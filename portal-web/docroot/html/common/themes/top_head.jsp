@@ -23,6 +23,22 @@
 <%@ include file="/html/common/themes/top_meta.jspf" %>
 <%@ include file="/html/common/themes/top_meta-ext.jsp" %>
 
+<%
+Locale[] availableLocales = LanguageUtil.getAvailableLocales();
+
+for(int localeCount=0; localeCount<availableLocales.length; localeCount++){
+	Locale localeArray = availableLocales[localeCount];
+	if(!localeArray.equals(locale)){
+		String languagePathAlternate = PortalUtil.getLayoutFriendlyURL(layout, themeDisplay, availableLocales[localeCount]) ;	
+		String langIdW3c = LocaleUtil.toW3cLanguageId(localeArray);		
+	
+%>
+		<link rel="alternate" href="<%=languagePathAlternate %>" hreflang="<%=langIdW3c %>" title="<%=layout.getHTMLTitle(localeArray)%>" />
+<% 
+	}
+}
+%>
+
 <link rel="Shortcut Icon" href="<%= themeDisplay.getPathThemeImages() %>/<%= PropsValues.THEME_SHORTCUT_ICON %>" />
 
 <%-- Portal CSS --%>
