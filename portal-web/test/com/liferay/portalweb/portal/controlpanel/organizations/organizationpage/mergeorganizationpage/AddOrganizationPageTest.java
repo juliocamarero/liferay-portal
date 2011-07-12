@@ -202,7 +202,7 @@ public class AddOrganizationPageTest extends BaseTestCase {
 				selenium.saveScreenShotAndSource();
 				selenium.clickAt("//div[4]/div/ul/li[1]/a",
 					RuntimeVariables.replace("Page"));
-				Thread.sleep(5000);
+				Thread.sleep(10000);
 
 				for (int second = 0;; second++) {
 					if (second >= 60) {

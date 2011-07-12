@@ -90,7 +90,7 @@ public class AssertMergeOrganizationPageTest extends BaseTestCase {
 			}
 
 			try {
-				if (selenium.isVisible("link=Pages")) {
+				if (selenium.isVisible("link=Site Pages")) {
 					break;
 				}
 			}
@@ -101,7 +101,7 @@ public class AssertMergeOrganizationPageTest extends BaseTestCase {
 		}
 
 		selenium.saveScreenShotAndSource();
-		selenium.clickAt("link=Pages", RuntimeVariables.replace("Pages"));
+		selenium.clickAt("link=Site Pages", RuntimeVariables.replace("Pages"));
 		selenium.waitForPageToLoad("30000");
 		selenium.saveScreenShotAndSource();
 		selenium.clickAt("//div[2]/span/button[2]",

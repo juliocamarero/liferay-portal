@@ -83,7 +83,7 @@ public class TearDownTest extends BaseTestCase {
 				selenium.waitForPageToLoad("30000");
 				selenium.saveScreenShotAndSource();
 				selenium.type("//input[@name='_125_keywords']",
-					RuntimeVariables.replace("Selenium"));
+					RuntimeVariables.replace("test"));
 				selenium.saveScreenShotAndSource();
 				selenium.clickAt("//input[@value='Search']",
 					RuntimeVariables.replace("Search"));
@@ -91,7 +91,7 @@ public class TearDownTest extends BaseTestCase {
 				selenium.saveScreenShotAndSource();
 
 				boolean organization1Present = selenium.isElementPresent(
-						"_125_rowIds");
+						"_125_allRowIds");
 
 				if (!organization1Present) {
 					label = 2;
@@ -99,7 +99,7 @@ public class TearDownTest extends BaseTestCase {
 					continue;
 				}
 
-				selenium.clickAt("//input[@name='_125_rowIds']",
+				selenium.clickAt("//input[@name='_125_allRowIds']",
 					RuntimeVariables.replace(""));
 				selenium.click(RuntimeVariables.replace(
 						"//input[@value='Delete']"));

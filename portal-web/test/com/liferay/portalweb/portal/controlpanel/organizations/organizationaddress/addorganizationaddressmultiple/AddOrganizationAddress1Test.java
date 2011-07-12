@@ -180,6 +180,7 @@ public class AddOrganizationAddress1Test extends BaseTestCase {
 			RuntimeVariables.replace("Mailing Checkbox"));
 		selenium.clickAt("//input[@id='_125_addressPrimary0']",
 			RuntimeVariables.replace("Primary Button"));
+		Thread.sleep(5000);
 		selenium.clickAt("//input[@value='Save']",
 			RuntimeVariables.replace("Save"));
 		selenium.waitForPageToLoad("30000");
