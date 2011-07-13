@@ -109,7 +109,8 @@ public class FieldWrapperTag extends IncludeTag {
 		request.setAttribute("aui:field-wrapper:label", label);
 		request.setAttribute("aui:field-wrapper:last", String.valueOf(_last));
 		request.setAttribute("aui:field-wrapper:name", _name);
-		request.setAttribute("aui:field-wrapper:required", String.valueOf(_required));
+		request.setAttribute(
+			"aui:field-wrapper:required", String.valueOf(_required));
 	}
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
