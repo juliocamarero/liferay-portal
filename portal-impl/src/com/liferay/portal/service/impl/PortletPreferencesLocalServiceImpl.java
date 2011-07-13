@@ -248,36 +248,6 @@ public class PortletPreferencesLocalServiceImpl
 			portletPreferencesIds.getPortletId());
 	}
 
-	public javax.portlet.PortletPreferences getStrictPreferences(
-			long companyId, long ownerId, int ownerType, long plid,
-			String portletId)
-		throws SystemException {
-
-		boolean strict = PortletPreferencesThreadLocal.isStrict();
-
-		PortletPreferencesThreadLocal.setStrict(!PropsValues.TCK_URL);
-
-		try {
-			return getPreferences(
-				companyId, ownerId, ownerType, plid, portletId, null);
-		}
-		finally {
-			PortletPreferencesThreadLocal.setStrict(strict);
-		}
-	}
-
-	public javax.portlet.PortletPreferences getStrictPreferences(
-			PortletPreferencesIds portletPreferencesIds)
-		throws SystemException {
-
-		return getStrictPreferences(
-			portletPreferencesIds.getCompanyId(),
-			portletPreferencesIds.getOwnerId(),
-			portletPreferencesIds.getOwnerType(),
-			portletPreferencesIds.getPlid(),
-			portletPreferencesIds.getPortletId());
-	}
-
 	public PortletPreferences updatePreferences(
 			long ownerId, int ownerType, long plid, String portletId,
 			javax.portlet.PortletPreferences portletPreferences)
