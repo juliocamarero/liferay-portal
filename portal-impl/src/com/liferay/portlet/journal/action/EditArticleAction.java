@@ -189,7 +189,7 @@ public class EditArticleAction extends PortletAction {
 						"portlet.journal.update_translation_redirect");
 				}
 				else if (!windowState.equals(LiferayWindowState.POP_UP) &&
-					layout.isTypeControlPanel()) {
+						 layout.isTypeControlPanel()) {
 
 					sendRedirect(actionRequest, actionResponse, redirect);
 				}
