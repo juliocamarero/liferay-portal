@@ -670,6 +670,12 @@ public class BaseDeployer implements Deployer {
 	}
 
 	public void deployFile(File srcFile) throws Exception {
+		deployFile(srcFile, null);
+	}
+
+	public void deployFile(File srcFile, String specifiedContext)
+		throws Exception {
+
 		PluginPackage pluginPackage = readPluginPackage(srcFile);
 
 		if (_log.isInfoEnabled()) {
@@ -677,14 +683,18 @@ public class BaseDeployer implements Deployer {
 		}
 
 		String deployDir = null;
-		String displayName = null;
+		String displayName = specifiedContext;
 		boolean overwrite = false;
-		String preliminaryContext = null;
+		String preliminaryContext = specifiedContext;
 
-		// File names starting with DEPLOY_TO_PREFIX should use the filename
-		// after the prefix as the deployment context
+		// The order of priority of the context is: 1.) the specified context,
+		// 2.) if the file name starts with DEPLOY_TO_PREFIX, use the file name
+		// after the prefix, or 3.) the recommended deployment context as
+		// specified in liferay-plugin-package.properties, or 4.) the file name.
 
-		if (srcFile.getName().startsWith(DEPLOY_TO_PREFIX)) {
+		if ((specifiedContext != null) &&
+			srcFile.getName().startsWith(DEPLOY_TO_PREFIX)) {
+
 			displayName = srcFile.getName().substring(
 				DEPLOY_TO_PREFIX.length(), srcFile.getName().length() - 4);
 
@@ -759,9 +769,7 @@ public class BaseDeployer implements Deployer {
 							previousVersion + " to version " + version);
 				}
 
-				if (pluginPackage.isLaterVersionThan(
-					previousPluginPackage)) {
-
+				if (pluginPackage.isLaterVersionThan(previousPluginPackage)) {
 					overwrite = true;
 				}
 			}
