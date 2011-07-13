@@ -55,7 +55,7 @@ portletURL.setParameter("tabs1", tabs1);
 	>
 
 		<%
-		String rowURL = null;
+		String rowHREF = null;
 
 		if (Validator.isNotNull(chooseCallback)) {
 			StringBundler sb = new StringBundler(7);
@@ -68,25 +68,25 @@ portletURL.setParameter("tabs1", tabs1);
 			sb.append(HtmlUtil.escapeJS(structure.getName(locale)));
 			sb.append("', Liferay.Util.getWindow());");
 
-			rowURL = sb.toString();
+			rowHREF = sb.toString();
 		}
 		%>
 
 		<liferay-ui:search-container-column-text
-			href="<%= rowURL %>"
+			href="<%= rowHREF %>"
 			name="id"
 			property="structureId"
 		/>
 
 		<liferay-ui:search-container-column-text
-			href="<%= rowURL %>"
+			href="<%= rowHREF %>"
 			name="name"
 			value="<%= structure.getName(locale) %>"
 		/>
 
 		<c:if test="<%= Validator.isNull(storageTypeValue) %>">
 			<liferay-ui:search-container-column-text
-				href="<%= rowURL %>"
+				href="<%= rowHREF %>"
 				name="storage-type"
 				value="<%= LanguageUtil.get(pageContext, structure.getStorageType()) %>"
 			/>
@@ -94,7 +94,7 @@ portletURL.setParameter("tabs1", tabs1);
 
 		<c:if test="<%= classNameId == 0 %>">
 			<liferay-ui:search-container-column-text
-				href="<%= rowURL %>"
+				href="<%= rowHREF %>"
 				buffer="buffer"
 				name="type"
 			>
@@ -107,7 +107,7 @@ portletURL.setParameter("tabs1", tabs1);
 		</c:if>
 
 		<liferay-ui:search-container-column-text
-			href="<%= rowURL %>"
+			href="<%= rowHREF %>"
 			buffer="buffer"
 			name="modified-date"
 		>
