@@ -1188,8 +1188,7 @@ public class StagingImpl implements Staging {
 		layout.setTypeSettingsProperties(typeSettingsProperties);
 	}
 
-	public void updateStaging(
-			PortletRequest portletRequest, Group liveGroup)
+	public void updateStaging(PortletRequest portletRequest, Group liveGroup)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(

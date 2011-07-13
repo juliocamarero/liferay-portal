@@ -24,8 +24,11 @@ Group group = (Group)request.getAttribute(WebKeys.GROUP);
 long groupId = BeanParamUtil.getLong(group, request, "groupId");
 
 Group liveGroup = null;
-Group stagingGroup = null;
+
 long liveGroupId = 0;
+
+Group stagingGroup = null;
+
 long stagingGroupId = 0;
 
 UnicodeProperties liveGroupTypeSettings = null;
@@ -33,6 +36,7 @@ UnicodeProperties liveGroupTypeSettings = null;
 if (group != null) {
 	if (group.isStagingGroup()) {
 		liveGroup = group.getLiveGroup();
+
 		stagingGroup = group;
 	}
 	else {
@@ -44,6 +48,7 @@ if (group != null) {
 	}
 
 	liveGroupId = liveGroup.getGroupId();
+
 	stagingGroupId = 0;
 
 	if (stagingGroup != null) {
