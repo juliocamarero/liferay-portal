@@ -26,8 +26,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -64,7 +64,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -1108,22 +1107,20 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 				user.getUserId(), password, password, passwordReset, true);
 		}
 
-		Set<String> ldapAttributesIgnore = new HashSet<String>();
-
-		ldapAttributesIgnore.addAll(
-			ListUtil.fromArray(PropsValues.LDAP_USER_IGNORE_ATTRIBUTES));
-
 		Contact contact = user.getContact();
 
-		for (String attribute : ldapAttributesIgnore) {
-			Object obj = BeanPropertiesUtil.getObjectSilent(user, attribute);
+		Set<String> ldapIgnoreAttributes = SetUtil.fromArray(
+			PropsValues.LDAP_USER_IGNORE_ATTRIBUTES);
 
-			if (obj == null) {
-				obj = BeanPropertiesUtil.getObjectSilent(contact, attribute);
+		for (String attribute : ldapIgnoreAttributes) {
+			Object value = BeanPropertiesUtil.getObjectSilent(user, attribute);
+
+			if (value == null) {
+				value = BeanPropertiesUtil.getObjectSilent(contact, attribute);
 			}
 
-			if (obj != null) {
-				BeanPropertiesUtil.setProperty(ldapUser, attribute, obj);
+			if (value != null) {
+				BeanPropertiesUtil.setProperty(ldapUser, attribute, value);
 			}
 		}
 
