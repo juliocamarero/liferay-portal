@@ -3245,7 +3245,8 @@
 			</license>
 		</licenses>
 		<comments>
-			This was recompiled for compatibility with JDK 5.
+			This includes a public patch from
+			http://code.google.com/p/xuggle/issues/detail?id=252.
 		</comments>
 	</library>
 </libraries>
