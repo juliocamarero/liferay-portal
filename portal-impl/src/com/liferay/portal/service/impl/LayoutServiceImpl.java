@@ -186,15 +186,15 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		if (groupId > 0) {
-			Group group = groupService.getGroup(groupId);
-
 			String scopeGroupLayoutUuid = null;
+
+			Group group = groupLocalService.getGroup(groupId);
 
 			if (group.isLayout()) {
 				groupId = group.getParentGroupId();
 
-				Layout scopeGroupLayout =
-					layoutLocalService.getLayout(group.getClassPK());
+				Layout scopeGroupLayout = layoutLocalService.getLayout(
+					group.getClassPK());
 
 				scopeGroupLayoutUuid = scopeGroupLayout.getUuid();
 			}
@@ -209,8 +209,8 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 					if (layoutTypePortlet.hasPortletId(portletId)) {
 						javax.portlet.PortletPreferences jxPreferences =
-							PortletPreferencesFactoryUtil.
-								getLayoutPortletSetup(layout, portletId);
+							PortletPreferencesFactoryUtil.getLayoutPortletSetup(
+								layout, portletId);
 
 						if (group.isLayout()) {
 							String scopeLayoutUuid = GetterUtil.getString(
@@ -219,7 +219,8 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 							if (scopeGroupLayoutUuid != null &&
 								scopeGroupLayoutUuid.equals(scopeLayoutUuid)) {
-									return layout.getPlid();
+
+								return layout.getPlid();
 							}
 						}
 						else {
