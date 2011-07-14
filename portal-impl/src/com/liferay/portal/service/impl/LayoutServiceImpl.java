@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.scheduler.Trigger;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.messaging.LayoutsLocalPublisherRequest;
 import com.liferay.portal.messaging.LayoutsRemotePublisherRequest;
@@ -182,19 +183,18 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	}
 
 	public long getDefaultPlid(
-			long groupId, boolean privateLayout, String portletId)
+			long groupId, long scopeGroupId, boolean privateLayout,
+			String portletId)
 		throws PortalException, SystemException {
 
 		if (groupId > 0) {
 			String scopeGroupLayoutUuid = null;
 
-			Group group = groupLocalService.getGroup(groupId);
+			Group scopeGroup = groupLocalService.getGroup(scopeGroupId);
 
-			if (group.isLayout()) {
-				groupId = group.getParentGroupId();
-
+			if (scopeGroup.isLayout()) {
 				Layout scopeGroupLayout = layoutLocalService.getLayout(
-					group.getClassPK());
+					scopeGroup.getClassPK());
 
 				scopeGroupLayoutUuid = scopeGroupLayout.getUuid();
 			}
@@ -212,7 +212,10 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 							PortletPreferencesFactoryUtil.getLayoutPortletSetup(
 								layout, portletId);
 
-						if (group.isLayout()) {
+						String scopeType = GetterUtil.getString(
+							jxPreferences.getValue("lfr-scope-type", null));
+
+						if (scopeGroup.isLayout()) {
 							String scopeLayoutUuid = GetterUtil.getString(
 								jxPreferences.getValue(
 									"lfrScopeLayoutUuid", null));
@@ -223,11 +226,15 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 								return layout.getPlid();
 							}
 						}
-						else {
-							String scopeType = GetterUtil.getString(
-								jxPreferences.getValue("lfr-scope-type", null));
+						else if (scopeGroup.isCompany()) {
+							if (scopeType != null &&
+								scopeType.equals("company")) {
 
-							if (scopeType == null || scopeType.length() == 0) {
+								return layout.getPlid();
+							}
+						}
+						else {
+							if (Validator.isNull(scopeType)) {
 								return layout.getPlid();
 							}
 						}
