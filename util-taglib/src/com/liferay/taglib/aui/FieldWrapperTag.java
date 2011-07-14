@@ -16,7 +16,6 @@ package com.liferay.taglib.aui;
 
 import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.taglib.aui.base.BaseFieldWrapperTag;
-import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.http.HttpServletRequest;
 
