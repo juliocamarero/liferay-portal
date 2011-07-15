@@ -29,6 +29,8 @@
 
 		names.splice(selectedIndex, 1);
 
+		var el;
+
 		for (var i = 0; i < names.length; i++) {
 			el = A.one('#' + namespace + toCharCode(names[i]) + 'TabsSection');
 
@@ -70,6 +72,46 @@
 		{
 			defaultFn: Liferay.Portal.Tabs._show
 		}
+	);
+
+	Liferay.provide(
+		ToolTip,
+		'hide',
+		function() {
+			var instance = this;
+
+			if (instance._cached) {
+				instance._cached.hide();
+			}
+		},
+		['aui-tooltip']
+	);
+
+	Liferay.provide(
+		ToolTip,
+		'addShowListeners',
+		function() {
+			var showTooltip = function(event) {
+				var node = event.currentTarget;
+
+				var tooltipContainerNode = node.next('.tooltip-container');
+
+				if (tooltipContainerNode) {
+					var content = tooltipContainerNode.get('innerHTML');
+
+					Liferay.Portal.ToolTip.show(node, content);
+				}
+			};
+
+			var DOC = A.config.doc;
+
+			A.delegate('mouseover', showTooltip, DOC, '.tooltip-target' );
+
+			A.delegate('focus', showTooltip, DOC, '.tooltip-target' );
+
+			A.delegate('blur', Liferay.Portal.ToolTip.hide, DOC, '.tooltip-target');
+		},
+		['aui-tooltip']
 	);
 
 	Liferay.provide(
