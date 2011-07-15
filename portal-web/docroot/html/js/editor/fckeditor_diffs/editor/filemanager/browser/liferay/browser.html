@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
    "http://www.w3.org/TR/html4/frameset.dtd">
 <!--
- * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * CKeditor - The text editor for Internet - http://www.fckeditor.net
  * Copyright (C) 2003-2007 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
@@ -24,7 +24,7 @@
 -->
 <html>
 	<head>
-		<title>FCKeditor - Resources Browser</title>
+		<title>CKeditor - Resources Browser</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link href="browser.css" type="text/css" rel="stylesheet">
 		<script type="text/javascript" src="js/fckxml.js"></script>
@@ -74,7 +74,13 @@ function GetUrlParam( paramName )
 }
 
 var oConnector = new Object() ;
+
+var currentFolderParam = GetUrlParam( 'currentFolder' ) ;
+
 oConnector.CurrentFolder	= '/' ;
+if (currentFolderParam) {
+	oConnector.CurrentFolder = currentFolderParam ;
+}
 
 var sConnUrl = GetUrlParam( 'Connector' ) ;
 
@@ -103,7 +109,7 @@ oConnector.SendCommand = function( command, params, callBackFunction )
 {
 	var sUrl = this.ConnectorUrl + 'Command=' + command ;
 	sUrl += '&Type=' + this.ResourceType ;
-	sUrl += '&CurrentFolder=' + encodeURIComponent( this.CurrentFolder ) ;
+	sUrl += '&CurrentFolder=' + encodeURIComponent( oConnector.CurrentFolder ) ;
 
 	if ( params ) sUrl += '&' + params ;
 

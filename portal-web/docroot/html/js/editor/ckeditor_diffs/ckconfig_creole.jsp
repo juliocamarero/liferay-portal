@@ -37,7 +37,6 @@ CKEDITOR.config.removePlugins = [
 	'flash',
 	'font',
 	'forms',
-	'image',
 	'indent',
 	'justify',
 	'keystrokes',
@@ -62,7 +61,7 @@ CKEDITOR.config.toolbar_creole = [
 	['Undo','Redo'],
 	['Bold', 'Italic', '-', 'NumberedList', 'BulletedList' ],
 	['Format'],
-	['Link', 'Unlink'],
+	['Link', 'Unlink', 'Image'],
 	['Table', '-', 'HorizontalRule', 'SpecialChar' ],
 	['Find','Replace','-','SelectAll','RemoveFormat'],
 	['Source']
