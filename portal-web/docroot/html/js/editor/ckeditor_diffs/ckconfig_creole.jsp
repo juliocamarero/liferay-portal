@@ -18,10 +18,16 @@
 <%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
 
 <%
-String cssPath = ParamUtil.getString(request, "cssPath");
 String cssClasses = ParamUtil.getString(request, "cssClasses");
 String languageId = ParamUtil.getString(request, "languageId");
 String attachmentURLPrefix = ParamUtil.getString(request, "attachmentURLPrefix");
+Long wikiPageResourcePrimKey = ParamUtil.getLong(request, "wikiPageResourcePrimKey");
+
+String linkButtonBar = "['Link', 'Unlink']";
+
+if (wikiPageResourcePrimKey > 0) {
+	linkButtonBar = "['Link', 'Unlink', 'Image']";
+}
 %>
 
 CKEDITOR.config.height = 265;
@@ -37,7 +43,6 @@ CKEDITOR.config.removePlugins = [
 	'flash',
 	'font',
 	'forms',
-	'image',
 	'indent',
 	'justify',
 	'keystrokes',
@@ -62,7 +67,7 @@ CKEDITOR.config.toolbar_creole = [
 	['Undo','Redo'],
 	['Bold', 'Italic', '-', 'NumberedList', 'BulletedList' ],
 	['Format'],
-	['Link', 'Unlink'],
+	<%= linkButtonBar %>,
 	['Table', '-', 'HorizontalRule', 'SpecialChar' ],
 	['Find','Replace','-','SelectAll','RemoveFormat'],
 	['Source']
