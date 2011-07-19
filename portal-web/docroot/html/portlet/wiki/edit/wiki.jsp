@@ -50,11 +50,11 @@ String content = BeanParamUtil.getString(wikiPage, request, "content");
 		Map<String,String> configParams = new HashMap();
 
 		configParams.put("attachmentURLPrefix", attachmentURLPrefix);
+		configParams.put("wikiPageResourcePrimKey", String.valueOf(resourcePrimKey));
 
 		Map<String,String> fileBrowseParams = new HashMap();
 
 		fileBrowseParams.put("wikiPageResourcePrimKey", String.valueOf(resourcePrimKey));
-
 		fileBrowseParams.put("Type", "Attachment");
 		%>
 

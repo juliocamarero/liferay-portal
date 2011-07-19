@@ -162,7 +162,12 @@ public String marshallParams(Map<String, String> params) {
 		}
 
 		<%
-		String connectorURL = HttpUtil.encodeURL(mainPath + "/portal/fckeditor?p_l_id=" + plid + "&p_p_id=" + HttpUtil.encodeURL(portletId) + "&doAsUserId=" + HttpUtil.encodeURL(doAsUserId) + "&doAsGroupId=" + HttpUtil.encodeURL(String.valueOf(doAsGroupId))) + HttpUtil.encodeURL(fileBrowseParams);
+		String connectorURL = HttpUtil.encodeURL(mainPath +
+			"/portal/fckeditor?p_l_id=" + plid +
+			"&p_p_id=" + HttpUtil.encodeURL(portletId) +
+			"&doAsUserId=" + HttpUtil.encodeURL(doAsUserId) +
+			"&doAsGroupId=" + HttpUtil.encodeURL(String.valueOf(doAsGroupId))) +
+			HttpUtil.encodeURL(fileBrowseParams);
 		%>
 
 		CKEDITOR.replace(
@@ -177,9 +182,9 @@ public String marshallParams(Map<String, String> params) {
 					'cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&' +
 					'cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&' +
 					'imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&' +
-					'languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&' +
+					'languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>' +
 					'<%= configParams %>',
-				filebrowserBrowseUrl: '<%= themeDisplay.getPathJavaScript() %>/editor/ckeditor/editor/filemanager/browser/liferay/browser.html?Connector=<%= connectorURL %>',
+				filebrowserBrowseUrl: '<%= themeDisplay.getPathJavaScript() %>/editor/ckeditor/editor/filemanager/browser/liferay/browser.html?Connector=<%= connectorURL %><%= fileBrowseParams %>',
 				filebrowserUploadUrl: null,
 				toolbar: '<%= TextFormatter.format(HtmlUtil.escape(toolbarSet), TextFormatter.M) %>'
 			}

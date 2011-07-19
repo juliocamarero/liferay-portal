@@ -16,24 +16,27 @@ package com.liferay.portal.editor.fckeditor.receiver.impl;
 
 import com.liferay.portal.editor.fckeditor.command.CommandArgument;
 import com.liferay.portal.editor.fckeditor.exception.FCKException;
+import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.model.GroupConstants;
-import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portlet.documentlibrary.DuplicateDirectoryException;
+import com.liferay.portlet.documentlibrary.NoSuchDirectoryException;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
+import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Julio Camarero
@@ -55,25 +58,25 @@ public class AttachmentCommandReceiver extends BaseCommandReceiver {
 
 			WikiPage page = WikiPageLocalServiceUtil.getPage(resourcePK);
 
-			String portletId = CompanyConstants.SYSTEM_STRING;
+			String title = page.getTitle();
 
-			long groupId = GroupConstants.DEFAULT_PARENT_GROUP_ID;
+			long nodeId = page.getNodeId();
 
-			long repositoryId = CompanyConstants.SYSTEM;
+			List<ObjectValuePair<String, byte[]>> files =
+				new ArrayList<ObjectValuePair<String, byte[]>>();
 
-			String dirName = page.getAttachmentsDir();
+			if (file != null) {
+				byte[] bytes = FileUtil.getBytes(file);
 
-			try {
-				DLStoreUtil.addDirectory(
-					page.getCompanyId(), repositoryId, dirName);
+				if ((bytes != null) && (bytes.length > 0)) {
+					ObjectValuePair<String, byte[]> ovp =
+						new ObjectValuePair<String, byte[]>(fileName, bytes);
+
+					files.add(ovp);
+				}
 			}
-			catch (DuplicateDirectoryException dde) {
-			}
 
-			DLStoreUtil.addFile(
-				page.getCompanyId(), portletId, groupId,
-				repositoryId, dirName + "/" + fileName, new ServiceContext(),
-				file);
+			WikiPageServiceUtil.addPageAttachments(nodeId, title, files);
 		}
 		catch (Exception e) {
 			throw new FCKException(e);
@@ -119,12 +122,22 @@ public class AttachmentCommandReceiver extends BaseCommandReceiver {
 
 		String dirName = page.getAttachmentsDir();
 
-		String[] fileNames = DLStoreUtil.getFileNames(
-			page.getCompanyId(), CompanyConstants.SYSTEM, dirName);
+		String[] fileNames = null;
+
+		try {
+			fileNames = DLStoreUtil.getFileNames(
+				page.getCompanyId(), repositoryId, dirName);
+		}
+		catch (NoSuchDirectoryException nsde) {
+			DLStoreUtil.addDirectory(
+				page.getCompanyId(), repositoryId, dirName);
+			fileNames = DLStoreUtil.getFileNames(
+				page.getCompanyId(), repositoryId, dirName);
+		}
 
 		for (String fileName : fileNames) {
 			byte[] fileEntry = DLStoreUtil.getFile(
-				page.getCompanyId(), CompanyConstants.SYSTEM, fileName);
+				page.getCompanyId(), repositoryId, fileName);
 
 			String[] parts = StringUtil.split(fileName, StringPool.SLASH);
 			fileName = parts[3];
@@ -136,19 +149,6 @@ public class AttachmentCommandReceiver extends BaseCommandReceiver {
 			fileElement.setAttribute("name", fileName);
 			fileElement.setAttribute("desc", fileName);
 			fileElement.setAttribute("size", getSize(fileEntry.length));
-
-			/*StringBundler url = new StringBundler(7);
-
-			ThemeDisplay themeDisplay = commandArgument.getThemeDisplay();
-
-			url.append(themeDisplay.getPathMain());
-			url.append("/wiki/get_page_attachment?title=");
-			url.append(HttpUtil.encodeURL(page.getTitle()));
-			url.append("&nodeId=");
-			url.append(page.getNodeId());
-			url.append("&fileName=");
-			url.append(fileName);*/
-
 			fileElement.setAttribute("url", fileName);
 		}
 	}
