@@ -29,14 +29,17 @@ import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
+
+import java.io.File;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Julio Camarero
@@ -52,9 +55,11 @@ public class AttachmentCommandReceiver extends BaseCommandReceiver {
 		String extension) {
 
 		try {
-			HttpServletRequest request = commandArgument.getHttpServletRequest();
+			HttpServletRequest request =
+				commandArgument.getHttpServletRequest();
 
-			long resourcePK = ParamUtil.getLong(request, "wikiPageResourcePrimKey");
+			long resourcePK = ParamUtil.getLong(
+				request, "wikiPageResourcePrimKey");
 
 			WikiPage page = WikiPageLocalServiceUtil.getPage(resourcePK);
 
