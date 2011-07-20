@@ -37,18 +37,11 @@ if (!ckEditorConfigFileName.equals("ckconfig.jsp")) {
 	useCustomDataProcessor = true;
 }
 
-StringBundler configParamsSB = new StringBundler();
+Map<String, String> configParamsMap = (Map<String, String>)request.getAttribute("liferay-ui:input-editor:configParams");
+String configParams = marshallParams(configParamsMap);
 
-Map<String, String> configParams = (Map<String, String>)request.getAttribute("liferay-ui:input-editor:configParams");
-
-if (configParams != null) {
-	for (Map.Entry<String, String> configParam : configParams.entrySet()) {
-		configParamsSB.append(StringPool.AMPERSAND);
-		configParamsSB.append(configParam.getKey());
-		configParamsSB.append(StringPool.EQUAL);
-		configParamsSB.append(HttpUtil.encodeURL(configParam.getValue()));
-	}
-}
+Map<String, String> fileBrowseParamsMap = (Map<String, String>)request.getAttribute("liferay-ui:input-editor:fileBrowseParams");
+String fileBrowseParams = marshallParams(fileBrowseParamsMap);
 
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
 String cssClasses = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClasses"));
@@ -64,6 +57,22 @@ if (Validator.isNotNull(onChangeMethod)) {
 
 boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:skipEditorLoading"));
 String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolbarSet");
+%>
+<%!
+public String marshallParams(Map<String, String> params) {
+	StringBundler paramsSB = new StringBundler();
+
+	if (params != null) {
+		for (Map.Entry<String, String> configParam : params.entrySet()) {
+			paramsSB.append(StringPool.AMPERSAND);
+			paramsSB.append(configParam.getKey());
+			paramsSB.append(StringPool.EQUAL);
+			paramsSB.append(HttpUtil.encodeURL(configParam.getValue()));
+		}
+	}
+
+	return paramsSB.toString();
+}
 %>
 
 <c:if test="<%= !skipEditorLoading %>">
@@ -152,14 +161,29 @@ String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolba
 		}
 
 		<%
-		String connectorURL = HttpUtil.encodeURL(mainPath + "/portal/fckeditor?p_l_id=" + plid + "&p_p_id=" + HttpUtil.encodeURL(portletId) + "&doAsUserId=" + HttpUtil.encodeURL(doAsUserId) + "&doAsGroupId=" + HttpUtil.encodeURL(String.valueOf(doAsGroupId)));
+		String connectorURL = HttpUtil.encodeURL(mainPath +
+			"/portal/fckeditor?p_l_id=" + plid +
+			"&p_p_id=" + HttpUtil.encodeURL(portletId) +
+			"&doAsUserId=" + HttpUtil.encodeURL(doAsUserId) +
+			"&doAsGroupId=" + HttpUtil.encodeURL(String.valueOf(doAsGroupId))) +
+			HttpUtil.encodeURL(fileBrowseParams);
 		%>
 
 		CKEDITOR.replace(
 			'<%= name %>',
 			{
-				customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/<%= ckEditorConfigFileName %>?p_l_id=<%= plid %>&p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %><%= configParamsSB.toString() %>',
-				filebrowserBrowseUrl: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/editor/filemanager/browser/liferay/browser.html?Connector=<%= connectorURL %>',
+				customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/<%= ckEditorConfigFileName %>?' +
+					'p_l_id=<%= plid %>&' +
+					'p_p_id=<%= HttpUtil.encodeURL(portletId) %>&' +
+					'p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&' +
+					'doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&' +
+					'doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&' +
+					'cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&' +
+					'cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&' +
+					'imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&' +
+					'languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&' +
+					'<%= configParams %>',
+				filebrowserBrowseUrl: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/editor/filemanager/browser/liferay/browser.html?Connector=<%= connectorURL %><%= fileBrowseParams %>',
 				filebrowserUploadUrl: null,
 				toolbar: '<%= TextFormatter.format(HtmlUtil.escape(toolbarSet), TextFormatter.M) %>'
 			}
