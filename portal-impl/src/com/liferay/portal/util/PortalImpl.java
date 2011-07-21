@@ -1272,105 +1272,78 @@ public class PortalImpl implements Portal {
 	public String getCurrentURL(PortletRequest portletRequest) {
 		return (String)portletRequest.getAttribute(WebKeys.CURRENT_URL);
 	}
-	
-	private String filterVirtualHost(){return "";}
-	
-	public String getCanonicalURL(HttpServletRequest request) throws PortalException, SystemException{
-		
-		//1a:http://www.sergio.com:8080/
-		//1b:http://www.sergio.com:8080/es/home/-/blogs/blabla?_33_redirect=http%3A%2F%2Fwww.sergio.com%3A8080%2Fes%2Fhome%3Fp_p_id%3D33%26p_p_lifecycle%3D0%26p_p_state%3Dnormal%26p_p_mode%3Dview%26p_p_col_id%3Dcolumn-1%26p_p_col_count%3D3
-		//1c:http://www.sergio.com:8080/es/home
-		//1d:http://www.sergio-liferay.com:8080/es/web/sergio
-		//1e:http://www.sergio-liferay.com:8080/es/web/sergio/home/-/blogs/blabla?_33_redirect=http%3A%2F%2Fwww.sergio-liferay.com%3A8080%2Fes%2Fweb%2Fsergio%2Fhome%3Fp_p_id%3D33%26p_p_lifecycle%3D0%26p_p_state%3Dnormal%26p_p_mode%3Dview%26p_p_col_id%3Dcolumn-1%26p_p_col_count%3D3
-		
+
+	public String getCanonicalURL(HttpServletRequest request) 
+		throws PortalException, SystemException{
+
 		String canonicalUrl = getCurrentCompleteURL(request);
-		
+
 		Enumeration pars = request.getParameterNames();
-		
-		//Entrar si hay pars. Buscar /-/ o ?
-		
-		while(pars.hasMoreElements()){
+
+		while (pars.hasMoreElements()) {
 			String par = (String) pars.nextElement();
-			if(par.matches("_.*_redirect$")){
+			if (par.matches("_.*_redirect$")) {
 				canonicalUrl = HttpUtil.removeParameter(canonicalUrl, par);
 			}
 		}
-		
-		return cleanCanonicalAlternateURL(request, canonicalUrl, LocaleUtil.getDefault());
-		
+
+		return getCanonicalAlternateURL(
+			request, canonicalUrl, LocaleUtil.getDefault());
+
 	}
-	
-	public String getAlternateURL(HttpServletRequest request, String url, Locale locale) throws PortalException, SystemException{
-		
-		return cleanCanonicalAlternateURL(request, url, locale);
+
+	public String getAlternateURL(
+			HttpServletRequest request, String url, Locale locale)
+		throws PortalException, SystemException {
+
+		return getCanonicalAlternateURL(request, url, locale);
 	}
-	
-	private String cleanCanonicalAlternateURL(HttpServletRequest request, String originalURL, Locale locale) 
-		throws PortalException, SystemException{
-		
+
+	private String getCanonicalAlternateURL(
+			HttpServletRequest request, String originalURL, Locale locale)
+		throws PortalException, SystemException {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-				WebKeys.THEME_DISPLAY);
+			WebKeys.THEME_DISPLAY);
 
 		Layout layout = themeDisplay.getLayout();
-		
+
 		String layoutURL = PortalUtil.getLayoutFriendlyURL(
 				layout, themeDisplay, locale);
-		
+
 		int pos = originalURL.indexOf(Portal.FRIENDLY_URL_SEPARATOR);
 
-		if (pos != -1) {
-			originalURL = originalURL.substring(pos);
-		}else{
-			originalURL = "";
+		if (pos == -1) {
+			pos = originalURL.indexOf(StringPool.QUESTION);
 		}
 		
-		//3a:""
-		//3b:/-/blogs/blabla
-		//3c:""
-		//3d:""
-		//3e:/-/blogs/blabla
-		
-		boolean isGroupRootPage = layout.isFirstParent();
-		
+		if (pos != -1) {
+			originalURL = originalURL.substring(pos);
+		}
+		else{
+			originalURL = "";
+		}
+
 		String urlFriendlyGroup = layout.getGroup().getFriendlyURL();
-		
-		//Se comprueba si se llega desde virtual-host o no
-		
-		//4a:http://www.sergio.com:8080/
-		//4b:http://www.sergio.com:8080/home/-/blogs/blabla
-		//4c:http://www.sergio.com:8080
-		//4d:""
-		//4e:==
+
+		String serverHost = "";
 		
 		int posFriendlyGroup = layoutURL.indexOf(urlFriendlyGroup);
 		
-		//Si se llega a través de virtual-host
-		
-		if(posFriendlyGroup == -1){
-			if(isGroupRootPage && originalURL.equals("")){
-				originalURL = layoutURL.substring(0,layoutURL.indexOf(layout.getFriendlyURL()));
-			}else{
-				originalURL = layoutURL + originalURL;
-			}
+		if (posFriendlyGroup != -1) {
+			serverHost = PortalUtil.getPortalURL(request);
 		}
 		
-		//Si no se llega a través de virtual-host. Generar la url completa
+		boolean isGroupRootPage = layout.isFirstParent();
 		
-		if(posFriendlyGroup != -1){
-			if(isGroupRootPage && originalURL.equals("")){
-				originalURL = PortalUtil.getPortalURL(request) + layoutURL.substring(0,layoutURL.indexOf(layout.getFriendlyURL()));
-			}else{
-				originalURL = PortalUtil.getPortalURL(request) + layoutURL + originalURL;
-		
-			}
+		if (isGroupRootPage && originalURL.equals("")) {
+			originalURL = serverHost + 
+			layoutURL.substring(0,layoutURL.indexOf(layout.getFriendlyURL()));
 		}
-		
-		//5a:==
-		//5b:==
-		//5c:==
-		//5d:http://www.sergio-liferay.com:8080/web/sergio
-		//5e:http://www.sergio-liferay.com:8080/web/sergio/home/-/blogs/blabla
-		
+		else{
+			originalURL = serverHost + layoutURL + originalURL;
+		}
+
 		return originalURL;
 	}
 

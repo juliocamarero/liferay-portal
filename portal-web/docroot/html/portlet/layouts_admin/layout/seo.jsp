@@ -68,14 +68,15 @@ if (selLayout != null) {
 			<aui:option selected='<%= changeFrequency.equals("never") %>' label="never" />
 		</aui:select>
 	</aui:fieldset>
-		
+
 </c:if>
 
 <aui:fieldset>
 		<%
-		boolean canonical = GetterUtil.getBoolean(layoutTypeSettings.getProperty("canonical"), true);	
+		boolean canonical = GetterUtil.getBoolean(layoutTypeSettings.getProperty("canonical"), true);
 		%>
-	
-		<h3><liferay-ui:message key="canonical" /></h3>
-		<aui:input helpMessage="canonical-help" label="use-canonical-alternate" name="TypeSettingsProperties--canonical--" type="checkbox" value="<%= canonical %>" />
+
+		<h3><liferay-ui:message key="canonical-alternate" /></h3>
+		
+		<aui:input helpMessage="canonical-alternate-help" label="use-canonical-alternate" name="TypeSettingsProperties--canonical--" type="checkbox" value="<%= canonical %>" />
 	</aui:fieldset>
