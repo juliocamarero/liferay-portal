@@ -811,6 +811,13 @@ public class PortalImpl implements Portal {
 
 		return actualURL;
 	}
+	
+	public String getAlternateURL(
+			HttpServletRequest request, String url, Locale locale)
+		throws PortalException, SystemException {
+	
+		return getCanonicalAlternateURL(request, url, locale);
+	}
 
 	public Set<String> getAuthTokenIgnoreActions() {
 		return _authTokenIgnoreActions;
@@ -955,7 +962,28 @@ public class PortalImpl implements Portal {
 
 		return userId;
 	}
+	
+	
 
+	public String getCanonicalURL(HttpServletRequest request) 
+		throws PortalException, SystemException{
+
+		String canonicalUrl = getCurrentCompleteURL(request);
+	
+		Enumeration pars = request.getParameterNames();
+	
+		while (pars.hasMoreElements()) {
+			String par = (String) pars.nextElement();
+			if (par.matches("_.*_redirect$")) {
+				canonicalUrl = HttpUtil.removeParameter(canonicalUrl, par);
+			}
+		}
+	
+		return getCanonicalAlternateURL(
+			request, canonicalUrl, LocaleUtil.getDefault());
+	
+	}
+	
 	/**
 	 * @deprecated {@link #getCDNHost(boolean)}
 	 */
@@ -1271,80 +1299,6 @@ public class PortalImpl implements Portal {
 
 	public String getCurrentURL(PortletRequest portletRequest) {
 		return (String)portletRequest.getAttribute(WebKeys.CURRENT_URL);
-	}
-
-	public String getCanonicalURL(HttpServletRequest request) 
-		throws PortalException, SystemException{
-
-		String canonicalUrl = getCurrentCompleteURL(request);
-
-		Enumeration pars = request.getParameterNames();
-
-		while (pars.hasMoreElements()) {
-			String par = (String) pars.nextElement();
-			if (par.matches("_.*_redirect$")) {
-				canonicalUrl = HttpUtil.removeParameter(canonicalUrl, par);
-			}
-		}
-
-		return getCanonicalAlternateURL(
-			request, canonicalUrl, LocaleUtil.getDefault());
-
-	}
-
-	public String getAlternateURL(
-			HttpServletRequest request, String url, Locale locale)
-		throws PortalException, SystemException {
-
-		return getCanonicalAlternateURL(request, url, locale);
-	}
-
-	private String getCanonicalAlternateURL(
-			HttpServletRequest request, String originalURL, Locale locale)
-		throws PortalException, SystemException {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		Layout layout = themeDisplay.getLayout();
-
-		String layoutURL = PortalUtil.getLayoutFriendlyURL(
-				layout, themeDisplay, locale);
-
-		int pos = originalURL.indexOf(Portal.FRIENDLY_URL_SEPARATOR);
-
-		if (pos == -1) {
-			pos = originalURL.indexOf(StringPool.QUESTION);
-		}
-		
-		if (pos != -1) {
-			originalURL = originalURL.substring(pos);
-		}
-		else{
-			originalURL = "";
-		}
-
-		String urlFriendlyGroup = layout.getGroup().getFriendlyURL();
-
-		String serverHost = "";
-		
-		int posFriendlyGroup = layoutURL.indexOf(urlFriendlyGroup);
-		
-		if (posFriendlyGroup != -1) {
-			serverHost = PortalUtil.getPortalURL(request);
-		}
-		
-		boolean isGroupRootPage = layout.isFirstParent();
-		
-		if (isGroupRootPage && originalURL.equals("")) {
-			originalURL = serverHost + 
-			layoutURL.substring(0,layoutURL.indexOf(layout.getFriendlyURL()));
-		}
-		else{
-			originalURL = serverHost + layoutURL + originalURL;
-		}
-
-		return originalURL;
 	}
 
 	public String getCustomSQLFunctionIsNotNull() {
@@ -5097,6 +5051,54 @@ public class PortalImpl implements Portal {
 		}
 
 		return filteredPortlets;
+	}
+	
+	private String getCanonicalAlternateURL(
+		HttpServletRequest request, String originalURL, Locale locale)
+	throws PortalException, SystemException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+	
+		Layout layout = themeDisplay.getLayout();
+	
+		String layoutURL = PortalUtil.getLayoutFriendlyURL(
+				layout, themeDisplay, locale);
+	
+		int pos = originalURL.indexOf(Portal.FRIENDLY_URL_SEPARATOR);
+	
+		if (pos == -1) {
+			pos = originalURL.indexOf(StringPool.QUESTION);
+		}
+		
+		if (pos != -1) {
+			originalURL = originalURL.substring(pos);
+		}
+		else{
+			originalURL = "";
+		}
+	
+		String urlFriendlyGroup = layout.getGroup().getFriendlyURL();
+	
+		String serverHost = "";
+		
+		int posFriendlyGroup = layoutURL.indexOf(urlFriendlyGroup);
+		
+		if (posFriendlyGroup != -1) {
+			serverHost = PortalUtil.getPortalURL(request);
+		}
+		
+		boolean isGroupRootPage = layout.isFirstParent();
+		
+		if (isGroupRootPage && originalURL.equals("")) {
+			originalURL = serverHost + 
+			layoutURL.substring(0,layoutURL.indexOf(layout.getFriendlyURL()));
+		}
+		else{
+			originalURL = serverHost + layoutURL + originalURL;
+		}
+	
+		return originalURL;
 	}
 
 	protected long getDefaultScopeGroupId(long companyId)
