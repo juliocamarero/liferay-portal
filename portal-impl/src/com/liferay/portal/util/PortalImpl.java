@@ -966,19 +966,19 @@ public class PortalImpl implements Portal {
 	public String getCanonicalURL(HttpServletRequest request) 
 		throws PortalException, SystemException{
 
-		String canonicalUrl = getCurrentCompleteURL(request);
+		String canonicalURL = getCurrentCompleteURL(request);
 	
 		Enumeration pars = request.getParameterNames();
 	
 		while (pars.hasMoreElements()) {
 			String par = (String) pars.nextElement();
 			if (par.matches("_.*_redirect$")) {
-				canonicalUrl = HttpUtil.removeParameter(canonicalUrl, par);
+				canonicalURL = HttpUtil.removeParameter(canonicalURL, par);
 			}
 		}
 	
 		return getCanonicalAlternateURL(
-			request, canonicalUrl, LocaleUtil.getDefault());
+			request, canonicalURL, LocaleUtil.getDefault());
 	
 	}
 	
@@ -5061,7 +5061,7 @@ public class PortalImpl implements Portal {
 		Layout layout = themeDisplay.getLayout();
 	
 		String layoutURL = PortalUtil.getLayoutFriendlyURL(
-				layout, themeDisplay, locale);
+			layout, themeDisplay, locale);
 	
 		int pos = originalURL.indexOf(Portal.FRIENDLY_URL_SEPARATOR);
 	
@@ -5073,27 +5073,27 @@ public class PortalImpl implements Portal {
 			originalURL = originalURL.substring(pos);
 		}
 		else{
-			originalURL = "";
+			originalURL = StringPool.BLANK;
 		}
 	
-		String urlFriendlyGroup = layout.getGroup().getFriendlyURL();
+		String friendlyGroupURL = layout.getGroup().getFriendlyURL();
 	
-		String serverHost = "";
+		String serverHost = StringPool.BLANK;
 		
-		int posFriendlyGroup = layoutURL.indexOf(urlFriendlyGroup);
+		int posFriendlyGroup = layoutURL.indexOf(friendlyGroupURL);
 		
 		if (posFriendlyGroup != -1) {
 			serverHost = PortalUtil.getPortalURL(request);
 		}
 		
-		boolean isGroupRootPage = layout.isFirstParent();
-		
-		if (isGroupRootPage && originalURL.equals("")) {
-			originalURL = serverHost + 
-			layoutURL.substring(0,layoutURL.indexOf(layout.getFriendlyURL()));
+		if (layout.isFirstParent() && Validator.isNull(originalURL)) {
+			String absolutGroupFriendlyURL = layoutURL.substring(
+				0,layoutURL.indexOf(layout.getFriendlyURL()));
+			
+			originalURL = serverHost.concat(absolutGroupFriendlyURL);
 		}
 		else{
-			originalURL = serverHost + layoutURL + originalURL;
+			originalURL = serverHost.concat(layoutURL).concat(originalURL);
 		}
 	
 		return originalURL;

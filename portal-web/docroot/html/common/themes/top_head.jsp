@@ -35,19 +35,19 @@ if(canonical){
 	if(availableLocales.length > 1 && layout.isPublicLayout()) {
 		Locale defaultLocale = LocaleUtil.getDefault();
 
-		String urlCanonical = PortalUtil.getCanonicalURL(request);
+		String canonicalURL = PortalUtil.getCanonicalURL(request);
 		%>
 
-		<link href="<%= urlCanonical %>" rel="canonical" />
+		<link href="<%= canonicalURL %>" rel="canonical" />
 
 		<%
 		if (locale.equals(defaultLocale)) {
 			for (Locale curLocale : availableLocales) {
 				if(!curLocale.equals(defaultLocale)) {
-					String urlAlternate = PortalUtil.getAlternateURL(request, urlCanonical, curLocale);
+					String alternateURL = PortalUtil.getAlternateURL(request, canonicalURL, curLocale);
 		%>
 
-					<link href="<%= urlAlternate %>" hreflang="<%= LocaleUtil.toW3cLanguageId(curLocale) %>" rel="alternate" title="<%= layout.getHTMLTitle(curLocale) %>" />
+					<link href="<%= alternateURL %>" hreflang="<%= LocaleUtil.toW3cLanguageId(curLocale) %>" rel="alternate" title="<%= layout.getHTMLTitle(curLocale) %>" />
 
 		<%
 				}

@@ -72,6 +72,7 @@ if (selLayout != null) {
 </c:if>
 
 <aui:fieldset>
+
 	<%
 	boolean canonical = GetterUtil.getBoolean(layoutTypeSettings.getProperty("canonical"), false);
 	%>
