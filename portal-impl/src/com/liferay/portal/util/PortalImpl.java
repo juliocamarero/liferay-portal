@@ -963,8 +963,6 @@ public class PortalImpl implements Portal {
 		return userId;
 	}
 	
-	
-
 	public String getCanonicalURL(HttpServletRequest request) 
 		throws PortalException, SystemException{
 
@@ -5053,9 +5051,9 @@ public class PortalImpl implements Portal {
 		return filteredPortlets;
 	}
 	
-	private String getCanonicalAlternateURL(
-		HttpServletRequest request, String originalURL, Locale locale)
-	throws PortalException, SystemException {
+	protected String getCanonicalAlternateURL(
+			HttpServletRequest request, String originalURL, Locale locale)
+		throws PortalException, SystemException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
