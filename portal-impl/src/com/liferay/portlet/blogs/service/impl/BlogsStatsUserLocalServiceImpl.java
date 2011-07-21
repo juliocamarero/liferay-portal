@@ -176,18 +176,28 @@ public class BlogsStatsUserLocalServiceImpl
 		int entryCount = blogsEntryPersistence.countByG_U_S(
 			groupId, userId, WorkflowConstants.STATUS_APPROVED);
 
+		if (entryCount == 0) {
+			
+			if (blogsStatsUserPersistence.countByG_U(groupId, userId) > 0) {
+				blogsStatsUserPersistence.removeByG_U(groupId, userId);
+			}
+			
+			return;
+		}
+
 		BlogsStatsUser statsUser = getStatsUser(groupId, userId);
 
 		statsUser.setEntryCount(entryCount);
 
-		if (displayDate != null) {
-			BlogsEntry blogsEntry = blogsEntryPersistence.findByG_U_S_First(
+		BlogsEntry blogsEntry = blogsEntryPersistence.findByG_U_S_First(
 				groupId, userId, WorkflowConstants.STATUS_APPROVED,
 				new EntryDisplayDateComparator());
 
-			Date lastDisplayDate = blogsEntry.getDisplayDate();
+		Date lastDisplayDate = blogsEntry.getDisplayDate();
 
-			Date lastPostDate = statsUser.getLastPostDate();
+		Date lastPostDate = statsUser.getLastPostDate();
+
+		if (displayDate != null) {
 
 			if (lastPostDate == null) {
 				statsUser.setLastPostDate(displayDate);
@@ -196,6 +206,12 @@ public class BlogsStatsUserLocalServiceImpl
 				statsUser.setLastPostDate(displayDate);
 			}
 			else if (lastDisplayDate.before(lastPostDate)) {
+				statsUser.setLastPostDate(lastDisplayDate);
+			}
+		}
+		else{
+			
+			if (lastDisplayDate.before(lastPostDate)) {
 				statsUser.setLastPostDate(lastDisplayDate);
 			}
 		}
