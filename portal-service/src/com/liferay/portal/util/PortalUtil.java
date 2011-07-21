@@ -344,6 +344,17 @@ public class PortalUtil {
 	public static String getCurrentURL(HttpServletRequest request) {
 		return getPortal().getCurrentURL(request);
 	}
+	
+	public static String getCanonicalURL(HttpServletRequest request) throws PortalException, SystemException{
+		
+		return getPortal().getCanonicalURL(request);
+	}
+	
+	public static String getAlternateURL(HttpServletRequest request, String url, Locale locale) throws PortalException, SystemException{
+		
+		return getPortal().getAlternateURL(request, url, locale);
+	}
+	
 
 	public static String getCurrentURL(PortletRequest portletRequest) {
 		return getPortal().getCurrentURL(portletRequest);

@@ -26,18 +26,36 @@
 <link href="<%= themeDisplay.getPathThemeImages() %>/<%= PropsValues.THEME_SHORTCUT_ICON %>" rel="Shortcut Icon" />
 
 <%-- Available Translations --%>
-
 <%
-Locale[] availableLocales = LanguageUtil.getAvailableLocales();
+boolean canonical = GetterUtil.getBoolean(layout.getTypeSettingsProperties().get("canonical"));
 
-for (Locale curLocale : availableLocales) {
-	if (!curLocale.equals(locale)) {
-		String alternateFriendlyURL = PortalUtil.getLayoutFriendlyURL(layout, themeDisplay, curLocale);
-%>
-
-		<link href="<%= alternateFriendlyURL %>" hreflang="<%= LocaleUtil.toW3cLanguageId(curLocale) %>" rel="alternate" title="<%= layout.getHTMLTitle(curLocale) %>" />
-
-<%
+if(canonical){
+	Locale[] availableLocales = LanguageUtil.getAvailableLocales();
+	
+	if(availableLocales.length > 1 && layout.isPublicLayout()) {
+		Locale defaultLocale = LocaleUtil.getDefault();
+		
+		//String urlCanonical = PortalUtil.getLayoutFriendlyURL(layout, themeDisplay, defaultLocale);
+		String urlCanonical = PortalUtil.getCanonicalURL(request);
+		
+		
+		%>
+		
+		<link href="<%= urlCanonical %>" rel="canonical" />
+		
+		<%
+		if (locale.equals(defaultLocale)) {
+			for (Locale curLocale : availableLocales) {		
+				if(!curLocale.equals(defaultLocale)) {
+					String urlAlternate = PortalUtil.getAlternateURL(request, urlCanonical, curLocale);
+		%>	
+		
+				<link href="<%= urlAlternate %>" hreflang="<%= LocaleUtil.toW3cLanguageId(curLocale) %>" rel="alternate" title="<%= layout.getHTMLTitle(curLocale) %>" />	
+		
+		<%
+				}
+			}
+		}
 	}
 }
 %>

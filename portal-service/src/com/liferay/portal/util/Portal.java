@@ -430,6 +430,10 @@ public interface Portal {
 	public String getCurrentURL(HttpServletRequest request);
 
 	public String getCurrentURL(PortletRequest portletRequest);
+	
+	public String getCanonicalURL(HttpServletRequest request) throws PortalException, SystemException;
+	
+	public String getAlternateURL(HttpServletRequest request, String url, Locale locale) throws PortalException, SystemException;
 
 	public String getCustomSQLFunctionIsNotNull();
 
