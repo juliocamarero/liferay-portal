@@ -28,7 +28,6 @@ public class UpgradeComunnityProperties extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-
 		updateCommunityFromAddressProperty();
 		updateCommunityFromNameProperty();
 		updateCommunityLogoProperty();
@@ -36,7 +35,8 @@ public class UpgradeComunnityProperties extends UpgradeProcess {
 		updateCommunityMembershipReplySubjectProperty();
 		updateCommunityMembershipRequestBodyProperty();
 		updateCommunityMembershipRequestSubjectProperty();
-
+		updatePortletPreferencesCommunityNameVariable();
+		updatePortletPreferenceMBCommunityRole();
 	}
 
 	protected void updateCommunityFromAddressProperty()
@@ -95,12 +95,38 @@ public class UpgradeComunnityProperties extends UpgradeProcess {
 			PropsKeys.SITES_EMAIL_MEMBERSHIP_REPLY_SUBJECT );
 	}
 
+	protected void updatePortletPreferenceMBCommunityRole()
+		throws IOException, SQLException {
+
+		updatePortletPreferences(MB_COMMUNITY_ROLE, "site-role");
+	}
+
+	protected void updatePortletPreferencesCommunityNameVariable()
+		throws IOException, SQLException {
+
+		updatePortletPreferences(
+			COMMUNITY_NAME_VARIABLE, SITE_NAME_VARIABLE);
+	}
+
+	protected void updatePreferences(
+			String tableName, String oldValue, String newValue)
+		throws IOException, SQLException {
+
+		runSQL("update " + tableName + " set preferences = " +
+			   	"replace(preferences, \"" + oldValue + "\", \"" + newValue +
+				"\") where preferences like \"%" + oldValue + "%\"");
+	}
+
 	protected void updatePortalPreferences(String oldValue, String newValue)
 		throws IOException, SQLException {
 
-		runSQL("update PortalPreferences set preferences = " +
-			   	"replace(preferences, \"" + oldValue + "\", \"" + newValue +
-				"\") where preferences like \"%" + oldValue + "%\"");
+		updatePreferences("PortalPreferences", oldValue, newValue);
+	}
+
+	protected void updatePortletPreferences(String oldValue, String newValue)
+		throws IOException, SQLException {
+
+		updatePreferences("PortletPreferences", oldValue, newValue);
 	}
 
 	protected static final String COMMUNITIES_EMAIL_FROM_ADDRESS =
@@ -123,5 +149,13 @@ public class UpgradeComunnityProperties extends UpgradeProcess {
 
 	protected static final String COMPANY_SECURITY_COMMUNITY_LOGO =
 		"company.security.community.logo";
+
+	protected static final String MB_COMMUNITY_ROLE= "community-role";
+
+	protected static final String COMMUNITY_NAME_VARIABLE =
+		"$COMMUNITY_NAME$";
+
+	protected static final String SITE_NAME_VARIABLE =
+		"$SITE_NAME$";
 
 }
