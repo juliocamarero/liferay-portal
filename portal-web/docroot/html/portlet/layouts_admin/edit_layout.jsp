@@ -113,7 +113,6 @@ String[][] categorySections = {mainSections};
 
 				<aui:button name="deleteLayout" onClick="<%= taglibDeleteOnClick %>" value="delete-in-all-pages-variations" />
 			</aui:button-row>
-
 		</c:when>
 		<c:otherwise>
 			<c:if test="<%= !group.isLayoutPrototype() && (selLayout != null) %>">
@@ -231,9 +230,7 @@ String[][] categorySections = {mainSections};
 		function(action) {
 			var A = AUI();
 
-			if (!action) {
-				action = 'update';
-			}
+			action = action || 'update';
 
 			if (action == '<%= Constants.DELETE %>') {
 				<c:choose>
@@ -260,7 +257,7 @@ String[][] categorySections = {mainSections};
 			document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = action;
 
 			submitForm(document.<portlet:namespace />fm);
-			},
+		},
 		['aui-base']
 	);
 </aui:script>
