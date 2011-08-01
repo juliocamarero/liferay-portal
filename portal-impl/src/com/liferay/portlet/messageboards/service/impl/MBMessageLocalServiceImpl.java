@@ -45,6 +45,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextUtil;
 import com.liferay.portal.util.Portal;
@@ -1760,7 +1761,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 	protected void notifyDiscussionSubscribers(
 			MBMessage message, ServiceContext serviceContext)
-		throws SystemException {
+		throws SystemException, PortalException {
 
 		if (!PrefsPropsUtil.getBoolean(
 				message.getCompanyId(),
@@ -1791,6 +1792,14 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		String body = PrefsPropsUtil.getContent(
 			message.getCompanyId(), PropsKeys.DISCUSSION_EMAIL_BODY);
 
+		long groupId = message.getGroupId();
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		if (group.isLayout()) {
+			groupId = group.getParentGroupId();
+		}	
+		
 		SubscriptionSender subscriptionSender = new SubscriptionSender();
 
 		subscriptionSender.setBody(body);
@@ -1800,7 +1809,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			"[$COMMENTS_USER_ADDRESS$]", userAddress, "[$COMMENTS_USER_NAME$]",
 			userName, "[$CONTENT_URL$]", contentURL);
 		subscriptionSender.setFrom(fromAddress, fromName);
-		subscriptionSender.setGroupId(message.getGroupId());
+		subscriptionSender.setGroupId(groupId);
+		subscriptionSender.setScopeGroupId(serviceContext.getScopeGroupId());
 		subscriptionSender.setHtmlFormat(true);
 		subscriptionSender.setMailId(
 			"mb_discussion", message.getCategoryId(), message.getMessageId());
@@ -1957,6 +1967,12 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				message.getCategoryId(), message.getParentMessageId());
 		}
 
+		long groupId = message.getGroupId();
+
+		if (group.isLayout()) {
+			groupId = group.getParentGroupId();
+		}			
+		
 		SubscriptionSender subscriptionSenderPrototype =
 			new MBSubscriptionSender();
 
@@ -1971,7 +1987,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			"[$MESSAGE_USER_ADDRESS$]", emailAddress, "[$MESSAGE_USER_NAME$]",
 			fullName);
 		subscriptionSenderPrototype.setFrom(fromAddress, fromName);
-		subscriptionSenderPrototype.setGroupId(message.getGroupId());
+		subscriptionSenderPrototype.setGroupId(groupId);
+		subscriptionSenderPrototype.setScopeGroupId(serviceContext.getScopeGroupId());
 		subscriptionSenderPrototype.setHtmlFormat(
 			MBUtil.getEmailHtmlFormat(preferences));
 		subscriptionSenderPrototype.setInReplyTo(inReplyTo);
