@@ -23,6 +23,8 @@ String typeSelection = request.getParameter("typeSelection");
 
 String callback = ParamUtil.getString(request, "callback");
 
+String refererEntryId = ParamUtil.getString(request, "refererEntryId");
+
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/portlet_configuration/search");
@@ -79,6 +81,10 @@ portletURL.setParameter("typeSelection", typeSelection);
 			}
 
 			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(typeSelection, assetEntryId);
+
+			if (Validator.isNotNull(refererEntryId) && (assetEntry.getEntryId() == Long.valueOf(refererEntryId))) {
+				continue;
+			}
 
 			assetEntry = assetEntry.toEscapedModel();
 
