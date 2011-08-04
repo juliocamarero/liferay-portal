@@ -94,7 +94,6 @@ public abstract class BaseAssetRendererFactory implements AssetRendererFactory {
 		return true;
 	}
 
-	@Override
 	public boolean isLinkable() {
 		return false;
 	}
