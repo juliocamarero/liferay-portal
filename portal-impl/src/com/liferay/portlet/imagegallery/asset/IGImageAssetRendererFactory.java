@@ -109,6 +109,11 @@ public class IGImageAssetRendererFactory extends BaseAssetRendererFactory {
 	}
 
 	@Override
+	public boolean isLinkable() {
+		return true;
+	}
+
+	@Override
 	protected String getIconPath(ThemeDisplay themeDisplay) {
 		return themeDisplay.getPathThemeImages() + "/file_system/small/bmp.png";
 	}
