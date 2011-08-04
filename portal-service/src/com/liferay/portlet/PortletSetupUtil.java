@@ -84,7 +84,7 @@ public class PortletSetupUtil {
 			String languageId = LocaleUtil.toLanguageId(locales[i]);
 
 			String title = portletSetup.getValue(
-				"portletSetupTitle" + languageId, null);
+				"portletSetupTitle_" + languageId, null);
 
 			if (Validator.isNotNull(languageId)) {
 				titles.put(languageId, title);

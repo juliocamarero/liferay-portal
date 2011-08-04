@@ -173,7 +173,7 @@ public class AddDefaultLayoutSetPrototypesAction extends SimpleAction {
 		preferences.put("classNameIds", String.valueOf(classNameId));
 
 		preferences.put(
-			"portletSetupTitle" + LocaleUtil.getDefault(),
+			"portletSetupTitle_" + LocaleUtil.getDefault(),
 			"Upcoming Events");
 		preferences.put(
 			"portletSetupUseCustomTitle", Boolean.TRUE.toString());

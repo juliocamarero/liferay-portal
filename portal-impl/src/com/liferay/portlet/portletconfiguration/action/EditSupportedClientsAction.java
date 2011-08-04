@@ -106,7 +106,7 @@ public class EditSupportedClientsAction extends EditConfigurationAction {
 
 		for (String portletMode : allPortletModes) {
 			String mobileDevicesParam =
-				"portletSetupSupportedClientsMobileDevices" + portletMode;
+				"portletSetupSupportedClientsMobileDevices_" + portletMode;
 
 			boolean mobileDevices = ParamUtil.getBoolean(
 				actionRequest, mobileDevicesParam);

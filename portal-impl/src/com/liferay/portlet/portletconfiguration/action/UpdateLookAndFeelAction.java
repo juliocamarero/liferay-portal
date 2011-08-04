@@ -113,10 +113,10 @@ public class UpdateLookAndFeelAction extends JSONAction {
 
 			if (Validator.isNotNull(title)) {
 				portletSetup.setValue(
-					"portletSetupTitle" + languageId, title);
+					"portletSetupTitle_" + languageId, title);
 			}
 			else {
-				portletSetup.reset("portletSetupTitle" + languageId);
+				portletSetup.reset("portletSetupTitle_" + languageId);
 			}
 		}
 

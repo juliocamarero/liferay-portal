@@ -1216,7 +1216,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 				try {
 					preferences.setValue(
-						"portletSetupTitle" + languageId, newPortletTitle);
+						"portletSetupTitle_" + languageId, newPortletTitle);
 					preferences.setValue(
 						"portletSetupUseCustomTitle",
 						Boolean.TRUE.toString());

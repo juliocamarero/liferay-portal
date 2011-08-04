@@ -68,10 +68,10 @@ public class PortletConfigurationUtil {
 			LocaleUtil.getDefault());
 
 		String defaultPortletTitle = portletSetup.getValue(
-			"portletSetupTitle" + defaultLanguageId, StringPool.BLANK);
+			"portletSetupTitle_" + defaultLanguageId, StringPool.BLANK);
 
 		String portletTitle = portletSetup.getValue(
-			"portletSetupTitle" + languageId, defaultPortletTitle);
+			"portletSetupTitle_" + languageId, defaultPortletTitle);
 
 		if (Validator.isNull(portletTitle)) {
 
@@ -87,7 +87,7 @@ public class PortletConfigurationUtil {
 
 				try {
 					portletSetup.setValue(
-						"portletSetupTitle" + defaultLanguageId,
+						"portletSetupTitle_" + defaultLanguageId,
 						portletTitle);
 					portletSetup.setValue(
 						"portletSetupUseCustomTitle", "true");
