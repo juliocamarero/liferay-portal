@@ -72,8 +72,6 @@ viewURL = _checkViewURL(viewURL, currentURL, themeDisplay);
 		<%
 		}
 		%>
-
-		<th></th>
 	</tr>
 </c:if>
 
@@ -174,8 +172,6 @@ viewURL = _checkViewURL(viewURL, currentURL, themeDisplay);
 			}
 		}
 		%>
-
-		<td></td>
 	</tr>
 </c:if>
 
