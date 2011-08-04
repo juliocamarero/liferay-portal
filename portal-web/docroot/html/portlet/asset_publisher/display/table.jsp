@@ -27,6 +27,8 @@ AssetRenderer assetRenderer = (AssetRenderer)request.getAttribute("view.jsp-asse
 
 String title = (String)request.getAttribute("view.jsp-title");
 
+request.setAttribute("view.jsp-showIconLabel", false);
+
 if (Validator.isNull(title)) {
 	title = assetRenderer.getTitle(locale);
 }
@@ -54,6 +56,9 @@ viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redi
 String viewURL = viewInContext ? assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString) : viewFullContentURL.toString();
 
 viewURL = _checkViewURL(viewURL, currentURL, themeDisplay);
+
+boolean hasStagingGroup = themeDisplay.getScopeGroup().isLayout() ? layout.getGroup().hasStagingGroup() : themeDisplay.getScopeGroup().hasStagingGroup();
+
 %>
 
 <c:if test="<%= assetEntryIndex == 0 %>">
@@ -72,6 +77,9 @@ viewURL = _checkViewURL(viewURL, currentURL, themeDisplay);
 		<%
 		}
 		%>
+		<c:if test="<%= assetRenderer.hasEditPermission(permissionChecker) && !(hasStagingGroup) %>">
+		<th></th>
+		</c:if>
 	</tr>
 </c:if>
 
@@ -172,6 +180,11 @@ viewURL = _checkViewURL(viewURL, currentURL, themeDisplay);
 			}
 		}
 		%>
+		<c:if test="<%= assetRenderer.hasEditPermission(permissionChecker) && !(hasStagingGroup) %>">
+		<td>
+			<liferay-util:include page="/html/portlet/asset_publisher/asset_actions.jsp" />
+		</td>
+		</c:if>
 	</tr>
 </c:if>
 
