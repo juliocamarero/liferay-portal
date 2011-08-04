@@ -101,6 +101,11 @@ public class CalEventAssetRendererFactory extends BaseAssetRendererFactory {
 	}
 
 	@Override
+	public boolean isLinkable() {
+		return true;
+	}
+
+	@Override
 	protected String getIconPath(ThemeDisplay themeDisplay) {
 		return themeDisplay.getPathThemeImages() + "/common/date.png";
 	}

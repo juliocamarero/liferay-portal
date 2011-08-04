@@ -94,6 +94,10 @@ public abstract class BaseAssetRendererFactory implements AssetRendererFactory {
 		return true;
 	}
 
+	public boolean isLinkable() {
+		return false;
+	}
+
 	public boolean isSelectable() {
 		return true;
 	}
