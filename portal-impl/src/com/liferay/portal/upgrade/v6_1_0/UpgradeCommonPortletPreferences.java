@@ -43,7 +43,7 @@ public class UpgradeCommonPortletPreferences
 		camelCasePreferencesNames.put("lfr-scope-uuid", "lfrScopeUuid");
 		camelCasePreferencesNames.put("lfr-sharing", "lfrSharing");
 		camelCasePreferencesNames.put(
-			"lfr-facebook-api-key", "lfr-facebook-api-key");
+			"lfr-facebook-api-key", "lfrFacebookApiKey");
 		camelCasePreferencesNames.put(
 			"lfr-facebook-canvas-page-url", "lfrFacebookCanvasPageUrl");
 		camelCasePreferencesNames.put(
