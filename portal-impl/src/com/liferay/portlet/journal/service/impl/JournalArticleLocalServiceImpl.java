@@ -2215,11 +2215,12 @@ public class JournalArticleLocalServiceImpl
 		if (addDraftAssetEntry) {
 			assetEntry = assetEntryLocalService.updateEntry(
 				userId, article.getGroupId(), JournalArticle.class.getName(),
-				article.getPrimaryKey(), article.getUuid(), assetCategoryIds,
+				article.getPrimaryKey(), article.getUuid(),
+				Long.parseLong(article.getStructureId()), assetCategoryIds,
 				assetTagNames, false, null, null, displayDate, expirationDate,
 				ContentTypes.TEXT_HTML, article.getTitle(),
-				article.getDescription(), article.getDescription(),
-				null, article.getLayoutUuid(), 0, 0, null, false);
+				article.getDescription(), article.getDescription(), null,
+				article.getLayoutUuid(), 0, 0, null, false);
 		}
 		else {
 			JournalArticleResource journalArticleResource =
@@ -2229,7 +2230,8 @@ public class JournalArticleLocalServiceImpl
 			assetEntry = assetEntryLocalService.updateEntry(
 				userId, article.getGroupId(), JournalArticle.class.getName(),
 				journalArticleResource.getResourcePrimKey(),
-				journalArticleResource.getUuid(), assetCategoryIds,
+				journalArticleResource.getUuid(),
+				Long.parseLong(article.getStructureId()), assetCategoryIds,
 				assetTagNames, visible, null, null, displayDate, expirationDate,
 				ContentTypes.TEXT_HTML, article.getTitle(),
 				article.getDescription(), article.getDescription(), null,
@@ -2346,6 +2348,7 @@ public class JournalArticleLocalServiceImpl
 								userId, article.getGroupId(),
 								JournalArticle.class.getName(),
 								article.getResourcePrimKey(), article.getUuid(),
+								Long.parseLong(article.getStructureId()),
 								assetCategoryIds, assetTagNames, visible, null,
 								null, displayDate, expirationDate,
 								ContentTypes.TEXT_HTML, article.getTitle(),
