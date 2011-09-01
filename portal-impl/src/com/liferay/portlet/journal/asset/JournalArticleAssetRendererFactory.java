@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -30,9 +31,11 @@ import com.liferay.portlet.asset.model.BaseAssetRendererFactory;
 import com.liferay.portlet.journal.NoSuchArticleException;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleResource;
+import com.liferay.portlet.journal.model.JournalStructure;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
+import com.liferay.portlet.journal.service.JournalStructureLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.service.permission.JournalPermission;
 
@@ -40,6 +43,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Julio Camarero
@@ -94,6 +99,24 @@ public class JournalArticleAssetRendererFactory
 
 	public String getClassName() {
 		return CLASS_NAME;
+	}
+
+	public List<KeyValuePair> getClassTypes(long[] groupIds)
+		throws SystemException {
+
+		List<KeyValuePair> classTypes = new ArrayList<KeyValuePair>();
+
+		for (long groupId : groupIds) {
+			List<JournalStructure> structures =
+				JournalStructureLocalServiceUtil.getStructures(groupId);
+
+			for (JournalStructure structure : structures) {
+				classTypes.add(new KeyValuePair(
+					String.valueOf(structure.getId()), structure.getName()));
+			}
+		}
+
+		return classTypes;
 	}
 
 	public String getType() {
