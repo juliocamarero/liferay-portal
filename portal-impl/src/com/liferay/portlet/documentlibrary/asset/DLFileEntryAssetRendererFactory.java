@@ -14,12 +14,14 @@
 
 package com.liferay.portlet.documentlibrary.asset;
 
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -30,7 +32,9 @@ import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.BaseAssetRendererFactory;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLPermission;
 
@@ -38,6 +42,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Julio Camarero
@@ -73,6 +79,26 @@ public class DLFileEntryAssetRendererFactory extends BaseAssetRendererFactory {
 
 	public String getClassName() {
 		return CLASS_NAME;
+	}
+
+	public List<KeyValuePair> getClassTypes(long[] groupIds)
+		throws SystemException {
+
+		List<KeyValuePair> classTypes = new ArrayList<KeyValuePair>();
+
+		for (long groupId : groupIds) {
+			List<DLFileEntryType> dlFileEntryTypes =
+				DLFileEntryTypeServiceUtil.getFileEntryTypes(
+					groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+			for (DLFileEntryType dlFileEntryType: dlFileEntryTypes) {
+				classTypes.add(new KeyValuePair(
+					String.valueOf(dlFileEntryType.getFileEntryTypeId()),
+					dlFileEntryType.getName()));
+			}
+		}
+
+		return classTypes;
 	}
 
 	public String getType() {

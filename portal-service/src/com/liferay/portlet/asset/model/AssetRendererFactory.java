@@ -18,10 +18,12 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.security.permission.PermissionChecker;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
+import java.util.List;
 
 /**
  * @author Jorge Ferrer
@@ -57,6 +59,9 @@ public interface AssetRendererFactory {
 	public String getIconPath(PortletRequest portletRequest);
 
 	public String getPortletId();
+
+	public List<KeyValuePair> getClassTypes(long[] groupIds)
+		throws SystemException;
 
 	public String getType();
 
