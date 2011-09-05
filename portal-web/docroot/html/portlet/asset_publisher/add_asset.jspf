@@ -135,6 +135,7 @@ public Map<String, PortletURL> getAddPortletURLs(LiferayPortletRequest liferayPo
 	Map<String, PortletURL> addPortletURLs = new TreeMap<String, PortletURL>(new ModelResourceComparator(themeDisplay.getLocale()));
 
 	ClassName dlFileEntryClassName = ClassNameServiceUtil.getClassName(DLFileEntry.class.getName());
+	ClassName journalArticleClassName = ClassNameServiceUtil.getClassName(JournalArticle.class.getName());
 
 	for (long classNameId : classNameIds) {
 		ClassName className = ClassNameServiceUtil.getClassName(classNameId);
@@ -156,26 +157,30 @@ public Map<String, PortletURL> getAddPortletURLs(LiferayPortletRequest liferayPo
 				}
 			}
 		}
+		else if (className.equals(journalArticleClassName)) {
+			List<JournalStructure> journalStructures = JournalStructureServiceUtil.getStructures(themeDisplay.getScopeGroupId());
+
+			for (JournalStructure journalStructure : journalStructures) {
+				PortletURL addPortletURL = getAddPortletURL(liferayPortletRequest, liferayPortletResponse, journalArticleClassName.getValue(), allAssetCategoryIds, allAssetTagNames, -1, journalStructure.getStructureId());
+
+				if (addPortletURL != null) {
+					String classNameValue = journalArticleClassName.getValue();
+
+					if (Validator.isNotNull(journalStructure.getName())) {
+						 classNameValue += _CLASSNAME_SEPARATOR + journalStructure.getName();
+					}
+
+					addPortletURLs.put(classNameValue, addPortletURL);
+				}
+			}
+
+		}
 		else {
 			PortletURL addPortletURL = getAddPortletURL(liferayPortletRequest, liferayPortletResponse, className.getValue(), allAssetCategoryIds, allAssetTagNames, -1, StringPool.BLANK);
 
 			if (addPortletURL != null) {
 				addPortletURLs.put(className.getValue(), addPortletURL);
 			}
-		}
-	}
-
-	ClassName journalArticleClassName = ClassNameServiceUtil.getClassName(JournalArticle.class.getName());
-
-	List<JournalStructure> journalStructures = JournalStructureServiceUtil.getStructures(themeDisplay.getScopeGroupId());
-
-	for (JournalStructure journalStructure : journalStructures) {
-		PortletURL addPortletURL = getAddPortletURL(liferayPortletRequest, liferayPortletResponse, journalArticleClassName.getValue(), allAssetCategoryIds, allAssetTagNames, -1, journalStructure.getStructureId());
-
-		if (addPortletURL != null) {
-			String classNameValue = journalArticleClassName.getValue() + _CLASSNAME_SEPARATOR + journalStructure.getName(themeDisplay.getLocale());
-
-			addPortletURLs.put(classNameValue, addPortletURL);
 		}
 	}
 
