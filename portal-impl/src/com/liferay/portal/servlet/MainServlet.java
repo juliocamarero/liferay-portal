@@ -14,6 +14,31 @@
 
 package com.liferay.portal.servlet;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.PageContext;
+
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionServlet;
+import org.apache.struts.action.RequestProcessor;
+import org.apache.struts.config.ControllerConfig;
+import org.apache.struts.config.ModuleConfig;
+import org.apache.struts.tiles.TilesUtilImpl;
+
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.events.EventsProcessorUtil;
 import com.liferay.portal.events.StartupAction;
@@ -77,6 +102,8 @@ import com.liferay.portal.service.ThemeLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.servlet.filters.absoluteredirects.AbsoluteRedirectsResponse;
 import com.liferay.portal.servlet.filters.i18n.I18nFilter;
+import com.liferay.portal.setup.SetupConstants;
+import com.liferay.portal.setup.SetupTasks;
 import com.liferay.portal.struts.PortletRequestProcessor;
 import com.liferay.portal.struts.StrutsUtil;
 import com.liferay.portal.util.ExtRegistry;
@@ -97,33 +124,6 @@ import com.liferay.portlet.social.messaging.CheckEquityLogMessageListener;
 import com.liferay.util.ContentUtil;
 import com.liferay.util.servlet.DynamicServletRequest;
 import com.liferay.util.servlet.EncryptedServletRequest;
-
-import java.io.IOException;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletException;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.PageContext;
-
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.action.RequestProcessor;
-import org.apache.struts.config.ControllerConfig;
-import org.apache.struts.config.ModuleConfig;
-import org.apache.struts.tiles.TilesUtilImpl;
 
 /**
  * @author Brian Wing Shun Chan
@@ -358,6 +358,14 @@ public class MainServlet extends ActionServlet {
 		catch (Exception e) {
 			_log.error(e, e);
 		}
+		
+		boolean setupEnabled = PropsValues.SETUP_WIZARD_ENABLED;
+		
+		this.getServletContext().setAttribute(
+			SetupConstants.LIFERAY_SETUP_ENABLED, setupEnabled);
+		
+		this.getServletContext().setAttribute(
+			SetupConstants.LIFERAY_STARTUP_FINISHED, true);
 	}
 
 	@Override
@@ -385,6 +393,14 @@ public class MainServlet extends ActionServlet {
 			return;
 		}
 
+		if (processSetupRequest(request, response)) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Processed setup request");
+			}
+			
+			return;
+		}
+		
 		if (_log.isDebugEnabled()) {
 			_log.debug("Get company id");
 		}
@@ -1246,6 +1262,61 @@ public class MainServlet extends ActionServlet {
 		response.sendRedirect(redirect);
 	}
 
+	protected boolean processSetupRequest (
+			HttpServletRequest request, HttpServletResponse response) 
+		throws IOException, ServletException  {
+		
+		boolean startupFinished = 
+			(Boolean)this.getServletContext().getAttribute(
+				SetupConstants.LIFERAY_STARTUP_FINISHED);
+		
+		boolean setupEnabled = (Boolean)this.getServletContext().getAttribute(
+				SetupConstants.LIFERAY_SETUP_ENABLED);
+		
+		if (!startupFinished || !setupEnabled) {
+			return false;
+		}
+		
+		int cmd = ParamUtil.getInteger(
+			request, SetupConstants.SETUP_WIZARD_CMD);
+		
+		String redirect = SetupConstants.SETUP_WIZARD_PAGE_0;
+		
+		switch (cmd) {
+			case SetupConstants.SETUP_WIZARD_STEP_0:
+				SetupTasks.init(request);
+				
+				break;
+			case SetupConstants.SETUP_WIZARD_STEP_2:
+				
+				// process tasks
+				
+				SetupTasks.configDatabase(request);
+				SetupTasks.configAdministrator(request);
+				SetupTasks.configPortal(request);
+			
+				// disable setup
+				
+				this.getServletContext().setAttribute(
+					SetupConstants.LIFERAY_SETUP_ENABLED, false);
+				
+				break;
+			case SetupConstants.SETUP_WIZARD_STEP_3:
+				SetupTasks.end(request);
+				
+				break;
+		}
+		
+		if (Validator.isNotNull(redirect)) {
+			RequestDispatcher requestDispatcher =
+				getServletContext().getRequestDispatcher(redirect);
+	
+			requestDispatcher.forward(request, response);
+		}
+		
+		return true;	
+	}
+	
 	protected boolean processShutdownRequest(
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {

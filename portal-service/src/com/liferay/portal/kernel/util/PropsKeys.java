@@ -830,7 +830,7 @@ public interface PropsKeys {
 	public static final String JCR_WORKSPACE_NAME = "jcr.workspace.name";
 
 	public static final String JDBC_DEFAULT_LIFERAY_POOL_PROVIDER = "jdbc.default.liferay.pool.provider";
-
+	
 	public static final String JOURNAL_ARTICLE_CHECK_INTERVAL = "journal.article.check.interval";
 
 	public static final String JOURNAL_ARTICLE_COMMENTS_ENABLED = "journal.article.comments.enabled";
@@ -1701,6 +1701,26 @@ public interface PropsKeys {
 
 	public static final String SESSION_VERIFY_SERIALIZABLE_ATTRIBUTE = "session.verify.serializable.attribute";
 
+	public static final String SETUP_ADMIN_EMAIL = "setup.admin.email";
+	
+	public static final String SETUP_ADMIN_PASSWORD = "setup.admin.password";
+	
+	public static final String SETUP_ADMIN_USERNAME = "setup.admin.username";
+	
+	public static final String SETUP_DATABASE_DRIVER = "setup.database.driver";
+	
+	public static final String SETUP_DATABASE_DRIVERS_LIST = "setup.database.drivers.list";
+	
+	public static final String SETUP_DATABASE_NAME = "setup.database.name";
+	
+	public static final String SETUP_DATABASE_PASSWORD = "setup.database.password";
+	
+	public static final String SETUP_DATABASE_USERNAME = "setup.database.username";
+	
+	public static final String SETUP_PORTAL_SITENAME = "setup.portal.sitename";
+	
+	public static final String SETUP_WIZARD_ENABLED = "setup.wizard.enabled";
+	
 	public static final String SHARD_DEFAULT_NAME = "shard.default.name";
 
 	public static final String SHARD_SELECTOR = "shard.selector";
