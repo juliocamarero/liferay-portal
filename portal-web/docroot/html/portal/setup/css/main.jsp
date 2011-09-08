@@ -110,7 +110,7 @@ body{
 
 .msg-alert {
 	background: #FFC url(/html/portal/setup/images/alert.png) no-repeat 6px 20%;
-	border-color: #FC0;
+	border: 1px solid #FC0;
 	display: block;
 	font-weight: bold;
 	margin: 2px auto 14px;

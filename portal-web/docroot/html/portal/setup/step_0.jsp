@@ -39,7 +39,7 @@
 		</script>
 	</head>
 	<body>
-		<div id="wrapper">
+		<div id="wrapper" style="padding-left: 2%; padding-right: 2%">
 			<header id="banner" role="banner">
 				<hgroup id="heading">
 					<h1 class="company-title">
@@ -71,7 +71,7 @@
 								</div>
 								<div style="float:right; width: 49%">
 									<img id="wrapper-image" src="/html/themes/classic/_diffs/images/screenshot.png" 
-										style="width:75%; height: 75%" alt="Liferay Portal Example" title="Liferay Portal Example"/>
+										style="width:75%;%" alt="Liferay Portal Example" title="Liferay Portal Example"/>
 								</div>
 							</div>
 						</c:when>

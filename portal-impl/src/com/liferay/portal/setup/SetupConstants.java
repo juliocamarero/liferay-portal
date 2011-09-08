@@ -26,6 +26,9 @@ public class SetupConstants {
 	
 	public static final String LIFERAY_SETUP_ENABLED = "LIFERAY_SETUP_ENABLED";
 	
+	public static final String LIFERAY_SETUP_PROPS_FILE = 
+		"portal-wizard.properties";
+	
 	public static final String LIFERAY_STARTUP_FINISHED = 
 		"LIFERAY_STARTUP_FINISHED";
 	

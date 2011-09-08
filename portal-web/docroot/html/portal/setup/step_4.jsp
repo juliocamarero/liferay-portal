@@ -20,17 +20,26 @@
 	<span class="bigger">Congratulations!!</span> Your configuration has finished successly.
 </div>
 <div class="msg-alert">
-	You <strong>MUST</strong> create a file named "portal-ext.properties", with the following lines into /WEB-INF/classes.
+	A <%= SetupConstants.LIFERAY_SETUP_PROPS_FILE %></span> file has been created for you into /WEB-INF/classes with the following lines.
 	<br/>
-	Then <strong>RESTART</strong> the application server.
+	The application Server <span class="bigger">MUST BE RESTARTED</span> to apply changes.
+</div>
+<div id="wrapper-button" style="text-align: center; padding-bottom: 15px">
+	<%
+		String onclickPortal = "javascript:processStep('" + SetupConstants.SETUP_WIZARD_STEP_3 + "')";
+		String buttonValue = "Go to " + portalInputs.get_portalname() + " !!";
+	%>
+	<aui:button name="btn_go_to_portal" 
+		onClick="<%= onclickPortal %>"
+		value="<%= buttonValue %>"/>
 </div>
 <div id="setup-summary">
 	<h2 class="fieldset-header first">
-		Your custom portal-ext.properties
+		Your custom portal-wizard.properties
 	</h2>
 	<aui:fieldset>
 		<div class="wrapper last">
-			<aui:input type="textarea" name="portal-ext" id="portal-ext" value="<%= setupConfiguration.toProperties() %>"
+			<aui:input type="textarea" name="portal-wizard" id="portal-wizard" value="<%= setupConfiguration.toProperties() %>"
 				style='<%= "height: " + ModelHintsConstants.TEXTAREA_DISPLAY_HEIGHT + "px; width: 90%;" %>' 
 				wrap="soft" />
 		</div>
@@ -73,13 +82,4 @@
 			</ul>
 		</div>
 	</aui:fieldset>
-</div>
-<div id="wrapper-button">
-	<%
-		String onclickPortal = "javascript:processStep('" + SetupConstants.SETUP_WIZARD_STEP_3 + "')";
-		String buttonValue = "Go to " + portalInputs.get_portalname() + " !!";
-	%>
-	<aui:button name="btn_go_to_portal" 
-		onClick="<%= onclickPortal %>"
-		value="<%= buttonValue %>"/>
 </div>

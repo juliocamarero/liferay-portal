@@ -84,6 +84,9 @@ public class SetupDatabaseInputs {
 			driverClassName += "org.hsqldb.jdbcDriver";
 			url += "jdbc:hsqldb:" + PropsValues.LIFERAY_HOME +
 				"/data/hsql/" + this.get_database();
+			
+			_username = "sa";
+			_password = "";
 		}
 		else if ("Ingres".equalsIgnoreCase(this.get_driver())) {
 			driverClassName += "com.ingres.jdbc.IngresDriver";

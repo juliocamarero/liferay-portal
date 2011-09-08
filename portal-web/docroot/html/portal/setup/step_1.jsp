@@ -22,8 +22,11 @@
 		<tr>
 			<td>
 				<aui:select label="Driver" name="setup_wizard.db.driver" id="setup_wizard.db.driver">
-				<% for (String driver : drivers) { %>
-					<option value="<%= driver.toLowerCase().replaceAll(" ","") %>"><%= driver %></option>
+				<% for (String driver : drivers) {
+						String value = driver.toLowerCase().replaceAll(" ","");
+						boolean selected = (databaseInputs.get_driver().equals(value));
+				%>
+					<option value="<%= value %>" <%= selected ? "selected='true'" : "" %>><%= driver %></option>
 				<% } %>
 				</aui:select>
 				<span class="tooltip">If your driver is not supported directly by Liferay, you'll have to install it in your App Server.</span>

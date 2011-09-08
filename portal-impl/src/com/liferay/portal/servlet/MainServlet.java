@@ -1300,6 +1300,10 @@ public class MainServlet extends ActionServlet {
 				this.getServletContext().setAttribute(
 					SetupConstants.LIFERAY_SETUP_ENABLED, false);
 				
+				// write props to file
+				
+				SetupTasks.writeSetupWizardFile();
+				
 				break;
 			case SetupConstants.SETUP_WIZARD_STEP_3:
 				SetupTasks.end(request);

@@ -19,9 +19,18 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
+
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.util.PropsValues;
 
 public class SetupTasks {
 
@@ -101,5 +110,32 @@ public class SetupTasks {
 			SetupConstants.LIFERAY_SETUP_DRIVERS, drivers );
 	}
 
+	public static void writeSetupWizardFile()
+	{
+		String path = PropsValues.LIFERAY_WEB_PORTAL_DIR+"WEB-INF/classes/" +
+			SetupConstants.LIFERAY_SETUP_PROPS_FILE;
+		
+		FileWriter fileWriter = null;
+		BufferedWriter out = null;
+
+		try {
+			fileWriter = new FileWriter(path);
+			out = new BufferedWriter(fileWriter);
+			
+			out.write(_setup.toProperties());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if (out != null) {
+					out.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	private static SetupConfiguration _setup;
 }
