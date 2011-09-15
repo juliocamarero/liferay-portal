@@ -1808,11 +1808,12 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				message.getUserId(), StringPool.BLANK);
 		}
 
-		String fromName = PrefsPropsUtil.getString(
+		String fromName = PrefsPropsUtil.getStringFromNames(
 			message.getCompanyId(), PropsKeys.ADMIN_EMAIL_FROM_NAME);
-		String fromAddress = PrefsPropsUtil.getString(
-			message.getCompanyId(), PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
 
+		String fromAddress = PrefsPropsUtil.getStringFromNames(
+			message.getCompanyId(), PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+			
 		String subject = PrefsPropsUtil.getContent(
 			message.getCompanyId(), PropsKeys.DISCUSSION_EMAIL_SUBJECT);
 		String body = PrefsPropsUtil.getContent(
