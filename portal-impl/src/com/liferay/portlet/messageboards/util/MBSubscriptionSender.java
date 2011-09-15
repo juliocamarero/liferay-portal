@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.Account;
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.mail.SMTPAccount;
+import com.liferay.portal.kernel.parsers.bbcode.BBCodeUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.SubscriptionSender;
 import com.liferay.portlet.messageboards.NoSuchMailingListException;
@@ -96,7 +97,7 @@ public class MBSubscriptionSender extends SubscriptionSender {
 		if (htmlFormat) {
 			try {
 				String processedBody = BBCodeUtil.getHTML(
-					mailMessage.getBody());
+						mailMessage.getBody());
 
 				mailMessage.setBody(processedBody);
 			}

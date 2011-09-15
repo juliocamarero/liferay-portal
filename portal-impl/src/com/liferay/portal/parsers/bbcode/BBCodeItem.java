@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
@@ -12,19 +11,34 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portal/init.jsp" %>
+package com.liferay.portal.parsers.bbcode;
 
-<%@ page import="com.liferay.portal.kernel.parsers.bbcode.BBCodeUtil" %>
+/**
+ * @author Iliyan Peychev
+ */
+public class BBCodeItem {
 
-<%
-for (int i = 0; i < BBCodeUtil.EMOTICONS.length; i++) {
-	String image = StringUtil.replace(BBCodeUtil.EMOTICONS[i][0], "@theme_images_path@", themeDisplay.getPathThemeImages());
-%>
+	public BBCodeItem(int type, String attribute, String value) {
+		_attribute = attribute;
+		_type = type;
+		_value = value;
+	}
 
-	<a class="lfr-button emoticon" emoticonCode="<%= BBCodeUtil.EMOTICONS[i][1] %>"><%= image %></a>
+	public String getAttribute() {
+		return _attribute;
+	}
 
-<%
+	public int getType() {
+		return _type;
+	}
+
+	public String getValue() {
+		return _value;
+	}
+
+	private String _attribute;
+	private int _type;
+	private String _value;
+
 }
-%>
