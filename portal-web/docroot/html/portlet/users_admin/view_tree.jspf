@@ -380,7 +380,7 @@ int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCom
 
 					<%= usersTitle %>
 
-					<c:if test="<%= organization == null && showOrganizations %>">
+					<c:if test="<%= organization == null %>">
 						<span class="view-all-link">(<a href="<%= viewUsersURL %>" id="<portlet:namespace />allUsersLink"><liferay-ui:message key="view-all-users" /></a>)</span>
 					</c:if>
 				</liferay-util:buffer>
