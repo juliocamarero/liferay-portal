@@ -339,7 +339,7 @@ int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCom
 							<portlet:param name="saveUsersListView" value="<%= Boolean.TRUE.toString() %>" />
 						</portlet:renderURL>
 
-						<span class="view-all-link">(<a href="<%= viewOrgsURL %>" id="<portlet:namespace />allOrganizationsLink"><liferay-ui:message key="view-all-organizations" /></a>)</span>
+						<span class="view-all-link">(<a href="<%= viewOrgsURL %>" id="<portlet:namespace />allOrganizationsLink"><liferay-ui:message key="search-all-organizations" /></a>)</span>
 					</c:if>
 				</liferay-util:buffer>
 
@@ -381,7 +381,7 @@ int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCom
 					<%= usersTitle %>
 
 					<c:if test="<%= organization == null %>">
-						<span class="view-all-link">(<a href="<%= viewUsersURL %>" id="<portlet:namespace />allUsersLink"><liferay-ui:message key="view-all-users" /></a>)</span>
+						<span class="view-all-link">(<a href="<%= viewUsersURL %>" id="<portlet:namespace />allUsersLink"><liferay-ui:message key="search-all-users" /></a>)</span>
 					</c:if>
 				</liferay-util:buffer>
 
