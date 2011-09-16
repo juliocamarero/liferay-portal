@@ -14,6 +14,7 @@
  */
 --%>
 
+<%@page import="com.liferay.portal.kernel.util.StringPool"%>
 <%
 long organizationId = ParamUtil.getLong(request, "organizationId", OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID);
 
@@ -304,6 +305,8 @@ int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCom
 					showUsers = true;
 				}
 			}
+			
+			String keywords = ParamUtil.getString(request, "keywords");
 			%>
 
 			<c:if test="<%= showOrganizations %>">
@@ -311,8 +314,11 @@ int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCom
 
 					<%
 					String organizationsTitle = null;
-
-					if (organization == null) {
+					
+					if (keywords != StringPool.BLANK){
+						organizationsTitle = LanguageUtil.get(pageContext,"organizations");
+					}
+					else if (organization == null) {
 						organizationsTitle = LanguageUtil.get(pageContext,"top-level-organizations");
 					}
 					else if (organizationsCount == 1) {
@@ -333,7 +339,7 @@ int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCom
 							<portlet:param name="saveUsersListView" value="<%= Boolean.TRUE.toString() %>" />
 						</portlet:renderURL>
 
-						<span class="view-all-link">(<a href="<%= viewOrgsURL %>" id="<portlet:namespace />allOrganizationsLink"><liferay-ui:message key="view-all-organizations" /></a>)</span>
+						<span class="view-all-link">(<a href="<%= viewOrgsURL %>" id="<portlet:namespace />allOrganizationsLink"><liferay-ui:message key="search-all-organizations" /></a>)</span>
 					</c:if>
 				</liferay-util:buffer>
 
@@ -355,7 +361,7 @@ int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCom
 					<%
 					String usersTitle = null;
 
-					if (organization == null && organizationsCount == 0) {
+					if ((organization == null && organizationsCount == 0) || (keywords != StringPool.BLANK)) {
 						usersTitle = LanguageUtil.get(pageContext, "users");
 					}
 					else if (organization == null) {
@@ -374,8 +380,8 @@ int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCom
 
 					<%= usersTitle %>
 
-					<c:if test="<%= organization == null && showOrganizations %>">
-						<span class="view-all-link">(<a href="<%= viewUsersURL %>" id="<portlet:namespace />allUsersLink"><liferay-ui:message key="view-all-users" /></a>)</span>
+					<c:if test="<%= organization == null %>">
+						<span class="view-all-link">(<a href="<%= viewUsersURL %>" id="<portlet:namespace />allUsersLink"><liferay-ui:message key="search-all-users" /></a>)</span>
 					</c:if>
 				</liferay-util:buffer>
 
