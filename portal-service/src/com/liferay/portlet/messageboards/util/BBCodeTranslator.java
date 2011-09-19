@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
@@ -12,19 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portal/init.jsp" %>
+package com.liferay.portlet.messageboards.util;
 
-<%@ page import="com.liferay.portal.kernel.parsers.bbcode.BBCodeUtil" %>
-
-<%
-for (int i = 0; i < BBCodeUtil.EMOTICONS.length; i++) {
-	String image = StringUtil.replace(BBCodeUtil.EMOTICONS[i][0], "@theme_images_path@", themeDisplay.getPathThemeImages());
-%>
-
-	<a class="lfr-button emoticon" emoticonCode="<%= BBCodeUtil.EMOTICONS[i][1] %>"><%= image %></a>
-
-<%
+/**
+ * @author Iliyan Peychev
+ * @author Miguel Pastor
+ */
+public interface BBCodeTranslator {
+	public String parse(String message);
 }
-%>
