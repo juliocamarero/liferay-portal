@@ -33,13 +33,14 @@ public class ValidatorTagImpl
 	public ValidatorTagImpl() {
 	}
 
-	public ValidatorTagImpl(String name, String errorMessage, String body) {
+	public ValidatorTagImpl(
+		String name, String errorMessage, String body, boolean isCustom) {
+
 		setName(name);
 		setErrorMessage(errorMessage);
 
 		_body = body;
-
-		processCustom();
+		_custom = isCustom;
 	}
 
 	@Override
@@ -66,10 +67,10 @@ public class ValidatorTagImpl
 		InputTag inputTag = (InputTag)findAncestorWithClass(
 			this, InputTag.class);
 
-		String name = getName();
+		String name = processCustom(getName());
 
 		ValidatorTag validatorTag = new ValidatorTagImpl(
-			name, getErrorMessage(), _body);
+			name, getErrorMessage(), _body, _custom);
 
 		inputTag.addValidatorTag(name, validatorTag);
 
@@ -103,16 +104,16 @@ public class ValidatorTagImpl
 		_body = body;
 	}
 
-	protected void processCustom() {
-		String name = getName();
-
+	protected String processCustom(String name) {
 		if (name.equals("custom")) {
 			_custom = true;
 
-			setName(
-				name.concat(StringPool.UNDERLINE).concat(
-					PwdGenerator.getPassword(PwdGenerator.KEY3, 4)));
+			return name.concat(
+				StringPool.UNDERLINE).concat(
+					PwdGenerator.getPassword(PwdGenerator.KEY3, 4));
 		}
+
+		return name;
 	}
 
 	private String _body;

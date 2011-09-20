@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
@@ -27,6 +28,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReader;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.util.PropsUtil;
+import com.liferay.util.PwdGenerator;
 
 import java.io.InputStream;
 
@@ -345,10 +347,15 @@ public class ModelHintsImpl implements ModelHints {
 						validator.attributeValue("error-message"));
 					String validatorValue = GetterUtil.getString(
 						validator.getText());
+					boolean isCustomValidator = isCustom(validatorName);
+
+					if (isCustomValidator) {
+						validatorName = processCustomName(validatorName);
+					}
 
 					Tuple fieldValidator = new Tuple(
 						fieldName, validatorName, validatorErrorMessage,
-						validatorValue);
+						validatorValue, isCustomValidator);
 
 					fieldValidators.put(validatorName, fieldValidator);
 				}
@@ -397,6 +404,20 @@ public class ModelHintsImpl implements ModelHints {
 		else {
 			return value;
 		}
+	}
+
+	protected boolean isCustom(String validatorName) {
+		if (validatorName.equals("custom")) {
+			return true;
+		}
+
+		return false;
+	}
+
+	protected String processCustomName(String validatorName) {
+		return validatorName.concat(
+			StringPool.UNDERLINE).concat(
+				PwdGenerator.getPassword(PwdGenerator.KEY3, 4));
 	}
 
 	private static final String _ELEMENTS_SUFFIX = "_ELEMENTS";
