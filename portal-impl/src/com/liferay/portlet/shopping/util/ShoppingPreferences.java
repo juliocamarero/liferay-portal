@@ -281,11 +281,11 @@ public class ShoppingPreferences {
 
 	public double getMinOrder() {
 		return GetterUtil.getDouble(_portletPreferences.getValue(
-			"min-order", StringPool.BLANK));
+			"minOrder", StringPool.BLANK));
 	}
 
 	public void setMinOrder(double minOrder) throws ReadOnlyException {
-		_portletPreferences.setValue("min-order", String.valueOf(minOrder));
+		_portletPreferences.setValue("minOrder", String.valueOf(minOrder));
 	}
 
 	public String getEmailFromAddress() {
