@@ -23,6 +23,8 @@ String referringPortletResource = ParamUtil.getString(request, "referringPortlet
 
 FileEntry fileEntry = (FileEntry)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FILE_ENTRY);
 
+String viewTitle = PortletKeys.IMAGE_GALLERY_DISPLAY.equals(portletName)?"add-multiple-media":"add-multiple-documents";
+
 long repositoryId = BeanParamUtil.getLong(fileEntry, request, "repositoryId");
 
 if (repositoryId <= 0) {
@@ -41,7 +43,7 @@ long folderId = BeanParamUtil.getLong(fileEntry, request, "folderId");
 
 <liferay-ui:header
 	backURL="<%= backURL %>"
-	title="add-multiple-documents"
+	title="<%= viewTitle %>"
 />
 
 <aui:layout>
