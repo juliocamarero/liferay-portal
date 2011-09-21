@@ -20,6 +20,8 @@
 <%@ page import="com.liferay.portal.model.LayoutSet" %>
 <%@ page import="com.liferay.portal.service.LayoutLocalServiceUtil" %>
 <%@ page import="com.liferay.portal.util.PortalUtil" %>
+<%@ page import="com.liferay.portal.events.ServicePreAction" %>
+<%@ page import="com.liferay.portal.theme.ThemeDisplay" %>
 <%@ page import="com.liferay.portal.util.WebKeys" %>
 
 <%
@@ -39,8 +41,12 @@ if (layoutSet != null) {
 
 	if (defaultPlid != LayoutConstants.DEFAULT_PLID) {
 		Layout layout = LayoutLocalServiceUtil.getLayout(defaultPlid);
+		
+		ServicePreAction servicePreAction = new ServicePreAction();
+		
+		ThemeDisplay themeDisplay = servicePreAction.initThemeDisplay(request, response);
 
-		redirect = layout.getFriendlyURL();
+		redirect = PortalUtil.getLayoutURL(layout, themeDisplay);
 	}
 	else {
 		redirect = PortalUtil.getPathMain();
