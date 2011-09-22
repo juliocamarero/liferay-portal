@@ -42,6 +42,23 @@ public class CookieUtil {
 		}
 	}
 
+	public static Cookie deleteCookie(
+		HttpServletRequest request, String name) {
+
+		Map<String, Cookie> cookieMap = _getCookieMap(request);
+
+		Cookie cookie = cookieMap.get(name.toUpperCase());
+
+		if (cookie == null) {
+			return null;
+		}
+		else {
+			cookie.setMaxAge(0);
+
+			return cookie;
+		}
+	}
+
 	private static Map<String, Cookie> _getCookieMap(
 		HttpServletRequest request) {
 

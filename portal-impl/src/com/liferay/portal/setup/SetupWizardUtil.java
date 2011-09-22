@@ -14,23 +14,36 @@
 
 package com.liferay.portal.setup;
 
+import com.liferay.portal.dao.jdbc.util.DataSourceSwapUtil;
+import com.liferay.portal.events.StartupAction;
+import com.liferay.portal.kernel.cache.CacheRegistryUtil;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.CentralizedThreadLocal;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropertiesParamUtil;
+import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
 import com.liferay.portal.security.auth.FullNameGenerator;
 import com.liferay.portal.security.auth.FullNameGeneratorFactory;
 import com.liferay.portal.security.auth.ScreenNameGenerator;
 import com.liferay.portal.security.auth.ScreenNameGeneratorFactory;
+import com.liferay.portal.service.QuartzLocalServiceUtil;
+import com.liferay.portal.util.CookieKeys;
+import com.liferay.portal.util.PortalInstances;
+import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.util.CookieUtil;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,7 +61,9 @@ public class SetupWizardUtil {
 
 	private final static String _PROPERTIES_PREFIX = "properties--";
 
-	public static void processProperties(HttpServletRequest request) {
+	public static void processSetup(HttpServletRequest request)
+		throws Exception {
+
 		UnicodeProperties unicodeProperties =
 			PropertiesParamUtil.getProperties(request, _PROPERTIES_PREFIX);
 
@@ -59,6 +74,10 @@ public class SetupWizardUtil {
 			PropsKeys.SETUP_WIZARD_ENABLED, String.valueOf(false));
 
 		boolean updatedPropertiesFile = _writePropertiesFile(unicodeProperties);
+
+		_processContextReload(request, unicodeProperties);
+
+		_deleteCookies(request);
 
 		request.setAttribute(
 			WebKeys.SETUP_WIZARD_PROPERTIES_UPDATED,
@@ -74,6 +93,18 @@ public class SetupWizardUtil {
 		name = _PROPERTIES_PREFIX.concat(name).concat(StringPool.DOUBLE_DASH);
 
 		return ParamUtil.getString(request, name);
+	}
+
+	private static void _deleteCookies(HttpServletRequest request) {
+		CookieUtil.deleteCookie(request, CookieKeys.COMPANY_ID);
+		CookieUtil.deleteCookie(request, CookieKeys.COOKIE_SUPPORT);
+		CookieUtil.deleteCookie(request, CookieKeys.GUEST_LANGUAGE_ID);
+		CookieUtil.deleteCookie(request, CookieKeys.ID);
+		CookieUtil.deleteCookie(request, CookieKeys.JSESSIONID);
+		CookieUtil.deleteCookie(request, CookieKeys.LOGIN);
+		CookieUtil.deleteCookie(request, CookieKeys.PASSWORD);
+		CookieUtil.deleteCookie(request, CookieKeys.REMEMBER_ME);
+		CookieUtil.deleteCookie(request, CookieKeys.SCREEN_NAME);
 	}
 
 	private static void _processAdminProperties(
@@ -114,8 +145,37 @@ public class SetupWizardUtil {
 			PropsKeys.DEFAULT_ADMIN_SCREEN_NAME, defaultAdminScreenName);
 	}
 
+	private static void _processContextReload(
+			HttpServletRequest request, UnicodeProperties unicodeProperties)
+		throws Exception {
+
+		// Swap datasource
+
+		Properties jdbcProperties = new Properties();
+		jdbcProperties.putAll(unicodeProperties);
+		jdbcProperties = PropertiesUtil.getProperties(
+			jdbcProperties,"jdbc.default.",true);
+
+		DataSourceSwapUtil.swapCounterDataSource(jdbcProperties);
+		DataSourceSwapUtil.swapPortalDataSource(jdbcProperties);
+
+		// Clear caches
+
+		CacheRegistryUtil.clear();
+		MultiVMPoolUtil.clear();
+		WebCachePoolUtil.clear();
+		CentralizedThreadLocal.clearShortLivedThreadLocals();
+
+		// Rebuild database and loading data
+
+		QuartzLocalServiceUtil.checkQuartzTables();
+		new StartupAction().run(null);
+		PortalInstances.reload(request.getSession().getServletContext());
+	}
+
 	private static void _processDatabaseProperties(
-		HttpServletRequest request, UnicodeProperties properties) {
+			HttpServletRequest request, UnicodeProperties properties)
+		throws Exception {
 
 		boolean defaultDatabase = ParamUtil.getBoolean(
 			request, "defaultDatabase", true);

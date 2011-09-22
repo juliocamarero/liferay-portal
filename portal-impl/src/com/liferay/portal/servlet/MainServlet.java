@@ -81,6 +81,7 @@ import com.liferay.portal.servlet.filters.i18n.I18nFilter;
 import com.liferay.portal.setup.SetupWizardUtil;
 import com.liferay.portal.struts.PortletRequestProcessor;
 import com.liferay.portal.struts.StrutsUtil;
+import com.liferay.portal.util.CookieKeys;
 import com.liferay.portal.util.ExtRegistry;
 import com.liferay.portal.util.MaintenanceUtil;
 import com.liferay.portal.util.Portal;
@@ -97,6 +98,7 @@ import com.liferay.portlet.PortletInstanceFactoryUtil;
 import com.liferay.portlet.PortletURLListenerFactory;
 import com.liferay.portlet.social.messaging.CheckEquityLogMessageListener;
 import com.liferay.util.ContentUtil;
+import com.liferay.util.CookieUtil;
 import com.liferay.util.servlet.DynamicServletRequest;
 import com.liferay.util.servlet.EncryptedServletRequest;
 
@@ -1280,7 +1282,15 @@ public class MainServlet extends ActionServlet {
 		String cmd = ParamUtil.getString(request, Constants.CMD);
 
 		if (cmd.equals(Constants.UPDATE)) {
-			SetupWizardUtil.processProperties(request);
+			try {
+				SetupWizardUtil.processSetup(request);
+
+				// Kill current session to remove company id saved in cookies
+				request.getSession().invalidate();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			servletContext.setAttribute(WebKeys.SETUP_WIZARD_FINISHED, true);
 		}
