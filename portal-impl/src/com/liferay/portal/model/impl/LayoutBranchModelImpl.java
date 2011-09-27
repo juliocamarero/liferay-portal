@@ -86,9 +86,10 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.portal.util.PropsUtil.get(
 				"value.object.column.bitmask.enabled.com.liferay.portal.model.LayoutBranch"),
 			true);
-	public static long PLID_COLUMN_BITMASK = 1L;
-	public static long LAYOUTSETBRANCHID_COLUMN_BITMASK = 2L;
-	public static long MASTER_COLUMN_BITMASK = 4L;
+	public static long NAME_COLUMN_BITMASK = 1L;
+	public static long PLID_COLUMN_BITMASK = 2L;
+	public static long LAYOUTSETBRANCHID_COLUMN_BITMASK = 4L;
+	public static long MASTER_COLUMN_BITMASK = 8L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -270,7 +271,17 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 	}
 
 	public void setName(String name) {
+		_columnBitmask |= NAME_COLUMN_BITMASK;
+
+		if (_originalName == null) {
+			_originalName = _name;
+		}
+
 		_name = name;
+	}
+
+	public String getOriginalName() {
+		return GetterUtil.getString(_originalName);
 	}
 
 	@JSON
@@ -423,6 +434,8 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 
 		layoutBranchModelImpl._setOriginalPlid = false;
 
+		layoutBranchModelImpl._originalName = layoutBranchModelImpl._name;
+
 		layoutBranchModelImpl._originalMaster = layoutBranchModelImpl._master;
 
 		layoutBranchModelImpl._setOriginalMaster = false;
@@ -574,6 +587,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 	private long _originalPlid;
 	private boolean _setOriginalPlid;
 	private String _name;
+	private String _originalName;
 	private String _description;
 	private boolean _master;
 	private boolean _originalMaster;
