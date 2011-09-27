@@ -365,6 +365,10 @@ public class MainServlet extends ActionServlet {
 			_log.error(e, e);
 		}
 
+		if (PropsValues.SETUP_WIZARD_ENABLED) {
+			servletContext.setAttribute(WebKeys.SETUP_WIZARD_FINISHED, false);
+		}
+
 		servletContext.setAttribute(WebKeys.STARTUP_FINISHED, true);
 	}
 
@@ -489,14 +493,6 @@ public class MainServlet extends ActionServlet {
 		if (processServicePre(request, response, userId)) {
 			if (_log.isDebugEnabled()) {
 				_log.debug("Processing service pre events has errors");
-			}
-
-			return;
-		}
-
-		if (processSetupWizardRequest(request, response)) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Processed setup request");
 			}
 
 			return;
@@ -1260,47 +1256,6 @@ public class MainServlet extends ActionServlet {
 		}
 
 		response.sendRedirect(redirect);
-	}
-
-	protected boolean processSetupWizardRequest(
-			HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
-
-		if (!PropsValues.SETUP_WIZARD_ENABLED) {
-			return false;
-		}
-
-		ServletContext servletContext = getServletContext();
-
-		Boolean startupFinished = (Boolean)servletContext.getAttribute(
-			WebKeys.STARTUP_FINISHED);
-
-		if ((startupFinished == null) || !startupFinished.booleanValue()) {
-			return false;
-		}
-
-		String cmd = ParamUtil.getString(request, Constants.CMD);
-
-		if (cmd.equals(Constants.UPDATE)) {
-			try {
-				SetupWizardUtil.processSetup(request);
-
-				// Kill current session to remove company id saved in cookies
-				request.getSession().invalidate();
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			servletContext.setAttribute(WebKeys.SETUP_WIZARD_FINISHED, true);
-		}
-
-		RequestDispatcher requestDispatcher = request.getRequestDispatcher(
-			"/html/portal/setup_wizard.jsp");
-
-		requestDispatcher.include(request, response);
-
-		return true;
 	}
 
 	protected boolean processShutdownRequest(

@@ -1,25 +1,35 @@
+#banner .setup-heading {
+	display: table;
+	width: 100%
+}
+
 #main-container {
-	width: 100%;
 	height: 100%;
+	width: 100%;
 }
 
 #messages-wrapper {
-	padding-top: 40px;
 	display: table;
+	padding-top: 40px;
 	width: 100%;
+}
+
+#setup-logo {
+	float: left;
+	width: 50%
 }
 
 #setup-title {
 	float: right;
-	width: 50%;
-	height: 134px;
 	font-size: 1.3em;
+	height: 120px;
 	text-align: right;
+	width: 50%;
 }
 
 #setup-wrapper {
-	max-width: 800px;
 	margin: auto;
+	max-width: 800px;
 }
 
 .bigger {
@@ -32,15 +42,15 @@
 }
 
 .credentials dt {
+	float: left;
 	font-weight: bold;
 	margin-right: 1em;
-	float: left;
 	min-width: 8em;
 }
 
 .fieldset-header {
-	padding: 10px 0;
 	border: none;
+	padding: 10px 0;
 }
 
 .fieldset-header .aui-fieldset-content {
@@ -51,25 +61,26 @@
 	border-bottom-right-radius: 10px;
 	border-bottom-left-radius: 10px;
 	border: 1px solid #363636;
-	width: 100%;
-	padding: 9px;
 	margin-top: -10px;
+	padding: 9px;
+	width: 100%;
 }
 
 .fieldset-header legend {
-	background-color: #363636;
-	color: #ECF1EF;
-	font-weight: bold;
-	margin: 0;
-	min-width: 500px;
-	width: 100%;
-	padding: 10px;
 	-webkit-border-top-left-radius: 10px;
 	-webkit-border-top-right-radius: 10px;
 	-moz-border-radius-topleft: 10px;
 	-moz-border-radius-topright: 10px;
+	background-color: #363636;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
+	color: #ECF1EF;
+	font-weight: bold;
+	margin: 0;
+	min-width: 500px;
+	min-height: 0.85em;
+	padding: 10px;
+	width: 100%;
 }
 
 .file-path {
@@ -77,8 +88,8 @@
 }
 
 .properties-text {
-	width: 100%;
 	min-height: 200px;
+	width: 100%;
 }
 
 .success-info {
@@ -93,9 +104,11 @@
 /*  copied from classic */
 
 body {
-	background: #EEF0F2;
-	font-size: 1em;
+	background: #EEF0F2 !important;
 	color: #363636;
+	font-size: 1em;
+	margin: 0 auto;
+	padding: 0 !important;
 }
 
 #wrapper {

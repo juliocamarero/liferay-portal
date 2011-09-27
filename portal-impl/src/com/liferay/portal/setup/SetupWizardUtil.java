@@ -18,6 +18,8 @@ import com.liferay.portal.dao.jdbc.util.DataSourceSwapUtil;
 import com.liferay.portal.events.StartupAction;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CentralizedThreadLocal;
@@ -30,21 +32,24 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
+import com.liferay.portal.model.Company;
+import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.FullNameGenerator;
 import com.liferay.portal.security.auth.FullNameGeneratorFactory;
 import com.liferay.portal.security.auth.ScreenNameGenerator;
 import com.liferay.portal.security.auth.ScreenNameGeneratorFactory;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.QuartzLocalServiceUtil;
-import com.liferay.portal.util.CookieKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalInstances;
-import com.liferay.portal.util.PropsUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.util.CookieUtil;
 
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -60,6 +65,17 @@ public class SetupWizardUtil {
 		"portal-setup-wizard.properties";
 
 	private final static String _PROPERTIES_PREFIX = "properties--";
+
+	public static boolean isSetupFinished(HttpServletRequest request) {
+		ServletContext servletContext =
+			request.getSession().getServletContext();
+
+		Boolean setupWizardFinished = (Boolean)servletContext.getAttribute(
+			WebKeys.SETUP_WIZARD_FINISHED);
+
+		return setupWizardFinished == null ||
+			setupWizardFinished.booleanValue();
+	}
 
 	public static void processSetup(HttpServletRequest request)
 		throws Exception {
@@ -77,13 +93,13 @@ public class SetupWizardUtil {
 
 		_processContextReload(request, unicodeProperties);
 
-		_deleteCookies(request);
+		_processVelocityReload(request);
 
-		request.setAttribute(
+		request.getSession().setAttribute(
 			WebKeys.SETUP_WIZARD_PROPERTIES_UPDATED,
 			String.valueOf(updatedPropertiesFile));
 
-		request.setAttribute(
+		request.getSession().setAttribute(
 			WebKeys.SETUP_WIZARD_PROPERTIES, unicodeProperties);
 	}
 
@@ -95,20 +111,12 @@ public class SetupWizardUtil {
 		return ParamUtil.getString(request, name);
 	}
 
-	private static void _deleteCookies(HttpServletRequest request) {
-		CookieUtil.deleteCookie(request, CookieKeys.COMPANY_ID);
-		CookieUtil.deleteCookie(request, CookieKeys.COOKIE_SUPPORT);
-		CookieUtil.deleteCookie(request, CookieKeys.GUEST_LANGUAGE_ID);
-		CookieUtil.deleteCookie(request, CookieKeys.ID);
-		CookieUtil.deleteCookie(request, CookieKeys.JSESSIONID);
-		CookieUtil.deleteCookie(request, CookieKeys.LOGIN);
-		CookieUtil.deleteCookie(request, CookieKeys.PASSWORD);
-		CookieUtil.deleteCookie(request, CookieKeys.REMEMBER_ME);
-		CookieUtil.deleteCookie(request, CookieKeys.SCREEN_NAME);
-	}
-
 	private static void _processAdminProperties(
 		HttpServletRequest request, UnicodeProperties properties) {
+
+		String webId = _getParameter(
+			request, PropsKeys.COMPANY_DEFAULT_WEB_ID, "liferay.com");
+		PropsValues.COMPANY_DEFAULT_WEB_ID = webId;
 
 		FullNameGenerator fullNameGenerator =
 			FullNameGeneratorFactory.getInstance();
@@ -123,11 +131,17 @@ public class SetupWizardUtil {
 
 		properties.put(PropsKeys.ADMIN_EMAIL_FROM_NAME, adminEmailFromName);
 
+		PropsValues.DEFAULT_ADMIN_FIRST_NAME = firstName;
+		PropsValues.DEFAULT_ADMIN_LAST_NAME = lastName;
+		PropsValues.ADMIN_EMAIL_FROM_NAME = adminEmailFromName;
+
 		String defaultAdminEmailAddress = _getParameter(
 			request, PropsKeys.ADMIN_EMAIL_FROM_ADDRESS, "test@liferay.com");
 
 		properties.put(
 			PropsKeys.DEFAULT_ADMIN_EMAIL_ADDRESS, defaultAdminEmailAddress);
+
+		PropsValues.DEFAULT_ADMIN_EMAIL_ADDRESS = defaultAdminEmailAddress;
 
 		ScreenNameGenerator screenNameGenerator =
 			ScreenNameGeneratorFactory.getInstance();
@@ -143,7 +157,10 @@ public class SetupWizardUtil {
 
 		properties.put(
 			PropsKeys.DEFAULT_ADMIN_SCREEN_NAME, defaultAdminScreenName);
+
+		PropsValues.DEFAULT_ADMIN_SCREEN_NAME = defaultAdminScreenName;
 	}
+
 
 	private static void _processContextReload(
 			HttpServletRequest request, UnicodeProperties unicodeProperties)
@@ -250,6 +267,28 @@ public class SetupWizardUtil {
 			PropsKeys.JDBC_DEFAULT_DRIVER_CLASS_NAME,
 			jdbcDefaultDriverClassName);
 		properties.put(PropsKeys.JDBC_DEFAULT_URL, jdbcDefaultURL);
+	}
+
+	private static void _processVelocityReload(HttpServletRequest request)
+		throws SystemException, PortalException {
+
+		//get new default Company
+
+		Company defaultCompany = CompanyLocalServiceUtil.getCompany(
+			PortalUtil.getDefaultCompanyId());
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		themeDisplay.setCompany(defaultCompany);
+
+		//get default contact
+
+		User defaultUser = defaultCompany.getDefaultUser();
+
+		themeDisplay.setUser(defaultUser);
+
+		request.setAttribute(WebKeys.USER, defaultUser);
 	}
 
 	private static boolean _writePropertiesFile(
