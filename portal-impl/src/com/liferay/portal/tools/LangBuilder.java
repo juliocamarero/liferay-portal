@@ -206,6 +206,8 @@ public class LangBuilder {
 			new OutputStreamWriter(
 				new FileOutputStream(propertiesFile), StringPool.UTF8));
 
+		int state = 0;
+
 		String line = null;
 
 		while ((line = unsyncBufferedReader.readLine()) != null) {
@@ -216,6 +218,19 @@ public class LangBuilder {
 			if (pos != -1) {
 				String key = line.substring(0, pos);
 				String value = line.substring(pos + 1, line.length());
+
+				if (((state == 1) && !key.startsWith("lang.")) ||
+					((state == 2) && !key.startsWith("javax.portlet.")) ||
+					((state == 3) && !key.startsWith("category.")) ||
+					((state == 4) && !key.startsWith("model.resource.")) ||
+					((state == 5) && !key.startsWith("action.")) ||
+					((state == 7) && !key.startsWith("currency.")) ||
+					((state != 7) && key.startsWith("currency."))) {
+
+					throw new RuntimeException(
+						"File " + languageId + " with state " + state +
+							" has key " + key);
+				}
 
 				String translatedText = properties.getProperty(key);
 
@@ -337,6 +352,58 @@ public class LangBuilder {
 				}
 			}
 			else {
+				if (line.startsWith("## Language settings")) {
+					if (state == 1) {
+						throw new RuntimeException(languageId);
+					}
+
+					state = 1;
+				}
+				else if (line.startsWith(
+							"## Portlet descriptions and titles")) {
+
+					if (state == 2) {
+						throw new RuntimeException(languageId);
+					}
+
+					state = 2;
+				}
+				else if (line.startsWith("## Category titles")) {
+					if (state == 3) {
+						throw new RuntimeException(languageId);
+					}
+
+					state = 3;
+				}
+				else if (line.startsWith("## Model resources")) {
+					if (state == 4) {
+						throw new RuntimeException(languageId);
+					}
+
+					state = 4;
+				}
+				else if (line.startsWith("## Action names")) {
+					if (state == 5) {
+						throw new RuntimeException(languageId);
+					}
+
+					state = 5;
+				}
+				else if (line.startsWith("## Messages")) {
+					if (state == 6) {
+						throw new RuntimeException(languageId);
+					}
+
+					state = 6;
+				}
+				else if (line.startsWith("## Currency")) {
+					if (state == 7) {
+						throw new RuntimeException(languageId);
+					}
+
+					state = 7;
+				}
+
 				unsyncBufferedWriter.write(line);
 
 				unsyncBufferedWriter.newLine();
