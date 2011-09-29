@@ -46,6 +46,7 @@ import com.liferay.portlet.shopping.model.ShoppingItemField;
 import com.liferay.portlet.shopping.model.ShoppingItemPrice;
 import com.liferay.portlet.shopping.model.ShoppingItemPriceConstants;
 import com.liferay.portlet.shopping.service.base.ShoppingItemLocalServiceBaseImpl;
+import com.liferay.portlet.shopping.util.ShoppingUtil;
 import com.liferay.util.PwdGenerator;
 
 import java.io.File;
@@ -68,7 +69,12 @@ public class ShoppingItemLocalServiceImpl
 		throws PortalException, SystemException {
 
 		try {
-			doAddBookItems(userId, groupId, categoryId, isbns);
+			if (ShoppingUtil.isAmazonConfigured()) {
+				doAddBookItems(userId, groupId, categoryId, isbns);
+			}
+			else {
+				throw new PortalException("Amazon is not configured");
+			}
 		}
 		catch (IOException ioe) {
 			throw new SystemException(ioe);

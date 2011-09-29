@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.shopping.action;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -82,7 +83,12 @@ public class AddBookItemsAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "isbns").toUpperCase(),
 			CharPool.SPACE);
 
-		ShoppingItemServiceUtil.addBookItems(groupId, categoryId, isbns);
+		try {
+			ShoppingItemServiceUtil.addBookItems(groupId, categoryId, isbns);
+		}
+		catch(PortalException pe) {
+			 SessionErrors.add(actionRequest, pe.getClass().getName());
+		}
 	}
 
 }

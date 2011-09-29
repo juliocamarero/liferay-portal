@@ -24,10 +24,14 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.MathUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PropsUtil;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.shopping.NoSuchCartException;
 import com.liferay.portlet.shopping.model.ShoppingCart;
@@ -970,6 +974,25 @@ public class ShoppingUtil {
 		}
 
 		return LanguageUtil.get(pageContext, ppPaymentStatus);
+	}
+
+	public static boolean isAmazonConfigured()
+	{
+		String amazonAccessKeyId = GetterUtil.getString(
+			PropsUtil.get(PropsKeys.AMAZON_ACCESS_KEY_ID));
+		String amazonAssociateTag = GetterUtil.getString(
+			PropsUtil.get(PropsKeys.AMAZON_ASSOCIATE_TAG));
+		String amazonSecretAccesKey = GetterUtil.getString(
+			PropsUtil.get(PropsKeys.AMAZON_SECRET_ACCESS_KEY));
+
+		if (Validator.isNull(amazonAccessKeyId) ||
+			Validator.isNull(amazonAssociateTag) ||
+			Validator.isNull(amazonSecretAccesKey)) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	public static boolean isInStock(ShoppingItem item) {
