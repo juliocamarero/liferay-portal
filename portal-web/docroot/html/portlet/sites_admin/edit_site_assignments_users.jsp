@@ -44,7 +44,7 @@ if (!tabs1.equals("summary")) {
 
 String emptyResultsMessage = UserSearch.EMPTY_RESULTS_MESSAGE;
 
-if (tabs2.equals("current")) {
+if (tabs1.equals("summary")) {
 	emptyResultsMessage ="no-user-was-found-that-is-a-direct-member-of-this-site";
 }
 
@@ -105,7 +105,7 @@ userSearch.setEmptyResultsMessage(emptyResultsMessage);
 			property="screenName"
 		/>
 
-		<c:if test='<%= tabs2.equals("current") %>'>
+		<c:if test='<%= tabs1.equals("summary") %>'>
 			<liferay-ui:search-container-column-text
 				buffer="buffer"
 				name="site-roles"
