@@ -59,6 +59,10 @@ body {
 	width: 50%;
 }
 
+#testMessages {
+	margin-top: 10px;
+}
+
 .properties-text {
 	min-height: 200px;
 	width: 100%;
