@@ -1528,6 +1528,11 @@
 
 		<action path="/roles_admin/view_users" forward="portlet.users_admin.view" />
 
+        <action path="/roles_admin/edit_user" type="com.liferay.portlet.usersadmin.action.EditUserAction">
+            <forward name="portlet.users_admin.edit_user" path="portlet.users_admin.edit_user" />
+            <forward name="portlet.users_admin.error" path="portlet.users_admin.error" />
+        </action>
+
 		<!-- RSS -->
 
 		<action path="/rss/article" forward="portlet.rss.article" />
