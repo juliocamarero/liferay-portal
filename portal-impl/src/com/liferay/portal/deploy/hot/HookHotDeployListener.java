@@ -2144,6 +2144,8 @@ public class HookHotDeployListener
 			release.getReleaseId(), buildNumber, null, true);
 	}
 
+	private static final String _MERGEABLE_PROP_OVERRIDE_MARK = "!";
+
 	private static final String[] _PROPS_KEYS_EVENTS = new String[] {
 		LOGIN_EVENTS_POST,
 		LOGIN_EVENTS_PRE,
@@ -2661,6 +2663,23 @@ public class HookHotDeployListener
 					_pluginStringArrayMap.entrySet()) {
 
 				String[] pluginStringArray = entry.getValue();
+
+				if (Validator.isNotNull(pluginStringArray) &&
+					Validator.isNotNull(pluginStringArray[0]) &&
+					pluginStringArray[0].trim().startsWith(
+						_MERGEABLE_PROP_OVERRIDE_MARK)) {
+
+					mergedStringList.removeAll(
+						ListUtil.fromArray(_portalStringArray));
+
+					if (pluginStringArray[0].trim().length() == 1) {
+						pluginStringArray = new String[0];
+					}
+					else {
+						pluginStringArray[0] =
+							pluginStringArray[0].trim().substring(1);
+					}
+				}
 
 				mergedStringList.addAll(ListUtil.fromArray(pluginStringArray));
 			}
