@@ -107,13 +107,20 @@ else if (layoutSetPrototype != null) {
 	title="<%= title %>"
 />
 
+<liferay-portlet:renderURL varImpl="redirectURL">
+	<portlet:param name="struts_action" value="/sites_admin/edit_site" />
+	<portlet:param name="redirect" value="<%= redirect %>" />
+
+	<portlet:param name="groupId" value="<%= String.valueOf(liveGroupId) %>" />
+</liferay-portlet:renderURL>
+
 <portlet:actionURL var="editSiteURL">
 	<portlet:param name="struts_action" value="/sites_admin/edit_site" />
 </portlet:actionURL>
 
 <aui:form action="<%= editSiteURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveGroup();" %>'>
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="redirect" type="hidden" value="<%= redirectURL.toString() %>" />
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
 	<aui:input name="liveGroupId" type="hidden" value="<%= liveGroupId %>" />
 	<aui:input name="stagingGroupId" type="hidden" value="<%= stagingGroupId %>" />
