@@ -375,6 +375,8 @@ public class WebServerServlet extends HttpServlet {
 				image = ImageServiceUtil.getImage(imageId);
 
 				image = getUserPortraitImageResized(image, imageId);
+			} else if (path.equals("/journal/article")) {
+				image = ImageServiceUtil.getImage(imageId);
 			}
 		}
 		else {
