@@ -91,7 +91,7 @@
 						</aui:fieldset>
 
 						<aui:fieldset column="<%= true %>" cssClass="aui-w100" label="database">
-							<aui:input name="defaultDatabase" type="hidden" value="<%= defaultDatabase %>" />
+							<aui:input name='<%= "properties--defaultDatabase--" %>' type="hidden" value="<%= defaultDatabase %>" />
 
 							<div class='<%= defaultDatabase ? StringPool.BLANK : "aui-helper-hidden" %>' id="defaultDatabaseOptions">
 								<p>
