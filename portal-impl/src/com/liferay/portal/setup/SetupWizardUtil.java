@@ -151,7 +151,12 @@ public class SetupWizardUtil {
 			PropertiesParamUtil.getProperties(request, _PROPERTIES_PREFIX);
 
 		_processAdminProperties(request, unicodeProperties);
+		
+		boolean databaseConfigured = _isDatabaseConfigured(
+			request, unicodeProperties);
+		
 		_processDatabaseProperties(request, unicodeProperties);
+		
 
 		updateLanguage(request, response);
 
@@ -168,7 +173,10 @@ public class SetupWizardUtil {
 		session.setAttribute(
 			WebKeys.SETUP_WIZARD_PROPERTIES_UPDATED, propertiesFileUpdated);
 
-		_reloadServletContext(request, unicodeProperties);
+		if(!databaseConfigured) {
+			_reloadServletContext(request, unicodeProperties);
+		}
+		
 		_resetAdminPassword(request);
 	}
 
@@ -180,6 +188,30 @@ public class SetupWizardUtil {
 		return ParamUtil.getString(request, name, defaultValue);
 	}
 
+	private static boolean _isDatabaseConfigured(
+		HttpServletRequest request, UnicodeProperties unicodeProperties) {
+		
+		String defaultDriverClassName = unicodeProperties.get(
+			PropsKeys.JDBC_DEFAULT_DRIVER_CLASS_NAME);
+		String defaultPassword = unicodeProperties.get(
+			PropsKeys.JDBC_DEFAULT_PASSWORD);
+		String defaultURL = unicodeProperties.get(
+			PropsKeys.JDBC_DEFAULT_URL);
+		String defaultUsername = unicodeProperties.get(
+			PropsKeys.JDBC_DEFAULT_USERNAME);
+		
+		if (PropsValues.JDBC_DEFAULT_DRIVER_CLASS_NAME.equals(
+				defaultDriverClassName) &&
+			PropsValues.JDBC_DEFAULT_PASSWORD.equals(defaultPassword) &&
+			PropsValues.JDBC_DEFAULT_URL.equals(defaultURL) &&
+			PropsValues.JDBC_DEFAULT_USERNAME.equals(defaultUsername) ) {
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
 	private static void _processAdminProperties(
 			HttpServletRequest request, UnicodeProperties unicodeProperties)
 		throws Exception {
