@@ -36,7 +36,6 @@ if (group.isStagingGroup()) {
 long liveGroupId = ParamUtil.getLong(request, "liveGroupId");
 
 boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
-long[] layoutIds = ParamUtil.getLongValues(request, "layoutIds");
 
 String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 

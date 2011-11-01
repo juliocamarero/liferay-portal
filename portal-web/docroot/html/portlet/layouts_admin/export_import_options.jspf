@@ -80,17 +80,9 @@ if (cmd.equals(Constants.EXPORT)) {
 					}
 
 					for (Layout exportableLayout : exportableLayouts) {
-						boolean checked = false;
-
-						if (layoutIds.length == 0) {
-							checked = true;
-						}
-						else {
-							checked = ArrayUtil.contains(layoutIds, exportableLayout.getLayoutId());
-						}
 					%>
 						<li class="tree-item">
-							<label><input <%= checked ? "checked" : "" %> class="aui-field-input aui-field-input-choice" name="layoutIds" type="checkbox" value="<%= exportableLayout.getLayoutId() %>" /><%= exportableLayout.getName(themeDisplay.getLocale()) %></label>
+							<label><input checked class="aui-field-input aui-field-input-choice" name="layoutIds" type="checkbox" value="<%= exportableLayout.getLayoutId() %>" /><%= exportableLayout.getName(themeDisplay.getLocale()) %></label>
 						</li>
 					<%
 					}
