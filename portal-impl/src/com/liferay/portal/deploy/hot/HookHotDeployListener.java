@@ -186,6 +186,9 @@ public class HookHotDeployListener
 		"auto.login.hooks",
 		"captcha.check.portal.create_account",
 		"captcha.engine.impl",
+		"company.settings.form.configuration",
+		"company.settings.form.identification",
+		"company.settings.form.miscellaneous",
 		"control.panel.entry.class.default",
 		"convert.processes",
 		"default.landing.page.path",
@@ -202,6 +205,12 @@ public class HookHotDeployListener
 		"field.enable.com.liferay.portal.model.Organization.status",
 		"hot.deploy.listeners",
 		"javascript.fast.load",
+		"journal.article.form.add",
+		"journal.article.form.translate",
+		"journal.article.form.update",
+		"layout.form.add",
+		"layout.form.update",
+		"layout.set.form.update",
 		"layout.static.portlets.all",
 		"layout.template.cache.enabled",
 		"layout.types",
@@ -225,6 +234,12 @@ public class HookHotDeployListener
 		"my.sites.show.public.sites.with.no.layouts",
 		"my.sites.show.user.private.sites.with.no.layouts",
 		"my.sites.show.user.public.sites.with.no.layouts",
+		"organizations.form.add.identification",
+		"organizations.form.add.main",
+		"organizations.form.add.miscellaneous",
+		"organizations.form.update.identification",
+		"organizations.form.update.main",
+		"organizations.form.update.miscellaneous",
 		"passwords.passwordpolicytoolkit.generator",
 		"passwords.passwordpolicytoolkit.static",
 		"portlet.add.default.resource.check.enabled",
@@ -237,6 +252,12 @@ public class HookHotDeployListener
 		"servlet.service.events.pre",
 		"session.phishing.protected.attributes",
 		"session.store.password",
+		"sites.form.add.advanced",
+		"sites.form.add.main",
+		"sites.form.add.seo",
+		"sites.form.update.advanced",
+		"sites.form.update.main",
+		"sites.form.update.seo",
 		"social.bookmark.*",
 		"terms.of.use.required",
 		"theme.css.fast.load",
@@ -2126,6 +2147,8 @@ public class HookHotDeployListener
 			release.getReleaseId(), buildNumber, null, true);
 	}
 
+	private static final String _MERGEABLE_PROP_OVERRIDE_MARK = "!";
+
 	private static final String[] _PROPS_KEYS_EVENTS = new String[] {
 		LOGIN_EVENTS_POST,
 		LOGIN_EVENTS_PRE,
@@ -2192,13 +2215,34 @@ public class HookHotDeployListener
 			"admin.default.role.names",
 			"admin.default.user.group.names",
 			"asset.publisher.display.styles",
+			"company.settings.form.configuration",
+			"company.settings.form.identification",
+			"company.settings.form.miscellaneous",
 			"convert.processes",
 			"dockbar.add.portlets",
+			"journal.article.form.add",
+			"journal.article.form.translate",
+			"journal.article.form.update",
+			"layout.form.add",
+			"layout.form.update",
+			"layout.set.form.update",
 			"layout.static.portlets.all",
 			"layout.types",
+			"organizations.form.add.identification",
+			"organizations.form.add.main",
+			"organizations.form.add.miscellaneous",
+			"organizations.form.update.identification",
+			"organizations.form.update.main",
+			"organizations.form.update.miscellaneous",
 			"portlet.add.default.resource.check.whitelist",
 			"portlet.add.default.resource.check.whitelist.actions",
 			"session.phishing.protected.attributes",
+			"sites.form.add.advanced",
+			"sites.form.add.main",
+			"sites.form.add.seo",
+			"sites.form.update.advanced",
+			"sites.form.update.main",
+			"sites.form.update.seo",
 			"users.form.add.identification",
 			"users.form.add.main",
 			"users.form.add.miscellaneous",
@@ -2625,6 +2669,23 @@ public class HookHotDeployListener
 					_pluginStringArrayMap.entrySet()) {
 
 				String[] pluginStringArray = entry.getValue();
+
+				if (Validator.isNotNull(pluginStringArray) &&
+					Validator.isNotNull(pluginStringArray[0]) &&
+					pluginStringArray[0].trim().startsWith(
+						_MERGEABLE_PROP_OVERRIDE_MARK)) {
+
+					mergedStringList.removeAll(
+						ListUtil.fromArray(_portalStringArray));
+
+					if (pluginStringArray[0].trim().length() == 1) {
+						pluginStringArray = new String[0];
+					}
+					else {
+						pluginStringArray[0] =
+							pluginStringArray[0].trim().substring(1);
+					}
+				}
 
 				mergedStringList.addAll(ListUtil.fromArray(pluginStringArray));
 			}
