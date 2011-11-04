@@ -42,8 +42,8 @@
 </style>
 
 <div id="<portlet:namespace />export-dialog-tree" class="panel-page-application">
-	<liferay-ui:panel-container id="<%= renderResponse.getNamespace() + \"export-dialog-tree-panel-container\" %>" extended="<%= true %>" persistState="<%= false %>">
-		<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" id="<%= renderResponse.getNamespace() + \"file-location-panel\" %>" persistState="<%= false %>" title="file-location">
+	<liferay-ui:panel-container id='<%= renderResponse.getNamespace() + "export-dialog-tree-panel-container" %>' extended="<%= true %>" persistState="<%= false %>">
+		<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" id='<%= renderResponse.getNamespace() + "file-location-panel" %>' persistState="<%= false %>" title="file-location">
 			<c:choose>
 				<c:when test="<%= cmd.equals(Constants.EXPORT) %>">
 					<aui:input label="export-the-selected-data-to-the-given-lar-file-name" name="exportFileName" size="50" value='<%= HtmlUtil.escape(StringUtil.replace(rootNodeName, " ", "_")) + "-" + Time.getShortTimestamp() + ".lar" %>' />
@@ -54,9 +54,9 @@
 			</c:choose>
 		</liferay-ui:panel>
 		<c:if test="<%= cmd.equals(Constants.EXPORT) %>">
-			<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" defaultState="closed" id="<%= renderResponse.getNamespace() + \"pages-panel\" %>" persistState="<%= false %>" title="pages">
+			<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" defaultState="closed" id='<%= renderResponse.getNamespace() + "pages-panel" %>' persistState="<%= false %>" title="pages">
 			</liferay-ui:panel>
-			<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" defaultState="closed" id="<%= renderResponse.getNamespace() + \"portlets-panel\" %>" persistState="<%= false %>" title="portlets">
+			<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" defaultState="closed" id='<%= renderResponse.getNamespace() + "portlets-panel" %>' persistState="<%= false %>" title="portlets">
 				<ul id="<portlet:namespace />portletDataList" class="lfr-tree lfr-component">
 
 					<%
@@ -140,7 +140,7 @@
 				</ul>
 			</liferay-ui:panel>
 		</c:if>
-		<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" id="<%= renderResponse.getNamespace() + \"portlet-data-panel\" %>" persistState="<%= false %>" title="portlet-data">
+		<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" id='<%= renderResponse.getNamespace() + "portlet-data-panel" %>' persistState="<%= false %>" title="portlet-data">
 			<ul class="lfr-tree lfr-component">
 				<li class="tree-item">
 					<aui:input inlineLabel="right" label="setup" name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="checkbox" value="<%= true %>" />
@@ -302,7 +302,7 @@
 				</li>
 			</ul>
 		</liferay-ui:panel>
-		<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" id="<%= renderResponse.getNamespace() + \"other-panel\" %>" persistState="<%= false %>" title="other">
+		<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" id='<%= renderResponse.getNamespace() + "other-panel" %>' persistState="<%= false %>" title="other">
 			<ul class="lfr-tree lfr-component">
 				<li class="tree-item">
 
