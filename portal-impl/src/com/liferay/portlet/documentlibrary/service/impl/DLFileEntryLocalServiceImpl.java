@@ -65,7 +65,6 @@ import com.liferay.portlet.documentlibrary.model.DLSyncConstants;
 import com.liferay.portlet.documentlibrary.model.impl.DLFileEntryImpl;
 import com.liferay.portlet.documentlibrary.service.base.DLFileEntryLocalServiceBaseImpl;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
-import com.liferay.portlet.documentlibrary.util.DLPreviewableProcessor;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.documentlibrary.util.comparator.RepositoryModelModifiedDateComparator;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -244,9 +243,6 @@ public class DLFileEntryLocalServiceImpl
 		}
 		catch (NoSuchFileException nsfe) {
 		}
-
-		DLPreviewableProcessor.deleteFiles(
-			new LiferayFileVersion(dlFileVersion));
 
 		lockLocalService.unlock(DLFileEntry.class.getName(), fileEntryId);
 	}
@@ -819,8 +815,11 @@ public class DLFileEntryLocalServiceImpl
 		}
 
 		try {
-			return moveFileEntryImpl(
+			DLFileEntry dlFileEntry = moveFileEntryImpl(
 				userId, fileEntryId, newFolderId, serviceContext);
+
+			return dlFileEntryTypeLocalService.updateFileEntryFileEntryType(
+				dlFileEntry, serviceContext);
 		}
 		finally {
 			if (!isFileEntryCheckedOut(fileEntryId)) {
@@ -914,15 +913,18 @@ public class DLFileEntryLocalServiceImpl
 			}
 
 			if (renderedImage != null) {
-				int dimension = PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_THUMBNAIL_MAX_DIMENSION);
+				int height = PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT);
+				int width = PrefsPropsUtil.getInteger(
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH);
 
-				RenderedImage thumbnail = ImageProcessorUtil.scale(
-					renderedImage, dimension, dimension);
+				RenderedImage thumbnailRenderedImage =
+					ImageProcessorUtil.scale(renderedImage, height, width);
 
 				imageLocalService.updateImage(
 					smallImageId,
-					ImageProcessorUtil.getBytes(thumbnail, contentType));
+					ImageProcessorUtil.getBytes(
+						thumbnailRenderedImage, contentType));
 			}
 		}
 		catch (IOException ioe) {
@@ -1108,6 +1110,7 @@ public class DLFileEntryLocalServiceImpl
 		dlFileVersion.setUserId(versionUserId);
 		dlFileVersion.setUserName(versionUserName);
 		dlFileVersion.setCreateDate(modifiedDate);
+		dlFileVersion.setModifiedDate(modifiedDate);
 		dlFileVersion.setRepositoryId(dlFileEntry.getRepositoryId());
 		dlFileVersion.setFolderId(dlFileEntry.getFolderId());
 		dlFileVersion.setFileEntryId(dlFileEntry.getFileEntryId());
@@ -1377,6 +1380,8 @@ public class DLFileEntryLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
+		// File entry
+
 		User user = userPersistence.findByPrimaryKey(userId);
 		DLFileEntry dlFileEntry = dlFileEntryPersistence.findByPrimaryKey(
 			fileEntryId);
@@ -1399,6 +1404,17 @@ public class DLFileEntryLocalServiceImpl
 		dlFileEntry.setFolderId(newFolderId);
 
 		dlFileEntryPersistence.update(dlFileEntry, false);
+
+		// File version
+
+		List<DLFileVersion> dlFileVersions =
+			dlFileVersionPersistence.findByFileEntryId(fileEntryId);
+
+		for (DLFileVersion dlFileVersion : dlFileVersions) {
+			dlFileVersion.setFolderId(newFolderId);
+
+			dlFileVersionPersistence.update(dlFileVersion, false);
+		}
 
 		// File
 
@@ -1570,6 +1586,8 @@ public class DLFileEntryLocalServiceImpl
 			Map<String, Fields> fieldsMap, String version, long size,
 			int status, Date statusDate, ServiceContext serviceContext)
 		throws PortalException, SystemException {
+
+		dlFileVersion.setModifiedDate(statusDate);
 
 		if (Validator.isNotNull(sourceFileName)) {
 			dlFileVersion.setExtension(extension);

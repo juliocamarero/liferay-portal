@@ -127,7 +127,8 @@ create table DDMStructure (
 	name STRING null,
 	description STRING null,
 	xsd TEXT null,
-	storageType VARCHAR(75) null
+	storageType VARCHAR(75) null,
+	type_ INTEGER
 );
 
 create table DDMStructureLink (
@@ -229,6 +230,7 @@ update DLFileShortcut set repositoryId = groupId;
 drop index IX_B413F1EC on DLFileVersion;
 drop index IX_94E784D2 on DLFileVersion;
 drop index IX_2F8FED9C on DLFileVersion;
+alter table DLFileVersion add modifiedDate DATE null;
 alter table DLFileVersion add repositoryId LONG;
 alter table DLFileVersion add fileEntryId LONG;
 alter table DLFileVersion add mimeType VARCHAR(75) null;
@@ -236,6 +238,7 @@ alter table DLFileVersion add fileEntryTypeId LONG;
 
 COMMIT_TRANSACTION;
 
+update DLFileVersion set modifiedDate = statusDate;
 update DLFileVersion set repositoryId = groupId;
 
 alter table DLFolder add repositoryId LONG;
@@ -562,8 +565,6 @@ create table SocialActivitySetting (
 	value VARCHAR(1024) null
 );
 
-alter table SocialEquityLog add extraData VARCHAR(255) null;
-
 update Role_ set name = 'Site Administrator' where name = 'Community Administrator';
 update Role_ set name = 'Site Member' where name = 'Community Member';
 update Role_ set name = 'Site Owner' where name = 'Community Owner';
@@ -608,8 +609,6 @@ create table UserNotificationEvent (
 	payload TEXT null,
 	archived BOOLEAN
 );
-
-alter table UserNotificationEvent add archived BOOLEAN;
 
 create table VirtualHost (
 	virtualHostId LONG not null primary key,

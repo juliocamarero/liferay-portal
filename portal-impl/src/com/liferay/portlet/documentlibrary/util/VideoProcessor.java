@@ -31,12 +31,6 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 
-import com.xuggle.mediatool.IMediaReader;
-import com.xuggle.mediatool.IMediaWriter;
-import com.xuggle.mediatool.ToolFactory;
-
-import java.awt.image.BufferedImage;
-
 import java.io.File;
 import java.io.InputStream;
 
@@ -59,6 +53,10 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		throws Exception {
 
 		_instance._generateVideo(fileVersion);
+	}
+
+	public static DLProcessor getInstance() {
+		return _instance;
 	}
 
 	public static InputStream getPreviewAsStream(FileVersion fileVersion)
@@ -95,7 +93,7 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		try {
 			hasVideo = _instance._hasVideo(fileVersion);
 
-			if (!hasVideo) {
+			if (!hasVideo && _instance.isSupported(fileVersion)) {
 				_instance._queueGeneration(fileVersion);
 			}
 		}
@@ -106,13 +104,13 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		return hasVideo;
 	}
 
-	public static boolean isSupportedVideo(String mimeType) {
-		return _instance._isSupportedVideo(mimeType);
-	}
-
 	public VideoProcessor() {
 		FileUtil.mkdirs(PREVIEW_TMP_PATH);
 		FileUtil.mkdirs(THUMBNAIL_TMP_PATH);
+	}
+
+	public boolean isSupported(String mimeType) {
+		return _videoMimeTypes.contains(mimeType);
 	}
 
 	public void trigger(FileVersion fileVersion) {
@@ -139,24 +137,13 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		File thumbnailTempFile = getThumbnailTempFile(tempFileId);
 
 		try {
-			IMediaReader iMediaReader = ToolFactory.makeReader(
-				file.getCanonicalPath());
-
-			iMediaReader.setBufferedImageTypeToGenerate(
-				BufferedImage.TYPE_3BYTE_BGR);
-
-			CaptureFrameListener captureFrameListener =
-				new CaptureFrameListener(
-					thumbnailTempFile, THUMBNAIL_TYPE, height, width);
-
-			iMediaReader.addListener(captureFrameListener);
-
 			try {
-				while (iMediaReader.readPacket() == null) {
-					if (captureFrameListener.isWritten()) {
-						break;
-					}
-				}
+				LiferayVideoThumbnailConverter liferayVideoThumbnailConverter =
+					new LiferayVideoThumbnailConverter(
+						file.getCanonicalPath(), thumbnailTempFile,
+						THUMBNAIL_TYPE, height, width, _THUMBNAIL_PERCENTAGE);
+
+				liferayVideoThumbnailConverter.convert();
 			}
 			catch (Exception e) {
 				_log.error(e, e);
@@ -238,8 +225,8 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 				try {
 					_generateThumbnailXuggler(
 						fileVersion, file,
-						PropsValues.DL_FILE_ENTRY_THUMBNAIL_HEIGHT,
-						PropsValues.DL_FILE_ENTRY_THUMBNAIL_WIDTH);
+						PropsValues.DL_FILE_ENTRY_PREVIEW_VIDEO_HEIGHT,
+						PropsValues.DL_FILE_ENTRY_PREVIEW_VIDEO_WIDTH);
 				}
 				catch (Exception e) {
 					_log.error(e, e);
@@ -261,29 +248,13 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 			int width)
 		throws Exception {
 
-		IMediaReader iMediaReader = ToolFactory.makeReader(
-			srcFile.getCanonicalPath());
-
-		VideoResizer videoResizer = new VideoResizer(height, width);
-
-		iMediaReader.addListener(videoResizer);
-
-		AudioListener audioListener = new AudioListener();
-
-		videoResizer.addListener(audioListener);
-
-		IMediaWriter iMediaWriter = ToolFactory.makeWriter(
-			destFile.getCanonicalPath(), iMediaReader);
-
-		audioListener.addListener(iMediaWriter);
-
-		VideoListener videoListener = new VideoListener(height, width);
-
-		iMediaWriter.addListener(videoListener);
-
 		try {
-			while (iMediaReader.readPacket() == null) {
-			}
+			LiferayVideoConverter liferayVideoConverter =
+				new LiferayVideoConverter(
+					srcFile.getCanonicalPath(), destFile.getCanonicalPath(),
+					height, width, _SAMPLE_RATE);
+
+			liferayVideoConverter.convert();
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -326,7 +297,7 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 	}
 
 	private boolean _hasVideo(FileVersion fileVersion) throws Exception {
-		if (!_isSupportedVideo(fileVersion)) {
+		if (!isSupported(fileVersion)) {
 			return false;
 		}
 
@@ -388,21 +359,9 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		}
 	}
 
-	private boolean _isSupportedVideo(FileVersion fileVersion) {
-		if (fileVersion == null) {
-			return false;
-		}
-
-		return _isSupportedVideo(fileVersion.getMimeType());
-	}
-
-	public boolean _isSupportedVideo(String mimeType) {
-		return _videoMimeTypes.contains(mimeType);
-	}
-
 	private void _queueGeneration(FileVersion fileVersion) {
 		if (_fileVersionIds.contains(fileVersion.getFileVersionId()) ||
-			!_isSupportedVideo(fileVersion)) {
+			!isSupported(fileVersion)) {
 
 			return;
 		}
@@ -412,6 +371,11 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		MessageBusUtil.sendMessage(
 			DestinationNames.DOCUMENT_LIBRARY_VIDEO_PROCESSOR, fileVersion);
 	}
+
+	private static int _SAMPLE_RATE = 44100;
+
+	private static int _THUMBNAIL_PERCENTAGE =
+		PropsValues.DL_FILE_ENTRY_THUMBNAIL_VIDEO_FRAME_PERCENTAGE;
 
 	private static Log _log = LogFactoryUtil.getLog(VideoProcessor.class);
 

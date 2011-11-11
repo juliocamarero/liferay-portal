@@ -1530,26 +1530,21 @@
 			var radioButton = A.one('#' + radioId);
 			var showBox = A.one('#' + showBoxId);
 
-			if (radioButton && showBox) {
+			if (radioButton) {
 				var checked = radioButton.get('checked');
 
-				showBox.toggle(checked);
+				if (showBox) {
+					showBox.toggle(checked);
+				}
 
 				radioButton.on(
 					'change',
 					function() {
-						showBox.show();
-
-						var hideBox;
-
-						if (isArray(hideBoxIds)) {
-							hideBox = A.all('#' + hideBoxIds.join(',#'));
-						}
-						else {
-							hideBox = A.one('#' + hideBoxIds);
+						if (showBox) {
+							showBox.show();
 						}
 
-						hideBox.hide();
+						A.all('#' + hideBoxIds.join(',#')).hide();
 					}
 				);
 			}

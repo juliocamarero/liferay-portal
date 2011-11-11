@@ -37,9 +37,8 @@ import com.liferay.portlet.social.service.base.SocialActivityCounterLocalService
 import com.liferay.portlet.social.service.persistence.SocialActivityCounterFinderUtil;
 import com.liferay.portlet.social.util.SocialCounterPeriodUtil;
 
-import edu.emory.mathcs.backport.java.util.Collections;
-
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,9 +99,7 @@ public class SocialActivityCounterLocalServiceImpl
 				activity.getGroupId(), activity.getClassName(),
 				activity.getType());
 
-		if ((activityDefinition == null) ||
-			!activityDefinition.isCounterEnabled()) {
-
+		if ((activityDefinition == null) || !activityDefinition.isEnabled()) {
 			return;
 		}
 
@@ -116,9 +113,9 @@ public class SocialActivityCounterLocalServiceImpl
 		for (SocialActivityCounterDefinition activityCounterDefinition :
 				activityDefinition.getActivityCounterDefinitions()) {
 
-			if ((activityCounterDefinition.getIncrement() != 0) &&
-				checkActivityLimit(
-					user, activity, activityCounterDefinition)) {
+			if (activityCounterDefinition.isEnabled() &&
+				(activityCounterDefinition.getIncrement() > 0) &&
+				checkActivityLimit(user, activity, activityCounterDefinition)) {
 
 				incrementActivityCounter(
 					activity.getGroupId(), user, activity.getAssetEntry(),
@@ -305,7 +302,7 @@ public class SocialActivityCounterLocalServiceImpl
 			return Collections.emptyList();
 		}
 
-		List<Tuple> userActivityCounters = new ArrayList<Tuple>();
+		Tuple[] userActivityCounters = new Tuple[userIds.size()];
 
 		List<SocialActivityCounter> activityCounters =
 			SocialActivityCounterFinderUtil.findAC_By_G_C_C_N_S_E(
@@ -324,13 +321,21 @@ public class SocialActivityCounterLocalServiceImpl
 				Tuple userActivityCounter = new Tuple(
 					userId, activityCountersMap);
 
-				userActivityCounters.add(userActivityCounter);
+				for (int i = 0; i < userIds.size(); i++) {
+					long curUserId = userIds.get(i);
+
+					if (userId == curUserId) {
+						userActivityCounters[i] = userActivityCounter;
+
+						break;
+					}
+				}
 			}
 
 			activityCountersMap.put(activityCounter.getName(), activityCounter);
 		}
 
-		return userActivityCounters;
+		return Arrays.asList(userActivityCounters);
 	}
 
 	public void incrementUserAchievementCounter(long userId, long groupId)

@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.documentlibrary.asset;
 
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
@@ -38,8 +37,6 @@ import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryTypePermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLPermission;
-
-import java.io.Serializable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -91,8 +88,7 @@ public class DLFileEntryAssetRendererFactory extends BaseAssetRendererFactory {
 		Map<Long, String> classTypes = new HashMap<Long, String>();
 
 		List<DLFileEntryType> dlFileEntryTypes =
-			DLFileEntryTypeServiceUtil.getFileEntryTypes(
-				groupIds, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+			DLFileEntryTypeServiceUtil.getFileEntryTypes(groupIds);
 
 		for (DLFileEntryType dlFileEntryType: dlFileEntryTypes) {
 			classTypes.put(
@@ -127,7 +123,7 @@ public class DLFileEntryAssetRendererFactory extends BaseAssetRendererFactory {
 		}
 
 		long classTypeId = GetterUtil.getLong(
-			(Serializable)liferayPortletRequest.getAttribute(
+			liferayPortletRequest.getAttribute(
 				WebKeys.ASSET_RENDERER_FACTORY_CLASS_TYPE_ID));
 
 		if ((classTypeId > 0) &&

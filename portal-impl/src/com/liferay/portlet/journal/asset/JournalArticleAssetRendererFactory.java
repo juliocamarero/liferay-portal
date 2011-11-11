@@ -40,8 +40,6 @@ import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.service.permission.JournalPermission;
 import com.liferay.portlet.journal.service.permission.JournalStructurePermission;
 
-import java.io.Serializable;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,16 +75,17 @@ public class JournalArticleAssetRendererFactory
 				JournalArticleResourceLocalServiceUtil.getArticleResource(
 					classPK);
 
-			int status = WorkflowConstants.STATUS_ANY;
-
 			if (type == TYPE_LATEST_APPROVED) {
-				status = WorkflowConstants.STATUS_APPROVED;
-			}
-
-			article =
-				JournalArticleLocalServiceUtil.getLatestArticle(
+				article = JournalArticleLocalServiceUtil.getDisplayArticle(
 					articleResource.getGroupId(),
-					articleResource.getArticleId(), status);
+					articleResource.getArticleId());
+			}
+			else {
+				article = JournalArticleLocalServiceUtil.getLatestArticle(
+					articleResource.getGroupId(),
+					articleResource.getArticleId(),
+					WorkflowConstants.STATUS_ANY);
+			}
 		}
 
 		return new JournalArticleAssetRenderer(article);
@@ -146,7 +145,7 @@ public class JournalArticleAssetRendererFactory
 		}
 
 		long classTypeId = GetterUtil.getLong(
-			(Serializable)liferayPortletRequest.getAttribute(
+			liferayPortletRequest.getAttribute(
 				WebKeys.ASSET_RENDERER_FACTORY_CLASS_TYPE_ID));
 
 		if ((classTypeId > 0) &&

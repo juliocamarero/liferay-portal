@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.metadata.RawMetadataProcessorUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileVersion;
 import com.liferay.portal.service.ServiceContext;
@@ -53,6 +54,12 @@ import java.util.Map;
  */
 public class RawMetadataProcessor implements DLProcessor {
 
+	public void cleanUp(FileEntry fileEntry) {
+	}
+
+	public void cleanUp(FileVersion fileVersion) {
+	}
+
 	/**
 	 * Generates the raw metadata associated with the file entry.
 	 *
@@ -72,6 +79,14 @@ public class RawMetadataProcessor implements DLProcessor {
 		if (fileEntryMetadataCount == 0) {
 			_instance.trigger(fileVersion);
 		}
+	}
+
+	public boolean isSupported(FileVersion fileVersion) {
+		return true;
+	}
+
+	public boolean isSupported(String mimeType) {
+		return true;
 	}
 
 	/**

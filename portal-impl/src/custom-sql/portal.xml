@@ -410,6 +410,17 @@
 				(LayoutSetBranch.master = ?)
 		]]>
 	</sql>
+	<sql id="com.liferay.portal.service.persistence.LockFinder.findByC_K">
+		<![CDATA[
+			SELECT
+				lock
+			FROM
+				Lock lock
+			WHERE
+				(lock.className = ?) AND
+				(lock.key = ?)
+		]]>
+	</sql>
 	<sql id="com.liferay.portal.service.persistence.OrganizationFinder.countByOrganizationId">
 		<![CDATA[
 			SELECT
@@ -852,6 +863,26 @@
 				Permission_.actionId ASC
 		]]>
 	</sql>
+	<sql id="com.liferay.portal.service.persistence.PermissionFinder.findByR_S">
+		<![CDATA[
+			SELECT
+				{Permission_.*}
+			FROM
+				Permission_
+			INNER JOIN
+				Roles_Permissions ON
+					(Roles_Permissions.permissionId = Permission_.permissionId)
+			INNER JOIN
+				Resource_ ON
+					(Resource_.resourceId = Permission_.resourceId)
+			INNER JOIN
+				ResourceCode ON
+					(ResourceCode.codeId = Resource_.codeId)
+			WHERE
+				(Roles_Permissions.roleId = ?) AND
+				[$SCOPE$]
+		]]>
+	</sql>
 	<sql id="com.liferay.portal.service.persistence.PermissionFinder.findByU_R">
 		<![CDATA[
 			SELECT
@@ -1249,14 +1280,14 @@
 					(Role_.companyId = ?) AND
 					(
 						(Role_.name = 'Administrator') OR
-						(Role_.name = 'Community Administrator') OR
-						(Role_.name = 'Community Member') OR
-						(Role_.name = 'Community Owner') OR
 						(Role_.name = 'Guest') OR
 						(Role_.name = 'Organization Administrator') OR
 						(Role_.name = 'Organization Member') OR
 						(Role_.name = 'Organization Owner') OR
 						(Role_.name = 'Owner') OR
+						(Role_.name = 'Site Administrator') OR
+						(Role_.name = 'Site Member') OR
+						(Role_.name = 'Site Owner') OR
 						(Role_.name = 'Power User') OR
 						(Role_.name = 'User')
 					)

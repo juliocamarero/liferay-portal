@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.servlet.HttpMethods;
 import com.liferay.portal.kernel.util.BinarySearch;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.MethodParameter;
 import com.liferay.portal.kernel.util.SortedArrayList;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.PortalUtil;
@@ -161,13 +162,13 @@ public class JSONWebServiceActionsManagerImpl
 	}
 
 	private int _countMatchedElements(
-		String[] targetArray, String[] subjectArray) {
+		String[] parameterNames, MethodParameter[] methodParameters) {
 
 		int matched = 0;
 
-		for (String target : targetArray) {
-			for (String subject : subjectArray) {
-				if (subject.equals(target)) {
+		for (String parameterName : parameterNames) {
+			for (MethodParameter methodParameter : methodParameters) {
+				if (parameterName.equals(methodParameter.getName())) {
 					matched++;
 
 					break;
@@ -222,21 +223,21 @@ public class JSONWebServiceActionsManagerImpl
 				}
 			}
 
-			String[] jsonWebServiceActionConfigParameterNames =
-				jsonWebServiceActionConfig.getParameterNames();
+			MethodParameter[] jsonWebServiceActionConfigMethodParameters =
+				jsonWebServiceActionConfig.getMethodParameters();
 
-			int methodArgumentsCount =
-				jsonWebServiceActionConfigParameterNames.length;
+			int methodParametersCount =
+				jsonWebServiceActionConfigMethodParameters.length;
 
-			if ((hint != -1) && (methodArgumentsCount != hint)) {
+			if ((hint != -1) && (methodParametersCount != hint)) {
 				continue;
 			}
 
 			int count = _countMatchedElements(
-				parameterNames, jsonWebServiceActionConfigParameterNames);
+				parameterNames, jsonWebServiceActionConfigMethodParameters);
 
 			if (count > max) {
-				if ((hint != -1) || (count >= methodArgumentsCount)) {
+				if ((hint != -1) || (count >= methodParametersCount)) {
 					max = count;
 
 					index = i;

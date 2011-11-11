@@ -235,7 +235,7 @@
 	</target>
 
 	<target name="build-test-ant-scripts">
-		<property name="build-test-ant-scripts.version" value="0" />
+		<property name="build-test-ant-scripts.version" value="3" />
 
 		<if>
 			<available file="portal-web/test-ant-scripts/version" />
@@ -1666,6 +1666,7 @@
 
 		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="staging-community-blogs" />
+			<param name="test.ant.script.plugin.webs" value="kaleo-web" />
 			<param name="test.ant.script.suite" value="StagingCommunityBlogsTestSuite" />
 		</antcall>
 
@@ -1686,6 +1687,7 @@
 
 		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="staging-organization-blogs" />
+			<param name="test.ant.script.plugin.webs" value="kaleo-web" />
 			<param name="test.ant.script.suite" value="StagingOrganizationBlogsTestSuite" />
 		</antcall>
 
@@ -1859,6 +1861,34 @@
 		</exec>
 
 		<delete file="execute-remote-command.bat" />
+	</target>
+
+	<target name="install-vm-java">
+		<if>
+			<not>
+				<available file="${java.jdk.local.dir}${java.jdk.zip}" />
+			</not>
+			<then>
+				<delete dir="${java.jdk.local.dir}" failonerror="false" />
+
+				<copy file="${java.jdk.remote.dir}${java.jdk.zip}" tofile="${java.jdk.local.dir}${java.jdk.zip}" />
+			</then>
+		</if>
+
+		<exec executable="${pscp.executable}">
+			<arg line="-pw ${vm.password} ${java.jdk.local.dir}${java.jdk.zip} ${vm.username}@${vm.host}:/" />
+		</exec>
+
+		<echo file="execute-remote-command.bat">
+			if not exist C:\Java\jdk-1.6.0_23 ${unzip.executable} -oq C:\${java.jdk.zip} -d C:\Java
+			${setx.executable} /m JAVA_HOME C:\Java\jdk-1.6.0_23
+			${setx.executable} /m JAVA_OPTS "-Xmx1024m -XX:MaxPermSize=256m"
+			if not %PATH:~0,7%==C:\Java ${setx.executable} /m PATH "C:\Java\jdk-1.6.0_23\bin;%PATH%"
+		</echo>
+
+		<antcall target="execute-remote-command">
+			<param name="vm.host" value="${vm.host}" />
+		</antcall>
 	</target>
 
 	<target name="kill-java-process">
@@ -2067,7 +2097,13 @@ wiki.page.titles.remove.regexp=([/\\\\\\[\\]%&amp;?@]+)
 
 users.last.name.required=true
 
+portal.security.manager.strategy=liferay
+
+layout.types=portlet,panel,embedded,article,url,link_to_layout
+
 editor.wysiwyg.portal-web.docroot.html.portlet.message_boards.edit_message.bb_code.jsp=bbcode
+
+setup.wizard.enabled=false
 
 discussion.subscribe.by.default=false
 
@@ -2117,7 +2153,13 @@ wiki.page.titles.remove.regexp=([/\\\\\\[\\]%&amp;?@]+)
 
 users.last.name.required=true
 
+portal.security.manager.strategy=liferay
+
+layout.types=portlet,panel,embedded,article,url,link_to_layout
+
 editor.wysiwyg.portal-web.docroot.html.portlet.message_boards.edit_message.bb_code.jsp=bbcode
+
+setup.wizard.enabled=false
 
 discussion.subscribe.by.default=false
 
@@ -2128,6 +2170,7 @@ message.boards.subscribe.by.default=false</echo>
 				<or>
 					<equals arg1="${sql.version}" arg2="6.0.5" />
 					<equals arg1="${sql.version}" arg2="6.0.6" />
+					<equals arg1="${sql.version}" arg2="6.0.12" />
 				</or>
 				<then>
 					<echo file="portal-impl/src/portal-ext.properties" append="true">
@@ -2138,7 +2181,13 @@ message.boards.subscribe.by.default=false</echo>
 
 users.last.name.required=true
 
+portal.security.manager.strategy=liferay
+
+layout.types=portlet,panel,embedded,article,url,link_to_layout
+
 editor.wysiwyg.portal-web.docroot.html.portlet.message_boards.edit_message.bb_code.jsp=bbcode
+
+setup.wizard.enabled=false
 
 discussion.subscribe.by.default=false
 
@@ -2146,6 +2195,17 @@ message.boards.subscribe.by.default=false</echo>
 				</then>
 			</elseif>
 		</if>
+
+		<if>
+			<equals arg1="${sql.version}" arg2="6.0.12" />
+			<then>
+				<echo file="portal-impl/src/portal-ext.properties" append="true">
+
+upgrade.processes=\
+	com.liferay.portal.upgrade.UpgradeProcess_6_0_12_to_6_1_0</echo>
+			</then>
+		</if>
+
 		<if>
 			<or>
 				<equals arg1="${vm.vmdk.suffix}" arg2="websphere-6.1.0.27" />
@@ -2155,6 +2215,14 @@ message.boards.subscribe.by.default=false</echo>
 				<echo file="portal-impl/src/portal-ext.properties" append="true">
 
 auto.deploy.dest.dir=${resource.repositories.root}/websphere-deploy</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="set.permission.algorithm.6" />
+			<then>
+				<replace file="portal-impl/src/portal-ext.properties" token="permissions.user.check.algorithm=5" value=""/>
+				<replace file="portal-impl/src/portal-ext.properties" token="permissions.view.dynamic.inheritance=false" value=""/>
 			</then>
 		</if>
 	</target>
@@ -2971,6 +3039,17 @@ executable ZIP file.
 					/>
 				</then>
 			</elseif>
+		</if>
+
+		<if>
+			<isset property="test.database.minimal" />
+			<then>
+				<replace
+					file="portal-web/test/test-portal-web.properties"
+					token="test.database.minimal=false"
+					value="test.database.minimal=true"
+				/>
+			</then>
 		</if>
 
 		<antcall target="rebuild-database" inheritAll="false" />

@@ -561,7 +561,17 @@ public class WebServerServlet extends HttpServlet {
 					return -1;
 				}
 				else {
-					modifiedDate = fileEntry.getModifiedDate();
+					String version = ParamUtil.getString(request, "version");
+
+					if (Validator.isNotNull(version)) {
+						FileVersion fileVersion = fileEntry.getFileVersion(
+							version);
+
+						modifiedDate = fileVersion.getModifiedDate();
+					}
+					else {
+						modifiedDate = fileEntry.getModifiedDate();
+					}
 				}
 			}
 
@@ -633,6 +643,12 @@ public class WebServerServlet extends HttpServlet {
 			HttpServletRequest request, HttpServletResponse response, User user,
 			String path, String[] pathArray)
 		throws Exception {
+
+		if (!PropsValues.WEB_SERVER_SERVLET_DIRECTORY_INDEXING_ENABLED) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+			return;
+		}
 
 		long groupId = _getGroupId(user.getCompanyId(), pathArray[0]);
 		long folderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
@@ -877,6 +893,12 @@ public class WebServerServlet extends HttpServlet {
 	protected void sendGroups(
 			HttpServletResponse response, User user, String path)
 		throws Exception {
+
+		if (!PropsValues.WEB_SERVER_SERVLET_DIRECTORY_INDEXING_ENABLED) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+			return;
+		}
 
 		List<WebServerEntry> webServerEntries = new ArrayList<WebServerEntry>();
 

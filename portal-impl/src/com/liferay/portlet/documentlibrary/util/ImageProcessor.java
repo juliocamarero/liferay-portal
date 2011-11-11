@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -48,6 +49,16 @@ import java.util.Vector;
  */
 public class ImageProcessor extends DLPreviewableProcessor {
 
+	public void cleanUp(FileEntry fileEntry) {
+		deleteFiles(fileEntry, null);
+	}
+
+	public void cleanUp(FileVersion fileVersion) {
+		String type = _instance._getType(fileVersion);
+
+		deleteFiles(fileVersion, type);
+	}
+
 	public static void generateImages(FileVersion fileVersion) {
 		_instance._generateImages(fileVersion);
 	}
@@ -55,7 +66,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 	public static InputStream getCustom1AsStream(FileVersion fileVersion)
 		throws Exception {
 
-		String type = _instance._getImageType(fileVersion);
+		String type = _instance._getType(fileVersion);
 
 		return _instance._getCustomAsStream(fileVersion, type, 1);
 	}
@@ -63,7 +74,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 	public static long getCustom1FileSize(FileVersion fileVersion)
 		throws Exception {
 
-		String type = _instance._getImageType(fileVersion);
+		String type = _instance._getType(fileVersion);
 
 		return _instance._getCustomFileSize(fileVersion, type, 1);
 	}
@@ -71,7 +82,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 	public static InputStream getCustom2AsStream(FileVersion fileVersion)
 		throws Exception {
 
-		String type = _instance._getImageType(fileVersion);
+		String type = _instance._getType(fileVersion);
 
 		return _instance._getCustomAsStream(fileVersion, type, 2);
 	}
@@ -79,7 +90,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 	public static long getCustom2FileSize(FileVersion fileVersion)
 		throws Exception {
 
-		String type = _instance._getImageType(fileVersion);
+		String type = _instance._getType(fileVersion);
 
 		return _instance._getCustomFileSize(fileVersion, type, 2);
 	}
@@ -91,7 +102,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 	public static InputStream getThumbnailAsStream(FileVersion fileVersion)
 		throws Exception {
 
-		String type = _instance._getImageType(fileVersion);
+		String type = _instance._getType(fileVersion);
 
 		return _instance.doGetThumbnailAsStream(fileVersion, type);
 	}
@@ -99,18 +110,22 @@ public class ImageProcessor extends DLPreviewableProcessor {
 	public static long getThumbnailFileSize(FileVersion fileVersion)
 		throws Exception {
 
-		String type = _instance._getImageType(fileVersion);
+		String type = _instance._getType(fileVersion);
 
 		return _instance.doGetThumbnailFileSize(fileVersion, type);
 	}
 
 	public static boolean hasImages(FileVersion fileVersion) {
+		if (!PropsValues.DL_FILE_ENTRY_THUMBNAIL_ENABLED) {
+			return false;
+		}
+
 		boolean hasImages = false;
 
 		try {
 			hasImages = _instance._hasImages(fileVersion);
 
-			if (!hasImages) {
+			if (!hasImages && _instance.isSupported(fileVersion)) {
 				_instance._queueGeneration(fileVersion);
 			}
 		}
@@ -136,12 +151,20 @@ public class ImageProcessor extends DLPreviewableProcessor {
 			custom2ImageId, is, type);
 	}
 
+	public boolean isSupported(String mimeType) {
+		return _imageMimeTypes.contains(mimeType);
+	}
+
 	public void trigger(FileVersion fileVersion) {
 		_instance._queueGeneration(fileVersion);
 	}
 
 	private void _generateImages(FileVersion fileVersion) {
 		try {
+			if (!PropsValues.DL_FILE_ENTRY_THUMBNAIL_ENABLED) {
+				return;
+			}
+
 			InputStream inputStream = fileVersion.getContentStream(false);
 
 			byte[] bytes = FileUtil.getBytes(inputStream);
@@ -154,28 +177,39 @@ public class ImageProcessor extends DLPreviewableProcessor {
 				return;
 			}
 
-			String type = _instance._getImageType(fileVersion);
+			String type = _instance._getType(fileVersion);
 
 			_saveThumbnailImage(
 				fileVersion, renderedImage,
-				PropsKeys.IG_IMAGE_THUMBNAIL_MAX_DIMENSION,
+				PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT,
+				PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH,
 				getThumbnailFilePath(fileVersion, type));
 
-			if (PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_CUSTOM_1_MAX_DIMENSION) > 0) {
+			if ((PrefsPropsUtil.getInteger(
+					PropsKeys.
+						DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT) > 0) ||
+				(PrefsPropsUtil.getInteger(
+					PropsKeys.
+						DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_WIDTH) > 0)) {
 
 				_saveThumbnailImage(
 					fileVersion, renderedImage,
-					PropsKeys.IG_IMAGE_CUSTOM_1_MAX_DIMENSION,
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT,
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_WIDTH,
 					_getCustom1FilePath(fileVersion, type));
 			}
 
-			if (PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_CUSTOM_2_MAX_DIMENSION) > 0) {
+			if ((PrefsPropsUtil.getInteger(
+					PropsKeys.
+						DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_HEIGHT) > 0) ||
+				(PrefsPropsUtil.getInteger(
+					PropsKeys.
+						DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_WIDTH) > 0)) {
 
 				_saveThumbnailImage(
 					fileVersion, renderedImage,
-					PropsKeys.IG_IMAGE_CUSTOM_2_MAX_DIMENSION,
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_HEIGHT,
+					PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_WIDTH,
 					_getCustom2FilePath(fileVersion, type));
 			}
 		}
@@ -233,7 +267,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 			_getCustomFilePath(fileVersion, type, index));
 	}
 
-	private String _getImageType(FileVersion fileVersion) {
+	private String _getType(FileVersion fileVersion) {
 		String type = fileVersion.getExtension();
 
 		if (type.equals("jpeg")) {
@@ -245,7 +279,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 
 	private boolean _hasCustomImage(FileVersion fileVersion, int index) {
 		try {
-			String type = _getImageType(fileVersion);
+			String type = _getType(fileVersion);
 
 			return DLStoreUtil.hasFile(
 				fileVersion.getCompanyId(), REPOSITORY_ID,
@@ -264,16 +298,24 @@ public class ImageProcessor extends DLPreviewableProcessor {
 		}
 
 		try {
-			if (PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_CUSTOM_1_MAX_DIMENSION) > 0) {
+			if ((PrefsPropsUtil.getInteger(
+					PropsKeys.
+						DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT) > 0) ||
+				(PrefsPropsUtil.getInteger(
+					PropsKeys.
+						DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_WIDTH) > 0)) {
 
 				if (!_hasCustomImage(fileVersion, 1)) {
 					return false;
 				}
 			}
 
-			if (PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_CUSTOM_2_MAX_DIMENSION) > 0) {
+			if ((PrefsPropsUtil.getInteger(
+						PropsKeys.
+							DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_HEIGHT) > 0) ||
+					(PrefsPropsUtil.getInteger(
+						PropsKeys.
+							DL_FILE_ENTRY_THUMBNAIL_CUSTOM_2_MAX_WIDTH) > 0)) {
 
 				if (!_hasCustomImage(fileVersion, 2)) {
 					return false;
@@ -289,7 +331,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 
 	private boolean _hasThumbnailImage(FileVersion fileVersion) {
 		try {
-			String imageType = _getImageType(fileVersion);
+			String imageType = _getType(fileVersion);
 
 			return DLStoreUtil.hasFile(
 				fileVersion.getCompanyId(), REPOSITORY_ID,
@@ -302,17 +344,9 @@ public class ImageProcessor extends DLPreviewableProcessor {
 		return false;
 	}
 
-	private boolean _isSupportedImage(FileVersion fileVersion) {
-		if (fileVersion == null) {
-			return false;
-		}
-
-		return _imageMimeTypes.contains(fileVersion.getMimeType());
-	}
-
 	private void _queueGeneration(FileVersion fileVersion) {
 		if (!_fileVersionIds.contains(fileVersion.getFileVersionId()) &&
-			_isSupportedImage(fileVersion) && !_hasImages(fileVersion)) {
+			isSupported(fileVersion) && !_hasImages(fileVersion)) {
 			_fileVersionIds.add(fileVersion.getFileVersionId());
 
 			MessageBusUtil.sendMessage(
@@ -323,12 +357,13 @@ public class ImageProcessor extends DLPreviewableProcessor {
 
 	private void _saveThumbnailImage(
 			FileVersion fileVersion, RenderedImage renderedImage,
-			String maxDimensionPropsKey, String filePath)
+			String maxHeightPropsKey, String maxWidthPropsKey, String filePath)
 		throws Exception {
 
 		File file = _scaleImage(
 			renderedImage, fileVersion.getMimeType(),
-			PrefsPropsUtil.getInteger(maxDimensionPropsKey));
+			PrefsPropsUtil.getInteger(maxHeightPropsKey),
+			PrefsPropsUtil.getInteger(maxWidthPropsKey));
 
 		try {
 			addFileToStore(
@@ -340,13 +375,15 @@ public class ImageProcessor extends DLPreviewableProcessor {
 	}
 
 	private File _scaleImage(
-			RenderedImage renderedImage, String contentType, int dimension)
+			RenderedImage renderedImage, String contentType, int height,
+			int width)
 		throws IOException {
 
-		RenderedImage thumbnail = ImageProcessorUtil.scale(
-			renderedImage, dimension, dimension);
+		RenderedImage thumbnailRenderedImage = ImageProcessorUtil.scale(
+			renderedImage, height, width);
 
-		byte[] bytes = ImageProcessorUtil.getBytes(thumbnail, contentType);
+		byte[] bytes = ImageProcessorUtil.getBytes(
+			thumbnailRenderedImage, contentType);
 
 		return FileUtil.createTempFile(bytes);
 	}
@@ -393,6 +430,6 @@ public class ImageProcessor extends DLPreviewableProcessor {
 
 	private static List<Long> _fileVersionIds = new Vector<Long>();
 	private static Set<String> _imageMimeTypes = SetUtil.fromArray(
-		PropsValues.IG_IMAGE_THUMBNAIL_MIME_TYPES);
+		PropsValues.DL_FILE_ENTRY_PREVIEW_IMAGE_MIME_TYPES);
 
 }

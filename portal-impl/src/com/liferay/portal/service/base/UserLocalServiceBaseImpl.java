@@ -160,6 +160,7 @@ import com.liferay.portal.service.persistence.LayoutSetBranchPersistence;
 import com.liferay.portal.service.persistence.LayoutSetPersistence;
 import com.liferay.portal.service.persistence.LayoutSetPrototypePersistence;
 import com.liferay.portal.service.persistence.ListTypePersistence;
+import com.liferay.portal.service.persistence.LockFinder;
 import com.liferay.portal.service.persistence.LockPersistence;
 import com.liferay.portal.service.persistence.MembershipRequestPersistence;
 import com.liferay.portal.service.persistence.OrgGroupPermissionFinder;
@@ -251,13 +252,9 @@ import com.liferay.portlet.messageboards.service.persistence.MBThreadFlagPersist
 import com.liferay.portlet.shopping.service.ShoppingCartLocalService;
 import com.liferay.portlet.shopping.service.persistence.ShoppingCartPersistence;
 import com.liferay.portlet.social.service.SocialActivityLocalService;
-import com.liferay.portlet.social.service.SocialEquityLogLocalService;
-import com.liferay.portlet.social.service.SocialEquityUserLocalService;
 import com.liferay.portlet.social.service.SocialRequestLocalService;
 import com.liferay.portlet.social.service.persistence.SocialActivityFinder;
 import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
-import com.liferay.portlet.social.service.persistence.SocialEquityLogPersistence;
-import com.liferay.portlet.social.service.persistence.SocialEquityUserPersistence;
 import com.liferay.portlet.social.service.persistence.SocialRequestPersistence;
 
 import java.io.Serializable;
@@ -1629,6 +1626,24 @@ public abstract class UserLocalServiceBaseImpl implements UserLocalService,
 	 */
 	public void setLockPersistence(LockPersistence lockPersistence) {
 		this.lockPersistence = lockPersistence;
+	}
+
+	/**
+	 * Returns the lock finder.
+	 *
+	 * @return the lock finder
+	 */
+	public LockFinder getLockFinder() {
+		return lockFinder;
+	}
+
+	/**
+	 * Sets the lock finder.
+	 *
+	 * @param lockFinder the lock finder
+	 */
+	public void setLockFinder(LockFinder lockFinder) {
+		this.lockFinder = lockFinder;
 	}
 
 	/**
@@ -4613,82 +4628,6 @@ public abstract class UserLocalServiceBaseImpl implements UserLocalService,
 	}
 
 	/**
-	 * Returns the social equity log local service.
-	 *
-	 * @return the social equity log local service
-	 */
-	public SocialEquityLogLocalService getSocialEquityLogLocalService() {
-		return socialEquityLogLocalService;
-	}
-
-	/**
-	 * Sets the social equity log local service.
-	 *
-	 * @param socialEquityLogLocalService the social equity log local service
-	 */
-	public void setSocialEquityLogLocalService(
-		SocialEquityLogLocalService socialEquityLogLocalService) {
-		this.socialEquityLogLocalService = socialEquityLogLocalService;
-	}
-
-	/**
-	 * Returns the social equity log persistence.
-	 *
-	 * @return the social equity log persistence
-	 */
-	public SocialEquityLogPersistence getSocialEquityLogPersistence() {
-		return socialEquityLogPersistence;
-	}
-
-	/**
-	 * Sets the social equity log persistence.
-	 *
-	 * @param socialEquityLogPersistence the social equity log persistence
-	 */
-	public void setSocialEquityLogPersistence(
-		SocialEquityLogPersistence socialEquityLogPersistence) {
-		this.socialEquityLogPersistence = socialEquityLogPersistence;
-	}
-
-	/**
-	 * Returns the social equity user local service.
-	 *
-	 * @return the social equity user local service
-	 */
-	public SocialEquityUserLocalService getSocialEquityUserLocalService() {
-		return socialEquityUserLocalService;
-	}
-
-	/**
-	 * Sets the social equity user local service.
-	 *
-	 * @param socialEquityUserLocalService the social equity user local service
-	 */
-	public void setSocialEquityUserLocalService(
-		SocialEquityUserLocalService socialEquityUserLocalService) {
-		this.socialEquityUserLocalService = socialEquityUserLocalService;
-	}
-
-	/**
-	 * Returns the social equity user persistence.
-	 *
-	 * @return the social equity user persistence
-	 */
-	public SocialEquityUserPersistence getSocialEquityUserPersistence() {
-		return socialEquityUserPersistence;
-	}
-
-	/**
-	 * Sets the social equity user persistence.
-	 *
-	 * @param socialEquityUserPersistence the social equity user persistence
-	 */
-	public void setSocialEquityUserPersistence(
-		SocialEquityUserPersistence socialEquityUserPersistence) {
-		this.socialEquityUserPersistence = socialEquityUserPersistence;
-	}
-
-	/**
 	 * Returns the social request local service.
 	 *
 	 * @return the social request local service
@@ -4901,6 +4840,8 @@ public abstract class UserLocalServiceBaseImpl implements UserLocalService,
 	protected LockLocalService lockLocalService;
 	@BeanReference(type = LockPersistence.class)
 	protected LockPersistence lockPersistence;
+	@BeanReference(type = LockFinder.class)
+	protected LockFinder lockFinder;
 	@BeanReference(type = MembershipRequestLocalService.class)
 	protected MembershipRequestLocalService membershipRequestLocalService;
 	@BeanReference(type = MembershipRequestService.class)
@@ -5221,14 +5162,6 @@ public abstract class UserLocalServiceBaseImpl implements UserLocalService,
 	protected SocialActivityPersistence socialActivityPersistence;
 	@BeanReference(type = SocialActivityFinder.class)
 	protected SocialActivityFinder socialActivityFinder;
-	@BeanReference(type = SocialEquityLogLocalService.class)
-	protected SocialEquityLogLocalService socialEquityLogLocalService;
-	@BeanReference(type = SocialEquityLogPersistence.class)
-	protected SocialEquityLogPersistence socialEquityLogPersistence;
-	@BeanReference(type = SocialEquityUserLocalService.class)
-	protected SocialEquityUserLocalService socialEquityUserLocalService;
-	@BeanReference(type = SocialEquityUserPersistence.class)
-	protected SocialEquityUserPersistence socialEquityUserPersistence;
 	@BeanReference(type = SocialRequestLocalService.class)
 	protected SocialRequestLocalService socialRequestLocalService;
 	@BeanReference(type = SocialRequestPersistence.class)

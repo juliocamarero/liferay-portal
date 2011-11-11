@@ -556,6 +556,24 @@ public class DDMStructureWrapper implements DDMStructure,
 		_ddmStructure.setStorageType(storageType);
 	}
 
+	/**
+	* Returns the type of this d d m structure.
+	*
+	* @return the type of this d d m structure
+	*/
+	public int getType() {
+		return _ddmStructure.getType();
+	}
+
+	/**
+	* Sets the type of this d d m structure.
+	*
+	* @param type the type of this d d m structure
+	*/
+	public void setType(int type) {
+		_ddmStructure.setType(type);
+	}
+
 	public boolean isNew() {
 		return _ddmStructure.isNew();
 	}
@@ -638,6 +656,10 @@ public class DDMStructureWrapper implements DDMStructure,
 		return _ddmStructure.getDefaultLocale();
 	}
 
+	public com.liferay.portal.kernel.xml.Document getDocument() {
+		return _ddmStructure.getDocument();
+	}
+
 	public java.lang.String getFieldDataType(java.lang.String fieldName) {
 		return _ddmStructure.getFieldDataType(fieldName);
 	}
@@ -702,6 +724,15 @@ public class DDMStructureWrapper implements DDMStructure,
 
 	public boolean hasField(java.lang.String fieldName) {
 		return _ddmStructure.hasField(fieldName);
+	}
+
+	public void setDocument(com.liferay.portal.kernel.xml.Document document) {
+		_ddmStructure.setDocument(document);
+	}
+
+	public void setFieldsMap(
+		java.util.Map<java.lang.String, java.util.Map<java.lang.String, java.lang.String>> fieldsMap) {
+		_ddmStructure.setFieldsMap(fieldsMap);
 	}
 
 	/**

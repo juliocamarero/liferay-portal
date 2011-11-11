@@ -17,8 +17,15 @@ package com.liferay.portlet.documentlibrary.model;
 /**
  * @author Hugo Huijser
  * @author Brian Wing Shun Chan
+ * @author Alexander Chow
  */
 public class DLFileEntryTypeConstants {
+
+	public static final long FILE_ENTRY_TYPE_ID_ALL = -1;
+
+	public static final long FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT = 0;
+
+	public static final String NAME_BASIC_DOCUMENT = "Basic Document";
 
 	public static final String NAME_IMAGE = "Image";
 

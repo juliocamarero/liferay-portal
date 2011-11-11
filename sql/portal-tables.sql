@@ -480,7 +480,8 @@ create table DDMStructure (
 	name STRING null,
 	description STRING null,
 	xsd TEXT null,
-	storageType VARCHAR(75) null
+	storageType VARCHAR(75) null,
+	type_ INTEGER
 );
 
 create table DDMStructureLink (
@@ -617,6 +618,7 @@ create table DLFileVersion (
 	userId LONG,
 	userName VARCHAR(75) null,
 	createDate DATE null,
+	modifiedDate DATE null,
 	repositoryId LONG,
 	folderId LONG,
 	fileEntryId LONG,
@@ -1908,74 +1910,6 @@ create table SocialActivitySetting (
 	activityType INTEGER,
 	name VARCHAR(75) null,
 	value VARCHAR(1024) null
-);
-
-create table SocialEquityAssetEntry (
-	equityAssetEntryId LONG not null primary key,
-	groupId LONG,
-	companyId LONG,
-	userId LONG,
-	assetEntryId LONG,
-	informationK DOUBLE,
-	informationB DOUBLE
-);
-
-create table SocialEquityGroupSetting (
-	equityGroupSettingId LONG not null primary key,
-	groupId LONG,
-	companyId LONG,
-	classNameId LONG,
-	type_ INTEGER,
-	enabled BOOLEAN
-);
-
-create table SocialEquityHistory (
-	equityHistoryId LONG not null primary key,
-	groupId LONG,
-	companyId LONG,
-	userId LONG,
-	createDate DATE null,
-	personalEquity INTEGER
-);
-
-create table SocialEquityLog (
-	equityLogId LONG not null primary key,
-	groupId LONG,
-	companyId LONG,
-	userId LONG,
-	assetEntryId LONG,
-	actionId VARCHAR(75) null,
-	actionDate INTEGER,
-	active_ BOOLEAN,
-	expiration INTEGER,
-	type_ INTEGER,
-	value INTEGER,
-	extraData VARCHAR(255) null
-);
-
-create table SocialEquitySetting (
-	equitySettingId LONG not null primary key,
-	groupId LONG,
-	companyId LONG,
-	classNameId LONG,
-	actionId VARCHAR(75) null,
-	dailyLimit INTEGER,
-	lifespan INTEGER,
-	type_ INTEGER,
-	uniqueEntry BOOLEAN,
-	value INTEGER
-);
-
-create table SocialEquityUser (
-	equityUserId LONG not null primary key,
-	groupId LONG,
-	companyId LONG,
-	userId LONG,
-	contributionK DOUBLE,
-	contributionB DOUBLE,
-	participationK DOUBLE,
-	participationB DOUBLE,
-	rank INTEGER
 );
 
 create table SocialRelation (
