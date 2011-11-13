@@ -107,7 +107,7 @@ portletURL.setParameter("nodeName", node.getName());
 				portletURL.setParameter("struts_action", "/wiki/view_recent_changes");
 				%>
 
-				<liferay-ui:icon
+				<%--<liferay-ui:icon
 					cssClass="top-link"
 					image="../aui/clock"
 					label="<%= true %>"
@@ -147,7 +147,7 @@ portletURL.setParameter("nodeName", node.getName());
 					label="<%= true %>"
 					message="draft-pages"
 					url='<%= strutsAction.equals(strutsPath + "/view_draft_pages") ? StringPool.BLANK : portletURL.toString() %>'
-				/>
+				/>--%>
 			</div>
 
 			<liferay-portlet:renderURL varImpl="searchURL">
