@@ -63,6 +63,7 @@
 				<!-- Prepare -->
 
 				<delete dir="docroot/html/ALLOY_ZIP" />
+				<delete dir="docroot/html/css/portal/aui.css" />
 				<delete dir="docroot/html/js/aui" />
 				<delete dir="docroot/html/portal/aui" />
 				<delete dir="docroot/html/themes/_unstyled/images/aui/" />
@@ -143,7 +144,7 @@
 					</sequential>
 				</for>
 
-				<replaceregexp match="url\(([^)]+)\)" replace="url(&lt;%= themeImagesPath %&gt;/aui/\1)" flags="g" byline="false">
+				<replaceregexp match="url\(([^)]+)\)" replace="url(@theme_image_path@/aui/\1)" flags="g" byline="false">
 					<fileset
 						dir="docroot/html/ALLOY_ZIP/build/aui-skins/tmp/"
 						includes="alloy.css"
@@ -160,7 +161,7 @@
 
 				<copy
 					file="docroot/html/ALLOY_ZIP/build/aui-skins/tmp/alloy.css"
-					tofile="docroot/html/portal/aui/css.jspf"
+					tofile="docroot/html/css/portal/aui.css"
 					overwrite="true"
 				/>
 
@@ -352,7 +353,7 @@
 			newenvironment="true"
 		>
 			<jvmarg value="-Dliferay.lib.portal.dir=${basedir}/../lib/portal" />
-			<arg value="sass.dir.0=${basedir}/docroot/html/portal" />
+			<arg value="sass.dir.0=${basedir}/docroot/html/css" />
 			<arg value="sass.dir.1=${basedir}/docroot/html/portlet" />
 			<arg value="sass.dir.2=${basedir}/docroot/html/themes" />
 		</java>
@@ -819,6 +820,9 @@ var defaultTypes = []]>
 		<delete dir="test-results" />
 
 		<delete>
+			<fileset dir="docroot/html/css" includes="**/_sass_cache_*.css" />
+			<fileset dir="docroot/html/portlet" includes="**/_sass_cache_*.css" />
+			<fileset dir="docroot/html/themes" includes="**/_sass_cache_*.css" />
 			<fileset dir="docroot/WEB-INF/tld" includes="liferay*.tld" />
 		</delete>
 
@@ -1008,6 +1012,8 @@ Please set the property "jdk.6.home" in build.properties.
 		<antcall target="build-fckeditor" />
 		<antcall target="build-tinymce" />
 		<antcall target="build-vaadin" />
+
+		<antcall target="build-css" />
 
 		<copy todir="docroot/WEB-INF/lib" file="${project.dir}/portal-client/portal-client.jar" failonerror="false" />
 

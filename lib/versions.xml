@@ -2211,6 +2211,9 @@
 				<license-name>LGPL 2.1</license-name>
 			</license>
 		</licenses>
+		<comments>
+			See the Ant target "build-ruby-gems" in portal-impl/build.xml.
+		</comments>
 	</library>
 	<library>
 		<file-name>portal/json-java.jar</file-name>

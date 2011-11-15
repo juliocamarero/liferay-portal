@@ -237,20 +237,23 @@ public class StripFilter extends BasePortalFilter {
 			minifiedContent = _minifierCache.get(key);
 
 			if (minifiedContent == null) {
-				try {
-					content = DynamicCSSUtil.parseSass(request, key, content);
-				}
-				catch (ScriptingException se) {
-					_log.error("Unable to parse SASS on CSS " + key, se);
-
-					if (_log.isDebugEnabled()) {
-						_log.debug(content);
+				if (PropsValues.STRIP_CSS_SASS_ENABLED) {
+					try {
+						content = DynamicCSSUtil.parseSass(
+							request, key, content);
 					}
+					catch (ScriptingException se) {
+						_log.error("Unable to parse SASS on CSS " + key, se);
 
-					if (response != null) {
-						response.setHeader(
-							HttpHeaders.CACHE_CONTROL,
-							HttpHeaders.CACHE_CONTROL_NO_CACHE_VALUE);
+						if (_log.isDebugEnabled()) {
+							_log.debug(content);
+						}
+
+						if (response != null) {
+							response.setHeader(
+								HttpHeaders.CACHE_CONTROL,
+								HttpHeaders.CACHE_CONTROL_NO_CACHE_VALUE);
+						}
 					}
 				}
 

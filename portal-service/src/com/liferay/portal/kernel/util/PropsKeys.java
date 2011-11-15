@@ -1867,6 +1867,8 @@ public interface PropsKeys {
 
 	public static final String SQL_DATA_MAX_PARAMETERS = "sql.data.max.parameters";
 
+	public static final String STRIP_CSS_SASS_ENABLED = "strip.css.sass.enabled";
+
 	public static final String STRIP_IGNORE_PATHS = "strip.ignore.paths";
 
 	public static final String STRUTS_PORTLET_REQUEST_PROCESSOR = "struts.portlet.request.processor";

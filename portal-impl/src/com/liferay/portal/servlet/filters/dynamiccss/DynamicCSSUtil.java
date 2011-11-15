@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.SessionParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -28,6 +29,7 @@ import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.UnsyncPrintWriterPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.ModelHintsConstants;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.scripting.ruby.RubyExecutor;
@@ -35,6 +37,7 @@ import com.liferay.portal.service.ThemeLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.tools.SassToCssBuilder;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PropsValues;
 
 import java.io.File;
 
@@ -80,6 +83,12 @@ public class DynamicCSSUtil {
 			stopWatch.start();
 		}
 
+		// Request will only be null when called by StripFilterTest
+
+		if (request == null) {
+			return content;
+		}
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -99,7 +108,8 @@ public class DynamicCSSUtil {
 		File cacheCssRealFile = SassToCssBuilder.getCacheFile(cssRealPath);
 
 		if (cacheCssRealFile.exists() &&
-			(cacheCssRealFile.lastModified() == cssRealFile.lastModified())) {
+			(cacheCssRealFile.lastModified() == cssRealFile.lastModified()) &&
+			_isThemeCssFastLoad(request, themeDisplay)) {
 
 			parsedContent = FileUtil.read(cacheCssRealFile);
 
@@ -110,6 +120,21 @@ public class DynamicCSSUtil {
 			}
 		}
 		else {
+			content = StringUtil.replace(
+				content,
+				new String[] {
+					"@model_hints_constants_text_display_height@",
+					"@model_hints_constants_text_display_width@",
+					"@model_hints_constants_textarea_display_height@",
+					"@model_hints_constants_textarea_display_width@"
+				},
+				new String[] {
+					ModelHintsConstants.TEXT_DISPLAY_HEIGHT,
+					ModelHintsConstants.TEXT_DISPLAY_WIDTH,
+					ModelHintsConstants.TEXTAREA_DISPLAY_HEIGHT,
+					ModelHintsConstants.TEXTAREA_DISPLAY_WIDTH
+				});
+
 			parsedContent = _parseSass(
 				request, themeDisplay, theme, cssRealPath, content);
 
@@ -226,6 +251,17 @@ public class DynamicCSSUtil {
 		}
 
 		return themeImagesPath;
+	}
+
+	private static boolean _isThemeCssFastLoad(
+		HttpServletRequest request, ThemeDisplay themeDisplay) {
+
+		if (themeDisplay != null) {
+			return themeDisplay.isThemeCssFastLoad();
+		}
+
+		return SessionParamUtil.getBoolean(
+			request, "css_fast_load", PropsValues.THEME_CSS_FAST_LOAD);
 	}
 
 	private static String _parseSass(

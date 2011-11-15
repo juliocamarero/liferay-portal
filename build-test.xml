@@ -62,6 +62,16 @@
 		</if>
 
 		<if>
+			<isset property="test.ant.script.evaluate.logs" />
+			<then>
+				<property name="test.ant.script.file.evaluate.logs" value="&lt;property name=&quot;test.evaluate.logs&quot; value=&quot;true&quot; /&gt;" />
+			</then>
+			<else>
+				<property name="test.ant.script.file.evaluate.logs" value=" " />
+			</else>
+		</if>
+
+		<if>
 			<isset property="test.ant.script.plugin.hooks" />
 			<then>
 				<property name="test.ant.script.file.plugin.hooks" value="&lt;property name=&quot;hook.plugins.includes&quot; value=&quot;${test.ant.script.plugin.hooks}&quot; /&gt;" />
@@ -137,6 +147,16 @@
 	</target>
 
 	<target name="build-test-ant-script-db-upgrade">
+		<if>
+			<isset property="test.ant.script.evaluate.logs" />
+			<then>
+				<property name="test.ant.script.file.evaluate.logs" value="&lt;property name=&quot;test.evaluate.logs&quot; value=&quot;true&quot; /&gt;" />
+			</then>
+			<else>
+				<property name="test.ant.script.file.evaluate.logs" value=" " />
+			</else>
+		</if>
+
 		<for list="${test.ant.script.versions}" param="test.ant.script.version">
 			<sequential>
 				<if>
@@ -235,7 +255,7 @@
 	</target>
 
 	<target name="build-test-ant-scripts">
-		<property name="build-test-ant-scripts.version" value="4" />
+		<property name="build-test-ant-scripts.version" value="5" />
 
 		<if>
 			<available file="portal-web/test-ant-scripts/version" />
@@ -602,6 +622,12 @@
 			<param name="test.ant.script.versions" value="5.2.3,6.0.6,6.0.12" />
 		</antcall>
 
+		<antcall target="build-test-ant-script-db-upgrade-smoke">
+			<param name="test.ant.script.command" value="db-upgrade-smoke" />
+			<param name="test.ant.script.evaluate.logs" value="true" />
+			<param name="test.ant.script.versions" value="5.2.3,6.0.6,6.0.12,latest" />
+		</antcall>
+
 		<antcall target="build-test-ant-script-db-upgrade">
 			<param name="test.ant.script.command" value="db-upgrade-social" />
 			<param name="test.ant.script.plugin.portlets" value="social-networking-portlet" />
@@ -637,11 +663,6 @@
 			<param name="test.ant.script.command" value="db-upgrade-wiki" />
 			<param name="test.ant.script.suite" value="Wiki" />
 			<param name="test.ant.script.versions" value="5.2.3,6.0.6,6.0.12" />
-		</antcall>
-
-		<antcall target="build-test-ant-script-db-upgrade-smoke">
-			<param name="test.ant.script.command" value="db-upgrade-smoke" />
-			<param name="test.ant.script.versions" value="5.2.3,6.0.6,6.0.12,latest" />
 		</antcall>
 
 		<antcall target="build-test-ant-script">
@@ -1530,12 +1551,14 @@
 
 		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="sevencogs-smoke" />
+			<param name="test.ant.script.evaluate.logs" value="true" />
 			<param name="test.ant.script.sevencogs" value="true" />
 			<param name="test.ant.script.suite" value="SevencogsSmokeTestSuite" />
 		</antcall>
 
 		<antcall target="build-test-ant-script">
 			<param name="test.ant.script.command" value="smoke-test" />
+			<param name="test.ant.script.evaluate.logs" value="true" />
 			<param name="test.ant.script.suite" value="SmokeTestSuite" />
 		</antcall>
 
@@ -1845,6 +1868,41 @@
 		</loadfile>
 
 		<echo file="portal-web/test-ant-scripts/${ant.script.file.name}">${template.content}</echo>
+	</target>
+
+	<target name="evaluate-logs">
+		<if>
+			<available file="portal-web/test-ant-scripts/log" />
+			<then>
+				<move file="portal-web/test-ant-scripts/log" todir="."/>
+			</then>
+		</if>
+
+		<if>
+			<isset property="print.logs" />
+			<then>
+				<loadfile property="log.content" srcfile="log">
+					<filterchain>
+						<expandproperties />
+					</filterchain>
+				</loadfile>
+
+				<echo>Displaying Logs:</echo>
+				<echo></echo>
+				<echo>${log.content}</echo>
+			</then>
+		</if>
+
+		<if>
+			<isset property="test.evaluate.logs" />
+			<then>
+				<ant dir="portal-web" target="test-class" inheritAll="false">
+					<property name="class" value="EvaluateLogTestSuite" />
+				</ant>
+			</then>
+		</if>
+
+		<delete file="log" />
 	</target>
 
 	<target name="execute-remote-command">
@@ -2314,6 +2372,141 @@ svn --username ${svn.username} --password ${svn.password} update -r ${svn.info.r
 	maxActive="20"
 />
 </Context>]]></echo>
+	</target>
+
+	<target name="prepare-selenium">
+		<if>
+			<not>
+				<isset property="selenium.executable.zip" />
+			</not>
+			<then>
+				<fail>
+.
+
+Please set "selenium.executable.zip" in test.properties to point to the Selenium
+executable ZIP file.
+				</fail>
+			</then>
+		</if>
+
+		<if>
+			<or>
+				<not>
+					<available file="${selenium.nanny.executable}" />
+				</not>
+				<uptodate
+					srcfile="${selenium.nanny.executable}"
+					targetfile="${selenium.executable.zip}"
+				/>
+			</or>
+			<then>
+				<delete>
+					<fileset
+						dir="${project.dir}/tools/selenium"
+						includes="*.exe"
+					/>
+				</delete>
+
+				<unzip
+					dest="${project.dir}/tools/selenium"
+					src="${selenium.executable.zip}"
+				/>
+
+				<touch file="${selenium.nanny.executable}" />
+			</then>
+		</if>
+
+		<if>
+			<isset property="selenium.output.dir" />
+			<then>
+				<replace
+					file="portal-web/test/test-portal-web.properties"
+					token="output.dir=H:\\selenium-output\\"
+					value="output.dir=${selenium.output.dir}"
+				/>
+			</then>
+			<else>
+				<property name="selenium.output.dir" value="H:\\selenium-output\\" />
+			</else>
+		</if>
+
+		<if>
+			<not>
+				<isset property="skip.delete-selenium-output" />
+			</not>
+			<then>
+				<delete dir="${selenium.output.dir}" />
+
+				<mkdir dir="${selenium.output.dir}" />
+			</then>
+		</if>
+
+		<if>
+			<isset property="test.browser" />
+			<then>
+				<replace
+					file="portal-web/test/test-portal-web.properties"
+					token="browser.type=*chrome"
+					value="browser.type=*${test.browser}"
+				/>
+			</then>
+			<else>
+				<property name="test.browser" value="chrome" />
+			</else>
+		</if>
+
+		<if>
+			<or>
+				<equals arg1="${test.browser}" arg2="chrome" />
+				<equals arg1="${test.browser}" arg2="firefox" />
+			</or>
+			<then>
+				<replace
+					file="portal-web/test/test-portal-web.properties"
+					token="#selenium.executable.dir="
+					value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
+				/>
+				<replace
+					file="portal-web/test/test-portal-web.properties"
+					token="#selenium.download.file.executable="
+					value="selenium.download.file.executable=selenium_download_file_ff.exe"
+				/>
+				<replace
+					file="portal-web/test/test-portal-web.properties"
+					token="#selenium.set.browser.option.executable="
+					value="selenium.set.browser.option.executable=selenium_set_browser_option_ff.exe"
+				/>
+			</then>
+			<elseif>
+				<or>
+					<equals arg1="${test.browser}" arg2="iehta" />
+					<equals arg1="${test.browser}" arg2="iexplorer" />
+				</or>
+				<then>
+					<replace
+						file="portal-web/test/test-portal-web.properties"
+						token="#selenium.executable.dir="
+						value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
+					/>
+					<replace
+						file="portal-web/test/test-portal-web.properties"
+						token="#selenium.download.file.executable="
+						value="selenium.download.file.executable=selenium_download_file_ie.exe"
+					/>
+				</then>
+			</elseif>
+		</if>
+
+		<if>
+			<isset property="test.database.minimal" />
+			<then>
+				<replace
+					file="portal-web/test/test-portal-web.properties"
+					token="test.database.minimal=false"
+					value="test.database.minimal=true"
+				/>
+			</then>
+		</if>
 	</target>
 
 	<target name="prepare-sql-server">
@@ -2919,139 +3112,6 @@ file.
 	</target>
 
 	<target name="run-simple-server">
-		<if>
-			<not>
-				<isset property="selenium.executable.zip" />
-			</not>
-			<then>
-				<fail>
-.
-
-Please set "selenium.executable.zip" in test.properties to point to the Selenium
-executable ZIP file.
-				</fail>
-			</then>
-		</if>
-
-		<if>
-			<or>
-				<not>
-					<available file="${selenium.nanny.executable}" />
-				</not>
-				<uptodate
-					srcfile="${selenium.nanny.executable}"
-					targetfile="${selenium.executable.zip}"
-				/>
-			</or>
-			<then>
-				<delete>
-					<fileset
-						dir="${project.dir}/tools/selenium"
-						includes="*.exe"
-					/>
-				</delete>
-
-				<unzip
-					dest="${project.dir}/tools/selenium"
-					src="${selenium.executable.zip}"
-				/>
-
-				<touch file="${selenium.nanny.executable}" />
-			</then>
-		</if>
-
-		<if>
-			<isset property="selenium.output.dir" />
-			<then>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="output.dir=H:\\selenium-output\\"
-					value="output.dir=${selenium.output.dir}"
-				/>
-			</then>
-			<else>
-				<property name="selenium.output.dir" value="H:\\selenium-output\\" />
-			</else>
-		</if>
-
-		<if>
-			<not>
-				<isset property="skip.delete-selenium-output" />
-			</not>
-			<then>
-				<delete dir="${selenium.output.dir}" />
-
-				<mkdir dir="${selenium.output.dir}" />
-			</then>
-		</if>
-
-		<if>
-			<isset property="test.browser" />
-			<then>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="browser.type=*chrome"
-					value="browser.type=*${test.browser}"
-				/>
-			</then>
-			<else>
-				<property name="test.browser" value="chrome" />
-			</else>
-		</if>
-
-		<if>
-			<or>
-				<equals arg1="${test.browser}" arg2="chrome" />
-				<equals arg1="${test.browser}" arg2="firefox" />
-			</or>
-			<then>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="#selenium.executable.dir="
-					value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
-				/>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="#selenium.download.file.executable="
-					value="selenium.download.file.executable=selenium_download_file_ff.exe"
-				/>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="#selenium.set.browser.option.executable="
-					value="selenium.set.browser.option.executable=selenium_set_browser_option_ff.exe"
-				/>
-			</then>
-			<elseif>
-				<or>
-					<equals arg1="${test.browser}" arg2="iehta" />
-					<equals arg1="${test.browser}" arg2="iexplorer" />
-				</or>
-				<then>
-					<replace
-						file="portal-web/test/test-portal-web.properties"
-						token="#selenium.executable.dir="
-						value="selenium.executable.dir=${basedir.unix}/tools/selenium/"
-					/>
-					<replace
-						file="portal-web/test/test-portal-web.properties"
-						token="#selenium.download.file.executable="
-						value="selenium.download.file.executable=selenium_download_file_ie.exe"
-					/>
-				</then>
-			</elseif>
-		</if>
-
-		<if>
-			<isset property="test.database.minimal" />
-			<then>
-				<replace
-					file="portal-web/test/test-portal-web.properties"
-					token="test.database.minimal=false"
-					value="test.database.minimal=true"
-				/>
-			</then>
-		</if>
-
 		<antcall target="rebuild-database" inheritAll="false" />
 
 		<delete includeemptydirs="true" failonerror="false">
@@ -3166,6 +3226,8 @@ executable ZIP file.
 				<property name="plugins.deployed" value="true" />
 			</then>
 		</if>
+
+		<antcall target="prepare-selenium" />
 
 		<if>
 			<or>

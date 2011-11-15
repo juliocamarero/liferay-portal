@@ -101,20 +101,6 @@
 			</sequential>
 		</parallel>
 
-		<antcall target="revert-test-properties" />
-
-		<replace
-			file="portal-impl/test/test-portal-impl.properties"
-			token="localhost:8080"
-			value="${vm.host}:7001"
-		/>
-
-		<replace
-			file="portal-web/test/test-portal-web.properties"
-			token="localhost:8080"
-			value="${vm.host}:7001"
-		/>
-
 		<if>
 			<isset property="hook.plugins.includes" />
 			<then>
@@ -186,11 +172,33 @@
 			</then>
 		</if>
 
+		<antcall target="revert-test-properties" />
+
+		<replace
+			file="portal-impl/test/test-portal-impl.properties"
+			token="localhost:8080"
+			value="${vm.host}:7001"
+		/>
+
+		<replace
+			file="portal-web/test/test-portal-web.properties"
+			token="localhost:8080"
+			value="${vm.host}:7001"
+		/>
+
+		<antcall target="prepare-selenium" />
+
 		<antcall target="start-selenium" />
+
+		<record action="start" name="log" />
 
 		<antcall target="run-weblogic-10.3">
 			<param name="test.class" value="${test.name}" />
 		</antcall>
+
+		<record action="stop" name="log" />
+
+		<antcall target="evaluate-logs" />
 
 		<antcall target="stop-selenium" />
 

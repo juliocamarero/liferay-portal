@@ -14,8 +14,12 @@
 
 package com.liferay.portal.deploy.auto;
 
+import aQute.libg.header.OSGiHeader;
+
 import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
 import com.liferay.portal.kernel.deploy.auto.AutoDeployListener;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
@@ -27,12 +31,16 @@ import java.io.InputStream;
 
 import java.net.URI;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
+import org.osgi.framework.Version;
 import org.osgi.framework.launch.Framework;
 
 /**
@@ -55,6 +63,7 @@ public class OSGiAutoDeployListener implements AutoDeployListener {
 				inputStream.close();
 			}
 			catch (Exception e) {
+				_log.error(e, e);
 			}
 
 			inputStream = null;
@@ -65,6 +74,7 @@ public class OSGiAutoDeployListener implements AutoDeployListener {
 				zipReader.close();
 			}
 			catch (Exception e) {
+				_log.error(e, e);
 			}
 		}
 	}
@@ -73,6 +83,10 @@ public class OSGiAutoDeployListener implements AutoDeployListener {
 		Framework framework = OSGiServiceUtil.getFramework();
 
 		if (framework == null) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("OSGi framework is disabled or not installed");
+			}
+
 			return;
 		}
 
@@ -116,15 +130,47 @@ public class OSGiAutoDeployListener implements AutoDeployListener {
 		}
 	}
 
+	protected Bundle getBundle(
+		Framework framework, Manifest manifest) {
+
+		BundleContext bundleContext = framework.getBundleContext();
+
+		Attributes attributes = manifest.getMainAttributes();
+
+		String bundleSymbolicNameAttribute = attributes.getValue(
+			Constants.BUNDLE_SYMBOLICNAME);
+
+		Map<String, Map<String, String>> bundleSymbolicNamesMap =
+			OSGiHeader.parseHeader(bundleSymbolicNameAttribute);
+
+		Set<String> bundleSymbolicNamesSet = bundleSymbolicNamesMap.keySet();
+
+		Iterator<String> bundleSymbolicNamesIterator =
+			bundleSymbolicNamesSet.iterator();
+
+		String bundleSymbolicName = bundleSymbolicNamesIterator.next();
+
+		String bundleVersionAttribute = attributes.getValue(
+			Constants.BUNDLE_VERSION);
+
+		Version bundleVersion = Version.parseVersion(bundleVersionAttribute);
+
+		for (Bundle bundle : bundleContext.getBundles()) {
+			if (bundleSymbolicName.equals(bundle.getSymbolicName()) &&
+				bundleVersion.equals(bundle.getVersion())) {
+
+				return bundle;
+			}
+		}
+
+		return null;
+	}
+
 	protected void installBundle(
 			Framework framework, File file, Manifest manifest)
 		throws Exception {
 
-		BundleContext bundleContext = framework.getBundleContext();
-
-		URI uri = file.toURI();
-
-		Bundle bundle = bundleContext.getBundle(uri.toString());
+		Bundle bundle = getBundle(framework, manifest);
 
 		InputStream inputStream = new FileInputStream(file);
 
@@ -132,10 +178,25 @@ public class OSGiAutoDeployListener implements AutoDeployListener {
 			bundle.update(inputStream);
 		}
 		else {
-			bundle = bundleContext.installBundle(uri.toString(), inputStream);
+			try {
+				BundleContext bundleContext = framework.getBundleContext();
+
+				URI uri = file.toURI();
+
+				bundle = bundleContext.installBundle(
+					uri.toString(), inputStream);
+			}
+			catch (Exception e) {
+				_log.error(e, e);
+			}
 		}
 
-		bundle.start();
+		if (bundle != null) {
+			bundle.start();
+		}
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		OSGiAutoDeployListener.class);
 
 }

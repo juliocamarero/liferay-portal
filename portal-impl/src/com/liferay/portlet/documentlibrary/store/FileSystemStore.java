@@ -292,49 +292,43 @@ public class FileSystemStore extends BaseStore {
 	public void updateFile(
 			long companyId, long repositoryId, long newRepositoryId,
 			String fileName)
-		throws SystemException {
+		throws PortalException {
 
-		try {
-			File fileNameDir = getFileNameDir(
-				companyId, repositoryId, fileName);
-			File newFileNameDir = getFileNameDir(
-				companyId, newRepositoryId, fileName);
+		File fileNameDir = getFileNameDir(
+			companyId, repositoryId, fileName);
+		File newFileNameDir = getFileNameDir(
+			companyId, newRepositoryId, fileName);
 
-			FileUtil.copyDirectory(fileNameDir, newFileNameDir);
-
-			File parentFile = fileNameDir.getParentFile();
-
-			FileUtil.deltree(fileNameDir);
-
-			deleteEmptyAncestors(parentFile);
+		if (newFileNameDir.exists()) {
+			throw new DuplicateFileException(fileName);
 		}
-		catch (IOException ioe) {
-			throw new SystemException(ioe);
-		}
+
+		File parentFile = fileNameDir.getParentFile();
+
+		fileNameDir.renameTo(newFileNameDir);
+
+		deleteEmptyAncestors(parentFile);
 	}
 
 	public void updateFile(
 			long companyId, long repositoryId, String fileName,
 			String newFileName)
-		throws SystemException {
+		throws PortalException {
 
-		try {
-			File fileNameDir = getFileNameDir(
-				companyId, repositoryId, fileName);
-			File newFileNameDir = getFileNameDir(
-				companyId, repositoryId, newFileName);
+		File fileNameDir = getFileNameDir(
+			companyId, repositoryId, fileName);
+		File newFileNameDir = getFileNameDir(
+			companyId, repositoryId, newFileName);
 
-			FileUtil.copyDirectory(fileNameDir, newFileNameDir);
-
-			File parentFile = fileNameDir.getParentFile();
-
-			FileUtil.deltree(fileNameDir);
-
-			deleteEmptyAncestors(parentFile);
+		if (newFileNameDir.exists()) {
+			throw new DuplicateFileException(newFileName);
 		}
-		catch (IOException ioe) {
-			throw new SystemException(ioe);
-		}
+
+		File parentFile = fileNameDir.getParentFile();
+
+		fileNameDir.renameTo(newFileNameDir);
+
+		deleteEmptyAncestors(parentFile);
 	}
 
 	@Override
