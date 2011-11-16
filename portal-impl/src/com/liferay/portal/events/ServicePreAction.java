@@ -401,6 +401,13 @@ public class ServicePreAction extends Action {
 			}
 		}
 
+		Boolean redirectToDefaultLayout = (Boolean)request.getAttribute(
+			WebKeys.REDIRECT_TO_DEFAULT_LAYOUT);
+
+		if (redirectToDefaultLayout == null) {
+			redirectToDefaultLayout = Boolean.FALSE;
+		}
+
 		if (layout != null) {
 			Group group = layout.getGroup();
 
@@ -409,7 +416,7 @@ public class ServicePreAction extends Action {
 			}
 
 			boolean isViewableGroup = LayoutPermissionUtil.contains(
-				permissionChecker, layout, controlPanelCategory,
+				permissionChecker, layout, controlPanelCategory, true,
 				ActionKeys.VIEW);
 			boolean isViewableStaging = GroupPermissionUtil.contains(
 				permissionChecker, group.getGroupId(),
@@ -423,7 +430,11 @@ public class ServicePreAction extends Action {
 			else if (!isViewableGroup && group.isStagingGroup()) {
 				layout = null;
 			}
-			else if (!isViewableGroup) {
+			else if (!isViewableGroup ||
+					 (!redirectToDefaultLayout &&
+					  !LayoutPermissionUtil.contains(
+						  permissionChecker, layout, false, ActionKeys.VIEW))) {
+
 				sb = new StringBundler(6);
 
 				sb.append("User ");
@@ -438,16 +449,6 @@ public class ServicePreAction extends Action {
 				}
 
 				throw new NoSuchLayoutException(sb.toString());
-			}
-			else if (isViewableGroup &&
-					!LayoutPermissionUtil.contains(
-						permissionChecker, layout, ActionKeys.VIEW)) {
-
-				layouts = LayoutLocalServiceUtil.getLayouts(
-					layout.getGroupId(), layout.isPrivateLayout(),
-					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-
-				layout = null;
 			}
 			else if (group.isLayoutPrototype()) {
 				layouts = new ArrayList<Layout>();
@@ -884,8 +885,7 @@ public class ServicePreAction extends Action {
 		if (layout != null) {
 			if (layout.isTypePortlet()) {
 				boolean freeformLayout =
-					layoutTypePortlet.getLayoutTemplateId().equals(
-						"freeform");
+					layoutTypePortlet.getLayoutTemplateId().equals("freeform");
 
 				themeDisplay.setFreeformLayout(freeformLayout);
 
@@ -1571,7 +1571,7 @@ public class ServicePreAction extends Action {
 
 		Group group = layout.getGroup();
 
-		boolean hasUpdateLayoutPermission = false;
+		boolean hasViewLayoutPermission = false;
 		boolean hasViewStagingPermission =
 			(group.isStagingGroup() || group.isStagedRemotely()) &&
 			 GroupPermissionUtil.contains(
@@ -1579,10 +1579,10 @@ public class ServicePreAction extends Action {
 				 ActionKeys.VIEW_STAGING);
 
 		if (LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.VIEW) ||
+				permissionChecker, layout, false, ActionKeys.VIEW) ||
 			hasViewStagingPermission) {
 
-			hasUpdateLayoutPermission = true;
+			hasViewLayoutPermission = true;
 		}
 
 		List<Layout> accessibleLayouts = new ArrayList<Layout>();
@@ -1592,10 +1592,10 @@ public class ServicePreAction extends Action {
 
 			if (!curLayout.isHidden() &&
 				(LayoutPermissionUtil.contains(
-					permissionChecker, curLayout, true, ActionKeys.VIEW) ||
+					permissionChecker, curLayout, false, ActionKeys.VIEW) ||
 				 hasViewStagingPermission)) {
 
-				if (accessibleLayouts.isEmpty() && !hasUpdateLayoutPermission) {
+				if (accessibleLayouts.isEmpty() && !hasViewLayoutPermission) {
 					layout = curLayout;
 				}
 
@@ -1606,7 +1606,7 @@ public class ServicePreAction extends Action {
 		if (accessibleLayouts.isEmpty()) {
 			layouts = null;
 
-			if (!hasUpdateLayoutPermission) {
+			if (!hasViewLayoutPermission) {
 				SessionErrors.add(
 					request, LayoutPermissionException.class.getName());
 			}
@@ -1885,8 +1885,7 @@ public class ServicePreAction extends Action {
 
 		// Main Journal article
 
-		long mainJournalArticleId = ParamUtil.getLong(
-			request, "p_j_a_id");
+		long mainJournalArticleId = ParamUtil.getLong(request, "p_j_a_id");
 
 		if (mainJournalArticleId > 0) {
 			try{

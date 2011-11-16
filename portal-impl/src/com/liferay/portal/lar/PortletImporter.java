@@ -169,24 +169,34 @@ public class PortletImporter {
 
 				String queryValuesName = "queryValues" + index;
 
-				String[] importedCategoryPKs = portletPreferences.getValues(
-					queryValuesName, null);
+				String[] importedAssetCategoryPKs =
+					portletPreferences.getValues(queryValuesName, null);
 
 				Map<Long, Long> assetCategoryPKs =
 					(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 						AssetCategory.class);
 
-				String[] newCategoryPKs = new String[
-					importedCategoryPKs.length];
+				String[] newAssetCategoryPKs = new String[
+					importedAssetCategoryPKs.length];
 
 				int i = 0;
 
-				for (String importedCategoryPK : importedCategoryPKs) {
-					newCategoryPKs[i++] = StringUtil.valueOf(
-						assetCategoryPKs.get(new Long(importedCategoryPK)));
+				for (String importedAssetCategoryPK :
+						importedAssetCategoryPKs) {
+
+					String newAssetCategoryPK = StringUtil.valueOf(
+						assetCategoryPKs.get(
+							new Long(importedAssetCategoryPK)));
+
+					if (Validator.isNull(newAssetCategoryPK)) {
+						newAssetCategoryPK = importedAssetCategoryPK;
+					}
+
+					newAssetCategoryPKs[i++] = newAssetCategoryPK;
 				}
 
-				portletPreferences.setValues(queryValuesName, newCategoryPKs);
+				portletPreferences.setValues(
+					queryValuesName, newAssetCategoryPKs);
 			}
 		}
 
@@ -481,8 +491,7 @@ public class PortletImporter {
 		readAssetLinks(portletDataContext);
 
 		if (_log.isInfoEnabled()) {
-			_log.info(
-				"Importing portlet takes " + stopWatch.getTime() + " ms");
+			_log.info("Importing portlet takes " + stopWatch.getTime() + " ms");
 		}
 
 		zipReader.close();
@@ -950,8 +959,7 @@ public class PortletImporter {
 
 			try {
 				jxPreferences.setValue("lfrScopeType", scopeType);
-				jxPreferences.setValue(
-					"lfrScopeLayoutUuid", scopeLayoutUuid);
+				jxPreferences.setValue("lfrScopeLayoutUuid", scopeLayoutUuid);
 
 				jxPreferences.store();
 			}
@@ -1217,8 +1225,7 @@ public class PortletImporter {
 			"expando-table");
 
 		for (Element expandoTableElement : expandoTableElements) {
-			String className = expandoTableElement.attributeValue(
-				"class-name");
+			String className = expandoTableElement.attributeValue("class-name");
 
 			ExpandoTable expandoTable = null;
 

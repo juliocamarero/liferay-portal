@@ -59,6 +59,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MinifierFilter extends BasePortalFilter {
 
+	/**
+	 * @see {@link DynamicCSSUtil#_propagateQueryString(String, String)}
+	 */
 	public static String aggregateCss(String dir, String content)
 		throws IOException {
 
@@ -416,8 +419,7 @@ public class MinifierFilter extends BasePortalFilter {
 		String cssRealPath, String content) {
 
 		try {
-			content = DynamicCSSUtil.parseSass(
-				request, cssRealPath, content);
+			content = DynamicCSSUtil.parseSass(request, cssRealPath, content);
 		}
 		catch (Exception e) {
 			_log.error("Unable to parse SASS on CSS " + cssRealPath, e);

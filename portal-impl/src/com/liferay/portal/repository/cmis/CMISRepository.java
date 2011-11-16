@@ -71,7 +71,6 @@ import com.liferay.portlet.documentlibrary.util.comparator.RepositoryModelSizeCo
 
 import java.io.InputStream;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import java.util.ArrayList;
@@ -1568,13 +1567,11 @@ public class CMISRepository extends BaseCmisRepository {
 				Object scoreObj = queryResult.getPropertyValueByQueryName(
 					"HITS");
 
-				if (scoreObj instanceof BigDecimal) {
-					BigDecimal scoreBigDecimal = (BigDecimal)scoreObj;
-
-					scores.add(scoreBigDecimal.floatValue());
+				if (scoreObj != null) {
+					scores.add(Float.valueOf(scoreObj.toString()));
 				}
 				else {
-					scores.add((Float)scoreObj);
+					scores.add(1.0f);
 				}
 			}
 			else {

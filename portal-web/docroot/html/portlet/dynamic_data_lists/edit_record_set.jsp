@@ -153,10 +153,11 @@ if (Validator.isNotNull(ddmStructureId)) {
 		Liferay.Util.openDDMPortlet(
 			{
 				chooseCallback: '<portlet:namespace />selectDDMStructure',
-				saveCallback: '<portlet:namespace />selectDDMStructure',
+				ddmResource: '<%= portletConfig.getInitParameter("ddm-resource") %>',
 				dialog: {
 					width:820
 				},
+				saveCallback: '<portlet:namespace />selectDDMStructure',
 				storageType: '<%= PropsValues.DYNAMIC_DATA_LISTS_STORAGE_TYPE %>',
 				structureId: ddmStructureId,
 				structureName: 'data-definition',

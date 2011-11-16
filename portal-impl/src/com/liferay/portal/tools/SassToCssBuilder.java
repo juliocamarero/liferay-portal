@@ -53,7 +53,7 @@ public class SassToCssBuilder {
 		int pos = fileName.lastIndexOf(StringPool.SLASH);
 
 		String cacheFileName =
-			fileName.substring(0, pos + 1) + "_sass_cache_" +
+			fileName.substring(0, pos + 1) + ".sass_cache_" +
 				fileName.substring(pos + 1);
 
 		return new File(cacheFileName);
@@ -165,8 +165,8 @@ public class SassToCssBuilder {
 		directoryScanner.setBasedir(dirName);
 		directoryScanner.setExcludes(
 			new String[] {
-				"**\\_diffs\\**", "**\\_sass_cache_*\\**", "**\\_styled\\**",
-				"**\\_unstyled\\**"
+				"**\\_diffs\\**", "**\\.sass_cache_*\\**",
+				"**\\_sass_cache_*\\**", "**\\_styled\\**", "**\\_unstyled\\**"
 			});
 		directoryScanner.setIncludes(new String[] {"**\\*.css"});
 

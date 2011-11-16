@@ -354,6 +354,8 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 
 	public static final String PUBLIC_RENDER_PARAMETERS_POOL = "PUBLIC_RENDER_PARAMETERS_POOL_";
 
+	public static final String REDIRECT_TO_DEFAULT_LAYOUT = "REDIRECT_TO_DEFAULT_LAYOUT";
+
 	public static final String REFERER = "referer";
 
 	public static final String REQUESTED_LAYOUT = "REQUESTED_LAYOUT";
@@ -385,7 +387,7 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 	public static final String SHOPPING_ORDER = "SHOPPING_ORDER";
 
 	public static final String SOCIAL_ACTIVITY_SETTINGS_MAP = "SOCIAL_ACTIVITY_SETTINGS_MAP";
-	
+
 	public static final String SOCIAL_REQUESTS = "SOCIAL_REQUESTS";
 
 	public static final String SOFTWARE_CATALOG_FRAMEWORK_VERSION = "SOFTWARE_CATALOG_FRAMEWORK_VERSION";

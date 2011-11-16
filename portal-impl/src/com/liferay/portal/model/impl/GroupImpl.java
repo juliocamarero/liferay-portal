@@ -164,8 +164,7 @@ public class GroupImpl extends GroupBaseImpl {
 
 		try {
 			if (_liveGroup == null) {
-				_liveGroup = GroupLocalServiceUtil.getGroup(
-					getLiveGroupId());
+				_liveGroup = GroupLocalServiceUtil.getGroup(getLiveGroupId());
 			}
 
 			return _liveGroup;
@@ -410,6 +409,17 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	public boolean isStagedPortlet(String portletId) {
+		try {
+			if (isLayout()) {
+				Group parentGroup = GroupLocalServiceUtil.getGroup(
+					getParentGroupId());
+
+				return parentGroup.isStagedPortlet(portletId);
+			}
+		}
+		catch (Exception e) {
+		}
+
 		portletId = PortletConstants.getRootPortletId(portletId);
 
 		String typeSettingsProperty = getTypeSettingsProperty(
