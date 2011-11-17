@@ -644,7 +644,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		PasswordPolicy passwordPolicy = defaultUser.getPasswordPolicy();
 
-		if (passwordPolicy.isChangeable() &&
+		if ((passwordPolicy != null) && passwordPolicy.isChangeable() &&
 			passwordPolicy.isChangeRequired()) {
 
 			user.setPasswordReset(true);
@@ -3615,8 +3615,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @param  userIds the primary keys of the users
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void unsetPasswordPolicyUsers(
-			long passwordPolicyId, long[] userIds)
+	public void unsetPasswordPolicyUsers(long passwordPolicyId, long[] userIds)
 		throws SystemException {
 
 		passwordPolicyRelLocalService.deletePasswordPolicyRels(

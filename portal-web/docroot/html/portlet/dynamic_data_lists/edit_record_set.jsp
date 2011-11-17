@@ -153,7 +153,7 @@ if (Validator.isNotNull(ddmStructureId)) {
 		Liferay.Util.openDDMPortlet(
 			{
 				chooseCallback: '<portlet:namespace />selectDDMStructure',
-				ddmResource: '<%= portletConfig.getInitParameter("ddm-resource") %>',
+				ddmResource: '<%= ddmResource %>',
 				dialog: {
 					width:820
 				},

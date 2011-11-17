@@ -1418,8 +1418,7 @@ public class JournalArticleLocalServiceImpl
 		return article.getVersion();
 	}
 
-	public double getLatestVersion(
-			long groupId, String articleId, int status)
+	public double getLatestVersion(long groupId, String articleId, int status)
 		throws PortalException, SystemException {
 
 		JournalArticle article = getLatestArticle(groupId, articleId, status);
@@ -1939,8 +1938,8 @@ public class JournalArticleLocalServiceImpl
 			article.setResourcePrimKey(oldArticle.getResourcePrimKey());
 			article.setGroupId(oldArticle.getGroupId());
 			article.setCompanyId(oldArticle.getCompanyId());
-			article.setUserId(oldArticle.getUserId());
-			article.setUserName(oldArticle.getUserName());
+			article.setUserId(user.getUserId());
+			article.setUserName(user.getFullName());
 			article.setCreateDate(serviceContext.getModifiedDate(now));
 			article.setClassNameId(oldArticle.getClassNameId());
 			article.setClassPK(oldArticle.getClassPK());

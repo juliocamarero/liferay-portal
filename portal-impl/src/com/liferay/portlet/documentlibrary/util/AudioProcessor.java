@@ -51,7 +51,7 @@ public class AudioProcessor extends DefaultPreviewableProcessor {
 	}
 
 	public static Set<String> getAudioMimeTypes() {
-		return _audioMimeTypes;
+		return _instance._audioMimeTypes;
 	}
 
 	public static DLProcessor getInstance() {
@@ -168,8 +168,7 @@ public class AudioProcessor extends DefaultPreviewableProcessor {
 		try {
 			LiferayAudioConverter liferayAudioConverter =
 				new LiferayAudioConverter(
-					srcFile.getCanonicalPath(), destFile.getCanonicalPath(),
-					_SAMPLE_RATE);
+					srcFile.getCanonicalPath(), destFile.getCanonicalPath());
 
 			liferayAudioConverter.convert();
 		}
@@ -258,14 +257,12 @@ public class AudioProcessor extends DefaultPreviewableProcessor {
 			DestinationNames.DOCUMENT_LIBRARY_AUDIO_PROCESSOR, fileVersion);
 	}
 
-	private static int _SAMPLE_RATE = 44100;
-
 	private static Log _log = LogFactoryUtil.getLog(AudioProcessor.class);
 
 	private static AudioProcessor _instance = new AudioProcessor();
 
-	private static Set<String> _audioMimeTypes = SetUtil.fromArray(
+	private Set<String> _audioMimeTypes = SetUtil.fromArray(
 		PropsValues.DL_FILE_ENTRY_PREVIEW_AUDIO_MIME_TYPES);
-	private static List<Long> _fileVersionIds = new Vector<Long>();
+	private List<Long> _fileVersionIds = new Vector<Long>();
 
 }

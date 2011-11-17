@@ -38,14 +38,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.commons.lang.time.StopWatch;
+
 /**
  * @author Juan González
  * @author Sergio González
  * @author Mika Koivisto
  */
 public class VideoProcessor extends DefaultPreviewableProcessor {
-
-	public static final String PREVIEW_TYPE = "flv";
 
 	public static final String THUMBNAIL_TYPE = "jpg";
 
@@ -65,10 +65,23 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		return _instance.doGetPreviewAsStream(fileVersion);
 	}
 
+	public static InputStream getPreviewAsStream(
+			FileVersion fileVersion, String type)
+		throws Exception {
+
+		return _instance.doGetPreviewAsStream(fileVersion, type);
+	}
+
 	public static long getPreviewFileSize(FileVersion fileVersion)
 		throws Exception {
 
 		return _instance.doGetPreviewFileSize(fileVersion);
+	}
+
+	public static long getPreviewFileSize(FileVersion fileVersion, String type)
+		throws Exception {
+
+		return _instance.doGetPreviewFileSize(fileVersion, type);
 	}
 
 	public static InputStream getThumbnailAsStream(FileVersion fileVersion)
@@ -84,7 +97,7 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 	}
 
 	public static Set<String> getVideoMimeTypes() {
-		return _videoMimeTypes;
+		return _instance._videoMimeTypes;
 	}
 
 	public static boolean hasVideo(FileVersion fileVersion) {
@@ -119,7 +132,12 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 
 	@Override
 	protected String getPreviewType() {
-		return PREVIEW_TYPE;
+		return _PREVIEW_TYPES[0];
+	}
+
+	@Override
+	protected String[] getPreviewTypes() {
+		return _PREVIEW_TYPES;
 	}
 
 	@Override
@@ -131,6 +149,14 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 			FileVersion fileVersion, File file, int height, int width)
 		throws Exception {
 
+		StopWatch stopWatch = null;
+
+		if (_log.isInfoEnabled()) {
+			stopWatch = new StopWatch();
+
+			stopWatch.start();
+		}
+
 		String tempFileId = DLUtil.getTempFileId(
 			fileVersion.getFileEntryId(), fileVersion.getVersion());
 
@@ -141,7 +167,9 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 				LiferayVideoThumbnailConverter liferayVideoThumbnailConverter =
 					new LiferayVideoThumbnailConverter(
 						file.getCanonicalPath(), thumbnailTempFile,
-						THUMBNAIL_TYPE, height, width, _THUMBNAIL_PERCENTAGE);
+						THUMBNAIL_TYPE, height, width,
+						PropsValues.
+							DL_FILE_ENTRY_THUMBNAIL_VIDEO_FRAME_PERCENTAGE);
 
 				liferayVideoThumbnailConverter.convert();
 			}
@@ -163,7 +191,8 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		if (_log.isInfoEnabled()) {
 			_log.info(
 				"Xuggler generated a thumbnail for " +
-					fileVersion.getFileVersionId());
+					fileVersion.getFileVersionId() + " in " +
+						stopWatch.getTime() + "ms");
 		}
 	}
 
@@ -173,7 +202,13 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 
 		File videoTempFile = _getVideoTempFile(
 			tempFileId, fileVersion.getExtension());
-		File previewTempFile = getPreviewTempFile(tempFileId);
+
+		File[] previewTempFiles = new File[_PREVIEW_TYPES.length];
+
+		for (int i = 0; i < _PREVIEW_TYPES.length; i++) {
+			previewTempFiles[i] = getPreviewTempFile(
+				tempFileId, _PREVIEW_TYPES[i]);
+		}
 
 		try {
 			if (!PrefsPropsUtil.getBoolean(
@@ -212,7 +247,7 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 			if (_isGeneratePreview(fileVersion)) {
 				try {
 					_generateVideoXuggler(
-						fileVersion, file, previewTempFile,
+						fileVersion, file, previewTempFiles,
 						PropsValues.DL_FILE_ENTRY_PREVIEW_VIDEO_HEIGHT,
 						PropsValues.DL_FILE_ENTRY_PREVIEW_VIDEO_WIDTH);
 				}
@@ -238,36 +273,62 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		finally {
 			_fileVersionIds.remove(fileVersion.getFileVersionId());
 
-			FileUtil.delete(previewTempFile);
+			for (int i = 0; i < previewTempFiles.length; i++) {
+				FileUtil.delete(previewTempFiles[i]);
+			}
+
 			FileUtil.delete(videoTempFile);
 		}
 	}
 
 	private void _generateVideoXuggler(
 			FileVersion fileVersion, File srcFile, File destFile, int height,
-			int width)
+			int width, String containerType)
 		throws Exception {
 
-		try {
-			LiferayVideoConverter liferayVideoConverter =
-				new LiferayVideoConverter(
-					srcFile.getCanonicalPath(), destFile.getCanonicalPath(),
-					height, width, _SAMPLE_RATE);
+		if (!_isGeneratePreview(fileVersion, containerType)) {
+			return;
+		}
 
-			liferayVideoConverter.convert();
+		StopWatch stopWatch = null;
+
+		if (_log.isInfoEnabled()) {
+			stopWatch = new StopWatch();
+
+			stopWatch.start();
 		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
+
+		LiferayVideoConverter liferayVideoConverter = new LiferayVideoConverter(
+			srcFile.getCanonicalPath(), destFile.getCanonicalPath(), height,
+			width);
+
+		liferayVideoConverter.convert();
 
 		addFileToStore(
 			fileVersion.getCompanyId(), PREVIEW_PATH,
-			getPreviewFilePath(fileVersion), destFile);
+			getPreviewFilePath(fileVersion, containerType), destFile);
 
 		if (_log.isInfoEnabled()) {
 			_log.info(
-				"Xuggler generated a preview video for " +
-					fileVersion.getFileVersionId());
+				"Xuggler generated a " + containerType + " preview video for " +
+					fileVersion.getFileVersionId() + " in " +
+						stopWatch.getTime() + "ms");
+		}
+	}
+
+	private void _generateVideoXuggler(
+		FileVersion fileVersion, File srcFile, File[] destFiles, int height,
+		int width) {
+
+		try {
+			for (int i = 0; i < destFiles.length; i++) {
+				_generateVideoXuggler(
+					fileVersion, srcFile, destFiles[i], height, width,
+					_PREVIEW_TYPES[i]);
+			}
+		}
+		catch (Exception e) {
+			_log.error(e, e);
 		}
 	}
 
@@ -286,8 +347,12 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 		sb.append(PREVIEW_TMP_PATH);
 		sb.append(tempFileId);
 
-		if (PREVIEW_TYPE.equals(targetExtension)) {
-			sb.append("_tmp");
+		for (int i = 0; i < _PREVIEW_TYPES.length; i++) {
+			if (_PREVIEW_TYPES[i].equals(targetExtension)) {
+				sb.append("_tmp");
+
+				break;
+			}
 		}
 
 		sb.append(StringPool.PERIOD);
@@ -301,9 +366,26 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 			return false;
 		}
 
-		boolean previewExists = DLStoreUtil.hasFile(
-			fileVersion.getCompanyId(), REPOSITORY_ID,
-			getPreviewFilePath(fileVersion));
+		int previewsCount = 0;
+
+		for (int i = 0; i < _PREVIEW_TYPES.length; i++) {
+			String previewFilePath = getPreviewFilePath(
+				fileVersion, _PREVIEW_TYPES[i]);
+
+			if (DLStoreUtil.hasFile(
+					fileVersion.getCompanyId(), REPOSITORY_ID,
+					previewFilePath)) {
+
+				previewsCount++;
+			}
+		}
+
+		boolean previewExists = false;
+
+		if (previewsCount == _PREVIEW_TYPES.length) {
+			previewExists = true;
+		}
+
 		boolean thumbnailExists = DLStoreUtil.hasFile(
 			fileVersion.getCompanyId(), REPOSITORY_ID,
 			getThumbnailFilePath(fileVersion));
@@ -330,7 +412,27 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 	private boolean _isGeneratePreview(FileVersion fileVersion)
 		throws Exception {
 
-		String previewFilePath = getPreviewFilePath(fileVersion);
+		int contPreviewsCreated = 0;
+
+		for (int i = 0; i < _PREVIEW_TYPES.length; i++) {
+			if (!_isGeneratePreview(fileVersion, _PREVIEW_TYPES[i])) {
+				contPreviewsCreated++;
+			}
+		}
+
+		if (contPreviewsCreated < _PREVIEW_TYPES.length) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	private boolean _isGeneratePreview(
+			FileVersion fileVersion, String previewType)
+		throws Exception {
+
+		String previewFilePath = getPreviewFilePath(fileVersion, previewType);
 
 		if (PropsValues.DL_FILE_ENTRY_PREVIEW_ENABLED &&
 			!DLStoreUtil.hasFile(
@@ -338,9 +440,8 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	private boolean _isGenerateThumbnail(FileVersion fileVersion)
@@ -372,17 +473,15 @@ public class VideoProcessor extends DefaultPreviewableProcessor {
 			DestinationNames.DOCUMENT_LIBRARY_VIDEO_PROCESSOR, fileVersion);
 	}
 
-	private static int _SAMPLE_RATE = 44100;
-
-	private static int _THUMBNAIL_PERCENTAGE =
-		PropsValues.DL_FILE_ENTRY_THUMBNAIL_VIDEO_FRAME_PERCENTAGE;
+	private static final String[] _PREVIEW_TYPES =
+		PropsValues.DL_FILE_ENTRY_PREVIEW_VIDEO_CONTAINERS;
 
 	private static Log _log = LogFactoryUtil.getLog(VideoProcessor.class);
 
 	private static VideoProcessor _instance = new VideoProcessor();
 
-	private static List<Long> _fileVersionIds = new Vector<Long>();
-	private static Set<String> _videoMimeTypes = SetUtil.fromArray(
+	private Set<String> _videoMimeTypes = SetUtil.fromArray(
 		PropsValues.DL_FILE_ENTRY_PREVIEW_VIDEO_MIME_TYPES);
+	private List<Long> _fileVersionIds = new Vector<Long>();
 
 }

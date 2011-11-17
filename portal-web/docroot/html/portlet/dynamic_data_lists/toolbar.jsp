@@ -50,7 +50,7 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view-all");
 	A.one('#<portlet:namespace />manageDDMStructuresLink').on('click', function() {
 		Liferay.Util.openDDMPortlet(
 			{
-				ddmResource: '<%= portletConfig.getInitParameter("ddm-resource") %>',
+				ddmResource: '<%= ddmResource %>',
 				dialog: {
 					width:820
 				},

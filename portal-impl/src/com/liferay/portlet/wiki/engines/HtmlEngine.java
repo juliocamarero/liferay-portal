@@ -45,6 +45,19 @@ import net.htmlparser.jericho.StartTag;
  */
 public class HtmlEngine implements WikiEngine {
 
+	public HtmlEngine() {
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			PortletKeys.WIKI);
+
+		_friendlyURLMapping =
+			Portal.FRIENDLY_URL_SEPARATOR + portlet.getFriendlyURLMapping();
+
+		FriendlyURLMapper friendlyURLMapper =
+			portlet.getFriendlyURLMapperInstance();
+
+		_router = friendlyURLMapper.getRouter();
+	}
+
 	public String convert(
 		WikiPage page, PortletURL viewPageURL, PortletURL editPageURL,
 		String attachmentURLPrefix) {
@@ -82,17 +95,6 @@ public class HtmlEngine implements WikiEngine {
 
 		Map<String, Boolean> links = new HashMap<String, Boolean>();
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
-			page.getCompanyId(), PortletKeys.WIKI);
-
-		String friendlyURLMapping = Portal.FRIENDLY_URL_SEPARATOR +
-			portlet.getFriendlyURLMapping();
-
-		FriendlyURLMapper friendlyURLMapper =
-			portlet.getFriendlyURLMapperInstance();
-
-		Router router = friendlyURLMapper.getRouter();
-
 		Source source = new Source(page.getContent());
 
 		List<StartTag> startTags = source.getAllStartTags("a");
@@ -104,10 +106,10 @@ public class HtmlEngine implements WikiEngine {
 				continue;
 			}
 
-			int pos = href.lastIndexOf(friendlyURLMapping);
+			int pos = href.lastIndexOf(_friendlyURLMapping);
 
 			String friendlyURL = href.substring(
-				pos + friendlyURLMapping.length());
+				pos + _friendlyURLMapping.length());
 
 			if (friendlyURL.endsWith(StringPool.SLASH)) {
 				friendlyURL = friendlyURL.substring(
@@ -116,7 +118,7 @@ public class HtmlEngine implements WikiEngine {
 
 			Map<String, String> routeParameters = new HashMap<String, String>();
 
-			if (!router.urlToParameters(friendlyURL, routeParameters)) {
+			if (!_router.urlToParameters(friendlyURL, routeParameters)) {
 				if (_log.isWarnEnabled()) {
 					_log.warn(
 						"No route could be found to match URL " + friendlyURL);
@@ -133,8 +135,7 @@ public class HtmlEngine implements WikiEngine {
 			}
 
 			try {
-				WikiNodeLocalServiceUtil.getNode(
-					page.getGroupId(), nodeName);
+				WikiNodeLocalServiceUtil.getNode(page.getGroupId(), nodeName);
 
 				links.put(title.toLowerCase(), Boolean.TRUE);
 			}
@@ -149,5 +150,8 @@ public class HtmlEngine implements WikiEngine {
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(HtmlEngine.class);
+
+	private String _friendlyURLMapping;
+	private Router _router;
 
 }

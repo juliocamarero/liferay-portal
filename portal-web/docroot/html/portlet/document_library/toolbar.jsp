@@ -137,7 +137,7 @@ String orderByType = ParamUtil.getString(request, "orderByType");
 	function <portlet:namespace />openDDMStructureView() {
 		Liferay.Util.openDDMPortlet(
 			{
-				ddmResource: '<%= portletConfig.getInitParameter("ddm-resource") %>',
+				ddmResource: '<%= ddmResource %>',
 				dialog: {
 					width:820
 				},

@@ -96,7 +96,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 	}
 
 	public static Set<String> getImageMimeTypes() {
-		return _imageMimeTypes;
+		return _instance._imageMimeTypes;
 	}
 
 	public static InputStream getThumbnailAsStream(FileVersion fileVersion)
@@ -424,8 +424,8 @@ public class ImageProcessor extends DLPreviewableProcessor {
 
 	private static ImageProcessor _instance = new ImageProcessor();
 
-	private static List<Long> _fileVersionIds = new Vector<Long>();
-	private static Set<String> _imageMimeTypes = SetUtil.fromArray(
+	private List<Long> _fileVersionIds = new Vector<Long>();
+	private Set<String> _imageMimeTypes = SetUtil.fromArray(
 		PropsValues.DL_FILE_ENTRY_PREVIEW_IMAGE_MIME_TYPES);
 
 }

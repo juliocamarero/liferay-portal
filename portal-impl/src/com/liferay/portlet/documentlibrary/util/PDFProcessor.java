@@ -674,7 +674,8 @@ public class PDFProcessor extends DefaultPreviewableProcessor {
 	private static PDFProcessor _instance = new PDFProcessor();
 
 	private static ConvertCmd _convertCmd;
-	private static List<Long> _fileVersionIds = new Vector<Long>();
 	private static boolean _warned;
+
+	private List<Long> _fileVersionIds = new Vector<Long>();
 
 }
