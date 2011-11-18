@@ -95,7 +95,7 @@ if (Validator.isNotNull(toLanguageId)) {
 	languageId = toLanguageId;
 }
 
-if (article == null && Validator.isNull(defaultLanguageId)) {
+if ((article == null) && Validator.isNull(defaultLanguageId)) {
 	defaultLanguageId = languageId;
 }
 else {
@@ -109,7 +109,7 @@ String[] mainSections = PropsValues.JOURNAL_ARTICLE_FORM_ADD;
 if (Validator.isNotNull(toLanguageId)) {
 	mainSections = PropsValues.JOURNAL_ARTICLE_FORM_TRANSLATE;
 }
-else if (article != null) {
+else if ((article != null) && (article.getId() > 0)) {
 	mainSections = PropsValues.JOURNAL_ARTICLE_FORM_UPDATE;
 }
 

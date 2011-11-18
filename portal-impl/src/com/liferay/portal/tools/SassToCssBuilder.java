@@ -90,6 +90,23 @@ public class SassToCssBuilder {
 		}
 	}
 
+	public static String parseStaticTokens(String content) {
+		return StringUtil.replace(
+			content,
+			new String[] {
+				"@model_hints_constants_text_display_height@",
+				"@model_hints_constants_text_display_width@",
+				"@model_hints_constants_textarea_display_height@",
+				"@model_hints_constants_textarea_display_width@"
+			},
+			new String[] {
+				ModelHintsConstants.TEXT_DISPLAY_HEIGHT,
+				ModelHintsConstants.TEXT_DISPLAY_WIDTH,
+				ModelHintsConstants.TEXTAREA_DISPLAY_HEIGHT,
+				ModelHintsConstants.TEXTAREA_DISPLAY_WIDTH
+			});
+	}
+
 	public SassToCssBuilder(List<String> dirNames) throws Exception {
 		Class<?> clazz = getClass();
 
@@ -119,20 +136,7 @@ public class SassToCssBuilder {
 
 		content = MinifierFilter.aggregateCss(file.getParent(), content);
 
-		return StringUtil.replace(
-			content,
-			new String[] {
-				"@model_hints_constants_text_display_height@",
-				"@model_hints_constants_text_display_width@",
-				"@model_hints_constants_textarea_display_height@",
-				"@model_hints_constants_textarea_display_width@"
-			},
-			new String[] {
-				ModelHintsConstants.TEXT_DISPLAY_HEIGHT,
-				ModelHintsConstants.TEXT_DISPLAY_WIDTH,
-				ModelHintsConstants.TEXTAREA_DISPLAY_HEIGHT,
-				ModelHintsConstants.TEXTAREA_DISPLAY_WIDTH
-			});
+		return parseStaticTokens(content);
 	}
 
 	private String _getCssThemePath(String fileName) {
