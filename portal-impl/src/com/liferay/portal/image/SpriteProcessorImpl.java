@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.ServletContextUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ContextPathUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -402,11 +403,11 @@ public class SpriteProcessorImpl implements SpriteProcessor {
 			spriteRootDirName += portalContextPath + StringPool.SLASH;
 		}
 
-		String portletContextPath = servletContext.getContextPath();
+		String portletContextPath = ContextPathUtil.getContextPath(
+			servletContext);
 
 		if (Validator.isNotNull(portletContextPath)) {
-			spriteRootDirName +=
-				servletContext.getContextPath() + StringPool.SLASH;
+			spriteRootDirName += portletContextPath + StringPool.SLASH;
 		}
 
 		String rootRealPath = ServletContextUtil.getRealPath(

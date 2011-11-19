@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.search.OpenSearch;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.servlet.URLEncoder;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.ContextPathUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -3005,7 +3006,7 @@ public class PortletImpl extends PortletBaseImpl {
 			ServletContext servletContext = ServletContextPool.get(
 				servletContextName);
 
-			return servletContext.getContextPath();
+			return ContextPathUtil.getContextPath(servletContext);
 		}
 
 		return StringPool.SLASH.concat(servletContextName);

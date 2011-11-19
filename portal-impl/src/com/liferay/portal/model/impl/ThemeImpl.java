@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
+import com.liferay.portal.kernel.util.ContextPathUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
@@ -178,7 +179,7 @@ public class ThemeImpl extends PluginBaseImpl implements Theme {
 			ServletContext servletContext = ServletContextPool.get(
 				servletContextName);
 
-			return servletContext.getContextPath();
+			return ContextPathUtil.getContextPath(servletContext);
 		}
 
 		return StringPool.SLASH.concat(servletContextName);

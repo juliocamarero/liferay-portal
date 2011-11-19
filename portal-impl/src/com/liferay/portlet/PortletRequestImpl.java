@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.servlet.ProtectedPrincipal;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.ContextPathUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -189,7 +190,7 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 		if (ServletContextPool.containsKey(servletContextName)) {
 			servletContext = ServletContextPool.get(servletContextName);
 
-			return servletContext.getContextPath();
+			return ContextPathUtil.getContextPath(servletContext);
 		}
 
 		return StringPool.SLASH.concat(_portletContext.getPortletContextName());

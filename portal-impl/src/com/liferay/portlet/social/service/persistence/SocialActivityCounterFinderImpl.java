@@ -256,13 +256,13 @@ public class SocialActivityCounterFinderImpl
 
 			SQLQuery q = session.createSQLQuery(sql);
 
+			q.addEntity(
+				"SocialActivityCounter", SocialActivityCounterImpl.class);
+
 			QueryPos qPos = QueryPos.getInstance(q);
 
 			qPos.add(groupId);
 			qPos.add(PortalUtil.getClassNameId(User.class.getName()));
-
-			q.addEntity(
-				"SocialActivityCounter", SocialActivityCounterImpl.class);
 
 			return (List<SocialActivityCounter>)QueryUtil.list(
 				q, getDialect(), start, end);
@@ -293,6 +293,8 @@ public class SocialActivityCounterFinderImpl
 			sql = StringUtil.replace(sql, "[$NAME$]", getNames(names));
 
 			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar("classPK", Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
