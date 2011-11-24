@@ -201,7 +201,8 @@ public class JournalArticleServiceWrapper implements JournalArticleService,
 		long groupId, java.lang.String urlTitle)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return _journalArticleService.getDisplayArticleByUrlTitle(groupId, urlTitle);
+		return _journalArticleService.getDisplayArticleByUrlTitle(groupId,
+			urlTitle);
 	}
 
 	public com.liferay.portlet.journal.model.JournalArticle getLatestArticle(
