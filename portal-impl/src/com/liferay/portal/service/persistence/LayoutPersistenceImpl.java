@@ -386,6 +386,23 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(layout);
+	}
+
+	@Override
+	public void clearCache(List<Layout> layouts) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Layout layout : layouts) {
+			EntityCacheUtil.removeResult(LayoutModelImpl.ENTITY_CACHE_ENABLED,
+				LayoutImpl.class, layout.getPrimaryKey());
+
+			clearUniqueFindersCache(layout);
+		}
+	}
+
+	protected void clearUniqueFindersCache(Layout layout) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] { layout.getUuid(), Long.valueOf(layout.getGroupId()) });
 
@@ -506,45 +523,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		LayoutModelImpl layoutModelImpl = (LayoutModelImpl)layout;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				layoutModelImpl.getUuid(),
-				Long.valueOf(layoutModelImpl.getGroupId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_ICONIMAGEID,
-			new Object[] { Long.valueOf(layoutModelImpl.getIconImageId()) });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_L,
-			new Object[] {
-				Long.valueOf(layoutModelImpl.getGroupId()),
-				Boolean.valueOf(layoutModelImpl.getPrivateLayout()),
-				Long.valueOf(layoutModelImpl.getLayoutId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_F,
-			new Object[] {
-				Long.valueOf(layoutModelImpl.getGroupId()),
-				Boolean.valueOf(layoutModelImpl.getPrivateLayout()),
-				
-			layoutModelImpl.getFriendlyURL()
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_TLU,
-			new Object[] {
-				Long.valueOf(layoutModelImpl.getGroupId()),
-				Boolean.valueOf(layoutModelImpl.getPrivateLayout()),
-				
-			layoutModelImpl.getTemplateLayoutUuid()
-			});
-
-		EntityCacheUtil.removeResult(LayoutModelImpl.ENTITY_CACHE_ENABLED,
-			LayoutImpl.class, layout.getPrimaryKey());
+		clearCache(layout);
 
 		return layout;
 	}

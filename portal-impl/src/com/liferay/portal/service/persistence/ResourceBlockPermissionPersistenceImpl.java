@@ -191,6 +191,26 @@ public class ResourceBlockPermissionPersistenceImpl extends BasePersistenceImpl<
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(resourceBlockPermission);
+	}
+
+	@Override
+	public void clearCache(
+		List<ResourceBlockPermission> resourceBlockPermissions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ResourceBlockPermission resourceBlockPermission : resourceBlockPermissions) {
+			EntityCacheUtil.removeResult(ResourceBlockPermissionModelImpl.ENTITY_CACHE_ENABLED,
+				ResourceBlockPermissionImpl.class,
+				resourceBlockPermission.getPrimaryKey());
+
+			clearUniqueFindersCache(resourceBlockPermission);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		ResourceBlockPermission resourceBlockPermission) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_R,
 			new Object[] {
 				Long.valueOf(resourceBlockPermission.getResourceBlockId()),
@@ -287,21 +307,7 @@ public class ResourceBlockPermissionPersistenceImpl extends BasePersistenceImpl<
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ResourceBlockPermissionModelImpl resourceBlockPermissionModelImpl = (ResourceBlockPermissionModelImpl)resourceBlockPermission;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_R,
-			new Object[] {
-				Long.valueOf(
-					resourceBlockPermissionModelImpl.getResourceBlockId()),
-				Long.valueOf(resourceBlockPermissionModelImpl.getRoleId())
-			});
-
-		EntityCacheUtil.removeResult(ResourceBlockPermissionModelImpl.ENTITY_CACHE_ENABLED,
-			ResourceBlockPermissionImpl.class,
-			resourceBlockPermission.getPrimaryKey());
+		clearCache(resourceBlockPermission);
 
 		return resourceBlockPermission;
 	}

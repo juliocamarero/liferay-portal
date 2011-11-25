@@ -182,6 +182,23 @@ public class PasswordPolicyPersistenceImpl extends BasePersistenceImpl<PasswordP
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(passwordPolicy);
+	}
+
+	@Override
+	public void clearCache(List<PasswordPolicy> passwordPolicies) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (PasswordPolicy passwordPolicy : passwordPolicies) {
+			EntityCacheUtil.removeResult(PasswordPolicyModelImpl.ENTITY_CACHE_ENABLED,
+				PasswordPolicyImpl.class, passwordPolicy.getPrimaryKey());
+
+			clearUniqueFindersCache(passwordPolicy);
+		}
+	}
+
+	protected void clearUniqueFindersCache(PasswordPolicy passwordPolicy) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DP,
 			new Object[] {
 				Long.valueOf(passwordPolicy.getCompanyId()),
@@ -284,26 +301,7 @@ public class PasswordPolicyPersistenceImpl extends BasePersistenceImpl<PasswordP
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		PasswordPolicyModelImpl passwordPolicyModelImpl = (PasswordPolicyModelImpl)passwordPolicy;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DP,
-			new Object[] {
-				Long.valueOf(passwordPolicyModelImpl.getCompanyId()),
-				Boolean.valueOf(passwordPolicyModelImpl.getDefaultPolicy())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N,
-			new Object[] {
-				Long.valueOf(passwordPolicyModelImpl.getCompanyId()),
-				
-			passwordPolicyModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(PasswordPolicyModelImpl.ENTITY_CACHE_ENABLED,
-			PasswordPolicyImpl.class, passwordPolicy.getPrimaryKey());
+		clearCache(passwordPolicy);
 
 		return passwordPolicy;
 	}

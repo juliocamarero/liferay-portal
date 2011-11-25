@@ -206,6 +206,17 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<UserTracker> userTrackers) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (UserTracker userTracker : userTrackers) {
+			EntityCacheUtil.removeResult(UserTrackerModelImpl.ENTITY_CACHE_ENABLED,
+				UserTrackerImpl.class, userTracker.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new user tracker with the primary key. Does not add the user tracker to the database.
 	 *
@@ -294,11 +305,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(UserTrackerModelImpl.ENTITY_CACHE_ENABLED,
-			UserTrackerImpl.class, userTracker.getPrimaryKey());
+		clearCache(userTracker);
 
 		return userTracker;
 	}

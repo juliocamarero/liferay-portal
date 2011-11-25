@@ -167,6 +167,17 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Image> images) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Image image : images) {
+			EntityCacheUtil.removeResult(ImageModelImpl.ENTITY_CACHE_ENABLED,
+				ImageImpl.class, image.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new image with the primary key. Does not add the image to the database.
 	 *
@@ -253,11 +264,7 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(ImageModelImpl.ENTITY_CACHE_ENABLED,
-			ImageImpl.class, image.getPrimaryKey());
+		clearCache(image);
 
 		return image;
 	}

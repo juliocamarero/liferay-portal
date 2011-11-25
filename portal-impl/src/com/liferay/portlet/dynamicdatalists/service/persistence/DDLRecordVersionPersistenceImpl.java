@@ -213,6 +213,23 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(ddlRecordVersion);
+	}
+
+	@Override
+	public void clearCache(List<DDLRecordVersion> ddlRecordVersions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (DDLRecordVersion ddlRecordVersion : ddlRecordVersions) {
+			EntityCacheUtil.removeResult(DDLRecordVersionModelImpl.ENTITY_CACHE_ENABLED,
+				DDLRecordVersionImpl.class, ddlRecordVersion.getPrimaryKey());
+
+			clearUniqueFindersCache(ddlRecordVersion);
+		}
+	}
+
+	protected void clearUniqueFindersCache(DDLRecordVersion ddlRecordVersion) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,
 			new Object[] {
 				Long.valueOf(ddlRecordVersion.getRecordId()),
@@ -309,20 +326,7 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		DDLRecordVersionModelImpl ddlRecordVersionModelImpl = (DDLRecordVersionModelImpl)ddlRecordVersion;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,
-			new Object[] {
-				Long.valueOf(ddlRecordVersionModelImpl.getRecordId()),
-				
-			ddlRecordVersionModelImpl.getVersion()
-			});
-
-		EntityCacheUtil.removeResult(DDLRecordVersionModelImpl.ENTITY_CACHE_ENABLED,
-			DDLRecordVersionImpl.class, ddlRecordVersion.getPrimaryKey());
+		clearCache(ddlRecordVersion);
 
 		return ddlRecordVersion;
 	}

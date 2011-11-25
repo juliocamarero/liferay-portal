@@ -392,6 +392,23 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(socialRequest);
+	}
+
+	@Override
+	public void clearCache(List<SocialRequest> socialRequests) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (SocialRequest socialRequest : socialRequests) {
+			EntityCacheUtil.removeResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
+				SocialRequestImpl.class, socialRequest.getPrimaryKey());
+
+			clearUniqueFindersCache(socialRequest);
+		}
+	}
+
+	protected void clearUniqueFindersCache(SocialRequest socialRequest) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
 				socialRequest.getUuid(),
@@ -500,28 +517,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		SocialRequestModelImpl socialRequestModelImpl = (SocialRequestModelImpl)socialRequest;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				socialRequestModelImpl.getUuid(),
-				Long.valueOf(socialRequestModelImpl.getGroupId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_C_C_T_R,
-			new Object[] {
-				Long.valueOf(socialRequestModelImpl.getUserId()),
-				Long.valueOf(socialRequestModelImpl.getClassNameId()),
-				Long.valueOf(socialRequestModelImpl.getClassPK()),
-				Integer.valueOf(socialRequestModelImpl.getType()),
-				Long.valueOf(socialRequestModelImpl.getReceiverUserId())
-			});
-
-		EntityCacheUtil.removeResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
-			SocialRequestImpl.class, socialRequest.getPrimaryKey());
+		clearCache(socialRequest);
 
 		return socialRequest;
 	}

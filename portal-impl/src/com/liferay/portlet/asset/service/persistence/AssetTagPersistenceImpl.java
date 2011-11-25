@@ -192,6 +192,23 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(assetTag);
+	}
+
+	@Override
+	public void clearCache(List<AssetTag> assetTags) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (AssetTag assetTag : assetTags) {
+			EntityCacheUtil.removeResult(AssetTagModelImpl.ENTITY_CACHE_ENABLED,
+				AssetTagImpl.class, assetTag.getPrimaryKey());
+
+			clearUniqueFindersCache(assetTag);
+		}
+	}
+
+	protected void clearUniqueFindersCache(AssetTag assetTag) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N,
 			new Object[] { Long.valueOf(assetTag.getGroupId()), assetTag.getName() });
 	}
@@ -293,20 +310,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		AssetTagModelImpl assetTagModelImpl = (AssetTagModelImpl)assetTag;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N,
-			new Object[] {
-				Long.valueOf(assetTagModelImpl.getGroupId()),
-				
-			assetTagModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(AssetTagModelImpl.ENTITY_CACHE_ENABLED,
-			AssetTagImpl.class, assetTag.getPrimaryKey());
+		clearCache(assetTag);
 
 		return assetTag;
 	}

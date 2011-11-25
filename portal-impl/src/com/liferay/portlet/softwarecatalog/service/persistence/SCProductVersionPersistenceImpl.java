@@ -198,6 +198,23 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(scProductVersion);
+	}
+
+	@Override
+	public void clearCache(List<SCProductVersion> scProductVersions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (SCProductVersion scProductVersion : scProductVersions) {
+			EntityCacheUtil.removeResult(SCProductVersionModelImpl.ENTITY_CACHE_ENABLED,
+				SCProductVersionImpl.class, scProductVersion.getPrimaryKey());
+
+			clearUniqueFindersCache(scProductVersion);
+		}
+	}
+
+	protected void clearUniqueFindersCache(SCProductVersion scProductVersion) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
 			new Object[] { scProductVersion.getDirectDownloadURL() });
 	}
@@ -300,16 +317,7 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		SCProductVersionModelImpl scProductVersionModelImpl = (SCProductVersionModelImpl)scProductVersion;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DIRECTDOWNLOADURL,
-			new Object[] { scProductVersionModelImpl.getDirectDownloadURL() });
-
-		EntityCacheUtil.removeResult(SCProductVersionModelImpl.ENTITY_CACHE_ENABLED,
-			SCProductVersionImpl.class, scProductVersion.getPrimaryKey());
+		clearCache(scProductVersion);
 
 		return scProductVersion;
 	}

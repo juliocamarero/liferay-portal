@@ -255,6 +255,17 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<AnnouncementsEntry> announcementsEntries) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (AnnouncementsEntry announcementsEntry : announcementsEntries) {
+			EntityCacheUtil.removeResult(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
+				AnnouncementsEntryImpl.class, announcementsEntry.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new announcements entry with the primary key. Does not add the announcements entry to the database.
 	 *
@@ -347,11 +358,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
-			AnnouncementsEntryImpl.class, announcementsEntry.getPrimaryKey());
+		clearCache(announcementsEntry);
 
 		return announcementsEntry;
 	}

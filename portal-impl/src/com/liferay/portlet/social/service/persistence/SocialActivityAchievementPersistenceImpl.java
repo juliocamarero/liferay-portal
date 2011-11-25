@@ -282,6 +282,26 @@ public class SocialActivityAchievementPersistenceImpl
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(socialActivityAchievement);
+	}
+
+	@Override
+	public void clearCache(
+		List<SocialActivityAchievement> socialActivityAchievements) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (SocialActivityAchievement socialActivityAchievement : socialActivityAchievements) {
+			EntityCacheUtil.removeResult(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
+				SocialActivityAchievementImpl.class,
+				socialActivityAchievement.getPrimaryKey());
+
+			clearUniqueFindersCache(socialActivityAchievement);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		SocialActivityAchievement socialActivityAchievement) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_N,
 			new Object[] {
 				Long.valueOf(socialActivityAchievement.getGroupId()),
@@ -380,22 +400,7 @@ public class SocialActivityAchievementPersistenceImpl
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		SocialActivityAchievementModelImpl socialActivityAchievementModelImpl = (SocialActivityAchievementModelImpl)socialActivityAchievement;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_N,
-			new Object[] {
-				Long.valueOf(socialActivityAchievementModelImpl.getGroupId()),
-				Long.valueOf(socialActivityAchievementModelImpl.getUserId()),
-				
-			socialActivityAchievementModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
-			SocialActivityAchievementImpl.class,
-			socialActivityAchievement.getPrimaryKey());
+		clearCache(socialActivityAchievement);
 
 		return socialActivityAchievement;
 	}

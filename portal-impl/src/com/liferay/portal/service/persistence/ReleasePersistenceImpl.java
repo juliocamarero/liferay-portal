@@ -158,6 +158,23 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(release);
+	}
+
+	@Override
+	public void clearCache(List<Release> releases) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Release release : releases) {
+			EntityCacheUtil.removeResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
+				ReleaseImpl.class, release.getPrimaryKey());
+
+			clearUniqueFindersCache(release);
+		}
+	}
+
+	protected void clearUniqueFindersCache(Release release) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
 			new Object[] { release.getServletContextName() });
 	}
@@ -248,16 +265,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ReleaseModelImpl releaseModelImpl = (ReleaseModelImpl)release;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
-			new Object[] { releaseModelImpl.getServletContextName() });
-
-		EntityCacheUtil.removeResult(ReleaseModelImpl.ENTITY_CACHE_ENABLED,
-			ReleaseImpl.class, release.getPrimaryKey());
+		clearCache(release);
 
 		return release;
 	}

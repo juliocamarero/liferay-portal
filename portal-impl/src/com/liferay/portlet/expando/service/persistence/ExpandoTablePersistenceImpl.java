@@ -194,6 +194,23 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(expandoTable);
+	}
+
+	@Override
+	public void clearCache(List<ExpandoTable> expandoTables) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ExpandoTable expandoTable : expandoTables) {
+			EntityCacheUtil.removeResult(ExpandoTableModelImpl.ENTITY_CACHE_ENABLED,
+				ExpandoTableImpl.class, expandoTable.getPrimaryKey());
+
+			clearUniqueFindersCache(expandoTable);
+		}
+	}
+
+	protected void clearUniqueFindersCache(ExpandoTable expandoTable) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_N,
 			new Object[] {
 				Long.valueOf(expandoTable.getCompanyId()),
@@ -291,21 +308,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ExpandoTableModelImpl expandoTableModelImpl = (ExpandoTableModelImpl)expandoTable;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C_N,
-			new Object[] {
-				Long.valueOf(expandoTableModelImpl.getCompanyId()),
-				Long.valueOf(expandoTableModelImpl.getClassNameId()),
-				
-			expandoTableModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(ExpandoTableModelImpl.ENTITY_CACHE_ENABLED,
-			ExpandoTableImpl.class, expandoTable.getPrimaryKey());
+		clearCache(expandoTable);
 
 		return expandoTable;
 	}

@@ -198,6 +198,17 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<SCLicense> scLicenses) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (SCLicense scLicense : scLicenses) {
+			EntityCacheUtil.removeResult(SCLicenseModelImpl.ENTITY_CACHE_ENABLED,
+				SCLicenseImpl.class, scLicense.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new s c license with the primary key. Does not add the s c license to the database.
 	 *
@@ -296,11 +307,7 @@ public class SCLicensePersistenceImpl extends BasePersistenceImpl<SCLicense>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(SCLicenseModelImpl.ENTITY_CACHE_ENABLED,
-			SCLicenseImpl.class, scLicense.getPrimaryKey());
+		clearCache(scLicense);
 
 		return scLicense;
 	}

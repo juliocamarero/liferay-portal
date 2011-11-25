@@ -183,6 +183,23 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(resourceAction);
+	}
+
+	@Override
+	public void clearCache(List<ResourceAction> resourceActions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ResourceAction resourceAction : resourceActions) {
+			EntityCacheUtil.removeResult(ResourceActionModelImpl.ENTITY_CACHE_ENABLED,
+				ResourceActionImpl.class, resourceAction.getPrimaryKey());
+
+			clearUniqueFindersCache(resourceAction);
+		}
+	}
+
+	protected void clearUniqueFindersCache(ResourceAction resourceAction) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_A,
 			new Object[] { resourceAction.getName(), resourceAction.getActionId() });
 	}
@@ -275,20 +292,7 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ResourceActionModelImpl resourceActionModelImpl = (ResourceActionModelImpl)resourceAction;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_N_A,
-			new Object[] {
-				resourceActionModelImpl.getName(),
-				
-			resourceActionModelImpl.getActionId()
-			});
-
-		EntityCacheUtil.removeResult(ResourceActionModelImpl.ENTITY_CACHE_ENABLED,
-			ResourceActionImpl.class, resourceAction.getPrimaryKey());
+		clearCache(resourceAction);
 
 		return resourceAction;
 	}

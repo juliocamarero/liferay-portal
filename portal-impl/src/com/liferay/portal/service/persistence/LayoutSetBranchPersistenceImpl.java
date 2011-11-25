@@ -220,6 +220,23 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(layoutSetBranch);
+	}
+
+	@Override
+	public void clearCache(List<LayoutSetBranch> layoutSetBranchs) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (LayoutSetBranch layoutSetBranch : layoutSetBranchs) {
+			EntityCacheUtil.removeResult(LayoutSetBranchModelImpl.ENTITY_CACHE_ENABLED,
+				LayoutSetBranchImpl.class, layoutSetBranch.getPrimaryKey());
+
+			clearUniqueFindersCache(layoutSetBranch);
+		}
+	}
+
+	protected void clearUniqueFindersCache(LayoutSetBranch layoutSetBranch) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_N,
 			new Object[] {
 				Long.valueOf(layoutSetBranch.getGroupId()),
@@ -317,21 +334,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		LayoutSetBranchModelImpl layoutSetBranchModelImpl = (LayoutSetBranchModelImpl)layoutSetBranch;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_N,
-			new Object[] {
-				Long.valueOf(layoutSetBranchModelImpl.getGroupId()),
-				Boolean.valueOf(layoutSetBranchModelImpl.getPrivateLayout()),
-				
-			layoutSetBranchModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(LayoutSetBranchModelImpl.ENTITY_CACHE_ENABLED,
-			LayoutSetBranchImpl.class, layoutSetBranch.getPrimaryKey());
+		clearCache(layoutSetBranch);
 
 		return layoutSetBranch;
 	}

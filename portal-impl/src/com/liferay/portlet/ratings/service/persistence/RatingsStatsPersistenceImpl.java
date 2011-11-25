@@ -166,6 +166,23 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(ratingsStats);
+	}
+
+	@Override
+	public void clearCache(List<RatingsStats> ratingsStatses) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (RatingsStats ratingsStats : ratingsStatses) {
+			EntityCacheUtil.removeResult(RatingsStatsModelImpl.ENTITY_CACHE_ENABLED,
+				RatingsStatsImpl.class, ratingsStats.getPrimaryKey());
+
+			clearUniqueFindersCache(ratingsStats);
+		}
+	}
+
+	protected void clearUniqueFindersCache(RatingsStats ratingsStats) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,
 			new Object[] {
 				Long.valueOf(ratingsStats.getClassNameId()),
@@ -261,19 +278,7 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		RatingsStatsModelImpl ratingsStatsModelImpl = (RatingsStatsModelImpl)ratingsStats;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,
-			new Object[] {
-				Long.valueOf(ratingsStatsModelImpl.getClassNameId()),
-				Long.valueOf(ratingsStatsModelImpl.getClassPK())
-			});
-
-		EntityCacheUtil.removeResult(RatingsStatsModelImpl.ENTITY_CACHE_ENABLED,
-			RatingsStatsImpl.class, ratingsStats.getPrimaryKey());
+		clearCache(ratingsStats);
 
 		return ratingsStats;
 	}

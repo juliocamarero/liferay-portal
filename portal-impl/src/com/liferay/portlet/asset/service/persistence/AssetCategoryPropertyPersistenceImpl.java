@@ -238,6 +238,25 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(assetCategoryProperty);
+	}
+
+	@Override
+	public void clearCache(List<AssetCategoryProperty> assetCategoryProperties) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (AssetCategoryProperty assetCategoryProperty : assetCategoryProperties) {
+			EntityCacheUtil.removeResult(AssetCategoryPropertyModelImpl.ENTITY_CACHE_ENABLED,
+				AssetCategoryPropertyImpl.class,
+				assetCategoryProperty.getPrimaryKey());
+
+			clearUniqueFindersCache(assetCategoryProperty);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		AssetCategoryProperty assetCategoryProperty) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CA_K,
 			new Object[] {
 				Long.valueOf(assetCategoryProperty.getCategoryId()),
@@ -334,21 +353,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		AssetCategoryPropertyModelImpl assetCategoryPropertyModelImpl = (AssetCategoryPropertyModelImpl)assetCategoryProperty;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CA_K,
-			new Object[] {
-				Long.valueOf(assetCategoryPropertyModelImpl.getCategoryId()),
-				
-			assetCategoryPropertyModelImpl.getKey()
-			});
-
-		EntityCacheUtil.removeResult(AssetCategoryPropertyModelImpl.ENTITY_CACHE_ENABLED,
-			AssetCategoryPropertyImpl.class,
-			assetCategoryProperty.getPrimaryKey());
+		clearCache(assetCategoryProperty);
 
 		return assetCategoryProperty;
 	}

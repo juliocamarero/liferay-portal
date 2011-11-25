@@ -216,6 +216,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<UserNotificationEvent> userNotificationEvents) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (UserNotificationEvent userNotificationEvent : userNotificationEvents) {
+			EntityCacheUtil.removeResult(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
+				UserNotificationEventImpl.class,
+				userNotificationEvent.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new user notification event with the primary key. Does not add the user notification event to the database.
 	 *
@@ -308,12 +320,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
-			UserNotificationEventImpl.class,
-			userNotificationEvent.getPrimaryKey());
+		clearCache(userNotificationEvent);
 
 		return userNotificationEvent;
 	}

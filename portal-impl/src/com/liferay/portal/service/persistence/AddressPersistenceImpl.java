@@ -287,6 +287,17 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Address> addresses) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Address address : addresses) {
+			EntityCacheUtil.removeResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
+				AddressImpl.class, address.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new address with the primary key. Does not add the address to the database.
 	 *
@@ -373,11 +384,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-			AddressImpl.class, address.getPrimaryKey());
+		clearCache(address);
 
 		return address;
 	}

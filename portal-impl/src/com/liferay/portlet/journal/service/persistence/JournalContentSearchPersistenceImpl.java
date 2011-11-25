@@ -343,6 +343,25 @@ public class JournalContentSearchPersistenceImpl extends BasePersistenceImpl<Jou
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(journalContentSearch);
+	}
+
+	@Override
+	public void clearCache(List<JournalContentSearch> journalContentSearchs) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (JournalContentSearch journalContentSearch : journalContentSearchs) {
+			EntityCacheUtil.removeResult(JournalContentSearchModelImpl.ENTITY_CACHE_ENABLED,
+				JournalContentSearchImpl.class,
+				journalContentSearch.getPrimaryKey());
+
+			clearUniqueFindersCache(journalContentSearch);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		JournalContentSearch journalContentSearch) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_L_P_A,
 			new Object[] {
 				Long.valueOf(journalContentSearch.getGroupId()),
@@ -443,25 +462,7 @@ public class JournalContentSearchPersistenceImpl extends BasePersistenceImpl<Jou
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		JournalContentSearchModelImpl journalContentSearchModelImpl = (JournalContentSearchModelImpl)journalContentSearch;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_L_P_A,
-			new Object[] {
-				Long.valueOf(journalContentSearchModelImpl.getGroupId()),
-				Boolean.valueOf(
-					journalContentSearchModelImpl.getPrivateLayout()),
-				Long.valueOf(journalContentSearchModelImpl.getLayoutId()),
-				
-			journalContentSearchModelImpl.getPortletId(),
-				
-			journalContentSearchModelImpl.getArticleId()
-			});
-
-		EntityCacheUtil.removeResult(JournalContentSearchModelImpl.ENTITY_CACHE_ENABLED,
-			JournalContentSearchImpl.class, journalContentSearch.getPrimaryKey());
+		clearCache(journalContentSearch);
 
 		return journalContentSearch;
 	}

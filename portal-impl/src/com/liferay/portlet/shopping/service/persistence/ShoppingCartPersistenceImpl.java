@@ -204,6 +204,23 @@ public class ShoppingCartPersistenceImpl extends BasePersistenceImpl<ShoppingCar
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(shoppingCart);
+	}
+
+	@Override
+	public void clearCache(List<ShoppingCart> shoppingCarts) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ShoppingCart shoppingCart : shoppingCarts) {
+			EntityCacheUtil.removeResult(ShoppingCartModelImpl.ENTITY_CACHE_ENABLED,
+				ShoppingCartImpl.class, shoppingCart.getPrimaryKey());
+
+			clearUniqueFindersCache(shoppingCart);
+		}
+	}
+
+	protected void clearUniqueFindersCache(ShoppingCart shoppingCart) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,
 			new Object[] {
 				Long.valueOf(shoppingCart.getGroupId()),
@@ -299,19 +316,7 @@ public class ShoppingCartPersistenceImpl extends BasePersistenceImpl<ShoppingCar
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ShoppingCartModelImpl shoppingCartModelImpl = (ShoppingCartModelImpl)shoppingCart;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,
-			new Object[] {
-				Long.valueOf(shoppingCartModelImpl.getGroupId()),
-				Long.valueOf(shoppingCartModelImpl.getUserId())
-			});
-
-		EntityCacheUtil.removeResult(ShoppingCartModelImpl.ENTITY_CACHE_ENABLED,
-			ShoppingCartImpl.class, shoppingCart.getPrimaryKey());
+		clearCache(shoppingCart);
 
 		return shoppingCart;
 	}

@@ -210,6 +210,23 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(ddmStorageLink);
+	}
+
+	@Override
+	public void clearCache(List<DDMStorageLink> ddmStorageLinks) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (DDMStorageLink ddmStorageLink : ddmStorageLinks) {
+			EntityCacheUtil.removeResult(DDMStorageLinkModelImpl.ENTITY_CACHE_ENABLED,
+				DDMStorageLinkImpl.class, ddmStorageLink.getPrimaryKey());
+
+			clearUniqueFindersCache(ddmStorageLink);
+		}
+	}
+
+	protected void clearUniqueFindersCache(DDMStorageLink ddmStorageLink) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK,
 			new Object[] { Long.valueOf(ddmStorageLink.getClassPK()) });
 	}
@@ -306,16 +323,7 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		DDMStorageLinkModelImpl ddmStorageLinkModelImpl = (DDMStorageLinkModelImpl)ddmStorageLink;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CLASSPK,
-			new Object[] { Long.valueOf(ddmStorageLinkModelImpl.getClassPK()) });
-
-		EntityCacheUtil.removeResult(DDMStorageLinkModelImpl.ENTITY_CACHE_ENABLED,
-			DDMStorageLinkImpl.class, ddmStorageLink.getPrimaryKey());
+		clearCache(ddmStorageLink);
 
 		return ddmStorageLink;
 	}

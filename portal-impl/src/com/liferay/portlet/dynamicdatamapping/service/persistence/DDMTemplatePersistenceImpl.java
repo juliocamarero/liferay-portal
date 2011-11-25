@@ -309,6 +309,23 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(ddmTemplate);
+	}
+
+	@Override
+	public void clearCache(List<DDMTemplate> ddmTemplates) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (DDMTemplate ddmTemplate : ddmTemplates) {
+			EntityCacheUtil.removeResult(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
+				DDMTemplateImpl.class, ddmTemplate.getPrimaryKey());
+
+			clearUniqueFindersCache(ddmTemplate);
+		}
+	}
+
+	protected void clearUniqueFindersCache(DDMTemplate ddmTemplate) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
 				ddmTemplate.getUuid(), Long.valueOf(ddmTemplate.getGroupId())
@@ -407,19 +424,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		DDMTemplateModelImpl ddmTemplateModelImpl = (DDMTemplateModelImpl)ddmTemplate;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				ddmTemplateModelImpl.getUuid(),
-				Long.valueOf(ddmTemplateModelImpl.getGroupId())
-			});
-
-		EntityCacheUtil.removeResult(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
-			DDMTemplateImpl.class, ddmTemplate.getPrimaryKey());
+		clearCache(ddmTemplate);
 
 		return ddmTemplate;
 	}

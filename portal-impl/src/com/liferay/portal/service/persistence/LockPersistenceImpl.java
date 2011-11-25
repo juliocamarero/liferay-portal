@@ -200,6 +200,23 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(lock);
+	}
+
+	@Override
+	public void clearCache(List<Lock> locks) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Lock lock : locks) {
+			EntityCacheUtil.removeResult(LockModelImpl.ENTITY_CACHE_ENABLED,
+				LockImpl.class, lock.getPrimaryKey());
+
+			clearUniqueFindersCache(lock);
+		}
+	}
+
+	protected void clearUniqueFindersCache(Lock lock) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_K,
 			new Object[] { lock.getClassName(), lock.getKey() });
 	}
@@ -293,16 +310,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		LockModelImpl lockModelImpl = (LockModelImpl)lock;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_K,
-			new Object[] { lockModelImpl.getClassName(), lockModelImpl.getKey() });
-
-		EntityCacheUtil.removeResult(LockModelImpl.ENTITY_CACHE_ENABLED,
-			LockImpl.class, lock.getPrimaryKey());
+		clearCache(lock);
 
 		return lock;
 	}

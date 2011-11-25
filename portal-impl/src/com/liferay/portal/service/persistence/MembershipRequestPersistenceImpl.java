@@ -243,6 +243,17 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<MembershipRequest> membershipRequests) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (MembershipRequest membershipRequest : membershipRequests) {
+			EntityCacheUtil.removeResult(MembershipRequestModelImpl.ENTITY_CACHE_ENABLED,
+				MembershipRequestImpl.class, membershipRequest.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new membership request with the primary key. Does not add the membership request to the database.
 	 *
@@ -331,11 +342,7 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(MembershipRequestModelImpl.ENTITY_CACHE_ENABLED,
-			MembershipRequestImpl.class, membershipRequest.getPrimaryKey());
+		clearCache(membershipRequest);
 
 		return membershipRequest;
 	}

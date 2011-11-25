@@ -199,6 +199,17 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<ShoppingCategory> shoppingCategories) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ShoppingCategory shoppingCategory : shoppingCategories) {
+			EntityCacheUtil.removeResult(ShoppingCategoryModelImpl.ENTITY_CACHE_ENABLED,
+				ShoppingCategoryImpl.class, shoppingCategory.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new shopping category with the primary key. Does not add the shopping category to the database.
 	 *
@@ -287,11 +298,7 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(ShoppingCategoryModelImpl.ENTITY_CACHE_ENABLED,
-			ShoppingCategoryImpl.class, shoppingCategory.getPrimaryKey());
+		clearCache(shoppingCategory);
 
 		return shoppingCategory;
 	}

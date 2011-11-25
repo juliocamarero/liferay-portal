@@ -258,6 +258,17 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<EmailAddress> emailAddresses) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (EmailAddress emailAddress : emailAddresses) {
+			EntityCacheUtil.removeResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+				EmailAddressImpl.class, emailAddress.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new email address with the primary key. Does not add the email address to the database.
 	 *
@@ -346,11 +357,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
-			EmailAddressImpl.class, emailAddress.getPrimaryKey());
+		clearCache(emailAddress);
 
 		return emailAddress;
 	}

@@ -207,6 +207,23 @@ public class MDRRuleGroupPersistenceImpl extends BasePersistenceImpl<MDRRuleGrou
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(mdrRuleGroup);
+	}
+
+	@Override
+	public void clearCache(List<MDRRuleGroup> mdrRuleGroups) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (MDRRuleGroup mdrRuleGroup : mdrRuleGroups) {
+			EntityCacheUtil.removeResult(MDRRuleGroupModelImpl.ENTITY_CACHE_ENABLED,
+				MDRRuleGroupImpl.class, mdrRuleGroup.getPrimaryKey());
+
+			clearUniqueFindersCache(mdrRuleGroup);
+		}
+	}
+
+	protected void clearUniqueFindersCache(MDRRuleGroup mdrRuleGroup) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
 				mdrRuleGroup.getUuid(), Long.valueOf(mdrRuleGroup.getGroupId())
@@ -305,19 +322,7 @@ public class MDRRuleGroupPersistenceImpl extends BasePersistenceImpl<MDRRuleGrou
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		MDRRuleGroupModelImpl mdrRuleGroupModelImpl = (MDRRuleGroupModelImpl)mdrRuleGroup;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				mdrRuleGroupModelImpl.getUuid(),
-				Long.valueOf(mdrRuleGroupModelImpl.getGroupId())
-			});
-
-		EntityCacheUtil.removeResult(MDRRuleGroupModelImpl.ENTITY_CACHE_ENABLED,
-			MDRRuleGroupImpl.class, mdrRuleGroup.getPrimaryKey());
+		clearCache(mdrRuleGroup);
 
 		return mdrRuleGroup;
 	}

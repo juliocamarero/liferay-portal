@@ -199,6 +199,23 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(userIdMapper);
+	}
+
+	@Override
+	public void clearCache(List<UserIdMapper> userIdMappers) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (UserIdMapper userIdMapper : userIdMappers) {
+			EntityCacheUtil.removeResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
+				UserIdMapperImpl.class, userIdMapper.getPrimaryKey());
+
+			clearUniqueFindersCache(userIdMapper);
+		}
+	}
+
+	protected void clearUniqueFindersCache(UserIdMapper userIdMapper) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T,
 			new Object[] {
 				Long.valueOf(userIdMapper.getUserId()),
@@ -302,27 +319,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		UserIdMapperModelImpl userIdMapperModelImpl = (UserIdMapperModelImpl)userIdMapper;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T,
-			new Object[] {
-				Long.valueOf(userIdMapperModelImpl.getUserId()),
-				
-			userIdMapperModelImpl.getType()
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_E,
-			new Object[] {
-				userIdMapperModelImpl.getType(),
-				
-			userIdMapperModelImpl.getExternalUserId()
-			});
-
-		EntityCacheUtil.removeResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-			UserIdMapperImpl.class, userIdMapper.getPrimaryKey());
+		clearCache(userIdMapper);
 
 		return userIdMapper;
 	}

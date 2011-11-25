@@ -362,6 +362,23 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(user);
+	}
+
+	@Override
+	public void clearCache(List<User> users) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (User user : users) {
+			EntityCacheUtil.removeResult(UserModelImpl.ENTITY_CACHE_ENABLED,
+				UserImpl.class, user.getPrimaryKey());
+
+			clearUniqueFindersCache(user);
+		}
+	}
+
+	protected void clearUniqueFindersCache(User user) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID,
 			new Object[] { Long.valueOf(user.getContactId()) });
 
@@ -549,58 +566,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		UserModelImpl userModelImpl = (UserModelImpl)user;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_CONTACTID,
-			new Object[] { Long.valueOf(userModelImpl.getContactId()) });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID,
-			new Object[] { Long.valueOf(userModelImpl.getPortraitId()) });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U,
-			new Object[] {
-				Long.valueOf(userModelImpl.getCompanyId()),
-				Long.valueOf(userModelImpl.getUserId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_DU,
-			new Object[] {
-				Long.valueOf(userModelImpl.getCompanyId()),
-				Boolean.valueOf(userModelImpl.getDefaultUser())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_SN,
-			new Object[] {
-				Long.valueOf(userModelImpl.getCompanyId()),
-				
-			userModelImpl.getScreenName()
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_EA,
-			new Object[] {
-				Long.valueOf(userModelImpl.getCompanyId()),
-				
-			userModelImpl.getEmailAddress()
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_FID,
-			new Object[] {
-				Long.valueOf(userModelImpl.getCompanyId()),
-				Long.valueOf(userModelImpl.getFacebookId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_O,
-			new Object[] {
-				Long.valueOf(userModelImpl.getCompanyId()),
-				
-			userModelImpl.getOpenId()
-			});
-
-		EntityCacheUtil.removeResult(UserModelImpl.ENTITY_CACHE_ENABLED,
-			UserImpl.class, user.getPrimaryKey());
+		clearCache(user);
 
 		return user;
 	}

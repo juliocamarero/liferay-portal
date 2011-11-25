@@ -205,6 +205,23 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(pollsVote);
+	}
+
+	@Override
+	public void clearCache(List<PollsVote> pollsVotes) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (PollsVote pollsVote : pollsVotes) {
+			EntityCacheUtil.removeResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,
+				PollsVoteImpl.class, pollsVote.getPrimaryKey());
+
+			clearUniqueFindersCache(pollsVote);
+		}
+	}
+
+	protected void clearUniqueFindersCache(PollsVote pollsVote) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_Q_U,
 			new Object[] {
 				Long.valueOf(pollsVote.getQuestionId()),
@@ -300,19 +317,7 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		PollsVoteModelImpl pollsVoteModelImpl = (PollsVoteModelImpl)pollsVote;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_Q_U,
-			new Object[] {
-				Long.valueOf(pollsVoteModelImpl.getQuestionId()),
-				Long.valueOf(pollsVoteModelImpl.getUserId())
-			});
-
-		EntityCacheUtil.removeResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,
-			PollsVoteImpl.class, pollsVote.getPrimaryKey());
+		clearCache(pollsVote);
 
 		return pollsVote;
 	}

@@ -145,6 +145,17 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<ClusterGroup> clusterGroups) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ClusterGroup clusterGroup : clusterGroups) {
+			EntityCacheUtil.removeResult(ClusterGroupModelImpl.ENTITY_CACHE_ENABLED,
+				ClusterGroupImpl.class, clusterGroup.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new cluster group with the primary key. Does not add the cluster group to the database.
 	 *
@@ -233,11 +244,7 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(ClusterGroupModelImpl.ENTITY_CACHE_ENABLED,
-			ClusterGroupImpl.class, clusterGroup.getPrimaryKey());
+		clearCache(clusterGroup);
 
 		return clusterGroup;
 	}

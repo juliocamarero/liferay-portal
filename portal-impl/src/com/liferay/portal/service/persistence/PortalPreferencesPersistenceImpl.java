@@ -167,6 +167,23 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(portalPreferences);
+	}
+
+	@Override
+	public void clearCache(List<PortalPreferences> portalPreferenceses) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (PortalPreferences portalPreferences : portalPreferenceses) {
+			EntityCacheUtil.removeResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
+				PortalPreferencesImpl.class, portalPreferences.getPrimaryKey());
+
+			clearUniqueFindersCache(portalPreferences);
+		}
+	}
+
+	protected void clearUniqueFindersCache(PortalPreferences portalPreferences) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O,
 			new Object[] {
 				Long.valueOf(portalPreferences.getOwnerId()),
@@ -262,19 +279,7 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		PortalPreferencesModelImpl portalPreferencesModelImpl = (PortalPreferencesModelImpl)portalPreferences;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O,
-			new Object[] {
-				Long.valueOf(portalPreferencesModelImpl.getOwnerId()),
-				Integer.valueOf(portalPreferencesModelImpl.getOwnerType())
-			});
-
-		EntityCacheUtil.removeResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-			PortalPreferencesImpl.class, portalPreferences.getPrimaryKey());
+		clearCache(portalPreferences);
 
 		return portalPreferences;
 	}

@@ -212,6 +212,23 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(passwordPolicyRel);
+	}
+
+	@Override
+	public void clearCache(List<PasswordPolicyRel> passwordPolicyRels) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (PasswordPolicyRel passwordPolicyRel : passwordPolicyRels) {
+			EntityCacheUtil.removeResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
+				PasswordPolicyRelImpl.class, passwordPolicyRel.getPrimaryKey());
+
+			clearUniqueFindersCache(passwordPolicyRel);
+		}
+	}
+
+	protected void clearUniqueFindersCache(PasswordPolicyRel passwordPolicyRel) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,
 			new Object[] {
 				Long.valueOf(passwordPolicyRel.getClassNameId()),
@@ -314,26 +331,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		PasswordPolicyRelModelImpl passwordPolicyRelModelImpl = (PasswordPolicyRelModelImpl)passwordPolicyRel;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,
-			new Object[] {
-				Long.valueOf(passwordPolicyRelModelImpl.getClassNameId()),
-				Long.valueOf(passwordPolicyRelModelImpl.getClassPK())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_C_C,
-			new Object[] {
-				Long.valueOf(passwordPolicyRelModelImpl.getPasswordPolicyId()),
-				Long.valueOf(passwordPolicyRelModelImpl.getClassNameId()),
-				Long.valueOf(passwordPolicyRelModelImpl.getClassPK())
-			});
-
-		EntityCacheUtil.removeResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
-			PasswordPolicyRelImpl.class, passwordPolicyRel.getPrimaryKey());
+		clearCache(passwordPolicyRel);
 
 		return passwordPolicyRel;
 	}

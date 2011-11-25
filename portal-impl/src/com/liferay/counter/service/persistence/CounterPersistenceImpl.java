@@ -149,6 +149,17 @@ public class CounterPersistenceImpl extends BasePersistenceImpl<Counter>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Counter> counters) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Counter counter : counters) {
+			EntityCacheUtil.removeResult(CounterModelImpl.ENTITY_CACHE_ENABLED,
+				CounterImpl.class, counter.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new counter with the primary key. Does not add the counter to the database.
 	 *
@@ -235,11 +246,7 @@ public class CounterPersistenceImpl extends BasePersistenceImpl<Counter>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(CounterModelImpl.ENTITY_CACHE_ENABLED,
-			CounterImpl.class, counter.getPrimaryKey());
+		clearCache(counter);
 
 		return counter;
 	}

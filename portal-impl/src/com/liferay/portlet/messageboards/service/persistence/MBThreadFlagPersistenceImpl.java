@@ -204,6 +204,23 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(mbThreadFlag);
+	}
+
+	@Override
+	public void clearCache(List<MBThreadFlag> mbThreadFlags) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (MBThreadFlag mbThreadFlag : mbThreadFlags) {
+			EntityCacheUtil.removeResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
+				MBThreadFlagImpl.class, mbThreadFlag.getPrimaryKey());
+
+			clearUniqueFindersCache(mbThreadFlag);
+		}
+	}
+
+	protected void clearUniqueFindersCache(MBThreadFlag mbThreadFlag) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T,
 			new Object[] {
 				Long.valueOf(mbThreadFlag.getUserId()),
@@ -299,19 +316,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		MBThreadFlagModelImpl mbThreadFlagModelImpl = (MBThreadFlagModelImpl)mbThreadFlag;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T,
-			new Object[] {
-				Long.valueOf(mbThreadFlagModelImpl.getUserId()),
-				Long.valueOf(mbThreadFlagModelImpl.getThreadId())
-			});
-
-		EntityCacheUtil.removeResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
-			MBThreadFlagImpl.class, mbThreadFlag.getPrimaryKey());
+		clearCache(mbThreadFlag);
 
 		return mbThreadFlag;
 	}

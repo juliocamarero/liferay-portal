@@ -173,6 +173,17 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<UserTrackerPath> userTrackerPaths) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (UserTrackerPath userTrackerPath : userTrackerPaths) {
+			EntityCacheUtil.removeResult(UserTrackerPathModelImpl.ENTITY_CACHE_ENABLED,
+				UserTrackerPathImpl.class, userTrackerPath.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new user tracker path with the primary key. Does not add the user tracker path to the database.
 	 *
@@ -261,11 +272,7 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(UserTrackerPathModelImpl.ENTITY_CACHE_ENABLED,
-			UserTrackerPathImpl.class, userTrackerPath.getPrimaryKey());
+		clearCache(userTrackerPath);
 
 		return userTrackerPath;
 	}

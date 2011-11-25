@@ -292,6 +292,23 @@ public class JournalTemplatePersistenceImpl extends BasePersistenceImpl<JournalT
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(journalTemplate);
+	}
+
+	@Override
+	public void clearCache(List<JournalTemplate> journalTemplates) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (JournalTemplate journalTemplate : journalTemplates) {
+			EntityCacheUtil.removeResult(JournalTemplateModelImpl.ENTITY_CACHE_ENABLED,
+				JournalTemplateImpl.class, journalTemplate.getPrimaryKey());
+
+			clearUniqueFindersCache(journalTemplate);
+		}
+	}
+
+	protected void clearUniqueFindersCache(JournalTemplate journalTemplate) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
 				journalTemplate.getUuid(),
@@ -401,31 +418,7 @@ public class JournalTemplatePersistenceImpl extends BasePersistenceImpl<JournalT
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		JournalTemplateModelImpl journalTemplateModelImpl = (JournalTemplateModelImpl)journalTemplate;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				journalTemplateModelImpl.getUuid(),
-				Long.valueOf(journalTemplateModelImpl.getGroupId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SMALLIMAGEID,
-			new Object[] {
-				Long.valueOf(journalTemplateModelImpl.getSmallImageId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_T,
-			new Object[] {
-				Long.valueOf(journalTemplateModelImpl.getGroupId()),
-				
-			journalTemplateModelImpl.getTemplateId()
-			});
-
-		EntityCacheUtil.removeResult(JournalTemplateModelImpl.ENTITY_CACHE_ENABLED,
-			JournalTemplateImpl.class, journalTemplate.getPrimaryKey());
+		clearCache(journalTemplate);
 
 		return journalTemplate;
 	}

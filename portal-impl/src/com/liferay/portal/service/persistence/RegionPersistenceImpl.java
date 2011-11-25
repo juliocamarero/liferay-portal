@@ -205,6 +205,17 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Region> regions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Region region : regions) {
+			EntityCacheUtil.removeResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
+				RegionImpl.class, region.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new region with the primary key. Does not add the region to the database.
 	 *
@@ -291,11 +302,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
-			RegionImpl.class, region.getPrimaryKey());
+		clearCache(region);
 
 		return region;
 	}

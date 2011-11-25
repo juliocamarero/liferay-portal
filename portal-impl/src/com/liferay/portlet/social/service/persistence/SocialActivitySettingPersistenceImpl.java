@@ -234,6 +234,25 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(socialActivitySetting);
+	}
+
+	@Override
+	public void clearCache(List<SocialActivitySetting> socialActivitySettings) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (SocialActivitySetting socialActivitySetting : socialActivitySettings) {
+			EntityCacheUtil.removeResult(SocialActivitySettingModelImpl.ENTITY_CACHE_ENABLED,
+				SocialActivitySettingImpl.class,
+				socialActivitySetting.getPrimaryKey());
+
+			clearUniqueFindersCache(socialActivitySetting);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		SocialActivitySetting socialActivitySetting) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_A_N,
 			new Object[] {
 				Long.valueOf(socialActivitySetting.getGroupId()),
@@ -332,24 +351,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		SocialActivitySettingModelImpl socialActivitySettingModelImpl = (SocialActivitySettingModelImpl)socialActivitySetting;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_A_N,
-			new Object[] {
-				Long.valueOf(socialActivitySettingModelImpl.getGroupId()),
-				Long.valueOf(socialActivitySettingModelImpl.getClassNameId()),
-				Integer.valueOf(
-					socialActivitySettingModelImpl.getActivityType()),
-				
-			socialActivitySettingModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(SocialActivitySettingModelImpl.ENTITY_CACHE_ENABLED,
-			SocialActivitySettingImpl.class,
-			socialActivitySetting.getPrimaryKey());
+		clearCache(socialActivitySetting);
 
 		return socialActivitySetting;
 	}

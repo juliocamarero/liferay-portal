@@ -225,6 +225,23 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(ddlRecordSet);
+	}
+
+	@Override
+	public void clearCache(List<DDLRecordSet> ddlRecordSets) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (DDLRecordSet ddlRecordSet : ddlRecordSets) {
+			EntityCacheUtil.removeResult(DDLRecordSetModelImpl.ENTITY_CACHE_ENABLED,
+				DDLRecordSetImpl.class, ddlRecordSet.getPrimaryKey());
+
+			clearUniqueFindersCache(ddlRecordSet);
+		}
+	}
+
+	protected void clearUniqueFindersCache(DDLRecordSet ddlRecordSet) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
 				ddlRecordSet.getUuid(), Long.valueOf(ddlRecordSet.getGroupId())
@@ -330,26 +347,7 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		DDLRecordSetModelImpl ddlRecordSetModelImpl = (DDLRecordSetModelImpl)ddlRecordSet;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				ddlRecordSetModelImpl.getUuid(),
-				Long.valueOf(ddlRecordSetModelImpl.getGroupId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_R,
-			new Object[] {
-				Long.valueOf(ddlRecordSetModelImpl.getGroupId()),
-				
-			ddlRecordSetModelImpl.getRecordSetKey()
-			});
-
-		EntityCacheUtil.removeResult(DDLRecordSetModelImpl.ENTITY_CACHE_ENABLED,
-			DDLRecordSetImpl.class, ddlRecordSet.getPrimaryKey());
+		clearCache(ddlRecordSet);
 
 		return ddlRecordSet;
 	}

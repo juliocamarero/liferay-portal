@@ -167,6 +167,17 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Contact> contacts) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Contact contact : contacts) {
+			EntityCacheUtil.removeResult(ContactModelImpl.ENTITY_CACHE_ENABLED,
+				ContactImpl.class, contact.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new contact with the primary key. Does not add the contact to the database.
 	 *
@@ -253,11 +264,7 @@ public class ContactPersistenceImpl extends BasePersistenceImpl<Contact>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(ContactModelImpl.ENTITY_CACHE_ENABLED,
-			ContactImpl.class, contact.getPrimaryKey());
+		clearCache(contact);
 
 		return contact;
 	}

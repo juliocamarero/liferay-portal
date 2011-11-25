@@ -220,6 +220,25 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(scProductScreenshot);
+	}
+
+	@Override
+	public void clearCache(List<SCProductScreenshot> scProductScreenshots) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (SCProductScreenshot scProductScreenshot : scProductScreenshots) {
+			EntityCacheUtil.removeResult(SCProductScreenshotModelImpl.ENTITY_CACHE_ENABLED,
+				SCProductScreenshotImpl.class,
+				scProductScreenshot.getPrimaryKey());
+
+			clearUniqueFindersCache(scProductScreenshot);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		SCProductScreenshot scProductScreenshot) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_THUMBNAILID,
 			new Object[] { Long.valueOf(scProductScreenshot.getThumbnailId()) });
 
@@ -321,29 +340,7 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		SCProductScreenshotModelImpl scProductScreenshotModelImpl = (SCProductScreenshotModelImpl)scProductScreenshot;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_THUMBNAILID,
-			new Object[] {
-				Long.valueOf(scProductScreenshotModelImpl.getThumbnailId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FULLIMAGEID,
-			new Object[] {
-				Long.valueOf(scProductScreenshotModelImpl.getFullImageId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_P_P,
-			new Object[] {
-				Long.valueOf(scProductScreenshotModelImpl.getProductEntryId()),
-				Integer.valueOf(scProductScreenshotModelImpl.getPriority())
-			});
-
-		EntityCacheUtil.removeResult(SCProductScreenshotModelImpl.ENTITY_CACHE_ENABLED,
-			SCProductScreenshotImpl.class, scProductScreenshot.getPrimaryKey());
+		clearCache(scProductScreenshot);
 
 		return scProductScreenshot;
 	}

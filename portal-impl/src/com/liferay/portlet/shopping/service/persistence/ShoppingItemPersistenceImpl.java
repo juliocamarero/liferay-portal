@@ -231,6 +231,23 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(shoppingItem);
+	}
+
+	@Override
+	public void clearCache(List<ShoppingItem> shoppingItems) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ShoppingItem shoppingItem : shoppingItems) {
+			EntityCacheUtil.removeResult(ShoppingItemModelImpl.ENTITY_CACHE_ENABLED,
+				ShoppingItemImpl.class, shoppingItem.getPrimaryKey());
+
+			clearUniqueFindersCache(shoppingItem);
+		}
+	}
+
+	protected void clearUniqueFindersCache(ShoppingItem shoppingItem) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SMALLIMAGEID,
 			new Object[] { Long.valueOf(shoppingItem.getSmallImageId()) });
 
@@ -336,30 +353,7 @@ public class ShoppingItemPersistenceImpl extends BasePersistenceImpl<ShoppingIte
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ShoppingItemModelImpl shoppingItemModelImpl = (ShoppingItemModelImpl)shoppingItem;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_SMALLIMAGEID,
-			new Object[] { Long.valueOf(shoppingItemModelImpl.getSmallImageId()) });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MEDIUMIMAGEID,
-			new Object[] { Long.valueOf(
-					shoppingItemModelImpl.getMediumImageId()) });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_LARGEIMAGEID,
-			new Object[] { Long.valueOf(shoppingItemModelImpl.getLargeImageId()) });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_S,
-			new Object[] {
-				Long.valueOf(shoppingItemModelImpl.getCompanyId()),
-				
-			shoppingItemModelImpl.getSku()
-			});
-
-		EntityCacheUtil.removeResult(ShoppingItemModelImpl.ENTITY_CACHE_ENABLED,
-			ShoppingItemImpl.class, shoppingItem.getPrimaryKey());
+		clearCache(shoppingItem);
 
 		return shoppingItem;
 	}

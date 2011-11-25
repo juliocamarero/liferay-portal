@@ -176,6 +176,17 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<ShoppingItemPrice> shoppingItemPrices) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ShoppingItemPrice shoppingItemPrice : shoppingItemPrices) {
+			EntityCacheUtil.removeResult(ShoppingItemPriceModelImpl.ENTITY_CACHE_ENABLED,
+				ShoppingItemPriceImpl.class, shoppingItemPrice.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new shopping item price with the primary key. Does not add the shopping item price to the database.
 	 *
@@ -264,11 +275,7 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(ShoppingItemPriceModelImpl.ENTITY_CACHE_ENABLED,
-			ShoppingItemPriceImpl.class, shoppingItemPrice.getPrimaryKey());
+		clearCache(shoppingItemPrice);
 
 		return shoppingItemPrice;
 	}

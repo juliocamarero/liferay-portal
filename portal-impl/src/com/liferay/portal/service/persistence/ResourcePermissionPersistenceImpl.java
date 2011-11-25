@@ -428,6 +428,24 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(resourcePermission);
+	}
+
+	@Override
+	public void clearCache(List<ResourcePermission> resourcePermissions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ResourcePermission resourcePermission : resourcePermissions) {
+			EntityCacheUtil.removeResult(ResourcePermissionModelImpl.ENTITY_CACHE_ENABLED,
+				ResourcePermissionImpl.class, resourcePermission.getPrimaryKey());
+
+			clearUniqueFindersCache(resourcePermission);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		ResourcePermission resourcePermission) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N_S_P_R_O_A,
 			new Object[] {
 				Long.valueOf(resourcePermission.getCompanyId()),
@@ -530,26 +548,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ResourcePermissionModelImpl resourcePermissionModelImpl = (ResourcePermissionModelImpl)resourcePermission;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N_S_P_R_O_A,
-			new Object[] {
-				Long.valueOf(resourcePermissionModelImpl.getCompanyId()),
-				
-			resourcePermissionModelImpl.getName(),
-				Integer.valueOf(resourcePermissionModelImpl.getScope()),
-				
-			resourcePermissionModelImpl.getPrimKey(),
-				Long.valueOf(resourcePermissionModelImpl.getRoleId()),
-				Long.valueOf(resourcePermissionModelImpl.getOwnerId()),
-				Long.valueOf(resourcePermissionModelImpl.getActionIds())
-			});
-
-		EntityCacheUtil.removeResult(ResourcePermissionModelImpl.ENTITY_CACHE_ENABLED,
-			ResourcePermissionImpl.class, resourcePermission.getPrimaryKey());
+		clearCache(resourcePermission);
 
 		return resourcePermission;
 	}

@@ -165,6 +165,17 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<ListType> listTypes) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ListType listType : listTypes) {
+			EntityCacheUtil.removeResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
+				ListTypeImpl.class, listType.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new list type with the primary key. Does not add the list type to the database.
 	 *
@@ -252,11 +263,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
-			ListTypeImpl.class, listType.getPrimaryKey());
+		clearCache(listType);
 
 		return listType;
 	}

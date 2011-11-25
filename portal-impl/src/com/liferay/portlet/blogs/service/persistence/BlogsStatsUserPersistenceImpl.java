@@ -279,6 +279,23 @@ public class BlogsStatsUserPersistenceImpl extends BasePersistenceImpl<BlogsStat
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(blogsStatsUser);
+	}
+
+	@Override
+	public void clearCache(List<BlogsStatsUser> blogsStatsUsers) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (BlogsStatsUser blogsStatsUser : blogsStatsUsers) {
+			EntityCacheUtil.removeResult(BlogsStatsUserModelImpl.ENTITY_CACHE_ENABLED,
+				BlogsStatsUserImpl.class, blogsStatsUser.getPrimaryKey());
+
+			clearUniqueFindersCache(blogsStatsUser);
+		}
+	}
+
+	protected void clearUniqueFindersCache(BlogsStatsUser blogsStatsUser) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,
 			new Object[] {
 				Long.valueOf(blogsStatsUser.getGroupId()),
@@ -374,19 +391,7 @@ public class BlogsStatsUserPersistenceImpl extends BasePersistenceImpl<BlogsStat
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		BlogsStatsUserModelImpl blogsStatsUserModelImpl = (BlogsStatsUserModelImpl)blogsStatsUser;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,
-			new Object[] {
-				Long.valueOf(blogsStatsUserModelImpl.getGroupId()),
-				Long.valueOf(blogsStatsUserModelImpl.getUserId())
-			});
-
-		EntityCacheUtil.removeResult(BlogsStatsUserModelImpl.ENTITY_CACHE_ENABLED,
-			BlogsStatsUserImpl.class, blogsStatsUser.getPrimaryKey());
+		clearCache(blogsStatsUser);
 
 		return blogsStatsUser;
 	}

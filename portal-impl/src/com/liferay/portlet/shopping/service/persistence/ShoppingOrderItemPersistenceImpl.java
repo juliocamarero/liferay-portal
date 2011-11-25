@@ -176,6 +176,17 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<ShoppingOrderItem> shoppingOrderItems) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ShoppingOrderItem shoppingOrderItem : shoppingOrderItems) {
+			EntityCacheUtil.removeResult(ShoppingOrderItemModelImpl.ENTITY_CACHE_ENABLED,
+				ShoppingOrderItemImpl.class, shoppingOrderItem.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new shopping order item with the primary key. Does not add the shopping order item to the database.
 	 *
@@ -264,11 +275,7 @@ public class ShoppingOrderItemPersistenceImpl extends BasePersistenceImpl<Shoppi
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(ShoppingOrderItemModelImpl.ENTITY_CACHE_ENABLED,
-			ShoppingOrderItemImpl.class, shoppingOrderItem.getPrimaryKey());
+		clearCache(shoppingOrderItem);
 
 		return shoppingOrderItem;
 	}

@@ -258,6 +258,17 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Website> websites) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Website website : websites) {
+			EntityCacheUtil.removeResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
+				WebsiteImpl.class, website.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new website with the primary key. Does not add the website to the database.
 	 *
@@ -344,11 +355,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-			WebsiteImpl.class, website.getPrimaryKey());
+		clearCache(website);
 
 		return website;
 	}

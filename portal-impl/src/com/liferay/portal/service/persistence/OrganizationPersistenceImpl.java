@@ -234,6 +234,23 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(organization);
+	}
+
+	@Override
+	public void clearCache(List<Organization> organizations) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Organization organization : organizations) {
+			EntityCacheUtil.removeResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
+				OrganizationImpl.class, organization.getPrimaryKey());
+
+			clearUniqueFindersCache(organization);
+		}
+	}
+
+	protected void clearUniqueFindersCache(Organization organization) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N,
 			new Object[] {
 				Long.valueOf(organization.getCompanyId()),
@@ -350,20 +367,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		OrganizationModelImpl organizationModelImpl = (OrganizationModelImpl)organization;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N,
-			new Object[] {
-				Long.valueOf(organizationModelImpl.getCompanyId()),
-				
-			organizationModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
-			OrganizationImpl.class, organization.getPrimaryKey());
+		clearCache(organization);
 
 		return organization;
 	}

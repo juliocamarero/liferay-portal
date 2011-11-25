@@ -264,6 +264,25 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(journalArticleImage);
+	}
+
+	@Override
+	public void clearCache(List<JournalArticleImage> journalArticleImages) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (JournalArticleImage journalArticleImage : journalArticleImages) {
+			EntityCacheUtil.removeResult(JournalArticleImageModelImpl.ENTITY_CACHE_ENABLED,
+				JournalArticleImageImpl.class,
+				journalArticleImage.getPrimaryKey());
+
+			clearUniqueFindersCache(journalArticleImage);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		JournalArticleImage journalArticleImage) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_A_V_E_E_L,
 			new Object[] {
 				Long.valueOf(journalArticleImage.getGroupId()),
@@ -367,27 +386,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		JournalArticleImageModelImpl journalArticleImageModelImpl = (JournalArticleImageModelImpl)journalArticleImage;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_A_V_E_E_L,
-			new Object[] {
-				Long.valueOf(journalArticleImageModelImpl.getGroupId()),
-				
-			journalArticleImageModelImpl.getArticleId(),
-				Double.valueOf(journalArticleImageModelImpl.getVersion()),
-				
-			journalArticleImageModelImpl.getElInstanceId(),
-				
-			journalArticleImageModelImpl.getElName(),
-				
-			journalArticleImageModelImpl.getLanguageId()
-			});
-
-		EntityCacheUtil.removeResult(JournalArticleImageModelImpl.ENTITY_CACHE_ENABLED,
-			JournalArticleImageImpl.class, journalArticleImage.getPrimaryKey());
+		clearCache(journalArticleImage);
 
 		return journalArticleImage;
 	}

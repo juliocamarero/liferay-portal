@@ -232,6 +232,25 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(workflowDefinitionLink);
+	}
+
+	@Override
+	public void clearCache(List<WorkflowDefinitionLink> workflowDefinitionLinks) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (WorkflowDefinitionLink workflowDefinitionLink : workflowDefinitionLinks) {
+			EntityCacheUtil.removeResult(WorkflowDefinitionLinkModelImpl.ENTITY_CACHE_ENABLED,
+				WorkflowDefinitionLinkImpl.class,
+				workflowDefinitionLink.getPrimaryKey());
+
+			clearUniqueFindersCache(workflowDefinitionLink);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		WorkflowDefinitionLink workflowDefinitionLink) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_C_T,
 			new Object[] {
 				Long.valueOf(workflowDefinitionLink.getGroupId()),
@@ -331,23 +350,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		WorkflowDefinitionLinkModelImpl workflowDefinitionLinkModelImpl = (WorkflowDefinitionLinkModelImpl)workflowDefinitionLink;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C_C_C_T,
-			new Object[] {
-				Long.valueOf(workflowDefinitionLinkModelImpl.getGroupId()),
-				Long.valueOf(workflowDefinitionLinkModelImpl.getCompanyId()),
-				Long.valueOf(workflowDefinitionLinkModelImpl.getClassNameId()),
-				Long.valueOf(workflowDefinitionLinkModelImpl.getClassPK()),
-				Long.valueOf(workflowDefinitionLinkModelImpl.getTypePK())
-			});
-
-		EntityCacheUtil.removeResult(WorkflowDefinitionLinkModelImpl.ENTITY_CACHE_ENABLED,
-			WorkflowDefinitionLinkImpl.class,
-			workflowDefinitionLink.getPrimaryKey());
+		clearCache(workflowDefinitionLink);
 
 		return workflowDefinitionLink;
 	}

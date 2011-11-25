@@ -396,6 +396,23 @@ public class SocialActivityPersistenceImpl extends BasePersistenceImpl<SocialAct
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(socialActivity);
+	}
+
+	@Override
+	public void clearCache(List<SocialActivity> socialActivities) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (SocialActivity socialActivity : socialActivities) {
+			EntityCacheUtil.removeResult(SocialActivityModelImpl.ENTITY_CACHE_ENABLED,
+				SocialActivityImpl.class, socialActivity.getPrimaryKey());
+
+			clearUniqueFindersCache(socialActivity);
+		}
+	}
+
+	protected void clearUniqueFindersCache(SocialActivity socialActivity) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
 			new Object[] { Long.valueOf(socialActivity.getMirrorActivityId()) });
 
@@ -499,29 +516,7 @@ public class SocialActivityPersistenceImpl extends BasePersistenceImpl<SocialAct
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		SocialActivityModelImpl socialActivityModelImpl = (SocialActivityModelImpl)socialActivity;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MIRRORACTIVITYID,
-			new Object[] {
-				Long.valueOf(socialActivityModelImpl.getMirrorActivityId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U_CD_C_C_T_R,
-			new Object[] {
-				Long.valueOf(socialActivityModelImpl.getGroupId()),
-				Long.valueOf(socialActivityModelImpl.getUserId()),
-				Long.valueOf(socialActivityModelImpl.getCreateDate()),
-				Long.valueOf(socialActivityModelImpl.getClassNameId()),
-				Long.valueOf(socialActivityModelImpl.getClassPK()),
-				Integer.valueOf(socialActivityModelImpl.getType()),
-				Long.valueOf(socialActivityModelImpl.getReceiverUserId())
-			});
-
-		EntityCacheUtil.removeResult(SocialActivityModelImpl.ENTITY_CACHE_ENABLED,
-			SocialActivityImpl.class, socialActivity.getPrimaryKey());
+		clearCache(socialActivity);
 
 		return socialActivity;
 	}

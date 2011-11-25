@@ -248,6 +248,24 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(portletPreferences);
+	}
+
+	@Override
+	public void clearCache(List<PortletPreferences> portletPreferenceses) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (PortletPreferences portletPreferences : portletPreferenceses) {
+			EntityCacheUtil.removeResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
+				PortletPreferencesImpl.class, portletPreferences.getPrimaryKey());
+
+			clearUniqueFindersCache(portletPreferences);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		PortletPreferences portletPreferences) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O_P_P,
 			new Object[] {
 				Long.valueOf(portletPreferences.getOwnerId()),
@@ -346,22 +364,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		PortletPreferencesModelImpl portletPreferencesModelImpl = (PortletPreferencesModelImpl)portletPreferences;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_O_O_P_P,
-			new Object[] {
-				Long.valueOf(portletPreferencesModelImpl.getOwnerId()),
-				Integer.valueOf(portletPreferencesModelImpl.getOwnerType()),
-				Long.valueOf(portletPreferencesModelImpl.getPlid()),
-				
-			portletPreferencesModelImpl.getPortletId()
-			});
-
-		EntityCacheUtil.removeResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-			PortletPreferencesImpl.class, portletPreferences.getPrimaryKey());
+		clearCache(portletPreferences);
 
 		return portletPreferences;
 	}

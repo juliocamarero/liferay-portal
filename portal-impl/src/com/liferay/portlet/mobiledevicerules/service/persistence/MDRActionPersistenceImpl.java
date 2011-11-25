@@ -206,6 +206,23 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(mdrAction);
+	}
+
+	@Override
+	public void clearCache(List<MDRAction> mdrActions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (MDRAction mdrAction : mdrActions) {
+			EntityCacheUtil.removeResult(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
+				MDRActionImpl.class, mdrAction.getPrimaryKey());
+
+			clearUniqueFindersCache(mdrAction);
+		}
+	}
+
+	protected void clearUniqueFindersCache(MDRAction mdrAction) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
 				mdrAction.getUuid(), Long.valueOf(mdrAction.getGroupId())
@@ -304,19 +321,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		MDRActionModelImpl mdrActionModelImpl = (MDRActionModelImpl)mdrAction;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				mdrActionModelImpl.getUuid(),
-				Long.valueOf(mdrActionModelImpl.getGroupId())
-			});
-
-		EntityCacheUtil.removeResult(MDRActionModelImpl.ENTITY_CACHE_ENABLED,
-			MDRActionImpl.class, mdrAction.getPrimaryKey());
+		clearCache(mdrAction);
 
 		return mdrAction;
 	}

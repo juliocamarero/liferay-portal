@@ -187,6 +187,23 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(team);
+	}
+
+	@Override
+	public void clearCache(List<Team> teams) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Team team : teams) {
+			EntityCacheUtil.removeResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
+				TeamImpl.class, team.getPrimaryKey());
+
+			clearUniqueFindersCache(team);
+		}
+	}
+
+	protected void clearUniqueFindersCache(Team team) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N,
 			new Object[] { Long.valueOf(team.getGroupId()), team.getName() });
 	}
@@ -296,20 +313,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		TeamModelImpl teamModelImpl = (TeamModelImpl)team;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N,
-			new Object[] {
-				Long.valueOf(teamModelImpl.getGroupId()),
-				
-			teamModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-			TeamImpl.class, team.getPrimaryKey());
+		clearCache(team);
 
 		return team;
 	}

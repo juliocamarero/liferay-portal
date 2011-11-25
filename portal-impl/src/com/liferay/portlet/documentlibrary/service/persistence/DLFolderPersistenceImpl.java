@@ -340,6 +340,23 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(dlFolder);
+	}
+
+	@Override
+	public void clearCache(List<DLFolder> dlFolders) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (DLFolder dlFolder : dlFolders) {
+			EntityCacheUtil.removeResult(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
+				DLFolderImpl.class, dlFolder.getPrimaryKey());
+
+			clearUniqueFindersCache(dlFolder);
+		}
+	}
+
+	protected void clearUniqueFindersCache(DLFolder dlFolder) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] { dlFolder.getUuid(), Long.valueOf(
 					dlFolder.getGroupId()) });
@@ -457,30 +474,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		DLFolderModelImpl dlFolderModelImpl = (DLFolderModelImpl)dlFolder;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				dlFolderModelImpl.getUuid(),
-				Long.valueOf(dlFolderModelImpl.getGroupId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_REPOSITORYID,
-			new Object[] { Long.valueOf(dlFolderModelImpl.getRepositoryId()) });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_N,
-			new Object[] {
-				Long.valueOf(dlFolderModelImpl.getGroupId()),
-				Long.valueOf(dlFolderModelImpl.getParentFolderId()),
-				
-			dlFolderModelImpl.getName()
-			});
-
-		EntityCacheUtil.removeResult(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
-			DLFolderImpl.class, dlFolder.getPrimaryKey());
+		clearCache(dlFolder);
 
 		return dlFolder;
 	}

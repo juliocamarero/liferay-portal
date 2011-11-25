@@ -201,6 +201,23 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(country);
+	}
+
+	@Override
+	public void clearCache(List<Country> countries) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Country country : countries) {
+			EntityCacheUtil.removeResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
+				CountryImpl.class, country.getPrimaryKey());
+
+			clearUniqueFindersCache(country);
+		}
+	}
+
+	protected void clearUniqueFindersCache(Country country) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME,
 			new Object[] { country.getName() });
 
@@ -297,22 +314,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		CountryModelImpl countryModelImpl = (CountryModelImpl)country;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME,
-			new Object[] { countryModelImpl.getName() });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A2,
-			new Object[] { countryModelImpl.getA2() });
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A3,
-			new Object[] { countryModelImpl.getA3() });
-
-		EntityCacheUtil.removeResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
-			CountryImpl.class, country.getPrimaryKey());
+		clearCache(country);
 
 		return country;
 	}

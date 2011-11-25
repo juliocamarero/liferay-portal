@@ -257,6 +257,17 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Phone> phones) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Phone phone : phones) {
+			EntityCacheUtil.removeResult(PhoneModelImpl.ENTITY_CACHE_ENABLED,
+				PhoneImpl.class, phone.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new phone with the primary key. Does not add the phone to the database.
 	 *
@@ -343,11 +354,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(PhoneModelImpl.ENTITY_CACHE_ENABLED,
-			PhoneImpl.class, phone.getPrimaryKey());
+		clearCache(phone);
 
 		return phone;
 	}

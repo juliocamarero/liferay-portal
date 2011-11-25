@@ -228,6 +228,17 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<SCFrameworkVersion> scFrameworkVersions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (SCFrameworkVersion scFrameworkVersion : scFrameworkVersions) {
+			EntityCacheUtil.removeResult(SCFrameworkVersionModelImpl.ENTITY_CACHE_ENABLED,
+				SCFrameworkVersionImpl.class, scFrameworkVersion.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new s c framework version with the primary key. Does not add the s c framework version to the database.
 	 *
@@ -326,11 +337,7 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(SCFrameworkVersionModelImpl.ENTITY_CACHE_ENABLED,
-			SCFrameworkVersionImpl.class, scFrameworkVersion.getPrimaryKey());
+		clearCache(scFrameworkVersion);
 
 		return scFrameworkVersion;
 	}

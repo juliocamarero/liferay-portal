@@ -257,6 +257,17 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<UserGroupGroupRole> userGroupGroupRoles) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (UserGroupGroupRole userGroupGroupRole : userGroupGroupRoles) {
+			EntityCacheUtil.removeResult(UserGroupGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
+				UserGroupGroupRoleImpl.class, userGroupGroupRole.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new user group group role with the primary key. Does not add the user group group role to the database.
 	 *
@@ -345,11 +356,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(UserGroupGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
-			UserGroupGroupRoleImpl.class, userGroupGroupRole.getPrimaryKey());
+		clearCache(userGroupGroupRole);
 
 		return userGroupGroupRole;
 	}

@@ -194,6 +194,17 @@ public class OrgGroupPermissionPersistenceImpl extends BasePersistenceImpl<OrgGr
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<OrgGroupPermission> orgGroupPermissions) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (OrgGroupPermission orgGroupPermission : orgGroupPermissions) {
+			EntityCacheUtil.removeResult(OrgGroupPermissionModelImpl.ENTITY_CACHE_ENABLED,
+				OrgGroupPermissionImpl.class, orgGroupPermission.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new org group permission with the primary key. Does not add the org group permission to the database.
 	 *
@@ -282,11 +293,7 @@ public class OrgGroupPermissionPersistenceImpl extends BasePersistenceImpl<OrgGr
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(OrgGroupPermissionModelImpl.ENTITY_CACHE_ENABLED,
-			OrgGroupPermissionImpl.class, orgGroupPermission.getPrimaryKey());
+		clearCache(orgGroupPermission);
 
 		return orgGroupPermission;
 	}

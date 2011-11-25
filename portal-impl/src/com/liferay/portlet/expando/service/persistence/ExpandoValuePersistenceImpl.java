@@ -347,6 +347,23 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(expandoValue);
+	}
+
+	@Override
+	public void clearCache(List<ExpandoValue> expandoValues) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ExpandoValue expandoValue : expandoValues) {
+			EntityCacheUtil.removeResult(ExpandoValueModelImpl.ENTITY_CACHE_ENABLED,
+				ExpandoValueImpl.class, expandoValue.getPrimaryKey());
+
+			clearUniqueFindersCache(expandoValue);
+		}
+	}
+
+	protected void clearUniqueFindersCache(ExpandoValue expandoValue) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_R,
 			new Object[] {
 				Long.valueOf(expandoValue.getColumnId()),
@@ -449,26 +466,7 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ExpandoValueModelImpl expandoValueModelImpl = (ExpandoValueModelImpl)expandoValue;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_R,
-			new Object[] {
-				Long.valueOf(expandoValueModelImpl.getColumnId()),
-				Long.valueOf(expandoValueModelImpl.getRowId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_C_C,
-			new Object[] {
-				Long.valueOf(expandoValueModelImpl.getTableId()),
-				Long.valueOf(expandoValueModelImpl.getColumnId()),
-				Long.valueOf(expandoValueModelImpl.getClassPK())
-			});
-
-		EntityCacheUtil.removeResult(ExpandoValueModelImpl.ENTITY_CACHE_ENABLED,
-			ExpandoValueImpl.class, expandoValue.getPrimaryKey());
+		clearCache(expandoValue);
 
 		return expandoValue;
 	}

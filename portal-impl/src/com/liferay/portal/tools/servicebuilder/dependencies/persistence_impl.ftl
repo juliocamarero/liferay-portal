@@ -311,30 +311,52 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		<#list entity.getUniqueFinderList() as finder>
-			<#assign finderColsList = finder.getColumns()>
-
-			FinderCacheUtil.removeResult(
-				FINDER_PATH_FETCH_BY_${finder.name?upper_case},
-				new Object[] {
-					<#list finderColsList as finderCol>
-						<#if finderCol.isPrimitiveType()>
-							${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-						</#if>
-
-						${entity.varName}.get${finderCol.methodName}()
-
-						<#if finderCol.isPrimitiveType()>
-							)
-						</#if>
-
-						<#if finderCol_has_next>
-							,
-						</#if>
-					</#list>
-				});
-		</#list>
+		<#if entity.getUniqueFinderList()?size &gt; 0>
+			clearUniqueFindersCache(${entity.varName});
+		</#if>
 	}
+
+	@Override
+	public void clearCache(List<${entity.name}> ${entity.varNames}) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (${entity.name} ${entity.varName} : ${entity.varNames}) {
+			EntityCacheUtil.removeResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, ${entity.varName}.getPrimaryKey());
+
+			<#if entity.getUniqueFinderList()?size &gt; 0>
+				clearUniqueFindersCache(${entity.varName});
+			</#if>
+		}
+	}
+
+	<#if entity.getUniqueFinderList()?size &gt; 0>
+		protected void clearUniqueFindersCache(${entity.name} ${entity.varName}) {
+			<#list entity.getUniqueFinderList() as finder>
+				<#assign finderColsList = finder.getColumns()>
+
+				FinderCacheUtil.removeResult(
+					FINDER_PATH_FETCH_BY_${finder.name?upper_case},
+					new Object[] {
+						<#list finderColsList as finderCol>
+							<#if finderCol.isPrimitiveType()>
+								${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
+							</#if>
+
+							${entity.varName}.get${finderCol.methodName}()
+
+							<#if finderCol.isPrimitiveType()>
+								)
+							</#if>
+
+							<#if finderCol_has_next>
+								,
+							</#if>
+						</#list>
+					});
+			</#list>
+		}
+	</#if>
 
 	/**
 	 * Creates a new ${entity.humanName} with the primary key. Does not add the ${entity.humanName} to the database.
@@ -449,40 +471,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		<#assign uniqueFinderList = entity.getUniqueFinderList()>
-
-		<#if uniqueFinderList?size != 0>
-			${entity.name}ModelImpl ${entity.varName}ModelImpl = (${entity.name}ModelImpl)${entity.varName};
-		</#if>
-
-		<#list uniqueFinderList as finder>
-			<#assign finderColsList = finder.getColumns()>
-
-			FinderCacheUtil.removeResult(
-				FINDER_PATH_FETCH_BY_${finder.name?upper_case},
-				new Object[] {
-					<#list finderColsList as finderCol>
-						<#if finderCol.isPrimitiveType()>
-							${serviceBuilder.getPrimitiveObj("${finderCol.type}")}.valueOf(
-						</#if>
-
-						${entity.varName}ModelImpl.get${finderCol.methodName}()
-
-						<#if finderCol.isPrimitiveType()>
-							)
-						</#if>
-
-						<#if finderCol_has_next>
-							,
-						</#if>
-					</#list>
-				});
-		</#list>
-
-		EntityCacheUtil.removeResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, ${entity.varName}.getPrimaryKey());
+		clearCache(${entity.varName});
 
 		return ${entity.varName};
 	}

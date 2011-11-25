@@ -234,6 +234,23 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(mbStatsUser);
+	}
+
+	@Override
+	public void clearCache(List<MBStatsUser> mbStatsUsers) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (MBStatsUser mbStatsUser : mbStatsUsers) {
+			EntityCacheUtil.removeResult(MBStatsUserModelImpl.ENTITY_CACHE_ENABLED,
+				MBStatsUserImpl.class, mbStatsUser.getPrimaryKey());
+
+			clearUniqueFindersCache(mbStatsUser);
+		}
+	}
+
+	protected void clearUniqueFindersCache(MBStatsUser mbStatsUser) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,
 			new Object[] {
 				Long.valueOf(mbStatsUser.getGroupId()),
@@ -329,19 +346,7 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		MBStatsUserModelImpl mbStatsUserModelImpl = (MBStatsUserModelImpl)mbStatsUser;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,
-			new Object[] {
-				Long.valueOf(mbStatsUserModelImpl.getGroupId()),
-				Long.valueOf(mbStatsUserModelImpl.getUserId())
-			});
-
-		EntityCacheUtil.removeResult(MBStatsUserModelImpl.ENTITY_CACHE_ENABLED,
-			MBStatsUserImpl.class, mbStatsUser.getPrimaryKey());
+		clearCache(mbStatsUser);
 
 		return mbStatsUser;
 	}

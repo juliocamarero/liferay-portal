@@ -194,6 +194,25 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(announcementsDelivery);
+	}
+
+	@Override
+	public void clearCache(List<AnnouncementsDelivery> announcementsDeliveries) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (AnnouncementsDelivery announcementsDelivery : announcementsDeliveries) {
+			EntityCacheUtil.removeResult(AnnouncementsDeliveryModelImpl.ENTITY_CACHE_ENABLED,
+				AnnouncementsDeliveryImpl.class,
+				announcementsDelivery.getPrimaryKey());
+
+			clearUniqueFindersCache(announcementsDelivery);
+		}
+	}
+
+	protected void clearUniqueFindersCache(
+		AnnouncementsDelivery announcementsDelivery) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T,
 			new Object[] {
 				Long.valueOf(announcementsDelivery.getUserId()),
@@ -290,21 +309,7 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		AnnouncementsDeliveryModelImpl announcementsDeliveryModelImpl = (AnnouncementsDeliveryModelImpl)announcementsDelivery;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_T,
-			new Object[] {
-				Long.valueOf(announcementsDeliveryModelImpl.getUserId()),
-				
-			announcementsDeliveryModelImpl.getType()
-			});
-
-		EntityCacheUtil.removeResult(AnnouncementsDeliveryModelImpl.ENTITY_CACHE_ENABLED,
-			AnnouncementsDeliveryImpl.class,
-			announcementsDelivery.getPrimaryKey());
+		clearCache(announcementsDelivery);
 
 		return announcementsDelivery;
 	}

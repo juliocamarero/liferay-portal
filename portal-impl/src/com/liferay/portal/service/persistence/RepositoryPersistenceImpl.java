@@ -172,6 +172,17 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Repository> repositories) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Repository repository : repositories) {
+			EntityCacheUtil.removeResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
+				RepositoryImpl.class, repository.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new repository with the primary key. Does not add the repository to the database.
 	 *
@@ -260,11 +271,7 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
-			RepositoryImpl.class, repository.getPrimaryKey());
+		clearCache(repository);
 
 		return repository;
 	}

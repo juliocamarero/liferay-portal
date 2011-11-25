@@ -145,6 +145,17 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<Account> accounts) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (Account account : accounts) {
+			EntityCacheUtil.removeResult(AccountModelImpl.ENTITY_CACHE_ENABLED,
+				AccountImpl.class, account.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new account with the primary key. Does not add the account to the database.
 	 *
@@ -231,11 +242,7 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(AccountModelImpl.ENTITY_CACHE_ENABLED,
-			AccountImpl.class, account.getPrimaryKey());
+		clearCache(account);
 
 		return account;
 	}

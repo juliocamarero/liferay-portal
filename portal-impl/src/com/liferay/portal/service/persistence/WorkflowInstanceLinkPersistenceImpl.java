@@ -182,6 +182,18 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<WorkflowInstanceLink> workflowInstanceLinks) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (WorkflowInstanceLink workflowInstanceLink : workflowInstanceLinks) {
+			EntityCacheUtil.removeResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+				WorkflowInstanceLinkImpl.class,
+				workflowInstanceLink.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new workflow instance link with the primary key. Does not add the workflow instance link to the database.
 	 *
@@ -270,11 +282,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
-			WorkflowInstanceLinkImpl.class, workflowInstanceLink.getPrimaryKey());
+		clearCache(workflowInstanceLink);
 
 		return workflowInstanceLink;
 	}

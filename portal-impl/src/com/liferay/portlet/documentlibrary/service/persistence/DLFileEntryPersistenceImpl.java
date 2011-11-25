@@ -372,6 +372,23 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(dlFileEntry);
+	}
+
+	@Override
+	public void clearCache(List<DLFileEntry> dlFileEntries) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (DLFileEntry dlFileEntry : dlFileEntries) {
+			EntityCacheUtil.removeResult(DLFileEntryModelImpl.ENTITY_CACHE_ENABLED,
+				DLFileEntryImpl.class, dlFileEntry.getPrimaryKey());
+
+			clearUniqueFindersCache(dlFileEntry);
+		}
+	}
+
+	protected void clearUniqueFindersCache(DLFileEntry dlFileEntry) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
 				dlFileEntry.getUuid(), Long.valueOf(dlFileEntry.getGroupId())
@@ -486,35 +503,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		DLFileEntryModelImpl dlFileEntryModelImpl = (DLFileEntryModelImpl)dlFileEntry;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,
-			new Object[] {
-				dlFileEntryModelImpl.getUuid(),
-				Long.valueOf(dlFileEntryModelImpl.getGroupId())
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_F_N,
-			new Object[] {
-				Long.valueOf(dlFileEntryModelImpl.getGroupId()),
-				Long.valueOf(dlFileEntryModelImpl.getFolderId()),
-				
-			dlFileEntryModelImpl.getName()
-			});
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_F_T,
-			new Object[] {
-				Long.valueOf(dlFileEntryModelImpl.getGroupId()),
-				Long.valueOf(dlFileEntryModelImpl.getFolderId()),
-				
-			dlFileEntryModelImpl.getTitle()
-			});
-
-		EntityCacheUtil.removeResult(DLFileEntryModelImpl.ENTITY_CACHE_ENABLED,
-			DLFileEntryImpl.class, dlFileEntry.getPrimaryKey());
+		clearCache(dlFileEntry);
 
 		return dlFileEntry;
 	}

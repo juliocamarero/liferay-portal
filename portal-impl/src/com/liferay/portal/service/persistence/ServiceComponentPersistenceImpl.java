@@ -189,6 +189,23 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
+		clearUniqueFindersCache(serviceComponent);
+	}
+
+	@Override
+	public void clearCache(List<ServiceComponent> serviceComponents) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (ServiceComponent serviceComponent : serviceComponents) {
+			EntityCacheUtil.removeResult(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
+				ServiceComponentImpl.class, serviceComponent.getPrimaryKey());
+
+			clearUniqueFindersCache(serviceComponent);
+		}
+	}
+
+	protected void clearUniqueFindersCache(ServiceComponent serviceComponent) {
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BNS_BNU,
 			new Object[] {
 				serviceComponent.getBuildNamespace(),
@@ -284,19 +301,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		ServiceComponentModelImpl serviceComponentModelImpl = (ServiceComponentModelImpl)serviceComponent;
-
-		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BNS_BNU,
-			new Object[] {
-				serviceComponentModelImpl.getBuildNamespace(),
-				Long.valueOf(serviceComponentModelImpl.getBuildNumber())
-			});
-
-		EntityCacheUtil.removeResult(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
-			ServiceComponentImpl.class, serviceComponent.getPrimaryKey());
+		clearCache(serviceComponent);
 
 		return serviceComponent;
 	}

@@ -167,6 +167,17 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@Override
+	public void clearCache(List<OrgLabor> orgLabors) {
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		for (OrgLabor orgLabor : orgLabors) {
+			EntityCacheUtil.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
+				OrgLaborImpl.class, orgLabor.getPrimaryKey());
+		}
+	}
+
 	/**
 	 * Creates a new org labor with the primary key. Does not add the org labor to the database.
 	 *
@@ -254,11 +265,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			closeSession(session);
 		}
 
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-
-		EntityCacheUtil.removeResult(OrgLaborModelImpl.ENTITY_CACHE_ENABLED,
-			OrgLaborImpl.class, orgLabor.getPrimaryKey());
+		clearCache(orgLabor);
 
 		return orgLabor;
 	}
