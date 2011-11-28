@@ -291,7 +291,7 @@
 				(ResourcePermission.scope = ?) AND
 				(ResourceAction.actionId = ?) AND
 				(ResourcePermission.roleId = ?) AND
-				((ResourcePermission.actionIds & ResourceAction.bitwiseValue) != 0)
+				(MOD(INTEGER_DIV(ResourcePermission.actionIds, ResourceAction.bitwisevalue), 2) != 0)
 		]]>
 	</sql>
 	<sql id="com.liferay.portal.service.persistence.GroupFinder.joinByRoleResourceTypePermissions">
@@ -305,7 +305,7 @@
 				ResourceAction ON
 					(ResourceAction.name = ResourceTypePermission.name) AND
 					(ResourceAction.actionId = ?) AND
-					((ResourceTypePermission.actionIds & ResourceAction.bitwiseValue) != 0)
+					(MOD(INTEGER_DIV(ResourcePermission.actionIds, ResourceAction.bitwisevalue), 2) != 0)
 			WHERE
 				(Group_.liveGroupId = 0)
 		]]>
@@ -1048,7 +1048,7 @@
 				(ResourcePermission.scope = ?) AND
 				(ResourcePermission.primKey = ?) AND
 				(ResourcePermission.roleId = ?) AND
-				((ResourcePermission.actionIds & ?) = ?)
+				(MOD(INTEGER_DIV(ResourcePermission.actionIds, ?), 2) = ?)
 		]]>
 	</sql>
 	<sql id="com.liferay.portal.service.persistence.ResourcePermissionFinder.findByResource">
