@@ -36,7 +36,6 @@ if (group.isStagingGroup()) {
 long liveGroupId = ParamUtil.getLong(request, "liveGroupId");
 
 boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
-long[] layoutIds = ParamUtil.getLongValues(request, "layoutIds");
 
 String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 
@@ -87,11 +86,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 
 	<c:choose>
 		<c:when test="<%= cmd.equals(Constants.EXPORT) %>">
-			<aui:input label="export-the-selected-data-to-the-given-lar-file-name" name="exportFileName" size="50" value='<%= HtmlUtil.escape(StringUtil.replace(rootNodeName, " ", "_")) + "-" + Time.getShortTimestamp() + ".lar" %>' />
-
-			<aui:field-wrapper label="what-would-you-like-to-export">
-				<%@ include file="/html/portlet/layouts_admin/export_import_options.jspf" %>
-			</aui:field-wrapper>
+			<%@ include file="/html/portlet/layouts_admin/export_import_options.jspf" %>
 
 			<aui:button-row>
 				<aui:button type="submit" value="export" />
@@ -104,11 +99,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 
 			<c:choose>
 				<c:when test="<%= (layout.getGroupId() != groupId) || (layout.isPrivateLayout() != privateLayout) %>">
-					<aui:input label="import-a-lar-file-to-overwrite-the-selected-data" name="importFileName" size="50" type="file" />
-
-					<aui:field-wrapper label="what-would-you-like-to-import">
-						<%@ include file="/html/portlet/layouts_admin/export_import_options.jspf" %>
-					</aui:field-wrapper>
+					<%@ include file="/html/portlet/layouts_admin/export_import_options.jspf" %>
 
 					<aui:button-row>
 						<aui:button type="submit" value="import" />
@@ -132,11 +123,35 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 
 			<c:choose>
 				<c:when test="<%= cmd.equals(Constants.EXPORT) %>">
+					(function () {
+						// Serialize page selector tree into hidden input
+
+						var treeView = A.one('#<portlet:namespace />layoutsExportTreeOutput').getData('treeInstance');
+						var children = treeView.getChildren(true);
+						var layoutIds = [];
+
+						for (var i in children) {
+							// Skip the root node because it's not a valid layout
+							if (i == 0) {
+								continue;
+							}
+
+							var child = children[i];
+
+							if (child.isChecked()) {
+								var layoutId = child.get('id').match(/layoutId_(\d+)/)[1];
+								layoutIds.push(layoutId);
+							}
+						}
+
+						var layoutIdsInput = A.one('#<portlet:namespace />layoutIds');
+						layoutIdsInput.val(layoutIds.join());
+					} ());
+
 					<portlet:actionURL var="exportPagesURL">
 						<portlet:param name="struts_action" value="/layouts_admin/export_layouts" />
 						<portlet:param name="groupId" value="<%= String.valueOf(liveGroupId) %>" />
 						<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
-						<portlet:param name="layoutIds" value="<%= StringUtil.merge(layoutIds) %>" />
 					</portlet:actionURL>
 
 					submitForm(form, '<%= exportPagesURL + "&etag=0" %>', false);
