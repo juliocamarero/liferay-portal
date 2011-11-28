@@ -17,13 +17,7 @@
 <div>
 	<ul class="lfr-tree lfr-component">
 		<li class="tree-item">
-
-			<%
-			String taglibOnChange = renderResponse.getNamespace() + "toggleChildren(this, '" + renderResponse.getNamespace() + "permissionsUl');";
-			%>
-
-			<aui:input helpMessage="export-import-permissions-help" inlineLabel="right" label="permissions" name="<%= PortletDataHandlerKeys.PERMISSIONS %>" onchange="<%= taglibOnChange %>" type="checkbox" />
-
+			<aui:input helpMessage="export-import-permissions-help" inlineLabel="right" label="permissions" name="<%= PortletDataHandlerKeys.PERMISSIONS %>" type="checkbox" />
 
 			<ul id="<portlet:namespace />permissionsUl">
 				<c:choose>
@@ -57,3 +51,7 @@
 		</li>
 	</ul>
 </div>
+
+<aui:script>
+	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PERMISSIONS %>Checkbox', '<portlet:namespace />permissionsUl');
+</aui:script>

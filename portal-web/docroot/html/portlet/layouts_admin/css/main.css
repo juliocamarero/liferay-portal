@@ -368,13 +368,19 @@
 	background-image: url(@theme_image_path@/trees/page.png);
 }
 
-.export-dialog-tree .aui-field-input-choice {
-	float: none;
-}
+.export-dialog-tree {
+	.aui-field-input-choice {
+		float: none;
+	}
 
-.export-dialog-tree .file-selector {
-	display: block;
-	margin: 0.5em 0 1.5em;
+	.file-selector {
+		display: block;
+		margin: 0.5em 0 1.5em;
+	}
+
+	.portlet-data-section legend {
+		font-size: 110%;
+	}
 }
 
 .lfr-export-dialog {
