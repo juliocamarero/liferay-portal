@@ -131,7 +131,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 										minuteInterval="<%= 1 %>"
 									/>
 								</aui:field-wrapper>
-							<li>
+							</li>
 
 							<li>
 								<aui:field-wrapper label="end-date">

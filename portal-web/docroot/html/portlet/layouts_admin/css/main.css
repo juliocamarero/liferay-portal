@@ -373,6 +373,15 @@
 		float: none;
 	}
 
+	.aui-field-label {
+		font-weight: normal;
+	}
+
+	.aui-fieldset .aui-field-content {
+		margin-top: .1em;
+		margin-bottom: .1em;
+	}
+
 	.file-selector {
 		display: block;
 		margin: 0.5em 0 1.5em;

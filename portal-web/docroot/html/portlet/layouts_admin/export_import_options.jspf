@@ -27,7 +27,7 @@
 	<liferay-ui:panel-container id="export-dialog-tree-panel-container" extended="<%= true %>" persistState="<%= false %>">
 		<liferay-ui:panel collapsible="<%= true %>" cssClass="export-group-panel" id="pagesPanel" persistState="<%= false %>" title="pages">
 			<c:if test="<%= cmd.equals(Constants.EXPORT) %>">
-				<aui:input type="hidden" name="layoutIds" value="<%= StringUtil.merge(layoutIds) %>" />
+				<aui:input type="hidden" name="layoutIds" />
 
 				<liferay-util:include page="/html/portlet/layouts_admin/tree_js.jsp">
 					<liferay-util:param name="defaultStateChecked" value="1" />
@@ -141,7 +141,7 @@
 														minuteInterval="<%= 1 %>"
 													/>
 												</aui:field-wrapper>
-											<li>
+											</li>
 
 											<li>
 												<aui:field-wrapper label="end-date">

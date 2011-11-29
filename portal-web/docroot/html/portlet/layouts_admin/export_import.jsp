@@ -36,7 +36,6 @@ if (group.isStagingGroup()) {
 long liveGroupId = ParamUtil.getLong(request, "liveGroupId");
 
 boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
-long[] layoutIds = ParamUtil.getLongValues(request, "layoutIds");
 
 String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 
@@ -127,7 +126,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 					var layoutsExportTreeOutput = A.one('#<portlet:namespace />layoutsExportTreeOutput');
 
 					if (layoutsExportTreeOutput) {
-						var treeView = tree.getData('treeInstance');
+						var treeView = layoutsExportTreeOutput.getData('treeInstance');
 
 						var children = treeView.getChildren(true);
 						var layoutIds = [];
