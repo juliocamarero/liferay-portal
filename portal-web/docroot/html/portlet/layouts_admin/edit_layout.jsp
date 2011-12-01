@@ -178,121 +178,77 @@ String[][] categorySections = {mainSections};
 							var buttonRow = A.one('#<portlet:namespace />layoutToolbar');
 
 							var popup = null;
-							var exportPopup = null;
+
+							var layoutToolbarChildren = [];
+
+							<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.ADD_LAYOUT) %>">
+								layoutToolbarChildren.push(
+									{
+										handler: function(event) {
+											if (!popup) {
+												var content = A.one('#<portlet:namespace />addLayout');
+
+												popup = new A.Dialog(
+													{
+														bodyContent: content.show(),
+														centered: true,
+														title: '<liferay-ui:message key="add-child-page" />',
+														modal: true,
+														width: 500
+													}
+												).render();
+											}
+
+											popup.show();
+
+											Liferay.Util.focusFormField(content.one('input:text'));
+										},
+										icon: 'add',
+										label: '<liferay-ui:message key="add-child-page" />'
+									}
+								);
+							</c:if>
+
+							<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.PERMISSIONS) %>">
+								layoutToolbarChildren.push(
+									{
+										handler: function(event) {
+											Liferay.Util.openWindow(
+												{
+													cache: false,
+													dialog: {
+														width: 700
+													},
+													id: '<portlet:namespace /><%= selPlid %>_permissions',
+													title: '<liferay-ui:message key="permissions" />',
+													uri: '<%= permissionURL %>'
+												}
+											);
+										},
+										icon: 'permissions',
+										label: '<liferay-ui:message key="permissions" />'
+									}
+								);
+							</c:if>
+
+							<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.DELETE) %>">
+								layoutToolbarChildren.push(
+									{
+										handler: function(event) {
+											<portlet:namespace />saveLayout('<%= Constants.DELETE %>');
+										},
+										icon: 'delete',
+										label: '<liferay-ui:message key="delete" />'
+									}
+								);
+							</c:if>
+
 
 							var layoutToolbar = new A.Toolbar(
 								{
 									activeState: false,
 									boundingBox: buttonRow,
-									children: [
-										<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.ADD_LAYOUT) %>">
-											{
-												handler: function(event) {
-													if (!popup) {
-														var content = A.one('#<portlet:namespace />addLayout');
-
-														popup = new A.Dialog(
-															{
-																bodyContent: content.show(),
-																centered: true,
-																title: '<liferay-ui:message key="add-child-page" />',
-																modal: true,
-																width: 500
-															}
-														).render();
-													}
-
-													popup.show();
-
-													Liferay.Util.focusFormField(content.one('input:text'));
-												},
-												icon: 'add',
-												label: '<liferay-ui:message key="add-child-page" />'
-											},
-										</c:if>
-
-										<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.PERMISSIONS) %>">
-											{
-												handler: function(event) {
-													Liferay.Util.openWindow(
-														{
-															cache: false,
-															dialog: {
-																width: 700
-															},
-															id: '<portlet:namespace /><%= selPlid %>_permissions',
-															title: '<liferay-ui:message key="permissions" />',
-															uri: '<%= permissionURL %>'
-														}
-													);
-												},
-												icon: 'permissions',
-												label: '<liferay-ui:message key="permissions" />'
-											},
-										</c:if>
-
-										<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.DELETE) %>">
-											{
-												handler: function(event) {
-													<portlet:namespace />saveLayout('<%= Constants.DELETE %>');
-												},
-												icon: 'delete',
-												label: '<liferay-ui:message key="delete" />'
-											},
-										</c:if>
-
-										<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, liveGroupId, ActionKeys.EXPORT_IMPORT_LAYOUTS) %>">
-											{
-												type: 'ToolbarSpacer'
-											},
-											{
-												handler: function(event) {
-													if (!exportPopup) {
-														exportPopup = new A.Dialog(
-															{
-																centered: true,
-																constrain: true,
-																cssClass: 'lfr-export-dialog',
-																modal: true,
-																title: '<liferay-ui:message key="export" />',
-																width: 600
-															}
-														).render();
-
-														<portlet:renderURL var="exportPagesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-															<portlet:param name="struts_action" value="/layouts_admin/export_layouts" />
-															<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
-															<portlet:param name="redirect" value="<%= currentURL %>" />
-															<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-															<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
-															<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
-															<portlet:param name="layoutIds" value="<%= String.valueOf(layoutId) %>" />
-															<portlet:param name="rootNodeName" value="<%= selLayout.getName(locale) %>" />
-														</portlet:renderURL>
-
-														exportPopup.plug(
-															A.Plugin.IO,
-															{
-																after: {
-																	success: function() {
-																		exportPopup.centered();
-																	}
-																},
-																autoLoad: false,
-																uri: '<%= exportPagesURL.toString() %>'
-															}
-														);
-													}
-
-													exportPopup.show();
-
-													exportPopup.io.start();
-												},
-												icon: 'export',
-												label: '<liferay-ui:message key="export" />'
-											}
-										</c:if>
-									]
+									children: layoutToolbarChildren
 								}
 							).render();
 
