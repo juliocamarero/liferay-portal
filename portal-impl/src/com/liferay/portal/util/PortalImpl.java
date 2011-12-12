@@ -163,6 +163,8 @@ import com.liferay.portlet.RenderResponseImpl;
 import com.liferay.portlet.StateAwareResponseImpl;
 import com.liferay.portlet.UserAttributes;
 import com.liferay.portlet.admin.util.OmniadminUtil;
+import com.liferay.portlet.asset.model.AssetTag;
+import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.calendar.model.CalEvent;
@@ -2003,10 +2005,10 @@ public class PortalImpl implements Portal {
 					LayoutTypePortletImpl.getFullInstanceSeparator();
 		}
 
-		if (Validator.isNull(currentDefaultAssetPublisherPortletId)) {
-			HttpServletRequest request =
-				(HttpServletRequest)requestContext.get("request");
+		HttpServletRequest request =
+			(HttpServletRequest)requestContext.get("request");
 
+		if (Validator.isNull(currentDefaultAssetPublisherPortletId)) {
 			String actualPortletAuthenticationToken = AuthTokenUtil.getToken(
 				request, layout.getPlid(), defaultAssetPublisherPortletId);
 
@@ -2048,6 +2050,17 @@ public class PortalImpl implements Portal {
 		else {
 			layoutActualURL =
 				layoutActualURL + StringPool.QUESTION + queryString;
+		}
+
+		PortalUtil.addPageSubtitle(journalArticle.getTitle(), request);
+		PortalUtil.addPageDescription(journalArticle.getDescription(), request);
+
+		List<AssetTag> articleTags =
+			AssetTagLocalServiceUtil.getTags(
+				JournalArticle.class.getName(), journalArticle.getPrimaryKey());
+
+		for (AssetTag tag : articleTags) {
+			PortalUtil.addPageKeywords(tag.getName(), request);
 		}
 
 		return layoutActualURL;
