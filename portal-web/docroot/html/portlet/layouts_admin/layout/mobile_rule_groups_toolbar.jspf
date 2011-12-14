@@ -47,16 +47,23 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem", "add");
 </liferay-portlet:renderURL>
 
 <aui:script>
-	function <portlet:namespace />processDialog(dialog) {
-		if (dialog) {
-			if (Liferay.Util.getTop() == window) {
-				dialog.plug(A.LoadingMask).render();
+	Liferay.provide(
+		window,
+		'<portlet:namespace />processDialog',
+		function(dialog) {
+			var A = AUI();
+
+			if (dialog) {
+				if (Liferay.Util.getTop() == window) {
+					dialog.plug(A.LoadingMask).render();
+				}
+				else {
+					dialog.close();
+				}
 			}
-			else {
-				dialog.close();
-			}
-		}
-	}
+		},
+		['aui-loading-mask']
+	);
 
 	function <portlet:namespace />saveRuleGroupsPriorities(dialog) {
 		<portlet:namespace />processDialog(dialog);
@@ -117,7 +124,7 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem", "add");
 		saveInstance.on(
 			'click',
 			function(event) {
-				config.dialog.title = '<liferay-ui:message key="rule-groups" />';
+				config.dialog.title = '<%= UnicodeLanguageUtil.get(pageContext, "rule-groups") %>';
 
 				config.uri = '<%= selectRuleGroupURL %>';
 
@@ -132,7 +139,7 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem", "add");
 		managePriorities.on(
 			'click',
 			function(event) {
-				config.dialog.title = '<liferay-ui:message key="rule-groups-priorities" />';
+				config.dialog.title = '<%= UnicodeLanguageUtil.get(pageContext, "rule-groups-priorities") %>';
 				config.dialog.width = 460;
 
 				config.uri = '<%= managePrioritiesURL %>';

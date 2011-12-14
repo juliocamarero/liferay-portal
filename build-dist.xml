@@ -265,8 +265,6 @@
 			<fileset dir="${lp.plugins.dir}/dist" includes="*.war" />
 		</copy>
 
-		<copy file="tunnel-web/tunnel-web.war" tofile="${tcat.dir}/admin/tcat_init/webapps/${lp.version.tcat}/tunnel-web.war" />
-
 		<ant dir="${lp.plugins.dir}" target="clean" inheritAll="false" />
 
 		<echo file="${lp.plugins.dir}/build.${user.name}.properties">plugins.includes=${lp.plugins.includes.required}</echo>
@@ -690,8 +688,6 @@ know what you are doing as it can cause loss of data.
 		<antcall target="zip-src" />
 		<antcall target="zip-tcat" />
 		<antcall target="zip-tomcat" />
-
-		<copy file="tunnel-web/tunnel-web.war" tofile="dist/liferay-portal-tunnel-web-${lp.version}.war" />
 
 		<!--<antcall target="build-dist-sql-oracle" />-->
 

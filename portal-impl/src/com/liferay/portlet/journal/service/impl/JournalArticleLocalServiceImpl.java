@@ -1650,6 +1650,8 @@ public class JournalArticleLocalServiceImpl
 
 		String status = String.valueOf(WorkflowConstants.STATUS_ANY);
 
+		params.put("keywords", keywords);
+
 		return search(
 			companyId, groupId, classNameId, articleId, title, description,
 			content, null, status, structureId, templateId, params, andOperator,
@@ -1686,6 +1688,13 @@ public class JournalArticleLocalServiceImpl
 			searchContext.setCompanyId(companyId);
 			searchContext.setGroupIds(new long[] {groupId});
 			searchContext.setEnd(end);
+
+			String keywords = (String)params.remove("keywords");
+
+			if (Validator.isNotNull(keywords)) {
+				searchContext.setKeywords(keywords);
+			}
+
 			searchContext.setSorts(new Sort[] {sort});
 
 			QueryConfig queryConfig = new QueryConfig();
@@ -1925,7 +1934,7 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		validate(
-			user.getCompanyId(), groupId, -1, titleMap, content, type,
+			user.getCompanyId(), groupId, 0, titleMap, content, type,
 			structureId, templateId, smallImage, smallImageURL, smallImageFile,
 			smallImageBytes);
 
@@ -2077,7 +2086,7 @@ public class JournalArticleLocalServiceImpl
 				article, serviceContext);
 		}
 		else if (article.getVersion() ==
-				 	JournalArticleConstants.VERSION_DEFAULT) {
+					JournalArticleConstants.VERSION_DEFAULT) {
 
 			// Indexer
 
@@ -2800,7 +2809,7 @@ public class JournalArticleLocalServiceImpl
 
 			byte[] bytes = images.get(elInstanceId + "_" + elName + elLanguage);
 
-			if (bytes != null && (bytes.length > 0)) {
+			if ((bytes != null) && (bytes.length > 0)) {
 				dynamicContent.setText(elContent);
 				dynamicContent.addAttribute("id", String.valueOf(imageId));
 
@@ -3363,7 +3372,7 @@ public class JournalArticleLocalServiceImpl
 
 		validate(
 			companyId, groupId, classNameId, titleMap, content, type,
-			structureId,templateId, smallImage, smallImageURL, smallImageFile,
+			structureId, templateId, smallImage, smallImageURL, smallImageFile,
 			smallImageBytes);
 	}
 

@@ -271,13 +271,6 @@ public class DLFileEntryLocalServiceImpl
 
 		dlFileVersionPersistence.update(dlFileVersion, false);
 
-		// App helper
-
-		dlAppHelperLocalService.updateAsset(
-			userId, new LiferayFileEntry(dlFileEntry),
-			new LiferayFileVersion(dlFileVersion),
-			dlFileVersion.getFileVersionId());
-
 		// Folder
 
 		if (dlFileEntry.getFolderId() !=
@@ -423,6 +416,7 @@ public class DLFileEntryLocalServiceImpl
 		throws PortalException, SystemException {
 
 		int count = dlFileEntryFinder.countByExtraSettings();
+
 		int pages = count / Indexer.DEFAULT_INTERVAL;
 
 		for (int i = 0; i <= pages; i++) {
@@ -502,14 +496,23 @@ public class DLFileEntryLocalServiceImpl
 	public void deleteFileEntries(long groupId, long folderId)
 		throws PortalException, SystemException {
 
-		List<DLFileEntry> dlFileEntries = dlFileEntryPersistence.findByG_F(
-			groupId, folderId);
+		int count = dlFileEntryPersistence.countByG_F(groupId, folderId);
 
-		for (DLFileEntry dlFileEntry : dlFileEntries) {
-			dlAppHelperLocalService.deleteFileEntry(
-				new LiferayFileEntry(dlFileEntry));
+		int pages = count / _DELETE_INTERVAL;
 
-			deleteFileEntry(dlFileEntry);
+		for (int i = 0; i <= pages; i++) {
+			int start = (i * _DELETE_INTERVAL);
+			int end = start + _DELETE_INTERVAL;
+
+			List<DLFileEntry> dlFileEntries = dlFileEntryPersistence.findByG_F(
+				groupId, folderId, start, end);
+
+			for (DLFileEntry dlFileEntry : dlFileEntries) {
+				dlAppHelperLocalService.deleteFileEntry(
+					new LiferayFileEntry(dlFileEntry));
+
+				deleteFileEntry(dlFileEntry);
+			}
 		}
 	}
 
@@ -1668,6 +1671,8 @@ public class DLFileEntryLocalServiceImpl
 			throw new FileNameException(fileName);
 		}
 	}
+
+	private static final int _DELETE_INTERVAL = 100;
 
 	private static Log _log = LogFactoryUtil.getLog(
 		DLFileEntryLocalServiceImpl.class);

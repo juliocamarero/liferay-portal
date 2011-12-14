@@ -19,7 +19,13 @@
 <%
 for (int displayActivityCounterNameIndex : displayActivityCounterNameIndexes) {
 	String displayActivityCounterName = PrefsParamUtil.getString(preferences, request, "displayActivityCounterName" + displayActivityCounterNameIndex);
+
+	if (Validator.isNull(displayActivityCounterName)){
+		continue;
+	}
+
 	String chartType = PrefsParamUtil.getString(preferences, request, "chartType" + displayActivityCounterNameIndex, "area");
+	int chartWidth = PrefsParamUtil.getInteger(preferences, request, "chartWidth" + displayActivityCounterNameIndex, 35);
 	String dataRange = PrefsParamUtil.getString(preferences, request, "dataRange" + displayActivityCounterNameIndex, "year");
 
 	List<AssetTag> assetTags = null;
@@ -28,60 +34,70 @@ for (int displayActivityCounterNameIndex : displayActivityCounterNameIndexes) {
 
 	String title = LanguageUtil.format(pageContext, "social.counter." + displayActivityCounterName, new Object[] {LanguageUtil.get(pageContext, "assets")});
 
+	int dataSize = 0;
 	int displayHeight = 80;
 
-	if (chartType.equals("tagCloud")) {
+	if (chartType.equals("tag-cloud")) {
 		if (dataRange.equals("year")) {
-			assetTags = AssetTagLocalServiceUtil.getTags(scopeGroupId, displayActivityCounterName, SocialCounterPeriodUtil.getFirstActivityDayOfYear(), SocialCounterPeriodUtil.getEndPeriod());
+			assetTags = AssetTagLocalServiceUtil.getSocialActivityCounterPeriodTags(scopeGroupId, displayActivityCounterName, SocialCounterPeriodUtil.getFirstActivityDayOfYear(), SocialCounterPeriodUtil.getEndPeriod());
 		}
 		else {
-			assetTags = AssetTagLocalServiceUtil.getTags(scopeGroupId, displayActivityCounterName, 11, true);
-		}
-
-		if (assetTags.isEmpty()) {
-			continue;
+			assetTags = AssetTagLocalServiceUtil.getSocialActivityCounterOffsetTags(scopeGroupId, displayActivityCounterName, -12, 0);
 		}
 
 		title = LanguageUtil.format(pageContext, "tag-cloud-based-on-x", new Object[] {title});
+
+		dataSize = assetTags.size();
 	}
 	else {
 		if (chartType.equals("pie")) {
 			if (dataRange.equals("year")) {
-				activityCounters = SocialActivityCounterLocalServiceUtil.getActivityCounterDistribution(scopeGroupId, displayActivityCounterName, SocialCounterPeriodUtil.getFirstActivityDayOfYear(), SocialCounterPeriodUtil.getEndPeriod());
+				activityCounters = SocialActivityCounterLocalServiceUtil.getPeriodActivityCounterDistribution(scopeGroupId, displayActivityCounterName, SocialCounterPeriodUtil.getFirstActivityDayOfYear(), SocialCounterPeriodUtil.getEndPeriod());
 			}
 			else {
-				activityCounters = SocialActivityCounterLocalServiceUtil.getActivityCounterDistribution(scopeGroupId, displayActivityCounterName, 11, true);
+				activityCounters = SocialActivityCounterLocalServiceUtil.getOffsetActivityCounterDistribution(scopeGroupId, displayActivityCounterName, -12, 0);
 			}
 
 			displayHeight = Math.max((activityCounters.size() + 1) * 18, displayHeight);
 		}
 		else {
 			if (dataRange.equals("year")) {
-				activityCounters = SocialActivityCounterLocalServiceUtil.getActivityCounters(scopeGroupId, displayActivityCounterName, SocialCounterPeriodUtil.getFirstActivityDayOfYear(), SocialCounterPeriodUtil.getEndPeriod());
+				activityCounters = SocialActivityCounterLocalServiceUtil.getPeriodActivityCounters(scopeGroupId, displayActivityCounterName, SocialCounterPeriodUtil.getFirstActivityDayOfYear(), SocialCounterPeriodUtil.getEndPeriod());
 			}
 			else {
-				activityCounters = SocialActivityCounterLocalServiceUtil.getActivityCounters(scopeGroupId, displayActivityCounterName, 11, true);
+				activityCounters = SocialActivityCounterLocalServiceUtil.getOffsetActivityCounters(scopeGroupId, displayActivityCounterName, -12, 0);
 			}
 		}
 
-		if (activityCounters.isEmpty()) {
-			continue;
-		}
+		dataSize = activityCounters.size();
+	}
+
+	if (dataSize == 0) {
+		displayHeight = 40;
 	}
 %>
 
 	<div class="group-statistics-container">
 		<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id='<%= "groupStatisticsPanel" + displayActivityCounterNameIndex %>' persistState="<%= true %>" title="<%= title %>">
-			<div class="group-statistics-body" style="height: <%= displayHeight %>px;">
+			<div class="group-statistics-body chart-<%= chartType %>" style="height: <%= displayHeight %>px;">
 				<c:choose>
-					<c:when test='<%= chartType.equals("pie") %>'>
-						<%@ include file="/html/portlet/group_statistics/chart/pie.jspf" %>
-					</c:when>
-					<c:when test='<%= chartType.equals("tagCloud") %>'>
-						<%@ include file="/html/portlet/group_statistics/chart/tag_cloud.jspf" %>
+					<c:when test="<%= dataSize > 0 %>">
+						<c:choose>
+							<c:when test='<%= chartType.equals("pie") %>'>
+								<%@ include file="/html/portlet/group_statistics/chart/pie.jspf" %>
+							</c:when>
+							<c:when test='<%= chartType.equals("tag-cloud") %>'>
+								<%@ include file="/html/portlet/group_statistics/chart/tag_cloud.jspf" %>
+							</c:when>
+							<c:otherwise>
+								<%@ include file="/html/portlet/group_statistics/chart/other.jspf" %>
+							</c:otherwise>
+						</c:choose>
 					</c:when>
 					<c:otherwise>
-						<%@ include file="/html/portlet/group_statistics/chart/other.jspf" %>
+						<div class="portlet-configuration portlet-msg-info">
+							<liferay-ui:message key="there-is-not-enough-data-to-display-for-this-counter" />
+						</div>
 					</c:otherwise>
 				</c:choose>
 			</div>

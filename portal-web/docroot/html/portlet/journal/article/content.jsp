@@ -399,7 +399,7 @@ if (Validator.isNotNull(content)) {
 											}
 
 											String taglibEditArticleURL = HttpUtil.addParameter(editArticleRenderPopUpURL.toString(), renderResponse.getNamespace() + "toLanguageId", LocaleUtil.toLanguageId(locales[i]));
-											String taglibEditURL = "javascript:Liferay.Util.openWindow({id: '" + renderResponse.getNamespace() + LocaleUtil.toLanguageId(locales[i]) + "', title: '" + LanguageUtil.get(pageContext, "web-content-translation") + "', uri: '" + taglibEditArticleURL + "'});";
+											String taglibEditURL = "javascript:Liferay.Util.openWindow({cache: false, id: '" + renderResponse.getNamespace() + LocaleUtil.toLanguageId(locales[i]) + "', title: '" + LanguageUtil.get(pageContext, "web-content-translation") + "', uri: '" + taglibEditArticleURL + "'});";
 										%>
 
 											<liferay-ui:icon
@@ -532,7 +532,7 @@ if (Validator.isNotNull(content)) {
 							for (int i = 0; i < availableLocales.length ; i++) {
 					%>
 
-								<input name="<portlet:namespace />available_locales" type="hidden" value="<%= HtmlUtil.escapeAttribute(availableLocales[i]) %>" />
+								<input id= "<portlet:namespace />availableLocales<%= HtmlUtil.escapeAttribute(availableLocales[i]) %>" name="<portlet:namespace />available_locales" type="hidden" value="<%= HtmlUtil.escapeAttribute(availableLocales[i]) %>" />
 
 					<%
 							}
@@ -541,7 +541,7 @@ if (Validator.isNotNull(content)) {
 						if (Validator.isNotNull(toLanguageId)) {
 					%>
 
-							<input name="<portlet:namespace />available_locales" type="hidden" value="<%= languageId %>" />
+							<input id="<portlet:namespace />availableLocales<%= languageId %>" name="<portlet:namespace />available_locales" type="hidden" value="<%= languageId %>" />
 
 					<%
 						}
@@ -550,7 +550,7 @@ if (Validator.isNotNull(content)) {
 						contentDoc = SAXReaderUtil.createDocument(SAXReaderUtil.createElement("root"));
 					%>
 
-						<input name="<portlet:namespace />available_locales" type="hidden" value="<%= HtmlUtil.escapeAttribute(defaultLanguageId) %>" />
+						<input id="<portlet:namespace />availableLocales<%= HtmlUtil.escapeAttribute(defaultLanguageId) %>" name="<portlet:namespace />available_locales" type="hidden" value="<%= HtmlUtil.escapeAttribute(defaultLanguageId) %>" />
 
 					<%
 					}
@@ -608,20 +608,24 @@ if (Validator.isNotNull(content)) {
 
 			versionNode.html(newVersion);
 
-			statusNode.removeClass('workflow-status-approved');
-			statusNode.addClass('workflow-status-draft');
-			statusNode.html('<%= LanguageUtil.get(pageContext, "draft") %>');
-
-			availableTranslationContainer.addClass('contains-translations');
-			availableTranslationsLinks.show();
-			translationsMessage.show();
-
 			var translationLink = availableTranslationContainer.one('.journal-article-translation-' + newLanguageId);
 
 			if (cmd == '<%= Constants.DELETE_TRANSLATION %>') {
-				translationLink.hide();
+				var availableLocales = A.one('#<portlet:namespace />availableLocales' + newLanguageId);
+
+				availableLocales.remove();
+
+				translationLink.remove();
 			}
 			else if (!translationLink) {
+				statusNode.removeClass('workflow-status-approved');
+				statusNode.addClass('workflow-status-draft');
+				statusNode.html('<%= LanguageUtil.get(pageContext, "draft") %>');
+
+				availableTranslationContainer.addClass('contains-translations');
+				availableTranslationsLinks.show();
+				translationsMessage.show();
+
 				var TPL_TRANSLATION = '<a class="lfr-token journal-article-translation-{newLanguageId}" href="javascript:;"><img alt="" src="<%= themeDisplay.getPathThemeImages() %>/language/{newLanguageId}.png" />{newLanguage}</a>';
 
 				translationLinkTpl = A.Lang.sub(
@@ -675,7 +679,7 @@ if (Validator.isNotNull(content)) {
 							stack: false,
 							width:680
 						},
-						title: '<liferay-ui:message key="template" />',
+						title: '<%= UnicodeLanguageUtil.get(pageContext, "template") %>',
 						uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/journal/select_template" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /><portlet:param name="structureId" value="<%= String.valueOf(structureId) %>" /></portlet:renderURL>'
 					}
 				);
@@ -867,7 +871,7 @@ private void _format(long groupId, Element contentParentElement, Element xsdPare
 
 			String elContent = GetterUtil.getString(contentElement.elementText("dynamic-content"));
 
-			if (!elType.equals("document_library") && !elType.equals("image_gallery") && !elType.equals("text") && !elType.equals("text_area") && !elType.equals("text_box")) {
+			if (!elType.equals("document_library") && !elType.equals("image") && !elType.equals("image_gallery") && !elType.equals("text") && !elType.equals("text_area") && !elType.equals("text_box")) {
 				elContent = HtmlUtil.toInputSafe(elContent);
 			}
 

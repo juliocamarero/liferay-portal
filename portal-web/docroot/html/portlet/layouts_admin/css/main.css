@@ -84,6 +84,12 @@
 				}
 			}
 
+			.aui-field-choice {
+				display: block;
+				margin: 0 auto;
+				width: 100px;
+			}
+
 			.aui-field-content {
 				margin-top: 0;
 			}
@@ -96,6 +102,10 @@
 				cursor: pointer;
 				width: 100px;
 			}
+		}
+
+		.lfr-layout-template-column:before {
+			border-right-width: 0;
 		}
 
 		.lfr-layout-template-column-content {
@@ -323,13 +333,23 @@
 		}
 
 		li img {
-				padding: 0;
+			padding: 0;
 		}
 	}
 
 	.site-membership-type {
 		font-weight: bold;
 		padding: 0 0 15px;
+	}
+}
+
+.aui-tree-node-content {
+	.layout-branch-name {
+		color: #AAA;
+	}
+
+	.incomplete-layout {
+		color: #CCC;
 	}
 }
 
@@ -366,6 +386,19 @@
 
 .aui-tree-collapsed .aui-tree-icon {
 	background-image: url(@theme_image_path@/trees/page.png);
+}
+
+.lfr-page-locked .aui-tree-icon {
+	background-image: url(@theme_image_path@/trees/page_locked.png);
+}
+
+.export-dialog-tree .aui-field-input-choice {
+	float: none;
+}
+
+.export-dialog-tree .file-selector {
+	display: block;
+	margin: 0.5em 0 1.5em;
 }
 
 .lfr-export-dialog {

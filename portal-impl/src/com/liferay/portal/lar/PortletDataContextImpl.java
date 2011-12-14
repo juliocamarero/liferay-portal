@@ -1456,22 +1456,31 @@ public class PortletDataContextImpl implements PortletDataContext {
 	protected void validateDateRange(Date startDate, Date endDate)
 		throws PortletDataException {
 
-		if ((startDate == null) ^ (endDate == null)) {
+		if ((startDate == null) && (endDate != null)) {
 			throw new PortletDataException(
-				"Both start and end dates must have valid values or be null");
+				PortletDataException.END_DATE_IS_MISSING_START_DATE);
+		}
+		else if ((startDate != null) && (endDate == null)) {
+			throw new PortletDataException(
+				PortletDataException.START_DATE_IS_MISSING_END_DATE);
 		}
 
 		if (startDate != null) {
 			if (startDate.after(endDate) || startDate.equals(endDate)) {
 				throw new PortletDataException(
-					"The start date cannot be after the end date");
+					PortletDataException.START_DATE_AFTER_END_DATE);
 			}
 
 			Date now = new Date();
 
-			if (startDate.after(now) || endDate.after(now)) {
+			if (startDate.after(now)) {
 				throw new PortletDataException(
-					"Dates must not be in the future");
+					PortletDataException.FUTURE_START_DATE);
+			}
+
+			if (endDate.after(now)) {
+				throw new PortletDataException(
+					PortletDataException.FUTURE_END_DATE);
 			}
 		}
 	}

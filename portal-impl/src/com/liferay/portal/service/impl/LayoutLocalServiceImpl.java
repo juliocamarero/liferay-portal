@@ -21,6 +21,15 @@ import com.liferay.portal.LayoutParentLayoutIdException;
 import com.liferay.portal.LayoutTypeException;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.RequiredLayoutException;
+import com.liferay.portal.kernel.dao.orm.Criterion;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Junction;
+import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
@@ -31,6 +40,7 @@ import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -54,6 +64,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcePermission;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.LayoutImpl;
+import com.liferay.portal.model.impl.PortletPreferencesImpl;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.LayoutLocalServiceBaseImpl;
 import com.liferay.portal.util.PortalUtil;
@@ -71,6 +82,7 @@ import java.io.InputStream;
 import java.text.DateFormat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -150,11 +162,12 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 *         normalized when accessed see {@link
 	 *         com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
 	 *         String)}.
-	 * @param  locked whether the layout is locked
 	 * @param  serviceContext the service context. Must specify the replacement
 	 *         universally unique identifier and can specify the replacement
 	 *         create date, replacement modified date and the new expando bridge
-	 *         attributes.
+	 *         attributes. For layouts that belong to a layout set prototype, an
+	 *         attribute named 'layoutUpdateable' can be set to specify whether
+	 *         site administrators can modify this page within their site.
 	 * @return the layout
 	 * @throws PortalException if a group or user with the primary key could not
 	 *         be found, or if layout values were invalid
@@ -165,7 +178,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			long parentLayoutId, Map<Locale, String> nameMap,
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
 			Map<Locale, String> keywordsMap, Map<Locale, String> robotsMap,
-			String type, boolean hidden, String friendlyURL, boolean locked,
+			String type, boolean hidden, String friendlyURL,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -208,11 +221,15 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		layout.setFriendlyURL(friendlyURL);
 		layout.setPriority(priority);
 
-		if (locked) {
+		boolean layoutUpdateable = ParamUtil.getBoolean(
+			serviceContext, "layoutUpdateable", true);
+
+		if (!layoutUpdateable) {
 			UnicodeProperties typeSettingsProperties =
 				layout.getTypeSettingsProperties();
 
-			typeSettingsProperties.put("locked", String.valueOf(locked));
+			typeSettingsProperties.put(
+				"layoutUpdateable", String.valueOf(layoutUpdateable));
 
 			layout.setTypeSettingsProperties(typeSettingsProperties);
 		}
@@ -322,10 +339,11 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 *         normalized when accessed see {@link
 	 *         com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
 	 *         String)}.
-	 * @param  locked whether the layout is locked
 	 * @param  serviceContext the service context. Must specify the universally
 	 *         unique identifier and can specify the create date and modified
-	 *         date.
+	 *         date. For layouts that belong to a layout set prototype, an
+	 *         attribute named 'layoutUpdateable' can be set to specify whether
+	 *         site administrators can modify this page within their site.
 	 * @return the layout
 	 * @throws PortalException if a group or user with the primary key could not
 	 *         be found
@@ -334,7 +352,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	public Layout addLayout(
 			long userId, long groupId, boolean privateLayout,
 			long parentLayoutId, String name, String title, String description,
-			String type, boolean hidden, String friendlyURL, boolean locked,
+			String type, boolean hidden, String friendlyURL,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -347,8 +365,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		return addLayout(
 			userId, groupId, privateLayout, parentLayoutId, localeNamesMap,
 			new HashMap<Locale, String>(), new HashMap<Locale, String>(),
-			new HashMap<Locale, String>(), new HashMap<Locale, String>(),
-			type, hidden, friendlyURL, locked, serviceContext);
+			new HashMap<Locale, String>(), new HashMap<Locale, String>(), type,
+			hidden, friendlyURL, serviceContext);
 	}
 
 	/**
@@ -365,6 +383,26 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			Layout layout, boolean updateLayoutSet,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
+
+		// First layout validation
+
+		if (layout.getParentLayoutId() ==
+				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
+
+			List<Layout> rootLayouts = layoutPersistence.findByG_P_P(
+				layout.getGroupId(), layout.isPrivateLayout(),
+				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, 0, 2);
+
+			if (rootLayouts.size() > 1) {
+				Layout firstLayout = rootLayouts.get(0);
+
+				if (firstLayout.getLayoutId() == layout.getLayoutId()) {
+					Layout secondLayout = rootLayouts.get(1);
+
+					validateFirstLayout(secondLayout.getType());
+				}
+			}
+		}
 
 		// Child layouts
 
@@ -461,24 +499,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Deletes the layout with the plid, also deleting the layout's child
-	 * layouts, and associated resources.
-	 *
-	 * @param  plid the primary key of the layout
-	 * @param  serviceContext the service context
-	 * @throws PortalException if a layout with the primary key could not be
-	 *         found , or if some other portal exception occurred
-	 * @throws SystemException if a system exception occurred
-	 */
-	public void deleteLayout(long plid, ServiceContext serviceContext)
-		throws PortalException, SystemException {
-
-		Layout layout = layoutPersistence.findByPrimaryKey(plid);
-
-		deleteLayout(layout, true, serviceContext);
-	}
-
-	/**
 	 * Deletes the layout with the primary key, also deleting the layout's child
 	 * layouts, and associated resources.
 	 *
@@ -497,6 +517,24 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		Layout layout = layoutPersistence.findByG_P_L(
 			groupId, privateLayout, layoutId);
+
+		deleteLayout(layout, true, serviceContext);
+	}
+
+	/**
+	 * Deletes the layout with the plid, also deleting the layout's child
+	 * layouts, and associated resources.
+	 *
+	 * @param  plid the primary key of the layout
+	 * @param  serviceContext the service context
+	 * @throws PortalException if a layout with the primary key could not be
+	 *         found , or if some other portal exception occurred
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteLayout(long plid, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		Layout layout = layoutPersistence.findByPrimaryKey(plid);
 
 		deleteLayout(layout, true, serviceContext);
 	}
@@ -717,6 +755,23 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		catch (Exception e) {
 			throw new SystemException(e);
 		}
+	}
+
+	public Layout fetchFirstLayout(
+			long groupId, boolean privateLayout, long parentLayoutId)
+		throws SystemException {
+
+		Layout firstLayout = null;
+
+		try {
+			firstLayout = layoutPersistence.findByG_P_P_First(
+				groupId, privateLayout, parentLayoutId,
+				new LayoutPriorityComparator());
+		}
+		catch (NoSuchLayoutException nsle) {
+		}
+
+		return firstLayout;
 	}
 
 	/**
@@ -1454,7 +1509,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 *         String)}.
 	 * @param  iconImage whether the icon image will be updated
 	 * @param  iconBytes the byte array of the layout's new icon image
-	 * @param  locked whether the layout is locked
 	 * @param  serviceContext the service context. Can specify the replacement
 	 *         modified date and new expando bridge attributes.
 	 * @return the updated layout
@@ -1470,7 +1524,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
 			Map<Locale, String> keywordsMap, Map<Locale, String> robotsMap,
 			String type, boolean hidden, String friendlyURL, Boolean iconImage,
-			byte[] iconBytes, boolean locked, ServiceContext serviceContext)
+			byte[] iconBytes, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		// Layout
@@ -1492,6 +1546,9 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		Layout layout = layoutPersistence.findByG_P_L(
 			groupId, privateLayout, layoutId);
+
+		List<Locale> modifiedLocales = getModifiedLocales(
+			layout.getNameMap(), nameMap);
 
 		if (parentLayoutId != layout.getParentLayoutId()) {
 			layout.setPriority(
@@ -1523,10 +1580,14 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			}
 		}
 
+		boolean layoutUpdateable = GetterUtil.getBoolean(
+			serviceContext.getAttribute("layoutUpdateable"), true);
+
 		UnicodeProperties typeSettingsProperties =
 			layout.getTypeSettingsProperties();
 
-		typeSettingsProperties.put("locked", String.valueOf(locked));
+		typeSettingsProperties.put(
+			"layoutUpdateable", String.valueOf(layoutUpdateable));
 
 		layout.setTypeSettingsProperties(typeSettingsProperties);
 
@@ -1546,12 +1607,9 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		// Portlet preferences
 
-		Locale[] locales = LanguageUtil.getAvailableLocales();
-
-		for (Locale locale : locales) {
+		if (!modifiedLocales.isEmpty()) {
 			updateScopedPortletNames(
-				groupId, privateLayout, layoutId, nameMap.get(locale),
-				LanguageUtil.getLanguageId(locale));
+				groupId, privateLayout, layoutId, nameMap, modifiedLocales);
 		}
 
 		// Expando
@@ -1905,6 +1963,119 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		return updatePriority(layout, priority);
 	}
 
+	public void updateScopedPortletNames(
+			long groupId, boolean privateLayout, long layoutId,
+			Map<Locale, String> nameMap, List<Locale> nameMapModifiedLocales)
+		throws PortalException, SystemException {
+
+		Layout layout = layoutPersistence.findByG_P_L(
+			groupId, privateLayout, layoutId);
+
+		DynamicQuery portletPreferencesDynamicQuery =
+			DynamicQueryFactoryUtil.forClass(
+				PortletPreferences.class, PortletPreferencesImpl.TABLE_NAME);
+
+		Property plidProperty = PropertyFactoryUtil.forName("plid");
+
+		DynamicQuery layoutDynamicQuery = DynamicQueryFactoryUtil.forClass(
+			Layout.class, LayoutImpl.TABLE_NAME);
+
+		Projection plidProjection = ProjectionFactoryUtil.property("plid");
+
+		layoutDynamicQuery.setProjection(plidProjection);
+
+		Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
+
+		layoutDynamicQuery.add(groupIdProperty.eq(groupId));
+
+		Property privateLayoutProperty = PropertyFactoryUtil.forName(
+			"privateLayout");
+
+		layoutDynamicQuery.add(privateLayoutProperty.eq(privateLayout));
+
+		portletPreferencesDynamicQuery.add(plidProperty.in(layoutDynamicQuery));
+
+		Junction junction = RestrictionsFactoryUtil.disjunction();
+
+		List<Portlet> scopablePortlets =
+			portletLocalService.getScopablePortlets();
+
+		for (Portlet scopablePortlet :scopablePortlets) {
+			if (scopablePortlet.isInstanceable()) {
+				Criterion criterion = RestrictionsFactoryUtil.like(
+					"portletId",
+					scopablePortlet.getPortletId() +
+						PortletConstants.INSTANCE_SEPARATOR +
+							StringPool.PERCENT);
+
+				junction.add(criterion);
+			}
+			else{
+				Criterion criterion = RestrictionsFactoryUtil.eq(
+					"portletId", scopablePortlet.getPortletId());
+
+				junction.add(criterion);
+			}
+		}
+
+		portletPreferencesDynamicQuery.add(junction);
+
+		List<PortletPreferences> portletPreferencesList =
+			portletPreferencesLocalService.dynamicQuery(
+				portletPreferencesDynamicQuery);
+
+		for (PortletPreferences portletPreferences : portletPreferencesList) {
+			if ((portletPreferences.getPortletId() == null)) {
+				continue;
+			}
+
+			Layout curLayout = layoutPersistence.findByPrimaryKey(
+				portletPreferences.getPlid());
+
+			javax.portlet.PortletPreferences jxPreferences =
+				PortletPreferencesFactoryUtil.getLayoutPortletSetup(
+					curLayout, portletPreferences.getPortletId());
+
+			String scopeLayoutUuid = GetterUtil.getString(
+				jxPreferences.getValue("lfrScopeLayoutUuid", null));
+
+			if (!scopeLayoutUuid.equals(layout.getUuid())) {
+				continue;
+			}
+
+			for (Locale locale : nameMapModifiedLocales) {
+				String languageId = LanguageUtil.getLanguageId(locale);
+
+				String portletTitle = PortalUtil.getPortletTitle(
+					PortletConstants.getRootPortletId(
+						portletPreferences.getPortletId()), languageId);
+
+				String newPortletTitle = PortalUtil.getNewPortletTitle(
+					portletTitle, curLayout.getName(languageId),
+					nameMap.get(locale));
+
+				if (newPortletTitle.equals(portletTitle)) {
+					continue;
+				}
+
+				try {
+					jxPreferences.setValue(
+						"portletSetupTitle_" + languageId, newPortletTitle);
+					jxPreferences.setValue(
+						"portletSetupUseCustomTitle", Boolean.TRUE.toString());
+
+					jxPreferences.store();
+				}
+				catch (IOException ioe) {
+					throw new SystemException(ioe);
+				}
+				catch (PortletException pe) {
+					throw new SystemException(pe);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Updates the names of the portlets within scope of the group, the scope of
 	 * the layout's universally unique identifier, and the privacy.
@@ -1924,63 +2095,18 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			String languageId)
 		throws PortalException, SystemException {
 
-		Layout layout = getLayout(groupId, privateLayout, layoutId);
+		Map<Locale, String> map = new HashMap<Locale, String>();
 
-		List<Layout> layouts = getLayouts(groupId, privateLayout);
+		Locale locale = LocaleUtil.fromLanguageId(languageId);
 
-		for (Layout curLayout : layouts) {
-			List<PortletPreferences> portletPreferencesList =
-				portletPreferencesLocalService.getPortletPreferencesByPlid(
-					curLayout.getPlid());
+		map.put(locale, name);
 
-			for (PortletPreferences portletPreferences :
-					portletPreferencesList) {
+		List<Locale> locales = new ArrayList<Locale>();
 
-				String portletId = portletPreferences.getPortletId();
+		locales.add(locale);
 
-				Portlet portlet = portletLocalService.getPortletById(portletId);
-
-				if ((portlet == null) || !portlet.isScopeable()) {
-					continue;
-				}
-
-				javax.portlet.PortletPreferences preferences =
-					PortletPreferencesFactoryUtil.getLayoutPortletSetup(
-						curLayout, portletId);
-
-				String scopeLayoutUuid = GetterUtil.getString(
-					preferences.getValue("lfrScopeLayoutUuid", null));
-
-				if (!scopeLayoutUuid.equals(layout.getUuid())) {
-					continue;
-				}
-
-				String portletTitle = PortalUtil.getPortletTitle(
-					portletId, languageId);
-
-				String newPortletTitle = PortalUtil.getNewPortletTitle(
-					portletTitle, curLayout.getName(languageId), name);
-
-				if (newPortletTitle.equals(portletTitle)) {
-					continue;
-				}
-
-				try {
-					preferences.setValue(
-						"portletSetupTitle_" + languageId, newPortletTitle);
-					preferences.setValue(
-						"portletSetupUseCustomTitle", Boolean.TRUE.toString());
-
-					preferences.store();
-				}
-				catch (IOException ioe) {
-					throw new SystemException(ioe);
-				}
-				catch (PortletException pe) {
-					throw new SystemException(pe);
-				}
-			}
-		}
+		updateScopedPortletNames(
+			groupId, privateLayout, layoutId, map, locales);
 	}
 
 	protected String getFriendlyURL(
@@ -2022,6 +2148,29 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 	protected String getFriendlyURL(String friendlyURL) {
 		return FriendlyURLNormalizerUtil.normalize(friendlyURL);
+	}
+
+	protected List<Locale> getModifiedLocales(
+		Map<Locale, String> oldMap, Map<Locale, String> newMap) {
+
+		if ((newMap == null) || newMap.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		List<Locale> modifiedLocales = new ArrayList<Locale>();
+
+		Locale[] locales = LanguageUtil.getAvailableLocales();
+
+		for (Locale locale : locales) {
+			String oldValue = oldMap.get(locale);
+			String newValue = newMap.get(locale);
+
+			if (!oldValue.equals(newValue)) {
+				modifiedLocales.add(locale);
+			}
+		}
+
+		return modifiedLocales;
 	}
 
 	protected int getNextPriority(
@@ -2105,7 +2254,12 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		throws PortalException {
 
 		if (Validator.isNull(type) || !PortalUtil.isLayoutFirstPageable(type)) {
-			throw new LayoutTypeException(LayoutTypeException.FIRST_LAYOUT);
+			LayoutTypeException lte = new LayoutTypeException(
+				LayoutTypeException.FIRST_LAYOUT);
+
+			lte.setLayoutType(type);
+
+			throw lte;
 		}
 	}
 

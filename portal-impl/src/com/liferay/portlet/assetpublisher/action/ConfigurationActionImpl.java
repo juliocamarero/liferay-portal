@@ -100,12 +100,14 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 
 					SessionMessages.add(
 						actionRequest,
-						portletConfig.getPortletName() + ".doConfigure");
+						portletConfig.getPortletName() +
+							SessionMessages.KEY_SUFFIX_REFRESH_PORTLET,
+						portletResource);
 
 					SessionMessages.add(
 						actionRequest,
-						portletConfig.getPortletName() + ".doRefresh",
-						portletResource);
+						portletConfig.getPortletName() +
+							SessionMessages.KEY_SUFFIX_UPDATED_CONFIGURATION);
 				}
 
 				String redirect = PortalUtil.escapeRedirect(
@@ -156,11 +158,13 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
 				className);
 
-		long[] groupdIds = {
+		long[] groupIds = {
 			themeDisplay.getCompanyGroupId(), themeDisplay.getScopeGroupId()
 		};
 
-		if (assetRendererFactory.getClassTypes(groupdIds) == null) {
+		if (assetRendererFactory.getClassTypes(
+				groupIds, themeDisplay.getLocale()) == null) {
+
 			return null;
 		}
 

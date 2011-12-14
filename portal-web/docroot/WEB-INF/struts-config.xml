@@ -31,6 +31,8 @@
 
 		<!-- Portal -->
 
+		<action path="/portal/api/jsonws" forward="portal.api.jsonws" />
+
 		<action path="/portal/emoticons" forward="/portal/emoticons.jsp" />
 
 		<action path="/portal/error" forward="portal.error" />
@@ -2013,8 +2015,8 @@
 		<action path="/wiki/view" type="com.liferay.portlet.wiki.action.ViewPageAction">
 			<forward name="portlet.wiki.error" path="portlet.wiki.error" />
 			<forward name="portlet.wiki.view_categorized_pages" path="portlet.wiki.view_categorized_pages" />
-			<forward name="portlet.wiki.view_tagged_pages" path="portlet.wiki.view_tagged_pages" />
 			<forward name="portlet.wiki.view_page" path="portlet.wiki.view" />
+			<forward name="portlet.wiki.view_tagged_pages" path="portlet.wiki.view_tagged_pages" />
 		</action>
 
 		<action path="/wiki/view_all_pages" type="com.liferay.portlet.wiki.action.ViewNodeAction">
@@ -2053,6 +2055,7 @@
 		<action path="/wiki/view_page_details" type="com.liferay.portlet.wiki.action.ViewPageAction">
 			<forward name="portlet.wiki.error" path="portlet.wiki.error" />
 			<forward name="portlet.wiki.view_categorized_pages" path="portlet.wiki.view_categorized_pages" />
+			<forward name="portlet.wiki.view_tagged_pages" path="portlet.wiki.view_tagged_pages" />
 			<forward name="portlet.wiki.view_page" path="portlet.wiki.view_page_details" />
 		</action>
 

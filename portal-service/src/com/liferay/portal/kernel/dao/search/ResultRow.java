@@ -180,18 +180,6 @@ public class ResultRow {
 			path, servletContext, request, response);
 	}
 
-	public void addScore(float score) {
-		addScore(_searchEntries.size(), score);
-	}
-
-	public void addScore(int index, float score) {
-		ScoreSearchEntry scoreSearchEntry = new ScoreSearchEntry();
-
-		scoreSearchEntry.setScore(score);
-
-		_searchEntries.add(index, scoreSearchEntry);
-	}
-
 	public void addSearchEntry(int index, SearchEntry searchEntry) {
 		_searchEntries.add(index, searchEntry);
 	}
@@ -346,6 +334,10 @@ public class ResultRow {
 		return _className;
 	}
 
+	public Map<String, Object> getData() {
+		return _data;
+	}
+
 	public List<SearchEntry> getEntries() {
 		return _searchEntries;
 	}
@@ -398,6 +390,10 @@ public class ResultRow {
 		_className = className;
 	}
 
+	public void setData(Map<String, Object> data) {
+		_data = data;
+	}
+
 	public void setObject(Object obj) {
 		_obj = obj;
 	}
@@ -425,6 +421,7 @@ public class ResultRow {
 	private boolean _bold;
 	private String _classHoverName;
 	private String _className;
+	private Map<String, Object> _data;
 	private List<SearchEntry> _searchEntries;
 	private Object _obj;
 	private Map<String, Object> _params;

@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.SortedArrayList;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.documentlibrary.DuplicateFileEntryTypeException;
 import com.liferay.portlet.documentlibrary.NoSuchFolderException;
@@ -274,12 +273,19 @@ public class DLFileEntryTypeLocalServiceImpl
 			DLFileEntry dlFileEntry, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		DLFolder dlFolder = dlFolderPersistence.findByPrimaryKey(
+		long groupId = serviceContext.getScopeGroupId();
+		long folderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
+
+		DLFolder dlFolder = dlFolderPersistence.fetchByPrimaryKey(
 			dlFileEntry.getFolderId());
 
+		if (dlFolder != null) {
+			groupId = dlFolder.getGroupId();
+			folderId = dlFolder.getFolderId();
+		}
+
 		List<DLFileEntryType> dlFileEntryTypes = getFolderFileEntryTypes(
-			DLUtil.getGroupIds(dlFolder.getGroupId()), dlFolder.getFolderId(),
-			true);
+			DLUtil.getGroupIds(groupId), folderId, true);
 
 		List<Long> fileEntryTypeIds = getFileEntryTypeIds(dlFileEntryTypes);
 
@@ -287,8 +293,7 @@ public class DLFileEntryTypeLocalServiceImpl
 			return dlFileEntry;
 		}
 
-		long defaultFileEntryTypeId = getDefaultFileEntryTypeId(
-			dlFolder.getFolderId());
+		long defaultFileEntryTypeId = getDefaultFileEntryTypeId(folderId);
 
 		DLFileVersion dlFileVersion =
 			dlFileVersionLocalService.getLatestFileVersion(
@@ -297,8 +302,7 @@ public class DLFileEntryTypeLocalServiceImpl
 		if (dlFileVersion.isPending()) {
 			workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
 				dlFileVersion.getCompanyId(), dlFileEntry.getGroupId(),
-				DLFileEntry.class.getName(),
-				dlFileVersion.getFileVersionId());
+				DLFileEntry.class.getName(), dlFileVersion.getFileVersionId());
 		}
 
 		return dlFileEntryLocalService.updateFileEntry(
@@ -479,7 +483,7 @@ public class DLFileEntryTypeLocalServiceImpl
 
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 
-		Locale locale = ServiceContextUtil.getLocale(serviceContext);
+		Locale locale = serviceContext.getLocale();
 
 		nameMap.put(locale, name);
 

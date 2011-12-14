@@ -128,7 +128,7 @@ String orderByType = ParamUtil.getString(request, "orderByType");
 				dialog: {
 					width:820
 				},
-				title: '<liferay-ui:message key="document-types" />',
+				title: '<%= UnicodeLanguageUtil.get(pageContext, "document-types") %>',
 				uri: '<liferay-portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/document_library/view_file_entry_type" /><portlet:param name="redirect" value="<%= currentURL %>" /></liferay-portlet:renderURL>'
 			}
 		);
@@ -139,14 +139,14 @@ String orderByType = ParamUtil.getString(request, "orderByType");
 			{
 				ddmResource: '<%= ddmResource %>',
 				dialog: {
-					width:820
+					width: 820
 				},
 				showGlobalScope: 'true',
 				showManageTemplates: 'false',
 				storageType: 'xml',
 				structureName: 'metadata-set',
 				structureType: 'com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata',
-				title: '<liferay-ui:message key="metadata-sets" />'
+				title: '<%= UnicodeLanguageUtil.get(pageContext, "metadata-sets") %>'
 			}
 		);
 	}

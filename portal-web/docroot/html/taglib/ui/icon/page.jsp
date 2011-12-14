@@ -26,6 +26,7 @@ if (Validator.isNotNull(cssClass)) {
 if (Validator.isNotNull(src) && themeDisplay.isThemeImagesFastLoad() && !auiImage) {
 	SpriteImage spriteImage = null;
 	String spriteFileName = null;
+	String spriteFileURL = null;
 
 	String imageFileName = StringUtil.replace(src, "common/../", "");
 
@@ -43,7 +44,7 @@ if (Validator.isNotNull(src) && themeDisplay.isThemeImagesFastLoad() && !auiImag
 				spriteFileName = StringUtil.replace(spriteFileName, ".png", ".gif");
 			}
 
-			spriteFileName = themeDisplay.getPathThemeImages().concat(spriteFileName);
+			spriteFileURL = PortalUtil.getPortalURL(request).concat(themeDisplay.getPathThemeImages()).concat(spriteFileName);
 		}
 	}
 
@@ -74,7 +75,7 @@ if (Validator.isNotNull(src) && themeDisplay.isThemeImagesFastLoad() && !auiImag
 					spriteFileName = StringUtil.replace(spriteFileName, ".png", ".gif");
 				}
 
-				spriteFileName = portlet.getStaticResourcePath().concat(spriteFileName);
+				spriteFileURL = portlet.getStaticResourcePath().concat(spriteFileName);
 			}
 		}
 	}
@@ -86,7 +87,7 @@ if (Validator.isNotNull(src) && themeDisplay.isThemeImagesFastLoad() && !auiImag
 
 		sb.append(details);
 		sb.append(" style=\"background-image: url('");
-		sb.append(spriteFileName);
+		sb.append(spriteFileURL);
 		sb.append("'); background-position: 50% -");
 		sb.append(spriteImage.getOffset());
 		sb.append("px; background-repeat: no-repeat; height: ");
@@ -134,11 +135,11 @@ boolean urlIsNotNull = Validator.isNotNull(url);
 			<liferay-ui:message key="<%= message %>" />
 		</c:when>
 		<c:when test="<%= (iconListIconCount != null) && ((iconListSingleIcon == null) || iconListShowWhenSingleIcon) %>">
-			<span class="taglib-text"><liferay-ui:message key="<%= message %>" /></span>
+			<span class="entry-title taglib-text"><liferay-ui:message key="<%= message %>" /></span>
 		</c:when>
 		<c:otherwise>
 			<c:if test="<%= label %>">
-				<span class="taglib-text"><liferay-ui:message key="<%= message %>" /></span>
+				<span class="entry-title taglib-text"><liferay-ui:message key="<%= message %>" /></span>
 			</c:if>
 		</c:otherwise>
 	</c:choose>

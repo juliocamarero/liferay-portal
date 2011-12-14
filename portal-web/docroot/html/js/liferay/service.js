@@ -73,8 +73,8 @@ Liferay.Service.registerClass(
 		getUserGroup: true,
 		getUserGroupsGroups: true,
 		getUserOrganizationsGroups: true,
-		getUserSites: true,
 		getUserPlaces: true,
+		getUserSites: true,
 		hasUserGroup: true,
 		search: true,
 		searchCount: true,
@@ -142,6 +142,7 @@ Liferay.Service.registerClass(
 Liferay.Service.registerClass(
 	Liferay.Service.Portal, "LayoutSet",
 	{
+		updateLayoutSetPrototypeLinkEnabled: true,
 		updateLookAndFeel: true,
 		updateSettings: true,
 		updateVirtualHost: true
@@ -313,14 +314,13 @@ Liferay.Service.registerClass(
 	{
 		addRepository: true,
 		checkRepository: true,
+		deleteRepository: true,
 		getLocalRepositoryImpl: true,
 		getRepository: true,
 		getRepositoryImpl: true,
 		getSupportedConfigurations: true,
 		getSupportedParameters: true,
 		getTypeSettingsProperties: true,
-		unmountRepositories: true,
-		unmountRepository: true,
 		updateRepository: true
 	}
 );
@@ -900,7 +900,9 @@ Liferay.Service.registerClass(
 		expireArticle: true,
 		getArticle: true,
 		getArticleByUrlTitle: true,
+		getArticlesByArticleId: true,
 		getArticlesByLayoutUuid: true,
+		getArticlesCountByArticleId: true,
 		getDisplayArticleByUrlTitle: true,
 		getLatestArticle: true,
 		removeArticleLocale: true,

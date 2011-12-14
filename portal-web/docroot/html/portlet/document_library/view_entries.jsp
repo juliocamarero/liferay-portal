@@ -80,7 +80,11 @@ for (String headerName : entryColumns) {
 
 searchContainer.setHeaderNames(headerNames);
 
-searchContainer.setRowChecker(new EntriesChecker(liferayPortletRequest, liferayPortletResponse));
+EntriesChecker entriesChecker = new EntriesChecker(liferayPortletRequest, liferayPortletResponse);
+
+entriesChecker.setCssClass("document-selector");
+
+searchContainer.setRowChecker(entriesChecker);
 
 Map<String, String> orderableHeaders = new HashMap<String, String>();
 
@@ -302,6 +306,15 @@ for (int i = 0; i < results.size(); i++) {
 						row = new ResultRow(fileShortcut, fileShortcut.getFileShortcutId(), i);
 					}
 
+					row.setClassName("document-display-style");
+
+					Map<String, Object> data = new HashMap<String, Object>();
+
+					data.put("draggable", DLFileEntryPermission.contains(permissionChecker, fileEntry, ActionKeys.DELETE) || DLFileEntryPermission.contains(permissionChecker, fileEntry, ActionKeys.UPDATE));
+					data.put("title", fileEntry.getTitle());
+
+					row.setData(data);
+
 					for (String columnName : entryColumns) {
 						if (columnName.equals("action")) {
 							row.addJSP("/html/portlet/document_library/file_entry_action.jsp");
@@ -430,6 +443,17 @@ for (int i = 0; i < results.size(); i++) {
 
 					ResultRow row = new ResultRow(curFolder, curFolder.getPrimaryKey(), i);
 
+					row.setClassName("document-display-style");
+
+					Map<String, Object> data = new HashMap<String, Object>();
+
+					data.put("draggable", DLFolderPermission.contains(permissionChecker, curFolder, ActionKeys.DELETE) || DLFolderPermission.contains(permissionChecker, curFolder, ActionKeys.UPDATE));
+					data.put("folder", true);
+					data.put("folder-id", curFolder.getFolderId());
+					data.put("title", curFolder.getName());
+
+					row.setData(data);
+
 					for (String columnName : entryColumns) {
 						if (columnName.equals("action")) {
 							row.addJSP("/html/portlet/document_library/folder_action.jsp");
@@ -440,7 +464,7 @@ for (int i = 0; i < results.size(); i++) {
 						}
 
 						if (columnName.equals("downloads")) {
-							row.addText(String.valueOf(0));
+							row.addText("--");
 						}
 
 						if (columnName.equals("modified-date")) {
@@ -456,7 +480,7 @@ for (int i = 0; i < results.size(); i++) {
 						}
 
 						if (columnName.equals("size")) {
-							row.addText(String.valueOf(0) + "k");
+							row.addText("--");
 						}
 					}
 

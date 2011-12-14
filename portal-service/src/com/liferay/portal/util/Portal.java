@@ -158,12 +158,15 @@ public interface Portal {
 	 *
 	 * @param  request the servlet request for the page
 	 * @param  portlet the portlet
-	 * @throws PortalException if adding the default resource permissions
-	 *         failed
+	 * @throws PortalException if adding the default resource permissions failed
 	 * @throws SystemException if a system exception occurred
 	 */
 	public void addPortletDefaultResource(
 			HttpServletRequest request, Portlet portlet)
+		throws PortalException, SystemException;
+
+	public void addPortletDefaultResource(
+			long companyId, Layout layout, Portlet portlet)
 		throws PortalException, SystemException;
 
 	/**
@@ -208,8 +211,7 @@ public interface Portal {
 	 * Copies the request parameters to the render parameters, unless a
 	 * parameter with that name already exists in the render parameters.
 	 *
-	 * @param actionRequest the request from which to get the request
-	 *        parameters
+	 * @param actionRequest the request from which to get the request parameters
 	 * @param actionResponse the response to receive the render parameters
 	 */
 	public void copyRequestParameters(
@@ -226,8 +228,7 @@ public interface Portal {
 	public String escapeRedirect(String url);
 
 	/**
-	 * Generates a random key to identify the request based on the input
-	 * string.
+	 * Generates a random key to identify the request based on the input string.
 	 *
 	 * @param  request the servlet request for the page
 	 * @param  input the input string
@@ -333,14 +334,14 @@ public interface Portal {
 	 * Returns the alternate URL of the page, to distinguish it from its
 	 * canonical URL.
 	 *
-	 * @param   request the servlet request to retrieve its parameters and
-	 * 		    remove those which are not relevant
-	 * @param   url the canonical URL previously obtained
-	 * @param   locale the locale of the translated page
-	 * @return  the alternate URL
-	 * @throws  PortalException if a friendly URL or the group could not be
-	 *          retrieved
-	 * @throws  SystemException if a system exception occurred
+	 * @param  request the servlet request to retrieve its parameters and remove
+	 *         those which are not relevant
+	 * @param  url the canonical URL previously obtained
+	 * @param  locale the locale of the translated page
+	 * @return the alternate URL
+	 * @throws PortalException if a friendly URL or the group could not be
+	 *         retrieved
+	 * @throws SystemException if a system exception occurred
 	 */
 	public String getCanonicalAlternateURL(
 			HttpServletRequest request, String url, Locale locale)
@@ -350,12 +351,12 @@ public interface Portal {
 	 * Returns the canonical URL of the page, to distinguish it among its
 	 * translations.
 	 *
-	 * @param   request the servlet request to retrieve its parameters and
-	 * 		    remove those which are not relevant
-	 * @return  the canonical URL
-	 * @throws  PortalException if a friendly URL or the group could not be
-	 *          retrieved
-	 * @throws  SystemException if a system exception occurred
+	 * @param  request the servlet request to retrieve its parameters and remove
+	 *         those which are not relevant
+	 * @return the canonical URL
+	 * @throws PortalException if a friendly URL or the group could not be
+	 *         retrieved
+	 * @throws SystemException if a system exception occurred
 	 */
 	public String getCanonicalURL(HttpServletRequest request)
 		throws PortalException, SystemException;
@@ -506,9 +507,8 @@ public interface Portal {
 		throws PortalException;
 
 	/**
-	 * Returns the date object for the specified month, day, year, hour,
-	 * minute, and time zone, optionally throwing an exception if the date is
-	 * invalid.
+	 * Returns the date object for the specified month, day, year, hour, minute,
+	 * and time zone, optionally throwing an exception if the date is invalid.
 	 *
 	 * @param  month the month (0-based, meaning 0 for January)
 	 * @param  day the day of the month
@@ -760,15 +760,15 @@ public interface Portal {
 
 	public String getPortalURL(HttpServletRequest request, boolean secure);
 
+	public String getPortalURL(Layout layout, ThemeDisplay themeDisplay)
+		throws PortalException, SystemException;
+
 	public String getPortalURL(PortletRequest portletRequest);
 
 	public String getPortalURL(PortletRequest portletRequest, boolean secure);
 
 	public String getPortalURL(
 		String serverName, int serverPort, boolean secure);
-
-	public String getPortalURL(Layout layout, ThemeDisplay themeDisplay)
-		throws PortalException, SystemException;
 
 	public String getPortalURL(ThemeDisplay themeDisplay)
 		throws PortalException, SystemException;
@@ -803,6 +803,21 @@ public interface Portal {
 
 	public String getPortletId(PortletRequest portletRequest);
 
+	public String getPortletLongTitle(Portlet portlet, Locale locale);
+
+	public String getPortletLongTitle(
+		Portlet portlet, ServletContext servletContext, Locale locale);
+
+	public String getPortletLongTitle(Portlet portlet, String languageId);
+
+	public String getPortletLongTitle(Portlet portlet, User user);
+
+	public String getPortletLongTitle(String portletId, Locale locale);
+
+	public String getPortletLongTitle(String portletId, String languageId);
+
+	public String getPortletLongTitle(String portletId, User user);
+
 	public String getPortletNamespace(String portletId);
 
 	public String getPortletTitle(Portlet portlet, Locale locale);
@@ -835,6 +850,11 @@ public interface Portal {
 		throws PortalException, SystemException;
 
 	public long getScopeGroupId(HttpServletRequest request, String portletId)
+		throws PortalException, SystemException;
+
+	public long getScopeGroupId(
+			HttpServletRequest request, String portletId,
+			boolean checkStagingGroup)
 		throws PortalException, SystemException;
 
 	public long getScopeGroupId(Layout layout);
@@ -942,6 +962,12 @@ public interface Portal {
 		throws SystemException;
 
 	public long getValidUserId(long companyId, long userId)
+		throws PortalException, SystemException;
+
+	public String getVirtualLayoutActualURL(
+			long groupId, boolean privateLayout, String mainPath,
+			String friendlyURL, Map<String, String[]> params,
+			Map<String, Object> requestContext)
 		throws PortalException, SystemException;
 
 	public String getWidgetURL(Portlet portlet, ThemeDisplay themeDisplay)

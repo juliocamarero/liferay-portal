@@ -18,7 +18,7 @@ AUI().add(
 		A.mix(
 			StagingBar,
 			{
-				_onInit: function(options) {
+				_onInit: function(event) {
 					var instance = this;
 
 					var namespace = instance._namespace;
@@ -32,15 +32,20 @@ AUI().add(
 							children: [
 								{
 									type: 'ToolbarSpacer'
-								},
-								{
-									handler: A.bind(instance._onViewHistory, instance),
-									icon: 'clock',
-									label: Liferay.Language.get('history')
 								}
 							]
 						}
 					).render();
+
+					if (!event.hideHistory) {
+						layoutRevisionToolbar.add(
+							{
+								handler: A.bind(instance._onViewHistory, instance),
+								icon: 'clock',
+								label: Liferay.Language.get('history')
+							}
+						);
+					}
 
 					StagingBar.layoutRevisionToolbar = layoutRevisionToolbar;
 
@@ -226,7 +231,8 @@ AUI().add(
 								doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
 								layoutRevisionId: layoutRevisionId,
 								layoutSetBranchId: layoutSetBranchId,
-								p_l_id: themeDisplay.getPlid()
+								p_l_id: themeDisplay.getPlid(),
+								p_v_g_id: themeDisplay.getParentGroupId()
 							},
 							on: {
 								success: function(event, id, obj) {

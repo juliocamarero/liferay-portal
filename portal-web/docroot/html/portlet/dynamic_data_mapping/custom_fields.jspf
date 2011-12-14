@@ -23,7 +23,7 @@
 
 	var TPL_BUTTON = '<div class="aui-field-labels-inline">' +
 						'<input type="button" value="<liferay-ui:message key="select" />" />' +
-					 '<div>';
+					'<div>';
 
 	var TPL_PARAGRAPH = '<p></p>';
 
@@ -70,7 +70,7 @@
 								collection[index] = {
 									attributeName: attributeName,
 									editor: new A.DateCellEditor(),
-									name: '<liferay-ui:message key="predefined-value" />'
+									name: '<%= UnicodeLanguageUtil.get(pageContext, "predefined-value") %>'
 								};
 							}
 						}
@@ -121,6 +121,11 @@
 				},
 				fieldNamespace: {
 					value: 'ddm'
+				},
+				name: {
+					valueFn: function() {
+						return A.FormBuilderField.buildFieldName('documents-and-media');
+					}
 				}
 			},
 
@@ -137,8 +142,13 @@
 					A.Array.each(
 						model,
 						function(item, index, collection) {
-							if (item.attributeName === 'predefinedValue') {
+							var attributeName = item.attributeName;
+
+							if (attributeName === 'predefinedValue') {
 								item.editor = false;
+							}
+							else if (attributeName === 'type') {
+								item.formatter = instance._defaultFormatter;
 							}
 						}
 					);
@@ -146,8 +156,14 @@
 					return model;
 				},
 
+				_defaultFormatter: function() {
+					var instance = this;
+
+					return 'documents-and-media';
+				},
+
 				_uiSetValue: function() {
-					return '<liferay-ui:message key="select" />';
+					return '<%= UnicodeLanguageUtil.get(pageContext, "select") %>';
 				}
 
 			}
@@ -181,7 +197,7 @@
 					},
 					value: {
 						folderId: <%= DLFolderConstants.DEFAULT_PARENT_FOLDER_ID %>,
-						folderName: '<liferay-ui:message key="home" />'
+						folderName: '<%= UnicodeLanguageUtil.get(pageContext, "home") %>'
 					}
 				},
 				tip: {
@@ -207,7 +223,7 @@
 					model.push(
 						{
 							attributeName: 'acceptFiles',
-							name: '<liferay-ui:message key="allowed-file-extensions" />'
+							name: '<%= UnicodeLanguageUtil.get(pageContext, "allowed-file-extensions") %>'
 						}
 					);
 
@@ -241,7 +257,7 @@
 
 			ATTRS: {
 				dataType: {
-					value: 'double'
+					value: 'number'
 				}
 			}
 		}
@@ -283,17 +299,17 @@
 						{
 							attributeName: 'type',
 							editor: false,
-							name: '<liferay-ui:message key="type" />'
+							name: '<%= UnicodeLanguageUtil.get(pageContext, "type") %>'
 						},
 						{
 							attributeName: 'label',
 							editor: new A.TextAreaCellEditor(),
-							name: '<liferay-ui:message key="text" />'
+							name: '<%= UnicodeLanguageUtil.get(pageContext, "text") %>'
 						},
 						{
 							attributeName: 'style',
 							editor: new A.TextAreaCellEditor(),
-							name: '<liferay-ui:message key="style" />'
+							name: '<%= UnicodeLanguageUtil.get(pageContext, "style") %>'
 						}
 					];
 				},
@@ -359,7 +375,7 @@
 						{
 							attributeName: 'type',
 							editor: false,
-							name: '<liferay-ui:message key="type" />'
+							name: '<%= UnicodeLanguageUtil.get(pageContext, "type") %>'
 						}
 					];
 				}

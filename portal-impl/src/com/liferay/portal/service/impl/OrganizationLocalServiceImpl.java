@@ -123,8 +123,8 @@ public class OrganizationLocalServiceImpl
 	 * @param  site whether the organization is to be associated with a main
 	 *         site
 	 * @param  serviceContext the organization's service context (optionally
-	 *         <code>null</code>). Can specify the organization's asset category
-	 *         IDs, asset tag names, and expando bridge attributes.
+	 *         <code>null</code>). Can set asset category IDs, asset tag names,
+	 *         and expando bridge attributes for the organization.
 	 * @return the organization
 	 * @throws PortalException if a creator or parent organization with the
 	 *         primary key could not be found or if the organization's
@@ -155,6 +155,11 @@ public class OrganizationLocalServiceImpl
 
 		organization.setCompanyId(user.getCompanyId());
 		organization.setParentOrganizationId(parentOrganizationId);
+
+		String treePath = organization.buildTreePath();
+
+		organization.setTreePath(treePath);
+
 		organization.setName(name);
 		organization.setType(type);
 		organization.setRecursable(recursable);
@@ -303,9 +308,9 @@ public class OrganizationLocalServiceImpl
 	 * assets are also deleted.
 	 *
 	 * @param  organizationId the primary key of the organization
-	 * @throws PortalException if an organization with the primary key could
-	 *         not be found, if the organization had a workflow in approved
-	 *         status, or if the organization was a parent organization
+	 * @throws PortalException if an organization with the primary key could not
+	 *         be found, if the organization had a workflow in approved status,
+	 *         or if the organization was a parent organization
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
@@ -324,7 +329,7 @@ public class OrganizationLocalServiceImpl
 	 *
 	 * @param  organization the organization
 	 * @throws PortalException if the organization had a workflow in approved
-	 *         status or if the organization was a parent organization.
+	 *         status or if the organization was a parent organization
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
@@ -434,8 +439,8 @@ public class OrganizationLocalServiceImpl
 	 *
 	 * @param  organizationId the primary key of the organization
 	 * @return the organization with the primary key
-	 * @throws PortalException if an organization with the primary key could
-	 *         not be found
+	 * @throws PortalException if an organization with the primary key could not
+	 *         be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
@@ -744,13 +749,13 @@ public class OrganizationLocalServiceImpl
 	}
 
 	/**
-	 * Returns <code>true</code> if the password policy has been assigned to
-	 * the organization.
+	 * Returns <code>true</code> if the password policy has been assigned to the
+	 * organization.
 	 *
 	 * @param  passwordPolicyId the primary key of the password policy
 	 * @param  organizationId the primary key of the organization
-	 * @return <code>true</code> if the password policy has been assigned to
-	 *         the organization; <code>false</code> otherwise
+	 * @return <code>true</code> if the password policy has been assigned to the
+	 *         organization; <code>false</code> otherwise
 	 * @throws SystemException if a system exception occurred
 	 */
 	public boolean hasPasswordPolicyOrganization(
@@ -763,8 +768,8 @@ public class OrganizationLocalServiceImpl
 
 	/**
 	 * Returns <code>true</code> if the user is a member of the organization.
-	 * This method is usually called to determine if the user has view access
-	 * to a resource belonging to the organization.
+	 * This method is usually called to determine if the user has view access to
+	 * a resource belonging to the organization.
 	 *
 	 * @param  userId the primary key of the user
 	 * @param  organizationId the primary key of the organization
@@ -780,9 +785,9 @@ public class OrganizationLocalServiceImpl
 
 	/**
 	 * Returns <code>true</code> if the user is a member of the organization,
-	 * optionally focusing on sub-organizations or the specified
-	 * organization. This method is usually called to determine if the user has
-	 * view access to a resource belonging to the organization.
+	 * optionally focusing on sub-organizations or the specified organization.
+	 * This method is usually called to determine if the user has view access to
+	 * a resource belonging to the organization.
 	 *
 	 * <p>
 	 *
@@ -823,7 +828,7 @@ public class OrganizationLocalServiceImpl
 	 *         are considered in the determination
 	 * @param  includeSpecifiedOrganization if <code>true</code> the
 	 *         organization specified by <code>organizationId</code> is
-	 *         considered in the determination.
+	 *         considered in the determination
 	 * @return <code>true</code> if the user has access to the organization;
 	 *         <code>false</code> otherwise
 	 * @throws PortalException if an organization with the primary key could not
@@ -874,6 +879,8 @@ public class OrganizationLocalServiceImpl
 	 * </p>
 	 *
 	 * @param  companyId the primary key of the organization's company
+	 * @throws PortalException if an organization with the primary key could not
+	 *         be found
 	 * @throws SystemException if a system exception occurred
 	 * @see    com.liferay.portal.service.persistence.OrganizationPersistence#rebuildTree(
 	 *         long, boolean)
@@ -893,6 +900,29 @@ public class OrganizationLocalServiceImpl
 		}
 	}
 
+	/**
+	 * Returns a range of all the organizations of the company.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link
+	 * com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param  companyId the primary key of the company
+	 * @param  params the finder parameters (optionally <code>null</code>). For
+	 *         more information see {@link
+	 *         com.liferay.portlet.enterpriseadmin.util.OrganizationIndexer}
+	 * @param  start the lower bound of the range of organizations to return
+	 * @param  end the upper bound of the range of organizations to return (not
+	 *         inclusive)
+	 * @return the range of all the organizations of the company
+	 * @throws SystemException if a system exception occurred
+	 */
 	public List<Organization> search(
 			long companyId, LinkedHashMap<String, Object> params, int start,
 			int end)
@@ -962,6 +992,8 @@ public class OrganizationLocalServiceImpl
 		else {
 			andOperator = true;
 		}
+
+		params.put("keywords", keywords);
 
 		return search(
 			companyId, parentOrganizationId, name, type, street, city, zip,
@@ -1236,7 +1268,7 @@ public class OrganizationLocalServiceImpl
 	 *         more information see {@link
 	 *         com.liferay.portlet.enterpriseadmin.util.OrganizationIndexer}.
 	 * @param  andSearch whether every field must match its keywords or just one
-	 *         field.
+	 *         field
 	 * @param  start the lower bound of the range of organizations to return
 	 * @param  end the upper bound of the range of organizations to return (not
 	 *         inclusive)
@@ -1281,6 +1313,13 @@ public class OrganizationLocalServiceImpl
 			searchContext.setAttributes(attributes);
 			searchContext.setCompanyId(companyId);
 			searchContext.setEnd(end);
+
+			String keywords = (String)params.remove("keywords");
+
+			if (Validator.isNotNull(keywords)) {
+				searchContext.setKeywords(keywords);
+			}
+
 			searchContext.setSorts(new Sort[] {sort});
 
 			QueryConfig queryConfig = new QueryConfig();
@@ -1498,9 +1537,9 @@ public class OrganizationLocalServiceImpl
 	 * @param  site whether the organization is to be associated with a main
 	 *         site
 	 * @param  serviceContext the organization's service context (optionally
-	 *         <code>null</code>). Can specify the organization's replacement
-	 *         asset category IDs, replacement asset tag names, and new expando
-	 *         bridge attributes.
+	 *         <code>null</code>). Can set asset category IDs and asset tag
+	 *         names for the organization, and merge expando bridge attributes
+	 *         for the organization.
 	 * @return the organization
 	 * @throws PortalException if an organization or parent organization with
 	 *         the primary key could not be found or if the new information was

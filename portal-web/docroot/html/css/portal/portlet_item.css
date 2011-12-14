@@ -7,11 +7,11 @@
 	padding: 0 5px 0 20px;
 }
 
-.lfr-portlet-item.lfr-instanceable {
+.lfr-add-content .lfr-portlet-item.lfr-instanceable {
 	background-image: url(@theme_image_path@/add_content/portlet_item_instanceable.png);
 }
 
-.lfr-portlet-item.lfr-archived-setup {
+.lfr-add-content .lfr-portlet-item.lfr-archived-setup {
 	background-image: url(@theme_image_path@/add_content/portlet_item_archived_setup.png);
 	margin-left: 20px;
 }

@@ -265,7 +265,7 @@
 		<field name="priority" type="int" />
 		<field name="layoutPrototypeUuid" type="String" />
 		<field name="layoutPrototypeLinkEnabled" type="boolean" />
-		<field name="templateLayoutUuid" type="String" />
+		<field name="sourcePrototypeLayoutUuid" type="String" />
 	</model>
 	<model name="com.liferay.portal.model.LayoutBranch">
 		<field name="LayoutBranchId" type="long" />
@@ -347,6 +347,8 @@
 		<field name="layoutSetId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
 		<field name="privateLayout" type="boolean" />
 		<field name="logo" type="boolean" />
 		<field name="logoId" type="long" />
@@ -386,6 +388,8 @@
 		<field name="uuid" type="String" />
 		<field name="layoutSetPrototypeId" type="long" />
 		<field name="companyId" type="long" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
 		<field name="name" type="String" localized="true">
 			<hint name="max-length">4000</hint>
 			<validator name="required" />
@@ -415,7 +419,7 @@
 			<hint name="max-length">200</hint>
 		</field>
 		<field name="owner" type="String">
-			<hint name="max-length">300</hint>
+			<hint name="max-length">255</hint>
 		</field>
 		<field name="inheritable" type="boolean" />
 		<field name="expirationDate" type="Date" />
@@ -648,9 +652,12 @@
 		</field>
 	</model>
 	<model name="com.liferay.portal.model.Repository">
+		<field name="uuid" type="String" />
 		<field name="repositoryId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="classNameId" type="long" />
@@ -873,8 +880,6 @@
 		<field name="description" type="String">
 			<hint-collection name="TEXTAREA" />
 		</field>
-		<field name="publicLayoutSetPrototypeId" type="long" />
-		<field name="privateLayoutSetPrototypeId" type="long" />
 		<field name="addedByLDAPImport" type="boolean" />
 	</model>
 	<model name="com.liferay.portal.model.UserGroupGroupRole">
@@ -1450,10 +1455,15 @@
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="fileId" type="long" />
+		<field name="fileUuid" type="String" />
 		<field name="repositoryId" type="long" />
 		<field name="parentFolderId" type="long" />
+		<field name="name" type="String">
+			<hint name="max-length">255</hint>
+		</field>
 		<field name="event" type="String" />
 		<field name="type" type="String" />
+		<field name="version" type="String" />
 	</model>
 	<model name="com.liferay.portlet.dynamicdatalists.model.DDLRecord">
 		<field name="uuid" type="String" />

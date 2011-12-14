@@ -37,6 +37,7 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.service.persistence.BatchSessionUtil;
 import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.LockPersistence;
 import com.liferay.portal.service.persistence.ResourcePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
@@ -337,6 +338,19 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	/**
 	 * Removes the social activity counter with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * @param activityCounterId the primary key of the social activity counter
+	 * @return the social activity counter that was removed
+	 * @throws com.liferay.portlet.social.NoSuchActivityCounterException if a social activity counter with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public SocialActivityCounter remove(long activityCounterId)
+		throws NoSuchActivityCounterException, SystemException {
+		return remove(Long.valueOf(activityCounterId));
+	}
+
+	/**
+	 * Removes the social activity counter with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
 	 * @param primaryKey the primary key of the social activity counter
 	 * @return the social activity counter that was removed
 	 * @throws com.liferay.portlet.social.NoSuchActivityCounterException if a social activity counter with the primary key could not be found
@@ -373,19 +387,6 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		finally {
 			closeSession(session);
 		}
-	}
-
-	/**
-	 * Removes the social activity counter with the primary key from the database. Also notifies the appropriate model listeners.
-	 *
-	 * @param activityCounterId the primary key of the social activity counter
-	 * @return the social activity counter that was removed
-	 * @throws com.liferay.portlet.social.NoSuchActivityCounterException if a social activity counter with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public SocialActivityCounter remove(long activityCounterId)
-		throws NoSuchActivityCounterException, SystemException {
-		return remove(Long.valueOf(activityCounterId));
 	}
 
 	@Override
@@ -2492,6 +2493,8 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	protected SocialRequestPersistence socialRequestPersistence;
 	@BeanReference(type = GroupPersistence.class)
 	protected GroupPersistence groupPersistence;
+	@BeanReference(type = LockPersistence.class)
+	protected LockPersistence lockPersistence;
 	@BeanReference(type = ResourcePersistence.class)
 	protected ResourcePersistence resourcePersistence;
 	@BeanReference(type = UserPersistence.class)

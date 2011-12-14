@@ -40,11 +40,11 @@ if ((article != null) && article.isDraft()) {
 			activeState: false,
 			boundingBox: '#<portlet:namespace />articleToobar',
 			children: [
-				<c:if test="<%= Validator.isNotNull(structureId) && (classNameId == 0) %>">
+				<c:if test="<%= (article != null) && Validator.isNotNull(structureId) && (classNameId == 0) %>">
 					{
 						icon: 'search',
 						id: '<portlet:namespace />previewArticleButton',
-						label: '<liferay-ui:message key="preview" />'
+						label: '<%= UnicodeLanguageUtil.get(pageContext, "preview") %>'
 					},
 				</c:if>
 
@@ -52,11 +52,11 @@ if ((article != null) && article.isDraft()) {
 					{
 						icon: 'arrowreturnthick-1-b',
 						id: '<portlet:namespace />downloadArticleContentButton',
-						label: '<liferay-ui:message key="download" />'
+						label: '<%= UnicodeLanguageUtil.get(pageContext, "download") %>'
 					},
 				</c:if>
 
-				<c:if test="<%= article != null && JournalArticlePermission.contains(permissionChecker, article, ActionKeys.PERMISSIONS) %>">
+				<c:if test="<%= (article != null) && JournalArticlePermission.contains(permissionChecker, article, ActionKeys.PERMISSIONS) %>">
 					<liferay-security:permissionsURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 						modelResource="<%= JournalArticle.class.getName() %>"
 						modelResourceDescription="<%= article.getTitle(locale) %>"
@@ -74,7 +74,7 @@ if ((article != null) && article.isDraft()) {
 										cssClass: 'portlet-asset-categories-admin-dialog permissions-change',
 										width: 700
 									},
-									title: '<liferay-ui:message key="permissions" />',
+									title: '<%= UnicodeLanguageUtil.get(pageContext, "permissions") %>',
 									uri: '<%= permissionsURL %>'
 								}
 							);
@@ -88,7 +88,7 @@ if ((article != null) && article.isDraft()) {
 
 					},
 					icon: 'key',
-					label: '<liferay-ui:message key="permissions" />'
+					label: '<%= UnicodeLanguageUtil.get(pageContext, "permissions") %>'
 				},
 				</c:if>
 
@@ -98,7 +98,7 @@ if ((article != null) && article.isDraft()) {
 							<portlet:namespace />expireArticle();
 						},
 						icon: 'minusthick',
-						label: '<liferay-ui:message key="expire-this-version" />'
+						label: '<%= UnicodeLanguageUtil.get(pageContext, "expire-this-version") %>'
 					},
 				</c:if>
 
@@ -125,7 +125,7 @@ if ((article != null) && article.isDraft()) {
 							window.location = '<%= viewHistoryURL %>';
 						},
 						icon: 'clock',
-						label: '<liferay-ui:message key="view-history" />'
+						label: '<%= UnicodeLanguageUtil.get(pageContext, "view-history") %>'
 					}
 				</c:if>
 			]

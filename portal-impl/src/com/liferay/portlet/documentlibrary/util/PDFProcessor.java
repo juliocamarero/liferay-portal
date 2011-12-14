@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.image.ImageProcessorUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
+import com.liferay.portal.kernel.messaging.MessageBusException;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -53,6 +54,7 @@ import javax.imageio.ImageIO;
 
 import javax.portlet.PortletPreferences;
 
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -155,6 +157,14 @@ public class PDFProcessor extends DefaultPreviewableProcessor {
 		}
 
 		return hasImages;
+	}
+
+	public static boolean isDocumentSupported(FileVersion fileVersion) {
+		return _instance.isSupported(fileVersion);
+	}
+
+	public static boolean isDocumentSupported(String mimeType) {
+		return _instance.isSupported(mimeType);
 	}
 
 	public static boolean isImageMagickEnabled() throws Exception {
@@ -318,6 +328,14 @@ public class PDFProcessor extends DefaultPreviewableProcessor {
 		throws Exception {
 
 		if (_isGeneratePreview(fileVersion)) {
+			StopWatch stopWatch = null;
+
+			if (_log.isInfoEnabled()) {
+				stopWatch = new StopWatch();
+
+				stopWatch.start();
+			}
+
 			_generateImagesIM(
 				fileVersion, file,
 				PropsValues.DL_FILE_ENTRY_PREVIEW_DOCUMENT_DEPTH,
@@ -330,12 +348,20 @@ public class PDFProcessor extends DefaultPreviewableProcessor {
 
 				_log.info(
 					"ImageMagick generated " + previewFileCount +
-						" preview pages for " +
-							fileVersion.getFileVersionId());
+						" preview pages for " + fileVersion.getTitle() +
+							" in " + stopWatch);
 			}
 		}
 
 		if (_isGenerateThumbnail(fileVersion)) {
+			StopWatch stopWatch = null;
+
+			if (_log.isInfoEnabled()) {
+				stopWatch = new StopWatch();
+
+				stopWatch.start();
+			}
+
 			_generateImagesIM(
 				fileVersion, file,
 				PropsValues.DL_FILE_ENTRY_THUMBNAIL_DOCUMENT_DEPTH,
@@ -349,7 +375,7 @@ public class PDFProcessor extends DefaultPreviewableProcessor {
 			if (_log.isInfoEnabled()) {
 				_log.info(
 					"ImageMagick generated a thumbnail for " +
-						fileVersion.getFileVersionId());
+						fileVersion.getTitle() + " in " + stopWatch);
 			}
 		}
 	}
@@ -386,6 +412,10 @@ public class PDFProcessor extends DefaultPreviewableProcessor {
 		else {
 			imOperation.addImage(file.getPath());
 			imOperation.addImage(getPreviewTempFilePath(tempFileId, -1));
+		}
+
+		if (_log.isInfoEnabled()) {
+			_log.info("Excecuting command 'convert " + imOperation + "'");
 		}
 
 		_convertCmd.run(imOperation);
@@ -664,8 +694,23 @@ public class PDFProcessor extends DefaultPreviewableProcessor {
 		if (generateImages) {
 			_fileVersionIds.add(fileVersion.getFileVersionId());
 
-			MessageBusUtil.sendMessage(
-				DestinationNames.DOCUMENT_LIBRARY_PDF_PROCESSOR, fileVersion);
+			if (PropsValues.DL_FILE_ENTRY_PROCESSORS_TRIGGER_SYNCHRONOUSLY) {
+				try {
+					MessageBusUtil.sendSynchronousMessage(
+						DestinationNames.DOCUMENT_LIBRARY_PDF_PROCESSOR,
+						fileVersion);
+				}
+				catch (MessageBusException mbe) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(mbe, mbe);
+					}
+				}
+			}
+			else {
+				MessageBusUtil.sendMessage(
+					DestinationNames.DOCUMENT_LIBRARY_PDF_PROCESSOR,
+					fileVersion);
+			}
 		}
 	}
 

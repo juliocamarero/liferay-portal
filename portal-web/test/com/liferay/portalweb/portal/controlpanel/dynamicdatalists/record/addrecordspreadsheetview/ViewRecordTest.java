@@ -62,13 +62,13 @@ public class ViewRecordTest extends BaseTestCase {
 			selenium.getText("//tr[3]/td[1]"));
 		assertEquals(RuntimeVariables.replace("Date"),
 			selenium.getText("//tr[1]/th[2]"));
-		assertEquals(RuntimeVariables.replace("11/10/11"),
+		assertEquals(RuntimeVariables.replace("12/10/11"),
 			selenium.getText("//tr[3]/td[2]"));
 		assertEquals(RuntimeVariables.replace("Decimal"),
 			selenium.getText("//tr[1]/th[3]"));
 		assertEquals(RuntimeVariables.replace("1.23"),
 			selenium.getText("//tr[3]/td[3]"));
-		assertEquals(RuntimeVariables.replace("Document Library"),
+		assertEquals(RuntimeVariables.replace("Documents and Media"),
 			selenium.getText("//tr[1]/th[4]"));
 		assertEquals(RuntimeVariables.replace("document.txt"),
 			selenium.getText("//tr[3]/td[4]"));
@@ -81,7 +81,7 @@ public class ViewRecordTest extends BaseTestCase {
 			selenium.getText("//tr[3]/td[6]"));
 		assertEquals(RuntimeVariables.replace("Number"),
 			selenium.getText("//tr[1]/th[7]"));
-		assertEquals(RuntimeVariables.replace("456.0"),
+		assertEquals(RuntimeVariables.replace("456"),
 			selenium.getText("//tr[3]/td[7]"));
 		assertEquals(RuntimeVariables.replace("Radio"),
 			selenium.getText("//tr[1]/th[8]"));
@@ -129,18 +129,19 @@ public class ViewRecordTest extends BaseTestCase {
 		selenium.waitForPageToLoad("30000");
 		assertEquals(RuntimeVariables.replace("Boolean true"),
 			selenium.getText("//div[@class='aui-fieldset-content ']/div[1]"));
-		assertEquals(RuntimeVariables.replace("Date 11/10/11"),
+		assertEquals(RuntimeVariables.replace("Date 12/10/11"),
 			selenium.getText("//div[@class='aui-fieldset-content ']/div[2]"));
 		assertEquals(RuntimeVariables.replace("Decimal 1.23"),
 			selenium.getText("//div[@class='aui-fieldset-content ']/div[3]"));
-		assertEquals(RuntimeVariables.replace("Document Library document.txt"),
+		assertEquals(RuntimeVariables.replace(
+				"Documents and Media document.txt"),
 			selenium.getText("//div[@class='aui-fieldset-content ']/div[4]"));
 		assertTrue(selenium.isPartialText(
 				"//div[@class='aui-fieldset-content ']/div[5]",
 				"File Upload document2.txt"));
 		assertEquals(RuntimeVariables.replace("Integer 123"),
 			selenium.getText("//div[@class='aui-fieldset-content ']/div[6]"));
-		assertEquals(RuntimeVariables.replace("Number 456.0"),
+		assertEquals(RuntimeVariables.replace("Number 456"),
 			selenium.getText("//div[@class='aui-fieldset-content ']/div[7]"));
 		assertEquals(RuntimeVariables.replace("Radio option 2"),
 			selenium.getText("//div[@class='aui-fieldset-content ']/div[8]"));
@@ -211,7 +212,7 @@ public class ViewRecordTest extends BaseTestCase {
 		selenium.waitForPageToLoad("30000");
 		assertEquals(RuntimeVariables.replace("True"),
 			selenium.getText("//td[1]/div"));
-		assertEquals(RuntimeVariables.replace("2011-11-10"),
+		assertEquals(RuntimeVariables.replace("2011-12-10"),
 			selenium.getText("//td[2]/div"));
 		assertEquals(RuntimeVariables.replace("1.23"),
 			selenium.getText("//td[3]/div"));
@@ -221,7 +222,7 @@ public class ViewRecordTest extends BaseTestCase {
 			selenium.getText("//td[5]/div"));
 		assertEquals(RuntimeVariables.replace("123"),
 			selenium.getText("//td[6]/div"));
-		assertEquals(RuntimeVariables.replace("456.0"),
+		assertEquals(RuntimeVariables.replace("456"),
 			selenium.getText("//td[7]/div"));
 		assertEquals(RuntimeVariables.replace("option 2"),
 			selenium.getText("//td[8]/div"));

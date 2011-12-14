@@ -282,11 +282,12 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 	normalized when accessed see {@link
 	com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
 	String)}.
-	* @param locked whether the layout is locked
 	* @param serviceContext the service context. Must specify the replacement
 	universally unique identifier and can specify the replacement
 	create date, replacement modified date and the new expando bridge
-	attributes.
+	attributes. For layouts that belong to a layout set prototype, an
+	attribute named 'layoutUpdateable' can be set to specify whether
+	site administrators can modify this page within their site.
 	* @return the layout
 	* @throws PortalException if a group or user with the primary key could not
 	be found, or if layout values were invalid
@@ -300,7 +301,7 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 		java.util.Map<java.util.Locale, java.lang.String> keywordsMap,
 		java.util.Map<java.util.Locale, java.lang.String> robotsMap,
 		java.lang.String type, boolean hidden, java.lang.String friendlyURL,
-		boolean locked, com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -348,10 +349,11 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 	normalized when accessed see {@link
 	com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil#normalize(
 	String)}.
-	* @param locked whether the layout is locked
 	* @param serviceContext the service context. Must specify the universally
 	unique identifier and can specify the create date and modified
-	date.
+	date. For layouts that belong to a layout set prototype, an
+	attribute named 'layoutUpdateable' can be set to specify whether
+	site administrators can modify this page within their site.
 	* @return the layout
 	* @throws PortalException if a group or user with the primary key could not
 	be found
@@ -361,7 +363,7 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 		boolean privateLayout, long parentLayoutId, java.lang.String name,
 		java.lang.String title, java.lang.String description,
 		java.lang.String type, boolean hidden, java.lang.String friendlyURL,
-		boolean locked, com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -382,21 +384,6 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* Deletes the layout with the plid, also deleting the layout's child
-	* layouts, and associated resources.
-	*
-	* @param plid the primary key of the layout
-	* @param serviceContext the service context
-	* @throws PortalException if a layout with the primary key could not be
-	found , or if some other portal exception occurred
-	* @throws SystemException if a system exception occurred
-	*/
-	public void deleteLayout(long plid,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
-
-	/**
 	* Deletes the layout with the primary key, also deleting the layout's child
 	* layouts, and associated resources.
 	*
@@ -410,6 +397,21 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 	*/
 	public void deleteLayout(long groupId, boolean privateLayout,
 		long layoutId, com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Deletes the layout with the plid, also deleting the layout's child
+	* layouts, and associated resources.
+	*
+	* @param plid the primary key of the layout
+	* @param serviceContext the service context
+	* @throws PortalException if a layout with the primary key could not be
+	found , or if some other portal exception occurred
+	* @throws SystemException if a system exception occurred
+	*/
+	public void deleteLayout(long plid,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -550,6 +552,11 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 		java.util.Date startDate, java.util.Date endDate)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.model.Layout fetchFirstLayout(long groupId,
+		boolean privateLayout, long parentLayoutId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
 	* Returns the layout matching the universally unique identifier and group
@@ -1006,7 +1013,6 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 	String)}.
 	* @param iconImage whether the icon image will be updated
 	* @param iconBytes the byte array of the layout's new icon image
-	* @param locked whether the layout is locked
 	* @param serviceContext the service context. Can specify the replacement
 	modified date and new expando bridge attributes.
 	* @return the updated layout
@@ -1024,7 +1030,7 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 		java.util.Map<java.util.Locale, java.lang.String> keywordsMap,
 		java.util.Map<java.util.Locale, java.lang.String> robotsMap,
 		java.lang.String type, boolean hidden, java.lang.String friendlyURL,
-		java.lang.Boolean iconImage, byte[] iconBytes, boolean locked,
+		java.lang.Boolean iconImage, byte[] iconBytes,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
@@ -1201,6 +1207,13 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 	*/
 	public com.liferay.portal.model.Layout updatePriority(long plid,
 		int priority)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void updateScopedPortletNames(long groupId, boolean privateLayout,
+		long layoutId,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.List<java.util.Locale> nameMapModifiedLocales)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

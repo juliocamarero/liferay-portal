@@ -36,7 +36,8 @@
 						cmd: 'delete',
 						doAsUserId: event.doAsUserId,
 						p_l_id: event.plid,
-						p_p_id: event.portletId
+						p_p_id: event.portletId,
+						p_v_g_id: themeDisplay.getParentGroupId()
 					}
 				}
 			);
@@ -168,7 +169,8 @@
 				p_p_col_pos: portletPosition,
 				p_p_id: portletId,
 				p_p_i_id: portletItemId,
-				p_p_isolated: true
+				p_p_isolated: true,
+				p_v_g_id: themeDisplay.getParentGroupId()
 			};
 
 			var firstPortlet = container.one('.portlet-boundary');
@@ -252,12 +254,17 @@
 
 				portletBoundary = portletBound;
 
-				if (Liferay.Layout && Liferay.Layout.INITIALIZED) {
-					Liferay.Layout.updateCurrentPortletInfo(portletBoundary);
+				var Layout = Liferay.Layout;
+
+				if (Layout && Layout.INITIALIZED) {
+					Layout.updateCurrentPortletInfo(portletBoundary);
 
 					if (container) {
-						Liferay.Layout.syncEmptyColumnClassUI(container);
+						Layout.syncEmptyColumnClassUI(container);
 					}
+
+					Layout.syncDraggableClassUI();
+					Layout.updatePortletDropZones(portletBoundary);
 				}
 
 				if (onComplete) {
@@ -435,7 +442,8 @@
 								doAsUserId: doAsUserId,
 								p_l_id: plid,
 								p_p_id: portlet.portletId,
-								p_p_restore: restore
+								p_p_restore: restore,
+								p_v_g_id: themeDisplay.getParentGroupId()
 							}
 						}
 					);
@@ -522,11 +530,11 @@
 			portlet = A.one(portlet);
 
 			if (portlet) {
-				data = data || {
-					portletAjaxable: true
-				};
+				data = data || {};
 
-				var ajaxable = data.portletAjaxable;
+                if (!A.Object.owns(data, 'portletAjaxable')) {
+                    data.portletAjaxable = true;
+                }
 
 				var id = portlet.attr('portlet');
 
@@ -534,7 +542,7 @@
 
 				var placeHolder = A.Node.create('<div class="loading-animation" id="p_load' + id + '" />');
 
-				if (ajaxable && url) {
+				if (data.portletAjaxable && url) {
 					portlet.placeBefore(placeHolder);
 
 					portlet.remove(true);
@@ -628,23 +636,26 @@
 					titleHtml = title.one('.portlet-title-text').outerHTML();
 				}
 
-				var dialog = Liferay.Util._openWindow(
+				Liferay.Util.openWindow(
 					{
-						title: titleHtml + ' - ' + Liferay.Language.get('configuration'),
-						uri: configurationURL,
 						cache: false,
 						dialog: {
 							align: Util.Window.ALIGN_CENTER,
+							on: {
+								render: function(event) {
+									this.set('y', this.get('y') + 100);
+								}
+							},
 							width: 820
 						},
 						dialogIframe: {
 							id: namespacedId + 'configurationIframe',
 							uri: configurationURL
-						}
+						},
+						title: titleHtml + ' - ' + Liferay.Language.get('configuration'),
+						uri: configurationURL
 					}
 				);
-
-				dialog.set('y', dialog.get('y') + 100);
 			}
 		},
 		['liferay-util-window']
