@@ -34,6 +34,10 @@ import java.util.regex.Pattern;
  */
 public class SQLTransformer {
 
+	public static void reloadSQLTransformer() {
+		_instance._reloadSQLTransformer();
+	}
+
 	public static String transform(String sql) {
 		return _instance._transform(sql);
 	}
@@ -47,6 +51,25 @@ public class SQLTransformer {
 	}
 
 	private SQLTransformer() {
+		_reloadSQLTransformer();
+	}
+
+	private void _reloadSQLTransformer() {
+		_vendorDB2 = false;
+		_vendorDerby = false;
+		_vendorFirebird = false;
+		//_vendorHypersonic = false;
+		_vendorInformix = false;
+		_vendorIngres = false;
+		_vendorInterbase = false;
+		_vendorMySQL = false;
+		_vendorOracle = false;
+		_vendorPostgreSQL = false;
+		_vendorSQLServer = false;
+		_vendorSybase = false;
+
+		_transformedSqls.clear();
+
 		DB db = DBFactoryUtil.getDB();
 
 		String dbType = db.getType();

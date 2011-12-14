@@ -16,6 +16,7 @@ package com.liferay.portal.setup;
 
 import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.dao.jdbc.util.DataSourceSwapper;
+import com.liferay.portal.dao.orm.common.SQLTransformer;
 import com.liferay.portal.events.StartupAction;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
@@ -301,6 +302,11 @@ public class SetupWizardUtil {
 		WebCachePoolUtil.clear();
 		CentralizedThreadLocal.clearShortLivedThreadLocals();
 
+		// SQL
+
+		CustomSQLUtil.reloadCustomSQL();
+		SQLTransformer.reloadSQLTransformer();
+
 		// Startup
 
 		QuartzLocalServiceUtil.checkQuartzTables();
@@ -309,9 +315,7 @@ public class SetupWizardUtil {
 
 		startupAction.run(null);
 
-		// Reload Custom SQL
-
-		CustomSQLUtil.reloadCustomSQL();
+		// Servlet context
 
 		HttpSession session = request.getSession();
 

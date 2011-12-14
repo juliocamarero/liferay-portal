@@ -14,6 +14,7 @@
 
 package com.liferay.portal.servlet;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
@@ -23,12 +24,14 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.servlet.filters.dynamiccss.DynamicCSSUtil;
 import com.liferay.portal.util.MinifierUtil;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.File;
@@ -39,6 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,13 +50,30 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Eduardo Lundgren
  * @author Edward Han
+ * @author Zsigmond Rab
  */
 public class ComboServlet extends HttpServlet {
 
 	@Override
 	public void service(
 			HttpServletRequest request, HttpServletResponse response)
-		throws IOException {
+		throws IOException, ServletException {
+
+		try {
+			doService(request, response);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			PortalUtil.sendError(
+				HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e, request,
+				response);
+		}
+	}
+
+	protected void doService(
+			HttpServletRequest request, HttpServletResponse response)
+		throws Exception {
 
 		String contextPath = PortalUtil.getPathContext();
 
@@ -98,17 +119,27 @@ public class ComboServlet extends HttpServlet {
 			bytesArray = new byte[length][];
 
 			for (String modulePath : modulePaths) {
-				byte[] bytes = new byte[0];
+				if (!validateModuleExtension(modulePath)) {
+					PortalUtil.sendError(
+						HttpServletResponse.SC_NOT_FOUND, new IOException(),
+						request, response);
 
-				if (Validator.isNotNull(modulePath)) {
-					modulePath = StringUtil.replaceFirst(
-						p.concat(modulePath), contextPath, StringPool.BLANK);
-
-					bytes = getFileContent(
-						request, response, modulePath, minifierType);
+					return;
 				}
+				else {
+					byte[] bytes = new byte[0];
 
-				bytesArray[--length] = bytes;
+					if (Validator.isNotNull(modulePath)) {
+						modulePath = StringUtil.replaceFirst(
+							p.concat(modulePath), contextPath,
+							StringPool.BLANK);
+
+						bytes = getFileContent(
+							request, response, modulePath, minifierType);
+					}
+
+					bytesArray[--length] = bytes;
+				}
 			}
 
 			if (modulePathsString != null) {
@@ -255,6 +286,27 @@ public class ComboServlet extends HttpServlet {
 		}
 
 		return fileContentBag._fileContent;
+	}
+
+	protected boolean validateModuleExtension(String moduleName)
+		throws SystemException {
+
+		boolean validModuleExtension = false;
+
+		String[] fileExtensions = PrefsPropsUtil.getStringArray(
+			PropsKeys.COMBO_ALLOWED_FILE_EXTENSIONS, StringPool.COMMA);
+
+		for (int i = 0; i < fileExtensions.length; i++) {
+			if (StringPool.STAR.equals(fileExtensions[i]) ||
+				StringUtil.endsWith(moduleName, fileExtensions[i])) {
+
+				validModuleExtension = true;
+
+				break;
+			}
+		}
+
+		return validModuleExtension;
 	}
 
 	private static final String _CSS_EXTENSION = "css";

@@ -75,13 +75,15 @@ List<LayoutPrototype> layoutPrototypes = LayoutPrototypeServiceUtil.search(compa
 				<aui:select id="addLayoutType" name="type">
 
 					<%
+					boolean firstLayout = ParamUtil.getBoolean(request, "firstLayout");
+
 					for (int i = 0; i < PropsValues.LAYOUT_TYPES.length; i++) {
 						if (PropsValues.LAYOUT_TYPES[i].equals("article") && (group.isLayoutPrototype() || group.isLayoutSetPrototype())) {
 							continue;
 						}
 					%>
 
-						<aui:option label='<%= LanguageUtil.get(pageContext, "layout.types." + PropsValues.LAYOUT_TYPES[i]) %>' value="<%= PropsValues.LAYOUT_TYPES[i] %>" />
+						<aui:option disabled="<%= firstLayout && !PortalUtil.isLayoutFirstPageable(PropsValues.LAYOUT_TYPES[i]) %>" label='<%= LanguageUtil.get(pageContext, "layout.types." + PropsValues.LAYOUT_TYPES[i]) %>' value="<%= PropsValues.LAYOUT_TYPES[i] %>" />
 
 					<%
 					}
