@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.FullNameGenerator;
@@ -77,6 +78,10 @@ public class SetupWizardUtil {
 	public static final String PROPERTIES_FILE_NAME =
 		"portal-setup-wizard.properties";
 
+	public static boolean isJDNIConfigured() {
+		return !Validator.isNull(PropsValues.JDBC_DEFAULT_JNDI_NAME);
+	}
+	
 	public static boolean isSetupFinished(HttpServletRequest request) {
 		if (!PropsValues.SETUP_WIZARD_ENABLED) {
 			return true;
