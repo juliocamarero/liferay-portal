@@ -1002,16 +1002,19 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 *
 	 * @param  companyId the primary key of the company
 	 * @param  bytes the bytes of the company's logo image
+	 * @return the company with the primary key
 	 * @throws PortalException if the company's logo ID could not be found or if
 	 *         the logo's image was corrupted
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void updateLogo(long companyId, byte[] bytes)
+	public Company updateLogo(long companyId, byte[] bytes)
 		throws PortalException, SystemException {
 
 		long logoId = getLogoId(companyId);
 
 		imageLocalService.updateImage(logoId, bytes);
+		
+		return companyLocalService.getCompany(companyId);
 	}
 
 	/**
@@ -1019,16 +1022,19 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 *
 	 * @param  companyId the primary key of the company
 	 * @param  file the file of the company's logo image
+	 * @return the company with the primary key
 	 * @throws PortalException the company's logo ID could not be found or if
 	 *         the logo's image was corrupted
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void updateLogo(long companyId, File file)
+	public Company updateLogo(long companyId, File file)
 		throws PortalException, SystemException {
 
 		long logoId = getLogoId(companyId);
 
 		imageLocalService.updateImage(logoId, file);
+		
+		return companyLocalService.getCompany(companyId);
 	}
 
 	/**
@@ -1036,16 +1042,19 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 *
 	 * @param  companyId the primary key of the company
 	 * @param  is the input stream of the company's logo image
+	 * @return the company with the primary key
 	 * @throws PortalException if the company's logo ID could not be found or if
 	 *         the company's logo image was corrupted
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void updateLogo(long companyId, InputStream is)
+	public Company updateLogo(long companyId, InputStream is)
 		throws PortalException, SystemException {
 
 		long logoId = getLogoId(companyId);
 
 		imageLocalService.updateImage(logoId, is);
+		
+		return companyLocalService.getCompanyById(companyId);
 	}
 
 	/**
