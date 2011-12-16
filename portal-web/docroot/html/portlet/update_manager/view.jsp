@@ -20,6 +20,12 @@
 List updatablePackageIds = new ArrayList();
 %>
 
+<c:if test='<%= SessionMessages.contains(renderRequest, "portletUndeploystarted") %>'>
+	<div class="portlet-msg-success">
+		<liferay-ui:message key="plugin-has-started-undeploy-refresh-page-to-see-if-it-has-finished" />
+	</div>
+</c:if>
+
 <c:choose>
 	<c:when test="<%= permissionChecker.isOmniadmin() %>">
 		<c:choose>
