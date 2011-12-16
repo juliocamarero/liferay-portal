@@ -97,13 +97,13 @@ public class EditCompanyLogoAction extends PortletAction {
 				throw new UploadException();
 			}
 
-			Company updatedCompany = 
+			Company company =
 				CompanyServiceUtil.updateLogo(companyId, inputStream);
 			
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 			
-			themeDisplay.setCompany(updatedCompany);
+			themeDisplay.setCompany(company);
 		}
 		finally {
 			StreamUtil.cleanUp(inputStream);
