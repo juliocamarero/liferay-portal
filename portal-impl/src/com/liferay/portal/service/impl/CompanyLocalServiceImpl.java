@@ -1010,17 +1010,9 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	public Company updateLogo(long companyId, byte[] bytes)
 		throws PortalException, SystemException {
 
-		Company company = companyPersistence.findByPrimaryKey(companyId);
+		Company company = checkCompanyLogo(companyId);
 
-		long logoId = company.getLogoId();
-
-		if (logoId <= 0) {
-			logoId = counterLocalService.increment();
-
-			company.setLogoId(logoId);
-		}
-
-		imageLocalService.updateImage(logoId, bytes);
+		imageLocalService.updateImage(company.getLogoId(), bytes);
 
 		return companyPersistence.update(company, false);
 	}
@@ -1038,17 +1030,9 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	public Company updateLogo(long companyId, File file)
 		throws PortalException, SystemException {
 
-		Company company = companyPersistence.findByPrimaryKey(companyId);
+		Company company = checkCompanyLogo(companyId);
 
-		long logoId = company.getLogoId();
-
-		if (logoId <= 0) {
-			logoId = counterLocalService.increment();
-
-			company.setLogoId(logoId);
-		}
-
-		imageLocalService.updateImage(logoId, file);
+		imageLocalService.updateImage(company.getLogoId(), file);
 
 		return companyPersistence.update(company, false);
 	}
@@ -1066,17 +1050,9 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	public Company updateLogo(long companyId, InputStream is)
 		throws PortalException, SystemException {
 
-		Company company = companyPersistence.findByPrimaryKey(companyId);
-		
-		long logoId = company.getLogoId();
-		
-		if (logoId <= 0) {
-			logoId = counterLocalService.increment();
+		Company company = checkCompanyLogo(companyId);
 
-			company.setLogoId(logoId);
-		}
-
-		imageLocalService.updateImage(logoId, is);
+		imageLocalService.updateImage(company.getLogoId(), is);
 
 		return companyPersistence.update(company, false);
 	}
@@ -1208,6 +1184,31 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		catch (PortletException pe) {
 			throw new SystemException(pe);
 		}
+	}
+
+	/**
+	 * Check if the company has a valid logo, assigning a new one if it has
+	 * no logo.
+	 *
+	 * @param  companyId the primary key of the company
+	 * @return the Company
+	 * @throws PortalException if a PortalException ocurred
+	 * @throws SystemException if a SystemException ocurred
+	 */
+	protected Company checkCompanyLogo(long companyId)
+		throws PortalException, SystemException {
+
+		Company company = companyPersistence.findByPrimaryKey(companyId);
+
+		long logoId = company.getLogoId();
+
+		if (logoId <= 0) {
+			logoId = counterLocalService.increment();
+
+			company.setLogoId(logoId);
+		}
+
+		return company;
 	}
 
 	protected void updateVirtualHost(long companyId, String virtualHostname)
