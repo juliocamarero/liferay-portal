@@ -1002,16 +1002,19 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 *
 	 * @param  companyId the primary key of the company
 	 * @param  bytes the bytes of the company's logo image
+	 * @return the company with the primary key
 	 * @throws PortalException if the company's logo ID could not be found or if
 	 *         the logo's image was corrupted
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void updateLogo(long companyId, byte[] bytes)
+	public Company updateLogo(long companyId, byte[] bytes)
 		throws PortalException, SystemException {
 
-		long logoId = getLogoId(companyId);
+		Company company = checkCompanyLogo(companyId);
 
-		imageLocalService.updateImage(logoId, bytes);
+		imageLocalService.updateImage(company.getLogoId(), bytes);
+
+		return companyPersistence.update(company, false);
 	}
 
 	/**
@@ -1019,16 +1022,19 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 *
 	 * @param  companyId the primary key of the company
 	 * @param  file the file of the company's logo image
+	 * @return the company with the primary key
 	 * @throws PortalException the company's logo ID could not be found or if
 	 *         the logo's image was corrupted
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void updateLogo(long companyId, File file)
+	public Company updateLogo(long companyId, File file)
 		throws PortalException, SystemException {
 
-		long logoId = getLogoId(companyId);
+		Company company = checkCompanyLogo(companyId);
 
-		imageLocalService.updateImage(logoId, file);
+		imageLocalService.updateImage(company.getLogoId(), file);
+
+		return companyPersistence.update(company, false);
 	}
 
 	/**
@@ -1036,16 +1042,19 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 *
 	 * @param  companyId the primary key of the company
 	 * @param  is the input stream of the company's logo image
+	 * @return the company with the primary key
 	 * @throws PortalException if the company's logo ID could not be found or if
 	 *         the company's logo image was corrupted
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void updateLogo(long companyId, InputStream is)
+	public Company updateLogo(long companyId, InputStream is)
 		throws PortalException, SystemException {
 
-		long logoId = getLogoId(companyId);
+		Company company = checkCompanyLogo(companyId);
 
-		imageLocalService.updateImage(logoId, is);
+		imageLocalService.updateImage(company.getLogoId(), is);
+
+		return companyPersistence.update(company, false);
 	}
 
 	/**
@@ -1177,7 +1186,16 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		}
 	}
 
-	protected long getLogoId(long companyId)
+	/**
+	 * Check if the company has a valid logo, assigning a new one if it has
+	 * no logo.
+	 *
+	 * @param  companyId the primary key of the company
+	 * @return the Company
+	 * @throws PortalException if a PortalException ocurred
+	 * @throws SystemException if a SystemException ocurred
+	 */
+	protected Company checkCompanyLogo(long companyId)
 		throws PortalException, SystemException {
 
 		Company company = companyPersistence.findByPrimaryKey(companyId);
@@ -1188,11 +1206,9 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			logoId = counterLocalService.increment();
 
 			company.setLogoId(logoId);
-
-			companyPersistence.update(company, false);
 		}
 
-		return logoId;
+		return company;
 	}
 
 	protected void updateVirtualHost(long companyId, String virtualHostname)

@@ -382,7 +382,7 @@ public class BaseDeployer implements Deployer {
 			if (!portletPropertiesFile.exists()) {
 				String pluginPackageName = null;
 
-				if (pluginPackage != null) { 
+				if (pluginPackage != null) {
 					pluginPackageName = pluginPackage.getName();
 				}
 				else {
