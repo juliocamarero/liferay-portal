@@ -99,10 +99,10 @@ public class EditCompanyLogoAction extends PortletAction {
 
 			Company company =
 				CompanyServiceUtil.updateLogo(companyId, inputStream);
-			
+
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-			
+
 			themeDisplay.setCompany(company);
 		}
 		finally {
