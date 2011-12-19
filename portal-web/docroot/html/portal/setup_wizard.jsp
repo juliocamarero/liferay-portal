@@ -270,7 +270,7 @@
 
 						var loadingMask = new A.LoadingMask(
 							{
-								'strings.loading': '<%= UnicodeLanguageUtil.get(pageContext, "liferay-is-being-installed") %>',
+								'strings.loading': '<%= HtmlUtil.escape(LanguageUtil.get(pageContext, "liferay-is-being-installed")) %>',
 								target: A.getBody()
 							}
 						);
@@ -324,7 +324,7 @@
 												failure: function(event, id, obj) {
 													loadingMask.hide();
 
-													updateMessage('<%= LanguageUtil.get(pageContext, "an-unexpected-error-occurred-while-connecting-to-the-database") %>', 'error');
+													updateMessage('<%= HtmlUtil.escape(LanguageUtil.get(pageContext, "an-unexpected-error-occurred-while-connecting-to-the-database")) %>', 'error');
 												}
 											},
 											on: {
