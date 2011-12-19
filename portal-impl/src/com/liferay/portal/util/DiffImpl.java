@@ -251,7 +251,7 @@ public class DiffImpl implements com.liferay.portal.kernel.util.Diff {
 
 		for (; i <= difference.getDeletedEnd(); i++) {
 			for (; j <= difference.getAddedEnd(); j++) {
-				if (_lineDiff(
+				if (_checkSourceAndTargetLengths(sourceStringList.get(i), targetStringList.get(j)) && _lineDiff(
 						sourceResults, targetResults, sourceStringList,
 						targetStringList, addedMarkerStart, addedMarkerEnd,
 						deletedMarkerStart, deletedMarkerEnd, i, j, false)) {
@@ -298,11 +298,34 @@ public class DiffImpl implements com.liferay.portal.kernel.util.Diff {
 
 		for (; i <= difference.getDeletedEnd() && j <= difference.getAddedEnd();
 				i++, j++) {
+			
+			if (_checkSourceAndTargetLengths(sourceStringList.get(i), targetStringList.get(j))){
 
-			_lineDiff(
-				sourceResults, targetResults, sourceStringList,
-				targetStringList, addedMarkerStart, addedMarkerEnd,
-				deletedMarkerStart, deletedMarkerEnd, i, j, true);
+				_lineDiff(
+					sourceResults, targetResults, sourceStringList,
+					targetStringList, addedMarkerStart, addedMarkerEnd,
+					deletedMarkerStart, deletedMarkerEnd, i, j, true);
+			} else{
+				_highlightLines(
+					sourceStringList, deletedMarkerStart, deletedMarkerEnd, i, i);
+				
+				DiffResult sourceResult = new DiffResult(
+					i, sourceStringList.subList(i, i + 1));
+
+				sourceResults.add(sourceResult);
+
+				targetResults.add(new DiffResult(i, CONTEXT_LINE));
+				
+				_highlightLines(
+					targetStringList, addedMarkerStart, addedMarkerEnd, j, j);
+				
+				DiffResult targetResult = new DiffResult(
+					j, targetStringList.subList(j, j + 1));
+
+				targetResults.add(targetResult);
+
+				sourceResults.add(new DiffResult(j, CONTEXT_LINE));
+			}
 		}
 
 		// After the for loop above, some lines might remained unchecked.
@@ -362,6 +385,18 @@ public class DiffImpl implements com.liferay.portal.kernel.util.Diff {
 		}
 
 		return margin;
+	}
+	
+	private static boolean _checkSourceAndTargetLengths(
+		String source, String target){
+		
+		int maxLength = 5000;
+		
+		if(source.length() > maxLength || target.length() > maxLength) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	private static void _highlightChars(
