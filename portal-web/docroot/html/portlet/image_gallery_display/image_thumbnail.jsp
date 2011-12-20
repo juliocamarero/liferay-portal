@@ -20,7 +20,6 @@
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
 FileEntry fileEntry = null;
-FileVersion fileVersion = null;
 
 Object object = row.getObject();
 
@@ -39,12 +38,12 @@ else if (object instanceof FileEntry) {
 	fileEntry = fileEntry.toEscapedModel();
 }
 
-fileVersion = fileEntry.getFileVersion();
+FileVersion fileVersion = fileEntry.getFileVersion();
 
-String largeURL = _getPreviewURL(fileEntry, fileVersion, themeDisplay, StringPool.BLANK);
-String thumbnailURL = _getPreviewURL(fileEntry, fileVersion, themeDisplay, "&imageThumbnail=1");
-String custom1URL = _getPreviewURL(fileEntry, fileVersion, themeDisplay, "&imageThumbnail=2");
-String custom2URL = _getPreviewURL(fileEntry, fileVersion, themeDisplay, "&imageThumbnail=3");
+String largeURL = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, StringPool.BLANK);
+String thumbnailURL = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&imageThumbnail=1");
+String custom1URL = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&imageThumbnail=2");
+String custom2URL = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&imageThumbnail=3");
 
 int custom1MaxHeight = PrefsPropsUtil.getInteger(PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT);
 int custom1MaxWidth = PrefsPropsUtil.getInteger(PropsKeys.DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_WIDTH);
