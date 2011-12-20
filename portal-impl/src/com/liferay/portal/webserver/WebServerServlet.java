@@ -78,9 +78,10 @@ import com.liferay.portlet.documentlibrary.service.DLFileEntryServiceUtil;
 import com.liferay.portlet.documentlibrary.util.AudioProcessor;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.documentlibrary.util.DocumentConversionUtil;
-import com.liferay.portlet.documentlibrary.util.ImageProcessor;
-import com.liferay.portlet.documentlibrary.util.PDFProcessor;
-import com.liferay.portlet.documentlibrary.util.VideoProcessor;
+import com.liferay.portlet.documentlibrary.util.PDFProcessorImpl;
+import com.liferay.portlet.documentlibrary.util.PDFProcessorUtil;
+import com.liferay.portlet.documentlibrary.util.VideoProcessorImpl;
+import com.liferay.portlet.documentlibrary.util.VideoProcessorUtil;
 
 import java.awt.image.RenderedImage;
 
@@ -423,8 +424,9 @@ public class WebServerServlet extends HttpServlet {
 			InputStream is = null;
 
 			if (smallImage) {
-				is = ImageProcessor.getThumbnailAsStream(
-					fileEntry.getFileVersion());
+				is = com.liferay.portlet.documentlibrary.util
+						.ImageProcessorUtil.getThumbnailAsStream(
+							fileEntry.getFileVersion());
 			}
 			else {
 				is = fileEntry.getContentStream();
@@ -784,35 +786,41 @@ public class WebServerServlet extends HttpServlet {
 				StringPool.PERIOD).concat(fileVersion.getExtension());
 
 			if (imageThumbnail == 1) {
-				inputStream = ImageProcessor.getThumbnailAsStream(fileVersion);
-				contentLength = ImageProcessor.getThumbnailFileSize(
-					fileVersion);
+				inputStream =
+					com.liferay.portlet.documentlibrary.util.ImageProcessorUtil
+						.getThumbnailAsStream(fileVersion);
+				contentLength = com.liferay.portlet.documentlibrary.util
+					.ImageProcessorUtil.getThumbnailFileSize(fileVersion);
 			}
 			else if (imageThumbnail == 2) {
-				inputStream = ImageProcessor.getCustom1AsStream(fileVersion);
-				contentLength = ImageProcessor.getCustom1FileSize(fileVersion);
+				inputStream = com.liferay.portlet.documentlibrary.util
+					.ImageProcessorUtil.getCustom1AsStream(fileVersion);
+				contentLength = com.liferay.portlet.documentlibrary.util
+					.ImageProcessorUtil.getCustom1FileSize(fileVersion);
 			}
 			else if (imageThumbnail == 3) {
-				inputStream = ImageProcessor.getCustom2AsStream(fileVersion);
-				contentLength = ImageProcessor.getCustom2FileSize(fileVersion);
+				inputStream = com.liferay.portlet.documentlibrary.util
+					.ImageProcessorUtil.getCustom2AsStream(fileVersion);
+				contentLength = com.liferay.portlet.documentlibrary.util
+					.ImageProcessorUtil.getCustom2FileSize(fileVersion);
 			}
 
 			converted = true;
 		}
 		else if (documentThumbnail) {
 			fileName = FileUtil.stripExtension(fileName).concat(
-				StringPool.PERIOD).concat(PDFProcessor.THUMBNAIL_TYPE);
-			inputStream = PDFProcessor.getThumbnailAsStream(fileVersion);
-			contentLength = PDFProcessor.getThumbnailFileSize(fileVersion);
+				StringPool.PERIOD).concat(PDFProcessorImpl.THUMBNAIL_TYPE);
+			inputStream = PDFProcessorUtil.getThumbnailAsStream(fileVersion);
+			contentLength = PDFProcessorUtil.getThumbnailFileSize(fileVersion);
 
 			converted = true;
 		}
 		else if (previewFileIndex > 0) {
 			fileName = FileUtil.stripExtension(fileName).concat(
-				StringPool.PERIOD).concat(PDFProcessor.PREVIEW_TYPE);
-			inputStream = PDFProcessor.getPreviewAsStream(
+				StringPool.PERIOD).concat(PDFProcessorImpl.PREVIEW_TYPE);
+			inputStream = PDFProcessorUtil.getPreviewAsStream(
 				fileVersion, previewFileIndex);
-			contentLength = PDFProcessor.getPreviewFileSize(
+			contentLength = PDFProcessorUtil.getPreviewFileSize(
 				fileVersion, previewFileIndex);
 
 			converted = true;
@@ -830,8 +838,9 @@ public class WebServerServlet extends HttpServlet {
 
 			fileName = FileUtil.stripExtension(fileName).concat(
 				StringPool.PERIOD).concat(type);
-			inputStream = VideoProcessor.getPreviewAsStream(fileVersion, type);
-			contentLength = VideoProcessor.getPreviewFileSize(
+			inputStream =
+				VideoProcessorUtil.getPreviewAsStream(fileVersion, type);
+			contentLength = VideoProcessorUtil.getPreviewFileSize(
 				fileVersion, type);
 
 			response.setHeader(
@@ -876,9 +885,10 @@ public class WebServerServlet extends HttpServlet {
 		}
 		else if (videoThumbnail) {
 			fileName = FileUtil.stripExtension(fileName).concat(
-				StringPool.PERIOD).concat(VideoProcessor.THUMBNAIL_TYPE);
-			inputStream = VideoProcessor.getThumbnailAsStream(fileVersion);
-			contentLength = VideoProcessor.getThumbnailFileSize(fileVersion);
+				StringPool.PERIOD).concat(VideoProcessorImpl.THUMBNAIL_TYPE);
+			inputStream = VideoProcessorUtil.getThumbnailAsStream(fileVersion);
+			contentLength =
+				VideoProcessorUtil.getThumbnailFileSize(fileVersion);
 
 			converted = true;
 		}
