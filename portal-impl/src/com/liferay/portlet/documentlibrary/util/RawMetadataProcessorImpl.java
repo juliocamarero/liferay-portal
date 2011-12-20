@@ -56,7 +56,8 @@ import java.util.Map;
  * @author Mika Koivisto
  * @author Miguel Pastor
  */
-public class RawMetadataProcessor implements DLProcessor {
+public class RawMetadataProcessorImpl
+	implements DLProcessor, RawMetadataProcessor {
 
 	public void cleanUp(FileEntry fileEntry) {
 	}
@@ -72,7 +73,7 @@ public class RawMetadataProcessor implements DLProcessor {
 	 * @throws PortalException if an error occurred in the metadata extraction
 	 * @throws SystemException if a system exception occurred
 	 */
-	public static void generateMetadata(FileVersion fileVersion)
+	public void generateMetadata(FileVersion fileVersion)
 		throws PortalException, SystemException {
 
 		long fileEntryMetadataCount =
@@ -106,7 +107,7 @@ public class RawMetadataProcessor implements DLProcessor {
 	 * @throws PortalException if an error occurred in the metadata extraction
 	 * @throws SystemException if a system exception occurred
 	 */
-	public static void saveMetadata(FileVersion fileVersion)
+	public void saveMetadata(FileVersion fileVersion)
 		throws PortalException, SystemException {
 
 		Map<String, Fields> rawMetadataMap = null;
@@ -180,8 +181,10 @@ public class RawMetadataProcessor implements DLProcessor {
 		}
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(RawMetadataProcessor.class);
+	private static Log _log = LogFactoryUtil.getLog(
+		RawMetadataProcessorImpl.class);
 
-	private static RawMetadataProcessor _instance = new RawMetadataProcessor();
+	private static RawMetadataProcessorImpl _instance =
+		new RawMetadataProcessorImpl();
 
 }
