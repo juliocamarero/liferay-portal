@@ -347,6 +347,16 @@ public class EditMessageAction extends PortletAction {
 			boolean preview = ParamUtil.getBoolean(actionRequest, "preview");
 
 			serviceContext.setAttribute("preview", preview);
+			
+			String canonicalLayoutFullURL = PortalUtil.getCanonicalURL(
+				serviceContext.getLayoutFullURL(), themeDisplay);
+			
+			serviceContext.setLayoutFullURL(canonicalLayoutFullURL);
+			
+			String canonicalPortalURL = PortalUtil.getCanonicalURL(
+				serviceContext.getPortalURL(), themeDisplay);
+			
+			serviceContext.setPortalURL(canonicalPortalURL);
 
 			MBMessage message = null;
 
