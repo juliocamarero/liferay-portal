@@ -404,6 +404,10 @@ public class SetupWizardUtil {
 		int birthdayDay = birthdayCal.get(Calendar.DAY_OF_MONTH);
 		int birthdayYear = birthdayCal.get(Calendar.YEAR);
 
+        // User Language
+
+        user.setLanguageId(themeDisplay.getLanguageId());
+
 		user = UserLocalServiceUtil.updateUser(
 			user.getUserId(), StringPool.BLANK, StringPool.BLANK,
 			StringPool.BLANK, false, user.getReminderQueryQuestion(),
