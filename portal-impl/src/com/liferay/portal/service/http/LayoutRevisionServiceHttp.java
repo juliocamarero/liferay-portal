@@ -54,14 +54,14 @@ import com.liferay.portal.service.LayoutRevisionServiceUtil;
 public class LayoutRevisionServiceHttp {
 	public static com.liferay.portal.model.LayoutRevision addLayoutRevision(
 		HttpPrincipal httpPrincipal, long userId, long layoutSetBranchId,
-		long layoutBranchId, long parentLayoutRevisionId, boolean head,
-		long plid, boolean privateLayout, java.lang.String name,
-		java.lang.String title, java.lang.String description,
-		java.lang.String keywords, java.lang.String robots,
-		java.lang.String typeSettings, boolean iconImage, long iconImageId,
-		java.lang.String themeId, java.lang.String colorSchemeId,
-		java.lang.String wapThemeId, java.lang.String wapColorSchemeId,
-		java.lang.String css,
+		long layoutBranchId, long portletPreferencesPlid,
+		long parentLayoutRevisionId, boolean head, long plid,
+		boolean privateLayout, java.lang.String name, java.lang.String title,
+		java.lang.String description, java.lang.String keywords,
+		java.lang.String robots, java.lang.String typeSettings,
+		boolean iconImage, long iconImageId, java.lang.String themeId,
+		java.lang.String colorSchemeId, java.lang.String wapThemeId,
+		java.lang.String wapColorSchemeId, java.lang.String css,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -70,11 +70,11 @@ public class LayoutRevisionServiceHttp {
 					"addLayoutRevision", _addLayoutRevisionParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, userId,
-					layoutSetBranchId, layoutBranchId, parentLayoutRevisionId,
-					head, plid, privateLayout, name, title, description,
-					keywords, robots, typeSettings, iconImage, iconImageId,
-					themeId, colorSchemeId, wapThemeId, wapColorSchemeId, css,
-					serviceContext);
+					layoutSetBranchId, layoutBranchId, portletPreferencesPlid,
+					parentLayoutRevisionId, head, plid, privateLayout, name,
+					title, description, keywords, robots, typeSettings,
+					iconImage, iconImageId, themeId, colorSchemeId, wapThemeId,
+					wapColorSchemeId, css, serviceContext);
 
 			Object returnObj = null;
 
@@ -104,8 +104,8 @@ public class LayoutRevisionServiceHttp {
 
 	private static Log _log = LogFactoryUtil.getLog(LayoutRevisionServiceHttp.class);
 	private static final Class<?>[] _addLayoutRevisionParameterTypes0 = new Class[] {
-			long.class, long.class, long.class, long.class, boolean.class,
-			long.class, boolean.class, java.lang.String.class,
+			long.class, long.class, long.class, long.class, long.class,
+			boolean.class, long.class, boolean.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, boolean.class, long.class,

@@ -84,7 +84,7 @@ public class LayoutBranchLocalServiceImpl
 
 		layoutRevisionService.addLayoutRevision(
 			layoutBranch.getUserId(), layoutRevision.getLayoutSetBranchId(),
-			layoutBranch.getLayoutBranchId(),
+			layoutBranch.getLayoutBranchId(), layoutRevision.getPlid(),
 			LayoutRevisionConstants.DEFAULT_PARENT_LAYOUT_REVISION_ID, false,
 			layoutRevision.getPlid(), layoutRevision.isPrivateLayout(),
 			layoutRevision.getName(), layoutRevision.getTitle(),

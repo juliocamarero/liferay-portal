@@ -45,8 +45,8 @@ public class LayoutRevisionLocalServiceImpl
 
 	public LayoutRevision addLayoutRevision(
 			long userId, long layoutSetBranchId, long layoutBranchId,
-			long parentLayoutRevisionId, boolean head, long plid,
-			boolean privateLayout, String name, String title,
+			long portletPreferencesPlid, long parentLayoutRevisionId, boolean head,
+			long plid, boolean privateLayout, String name, String title,
 			String description, String keywords, String robots,
 			String typeSettings, boolean iconImage, long iconImageId,
 			String themeId, String colorSchemeId, String wapThemeId,
@@ -111,20 +111,12 @@ public class LayoutRevisionLocalServiceImpl
 
 		// Portlet preferences
 
-		if (parentLayoutRevisionId ==
-				LayoutRevisionConstants.DEFAULT_PARENT_LAYOUT_REVISION_ID) {
-
-			parentLayoutRevisionId = layoutRevision.getPlid();
-		}
-
-		long sourceParentLayoutRevisionId = parentLayoutRevisionId;
-
 		if (mergeLayoutRevisionId > 0) {
-			sourceParentLayoutRevisionId = mergeLayoutRevisionId;
+			portletPreferencesPlid = mergeLayoutRevisionId;
 		}
 
 		copyPortletPreferences(
-			layoutRevision, sourceParentLayoutRevisionId, serviceContext);
+			layoutRevision, portletPreferencesPlid, serviceContext);
 
 		// Workflow
 

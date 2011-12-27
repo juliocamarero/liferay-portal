@@ -103,7 +103,8 @@ public class LayoutSetBranchLocalServiceImpl
 						serviceContext);
 
 				layoutRevisionLocalService.addLayoutRevision(
-					userId, layoutSetBranchId, layoutBranch.getLayoutBranchId(),
+					userId, layoutSetBranchId,
+					layoutBranch.getLayoutBranchId(), layout.getPlid(),
 					LayoutRevisionConstants.DEFAULT_PARENT_LAYOUT_REVISION_ID,
 					true, layout.getPlid(), layout.getPrivateLayout(),
 					layout.getName(), layout.getTitle(),
@@ -131,6 +132,7 @@ public class LayoutSetBranchLocalServiceImpl
 				layoutRevisionLocalService.addLayoutRevision(
 					userId, layoutSetBranchId,
 					layoutBranch.getLayoutBranchId(),
+					layoutRevision.getLayoutRevisionId(),
 					LayoutRevisionConstants.DEFAULT_PARENT_LAYOUT_REVISION_ID,
 					true, layoutRevision.getPlid(),
 					layoutRevision.getPrivateLayout(), layoutRevision.getName(),
@@ -285,6 +287,7 @@ public class LayoutSetBranchLocalServiceImpl
 				layoutRevision.getUserId(),
 				layoutSetBranch.getLayoutSetBranchId(),
 				layoutRevision.getLayoutBranchId(),
+				layoutRevision.getLayoutRevisionId(),
 				LayoutRevisionConstants.DEFAULT_PARENT_LAYOUT_REVISION_ID,
 				false, layoutRevision.getPlid(),
 				layoutRevision.isPrivateLayout(), layoutRevision.getName(),
