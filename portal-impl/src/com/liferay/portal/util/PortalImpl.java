@@ -822,10 +822,7 @@ public class PortalImpl implements Portal {
 	}
 
 	public String getAlternateURL(
-		HttpServletRequest request, String canonicalURL, Locale locale) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		String canonicalURL, ThemeDisplay themeDisplay, Locale locale) {
 
 		LayoutSet layoutSet = themeDisplay.getLayoutSet();
 
@@ -1010,7 +1007,14 @@ public class PortalImpl implements Portal {
 		return userId;
 	}
 
-	public String getCanonicalURL(String completeURL, ThemeDisplay themeDisplay)
+	public String getCanonicalURL(String completeURL, ThemeDisplay themeDisplay) 
+		throws PortalException, SystemException{
+		
+		return getCanonicalURL(completeURL, themeDisplay, null);
+	}
+	
+	public String getCanonicalURL(
+			String completeURL, ThemeDisplay themeDisplay, Layout layout)
 		throws PortalException, SystemException {
 
 		completeURL = removeRedirectParameter(completeURL);
@@ -1031,8 +1035,10 @@ public class PortalImpl implements Portal {
 			parametersURL = completeURL.substring(pos);
 		}
 
-		Layout layout = themeDisplay.getLayout();
-
+		if (layout==null) {
+			layout = themeDisplay.getLayout();
+		}
+		
 		String layoutFriendlyURL = StringPool.BLANK;
 
 		if ((groupFriendlyURL.contains(layout.getFriendlyURL()) ||
