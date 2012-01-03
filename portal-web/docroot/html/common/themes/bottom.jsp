@@ -111,36 +111,6 @@ StringBundler pageBottomSB = (StringBundler)request.getAttribute(WebKeys.PAGE_BO
 		// ]]>
 	</script>
 
-	<%-- Google Analytics --%>
-
-	<%
-	UnicodeProperties groupTypeSettings = group.getTypeSettingsProperties();
-
-	String googleAnalyticsId = groupTypeSettings.getProperty("googleAnalyticsId");
-
-	if (Validator.isNotNull(googleAnalyticsId)) {
-	%>
-
-		<script type="text/javascript">
-			var _gaq = _gaq || [];
-
-			_gaq.push(['_setAccount', '<%= googleAnalyticsId %>']);
-			_gaq.push(['_trackPageview']);
-
-			(function() {
-				var ga = document.createElement('script');
-
-				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-				ga.setAttribute('async', 'true');
-
-				document.documentElement.firstChild.appendChild(ga);
-			})();
-		</script>
-
-	<%
-	}
-	%>
-
 </c:if>
 
 <c:if test="<%= PropsValues.MONITORING_PORTAL_REQUEST %>">
