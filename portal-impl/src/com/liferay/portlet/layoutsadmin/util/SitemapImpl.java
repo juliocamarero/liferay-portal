@@ -116,14 +116,16 @@ public class SitemapImpl implements Sitemap {
 
 			generateSitemapTag(element, articleURL, null);
 			
-			Locale defaultLocale = LocaleUtil.getDefault();
-			Locale[] availableLocales = LanguageUtil.getAvailableLocales();
+			String defaultLocale = journalArticle.getDefaultLocale();
+			String[] availableLocales = journalArticle.getAvailableLocales();
 
 			if (availableLocales.length > 1) {
-				for (Locale curLocale : availableLocales) {
+				for (String curLocale : availableLocales) {
 					if (!curLocale.equals(defaultLocale)) {
 						String alternateURL = PortalUtil.getAlternateURL(
-							articleURL, themeDisplay, curLocale);
+							articleURL, 
+							themeDisplay, 
+							LocaleUtil.fromLanguageId(curLocale));
 						
 						generateSitemapTag(element, alternateURL, null);
 					}
