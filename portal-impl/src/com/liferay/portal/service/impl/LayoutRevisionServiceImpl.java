@@ -31,9 +31,9 @@ public class LayoutRevisionServiceImpl extends LayoutRevisionServiceBaseImpl {
 
 	public LayoutRevision addLayoutRevision(
 			long userId, long layoutSetBranchId, long layoutBranchId,
-			long parentLayoutRevisionId, boolean head, long plid,
-			boolean privateLayout, String name, String title,
-			String description, String keywords, String robots,
+			long portletPreferencesPlid, long parentLayoutRevisionId,
+			boolean head, long plid, boolean privateLayout, String name,
+			String title, String description, String keywords, String robots,
 			String typeSettings, boolean iconImage, long iconImageId,
 			String themeId, String colorSchemeId, String wapThemeId,
 			String wapColorSchemeId, String css, ServiceContext serviceContext)
@@ -48,10 +48,10 @@ public class LayoutRevisionServiceImpl extends LayoutRevisionServiceBaseImpl {
 
 		return layoutRevisionLocalService.addLayoutRevision(
 			userId, layoutSetBranchId, layoutBranchId,
-			parentLayoutRevisionId, head, plid, privateLayout, name, title,
-			description, keywords, robots, typeSettings, iconImage, iconImageId,
-			themeId, colorSchemeId, wapThemeId, wapColorSchemeId, css,
-			serviceContext);
+			portletPreferencesPlid, parentLayoutRevisionId, head, plid,
+			privateLayout, name, title, description, keywords, robots,
+			typeSettings, iconImage, iconImageId, themeId, colorSchemeId,
+			wapThemeId, wapColorSchemeId, css, serviceContext);
 	}
 
 }

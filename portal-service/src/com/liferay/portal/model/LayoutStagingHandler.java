@@ -38,7 +38,6 @@ import com.liferay.portal.util.LayoutTypePortletFactoryUtil;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -242,7 +241,7 @@ public class LayoutStagingHandler implements InvocationHandler {
 
 		layoutRevision = LayoutRevisionLocalServiceUtil.addLayoutRevision(
 			serviceContext.getUserId(), layoutSetBranchId,
-			layoutBranch.getLayoutBranchId(),
+			layoutBranch.getLayoutBranchId(), layout.getPlid(),
 			LayoutRevisionConstants.DEFAULT_PARENT_LAYOUT_REVISION_ID, false,
 			layout.getPlid(), layout.isPrivateLayout(), layout.getName(),
 			layout.getTitle(), layout.getDescription(), layout.getKeywords(),
