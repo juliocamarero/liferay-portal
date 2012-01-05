@@ -72,6 +72,15 @@ public class LayoutLocalServiceStagingAdvice
 		if (layoutSetBranchId > 0) {
 			layoutRevisionLocalService.deleteLayoutRevisions(
 				layoutSetBranchId, layout.getPlid());
+
+			if (layoutRevisionPersistence.findByPlid_NotS(
+					layout.getPlid(),
+					WorkflowConstants.STATUS_INCOMPLETE).isEmpty()) {
+				layoutRevisionLocalService
+					.deleteLayoutLayoutRevisions(layout.getPlid());
+
+				super.deleteLayout(layout, updateLayoutSet, serviceContext);
+			}
 		}
 		else {
 			super.deleteLayout(layout, updateLayoutSet, serviceContext);

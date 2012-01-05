@@ -380,6 +380,7 @@ create index IX_B7B914E5 on LayoutRevision (layoutSetBranchId, plid);
 create index IX_70DA9ECB on LayoutRevision (layoutSetBranchId, plid, status);
 create index IX_7FFAE700 on LayoutRevision (layoutSetBranchId, status);
 create index IX_9329C9D6 on LayoutRevision (plid);
+create index IX_8EC3D2BC on LayoutRevision (plid, status);
 
 create index IX_A40B8BEC on LayoutSet (groupId);
 create unique index IX_48550691 on LayoutSet (groupId, privateLayout);
