@@ -66,7 +66,7 @@ public class VideoProcessorImpl
 
 	public void generateVideo(FileVersion fileVersion)
 		throws Exception {
-
+		System.out.println("Hola mundo y Julio!");
 		_instance._generateVideo(fileVersion);
 	}
 
