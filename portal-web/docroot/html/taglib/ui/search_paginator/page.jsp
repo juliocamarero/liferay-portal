@@ -30,6 +30,8 @@ if (iteratorURL != null) {
 
 	url = HttpUtil.removeParameter(iteratorURL.toString(), namespace + searchContainer.getCurParam());
 }
+	
+url = HttpUtil.addParameter(url, "groupId", ParamUtil.getInteger(request, "groupId", 0));
 %>
 
 <liferay-ui:page-iterator
