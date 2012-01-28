@@ -391,6 +391,10 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 						<%@ include file="/html/portlet/layouts_admin/publish_layouts_portlets.jspf" %>
 					</liferay-ui:panel>
 
+					<liferay-ui:panel collapsible="<%= true %>" defaultState="closed" extended="<%= true %>" id="layoutsAdminExportPagesAssetsPanel" persistState="<%= true %>" title="asset-types">
+						<%@ include file="/html/portlet/layouts_admin/publish_layouts_assets.jspf" %>
+					</liferay-ui:panel>
+
 					<liferay-ui:panel collapsible="<%= true %>" defaultState="closed" extended="<%= true %>" id="layoutsAdminExportPagesOptionsPanel" persistState="<%= true %>" title="other">
 						<%@ include file="/html/portlet/layouts_admin/publish_layouts_other.jspf" %>
 					</liferay-ui:panel>
