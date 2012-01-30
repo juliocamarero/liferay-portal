@@ -32,10 +32,10 @@ public class UpgradeBlogs extends UpgradeProcess {
 			runSQL("alter_column_type BlogsEntry smallImageURL STRING null");
 		}
 		catch (SQLException sqle) {
-			UpgradeTable upgradeTable = UpgradeTableFactoryUtil.getUpgradeTable(
-				BlogsEntryTable.TABLE_NAME, BlogsEntryTable.TABLE_COLUMNS);
-
-			upgradeTable.updateTable();
+			upgradeTable(
+				BlogsEntryTable.TABLE_NAME, BlogsEntryTable.TABLE_COLUMNS,
+				BlogsEntryTable.TABLE_SQL_CREATE,
+				BlogsEntryTable.TABLE_SQL_ADD_INDEXES);
 		}
 	}
 

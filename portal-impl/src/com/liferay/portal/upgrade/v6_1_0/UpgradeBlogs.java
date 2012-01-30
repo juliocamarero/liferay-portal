@@ -41,7 +41,9 @@ public class UpgradeBlogs extends UpgradeProcess {
 		}
 		catch (SQLException sqle) {
 			upgradeTable(
-				BlogsEntryTable.TABLE_NAME, BlogsEntryTable.TABLE_COLUMNS);
+				BlogsEntryTable.TABLE_NAME, BlogsEntryTable.TABLE_COLUMNS,
+				BlogsEntryTable.TABLE_SQL_CREATE,
+				BlogsEntryTable.TABLE_SQL_ADD_INDEXES);
 		}
 	}
 
