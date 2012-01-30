@@ -289,9 +289,20 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		}
 
 		if (isSupportsAlterColumnType()) {
-			runSQL("alter_column_type DLFileVersion extraSettings TEXT null");
-			runSQL("alter_column_type DLFileVersion title VARCHAR(255) null");
-			runSQL("alter table DLFileVersion drop column name");
+			try {
+				runSQL(
+					"alter_column_type DLFileVersion extraSettings TEXT null");
+				runSQL(
+					"alter_column_type DLFileVersion title VARCHAR(255) null");
+				runSQL("alter table DLFileVersion drop column name");
+			}
+			catch (Exception e) {
+				upgradeTable(
+					DLFileVersionTable.TABLE_NAME,
+					DLFileVersionTable.TABLE_COLUMNS,
+					DLFileVersionTable.TABLE_SQL_CREATE,
+					DLFileVersionTable.TABLE_SQL_ADD_INDEXES);
+			}
 		}
 		else {
 			upgradeTable(
