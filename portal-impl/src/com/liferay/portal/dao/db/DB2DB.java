@@ -163,9 +163,6 @@ public class DB2DB extends BaseDB {
 					"alter table @table@ drop column @old-column@",
 					REWORD_TEMPLATE, template);
 			}
-			else if (line.startsWith(ALTER_COLUMN_TYPE)) {
-				line = "-- " + line;
-			}
 			else if (line.indexOf(DROP_INDEX) != -1) {
 				String[] tokens = StringUtil.split(line, ' ');
 
