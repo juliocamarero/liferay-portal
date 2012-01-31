@@ -50,14 +50,14 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_foldersAndEntries
+			_foldersAndEntries, _bookmarkAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_foldersAndEntries
+			_foldersAndEntries, _bookmarkAsset
 		};
 	}
 
@@ -427,10 +427,13 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	private static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
 
+	private static PortletDataHandlerAsset _bookmarkAsset;
+
 	private static PortletDataHandlerBoolean _categories =
 		new PortletDataHandlerBoolean(_NAMESPACE, "categories");
 
-	private static PortletDataHandlerBoolean _foldersAndEntries;
+	private static PortletDataHandlerBoolean _foldersAndEntries =
+		new PortletDataHandlerBoolean(_NAMESPACE, "folders-and-entries");
 
 	private static PortletDataHandlerBoolean _ratings =
 		new PortletDataHandlerBoolean(_NAMESPACE, "ratings");
@@ -439,9 +442,8 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
 
 	static {
-		_foldersAndEntries = new PortletDataHandlerAsset(
-			_NAMESPACE, "folders-and-entries", true, true,
-			new PortletDataHandlerControl[] {
+		_bookmarkAsset = new PortletDataHandlerAsset(
+			_NAMESPACE, "bookmarks", new PortletDataHandlerControl[] {
 				 _categories, _ratings, _tags
 			});
 	}

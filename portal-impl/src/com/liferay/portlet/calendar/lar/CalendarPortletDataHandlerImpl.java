@@ -47,14 +47,14 @@ public class CalendarPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_events
+			_events, _eventAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_events
+			_events, _eventAsset
 		};
 	}
 
@@ -288,7 +288,10 @@ public class CalendarPortletDataHandlerImpl extends BasePortletDataHandler {
 	private static PortletDataHandlerBoolean _comments =
 		new PortletDataHandlerBoolean(_NAMESPACE, "comments");
 
-	private static PortletDataHandlerBoolean _events;
+	private static PortletDataHandlerAsset _eventAsset;
+
+	private static PortletDataHandlerBoolean _events =
+		new PortletDataHandlerBoolean(_NAMESPACE, "events", true, true);
 
 	private static PortletDataHandlerBoolean _ratings =
 		new PortletDataHandlerBoolean(_NAMESPACE, "ratings");
@@ -297,9 +300,8 @@ public class CalendarPortletDataHandlerImpl extends BasePortletDataHandler {
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
 
 	static {
-		_events = new PortletDataHandlerAsset(
-			_NAMESPACE, "events", true, true,
-			new PortletDataHandlerControl[] {
+		_eventAsset = new PortletDataHandlerAsset(
+			_NAMESPACE, "events", new PortletDataHandlerControl[] {
 				 _categories, _comments, _ratings, _tags
 			});
 	}

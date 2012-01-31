@@ -313,6 +313,10 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 		return sb.toString();
 	}
 
+	public static PortletDataHandlerAsset getWebContentAsset() {
+		return _webContentAsset;
+	}
+
 	public static void importArticle(
 			PortletDataContext portletDataContext, Element articleElement)
 		throws Exception {
@@ -1296,14 +1300,15 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_articles, _structuresTemplatesAndFeeds, _embeddedAssets
+			_webContents, _structuresTemplatesAndFeeds, _embeddedAssets,
+			_webContentAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_articles, _structuresTemplatesAndFeeds
+			_webContents, _structuresTemplatesAndFeeds, _webContentAsset
 		};
 	}
 
@@ -2245,8 +2250,6 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 	private static Log _log = LogFactoryUtil.getLog(
 		JournalPortletDataHandlerImpl.class);
 
-	private static PortletDataHandlerBoolean _articles;
-
 	private static PortletDataHandlerBoolean _categories =
 		new PortletDataHandlerBoolean(_NAMESPACE, "categories");
 
@@ -2276,10 +2279,14 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 	private static PortletDataHandlerBoolean _tags =
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
 
+	private static PortletDataHandlerAsset _webContentAsset;
+
+	private static PortletDataHandlerBoolean _webContents =
+		new PortletDataHandlerBoolean(_NAMESPACE, "web-contents", true, false);
+
 	static {
-		_articles = new PortletDataHandlerAsset(
-			_NAMESPACE, "articles", true, false,
-			new PortletDataHandlerControl[] {
+		_webContentAsset = new PortletDataHandlerAsset(
+			_NAMESPACE, "web-contents", new PortletDataHandlerControl[] {
 				_images, _categories, _comments, _ratings, _tags
 			});
 	}

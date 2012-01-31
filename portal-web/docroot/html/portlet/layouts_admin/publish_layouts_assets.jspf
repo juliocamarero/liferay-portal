@@ -26,6 +26,7 @@ List portletsList = (List)request.getAttribute("publish_layouts.jsp-portletsList
 			<ul id="<portlet:namespace />portletDataList">
 
 			<%
+			Set<String> displayedControls = new HashSet<String>();
 			Set<String> portletDataHandlerClasses = new HashSet<String>();
 
 			Iterator itr1 = portletsList.iterator();
@@ -51,9 +52,11 @@ List portletsList = (List)request.getAttribute("publish_layouts.jsp-portletsList
 						String rootPortletId = curPortlet.getRootPortletId();
 
 						for (int i = 0; i < controls.length; i++) {
-							if (controls[i] instanceof PortletDataHandlerAsset) {
-								PortletDataHandlerBoolean control = (PortletDataHandlerBoolean)controls[i];
+							if ((controls[i] instanceof PortletDataHandlerAsset) && !displayedControls.contains(controls[i].getNamespacedControlName())) {
+								PortletDataHandlerAsset control = (PortletDataHandlerAsset)controls[i];
 								PortletDataHandlerControl[] children = control.getChildren();
+
+								displayedControls.add(controls[i].getNamespacedControlName());
 
 								if ((children != null) && (children.length > 0)) {
 

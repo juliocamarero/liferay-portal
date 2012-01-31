@@ -17,37 +17,21 @@ package com.liferay.portal.kernel.lar;
 /**
  * @author Raymond Augé
  */
-public class PortletDataHandlerAsset extends PortletDataHandlerBoolean {
-
-	public PortletDataHandlerAsset(String namespace, String controlName) {
-		super(namespace, controlName);
-	}
+public class PortletDataHandlerAsset extends PortletDataHandlerControl {
 
 	public PortletDataHandlerAsset(
-		String namespace, String controlName, boolean defaultState) {
-
-		super(namespace, controlName, defaultState);
-	}
-
-	public PortletDataHandlerAsset(
-		String namespace, String controlName, boolean defaultState,
-		boolean disabled) {
-
-		super(namespace, controlName, defaultState, disabled);
-	}
-
-	public PortletDataHandlerAsset(
-		String namespace, String controlName, boolean defaultState,
+		String namespace, String controlName,
 		PortletDataHandlerControl[] children) {
 
-		super(namespace, controlName, defaultState, children);
+		super(namespace, controlName);
+
+		_children = children;
 	}
 
-	public PortletDataHandlerAsset(
-		String namespace, String controlName, boolean defaultState,
-		boolean disabled, PortletDataHandlerControl[] children) {
-
-		super(namespace, controlName, defaultState, disabled, children);
+	public PortletDataHandlerControl[] getChildren() {
+		return _children;
 	}
+
+	private PortletDataHandlerControl[] _children;
 
 }
