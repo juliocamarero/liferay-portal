@@ -176,6 +176,10 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 			fileEntryElement, path, fileEntry, _NAMESPACE);
 	}
 
+	public static PortletDataHandlerAsset getDocumentAssetHandler() {
+		return _documentAsset;
+	}
+
 	public static String getFileEntryPath(
 		PortletDataContext portletDataContext, FileEntry fileEntry) {
 
@@ -1636,7 +1640,11 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 	private static PortletDataHandlerBoolean _comments =
 		new PortletDataHandlerBoolean(_NAMESPACE, "comments");
 
-	private static PortletDataHandlerBoolean _foldersAndDocuments;
+	private static PortletDataHandlerAsset _documentAsset;
+
+	private static PortletDataHandlerBoolean _foldersAndDocuments =
+		new PortletDataHandlerBoolean(
+			_NAMESPACE, "folders-and-documents", true, true);
 
 	private static PortletDataHandlerBoolean _ranks =
 		new PortletDataHandlerBoolean(_NAMESPACE, "ranks");
@@ -1654,9 +1662,9 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
 
 	static {
-		 _foldersAndDocuments =
+		 _documentAsset =
 			new PortletDataHandlerAsset(
-				_NAMESPACE, "folders-and-documents", true, true,
+				_NAMESPACE, "folders-and-documents",
 				new PortletDataHandlerControl[] {
 					_categories, _comments, _ratings, _tags
 				});

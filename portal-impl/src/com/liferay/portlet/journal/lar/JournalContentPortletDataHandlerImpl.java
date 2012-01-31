@@ -16,6 +16,7 @@ package com.liferay.portlet.journal.lar;
 
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerAsset;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
@@ -30,6 +31,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandlerImpl;
 import com.liferay.portlet.journal.NoSuchArticleException;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalTemplate;
@@ -72,14 +74,14 @@ public class JournalContentPortletDataHandlerImpl
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_selectedArticles, _embeddedAssets
+			_selectedArticles, _embeddedAssets, _webContentAsset, _documentAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_selectedArticles
+			_selectedArticles, _webContentAsset, _documentAsset
 		};
 	}
 
@@ -318,11 +320,20 @@ public class JournalContentPortletDataHandlerImpl
 	private static Log _log = LogFactoryUtil.getLog(
 		JournalContentPortletDataHandlerImpl.class);
 
+	private static PortletDataHandlerAsset _documentAsset;
+
 	private static PortletDataHandlerBoolean _embeddedAssets =
 		new PortletDataHandlerBoolean(_NAMESPACE, "embedded-assets");
 
 	private static PortletDataHandlerBoolean _selectedArticles =
 		new PortletDataHandlerBoolean(
 			_NAMESPACE, "selected-web-content", true, true);
+
+	private static PortletDataHandlerAsset _webContentAsset;
+
+	static {
+		_documentAsset = DLPortletDataHandlerImpl.getDocumentAssetHandler();
+		_webContentAsset = JournalPortletDataHandlerImpl.getWebContentAsset();
+	}
 
 }
