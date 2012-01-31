@@ -225,15 +225,11 @@ public class SeleneseToJavaBuilder {
 
 				@Override
 				public int compare(String s1, String s2) {
-					if (s1.endsWith("Test.html") &&
-						s2.contains("Tests.html")) {
-
+					if (s1.endsWith("Test.html") && s2.contains("Tests.html")) {
 						return -1;
 					}
 
-					if (s1.endsWith("Tests.html") &&
-						s2.contains("Test.html")) {
-
+					if (s1.endsWith("Tests.html") && s2.contains("Test.html")) {
 						return 1;
 					}
 

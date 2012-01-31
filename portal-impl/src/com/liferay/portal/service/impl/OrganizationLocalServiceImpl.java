@@ -504,15 +504,9 @@ public class OrganizationLocalServiceImpl
 			long companyId, long parentOrganizationId)
 		throws SystemException {
 
-		if (parentOrganizationId ==
-				OrganizationConstants.ANY_PARENT_ORGANIZATION_ID) {
-
-			return organizationPersistence.findByCompanyId(companyId);
-		}
-		else {
-			return organizationPersistence.findByC_P(
-				companyId, parentOrganizationId);
-		}
+		return getOrganizations(
+			companyId, parentOrganizationId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 	}
 
 	/**
@@ -544,8 +538,16 @@ public class OrganizationLocalServiceImpl
 			long companyId, long parentOrganizationId, int start, int end)
 		throws SystemException {
 
-		return organizationPersistence.findByC_P(
-			companyId, parentOrganizationId, start, end);
+		if (parentOrganizationId ==
+				OrganizationConstants.ANY_PARENT_ORGANIZATION_ID) {
+
+			return organizationPersistence.findByCompanyId(
+				companyId, start, end);
+		}
+		else {
+			return organizationPersistence.findByC_P(
+				companyId, parentOrganizationId, start, end);
+		}
 	}
 
 	/**
