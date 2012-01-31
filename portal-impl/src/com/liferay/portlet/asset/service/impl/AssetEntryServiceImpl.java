@@ -253,9 +253,6 @@ public class AssetEntryServiceImpl extends AssetEntryServiceBaseImpl {
 				catch (Exception e) {
 				}
 
-				if (filteredEntries.size() > end) {
-					break;
-				}
 			}
 
 			filteredEntriesCount = filteredEntries.size();
