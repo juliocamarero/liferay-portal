@@ -74,7 +74,7 @@ public class JournalContentPortletDataHandlerImpl
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_selectedArticles, _embeddedAssets, _webContentAsset, _documentAsset
+			_selectedArticles, _webContentAsset, _documentAsset
 		};
 	}
 
@@ -321,9 +321,6 @@ public class JournalContentPortletDataHandlerImpl
 		JournalContentPortletDataHandlerImpl.class);
 
 	private static PortletDataHandlerAsset _documentAsset;
-
-	private static PortletDataHandlerBoolean _embeddedAssets =
-		new PortletDataHandlerBoolean(_NAMESPACE, "embedded-assets");
 
 	private static PortletDataHandlerBoolean _selectedArticles =
 		new PortletDataHandlerBoolean(

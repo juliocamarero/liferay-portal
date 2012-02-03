@@ -16,6 +16,7 @@ package com.liferay.portlet.messageboards.lar;
 
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerAsset;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
@@ -74,16 +75,14 @@ public class MBPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_categoriesAndMessages, _attachments, _threadFlags, _userBans,
-			_ratings, _tags
+			_categoriesAndMessages, _threadFlags, _userBans, _messageAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_categoriesAndMessages, _attachments, _threadFlags, _userBans,
-			_ratings, _tags
+			_categoriesAndMessages, _threadFlags, _userBans, _messageAsset
 		};
 	}
 
@@ -855,6 +854,8 @@ public class MBPortletDataHandlerImpl extends BasePortletDataHandler {
 		new PortletDataHandlerBoolean(
 			_NAMESPACE, "categories-and-messages", true, true);
 
+	private static PortletDataHandlerAsset _messageAsset;
+
 	private static PortletDataHandlerBoolean _ratings =
 		new PortletDataHandlerBoolean(_NAMESPACE, "ratings");
 
@@ -866,5 +867,13 @@ public class MBPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	private static PortletDataHandlerBoolean _userBans =
 		new PortletDataHandlerBoolean(_NAMESPACE, "user-bans");
+
+	static {
+		_messageAsset = new PortletDataHandlerAsset(
+			_NAMESPACE, "message-board-messages",
+			new PortletDataHandlerControl[] {
+				_attachments, _ratings, _tags
+			});
+	}
 
 }

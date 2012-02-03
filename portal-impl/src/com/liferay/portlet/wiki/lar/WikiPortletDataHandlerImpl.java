@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
+import com.liferay.portal.kernel.lar.PortletDataHandlerAsset;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -95,6 +96,10 @@ public class WikiPortletDataHandlerImpl extends BasePortletDataHandler {
 				dlFileEntryTypesElement, dlFoldersElement, dlFileEntriesElement,
 				dlFileRanksElement, page, true);
 		}
+	}
+
+	public static PortletDataHandlerAsset getWikiPageAsset() {
+		return _wikiPageAsset;
 	}
 
 	public static void importNode(
@@ -254,16 +259,14 @@ public class WikiPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_nodesAndPages, _attachments, _categories, _comments, _ratings,
-			_tags
+			_nodesAndPages, _wikiPageAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_nodesAndPages, _attachments, _categories, _comments, _ratings,
-			_tags
+			_nodesAndPages, _wikiPageAsset
 		};
 	}
 
@@ -584,5 +587,14 @@ public class WikiPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	private static PortletDataHandlerBoolean _tags =
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
+
+	private static PortletDataHandlerAsset _wikiPageAsset;
+
+	static {
+		_wikiPageAsset = new PortletDataHandlerAsset(
+			_NAMESPACE, "web-content", new PortletDataHandlerControl[] {
+				_attachments, _categories, _comments, _ratings, _tags
+			});
+	}
 
 }

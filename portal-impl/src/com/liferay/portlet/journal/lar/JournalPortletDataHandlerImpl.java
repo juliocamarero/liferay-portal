@@ -2279,10 +2279,10 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 	private static PortletDataHandlerBoolean _tags =
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
 
-	private static PortletDataHandlerAsset _webContentAsset;
-
 	private static PortletDataHandlerBoolean _webContent =
 		new PortletDataHandlerBoolean(_NAMESPACE, "web-contents", true, false);
+
+	private static PortletDataHandlerAsset _webContentAsset;
 
 	static {
 		_webContentAsset = new PortletDataHandlerAsset(
