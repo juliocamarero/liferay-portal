@@ -93,7 +93,7 @@
 							%>
 
 									<li class="tree-item">
-										<aui:fieldset cssClass="portlet-data-section" label="<%= controls[i].getControlName() %>">
+										<aui:fieldset cssClass="portlet-data-section" label="content-related-information">
 
 											<ul id="<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA %>_<%= selPortlet.getRootPortletId() %>Controls">
 												<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />

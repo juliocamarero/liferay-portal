@@ -416,10 +416,8 @@
 			font-size: 110%;
 		}
 
-		.portlet-data-sub-section {
-			.aui-legend {
-				border-width: 0;
-			}
+		.portlet-data-sub-section .aui-legend {
+			border-width: 0;
 		}
 	}
 
