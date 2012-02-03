@@ -502,15 +502,15 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
 			_repositories, _foldersAndDocuments, _shortcuts,
-			_previewsAndThumbnails, _ranks
+			_previewsAndThumbnails, _ranks, _documentAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_repositories, _foldersAndDocuments, _shortcuts, 
-			_previewsAndThumbnails, _ranks
+			_repositories, _foldersAndDocuments, _shortcuts,
+			_previewsAndThumbnails, _ranks, _documentAsset
 		};
 	}
 
