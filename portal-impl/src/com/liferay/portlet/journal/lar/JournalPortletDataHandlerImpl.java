@@ -1300,7 +1300,7 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_webContents, _structuresTemplatesAndFeeds, _embeddedAssets,
+			_webContent, _structuresTemplatesAndFeeds, _embeddedAssets,
 			_webContentAsset
 		};
 	}
@@ -1308,7 +1308,7 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_webContents, _structuresTemplatesAndFeeds, _webContentAsset
+			_webContent, _structuresTemplatesAndFeeds, _webContentAsset
 		};
 	}
 
@@ -2281,12 +2281,12 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	private static PortletDataHandlerAsset _webContentAsset;
 
-	private static PortletDataHandlerBoolean _webContents =
+	private static PortletDataHandlerBoolean _webContent =
 		new PortletDataHandlerBoolean(_NAMESPACE, "web-contents", true, false);
 
 	static {
 		_webContentAsset = new PortletDataHandlerAsset(
-			_NAMESPACE, "web-contents", new PortletDataHandlerControl[] {
+			_NAMESPACE, "web-content", new PortletDataHandlerControl[] {
 				_images, _categories, _comments, _ratings, _tags
 			});
 	}
