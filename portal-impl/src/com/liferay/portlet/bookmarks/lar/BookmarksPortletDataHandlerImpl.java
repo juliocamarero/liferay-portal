@@ -16,6 +16,7 @@ package com.liferay.portlet.bookmarks.lar;
 
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerAsset;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -49,14 +50,14 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_foldersAndEntries, _categories, _ratings, _tags
+			_foldersAndEntries, _bookmarkAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_foldersAndEntries, _categories, _ratings, _tags
+			_foldersAndEntries, _bookmarkAsset
 		};
 	}
 
@@ -426,17 +427,25 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	private static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
 
+	private static PortletDataHandlerAsset _bookmarkAsset;
+
 	private static PortletDataHandlerBoolean _categories =
 		new PortletDataHandlerBoolean(_NAMESPACE, "categories");
 
 	private static PortletDataHandlerBoolean _foldersAndEntries =
-		new PortletDataHandlerBoolean(
-			_NAMESPACE, "folders-and-entries", true, true);
+		new PortletDataHandlerBoolean(_NAMESPACE, "folders-and-entries");
 
 	private static PortletDataHandlerBoolean _ratings =
 		new PortletDataHandlerBoolean(_NAMESPACE, "ratings");
 
 	private static PortletDataHandlerBoolean _tags =
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
+
+	static {
+		_bookmarkAsset = new PortletDataHandlerAsset(
+			_NAMESPACE, "bookmarks", new PortletDataHandlerControl[] {
+				 _categories, _ratings, _tags
+			});
+	}
 
 }

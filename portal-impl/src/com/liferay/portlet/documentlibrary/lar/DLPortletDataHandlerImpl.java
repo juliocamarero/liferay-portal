@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerAsset;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
@@ -184,6 +185,10 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 
 		portletDataContext.addClassedModel(
 			fileEntryElement, path, fileEntry, _NAMESPACE);
+	}
+
+	public static PortletDataHandlerAsset getDocumentAssetHandler() {
+		return _documentAsset;
 	}
 
 	public static String getFileEntryPath(
@@ -497,8 +502,7 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
 			_repositories, _foldersAndDocuments, _shortcuts,
-			_previewsAndThumbnails, _ranks, _categories, _comments, _ratings,
-			_tags
+			_previewsAndThumbnails, _ranks, _documentAsset
 		};
 	}
 
@@ -506,8 +510,7 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
 			_repositories, _foldersAndDocuments, _shortcuts,
-			_previewsAndThumbnails, _ranks, _categories, _comments, _ratings,
-			_tags
+			_previewsAndThumbnails, _ranks, _documentAsset
 		};
 	}
 
@@ -1694,6 +1697,8 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 	private static PortletDataHandlerBoolean _comments =
 		new PortletDataHandlerBoolean(_NAMESPACE, "comments");
 
+	private static PortletDataHandlerAsset _documentAsset;
+
 	private static PortletDataHandlerBoolean _foldersAndDocuments =
 		new PortletDataHandlerBoolean(
 			_NAMESPACE, "folders-and-documents", true, true);
@@ -1715,5 +1720,14 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	private static PortletDataHandlerBoolean _tags =
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
+
+	static {
+		 _documentAsset =
+			new PortletDataHandlerAsset(
+				_NAMESPACE, "folders-and-documents",
+				new PortletDataHandlerControl[] {
+					_categories, _comments, _ratings, _tags
+				});
+	}
 
 }

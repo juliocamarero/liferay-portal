@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerAsset;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
@@ -310,6 +311,10 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 		sb.append("article.xml");
 
 		return sb.toString();
+	}
+
+	public static PortletDataHandlerAsset getWebContentAsset() {
+		return _webContentAsset;
 	}
 
 	public static void importArticle(
@@ -1295,16 +1300,15 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
 		return new PortletDataHandlerControl[] {
-			_articles, _structuresTemplatesAndFeeds, _embeddedAssets, _images,
-			_categories, _comments, _ratings, _tags
+			_webContent, _structuresTemplatesAndFeeds, _embeddedAssets,
+			_webContentAsset
 		};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
 		return new PortletDataHandlerControl[] {
-			_articles, _structuresTemplatesAndFeeds, _images, _categories,
-			_comments, _ratings, _tags
+			_webContent, _structuresTemplatesAndFeeds, _webContentAsset
 		};
 	}
 
@@ -2246,15 +2250,6 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 	private static Log _log = LogFactoryUtil.getLog(
 		JournalPortletDataHandlerImpl.class);
 
-	private static PortletDataHandlerBoolean _articles =
-		new PortletDataHandlerBoolean(_NAMESPACE, "articles", true, false,
-		new PortletDataHandlerControl[] {
-			JournalPortletDataHandlerImpl._images,
-			JournalPortletDataHandlerImpl._comments,
-			JournalPortletDataHandlerImpl._ratings,
-			JournalPortletDataHandlerImpl._tags
-		});
-
 	private static PortletDataHandlerBoolean _categories =
 		new PortletDataHandlerBoolean(_NAMESPACE, "categories");
 
@@ -2283,5 +2278,17 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	private static PortletDataHandlerBoolean _tags =
 		new PortletDataHandlerBoolean(_NAMESPACE, "tags");
+
+	private static PortletDataHandlerBoolean _webContent =
+		new PortletDataHandlerBoolean(_NAMESPACE, "web-contents", true, false);
+
+	private static PortletDataHandlerAsset _webContentAsset;
+
+	static {
+		_webContentAsset = new PortletDataHandlerAsset(
+			_NAMESPACE, "web-content", new PortletDataHandlerControl[] {
+				_images, _categories, _comments, _ratings, _tags
+			});
+	}
 
 }
