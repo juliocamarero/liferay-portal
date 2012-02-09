@@ -46,10 +46,13 @@ public class LanguageResources {
 			value = value.substring(
 				0, value.length() - LangBuilder.AUTOMATIC_COPY.length());
 		}
-
-		if (value.endsWith(LangBuilder.AUTOMATIC_TRANSLATION)) {
+		else if (value.endsWith(LangBuilder.AUTOMATIC_TRANSLATION)) {
 			value = value.substring(
 				0, value.length() - LangBuilder.AUTOMATIC_TRANSLATION.length());
+		}
+		else if (value.contains(LangBuilder.QUESTIONABLE_TRANSLATION)) {
+			value = value.substring(
+				0, value.indexOf(LangBuilder.QUESTIONABLE_TRANSLATION));
 		}
 
 		return value;

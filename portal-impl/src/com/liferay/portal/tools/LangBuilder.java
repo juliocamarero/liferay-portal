@@ -51,6 +51,8 @@ public class LangBuilder {
 	public static final String AUTOMATIC_TRANSLATION =
 		" (Automatic Translation)";
 
+	public static final String QUESTIONABLE_TRANSLATION = " (Questionable Translation";
+
 	public static void main(String[] args) {
 		Map<String, String> arguments = ArgumentsUtil.parseArguments(args);
 
