@@ -166,7 +166,11 @@
 									&laquo; <liferay-ui:message key='<%= defaultDatabase ? "use-default-database" : "use-configured-database" %>' />
 								</a>
 
-								<aui:select cssClass="database-type" name="databaseType">
+								<%
+                                    String defaultDriver = PropsValues.JDBC_DEFAULT_DRIVER_CLASS_NAME;
+								%>
+
+                                <aui:select cssClass="database-type" name="databaseType">
 
 									<%
 									for (int i = 0; i < PropsValues.SETUP_DATABASE_TYPES.length; i++) {
@@ -183,7 +187,7 @@
 										data.put("url", url);
 									%>
 
-										<aui:option data="<%= data %>" label='<%= "database." + databaseType %>' selected='<%= databaseType.equals("hypersonic") %>' value="<%= databaseType %>" />
+										<aui:option data="<%= data %>" label='<%= "database." + databaseType %>' selected='<%= driverClassName.equals(defaultDriver) %>' value="<%= databaseType %>" />
 
 									<%
 									}
