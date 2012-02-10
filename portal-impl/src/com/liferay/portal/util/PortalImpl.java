@@ -550,14 +550,21 @@ public class PortalImpl implements Portal {
 			request.setAttribute(
 				WebKeys.PORTLET_BREADCRUMBS, breadcrumbEntries);
 		}
+		
+		for (BreadcrumbEntry breadcrumbEntry : breadcrumbEntries) {
+			if (title.equals(breadcrumbEntry.getTitle())) {
+				return;
+			}
+		}
 
-		BreadcrumbEntry breadcrumbEntry = new BreadcrumbEntry();
+		BreadcrumbEntry curBreadcrumbEntry = new BreadcrumbEntry();
 
-		breadcrumbEntry.setData(data);
-		breadcrumbEntry.setTitle(title);
-		breadcrumbEntry.setURL(url);
-
-		breadcrumbEntries.add(breadcrumbEntry);
+		curBreadcrumbEntry.setData(data);
+		curBreadcrumbEntry.setTitle(title);
+		curBreadcrumbEntry.setURL(url);
+		
+		breadcrumbEntries.add(curBreadcrumbEntry);		
+		
 	}
 
 	public void addPortletDefaultResource(
