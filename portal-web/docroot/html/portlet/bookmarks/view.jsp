@@ -61,7 +61,7 @@ request.setAttribute("view.jsp-useAssetEntryQuery", String.valueOf(useAssetEntry
 
 <c:choose>
 	<c:when test="<%= useAssetEntryQuery %>">
-		<liferay-ui:categorization-filter assetType="bookmarks" portletURL="<%= portletURL %>"/>	
+		<liferay-ui:categorization-filter assetType="bookmarks" portletURL="<%= portletURL %>" />
 
 		<%@ include file="/html/portlet/bookmarks/view_entries.jspf" %>
 

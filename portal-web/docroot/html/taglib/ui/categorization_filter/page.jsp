@@ -16,26 +16,16 @@
 
 <%@ include file="/html/taglib/ui/categorization_filter/init.jsp" %>
 
-<portlet:renderURL var="viewURLWithoutCategory">
-	<portlet:param name="categoryId" value="0" />
-</portlet:renderURL>
-<portlet:renderURL var="viewURLWithoutTag">
-	<portlet:param name="tag" value="" />
-</portlet:renderURL>
-
 <%
-String assetType = (String)request.getAttribute("liferay-ui:categorization-filter:assetType");
+String assetType = GetterUtil.getString((String)request.getAttribute("liferay-ui:categorization-filter:assetType"), "content");
 PortletURL portletURL = (PortletURL)request.getAttribute("liferay-ui:categorization-filter:portletURL");
-
-if (Validator.isNull(assetType)) {
-	assetType = "content";
-}
 
 if (Validator.isNull(portletURL)) {
 	portletURL = renderResponse.createRenderURL();
 }
 
 long assetCategoryId = ParamUtil.getLong(request, "categoryId");
+String assetTagName = ParamUtil.getString(request, "tag");
 
 String assetCategoryTitle = null;
 String assetVocabularyTitle = null;
@@ -53,88 +43,71 @@ if (assetCategoryId != 0) {
 
 	assetVocabularyTitle = assetVocabulary.getTitle(locale);
 }
-
-boolean isCategory = Validator.isNotNull(assetCategoryTitle);
-
-String assetTagName = ParamUtil.getString(request, "tag");
-
-boolean isTag = Validator.isNotNull(assetTagName);
-
-String openSpanTag = "<span class=\"aui-textboxlistentry\">";
-String openATag = "<a href=\"";
-String closeTag = "\"><span class=\"aui-icon aui-icon-close aui-textboxlistentry-close\"></span></a></span>";
-
-String assetTypeKey = "";
-String message = "";
-
-String removeCategoryHtml = "";
-
-if (isCategory) {
-	if (!isTag) {
-		assetTypeKey = assetType.concat("-with-x-x");
-		
-		AssetUtil.addPortletBreadcrumbEntries(assetCategoryId, request, portletURL);
-	}
-	
-	PortalUtil.addPageKeywords(assetCategoryTitle, request);
-	
-	StringBundler removeCategoryHtmlSb = new StringBundler(5);
-	removeCategoryHtmlSb.append(openSpanTag);
-	removeCategoryHtmlSb.append(assetCategoryTitle);
-	removeCategoryHtmlSb.append(openATag);
-	removeCategoryHtmlSb.append(viewURLWithoutCategory);
-	removeCategoryHtmlSb.append(closeTag);
-	
-	removeCategoryHtml = removeCategoryHtmlSb.toString();
-}
-
-String removeTagHtml = "";
-
-if (isTag) {
-	if (!isCategory) {
-		assetTypeKey = assetType.concat("-with-tag-x");
-		
-		PortalUtil.addPortletBreadcrumbEntry(request, assetTagName, currentURL);
-	}
-	
-	PortalUtil.addPageKeywords(assetTagName, request);
-	
-	StringBundler removeTagHtmlSb = new StringBundler(5);
-	removeTagHtmlSb.append(openSpanTag);
-	removeTagHtmlSb.append(assetTagName);
-	removeTagHtmlSb.append(openATag);
-	removeTagHtmlSb.append(viewURLWithoutTag);
-	removeTagHtmlSb.append(closeTag);
-	
-	removeTagHtml = removeTagHtmlSb.toString();
-}
-
-if (isCategory && isTag) {
-	assetTypeKey = assetType.concat("-with-x-x-and-tag-x");
-	
-	AssetUtil.addPortletBreadcrumbEntries(assetCategoryId, request, portletURL);
-
-	PortalUtil.addPortletBreadcrumbEntry(request, assetTagName, currentURL);
-}
-
 %>
 
+<liferay-util:buffer var="removeCategory">
+	<c:if test="<%= assetCategoryId != 0 %>">
+		<span class="aui-textboxlistentry">
+			<%= assetCategoryTitle %>
+
+			<portlet:renderURL var="viewURLWithoutCategory">
+				<portlet:param name="categoryId" value="0" />
+			</portlet:renderURL>
+
+			<a href="<%= viewURLWithoutCategory %>">
+				<span class="aui-icon aui-icon-close aui-textboxlistentry-close"></span>
+			</a>
+		</span>
+	</c:if>
+</liferay-util:buffer>
+
+<liferay-util:buffer var="removeTag">
+	<c:if test="<%= Validator.isNotNull(assetTagName) %>">
+		<span class="aui-textboxlistentry">
+			<%= assetTagName %>
+
+			<portlet:renderURL var="viewURLWithoutTag">
+				<portlet:param name="tag" value="" />
+			</portlet:renderURL>
+
+			<a href="<%= viewURLWithoutTag %>">
+				<span class="aui-icon aui-icon-close aui-textboxlistentry-close"></span>
+			</a>
+		</span>
+	</c:if>
+</liferay-util:buffer>
+
 <c:choose>
-	<c:when test="<%= isCategory && isTag %>">
+	<c:when test="<%= (assetCategoryId != 0) && Validator.isNotNull(assetTagName) %>">
+
+		<%
+		AssetUtil.addPortletBreadcrumbEntries(assetCategoryId, request, portletURL);
+
+		PortalUtil.addPortletBreadcrumbEntry(request, assetTagName, currentURL);
+		%>
+
 		<h1 class="entry-title">
-			<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategoryHtml, removeTagHtml.toString()} %>" key="<%=assetTypeKey %>" />		
+			<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategory, removeTag} %>" key='<%= assetType.concat("-with-x-x-and-tag-x") %>' />
 		</h1>
 	</c:when>
-	<c:otherwise>
-		<c:if test="<%= isCategory  %>">	
-			<h1 class="entry-title">		
-				<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategoryHtml} %>" key="<%=assetTypeKey %>" />			
-			</h1>		
-		</c:if>
-		<c:if test="<%= isTag %>">		
-			<h1 class="entry-title">
-				<liferay-ui:message arguments="<%= removeTagHtml %>" key="<%=assetTypeKey %>" />
-			</h1>
-		</c:if>
-	</c:otherwise>
+	<c:when test="<%= assetCategoryId != 0 %>">
+
+		<%
+		AssetUtil.addPortletBreadcrumbEntries(assetCategoryId, request, portletURL);
+		%>
+
+		<h1 class="entry-title">
+			<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategory} %>" key='<%= assetType.concat("-with-x-x") %>' />
+		</h1>
+	</c:when>
+	<c:when test="<%= Validator.isNotNull(assetTagName) %>">
+
+		<%
+		PortalUtil.addPortletBreadcrumbEntry(request, assetTagName, currentURL);
+		%>
+
+		<h1 class="entry-title">
+			<liferay-ui:message arguments="<%= removeTag %>" key='<%= assetType.concat("-with-tag-x") %>' />
+		</h1>
+	</c:when>
 </c:choose>

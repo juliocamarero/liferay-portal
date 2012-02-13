@@ -26,7 +26,7 @@ portletURL.setParameter("categoryId", String.valueOf(categoryId));
 
 <liferay-util:include page="/html/portlet/wiki/top_links.jsp" />
 
-<liferay-ui:categorization-filter assetType="pages" portletURL="<%= portletURL %>"/>
+<liferay-ui:categorization-filter assetType="pages" portletURL="<%= portletURL %>" />
 
 <liferay-ui:header
 	escapeXml="<%= false %>"

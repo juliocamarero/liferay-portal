@@ -54,7 +54,7 @@ showSearch = showSearch && !results.isEmpty();
 	</div>
 </c:if>
 
-<liferay-ui:categorization-filter assetType="entries" portletURL="<%= portletURL %>"/>
+<liferay-ui:categorization-filter assetType="entries" portletURL="<%= portletURL %>" />
 
 <%
 for (Object result : results) {

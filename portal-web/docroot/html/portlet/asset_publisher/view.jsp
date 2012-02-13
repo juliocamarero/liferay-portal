@@ -111,7 +111,7 @@ if (!paginationType.equals("none")) {
 %>
 
 <c:if test="<%= showMetadataDescriptions %>">
-	<liferay-ui:categorization-filter assetType="content" portletURL="<%= portletURL%>"/>
+	<liferay-ui:categorization-filter assetType="content" portletURL="<%= portletURL%>" />
 </c:if>
 
 <c:choose>

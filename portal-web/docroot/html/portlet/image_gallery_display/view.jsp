@@ -76,7 +76,7 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 
 <c:choose>
 	<c:when test="<%= useAssetEntryQuery %>">
-		<liferay-ui:categorization-filter assetType="images" portletURL="<%= portletURL %>"/>
+		<liferay-ui:categorization-filter assetType="images" portletURL="<%= portletURL %>" />
 
 		<%
 		SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, "cur2", SearchContainer.DEFAULT_DELTA, portletURL, null, null);
