@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.EmailAddress;
 import com.liferay.portal.model.OrgLabor;
@@ -148,10 +150,27 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 					Organization.class);
 
 				if (parentOrganizationId > 0) {
-					indexer.reindex(
-						new String[] {
-							String.valueOf(organization.getCompanyId())
-						});
+					String treePath = organization.getTreePath();
+
+					if (treePath != null) {
+						if (treePath.startsWith(StringPool.SLASH)) {
+							treePath = treePath.substring(1);
+						}
+
+						String[] ids = StringUtil.split(
+								treePath, StringPool.SLASH);
+
+						long[] organizationIds = new long[ids.length];
+
+						for (int i=0; i<ids.length; i++) {
+							organizationIds[i] = Long.valueOf(ids[i]);
+						}
+
+						indexer.reindex(organizationIds);
+					}
+					else{
+						indexer.reindex(organization);
+					}
 				}
 				else {
 					indexer.reindex(organization);
