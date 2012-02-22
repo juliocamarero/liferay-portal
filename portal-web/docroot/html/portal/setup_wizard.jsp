@@ -45,12 +45,12 @@
 	<div id="content">
 		<div id="main-content">
 
-			<%
-			boolean propertiesFileUpdated = GetterUtil.getBoolean((Boolean)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES_UPDATED));
+            <%
+            UnicodeProperties unicodeProperties = (UnicodeProperties)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES);
 			%>
 
 			<c:choose>
-				<c:when test="<%= !propertiesFileUpdated && !SetupWizardUtil.isSetupFinished() %>">
+				<c:when test="<%= Validator.isNull(unicodeProperties) %>">
 
 					<%
 					boolean defaultDatabase = SetupWizardUtil.isDefaultDatabase(request);
@@ -345,11 +345,14 @@
 				<c:otherwise>
 
 					<%
-					SetupWizardUtil.setSetupFinished(true);
+                    SetupWizardUtil.setSetupFinished(true);
+
+                    boolean adminUserUpdated = GetterUtil.getBoolean((Boolean)session.getAttribute(WebKeys.SETUP_WIZARD_USER_UPDATED));
+                    boolean propertiesFileCreated = GetterUtil.getBoolean((Boolean)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES_FILE_CREATED));
 					%>
 
 					<c:choose>
-						<c:when test="<%= propertiesFileUpdated %>">
+						<c:when test="<%= propertiesFileCreated && adminUserUpdated %>">
 
 							<%
 							PortletURL loginURL = new PortletURLImpl(request, PortletKeys.LOGIN, plid, PortletRequest.ACTION_PHASE);
@@ -387,7 +390,7 @@
 								<c:if test="<%= !passwordUpdated %>">
 									<p>
 										<span class="aui-field-hint">
-											<liferay-ui:message arguments="<%= PropsValues.DEFAULT_ADMIN_PASSWORD %>" key="your-password-is-x.-don't-forget-to-change-it-in-my-account" />
+											<liferay-ui:message arguments="<%= PropsValues.DEFAULT_ADMIN_PASSWORD %>" key="your-password-is-x.-you-will-be-required-to-change-it-the-next-time-you-log-into-the-portal" />
 										</span>
 									</p>
 								</c:if>
@@ -398,18 +401,26 @@
 						<c:otherwise>
 							<p>
 								<span class="portlet-msg-alert">
+                                    <c:choose>
+                                        <c:when test="<%= !propertiesFileCreated %>">
 
-									<%
-									String taglibArguments = "<span class=\"lfr-inline-code\">" + PropsValues.LIFERAY_HOME + "</span>";
-									%>
+                                            <%
+                                            String taglibArguments = "<span class=\"lfr-inline-code\">" + PropsValues.LIFERAY_HOME + "</span>";
+                                            %>
 
-									<liferay-ui:message arguments="<%= taglibArguments %>" key="sorry,-we-were-not-able-to-save-the-configuration-file-in-x" />
+                                            <liferay-ui:message arguments="<%= taglibArguments %>" key="sorry,-we-were-not-able-to-save-the-configuration-file-in-x" />
+                                        </c:when>
+                                        <c:otherwise>
+
+                                            <%
+                                            String[] taglibArguments = {PropsValues.DEFAULT_ADMIN_EMAIL_ADDRESS, PropsValues.LIFERAY_HOME};
+                                            %>
+
+                                            <liferay-ui:message arguments="<%= taglibArguments %>" key="sorry,-we-were-not-able-to-update-the-administrator-x-in-the-database" />
+                                        </c:otherwise>
+                                    </c:choose>
 								</span>
 							</p>
-
-							<%
-							UnicodeProperties unicodeProperties = (UnicodeProperties)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES);
-							%>
 
 							<aui:input inputCssClass="properties-text" name="portal-ext" label="" type="textarea" value="<%= unicodeProperties.toSortedString() %>" wrap="soft" />
 						</c:otherwise>
