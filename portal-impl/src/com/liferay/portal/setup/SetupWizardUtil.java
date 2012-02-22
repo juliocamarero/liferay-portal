@@ -185,16 +185,6 @@ public class SetupWizardUtil {
 
 		PropsUtil.addProperties(unicodeProperties);
 
-		HttpSession session = request.getSession();
-
-		session.setAttribute(
-			WebKeys.SETUP_WIZARD_PROPERTIES, unicodeProperties);
-
-		boolean propertiesFileUpdated = _writePropertiesFile(unicodeProperties);
-
-		session.setAttribute(
-			WebKeys.SETUP_WIZARD_PROPERTIES_UPDATED, propertiesFileUpdated);
-
 		if (!databaseConfigured) {
 			_reloadServletContext(request, unicodeProperties);
 		}
@@ -203,6 +193,16 @@ public class SetupWizardUtil {
 		_updateAdminUser(request);
 
 		_initPlugins();
+
+		boolean propertiesFileCreated = _writePropertiesFile(unicodeProperties);
+
+		HttpSession session = request.getSession();
+
+		session.setAttribute(
+			WebKeys.SETUP_WIZARD_PROPERTIES, unicodeProperties);
+		session.setAttribute(
+			WebKeys.SETUP_WIZARD_PROPERTIES_FILE_CREATED,
+			propertiesFileCreated);
 	}
 
 	private static String _getParameter(
@@ -413,13 +413,28 @@ public class SetupWizardUtil {
 				PropsValues.ADMIN_EMAIL_FROM_ADDRESS);
 		}
 		catch (NoSuchUserException nsue) {
-			user = UserLocalServiceUtil.getUserByEmailAddress(
-				PortalUtil.getDefaultCompanyId(), "test@liferay.com");
+			try {
+				user = UserLocalServiceUtil.getUserByEmailAddress(
+					PortalUtil.getDefaultCompanyId(), "test@liferay.com");
 
-			user = UserLocalServiceUtil.updateEmailAddress(
-				user.getUserId(), StringPool.BLANK,
-				PropsValues.ADMIN_EMAIL_FROM_ADDRESS,
-				PropsValues.ADMIN_EMAIL_FROM_ADDRESS);
+				user = UserLocalServiceUtil.updateEmailAddress(
+					user.getUserId(), StringPool.BLANK,
+					PropsValues.ADMIN_EMAIL_FROM_ADDRESS,
+					PropsValues.ADMIN_EMAIL_FROM_ADDRESS);
+			}
+			catch (NoSuchUserException nsue1) {
+				int position = PropsValues.ADMIN_EMAIL_FROM_ADDRESS.indexOf(
+					StringPool.AT);
+
+				String mx = PropsValues.ADMIN_EMAIL_FROM_ADDRESS.substring(
+					position + 1);
+
+				CompanyLocalServiceUtil.createAdminUser(
+					PortalUtil.getDefaultCompanyId(), themeDisplay.getLocale(),
+					mx);
+
+				return;
+			}
 		}
 
 		// First and last name
@@ -487,7 +502,9 @@ public class SetupWizardUtil {
 				PropsValues.LIFERAY_HOME, PROPERTIES_FILE_NAME,
 				unicodeProperties.toString());
 
-			return true;
+			return FileUtil.exists(
+				PropsValues.LIFERAY_HOME + StringPool.SLASH +
+					PROPERTIES_FILE_NAME);
 		}
 		catch (IOException ioe) {
 			_log.error(ioe, ioe);
