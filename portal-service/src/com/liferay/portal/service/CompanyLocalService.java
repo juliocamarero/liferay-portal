@@ -300,6 +300,11 @@ public interface CompanyLocalService extends PersistedModelLocalService {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public void createAdminUser(long companyId, java.util.Locale defaultLocale,
+		java.lang.String mx)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Deletes the company's logo.
 	*

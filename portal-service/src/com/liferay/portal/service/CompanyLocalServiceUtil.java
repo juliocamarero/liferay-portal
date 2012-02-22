@@ -338,6 +338,13 @@ public class CompanyLocalServiceUtil {
 		getService().checkCompanyKey(companyId);
 	}
 
+	public static void createAdminUser(long companyId,
+		java.util.Locale defaultLocale, java.lang.String mx)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().createAdminUser(companyId, defaultLocale, mx);
+	}
+
 	/**
 	* Deletes the company's logo.
 	*

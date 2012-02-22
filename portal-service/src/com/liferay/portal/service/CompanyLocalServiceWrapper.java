@@ -326,6 +326,13 @@ public class CompanyLocalServiceWrapper implements CompanyLocalService,
 		_companyLocalService.checkCompanyKey(companyId);
 	}
 
+	public void createAdminUser(long companyId, java.util.Locale defaultLocale,
+		java.lang.String mx)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_companyLocalService.createAdminUser(companyId, defaultLocale, mx);
+	}
+
 	/**
 	* Deletes the company's logo.
 	*
