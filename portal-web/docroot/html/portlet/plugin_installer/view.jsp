@@ -129,6 +129,7 @@
 				}
 
 				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = cmd;
+				document.<portlet:namespace />fm.<portlet:namespace />struts_action.value = "/plugin_installer/install_plugin";
 				submitForm(document.<portlet:namespace />fm, "<portlet:actionURL><portlet:param name="struts_action" value="/plugin_installer/install_plugin" /></portlet:actionURL>");
 			}
 
