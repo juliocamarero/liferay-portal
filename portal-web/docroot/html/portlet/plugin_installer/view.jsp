@@ -75,11 +75,11 @@
 		%>
 
 		<aui:form action="<%= portletURL %>" method="get" name="fm">
-			<liferay-portlet:renderURLParams varImpl="portletURL" />
 			<aui:input name="<%= Constants.CMD %>" type="hidden" />
 			<aui:input name="<%= Constants.PROGRESS_ID %>" type="hidden" value="<%= uploadProgressId %>" />
 			<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 			<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
+			<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 
 			<c:if test="<%= Validator.isNull(moduleId) || Validator.isNull(repositoryURL) %>">
 				<aui:input name="redirect" type="hidden" value="<%= portletURLString %>" />
@@ -129,7 +129,6 @@
 				}
 
 				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = cmd;
-				document.<portlet:namespace />fm.<portlet:namespace />struts_action.value = "/plugin_installer/install_plugin";
 				submitForm(document.<portlet:namespace />fm, "<portlet:actionURL><portlet:param name="struts_action" value="/plugin_installer/install_plugin" /></portlet:actionURL>");
 			}
 
