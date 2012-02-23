@@ -145,6 +145,7 @@
 			}
 
 			function <portlet:namespace />searchPlugins() {
+				document.<portlet:namespace />fm.method = "post";
 				submitForm(document.<portlet:namespace />fm);
 			}
 		</aui:script>
