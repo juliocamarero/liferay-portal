@@ -181,16 +181,6 @@ public class SetupWizardUtil {
 
 		PropsUtil.addProperties(unicodeProperties);
 
-		HttpSession session = request.getSession();
-
-		session.setAttribute(
-			WebKeys.SETUP_WIZARD_PROPERTIES, unicodeProperties);
-
-		boolean propertiesFileUpdated = _writePropertiesFile(unicodeProperties);
-
-		session.setAttribute(
-			WebKeys.SETUP_WIZARD_PROPERTIES_UPDATED, propertiesFileUpdated);
-
 		if (!databaseConfigured) {
 			_reloadServletContext(request, unicodeProperties);
 		}
@@ -199,6 +189,16 @@ public class SetupWizardUtil {
 		_updateAdminUser(request, unicodeProperties);
 
 		_initPlugins();
+
+		boolean propertiesFileCreated = _writePropertiesFile(unicodeProperties);
+
+		HttpSession session = request.getSession();
+
+		session.setAttribute(
+			WebKeys.SETUP_WIZARD_PROPERTIES, unicodeProperties);
+		session.setAttribute(
+			WebKeys.SETUP_WIZARD_PROPERTIES_FILE_CREATED,
+			propertiesFileCreated);
 	}
 
 	private static String _getParameter(
@@ -384,6 +384,10 @@ public class SetupWizardUtil {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		HttpSession session = request.getSession();
+
+		boolean newAdminCreated = false;
+
 		User user = null;
 
 		try {
@@ -391,46 +395,60 @@ public class SetupWizardUtil {
 				PortalUtil.getDefaultCompanyId(), emailAddress);
 		}
 		catch (NoSuchUserException nsue) {
-			user = UserLocalServiceUtil.getUserByEmailAddress(
-				PortalUtil.getDefaultCompanyId(), "test@liferay.com");
+			try {
+				user = UserLocalServiceUtil.getUserByEmailAddress(
+					PortalUtil.getDefaultCompanyId(), "test@liferay.com");
 
-			user = UserLocalServiceUtil.updateEmailAddress(
-				user.getUserId(), StringPool.BLANK, emailAddress, emailAddress);
+				user = UserLocalServiceUtil.updateEmailAddress(
+					user.getUserId(), StringPool.BLANK, emailAddress,
+					emailAddress);
+			}
+			catch (NoSuchUserException nsue1) {
+				CompanyLocalServiceUtil.createAdminUser(
+					PortalUtil.getDefaultCompanyId(), themeDisplay.getLocale(),
+					firstName, lastName, emailAddress);
+
+				user = UserLocalServiceUtil.getUserByEmailAddress(
+					PortalUtil.getDefaultCompanyId(), emailAddress);
+
+				newAdminCreated = true;
+			}
 		}
 
-		String greeting = LanguageUtil.format(themeDisplay.getLocale(),
-			"welcome-x", StringPool.SPACE + fullName, false);
+		if (!newAdminCreated) {
+			String greeting = LanguageUtil.format(themeDisplay.getLocale(),
+				"welcome-x", StringPool.SPACE + fullName, false);
 
-		Contact contact = user.getContact();
+			Contact contact = user.getContact();
 
-		Calendar birthdayCal = CalendarFactoryUtil.getCalendar();
+			Calendar birthdayCal = CalendarFactoryUtil.getCalendar();
 
-		birthdayCal.setTime(contact.getBirthday());
+			birthdayCal.setTime(contact.getBirthday());
 
-		int birthdayMonth = birthdayCal.get(Calendar.MONTH);
-		int birthdayDay = birthdayCal.get(Calendar.DAY_OF_MONTH);
-		int birthdayYear = birthdayCal.get(Calendar.YEAR);
+			int birthdayMonth = birthdayCal.get(Calendar.MONTH);
+			int birthdayDay = birthdayCal.get(Calendar.DAY_OF_MONTH);
+			int birthdayYear = birthdayCal.get(Calendar.YEAR);
 
-		user = UserLocalServiceUtil.updateUser(
-			user.getUserId(), StringPool.BLANK, StringPool.BLANK,
-			StringPool.BLANK, false, user.getReminderQueryQuestion(),
-			user.getReminderQueryAnswer(), screenName, emailAddress,
-			user.getFacebookId(), user.getOpenId(),
-			themeDisplay.getLanguageId(), user.getTimeZoneId(), greeting,
-			user.getComments(), firstName, user.getMiddleName(), lastName,
-			contact.getPrefixId(), contact.getSuffixId(), contact.isMale(),
-			birthdayMonth, birthdayDay, birthdayYear, contact.getSmsSn(),
-			contact.getAimSn(), contact.getFacebookSn(), contact.getIcqSn(),
-			contact.getJabberSn(), contact.getMsnSn(), contact.getMySpaceSn(),
-			contact.getSkypeSn(), contact.getTwitterSn(), contact.getYmSn(),
-			contact.getJobTitle(), null, null, null, null, null,
-			new ServiceContext());
+			user = UserLocalServiceUtil.updateUser(
+				user.getUserId(), StringPool.BLANK, StringPool.BLANK,
+				StringPool.BLANK, false, user.getReminderQueryQuestion(),
+				user.getReminderQueryAnswer(), screenName, emailAddress,
+				user.getFacebookId(), user.getOpenId(),
+				themeDisplay.getLanguageId(), user.getTimeZoneId(), greeting,
+				user.getComments(), firstName, user.getMiddleName(), lastName,
+				contact.getPrefixId(), contact.getSuffixId(), contact.isMale(),
+				birthdayMonth, birthdayDay, birthdayYear, contact.getSmsSn(),
+				contact.getAimSn(), contact.getFacebookSn(), contact.getIcqSn(),
+				contact.getJabberSn(), contact.getMsnSn(),
+				contact.getMySpaceSn(), contact.getSkypeSn(),
+				contact.getTwitterSn(), contact.getYmSn(),
+				contact.getJobTitle(), null, null, null, null, null,
+				new ServiceContext());
+		}
 
 		// Password
 
 		user = UserLocalServiceUtil.updatePasswordReset(user.getUserId(), true);
-
-		HttpSession session = request.getSession();
 
 		session.setAttribute(WebKeys.SETUP_WIZARD_PASSWORD_UPDATED, true);
 		session.setAttribute(WebKeys.USER_ID, user.getUserId());
@@ -474,7 +492,9 @@ public class SetupWizardUtil {
 				PropsValues.LIFERAY_HOME, PROPERTIES_FILE_NAME,
 				unicodeProperties.toString());
 
-			return true;
+			return FileUtil.exists(
+				PropsValues.LIFERAY_HOME + StringPool.SLASH +
+					PROPERTIES_FILE_NAME);
 		}
 		catch (IOException ioe) {
 			_log.error(ioe, ioe);
