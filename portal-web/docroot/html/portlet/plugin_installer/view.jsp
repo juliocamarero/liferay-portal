@@ -75,11 +75,11 @@
 		%>
 
 		<aui:form action="<%= portletURL %>" method="get" name="fm">
-			<liferay-portlet:renderURLParams varImpl="portletURL" />
 			<aui:input name="<%= Constants.CMD %>" type="hidden" />
 			<aui:input name="<%= Constants.PROGRESS_ID %>" type="hidden" value="<%= uploadProgressId %>" />
 			<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 			<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
+			<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 
 			<c:if test="<%= Validator.isNull(moduleId) || Validator.isNull(repositoryURL) %>">
 				<aui:input name="redirect" type="hidden" value="<%= portletURLString %>" />
@@ -145,6 +145,7 @@
 			}
 
 			function <portlet:namespace />searchPlugins() {
+				document.<portlet:namespace />fm.method = "post";
 				submitForm(document.<portlet:namespace />fm);
 			}
 		</aui:script>
