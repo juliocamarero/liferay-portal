@@ -339,6 +339,29 @@ public class CompanyLocalServiceUtil {
 	}
 
 	/**
+	* Creates an admin user in the company, using first name, last name and
+	* email address.
+	*
+	* @param companyId the primary key of the company
+	* @param defaultLocale the default locale of the admin user
+	* @param firstName the first name of the admin user
+	* @param lastName the last name of the admin user
+	* @param emailAddress the email addres of the admin user
+	* @throws PortalException if a company with the primary key could not be
+	found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void createAdminUser(long companyId,
+		java.util.Locale defaultLocale, java.lang.String firstName,
+		java.lang.String lastName, java.lang.String emailAddress)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.createAdminUser(companyId, defaultLocale, firstName, lastName,
+			emailAddress);
+	}
+
+	/**
 	* Deletes the company's logo.
 	*
 	* @param companyId the primary key of the company
