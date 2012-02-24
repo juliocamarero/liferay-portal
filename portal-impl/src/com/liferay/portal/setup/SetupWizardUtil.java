@@ -374,10 +374,12 @@ public class SetupWizardUtil {
 
 		PropsValues.ADMIN_EMAIL_FROM_ADDRESS = emailAddress;
 		PropsValues.ADMIN_EMAIL_FROM_NAME = fullName;
+		PropsValues.DEFAULT_ADMIN_SCREEN_NAME = screenName;
 
 		unicodeProperties.put(
 			PropsKeys.ADMIN_EMAIL_FROM_ADDRESS, emailAddress);
 		unicodeProperties.put(PropsKeys.ADMIN_EMAIL_FROM_NAME, fullName);
+		unicodeProperties.put(PropsKeys.DEFAULT_ADMIN_SCREEN_NAME, screenName);
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
