@@ -62,14 +62,24 @@ public class ViewAction extends PortletAction {
 		return mapping.findForward("portlet.iframe.view");
 	}
 
-	protected String getPassword(
+	protected String getBasicPassword(
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws PortalException, SystemException {
 
 		PortletPreferences preferences = renderRequest.getPreferences();
-		String password = preferences.getValue("password", StringPool.BLANK);
+		String password = preferences.getValue("basicPassword", StringPool.BLANK);
 
 		return IFrameUtil.getPassword(renderRequest, password);
+	}
+
+	protected String getBasicUserName(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws PortalException, SystemException {
+
+		PortletPreferences preferences = renderRequest.getPreferences();
+		String userName = preferences.getValue("basicUserName", StringPool.BLANK);
+
+		return IFrameUtil.getUserName(renderRequest, userName);
 	}
 
 	protected String getSrc(
@@ -84,16 +94,6 @@ public class ViewAction extends PortletAction {
 		return src;
 	}
 
-	protected String getUserName(
-			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws PortalException, SystemException {
-
-		PortletPreferences preferences = renderRequest.getPreferences();
-		String userName = preferences.getValue("user-name", StringPool.BLANK);
-
-		return IFrameUtil.getUserName(renderRequest, userName);
-	}
-
 	protected String transformSrc(
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws PortalException, SystemException {
@@ -104,16 +104,19 @@ public class ViewAction extends PortletAction {
 
 		boolean auth = GetterUtil.getBoolean(
 			preferences.getValue("auth", StringPool.BLANK));
-		String authType = preferences.getValue("auth-type", StringPool.BLANK);
-		String userName = getUserName(renderRequest, renderResponse);
-		String password = getPassword(renderRequest, renderResponse);
 
 		if (auth) {
+			String authType =
+				preferences.getValue("authType", StringPool.BLANK);
+
 			if (authType.equals("basic")) {
 				int pos = src.indexOf("://");
 
 				String protocol = src.substring(0, pos + 3);
 				String url = src.substring(pos + 3, src.length());
+
+				String userName = getBasicUserName(renderRequest, renderResponse);
+				String password = getBasicPassword(renderRequest, renderResponse);
 
 				src = protocol + userName + ":" + password + "@" + url;
 			}
