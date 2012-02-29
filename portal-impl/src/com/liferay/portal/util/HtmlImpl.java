@@ -231,6 +231,41 @@ public class HtmlImpl implements Html {
 		return escape(js, ESCAPE_MODE_JS);
 	}
 
+	public String escapeJSSource(String js) {
+		boolean parsingValue = false;
+
+		char DOUBLE_QUOTE = 0x22;
+		char SINGLE_QUOTE = 0x27;
+		char openedQuote = 0x0;
+
+		StringBundler scriptBundler = new StringBundler(10);
+		StringBundler valueBundler = new StringBundler(10);
+
+		for (char c : js.toCharArray()) {
+			if (parsingValue) {
+				if (c != openedQuote) {
+					valueBundler.append(c);
+
+					continue;
+				}
+				else {
+					scriptBundler.append(escapeJS(valueBundler.toString()));
+
+					parsingValue = false;
+				}
+			}
+			else if (c == DOUBLE_QUOTE || c == SINGLE_QUOTE ) {
+				openedQuote = c;
+				parsingValue = true;
+				valueBundler = new StringBundler(10);
+			}
+
+			scriptBundler.append(c);
+		}
+
+		return scriptBundler.toString();
+	}
+
 	public String escapeURL(String url) {
 		return escape(url, ESCAPE_MODE_URL);
 	}
