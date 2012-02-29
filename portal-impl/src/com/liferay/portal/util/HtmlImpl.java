@@ -37,6 +37,8 @@ import net.htmlparser.jericho.TextExtractor;
  */
 public class HtmlImpl implements Html {
 
+	public static final char DOUBLE_QUOTE = 0x22;
+
 	public static final int ESCAPE_MODE_ATTRIBUTE = 1;
 
 	public static final int ESCAPE_MODE_CSS = 2;
@@ -46,6 +48,8 @@ public class HtmlImpl implements Html {
 	public static final int ESCAPE_MODE_TEXT = 4;
 
 	public static final int ESCAPE_MODE_URL = 5;
+
+	public static final char SINGLE_QUOTE = 0x27;
 
 	public String escape(String text) {
 		if (text == null) {
@@ -229,6 +233,39 @@ public class HtmlImpl implements Html {
 
 	public String escapeJS(String js) {
 		return escape(js, ESCAPE_MODE_JS);
+	}
+
+	public String escapeJSSource(String js) {
+		boolean parsingValue = false;
+
+		char openedQuote = 0x0;
+
+		StringBundler scriptBundler = new StringBundler(10);
+		StringBundler valueBundler = new StringBundler(10);
+
+		for (char c : js.toCharArray()) {
+			if (parsingValue) {
+				if (c != openedQuote) {
+					valueBundler.append(c);
+
+					continue;
+				}
+				else {
+					scriptBundler.append(escapeJS(valueBundler.toString()));
+
+					parsingValue = false;
+				}
+			}
+			else if (c == DOUBLE_QUOTE || c == SINGLE_QUOTE ) {
+				openedQuote = c;
+				parsingValue = true;
+				valueBundler = new StringBundler(10);
+			}
+
+			scriptBundler.append(c);
+		}
+
+		return scriptBundler.toString();
 	}
 
 	public String escapeURL(String url) {
