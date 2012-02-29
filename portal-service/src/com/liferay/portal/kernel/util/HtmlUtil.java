@@ -46,6 +46,10 @@ public class HtmlUtil {
 		return getHtml().escapeJS(js);
 	}
 
+	public static String escapeJSSource(String js) {
+		return getHtml().escapeJSSource(js);
+	}
+
 	public static String escapeURL(String url) {
 		return getHtml().escapeURL(url);
 	}
