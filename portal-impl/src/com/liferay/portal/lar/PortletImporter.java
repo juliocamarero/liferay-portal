@@ -54,7 +54,9 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.PortletItem;
 import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
+import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletItemLocalServiceUtil;
@@ -82,6 +84,7 @@ import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetLinkLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
+import com.liferay.portlet.asset.service.permission.AssetPermission;
 import com.liferay.portlet.asset.service.persistence.AssetCategoryUtil;
 import com.liferay.portlet.asset.service.persistence.AssetTagUtil;
 import com.liferay.portlet.asset.service.persistence.AssetVocabularyUtil;
@@ -663,7 +666,30 @@ public class PortletImporter {
 		serviceContext.setAddGuestPermissions(true);
 		serviceContext.setCreateDate(assetCategory.getCreateDate());
 		serviceContext.setModifiedDate(assetCategory.getModifiedDate());
-		serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+
+		boolean global = GetterUtil.getBoolean(
+			assetCategoryElement.attributeValue("global"));
+
+		if (global) {
+			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+				portletDataContext.getCompanyId());
+
+			try {
+				AssetPermission.check(
+					PermissionThreadLocal.getPermissionChecker(),
+					companyGroup.getGroupId(), ActionKeys.ADD_CATEGORY);
+
+				serviceContext.setScopeGroupId(companyGroup.getGroupId());
+			}
+			catch (PortalException e) {
+				serviceContext.setScopeGroupId(
+					portletDataContext.getScopeGroupId());
+			}
+		}
+		else {
+			serviceContext.setScopeGroupId(
+				portletDataContext.getScopeGroupId());
+		}
 
 		AssetCategory importedAssetCategory = null;
 
@@ -829,7 +855,30 @@ public class PortletImporter {
 		serviceContext.setAddGuestPermissions(true);
 		serviceContext.setCreateDate(assetVocabulary.getCreateDate());
 		serviceContext.setModifiedDate(assetVocabulary.getModifiedDate());
-		serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+
+		boolean global = GetterUtil.getBoolean(
+			assetVocabularyElement.attributeValue("global"));
+
+		if (global) {
+			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+				portletDataContext.getCompanyId());
+
+			try {
+				AssetPermission.check(
+					PermissionThreadLocal.getPermissionChecker(),
+					companyGroup.getGroupId(), ActionKeys.ADD_VOCABULARY);
+
+				serviceContext.setScopeGroupId(companyGroup.getGroupId());
+			}
+			catch (PortalException e) {
+				serviceContext.setScopeGroupId(
+					portletDataContext.getScopeGroupId());
+			}
+		}
+		else {
+			serviceContext.setScopeGroupId(
+				portletDataContext.getScopeGroupId());
+		}
 
 		AssetVocabulary importedAssetVocabulary = null;
 
