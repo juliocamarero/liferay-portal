@@ -716,15 +716,16 @@ public class PortletImporter {
 
 				if (global) {
 					if (AssetPermission.contains(
-						PermissionThreadLocal.getPermissionChecker(),
-						groupId, ActionKeys.ADD_CATEGORY)) {
+						PermissionThreadLocal.getPermissionChecker(), groupId,
+						ActionKeys.ADD_CATEGORY)) {
 
 						serviceContext.setScopeGroupId(groupId);
 					}
 					else {
 						_log.error("Category " + assetCategory.getName() +
 							" could not be imported to the Global scope because"
-							+ " the user doesn't have enough permissions");
+							+ " the user doesn't have enough permissions. " +
+							"Importing it into the current scope.");
 					}
 				}
 
@@ -764,13 +765,14 @@ public class PortletImporter {
 							userId, existingAssetCategory.getCategoryId(),
 							parentAssetCategoryId,
 							getAssetCategoryTitleMap(assetCategory, name),
-							assetCategory.getDescriptionMap(), assetVocabularyId,
-							properties, serviceContext);
+							assetCategory.getDescriptionMap(),
+							assetVocabularyId, properties, serviceContext);
 				}
 				else {
 					_log.error("Category " + existingAssetCategory.getName() +
 						" could not be updated in the global scope because"
-						+ " the user doesn't have enough permissions");
+						+ " the user doesn't have enough permissions. " +
+						"Updating it in the current scope");
 				}
 			}
 
@@ -882,6 +884,7 @@ public class PortletImporter {
 		serviceContext.setAddGuestPermissions(true);
 		serviceContext.setCreateDate(assetVocabulary.getCreateDate());
 		serviceContext.setModifiedDate(assetVocabulary.getModifiedDate());
+		serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
 
 		boolean global = GetterUtil.getBoolean(
 			assetVocabularyElement.attributeValue("global"));
@@ -890,21 +893,7 @@ public class PortletImporter {
 			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 				portletDataContext.getCompanyId());
 
-			try {
-				AssetPermission.check(
-					PermissionThreadLocal.getPermissionChecker(),
-					companyGroup.getGroupId(), ActionKeys.ADD_VOCABULARY);
-
-				serviceContext.setScopeGroupId(companyGroup.getGroupId());
-			}
-			catch (PortalException e) {
-				serviceContext.setScopeGroupId(
-					portletDataContext.getScopeGroupId());
-			}
-		}
-		else {
-			serviceContext.setScopeGroupId(
-				portletDataContext.getScopeGroupId());
+			groupId = companyGroup.getGroupId();
 		}
 
 		AssetVocabulary importedAssetVocabulary = null;
@@ -913,7 +902,7 @@ public class PortletImporter {
 			AssetVocabularyUtil.fetchByUUID_G(
 				assetVocabulary.getUuid(), groupId);
 
-		if (existingAssetVocabulary == null) {
+		if ((existingAssetVocabulary == null) && !global) {
 			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 				portletDataContext.getCompanyId());
 
@@ -927,6 +916,21 @@ public class PortletImporter {
 
 			serviceContext.setUuid(assetVocabulary.getUuid());
 
+			if (global) {
+				if (AssetPermission.contains(
+					PermissionThreadLocal.getPermissionChecker(), groupId,
+					ActionKeys.ADD_VOCABULARY)) {
+
+					serviceContext.setScopeGroupId(groupId);
+				}
+				else {
+					_log.error("Vocabulary " + assetVocabulary.getName() +
+						" could not be imported to the Global scope because"
+						+ " the user doesn't have enough permissions. " +
+						"Importing it into the current scope.");
+				}
+			}
+
 			importedAssetVocabulary =
 				AssetVocabularyLocalServiceUtil.addVocabulary(
 					userId, StringPool.BLANK,
@@ -939,12 +943,39 @@ public class PortletImporter {
 				assetVocabulary.getUuid(), groupId, assetVocabulary.getName(),
 				2);
 
-			importedAssetVocabulary =
-				AssetVocabularyLocalServiceUtil.updateVocabulary(
-					existingAssetVocabulary.getVocabularyId(), StringPool.BLANK,
-					getAssetVocabularyTitleMap(assetVocabulary, name),
-					assetVocabulary.getDescriptionMap(),
-					assetVocabulary.getSettings(), serviceContext);
+			boolean updateVocabulary = true;
+
+			if (global) {
+				PermissionChecker permissionChecker =
+					PermissionThreadLocal.getPermissionChecker();
+
+				if (permissionChecker.hasPermission(
+					 groupId, AssetVocabulary.class.getName(),
+					 existingAssetVocabulary.getVocabularyId(),
+					 ActionKeys.UPDATE)) {
+
+					 serviceContext.setScopeGroupId(groupId);
+				}
+				else {
+					 updateVocabulary = false;
+				}
+			}
+
+			if (updateVocabulary) {
+				importedAssetVocabulary =
+					AssetVocabularyLocalServiceUtil.updateVocabulary(
+						existingAssetVocabulary.getVocabularyId(),
+						StringPool.BLANK,
+						getAssetVocabularyTitleMap(assetVocabulary, name),
+						assetVocabulary.getDescriptionMap(),
+						assetVocabulary.getSettings(), serviceContext);
+			}
+			else {
+				_log.error("Vocabulary " + existingAssetVocabulary.getName() +
+					" could not be updated in the global scope because"
+					+ " the user doesn't have enough permissions. Updating " +
+					"it in the current scope.");
+			}
 		}
 
 		assetVocabularyPKs.put(
