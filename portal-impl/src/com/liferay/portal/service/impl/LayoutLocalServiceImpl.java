@@ -251,10 +251,21 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			layout.setLayoutPrototypeLinkEnabled(layoutPrototypeLinkEnabled);
 		}
 
-		if (type.equals(LayoutConstants.TYPE_PORTLET)) {
-			LayoutTypePortlet layoutTypePortlet =
-				(LayoutTypePortlet)layout.getLayoutType();
+		LayoutTypePortlet layoutTypePortlet =
+			(LayoutTypePortlet)layout.getLayoutType();
 
+		if (!type.equals(LayoutConstants.TYPE_URL) &&
+			!type.equals(LayoutConstants.TYPE_LINK_TO_LAYOUT)) {
+
+			layoutTypePortlet.setTypeSettingsProperty(
+				"sitemap-changefreq",
+				PropsValues.SITES_SITEMAP_DEFAULT_CHANGE_FREQUENCY);
+
+			layoutTypePortlet.setTypeSettingsProperty(
+				"sitemap-priority", PropsValues.SITES_SITEMAP_DEFAULT_PRIORITY);
+		}
+
+		if (type.equals(LayoutConstants.TYPE_PORTLET)) {
 			layoutTypePortlet.setLayoutTemplateId(
 				0, PropsValues.LAYOUT_DEFAULT_TEMPLATE_ID, false);
 		}
