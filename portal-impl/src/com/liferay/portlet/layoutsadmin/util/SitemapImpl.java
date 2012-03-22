@@ -83,8 +83,6 @@ public class SitemapImpl implements Sitemap {
 		Element element, String url, UnicodeProperties typeSettingsProperties,
 		Date modifiedDate) {
 
-		DateFormat iso8601DateFormat = DateUtil.getISO8601Format();
-
 		Element urlElement = element.addElement("url");
 
 		Element locElement = urlElement.addElement("loc");
@@ -147,9 +145,11 @@ public class SitemapImpl implements Sitemap {
 		}
 
 		if (modifiedDate != null) {
-			Element modifiedDateElement = urlElement.addElement("lastmod");
+			DateFormat dateFormatISO8601 = DateUtil.getISO8601Format();
 
-			String formattedDate = iso8601DateFormat.format(modifiedDate);
+			String formattedDate = dateFormatISO8601.format(modifiedDate);
+
+			Element modifiedDateElement = urlElement.addElement("lastmod");
 
 			modifiedDateElement.addText(formattedDate);
 		}
