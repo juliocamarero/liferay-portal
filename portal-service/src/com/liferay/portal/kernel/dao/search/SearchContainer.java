@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -152,6 +153,9 @@ public class SearchContainer<R> {
 			_headerNames.addAll(headerNames);
 
 			_buildNormalizedHeaderNames(_headerNames);
+		}
+		else {
+			_normalizedHeaderNames = Collections.EMPTY_LIST;
 		}
 
 		_emptyResultsMessage = emptyResultsMessage;
