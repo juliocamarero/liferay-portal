@@ -295,9 +295,11 @@ if (!selectableTree) {
 	var rootNode = new RootNodeType(
 		{
 			after: {
+				<c:if test="<%= saveState %>">
 				checkedChange: function(event) {
 					TreeUtil.updateSessionTreeClick(<%= LayoutConstants.DEFAULT_PLID %>, event.newVal, '<%= HtmlUtil.escape(treeId) %>SelectedNode');
 				},
+				</c:if>
 				expandedChange: function(event) {
 					var sessionClickURL = themeDisplay.getPathMain() + '/portal/session_click';
 
