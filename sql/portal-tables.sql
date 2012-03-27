@@ -1997,6 +1997,16 @@ create table Ticket (
 	expirationDate DATE null
 );
 
+create table TrashEntry (
+	entryId LONG not null primary key,
+	groupId LONG,
+	companyId LONG,
+	classNameId LONG,
+	classPK LONG,
+	status INTEGER,
+	typeSettings TEXT null
+);
+
 create table User_ (
 	uuid_ VARCHAR(75) null,
 	userId LONG not null primary key,

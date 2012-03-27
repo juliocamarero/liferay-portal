@@ -744,6 +744,13 @@ create unique index IX_143DC786 on Team (groupId, name);
 
 create index IX_B2468446 on Ticket (key_);
 
+create unique index IX_B35F73D5 on TrashEntry (classNameId, classPK);
+create index IX_2674F2A8 on TrashEntry (companyId);
+create index IX_526A032A on TrashEntry (groupId);
+create index IX_83E159FF on TrashEntry (groupId, classNameId, classPK);
+create index IX_C79A5834 on TrashEntry (uuid_);
+create unique index IX_A5F916F6 on TrashEntry (uuid_, groupId);
+
 create index IX_524FEFCE on UserGroup (companyId);
 create unique index IX_23EAD0D on UserGroup (companyId, name);
 create index IX_69771487 on UserGroup (companyId, parentUserGroupId);
