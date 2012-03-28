@@ -23,11 +23,8 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistry;
@@ -93,26 +90,12 @@ public abstract class DDMStructureLocalServiceBaseImpl
 	 * @return the d d m structure that was added
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public DDMStructure addDDMStructure(DDMStructure ddmStructure)
 		throws SystemException {
 		ddmStructure.setNew(true);
 
-		ddmStructure = ddmStructurePersistence.update(ddmStructure, false);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(ddmStructure);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return ddmStructure;
+		return ddmStructurePersistence.update(ddmStructure, false);
 	}
 
 	/**
@@ -129,49 +112,27 @@ public abstract class DDMStructureLocalServiceBaseImpl
 	 * Deletes the d d m structure with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param structureId the primary key of the d d m structure
+	 * @return the d d m structure that was removed
 	 * @throws PortalException if a d d m structure with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteDDMStructure(long structureId)
+	@Indexable(type = IndexableType.DELETE)
+	public DDMStructure deleteDDMStructure(long structureId)
 		throws PortalException, SystemException {
-		DDMStructure ddmStructure = ddmStructurePersistence.remove(structureId);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(ddmStructure);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return ddmStructurePersistence.remove(structureId);
 	}
 
 	/**
 	 * Deletes the d d m structure from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param ddmStructure the d d m structure
+	 * @return the d d m structure that was removed
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteDDMStructure(DDMStructure ddmStructure)
+	@Indexable(type = IndexableType.DELETE)
+	public DDMStructure deleteDDMStructure(DDMStructure ddmStructure)
 		throws SystemException {
-		ddmStructurePersistence.remove(ddmStructure);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(ddmStructure);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return ddmStructurePersistence.remove(ddmStructure);
 	}
 
 	/**
@@ -311,6 +272,7 @@ public abstract class DDMStructureLocalServiceBaseImpl
 	 * @return the d d m structure that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public DDMStructure updateDDMStructure(DDMStructure ddmStructure)
 		throws SystemException {
 		return updateDDMStructure(ddmStructure, true);
@@ -324,26 +286,12 @@ public abstract class DDMStructureLocalServiceBaseImpl
 	 * @return the d d m structure that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public DDMStructure updateDDMStructure(DDMStructure ddmStructure,
 		boolean merge) throws SystemException {
 		ddmStructure.setNew(false);
 
-		ddmStructure = ddmStructurePersistence.update(ddmStructure, merge);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(ddmStructure);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return ddmStructure;
+		return ddmStructurePersistence.update(ddmStructure, merge);
 	}
 
 	/**
@@ -964,6 +912,5 @@ public abstract class DDMStructureLocalServiceBaseImpl
 	protected DLFileEntryTypeFinder dlFileEntryTypeFinder;
 	@BeanReference(type = PersistedModelLocalServiceRegistry.class)
 	protected PersistedModelLocalServiceRegistry persistedModelLocalServiceRegistry;
-	private static Log _log = LogFactoryUtil.getLog(DDMStructureLocalServiceBaseImpl.class);
 	private String _beanIdentifier;
 }

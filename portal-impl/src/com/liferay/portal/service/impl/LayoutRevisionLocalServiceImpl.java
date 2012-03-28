@@ -134,7 +134,7 @@ public class LayoutRevisionLocalServiceImpl
 	}
 
 	@Override
-	public void deleteLayoutRevision(LayoutRevision layoutRevision)
+	public LayoutRevision deleteLayoutRevision(LayoutRevision layoutRevision)
 		throws PortalException, SystemException {
 
 		if (layoutRevision.hasChildren()) {
@@ -161,17 +161,17 @@ public class LayoutRevisionLocalServiceImpl
 			}
 		}
 
-		layoutRevisionPersistence.remove(layoutRevision);
+		return layoutRevisionPersistence.remove(layoutRevision);
 	}
 
 	@Override
-	public void deleteLayoutRevision(long layoutRevisionId)
+	public LayoutRevision deleteLayoutRevision(long layoutRevisionId)
 		throws PortalException, SystemException {
 
 		LayoutRevision layoutRevision =
 			layoutRevisionPersistence.findByPrimaryKey(layoutRevisionId);
 
-		layoutRevisionLocalService.deleteLayoutRevision(layoutRevision);
+		return deleteLayoutRevision(layoutRevision);
 	}
 
 	public void deleteLayoutRevisions(long layoutSetBranchId, long plid)
@@ -245,13 +245,6 @@ public class LayoutRevisionLocalServiceImpl
 
 		return layoutRevisionPersistence.countByL_P_P(
 			layoutSetBranchId, parentLayoutRevision, plid);
-	}
-
-	@Override
-	public LayoutRevision getLayoutRevision(long layoutRevisionId)
-		throws PortalException, SystemException {
-
-		return layoutRevisionPersistence.findByPrimaryKey(layoutRevisionId);
 	}
 
 	public LayoutRevision getLayoutRevision(

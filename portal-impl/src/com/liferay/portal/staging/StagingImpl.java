@@ -1333,12 +1333,12 @@ public class StagingImpl implements Staging {
 			return;
 		}
 
-		int stagingType = ParamUtil.getInteger(portletRequest, "stagingType");
+		int stagingType = getStagingType(portletRequest, liveGroup);
 
-		boolean branchingPublic = ParamUtil.getBoolean(
-			portletRequest, "branchingPublic");
-		boolean branchingPrivate = ParamUtil.getBoolean(
-			portletRequest, "branchingPrivate");
+		boolean branchingPublic = getBoolean(
+			portletRequest, liveGroup, "branchingPublic");
+		boolean branchingPrivate = getBoolean(
+			portletRequest, liveGroup, "branchingPrivate");
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -1355,16 +1355,17 @@ public class StagingImpl implements Staging {
 				branchingPrivate, serviceContext);
 		}
 		else if (stagingType == StagingConstants.TYPE_REMOTE_STAGING) {
-			String remoteAddress = ParamUtil.getString(
-				portletRequest, "remoteAddress");
+			String remoteAddress = getString(
+				portletRequest, liveGroup, "remoteAddress");
 
 			remoteAddress = stripProtocolFromRemoteAddress(remoteAddress);
 
-			long remoteGroupId = ParamUtil.getLong(
-				portletRequest, "remoteGroupId");
-			int remotePort = ParamUtil.getInteger(portletRequest, "remotePort");
-			boolean secureConnection = ParamUtil.getBoolean(
-				portletRequest, "secureConnection");
+			long remoteGroupId = getLong(
+				portletRequest, liveGroup, "remoteGroupId");
+			int remotePort = getInteger(
+				portletRequest, liveGroup, "remotePort");
+			boolean secureConnection = getBoolean(
+				portletRequest, liveGroup, "secureConnection");
 
 			enableRemoteStaging(
 				userId, scopeGroup, liveGroup, branchingPublic,
@@ -1442,6 +1443,14 @@ public class StagingImpl implements Staging {
 			getRecentLayoutRevisionIdKey(layoutSetBranchId, plid), null);
 	}
 
+	protected boolean getBoolean(
+		PortletRequest portletRequest, Group group, String param) {
+
+		return ParamUtil.getBoolean(
+			portletRequest, param,
+			GetterUtil.getBoolean(group.getTypeSettingsProperty(param)));
+	}
+
 	protected Calendar getDate(
 			PortletRequest portletRequest, String paramPrefix,
 			boolean timeZoneSensitive)
@@ -1489,6 +1498,22 @@ public class StagingImpl implements Staging {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		return cal;
+	}
+
+	protected int getInteger(
+		PortletRequest portletRequest, Group group, String param) {
+
+		return ParamUtil.getInteger(
+			portletRequest, param,
+			GetterUtil.getInteger(group.getTypeSettingsProperty(param)));
+	}
+
+	protected long getLong(
+		PortletRequest portletRequest, Group group, String param) {
+
+		return ParamUtil.getLong(
+			portletRequest, param,
+			GetterUtil.getLong(group.getTypeSettingsProperty(param)));
 	}
 
 	protected PortalPreferences getPortalPreferences(User user)
@@ -1588,6 +1613,34 @@ public class StagingImpl implements Staging {
 
 	protected String getRecentLayoutSetBranchIdKey(long layoutSetId) {
 		return "layoutSetBranchId_" + layoutSetId;
+	}
+
+	protected int getStagingType(
+		PortletRequest portletRequest, Group liveGroup) {
+
+		String stagingType = portletRequest.getParameter("stagingType");
+
+		if (stagingType != null) {
+			return GetterUtil.getInteger(stagingType);
+		}
+
+		if (liveGroup.isStagedRemotely()) {
+			return StagingConstants.TYPE_REMOTE_STAGING;
+		}
+
+		if (liveGroup.hasStagingGroup()) {
+			return StagingConstants.TYPE_LOCAL_STAGING;
+		}
+
+		return StagingConstants.TYPE_NOT_STAGED;
+	}
+
+	protected String getString(
+		PortletRequest portletRequest, Group group, String param) {
+
+		return ParamUtil.getString(
+			portletRequest, param,
+			GetterUtil.getString(group.getTypeSettingsProperty(param)));
 	}
 
 	protected void publishLayouts(
@@ -1949,11 +2002,11 @@ public class StagingImpl implements Staging {
 		Set<String> parameterNames = serviceContext.getAttributes().keySet();
 
 		for (String parameterName : parameterNames) {
-			boolean staged = ParamUtil.getBoolean(
-				serviceContext, parameterName);
-
 			if (parameterName.startsWith(StagingConstants.STAGED_PORTLET) &&
 				!parameterName.endsWith("Checkbox")) {
+
+				boolean staged = ParamUtil.getBoolean(
+					serviceContext, parameterName);
 
 				typeSettingsProperties.setProperty(
 					parameterName, String.valueOf(staged));

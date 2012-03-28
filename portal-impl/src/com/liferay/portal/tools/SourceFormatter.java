@@ -31,14 +31,16 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.util.ContentUtil;
 import com.liferay.portal.util.FileImpl;
 import com.liferay.portal.xml.SAXReaderImpl;
+import com.liferay.util.ContentUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -79,10 +81,10 @@ public class SourceFormatter {
 				"source_formatter_line_length_exclusions.properties");
 
 			Thread thread1 = new Thread () {
+
 				@Override
 				public void run() {
 					try {
-						_checkPersistenceTestSuite();
 						_formatJSP();
 						_formatAntXML();
 						_formatDDLStructuresXML();
@@ -95,9 +97,11 @@ public class SourceFormatter {
 						e.printStackTrace();
 					}
 				}
+
 			};
 
 			Thread thread2 = new Thread () {
+
 				@Override
 				public void run() {
 					try {
@@ -107,6 +111,7 @@ public class SourceFormatter {
 						e.printStackTrace();
 					}
 				}
+
 			};
 
 			thread1.start();
@@ -267,7 +272,7 @@ public class SourceFormatter {
 
 			includeFileNames.add(fileName);
 
-			Set<String> checkedFileNames =  new HashSet<String>();
+			Set<String> checkedFileNames = new HashSet<String>();
 
 			int x = importLine.indexOf(StringPool.QUOTE);
 			int y = importLine.indexOf(StringPool.QUOTE, x + 1);
@@ -447,51 +452,6 @@ public class SourceFormatter {
 		}
 	}
 
-	private static void _checkPersistenceTestSuite() throws IOException {
-		String basedir = "./portal-impl/test/integration";
-
-		if (!_fileUtil.exists(basedir)) {
-			return;
-		}
-
-		DirectoryScanner directoryScanner = new DirectoryScanner();
-
-		directoryScanner.setBasedir(basedir);
-		directoryScanner.setIncludes(
-			new String[] {"**\\*PersistenceTest.java"});
-
-		List<String> fileNames = _sourceFormatterHelper.scanForFiles(
-			directoryScanner);
-
-		List<String> persistenceTests = new ArrayList<String>();
-
-		for (String fileName : fileNames) {
-			String persistenceTest = fileName.substring(
-				0, fileName.length() - 5);
-
-			persistenceTest = persistenceTest.substring(
-				persistenceTest.lastIndexOf(File.separator) + 1,
-				persistenceTest.length());
-
-			persistenceTests.add(persistenceTest);
-		}
-
-		String persistenceTestSuiteFileName =
-			basedir + "/com/liferay/portal/service/persistence/" +
-				"PersistenceTestSuite.java";
-
-		String persistenceTestSuiteContent = _fileUtil.read(
-			persistenceTestSuiteFileName);
-
-		for (String persistenceTest : persistenceTests) {
-			if (!persistenceTestSuiteContent.contains(persistenceTest)) {
-				_sourceFormatterHelper.printError(
-					persistenceTestSuiteFileName,
-					"PersistenceTestSuite: " + persistenceTest);
-			}
-		}
-	}
-
 	private static boolean _checkTaglibVulnerability(
 		String jspContent, String vulnerability) {
 
@@ -647,7 +607,7 @@ public class SourceFormatter {
 		}
 
 		for (int i = 0; i < previousMethodParameterTypes.size(); i++) {
-			if (methodParameterTypes.size() < i + 1) {
+			if (methodParameterTypes.size() < (i + 1)) {
 				_sourceFormatterHelper.printError(
 					fileName, "sort: " + fileName + " " + lineCount);
 
@@ -1102,7 +1062,7 @@ public class SourceFormatter {
 
 			String packageLevel = s.substring(classStartPos, pos);
 
-			if ((i != 0) && (!packageLevel.equals(temp))) {
+			if ((i != 0) && !packageLevel.equals(temp)) {
 				sb.append("\n");
 			}
 
@@ -1242,26 +1202,12 @@ public class SourceFormatter {
 			newContent = StringUtil.replace(
 				newContent,
 				new String[] {
-					";\n/**",
-					"\t/*\n\t *",
-					"if(",
-					"for(",
-					"while(",
-					"List <",
-					"){\n",
-					"]{\n",
-					"\n\n\n"
+					";\n/**", "\t/*\n\t *", "else{", "if(", "for(", "while(",
+					"List <", "){\n", "]{\n", "\n\n\n"
 				},
 				new String[] {
-					";\n\n/**",
-					"\t/**\n\t *",
-					"if (",
-					"for (",
-					"while (",
-					"List<",
-					") {\n",
-					"] {\n",
-					"\n\n"
+					";\n\n/**", "\t/**\n\t *", "else {", "if (", "for (",
+					"while (", "List<", ") {\n", "] {\n", "\n\n"
 				});
 
 			if (newContent.contains("*/\npackage ")) {
@@ -1269,9 +1215,7 @@ public class SourceFormatter {
 					fileName, "package: " + fileName);
 			}
 
-			if (!newContent.endsWith("\n\n}") &&
-				!newContent.endsWith("{\n}")) {
-
+			if (!newContent.endsWith("\n\n}") && !newContent.endsWith("{\n}")) {
 				_sourceFormatterHelper.printError(fileName, "}: " + fileName);
 			}
 
@@ -1359,6 +1303,12 @@ public class SourceFormatter {
 						temp = line.substring(pos);
 					}
 				}
+			}
+
+			if (line.contains(StringPool.TAB + "for (") && line.contains(":") &&
+				!line.contains(" :")) {
+
+				line = StringUtil.replace(line, ":" , " :");
 			}
 
 			line = _replacePrimitiveWrapperInstantiation(
@@ -1590,7 +1540,8 @@ public class SourceFormatter {
 							fileName, "> 80: " + fileName + " " + lineCount);
 					}
 					else {
-						int lineTabCount = StringUtil.count(line, StringPool.TAB);
+						int lineTabCount = StringUtil.count(
+							line, StringPool.TAB);
 						int previousLineTabCount = StringUtil.count(
 							previousLine, StringPool.TAB);
 
@@ -1633,7 +1584,7 @@ public class SourceFormatter {
 			else {
 				if ((lineCount > 1) &&
 					(Validator.isNotNull(previousLine) ||
-					 (lineToSkipIfEmpty != lineCount - 1))) {
+					 (lineToSkipIfEmpty != (lineCount - 1)))) {
 
 					sb.append(previousLine);
 					sb.append("\n");
@@ -1669,8 +1620,8 @@ public class SourceFormatter {
 		directoryScanner.setBasedir(basedir);
 
 		String[] excludes = {
-			"**\\portal\\aui\\**", "**\\bin\\**", "**\\null.jsp",
-			"**\\tmp\\**", "**\\tools\\**"
+			"**\\portal\\aui\\**", "**\\bin\\**", "**\\null.jsp", "**\\tmp\\**",
+			"**\\tools\\**"
 		};
 
 		excludes = ArrayUtil.append(excludes, _excludes);
@@ -1781,8 +1732,7 @@ public class SourceFormatter {
 				newContent,
 				new String[] {
 					"alert('<%= LanguageUtil.",
-					"alert(\"<%= LanguageUtil.",
-					"confirm('<%= LanguageUtil.",
+					"alert(\"<%= LanguageUtil.", "confirm('<%= LanguageUtil.",
 					"confirm(\"<%= LanguageUtil."
 				},
 				new String[] {
@@ -1972,8 +1922,7 @@ public class SourceFormatter {
 
 					if (!matcher.find()) {
 						_sourceFormatterHelper.printError(
-							fileName,
-							"include: " + fileName + " " + lineCount);
+							fileName, "include: " + fileName + " " + lineCount);
 					}
 				}
 			}
@@ -2234,8 +2183,7 @@ public class SourceFormatter {
 
 			sb = new StringBundler();
 
-			sb.append(
-				"\t\t\t<url-pattern>/c/portal/protected</url-pattern>\n");
+			sb.append("\t\t\t<url-pattern>/c/portal/protected</url-pattern>\n");
 
 			for (String urlPattern : urlPatterns) {
 				sb.append(
@@ -2365,7 +2313,7 @@ public class SourceFormatter {
 				if ((line.charAt(x - 1) != CharPool.SPACE) &&
 					(previousLineLength + 1 + x) < 80) {
 
-					String addToPreviousLine  = line.substring(0, x + 1);
+					String addToPreviousLine = line.substring(0, x + 1);
 
 					if (addToPreviousLine.contains(StringPool.SPACE)) {
 						return null;
@@ -2424,8 +2372,7 @@ public class SourceFormatter {
 					 ((line.length() + previousLineLength) < 80)) {
 
 				return new String[] {
-					previousLine + StringPool.SPACE + line,
-					StringPool.BLANK
+					previousLine + StringPool.SPACE + line, StringPool.BLANK
 				};
 			}
 		}
@@ -2767,8 +2714,7 @@ public class SourceFormatter {
 
 		String[] excludes = {
 			"**\\bin\\**", "**\\model\\*Clp.java",
-			"**\\model\\impl\\*BaseImpl.java",
-			"**\\model\\impl\\*Model.java",
+			"**\\model\\impl\\*BaseImpl.java", "**\\model\\impl\\*Model.java",
 			"**\\model\\impl\\*ModelImpl.java",
 			"**\\service\\**\\model\\*Model.java",
 			"**\\service\\**\\model\\*Soap.java",
@@ -2927,6 +2873,18 @@ public class SourceFormatter {
 		}
 	}
 
+	private static boolean _isInJavaTermTypeGroup(
+		int javaTermType, int[] javaTermTypeGroup) {
+
+		for (int type : javaTermTypeGroup) {
+			if (javaTermType == type) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private static boolean _isJSPAttributName(String attributeName) {
 		if (Validator.isNull(attributeName)) {
 			return false;
@@ -3038,18 +2996,6 @@ public class SourceFormatter {
 		return false;
 	}
 
-	private static boolean _isInJavaTermTypeGroup(
-		int javaTermType, int[] javaTermTypeGroup) {
-
-		for (int type : javaTermTypeGroup) {
-			if (javaTermType == type) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	private static boolean _isValidJavaParameter(String javaParameter) {
 		int quoteCount = StringUtil.count(javaParameter, StringPool.QUOTE);
 
@@ -3092,8 +3038,8 @@ public class SourceFormatter {
 		String newLine = StringUtil.replace(
 			line,
 			new String[] {
-				"new Boolean(", "new Byte(", "new Character(",
-				"new Integer(", "new Long(", "new Short("
+				"new Boolean(", "new Byte(", "new Character(", "new Integer(",
+				"new Long(", "new Short("
 			},
 			new String[] {
 				"Boolean.valueOf(", "Byte.valueOf(", "Character.valueOf(",

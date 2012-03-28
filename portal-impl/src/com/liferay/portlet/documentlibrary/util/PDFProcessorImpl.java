@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.OSDetector;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -57,6 +58,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.Future;
@@ -70,9 +72,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
 
-import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
-import org.im4java.process.ProcessStarter;
 
 /**
  * @author Alexander Chow
@@ -85,17 +85,6 @@ public class PDFProcessorImpl
 
 	public static PDFProcessorImpl getInstance() {
 		return _instance;
-	}
-
-	public void exportGeneratedFiles(
-			PortletDataContext portletDataContext, FileEntry fileEntry,
-			Element fileEntryElement)
-		throws Exception {
-
-		exportThumbnails(
-			portletDataContext, fileEntry, fileEntryElement, "pdf");
-
-		exportPreviews(portletDataContext, fileEntry, fileEntryElement);
 	}
 
 	public void generateImages(FileVersion fileVersion) throws Exception {
@@ -154,6 +143,18 @@ public class PDFProcessorImpl
 			fileVersion, index);
 	}
 
+	public Properties getResourceLimitsProperties() throws Exception {
+		Properties resourceLimitsProperties = PrefsPropsUtil.getProperties(
+			PropsKeys.IMAGEMAGICK_RESOURCE_LIMIT, true);
+
+		if (resourceLimitsProperties.isEmpty()) {
+			resourceLimitsProperties = PropsUtil.getProperties(
+				PropsKeys.IMAGEMAGICK_RESOURCE_LIMIT, true);
+		}
+
+		return resourceLimitsProperties;
+	}
+
 	public InputStream getThumbnailAsStream(FileVersion fileVersion, int index)
 		throws Exception {
 
@@ -181,19 +182,6 @@ public class PDFProcessorImpl
 		}
 
 		return hasImages;
-	}
-
-	public void importGeneratedFiles(
-			PortletDataContext portletDataContext, FileEntry fileEntry,
-			FileEntry importedFileEntry, Element fileEntryElement)
-		throws Exception {
-
-		importThumbnails(
-			portletDataContext, fileEntry, importedFileEntry, fileEntryElement,
-			"pdf");
-
-		importPreviews(
-			portletDataContext, fileEntry, importedFileEntry, fileEntryElement);
 	}
 
 	public boolean isDocumentSupported(FileVersion fileVersion) {
@@ -258,17 +246,38 @@ public class PDFProcessorImpl
 		if (isImageMagickEnabled()) {
 			_globalSearchPath = getGlobalSearchPath();
 
-			ProcessStarter.setGlobalSearchPath(_globalSearchPath);
-
-			_convertCmd = new ConvertCmd();
-		}
-		else {
-			_convertCmd = null;
+			_resourceLimitsProperties = getResourceLimitsProperties();
 		}
 	}
 
 	public void trigger(FileVersion fileVersion) {
 		Initializer._initializedInstance._queueGeneration(fileVersion);
+	}
+
+	@Override
+	protected void doExportGeneratedFiles(
+			PortletDataContext portletDataContext, FileEntry fileEntry,
+			Element fileEntryElement)
+		throws Exception {
+
+		exportThumbnails(
+			portletDataContext, fileEntry, fileEntryElement, "pdf");
+
+		exportPreviews(portletDataContext, fileEntry, fileEntryElement);
+	}
+
+	@Override
+	protected void doImportGeneratedFiles(
+			PortletDataContext portletDataContext, FileEntry fileEntry,
+			FileEntry importedFileEntry, Element fileEntryElement)
+		throws Exception {
+
+		importThumbnails(
+			portletDataContext, fileEntry, importedFileEntry, fileEntryElement,
+			"pdf");
+
+		importPreviews(
+			portletDataContext, fileEntry, importedFileEntry, fileEntryElement);
 	}
 
 	protected void exportPreviews(
@@ -313,7 +322,7 @@ public class PDFProcessorImpl
 		throws Exception {
 
 		int previewFileCount = GetterUtil.getInteger(
-			fileEntryElement.attributeValue("bin-path-preview-pdf-count"));
+			fileEntryElement.attributeValue("bin-path-pdf-preview-count"));
 
 		for (int i = 0; i < previewFileCount; i++) {
 			importPreview(
@@ -340,6 +349,8 @@ public class PDFProcessorImpl
 	private void _generateImages(FileVersion fileVersion)
 		throws Exception {
 
+		InputStream inputStream = null;
+
 		try {
 			if (_hasImages(fileVersion)) {
 				return;
@@ -363,12 +374,12 @@ public class PDFProcessorImpl
 					}
 				}
 
-				InputStream inputStream = fileVersion.getContentStream(false);
+				inputStream = fileVersion.getContentStream(false);
 
 				_generateImages(fileVersion, inputStream);
 			}
 			else if (DocumentConversionUtil.isEnabled()) {
-				InputStream inputStream = fileVersion.getContentStream(false);
+				inputStream = fileVersion.getContentStream(false);
 
 				String tempFileId = DLUtil.getTempFileId(
 					fileVersion.getFileEntryId(), fileVersion.getVersion());
@@ -382,6 +393,8 @@ public class PDFProcessorImpl
 		catch (NoSuchFileEntryException nsfee) {
 		}
 		finally {
+			StreamUtil.cleanUp(inputStream);
+
 			_fileVersionIds.remove(fileVersion.getFileVersionId());
 		}
 	}
@@ -490,14 +503,11 @@ public class PDFProcessorImpl
 			imOperation.addImage(getPreviewTempFilePath(tempFileId, -1));
 		}
 
-		if (_log.isInfoEnabled()) {
-			_log.info("Excecuting command 'convert " + imOperation + "'");
-		}
-
 		if (PropsValues.DL_FILE_ENTRY_PREVIEW_FORK_PROCESS_ENABLED) {
 			ProcessCallable<String> processCallable =
 				new ImageMagickProcessCallable(
-					_globalSearchPath, imOperation.getCmdArgs());
+					_globalSearchPath, _resourceLimitsProperties,
+					imOperation.getCmdArgs());
 
 			Future<String> future = ProcessExecutor.execute(
 				ClassPathUtil.getPortalClassPath(), processCallable);
@@ -505,7 +515,9 @@ public class PDFProcessorImpl
 			future.get();
 		}
 		else {
-			_convertCmd.run(imOperation);
+			LiferayConvertCmd.run(
+				_globalSearchPath, _resourceLimitsProperties,
+				imOperation.getCmdArgs());
 		}
 
 		// Store images
@@ -554,9 +566,11 @@ public class PDFProcessorImpl
 			FileVersion fileVersion, InputStream inputStream)
 		throws Exception {
 
-		File file = FileUtil.createTempFile(inputStream);
+		File file = null;
 
 		try {
+			file = FileUtil.createTempFile(inputStream);
+
 			_generateImagesIM(fileVersion, file);
 		}
 		finally {
@@ -776,24 +790,27 @@ public class PDFProcessorImpl
 		InstancePool.put(PDFProcessorImpl.class.getName(), _instance);
 	}
 
-	private ConvertCmd _convertCmd;
 	private List<Long> _fileVersionIds = new Vector<Long>();
 	private String _globalSearchPath;
+	private Properties _resourceLimitsProperties;
 	private boolean _warned;
 
 	private static class ImageMagickProcessCallable
 		implements ProcessCallable<String> {
 
 		public ImageMagickProcessCallable(
-			String globalSearchPath, LinkedList<String> commandArguments) {
+			String globalSearchPath, Properties resourceLimits,
+			LinkedList<String> commandArguments) {
 
 			_globalSearchPath = globalSearchPath;
 			_commandArguments = commandArguments;
+			_resourceLimits = resourceLimits;
 		}
 
 		public String call() throws ProcessException {
 			try {
-				LiferayConvertCmd.run(_globalSearchPath, _commandArguments);
+				LiferayConvertCmd.run(
+					_globalSearchPath, _resourceLimits, _commandArguments);
 			}
 			catch (Exception e) {
 				throw new ProcessException(e);
@@ -804,6 +821,7 @@ public class PDFProcessorImpl
 
 		private LinkedList<String> _commandArguments;
 		private String _globalSearchPath;
+		private Properties _resourceLimits;
 
 	}
 

@@ -172,10 +172,11 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void deleteResource(long resourceId) throws SystemException {
+	public Resource deleteResource(long resourceId) throws SystemException {
+		Resource resource = null;
+
 		try {
-			Resource resource = resourcePersistence.findByPrimaryKey(
-				resourceId);
+			resource = resourcePersistence.findByPrimaryKey(resourceId);
 
 			deleteResource(resource);
 		}
@@ -184,6 +185,8 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 				_log.warn(nsre);
 			}
 		}
+
+		return resource;
 	}
 
 	public void deleteResource(
@@ -201,7 +204,7 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void deleteResource(Resource resource) throws SystemException {
+	public Resource deleteResource(Resource resource) throws SystemException {
 
 		// Permissions
 
@@ -217,7 +220,7 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 
 		// Resource
 
-		resourcePersistence.remove(resource);
+		return resourcePersistence.remove(resource);
 	}
 
 	public void deleteResources(String name) throws SystemException {
@@ -252,13 +255,6 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 
 			return resource.getResourceId();
 		}
-	}
-
-	@Override
-	public Resource getResource(long resourceId)
-		throws PortalException, SystemException {
-
-		return resourcePersistence.findByPrimaryKey(resourceId);
 	}
 
 	public Resource getResource(

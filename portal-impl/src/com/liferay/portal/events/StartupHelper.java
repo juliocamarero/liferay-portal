@@ -16,6 +16,7 @@ package com.liferay.portal.events;
 
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
+import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
@@ -30,6 +31,8 @@ import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.verify.VerifyException;
 import com.liferay.portal.verify.VerifyProcessUtil;
 
+import java.sql.Connection;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Alexander Chow
@@ -37,22 +40,10 @@ import com.liferay.portal.verify.VerifyProcessUtil;
  */
 public class StartupHelper {
 
-	public boolean isUpgraded() {
-		return _upgraded;
-	}
+	public static void updateIndexes(
+		DB db, Connection con, boolean dropIndexes) {
 
-	public boolean isVerified() {
-		return _verified;
-	}
-
-	public void setDropIndexes(boolean dropIndexes) {
-		_dropIndexes = dropIndexes;
-	}
-
-	public void updateIndexes() {
 		try {
-			DB db = DBFactoryUtil.getDB();
-
 			Thread currentThread = Thread.currentThread();
 
 			ClassLoader classLoader = currentThread.getContextClassLoader();
@@ -70,10 +61,40 @@ public class StartupHelper {
 				"com/liferay/portal/tools/sql/dependencies/indexes.properties");
 
 			db.updateIndexes(
-				tablesSQL, indexesSQL, indexesProperties, _dropIndexes);
+				con, tablesSQL, indexesSQL, indexesProperties, dropIndexes);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
+		}
+	}
+
+	public boolean isUpgraded() {
+		return _upgraded;
+	}
+
+	public boolean isVerified() {
+		return _verified;
+	}
+
+	public void setDropIndexes(boolean dropIndexes) {
+		_dropIndexes = dropIndexes;
+	}
+
+	public void updateIndexes() {
+		DB db = DBFactoryUtil.getDB();
+
+		Connection con = null;
+
+		try {
+			con = DataAccess.getConnection();
+
+			updateIndexes(db, con, _dropIndexes);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+		finally {
+			DataAccess.cleanUp(con);
 		}
 	}
 

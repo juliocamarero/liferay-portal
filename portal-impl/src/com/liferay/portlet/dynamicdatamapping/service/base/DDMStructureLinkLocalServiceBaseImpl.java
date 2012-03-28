@@ -23,11 +23,8 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistry;
@@ -89,27 +86,12 @@ public abstract class DDMStructureLinkLocalServiceBaseImpl
 	 * @return the d d m structure link that was added
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public DDMStructureLink addDDMStructureLink(
 		DDMStructureLink ddmStructureLink) throws SystemException {
 		ddmStructureLink.setNew(true);
 
-		ddmStructureLink = ddmStructureLinkPersistence.update(ddmStructureLink,
-				false);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(ddmStructureLink);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return ddmStructureLink;
+		return ddmStructureLinkPersistence.update(ddmStructureLink, false);
 	}
 
 	/**
@@ -126,49 +108,27 @@ public abstract class DDMStructureLinkLocalServiceBaseImpl
 	 * Deletes the d d m structure link with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param structureLinkId the primary key of the d d m structure link
+	 * @return the d d m structure link that was removed
 	 * @throws PortalException if a d d m structure link with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteDDMStructureLink(long structureLinkId)
+	@Indexable(type = IndexableType.DELETE)
+	public DDMStructureLink deleteDDMStructureLink(long structureLinkId)
 		throws PortalException, SystemException {
-		DDMStructureLink ddmStructureLink = ddmStructureLinkPersistence.remove(structureLinkId);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(ddmStructureLink);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return ddmStructureLinkPersistence.remove(structureLinkId);
 	}
 
 	/**
 	 * Deletes the d d m structure link from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param ddmStructureLink the d d m structure link
+	 * @return the d d m structure link that was removed
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteDDMStructureLink(DDMStructureLink ddmStructureLink)
-		throws SystemException {
-		ddmStructureLinkPersistence.remove(ddmStructureLink);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(ddmStructureLink);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+	@Indexable(type = IndexableType.DELETE)
+	public DDMStructureLink deleteDDMStructureLink(
+		DDMStructureLink ddmStructureLink) throws SystemException {
+		return ddmStructureLinkPersistence.remove(ddmStructureLink);
 	}
 
 	/**
@@ -294,6 +254,7 @@ public abstract class DDMStructureLinkLocalServiceBaseImpl
 	 * @return the d d m structure link that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public DDMStructureLink updateDDMStructureLink(
 		DDMStructureLink ddmStructureLink) throws SystemException {
 		return updateDDMStructureLink(ddmStructureLink, true);
@@ -307,28 +268,13 @@ public abstract class DDMStructureLinkLocalServiceBaseImpl
 	 * @return the d d m structure link that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public DDMStructureLink updateDDMStructureLink(
 		DDMStructureLink ddmStructureLink, boolean merge)
 		throws SystemException {
 		ddmStructureLink.setNew(false);
 
-		ddmStructureLink = ddmStructureLinkPersistence.update(ddmStructureLink,
-				merge);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(ddmStructureLink);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return ddmStructureLink;
+		return ddmStructureLinkPersistence.update(ddmStructureLink, merge);
 	}
 
 	/**
@@ -865,6 +811,5 @@ public abstract class DDMStructureLinkLocalServiceBaseImpl
 	protected UserFinder userFinder;
 	@BeanReference(type = PersistedModelLocalServiceRegistry.class)
 	protected PersistedModelLocalServiceRegistry persistedModelLocalServiceRegistry;
-	private static Log _log = LogFactoryUtil.getLog(DDMStructureLinkLocalServiceBaseImpl.class);
 	private String _beanIdentifier;
 }

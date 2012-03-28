@@ -20,15 +20,10 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.PortalPreferencesLocalServiceUtil;
-import com.liferay.portal.service.impl.PortletPreferencesLocalUtil;
-import com.liferay.portlet.BasePreferencesImpl;
-import com.liferay.portlet.PortalPreferencesImpl;
-import com.liferay.portlet.PortalPreferencesWrapper;
 import com.liferay.util.ContentUtil;
 
-import java.io.Serializable;
-
-import java.util.Map;
+import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.portlet.PortletPreferences;
 
@@ -252,20 +247,41 @@ public class PrefsPropsUtil {
 		long ownerId = companyId;
 		int ownerType = PortletKeys.PREFS_OWNER_TYPE_COMPANY;
 
-		Map<Serializable, BasePreferencesImpl> preferencesPool =
-			PortletPreferencesLocalUtil.getPreferencesPool(ownerId, ownerType);
+		return PortalPreferencesLocalServiceUtil.getPreferences(
+			companyId, ownerId, ownerType);
+	}
 
-		PortalPreferencesImpl portalPreferencesImpl =
-			(PortalPreferencesImpl)preferencesPool.get(companyId);
+	public static Properties getProperties(
+		PortletPreferences preferences, long companyId, String prefix,
+		boolean removePrefix) {
 
-		if (portalPreferencesImpl == null) {
-			return PortalPreferencesLocalServiceUtil.getPreferences(
-				companyId, ownerId, ownerType);
+		Properties newProperties = new Properties();
+
+		Enumeration<String> enu = preferences.getNames();
+
+		while (enu.hasMoreElements()) {
+			String key = enu.nextElement();
+
+			if (key.startsWith(prefix)) {
+				String value = preferences.getValue(key, StringPool.BLANK);
+
+				if (removePrefix) {
+					key = key.substring(prefix.length());
+				}
+
+				newProperties.setProperty(key, value);
+			}
 		}
-		else {
-			return new PortalPreferencesWrapper(
-				(PortalPreferencesImpl)portalPreferencesImpl.clone());
-		}
+
+		return newProperties;
+	}
+
+	public static Properties getProperties(String prefix, boolean removePrefix)
+		throws SystemException {
+
+		PortletPreferences preferences = getPreferences();
+
+		return getProperties(preferences, 0, prefix, removePrefix);
 	}
 
 	public static short getShort(long companyId, String name)

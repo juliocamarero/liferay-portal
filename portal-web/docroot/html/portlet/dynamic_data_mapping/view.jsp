@@ -136,8 +136,9 @@ portletURL.setParameter("tabs1", tabs1);
 					constrain: true,
 					width: 600
 				},
+				id: '<portlet:namespace />copyStructure',
 				refreshWindow: window,
-				title: '<%= UnicodeLanguageUtil.get(pageContext, "copy-structure") %>',
+				title: '<%= UnicodeLanguageUtil.get(pageContext, "copy-data-definition") %>',
 				uri: uri
 			}
 		);

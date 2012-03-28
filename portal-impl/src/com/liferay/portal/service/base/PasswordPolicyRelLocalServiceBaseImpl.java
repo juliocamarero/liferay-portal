@@ -23,11 +23,8 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PasswordPolicyRel;
 import com.liferay.portal.model.PersistedModel;
@@ -254,27 +251,12 @@ public abstract class PasswordPolicyRelLocalServiceBaseImpl
 	 * @return the password policy rel that was added
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public PasswordPolicyRel addPasswordPolicyRel(
 		PasswordPolicyRel passwordPolicyRel) throws SystemException {
 		passwordPolicyRel.setNew(true);
 
-		passwordPolicyRel = passwordPolicyRelPersistence.update(passwordPolicyRel,
-				false);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(passwordPolicyRel);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return passwordPolicyRel;
+		return passwordPolicyRelPersistence.update(passwordPolicyRel, false);
 	}
 
 	/**
@@ -291,49 +273,27 @@ public abstract class PasswordPolicyRelLocalServiceBaseImpl
 	 * Deletes the password policy rel with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param passwordPolicyRelId the primary key of the password policy rel
+	 * @return the password policy rel that was removed
 	 * @throws PortalException if a password policy rel with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deletePasswordPolicyRel(long passwordPolicyRelId)
+	@Indexable(type = IndexableType.DELETE)
+	public PasswordPolicyRel deletePasswordPolicyRel(long passwordPolicyRelId)
 		throws PortalException, SystemException {
-		PasswordPolicyRel passwordPolicyRel = passwordPolicyRelPersistence.remove(passwordPolicyRelId);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(passwordPolicyRel);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return passwordPolicyRelPersistence.remove(passwordPolicyRelId);
 	}
 
 	/**
 	 * Deletes the password policy rel from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param passwordPolicyRel the password policy rel
+	 * @return the password policy rel that was removed
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deletePasswordPolicyRel(PasswordPolicyRel passwordPolicyRel)
-		throws SystemException {
-		passwordPolicyRelPersistence.remove(passwordPolicyRel);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(passwordPolicyRel);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+	@Indexable(type = IndexableType.DELETE)
+	public PasswordPolicyRel deletePasswordPolicyRel(
+		PasswordPolicyRel passwordPolicyRel) throws SystemException {
+		return passwordPolicyRelPersistence.remove(passwordPolicyRel);
 	}
 
 	/**
@@ -459,6 +419,7 @@ public abstract class PasswordPolicyRelLocalServiceBaseImpl
 	 * @return the password policy rel that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public PasswordPolicyRel updatePasswordPolicyRel(
 		PasswordPolicyRel passwordPolicyRel) throws SystemException {
 		return updatePasswordPolicyRel(passwordPolicyRel, true);
@@ -472,28 +433,13 @@ public abstract class PasswordPolicyRelLocalServiceBaseImpl
 	 * @return the password policy rel that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public PasswordPolicyRel updatePasswordPolicyRel(
 		PasswordPolicyRel passwordPolicyRel, boolean merge)
 		throws SystemException {
 		passwordPolicyRel.setNew(false);
 
-		passwordPolicyRel = passwordPolicyRelPersistence.update(passwordPolicyRel,
-				merge);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(passwordPolicyRel);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return passwordPolicyRel;
+		return passwordPolicyRelPersistence.update(passwordPolicyRel, merge);
 	}
 
 	/**
@@ -4445,6 +4391,5 @@ public abstract class PasswordPolicyRelLocalServiceBaseImpl
 	protected CounterLocalService counterLocalService;
 	@BeanReference(type = PersistedModelLocalServiceRegistry.class)
 	protected PersistedModelLocalServiceRegistry persistedModelLocalServiceRegistry;
-	private static Log _log = LogFactoryUtil.getLog(PasswordPolicyRelLocalServiceBaseImpl.class);
 	private String _beanIdentifier;
 }

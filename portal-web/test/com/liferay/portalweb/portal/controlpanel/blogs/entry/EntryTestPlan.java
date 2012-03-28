@@ -16,6 +16,7 @@ package com.liferay.portalweb.portal.controlpanel.blogs.entry;
 
 import com.liferay.portalweb.portal.BaseTestSuite;
 import com.liferay.portalweb.portal.controlpanel.blogs.entry.addblogsentryautodraftcp.AddBlogsEntryAutoDraftCPTests;
+import com.liferay.portalweb.portal.controlpanel.blogs.entry.addblogsentryckeditorcp.AddBlogsEntryCKEditorCPTests;
 import com.liferay.portalweb.portal.controlpanel.blogs.entry.addblogsentrycontentnullcp.AddBlogsEntryContentNullCPTests;
 import com.liferay.portalweb.portal.controlpanel.blogs.entry.addblogsentrycp.AddBlogsEntryCPTests;
 import com.liferay.portalweb.portal.controlpanel.blogs.entry.addblogsentrydraftcp.AddBlogsEntryDraftCPTests;
@@ -44,6 +45,7 @@ public class EntryTestPlan extends BaseTestSuite {
 
 		testSuite.addTest(AddBlogsEntryAutoDraftCPTests.suite());
 		testSuite.addTest(AddBlogsEntryContentNullCPTests.suite());
+		testSuite.addTest(AddBlogsEntryCKEditorCPTests.suite());
 		testSuite.addTest(AddBlogsEntryCPTests.suite());
 		testSuite.addTest(AddBlogsEntryDraftCPTests.suite());
 		testSuite.addTest(AddBlogsEntryMultipleCPTests.suite());

@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.SetUtil;
+import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -68,17 +69,6 @@ public class ImageProcessorImpl
 		String type = _instance.getThumbnailType(fileVersion);
 
 		deleteFiles(fileVersion, type);
-	}
-
-	public void exportGeneratedFiles(
-			PortletDataContext portletDataContext, FileEntry fileEntry,
-			Element fileEntryElement)
-		throws Exception {
-
-		exportThumbnails(
-			portletDataContext, fileEntry, fileEntryElement, "image");
-
-		exportPreview(portletDataContext, fileEntry, fileEntryElement);
 	}
 
 	public void generateImages(FileVersion fileVersion) {
@@ -162,26 +152,6 @@ public class ImageProcessorImpl
 		return hasImages;
 	}
 
-	public void importGeneratedFiles(
-			PortletDataContext portletDataContext, FileEntry fileEntry,
-			FileEntry importedFileEntry, Element fileEntryElement)
-		throws Exception {
-
-		importThumbnails(
-			portletDataContext, fileEntry, importedFileEntry, fileEntryElement,
-			"image");
-
-		FileVersion importedFileVersion = importedFileEntry.getFileVersion();
-
-		if (!_previewGenerationRequired(importedFileVersion)) {
-			return;
-		}
-
-		importPreview(
-			portletDataContext, fileEntry, importedFileEntry, fileEntryElement,
-			"image", getPreviewType(importedFileVersion));
-	}
-
 	public boolean isImageSupported(FileVersion fileVersion) {
 		return _instance.isSupported(fileVersion);
 	}
@@ -213,6 +183,39 @@ public class ImageProcessorImpl
 		_instance._queueGeneration(fileVersion);
 	}
 
+	@Override
+	protected void doExportGeneratedFiles(
+			PortletDataContext portletDataContext, FileEntry fileEntry,
+			Element fileEntryElement)
+		throws Exception {
+
+		exportThumbnails(
+			portletDataContext, fileEntry, fileEntryElement, "image");
+
+		exportPreview(portletDataContext, fileEntry, fileEntryElement);
+	}
+
+	@Override
+	protected void doImportGeneratedFiles(
+			PortletDataContext portletDataContext, FileEntry fileEntry,
+			FileEntry importedFileEntry, Element fileEntryElement)
+		throws Exception {
+
+		importThumbnails(
+			portletDataContext, fileEntry, importedFileEntry, fileEntryElement,
+			"image");
+
+		FileVersion importedFileVersion = importedFileEntry.getFileVersion();
+
+		if (!_previewGenerationRequired(importedFileVersion)) {
+			return;
+		}
+
+		importPreview(
+			portletDataContext, fileEntry, importedFileEntry, fileEntryElement,
+			"image", getPreviewType(importedFileVersion));
+	}
+
 	protected void exportPreview(
 			PortletDataContext portletDataContext, FileEntry fileEntry,
 			Element fileEntryElement)
@@ -236,6 +239,8 @@ public class ImageProcessorImpl
 	}
 
 	private void _generateImages(FileVersion fileVersion) {
+		InputStream inputStream = null;
+
 		try {
 			if (!PropsValues.DL_FILE_ENTRY_THUMBNAIL_ENABLED &&
 				!PropsValues.DL_FILE_ENTRY_PREVIEW_ENABLED) {
@@ -243,7 +248,7 @@ public class ImageProcessorImpl
 				return;
 			}
 
-			InputStream inputStream = fileVersion.getContentStream(false);
+			inputStream = fileVersion.getContentStream(false);
 
 			byte[] bytes = FileUtil.getBytes(inputStream);
 
@@ -269,6 +274,8 @@ public class ImageProcessorImpl
 			_log.error(e, e);
 		}
 		finally {
+			StreamUtil.cleanUp(inputStream);
+
 			_fileVersionIds.remove(fileVersion.getFileVersionId());
 		}
 	}
@@ -355,9 +362,11 @@ public class ImageProcessorImpl
 
 		String type = getPreviewType(fileVersion);
 
-		File file = FileUtil.createTempFile(type);
+		File file = null;
 
 		try {
+			file = FileUtil.createTempFile(type);
+
 			FileOutputStream fos = new FileOutputStream(file);
 
 			try {

@@ -23,11 +23,8 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.model.UserIdMapper;
@@ -254,26 +251,12 @@ public abstract class UserIdMapperLocalServiceBaseImpl
 	 * @return the user ID mapper that was added
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public UserIdMapper addUserIdMapper(UserIdMapper userIdMapper)
 		throws SystemException {
 		userIdMapper.setNew(true);
 
-		userIdMapper = userIdMapperPersistence.update(userIdMapper, false);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(userIdMapper);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return userIdMapper;
+		return userIdMapperPersistence.update(userIdMapper, false);
 	}
 
 	/**
@@ -290,49 +273,27 @@ public abstract class UserIdMapperLocalServiceBaseImpl
 	 * Deletes the user ID mapper with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param userIdMapperId the primary key of the user ID mapper
+	 * @return the user ID mapper that was removed
 	 * @throws PortalException if a user ID mapper with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteUserIdMapper(long userIdMapperId)
+	@Indexable(type = IndexableType.DELETE)
+	public UserIdMapper deleteUserIdMapper(long userIdMapperId)
 		throws PortalException, SystemException {
-		UserIdMapper userIdMapper = userIdMapperPersistence.remove(userIdMapperId);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(userIdMapper);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return userIdMapperPersistence.remove(userIdMapperId);
 	}
 
 	/**
 	 * Deletes the user ID mapper from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param userIdMapper the user ID mapper
+	 * @return the user ID mapper that was removed
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteUserIdMapper(UserIdMapper userIdMapper)
+	@Indexable(type = IndexableType.DELETE)
+	public UserIdMapper deleteUserIdMapper(UserIdMapper userIdMapper)
 		throws SystemException {
-		userIdMapperPersistence.remove(userIdMapper);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(userIdMapper);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return userIdMapperPersistence.remove(userIdMapper);
 	}
 
 	/**
@@ -458,6 +419,7 @@ public abstract class UserIdMapperLocalServiceBaseImpl
 	 * @return the user ID mapper that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public UserIdMapper updateUserIdMapper(UserIdMapper userIdMapper)
 		throws SystemException {
 		return updateUserIdMapper(userIdMapper, true);
@@ -471,26 +433,12 @@ public abstract class UserIdMapperLocalServiceBaseImpl
 	 * @return the user ID mapper that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public UserIdMapper updateUserIdMapper(UserIdMapper userIdMapper,
 		boolean merge) throws SystemException {
 		userIdMapper.setNew(false);
 
-		userIdMapper = userIdMapperPersistence.update(userIdMapper, merge);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(userIdMapper);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return userIdMapper;
+		return userIdMapperPersistence.update(userIdMapper, merge);
 	}
 
 	/**
@@ -4442,6 +4390,5 @@ public abstract class UserIdMapperLocalServiceBaseImpl
 	protected CounterLocalService counterLocalService;
 	@BeanReference(type = PersistedModelLocalServiceRegistry.class)
 	protected PersistedModelLocalServiceRegistry persistedModelLocalServiceRegistry;
-	private static Log _log = LogFactoryUtil.getLog(UserIdMapperLocalServiceBaseImpl.class);
 	private String _beanIdentifier;
 }

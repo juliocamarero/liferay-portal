@@ -21,31 +21,32 @@ import org.junit.runners.model.Statement;
 /**
  * @author Miguel Pastor
  */
-public class RunBeforeTestMethodCallback extends Statement {
+public class RunBeforeTestMethodCallback extends AbstractStatementCallback {
 
 	public RunBeforeTestMethodCallback(
 		Object instance, Method method, Statement statement,
 		TestContextHandler testContextHandler) {
 
+		super(statement, testContextHandler);
+
 		_instance = instance;
 		_method = method;
-		_statement = statement;
-		_testContextHandler = testContextHandler;
 	}
 
 	@Override
 	public void evaluate() throws Throwable {
-		_testContextHandler.runBeforeTestMethod(_instance, _method);
+		TestContextHandler testContextHandler = getTestContextHandler();
 
-		if (_statement != null) {
-			_statement.evaluate();
+		testContextHandler.runBeforeTestMethod(_instance, _method);
+
+		Statement statement = getStatement();
+
+		if (statement != null) {
+			statement.evaluate();
 		}
-
 	}
 
 	private Object _instance;
 	private Method _method;
-	private Statement _statement;
-	private TestContextHandler _testContextHandler;
 
 }

@@ -23,11 +23,8 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.GroupLocalService;
@@ -102,26 +99,12 @@ public abstract class MBStatsUserLocalServiceBaseImpl
 	 * @return the message boards stats user that was added
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public MBStatsUser addMBStatsUser(MBStatsUser mbStatsUser)
 		throws SystemException {
 		mbStatsUser.setNew(true);
 
-		mbStatsUser = mbStatsUserPersistence.update(mbStatsUser, false);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(mbStatsUser);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return mbStatsUser;
+		return mbStatsUserPersistence.update(mbStatsUser, false);
 	}
 
 	/**
@@ -138,49 +121,27 @@ public abstract class MBStatsUserLocalServiceBaseImpl
 	 * Deletes the message boards stats user with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param statsUserId the primary key of the message boards stats user
+	 * @return the message boards stats user that was removed
 	 * @throws PortalException if a message boards stats user with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteMBStatsUser(long statsUserId)
+	@Indexable(type = IndexableType.DELETE)
+	public MBStatsUser deleteMBStatsUser(long statsUserId)
 		throws PortalException, SystemException {
-		MBStatsUser mbStatsUser = mbStatsUserPersistence.remove(statsUserId);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(mbStatsUser);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return mbStatsUserPersistence.remove(statsUserId);
 	}
 
 	/**
 	 * Deletes the message boards stats user from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param mbStatsUser the message boards stats user
+	 * @return the message boards stats user that was removed
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteMBStatsUser(MBStatsUser mbStatsUser)
+	@Indexable(type = IndexableType.DELETE)
+	public MBStatsUser deleteMBStatsUser(MBStatsUser mbStatsUser)
 		throws SystemException {
-		mbStatsUserPersistence.remove(mbStatsUser);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(mbStatsUser);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return mbStatsUserPersistence.remove(mbStatsUser);
 	}
 
 	/**
@@ -306,6 +267,7 @@ public abstract class MBStatsUserLocalServiceBaseImpl
 	 * @return the message boards stats user that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public MBStatsUser updateMBStatsUser(MBStatsUser mbStatsUser)
 		throws SystemException {
 		return updateMBStatsUser(mbStatsUser, true);
@@ -319,26 +281,12 @@ public abstract class MBStatsUserLocalServiceBaseImpl
 	 * @return the message boards stats user that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public MBStatsUser updateMBStatsUser(MBStatsUser mbStatsUser, boolean merge)
 		throws SystemException {
 		mbStatsUser.setNew(false);
 
-		mbStatsUser = mbStatsUserPersistence.update(mbStatsUser, merge);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(mbStatsUser);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return mbStatsUser;
+		return mbStatsUserPersistence.update(mbStatsUser, merge);
 	}
 
 	/**
@@ -1138,6 +1086,5 @@ public abstract class MBStatsUserLocalServiceBaseImpl
 	protected UserFinder userFinder;
 	@BeanReference(type = PersistedModelLocalServiceRegistry.class)
 	protected PersistedModelLocalServiceRegistry persistedModelLocalServiceRegistry;
-	private static Log _log = LogFactoryUtil.getLog(MBStatsUserLocalServiceBaseImpl.class);
 	private String _beanIdentifier;
 }

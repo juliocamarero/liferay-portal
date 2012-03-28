@@ -65,10 +65,11 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 	* Deletes the layout with the primary key from the database. Also notifies the appropriate model listeners.
 	*
 	* @param plid the primary key of the layout
+	* @return the layout that was removed
 	* @throws PortalException if a layout with the primary key could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public void deleteLayout(long plid)
+	public com.liferay.portal.model.Layout deleteLayout(long plid)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -76,9 +77,11 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 	* Deletes the layout from the database. Also notifies the appropriate model listeners.
 	*
 	* @param layout the layout
+	* @return the layout that was removed
 	* @throws SystemException if a system exception occurred
 	*/
-	public void deleteLayout(com.liferay.portal.model.Layout layout)
+	public com.liferay.portal.model.Layout deleteLayout(
+		com.liferay.portal.model.Layout layout)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
@@ -784,6 +787,11 @@ public interface LayoutLocalService extends PersistedModelLocalService {
 	public com.liferay.portal.model.LayoutReference[] getLayouts(
 		long companyId, java.lang.String portletId,
 		java.lang.String preferencesKey, java.lang.String preferencesValue)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getLayoutsByLayoutPrototypeUuidCount(
+		java.lang.String layoutPrototypeUuid)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

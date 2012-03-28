@@ -132,17 +132,17 @@ public class PasswordPolicyLocalServiceImpl
 	}
 
 	@Override
-	public void deletePasswordPolicy(long passwordPolicyId)
+	public PasswordPolicy deletePasswordPolicy(long passwordPolicyId)
 		throws PortalException, SystemException {
 
 		PasswordPolicy passwordPolicy =
 			passwordPolicyPersistence.findByPrimaryKey(passwordPolicyId);
 
-		deletePasswordPolicy(passwordPolicy);
+		return deletePasswordPolicy(passwordPolicy);
 	}
 
 	@Override
-	public void deletePasswordPolicy(PasswordPolicy passwordPolicy)
+	public PasswordPolicy deletePasswordPolicy(PasswordPolicy passwordPolicy)
 		throws PortalException, SystemException {
 
 		if (passwordPolicy.isDefaultPolicy()) {
@@ -163,7 +163,7 @@ public class PasswordPolicyLocalServiceImpl
 
 		// Password policy
 
-		passwordPolicyPersistence.remove(passwordPolicy);
+		return passwordPolicyPersistence.remove(passwordPolicy);
 	}
 
 	public PasswordPolicy getDefaultPasswordPolicy(long companyId)
@@ -174,13 +174,6 @@ public class PasswordPolicyLocalServiceImpl
 		}
 
 		return passwordPolicyPersistence.findByC_DP(companyId, true);
-	}
-
-	@Override
-	public PasswordPolicy getPasswordPolicy(long passwordPolicyId)
-		throws PortalException, SystemException {
-
-		return passwordPolicyPersistence.findByPrimaryKey(passwordPolicyId);
 	}
 
 	/**

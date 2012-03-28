@@ -24,8 +24,7 @@ import org.junit.runners.model.Statement;
 /**
  * @author Miguel Pastor
  */
-public class LiferayIntegrationJUnitTestRunner
-	extends BlockJUnit4ClassRunner {
+public class LiferayIntegrationJUnitTestRunner extends BlockJUnit4ClassRunner {
 
 	public LiferayIntegrationJUnitTestRunner(Class<?> clazz)
 		throws InitializationError {
@@ -41,6 +40,14 @@ public class LiferayIntegrationJUnitTestRunner
 		_testContextHandler = new TestContextHandler(clazz);
 	}
 
+	@Override
+	protected Statement withAfterClasses(Statement statement) {
+		Statement withAfterClassesStatement = super.withAfterClasses(statement);
+
+		return new RunAfterTestClassesCallback(
+			withAfterClassesStatement, _testContextHandler);
+	}
+
 	/**
 	 * @deprecated
 	 */
@@ -54,6 +61,15 @@ public class LiferayIntegrationJUnitTestRunner
 		return new RunAfterTestMethodCallback(
 			instance, frameworkMethod.getMethod(), withAftersStatement,
 			_testContextHandler);
+	}
+
+	@Override
+	protected Statement withBeforeClasses(Statement statement) {
+		Statement withBeforeClassesStatement = super.withBeforeClasses(
+			statement);
+
+		return new RunBeforeTestClassesCallback(
+			withBeforeClassesStatement, _testContextHandler);
 	}
 
 	/**

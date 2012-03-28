@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.PortletDisplay;
@@ -117,18 +116,24 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 		}
 
 		if (Validator.isNull(_id)) {
-			String randomKey = PortalUtil.generateRandomKey(
-				request, IconMenuTag.class.getName());
+			_id = (String)request.getAttribute(
+				"liferay-ui:search-container-row:rowId");
 
-			_id = randomKey + StringPool.UNDERLINE + "menu";
+			if (Validator.isNull(_id)) {
+				_id = PortalUtil.generateRandomKey(
+					request, IconMenuTag.class.getName());
+			}
+
+			_id = _id.concat("_menu");
 		}
-		else {
-			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-			String namespace = portletDisplay.getNamespace();
+		request.setAttribute("liferay-ui:icon-menu:id", _id);
 
-			_id = namespace.concat(_id);
-		}
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		String namespace = portletDisplay.getNamespace();
+
+		_id = namespace.concat(_id);
 
 		request.setAttribute(
 			"liferay-ui:icon-menu:icon-count", new IntegerWrapper());
@@ -227,6 +232,7 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 			"liferay-ui:icon-menu:icon-count");
 
 		request.removeAttribute("liferay-ui:icon-menu:icon-count");
+		request.removeAttribute("liferay-ui:icon-menu:id");
 
 		Boolean singleIcon = (Boolean)request.getAttribute(
 			"liferay-ui:icon-menu:single-icon");
@@ -283,7 +289,10 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 					jspWriter.write(_id);
 					jspWriter.write("\">");
 					jspWriter.write("<li class=\"lfr-trigger\"><strong>");
-					jspWriter.write("<a class=\"nobr\" href=\"javascript:;\">");
+					jspWriter.write(
+						"<a class=\"nobr\" href=\"javascript:;\" id=\"");
+					jspWriter.write(_id);
+					jspWriter.write("Button\">");
 
 					if (Validator.isNotNull(_icon)) {
 						jspWriter.write("<img alt=\"\" src=\"");

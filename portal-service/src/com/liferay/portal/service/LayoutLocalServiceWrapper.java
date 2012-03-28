@@ -56,24 +56,27 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 	* Deletes the layout with the primary key from the database. Also notifies the appropriate model listeners.
 	*
 	* @param plid the primary key of the layout
+	* @return the layout that was removed
 	* @throws PortalException if a layout with the primary key could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public void deleteLayout(long plid)
+	public com.liferay.portal.model.Layout deleteLayout(long plid)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_layoutLocalService.deleteLayout(plid);
+		return _layoutLocalService.deleteLayout(plid);
 	}
 
 	/**
 	* Deletes the layout from the database. Also notifies the appropriate model listeners.
 	*
 	* @param layout the layout
+	* @return the layout that was removed
 	* @throws SystemException if a system exception occurred
 	*/
-	public void deleteLayout(com.liferay.portal.model.Layout layout)
+	public com.liferay.portal.model.Layout deleteLayout(
+		com.liferay.portal.model.Layout layout)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		_layoutLocalService.deleteLayout(layout);
+		return _layoutLocalService.deleteLayout(layout);
 	}
 
 	/**
@@ -854,6 +857,12 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _layoutLocalService.getLayouts(companyId, portletId,
 			preferencesKey, preferencesValue);
+	}
+
+	public int getLayoutsByLayoutPrototypeUuidCount(
+		java.lang.String layoutPrototypeUuid)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _layoutLocalService.getLayoutsByLayoutPrototypeUuidCount(layoutPrototypeUuid);
 	}
 
 	public int getLayoutsCount(com.liferay.portal.model.Group group,

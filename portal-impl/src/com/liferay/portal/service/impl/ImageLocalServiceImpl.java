@@ -136,11 +136,11 @@ public class ImageLocalServiceImpl extends ImageLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void deleteImage(long imageId)
+	public Image deleteImage(long imageId)
 		throws PortalException, SystemException {
 
 		if (imageId <= 0) {
-			return;
+			return null;
 		}
 
 		/*if (PropsValues.IMAGE_HOOK_IMPL.equals(
@@ -152,8 +152,10 @@ public class ImageLocalServiceImpl extends ImageLocalServiceBaseImpl {
 			imagePersistence.clearCache();
 		}
 		else {*/
+			Image image = null;
+
 			try {
-				Image image = getImage(imageId);
+				image = getImage(imageId);
 
 				imagePersistence.remove(imageId);
 
@@ -163,6 +165,8 @@ public class ImageLocalServiceImpl extends ImageLocalServiceBaseImpl {
 			}
 			catch (NoSuchImageException nsie) {
 			}
+
+			return image;
 		//}
 	}
 
@@ -252,11 +256,6 @@ public class ImageLocalServiceImpl extends ImageLocalServiceBaseImpl {
 
 	public List<Image> getImages() throws SystemException {
 		return imagePersistence.findAll();
-	}
-
-	@Override
-	public List<Image> getImages(int start, int end) throws SystemException {
-		return imagePersistence.findAll(start, end);
 	}
 
 	public List<Image> getImagesBySize(int size) throws SystemException {

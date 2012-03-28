@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.service.base.ContactLocalServiceBaseImpl;
@@ -25,7 +24,7 @@ import com.liferay.portal.service.base.ContactLocalServiceBaseImpl;
 public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 	@Override
-	public void deleteContact(Contact contact) throws SystemException {
+	public Contact deleteContact(Contact contact) throws SystemException {
 
 		// Addresses
 
@@ -53,23 +52,18 @@ public class ContactLocalServiceImpl extends ContactLocalServiceBaseImpl {
 
 		// Contact
 
-		contactPersistence.remove(contact);
+		return contactPersistence.remove(contact);
 	}
 
 	@Override
-	public void deleteContact(long contactId) throws SystemException {
+	public Contact deleteContact(long contactId) throws SystemException {
 		Contact contact = contactPersistence.fetchByPrimaryKey(contactId);
 
 		if (contact != null) {
 			deleteContact(contact);
 		}
-	}
 
-	@Override
-	public Contact getContact(long contactId)
-		throws PortalException, SystemException {
-
-		return contactPersistence.findByPrimaryKey(contactId);
+		return contact;
 	}
 
 }

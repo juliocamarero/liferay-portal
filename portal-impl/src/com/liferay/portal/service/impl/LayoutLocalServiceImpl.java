@@ -104,6 +104,7 @@ import javax.portlet.PortletException;
  * @author Raymond Augé
  * @author Jorge Ferrer
  * @author Bruno Farache
+ * @author Vilmos Papp
  */
 public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
@@ -943,23 +944,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the layout matching the primary key; throws a {@link
-	 * com.liferay.portal.NoSuchLayoutException} otherwise.
-	 *
-	 * @param  plid the primary key of the layout
-	 * @return the matching layout
-	 * @throws PortalException if a layout with the primary key could not be
-	 *         found
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public Layout getLayout(long plid)
-		throws PortalException, SystemException {
-
-		return layoutPersistence.findByPrimaryKey(plid);
-	}
-
-	/**
 	 * Returns the layout matching the primary key, group, and privacy; throws a
 	 * {@link com.liferay.portal.NoSuchLayoutException} otherwise.
 	 *
@@ -990,23 +974,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		return layoutPersistence.findByIconImageId(iconImageId);
-	}
-
-	/**
-	 * Returns the layout with the universally unique identifier and the group.
-	 *
-	 * @param  uuid the universally unique identifier of the layout
-	 * @param  groupId the primary key of the group
-	 * @return the layout with the universally unique identifier and the group
-	 * @throws PortalException if a group with the primary key could not be
-	 *         found
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public Layout getLayoutByUuidAndGroupId(String uuid, long groupId)
-		throws PortalException, SystemException {
-
-		return layoutPersistence.findByUUID_G(uuid, groupId);
 	}
 
 	/**
@@ -1143,6 +1110,13 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		return layoutReferences.toArray(
 			new LayoutReference[layoutReferences.size()]);
+	}
+
+	public int getLayoutsByLayoutPrototypeUuidCount(String layoutPrototypeUuid)
+		throws SystemException {
+
+		return layoutPersistence.countByLayoutPrototypeUuid(
+			layoutPrototypeUuid);
 	}
 
 	public int getLayoutsCount(Group group, boolean privateLayout)
@@ -2160,7 +2134,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 				junction.add(criterion);
 			}
-			else{
+			else {
 				Criterion criterion = RestrictionsFactoryUtil.eq(
 					"portletId", scopablePortlet.getPortletId());
 
@@ -2304,16 +2278,16 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			long groupId, boolean privateLayout, long parentLayoutId)
 		throws SystemException {
 
-		List<Layout> layouts = layoutPersistence.findByG_P_P(
-			groupId, privateLayout, parentLayoutId);
+		try {
+			Layout layout = layoutPersistence.findByG_P_P_First(
+				groupId, privateLayout, parentLayoutId,
+				new LayoutPriorityComparator(false));
 
-		if (layouts.size() == 0) {
+			return layout.getPriority() + 1;
+		}
+		catch (NoSuchLayoutException e) {
 			return 0;
 		}
-
-		Layout layout = layouts.get(layouts.size() - 1);
-
-		return layout.getPriority() + 1;
 	}
 
 	protected long getParentLayoutId(

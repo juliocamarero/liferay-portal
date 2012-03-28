@@ -128,6 +128,7 @@ public class PluginsSummaryBuilder {
 		String name = StringPool.BLANK;
 		String tags = StringPool.BLANK;
 		String shortDescription = StringPool.BLANK;
+		String longDescription = StringPool.BLANK;
 		String changeLog = StringPool.BLANK;
 		String pageURL = StringPool.BLANK;
 		String author = StringPool.BLANK;
@@ -139,6 +140,7 @@ public class PluginsSummaryBuilder {
 			name = _readProperty(properties, "name");
 			tags = _readProperty(properties, "tags");
 			shortDescription = _readProperty(properties, "short-description");
+			longDescription = _readProperty(properties, "long-description");
 			changeLog = _readProperty(properties, "change-log");
 			pageURL = _readProperty(properties, "page-url");
 			author = _readProperty(properties, "author");
@@ -152,6 +154,8 @@ public class PluginsSummaryBuilder {
 			name = rootElement.elementText("name");
 			tags = _readList(rootElement.element("tags"), "tag");
 			shortDescription = rootElement.elementText("short-description");
+			longDescription = GetterUtil.getString(
+				rootElement.elementText("long-description"));
 			changeLog = rootElement.elementText("change-log");
 			pageURL = rootElement.elementText("page-url");
 			author = rootElement.elementText("author");
@@ -168,6 +172,7 @@ public class PluginsSummaryBuilder {
 		_writeElement(sb, "type", type, 2);
 		_writeElement(sb, "tags", tags, 2);
 		_writeElement(sb, "short-description", shortDescription, 2);
+		_writeElement(sb, "long-description", longDescription, 2);
 		_writeElement(sb, "change-log", changeLog, 2);
 		_writeElement(sb, "page-url", pageURL, 2);
 		_writeElement(sb, "author", author, 2);
@@ -217,9 +222,13 @@ public class PluginsSummaryBuilder {
 	private String _readReleng(String fileName) throws Exception {
 		int x = fileName.indexOf("WEB-INF");
 
+		String relativeWebInfDirName = fileName.substring(0, x + 8);
+
+		String fullWebInfDirName =
+			_pluginsDir + StringPool.SLASH + relativeWebInfDirName;
+
 		String relengPropertiesFileName =
-			_pluginsDir + StringPool.SLASH + fileName.substring(0, x + 8) +
-				"liferay-releng.properties";
+			fullWebInfDirName + "liferay-releng.properties";
 
 		Properties relengProperties = null;
 
@@ -241,10 +250,48 @@ public class PluginsSummaryBuilder {
 		StringBundler sb = new StringBundler();
 
 		_writeElement(sb, "bundle", relengProperties, 3);
+		_writeElement(sb, "category", relengProperties, 3);
+		_writeElement(sb, "compatibility", relengProperties, 3);
+		_writeElement(sb, "demo-url", relengProperties, 3);
+
+		if (FileUtil.exists(fullWebInfDirName + "releng/icons/90x90.png")) {
+			_writeElement(
+				sb, "icon", relativeWebInfDirName + "releng/icons/90x90.png",
+				3);
+		}
+
 		_writeElement(sb, "labs", relengProperties, 3);
 		_writeElement(sb, "marketplace", relengProperties, 3);
 		_writeElement(sb, "parent-app", relengProperties, 3);
 		_writeElement(sb, "public", relengProperties, 3);
+
+		String fullScreenshotsDirName =
+			fullWebInfDirName + "releng/screenshots/";
+		String relativeScreenshotsDirName =
+			relativeWebInfDirName + "releng/screenshots/";
+
+		if (FileUtil.exists(fullScreenshotsDirName)) {
+			String[] screenshotsFileNames = FileUtil.listFiles(
+				fullScreenshotsDirName);
+
+			Arrays.sort(screenshotsFileNames);
+
+			for (String screenshotsFileName : screenshotsFileNames) {
+				if (screenshotsFileName.equals("Thumbs.db")) {
+					FileUtil.delete(
+						fullScreenshotsDirName + screenshotsFileName);
+				}
+
+				if (!screenshotsFileName.endsWith(".png")) {
+					continue;
+				}
+
+				_writeElement(
+					sb, "screenshot",
+					relativeScreenshotsDirName + screenshotsFileName, 3);
+			}
+		}
+
 		_writeElement(sb, "standalone-app", relengProperties, 3);
 		_writeElement(sb, "supported", relengProperties, 3);
 
@@ -258,6 +305,9 @@ public class PluginsSummaryBuilder {
 		StringBundler sb = new StringBundler();
 
 		_writeProperty(sb, relengProperties, "bundle", "false");
+		_writeProperty(sb, relengProperties, "category", "");
+		_writeProperty(sb, relengProperties, "compatibility", "");
+		_writeProperty(sb, relengProperties, "demo-url", "");
 		_writeProperty(sb, relengProperties, "labs", "true");
 		_writeProperty(sb, relengProperties, "marketplace", "false");
 		_writeProperty(sb, relengProperties, "parent-app", "");

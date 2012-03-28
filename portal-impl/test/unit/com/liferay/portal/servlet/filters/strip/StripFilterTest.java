@@ -15,7 +15,6 @@
 package com.liferay.portal.servlet.filters.strip;
 
 import com.liferay.portal.cache.key.HashCodeCacheKeyGenerator;
-import com.liferay.portal.kernel.cache.key.CacheKeyGenerator;
 import com.liferay.portal.kernel.cache.key.CacheKeyGeneratorUtil;
 import com.liferay.portal.util.MinifierUtil;
 
@@ -29,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -373,11 +371,12 @@ public class StripFilterTest extends PowerMockito {
 	private void _mockCacheGenerationUtil() {
 		mockStatic(CacheKeyGeneratorUtil.class);
 
-		OngoingStubbing<CacheKeyGenerator> ongoingStubbing = when(
+		when(
 			CacheKeyGeneratorUtil.getCacheKeyGenerator(
-				StripFilter.class.getName()));
-
-		ongoingStubbing.thenReturn(new HashCodeCacheKeyGenerator());
+				StripFilter.class.getName())
+		).thenReturn(
+			new HashCodeCacheKeyGenerator()
+		);
 	}
 
 }

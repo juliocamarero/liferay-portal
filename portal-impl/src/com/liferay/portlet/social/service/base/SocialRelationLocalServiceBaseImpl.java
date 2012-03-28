@@ -23,11 +23,8 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistry;
@@ -94,26 +91,12 @@ public abstract class SocialRelationLocalServiceBaseImpl
 	 * @return the social relation that was added
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public SocialRelation addSocialRelation(SocialRelation socialRelation)
 		throws SystemException {
 		socialRelation.setNew(true);
 
-		socialRelation = socialRelationPersistence.update(socialRelation, false);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(socialRelation);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return socialRelation;
+		return socialRelationPersistence.update(socialRelation, false);
 	}
 
 	/**
@@ -130,49 +113,27 @@ public abstract class SocialRelationLocalServiceBaseImpl
 	 * Deletes the social relation with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param relationId the primary key of the social relation
+	 * @return the social relation that was removed
 	 * @throws PortalException if a social relation with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteSocialRelation(long relationId)
+	@Indexable(type = IndexableType.DELETE)
+	public SocialRelation deleteSocialRelation(long relationId)
 		throws PortalException, SystemException {
-		SocialRelation socialRelation = socialRelationPersistence.remove(relationId);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(socialRelation);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return socialRelationPersistence.remove(relationId);
 	}
 
 	/**
 	 * Deletes the social relation from the database. Also notifies the appropriate model listeners.
 	 *
 	 * @param socialRelation the social relation
+	 * @return the social relation that was removed
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteSocialRelation(SocialRelation socialRelation)
+	@Indexable(type = IndexableType.DELETE)
+	public SocialRelation deleteSocialRelation(SocialRelation socialRelation)
 		throws SystemException {
-		socialRelationPersistence.remove(socialRelation);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.delete(socialRelation);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
+		return socialRelationPersistence.remove(socialRelation);
 	}
 
 	/**
@@ -298,6 +259,7 @@ public abstract class SocialRelationLocalServiceBaseImpl
 	 * @return the social relation that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public SocialRelation updateSocialRelation(SocialRelation socialRelation)
 		throws SystemException {
 		return updateSocialRelation(socialRelation, true);
@@ -311,26 +273,12 @@ public abstract class SocialRelationLocalServiceBaseImpl
 	 * @return the social relation that was updated
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	public SocialRelation updateSocialRelation(SocialRelation socialRelation,
 		boolean merge) throws SystemException {
 		socialRelation.setNew(false);
 
-		socialRelation = socialRelationPersistence.update(socialRelation, merge);
-
-		Indexer indexer = IndexerRegistryUtil.getIndexer(getModelClassName());
-
-		if (indexer != null) {
-			try {
-				indexer.reindex(socialRelation);
-			}
-			catch (SearchException se) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(se, se);
-				}
-			}
-		}
-
-		return socialRelation;
+		return socialRelationPersistence.update(socialRelation, merge);
 	}
 
 	/**
@@ -976,6 +924,5 @@ public abstract class SocialRelationLocalServiceBaseImpl
 	protected UserFinder userFinder;
 	@BeanReference(type = PersistedModelLocalServiceRegistry.class)
 	protected PersistedModelLocalServiceRegistry persistedModelLocalServiceRegistry;
-	private static Log _log = LogFactoryUtil.getLog(SocialRelationLocalServiceBaseImpl.class);
 	private String _beanIdentifier;
 }

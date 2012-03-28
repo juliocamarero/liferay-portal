@@ -207,10 +207,14 @@ public class ServiceContextFactory {
 
 		List<Long> assetCategoryIdsList = new ArrayList<Long>();
 
+		boolean updateAssetCategoryIds = false;
+
 		for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
 			String name = entry.getKey();
 
 			if (name.startsWith("assetCategoryIds")) {
+				updateAssetCategoryIds = true;
+
 				long[] assetVocabularyAssetCategoryIds = StringUtil.split(
 					ParamUtil.getString(request, name), 0L);
 
@@ -220,21 +224,32 @@ public class ServiceContextFactory {
 			}
 		}
 
-		long[] assetCategoryIds = ArrayUtil.toArray(
-			assetCategoryIdsList.toArray(
-				new Long[assetCategoryIdsList.size()]));
+		if (updateAssetCategoryIds) {
+			long[] assetCategoryIds = ArrayUtil.toArray(
+				assetCategoryIdsList.toArray(
+					new Long[assetCategoryIdsList.size()]));
+
+			serviceContext.setAssetCategoryIds(assetCategoryIds);
+		}
+
 		boolean assetEntryVisible = ParamUtil.getBoolean(
 			request, "assetEntryVisible", true);
+
+		serviceContext.setAssetEntryVisible(assetEntryVisible);
+
 		long[] assetLinkEntryIds = StringUtil.split(
 			ParamUtil.getString(
-				request, "assetLinkSearchContainerPrimaryKeys"), 0L);
-		String[] assetTagNames = StringUtil.split(
-			ParamUtil.getString(request, "assetTagNames"));
+				request, "assetLinksSearchContainerPrimaryKeys"), 0L);
 
-		serviceContext.setAssetCategoryIds(assetCategoryIds);
-		serviceContext.setAssetEntryVisible(assetEntryVisible);
 		serviceContext.setAssetLinkEntryIds(assetLinkEntryIds);
-		serviceContext.setAssetTagNames(assetTagNames);
+
+		String assetTagNamesString = request.getParameter("assetTagNames");
+
+		if (assetTagNamesString != null) {
+			String[] assetTagNames = StringUtil.split(assetTagNamesString);
+
+			serviceContext.setAssetTagNames(assetTagNames);
+		}
 
 		// Workflow
 
@@ -383,10 +398,14 @@ public class ServiceContextFactory {
 
 		List<Long> assetCategoryIdsList = new ArrayList<Long>();
 
+		boolean updateAssetCategoryIds = false;
+
 		for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
 			String name = entry.getKey();
 
 			if (name.startsWith("assetCategoryIds")) {
+				updateAssetCategoryIds = true;
+
 				long[] assetVocabularyAssetCategoryIds = StringUtil.split(
 					ParamUtil.getString(portletRequest, name), 0L);
 
@@ -396,21 +415,32 @@ public class ServiceContextFactory {
 			}
 		}
 
-		long[] assetCategoryIds = ArrayUtil.toArray(
-			assetCategoryIdsList.toArray(
-				new Long[assetCategoryIdsList.size()]));
+		if (updateAssetCategoryIds) {
+			long[] assetCategoryIds = ArrayUtil.toArray(
+				assetCategoryIdsList.toArray(
+					new Long[assetCategoryIdsList.size()]));
+
+			serviceContext.setAssetCategoryIds(assetCategoryIds);
+		}
+
 		boolean assetEntryVisible = ParamUtil.getBoolean(
 			portletRequest, "assetEntryVisible", true);
+
+		serviceContext.setAssetEntryVisible(assetEntryVisible);
+
 		long[] assetLinkEntryIds = StringUtil.split(
 			ParamUtil.getString(
-				portletRequest, "assetLinkSearchContainerPrimaryKeys"), 0L);
-		String[] assetTagNames = StringUtil.split(
-			ParamUtil.getString(portletRequest, "assetTagNames"));
+				portletRequest, "assetLinksSearchContainerPrimaryKeys"), 0L);
 
-		serviceContext.setAssetCategoryIds(assetCategoryIds);
-		serviceContext.setAssetEntryVisible(assetEntryVisible);
 		serviceContext.setAssetLinkEntryIds(assetLinkEntryIds);
-		serviceContext.setAssetTagNames(assetTagNames);
+
+		String assetTagNamesString = request.getParameter("assetTagNames");
+
+		if (assetTagNamesString != null) {
+			String[] assetTagNames = StringUtil.split(assetTagNamesString);
+
+			serviceContext.setAssetTagNames(assetTagNames);
+		}
 
 		// Workflow
 

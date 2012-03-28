@@ -297,12 +297,12 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public void deleteRole(long roleId)
+	public Role deleteRole(long roleId)
 		throws PortalException, SystemException {
 
 		Role role = rolePersistence.findByPrimaryKey(roleId);
 
-		deleteRole(role);
+		return deleteRole(role);
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public void deleteRole(Role role)
+	public Role deleteRole(Role role)
 		throws PortalException, SystemException {
 
 		if (PortalUtil.isSystemRole(role.getName())) {
@@ -349,6 +349,8 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 		// Permission cache
 
 		PermissionCacheUtil.clearCache();
+
+		return role;
 	}
 
 	/**
@@ -489,19 +491,6 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 		return roleFinder.findByC_N_S_P_A(
 			companyId, name, scope, primKey, actionId);
-	}
-
-	/**
-	 * Returns the role with the primary key.
-	 *
-	 * @param  roleId the primary key of the role
-	 * @return the role with the primary key
-	 * @throws PortalException if a role with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public Role getRole(long roleId) throws PortalException, SystemException {
-		return rolePersistence.findByPrimaryKey(roleId);
 	}
 
 	/**

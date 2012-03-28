@@ -25,7 +25,6 @@ import org.junit.runner.RunWith;
 
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -52,10 +51,11 @@ public class PortalBeanLocatorUtilTest extends PowerMockito {
 	@Test
 	public void testLocateExistingBean() {
 
-		OngoingStubbing<Object> ongoingStubbing = when(
-			_beanLocator.locate("existingBean"));
-
-		ongoingStubbing.thenReturn(new String("existingBean"));
+		when(
+			_beanLocator.locate("existingBean")
+		).thenReturn(
+			new String("existingBean")
+		);
 
 		PortalBeanLocatorUtil.setBeanLocator(_beanLocator);
 
@@ -69,10 +69,11 @@ public class PortalBeanLocatorUtilTest extends PowerMockito {
 
 	@Test
 	public void testLocateNonExistingBean() {
-		OngoingStubbing<Object> ongoingStubbing = when(
-			_beanLocator.locate("nonExistingBean"));
-
-		ongoingStubbing.thenReturn(null);
+		when(
+			_beanLocator.locate("nonExistingBean")
+		).thenReturn(
+			null
+		);
 
 		PortalBeanLocatorUtil.setBeanLocator(_beanLocator);
 

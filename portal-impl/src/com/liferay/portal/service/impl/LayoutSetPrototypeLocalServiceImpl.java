@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.LayoutConstants;
-import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
@@ -103,18 +102,17 @@ public class LayoutSetPrototypeLocalServiceImpl
 	}
 
 	@Override
-	public void deleteLayoutSetPrototype(LayoutSetPrototype layoutSetPrototype)
+	public LayoutSetPrototype deleteLayoutSetPrototype(
+			LayoutSetPrototype layoutSetPrototype)
 		throws PortalException, SystemException {
 
-		List<LayoutSet> layoutSets =
-			layoutSetLocalService.getLayoutSetsByLayoutSetPrototypeUuid(
-				layoutSetPrototype.getUuid());
+		// Group
 
-		if (!layoutSets.isEmpty()) {
+		if (layoutSetPersistence.countByLayoutSetPrototypeUuid(
+				layoutSetPrototype.getUuid()) > 0) {
+
 			throw new RequiredLayoutSetPrototypeException();
 		}
-
-		// Group
 
 		Group group = layoutSetPrototype.getGroup();
 
@@ -135,17 +133,20 @@ public class LayoutSetPrototypeLocalServiceImpl
 		// Permission cache
 
 		PermissionCacheUtil.clearCache();
+
+		return layoutSetPrototype;
 	}
 
 	@Override
-	public void deleteLayoutSetPrototype(long layoutSetPrototypeId)
+	public LayoutSetPrototype deleteLayoutSetPrototype(
+			long layoutSetPrototypeId)
 		throws PortalException, SystemException {
 
 		LayoutSetPrototype layoutSetPrototype =
 			layoutSetPrototypePersistence.findByPrimaryKey(
 				layoutSetPrototypeId);
 
-		deleteLayoutSetPrototype(layoutSetPrototype);
+		return deleteLayoutSetPrototype(layoutSetPrototype);
 	}
 
 	public LayoutSetPrototype getLayoutSetPrototypeByUuid(String uuid)
