@@ -1827,6 +1827,10 @@
 
 		<action path="/staging_bar/view_layout_set_branches" forward="portlet.staging_bar.view_layout_set_branches" />
 
+		<!-- Trash -->
+
+		<action path="/trash/view" forward="portlet.trash.view" />
+
 		<!-- Update Manager -->
 
 		<action path="/update_manager/install_plugin" type="com.liferay.portlet.plugininstaller.action.InstallPluginAction">
