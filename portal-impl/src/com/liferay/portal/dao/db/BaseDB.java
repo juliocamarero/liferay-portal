@@ -496,6 +496,9 @@ public abstract class BaseDB implements DB {
 		if (words.length == 7) {
 			words[5] = "not null;";
 		}
+		else {
+			words[5] = "";
+		}
 
 		String[] template = {
 			words[1], words[2], words[3], words[4], words[5]

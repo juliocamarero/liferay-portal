@@ -173,6 +173,10 @@ public class BlogsUtil {
 	}
 
 	public static String getUrlTitle(long entryId, String title) {
+		if (title == null) {
+			return String.valueOf(entryId);
+		}
+
 		title = title.trim().toLowerCase();
 
 		if (Validator.isNull(title) || Validator.isNumber(title) ||

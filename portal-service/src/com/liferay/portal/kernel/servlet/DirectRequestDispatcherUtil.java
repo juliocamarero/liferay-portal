@@ -58,6 +58,7 @@ public class DirectRequestDispatcherUtil {
 
 		if (pos != -1) {
 			queryString = fullPath.substring(pos + 1);
+
 			fullPath = fullPath.substring(0, pos);
 		}
 
