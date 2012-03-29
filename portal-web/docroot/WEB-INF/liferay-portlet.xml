@@ -1895,6 +1895,19 @@
 		<header-portlet-css>/html/portlet/group_statistics/css/main.css</header-portlet-css>
 		<css-class-wrapper>portlet-group-statistics</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>182</portlet-name>
+		<icon>/html/icons/trash.png</icon>
+		<struts-path>trash</struts-path>
+		<control-panel-entry-category>content</control-panel-entry-category>
+		<control-panel-entry-weight>23.0</control-panel-entry-weight>
+		<preferences-owned-by-group>true</preferences-owned-by-group>
+		<use-default-template>false</use-default-template>
+		<private-request-attributes>false</private-request-attributes>
+		<private-session-attributes>false</private-session-attributes>
+		<header-portlet-css>/html/portlet/trash/css/main.css</header-portlet-css>
+		<css-class-wrapper>portlet-trash</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
