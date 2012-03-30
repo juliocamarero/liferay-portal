@@ -485,20 +485,20 @@ public class BlogsEntryLocalServiceUtil {
 		return getService().getGroupEntriesCount(groupId, displayDate, status);
 	}
 
-	/**
-	* @deprecated {@link #getGroupEntriesCount(long, QueryDefinition)}
-	*/
-	public static int getGroupEntriesCount(long groupId, int status)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getGroupEntriesCount(groupId, status);
-	}
-
 	public static int getGroupEntriesCount(long groupId,
 		java.util.Date displayDate,
 		com.liferay.portal.kernel.dao.orm.QueryDefinition queryDefinition)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .getGroupEntriesCount(groupId, displayDate, queryDefinition);
+	}
+
+	/**
+	* @deprecated {@link #getGroupEntriesCount(long, QueryDefinition)}
+	*/
+	public static int getGroupEntriesCount(long groupId, int status)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getGroupEntriesCount(groupId, status);
 	}
 
 	public static int getGroupEntriesCount(long groupId,
@@ -655,6 +655,12 @@ public class BlogsEntryLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		getService().moveEntryToTrash(userId, entryId);
+	}
+
+	public static void restoreEntryFromTrash(long userId, long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().restoreEntryFromTrash(userId, entryId);
 	}
 
 	public static void subscribe(long userId, long groupId)

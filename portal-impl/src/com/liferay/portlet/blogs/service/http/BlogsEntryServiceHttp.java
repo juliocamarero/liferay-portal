@@ -646,15 +646,47 @@ public class BlogsEntryServiceHttp {
 	}
 
 	public static void moveEntryToTrash(HttpPrincipal httpPrincipal,
-		long userId, long entryId)
+		long entryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
 					"moveEntryToTrash", _moveEntryToTrashParameterTypes16);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey, userId,
-					entryId);
+			MethodHandler methodHandler = new MethodHandler(methodKey, entryId);
+
+			try {
+				TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static void restoreEntryFromTrash(HttpPrincipal httpPrincipal,
+		long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
+					"restoreEntryFromTrash",
+					_restoreEntryFromTrashParameterTypes17);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, entryId);
 
 			try {
 				TunnelUtil.invoke(httpPrincipal, methodHandler);
@@ -683,7 +715,7 @@ public class BlogsEntryServiceHttp {
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
-					"subscribe", _subscribeParameterTypes17);
+					"subscribe", _subscribeParameterTypes18);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId);
 
@@ -714,7 +746,7 @@ public class BlogsEntryServiceHttp {
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
-					"unsubscribe", _unsubscribeParameterTypes18);
+					"unsubscribe", _unsubscribeParameterTypes19);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId);
 
@@ -754,7 +786,7 @@ public class BlogsEntryServiceHttp {
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
-					"updateEntry", _updateEntryParameterTypes19);
+					"updateEntry", _updateEntryParameterTypes20);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, entryId,
 					title, description, content, displayDateMonth,
@@ -853,15 +885,18 @@ public class BlogsEntryServiceHttp {
 			com.liferay.portal.theme.ThemeDisplay.class
 		};
 	private static final Class<?>[] _moveEntryToTrashParameterTypes16 = new Class[] {
-			long.class, long.class
-		};
-	private static final Class<?>[] _subscribeParameterTypes17 = new Class[] {
 			long.class
 		};
-	private static final Class<?>[] _unsubscribeParameterTypes18 = new Class[] {
+	private static final Class<?>[] _restoreEntryFromTrashParameterTypes17 = new Class[] {
 			long.class
 		};
-	private static final Class<?>[] _updateEntryParameterTypes19 = new Class[] {
+	private static final Class<?>[] _subscribeParameterTypes18 = new Class[] {
+			long.class
+		};
+	private static final Class<?>[] _unsubscribeParameterTypes19 = new Class[] {
+			long.class
+		};
+	private static final Class<?>[] _updateEntryParameterTypes20 = new Class[] {
 			long.class, java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, int.class, int.class, int.class, int.class,
 			int.class, boolean.class, boolean.class, java.lang.String[].class,
