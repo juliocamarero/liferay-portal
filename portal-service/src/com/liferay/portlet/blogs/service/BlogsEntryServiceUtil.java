@@ -176,6 +176,12 @@ public class BlogsEntryServiceUtil {
 			themeDisplay);
 	}
 
+	public static void moveEntryToTrash(long userId, long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().moveEntryToTrash(userId, entryId);
+	}
+
 	public static void subscribe(long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {

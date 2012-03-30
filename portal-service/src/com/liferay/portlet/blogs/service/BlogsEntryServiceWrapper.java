@@ -166,6 +166,12 @@ public class BlogsEntryServiceWrapper implements BlogsEntryService,
 			entryURL, themeDisplay);
 	}
 
+	public void moveEntryToTrash(long userId, long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_blogsEntryService.moveEntryToTrash(userId, entryId);
+	}
+
 	public void subscribe(long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
