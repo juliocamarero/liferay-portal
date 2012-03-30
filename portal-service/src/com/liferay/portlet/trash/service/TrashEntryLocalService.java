@@ -239,7 +239,7 @@ public interface TrashEntryLocalService extends PersistedModelLocalService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public com.liferay.portlet.trash.model.TrashEntry addTrashEntry(
-		long companyId, long groupId, long classNameId, long classPK,
+		long companyId, long groupId, java.lang.String className, long classPK,
 		int status,
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties)
 		throws com.liferay.portal.kernel.exception.SystemException;

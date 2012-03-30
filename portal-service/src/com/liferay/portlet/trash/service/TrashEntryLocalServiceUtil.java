@@ -264,12 +264,12 @@ public class TrashEntryLocalServiceUtil {
 	}
 
 	public static com.liferay.portlet.trash.model.TrashEntry addTrashEntry(
-		long companyId, long groupId, long classNameId, long classPK,
+		long companyId, long groupId, java.lang.String className, long classPK,
 		int status,
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService()
-				   .addTrashEntry(companyId, groupId, classNameId, classPK,
+				   .addTrashEntry(companyId, groupId, className, classPK,
 			status, typeSettingsProperties);
 	}
 

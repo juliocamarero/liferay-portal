@@ -258,12 +258,12 @@ public class TrashEntryLocalServiceWrapper implements TrashEntryLocalService,
 	}
 
 	public com.liferay.portlet.trash.model.TrashEntry addTrashEntry(
-		long companyId, long groupId, long classNameId, long classPK,
+		long companyId, long groupId, java.lang.String className, long classPK,
 		int status,
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _trashEntryLocalService.addTrashEntry(companyId, groupId,
-			classNameId, classPK, status, typeSettingsProperties);
+			className, classPK, status, typeSettingsProperties);
 	}
 
 	public com.liferay.portlet.trash.model.TrashEntry fetchEntry(long entryId)
