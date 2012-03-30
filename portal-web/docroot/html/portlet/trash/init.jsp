@@ -16,18 +16,12 @@
 
 <%@ include file="/html/portlet/init.jsp" %>
 
-<%@ page import="com.liferay.portlet.trash.model.TrashEntry" %><%@
-page import="com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil" %>
-
-<%
-PortletPreferences preferences = renderRequest.getPreferences();
-
-String portletResource = ParamUtil.getString(request, "portletResource");
-
-if (Validator.isNotNull(portletResource)) {
-	preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
-}
-
-%>
+<%@ page import="com.liferay.portlet.asset.model.AssetRendererFactory" %>
+<%@ page import="com.liferay.portlet.asset.model.AssetRenderer" %>
+<%@ page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil" %>
+<%@ page import="com.liferay.portlet.asset.model.AssetEntry" %>
+<%@ page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil" %>
+<%@ page import="com.liferay.portlet.trash.model.TrashEntry" %>
+<%@ page import="com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil" %>
 
 <%@ include file="/html/portlet/trash/init-ext.jsp" %>

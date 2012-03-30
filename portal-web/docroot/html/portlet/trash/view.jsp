@@ -17,26 +17,25 @@
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
 <%
-List<TrashEntry> trashEntries = TrashEntryLocalServiceUtil.getEntries(themeDisplay.getCompanyGroupId());
+int trashEntriesCount = TrashEntryLocalServiceUtil.getTrashEntriesCount(themeDisplay.getScopeGroupId());
 %>
 
 <aui:layout>
-
-	<c:if test="<%= trashEntries.size() > 0 %>">
+	<c:if test="<%= trashEntriesCount > 0 %>">
 		<aui:button-row>
 			<aui:button name="emptyTrashButton" value="empty-trash" />
 		</aui:button-row>
 	</c:if>
 
 	<liferay-ui:search-container
-		emptyResultsMessage="no-trash-entries-were-found"
-		headerNames="primaryKey,type, status"
+		emptyResultsMessage="the-recycle-bin-is-empty"
+		headerNames="primaryKey, className, entryName, type, status, actions"
 		id="trashEntriesSearchContainer"
 		rowChecker="<%= new RowChecker(renderResponse) %>"
 	>
 		<liferay-ui:search-container-results
-			results="<%= trashEntries %>"
-			total="<%= trashEntries.size() %>"
+			results="<%= TrashEntryLocalServiceUtil.getEntries(themeDisplay.getScopeGroupId(), searchContainer.getStart(), searchContainer.getEnd()) %>"
+			total="<%= trashEntriesCount %>"
 		/>
 
 		<liferay-ui:search-container-row
@@ -45,6 +44,14 @@ List<TrashEntry> trashEntries = TrashEntryLocalServiceUtil.getEntries(themeDispl
 			modelVar="trashEntry"
 		>
 
+			<%
+			String className = trashEntry.getClassName();
+
+			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
+			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, trashEntry.getClassPK());
+			AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(trashEntry.getClassPK());
+			%>
+
 			<liferay-ui:search-container-column-text
 				name="primaryKey"
 				property="primaryKey"
@@ -52,12 +59,30 @@ List<TrashEntry> trashEntries = TrashEntryLocalServiceUtil.getEntries(themeDispl
 
 			<liferay-ui:search-container-column-text
 				name="type"
+			>
+				<liferay-ui:icon src="<%= assetRenderer.getIconPath(renderRequest) %>" />
+			</liferay-ui:search-container-column-text>
+
+			<liferay-ui:search-container-column-text
+				name="className"
 				property="className"
+				orderable="true"
+			/>
+
+			<liferay-ui:search-container-column-text
+				name="entryName"
+				value="<%= assetEntry.getTitle() %>"
 			/>
 
 			<liferay-ui:search-container-column-text
 				name="status"
 				value="status"
+				orderable="true"
+			/>
+
+			<liferay-ui:search-container-column-jsp
+				align="right"
+				path="/html/portlet/trash/trash_entry_actions.jsp"
 			/>
 
 		</liferay-ui:search-container-row>

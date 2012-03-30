@@ -1829,6 +1829,14 @@
 
 		<!-- Trash -->
 
+		<action path="/trash/delete_entry" type="com.liferay.portlet.trash.action.DeleteTrashEntryAction">
+			<forward name="portlet.trash.view" path="portlet.trash.view" />
+		</action>
+
+		<action path="/trash/restore_entry" type="com.liferay.portlet.trash.action.RestoreTrashEntryAction">
+			<forward name="portlet.trash.view" path="portlet.trash.view" />
+		</action>
+
 		<action path="/trash/view" forward="portlet.trash.view" />
 
 		<!-- Update Manager -->
