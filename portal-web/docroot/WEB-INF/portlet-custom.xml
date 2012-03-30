@@ -2790,7 +2790,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>182</portlet-name>
-		<display-name>Trash</display-name>
+		<display-name>Recycle Bin</display-name>
 		<portlet-class>com.liferay.portlet.StrutsPortlet</portlet-class>
 		<init-param>
 			<name>view-action</name>

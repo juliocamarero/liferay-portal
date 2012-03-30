@@ -72,6 +72,10 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 		return trashEntryPersistence.findByGroupId(groupId);
 	}
 
+	public int getEntriesCount(long groupId) throws SystemException {
+		return trashEntryPersistence.countByGroupId(groupId);
+	}
+
 	public TrashEntry getEntry(String className, long classPK)
 		throws PortalException, SystemException {
 
