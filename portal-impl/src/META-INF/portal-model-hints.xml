@@ -2610,6 +2610,7 @@
 		<field name="classNameId" type="long" />
 		<field name="classPK" type="long" />
 		<field name="status" type="int" />
+		<field name="trashedDate" type="Date" />
 		<field name="typeSettings" type="String">
 			<hint-collection name="CLOB" />
 		</field>

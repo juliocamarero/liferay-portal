@@ -22,6 +22,8 @@ import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.io.Serializable;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing TrashEntry in entity cache.
  *
@@ -33,7 +35,7 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{entryId=");
 		sb.append(entryId);
@@ -47,6 +49,8 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 		sb.append(classPK);
 		sb.append(", status=");
 		sb.append(status);
+		sb.append(", trashedDate=");
+		sb.append(trashedDate);
 		sb.append(", typeSettings=");
 		sb.append(typeSettings);
 		sb.append("}");
@@ -63,6 +67,13 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 		trashEntryImpl.setClassNameId(classNameId);
 		trashEntryImpl.setClassPK(classPK);
 		trashEntryImpl.setStatus(status);
+
+		if (trashedDate == Long.MIN_VALUE) {
+			trashEntryImpl.setTrashedDate(null);
+		}
+		else {
+			trashEntryImpl.setTrashedDate(new Date(trashedDate));
+		}
 
 		if (typeSettings == null) {
 			trashEntryImpl.setTypeSettings(StringPool.BLANK);
@@ -82,5 +93,6 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 	public long classNameId;
 	public long classPK;
 	public int status;
+	public long trashedDate;
 	public String typeSettings;
 }

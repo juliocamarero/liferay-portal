@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.PersistenceExecutionTestListener;
 import com.liferay.portal.test.ExecutionTestListeners;
@@ -92,6 +93,8 @@ public class TrashEntryPersistenceTest {
 
 		newTrashEntry.setStatus(ServiceTestUtil.nextInt());
 
+		newTrashEntry.setTrashedDate(ServiceTestUtil.nextDate());
+
 		newTrashEntry.setTypeSettings(ServiceTestUtil.randomString());
 
 		_persistence.update(newTrashEntry, false);
@@ -110,6 +113,9 @@ public class TrashEntryPersistenceTest {
 			newTrashEntry.getClassPK());
 		Assert.assertEquals(existingTrashEntry.getStatus(),
 			newTrashEntry.getStatus());
+		Assert.assertEquals(Time.getShortTimestamp(
+				existingTrashEntry.getTrashedDate()),
+			Time.getShortTimestamp(newTrashEntry.getTrashedDate()));
 		Assert.assertEquals(existingTrashEntry.getTypeSettings(),
 			newTrashEntry.getTypeSettings());
 	}
@@ -258,6 +264,8 @@ public class TrashEntryPersistenceTest {
 		trashEntry.setClassPK(ServiceTestUtil.nextLong());
 
 		trashEntry.setStatus(ServiceTestUtil.nextInt());
+
+		trashEntry.setTrashedDate(ServiceTestUtil.nextDate());
 
 		trashEntry.setTypeSettings(ServiceTestUtil.randomString());
 

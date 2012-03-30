@@ -3430,6 +3430,9 @@
 			<basic name="classNameId" />
 			<basic name="classPK" />
 			<basic name="status" />
+			<basic name="trashedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<basic name="typeSettings" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

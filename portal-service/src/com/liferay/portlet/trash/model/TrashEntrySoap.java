@@ -17,6 +17,7 @@ package com.liferay.portlet.trash.model;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +36,7 @@ public class TrashEntrySoap implements Serializable {
 		soapModel.setClassNameId(model.getClassNameId());
 		soapModel.setClassPK(model.getClassPK());
 		soapModel.setStatus(model.getStatus());
+		soapModel.setTrashedDate(model.getTrashedDate());
 		soapModel.setTypeSettings(model.getTypeSettings());
 
 		return soapModel;
@@ -136,6 +138,14 @@ public class TrashEntrySoap implements Serializable {
 		_status = status;
 	}
 
+	public Date getTrashedDate() {
+		return _trashedDate;
+	}
+
+	public void setTrashedDate(Date trashedDate) {
+		_trashedDate = trashedDate;
+	}
+
 	public String getTypeSettings() {
 		return _typeSettings;
 	}
@@ -150,5 +160,6 @@ public class TrashEntrySoap implements Serializable {
 	private long _classNameId;
 	private long _classPK;
 	private int _status;
+	private Date _trashedDate;
 	private String _typeSettings;
 }

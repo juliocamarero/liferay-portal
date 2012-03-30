@@ -283,13 +283,6 @@ public class TrashEntryLocalServiceWrapper implements TrashEntryLocalService,
 		return _trashEntryLocalService.getEntries(groupId);
 	}
 
-	public com.liferay.portlet.trash.model.TrashEntry getEntry(
-		java.lang.String className, long classPK)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _trashEntryLocalService.getEntry(className, classPK);
-	}
-
 	public java.util.List<com.liferay.portlet.trash.model.TrashEntry> getEntries(
 		long groupId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -300,6 +293,13 @@ public class TrashEntryLocalServiceWrapper implements TrashEntryLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _trashEntryLocalService.getEntry(entryId);
+	}
+
+	public com.liferay.portlet.trash.model.TrashEntry getEntry(
+		java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _trashEntryLocalService.getEntry(className, classPK);
 	}
 
 	/**
