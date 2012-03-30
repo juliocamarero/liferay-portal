@@ -625,6 +625,7 @@ Liferay.Service.registerClass(
 		getGroupEntriesCount: true,
 		getGroupsEntries: true,
 		getOrganizationEntries: true,
+		moveEntryToTrash: true,
 		subscribe: true,
 		unsubscribe: true
 	}
