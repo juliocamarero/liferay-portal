@@ -356,13 +356,22 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			blogsEntries, themeDisplay);
 	}
 
-	public void moveEntryToTrash(long userId, long entryId)
+	public void moveEntryToTrash(long entryId)
 		throws PortalException, SystemException {
 
 		BlogsEntryPermission.check(
 			getPermissionChecker(), entryId, ActionKeys.DELETE);
 
-		blogsEntryLocalService.moveEntryToTrash(userId, entryId);
+		blogsEntryLocalService.moveEntryToTrash(getUserId(), entryId);
+	}
+
+	public void restoreEntryFromTrash(long entryId)
+		throws PortalException, SystemException {
+
+		BlogsEntryPermission.check(
+			getPermissionChecker(), entryId, ActionKeys.UPDATE);
+
+		blogsEntryLocalService.restoreEntryFromTrash(getUserId(), entryId);
 	}
 
 	public void subscribe(long groupId)

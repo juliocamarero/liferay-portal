@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
@@ -250,20 +249,17 @@ public class EditEntryAction extends PortletAction {
 	}
 
 	protected void deleteEntries(ActionRequest actionRequest) throws Exception {
-		User user = PortalUtil.getUser(actionRequest);
-
 		long entryId = ParamUtil.getLong(actionRequest, "entryId");
 
 		if (entryId > 0) {
-			BlogsEntryServiceUtil.moveEntryToTrash(user.getUserId(), entryId);
+			BlogsEntryServiceUtil.moveEntryToTrash(entryId);
 		}
 		else {
 			long[] deleteEntryIds = StringUtil.split(
 				ParamUtil.getString(actionRequest, "deleteEntryIds"), 0L);
 
 			for (int i = 0; i < deleteEntryIds.length; i++) {
-				BlogsEntryServiceUtil.moveEntryToTrash(
-					user.getUserId(), deleteEntryIds[i]);
+				BlogsEntryServiceUtil.moveEntryToTrash(deleteEntryIds[i]);
 			}
 		}
 	}
