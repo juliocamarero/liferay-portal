@@ -25,7 +25,9 @@ import com.liferay.portlet.asset.model.AssetRendererFactory;
  */
 public abstract class BaseTrashHandler implements TrashHandler {
 
-	public void deleteTrashEntry(long classPK) {
+	public void deleteTrashEntry(long classPK)
+		throws PortalException, SystemException {
+
 		deleteTrashEntries(new long[] {classPK});
 	}
 
@@ -48,7 +50,9 @@ public abstract class BaseTrashHandler implements TrashHandler {
 			getAssetRendererFactoryByClassName(getClassName());
 	}
 
-	public void restoreTrashEntry(long classPK) {
+	public void restoreTrashEntry(long classPK)
+		throws PortalException, SystemException {
+
 		restoreTrashEntries(new long[] {classPK});
 	}
 

@@ -24,9 +24,11 @@ import com.liferay.portlet.asset.model.AssetRendererFactory;
  */
 public interface TrashHandler {
 
-	public void deleteTrashEntries(long[] classPKs);
+	public void deleteTrashEntries(long[] classPKs)
+		throws PortalException, SystemException;
 
-	public void deleteTrashEntry(long classPK);
+	public void deleteTrashEntry(long classPK)
+		throws PortalException, SystemException;
 
 	public AssetRenderer getAssetRenderer(long classPK)
 		throws PortalException, SystemException;
@@ -35,8 +37,10 @@ public interface TrashHandler {
 
 	public String getClassName();
 
-	public void restoreTrashEntries(long[] classPKs);
+	public void restoreTrashEntries(long[] classPKs)
+		throws PortalException, SystemException;
 
-	public void restoreTrashEntry(long classPK);
+	public void restoreTrashEntry(long classPK)
+		throws PortalException, SystemException;
 
 }
