@@ -58,6 +58,14 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 		return trashEntry;
 	}
 
+	public void deleteEntry(String className, long classPK)
+		throws PortalException, SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		trashEntryPersistence.removeByC_C(classNameId, classPK);
+	}
+
 	public TrashEntry fetchEntry(long entryId)
 		throws SystemException {
 
@@ -78,14 +86,14 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 		return trashEntryPersistence.findByGroupId(groupId);
 	}
 
-	public int getEntriesCount(long groupId) throws SystemException {
-		return trashEntryPersistence.countByGroupId(groupId);
-	}
-
 	public List<TrashEntry> getEntries(long groupId, int start, int end)
 		throws SystemException {
 
 		return trashEntryPersistence.findByGroupId(groupId, start, end);
+	}
+
+	public int getEntriesCount(long groupId) throws SystemException {
+		return trashEntryPersistence.countByGroupId(groupId);
 	}
 
 	public TrashEntry getEntry(long entryId)
