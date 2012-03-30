@@ -30,9 +30,11 @@ import java.util.List;
 public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 	public TrashEntry addTrashEntry(
-			long companyId, long groupId, long classNameId, long classPK,
+			long companyId, long groupId, String className, long classPK,
 			int status, UnicodeProperties typeSettingsProperties)
 		throws SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
 
 		long entryId = counterLocalService.increment();
 
@@ -48,6 +50,8 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 		if (typeSettingsProperties != null) {
 			trashEntry.setTypeSettingsProperties(typeSettingsProperties);
 		}
+
+		trashEntryPersistence.update(trashEntry, false);
 
 		return trashEntry;
 	}
@@ -72,14 +76,6 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 		return trashEntryPersistence.findByGroupId(groupId);
 	}
 
-	public TrashEntry getEntry(String className, long classPK)
-		throws PortalException, SystemException {
-
-		long classNameId = PortalUtil.getClassNameId(className);
-
-		return trashEntryPersistence.findByC_C(classNameId, classPK);
-	}
-
 	public List<TrashEntry> getEntries(long groupId, int start, int end)
 		throws SystemException {
 
@@ -90,6 +86,14 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		return trashEntryPersistence.findByPrimaryKey(entryId);
+	}
+
+	public TrashEntry getEntry(String className, long classPK)
+		throws PortalException, SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		return trashEntryPersistence.findByC_C(classNameId, classPK);
 	}
 
 }
