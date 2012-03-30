@@ -273,6 +273,12 @@ public class TrashEntryLocalServiceUtil {
 			status, typeSettingsProperties);
 	}
 
+	public static void deleteEntry(java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteEntry(className, classPK);
+	}
+
 	public static com.liferay.portlet.trash.model.TrashEntry fetchEntry(
 		long entryId)
 		throws com.liferay.portal.kernel.exception.SystemException {

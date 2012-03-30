@@ -244,6 +244,10 @@ public interface TrashEntryLocalService extends PersistedModelLocalService {
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public void deleteEntry(java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portlet.trash.model.TrashEntry fetchEntry(long entryId)
 		throws com.liferay.portal.kernel.exception.SystemException;
