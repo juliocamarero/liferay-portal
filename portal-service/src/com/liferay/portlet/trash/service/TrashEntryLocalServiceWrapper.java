@@ -283,6 +283,11 @@ public class TrashEntryLocalServiceWrapper implements TrashEntryLocalService,
 		return _trashEntryLocalService.getEntries(groupId);
 	}
 
+	public int getEntriesCount(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _trashEntryLocalService.getEntriesCount(groupId);
+	}
+
 	public com.liferay.portlet.trash.model.TrashEntry getEntry(
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException,

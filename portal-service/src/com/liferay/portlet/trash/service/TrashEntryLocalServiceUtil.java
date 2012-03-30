@@ -291,6 +291,11 @@ public class TrashEntryLocalServiceUtil {
 		return getService().getEntries(groupId);
 	}
 
+	public static int getEntriesCount(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getEntriesCount(groupId);
+	}
+
 	public static com.liferay.portlet.trash.model.TrashEntry getEntry(
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException,
