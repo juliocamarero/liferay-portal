@@ -22,7 +22,14 @@
 		<column name="classNameId" type="long" />
 		<column name="classPK" type="long" />
 		<column name="status" type="int" />
+		<column name="trashedDate" type="Date" />
 		<column name="typeSettings" type="String" />
+
+		<!-- Order -->
+
+		<order by="desc">
+			<order-column name="trashedDate" />
+		</order>
 
 		<!-- Finder methods -->
 
