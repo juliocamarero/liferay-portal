@@ -15,6 +15,7 @@
 package com.liferay.portlet.trash.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -32,6 +33,8 @@ import com.liferay.portlet.trash.model.TrashEntryModel;
 import java.io.Serializable;
 
 import java.sql.Types;
+
+import java.util.Date;
 
 /**
  * The base model implementation for the TrashEntry service. Represents a row in the &quot;TrashEntry&quot; database table, with each column mapped to a property of this class.
@@ -61,10 +64,13 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 			{ "classNameId", Types.BIGINT },
 			{ "classPK", Types.BIGINT },
 			{ "status", Types.INTEGER },
+			{ "trashedDate", Types.TIMESTAMP },
 			{ "typeSettings", Types.CLOB }
 		};
-	public static final String TABLE_SQL_CREATE = "create table TrashEntry (entryId LONG not null primary key,groupId LONG,companyId LONG,classNameId LONG,classPK LONG,status INTEGER,typeSettings TEXT null)";
+	public static final String TABLE_SQL_CREATE = "create table TrashEntry (entryId LONG not null primary key,groupId LONG,companyId LONG,classNameId LONG,classPK LONG,status INTEGER,trashedDate DATE null,typeSettings TEXT null)";
 	public static final String TABLE_SQL_DROP = "drop table TrashEntry";
+	public static final String ORDER_BY_JPQL = " ORDER BY trashEntry.trashedDate DESC";
+	public static final String ORDER_BY_SQL = " ORDER BY TrashEntry.trashedDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -215,6 +221,16 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		_status = status;
 	}
 
+	public Date getTrashedDate() {
+		return _trashedDate;
+	}
+
+	public void setTrashedDate(Date trashedDate) {
+		_columnBitmask = -1L;
+
+		_trashedDate = trashedDate;
+	}
+
 	public String getTypeSettings() {
 		if (_typeSettings == null) {
 			return StringPool.BLANK;
@@ -268,6 +284,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		trashEntryImpl.setClassNameId(getClassNameId());
 		trashEntryImpl.setClassPK(getClassPK());
 		trashEntryImpl.setStatus(getStatus());
+		trashEntryImpl.setTrashedDate(getTrashedDate());
 		trashEntryImpl.setTypeSettings(getTypeSettings());
 
 		trashEntryImpl.resetOriginalValues();
@@ -276,17 +293,17 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 	}
 
 	public int compareTo(TrashEntry trashEntry) {
-		long primaryKey = trashEntry.getPrimaryKey();
+		int value = 0;
 
-		if (getPrimaryKey() < primaryKey) {
-			return -1;
+		value = DateUtil.compareTo(getTrashedDate(), trashEntry.getTrashedDate());
+
+		value = value * -1;
+
+		if (value != 0) {
+			return value;
 		}
-		else if (getPrimaryKey() > primaryKey) {
-			return 1;
-		}
-		else {
-			return 0;
-		}
+
+		return 0;
 	}
 
 	@Override
@@ -358,6 +375,15 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 
 		trashEntryCacheModel.status = getStatus();
 
+		Date trashedDate = getTrashedDate();
+
+		if (trashedDate != null) {
+			trashEntryCacheModel.trashedDate = trashedDate.getTime();
+		}
+		else {
+			trashEntryCacheModel.trashedDate = Long.MIN_VALUE;
+		}
+
 		trashEntryCacheModel.typeSettings = getTypeSettings();
 
 		String typeSettings = trashEntryCacheModel.typeSettings;
@@ -371,7 +397,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{entryId=");
 		sb.append(getEntryId());
@@ -385,6 +411,8 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		sb.append(getClassPK());
 		sb.append(", status=");
 		sb.append(getStatus());
+		sb.append(", trashedDate=");
+		sb.append(getTrashedDate());
 		sb.append(", typeSettings=");
 		sb.append(getTypeSettings());
 		sb.append("}");
@@ -393,7 +421,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portlet.trash.model.TrashEntry");
@@ -424,6 +452,10 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		sb.append(getStatus());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>trashedDate</column-name><column-value><![CDATA[");
+		sb.append(getTrashedDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>typeSettings</column-name><column-value><![CDATA[");
 		sb.append(getTypeSettings());
 		sb.append("]]></column-value></column>");
@@ -451,6 +483,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
 	private int _status;
+	private Date _trashedDate;
 	private String _typeSettings;
 	private transient ExpandoBridge _expandoBridge;
 	private long _columnBitmask;

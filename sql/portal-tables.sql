@@ -2004,6 +2004,7 @@ create table TrashEntry (
 	classNameId LONG,
 	classPK LONG,
 	status INTEGER,
+	trashedDate DATE null,
 	typeSettings TEXT null
 );
 

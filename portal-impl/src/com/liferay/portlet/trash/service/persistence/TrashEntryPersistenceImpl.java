@@ -443,6 +443,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		trashEntryImpl.setClassNameId(trashEntry.getClassNameId());
 		trashEntryImpl.setClassPK(trashEntry.getClassPK());
 		trashEntryImpl.setStatus(trashEntry.getStatus());
+		trashEntryImpl.setTrashedDate(trashEntry.getTrashedDate());
 		trashEntryImpl.setTypeSettings(trashEntry.getTypeSettings());
 
 		return trashEntryImpl;
@@ -626,7 +627,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_TRASHENTRY_WHERE);
@@ -636,6 +637,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -864,6 +869,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			}
 		}
 
+		else {
+			query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -974,7 +983,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_TRASHENTRY_WHERE);
@@ -984,6 +993,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -1213,6 +1226,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			}
 		}
 
+		else {
+			query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1321,13 +1338,15 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		}
 
 		if (result == null) {
-			StringBundler query = new StringBundler(3);
+			StringBundler query = new StringBundler(4);
 
 			query.append(_SQL_SELECT_TRASHENTRY_WHERE);
 
 			query.append(_FINDER_COLUMN_C_C_CLASSNAMEID_2);
 
 			query.append(_FINDER_COLUMN_C_C_CLASSPK_2);
+
+			query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
 
 			String sql = query.toString();
 
@@ -1464,7 +1483,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_TRASHENTRY;
+				sql = _SQL_SELECT_TRASHENTRY.concat(TrashEntryModelImpl.ORDER_BY_JPQL);
 			}
 
 			Session session = null;

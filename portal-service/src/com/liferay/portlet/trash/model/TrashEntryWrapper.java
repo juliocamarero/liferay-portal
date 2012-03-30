@@ -174,6 +174,24 @@ public class TrashEntryWrapper implements TrashEntry, ModelWrapper<TrashEntry> {
 	}
 
 	/**
+	* Returns the trashed date of this trash entry.
+	*
+	* @return the trashed date of this trash entry
+	*/
+	public java.util.Date getTrashedDate() {
+		return _trashEntry.getTrashedDate();
+	}
+
+	/**
+	* Sets the trashed date of this trash entry.
+	*
+	* @param trashedDate the trashed date of this trash entry
+	*/
+	public void setTrashedDate(java.util.Date trashedDate) {
+		_trashEntry.setTrashedDate(trashedDate);
+	}
+
+	/**
 	* Returns the type settings of this trash entry.
 	*
 	* @return the type settings of this trash entry

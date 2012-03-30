@@ -24,6 +24,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Date;
+
 /**
  * The base model interface for the TrashEntry service. Represents a row in the &quot;TrashEntry&quot; database table, with each column mapped to a property of this class.
  *
@@ -148,6 +150,20 @@ public interface TrashEntryModel extends AttachedModel, BaseModel<TrashEntry> {
 	 * @param status the status of this trash entry
 	 */
 	public void setStatus(int status);
+
+	/**
+	 * Returns the trashed date of this trash entry.
+	 *
+	 * @return the trashed date of this trash entry
+	 */
+	public Date getTrashedDate();
+
+	/**
+	 * Sets the trashed date of this trash entry.
+	 *
+	 * @param trashedDate the trashed date of this trash entry
+	 */
+	public void setTrashedDate(Date trashedDate);
 
 	/**
 	 * Returns the type settings of this trash entry.
