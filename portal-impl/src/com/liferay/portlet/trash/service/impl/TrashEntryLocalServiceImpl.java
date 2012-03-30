@@ -22,6 +22,7 @@ import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.model.impl.TrashEntryImpl;
 import com.liferay.portlet.trash.service.base.TrashEntryLocalServiceBaseImpl;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 		trashEntry.setClassNameId(classNameId);
 		trashEntry.setClassPK(classPK);
 		trashEntry.setStatus(status);
+		trashEntry.setTrashedDate(new Date());
 
 		if (typeSettingsProperties != null) {
 			trashEntry.setTypeSettingsProperties(typeSettingsProperties);
