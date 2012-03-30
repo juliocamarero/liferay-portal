@@ -645,12 +645,45 @@ public class BlogsEntryServiceHttp {
 		}
 	}
 
+	public static void moveEntryToTrash(HttpPrincipal httpPrincipal,
+		long userId, long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
+					"moveEntryToTrash", _moveEntryToTrashParameterTypes16);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, userId,
+					entryId);
+
+			try {
+				TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static void subscribe(HttpPrincipal httpPrincipal, long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
-					"subscribe", _subscribeParameterTypes16);
+					"subscribe", _subscribeParameterTypes17);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId);
 
@@ -681,7 +714,7 @@ public class BlogsEntryServiceHttp {
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
-					"unsubscribe", _unsubscribeParameterTypes17);
+					"unsubscribe", _unsubscribeParameterTypes18);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId);
 
@@ -721,7 +754,7 @@ public class BlogsEntryServiceHttp {
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(BlogsEntryServiceUtil.class.getName(),
-					"updateEntry", _updateEntryParameterTypes18);
+					"updateEntry", _updateEntryParameterTypes19);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, entryId,
 					title, description, content, displayDateMonth,
@@ -819,13 +852,16 @@ public class BlogsEntryServiceHttp {
 			java.lang.String.class, java.lang.String.class,
 			com.liferay.portal.theme.ThemeDisplay.class
 		};
-	private static final Class<?>[] _subscribeParameterTypes16 = new Class[] {
+	private static final Class<?>[] _moveEntryToTrashParameterTypes16 = new Class[] {
+			long.class, long.class
+		};
+	private static final Class<?>[] _subscribeParameterTypes17 = new Class[] {
 			long.class
 		};
-	private static final Class<?>[] _unsubscribeParameterTypes17 = new Class[] {
+	private static final Class<?>[] _unsubscribeParameterTypes18 = new Class[] {
 			long.class
 		};
-	private static final Class<?>[] _updateEntryParameterTypes18 = new Class[] {
+	private static final Class<?>[] _updateEntryParameterTypes19 = new Class[] {
 			long.class, java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, int.class, int.class, int.class, int.class,
 			int.class, boolean.class, boolean.class, java.lang.String[].class,
