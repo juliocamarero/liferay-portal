@@ -66,6 +66,7 @@ import com.liferay.portlet.documentlibrary.NoSuchFolderException;
 import com.liferay.portlet.documentlibrary.SourceFileNameException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 
 import java.io.File;
@@ -97,6 +98,7 @@ import org.apache.struts.action.ActionMapping;
  * @author Brian Wing Shun Chan
  * @author Alexander Chow
  * @author Sergio González
+ * @author Manuel de la Peña
  */
 public class EditFileEntryAction extends PortletAction {
 
@@ -135,7 +137,7 @@ public class EditFileEntryAction extends PortletAction {
 				addTempFileEntry(actionRequest);
 			}
 			else if (cmd.equals(Constants.DELETE)) {
-				deleteFileEntries(actionRequest);
+				moveFileEntriesToTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.DELETE_TEMP)) {
 				deleteTempFileEntry(actionRequest, actionResponse);
@@ -623,6 +625,33 @@ public class EditFileEntryAction extends PortletAction {
 			for (int i = 0; i < fileEntryIds.length; i++) {
 				DLAppServiceUtil.moveFileEntry(
 					fileEntryIds[i], newFolderId, serviceContext);
+			}
+		}
+	}
+
+	protected void moveFileEntriesToTrash(ActionRequest actionRequest)
+		throws Exception {
+
+		long fileEntryId = ParamUtil.getLong(actionRequest, "fileEntryId");
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			DLFileEntry.class.getName(), actionRequest);
+
+		if (fileEntryId > 0) {
+			DLFileEntryLocalServiceUtil.moveToTrash(
+				themeDisplay.getUserId(), fileEntryId, serviceContext);
+		}
+		else {
+			long[] deleteFileEntryIds = StringUtil.split(
+				ParamUtil.getString(actionRequest, "fileEntryIds"), 0L);
+
+			for (int i = 0; i < deleteFileEntryIds.length; i++) {
+				DLFileEntryLocalServiceUtil.moveToTrash(
+					themeDisplay.getUserId(), deleteFileEntryIds[i],
+					serviceContext);
 			}
 		}
 	}

@@ -27,7 +27,9 @@ import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.AssetTagException;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
@@ -38,6 +40,7 @@ import com.liferay.portlet.documentlibrary.SourceFileNameException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -55,6 +58,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * @author Brian Wing Shun Chan
  * @author Sergio González
+ * @author Manuel de la Peña
  */
 public class EditEntryAction extends PortletAction {
 
@@ -68,7 +72,7 @@ public class EditEntryAction extends PortletAction {
 
 		try {
 			if (cmd.equals(Constants.DELETE)) {
-				deleteEntries(actionRequest);
+				moveEntriesToTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.CANCEL_CHECKOUT)) {
 				cancelCheckedOutEntries(actionRequest);
@@ -300,4 +304,25 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
+	protected void moveEntriesToTrash(ActionRequest actionRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			DLFileEntry.class.getName(), actionRequest);
+
+		// Delete file shortcuts before file entries. See LPS-21348.
+
+		// Delete file entries
+
+		long[] deleteFileEntryIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "fileEntryIds"), 0L);
+
+		for (long deleteFileEntryId : deleteFileEntryIds) {
+			DLFileEntryLocalServiceUtil.moveToTrash(
+				themeDisplay.getUserId(), deleteFileEntryId, serviceContext);
+		}
+	}
 }

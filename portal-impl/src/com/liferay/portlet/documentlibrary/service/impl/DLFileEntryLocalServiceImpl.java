@@ -77,6 +77,7 @@ import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.portlet.dynamicdatamapping.storage.StorageEngineUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
+import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.awt.image.RenderedImage;
 
@@ -104,6 +105,7 @@ import java.util.Map;
  * @author Brian Wing Shun Chan
  * @author Harry Mark
  * @author Alexander Chow
+ * @author Manuel de la Peña
  */
 public class DLFileEntryLocalServiceImpl
 	extends DLFileEntryLocalServiceBaseImpl {
@@ -980,6 +982,43 @@ public class DLFileEntryLocalServiceImpl
 
 			return dlFileEntryTypeLocalService.updateFileEntryFileEntryType(
 				dlFileEntry, serviceContext);
+		}
+		finally {
+			if (!isFileEntryCheckedOut(fileEntryId)) {
+				unlockFileEntry(fileEntryId);
+			}
+		}
+	}
+
+	public TrashEntry moveToTrash(
+			long userId, long fileEntryId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		if (!hasFileEntryLock(userId, fileEntryId)) {
+			lockFileEntry(userId, fileEntryId);
+		}
+
+		try {
+			DLFileEntry dlFileEntry = getDLFileEntry(fileEntryId);
+
+			DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
+
+			// delete workflow
+
+			// create trash entry
+
+			TrashEntry trashEntry = trashEntryLocalService.addTrashEntry(
+				dlFileEntry.getCompanyId(), dlFileEntry.getGroupId(),
+				DLFileEntry.class.getName(), dlFileEntry.getPrimaryKey(),
+				dlFileVersion.getStatus(), null);
+
+			// modify status of current file version
+
+			dlFileVersion.setStatus(WorkflowConstants.STATUS_DELETED);
+
+			dlFileVersionPersistence.update(dlFileVersion, true);
+
+			return trashEntry;
 		}
 		finally {
 			if (!isFileEntryCheckedOut(fileEntryId)) {

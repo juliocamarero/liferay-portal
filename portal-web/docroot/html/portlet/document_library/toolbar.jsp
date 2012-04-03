@@ -78,7 +78,8 @@
 	%>
 
 	<liferay-ui:icon-delete
-		confirmation="are-you-sure-you-want-to-delete-the-selected-entries"
+		confirmation="are-you-sure-you-want-to-move-the-selected-documents-to-recycle-bin"
+		message="move-to-recycle-bin"
 		url="<%= taglibUrl %>"
 	/>
 </liferay-ui:icon-menu>

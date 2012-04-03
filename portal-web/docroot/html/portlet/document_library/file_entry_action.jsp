@@ -161,6 +161,7 @@ viewFolderURL.setParameter("folderId", String.valueOf(folderId));
 					</portlet:actionURL>
 
 					<liferay-ui:icon-delete
+						trash="<%= true %>"
 						url="<%= deleteURL %>"
 					/>
 				</c:if>
@@ -236,6 +237,7 @@ viewFolderURL.setParameter("folderId", String.valueOf(folderId));
 					</portlet:actionURL>
 
 					<liferay-ui:icon-delete
+						trash="<%= true %>"
 						url="<%= deleteShortcutURL %>"
 					/>
 				</c:if>

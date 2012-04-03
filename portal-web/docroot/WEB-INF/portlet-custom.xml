@@ -2793,6 +2793,10 @@
 		<display-name>Trash</display-name>
 		<portlet-class>com.liferay.portlet.StrutsPortlet</portlet-class>
 		<init-param>
+			<name>add-process-action-success-action</name>
+			<value>false</value>
+		</init-param>
+		<init-param>
 			<name>view-action</name>
 			<value>/trash/view</value>
 		</init-param>
