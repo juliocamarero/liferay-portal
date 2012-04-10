@@ -12,28 +12,32 @@
  * details.
  */
 
-package com.liferay.portlet.social.model;
+package com.liferay.portlet.documentlibrary.trash;
+
+import com.liferay.portal.kernel.trash.BaseTrashHandler;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 
 /**
- * @author Zsolt Berentey
- * @author Brian Wing Shun Chan
+ * @author Alexander Chow
  */
-public class SocialActivityConstants {
+public class DLFileEntryTrashHandler extends BaseTrashHandler {
 
-	public static final int TYPE_ADD_ATTACHMENT = 10006;
+	public static final String CLASS_NAME = DLFileEntry.class.getName();
 
-	public static final int TYPE_ADD_COMMENT = 10005;
+	public void deleteTrashEntries(long[] classPKs) {
 
-	public static final int TYPE_ADD_VOTE = 10004;
+		// LPS-26339
 
-	public static final int TYPE_MOVE_TO_TRASH = 10007;
+	}
 
-	public static final int TYPE_RESTORE_FROM_TRASH = 10008;
+	public String getClassName() {
+		return CLASS_NAME;
+	}
 
-	public static final int TYPE_SUBSCRIBE = 10002;
+	public void restoreTrashEntries(long[] classPKs) {
 
-	public static final int TYPE_UNSUBSCRIBE = 10003;
+		// LPS-26339
 
-	public static final int TYPE_VIEW = 10001;
+	}
 
 }

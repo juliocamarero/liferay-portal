@@ -3654,6 +3654,7 @@
 			<transient name="supportedLocales" />
 			<transient name="system" />
 			<transient name="timestamp" />
+			<transient name="trashHandlerClasses" />
 			<transient name="undeployedPortlet" />
 			<transient name="unlinkedRoles" />
 			<transient name="useDefaultTemplate" />

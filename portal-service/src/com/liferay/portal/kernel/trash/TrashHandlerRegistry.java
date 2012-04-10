@@ -12,28 +12,21 @@
  * details.
  */
 
-package com.liferay.portlet.social.model;
+package com.liferay.portal.kernel.trash;
+
+import java.util.List;
 
 /**
- * @author Zsolt Berentey
- * @author Brian Wing Shun Chan
+ * @author Alexander Chow
  */
-public class SocialActivityConstants {
+public interface TrashHandlerRegistry {
 
-	public static final int TYPE_ADD_ATTACHMENT = 10006;
+	public TrashHandler getTrashHandler(String className);
 
-	public static final int TYPE_ADD_COMMENT = 10005;
+	public List<TrashHandler> getTrashHandlers();
 
-	public static final int TYPE_ADD_VOTE = 10004;
+	public void register(TrashHandler trashHandler);
 
-	public static final int TYPE_MOVE_TO_TRASH = 10007;
-
-	public static final int TYPE_RESTORE_FROM_TRASH = 10008;
-
-	public static final int TYPE_SUBSCRIBE = 10002;
-
-	public static final int TYPE_UNSUBSCRIBE = 10003;
-
-	public static final int TYPE_VIEW = 10001;
+	public void unregister(TrashHandler trashHandler);
 
 }
