@@ -21,10 +21,17 @@
 	headerNames="name,type,removed-date"
 	rowChecker="<%= new RowChecker(renderResponse) %>"
 >
-	<liferay-ui:search-container-results
-		results="<%= TrashEntryLocalServiceUtil.getEntries(themeDisplay.getScopeGroupId(), searchContainer.getStart(), searchContainer.getEnd()) %>"
-		total="<%= TrashEntryLocalServiceUtil.getEntriesCount(themeDisplay.getScopeGroupId()) %>"
-	/>
+	<liferay-ui:search-container-results>
+
+		<%
+		Object[] entries = TrashEntryServiceUtil.getEntries(themeDisplay.getScopeGroupId(), searchContainer.getStart(), searchContainer.getEnd());
+
+		pageContext.setAttribute("results", entries[0]);
+		pageContext.setAttribute("total", entries[1]);
+		aproximate = (Boolean)entries[2];
+		%>
+
+	</liferay-ui:search-container-results>
 
 	<liferay-ui:search-container-row
 		className="com.liferay.portlet.trash.model.TrashEntry"
@@ -80,5 +87,5 @@
 		/>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator paginate="<%= false %>" />
+	<liferay-ui:search-iterator type='<%= aproximate ? "more" : "regular" %>' />
 </liferay-ui:search-container>
