@@ -28,7 +28,6 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.util.AssetUtil;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
 import com.liferay.portlet.documentlibrary.DuplicateFolderNameException;
@@ -382,29 +381,6 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 		else {
 			return dlFolderPersistence.countByG_P_M(
 				groupId, parentFolderId, false);
-		}
-	}
-
-	public int getFoldersFileEntriesCount(
-			long groupId, List<Long> folderIds, int status)
-		throws SystemException {
-
-		if (folderIds.size() <= PropsValues.SQL_DATA_MAX_PARAMETERS) {
-			return dlFileEntryFinder.countByG_F_S(groupId, folderIds, status);
-		}
-		else {
-			int start = 0;
-			int end = PropsValues.SQL_DATA_MAX_PARAMETERS;
-
-			int filesCount = dlFileEntryFinder.countByG_F_S(
-				groupId, folderIds.subList(start, end), status);
-
-			folderIds.subList(start, end).clear();
-
-			filesCount += getFoldersFileEntriesCount(
-				groupId, folderIds, status);
-
-			return filesCount;
 		}
 	}
 
