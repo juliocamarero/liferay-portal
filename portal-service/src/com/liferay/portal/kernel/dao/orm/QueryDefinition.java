@@ -31,7 +31,7 @@ public class QueryDefinition {
 
 	public QueryDefinition(int status) {
 		if (status == WorkflowConstants.STATUS_ANY) {
-			setStatus(status, true);
+			setStatus(WorkflowConstants.STATUS_IN_TRASH, true);
 		}
 		else {
 			setStatus(status);
@@ -53,7 +53,7 @@ public class QueryDefinition {
 		int status, int start, int end, OrderByComparator obc) {
 
 		if (status == WorkflowConstants.STATUS_ANY) {
-			setStatus(status, true);
+			setStatus(WorkflowConstants.STATUS_IN_TRASH, true);
 		}
 		else {
 			setStatus(status);

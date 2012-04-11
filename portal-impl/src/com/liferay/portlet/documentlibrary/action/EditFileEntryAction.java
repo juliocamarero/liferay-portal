@@ -66,7 +66,6 @@ import com.liferay.portlet.documentlibrary.NoSuchFolderException;
 import com.liferay.portlet.documentlibrary.SourceFileNameException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 
 import java.io.File;
@@ -137,7 +136,7 @@ public class EditFileEntryAction extends PortletAction {
 				addTempFileEntry(actionRequest);
 			}
 			else if (cmd.equals(Constants.DELETE)) {
-				moveFileEntriesToTrash(actionRequest);
+				deleteFileEntries(actionRequest, false);
 			}
 			else if (cmd.equals(Constants.DELETE_TEMP)) {
 				deleteTempFileEntry(actionRequest, actionResponse);
@@ -153,6 +152,9 @@ public class EditFileEntryAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.MOVE)) {
 				moveFileEntries(actionRequest);
+			}
+			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
+				deleteFileEntries(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.REVERT)) {
 				revertFileEntry(actionRequest);
@@ -482,20 +484,31 @@ public class EditFileEntryAction extends PortletAction {
 		}
 	}
 
-	protected void deleteFileEntries(ActionRequest actionRequest)
+	protected void deleteFileEntries(
+			ActionRequest actionRequest, boolean moveToTrash)
 		throws Exception {
 
 		long fileEntryId = ParamUtil.getLong(actionRequest, "fileEntryId");
 
 		if (fileEntryId > 0) {
-			DLAppServiceUtil.deleteFileEntry(fileEntryId);
+			if (moveToTrash) {
+				DLAppServiceUtil.moveFileEntryToTrash(fileEntryId);
+			}
+			else {
+				DLAppServiceUtil.deleteFileEntry(fileEntryId);
+			}
 		}
 		else {
 			long[] deleteFileEntryIds = StringUtil.split(
 				ParamUtil.getString(actionRequest, "deleteEntryIds"), 0L);
 
-			for (int i = 0; i < deleteFileEntryIds.length; i++) {
-				DLAppServiceUtil.deleteFileEntry(deleteFileEntryIds[i]);
+			for (long deleteFileEntryId : deleteFileEntryIds) {
+				if (moveToTrash) {
+					DLAppServiceUtil.moveFileEntryToTrash(deleteFileEntryId);
+				}
+				else {
+					DLAppServiceUtil.deleteFileEntry(deleteFileEntryId);
+				}
 			}
 		}
 	}
@@ -625,33 +638,6 @@ public class EditFileEntryAction extends PortletAction {
 			for (int i = 0; i < fileEntryIds.length; i++) {
 				DLAppServiceUtil.moveFileEntry(
 					fileEntryIds[i], newFolderId, serviceContext);
-			}
-		}
-	}
-
-	protected void moveFileEntriesToTrash(ActionRequest actionRequest)
-		throws Exception {
-
-		long fileEntryId = ParamUtil.getLong(actionRequest, "fileEntryId");
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			DLFileEntry.class.getName(), actionRequest);
-
-		if (fileEntryId > 0) {
-			DLFileEntryLocalServiceUtil.moveToTrash(
-				themeDisplay.getUserId(), fileEntryId, serviceContext);
-		}
-		else {
-			long[] deleteFileEntryIds = StringUtil.split(
-				ParamUtil.getString(actionRequest, "fileEntryIds"), 0L);
-
-			for (int i = 0; i < deleteFileEntryIds.length; i++) {
-				DLFileEntryLocalServiceUtil.moveToTrash(
-					themeDisplay.getUserId(), deleteFileEntryIds[i],
-					serviceContext);
 			}
 		}
 	}

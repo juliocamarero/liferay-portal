@@ -27,9 +27,7 @@ import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.AssetTagException;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
@@ -40,7 +38,6 @@ import com.liferay.portlet.documentlibrary.SourceFileNameException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -71,10 +68,7 @@ public class EditEntryAction extends PortletAction {
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
 		try {
-			if (cmd.equals(Constants.DELETE)) {
-				moveEntriesToTrash(actionRequest);
-			}
-			else if (cmd.equals(Constants.CANCEL_CHECKOUT)) {
+			if (cmd.equals(Constants.CANCEL_CHECKOUT)) {
 				cancelCheckedOutEntries(actionRequest);
 			}
 			else if (cmd.equals(Constants.CHECKIN)) {
@@ -83,8 +77,14 @@ public class EditEntryAction extends PortletAction {
 			else if (cmd.equals(Constants.CHECKOUT)) {
 				checkOutEntries(actionRequest);
 			}
+			else if (cmd.equals(Constants.DELETE)) {
+				deleteEntries(actionRequest, false);
+			}
 			else if (cmd.equals(Constants.MOVE)) {
 				moveEntries(actionRequest);
+			}
+			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
+				deleteEntries(actionRequest, true);
 			}
 
 			WindowState windowState = actionRequest.getWindowState();
@@ -241,7 +241,10 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void deleteEntries(ActionRequest actionRequest) throws Exception {
+	protected void deleteEntries(
+			ActionRequest actionRequest, boolean moveToTrash)
+		throws Exception {
+
 		long[] deleteFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "folderIds"), 0L);
 
@@ -262,7 +265,12 @@ public class EditEntryAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "fileEntryIds"), 0L);
 
 		for (long deleteFileEntryId : deleteFileEntryIds) {
-			DLAppServiceUtil.deleteFileEntry(deleteFileEntryId);
+			if (moveToTrash) {
+				DLAppServiceUtil.moveFileEntryToTrash(deleteFileEntryId);
+			}
+			else {
+				DLAppServiceUtil.deleteFileEntry(deleteFileEntryId);
+			}
 		}
 	}
 
@@ -304,25 +312,4 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void moveEntriesToTrash(ActionRequest actionRequest)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			DLFileEntry.class.getName(), actionRequest);
-
-		// Delete file shortcuts before file entries. See LPS-21348.
-
-		// Delete file entries
-
-		long[] deleteFileEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "fileEntryIds"), 0L);
-
-		for (long deleteFileEntryId : deleteFileEntryIds) {
-			DLFileEntryLocalServiceUtil.moveToTrash(
-				themeDisplay.getUserId(), deleteFileEntryId, serviceContext);
-		}
-	}
 }
