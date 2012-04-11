@@ -1832,6 +1832,8 @@
 
 		<action path="/trash/view" forward="portlet.trash.view" />
 
+		<action path="/trash/view_content" forward="portlet.asset_publisher.view_content" />
+
 		<!-- Update Manager -->
 
 		<action path="/update_manager/install_plugin" type="com.liferay.portlet.plugininstaller.action.InstallPluginAction">
