@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.Repository;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
@@ -504,12 +505,10 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 			List<com.liferay.portal.model.Repository> repositories =
 				repositoryPersistence.findByGroupId(groupId);
 
-			for (int i = 0; i < repositories.size(); i++) {
+			for (Repository repository : repositories) {
 				try {
-					long repositoryId = repositories.get(i).getRepositoryId();
-
 					LocalRepository localRepository = getLocalRepository(
-						repositoryId);
+						repository.getRepositoryId());
 
 					return localRepository.getFileEntryByUuid(uuid);
 				}
@@ -656,10 +655,8 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 
 			// Move file entries within repository
 
-			FileEntry fileEntry = fromLocalRepository.moveFileEntry(
+			return fromLocalRepository.moveFileEntry(
 				userId, fileEntryId, newFolderId, serviceContext);
-
-			return fileEntry;
 		}
 
 		// Move file entries between repositories
