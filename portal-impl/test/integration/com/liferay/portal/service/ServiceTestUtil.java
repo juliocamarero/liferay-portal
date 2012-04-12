@@ -15,7 +15,6 @@
 package com.liferay.portal.service;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
-import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.jcr.JCRFactoryUtil;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.messaging.MessageBus;
@@ -24,9 +23,9 @@ import com.liferay.portal.kernel.messaging.sender.MessageSender;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineUtil;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
@@ -79,29 +78,26 @@ public class ServiceTestUtil {
 
 	public static final int THREAD_COUNT = 25;
 
-	public static Group addGroup(ServiceContext serviceContext)
+	public static Group addGroup(String name)
 		throws Exception {
 
-		String name = "Sample Group";
-		String description ="This is a sample group";
+		String description ="This is a test group";
 		int type = GroupConstants.TYPE_SITE_OPEN;
-		String friendlyURL =  "/sample-group";
+		String friendlyURL =
+			StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(name);
 		boolean active = true;
 		boolean site = true;
-		Group group = null;
 
-		try {
-			group = GroupLocalServiceUtil.getGroup(
-				serviceContext.getCompanyId(), name);
+		Group group = GroupLocalServiceUtil.fetchGroup(
+			TestPropsValues.getCompanyId(), name);
 
+		if (group != null) {
 			return group;
-		}
-		catch (NoSuchGroupException nsge) {
 		}
 
 		return GroupLocalServiceUtil.addGroup(
-			serviceContext.getUserId(), null, 0, name, description, type,
-			friendlyURL, site, active, serviceContext);
+			TestPropsValues.getUserId(), null, 0, name, description, type,
+			friendlyURL, site, active, getServiceContext());
 	}
 
 	public static User addUser(
