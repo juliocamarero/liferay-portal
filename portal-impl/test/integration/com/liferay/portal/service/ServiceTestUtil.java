@@ -15,6 +15,7 @@
 package com.liferay.portal.service;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.jcr.JCRFactoryUtil;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.messaging.MessageBus;
@@ -23,10 +24,14 @@ import com.liferay.portal.kernel.messaging.sender.MessageSender;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineUtil;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.trash.TrashHandler;
+import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.PortletImpl;
@@ -40,6 +45,10 @@ import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
+import com.liferay.portlet.blogs.asset.BlogsEntryAssetRendererFactory;
+import com.liferay.portlet.blogs.trash.BlogsEntryTrashHandler;
+import com.liferay.portlet.blogs.workflow.BlogsEntryWorkflowHandler;
 import com.liferay.portlet.bookmarks.util.BookmarksIndexer;
 import com.liferay.portlet.directory.workflow.UserWorkflowHandler;
 import com.liferay.portlet.documentlibrary.util.DLIndexer;
@@ -69,6 +78,31 @@ import java.util.Set;
 public class ServiceTestUtil {
 
 	public static final int THREAD_COUNT = 25;
+
+	public static Group addGroup(ServiceContext serviceContext)
+		throws Exception {
+
+		String name = "Sample Group";
+		String description ="This is a sample group";
+		int type = GroupConstants.TYPE_SITE_OPEN;
+		String friendlyURL =  "/sample-group";
+		boolean active = true;
+		boolean site = true;
+		Group group = null;
+
+		try {
+			group = GroupLocalServiceUtil.getGroup(
+				serviceContext.getCompanyId(), name);
+
+			return group;
+		}
+		catch (NoSuchGroupException nsge) {
+		}
+
+		return GroupLocalServiceUtil.addGroup(
+			serviceContext.getUserId(), null, 0, name, description, type,
+			friendlyURL, site, active, serviceContext);
+	}
 
 	public static User addUser(
 			String screenName, boolean autoScreenName, long[] groupIds)
@@ -225,8 +259,18 @@ public class ServiceTestUtil {
 			e.printStackTrace();
 		}
 
+		// Asset Renderer Factories
+
+		AssetRendererFactoryRegistryUtil.register(
+			new BlogsEntryAssetRendererFactory());
+
+		// Trash
+
+		TrashHandlerRegistryUtil.register(new BlogsEntryTrashHandler());
+
 		// Workflow
 
+		WorkflowHandlerRegistryUtil.register(new BlogsEntryWorkflowHandler());
 		WorkflowHandlerRegistryUtil.register(new DLFileEntryWorkflowHandler());
 		WorkflowHandlerRegistryUtil.register(
 			new JournalArticleWorkflowHandler());
