@@ -523,7 +523,7 @@
 			<forward name="portlet.document_library.error" path="portlet.document_library.error" />
 		</action>
 
-		<action path="/document_library/restore_entry" type="com.liferay.portlet.trash.action.EditTrashEntryAction">
+		<action path="/document_library/restore_entry" type="com.liferay.portlet.trash.action.EditEntryAction">
 			<forward name="portlet.document_library.view" path="portlet.document_library.view" />
 		</action>
 
