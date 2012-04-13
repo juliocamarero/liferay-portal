@@ -2363,7 +2363,7 @@ public class JournalArticleLocalServiceImpl
 
 		journalArticlePersistence.update(article, false);
 
-		if (isLatestVersion(
+		if (isGreaterOrEqualThanLatestApprovedVersion(
 				article.getGroupId(), article.getArticleId(),
 				article.getVersion())) {
 
@@ -3041,6 +3041,27 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		return newUrlTitle;
+	}
+
+	protected boolean isGreaterOrEqualThanLatestApprovedVersion(
+			long groupId, String articleId, double version)
+		throws PortalException, SystemException {
+
+		double latestApprovedVersion;
+
+		try {
+			latestApprovedVersion = getLatestVersion(
+				groupId, articleId, WorkflowConstants.STATUS_APPROVED);
+
+			if (version >= latestApprovedVersion) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} catch (NoSuchArticleException nsae) {
+			return true;
+		}
 	}
 
 	protected void notifySubscribers(
