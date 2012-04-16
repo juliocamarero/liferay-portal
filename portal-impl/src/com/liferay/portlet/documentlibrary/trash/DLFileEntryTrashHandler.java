@@ -21,7 +21,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 
 /**
- * Represents the trash handler for file entries entity.
+ * Represents the trash handler for the file entry entity.
  *
  * @author Alexander Chow
  * @author Manuel de la Peña
@@ -33,9 +33,9 @@ public class DLFileEntryTrashHandler extends BaseTrashHandler {
 	/**
 	 * Deletes all file entries with the matching primary keys.
 	 *
-	 * @param classPKs the primary keys to be deleted
-	 * @throws PortalException if the file entry could not be found
-	 * @throws SystemException if a system exception is ocurred
+	 * @param classPKs the primary keys of the file entries to be deleted
+	 * @throws PortalException if any one of the file entries could not be found
+	 * @throws SystemException if a system exception occurred
 	 */
 	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
@@ -57,9 +57,9 @@ public class DLFileEntryTrashHandler extends BaseTrashHandler {
 	/**
 	 * Restores all file entries with the matching primary keys.
 	 *
-	 * @param classPKs the primary keys to be deleted
-	 * @throws PortalException if the file entry could not be found
-	 * @throws SystemException if a system exception is ocurred
+	 * @param classPKs the primary keys of the file entries to be deleted
+	 * @throws PortalException if any one of the file entries could not be found
+	 * @throws SystemException if a system exception occurred
 	 */
 	public void restoreTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {

@@ -29,21 +29,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The trash entry remote service is responsible for returning trash entries
+ * The trash entry remote service is responsible for returning trash entries.
  * For more information on trash entries services and TrashEntry, see
- * {@link TrashEntryLocalServiceImpl}.
+ * {@link com.liferay.portlet.trash.service.impl.TrashEntryLocalServiceImpl}.
  *
  * @author Julio Camarero
  */
 public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 
 	/**
-	 * Returns the trash entries matching a specified groupId.
+	 * Returns the trash entries with the matching group ID.
 	 *
 	 * @param groupId the primary key of the group
-	 * @return
+	 * @return the matching trash entries
 	 * @throws SystemException if a system exception occurred
-	 * @throws PrincipalException
+	 * @throws PrincipalException if a principal exception occurred
 	 */
 	public Object[] getEntries(long groupId)
 		throws SystemException, PrincipalException {
@@ -52,15 +52,15 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 	}
 
 	/**
-	 * Returns a range with the trash entries matching a specified groupId.
+	 * Returns a range of all the trash entries matching the group ID.
 	 *
 	 * @param groupId the primary key of the group
 	 * @param start the lower bound of the range of trash entries to return
 	 * @param end the upper bound of the range of trash entries to return (not
 	 *        inclusive)
-	 * @return the range of trash entries associated with the groupId
+	 * @return the range of matching trash entries
 	 * @throws SystemException if a system exception occurred
-	 * @throws PrincipalException
+	 * @throws PrincipalException if a system exception occurred
 	 */
 	public Object[] getEntries(long groupId, int start, int end)
 		throws SystemException, PrincipalException {

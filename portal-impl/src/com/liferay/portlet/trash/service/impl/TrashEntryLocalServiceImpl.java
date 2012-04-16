@@ -35,7 +35,7 @@ import java.util.List;
  *
  * <ul>
  * <li>
- * @link com.liferay.portlet.blogs.model.BlogsEntry
+ * {@link com.liferay.portlet.blogs.model.BlogsEntry}
  * </li>
  * </ul>
  *
@@ -46,12 +46,12 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	/**
 	 * Moves an entry to trash.
 	 *
-	 * @param companyId the primary key of the company
-	 * @param groupId the primary key of the group
+	 * @param companyId the primary key of the entry's company
+	 * @param groupId the primary key of the entry's group
 	 * @param className the class name of the entity
 	 * @param classPK the primary key of the entity
-	 * @param status the status of the entity prior to be moved to trash
-	 * @param typeSettingsProperties
+	 * @param status the status of the entityy prior to being moved to trash
+	 * @param typeSettingsProperties the type settings properties
 	 * @return the trashEntry
 	 * @throws SystemException if a system exception occurred
 	 */
@@ -84,11 +84,11 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Deletes an entry using its class name and primary key.
+	 * Deletes the trash entry with the entity class name and primary key.
 	 *
-	 * @param className the class name of entry's entity
+	 * @param className the class name of entity
 	 * @param classPK the primary key of the entry
-	 * @throws PortalException if there are no permissions to delete the entry
+	 * @throws PortalException if the user did not have permission to delete the entry
 	 * @throws SystemException if a system exception occurred
 	 */
 	public void deleteEntry(String className, long classPK)
@@ -100,10 +100,10 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the entry using its primary key.
+	 * Returns the trash entry with the primary key.
 	 *
 	 * @param entryId the primary key of the entry
-	 * @return the trash entry
+	 * @return the trash entry with the primary key
 	 * @throws SystemException if a system exception occurred
 	 */
 	public TrashEntry fetchEntry(long entryId) throws SystemException {
@@ -111,11 +111,11 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the entry using its entity's class name and primary key.
+	 * Returns the trash entry with the entity class name and primary key.
 	 *
 	 * @param className the class name of the entity
 	 * @param classPK the primary key of the entity
-	 * @return the trash entry
+	 * @return the trash entry with the entity class name and primary key
 	 * @throws SystemException if a system exception occurred
 	 */
 	public TrashEntry fetchEntry(String className, long classPK)
@@ -127,10 +127,10 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the trash entries matching a specified groupId.
+	 * Returns the trash entries with the matching group ID.
 	 *
 	 * @param groupId the primary key of the group
-	 * @return the trash entries with the groupId
+	 * @return the trash entries with the group ID
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<TrashEntry> getEntries(long groupId) throws SystemException {
@@ -138,13 +138,13 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns a range with the trash entries matching a specified groupId.
+	 * Returns a range of all the trash entries matching the group ID.
 	 *
 	 * @param groupId the primary key of the group
 	 * @param start the lower bound of the range of trash entries to return
 	 * @param end the upper bound of the range of trash entries to return (not
 	 *        inclusive)
-	 * @return the range of trash entries associated with the groupId
+	 * @return the range of matching trash entries
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<TrashEntry> getEntries(long groupId, int start, int end)
@@ -154,7 +154,7 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the number of trash entries that match the groupId.
+	 * Returns the number of trash entries with the group ID.
 	 *
 	 * @param groupId the primary key of the group
 	 * @return the number of matching trash entries
@@ -165,11 +165,11 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the entry using its primary key.
+	 * Returns the trash entry with the primary key.
 	 *
 	 * @param entryId the primary key of the trash entry
-	 * @return the trash entry
-	 * @throws PortalException
+	 * @return the trash entry with the primary key
+	 * @throws PortalException if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
 	public TrashEntry getEntry(long entryId)
@@ -179,11 +179,11 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the entry using its entity's class name and primary key.
+	 * Returns the entry with the entity class name and primary key.
 	 *
 	 * @param className the class name of the entity
 	 * @param classPK the primary key of the entity
-	 * @return the trash entry
+	 * @return the trash entry with the entity class name and primary key
 	 * @throws PortalException if a trash entry with the primary key could not
 	 *         be found
 	 * @throws SystemException if a system exception occurred

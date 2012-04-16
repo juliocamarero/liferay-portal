@@ -26,7 +26,7 @@ import java.util.List;
  *
  * <ul>
  * <li>
- * @link com.liferay.portlet.blogs.trash.BlogsEntryTrashHandler
+ * {@link com.liferay.portlet.blogs.trash.BlogsEntryTrashHandler}
  * </li>
  * </ul>
  *
@@ -35,32 +35,33 @@ import java.util.List;
 public interface TrashHandlerRegistry {
 
 	/**
-	 * Returns the TrashHandler object associated with the
-	 * <code>className</code> parameter.
+	 * Returns the trash handler associated with the
+	 * class name.
 	 *
-	 * @param className class name of the TrashHandler.
-	 * @return The trashHandler object associated with the className.
+	 * @param className class name of the TrashHandler
+	 * @return the trash handler associated with the
+	 * class name
 	 */
 	public TrashHandler getTrashHandler(String className);
 
 	/**
-	 * Returns a List with all trashHandlers.
+	 * Returns all of the trash handlers.
 	 *
-	 * @return The trashHandler object associated.
+	 * @return the trash handlers
 	 */
 	public List<TrashHandler> getTrashHandlers();
 
 	/**
-	 * Registers the trashHandler passed as parameter.
+	 * Registers the trash handler.
 	 *
-	 * @param trashHandler the TrashHandler to register.
+	 * @param trashHandler the TrashHandler to register
 	 */
 	public void register(TrashHandler trashHandler);
 
 	/**
-	 * Unregisters the trashHandler passed as parameter.
+	 * Unregisters the trash handler.
 	 *
-	 * @param trashHandler the TrashHandler to unregister.
+	 * @param trashHandler the trash handler to unregister
 	 */
 	public void unregister(TrashHandler trashHandler);
 

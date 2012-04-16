@@ -54,23 +54,23 @@ import com.liferay.portlet.asset.model.AssetRendererFactory;
 public interface TrashHandler {
 
 	/**
-	 * Deletes all entries in the parameter array.
+	 * Deletes all trash entries with the primary keys.
 	 *
-	 * @param classPKs the primary keys of the entries to delete
+	 * @param  classPKs the primary keys of the entries to delete
 	 * @throws PortalException if an entry with the primary key could not be
 	 *         found
-	 * @throws SystemException if a system exception is ocurred
+	 * @throws SystemException if a system exception occurred
 	 */
 	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException;
 
 	/**
-	 * Delete the entry defined by the primary key.
+	 * Deletes the entry with the primary key.
 	 *
 	 * @param  classPK the primary key of the entry to delete
 	 * @throws PortalException if an entry with the primary key could not be
 	 *         found
-	 * @throws SystemException if a system exception is ocurred
+	 * @throws SystemException if a system exception occurred
 	 */
 	public void deleteTrashEntry(long classPK)
 		throws PortalException, SystemException;
@@ -82,7 +82,7 @@ public interface TrashHandler {
 	 * @return the asset renderer associated to the trash entry
 	 * @throws PortalException if an entry with the primary key could not be
 	 *         found
-	 * @throws SystemException if a system exception is ocurred
+	 * @throws SystemException if a system exception occurred
 	 */
 	public AssetRenderer getAssetRenderer(long classPK)
 		throws PortalException, SystemException;
@@ -102,12 +102,12 @@ public interface TrashHandler {
 	public String getClassName();
 
 	/**
-	 * Restores all entries in the parameter array.
+	 * Restores all entries with the primary keys.
 	 *
 	 * @param  classPKs the primary keys of the entries to restore
 	 * @throws PortalException if an entry with the primary key could not be
 	 *         found
-	 * @throws SystemException if a system exception is ocurred
+	 * @throws SystemException if a system exception occurred
 	 */
 	public void restoreTrashEntries(long[] classPKs)
 		throws PortalException, SystemException;
@@ -118,7 +118,7 @@ public interface TrashHandler {
 	 * @param  classPK the primary key of the entry to restore
 	 * @throws PortalException if an entry with the primary key could not be
 	 *         found
-	 * @throws SystemException if a system exception is ocurred
+	 * @throws SystemException if a system exception occurred
 	 */
 	public void restoreTrashEntry(long classPK)
 		throws PortalException, SystemException;
