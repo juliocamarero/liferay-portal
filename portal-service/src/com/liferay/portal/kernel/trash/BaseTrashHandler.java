@@ -37,8 +37,7 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
 
 		if (assetRendererFactory != null) {
-			return assetRendererFactory.getAssetRenderer(
-				classPK, AssetRendererFactory.TYPE_LATEST);
+			return assetRendererFactory.getAssetRenderer(classPK);
 		}
 		else {
 			return null;

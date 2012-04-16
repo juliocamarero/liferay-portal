@@ -35,8 +35,10 @@
 		<%
 		String className = trashEntry.getClassName();
 
-		AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
-		AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(trashEntry.getClassPK());
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
+
+		AssetRendererFactory assetRendererFactory = trashHandler.getAssetRendererFactory();
+		AssetRenderer assetRenderer = trashHandler.getAssetRenderer(trashEntry.getClassPK());
 		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, trashEntry.getClassPK());
 		%>
 
