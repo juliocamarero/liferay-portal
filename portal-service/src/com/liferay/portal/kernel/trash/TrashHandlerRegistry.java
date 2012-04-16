@@ -17,16 +17,51 @@ package com.liferay.portal.kernel.trash;
 import java.util.List;
 
 /**
+ * Represents the interface for registering handlers for those entities that
+ * can be moved to Trash.
+ *
+ * <p>
+ * The entities that can be registered are:
+ * </p>
+ *
+ * <ul>
+ * <li>
+ * @link com.liferay.portlet.blogs.trash.BlogsEntryTrashHandler
+ * </li>
+ * </ul>
+ *
  * @author Alexander Chow
  */
 public interface TrashHandlerRegistry {
 
+	/**
+	 * Returns the TrashHandler object associated with the
+	 * <code>className</code> parameter.
+	 *
+	 * @param className class name of the TrashHandler.
+	 * @return The trashHandler object associated with the className.
+	 */
 	public TrashHandler getTrashHandler(String className);
 
+	/**
+	 * Returns a List with all trashHandlers.
+	 *
+	 * @return The trashHandler object associated.
+	 */
 	public List<TrashHandler> getTrashHandlers();
 
+	/**
+	 * Registers the trashHandler passed as parameter.
+	 *
+	 * @param trashHandler the TrashHandler to register.
+	 */
 	public void register(TrashHandler trashHandler);
 
+	/**
+	 * Unregisters the trashHandler passed as parameter.
+	 *
+	 * @param trashHandler the TrashHandler to unregister.
+	 */
 	public void unregister(TrashHandler trashHandler);
 
 }

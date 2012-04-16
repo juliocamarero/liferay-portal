@@ -21,6 +21,19 @@ import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 
 /**
+ * Represents the base class for basic operations with the Trash.
+ *
+ * <p>The basic operations are:</p>
+ *
+ * <ul>
+ * <li>
+ * Deletion of entries
+ * </li>
+ * <li>
+ * Restore of entries
+  * </li>
+ * </ul>
+ *
  * @author Alexander Chow
  */
 public abstract class BaseTrashHandler implements TrashHandler {

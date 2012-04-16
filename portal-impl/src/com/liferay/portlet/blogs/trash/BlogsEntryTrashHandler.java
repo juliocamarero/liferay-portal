@@ -21,12 +21,21 @@ import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryServiceUtil;
 
 /**
+ * Represents the trash handler for blogs entries entity.
+ *
  * @author Zsolt Berentey
  */
 public class BlogsEntryTrashHandler extends BaseTrashHandler {
 
 	public static final String CLASS_NAME = BlogsEntry.class.getName();
 
+	/**
+	 * Deletes all blogs entries with the matching primary keys.
+	 *
+	 * @param classPKs the primary keys to be deleted
+	 * @throws PortalException if the blogs entry could not be found
+	 * @throws SystemException if a system exception is ocurred
+	 */
 	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
@@ -35,10 +44,22 @@ public class BlogsEntryTrashHandler extends BaseTrashHandler {
 		}
 	}
 
+	/**
+	 * Returns the blogs entry entity's class name
+	 *
+	 * @return the blogs entry entity's class name
+	 */
 	public String getClassName() {
 		return CLASS_NAME;
 	}
 
+	/**
+	 * Restores all blogs entries with the matching primary keys.
+	 *
+	 * @param classPKs the primary key to be restored
+	 * @throws PortalException if the blogs entry could not be found
+	 * @throws SystemException if a system exception is ocurred
+	 */
 	public void restoreTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 

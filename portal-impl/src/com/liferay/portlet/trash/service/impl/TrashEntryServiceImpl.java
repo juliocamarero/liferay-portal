@@ -29,15 +29,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The trash entry remote service is responsible for returning trash entries
+ * For more information on trash entries services and TrashEntry, see
+ * {@link TrashEntryLocalServiceImpl}.
+ *
  * @author Julio Camarero
  */
 public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
+
+	/**
+	 * Returns the trash entries matching a specified groupId.
+	 *
+	 * @param groupId the primary key of the group
+	 * @return
+	 * @throws SystemException if a system exception occurred
+	 * @throws PrincipalException
+	 */
 	public Object[] getEntries(long groupId)
 		throws SystemException, PrincipalException {
 
 		return getEntries(groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 	}
 
+	/**
+	 * Returns a range with the trash entries matching a specified groupId.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param start the lower bound of the range of trash entries to return
+	 * @param end the upper bound of the range of trash entries to return (not
+	 *        inclusive)
+	 * @return the range of trash entries associated with the groupId
+	 * @throws SystemException if a system exception occurred
+	 * @throws PrincipalException
+	 */
 	public Object[] getEntries(long groupId, int start, int end)
 		throws SystemException, PrincipalException {
 
