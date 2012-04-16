@@ -16,76 +16,132 @@
 
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
-<liferay-ui:search-container
-	emptyResultsMessage="the-recycle-bin-is-empty"
-	headerNames="name,type,removed-date"
-	rowChecker="<%= new RowChecker(renderResponse) %>"
->
-	<liferay-ui:search-container-results>
+<%
+boolean aproximate = false;
+%>
 
-		<%
-		Object[] entries = TrashEntryServiceUtil.getEntries(themeDisplay.getScopeGroupId(), searchContainer.getStart(), searchContainer.getEnd());
+<portlet:actionURL var="editTrashEntryURL">
+	<portlet:param name="struts_action" value="/trash/edit_entry" />
+</portlet:actionURL>
 
-		pageContext.setAttribute("results", entries[0]);
-		pageContext.setAttribute("total", entries[1]);
-		aproximate = (Boolean)entries[2];
-		%>
+<aui:form action='<%= editTrashEntryURL %>' method="post" name="fm" onSubmit="event.preventDefault();">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="" />
+	<aui:input name="deleteEntryIds" type="hidden" />
+	<aui:input name="restoreEntryIds" type="hidden" />
 
-	</liferay-ui:search-container-results>
-
-	<liferay-ui:search-container-row
-		className="com.liferay.portlet.trash.model.TrashEntry"
-		keyProperty="entryId"
-		modelVar="trashEntry"
+	<liferay-ui:search-container
+		emptyResultsMessage="the-recycle-bin-is-empty"
+		headerNames="name,type,removed-date"
+		rowChecker="<%= new RowChecker(renderResponse) %>"
 	>
+		<liferay-ui:search-container-results>
 
-		<%
-		String className = trashEntry.getClassName();
+			<%
+			Object[] entries = TrashEntryServiceUtil.getEntries(themeDisplay.getScopeGroupId(), searchContainer.getStart(), searchContainer.getEnd());
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
+			pageContext.setAttribute("results", entries[0]);
+			pageContext.setAttribute("total", entries[1]);
+			aproximate = (Boolean)entries[2];
+			%>
 
-		AssetRendererFactory assetRendererFactory = trashHandler.getAssetRendererFactory();
-		AssetRenderer assetRenderer = trashHandler.getAssetRenderer(trashEntry.getClassPK());
-		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, trashEntry.getClassPK());
+		</liferay-ui:search-container-results>
 
-		PortletURL viewFullContentURL = renderResponse.createRenderURL();
-
-		viewFullContentURL.setParameter("struts_action", "/trash/view_content");
-		viewFullContentURL.setParameter("redirect", currentURL);
-
-		if (assetEntry != null) {
-			viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
-		}
-
-		if (assetRendererFactory != null) {
-			viewFullContentURL.setParameter("type", assetRendererFactory.getType());
-		}
-
-		viewFullContentURL.setParameter("showEditURL", String.valueOf(Boolean.FALSE));
-		%>
-
-		<liferay-ui:search-container-column-text
-			href="<%= viewFullContentURL.toString() %>"
-			name="name"
+		<liferay-ui:search-container-row
+			className="com.liferay.portlet.trash.model.TrashEntry"
+			keyProperty="entryId"
+			modelVar="trashEntry"
 		>
-			<liferay-ui:icon label="<%= true %>" message="<%= assetEntry.getTitle(locale) %>" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
-		</liferay-ui:search-container-column-text>
 
-		<liferay-ui:search-container-column-text
-			name="type"
-			value="<%= LanguageUtil.get(pageContext, assetRendererFactory.getType()) %>"
-		/>
+			<%
+			String className = trashEntry.getClassName();
 
-		<liferay-ui:search-container-column-text
-			name="removed-date"
-			value="<%= dateFormatDateTime.format(trashEntry.getTrashedDate()) %>"
-		/>
+			TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
 
-		<liferay-ui:search-container-column-jsp
-			align="right"
-			path="/html/portlet/trash/trash_entry_actions.jsp"
-		/>
-	</liferay-ui:search-container-row>
+			AssetRendererFactory assetRendererFactory = trashHandler.getAssetRendererFactory();
+			AssetRenderer assetRenderer = trashHandler.getAssetRenderer(trashEntry.getClassPK());
+			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, trashEntry.getClassPK());
 
-	<liferay-ui:search-iterator type='<%= aproximate ? "more" : "regular" %>' />
-</liferay-ui:search-container>
+			PortletURL viewFullContentURL = renderResponse.createRenderURL();
+
+			viewFullContentURL.setParameter("struts_action", "/trash/view_content");
+			viewFullContentURL.setParameter("redirect", currentURL);
+
+			if (assetEntry != null) {
+				viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
+			}
+
+			if (assetRendererFactory != null) {
+				viewFullContentURL.setParameter("type", assetRendererFactory.getType());
+			}
+
+			viewFullContentURL.setParameter("showEditURL", String.valueOf(Boolean.FALSE));
+			%>
+
+			<liferay-ui:search-container-column-text
+				href="<%= viewFullContentURL.toString() %>"
+				name="name"
+			>
+				<liferay-ui:icon label="<%= true %>" message="<%= assetEntry.getTitle(locale) %>" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
+			</liferay-ui:search-container-column-text>
+
+			<liferay-ui:search-container-column-text
+				name="type"
+				value="<%= LanguageUtil.get(pageContext, assetRendererFactory.getType()) %>"
+			/>
+
+			<liferay-ui:search-container-column-text
+				name="removed-date"
+				value="<%= dateFormatDateTime.format(trashEntry.getTrashedDate()) %>"
+			/>
+
+			<liferay-ui:search-container-column-jsp
+				align="right"
+				path="/html/portlet/trash/trash_entry_actions.jsp"
+			/>
+		</liferay-ui:search-container-row>
+
+		<aui:button-row>
+			<aui:button name="deleteButton" onClick='<%= renderResponse.getNamespace() + "deleteEntries();" %>' value="delete" />
+
+			<aui:button name="restoreButton" onClick='<%= renderResponse.getNamespace() + "restoreEntries();" %>' value="restore" />
+		</aui:button-row>
+
+		<div class="separator"><!-- --></div>
+
+		<liferay-ui:search-iterator type='<%= aproximate ? "more" : "regular" %>' />
+	</liferay-ui:search-container>
+</aui:form>
+
+<aui:script use="aui-base">
+	Liferay.provide(
+		window,
+		'<portlet:namespace />deleteEntries',
+		function() {
+			var deleteEntryIds = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+
+			if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-the-selected-entries") %>')) {
+				document.<portlet:namespace />fm.method = "post";
+				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.DELETE %>";
+				document.<portlet:namespace />fm.<portlet:namespace />deleteEntryIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+				submitForm(document.<portlet:namespace />fm);
+			}
+		},
+		['liferay-util-list-fields']
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />restoreEntries',
+		function() {
+			var restoreEntryIds = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+
+			if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-restore-the-selected-entries") %>')) {
+				document.<portlet:namespace />fm.method = "post";
+				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.RESTORE %>";
+				document.<portlet:namespace />fm.<portlet:namespace />restoreEntryIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+				submitForm(document.<portlet:namespace />fm);
+			}
+		},
+		['liferay-util-list-fields']
+	);
+</aui:script>
