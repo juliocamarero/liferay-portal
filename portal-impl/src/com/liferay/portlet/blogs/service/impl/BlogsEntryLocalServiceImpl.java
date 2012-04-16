@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.blogs.service.impl;
 
+import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -35,10 +36,13 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
+import com.liferay.portal.kernel.workflow.WorkflowInstance;
+import com.liferay.portal.kernel.workflow.WorkflowInstanceManagerUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.WorkflowInstanceLink;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextUtil;
 import com.liferay.portal.util.Portal;
@@ -60,10 +64,15 @@ import com.liferay.portlet.blogs.social.BlogsActivityKeys;
 import com.liferay.portlet.blogs.util.BlogsUtil;
 import com.liferay.portlet.blogs.util.LinkbackProducerUtil;
 import com.liferay.portlet.blogs.util.comparator.EntryDisplayDateComparator;
+import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.trash.model.TrashEntry;
+import net.htmlparser.jericho.Source;
+import net.htmlparser.jericho.StartTag;
 
+import javax.portlet.PortletPreferences;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,11 +80,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import javax.portlet.PortletPreferences;
-
-import net.htmlparser.jericho.Source;
-import net.htmlparser.jericho.StartTag;
 
 /**
  * @author Brian Wing Shun Chan
@@ -309,6 +313,11 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(
 			entry.getCompanyId(), entry.getGroupId(),
 			BlogsEntry.class.getName(), entry.getEntryId());
+
+		// Trash Entry
+
+		trashEntryLocalService.deleteEntry(
+			BlogsEntry.class.getName(), entry.getEntryId());
 	}
 
 	public void deleteEntry(long entryId)
@@ -319,45 +328,74 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		deleteEntry(entry);
 	}
 
+	/**
+	 * @deprecated {@link #getCompanyEntries(long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getCompanyEntries(
 			long companyId, Date displayDate, int status, int start, int end)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.findByC_LtD(
-				companyId, displayDate, start, end);
-		}
-		else {
-			return blogsEntryPersistence.findByC_LtD_S(
-				companyId, displayDate, status, start, end);
-		}
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, null);
+
+		return getCompanyEntries(companyId, displayDate, queryDefinition);
 	}
 
+	/**
+	 * @deprecated {@link #getCompanyEntries(long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getCompanyEntries(
 			long companyId, Date displayDate, int status, int start, int end,
 			OrderByComparator obc)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.findByC_LtD(
-				companyId, displayDate, start, end, obc);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, obc);
+
+		return getCompanyEntries(companyId, displayDate, queryDefinition);
+	}
+
+	public List<BlogsEntry> getCompanyEntries(
+			long companyId, Date displayDate, QueryDefinition queryDefinition)
+		throws SystemException {
+
+		if (queryDefinition.isExcludeStatus()) {
+			return blogsEntryPersistence.findByC_LtD_NeS(
+				companyId, displayDate, queryDefinition.getStatus(),
+				queryDefinition.getStart(), queryDefinition.getEnd(),
+				queryDefinition.getOrderByComparator());
 		}
 		else {
 			return blogsEntryPersistence.findByC_LtD_S(
-				companyId, displayDate, status, start, end, obc);
+				companyId, displayDate, queryDefinition.getStatus(),
+				queryDefinition.getStart(), queryDefinition.getEnd(),
+				queryDefinition.getOrderByComparator());
 		}
 	}
 
+	/**
+	 * @deprecated {@link #getCompanyEntriesCount(long, Date, QueryDefinition)}
+	 */
 	public int getCompanyEntriesCount(
 			long companyId, Date displayDate, int status)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.countByC_LtD(companyId, displayDate);
+		QueryDefinition queryDefinition = new QueryDefinition(status);
+
+		return getCompanyEntriesCount(companyId, displayDate, queryDefinition);
+	}
+
+	public int getCompanyEntriesCount(
+			long companyId, Date displayDate, QueryDefinition queryDefinition)
+		throws SystemException {
+
+		if (queryDefinition.isExcludeStatus()) {
+			return blogsEntryPersistence.countByC_LtD_NeS(
+				companyId, displayDate, queryDefinition.getStatus());
 		}
 		else {
 			return blogsEntryPersistence.countByC_LtD_S(
-				companyId, displayDate, status);
+				companyId, displayDate, queryDefinition.getStatus());
 		}
 	}
 
@@ -384,134 +422,243 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		return blogsEntryPersistence.findByG_UT(groupId, urlTitle);
 	}
 
+	/**
+	 * @deprecated {@link #getGroupEntries(long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getGroupEntries(
 			long groupId, Date displayDate, int status, int start, int end)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.findByG_LtD(
-				groupId, displayDate, start, end);
-		}
-		else {
-			return blogsEntryPersistence.findByG_LtD_S(
-				groupId, displayDate, status, start, end);
-		}
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, null);
+
+		return getGroupEntries(groupId, displayDate, queryDefinition);
 	}
 
+	/**
+	 * @deprecated {@link #getGroupEntries(long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getGroupEntries(
 			long groupId, Date displayDate, int status, int start, int end,
 			OrderByComparator obc)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.findByG_LtD(
-				groupId, displayDate, start, end, obc);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, obc);
+
+		return getGroupEntries(groupId, displayDate, queryDefinition);
+	}
+
+	public List<BlogsEntry> getGroupEntries(
+			long groupId, Date displayDate, QueryDefinition queryDefinition)
+		throws SystemException {
+
+		if (queryDefinition.isExcludeStatus()) {
+			return blogsEntryPersistence.findByG_LtD_NeS(
+				groupId, displayDate, queryDefinition.getStatus(),
+				queryDefinition.getStart(), queryDefinition.getEnd(),
+				queryDefinition.getOrderByComparator());
 		}
 		else {
 			return blogsEntryPersistence.findByG_LtD_S(
-				groupId, displayDate, status, start, end, obc);
+				groupId, displayDate, queryDefinition.getStatus(),
+				queryDefinition.getStart(), queryDefinition.getEnd(),
+				queryDefinition.getOrderByComparator());
 		}
 	}
 
+	/**
+	 * @deprecated {@link #getGroupEntries(long, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getGroupEntries(
 			long groupId, int status, int start, int end)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.findByGroupId(groupId, start, end);
-		}
-		else {
-			return blogsEntryPersistence.findByG_S(groupId, status, start, end);
-		}
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, null);
+
+		return getGroupEntries(groupId, queryDefinition);
 	}
 
+	/**
+	 * @deprecated {@link #getGroupEntries(long, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getGroupEntries(
 			long groupId, int status, int start, int end, OrderByComparator obc)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.findByGroupId(
-				groupId, start, end, obc);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, obc);
+
+		return getGroupEntries(groupId, queryDefinition);
+	}
+
+	public List<BlogsEntry> getGroupEntries(
+			long groupId, QueryDefinition queryDefinition)
+		throws SystemException {
+
+		if (queryDefinition.isExcludeStatus()) {
+			return blogsEntryPersistence.findByG_NeS(
+				groupId, queryDefinition.getStatus(),
+				queryDefinition.getStart(), queryDefinition.getEnd(),
+				queryDefinition.getOrderByComparator());
 		}
 		else {
 			return blogsEntryPersistence.findByG_S(
-				groupId, status, start, end, obc);
+				groupId, queryDefinition.getStatus(),
+				queryDefinition.getStart(), queryDefinition.getEnd(),
+				queryDefinition.getOrderByComparator());
 		}
 	}
 
+	/**
+	 * @deprecated {@link #getGroupEntriesCount(long, Date, QueryDefinition)}
+	 */
 	public int getGroupEntriesCount(long groupId, Date displayDate, int status)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.countByG_LtD(groupId, displayDate);
+		QueryDefinition queryDefinition = new QueryDefinition(status);
+
+		return getGroupEntriesCount(groupId, displayDate, queryDefinition);
+	}
+
+	public int getGroupEntriesCount(
+			long groupId, Date displayDate, QueryDefinition queryDefinition)
+		throws SystemException {
+
+		if (queryDefinition.isExcludeStatus()) {
+			return blogsEntryPersistence.countByG_LtD_NeS(
+				groupId, displayDate, queryDefinition.getStatus());
 		}
 		else {
 			return blogsEntryPersistence.countByG_LtD_S(
-				groupId, displayDate, status);
+				groupId, displayDate, queryDefinition.getStatus());
 		}
 	}
 
+	/**
+	 * @deprecated {@link #getGroupEntriesCount(long, QueryDefinition)}
+	 */
 	public int getGroupEntriesCount(long groupId, int status)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.countByGroupId(groupId);
+		QueryDefinition queryDefinition = new QueryDefinition(status);
+
+		return getGroupEntriesCount(groupId, queryDefinition);
+	}
+
+	public int getGroupEntriesCount(
+			long groupId, QueryDefinition queryDefinition)
+		throws SystemException {
+
+		if (queryDefinition.isExcludeStatus()) {
+			return blogsEntryPersistence.countByG_NeS(
+				groupId, queryDefinition.getStatus());
 		}
 		else {
-			return blogsEntryPersistence.countByG_S(groupId, status);
+			return blogsEntryPersistence.countByG_S(
+				groupId, queryDefinition.getStatus());
 		}
 	}
 
+	/**
+	 * @deprecated {@link #getGroupsEntries(long, long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getGroupsEntries(
 			long companyId, long groupId, Date displayDate, int status,
 			int start, int end)
 		throws SystemException {
 
-		return blogsEntryFinder.findByGroupIds(
-			companyId, groupId, displayDate, status, start, end);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, null);
+
+		return getGroupsEntries(
+			companyId, groupId, displayDate, queryDefinition);
 	}
 
+	public List<BlogsEntry> getGroupsEntries(
+			long companyId, long groupId, Date displayDate,
+			QueryDefinition queryDefinition)
+		throws SystemException {
+
+		return blogsEntryFinder.findByGroupIds(
+			companyId, groupId, displayDate, queryDefinition);
+	}
+
+	/**
+	 * @deprecated {@link #getGroupUserEntries(long, long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getGroupUserEntries(
 			long groupId, long userId, Date displayDate, int status, int start,
 			int end)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.findByG_U_LtD(
-				groupId, userId, displayDate, start, end);
-		}
-		else {
-			return blogsEntryPersistence.findByG_U_LtD_S(
-				groupId, userId, displayDate, status, start, end);
-		}
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, null);
+
+		return getGroupUserEntries(
+			groupId, userId, displayDate, queryDefinition);
 	}
 
+	/**
+	 * @deprecated {@link #getGroupUserEntries(long, long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getGroupUserEntries(
 			long groupId, long userId, Date displayDate, int status, int start,
 			int end, OrderByComparator obc)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.findByG_U_LtD(
-				groupId, userId, displayDate, start, end, obc);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, obc);
+
+		return getGroupUserEntries(
+			groupId, userId, displayDate, queryDefinition);
+	}
+
+	public List<BlogsEntry> getGroupUserEntries(
+			long groupId, long userId, Date displayDate,
+			QueryDefinition queryDefinition)
+		throws SystemException {
+
+		if (queryDefinition.isExcludeStatus()) {
+			return blogsEntryPersistence.findByG_U_NeS(
+				groupId, userId, queryDefinition.getStatus(),
+				queryDefinition.getStart(), queryDefinition.getEnd(),
+				queryDefinition.getOrderByComparator());
 		}
 		else {
-			return blogsEntryPersistence.findByG_U_LtD_S(
-				groupId, userId, displayDate, status, start, end, obc);
+			return blogsEntryPersistence.findByG_U_S(
+				groupId, userId, queryDefinition.getStatus(),
+				queryDefinition.getStart(), queryDefinition.getEnd(),
+				queryDefinition.getOrderByComparator());
 		}
 	}
 
+	/**
+	 * @deprecated {@link #getGroupUserEntriesCount(long, long, Date, QueryDefinition)}
+	 */
 	public int getGroupUserEntriesCount(
 			long groupId, long userId, Date displayDate, int status)
 		throws SystemException {
 
-		if (status == WorkflowConstants.STATUS_ANY) {
-			return blogsEntryPersistence.countByG_U_LtD(
-				groupId, userId, displayDate);
+		QueryDefinition queryDefinition = new QueryDefinition(status);
+
+		return getGroupUserEntriesCount(
+			groupId, userId, displayDate, queryDefinition);
+	}
+
+	public int getGroupUserEntriesCount(
+			long groupId, long userId, Date displayDate,
+			QueryDefinition queryDefinition)
+		throws SystemException {
+
+		if (queryDefinition.isExcludeStatus()) {
+			return blogsEntryPersistence.countByG_U_LtD_NeS(
+				groupId, userId, displayDate, queryDefinition.getStatus());
 		}
 		else {
 			return blogsEntryPersistence.countByG_U_LtD_S(
-				groupId, userId, displayDate, status);
+				groupId, userId, displayDate, queryDefinition.getStatus());
 		}
 	}
 
@@ -519,30 +666,166 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		return blogsEntryFinder.findByNoAssets();
 	}
 
+	/**
+	 * @deprecated {@link #getOrganizationEntries(long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getOrganizationEntries(
 			long organizationId, Date displayDate, int status, int start,
 			int end)
 		throws SystemException {
 
-		return blogsEntryFinder.findByOrganizationId(
-			organizationId, displayDate, status, start, end, null);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, null);
+
+		return getOrganizationEntries(
+			organizationId, displayDate, queryDefinition);
 	}
 
+	/**
+	 * @deprecated {@link #getOrganizationEntries(long, Date, QueryDefinition)}
+	 */
 	public List<BlogsEntry> getOrganizationEntries(
 			long organizationId, Date displayDate, int status, int start,
 			int end, OrderByComparator obc)
 		throws SystemException {
 
-		return blogsEntryFinder.findByOrganizationId(
-			organizationId, displayDate, status, start, end, obc);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			status, start, end, obc);
+
+		return getOrganizationEntries(
+			organizationId, displayDate, queryDefinition);
 	}
 
+	public List<BlogsEntry> getOrganizationEntries(
+			long organizationId, Date displayDate,
+			QueryDefinition queryDefinition)
+		throws SystemException {
+
+		return blogsEntryFinder.findByOrganizationId(
+			organizationId, displayDate, queryDefinition);
+	}
+
+	/**
+	 * @deprecated {@link #getOrganizationEntriesCount(long, Date, QueryDefinition)}
+	 */
 	public int getOrganizationEntriesCount(
 			long organizationId, Date displayDate, int status)
 		throws SystemException {
 
+		QueryDefinition queryDefinition = new QueryDefinition(status);
+
+		return getOrganizationEntriesCount(
+			organizationId, displayDate, queryDefinition);
+	}
+
+	public int getOrganizationEntriesCount(
+			long organizationId, Date displayDate,
+			QueryDefinition queryDefinition)
+		throws SystemException {
+
 		return blogsEntryFinder.countByOrganizationId(
-			organizationId, displayDate, status);
+			organizationId, displayDate, queryDefinition);
+	}
+
+	public void moveEntriesToTrash(long groupId, long userId)
+		throws PortalException, SystemException {
+
+		for (BlogsEntry entry : blogsEntryPersistence.findByGroupId(groupId)) {
+			moveEntryToTrash(userId, entry);
+		}
+	}
+
+	public void moveEntryToTrash(long userId, BlogsEntry entry)
+		throws PortalException, SystemException {
+
+		int oldStatus = entry.getStatus();
+
+		// Blog Entry
+
+		updateStatus(
+			userId, entry.getEntryId(), WorkflowConstants.STATUS_IN_TRASH,
+			new ServiceContext());
+
+		// Social
+
+		socialActivityLocalService.addActivity(
+			userId, entry.getGroupId(), BlogsEntry.class.getName(),
+			entry.getEntryId(), SocialActivityConstants.TYPE_MOVE_TO_TRASH,
+			StringPool.BLANK, 0);
+
+		// Workflow
+
+		if (oldStatus == WorkflowConstants.STATUS_PENDING) {
+			WorkflowInstanceLink workflowInstanceLink =
+				workflowInstanceLinkLocalService.getWorkflowInstanceLink(
+					entry.getCompanyId(), entry.getGroupId(),
+					BlogsEntry.class.getName(), entry.getEntryId());
+
+			WorkflowInstance workflowInstance =
+				WorkflowInstanceManagerUtil.getWorkflowInstance(
+					entry.getCompanyId(),
+					workflowInstanceLink.getWorkflowInstanceId());
+
+			Map<String, Serializable> workflowContext =
+				workflowInstance.getWorkflowContext();
+
+			ServiceContext serviceContext = (ServiceContext)workflowContext.get(
+				WorkflowConstants.CONTEXT_SERVICE_CONTEXT);
+
+			boolean update = GetterUtil.getBoolean(
+				serviceContext.getAttribute("update"), false);
+
+			if (update) {
+				entry.setStatus(WorkflowConstants.STATUS_DRAFT_FROM_APPROVED);
+			}
+			else {
+				entry.setStatus(WorkflowConstants.STATUS_DRAFT);
+			}
+
+			workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
+				workflowInstanceLink.getWorkflowInstanceId());
+		}
+
+		// Trash Entry
+
+		trashEntryLocalService.addTrashEntry(
+			entry.getCompanyId(), entry.getGroupId(),
+			BlogsEntry.class.getName(), entry.getEntryId(), oldStatus, null);
+
+	}
+
+	public void moveEntryToTrash(long userId, long entryId)
+		throws PortalException, SystemException {
+
+		BlogsEntry entry = blogsEntryPersistence.findByPrimaryKey(entryId);
+
+		moveEntryToTrash(userId, entry);
+	}
+
+	public void restoreEntryFromTrash(long userId, long entryId)
+		throws PortalException, SystemException {
+
+		TrashEntry trashEntry = trashEntryLocalService.getEntry(
+			BlogsEntry.class.getName(), entryId);
+
+		// Blogs Entry
+
+		updateStatus(
+			userId, entryId, trashEntry.getStatus(), new ServiceContext());
+
+		// Social
+
+		socialActivityCounterLocalService.enableActivityCounters(
+			BlogsEntry.class.getName(), entryId);
+
+		socialActivityLocalService.addActivity(
+			userId, trashEntry.getGroupId(), BlogsEntry.class.getName(),
+			entryId, SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			StringPool.BLANK, 0);
+
+		// Trash Entry
+
+		trashEntryLocalService.deleteTrashEntry(trashEntry.getEntryId());
 	}
 
 	public void subscribe(long userId, long groupId)
@@ -755,19 +1038,23 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 
 				// Social
 
-				boolean update = ParamUtil.getBoolean(serviceContext, "update");
+				if (oldStatus != WorkflowConstants.STATUS_IN_TRASH) {
+					boolean update = ParamUtil.getBoolean(
+						serviceContext, "update");
 
-				if (update) {
-					socialActivityLocalService.addActivity(
-						user.getUserId(), entry.getGroupId(),
-						BlogsEntry.class.getName(), entryId,
-						BlogsActivityKeys.UPDATE_ENTRY, StringPool.BLANK, 0);
-				}
-				else {
-					socialActivityLocalService.addUniqueActivity(
-						user.getUserId(), entry.getGroupId(),
-						BlogsEntry.class.getName(), entryId,
-						BlogsActivityKeys.ADD_ENTRY, StringPool.BLANK, 0);
+					if (update) {
+						socialActivityLocalService.addActivity(
+							user.getUserId(), entry.getGroupId(),
+							BlogsEntry.class.getName(), entryId,
+							BlogsActivityKeys.UPDATE_ENTRY, StringPool.BLANK,
+							0);
+					}
+					else {
+						socialActivityLocalService.addUniqueActivity(
+							user.getUserId(), entry.getGroupId(),
+							BlogsEntry.class.getName(), entryId,
+							BlogsActivityKeys.ADD_ENTRY, StringPool.BLANK, 0);
+					}
 				}
 			}
 
@@ -775,28 +1062,36 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 
 			indexer.reindex(entry);
 
-			// Subscriptions
+			if (oldStatus != WorkflowConstants.STATUS_IN_TRASH) {
+				// Subscriptions
 
-			notifySubscribers(entry, serviceContext);
+				notifySubscribers(entry, serviceContext);
 
-			// Ping
+				// Ping
 
-			String[] trackbacks = (String[])serviceContext.getAttribute(
-				"trackbacks");
-			Boolean pingOldTrackbacks = GetterUtil.getBoolean(
-				(String)serviceContext.getAttribute("pingOldTrackbacks"));
+				String[] trackbacks = (String[])serviceContext.getAttribute(
+					"trackbacks");
+				Boolean pingOldTrackbacks = GetterUtil.getBoolean(
+					(String)serviceContext.getAttribute("pingOldTrackbacks"));
 
-			pingGoogle(entry, serviceContext);
-			pingPingback(entry, serviceContext);
-			pingTrackbacks(
-				entry, trackbacks, pingOldTrackbacks, serviceContext);
+				pingGoogle(entry, serviceContext);
+				pingPingback(entry, serviceContext);
+				pingTrackbacks(
+					entry, trackbacks, pingOldTrackbacks, serviceContext);
+			}
 		}
-		else if (status != WorkflowConstants.STATUS_APPROVED) {
+		else {
 
 			// Asset
 
-			assetEntryLocalService.updateVisible(
-				BlogsEntry.class.getName(), entryId, false);
+			if (status == WorkflowConstants.STATUS_IN_TRASH) {
+				assetEntryLocalService.moveEntryToTrash(
+					BlogsEntry.class.getName(), entryId);
+			}
+			else {
+				assetEntryLocalService.updateVisible(
+					BlogsEntry.class.getName(), entryId, false);
+			}
 
 			// Indexer
 
@@ -1158,8 +1453,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 				PropsKeys.BLOGS_IMAGE_SMALL_MAX_SIZE);
 
 			if ((smallImageMaxSize > 0) &&
-				((smallImageBytes == null) ||
-				 (smallImageBytes.length > smallImageMaxSize))) {
+				(smallImageBytes.length > smallImageMaxSize)) {
 
 				throw new EntrySmallImageSizeException();
 			}

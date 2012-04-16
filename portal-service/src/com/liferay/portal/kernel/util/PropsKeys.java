@@ -2051,6 +2051,8 @@ public interface PropsKeys {
 
 	public static final String TRANSLATOR_DEFAULT_LANGUAGES = "translator.default.languages";
 
+	public static final String TRASH_SEARCH_LIMIT = "trash.search.limit";
+
 	public static final String UPGRADE_PROCESSES = "upgrade.processes";
 
 	public static final String UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE = "com.liferay.portal.upload.UploadServletRequestImpl.max.size";

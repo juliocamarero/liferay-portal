@@ -102,6 +102,7 @@ import java.util.Map;
  * @author Brian Wing Shun Chan
  * @author Harry Mark
  * @author Alexander Chow
+ * @author Manuel de la Peña
  */
 public class DLFileEntryLocalServiceImpl
 	extends DLFileEntryLocalServiceBaseImpl {
@@ -1063,6 +1064,8 @@ public class DLFileEntryLocalServiceImpl
 		DLFileVersion dlFileVersion = dlFileVersionPersistence.findByPrimaryKey(
 			fileVersionId);
 
+		int oldStatus = dlFileVersion.getStatus();
+
 		dlFileVersion.setStatus(status);
 		dlFileVersion.setStatusByUserId(user.getUserId());
 		dlFileVersion.setStatusByUserName(user.getFullName());
@@ -1132,7 +1135,8 @@ public class DLFileEntryLocalServiceImpl
 
 		dlAppHelperLocalService.updateStatus(
 			userId, new LiferayFileEntry(dlFileEntry),
-			new LiferayFileVersion(dlFileVersion), status, workflowContext);
+			new LiferayFileVersion(dlFileVersion), oldStatus, status,
+			workflowContext);
 
 		// Indexer
 

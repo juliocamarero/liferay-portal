@@ -75,7 +75,7 @@ portletURL.setParameter("struts_action", "/blogs_admin/view");
 			/>
 		</liferay-ui:search-container-row>
 
-		<aui:button onClick='<%= renderResponse.getNamespace() + "deleteEntries();" %>' value="delete" />
+		<aui:button onClick='<%= renderResponse.getNamespace() + "deleteEntries();" %>' value="move-to-recycle-bin" />
 
 		<div class="separator"><!-- --></div>
 
@@ -88,7 +88,7 @@ portletURL.setParameter("struts_action", "/blogs_admin/view");
 		window,
 		'<portlet:namespace />deleteEntries',
 		function() {
-			if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-the-selected-entries") %>')) {
+			if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-move-the-selected-entries-to-the-recycle-bin") %>')) {
 				document.<portlet:namespace />fm.method = "post";
 				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.DELETE %>";
 				document.<portlet:namespace />fm.<portlet:namespace />deleteEntryIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
