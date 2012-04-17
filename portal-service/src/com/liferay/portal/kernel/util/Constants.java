@@ -55,6 +55,8 @@ public interface Constants {
 
 	public static final String EDIT = "edit";
 
+	public static final String EMPTY_TRASH = "empty_trash";
+
 	public static final String EXPIRE = "expire";
 
 	public static final String EXPORT = "export";

@@ -21,8 +21,11 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.struts.PortletAction;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -53,6 +56,9 @@ public class EditEntryAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
 				restoreTrashEntries(actionRequest);
+			}
+			else if (cmd.equals(Constants.EMPTY_TRASH)) {
+				emptyTrash(actionRequest);
 			}
 
 			sendRedirect(actionRequest, actionResponse);
@@ -98,6 +104,13 @@ public class EditEntryAction extends PortletAction {
 			trashEntry.getClassName());
 
 		trashHandler.deleteTrashEntry(trashEntry.getClassPK());
+	}
+
+	protected void emptyTrash(ActionRequest actionRequest) throws Exception {
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		TrashEntryServiceUtil.deleteEntries(themeDisplay.getScopeGroupId());
 	}
 
 	protected void restoreTrashEntries(ActionRequest actionRequest)

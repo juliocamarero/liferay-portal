@@ -16,6 +16,8 @@ package com.liferay.portlet.trash.service.impl;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.trash.TrashHandler;
+import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -36,6 +38,45 @@ import java.util.List;
  * @author Julio Camarero
  */
 public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
+
+	/**
+	 * Deletes the trash entries with the matching group ID considering
+	 * permissions.
+	 *
+	 * @param groupId the primary key of the group
+	 * @throws SystemException if a system exception occurred
+	 * @throws PrincipalException if a principal exception occurred
+	 */
+	public void deleteEntries(long groupId)
+		throws SystemException, PrincipalException {
+
+		List<TrashEntry> entries = trashEntryLocalService.getEntries(groupId);
+
+		PermissionChecker permissionChecker = getPermissionChecker();
+
+		for (TrashEntry entry : entries) {
+			String className = entry.getClassName();
+			long classPK = entry.getClassPK();
+
+			AssetRendererFactory assetRendererFactory =
+				AssetRendererFactoryRegistryUtil.
+					getAssetRendererFactoryByClassName(className);
+
+			try {
+				if (assetRendererFactory.hasPermission(
+						permissionChecker, classPK, ActionKeys.DELETE)) {
+
+					TrashHandler trashHandler =
+						TrashHandlerRegistryUtil.getTrashHandler(className);
+
+					trashHandler.deleteTrashEntry(classPK);
+				}
+			}
+			catch (Exception e) {
+			}
+		}
+
+	}
 
 	/**
 	 * Returns the trash entries with the matching group ID.

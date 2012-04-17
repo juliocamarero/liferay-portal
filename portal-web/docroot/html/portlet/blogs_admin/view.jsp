@@ -75,9 +75,11 @@ portletURL.setParameter("struts_action", "/blogs_admin/view");
 			/>
 		</liferay-ui:search-container-row>
 
-		<aui:button onClick='<%= renderResponse.getNamespace() + "deleteEntries();" %>' value="move-to-recycle-bin" />
+		<c:if test="<%= total > 0 %>">
+			<aui:button onClick='<%= renderResponse.getNamespace() + "deleteEntries();" %>' value="move-to-recycle-bin" />
 
-		<div class="separator"><!-- --></div>
+			<div class="separator"><!-- --></div>
+		</c:if>
 
 		<liferay-ui:search-iterator />
 	</liferay-ui:search-container>

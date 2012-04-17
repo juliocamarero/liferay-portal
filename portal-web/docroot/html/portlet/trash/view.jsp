@@ -26,6 +26,7 @@ boolean aproximate = false;
 
 <aui:form action='<%= editTrashEntryURL %>' method="post" name="fm" onSubmit="event.preventDefault();">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="" />
+	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="deleteEntryIds" type="hidden" />
 	<aui:input name="restoreEntryIds" type="hidden" />
 
@@ -100,13 +101,17 @@ boolean aproximate = false;
 			/>
 		</liferay-ui:search-container-row>
 
-		<aui:button-row>
-			<aui:button name="deleteButton" onClick='<%= renderResponse.getNamespace() + "deleteEntries();" %>' value="delete" />
+		<c:if test="<%= total > 0 %>">
+			<aui:button-row>
+				<aui:button name="deleteButton" onClick='<%= renderResponse.getNamespace() + "deleteEntries();" %>' value="delete" />
 
-			<aui:button name="restoreButton" onClick='<%= renderResponse.getNamespace() + "restoreEntries();" %>' value="restore" />
-		</aui:button-row>
+				<aui:button name="restoreButton" onClick='<%= renderResponse.getNamespace() + "restoreEntries();" %>' value="restore" />
 
-		<div class="separator"><!-- --></div>
+				<aui:button name="emptyTrashButton" onClick='<%= renderResponse.getNamespace() + "emptyTrash();" %>' value="empty-recycle-bin" />
+			</aui:button-row>
+
+			<div class="separator"><!-- --></div>
+		</c:if>
 
 		<liferay-ui:search-iterator type='<%= aproximate ? "more" : "regular" %>' />
 	</liferay-ui:search-container>
@@ -127,6 +132,18 @@ boolean aproximate = false;
 			}
 		},
 		['liferay-util-list-fields']
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />emptyTrash',
+		function() {
+			if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-empty-the-recycle-bin") %>')) {
+				document.<portlet:namespace />fm.method = "post";
+				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.EMPTY_TRASH %>";
+				submitForm(document.<portlet:namespace />fm);
+			}
+		}
 	);
 
 	Liferay.provide(
