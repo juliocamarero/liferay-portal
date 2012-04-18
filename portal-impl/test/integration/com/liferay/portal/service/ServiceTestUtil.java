@@ -23,10 +23,14 @@ import com.liferay.portal.kernel.messaging.sender.MessageSender;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineUtil;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.PortletImpl;
@@ -40,6 +44,10 @@ import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
+import com.liferay.portlet.blogs.asset.BlogsEntryAssetRendererFactory;
+import com.liferay.portlet.blogs.trash.BlogsEntryTrashHandler;
+import com.liferay.portlet.blogs.workflow.BlogsEntryWorkflowHandler;
 import com.liferay.portlet.bookmarks.util.BookmarksIndexer;
 import com.liferay.portlet.directory.workflow.UserWorkflowHandler;
 import com.liferay.portlet.documentlibrary.util.DLIndexer;
@@ -65,10 +73,31 @@ import java.util.Set;
  * @author Brian Wing Shun Chan
  * @author Michael Young
  * @author Alexander Chow
+ * @author Manuel de la Peña
  */
 public class ServiceTestUtil {
 
 	public static final int THREAD_COUNT = 25;
+
+	public static Group addGroup(String name) throws Exception {
+		String description ="This is a test group";
+		int type = GroupConstants.TYPE_SITE_OPEN;
+		String friendlyURL =
+			StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(name);
+		boolean active = true;
+		boolean site = true;
+
+		Group group = GroupLocalServiceUtil.fetchGroup(
+			TestPropsValues.getCompanyId(), name);
+
+		if (group != null) {
+			return group;
+		}
+
+		return GroupLocalServiceUtil.addGroup(
+			TestPropsValues.getUserId(), null, 0, name, description, type,
+			friendlyURL, site, active, getServiceContext());
+	}
 
 	public static User addUser(
 			String screenName, boolean autoScreenName, long[] groupIds)
@@ -225,8 +254,18 @@ public class ServiceTestUtil {
 			e.printStackTrace();
 		}
 
+		// Asset Renderer Factories
+
+		AssetRendererFactoryRegistryUtil.register(
+			new BlogsEntryAssetRendererFactory());
+
+		// Trash
+
+		TrashHandlerRegistryUtil.register(new BlogsEntryTrashHandler());
+
 		// Workflow
 
+		WorkflowHandlerRegistryUtil.register(new BlogsEntryWorkflowHandler());
 		WorkflowHandlerRegistryUtil.register(new DLFileEntryWorkflowHandler());
 		WorkflowHandlerRegistryUtil.register(
 			new JournalArticleWorkflowHandler());
