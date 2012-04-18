@@ -17,8 +17,30 @@
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
 <%
+String tabs1 = ParamUtil.getString(request, "tabs1", "staging");
+
+long groupId = themeDisplay.getScopeGroupId();
+
+Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+if (group.isStagingGroup() && tabs1.equals("live")) {
+	groupId = group.getLiveGroupId();
+}
+
+PortletURL portletURL = renderResponse.createRenderURL();
+
+portletURL.setParameter("struts_action", "/trash/view");
+portletURL.setParameter("tabs1", tabs1);
+
 boolean aproximate = false;
 %>
+
+<c:if test="<%= group.isStagingGroup() %>">
+	<liferay-ui:tabs
+		names="staging,live"
+		url="<%= portletURL.toString() %>"
+	/>
+</c:if>
 
 <portlet:actionURL var="editTrashEntryURL">
 	<portlet:param name="struts_action" value="/trash/edit_entry" />
@@ -38,7 +60,7 @@ boolean aproximate = false;
 		<liferay-ui:search-container-results>
 
 			<%
-			Object[] entries = TrashEntryServiceUtil.getEntries(themeDisplay.getScopeGroupId(), searchContainer.getStart(), searchContainer.getEnd());
+			Object[] entries = TrashEntryServiceUtil.getEntries(groupId, searchContainer.getStart(), searchContainer.getEnd());
 
 			pageContext.setAttribute("results", entries[0]);
 			pageContext.setAttribute("total", entries[1]);

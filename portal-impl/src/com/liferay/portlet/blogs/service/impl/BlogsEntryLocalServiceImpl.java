@@ -735,7 +735,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		}
 	}
 
-	public void moveEntryToTrash(long userId, BlogsEntry entry)
+	public BlogsEntry moveEntryToTrash(long userId, BlogsEntry entry)
 		throws PortalException, SystemException {
 
 		int oldStatus = entry.getStatus();
@@ -792,14 +792,15 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 			entry.getCompanyId(), entry.getGroupId(),
 			BlogsEntry.class.getName(), entry.getEntryId(), oldStatus, null);
 
+		return entry;
 	}
 
-	public void moveEntryToTrash(long userId, long entryId)
+	public BlogsEntry moveEntryToTrash(long userId, long entryId)
 		throws PortalException, SystemException {
 
 		BlogsEntry entry = blogsEntryPersistence.findByPrimaryKey(entryId);
 
-		moveEntryToTrash(userId, entry);
+		return moveEntryToTrash(userId, entry);
 	}
 
 	public void restoreEntryFromTrash(long userId, long entryId)

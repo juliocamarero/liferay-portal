@@ -1957,7 +1957,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 * @throws PortalException if the file entry could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void moveFileEntryToTrash(long fileEntryId)
+	public FileEntry moveFileEntryToTrash(long fileEntryId)
 		throws PortalException, SystemException {
 
 		Repository repository = getRepository(0, fileEntryId, 0);
@@ -1973,7 +1973,8 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 		DLFileEntryPermission.check(
 			getPermissionChecker(), fileEntry, ActionKeys.DELETE);
 
-		dlAppHelperLocalService.moveFileEntryToTrash(getUserId(), fileEntry);
+		return dlAppHelperLocalService.moveFileEntryToTrash(
+			getUserId(), fileEntry);
 	}
 
 	/**

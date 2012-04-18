@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.trash.NoSuchEntryException;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.model.impl.TrashEntryImpl;
 import com.liferay.portlet.trash.service.base.TrashEntryLocalServiceBaseImpl;
@@ -96,7 +97,11 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 		long classNameId = PortalUtil.getClassNameId(className);
 
-		trashEntryPersistence.removeByC_C(classNameId, classPK);
+		try {
+			trashEntryPersistence.removeByC_C(classNameId, classPK);
+		}
+		catch(NoSuchEntryException nsee) {
+		}
 	}
 
 	/**

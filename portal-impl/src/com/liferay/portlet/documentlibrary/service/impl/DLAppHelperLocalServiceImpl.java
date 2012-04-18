@@ -305,7 +305,7 @@ public class DLAppHelperLocalServiceImpl
 		}
 	}
 
-	public void moveFileEntryToTrash(long userId, FileEntry fileEntry)
+	public FileEntry moveFileEntryToTrash(long userId, FileEntry fileEntry)
 		throws PortalException, SystemException {
 
 		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
@@ -344,6 +344,8 @@ public class DLAppHelperLocalServiceImpl
 			fileEntry.getCompanyId(), fileEntry.getGroupId(),
 			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId(),
 			oldStatus, null);
+
+		return fileEntry;
 	}
 
 	public void moveFolder(Folder folder)
