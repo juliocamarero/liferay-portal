@@ -96,6 +96,9 @@ public class DLFileEntryTrashHandlerTest extends BaseDLAppTestCase {
 			boolean delete, boolean versioned, boolean leaveCheckedOut)
 		throws Exception {
 
+		int initialFileEntriesCount = getFileEntriesNotInTrashCount();
+		int initialTrashEntriesCount = getTrashEntriesCount();
+
 		FileEntry fileEntry = addFileEntry(false, "Test Basic.txt");
 
 		long fileEntryId = fileEntry.getFileEntryId();
@@ -109,30 +112,35 @@ public class DLFileEntryTrashHandlerTest extends BaseDLAppTestCase {
 				fileEntryId, new ServiceContext());
 		}
 
-		Assert.assertEquals(1, getFileEntriesNotInTrashCount());
-		Assert.assertEquals(0, getTrashEntriesCount());
+		Assert.assertEquals(
+			initialFileEntriesCount + 1, getFileEntriesNotInTrashCount());
+		Assert.assertEquals(initialTrashEntriesCount, getTrashEntriesCount());
 		Assert.assertTrue(isAssetEntryVisible(fileEntryId));
 
 		DLAppServiceUtil.moveFileEntryToTrash(fileEntryId);
 
-		Assert.assertEquals(0, getFileEntriesNotInTrashCount());
-		Assert.assertEquals(1, getTrashEntriesCount());
+		Assert.assertEquals(
+			initialFileEntriesCount, getFileEntriesNotInTrashCount());
+		Assert.assertEquals(
+			initialTrashEntriesCount + 1, getTrashEntriesCount());
 		Assert.assertFalse(isAssetEntryVisible(fileEntryId));
 
 		if (delete) {
 			TrashEntryServiceUtil.deleteEntries(folder.getGroupId());
 
-			Assert.assertEquals(0, getFileEntriesNotInTrashCount());
+			Assert.assertEquals(
+				initialFileEntriesCount, getFileEntriesNotInTrashCount());
 			Assert.assertNull(fetchAssetEntry(fileEntryId));
 		}
 		else {
 			DLAppServiceUtil.restoreFileEntryFromTrash(fileEntryId);
 
-			Assert.assertEquals(1, getFileEntriesNotInTrashCount());
+			Assert.assertEquals(
+				initialFileEntriesCount + 1, getFileEntriesNotInTrashCount());
 			Assert.assertTrue(isAssetEntryVisible(fileEntryId));
 		}
 
-		Assert.assertEquals(0, getTrashEntriesCount());
+		Assert.assertEquals(initialTrashEntriesCount, getTrashEntriesCount());
 	}
 
 }
