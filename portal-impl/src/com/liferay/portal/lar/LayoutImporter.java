@@ -344,7 +344,8 @@ public class LayoutImporter {
 		String larType = headerElement.attributeValue("type");
 
 		if (!larType.equals("layout-set") &&
-			!larType.equals("layout-set-prototype")) {
+			!larType.equals("layout-set-prototype") &&
+			!larType.equals("layout-prototype")) {
 
 			throw new LARTypeException(
 				"Invalid type of LAR file (" + larType + ")");
