@@ -1481,8 +1481,9 @@ public class UserServiceHttp {
 	}
 
 	public static com.liferay.portal.model.User updatePassword(
-		HttpPrincipal httpPrincipal, long userId, java.lang.String password1,
-		java.lang.String password2, boolean passwordReset)
+		HttpPrincipal httpPrincipal, long userId, boolean overrideOldPassword,
+		java.lang.String password1, java.lang.String password2,
+		boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
@@ -1490,7 +1491,7 @@ public class UserServiceHttp {
 					"updatePassword", _updatePasswordParameterTypes38);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, userId,
-					password1, password2, passwordReset);
+					overrideOldPassword, password1, password2, passwordReset);
 
 			Object returnObj = null;
 
@@ -1963,8 +1964,8 @@ public class UserServiceHttp {
 			com.liferay.portal.service.ServiceContext.class
 		};
 	private static final Class<?>[] _updatePasswordParameterTypes38 = new Class[] {
-			long.class, java.lang.String.class, java.lang.String.class,
-			boolean.class
+			long.class, boolean.class, java.lang.String.class,
+			java.lang.String.class, boolean.class
 		};
 	private static final Class<?>[] _updatePortraitParameterTypes39 = new Class[] {
 			long.class, byte[].class

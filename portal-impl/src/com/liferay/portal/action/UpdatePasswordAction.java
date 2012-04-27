@@ -20,6 +20,7 @@ import com.liferay.portal.UserPasswordException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.SessionParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.CompanyConstants;
@@ -163,9 +164,11 @@ public class UpdatePasswordAction extends Action {
 		String password1 = request.getParameter("password1");
 		String password2 = request.getParameter("password2");
 		boolean passwordReset = false;
+		boolean overrideOldPassword = SessionParamUtil.getBoolean(
+			request, WebKeys.SETUP_WIZARD_PASSWORD_UPDATED);
 
 		UserLocalServiceUtil.updatePassword(
-			userId, password1, password2, passwordReset);
+			userId, overrideOldPassword, password1, password2, passwordReset);
 
 		if (ticket != null) {
 			TicketLocalServiceUtil.deleteTicket(ticket);

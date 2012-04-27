@@ -2398,6 +2398,8 @@ public interface UserLocalService extends PersistedModelLocalService {
 	* Updates the user's password without tracking or validation of the change.
 	*
 	* @param userId the primary key of the user
+	* @param overrideOldPassword whether the new password should be the same
+	as the old password. Primarily used for setup wizard.
 	* @param password1 the user's new password
 	* @param password2 the user's new password confirmation
 	* @param passwordReset whether the user should be asked to reset their
@@ -2407,8 +2409,8 @@ public interface UserLocalService extends PersistedModelLocalService {
 	* @throws SystemException if a system exception occurred
 	*/
 	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset)
+		boolean overrideOldPassword, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -2417,6 +2419,8 @@ public interface UserLocalService extends PersistedModelLocalService {
 	* the change.
 	*
 	* @param userId the primary key of the user
+	* @param overrideOldPassword whether the new password should be the same
+	as the old password. Primarily used for setup wizard.
 	* @param password1 the user's new password
 	* @param password2 the user's new password confirmation
 	* @param passwordReset whether the user should be asked to reset their
@@ -2428,8 +2432,8 @@ public interface UserLocalService extends PersistedModelLocalService {
 	* @throws SystemException if a system exception occurred
 	*/
 	public com.liferay.portal.model.User updatePassword(long userId,
-		java.lang.String password1, java.lang.String password2,
-		boolean passwordReset, boolean silentUpdate)
+		boolean overrideOldPassword, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset, boolean silentUpdate)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
