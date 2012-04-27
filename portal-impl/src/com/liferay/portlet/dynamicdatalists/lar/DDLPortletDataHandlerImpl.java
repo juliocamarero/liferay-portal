@@ -37,6 +37,7 @@ import javax.portlet.PortletPreferences;
 
 /**
  * @author Michael C. Han
+ * @author Jonathan Potter 
  */
 public class DDLPortletDataHandlerImpl
 	extends BasePortletDataHandler implements DDLPortletDataHandler {
@@ -171,6 +172,18 @@ public class DDLPortletDataHandlerImpl
 		}
 
 		return portletPreferences;
+	}
+	
+	@Override
+	protected PortletPreferences doDeleteData(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences, long companyId)
+		throws Exception {
+
+		DDLRecordLocalServiceUtil.deleteRecordsByCompany(companyId);
+		DDLRecordSetLocalServiceUtil.deleteRecordSetsByCompany(companyId);
+
+		return null;
 	}
 
 	@Override
