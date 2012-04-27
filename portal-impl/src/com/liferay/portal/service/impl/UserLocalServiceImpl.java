@@ -4284,6 +4284,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * Updates the user's password without tracking or validation of the change.
 	 *
 	 * @param  userId the primary key of the user
+	 * @param  overrideOldPassword whether the new password should be the same
+	 *         as the old password. Primarily used for setup wizard.
 	 * @param  password1 the user's new password
 	 * @param  password2 the user's new password confirmation
 	 * @param  passwordReset whether the user should be asked to reset their
@@ -4293,12 +4295,13 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public User updatePassword(
-			long userId, String password1, String password2,
-			boolean passwordReset)
+			long userId, boolean overrideOldPassword, String password1,
+			String password2, boolean passwordReset)
 		throws PortalException, SystemException {
 
 		return updatePassword(
-			userId, password1, password2, passwordReset, false);
+			userId, overrideOldPassword, password1, password2, passwordReset,
+			false);
 	}
 
 	/**
@@ -4306,6 +4309,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * the change.
 	 *
 	 * @param  userId the primary key of the user
+	 * @param  overrideOldPassword whether the new password should be the same
+	 *         as the old password. Primarily used for setup wizard.
 	 * @param  password1 the user's new password
 	 * @param  password2 the user's new password confirmation
 	 * @param  passwordReset whether the user should be asked to reset their
@@ -4317,14 +4322,16 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public User updatePassword(
-			long userId, String password1, String password2,
-			boolean passwordReset, boolean silentUpdate)
+			long userId, boolean overrideOldPassword, String password1,
+			String password2, boolean passwordReset, boolean silentUpdate)
 		throws PortalException, SystemException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
 		if (!silentUpdate) {
-			validatePassword(user.getCompanyId(), userId, password1, password2);
+			validatePassword(
+				user.getCompanyId(), userId, overrideOldPassword, password1,
+				password2);
 		}
 
 		String oldEncPwd = user.getPassword();
@@ -4704,7 +4711,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			Validator.isNotNull(newPassword2)) {
 
 			user = updatePassword(
-				userId, newPassword1, newPassword2, passwordReset);
+				userId, false, newPassword1, newPassword2, passwordReset);
 
 			password = newPassword1;
 
@@ -5728,7 +5735,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	}
 
 	protected void validatePassword(
-			long companyId, long userId, String password1, String password2)
+			long companyId, long userId, boolean overrideOldPassword,
+			String password1, String password2)
 		throws PortalException, SystemException {
 
 		if (Validator.isNull(password1) || Validator.isNull(password2)) {
@@ -5741,11 +5749,13 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				UserPasswordException.PASSWORDS_DO_NOT_MATCH);
 		}
 
-		PasswordPolicy passwordPolicy =
-			passwordPolicyLocalService.getPasswordPolicyByUserId(userId);
+		if (!overrideOldPassword) {
+			PasswordPolicy passwordPolicy =
+				passwordPolicyLocalService.getPasswordPolicyByUserId(userId);
 
-		PwdToolkitUtil.validate(
-			companyId, userId, password1, password2, passwordPolicy);
+			PwdToolkitUtil.validate(
+				companyId, userId, password1, password2, passwordPolicy);
+		}
 	}
 
 	protected void validateReminderQuery(String question, String answer)

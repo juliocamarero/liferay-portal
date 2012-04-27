@@ -1240,6 +1240,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 	 * Updates the user's password without tracking or validation of the change.
 	 *
 	 * @param  userId the primary key of the user
+	 * @param  overrideOldPassword whether the new password should be the same
+	 *         as the old password. Primarily used for setup wizard.
 	 * @param  password1 the user's new password
 	 * @param  password2 the user's new password confirmation
 	 * @param  passwordReset whether the user should be asked to reset their
@@ -1250,15 +1252,15 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public User updatePassword(
-			long userId, String password1, String password2,
-			boolean passwordReset)
+			long userId, boolean overrideOldPassword, String password1,
+			String password2, boolean passwordReset)
 		throws PortalException, SystemException {
 
 		UserPermissionUtil.check(
 			getPermissionChecker(), userId, ActionKeys.UPDATE);
 
 		return userLocalService.updatePassword(
-			userId, password1, password2, passwordReset);
+			userId, overrideOldPassword, password1, password2, passwordReset);
 	}
 
 	/**
