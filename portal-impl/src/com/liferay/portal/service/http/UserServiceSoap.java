@@ -1268,6 +1268,8 @@ public class UserServiceSoap {
 	* Updates the user's password without tracking or validation of the change.
 	*
 	* @param userId the primary key of the user
+	* @param overrideOldPassword whether the new password should be the same
+	as the old password. Primarily used for setup wizard.
 	* @param password1 the user's new password
 	* @param password2 the user's new password confirmation
 	* @param passwordReset whether the user should be asked to reset their
@@ -1278,11 +1280,12 @@ public class UserServiceSoap {
 	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.portal.model.UserSoap updatePassword(
-		long userId, java.lang.String password1, java.lang.String password2,
-		boolean passwordReset) throws RemoteException {
+		long userId, boolean overrideOldPassword, java.lang.String password1,
+		java.lang.String password2, boolean passwordReset)
+		throws RemoteException {
 		try {
 			com.liferay.portal.model.User returnValue = UserServiceUtil.updatePassword(userId,
-					password1, password2, passwordReset);
+					overrideOldPassword, password1, password2, passwordReset);
 
 			return com.liferay.portal.model.UserSoap.toSoapModel(returnValue);
 		}
