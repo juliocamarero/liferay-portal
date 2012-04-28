@@ -50,7 +50,7 @@ import com.liferay.portal.kernel.sanitizer.SanitizerWrapper;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerPostProcessor;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.servlet.DirectServletRegistry;
+import com.liferay.portal.kernel.servlet.DirectServletRegistryUtil;
 import com.liferay.portal.kernel.servlet.LiferayFilter;
 import com.liferay.portal.kernel.servlet.LiferayFilterTracker;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
@@ -950,7 +950,7 @@ public class HookHotDeployListener
 
 		registerClpMessageListeners(servletContext, portletClassLoader);
 
-		DirectServletRegistry.clearServlets();
+		DirectServletRegistryUtil.clearServlets();
 		FileAvailabilityUtil.reset();
 
 		if (_log.isInfoEnabled()) {

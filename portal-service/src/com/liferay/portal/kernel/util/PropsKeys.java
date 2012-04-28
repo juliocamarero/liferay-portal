@@ -421,6 +421,8 @@ public interface PropsKeys {
 
 	public static final String CUSTOM_SQL_FUNCTION_ISNULL = "custom.sql.function.isnull";
 
+	public static final String DATABASE_INDEXES_UPDATE_ON_STARTUP = "database.indexes.update.on.startup";
+
 	public static final String DATABASE_MYSQL_ENGINE = "database.mysql.engine";
 
 	public static final String DEFAULT_ADMIN_EMAIL_ADDRESS_PREFIX = "default.admin.email.address.prefix";
@@ -846,6 +848,8 @@ public interface PropsKeys {
 	public static final String INVITATION_EMAIL_MESSAGE_SUBJECT = "invitation.email.message.subject";
 
 	public static final String INVOKER_FILTER_CHAIN_SIZE = "invoker.filter.chain.cache.size";
+
+	public static final String JAVADOC_MANAGER_ENABLED = "javadoc.manager.enabled";
 
 	public static final String JAVASCRIPT_BAREBONE_ENABLED = "javascript.barebone.enabled";
 
