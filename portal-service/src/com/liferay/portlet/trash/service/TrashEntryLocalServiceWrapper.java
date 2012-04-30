@@ -264,7 +264,10 @@ public class TrashEntryLocalServiceWrapper implements TrashEntryLocalService,
 	* @param groupId the primary key of the entry's group
 	* @param className the class name of the entity
 	* @param classPK the primary key of the entity
-	* @param status the status of the entityy prior to being moved to trash
+	* @param status the status of the entity prior to being moved to trash
+	* @param versions the primary keys and statuses of any of the entry's
+	versions (e.g., {@link
+	com.liferay.portlet.documentlibrary.model.DLFileVerison})
 	* @param typeSettingsProperties the type settings properties
 	* @return the trashEntry
 	* @throws SystemException if a system exception occurred
@@ -350,6 +353,26 @@ public class TrashEntryLocalServiceWrapper implements TrashEntryLocalService,
 	}
 
 	/**
+	* Returns a range of all the trash entries matching the group ID.
+	*
+	* @param groupId the primary key of the group
+	* @param start the lower bound of the range of trash entries to return
+	* @param end the upper bound of the range of trash entries to return (not
+	inclusive)
+	* @param obc the comparator to order the trash entries (optionally
+	<code>null</code>)
+	* @return the range of matching trash entries ordered by comparator
+	<code>obc</code>
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.trash.model.TrashEntry> getEntries(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _trashEntryLocalService.getEntries(groupId, start, end, obc);
+	}
+
+	/**
 	* Returns the number of trash entries with the group ID.
 	*
 	* @param groupId the primary key of the group
@@ -393,10 +416,10 @@ public class TrashEntryLocalServiceWrapper implements TrashEntryLocalService,
 	}
 
 	/**
-	* Returns the trash versions associated with the trash entry.
+	* Returns all the trash versions associated with the trash entry.
 	*
 	* @param entryId the primary key of the trash entry
-	* @return the trash versions associated with the trash entry
+	* @return all the trash versions associated with the trash entry
 	* @throws SystemException if a system exception occurred
 	*/
 	public java.util.List<com.liferay.portlet.trash.model.TrashVersion> getVersions(
