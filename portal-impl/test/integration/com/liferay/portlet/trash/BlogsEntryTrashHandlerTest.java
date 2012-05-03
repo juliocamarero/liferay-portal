@@ -15,6 +15,10 @@
 package com.liferay.portlet.trash;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
@@ -148,6 +152,18 @@ public class BlogsEntryTrashHandlerTest {
 		return assetEntry.isVisible();
 	}
 
+	protected int searchBlogsEntriesCount(long groupId) throws Exception {
+		Indexer indexer = IndexerRegistryUtil.getIndexer(BlogsEntry.class);
+
+		SearchContext searchContext = ServiceTestUtil.getSearchContext();
+
+		searchContext.setGroupIds(new long[] {groupId});
+
+		Hits results = indexer.search(searchContext);
+
+		return results.getLength();
+	}
+
 	protected void testTrash(boolean approved, boolean delete) {
 		try {
 			Group group = ServiceTestUtil.addGroup(
@@ -156,6 +172,8 @@ public class BlogsEntryTrashHandlerTest {
 			int initialBlogsEntriesCount = getBlogsEntriesNotInTrashCount(
 				group.getGroupId());
 			int initialTrashEntriesCount = getTrashEntriesCount(
+				group.getGroupId());
+			int initialBlogsEntriesSearchCount = searchBlogsEntriesCount(
 				group.getGroupId());
 
 			BlogsEntry blogsEntry = addBlogsEntry(group, approved);
@@ -171,10 +189,16 @@ public class BlogsEntryTrashHandlerTest {
 
 			if (approved) {
 				Assert.assertTrue(isAssetEntryVisible(blogsEntry.getEntryId()));
+				Assert.assertEquals(
+					initialBlogsEntriesSearchCount + 1,
+					searchBlogsEntriesCount(group.getGroupId()));
 			}
 			else {
 				Assert.assertFalse(
 					isAssetEntryVisible(blogsEntry.getEntryId()));
+				Assert.assertEquals(
+					initialBlogsEntriesSearchCount,
+					searchBlogsEntriesCount(group.getGroupId()));
 			}
 
 			BlogsEntryServiceUtil.moveEntryToTrash(blogsEntry.getEntryId());
@@ -193,6 +217,9 @@ public class BlogsEntryTrashHandlerTest {
 				initialTrashEntriesCount + 1,
 				getTrashEntriesCount(group.getGroupId()));
 			Assert.assertFalse(isAssetEntryVisible(blogsEntry.getEntryId()));
+			Assert.assertEquals(
+				initialBlogsEntriesSearchCount,
+				searchBlogsEntriesCount(group.getGroupId()));
 
 			TrashHandler trashHandler =
 				TrashHandlerRegistryUtil.getTrashHandler(
@@ -205,6 +232,9 @@ public class BlogsEntryTrashHandlerTest {
 					initialBlogsEntriesCount,
 					getBlogsEntriesNotInTrashCount(group.getGroupId()));
 				Assert.assertNull(fetchAssetEntry(blogsEntry.getEntryId()));
+				Assert.assertEquals(
+					initialBlogsEntriesSearchCount,
+					searchBlogsEntriesCount(group.getGroupId()));
 			}
 			else {
 				trashHandler.restoreTrashEntry(blogsEntry.getEntryId());
@@ -220,10 +250,16 @@ public class BlogsEntryTrashHandlerTest {
 				if (approved) {
 					Assert.assertTrue(
 						isAssetEntryVisible(blogsEntry.getEntryId()));
+					Assert.assertEquals(
+						initialBlogsEntriesSearchCount + 1,
+						searchBlogsEntriesCount(group.getGroupId()));
 				}
 				else {
 					Assert.assertFalse(
 						isAssetEntryVisible(blogsEntry.getEntryId()));
+					Assert.assertEquals(
+						initialBlogsEntriesSearchCount,
+						searchBlogsEntriesCount(group.getGroupId()));
 				}
 			}
 		}
