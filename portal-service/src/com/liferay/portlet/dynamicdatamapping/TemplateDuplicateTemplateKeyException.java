@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
@@ -12,8 +11,30 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/document_library/init.jsp" %>
+package com.liferay.portlet.dynamicdatamapping;
 
-<liferay-util:include page="/html/portlet/document_library/view_file_entry.jsp" />
+import com.liferay.portal.kernel.exception.PortalException;
+
+/**
+ * @author Brian Wing Shun Chan
+ */
+public class TemplateDuplicateTemplateKeyException extends PortalException {
+
+	public TemplateDuplicateTemplateKeyException() {
+		super();
+	}
+
+	public TemplateDuplicateTemplateKeyException(String msg) {
+		super(msg);
+	}
+
+	public TemplateDuplicateTemplateKeyException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+
+	public TemplateDuplicateTemplateKeyException(Throwable cause) {
+		super(cause);
+	}
+
+}

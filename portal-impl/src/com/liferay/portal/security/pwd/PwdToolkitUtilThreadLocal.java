@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
@@ -12,8 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/document_library/init.jsp" %>
+package com.liferay.portal.security.pwd;
 
-<liferay-util:include page="/html/portlet/document_library/view_file_entry.jsp" />
+import com.liferay.portal.kernel.util.InitialThreadLocal;
+
+/**
+ * @author Brian Wing Shun Chan
+ */
+public class PwdToolkitUtilThreadLocal {
+
+	public static boolean isValidate() {
+		return _validate.get().booleanValue();
+	}
+
+	public static void setValidate(boolean validate) {
+		_validate.set(validate);
+	}
+
+	private static ThreadLocal<Boolean> _validate =
+		new InitialThreadLocal<Boolean>(
+			PwdToolkitUtilThreadLocal.class + "._validate", true);
+
+}
