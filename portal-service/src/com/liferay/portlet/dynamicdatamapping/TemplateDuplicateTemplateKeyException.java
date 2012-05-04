@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
@@ -12,26 +11,30 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/announcements/init.jsp" %>
+package com.liferay.portlet.dynamicdatamapping;
 
-<%
-String tabs1 = ParamUtil.getString(request, "tabs1", "entries");
+import com.liferay.portal.kernel.exception.PortalException;
 
-PortletURL tabs1URL = renderResponse.createRenderURL();
+/**
+ * @author Brian Wing Shun Chan
+ */
+public class TemplateDuplicateTemplateKeyException extends PortalException {
 
-tabs1URL.setParameter("struts_action", "/announcements/view");
-tabs1URL.setParameter("tabs1", tabs1);
+	public TemplateDuplicateTemplateKeyException() {
+		super();
+	}
 
-String tabs1Names = "entries";
+	public TemplateDuplicateTemplateKeyException(String msg) {
+		super(msg);
+	}
 
-if (AnnouncementsEntryPermission.contains(permissionChecker, layout, portletName, ActionKeys.ADD_ENTRY)) {
-	tabs1Names += ",manage-entries";
+	public TemplateDuplicateTemplateKeyException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+
+	public TemplateDuplicateTemplateKeyException(Throwable cause) {
+		super(cause);
+	}
+
 }
-%>
-
-<liferay-ui:tabs
-	names="<%= tabs1Names %>"
-	url="<%= tabs1URL.toString() %>"
-/>

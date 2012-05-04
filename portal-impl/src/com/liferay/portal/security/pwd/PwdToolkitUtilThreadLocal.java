@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
@@ -12,26 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/announcements/init.jsp" %>
+package com.liferay.portal.security.pwd;
 
-<%
-String tabs1 = ParamUtil.getString(request, "tabs1", "entries");
+import com.liferay.portal.kernel.util.InitialThreadLocal;
 
-PortletURL tabs1URL = renderResponse.createRenderURL();
+/**
+ * @author Brian Wing Shun Chan
+ */
+public class PwdToolkitUtilThreadLocal {
 
-tabs1URL.setParameter("struts_action", "/announcements/view");
-tabs1URL.setParameter("tabs1", tabs1);
+	public static boolean isValidate() {
+		return _validate.get().booleanValue();
+	}
 
-String tabs1Names = "entries";
+	public static void setValidate(boolean validate) {
+		_validate.set(validate);
+	}
 
-if (AnnouncementsEntryPermission.contains(permissionChecker, layout, portletName, ActionKeys.ADD_ENTRY)) {
-	tabs1Names += ",manage-entries";
+	private static ThreadLocal<Boolean> _validate =
+		new InitialThreadLocal<Boolean>(
+			PwdToolkitUtilThreadLocal.class + "._validate", true);
+
 }
-%>
-
-<liferay-ui:tabs
-	names="<%= tabs1Names %>"
-	url="<%= tabs1URL.toString() %>"
-/>
