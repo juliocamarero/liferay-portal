@@ -84,16 +84,21 @@ portletURL.setParameter("tabs1", tabs1);
 
 			PortletURL viewFullContentURL = renderResponse.createRenderURL();
 
-			viewFullContentURL.setParameter("struts_action", "/trash/view_content");
+			TrashRenderer trashRenderer = trashHandler.getTrashRenderer(entry.getClassPK());
+
+			if (trashRenderer instanceof AssetRenderer) {
+				viewFullContentURL.setParameter("struts_action", "/trash/view_content_in_asset_publisher");
+			}
+			else {
+				viewFullContentURL.setParameter("struts_action", "/trash/view_content_in_trash");
+			}
+
 			viewFullContentURL.setParameter("redirect", currentURL);
 
 			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(entry.getClassName(), entry.getClassPK());
 
 			viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
-
-			AssetRendererFactory assetRendererFactory = trashHandler.getAssetRendererFactory();
-
-			viewFullContentURL.setParameter("type", assetRendererFactory.getType());
+			viewFullContentURL.setParameter("type", trashRenderer.getType());
 			viewFullContentURL.setParameter("showActions", String.valueOf(Boolean.FALSE));
 			viewFullContentURL.setParameter("showAssetMetadata", String.valueOf(Boolean.TRUE));
 			viewFullContentURL.setParameter("showEditURL", String.valueOf(Boolean.FALSE));
@@ -103,17 +108,12 @@ portletURL.setParameter("tabs1", tabs1);
 				href="<%= viewFullContentURL.toString() %>"
 				name="name"
 			>
-
-				<%
-				AssetRenderer assetRenderer = trashHandler.getAssetRenderer(entry.getClassPK());
-				%>
-
-				<liferay-ui:icon label="<%= true %>" message="<%= assetEntry.getTitle(locale) %>" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
+				<liferay-ui:icon label="<%= true %>" message="<%= assetEntry.getTitle(locale) %>" src="<%= trashRenderer.getIconPath(renderRequest) %>" />
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
 				name="type"
-				value="<%= LanguageUtil.get(pageContext, assetRendererFactory.getType()) %>"
+				value="<%= LanguageUtil.get(pageContext, trashRenderer.getType()) %>"
 			/>
 
 			<liferay-ui:search-container-column-text
