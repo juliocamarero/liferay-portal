@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletFilterUtil;
+import com.liferay.portal.kernel.servlet.PluginContextListener;
 import com.liferay.portal.kernel.servlet.PortletServlet;
 import com.liferay.portal.kernel.servlet.StringServletResponse;
 import com.liferay.portal.kernel.util.ClassUtil;
@@ -219,7 +220,7 @@ public class InvokerPortletImpl implements InvokerPortlet {
 
 	public ClassLoader getPortletClassLoader() {
 		ClassLoader classLoader = (ClassLoader)_portletContextImpl.getAttribute(
-			PortletServlet.PORTLET_CLASS_LOADER);
+			PluginContextListener.PLUGIN_CLASS_LOADER);
 
 		if (classLoader == null) {
 			classLoader = PortalClassLoaderUtil.getClassLoader();
