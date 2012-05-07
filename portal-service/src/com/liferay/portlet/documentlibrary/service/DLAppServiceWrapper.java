@@ -1710,6 +1710,20 @@ public class DLAppServiceWrapper implements DLAppService,
 	}
 
 	/**
+	* Moves the file shortcut with the primary key to the trash portlet.
+	*
+	* @param fileShortcutId the primary key of the file shortcut
+	* @throws PortalException if the file shortcut could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portlet.documentlibrary.model.DLFileShortcut moveFileShortcutToTrash(
+		long fileShortcutId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _dlAppService.moveFileShortcutToTrash(fileShortcutId);
+	}
+
+	/**
 	* Moves the folder to the new parent folder with the primary key.
 	*
 	* @param folderId the primary key of the folder
@@ -1770,7 +1784,7 @@ public class DLAppServiceWrapper implements DLAppService,
 	}
 
 	/**
-	* Moves the file entry with the primary key to the trash portlet.
+	* Restores the file entry with the primary key from the trash portlet.
 	*
 	* @param fileEntryId the primary key of the file entry
 	* @throws PortalException if the file entry could not be found
@@ -1780,6 +1794,19 @@ public class DLAppServiceWrapper implements DLAppService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		_dlAppService.restoreFileEntryFromTrash(fileEntryId);
+	}
+
+	/**
+	* Restores the file shortcut with the primary key to the trash portlet.
+	*
+	* @param fileShortcutId the primary key of the file shortcut
+	* @throws PortalException if the file shortcut could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public void restoreFileShortcutFromTrash(long fileShortcutId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_dlAppService.restoreFileShortcutFromTrash(fileShortcutId);
 	}
 
 	/**

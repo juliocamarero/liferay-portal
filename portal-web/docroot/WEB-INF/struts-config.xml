@@ -1856,7 +1856,9 @@
 
 		<action path="/trash/view" forward="portlet.trash.view" />
 
-		<action path="/trash/view_content" forward="portlet.asset_publisher.view_content" />
+		<action path="/trash/view_content_in_asset_publisher" forward="portlet.asset_publisher.view_content" />
+
+		<action path="/trash/view_content_in_trash" forward="portlet.trash.view_content" />
 
 		<!-- Update Manager -->
 

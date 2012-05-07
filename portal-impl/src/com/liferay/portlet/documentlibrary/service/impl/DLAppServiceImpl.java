@@ -46,6 +46,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.base.DLAppServiceBaseImpl;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
+import com.liferay.portlet.documentlibrary.service.permission.DLFileShortcutPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 import com.liferay.portlet.documentlibrary.util.DLAppUtil;
 import com.liferay.portlet.documentlibrary.util.DLProcessorRegistryUtil;
@@ -1996,6 +1997,25 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	}
 
 	/**
+	 * Moves the file shortcut with the primary key to the trash portlet.
+	 *
+	 * @param  fileShortcutId the primary key of the file shortcut
+	 * @throws PortalException if the file shortcut could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public DLFileShortcut moveFileShortcutToTrash(long fileShortcutId)
+		throws PortalException, SystemException {
+
+		DLFileShortcut fileShortcut = getFileShortcut(fileShortcutId);
+
+		DLFileShortcutPermission.check(
+			getPermissionChecker(), fileShortcut, ActionKeys.DELETE);
+
+		return dlAppHelperLocalService.moveFileShortcutToTrash(
+			getUserId(), fileShortcut);
+	}
+
+	/**
 	 * Moves the folder to the new parent folder with the primary key.
 	 *
 	 * @param  folderId the primary key of the folder
@@ -2087,7 +2107,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	}
 
 	/**
-	 * Moves the file entry with the primary key to the trash portlet.
+	 * Restores the file entry with the primary key from the trash portlet.
 	 *
 	 * @param  fileEntryId the primary key of the file entry
 	 * @throws PortalException if the file entry could not be found
@@ -2111,6 +2131,25 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 
 		dlAppHelperLocalService.restoreFileEntryFromTrash(
 			getUserId(), fileEntry);
+	}
+
+	/**
+	 * Restores the file shortcut with the primary key to the trash portlet.
+	 *
+	 * @param  fileShortcutId the primary key of the file shortcut
+	 * @throws PortalException if the file shortcut could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void restoreFileShortcutFromTrash(long fileShortcutId)
+		throws PortalException, SystemException {
+
+		DLFileShortcut fileShortcut = getFileShortcut(fileShortcutId);
+
+		DLFileShortcutPermission.check(
+			getPermissionChecker(), fileShortcut, ActionKeys.UPDATE);
+
+		dlAppHelperLocalService.restoreFileShortcutFromTrash(
+			getUserId(), fileShortcut);
 	}
 
 	/**
