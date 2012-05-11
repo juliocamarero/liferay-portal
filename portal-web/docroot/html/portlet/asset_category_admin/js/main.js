@@ -105,6 +105,8 @@ AUI.add(
 
 		var STR_PARENT_NODE = 'parentNode';
 
+		var STR_PARENT_CATEGORY_ID = 'parentCategoryId';
+
 		var STR_QUERY = 'query';
 
 		var STR_SELECTED = 'selected';
@@ -629,6 +631,12 @@ AUI.add(
 							if (action == ACTION_ADD) {
 								path += STR_EDIT_CATEGORY;
 
+								url.setParameter(STR_VOCABULARY_ID, instance._selectedVocabularyId);
+							}
+							else if (action == ACTION_ADD_SUBCATEGORY) {
+								path += STR_EDIT_CATEGORY;
+
+								url.setParameter(STR_PARENT_CATEGORY_ID, instance._selectedCategoryId);
 								url.setParameter(STR_VOCABULARY_ID, instance._selectedVocabularyId);
 							}
 							else if (action == ACTION_EDIT) {
@@ -2113,20 +2121,20 @@ AUI.add(
 
 						if (!categoryPanelAdd) {
 							categoryPanelAdd = instance._createCategoryPanelAdd();
-
-							var categoryURL = instance._createURL(CATEGORY, ACTION_ADD, LIFECYCLE_RENDER);
-
-							categoryPanelAdd.plug(
-								A.Plugin.IO,
-								{
-									autoLoad: false,
-									uri: categoryURL.toString()
-								}
-							);
 						}
 						else if (instance._currentCategoryPanelAddIOHandle) {
 							instance._currentCategoryPanelAddIOHandle.detach();
 						}
+
+						var categoryURL = instance._createURL(CATEGORY, action, LIFECYCLE_RENDER);
+
+						categoryPanelAdd.plug(
+							A.Plugin.IO,
+							{
+								autoLoad: false,
+								uri: categoryURL.toString()
+							}
+						);
 
 						categoryPanelAdd.show();
 
