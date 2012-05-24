@@ -371,6 +371,10 @@ public class DLAppHelperLocalServiceImpl
 		dlFileShortcutLocalService.disableFileShortcuts(
 			fileEntry.getFileEntryId());
 
+		// File rank
+
+		dlFileRankLocalService.disableFileRanks(fileEntry.getFileEntryId());
+
 		// Social
 
 		socialActivityLocalService.addActivity(
@@ -460,6 +464,10 @@ public class DLAppHelperLocalServiceImpl
 			userId, folder.getFolderId(), WorkflowConstants.STATUS_IN_TRASH,
 			new HashMap<String, Serializable>(), new ServiceContext());
 
+		// File rank
+
+		dlFileRankLocalService.disableFileRanksByFolder(folder.getFolderId());
+
 		// Trash
 
 		trashEntryLocalService.addTrashEntry(
@@ -501,6 +509,10 @@ public class DLAppHelperLocalServiceImpl
 
 		dlFileShortcutLocalService.enableFileShortcuts(
 			fileEntry.getFileEntryId());
+
+		// File rank
+
+		dlFileRankLocalService.enableFileRanks(fileEntry.getFileEntryId());
 
 		// Social
 
@@ -562,6 +574,10 @@ public class DLAppHelperLocalServiceImpl
 		dlFolderLocalService.updateStatus(
 			userId, folder.getFolderId(), WorkflowConstants.STATUS_APPROVED,
 			new HashMap<String, Serializable>(), new ServiceContext());
+
+		// File rank
+
+		dlFileRankLocalService.enableFileRanksByFolder(folder.getFolderId());
 
 		// Trash
 
