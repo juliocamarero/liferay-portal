@@ -29,6 +29,7 @@ import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
+import com.liferay.portlet.documentlibrary.util.DLAppUtil;
 
 import java.util.Locale;
 
@@ -59,7 +60,7 @@ public class DLFolderTrashRenderer extends BaseTrashRenderer {
 	}
 
 	public String getTitle(Locale locale) {
-		return _folder.getName();
+		return DLAppUtil.stripTrashNamespace(_folder.getName());
 	}
 
 	public String getType() {
