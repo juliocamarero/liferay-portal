@@ -1052,7 +1052,7 @@ release was successful.</echo>
 			<replacefilter token="9043" value="8443" />
 		</replace>
 
-		<replace file="${app.server.dir}/conf/tomcat6-server.xml">
+		<replace file="${app.server.jonas.dir}/conf/tomcat6-server.xml">
 			<replacetoken><![CDATA[autoDeploy="false"]]></replacetoken>
 			<replacevalue><![CDATA[autoDeploy="true"]]></replacevalue>
 		</replace>
