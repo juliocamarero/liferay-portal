@@ -18,21 +18,23 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
+import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.PortalPreferencesLocalServiceUtil;
 import com.liferay.portal.util.PortletKeys;
 
 import javax.portlet.PortletPreferences;
-
-import static com.liferay.portlet.portalsettings.lar.PortalSettingsLARHandler.PORTAL_SETTINGS_CONTROLS;
 
 /**
  * @author Kamesh Sampath
@@ -40,36 +42,42 @@ import static com.liferay.portlet.portalsettings.lar.PortalSettingsLARHandler.PO
 public class PortalSettingsDataHandlerImpl extends BasePortletDataHandler {
 
 	@Override
+	public PortletDataHandlerControl[] getExportControls() {
+		return new PortletDataHandlerControl[] {
+			exportCompanyDetails, exportCompanyPreferences, exportLogo
+		};
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getImportControls() {
+		return new PortletDataHandlerControl[] {
+			exportCompanyDetails, exportCompanyPreferences, exportLogo
+		};
+	}
+
+	@Override
 	public PortletPreferences doDeleteData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
-			throws PortletDataException {
+		throws PortletDataException {
 
-		if (_log.isDebugEnabled()) {
-			_log.debug("Deleting existing Portlet data");
-		}
-
-		int onwerTypeId = PortletKeys.PREFS_OWNER_TYPE_COMPANY;
 		long companyId = portletDataContext.getCompanyId();
 
+		long ownerId = companyId;
+		int ownerType = PortletKeys.PREFS_OWNER_TYPE_COMPANY;
+
 		if (_log.isDebugEnabled()) {
-			_log.debug("deleteData - Owner ID Type Id:" + onwerTypeId);
+			_log.debug(
+				"Deleting existing preferences for compnay:" + companyId);
 		}
 
-		if (PortletKeys.PREFS_OWNER_TYPE_COMPANY == onwerTypeId) {
-			long ownerId = companyId;
-			if (_log.isDebugEnabled()) {
-				_log.debug("deleteData - Owner ID" + ownerId);
-			}
-
-			try {
-				PortalPreferencesLocalServiceUtil.updatePreferences(ownerId,
-						onwerTypeId, PortletConstants.DEFAULT_PREFERENCES);
-			} catch (SystemException e) {
-				_log.error("Error while deleting data", e);
-				throw new PortletDataException(e);
-
-			}
+		try {
+			PortalPreferencesLocalServiceUtil.updatePreferences(
+				ownerId, ownerType, PortletConstants.DEFAULT_PREFERENCES);
+		}
+		catch (SystemException e) {
+			_log.error(
+				"Error deleting preferences for company: " + companyId, e);
 		}
 
 		return null;
@@ -79,39 +87,36 @@ public class PortalSettingsDataHandlerImpl extends BasePortletDataHandler {
 	public String doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
-			throws PortletDataException {
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Exporting Portal Settings data");
-		}
-
-		String exportDataStructure = "";
+		throws PortletDataException {
 
 		long companyId = portletDataContext.getCompanyId();
 
-		int onwerTypeId = PortletKeys.PREFS_OWNER_TYPE_COMPANY;
-
 		if (_log.isDebugEnabled()) {
-			_log.debug("Owner Id" + companyId);
+			_log.debug("Exporting compnay:" + companyId);
 		}
 
 		try {
 			Company company = CompanyLocalServiceUtil.getCompany(companyId);
-			PortletPreferences companyPreferences =
-					PortalPreferencesLocalServiceUtil
-							.getPreferences(companyId, companyId, onwerTypeId);
-			if (companyPreferences != null) {
-				exportDataStructure =
-						_exportLARHandler.exportPortalSettings(
-								portletDataContext, company,
-								companyPreferences);
-			}
-		} catch (Exception e) {
+
+			boolean exportCompanyDetails =
+				portletDataContext.getBooleanParameter(
+					_NAMESPACE, "company-details");
+
+			boolean exportLogo = portletDataContext.getBooleanParameter(
+				_NAMESPACE, "logo");
+
+			boolean exportPreferences = portletDataContext.getBooleanParameter(
+				_NAMESPACE, "company-preferences");
+
+			return _companyExporter.exportCompany(
+				portletDataContext, company, exportCompanyDetails, exportLogo,
+				exportPreferences);
+		}
+		catch (Exception e) {
 			_log.error(e);
-			throw new PortletDataException(e.getMessage());
 		}
 
-		return exportDataStructure;
+		return StringPool.BLANK;
 	}
 
 	@Override
@@ -127,47 +132,194 @@ public class PortalSettingsDataHandlerImpl extends BasePortletDataHandler {
 		Document document = null;
 
 		try {
-
 			document = SAXReaderUtil.read(data);
 
 			Element rootElement = document.getRootElement();
 
-			Element portalPreferencesElement = rootElement.element(
-					PortalSettingsLARHandler.ELEMENT_PREFERENCE);
+			Element companyElement = rootElement.element("company");
 
-			Element companyElement =
-					rootElement
-							.element(PortalSettingsLARHandler.ELEMENT_COMPANY);
+			boolean importCompanyDetails =
+				portletDataContext.getBooleanParameter(
+					_NAMESPACE, "company-details");
 
-			_importLARHandler.importSettings(portletDataContext,
-					portalPreferencesElement, companyElement);
-		} catch (Exception e) {
+			boolean importLogo = portletDataContext.getBooleanParameter(
+				_NAMESPACE, "logo");
+
+			boolean importPreferences =
+				portletDataContext.getBooleanParameter(
+					_NAMESPACE, "company-preferences");
+
+			_companyImporter.importCompany(
+				portletDataContext, companyElement, importCompanyDetails,
+				importLogo, importPreferences);
+		}
+		catch (Exception e) {
 			_log.error("Error occured while importing data", e);
-			throw new PortletDataException(e);
 		}
 
 		return null;
 	}
 
-	@Override
-	public PortletDataHandlerControl[] getExportControls() {
+	protected String getAddressPath(
+			PortletDataContext portletDataContext, long accountId,
+			long addressId) {
 
-		return PORTAL_SETTINGS_CONTROLS;
+		StringBundler sb = new StringBundler(7);
+
+		sb.append(
+			portletDataContext.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append("Address_");
+		sb.append(accountId);
+		sb.append("_");
+		sb.append(addressId);
+		sb.append(".xml");
+
+		return sb.toString();
 	}
 
-	@Override
-	public PortletDataHandlerControl[] getImportControls() {
+	protected String getCompanyPath(
+		PortletDataContext portletDataContext, Company company) {
 
-		return PORTAL_SETTINGS_CONTROLS;
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(
+			portletDataContext.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append(company.getCompanyId());
+		sb.append(".xml");
+
+		return sb.toString();
 	}
 
-	private static Log _log = LogFactoryUtil
-			.getLog(PortalSettingsDataHandlerImpl.class);
+	protected String getPreferencesPath(
+		PortletDataContext portletDataContext, Company company) {
 
-	private final PortalSettingsExportLARHandler _exportLARHandler =
-			new PortalSettingsExportLARHandler();
+		StringBundler sb = new StringBundler(3);
 
-	private final PortalSettingsImportLARHandler _importLARHandler =
-			new PortalSettingsImportLARHandler();
+		sb.append(
+			portletDataContext.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append("preferences.xml");
+
+		return sb.toString();
+	}
+
+	protected String getCompanyAccountPath(
+			PortletDataContext portletDataContext, Company company) {
+
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(
+			portletDataContext.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append("account.xml");
+
+		return sb.toString();
+	}
+
+	protected String getCompanyLogoPath(
+		PortletDataContext portletDataContext, Company company) {
+
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(
+			portletDataContext.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append("logo/");
+
+		return sb.toString();
+	}
+
+	protected String getEmailAddressPath(
+			PortletDataContext portletDataContext, long accountId,
+			long emailAddressId) {
+
+		StringBundler sb = new StringBundler(7);
+
+		sb.append(portletDataContext
+				.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append("Email_Address_");
+		sb.append(accountId);
+		sb.append("_");
+		sb.append(emailAddressId);
+		sb.append(".xml");
+
+		return sb.toString();
+	}
+
+	protected String getPhonePath(
+			PortletDataContext portletDataContext, long accountId,
+			long phoneId) {
+
+		StringBundler sb = new StringBundler(7);
+
+		sb.append(portletDataContext
+				.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append("Phone_");
+		sb.append(accountId);
+		sb.append("_");
+		sb.append(phoneId);
+		sb.append(".xml");
+
+		return sb.toString();
+	}
+
+	protected String getDefaultUserPath(
+		PortletDataContext portletDataContext, User defaultUser) {
+
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(
+			portletDataContext.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append("default_user.xml");
+
+		return sb.toString();
+	}
+
+	protected String getWebsitePath(
+		PortletDataContext portletDataContext, long accountId, long websiteId) {
+
+		StringBundler sb = new StringBundler(7);
+
+		sb.append(portletDataContext
+			.getPortletPath(PortletKeys.PORTAL_SETTINGS));
+		sb.append(PATH_COMPANY);
+		sb.append("Website_");
+		sb.append(accountId);
+		sb.append("_");
+		sb.append(websiteId);
+		sb.append(".xml");
+
+		return sb.toString();
+	}
+
+	public static String getNamespace () {
+		return _NAMESPACE;
+	}
+
+	private static final String PATH_COMPANY = "/company/";
+
+	protected static final String _NAMESPACE = "portal-settings";
+
+	public static final PortletDataHandlerBoolean exportCompanyDetails =
+		new PortletDataHandlerBoolean(_NAMESPACE, "company-details", true);
+
+	public static final PortletDataHandlerBoolean exportCompanyPreferences =
+		new PortletDataHandlerBoolean(_NAMESPACE, "company-preferences", true);
+
+	public static final PortletDataHandlerBoolean exportLogo =
+		new PortletDataHandlerBoolean(_NAMESPACE, "logo", true);
+
+	private static Log _log = LogFactoryUtil.getLog(
+		PortalSettingsDataHandlerImpl.class);
+
+	private final CompanyExporter _companyExporter = new CompanyExporter();
+
+	private final CompanyImporter _companyImporter = new CompanyImporter();
+
 
 }
