@@ -357,50 +357,19 @@ public class LayoutImpl extends LayoutBaseImpl {
 			return value;
 		}
 
-		if (isInheritLookAndFeel()) {
-			try {
-				LayoutSet layoutSet = getLayoutSet();
+		try {
+			if (isInheritLookAndFeel()) {
+					LayoutSet layoutSet = getLayoutSet();
 
-				value = layoutSet.getThemeSetting(key, device);
+					value = layoutSet.getThemeSetting(key, device);
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
-			try {
-				LayoutSet layoutSet = getLayoutSet();
-
-				Theme theme = null;
-
-				boolean controlPanel = false;
-
-				try {
-					Group group = getGroup();
-
-					controlPanel = group.isControlPanel();
-				}
-				catch (Exception e) {
-				}
-
-				if (controlPanel) {
-					String themeId = PrefsPropsUtil.getString(
-						getCompanyId(),
-						PropsKeys.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID);
-
-					theme = ThemeLocalServiceUtil.getTheme(
-						getCompanyId(), themeId, !device.equals("regular"));
-				}
-				else if (device.equals("regular")) {
-					theme = layoutSet.getTheme();
-				}
-				else {
-					theme = layoutSet.getWapTheme();
-				}
+			else {
+				Theme theme = getTheme(device);
 
 				value = theme.getSetting(key);
 			}
-			catch (Exception e) {
-			}
+		}
+		catch (Exception e) {
 		}
 
 		return value;
@@ -701,6 +670,35 @@ public class LayoutImpl extends LayoutBaseImpl {
 		_typeSettingsProperties = typeSettingsProperties;
 
 		super.setTypeSettings(_typeSettingsProperties.toString());
+	}
+
+	protected Theme getTheme(String device)
+		throws PortalException, SystemException {
+
+		boolean controlPanel = false;
+
+		try {
+			Group group = getGroup();
+
+			controlPanel = group.isControlPanel();
+		}
+		catch (Exception e) {
+		}
+
+		if (controlPanel) {
+			String themeId = PrefsPropsUtil.getString(
+				getCompanyId(),
+				PropsKeys.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID);
+
+			return ThemeLocalServiceUtil.getTheme(
+				getCompanyId(), themeId, !device.equals("regular"));
+		}
+		else if (device.equals("regular")) {
+			return getTheme();
+		}
+		else {
+			return getWapTheme();
+		}
 	}
 
 	private LayoutTypePortlet _getLayoutTypePortletClone(
