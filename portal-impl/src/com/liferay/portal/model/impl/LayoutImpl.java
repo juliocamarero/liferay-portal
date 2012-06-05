@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -49,6 +50,7 @@ import com.liferay.portal.util.CookieKeys;
 import com.liferay.portal.util.LayoutClone;
 import com.liferay.portal.util.LayoutCloneFactory;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletURLImpl;
@@ -355,12 +357,50 @@ public class LayoutImpl extends LayoutBaseImpl {
 			return value;
 		}
 
-		try {
-			LayoutSet layoutSet = getLayoutSet();
+		if (isInheritLookAndFeel()) {
+			try {
+				LayoutSet layoutSet = getLayoutSet();
 
-			value = layoutSet.getThemeSetting(key, device);
+				value = layoutSet.getThemeSetting(key, device);
+			}
+			catch (Exception e) {
+			}
 		}
-		catch (Exception e) {
+		else {
+			try {
+				LayoutSet layoutSet = getLayoutSet();
+
+				Theme theme = null;
+
+				boolean controlPanel = false;
+
+				try {
+					Group group = getGroup();
+
+					controlPanel = group.isControlPanel();
+				}
+				catch (Exception e) {
+				}
+
+				if (controlPanel) {
+					String themeId = PrefsPropsUtil.getString(
+						getCompanyId(),
+						PropsKeys.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID);
+
+					theme = ThemeLocalServiceUtil.getTheme(
+						getCompanyId(), themeId, !device.equals("regular"));
+				}
+				else if (device.equals("regular")) {
+					theme = layoutSet.getTheme();
+				}
+				else {
+					theme = layoutSet.getWapTheme();
+				}
+
+				value = theme.getSetting(key);
+			}
+			catch (Exception e) {
+			}
 		}
 
 		return value;
