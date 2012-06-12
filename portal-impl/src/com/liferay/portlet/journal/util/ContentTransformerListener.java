@@ -172,15 +172,6 @@ public class ContentTransformerListener extends BaseTransformerListener {
 
 					dynamicContent.setText("@cdn_host@@root_path@" + text);
 				}
-
-				String type = GetterUtil.getString(el.attributeValue("type"));
-
-				if (type.equals("text_box")) {
-					text = text.replaceAll("\\n", "<br />");
-				}
-
-				dynamicContent.setText(text);
-
 			}
 
 			replace(el);
