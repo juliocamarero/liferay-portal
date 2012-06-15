@@ -38,7 +38,7 @@ Company companyObject = (Company)row.getObject();
 		/>
 	</c:if>
 
-	<c:if test="<%= CompanyPermissionUtil.contains(permissionChecker, companyObject, ActionKeys.DELETE) %>">
+	<c:if test="<%= (companyObject.getCompanyId() != PortalInstances.getDefaultCompanyId()) && CompanyPermissionUtil.contains(permissionChecker, companyObject, ActionKeys.DELETE) %>">
 		<portlet:actionURL var="deleteURL">
 			<portlet:param name="struts_action" value="/admin/edit_instance" />
 			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
