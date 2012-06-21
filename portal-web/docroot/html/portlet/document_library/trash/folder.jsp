@@ -45,23 +45,23 @@ portletURL.setParameter("classPK", String.valueOf(folder.getPrimaryKey()));
 	<c:if test="<%= foldersCount > 0 %>">
 		<liferay-ui:panel collapsible="<%= true %>" cssClass="view-folders" extended="<%= true %>" id="documentLibraryDisplayFoldersListingPanel" persistState="<%= true %>" title='<%= (folder != null) ? "subfolders" : "folders" %>'>
 			<liferay-ui:search-container
-					curParam="cur1"
-					delta="<%= foldersPerPage %>"
-					deltaConfigurable="<%= false %>"
-					iteratorURL="<%= portletURL %>"
-					>
+				curParam="cur1"
+				delta="<%= foldersPerPage %>"
+				deltaConfigurable="<%= false %>"
+				iteratorURL="<%= portletURL %>"
+			>
 				<liferay-ui:search-container-results
-						results="<%= DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd()) %>"
-						total="<%= foldersCount %>"
-						/>
+					results="<%= DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd()) %>"
+					total="<%= foldersCount %>"
+				/>
 
 				<liferay-ui:search-container-row
-						className="com.liferay.portal.kernel.repository.model.Folder"
-						escapedModel="<%= true %>"
-						keyProperty="folderId"
-						modelVar="curFolder"
-						rowVar="row"
-						>
+					className="com.liferay.portal.kernel.repository.model.Folder"
+					escapedModel="<%= true %>"
+					keyProperty="folderId"
+					modelVar="curFolder"
+					rowVar="row"
+				>
 					<liferay-portlet:renderURL varImpl="rowURL">
 						<portlet:param name="struts_action" value="/trash/view_content" />
 						<portlet:param name="redirect" value="<%= currentURL %>" />
@@ -83,5 +83,5 @@ portletURL.setParameter("classPK", String.valueOf(folder.getPrimaryKey()));
 </liferay-ui:panel-container>
 
 <%!
-	private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.document_library.trash.folder_jsp");
+private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.document_library.trash.folder_jsp");
 %>
