@@ -136,7 +136,7 @@ public class DDMImpl implements DDM {
 				fieldValue = String.valueOf(fieldValueDate.getTime());
 			}
 
-			if (fieldValue == null ||
+			if ((fieldValue == null) ||
 				fieldDataType.equals(FieldConstants.FILE_UPLOAD)) {
 
 				continue;
