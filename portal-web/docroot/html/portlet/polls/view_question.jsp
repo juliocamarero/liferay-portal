@@ -52,13 +52,13 @@ if (viewResults && !PollsQuestionPermission.contains(permissionChecker, question
 	<aui:fieldset>
  		<liferay-ui:header
 			backURL="<%= redirect %>"
-			escapeXml="<%= false %>"
+			escapeXml="<%= true %>"
 			localizeTitle="<%= false %>"
 			title="<%= question.getTitle(locale) %>"
 		/>
 
 		<span style="font-size: x-small;">
-			<%= StringUtil.replace(question.getDescription(locale), StringPool.NEW_LINE, "<br />") %>
+			<%= StringUtil.replace(HtmlUtil.escape(question.getDescription(locale)), StringPool.NEW_LINE, "<br />") %>
 		</span>
 
 		<br /><br />
