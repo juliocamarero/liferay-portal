@@ -22,6 +22,8 @@ PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("struts_action", "/blogs_admin/view");
 %>
 
+<%@ include file="/html/portal/trashUndo.jsp" %>
+
 <liferay-portlet:renderURL varImpl="searchURL">
 	<portlet:param name="struts_action" value="/blogs_admin/search" />
 </liferay-portlet:renderURL>

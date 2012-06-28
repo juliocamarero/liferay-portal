@@ -73,6 +73,8 @@ request.setAttribute("view.jsp-folderId", String.valueOf(folderId));
 request.setAttribute("view.jsp-repositoryId", String.valueOf(repositoryId));
 %>
 
+<%@ include file="/html/portal/trashUndo.jsp" %>
+
 <div id="<portlet:namespace />documentLibraryContainer">
 	<aui:layout cssClass="lfr-app-column-view">
 		<aui:column columnWidth="<%= 20 %>" cssClass="navigation-pane" first="<%= true %>">

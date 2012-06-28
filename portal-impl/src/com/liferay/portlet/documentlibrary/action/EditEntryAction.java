@@ -15,19 +15,24 @@
 package com.liferay.portlet.documentlibrary.action;
 
 import com.liferay.portal.DuplicateLockException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.ServletResponseConstants;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.AssetTagException;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
@@ -39,6 +44,9 @@ import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
@@ -46,6 +54,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
@@ -56,6 +65,7 @@ import org.apache.struts.action.ActionMapping;
  * @author Brian Wing Shun Chan
  * @author Sergio González
  * @author Manuel de la Peña
+ * @author Levente Hudák
  */
 public class EditEntryAction extends PortletAction {
 
@@ -85,6 +95,9 @@ public class EditEntryAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
 				deleteEntries(actionRequest, true);
+			}
+			else if (cmd.equals(Constants.UNDO)) {
+				restoreEntries(actionRequest);
 			}
 
 			WindowState windowState = actionRequest.getWindowState();
@@ -255,6 +268,38 @@ public class EditEntryAction extends PortletAction {
 				DLAppServiceUtil.deleteFileEntry(deleteFileEntryId);
 			}
 		}
+
+		if (moveToTrash && ((deleteFolderIds.length > 0) ||
+				(deleteFileShortcutIds.length > 0) ||
+				(deleteFileEntryIds.length > 0))) {
+
+			HttpServletRequest request = PortalUtil.getHttpServletRequest(
+				actionRequest);
+
+			String portletId = (String)request.getAttribute(WebKeys.PORTLET_ID);
+
+			Map<String, String> data = new HashMap<String, String>();
+
+			data.put(
+				"trashedFileEntryIds", StringUtil.merge(deleteFileEntryIds));
+
+			data.put(
+				"trashedFileShortcutIds",
+				StringUtil.merge(deleteFileShortcutIds));
+
+			data.put("trashedFolderIds", StringUtil.merge(deleteFolderIds));
+
+			SessionMessages.add(actionRequest, WebKeys.TRASHED_ENTRIES, data);
+
+			SessionMessages.add(
+				actionRequest, WebKeys.UNDO_TYPE, PortletKeys.DOCUMENT_LIBRARY);
+
+			SessionMessages.add(
+				actionRequest,
+				portletId +
+					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS,
+				Boolean.TRUE);
+		}
 	}
 
 	protected void moveEntries(ActionRequest actionRequest) throws Exception {
@@ -292,6 +337,32 @@ public class EditEntryAction extends PortletAction {
 			DLAppServiceUtil.updateFileShortcut(
 				fileShortcutId, newFolderId, fileShortcut.getToFileEntryId(),
 				serviceContext);
+		}
+	}
+
+	protected void restoreEntries(ActionRequest actionRequest)
+		throws PortalException, SystemException {
+
+		long[] restoreFolderIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "trashedFolderIds"), 0L);
+
+		for (long restoreFolderId : restoreFolderIds) {
+			DLAppServiceUtil.restoreFolderFromTrash(restoreFolderId);
+		}
+
+		long[] restoreFileEntryIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "trashedFileEntryIds"), 0L);
+
+		for (long restoreFileEntryId : restoreFileEntryIds) {
+			DLAppServiceUtil.restoreFileEntryFromTrash(restoreFileEntryId);
+		}
+
+		long[] restoreFileShortcutIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "trashedFileShortcutIds"), 0L);
+
+		for (long restoreFileShortcutId : restoreFileShortcutIds) {
+			DLAppServiceUtil.restoreFileShortcutFromTrash(
+				restoreFileShortcutId);
 		}
 	}
 

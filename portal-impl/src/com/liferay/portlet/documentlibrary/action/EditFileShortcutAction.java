@@ -15,12 +15,17 @@
 package com.liferay.portlet.documentlibrary.action;
 
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 import com.liferay.portlet.documentlibrary.FileShortcutPermissionException;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
@@ -28,11 +33,16 @@ import com.liferay.portlet.documentlibrary.NoSuchFileShortcutException;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -40,6 +50,7 @@ import org.apache.struts.action.ActionMapping;
 
 /**
  * @author Brian Wing Shun Chan
+ * @author Levente Hudák
  */
 public class EditFileShortcutAction extends PortletAction {
 
@@ -124,6 +135,27 @@ public class EditFileShortcutAction extends PortletAction {
 
 		if (moveToTrash) {
 			DLAppServiceUtil.moveFileShortcutToTrash(fileShortcutId);
+
+			HttpServletRequest request = PortalUtil.getHttpServletRequest(
+				actionRequest);
+
+			String portletId = (String)request.getAttribute(WebKeys.PORTLET_ID);
+
+			Map<String, String> data = new HashMap<String, String>();
+
+			data.put(
+				"trashedFileShortcutIds", StringUtil.valueOf(fileShortcutId));
+
+			SessionMessages.add(actionRequest, WebKeys.TRASHED_ENTRIES, data);
+
+			SessionMessages.add(
+				actionRequest, WebKeys.UNDO_TYPE, PortletKeys.DOCUMENT_LIBRARY);
+
+			SessionMessages.add(
+				actionRequest,
+				portletId +
+					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS,
+				Boolean.TRUE);
 		}
 		else {
 			DLAppServiceUtil.deleteFileShortcut(fileShortcutId);
