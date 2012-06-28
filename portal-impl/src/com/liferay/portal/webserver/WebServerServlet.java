@@ -78,6 +78,7 @@ import com.liferay.portlet.documentlibrary.NoSuchFolderException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
+import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
@@ -97,6 +98,7 @@ import com.liferay.portlet.dynamicdatamapping.storage.Field;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.portlet.dynamicdatamapping.storage.StorageEngineUtil;
 import com.liferay.portlet.dynamicdatamapping.util.DDMUtil;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.awt.image.RenderedImage;
 
@@ -832,6 +834,28 @@ public class WebServerServlet extends HttpServlet {
 			fileEntry.getFileEntryId(), version);
 
 		FileVersion fileVersion = fileEntry.getFileVersion(version);
+
+		if (fileVersion.getModel() instanceof DLFileVersion) {
+			LiferayFileVersion liferayFileVersion =
+				(LiferayFileVersion)fileVersion;
+
+			if (liferayFileVersion.isInTrash() ||
+					liferayFileVersion.isInTrashFolder()) {
+				boolean showTrashEntries = ParamUtil.getBoolean(
+					request, "showTrashEntries", false);
+
+				if (showTrashEntries) {
+					PermissionChecker permissionChecker =
+						PermissionThreadLocal.getPermissionChecker();
+
+					TrashUtil.checkPermission(
+						permissionChecker, fileEntry.getGroupId());
+				}
+				else {
+					throw new NoSuchFileEntryException();
+				}
+			}
+		}
 
 		String fileName = fileVersion.getTitle();
 

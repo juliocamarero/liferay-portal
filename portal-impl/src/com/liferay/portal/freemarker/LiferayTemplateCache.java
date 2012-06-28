@@ -50,6 +50,7 @@ public class LiferayTemplateCache extends TemplateCache {
 		}
 	}
 
+	@Override
 	public Template getTemplate(
 			String templateId, Locale locale, String encoding, boolean parse)
 		throws IOException {
