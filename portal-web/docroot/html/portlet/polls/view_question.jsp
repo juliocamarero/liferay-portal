@@ -105,7 +105,7 @@ if (viewResults && !PollsQuestionPermission.contains(permissionChecker, question
 				</aui:button-row>
 
 				<%
-				PortalUtil.addPortletBreadcrumbEntry(request, question.getTitle(locale), currentURL);
+				PortalUtil.addPortletBreadcrumbEntry(request, HtmlUtil.unescape(question.getTitle(locale)), currentURL);
 				%>
 
 			</c:when>
