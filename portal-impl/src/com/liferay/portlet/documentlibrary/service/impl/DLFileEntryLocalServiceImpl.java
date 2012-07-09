@@ -1193,6 +1193,10 @@ public class DLFileEntryLocalServiceImpl
 
 		String extraSettings = StringPool.BLANK;
 
+		if (fileEntryTypeId == 0) {
+			fileEntryTypeId = dlFileEntry.getFileEntryTypeId();
+		}
+
 		fileEntryTypeId = getFileEntryTypeId(
 			DLUtil.getGroupIds(dlFileEntry.getGroupId()),
 			dlFileEntry.getFolderId(), fileEntryTypeId);
