@@ -385,6 +385,11 @@ public class DLAppHelperLocalServiceImpl
 			userId, fileVersion.getFileVersionId(), fileVersion.getStatus(),
 			new HashMap<String, Serializable>(), serviceContext);
 
+		// File shortcut
+
+		dlFileShortcutLocalService.enableFileShortcuts(
+			fileEntry.getFileEntryId());
+
 		// File rank
 
 		dlFileRankLocalService.enableFileRanks(fileEntry.getFileEntryId());
@@ -478,6 +483,16 @@ public class DLAppHelperLocalServiceImpl
 		}
 
 		return fileEntry;
+	}
+
+	public DLFileShortcut moveFileShortcutFromTrash(
+			long userId, DLFileShortcut dlFileShortcut, long newFolderId,
+			long toFileEntryId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return dlAppService.updateFileShortcut(
+			dlFileShortcut.getFileShortcutId(), newFolderId, toFileEntryId,
+			serviceContext);
 	}
 
 	public DLFileShortcut moveFileShortcutToTrash(
@@ -961,6 +976,17 @@ public class DLAppHelperLocalServiceImpl
 						WorkflowConstants.STATUS_IN_TRASH)) {
 
 					continue;
+				}
+
+				// File shortcut
+
+				if (status == WorkflowConstants.STATUS_APPROVED) {
+					dlFileShortcutLocalService.enableFileShortcuts(
+						dlFileEntry.getFileEntryId());
+				}
+				else {
+					dlFileShortcutLocalService.disableFileShortcuts(
+						dlFileEntry.getFileEntryId());
 				}
 
 				// Asset
