@@ -426,9 +426,9 @@ public class EditGroupAction extends PortletAction {
 		typeSettingsProperties.setProperty("false-robots.txt", publicRobots);
 		typeSettingsProperties.setProperty("true-robots.txt", privateRobots);
 
-		boolean trashEnabled = ParamUtil.getBoolean(
+		int trashEnabled = ParamUtil.getInteger(
 			actionRequest, "trashEnabled",
-			GetterUtil.getBoolean(
+			GetterUtil.getInteger(
 				typeSettingsProperties.getProperty("trashEnabled")));
 
 		typeSettingsProperties.setProperty(
