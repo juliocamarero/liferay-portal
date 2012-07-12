@@ -27,7 +27,8 @@ page import="com.liferay.portlet.trash.action.EditEntryAction" %><%@
 page import="com.liferay.portlet.trash.model.TrashEntry" %><%@
 page import="com.liferay.portlet.trash.search.EntrySearch" %><%@
 page import="com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil" %><%@
-page import="com.liferay.portlet.trash.service.TrashEntryServiceUtil" %>
+page import="com.liferay.portlet.trash.service.TrashEntryServiceUtil" %><%@
+page import="com.liferay.portlet.trash.util.TrashUtil" %>
 
 <%@ include file="/html/portlet/trash/init-ext.jsp" %>
 
