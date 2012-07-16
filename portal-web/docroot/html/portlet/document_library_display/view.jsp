@@ -75,6 +75,8 @@ request.setAttribute("view.jsp-viewFolder", Boolean.TRUE.toString());
 request.setAttribute("view.jsp-useAssetEntryQuery", String.valueOf(useAssetEntryQuery));
 %>
 
+<%@ include file="/html/portal/trashUndo.jsp" %>
+
 <liferay-util:include page="/html/portlet/document_library/top_links.jsp" />
 
 <c:choose>
