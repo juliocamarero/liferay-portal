@@ -34,8 +34,13 @@ public class SessionMessages {
 
 	public static final String KEY_SUFFIX_CLOSE_REDIRECT = ".closeRedirect";
 
+	public static final String KEY_SUFFIX_DELETE_SUCCESS = ".deleteSuccess";
+
 	public static final String KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE =
 		".hideDefaultErrorMessage";
+
+	public static final String KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE =
+		".hideDefaultSuccessMessage";
 
 	public static final String KEY_SUFFIX_PORTLET_NOT_AJAXABLE =
 		".portletNotAjaxable";
@@ -44,9 +49,6 @@ public class SessionMessages {
 
 	public static final String KEY_SUFFIX_REFRESH_PORTLET_DATA =
 		".refreshPortletData";
-
-	public static final String KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE =
-		".hideDefaultSuccessMessage";
 
 	public static final String KEY_SUFFIX_UPDATED_CONFIGURATION =
 		".updatedConfiguration";

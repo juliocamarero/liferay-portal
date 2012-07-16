@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletConfig;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
@@ -89,7 +90,6 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
@@ -140,7 +140,8 @@ public class EditFileEntryAction extends PortletAction {
 				addTempFileEntry(actionRequest);
 			}
 			else if (cmd.equals(Constants.DELETE)) {
-				deleteFileEntries(actionRequest, false);
+				deleteFileEntries(
+					actionRequest, (LiferayPortletConfig)portletConfig, false);
 			}
 			else if (cmd.equals(Constants.DELETE_TEMP)) {
 				deleteTempFileEntry(actionRequest, actionResponse);
@@ -161,7 +162,8 @@ public class EditFileEntryAction extends PortletAction {
 				moveFileEntries(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
-				deleteFileEntries(actionRequest, true);
+				deleteFileEntries(
+					actionRequest, (LiferayPortletConfig)portletConfig, true);
 			}
 			else if (cmd.equals(Constants.REVERT)) {
 				revertFileEntry(actionRequest);
@@ -498,14 +500,14 @@ public class EditFileEntryAction extends PortletAction {
 	}
 
 	protected void deleteFileEntries(
-			ActionRequest actionRequest, boolean moveToTrash)
+			ActionRequest actionRequest, LiferayPortletConfig portletConfig,
+			boolean moveToTrash)
 		throws Exception {
 
-		long[] deleteFileEntryIds = null;
-
 		long fileEntryId = ParamUtil.getLong(actionRequest, "fileEntryId");
-
 		String version = ParamUtil.getString(actionRequest, "version");
+
+		long[] deleteFileEntryIds = null;
 
 		if ((fileEntryId > 0) && Validator.isNotNull(version)) {
 			DLAppServiceUtil.deleteFileVersion(fileEntryId, version);
@@ -530,27 +532,20 @@ public class EditFileEntryAction extends PortletAction {
 			}
 		}
 
-		if (moveToTrash && (deleteFileEntryIds.length > 0)) {
-			HttpServletRequest request = PortalUtil.getHttpServletRequest(
-				actionRequest);
+		if (moveToTrash && Validator.isNotNull(deleteFileEntryIds)) {
+			Map<String, long[]> data = new HashMap<String, long[]>();
 
-			String portletId = (String)request.getAttribute(WebKeys.PORTLET_ID);
-
-			Map<String, String> data = new HashMap<String, String>();
-
-			data.put(
-				"trashedFileEntryIds", StringUtil.merge(deleteFileEntryIds));
-
-			SessionMessages.add(actionRequest, WebKeys.TRASHED_ENTRIES, data);
-
-			SessionMessages.add(
-				actionRequest, WebKeys.UNDO_TYPE, PortletKeys.DOCUMENT_LIBRARY);
+			data.put("restoreFileEntryIds", deleteFileEntryIds);
 
 			SessionMessages.add(
 				actionRequest,
-				portletId +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS,
-				Boolean.TRUE);
+				portletConfig.getPortletId() +
+					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS, data);
+
+			SessionMessages.add(
+				actionRequest,
+				portletConfig.getPortletName() +
+					SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
 		}
 	}
 

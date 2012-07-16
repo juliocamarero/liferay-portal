@@ -17,6 +17,7 @@ package com.liferay.portlet.documentlibrary.action;
 import com.liferay.portal.DuplicateLockException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.portlet.LiferayPortletConfig;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.ServletResponseConstants;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -26,13 +27,11 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.AssetTagException;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
@@ -54,7 +53,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
@@ -88,15 +86,17 @@ public class EditEntryAction extends PortletAction {
 				checkOutEntries(actionRequest);
 			}
 			else if (cmd.equals(Constants.DELETE)) {
-				deleteEntries(actionRequest, false);
+				deleteEntries(
+					actionRequest, (LiferayPortletConfig)portletConfig, false);
 			}
 			else if (cmd.equals(Constants.MOVE)) {
 				moveEntries(actionRequest);
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
-				deleteEntries(actionRequest, true);
+				deleteEntries(
+					actionRequest, (LiferayPortletConfig)portletConfig, true);
 			}
-			else if (cmd.equals(Constants.UNDO)) {
+			else if (cmd.equals(Constants.RESTORE)) {
 				restoreEntries(actionRequest);
 			}
 
@@ -228,7 +228,8 @@ public class EditEntryAction extends PortletAction {
 	}
 
 	protected void deleteEntries(
-			ActionRequest actionRequest, boolean moveToTrash)
+			ActionRequest actionRequest, LiferayPortletConfig portletConfig,
+			boolean moveToTrash)
 		throws Exception {
 
 		long[] deleteFolderIds = StringUtil.split(
@@ -273,32 +274,21 @@ public class EditEntryAction extends PortletAction {
 				(deleteFileShortcutIds.length > 0) ||
 				(deleteFileEntryIds.length > 0))) {
 
-			HttpServletRequest request = PortalUtil.getHttpServletRequest(
-				actionRequest);
+			Map<String, long[]> data = new HashMap<String, long[]>();
 
-			String portletId = (String)request.getAttribute(WebKeys.PORTLET_ID);
-
-			Map<String, String> data = new HashMap<String, String>();
-
-			data.put(
-				"trashedFileEntryIds", StringUtil.merge(deleteFileEntryIds));
-
-			data.put(
-				"trashedFileShortcutIds",
-				StringUtil.merge(deleteFileShortcutIds));
-
-			data.put("trashedFolderIds", StringUtil.merge(deleteFolderIds));
-
-			SessionMessages.add(actionRequest, WebKeys.TRASHED_ENTRIES, data);
-
-			SessionMessages.add(
-				actionRequest, WebKeys.UNDO_TYPE, PortletKeys.DOCUMENT_LIBRARY);
+			data.put("restoreFileEntryIds", deleteFileEntryIds);
+			data.put("restoreFileShortcutIds", deleteFileShortcutIds);
+			data.put("restoreFolderIds", deleteFolderIds);
 
 			SessionMessages.add(
 				actionRequest,
-				portletId +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS,
-				Boolean.TRUE);
+				portletConfig.getPortletId() +
+					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS, data);
+
+			SessionMessages.add(
+				actionRequest,
+				portletConfig.getPortletName() +
+					SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
 		}
 	}
 
@@ -344,21 +334,21 @@ public class EditEntryAction extends PortletAction {
 		throws PortalException, SystemException {
 
 		long[] restoreFolderIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "trashedFolderIds"), 0L);
+			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
 
 		for (long restoreFolderId : restoreFolderIds) {
 			DLAppServiceUtil.restoreFolderFromTrash(restoreFolderId);
 		}
 
 		long[] restoreFileEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "trashedFileEntryIds"), 0L);
+			ParamUtil.getString(actionRequest, "restoreFileEntryIds"), 0L);
 
 		for (long restoreFileEntryId : restoreFileEntryIds) {
 			DLAppServiceUtil.restoreFileEntryFromTrash(restoreFileEntryId);
 		}
 
 		long[] restoreFileShortcutIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "trashedFileShortcutIds"), 0L);
+			ParamUtil.getString(actionRequest, "restoreFileShortcutIds"), 0L);
 
 		for (long restoreFileShortcutId : restoreFileShortcutIds) {
 			DLAppServiceUtil.restoreFileShortcutFromTrash(
