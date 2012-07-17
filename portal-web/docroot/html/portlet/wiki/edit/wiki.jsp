@@ -27,6 +27,14 @@ String toggleId = "toggle_id_wiki_editor_help";
 String toggleValue = SessionClicks.get(request, toggleId, null);
 
 boolean showSyntaxHelp = ((toggleValue != null) && toggleValue.equals("block"));
+
+String namespace = StringPool.BLANK;
+
+if ((portletResponse != null)) {
+	namespace = portletResponse.getNamespace();
+}
+
+String name = namespace + "content";
 %>
 
 <div align="right">
@@ -101,6 +109,43 @@ boolean showSyntaxHelp = ((toggleValue != null) && toggleValue.equals("block"));
 	function <portlet:namespace />initEditor() {
 		return "<%= UnicodeFormatter.toString(content) %>";
 	}
+
+	<%
+		if (format.equalsIgnoreCase("wikimedia")) {
+	%>
+
+	var textarea = A.one("<%= name %>");
+	alert(textarea.val());
+
+	window['<%= name %>'] = {
+		destroy: function() {
+			delete window['<%= name %>'];
+		},
+
+		focus: function() {
+			textarea.focus();
+		},
+
+		getCkData: function() {
+			return textarea.val();
+		},
+
+		getHTML: function() {
+			return window['<%= name %>'].getCkData();
+		},
+
+		getText: function() {
+			return window['<%= name %>'].getCkData();
+		},
+
+		setHTML: function(value) {
+			textarea.val(value);
+		}
+	};
+
+	<%
+		}
+	%>
 </aui:script>
 
 <aui:script use="aui-base">
@@ -149,7 +194,6 @@ boolean showSyntaxHelp = ((toggleValue != null) && toggleValue.equals("block"));
 		}
 	);
 </aui:script>
-
 <%!
 public static final String EDITOR_WYSIWYG_IMPL_KEY = "editor.wysiwyg.portal-web.docroot.html.portlet.wiki.edit.creole.jsp";
 %>
