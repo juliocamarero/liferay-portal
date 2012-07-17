@@ -65,13 +65,22 @@ boolean showSyntaxHelp = ((toggleValue != null) && toggleValue.equals("block"));
 			fileBrowserParams.put("wikiPageResourcePrimKey", String.valueOf(resourcePrimKey));
 			%>
 
-			<liferay-ui:input-editor
-				configParams="<%= configParams %>"
-				editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>"
-				fileBrowserParams="<%= fileBrowserParams %>"
-				toolbarSet="creole"
-				width="100%"
-			/>
+		<c:choose>
+			<c:when test='<%= format.equals("creole") %>'>
+				<liferay-ui:input-editor
+					configParams="<%= configParams %>"
+					editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>"
+					fileBrowserParams="<%= fileBrowserParams %>"
+					toolbarSet="creole"
+					width="100%"
+				/>
+			</c:when>
+			<c:otherwise>
+				<div>
+					<liferay-ui:input-field model="<%= WikiPage.class %>" bean="<%= wikiPage %>" cssClass="aui-w100" field="content" />
+				</div>
+			</c:otherwise>
+		</c:choose>
 
 			<aui:input name="content" type="hidden" />
 		</aui:column>
