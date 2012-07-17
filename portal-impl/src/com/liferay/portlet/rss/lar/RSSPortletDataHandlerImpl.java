@@ -273,10 +273,6 @@ public class RSSPortletDataHandlerImpl extends JournalPortletDataHandlerImpl {
 				portletDataContext, templateElement);
 		}
 
-		Map<String, String> articleIds =
-			(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
-				JournalArticle.class);
-
 		Layout layout = LayoutLocalServiceUtil.getLayout(
 			portletDataContext.getPlid());
 
@@ -291,6 +287,13 @@ public class RSSPortletDataHandlerImpl extends JournalPortletDataHandlerImpl {
 			"footerArticleValues", new String[] {"0", ""});
 
 		String footerArticleId = footerArticleValues[1];
+
+		Map<String, String> articleIds =
+			(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
+				JournalArticle.class + ".articleId");
+
+		footerArticleId = MapUtil.getString(
+			articleIds, footerArticleId, footerArticleId);
 
 		if (Validator.isNotNull(footerArticleId)) {
 			footerArticleId = MapUtil.getString(
@@ -319,6 +322,13 @@ public class RSSPortletDataHandlerImpl extends JournalPortletDataHandlerImpl {
 			"headerArticleValues", new String[] {"0", ""});
 
 		String headerArticleId = headerArticleValues[1];
+
+		articleIds =
+			(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
+				JournalArticle.class + ".articleId");
+
+		headerArticleId = MapUtil.getString(
+			articleIds, headerArticleId, headerArticleId);
 
 		if (Validator.isNotNull(headerArticleId)) {
 			headerArticleId = MapUtil.getString(
