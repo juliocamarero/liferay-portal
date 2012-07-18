@@ -66,6 +66,8 @@ page import="com.liferay.util.RSSUtil" %>
 <%
 PortletPreferences preferences = renderRequest.getPreferences();
 
+PortletResponse portletResponse = (PortletResponse)request.getAttribute(JavaConstants.JAVAX_PORTLET_RESPONSE);
+
 String portletResource = ParamUtil.getString(request, "portletResource");
 
 if (Validator.isNotNull(portletResource)) {
