@@ -30,10 +30,19 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Attribute;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.security.pacl.PACLClassLoaderUtil;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+
+import java.io.IOException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -59,6 +68,47 @@ import org.apache.commons.collections.map.ReferenceMap;
  * @author Connor McKay
  */
 public class LocalizationImpl implements Localization {
+
+	public void cloneDDMStructureLocale(
+			DDMStructure structure, Locale fromLocale, Locale toLocale)
+		throws DocumentException, IOException {
+
+		Document xsd = SAXReaderUtil.read(structure.getXsd());
+
+		Element rootElement = xsd.getRootElement();
+
+		Attribute availableLocales = rootElement.attribute(_AVAILABLE_LOCALES);
+
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(availableLocales.getValue());
+		sb.append(StringPool.COMMA);
+		sb.append(toLocale.toString());
+
+		availableLocales.setValue(sb.toString());
+
+		Attribute defaultLocale = rootElement.attribute(_DEFAULT_LOCALE);
+
+		defaultLocale.setValue(toLocale.toString());
+
+		// append new locale for each dynamic element, copying default
+
+		List<Element> dynamicElements = rootElement.elements(_DYNAMIC_ELEMENT);
+
+		for (Element outterDynamicElement : dynamicElements) {
+			List<Element> innerDynamicElements = outterDynamicElement.elements(
+				_DYNAMIC_ELEMENT);
+
+			for (Element innerDynamicElement : innerDynamicElements) {
+				_copyDDMMetaDataLocale(
+					innerDynamicElement, fromLocale, toLocale);
+			}
+
+			_copyDDMMetaDataLocale(outterDynamicElement, fromLocale, toLocale);
+		}
+
+		structure.setXsd(xsd.formattedString());
+	}
 
 	public Object deserialize(JSONObject jsonObject) {
 		Locale[] locales = LanguageUtil.getAvailableLocales();
@@ -841,6 +891,29 @@ public class LocalizationImpl implements Localization {
 		return xml;
 	}
 
+	private void _copyDDMMetaDataLocale(
+		Element dynamicElement, Locale fromLocale, Locale toLocale) {
+
+		Element metaDataImportElement =
+			(Element) dynamicElement.selectSingleNode(
+				"meta-data[@locale='" + toLocale.toString() + "']");
+
+		if (metaDataImportElement == null) {
+			Element metaDataElement =
+				(Element) dynamicElement.selectSingleNode(
+					"meta-data[@locale='" + fromLocale.toString() + "']");
+
+			Element copiedMetadataElement = metaDataElement.createCopy();
+
+			Attribute attributeLocale = copiedMetadataElement.attribute(
+				_LOCALE);
+
+			attributeLocale.setValue(toLocale.toString());
+
+			dynamicElement.add(copiedMetadataElement);
+		}
+	}
+
 	private void _copyNonExempt(
 			XMLStreamReader xmlStreamReader, XMLStreamWriter xmlStreamWriter,
 			String exemptLanguageId, String defaultLanguageId, boolean cdata)
@@ -1027,9 +1100,13 @@ public class LocalizationImpl implements Localization {
 
 	private static final String _DEFAULT_LOCALE = "default-locale";
 
+	private static final String _DYNAMIC_ELEMENT = "dynamic-element";
+
 	private static final String _EMPTY_ROOT_NODE = "<root />";
 
 	private static final String _LANGUAGE_ID = "language-id";
+
+	private static final String _LOCALE = "locale";
 
 	private static final String _ROOT = "root";
 

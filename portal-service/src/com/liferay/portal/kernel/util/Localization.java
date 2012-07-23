@@ -15,6 +15,10 @@
 package com.liferay.portal.kernel.util;
 
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+
+import java.io.IOException;
 
 import java.util.Locale;
 import java.util.Map;
@@ -44,6 +48,10 @@ import javax.portlet.PortletRequest;
  * @author Brian Wing Shun Chan
  */
 public interface Localization {
+
+	public void cloneDDMStructureLocale(
+			DDMStructure structure, Locale fromLocale, Locale toLocale)
+		throws DocumentException, IOException;
 
 	/**
 	 * Deserializes the JSON object into a map of locales and localized strings.

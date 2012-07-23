@@ -14,6 +14,9 @@
 
 package com.liferay.portlet.dynamicdatamapping.lar;
 
+import com.liferay.portal.LocaleException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
@@ -21,6 +24,8 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.xml.Document;
@@ -39,6 +44,7 @@ import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureUt
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateUtil;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.portlet.PortletPreferences;
@@ -109,6 +115,8 @@ public class DDMPortletDataHandlerImpl extends BasePortletDataHandler {
 
 		DDMStructure structure =
 			(DDMStructure)portletDataContext.getZipEntryAsObject(path);
+
+		prepareLanguagesForImport(structure.getPrimaryKey());
 
 		long userId = portletDataContext.getUserId(structure.getUserUuid());
 
@@ -308,6 +316,40 @@ public class DDMPortletDataHandlerImpl extends BasePortletDataHandler {
 		sb.append(".xml");
 
 		return sb.toString();
+	}
+
+	protected static void prepareLanguagesForImport(long classPK)
+		throws PortalException, SystemException {
+
+		DDMStructure structure = DDMStructureLocalServiceUtil.getStructure(
+			classPK);
+
+		Locale ddmStructureDefaultLocale = LocaleUtil.fromLanguageId(
+			structure.getDefaultLocale());
+
+		List<String> ddmStructureAvailableLocalesList =
+			structure.getAvailableLocales();
+
+		Locale[] ddmStructureAvailableLocales =
+			new Locale[ddmStructureAvailableLocalesList.size()];
+
+		for (int i = 0;i < ddmStructureAvailableLocales.length; i++) {
+			ddmStructureAvailableLocales[i] = LocaleUtil.fromLanguageId(
+				ddmStructureAvailableLocalesList.get(i));
+		}
+
+		Locale defaultImportLocale = LocalizationUtil.prepareLocalesForImport(
+			classPK, ddmStructureDefaultLocale, ddmStructureAvailableLocales);
+
+		structure.prepareLocalizedFieldsForImport(defaultImportLocale);
+
+		try {
+			LocalizationUtil.cloneDDMStructureLocale(
+				structure, ddmStructureDefaultLocale, defaultImportLocale);
+		}
+		catch (Exception e) {
+			throw new LocaleException(e);
+		}
 	}
 
 	@Override
