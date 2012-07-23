@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.action;
 
+import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -253,6 +254,10 @@ public class EditArticleAction extends PortletAction {
 			}
 			else if (e instanceof AssetCategoryException ||
 					 e instanceof AssetTagException) {
+
+				SessionErrors.add(actionRequest, e.getClass(), e);
+			}
+			else if (e instanceof LocaleException) {
 
 				SessionErrors.add(actionRequest, e.getClass(), e);
 			}
