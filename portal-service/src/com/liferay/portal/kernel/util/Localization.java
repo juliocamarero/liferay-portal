@@ -241,6 +241,9 @@ public interface Localization {
 		PortletPreferences preferences, String key, String languageId,
 		boolean useDefault);
 
+	public Locale prepareLocalesForImport(
+		long classPK, Locale defaultLocale, Locale[] availableLocales);
+
 	/**
 	 * Removes the localization for the language from the localizations XML.
 	 * Stores the localized strings as characters in the XML.

@@ -882,6 +882,17 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+
+	<#list entity.regularColList as column>
+		<#if column.localized>
+			String ${column.name} = this.get${column.methodName}(defaultImportLocale);
+
+			this.set${column.methodName}(${column.name}, defaultImportLocale, defaultImportLocale);
+		</#if>
+	</#list>
+	}
+
 	@Override
 	public void resetOriginalValues() {
 		<#list entity.regularColList as column>

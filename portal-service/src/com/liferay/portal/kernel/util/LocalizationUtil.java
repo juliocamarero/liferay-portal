@@ -172,6 +172,13 @@ public class LocalizationUtil {
 			preferences, key, languageId, useDefault);
 	}
 
+	public static Locale prepareLocalesForImport(
+			long classPK, Locale defaultLocale, Locale[] availableLocales) {
+
+		return getLocalization().prepareLocalesForImport(
+			classPK, defaultLocale, availableLocales);
+	}
+
 	public static String removeLocalization(
 		String xml, String key, String requestedLanguageId) {
 

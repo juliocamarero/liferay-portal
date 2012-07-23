@@ -20,10 +20,12 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
@@ -444,6 +446,60 @@ public class LocalizationImpl implements Localization {
 		}
 
 		return values;
+	}
+
+	public Locale prepareLocalesForImport(
+			long classPK, Locale defaultLocale, Locale[] availableLocales) {
+
+		Locale defaultImportLocale = null;
+
+		Locale[] targetAvailableLocales = LanguageUtil.getAvailableLocales();
+
+		if (!ArrayUtil.contains(targetAvailableLocales, defaultLocale)) {
+
+			// portal default locale has priority
+
+			Locale portalDefaultLocale = LocaleUtil.getDefault();
+
+			if (ArrayUtil.contains(
+				availableLocales, portalDefaultLocale)) {
+
+				defaultImportLocale = portalDefaultLocale;
+			}
+			else {
+				for (Locale articleAvailableLocale : availableLocales) {
+					if (ArrayUtil.contains(
+							targetAvailableLocales, articleAvailableLocale)) {
+
+						defaultImportLocale = articleAvailableLocale;
+
+						break;
+					}
+				}
+			}
+
+			if (defaultImportLocale == null) {
+
+				// add new language with portal default
+
+				defaultImportLocale = portalDefaultLocale;
+
+				if (_log.isWarnEnabled()) {
+					StringBundler sb = new StringBundler();
+
+					sb.append("Language ");
+					sb.append(LocaleUtil.toLanguageId(defaultLocale));
+					sb.append(" is missing for entity ");
+					sb.append(classPK);
+					sb.append(", translating and setting it as default to ");
+					sb.append(LocaleUtil.toLanguageId(defaultImportLocale));
+
+					_log.warn(sb.toString());
+				}
+			}
+		}
+
+		return defaultImportLocale;
 	}
 
 	public String removeLocalization(
