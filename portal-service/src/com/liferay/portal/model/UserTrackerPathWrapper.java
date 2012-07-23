@@ -220,6 +220,11 @@ public class UserTrackerPathWrapper implements UserTrackerPath,
 		return _userTrackerPath.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_userTrackerPath.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.UserTrackerPath> toCacheModel() {
 		return _userTrackerPath.toCacheModel();
 	}

@@ -234,6 +234,11 @@ public class MBDiscussionWrapper implements MBDiscussion,
 		return _mbDiscussion.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_mbDiscussion.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.messageboards.model.MBDiscussion> toCacheModel() {
 		return _mbDiscussion.toCacheModel();
 	}

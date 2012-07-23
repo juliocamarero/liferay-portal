@@ -234,6 +234,11 @@ public class DDMStructureLinkWrapper implements DDMStructureLink,
 		return _ddmStructureLink.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_ddmStructureLink.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.dynamicdatamapping.model.DDMStructureLink> toCacheModel() {
 		return _ddmStructureLink.toCacheModel();
 	}

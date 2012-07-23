@@ -365,6 +365,11 @@ public class PollsVoteWrapper implements PollsVote, ModelWrapper<PollsVote> {
 		return _pollsVote.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_pollsVote.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.polls.model.PollsVote> toCacheModel() {
 		return _pollsVote.toCacheModel();
 	}

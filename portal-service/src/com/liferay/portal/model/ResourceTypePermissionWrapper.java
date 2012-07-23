@@ -271,6 +271,11 @@ public class ResourceTypePermissionWrapper implements ResourceTypePermission,
 		return _resourceTypePermission.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_resourceTypePermission.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.ResourceTypePermission> toCacheModel() {
 		return _resourceTypePermission.toCacheModel();
 	}

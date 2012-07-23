@@ -227,6 +227,11 @@ public class ClusterGroupWrapper implements ClusterGroup,
 		return _clusterGroup.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_clusterGroup.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.ClusterGroup> toCacheModel() {
 		return _clusterGroup.toCacheModel();
 	}

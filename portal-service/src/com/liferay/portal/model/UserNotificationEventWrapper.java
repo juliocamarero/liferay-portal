@@ -375,6 +375,11 @@ public class UserNotificationEventWrapper implements UserNotificationEvent,
 		return _userNotificationEvent.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_userNotificationEvent.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.UserNotificationEvent> toCacheModel() {
 		return _userNotificationEvent.toCacheModel();
 	}

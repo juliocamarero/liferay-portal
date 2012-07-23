@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the PortletPreferences service. Represents a row in the &quot;PortletPreferences&quot; database table, with each column mapped to a property of this class.
  *
@@ -164,6 +166,8 @@ public interface PortletPreferencesModel extends BaseModel<PortletPreferences> {
 	public int compareTo(PortletPreferences portletPreferences);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<PortletPreferences> toCacheModel();
 

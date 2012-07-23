@@ -26,6 +26,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the SCFrameworkVersion service. Represents a row in the &quot;SCFrameworkVersion&quot; database table, with each column mapped to a property of this class.
@@ -264,6 +265,8 @@ public interface SCFrameworkVersionModel extends BaseModel<SCFrameworkVersion>,
 	public int compareTo(SCFrameworkVersion scFrameworkVersion);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<SCFrameworkVersion> toCacheModel();
 

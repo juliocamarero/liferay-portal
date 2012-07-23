@@ -538,6 +538,11 @@ public class AccountWrapper implements Account, ModelWrapper<Account> {
 		return _account.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_account.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Account> toCacheModel() {
 		return _account.toCacheModel();
 	}

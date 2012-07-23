@@ -365,6 +365,11 @@ public class AssetTagWrapper implements AssetTag, ModelWrapper<AssetTag> {
 		return _assetTag.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_assetTag.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.asset.model.AssetTag> toCacheModel() {
 		return _assetTag.toCacheModel();
 	}

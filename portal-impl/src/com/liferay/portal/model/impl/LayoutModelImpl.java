@@ -1411,6 +1411,29 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 		return (int)getPrimaryKey();
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		String name = this.getName(defaultImportLocale);
+
+		this.setName(name, defaultImportLocale, defaultImportLocale);
+
+		String title = this.getTitle(defaultImportLocale);
+
+		this.setTitle(title, defaultImportLocale, defaultImportLocale);
+
+		String description = this.getDescription(defaultImportLocale);
+
+		this.setDescription(description, defaultImportLocale,
+			defaultImportLocale);
+
+		String keywords = this.getKeywords(defaultImportLocale);
+
+		this.setKeywords(keywords, defaultImportLocale, defaultImportLocale);
+
+		String robots = this.getRobots(defaultImportLocale);
+
+		this.setRobots(robots, defaultImportLocale, defaultImportLocale);
+	}
+
 	@Override
 	public void resetOriginalValues() {
 		LayoutModelImpl layoutModelImpl = this;

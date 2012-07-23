@@ -259,6 +259,11 @@ public class TrashVersionWrapper implements TrashVersion,
 		return _trashVersion.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_trashVersion.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.trash.model.TrashVersion> toCacheModel() {
 		return _trashVersion.toCacheModel();
 	}

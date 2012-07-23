@@ -601,6 +601,11 @@ public class ShoppingCouponWrapper implements ShoppingCoupon,
 		return _shoppingCoupon.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_shoppingCoupon.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.shopping.model.ShoppingCoupon> toCacheModel() {
 		return _shoppingCoupon.toCacheModel();
 	}

@@ -659,6 +659,11 @@ public class DLFileShortcutWrapper implements DLFileShortcut,
 		return _dlFileShortcut.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_dlFileShortcut.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.documentlibrary.model.DLFileShortcut> toCacheModel() {
 		return _dlFileShortcut.toCacheModel();
 	}

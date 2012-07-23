@@ -26,6 +26,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the WikiNode service. Represents a row in the &quot;WikiNode&quot; database table, with each column mapped to a property of this class.
@@ -257,6 +258,8 @@ public interface WikiNodeModel extends BaseModel<WikiNode>, GroupedModel {
 	public int compareTo(WikiNode wikiNode);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<WikiNode> toCacheModel();
 

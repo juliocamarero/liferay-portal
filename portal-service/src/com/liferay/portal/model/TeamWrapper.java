@@ -363,6 +363,11 @@ public class TeamWrapper implements Team, ModelWrapper<Team> {
 		return _team.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_team.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Team> toCacheModel() {
 		return _team.toCacheModel();
 	}

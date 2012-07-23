@@ -24,6 +24,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the MBStatsUser service. Represents a row in the &quot;MBStatsUser&quot; database table, with each column mapped to a property of this class.
@@ -182,6 +183,8 @@ public interface MBStatsUserModel extends BaseModel<MBStatsUser> {
 	public int compareTo(MBStatsUser mbStatsUser);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<MBStatsUser> toCacheModel();
 

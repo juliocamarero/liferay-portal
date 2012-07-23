@@ -678,6 +678,11 @@ public class MBThreadWrapper implements MBThread, ModelWrapper<MBThread> {
 		return _mbThread.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_mbThread.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.messageboards.model.MBThread> toCacheModel() {
 		return _mbThread.toCacheModel();
 	}

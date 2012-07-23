@@ -501,6 +501,11 @@ public class RepositoryWrapper implements Repository, ModelWrapper<Repository> {
 		return _repository.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_repository.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Repository> toCacheModel() {
 		return _repository.toCacheModel();
 	}

@@ -798,6 +798,11 @@ public class DDMTemplateWrapper implements DDMTemplate,
 		return _ddmTemplate.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_ddmTemplate.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.dynamicdatamapping.model.DDMTemplate> toCacheModel() {
 		return _ddmTemplate.toCacheModel();
 	}

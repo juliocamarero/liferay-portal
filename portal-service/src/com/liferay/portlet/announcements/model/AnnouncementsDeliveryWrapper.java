@@ -344,6 +344,11 @@ public class AnnouncementsDeliveryWrapper implements AnnouncementsDelivery,
 		return _announcementsDelivery.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_announcementsDelivery.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.announcements.model.AnnouncementsDelivery> toCacheModel() {
 		return _announcementsDelivery.toCacheModel();
 	}

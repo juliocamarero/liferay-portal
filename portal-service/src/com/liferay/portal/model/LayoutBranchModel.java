@@ -22,6 +22,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the LayoutBranch service. Represents a row in the &quot;LayoutBranch&quot; database table, with each column mapped to a property of this class.
  *
@@ -244,6 +246,8 @@ public interface LayoutBranchModel extends BaseModel<LayoutBranch> {
 	public int compareTo(LayoutBranch layoutBranch);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<LayoutBranch> toCacheModel();
 

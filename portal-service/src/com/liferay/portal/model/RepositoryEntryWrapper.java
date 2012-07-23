@@ -244,6 +244,11 @@ public class RepositoryEntryWrapper implements RepositoryEntry,
 		return _repositoryEntry.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_repositoryEntry.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.RepositoryEntry> toCacheModel() {
 		return _repositoryEntry.toCacheModel();
 	}

@@ -195,6 +195,11 @@ public class UserGroupGroupRoleWrapper implements UserGroupGroupRole,
 		return _userGroupGroupRole.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_userGroupGroupRole.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.UserGroupGroupRole> toCacheModel() {
 		return _userGroupGroupRole.toCacheModel();
 	}

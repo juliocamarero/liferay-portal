@@ -23,6 +23,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the WikiPageResource service. Represents a row in the &quot;WikiPageResource&quot; database table, with each column mapped to a property of this class.
  *
@@ -138,6 +140,8 @@ public interface WikiPageResourceModel extends BaseModel<WikiPageResource> {
 	public int compareTo(WikiPageResource wikiPageResource);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<WikiPageResource> toCacheModel();
 

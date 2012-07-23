@@ -377,6 +377,11 @@ public class SubscriptionWrapper implements Subscription,
 		return _subscription.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_subscription.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Subscription> toCacheModel() {
 		return _subscription.toCacheModel();
 	}

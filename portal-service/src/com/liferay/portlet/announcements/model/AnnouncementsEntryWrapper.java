@@ -589,6 +589,11 @@ public class AnnouncementsEntryWrapper implements AnnouncementsEntry,
 		return _announcementsEntry.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_announcementsEntry.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.announcements.model.AnnouncementsEntry> toCacheModel() {
 		return _announcementsEntry.toCacheModel();
 	}

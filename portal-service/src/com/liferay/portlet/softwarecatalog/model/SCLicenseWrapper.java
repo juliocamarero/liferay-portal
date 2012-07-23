@@ -297,6 +297,11 @@ public class SCLicenseWrapper implements SCLicense, ModelWrapper<SCLicense> {
 		return _scLicense.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_scLicense.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.softwarecatalog.model.SCLicense> toCacheModel() {
 		return _scLicense.toCacheModel();
 	}

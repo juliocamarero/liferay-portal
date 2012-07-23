@@ -23,6 +23,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the DLFileEntryMetadata service. Represents a row in the &quot;DLFileEntryMetadata&quot; database table, with each column mapped to a property of this class.
  *
@@ -179,6 +181,8 @@ public interface DLFileEntryMetadataModel extends BaseModel<DLFileEntryMetadata>
 	public int compareTo(DLFileEntryMetadata dlFileEntryMetadata);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DLFileEntryMetadata> toCacheModel();
 

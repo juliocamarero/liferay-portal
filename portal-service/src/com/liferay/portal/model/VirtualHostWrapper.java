@@ -218,6 +218,11 @@ public class VirtualHostWrapper implements VirtualHost,
 		return _virtualHost.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_virtualHost.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.VirtualHost> toCacheModel() {
 		return _virtualHost.toCacheModel();
 	}

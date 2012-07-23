@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the ResourceTypePermission service. Represents a row in the &quot;ResourceTypePermission&quot; database table, with each column mapped to a property of this class.
  *
@@ -163,6 +165,8 @@ public interface ResourceTypePermissionModel extends BaseModel<ResourceTypePermi
 	public int compareTo(ResourceTypePermission resourceTypePermission);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<ResourceTypePermission> toCacheModel();
 

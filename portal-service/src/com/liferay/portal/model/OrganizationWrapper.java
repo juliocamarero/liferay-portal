@@ -402,6 +402,11 @@ public class OrganizationWrapper implements Organization,
 		return _organization.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_organization.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Organization> toCacheModel() {
 		return _organization.toCacheModel();
 	}

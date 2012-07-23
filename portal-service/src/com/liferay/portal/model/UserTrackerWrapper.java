@@ -339,6 +339,11 @@ public class UserTrackerWrapper implements UserTracker,
 		return _userTracker.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_userTracker.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.UserTracker> toCacheModel() {
 		return _userTracker.toCacheModel();
 	}

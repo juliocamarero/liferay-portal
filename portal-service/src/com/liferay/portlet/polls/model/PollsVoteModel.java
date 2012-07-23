@@ -26,6 +26,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the PollsVote service. Represents a row in the &quot;PollsVote&quot; database table, with each column mapped to a property of this class.
@@ -226,6 +227,8 @@ public interface PollsVoteModel extends AuditedModel, BaseModel<PollsVote> {
 	public int compareTo(PollsVote pollsVote);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<PollsVote> toCacheModel();
 

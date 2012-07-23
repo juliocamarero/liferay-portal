@@ -20,6 +20,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the ResourceBlockPermission service. Represents a row in the &quot;ResourceBlockPermission&quot; database table, with each column mapped to a property of this class.
  *
@@ -133,6 +135,8 @@ public interface ResourceBlockPermissionModel extends BaseModel<ResourceBlockPer
 	public int compareTo(ResourceBlockPermission resourceBlockPermission);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<ResourceBlockPermission> toCacheModel();
 

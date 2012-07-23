@@ -24,6 +24,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the DLFileRank service. Represents a row in the &quot;DLFileRank&quot; database table, with each column mapped to a property of this class.
@@ -202,6 +203,8 @@ public interface DLFileRankModel extends BaseModel<DLFileRank> {
 	public int compareTo(DLFileRank dlFileRank);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DLFileRank> toCacheModel();
 

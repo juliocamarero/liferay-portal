@@ -334,6 +334,11 @@ public class ExpandoValueWrapper implements ExpandoValue,
 		return _expandoValue.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_expandoValue.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.expando.model.ExpandoValue> toCacheModel() {
 		return _expandoValue.toCacheModel();
 	}

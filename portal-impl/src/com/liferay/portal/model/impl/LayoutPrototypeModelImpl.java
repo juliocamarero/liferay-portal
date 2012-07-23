@@ -505,6 +505,12 @@ public class LayoutPrototypeModelImpl extends BaseModelImpl<LayoutPrototype>
 		return (int)getPrimaryKey();
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		String name = this.getName(defaultImportLocale);
+
+		this.setName(name, defaultImportLocale, defaultImportLocale);
+	}
+
 	@Override
 	public void resetOriginalValues() {
 		LayoutPrototypeModelImpl layoutPrototypeModelImpl = this;

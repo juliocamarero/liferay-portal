@@ -1172,6 +1172,11 @@ public class UserWrapper implements User, ModelWrapper<User> {
 		return _user.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_user.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.User> toCacheModel() {
 		return _user.toCacheModel();
 	}

@@ -837,6 +837,11 @@ public class MBMailingListWrapper implements MBMailingList,
 		return _mbMailingList.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_mbMailingList.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.messageboards.model.MBMailingList> toCacheModel() {
 		return _mbMailingList.toCacheModel();
 	}

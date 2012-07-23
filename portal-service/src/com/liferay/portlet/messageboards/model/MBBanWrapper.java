@@ -360,6 +360,11 @@ public class MBBanWrapper implements MBBan, ModelWrapper<MBBan> {
 		return _mbBan.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_mbBan.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.messageboards.model.MBBan> toCacheModel() {
 		return _mbBan.toCacheModel();
 	}

@@ -33,6 +33,7 @@ import java.io.Serializable;
 import java.sql.Types;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -378,6 +379,9 @@ public class SocialRelationModelImpl extends BaseModelImpl<SocialRelation>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
 	}
 
 	@Override

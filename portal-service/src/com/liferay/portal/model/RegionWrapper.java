@@ -251,6 +251,11 @@ public class RegionWrapper implements Region, ModelWrapper<Region> {
 		return _region.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_region.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Region> toCacheModel() {
 		return _region.toCacheModel();
 	}

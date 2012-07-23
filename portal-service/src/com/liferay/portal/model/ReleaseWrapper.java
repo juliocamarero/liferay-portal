@@ -352,6 +352,11 @@ public class ReleaseWrapper implements Release, ModelWrapper<Release> {
 		return _release.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_release.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Release> toCacheModel() {
 		return _release.toCacheModel();
 	}

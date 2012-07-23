@@ -25,6 +25,8 @@ import java.io.Serializable;
 
 import java.sql.Blob;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the DLContent service. Represents a row in the &quot;DLContent&quot; database table, with each column mapped to a property of this class.
  *
@@ -196,6 +198,8 @@ public interface DLContentModel extends BaseModel<DLContent> {
 	public int compareTo(DLContent dlContent);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DLContent> toCacheModel();
 

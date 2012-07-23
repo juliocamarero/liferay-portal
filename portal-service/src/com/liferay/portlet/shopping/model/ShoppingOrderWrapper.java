@@ -1464,6 +1464,11 @@ public class ShoppingOrderWrapper implements ShoppingOrder,
 		return _shoppingOrder.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_shoppingOrder.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.shopping.model.ShoppingOrder> toCacheModel() {
 		return _shoppingOrder.toCacheModel();
 	}

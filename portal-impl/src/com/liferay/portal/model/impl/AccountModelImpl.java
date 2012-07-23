@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -594,6 +595,9 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
 	}
 
 	@Override

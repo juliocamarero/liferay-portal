@@ -380,6 +380,11 @@ public class SocialActivityLimitWrapper implements SocialActivityLimit,
 		return _socialActivityLimit.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_socialActivityLimit.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.social.model.SocialActivityLimit> toCacheModel() {
 		return _socialActivityLimit.toCacheModel();
 	}

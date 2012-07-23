@@ -446,6 +446,11 @@ public class DLSyncWrapper implements DLSync, ModelWrapper<DLSync> {
 		return _dlSync.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_dlSync.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.documentlibrary.model.DLSync> toCacheModel() {
 		return _dlSync.toCacheModel();
 	}

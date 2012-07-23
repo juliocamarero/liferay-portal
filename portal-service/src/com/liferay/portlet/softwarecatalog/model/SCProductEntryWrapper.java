@@ -542,6 +542,11 @@ public class SCProductEntryWrapper implements SCProductEntry,
 		return _scProductEntry.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_scProductEntry.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.softwarecatalog.model.SCProductEntry> toCacheModel() {
 		return _scProductEntry.toCacheModel();
 	}

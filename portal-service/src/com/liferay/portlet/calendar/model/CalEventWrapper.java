@@ -742,6 +742,11 @@ public class CalEventWrapper implements CalEvent, ModelWrapper<CalEvent> {
 		return _calEvent.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_calEvent.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.calendar.model.CalEvent> toCacheModel() {
 		return _calEvent.toCacheModel();
 	}

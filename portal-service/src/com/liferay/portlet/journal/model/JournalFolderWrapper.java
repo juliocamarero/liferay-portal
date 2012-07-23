@@ -417,6 +417,11 @@ public class JournalFolderWrapper implements JournalFolder,
 		return _journalFolder.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_journalFolder.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.journal.model.JournalFolder> toCacheModel() {
 		return _journalFolder.toCacheModel();
 	}

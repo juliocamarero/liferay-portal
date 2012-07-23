@@ -268,6 +268,11 @@ public class ResourceBlockWrapper implements ResourceBlock,
 		return _resourceBlock.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_resourceBlock.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.ResourceBlock> toCacheModel() {
 		return _resourceBlock.toCacheModel();
 	}

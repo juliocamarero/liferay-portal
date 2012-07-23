@@ -499,6 +499,11 @@ public class SocialRequestWrapper implements SocialRequest,
 		return _socialRequest.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_socialRequest.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.social.model.SocialRequest> toCacheModel() {
 		return _socialRequest.toCacheModel();
 	}

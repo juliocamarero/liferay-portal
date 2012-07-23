@@ -27,6 +27,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the DLFolder service. Represents a row in the &quot;DLFolder&quot; database table, with each column mapped to a property of this class.
@@ -483,6 +484,8 @@ public interface DLFolderModel extends BaseModel<DLFolder>, GroupedModel,
 	public int compareTo(DLFolder dlFolder);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DLFolder> toCacheModel();
 

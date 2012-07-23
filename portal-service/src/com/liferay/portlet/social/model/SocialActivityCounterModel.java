@@ -24,6 +24,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the SocialActivityCounter service. Represents a row in the &quot;SocialActivityCounter&quot; database table, with each column mapped to a property of this class.
  *
@@ -281,6 +283,8 @@ public interface SocialActivityCounterModel extends AttachedModel,
 	public int compareTo(SocialActivityCounter socialActivityCounter);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<SocialActivityCounter> toCacheModel();
 

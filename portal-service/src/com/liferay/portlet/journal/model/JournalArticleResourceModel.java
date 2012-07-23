@@ -23,6 +23,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the JournalArticleResource service. Represents a row in the &quot;JournalArticleResource&quot; database table, with each column mapped to a property of this class.
  *
@@ -138,6 +140,8 @@ public interface JournalArticleResourceModel extends BaseModel<JournalArticleRes
 	public int compareTo(JournalArticleResource journalArticleResource);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<JournalArticleResource> toCacheModel();
 

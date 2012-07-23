@@ -192,6 +192,11 @@ public class ListTypeWrapper implements ListType, ModelWrapper<ListType> {
 		return _listType.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_listType.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.ListType> toCacheModel() {
 		return _listType.toCacheModel();
 	}

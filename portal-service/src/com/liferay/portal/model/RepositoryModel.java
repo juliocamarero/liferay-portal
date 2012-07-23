@@ -23,6 +23,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the Repository service. Represents a row in the &quot;Repository&quot; database table, with each column mapped to a property of this class.
@@ -307,6 +308,8 @@ public interface RepositoryModel extends BaseModel<Repository>, GroupedModel {
 	public int compareTo(Repository repository);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<Repository> toCacheModel();
 

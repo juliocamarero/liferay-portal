@@ -296,6 +296,11 @@ public class SocialRelationWrapper implements SocialRelation,
 		return _socialRelation.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_socialRelation.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.social.model.SocialRelation> toCacheModel() {
 		return _socialRelation.toCacheModel();
 	}

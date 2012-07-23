@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the VirtualHost service. Represents a row in the &quot;VirtualHost&quot; database table, with each column mapped to a property of this class.
  *
@@ -135,6 +137,8 @@ public interface VirtualHostModel extends BaseModel<VirtualHost> {
 	public int compareTo(VirtualHost virtualHost);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<VirtualHost> toCacheModel();
 

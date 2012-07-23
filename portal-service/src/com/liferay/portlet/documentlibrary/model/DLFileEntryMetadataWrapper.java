@@ -296,6 +296,11 @@ public class DLFileEntryMetadataWrapper implements DLFileEntryMetadata,
 		return _dlFileEntryMetadata.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_dlFileEntryMetadata.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata> toCacheModel() {
 		return _dlFileEntryMetadata.toCacheModel();
 	}

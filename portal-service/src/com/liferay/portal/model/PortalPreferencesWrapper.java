@@ -219,6 +219,11 @@ public class PortalPreferencesWrapper implements PortalPreferences,
 		return _portalPreferences.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_portalPreferences.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.PortalPreferences> toCacheModel() {
 		return _portalPreferences.toCacheModel();
 	}

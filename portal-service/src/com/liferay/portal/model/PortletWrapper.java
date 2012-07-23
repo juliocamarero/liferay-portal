@@ -251,6 +251,11 @@ public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 		return _portlet.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_portlet.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Portlet> toCacheModel() {
 		return _portlet.toCacheModel();
 	}

@@ -221,6 +221,11 @@ public class WikiPageResourceWrapper implements WikiPageResource,
 		return _wikiPageResource.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_wikiPageResource.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.wiki.model.WikiPageResource> toCacheModel() {
 		return _wikiPageResource.toCacheModel();
 	}

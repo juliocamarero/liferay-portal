@@ -436,6 +436,11 @@ public class EmailAddressWrapper implements EmailAddress,
 		return _emailAddress.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_emailAddress.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.EmailAddress> toCacheModel() {
 		return _emailAddress.toCacheModel();
 	}

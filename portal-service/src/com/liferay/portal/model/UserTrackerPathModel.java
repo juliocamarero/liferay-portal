@@ -22,6 +22,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the UserTrackerPath service. Represents a row in the &quot;UserTrackerPath&quot; database table, with each column mapped to a property of this class.
@@ -137,6 +138,8 @@ public interface UserTrackerPathModel extends BaseModel<UserTrackerPath> {
 	public int compareTo(UserTrackerPath userTrackerPath);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<UserTrackerPath> toCacheModel();
 

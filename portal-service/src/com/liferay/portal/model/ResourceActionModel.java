@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the ResourceAction service. Represents a row in the &quot;ResourceAction&quot; database table, with each column mapped to a property of this class.
  *
@@ -136,6 +138,8 @@ public interface ResourceActionModel extends BaseModel<ResourceAction> {
 	public int compareTo(ResourceAction resourceAction);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<ResourceAction> toCacheModel();
 

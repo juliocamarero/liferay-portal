@@ -23,6 +23,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the ShoppingItemField service. Represents a row in the &quot;ShoppingItemField&quot; database table, with each column mapped to a property of this class.
  *
@@ -153,6 +155,8 @@ public interface ShoppingItemFieldModel extends BaseModel<ShoppingItemField> {
 	public int compareTo(ShoppingItemField shoppingItemField);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<ShoppingItemField> toCacheModel();
 

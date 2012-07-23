@@ -435,6 +435,11 @@ public class WebsiteWrapper implements Website, ModelWrapper<Website> {
 		return _website.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_website.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Website> toCacheModel() {
 		return _website.toCacheModel();
 	}

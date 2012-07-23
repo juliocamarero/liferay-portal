@@ -319,6 +319,11 @@ public class ResourcePermissionWrapper implements ResourcePermission,
 		return _resourcePermission.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_resourcePermission.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.ResourcePermission> toCacheModel() {
 		return _resourcePermission.toCacheModel();
 	}

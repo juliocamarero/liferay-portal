@@ -392,6 +392,11 @@ public class ShoppingCategoryWrapper implements ShoppingCategory,
 		return _shoppingCategory.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_shoppingCategory.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.shopping.model.ShoppingCategory> toCacheModel() {
 		return _shoppingCategory.toCacheModel();
 	}

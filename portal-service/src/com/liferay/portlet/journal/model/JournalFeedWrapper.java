@@ -719,6 +719,11 @@ public class JournalFeedWrapper implements JournalFeed,
 		return _journalFeed.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_journalFeed.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.journal.model.JournalFeed> toCacheModel() {
 		return _journalFeed.toCacheModel();
 	}

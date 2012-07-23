@@ -529,6 +529,12 @@ public class DDMContentModelImpl extends BaseModelImpl<DDMContent>
 		return (int)getPrimaryKey();
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		String name = this.getName(defaultImportLocale);
+
+		this.setName(name, defaultImportLocale, defaultImportLocale);
+	}
+
 	@Override
 	public void resetOriginalValues() {
 		DDMContentModelImpl ddmContentModelImpl = this;

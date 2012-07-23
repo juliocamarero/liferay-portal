@@ -828,6 +828,11 @@ public class JournalTemplateWrapper implements JournalTemplate,
 		return _journalTemplate.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_journalTemplate.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.journal.model.JournalTemplate> toCacheModel() {
 		return _journalTemplate.toCacheModel();
 	}

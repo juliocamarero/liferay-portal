@@ -706,6 +706,11 @@ public class LayoutSetBranchWrapper implements LayoutSetBranch,
 		return _layoutSetBranch.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_layoutSetBranch.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.LayoutSetBranch> toCacheModel() {
 		return _layoutSetBranch.toCacheModel();
 	}

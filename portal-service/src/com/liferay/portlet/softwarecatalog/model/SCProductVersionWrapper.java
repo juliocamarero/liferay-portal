@@ -451,6 +451,11 @@ public class SCProductVersionWrapper implements SCProductVersion,
 		return _scProductVersion.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_scProductVersion.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.softwarecatalog.model.SCProductVersion> toCacheModel() {
 		return _scProductVersion.toCacheModel();
 	}

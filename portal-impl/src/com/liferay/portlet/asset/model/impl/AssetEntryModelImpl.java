@@ -1146,6 +1146,21 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 		return (int)getPrimaryKey();
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		String title = this.getTitle(defaultImportLocale);
+
+		this.setTitle(title, defaultImportLocale, defaultImportLocale);
+
+		String description = this.getDescription(defaultImportLocale);
+
+		this.setDescription(description, defaultImportLocale,
+			defaultImportLocale);
+
+		String summary = this.getSummary(defaultImportLocale);
+
+		this.setSummary(summary, defaultImportLocale, defaultImportLocale);
+	}
+
 	@Override
 	public void resetOriginalValues() {
 		AssetEntryModelImpl assetEntryModelImpl = this;

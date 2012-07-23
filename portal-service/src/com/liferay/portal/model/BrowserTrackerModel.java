@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the BrowserTracker service. Represents a row in the &quot;BrowserTracker&quot; database table, with each column mapped to a property of this class.
  *
@@ -135,6 +137,8 @@ public interface BrowserTrackerModel extends BaseModel<BrowserTracker> {
 	public int compareTo(BrowserTracker browserTracker);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<BrowserTracker> toCacheModel();
 

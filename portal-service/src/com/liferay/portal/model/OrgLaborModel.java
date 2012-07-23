@@ -20,6 +20,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the OrgLabor service. Represents a row in the &quot;OrgLabor&quot; database table, with each column mapped to a property of this class.
  *
@@ -315,6 +317,8 @@ public interface OrgLaborModel extends BaseModel<OrgLabor> {
 	public int compareTo(OrgLabor orgLabor);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<OrgLabor> toCacheModel();
 

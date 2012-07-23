@@ -296,6 +296,11 @@ public class ExpandoColumnWrapper implements ExpandoColumn,
 		return _expandoColumn.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_expandoColumn.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.expando.model.ExpandoColumn> toCacheModel() {
 		return _expandoColumn.toCacheModel();
 	}

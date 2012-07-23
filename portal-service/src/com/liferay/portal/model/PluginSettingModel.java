@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the PluginSetting service. Represents a row in the &quot;PluginSetting&quot; database table, with each column mapped to a property of this class.
  *
@@ -172,6 +174,8 @@ public interface PluginSettingModel extends BaseModel<PluginSetting> {
 	public int compareTo(PluginSetting pluginSetting);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<PluginSetting> toCacheModel();
 

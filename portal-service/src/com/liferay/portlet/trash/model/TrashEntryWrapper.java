@@ -403,6 +403,11 @@ public class TrashEntryWrapper implements TrashEntry, ModelWrapper<TrashEntry> {
 		return _trashEntry.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_trashEntry.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.trash.model.TrashEntry> toCacheModel() {
 		return _trashEntry.toCacheModel();
 	}

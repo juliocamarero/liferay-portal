@@ -461,6 +461,8 @@ public interface JournalStructureModel extends BaseModel<JournalStructure>,
 
 	public int hashCode();
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
+
 	public CacheModel<JournalStructure> toCacheModel();
 
 	public JournalStructure toEscapedModel();
