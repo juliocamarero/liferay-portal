@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,6 +32,10 @@ public class LocaleUtil {
 
 	public static Locale fromLanguageId(String languageId) {
 		return getInstance()._fromLanguageId(languageId);
+	}
+
+	public static Locale[] fromLanguageIds(List<String> languageIds) {
+		return getInstance()._fromLanguageIds(languageIds);
 	}
 
 	public static Locale[] fromLanguageIds(String[] languageIds) {
@@ -147,6 +152,16 @@ public class LocaleUtil {
 		}
 
 		return locale;
+	}
+
+	private Locale[] _fromLanguageIds(List<String> languageIds) {
+		Locale[] locales = new Locale[languageIds.size()];
+
+		for (int i = 0; i < languageIds.size(); i++) {
+			locales[i] = _fromLanguageId(languageIds.get(i));
+		}
+
+		return locales;
 	}
 
 	private Locale[] _fromLanguageIds(String[] languageIds) {
