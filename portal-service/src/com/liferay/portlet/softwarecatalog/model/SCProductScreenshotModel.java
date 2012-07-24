@@ -22,6 +22,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the SCProductScreenshot service. Represents a row in the &quot;SCProductScreenshot&quot; database table, with each column mapped to a property of this class.
  *
@@ -177,6 +179,8 @@ public interface SCProductScreenshotModel extends BaseModel<SCProductScreenshot>
 	public int compareTo(SCProductScreenshot scProductScreenshot);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<SCProductScreenshot> toCacheModel();
 

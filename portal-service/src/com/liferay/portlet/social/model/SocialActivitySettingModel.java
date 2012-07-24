@@ -23,6 +23,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the SocialActivitySetting service. Represents a row in the &quot;SocialActivitySetting&quot; database table, with each column mapped to a property of this class.
  *
@@ -189,6 +191,8 @@ public interface SocialActivitySettingModel extends BaseModel<SocialActivitySett
 	public int compareTo(SocialActivitySetting socialActivitySetting);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<SocialActivitySetting> toCacheModel();
 

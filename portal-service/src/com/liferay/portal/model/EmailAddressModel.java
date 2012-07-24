@@ -23,6 +23,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the EmailAddress service. Represents a row in the &quot;EmailAddress&quot; database table, with each column mapped to a property of this class.
@@ -269,6 +270,8 @@ public interface EmailAddressModel extends AttachedModel, AuditedModel,
 	public int compareTo(EmailAddress emailAddress);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<EmailAddress> toCacheModel();
 

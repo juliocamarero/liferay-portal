@@ -310,6 +310,11 @@ public class SocialActivitySettingWrapper implements SocialActivitySetting,
 		return _socialActivitySetting.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_socialActivitySetting.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.social.model.SocialActivitySetting> toCacheModel() {
 		return _socialActivitySetting.toCacheModel();
 	}

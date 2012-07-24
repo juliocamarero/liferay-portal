@@ -518,6 +518,11 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 		return _group.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_group.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Group> toCacheModel() {
 		return _group.toCacheModel();
 	}

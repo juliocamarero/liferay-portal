@@ -422,6 +422,11 @@ public class LockWrapper implements Lock, ModelWrapper<Lock> {
 		return _lock.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_lock.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Lock> toCacheModel() {
 		return _lock.toCacheModel();
 	}

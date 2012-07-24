@@ -426,6 +426,11 @@ public class ShoppingCartWrapper implements ShoppingCart,
 		return _shoppingCart.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_shoppingCart.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.shopping.model.ShoppingCart> toCacheModel() {
 		return _shoppingCart.toCacheModel();
 	}

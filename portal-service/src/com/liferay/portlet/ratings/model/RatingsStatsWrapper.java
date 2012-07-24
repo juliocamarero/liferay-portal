@@ -284,6 +284,11 @@ public class RatingsStatsWrapper implements RatingsStats,
 		return _ratingsStats.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_ratingsStats.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.ratings.model.RatingsStats> toCacheModel() {
 		return _ratingsStats.toCacheModel();
 	}

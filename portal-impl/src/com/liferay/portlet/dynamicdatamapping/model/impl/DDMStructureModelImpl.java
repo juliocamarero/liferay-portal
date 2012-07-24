@@ -825,6 +825,17 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 		return (int)getPrimaryKey();
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		String name = this.getName(defaultImportLocale);
+
+		this.setName(name, defaultImportLocale, defaultImportLocale);
+
+		String description = this.getDescription(defaultImportLocale);
+
+		this.setDescription(description, defaultImportLocale,
+			defaultImportLocale);
+	}
+
 	@Override
 	public void resetOriginalValues() {
 		DDMStructureModelImpl ddmStructureModelImpl = this;

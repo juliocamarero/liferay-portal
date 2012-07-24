@@ -306,6 +306,11 @@ public class JournalContentSearchWrapper implements JournalContentSearch,
 		return _journalContentSearch.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_journalContentSearch.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.journal.model.JournalContentSearch> toCacheModel() {
 		return _journalContentSearch.toCacheModel();
 	}

@@ -380,6 +380,11 @@ public class RatingsEntryWrapper implements RatingsEntry,
 		return _ratingsEntry.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_ratingsEntry.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.ratings.model.RatingsEntry> toCacheModel() {
 		return _ratingsEntry.toCacheModel();
 	}

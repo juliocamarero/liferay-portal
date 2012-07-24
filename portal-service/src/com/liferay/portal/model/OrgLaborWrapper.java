@@ -542,6 +542,11 @@ public class OrgLaborWrapper implements OrgLabor, ModelWrapper<OrgLabor> {
 		return _orgLabor.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_orgLabor.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.OrgLabor> toCacheModel() {
 		return _orgLabor.toCacheModel();
 	}

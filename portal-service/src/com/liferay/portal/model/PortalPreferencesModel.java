@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the PortalPreferences service. Represents a row in the &quot;PortalPreferences&quot; database table, with each column mapped to a property of this class.
  *
@@ -135,6 +137,8 @@ public interface PortalPreferencesModel extends BaseModel<PortalPreferences> {
 	public int compareTo(PortalPreferences portalPreferences);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<PortalPreferences> toCacheModel();
 

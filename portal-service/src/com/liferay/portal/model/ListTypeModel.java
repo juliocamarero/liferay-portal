@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the ListType service. Represents a row in the &quot;ListType&quot; database table, with each column mapped to a property of this class.
  *
@@ -122,6 +124,8 @@ public interface ListTypeModel extends BaseModel<ListType> {
 	public int compareTo(ListType listType);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<ListType> toCacheModel();
 

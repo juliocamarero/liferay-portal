@@ -619,6 +619,11 @@ public class AddressWrapper implements Address, ModelWrapper<Address> {
 		return _address.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_address.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Address> toCacheModel() {
 		return _address.toCacheModel();
 	}

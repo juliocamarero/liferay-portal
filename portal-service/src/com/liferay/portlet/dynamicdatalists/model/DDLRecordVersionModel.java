@@ -26,6 +26,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the DDLRecordVersion service. Represents a row in the &quot;DDLRecordVersion&quot; database table, with each column mapped to a property of this class.
@@ -396,6 +397,8 @@ public interface DDLRecordVersionModel extends BaseModel<DDLRecordVersion>,
 	public int compareTo(DDLRecordVersion ddlRecordVersion);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DDLRecordVersion> toCacheModel();
 

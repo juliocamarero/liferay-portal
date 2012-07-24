@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the Shard service. Represents a row in the &quot;Shard&quot; database table, with each column mapped to a property of this class.
  *
@@ -144,6 +146,8 @@ public interface ShardModel extends AttachedModel, BaseModel<Shard> {
 	public int compareTo(Shard shard);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<Shard> toCacheModel();
 

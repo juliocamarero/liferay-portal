@@ -222,6 +222,11 @@ public class JournalArticleResourceWrapper implements JournalArticleResource,
 		return _journalArticleResource.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_journalArticleResource.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.journal.model.JournalArticleResource> toCacheModel() {
 		return _journalArticleResource.toCacheModel();
 	}

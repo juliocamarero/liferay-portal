@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the ServiceComponent service. Represents a row in the &quot;ServiceComponent&quot; database table, with each column mapped to a property of this class.
  *
@@ -150,6 +152,8 @@ public interface ServiceComponentModel extends BaseModel<ServiceComponent> {
 	public int compareTo(ServiceComponent serviceComponent);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<ServiceComponent> toCacheModel();
 

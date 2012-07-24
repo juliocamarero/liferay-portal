@@ -402,6 +402,11 @@ public class PortletItemWrapper implements PortletItem,
 		return _portletItem.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_portletItem.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.PortletItem> toCacheModel() {
 		return _portletItem.toCacheModel();
 	}

@@ -17,6 +17,10 @@ package com.liferay.portal.kernel.util;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +40,14 @@ import javax.portlet.PortletRequest;
  * @see    Localization
  */
 public class LocalizationUtil {
+
+	public static void cloneDDMStructureLocale(
+			DDMStructure structure, Locale fromLocale, Locale toLocale)
+		throws DocumentException, IOException {
+
+		getLocalization().cloneDDMStructureLocale(
+			structure, fromLocale, toLocale);
+	}
 
 	public static Object deserialize(JSONObject jsonObject) {
 		return getLocalization().deserialize(jsonObject);
@@ -170,6 +182,13 @@ public class LocalizationUtil {
 
 		return getLocalization().getPreferencesValues(
 			preferences, key, languageId, useDefault);
+	}
+
+	public static Locale prepareLocalesForImport(
+			long classPK, Locale defaultLocale, Locale[] availableLocales) {
+
+		return getLocalization().prepareLocalesForImport(
+			classPK, defaultLocale, availableLocales);
 	}
 
 	public static String removeLocalization(

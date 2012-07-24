@@ -356,6 +356,11 @@ public class TicketWrapper implements Ticket, ModelWrapper<Ticket> {
 		return _ticket.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_ticket.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Ticket> toCacheModel() {
 		return _ticket.toCacheModel();
 	}

@@ -625,6 +625,11 @@ public class DDLRecordVersionWrapper implements DDLRecordVersion,
 		return _ddlRecordVersion.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_ddlRecordVersion.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion> toCacheModel() {
 		return _ddlRecordVersion.toCacheModel();
 	}

@@ -22,6 +22,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the UserNotificationEvent service. Represents a row in the &quot;UserNotificationEvent&quot; database table, with each column mapped to a property of this class.
  *
@@ -230,6 +232,8 @@ public interface UserNotificationEventModel extends BaseModel<UserNotificationEv
 	public int compareTo(UserNotificationEvent userNotificationEvent);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<UserNotificationEvent> toCacheModel();
 

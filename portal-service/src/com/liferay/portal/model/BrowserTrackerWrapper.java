@@ -213,6 +213,11 @@ public class BrowserTrackerWrapper implements BrowserTracker,
 		return _browserTracker.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_browserTracker.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.BrowserTracker> toCacheModel() {
 		return _browserTracker.toCacheModel();
 	}

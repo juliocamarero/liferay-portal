@@ -328,6 +328,11 @@ public class SocialActivityAchievementWrapper
 		return _socialActivityAchievement.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_socialActivityAchievement.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.social.model.SocialActivityAchievement> toCacheModel() {
 		return _socialActivityAchievement.toCacheModel();
 	}

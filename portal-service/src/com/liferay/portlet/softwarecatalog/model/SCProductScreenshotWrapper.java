@@ -296,6 +296,11 @@ public class SCProductScreenshotWrapper implements SCProductScreenshot,
 		return _scProductScreenshot.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_scProductScreenshot.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.softwarecatalog.model.SCProductScreenshot> toCacheModel() {
 		return _scProductScreenshot.toCacheModel();
 	}

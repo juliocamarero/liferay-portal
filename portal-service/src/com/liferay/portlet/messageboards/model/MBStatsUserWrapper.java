@@ -287,6 +287,11 @@ public class MBStatsUserWrapper implements MBStatsUser,
 		return _mbStatsUser.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_mbStatsUser.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.messageboards.model.MBStatsUser> toCacheModel() {
 		return _mbStatsUser.toCacheModel();
 	}

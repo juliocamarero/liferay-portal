@@ -23,6 +23,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the MBDiscussion service. Represents a row in the &quot;MBDiscussion&quot; database table, with each column mapped to a property of this class.
  *
@@ -145,6 +147,8 @@ public interface MBDiscussionModel extends AttachedModel, BaseModel<MBDiscussion
 	public int compareTo(MBDiscussion mbDiscussion);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<MBDiscussion> toCacheModel();
 

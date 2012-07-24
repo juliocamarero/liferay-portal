@@ -26,6 +26,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the AssetCategoryProperty service. Represents a row in the &quot;AssetCategoryProperty&quot; database table, with each column mapped to a property of this class.
@@ -229,6 +230,8 @@ public interface AssetCategoryPropertyModel extends AuditedModel,
 	public int compareTo(AssetCategoryProperty assetCategoryProperty);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<AssetCategoryProperty> toCacheModel();
 

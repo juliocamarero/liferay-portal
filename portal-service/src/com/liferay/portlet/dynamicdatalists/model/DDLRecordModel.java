@@ -26,6 +26,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the DDLRecord service. Represents a row in the &quot;DDLRecord&quot; database table, with each column mapped to a property of this class.
@@ -314,6 +315,8 @@ public interface DDLRecordModel extends BaseModel<DDLRecord>, GroupedModel {
 	public int compareTo(DDLRecord ddlRecord);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DDLRecord> toCacheModel();
 

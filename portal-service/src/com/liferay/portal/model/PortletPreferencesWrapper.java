@@ -269,6 +269,11 @@ public class PortletPreferencesWrapper implements PortletPreferences,
 		return _portletPreferences.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_portletPreferences.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.PortletPreferences> toCacheModel() {
 		return _portletPreferences.toCacheModel();
 	}

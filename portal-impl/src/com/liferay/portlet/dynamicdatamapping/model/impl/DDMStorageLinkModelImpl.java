@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.sql.Types;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -338,6 +339,9 @@ public class DDMStorageLinkModelImpl extends BaseModelImpl<DDMStorageLink>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
 	}
 
 	@Override

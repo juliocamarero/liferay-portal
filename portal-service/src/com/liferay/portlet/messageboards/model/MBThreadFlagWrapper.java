@@ -242,6 +242,11 @@ public class MBThreadFlagWrapper implements MBThreadFlag,
 		return _mbThreadFlag.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_mbThreadFlag.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.messageboards.model.MBThreadFlag> toCacheModel() {
 		return _mbThreadFlag.toCacheModel();
 	}

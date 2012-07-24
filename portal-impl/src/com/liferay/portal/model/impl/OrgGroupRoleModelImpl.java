@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.sql.Types;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -246,6 +247,9 @@ public class OrgGroupRoleModelImpl extends BaseModelImpl<OrgGroupRole>
 	@Override
 	public int hashCode() {
 		return getPrimaryKey().hashCode();
+	}
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
 	}
 
 	@Override

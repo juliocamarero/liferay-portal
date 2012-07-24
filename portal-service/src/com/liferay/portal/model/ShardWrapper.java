@@ -230,6 +230,11 @@ public class ShardWrapper implements Shard, ModelWrapper<Shard> {
 		return _shard.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_shard.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Shard> toCacheModel() {
 		return _shard.toCacheModel();
 	}

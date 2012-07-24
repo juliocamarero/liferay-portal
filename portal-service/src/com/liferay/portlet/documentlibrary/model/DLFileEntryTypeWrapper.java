@@ -392,6 +392,11 @@ public class DLFileEntryTypeWrapper implements DLFileEntryType,
 		return _dlFileEntryType.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_dlFileEntryType.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.documentlibrary.model.DLFileEntryType> toCacheModel() {
 		return _dlFileEntryType.toCacheModel();
 	}

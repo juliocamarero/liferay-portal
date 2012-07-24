@@ -246,6 +246,11 @@ public class ShoppingItemFieldWrapper implements ShoppingItemField,
 		return _shoppingItemField.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_shoppingItemField.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.shopping.model.ShoppingItemField> toCacheModel() {
 		return _shoppingItemField.toCacheModel();
 	}

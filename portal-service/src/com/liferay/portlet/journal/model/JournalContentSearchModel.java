@@ -23,6 +23,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the JournalContentSearch service. Represents a row in the &quot;JournalContentSearch&quot; database table, with each column mapped to a property of this class.
  *
@@ -187,6 +189,8 @@ public interface JournalContentSearchModel extends BaseModel<JournalContentSearc
 	public int compareTo(JournalContentSearch journalContentSearch);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<JournalContentSearch> toCacheModel();
 

@@ -850,6 +850,11 @@ public class BlogsEntryWrapper implements BlogsEntry, ModelWrapper<BlogsEntry> {
 		return _blogsEntry.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_blogsEntry.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.blogs.model.BlogsEntry> toCacheModel() {
 		return _blogsEntry.toCacheModel();
 	}

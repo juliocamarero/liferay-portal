@@ -335,6 +335,11 @@ public class CountryWrapper implements Country, ModelWrapper<Country> {
 		return _country.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_country.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Country> toCacheModel() {
 		return _country.toCacheModel();
 	}

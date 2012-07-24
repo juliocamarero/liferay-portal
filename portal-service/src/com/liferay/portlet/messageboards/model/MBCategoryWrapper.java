@@ -516,6 +516,11 @@ public class MBCategoryWrapper implements MBCategory, ModelWrapper<MBCategory> {
 		return _mbCategory.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_mbCategory.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.messageboards.model.MBCategory> toCacheModel() {
 		return _mbCategory.toCacheModel();
 	}

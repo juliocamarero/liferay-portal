@@ -410,6 +410,11 @@ public class MembershipRequestWrapper implements MembershipRequest,
 		return _membershipRequest.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_membershipRequest.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.MembershipRequest> toCacheModel() {
 		return _membershipRequest.toCacheModel();
 	}

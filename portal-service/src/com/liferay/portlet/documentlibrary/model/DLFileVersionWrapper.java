@@ -850,6 +850,11 @@ public class DLFileVersionWrapper implements DLFileVersion,
 		return _dlFileVersion.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_dlFileVersion.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.documentlibrary.model.DLFileVersion> toCacheModel() {
 		return _dlFileVersion.toCacheModel();
 	}

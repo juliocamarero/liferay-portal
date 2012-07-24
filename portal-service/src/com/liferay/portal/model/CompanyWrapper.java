@@ -385,6 +385,11 @@ public class CompanyWrapper implements Company, ModelWrapper<Company> {
 		return _company.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_company.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Company> toCacheModel() {
 		return _company.toCacheModel();
 	}

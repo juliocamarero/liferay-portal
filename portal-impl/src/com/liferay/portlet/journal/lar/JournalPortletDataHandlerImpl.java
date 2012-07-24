@@ -16,6 +16,7 @@ package com.liferay.portlet.journal.lar;
 
 import com.liferay.portal.NoSuchImageException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -30,6 +31,8 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -91,6 +94,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -329,6 +333,8 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 		JournalArticle article =
 			(JournalArticle)portletDataContext.getZipEntryAsObject(path);
+
+		prepareLanguagesForImport(article.getClassPK());
 
 		long userId = portletDataContext.getUserId(article.getUserUuid());
 
@@ -2418,6 +2424,42 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 			ArrayUtil.toStringArray(newLinksToLayout.toArray()));
 
 		return content;
+	}
+
+	protected static void prepareLanguagesForImport(long classPK)
+		throws PortalException, SystemException {
+
+		JournalArticle article = JournalArticleLocalServiceUtil.getArticle(
+			classPK);
+
+		Locale articleDefaultLocale = LocaleUtil.fromLanguageId(
+			article.getDefaultLocale());
+
+		String[] arrayArticleAvailableLocales = article.getAvailableLocales();
+
+		Locale[] articleAvailableLocales =
+			new Locale[arrayArticleAvailableLocales.length];
+
+		for (int i = 0;i < arrayArticleAvailableLocales.length; i++) {
+			articleAvailableLocales[i] = LocaleUtil.fromLanguageId(
+				arrayArticleAvailableLocales[i]);
+		}
+
+		Locale defaultImportLocale = LocalizationUtil.prepareLocalesForImport(
+			classPK, articleDefaultLocale, articleAvailableLocales);
+
+		String defaultExportedLanguageId = LocaleUtil.toLanguageId(
+			defaultImportLocale);
+
+		String content = LocalizationUtil.updateLocalization(
+			article.getContent(), "static-content",
+			LocalizationUtil.getLocalization(
+				article.getContent(), defaultExportedLanguageId),
+			defaultExportedLanguageId, defaultExportedLanguageId, true, true);
+
+		article.setContent(content);
+
+		article.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 
 	@Override

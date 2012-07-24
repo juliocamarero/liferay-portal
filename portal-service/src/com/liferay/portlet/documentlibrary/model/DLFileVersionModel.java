@@ -27,6 +27,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the DLFileVersion service. Represents a row in the &quot;DLFileVersion&quot; database table, with each column mapped to a property of this class.
@@ -530,6 +531,8 @@ public interface DLFileVersionModel extends BaseModel<DLFileVersion>,
 	public int compareTo(DLFileVersion dlFileVersion);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DLFileVersion> toCacheModel();
 

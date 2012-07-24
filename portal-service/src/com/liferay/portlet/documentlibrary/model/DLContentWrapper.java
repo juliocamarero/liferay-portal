@@ -322,6 +322,11 @@ public class DLContentWrapper implements DLContent, ModelWrapper<DLContent> {
 		return _dlContent.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_dlContent.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.documentlibrary.model.DLContent> toCacheModel() {
 		return _dlContent.toCacheModel();
 	}

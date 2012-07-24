@@ -234,6 +234,11 @@ public class ExpandoTableWrapper implements ExpandoTable,
 		return _expandoTable.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_expandoTable.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.expando.model.ExpandoTable> toCacheModel() {
 		return _expandoTable.toCacheModel();
 	}

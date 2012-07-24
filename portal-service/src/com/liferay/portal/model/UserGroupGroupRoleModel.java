@@ -21,6 +21,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the UserGroupGroupRole service. Represents a row in the &quot;UserGroupGroupRole&quot; database table, with each column mapped to a property of this class.
  *
@@ -120,6 +122,8 @@ public interface UserGroupGroupRoleModel extends BaseModel<UserGroupGroupRole> {
 	public int compareTo(UserGroupGroupRole userGroupGroupRole);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<UserGroupGroupRole> toCacheModel();
 

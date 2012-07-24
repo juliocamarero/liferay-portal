@@ -736,6 +736,17 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 		return (int)getPrimaryKey();
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		String name = this.getName(defaultImportLocale);
+
+		this.setName(name, defaultImportLocale, defaultImportLocale);
+
+		String description = this.getDescription(defaultImportLocale);
+
+		this.setDescription(description, defaultImportLocale,
+			defaultImportLocale);
+	}
+
 	@Override
 	public void resetOriginalValues() {
 		DDLRecordSetModelImpl ddlRecordSetModelImpl = this;

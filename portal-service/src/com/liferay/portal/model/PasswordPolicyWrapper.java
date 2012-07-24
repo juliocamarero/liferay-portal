@@ -1021,6 +1021,11 @@ public class PasswordPolicyWrapper implements PasswordPolicy,
 		return _passwordPolicy.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_passwordPolicy.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.PasswordPolicy> toCacheModel() {
 		return _passwordPolicy.toCacheModel();
 	}

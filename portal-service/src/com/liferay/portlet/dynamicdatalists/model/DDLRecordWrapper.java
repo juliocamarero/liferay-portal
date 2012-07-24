@@ -511,6 +511,11 @@ public class DDLRecordWrapper implements DDLRecord, ModelWrapper<DDLRecord> {
 		return _ddlRecord.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_ddlRecord.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.dynamicdatalists.model.DDLRecord> toCacheModel() {
 		return _ddlRecord.toCacheModel();
 	}

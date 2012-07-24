@@ -23,6 +23,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the Contact service. Represents a row in the &quot;Contact_&quot; database table, with each column mapped to a property of this class.
@@ -595,6 +596,8 @@ public interface ContactModel extends AttachedModel, AuditedModel,
 	public int compareTo(Contact contact);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<Contact> toCacheModel();
 

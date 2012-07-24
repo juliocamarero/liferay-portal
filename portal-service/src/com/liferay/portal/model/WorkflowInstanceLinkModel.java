@@ -23,6 +23,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the WorkflowInstanceLink service. Represents a row in the &quot;WorkflowInstanceLink&quot; database table, with each column mapped to a property of this class.
@@ -247,6 +248,8 @@ public interface WorkflowInstanceLinkModel extends AttachedModel,
 	public int compareTo(WorkflowInstanceLink workflowInstanceLink);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<WorkflowInstanceLink> toCacheModel();
 

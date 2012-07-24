@@ -169,6 +169,11 @@ public class CounterWrapper implements Counter, ModelWrapper<Counter> {
 		return _counter.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_counter.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.counter.model.Counter> toCacheModel() {
 		return _counter.toCacheModel();
 	}

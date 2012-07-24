@@ -390,6 +390,11 @@ public class ShoppingItemPriceWrapper implements ShoppingItemPrice,
 		return _shoppingItemPrice.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_shoppingItemPrice.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.shopping.model.ShoppingItemPrice> toCacheModel() {
 		return _shoppingItemPrice.toCacheModel();
 	}

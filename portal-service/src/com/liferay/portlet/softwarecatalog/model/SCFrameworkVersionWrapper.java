@@ -426,6 +426,11 @@ public class SCFrameworkVersionWrapper implements SCFrameworkVersion,
 		return _scFrameworkVersion.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_scFrameworkVersion.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion> toCacheModel() {
 		return _scFrameworkVersion.toCacheModel();
 	}

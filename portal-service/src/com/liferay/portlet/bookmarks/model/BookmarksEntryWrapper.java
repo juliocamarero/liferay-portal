@@ -517,6 +517,11 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 		return _bookmarksEntry.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_bookmarksEntry.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.bookmarks.model.BookmarksEntry> toCacheModel() {
 		return _bookmarksEntry.toCacheModel();
 	}

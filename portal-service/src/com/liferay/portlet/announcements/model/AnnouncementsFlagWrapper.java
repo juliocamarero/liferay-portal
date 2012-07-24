@@ -267,6 +267,11 @@ public class AnnouncementsFlagWrapper implements AnnouncementsFlag,
 		return _announcementsFlag.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_announcementsFlag.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.announcements.model.AnnouncementsFlag> toCacheModel() {
 		return _announcementsFlag.toCacheModel();
 	}

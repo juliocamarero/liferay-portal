@@ -36,6 +36,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -403,6 +404,9 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
 	}
 
 	@Override

@@ -365,6 +365,11 @@ public class AssetLinkWrapper implements AssetLink, ModelWrapper<AssetLink> {
 		return _assetLink.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_assetLink.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.asset.model.AssetLink> toCacheModel() {
 		return _assetLink.toCacheModel();
 	}

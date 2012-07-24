@@ -26,6 +26,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the BookmarksEntry service. Represents a row in the &quot;BookmarksEntry&quot; database table, with each column mapped to a property of this class.
@@ -315,6 +316,8 @@ public interface BookmarksEntryModel extends BaseModel<BookmarksEntry>,
 	public int compareTo(BookmarksEntry bookmarksEntry);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<BookmarksEntry> toCacheModel();
 

@@ -368,6 +368,11 @@ public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 		return _assetCategoryProperty.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_assetCategoryProperty.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.asset.model.AssetCategoryProperty> toCacheModel() {
 		return _assetCategoryProperty.toCacheModel();
 	}

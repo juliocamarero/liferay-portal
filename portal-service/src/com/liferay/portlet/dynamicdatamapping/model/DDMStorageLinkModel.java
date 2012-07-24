@@ -24,6 +24,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the DDMStorageLink service. Represents a row in the &quot;DDMStorageLink&quot; database table, with each column mapped to a property of this class.
  *
@@ -162,6 +164,8 @@ public interface DDMStorageLinkModel extends AttachedModel,
 	public int compareTo(DDMStorageLink ddmStorageLink);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DDMStorageLink> toCacheModel();
 

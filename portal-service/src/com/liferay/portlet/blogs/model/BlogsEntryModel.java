@@ -27,6 +27,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the BlogsEntry service. Represents a row in the &quot;BlogsEntry&quot; database table, with each column mapped to a property of this class.
@@ -536,6 +537,8 @@ public interface BlogsEntryModel extends BaseModel<BlogsEntry>, GroupedModel,
 	public int compareTo(BlogsEntry blogsEntry);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<BlogsEntry> toCacheModel();
 

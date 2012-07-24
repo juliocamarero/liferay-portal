@@ -263,6 +263,11 @@ public class UserIdMapperWrapper implements UserIdMapper,
 		return _userIdMapper.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_userIdMapper.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.UserIdMapper> toCacheModel() {
 		return _userIdMapper.toCacheModel();
 	}

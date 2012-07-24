@@ -277,6 +277,11 @@ public class PluginSettingWrapper implements PluginSetting,
 		return _pluginSetting.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_pluginSetting.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.PluginSetting> toCacheModel() {
 		return _pluginSetting.toCacheModel();
 	}

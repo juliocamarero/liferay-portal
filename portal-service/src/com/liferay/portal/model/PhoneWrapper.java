@@ -460,6 +460,11 @@ public class PhoneWrapper implements Phone, ModelWrapper<Phone> {
 		return _phone.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_phone.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Phone> toCacheModel() {
 		return _phone.toCacheModel();
 	}

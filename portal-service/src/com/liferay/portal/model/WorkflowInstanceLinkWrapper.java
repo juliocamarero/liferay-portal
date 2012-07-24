@@ -405,6 +405,11 @@ public class WorkflowInstanceLinkWrapper implements WorkflowInstanceLink,
 		return _workflowInstanceLink.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_workflowInstanceLink.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.WorkflowInstanceLink> toCacheModel() {
 		return _workflowInstanceLink.toCacheModel();
 	}

@@ -22,6 +22,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The base model interface for the Release service. Represents a row in the &quot;Release_&quot; database table, with each column mapped to a property of this class.
@@ -215,6 +216,8 @@ public interface ReleaseModel extends BaseModel<Release> {
 	public int compareTo(Release release);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<Release> toCacheModel();
 

@@ -415,6 +415,11 @@ public class WikiNodeWrapper implements WikiNode, ModelWrapper<WikiNode> {
 		return _wikiNode.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_wikiNode.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.wiki.model.WikiNode> toCacheModel() {
 		return _wikiNode.toCacheModel();
 	}

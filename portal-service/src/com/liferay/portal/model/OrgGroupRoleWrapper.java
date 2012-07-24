@@ -194,6 +194,11 @@ public class OrgGroupRoleWrapper implements OrgGroupRole,
 		return _orgGroupRole.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_orgGroupRole.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.OrgGroupRole> toCacheModel() {
 		return _orgGroupRole.toCacheModel();
 	}

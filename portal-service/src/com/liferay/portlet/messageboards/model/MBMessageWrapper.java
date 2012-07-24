@@ -948,6 +948,11 @@ public class MBMessageWrapper implements MBMessage, ModelWrapper<MBMessage> {
 		return _mbMessage.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_mbMessage.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.messageboards.model.MBMessage> toCacheModel() {
 		return _mbMessage.toCacheModel();
 	}

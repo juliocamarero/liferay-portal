@@ -293,6 +293,11 @@ public class ImageWrapper implements Image, ModelWrapper<Image> {
 		return _image.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_image.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.Image> toCacheModel() {
 		return _image.toCacheModel();
 	}

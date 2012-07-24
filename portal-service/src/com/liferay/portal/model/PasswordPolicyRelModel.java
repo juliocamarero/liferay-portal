@@ -20,6 +20,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the PasswordPolicyRel service. Represents a row in the &quot;PasswordPolicyRel&quot; database table, with each column mapped to a property of this class.
  *
@@ -143,6 +145,8 @@ public interface PasswordPolicyRelModel extends AttachedModel,
 	public int compareTo(PasswordPolicyRel passwordPolicyRel);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<PasswordPolicyRel> toCacheModel();
 

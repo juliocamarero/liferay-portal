@@ -330,6 +330,11 @@ public class JournalArticleImageWrapper implements JournalArticleImage,
 		return _journalArticleImage.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_journalArticleImage.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.journal.model.JournalArticleImage> toCacheModel() {
 		return _journalArticleImage.toCacheModel();
 	}

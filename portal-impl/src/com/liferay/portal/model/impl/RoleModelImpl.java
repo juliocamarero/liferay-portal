@@ -686,6 +686,17 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 		return (int)getPrimaryKey();
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		String title = this.getTitle(defaultImportLocale);
+
+		this.setTitle(title, defaultImportLocale, defaultImportLocale);
+
+		String description = this.getDescription(defaultImportLocale);
+
+		this.setDescription(description, defaultImportLocale,
+			defaultImportLocale);
+	}
+
 	@Override
 	public void resetOriginalValues() {
 		RoleModelImpl roleModelImpl = this;

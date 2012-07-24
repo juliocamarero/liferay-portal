@@ -244,6 +244,11 @@ public class ServiceComponentWrapper implements ServiceComponent,
 		return _serviceComponent.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_serviceComponent.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.ServiceComponent> toCacheModel() {
 		return _serviceComponent.toCacheModel();
 	}

@@ -23,6 +23,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the DDMStructureLink service. Represents a row in the &quot;DDMStructureLink&quot; database table, with each column mapped to a property of this class.
  *
@@ -146,6 +148,8 @@ public interface DDMStructureLinkModel extends AttachedModel,
 	public int compareTo(DDMStructureLink ddmStructureLink);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<DDMStructureLink> toCacheModel();
 

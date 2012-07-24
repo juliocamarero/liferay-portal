@@ -769,6 +769,11 @@ public class DLFolderWrapper implements DLFolder, ModelWrapper<DLFolder> {
 		return _dlFolder.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_dlFolder.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.documentlibrary.model.DLFolder> toCacheModel() {
 		return _dlFolder.toCacheModel();
 	}

@@ -389,6 +389,11 @@ public class BlogsStatsUserWrapper implements BlogsStatsUser,
 		return _blogsStatsUser.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_blogsStatsUser.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.blogs.model.BlogsStatsUser> toCacheModel() {
 		return _blogsStatsUser.toCacheModel();
 	}

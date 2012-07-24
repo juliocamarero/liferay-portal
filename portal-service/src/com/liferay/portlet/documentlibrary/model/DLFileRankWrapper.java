@@ -325,6 +325,11 @@ public class DLFileRankWrapper implements DLFileRank, ModelWrapper<DLFileRank> {
 		return _dlFileRank.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_dlFileRank.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.documentlibrary.model.DLFileRank> toCacheModel() {
 		return _dlFileRank.toCacheModel();
 	}

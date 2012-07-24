@@ -345,6 +345,8 @@ public interface DDMContentModel extends BaseModel<DDMContent>, GroupedModel {
 
 	public int hashCode();
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
+
 	public CacheModel<DDMContent> toCacheModel();
 
 	public DDMContent toEscapedModel();

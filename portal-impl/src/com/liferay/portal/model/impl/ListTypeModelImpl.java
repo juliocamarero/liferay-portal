@@ -32,6 +32,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -299,6 +300,9 @@ public class ListTypeModelImpl extends BaseModelImpl<ListType>
 	@Override
 	public int hashCode() {
 		return getPrimaryKey();
+	}
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
 	}
 
 	@Override

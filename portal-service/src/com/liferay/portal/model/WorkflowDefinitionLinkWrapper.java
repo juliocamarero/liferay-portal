@@ -459,6 +459,11 @@ public class WorkflowDefinitionLinkWrapper implements WorkflowDefinitionLink,
 		return _workflowDefinitionLink.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_workflowDefinitionLink.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.WorkflowDefinitionLink> toCacheModel() {
 		return _workflowDefinitionLink.toCacheModel();
 	}

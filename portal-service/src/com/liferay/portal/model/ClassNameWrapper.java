@@ -180,6 +180,11 @@ public class ClassNameWrapper implements ClassName, ModelWrapper<ClassName> {
 		return _className.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_className.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.ClassName> toCacheModel() {
 		return _className.toCacheModel();
 	}

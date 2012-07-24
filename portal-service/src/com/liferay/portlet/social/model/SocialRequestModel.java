@@ -25,6 +25,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the SocialRequest service. Represents a row in the &quot;SocialRequest&quot; database table, with each column mapped to a property of this class.
  *
@@ -306,6 +308,8 @@ public interface SocialRequestModel extends AttachedModel,
 	public int compareTo(SocialRequest socialRequest);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<SocialRequest> toCacheModel();
 

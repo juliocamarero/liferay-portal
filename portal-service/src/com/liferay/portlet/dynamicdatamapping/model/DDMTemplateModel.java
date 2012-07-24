@@ -530,6 +530,8 @@ public interface DDMTemplateModel extends AttachedModel, BaseModel<DDMTemplate>,
 
 	public int hashCode();
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
+
 	public CacheModel<DDMTemplate> toCacheModel();
 
 	public DDMTemplate toEscapedModel();

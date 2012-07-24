@@ -234,6 +234,11 @@ public class AssetTagStatsWrapper implements AssetTagStats,
 		return _assetTagStats.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_assetTagStats.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.asset.model.AssetTagStats> toCacheModel() {
 		return _assetTagStats.toCacheModel();
 	}

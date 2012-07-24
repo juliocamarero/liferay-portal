@@ -469,6 +469,11 @@ public class SocialActivityCounterWrapper implements SocialActivityCounter,
 		return _socialActivityCounter.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_socialActivityCounter.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.social.model.SocialActivityCounter> toCacheModel() {
 		return _socialActivityCounter.toCacheModel();
 	}

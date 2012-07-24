@@ -21,6 +21,8 @@ import com.liferay.portal.service.ServiceContext;
 
 import java.io.Serializable;
 
+import java.util.Locale;
+
 /**
  * The base model interface for the ExpandoTable service. Represents a row in the &quot;ExpandoTable&quot; database table, with each column mapped to a property of this class.
  *
@@ -144,6 +146,8 @@ public interface ExpandoTableModel extends BaseModel<ExpandoTable> {
 	public int compareTo(ExpandoTable expandoTable);
 
 	public int hashCode();
+
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
 
 	public CacheModel<ExpandoTable> toCacheModel();
 

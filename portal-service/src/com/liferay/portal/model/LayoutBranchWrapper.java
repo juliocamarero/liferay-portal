@@ -397,6 +397,11 @@ public class LayoutBranchWrapper implements LayoutBranch,
 		return _layoutBranch.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_layoutBranch.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.LayoutBranch> toCacheModel() {
 		return _layoutBranch.toCacheModel();
 	}

@@ -232,6 +232,11 @@ public class PasswordPolicyRelWrapper implements PasswordPolicyRel,
 		return _passwordPolicyRel.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_passwordPolicyRel.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.PasswordPolicyRel> toCacheModel() {
 		return _passwordPolicyRel.toCacheModel();
 	}

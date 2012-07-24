@@ -307,6 +307,11 @@ public class WebDAVPropsWrapper implements WebDAVProps,
 		return _webDAVProps.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_webDAVProps.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portal.model.WebDAVProps> toCacheModel() {
 		return _webDAVProps.toCacheModel();
 	}
