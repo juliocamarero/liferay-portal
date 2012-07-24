@@ -26,6 +26,8 @@ String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:on
 if (Validator.isNotNull(onChangeMethod)) {
 	onChangeMethod = namespace + onChangeMethod;
 }
+
+String format = GetterUtil.getString((String)request.getAttribute("wiki.jsp-format"));
 %>
 
 <aui:script use="resize">
@@ -52,13 +54,15 @@ if (Validator.isNotNull(onChangeMethod)) {
 			<c:if test="<%= Validator.isNotNull(initMethod) %>">
 				<%= name %>.setHTML(<%= namespace + initMethod %>());
 
-				new A.Resize(
-					{
-						handles: 'br',
-						node: '#<%= name %>_container',
-						wrap: true
-					}
-				);
+				<c:if test='<%= !format.equalsIgnoreCase("mediawiki") %>'>
+					new A.Resize(
+						{
+							handles: 'br',
+							node: '#<%= name %>_container',
+							wrap: true
+						}
+					);
+				</c:if>
 			</c:if>
 		},
 
