@@ -856,6 +856,8 @@ public interface JournalArticleModel extends AttachedModel,
 
 	public int hashCode();
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
+
 	public CacheModel<JournalArticle> toCacheModel();
 
 	public JournalArticle toEscapedModel();

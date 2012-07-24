@@ -497,6 +497,8 @@ public interface DDMStructureModel extends BaseModel<DDMStructure>, GroupedModel
 
 	public int hashCode();
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
+
 	public CacheModel<DDMStructure> toCacheModel();
 
 	public DDMStructure toEscapedModel();
