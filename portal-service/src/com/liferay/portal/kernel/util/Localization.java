@@ -61,6 +61,10 @@ public interface Localization {
 	 */
 	public String[] getAvailableLocales(String xml);
 
+	public Locale getDefaultImportLocale(
+		String className, long classPK, Locale contentDefaultLocale,
+		Locale[] contentAvailableLocales);
+
 	/**
 	 * Returns the default locale from the localizations XML.
 	 *

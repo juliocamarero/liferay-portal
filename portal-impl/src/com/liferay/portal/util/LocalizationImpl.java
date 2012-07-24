@@ -20,10 +20,12 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
@@ -81,6 +83,64 @@ public class LocalizationImpl implements Localization {
 			xml, _AVAILABLE_LOCALES, StringPool.BLANK);
 
 		return StringUtil.split(attributeValue);
+	}
+
+	public Locale getDefaultImportLocale(
+			String className, long classPK, Locale contentDefaultLocale,
+			Locale[] contentAvailableLocales) {
+
+		Locale defaultImportLocale = null;
+
+		Locale[] targetAvailableLocales = LanguageUtil.getAvailableLocales();
+
+		if (!ArrayUtil.contains(targetAvailableLocales, contentDefaultLocale)) {
+
+			// portal default locale has priority
+
+			Locale portalDefaultLocale = LocaleUtil.getDefault();
+
+			if (ArrayUtil.contains(
+				contentAvailableLocales, portalDefaultLocale)) {
+
+				defaultImportLocale = portalDefaultLocale;
+			}
+			else {
+				for (Locale contentAvailableLocale : contentAvailableLocales) {
+					if (ArrayUtil.contains(
+							targetAvailableLocales, contentAvailableLocale)) {
+
+						defaultImportLocale = contentAvailableLocale;
+
+						break;
+					}
+				}
+			}
+
+			if (defaultImportLocale == null) {
+
+				defaultImportLocale = portalDefaultLocale;
+
+				if (_log.isWarnEnabled()) {
+					StringBundler sb = new StringBundler();
+
+					sb.append("Language ");
+					sb.append(LocaleUtil.toLanguageId(contentDefaultLocale));
+					sb.append(" is missing for ");
+					sb.append(className);
+					sb.append(" with primaryKey ");
+					sb.append(classPK);
+					sb.append(", setting it as default to ");
+					sb.append(LocaleUtil.toLanguageId(defaultImportLocale));
+
+					_log.warn(sb.toString());
+				}
+			}
+		}
+		else {
+			defaultImportLocale = contentDefaultLocale;
+		}
+
+		return defaultImportLocale;
 	}
 
 	public String getDefaultLocale(String xml) {
@@ -971,9 +1031,13 @@ public class LocalizationImpl implements Localization {
 
 	private static final String _DEFAULT_LOCALE = "default-locale";
 
+	private static final String _DYNAMIC_ELEMENT = "dynamic-element";
+
 	private static final String _EMPTY_ROOT_NODE = "<root />";
 
 	private static final String _LANGUAGE_ID = "language-id";
+
+	private static final String _LOCALE = "locale";
 
 	private static final String _ROOT = "root";
 

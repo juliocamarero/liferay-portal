@@ -351,6 +351,10 @@ public interface ${entity.name}Model extends
 
 	public int hashCode();
 
+	<#if entity.hasLocalizedColumn()>
+		public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
+	</#if>
+
 	public CacheModel<${entity.name}> toCacheModel();
 
 	public ${entity.name} toEscapedModel();
