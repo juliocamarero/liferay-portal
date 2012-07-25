@@ -909,6 +909,17 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 	}
 
+	<#if entity.hasLocalizedColumn()>
+		public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+
+			<#list entity.regularColList as column>
+				<#if column.localized>
+					set${column.methodName}(get${column.methodName}(defaultImportLocale), defaultImportLocale, defaultImportLocale);
+				</#if>
+			</#list>
+		}
+	</#if>
+
 	@Override
 	public CacheModel<${entity.name}> toCacheModel() {
 		${entity.name}CacheModel ${entity.varName}CacheModel = new ${entity.name}CacheModel();

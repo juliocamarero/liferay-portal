@@ -20,16 +20,25 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Attribute;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.security.pacl.PACLClassLoaderUtil;
+
+import java.io.IOException;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -76,11 +85,105 @@ public class LocalizationImpl implements Localization {
 		return map;
 	}
 
+	public String fixContentDefaultLocale(
+			String xml, Locale contentDefaultLocale,
+			Locale availableDefaultLocale)
+		throws DocumentException, IOException {
+
+		Document xsd = SAXReaderUtil.read(xml);
+
+		Element rootElement = xsd.getRootElement();
+
+		Attribute availableLocales = rootElement.attribute(_AVAILABLE_LOCALES);
+
+		String availableDefaultLocaleId = LocaleUtil.toLanguageId(
+			availableDefaultLocale);
+
+		if (availableLocales.getValue().indexOf(
+				availableDefaultLocaleId) == -1) {
+
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(availableLocales.getValue());
+			sb.append(StringPool.COMMA);
+			sb.append(availableDefaultLocaleId);
+
+			availableLocales.setValue(sb.toString());
+		}
+
+		Attribute defaultLocale = rootElement.attribute(_DEFAULT_LOCALE);
+
+		defaultLocale.setValue(availableDefaultLocaleId);
+
+		_fixElementsDefaultLocale(
+			rootElement, contentDefaultLocale, availableDefaultLocale);
+
+		return xsd.formattedString();
+	}
+
 	public String[] getAvailableLocales(String xml) {
 		String attributeValue = _getRootAttribute(
 			xml, _AVAILABLE_LOCALES, StringPool.BLANK);
 
 		return StringUtil.split(attributeValue);
+	}
+
+	public Locale getDefaultImportLocale(
+			String className, long classPK, Locale contentDefaultLocale,
+			Locale[] contentAvailableLocales) {
+
+		Locale defaultImportLocale = null;
+
+		Locale[] targetAvailableLocales = LanguageUtil.getAvailableLocales();
+
+		if (!ArrayUtil.contains(targetAvailableLocales, contentDefaultLocale)) {
+
+			// portal default locale has priority
+
+			Locale portalDefaultLocale = LocaleUtil.getDefault();
+
+			if (ArrayUtil.contains(
+				contentAvailableLocales, portalDefaultLocale)) {
+
+				defaultImportLocale = portalDefaultLocale;
+			}
+			else {
+				for (Locale contentAvailableLocale : contentAvailableLocales) {
+					if (ArrayUtil.contains(
+							targetAvailableLocales, contentAvailableLocale)) {
+
+						defaultImportLocale = contentAvailableLocale;
+
+						break;
+					}
+				}
+			}
+
+			if (defaultImportLocale == null) {
+
+				defaultImportLocale = portalDefaultLocale;
+
+				if (_log.isWarnEnabled()) {
+					StringBundler sb = new StringBundler();
+
+					sb.append("Language ");
+					sb.append(LocaleUtil.toLanguageId(contentDefaultLocale));
+					sb.append(" is missing for ");
+					sb.append(className);
+					sb.append(" with primaryKey ");
+					sb.append(classPK);
+					sb.append(", setting it as default to ");
+					sb.append(LocaleUtil.toLanguageId(defaultImportLocale));
+
+					_log.warn(sb.toString());
+				}
+			}
+		}
+		else {
+			defaultImportLocale = contentDefaultLocale;
+		}
+
+		return defaultImportLocale;
 	}
 
 	public String getDefaultLocale(String xml) {
@@ -838,6 +941,38 @@ public class LocalizationImpl implements Localization {
 		}
 	}
 
+	private void _fixElementsDefaultLocale(
+		Element rootElement, Locale contentDefaultLocale,
+		Locale contentAvailableLocale) {
+
+		for (Element child : rootElement.elements(_DYNAMIC_ELEMENT)) {
+
+			Element metaDataImportElement =
+				(Element) child.selectSingleNode(
+					"meta-data[@locale='" + contentAvailableLocale.toString() +
+						"']");
+
+			if (metaDataImportElement == null) {
+				Element metaDataElement =
+					(Element) child.selectSingleNode(
+						"meta-data[@locale='" +
+							contentDefaultLocale.toString() + "']");
+
+				Element copiedMetadataElement = metaDataElement.createCopy();
+
+				Attribute attributeLocale = copiedMetadataElement.attribute(
+					_LOCALE);
+
+				attributeLocale.setValue(contentAvailableLocale.toString());
+
+				child.add(copiedMetadataElement);
+			}
+
+			_fixElementsDefaultLocale(
+				child, contentDefaultLocale, contentAvailableLocale);
+		}
+	}
+
 	private String _getCachedValue(
 		String xml, String requestedLanguageId, boolean useDefault) {
 
@@ -971,9 +1106,13 @@ public class LocalizationImpl implements Localization {
 
 	private static final String _DEFAULT_LOCALE = "default-locale";
 
+	private static final String _DYNAMIC_ELEMENT = "dynamic-element";
+
 	private static final String _EMPTY_ROOT_NODE = "<root />";
 
 	private static final String _LANGUAGE_ID = "language-id";
+
+	private static final String _LOCALE = "locale";
 
 	private static final String _ROOT = "root";
 

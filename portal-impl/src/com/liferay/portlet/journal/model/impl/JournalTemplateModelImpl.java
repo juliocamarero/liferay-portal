@@ -890,6 +890,13 @@ public class JournalTemplateModelImpl extends BaseModelImpl<JournalTemplate>
 		journalTemplateModelImpl._columnBitmask = 0;
 	}
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale) {
+		setName(getName(defaultImportLocale), defaultImportLocale,
+			defaultImportLocale);
+		setDescription(getDescription(defaultImportLocale),
+			defaultImportLocale, defaultImportLocale);
+	}
+
 	@Override
 	public CacheModel<JournalTemplate> toCacheModel() {
 		JournalTemplateCacheModel journalTemplateCacheModel = new JournalTemplateCacheModel();

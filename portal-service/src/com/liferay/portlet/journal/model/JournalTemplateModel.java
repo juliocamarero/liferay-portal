@@ -546,6 +546,8 @@ public interface JournalTemplateModel extends BaseModel<JournalTemplate>,
 
 	public int hashCode();
 
+	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale);
+
 	public CacheModel<JournalTemplate> toCacheModel();
 
 	public JournalTemplate toEscapedModel();

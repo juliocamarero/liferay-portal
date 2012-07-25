@@ -524,6 +524,11 @@ public class DDMContentWrapper implements DDMContent, ModelWrapper<DDMContent> {
 		return _ddmContent.hashCode();
 	}
 
+	public void prepareLocalizedFieldsForImport(
+		java.util.Locale defaultImportLocale) {
+		_ddmContent.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
 	public com.liferay.portal.model.CacheModel<com.liferay.portlet.dynamicdatamapping.model.DDMContent> toCacheModel() {
 		return _ddmContent.toCacheModel();
 	}
