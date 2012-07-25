@@ -5,118 +5,116 @@
 		<name><![CDATA[Contacts]]></name>
 		<description><![CDATA[Contacts]]></description>
 		<root available-locales="en_US" default-locale="en_US">
-			<dynamic-element dataType="string" name="company" type="text">
-				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w50]]></entry>
-					<entry name="label"><![CDATA[Company]]></entry>
-					<entry name="predefinedValue"><![CDATA[]]></entry>
-					<entry name="required"><![CDATA[false]]></entry>
-					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[50]]></entry>
-				</meta-data>
-			</dynamic-element>
-			<dynamic-element dataType="string" name="email" type="text">
-				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w50]]></entry>
-					<entry name="label"><![CDATA[Email]]></entry>
-					<entry name="predefinedValue"><![CDATA[]]></entry>
-					<entry name="required"><![CDATA[false]]></entry>
-					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[50]]></entry>
-				</meta-data>
-			</dynamic-element>
-			<dynamic-element dataType="string" name="firstName" type="text">
-				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w50]]></entry>
-					<entry name="label"><![CDATA[First Name]]></entry>
-					<entry name="predefinedValue"><![CDATA[]]></entry>
-					<entry name="required"><![CDATA[false]]></entry>
-					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[50]]></entry>
-				</meta-data>
-			</dynamic-element>
-			<dynamic-element dataType="string" name="imService" type="select">
-				<dynamic-element name="aol" type="option" value="aol">
+			<dynamic-element dataType="string" name="select2235" type="select">
+				<dynamic-element name="home_edition" type="option" value="HE">
 					<meta-data locale="en_US">
-						<entry name="label"><![CDATA[AOL]]></entry>
+						<entry name="label"><![CDATA[Home Edition]]></entry>
 						<entry name="multiple"><![CDATA[false]]></entry>
 					</meta-data>
 				</dynamic-element>
-				<dynamic-element name="yahoo" type="option" value="yahoo">
+				<dynamic-element name="business_edition" type="option" value="BE">
 					<meta-data locale="en_US">
-						<entry name="label"><![CDATA[Yahoo]]></entry>
+						<entry name="label"><![CDATA[Business Edition]]></entry>
 					</meta-data>
 				</dynamic-element>
-				<dynamic-element name="gtalk" type="option" value="gtalk">
+				<dynamic-element name="enterprise_edition" type="option" value="EE">
 					<meta-data locale="en_US">
-						<entry name="label"><![CDATA[GTalk]]></entry>
+						<entry name="label"><![CDATA[Enterprise Edition]]></entry>
 					</meta-data>
 				</dynamic-element>
 				<meta-data locale="en_US">
-					<entry name="label"><![CDATA[Instant Messenger Service]]></entry>
-					<entry name="predefinedValue"><![CDATA[["gtalk"]]]></entry>
+					<entry name="displayChildLabelAsValue"><![CDATA[true]]></entry>
+					<entry name="label"><![CDATA[Product]]></entry>
+					<entry name="multiple"><![CDATA[true]]></entry>
+					<entry name="predefinedValue"><![CDATA[]]></entry>
+					<entry name="readOnly"><![CDATA[false]]></entry>
 					<entry name="required"><![CDATA[false]]></entry>
 					<entry name="showLabel"><![CDATA[true]]></entry>
+					<entry name="tip"><![CDATA[]]></entry>
 				</meta-data>
 			</dynamic-element>
-			<dynamic-element dataType="string" name="imUserName" type="text">
+			<dynamic-element dataType="string" name="select3212" type="select">
+				<dynamic-element name="1_0" type="option" value="1">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[1.0]]></entry>
+						<entry name="multiple"><![CDATA[false]]></entry>
+					</meta-data>
+				</dynamic-element>
+				<dynamic-element name="2_0" type="option" value="2">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[2.0]]></entry>
+					</meta-data>
+				</dynamic-element>
+				<dynamic-element name="3_0" type="option" value="3">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[3.0]]></entry>
+					</meta-data>
+				</dynamic-element>
 				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w50]]></entry>
-					<entry name="label"><![CDATA[Instant Messenger]]></entry>
+					<entry name="displayChildLabelAsValue"><![CDATA[true]]></entry>
+					<entry name="label"><![CDATA[Version]]></entry>
+					<entry name="multiple"><![CDATA[true]]></entry>
 					<entry name="predefinedValue"><![CDATA[]]></entry>
+					<entry name="readOnly"><![CDATA[false]]></entry>
 					<entry name="required"><![CDATA[false]]></entry>
 					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[50]]></entry>
+					<entry name="tip"><![CDATA[]]></entry>
 				</meta-data>
 			</dynamic-element>
-			<dynamic-element dataType="string" name="jobTitle" type="text">
+			<dynamic-element dataType="string" name="select4115" type="select">
+				<dynamic-element name="administration" type="option" value="admin">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[Administration]]></entry>
+						<entry name="multiple"><![CDATA[false]]></entry>
+					</meta-data>
+				</dynamic-element>
+				<dynamic-element name="installation" type="option" value="install">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[Installation]]></entry>
+					</meta-data>
+				</dynamic-element>
+				<dynamic-element name="configuration" type="option" value="config">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[Configuration]]></entry>
+					</meta-data>
+				</dynamic-element>
 				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w50]]></entry>
-					<entry name="label"><![CDATA[Job Title]]></entry>
+					<entry name="displayChildLabelAsValue"><![CDATA[true]]></entry>
+					<entry name="label"><![CDATA[Topics]]></entry>
+					<entry name="multiple"><![CDATA[true]]></entry>
 					<entry name="predefinedValue"><![CDATA[]]></entry>
+					<entry name="readOnly"><![CDATA[false]]></entry>
 					<entry name="required"><![CDATA[false]]></entry>
 					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[50]]></entry>
+					<entry name="tip"><![CDATA[]]></entry>
 				</meta-data>
 			</dynamic-element>
-			<dynamic-element dataType="string" name="lastName" type="text">
+			<dynamic-element dataType="string" name="select5069" type="select">
+				<dynamic-element name="beginner" type="option" value="beginner">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[Beginner]]></entry>
+						<entry name="multiple"><![CDATA[false]]></entry>
+					</meta-data>
+				</dynamic-element>
+				<dynamic-element name="intermediate" type="option" value="intermediate">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[Intermediate]]></entry>
+					</meta-data>
+				</dynamic-element>
+				<dynamic-element name="advanced" type="option" value="advanced">
+					<meta-data locale="en_US">
+						<entry name="label"><![CDATA[Advanced]]></entry>
+					</meta-data>
+				</dynamic-element>
 				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w50]]></entry>
-					<entry name="label"><![CDATA[Last Name]]></entry>
+					<entry name="displayChildLabelAsValue"><![CDATA[true]]></entry>
+					<entry name="label"><![CDATA[Level]]></entry>
+					<entry name="multiple"><![CDATA[false]]></entry>
 					<entry name="predefinedValue"><![CDATA[]]></entry>
+					<entry name="readOnly"><![CDATA[false]]></entry>
 					<entry name="required"><![CDATA[false]]></entry>
 					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[50]]></entry>
-				</meta-data>
-			</dynamic-element>
-			<dynamic-element dataType="string" name="notes" type="textarea">
-				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w100]]></entry>
-					<entry name="label"><![CDATA[Notes]]></entry>
-					<entry name="predefinedValue"><![CDATA[]]></entry>
-					<entry name="required"><![CDATA[false]]></entry>
-					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[100]]></entry>
-				</meta-data>
-			</dynamic-element>
-			<dynamic-element dataType="string" name="phoneMobile" type="text">
-				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w50]]></entry>
-					<entry name="label"><![CDATA[Phone (Mobile)]]></entry>
-					<entry name="predefinedValue"><![CDATA[]]></entry>
-					<entry name="required"><![CDATA[false]]></entry>
-					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[50]]></entry>
-				</meta-data>
-			</dynamic-element>
-			<dynamic-element dataType="string" name="phoneOffice" type="text">
-				<meta-data locale="en_US">
-					<entry name="fieldCssClass"><![CDATA[aui-w50]]></entry>
-					<entry name="label"><![CDATA[Phone (Office)]]></entry>
-					<entry name="predefinedValue"><![CDATA[]]></entry>
-					<entry name="required"><![CDATA[false]]></entry>
-					<entry name="showLabel"><![CDATA[true]]></entry>
-					<entry name="width"><![CDATA[50]]></entry>
+					<entry name="tip"><![CDATA[]]></entry>
 				</meta-data>
 			</dynamic-element>
 		</root>
