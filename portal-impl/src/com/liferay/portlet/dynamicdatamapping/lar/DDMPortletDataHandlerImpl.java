@@ -42,7 +42,6 @@ import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUt
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMStructureUtil;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateUtil;
-import com.liferay.portlet.dynamicdatamapping.util.DDMXMLUtil;
 
 import java.util.List;
 import java.util.Locale;

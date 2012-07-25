@@ -117,6 +117,15 @@ public class DDMXMLImplTest extends PowerMockito {
 		return checkElementLocale(rootElement, newLocaleId);
 	}
 
+	protected String readText(String fileName) throws IOException {
+		Class<?> clazz = getClass();
+
+		InputStream inputStream = clazz.getResourceAsStream(
+			"dependencies/" + fileName);
+
+		return StringUtil.read(inputStream);
+	}
+
 	protected void updateContentDefaultLocale(String fileName) {
 		boolean result = false;
 
@@ -170,15 +179,6 @@ public class DDMXMLImplTest extends PowerMockito {
 			Assert.fail(
 				"Test failed because an I/O error: " + ioe.getMessage());
 		}
-	}
-
-	protected String readText(String fileName) throws IOException {
-		Class<?> clazz = getClass();
-
-		InputStream inputStream = clazz.getResourceAsStream(
-			"dependencies/" + fileName);
-
-		return StringUtil.read(inputStream);
 	}
 
 	private DDMXMLImpl _ddmXML = new DDMXMLImpl();

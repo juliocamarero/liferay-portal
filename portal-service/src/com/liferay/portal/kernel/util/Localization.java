@@ -15,9 +15,6 @@
 package com.liferay.portal.kernel.util;
 
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.xml.DocumentException;
-
-import java.io.IOException;
 
 import java.util.Locale;
 import java.util.Map;

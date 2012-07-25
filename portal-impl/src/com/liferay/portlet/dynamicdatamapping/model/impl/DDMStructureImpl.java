@@ -217,7 +217,7 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 
 	@Override
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
-		 throws LocaleException {
+		throws LocaleException {
 
 		super.prepareLocalizedFieldsForImport(defaultImportLocale);
 
@@ -227,8 +227,7 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 		try {
 			setXsd(
 				DDMXMLUtil.updateXMLDefaultLocale(
-					getXsd(), ddmStructureDefaultLocale,
-					defaultImportLocale));
+					getXsd(), ddmStructureDefaultLocale, defaultImportLocale));
 		}
 		catch (Exception e) {
 			throw new LocaleException(e);

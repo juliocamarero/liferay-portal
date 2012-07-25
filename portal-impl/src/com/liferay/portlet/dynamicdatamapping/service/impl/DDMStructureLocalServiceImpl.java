@@ -693,9 +693,7 @@ public class DDMStructureLocalServiceImpl
 		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
 		for (Locale contentAvailableLocale : contentAvailableLocales) {
-			if (ArrayUtil.contains(
-					availableLocales, contentAvailableLocale)) {
-
+			if (ArrayUtil.contains(availableLocales, contentAvailableLocale)) {
 				return;
 			}
 		}

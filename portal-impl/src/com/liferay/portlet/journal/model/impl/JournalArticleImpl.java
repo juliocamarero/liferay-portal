@@ -193,7 +193,7 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 
 	@Override
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
-		throws LocaleException{
+		throws LocaleException {
 
 		super.prepareLocalizedFieldsForImport(defaultImportLocale);
 
