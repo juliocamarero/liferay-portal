@@ -799,7 +799,8 @@ public class DDMTemplateWrapper implements DDMTemplate,
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_ddmTemplate.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 

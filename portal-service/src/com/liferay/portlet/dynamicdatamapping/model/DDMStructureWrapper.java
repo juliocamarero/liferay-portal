@@ -749,7 +749,8 @@ public class DDMStructureWrapper implements DDMStructure,
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_ddmStructure.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 

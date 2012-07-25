@@ -525,7 +525,8 @@ public class DDMContentWrapper implements DDMContent, ModelWrapper<DDMContent> {
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_ddmContent.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 

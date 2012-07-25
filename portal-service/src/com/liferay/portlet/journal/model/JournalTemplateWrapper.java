@@ -829,7 +829,8 @@ public class JournalTemplateWrapper implements JournalTemplate,
 	}
 
 	public void prepareLocalizedFieldsForImport(
-		java.util.Locale defaultImportLocale) {
+		java.util.Locale defaultImportLocale)
+		throws com.liferay.portal.LocaleException {
 		_journalTemplate.prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 
