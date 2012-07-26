@@ -35,9 +35,11 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.RepositoryEntry;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.RepositoryEntryLocalServiceUtil;
 import com.liferay.portal.service.RepositoryLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -1351,6 +1353,16 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		for (int i = 0; i < ddmStructureUuids.length; i++) {
 			DDMStructure existingStructure = DDMStructureUtil.fetchByUUID_G(
 				ddmStructureUuids[i], portletDataContext.getScopeGroupId());
+
+			if (existingStructure == null) {
+				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+					portletDataContext.getCompanyId());
+
+				long companyGroupId = companyGroup.getGroupId();
+
+				existingStructure = DDMStructureUtil.fetchByUUID_G(
+					ddmStructureUuids[i], companyGroupId);
+			}
 
 			ddmStrutureIds[i] = existingStructure.getStructureId();
 		}
