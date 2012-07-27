@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
@@ -953,12 +951,6 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		for (int i = 0; i < dlFileEntryTypes.size(); i++) {
 			DLFileEntryType dlFileEntryType = dlFileEntryTypes.get(i);
 
-			if (!isFileEntryTypeExportable(
-					portletDataContext.getCompanyId(), dlFileEntryType)) {
-
-				continue;
-			}
-
 			fileEntryTypeUuids[i] = dlFileEntryType.getUuid();
 
 			if (defaultFileEntryTypeId ==
@@ -1002,12 +994,6 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 
 		fileEntryElement.addAttribute(
 			"fileEntryTypeUuid", dlFileEntryType.getUuid());
-
-		if (!isFileEntryTypeExportable(
-				portletDataContext.getCompanyId(), dlFileEntryType)) {
-
-			return;
-		}
 
 		exportFileEntryType(
 			portletDataContext, fileEntryTypesElement, dlFileEntryType);
@@ -1368,6 +1354,16 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 			DDMStructure existingStructure = DDMStructureUtil.fetchByUUID_G(
 				ddmStructureUuids[i], portletDataContext.getScopeGroupId());
 
+			if (existingStructure == null) {
+				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+					portletDataContext.getCompanyId());
+
+				long companyGroupId = companyGroup.getGroupId();
+
+				existingStructure = DDMStructureUtil.fetchByUUID_G(
+					ddmStructureUuids[i], companyGroupId);
+			}
+
 			ddmStrutureIds[i] = existingStructure.getStructureId();
 		}
 
@@ -1718,23 +1714,6 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		}
 	}
 
-	protected static boolean isFileEntryTypeExportable(
-			long companyId, DLFileEntryType dlFileEntryType)
-		throws PortalException, SystemException {
-
-		if (dlFileEntryType.getFileEntryTypeId() == 0) {
-			return false;
-		}
-
-		Group group = GroupLocalServiceUtil.getCompanyGroup(companyId);
-
-		if (dlFileEntryType.getGroupId() == group.getGroupId()) {
-			return false;
-		}
-
-		return true;
-	}
-
 	@Override
 	protected PortletPreferences doDeleteData(
 			PortletDataContext portletDataContext, String portletId,
@@ -1791,12 +1770,6 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 				new long[] {portletDataContext.getScopeGroupId()});
 
 		for (DLFileEntryType dlFileEntryType : dlFileEntryTypes) {
-			if (!isFileEntryTypeExportable(
-					portletDataContext.getCompanyId(), dlFileEntryType)) {
-
-				continue;
-			}
-
 			exportFileEntryType(
 				portletDataContext, fileEntryTypesElement, dlFileEntryType);
 		}

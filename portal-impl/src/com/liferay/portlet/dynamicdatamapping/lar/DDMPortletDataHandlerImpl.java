@@ -29,6 +29,8 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
@@ -144,21 +146,60 @@ public class DDMPortletDataHandlerImpl extends BasePortletDataHandler {
 			}
 
 			if (existingStructure == null) {
+				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+					portletDataContext.getCompanyId());
+
+				long companyGroupId = companyGroup.getGroupId();
+
+				existingStructure = DDMStructureUtil.fetchByUUID_G(
+					structure.getUuid(), companyGroupId);
+			}
+
+			if (existingStructure == null) {
+				String structureKey = null;
+
+				if (!preloaded) {
+					structureKey = structure.getStructureKey();
+				}
+
 				serviceContext.setUuid(structure.getUuid());
 
 				importedStructure = DDMStructureLocalServiceUtil.addStructure(
 					userId, portletDataContext.getScopeGroupId(),
-					structure.getClassNameId(), structure.getStructureKey(),
+					structure.getClassNameId(), structureKey,
 					structure.getNameMap(), structure.getDescriptionMap(),
 					structure.getXsd(), structure.getStorageType(),
 					structure.getType(), serviceContext);
 			}
 			else {
-				importedStructure =
-					DDMStructureLocalServiceUtil.updateStructure(
-						existingStructure.getStructureId(),
-						structure.getNameMap(), structure.getDescriptionMap(),
-						structure.getXsd(), serviceContext);
+				if (!structure.getUuid().equals(existingStructure.getUuid()) &&
+					preloaded) {
+
+					existingStructure = DDMStructureUtil.fetchByUUID_G(
+						structure.getUuid(),
+						portletDataContext.getScopeGroupId());
+				}
+
+				if (existingStructure == null) {
+					serviceContext.setUuid(structure.getUuid());
+
+					importedStructure = DDMStructureLocalServiceUtil.
+						addStructure(
+							userId, portletDataContext.getScopeGroupId(),
+							structure.getClassNameId(), null,
+							structure.getNameMap(),
+							structure.getDescriptionMap(), structure.getXsd(),
+							structure.getStorageType(), structure.getType(),
+							serviceContext);
+				}
+				else {
+					importedStructure =
+						DDMStructureLocalServiceUtil.updateStructure(
+							existingStructure.getStructureId(),
+							structure.getNameMap(),
+							structure.getDescriptionMap(), structure.getXsd(),
+							serviceContext);
+				}
 			}
 		}
 		else {
