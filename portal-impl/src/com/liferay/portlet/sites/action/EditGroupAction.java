@@ -440,13 +440,14 @@ public class EditGroupAction extends PortletAction {
 		typeSettingsProperties.setProperty(
 			"trashEnabled", String.valueOf(trashEnabled));
 
+		int trashEntriesMaxAgeCompany = PrefsPropsUtil.getInteger(
+			themeDisplay.getCompanyId(), PropsKeys.TRASH_ENTRIES_MAX_AGE);
+
 		int trashEntriesMaxAgeGroup = ParamUtil.getInteger(
 			actionRequest, "trashEntriesMaxAge",
 			GetterUtil.getInteger(
-				typeSettingsProperties.getProperty("trashEntriesMaxAge")));
-
-		int trashEntriesMaxAgeCompany = PrefsPropsUtil.getInteger(
-			themeDisplay.getCompanyId(), PropsKeys.TRASH_ENTRIES_MAX_AGE);
+				typeSettingsProperties.getProperty("trashEntriesMaxAge"),
+				trashEntriesMaxAgeCompany));
 
 		if (trashEntriesMaxAgeGroup != trashEntriesMaxAgeCompany) {
 			typeSettingsProperties.setProperty(
