@@ -693,12 +693,6 @@ public class DDMStructureLocalServiceImpl
 			Map<Locale, String> nameMap, Locale contentDefaultLocale)
 		throws PortalException {
 
-		String name = nameMap.get(contentDefaultLocale);
-
-		if (Validator.isNull(name)) {
-			throw new StructureNameException();
-		}
-
 		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
 		if (!ArrayUtil.contains(availableLocales, contentDefaultLocale)) {
@@ -708,6 +702,12 @@ public class DDMStructureLocalServiceImpl
 			le.setTargetAvailableLocales(availableLocales);
 
 			throw le;
+		}
+
+		String name = nameMap.get(contentDefaultLocale);
+
+		if (Validator.isNull(name)) {
+			throw new StructureNameException();
 		}
 	}
 

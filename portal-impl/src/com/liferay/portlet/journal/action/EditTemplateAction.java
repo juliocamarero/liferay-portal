@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.action;
 
+import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -111,6 +112,7 @@ public class EditTemplateAction extends PortletAction {
 				setForward(actionRequest, "portlet.journal.error");
 			}
 			else if (e instanceof DuplicateTemplateIdException ||
+					 e instanceof LocaleException ||
 					 e instanceof RequiredTemplateException ||
 					 e instanceof TemplateIdException ||
 					 e instanceof TemplateNameException ||
