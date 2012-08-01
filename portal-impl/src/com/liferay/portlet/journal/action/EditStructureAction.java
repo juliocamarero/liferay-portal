@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.action;
 
+import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -110,6 +111,7 @@ public class EditStructureAction extends PortletAction {
 			}
 			else if (e instanceof DuplicateStructureElementException ||
 					 e instanceof DuplicateStructureIdException ||
+					 e instanceof LocaleException ||
 					 e instanceof RequiredStructureException ||
 					 e instanceof StructureIdException ||
 					 e instanceof StructureInheritanceException ||

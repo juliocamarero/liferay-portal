@@ -3480,18 +3480,7 @@ public class JournalArticleLocalServiceImpl
 		Locale articleDefaultLocale = LocaleUtil.fromLanguageId(
 			LocalizationUtil.getDefaultLocale(content));
 
-		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
-
-		if (!ArrayUtil.contains(availableLocales, articleDefaultLocale)) {
-			LocaleException le = new LocaleException();
-
-			Locale[] sourceAvailableLocales = {articleDefaultLocale};
-
-			le.setSourceAvailableLocales(sourceAvailableLocales);
-			le.setTargetAvailableLocales(availableLocales);
-
-			throw le;
-		}
+		validateLanguages(articleDefaultLocale);
 
 		if ((classNameId == 0) &&
 			(titleMap.isEmpty() ||
@@ -3622,6 +3611,21 @@ public class JournalArticleLocalServiceImpl
 
 			throw new ArticleContentException(
 				"Unable to read content with an XML parser", de);
+		}
+	}
+
+	protected void validateLanguages(Locale contentDefaultLocale)
+		throws PortalException {
+
+		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
+
+		if (!ArrayUtil.contains(availableLocales, contentDefaultLocale)) {
+			LocaleException le = new LocaleException();
+
+			le.setSourceAvailableLocales(new Locale[] {contentDefaultLocale});
+			le.setTargetAvailableLocales(availableLocales);
+
+			throw le;
 		}
 	}
 

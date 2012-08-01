@@ -112,6 +112,14 @@ int tabIndex = 1;
 
 	<liferay-ui:error exception="<%= DuplicateStructureElementException.class %>" message="please-enter-unique-structure-field-names-(including-field-names-inherited-from-the-parent-structure)" />
 	<liferay-ui:error exception="<%= DuplicateStructureIdException.class %>" message="please-enter-a-unique-id" />
+	<liferay-ui:error exception="<%= LocaleException.class %>">
+
+		<%
+			LocaleException le = (LocaleException)errorException;
+		%>
+
+		<liferay-ui:message arguments="<%= new String[] {StringUtil.merge(le.getSourceAvailableLocales(), StringPool.COMMA_AND_SPACE), StringUtil.merge(le.getTargetAvailableLocales(), StringPool.COMMA_AND_SPACE)} %>" key="the-default-language-x-does-not-match-the-portal's-available-languages-x" />
+	</liferay-ui:error>
 	<liferay-ui:error exception="<%= StructureIdException.class %>" message="please-enter-a-valid-id" />
 	<liferay-ui:error exception="<%= StructureInheritanceException.class %>" message="this-structure-is-already-within-the-inheritance-path-of-the-selected-parent-please-select-another-parent-structure" />
 	<liferay-ui:error exception="<%= StructureNameException.class %>" message="please-enter-a-valid-name" />
