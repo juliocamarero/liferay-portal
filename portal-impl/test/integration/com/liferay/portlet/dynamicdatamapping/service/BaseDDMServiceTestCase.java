@@ -17,6 +17,11 @@ package com.liferay.portlet.dynamicdatamapping.service;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.xml.Attribute;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.TestPropsValues;
@@ -25,7 +30,9 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMStructureConstants;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateConstants;
 import com.liferay.portlet.dynamicdatamapping.storage.StorageType;
+import com.liferay.portlet.dynamicdatamapping.util.DDMXMLUtil;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.HashMap;
@@ -82,10 +89,17 @@ public class BaseDDMServiceTestCase {
 			String storageType, int type)
 		throws Exception {
 
+		Object[] updatedResult = updateXMLDefaultLocale(xsd);
+
+		xsd = (String)updatedResult[0];
+
+		Locale[] availableContentLocales = (Locale[])updatedResult[1];
+
 		return DDMStructureLocalServiceUtil.addStructure(
 			TestPropsValues.getUserId(), TestPropsValues.getGroupId(),
-			classNameId, structureKey, getDefaultLocaleMap(name), null, xsd,
-			storageType, type, ServiceTestUtil.getServiceContext());
+			classNameId, structureKey,
+			getDefaultLocaleMapStructure(availableContentLocales, name), null,
+			xsd, storageType, type, ServiceTestUtil.getServiceContext());
 	}
 
 	protected DDMTemplate addTemplate(
@@ -112,6 +126,17 @@ public class BaseDDMServiceTestCase {
 		Map<Locale, String> map = new HashMap<Locale, String>();
 
 		map.put(LocaleUtil.getDefault(), defaultValue);
+
+		return map;
+	}
+
+	protected Map<Locale, String> getDefaultLocaleMapStructure(
+		Locale[] contentAvailableLocales, String defaultValue) {
+		Map<Locale, String> map = new HashMap<Locale, String>();
+
+		for (Locale contentAvailableLocale : contentAvailableLocales) {
+			map.put(contentAvailableLocale, defaultValue);
+		}
 
 		return map;
 	}
@@ -146,6 +171,45 @@ public class BaseDDMServiceTestCase {
 			"dependencies/" + fileName);
 
 		return StringUtil.read(inputStream);
+	}
+
+	protected Object[] updateXMLDefaultLocale(String xml)
+		throws DocumentException, IOException {
+
+		Document structureDocument = SAXReaderUtil.read(xml);
+
+		Element rootElement = structureDocument.getRootElement();
+
+		Attribute defaultLocale = rootElement.attribute("default-locale");
+
+		Locale contentDefaultLocale = LocaleUtil.fromLanguageId(
+			defaultLocale.getValue());
+
+		Locale availableDefaultLocale = LocaleUtil.getDefault();
+
+		Object[] result = new Object[2];
+
+		xml = DDMXMLUtil.updateXMLDefaultLocale(
+			xml, contentDefaultLocale, availableDefaultLocale);
+
+		result[0] = xml;
+
+		structureDocument = SAXReaderUtil.read(xml);
+
+		rootElement = structureDocument.getRootElement();
+
+		Attribute availableContentLocales = rootElement.attribute(
+			"available-locales");
+
+		String[] availableContentLocalesArray = StringUtil.split(
+			availableContentLocales.getValue());
+
+		Locale[] availableLocales = LocaleUtil.fromLanguageIds(
+			availableContentLocalesArray);
+
+		result[1] = availableLocales;
+
+		return result;
 	}
 
 }
