@@ -16,6 +16,8 @@ package com.liferay.portlet.trash;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
@@ -162,7 +164,17 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Hits results = indexer.search(searchContext);
 
-		return results.getLength();
+		int count = 0;
+
+		for (Document document : results.getDocs()) {
+			int status = Integer.parseInt(document.get(Field.STATUS));
+
+			if (status == WorkflowConstants.STATUS_APPROVED) {
+				count = count + 1;
+			}
+		}
+
+		return count;
 	}
 
 	protected int searchTrashEntriesCount(
@@ -242,6 +254,10 @@ public abstract class BaseTrashHandlerTestCase {
 			initialTrashEntriesCount, getTrashEntriesCount(group.getGroupId()));
 
 		moveBaseModelToTrash((Long)baseModel.getPrimaryKeyObj());
+
+		baseModel = getBaseModel((Long)baseModel.getPrimaryKeyObj());
+
+		workflowedModel = (WorkflowedModel)baseModel;
 
 		TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
 			getBaseModelClassName(), getTrashClassPK(baseModel));
