@@ -35,14 +35,12 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	public AssetVocabularyImpl() {
 	}
 
-	public List<AssetCategory> getCategories()
-        throws SystemException {
+	public List<AssetCategory> getCategories() throws SystemException {
+		return AssetCategoryLocalServiceUtil.getVocabularyCategories(
+			getVocabularyId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
 
-        return AssetCategoryLocalServiceUtil.getVocabularyCategories(
-            getVocabularyId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-    }
-
-    @Override
+	@Override
 	public String getSettings() {
 		if (_settingsProperties == null) {
 			return super.getSettings();
