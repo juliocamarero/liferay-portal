@@ -30,6 +30,7 @@ import com.liferay.portlet.journal.model.JournalArticleResource;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
+import com.liferay.portlet.journal.util.JournalUtil;
 import com.liferay.portlet.journal.util.LocaleTransformerListener;
 
 import java.util.Locale;
@@ -192,9 +193,35 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 	}
 
 	@Override
-	@SuppressWarnings("unused")
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
 		throws LocaleException {
+
+		super.prepareLocalizedFieldsForImport(defaultImportLocale);
+
+		String content = getContent();
+
+		String defaultImportLanguageId = LocaleUtil.toLanguageId(
+			defaultImportLocale);
+
+		try {
+			if (Validator.isNull(getStructureId())) {
+				content = LocalizationUtil.updateLocalization(
+					getContent(), "static-content",
+					LocalizationUtil.getLocalization(
+						getContent(), defaultImportLanguageId),
+					defaultImportLanguageId, defaultImportLanguageId, true,
+					true);
+			}
+			else {
+				content = JournalUtil.prepareLanguageContentForImport(
+					content, defaultImportLocale);
+			}
+		}
+		catch (Exception e) {
+			throw new LocaleException(e);
+		}
+
+		setContent(content);
 	}
 
 	public void setSmallImageType(String smallImageType) {
