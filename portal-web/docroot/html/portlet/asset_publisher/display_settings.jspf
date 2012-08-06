@@ -20,12 +20,12 @@ PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemp
 
 <aui:fieldset cssClass="general-display-settings">
 	<div class="display-style">
-        <liferay-ui:ddm-template-menu
-            classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
-            defaultOptions="<%= Arrays.asList(PropsValues.ASSET_PUBLISHER_DISPLAY_STYLES) %>"
-            label="display-template"
-            preferenceValue="<%= displayStyle %>"
-        />
+		<liferay-ui:ddm-template-menu
+			classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
+			defaultOptions="<%= Arrays.asList(PropsValues.ASSET_PUBLISHER_DISPLAY_STYLES) %>"
+			label="display-template"
+			preferenceValue="<%= displayStyle %>"
+		/>
 
 		<liferay-ui:ddm-template-selector
 			classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"

@@ -16,8 +16,9 @@ package com.liferay.taglib.ui;
 
 import com.liferay.taglib.util.IncludeTag;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Juan Fernández
@@ -28,33 +29,33 @@ public class DDMTemplateMenuTag extends IncludeTag {
 		_classNameId = classNameId;
 	}
 
-    public void setDefaultOptions(List<String> defaultOptions) {
-        _defaultOptions = defaultOptions;
-    }
+	public void setDefaultOptions(List<String> defaultOptions) {
+		_defaultOptions = defaultOptions;
+	}
 
-    public void setLabel(String label) {
-        _label = label;
-    }
+	public void setLabel(String label) {
+		_label = label;
+	}
 
-    public void setPreferenceName(String preferenceName) {
-        _preferenceName = preferenceName;
-    }
+	public void setPreferenceName(String preferenceName) {
+		_preferenceName = preferenceName;
+	}
 
-    public void setPreferenceValue(String preferenceValue) {
-        _preferenceValue = preferenceValue;
-    }
+	public void setPreferenceValue(String preferenceValue) {
+		_preferenceValue = preferenceValue;
+	}
 
-    public void setShowDefaultOption(boolean showDefaultOption) {
-        _showDefaultOption = showDefaultOption;
-    }
+	public void setShowDefaultOption(boolean showDefaultOption) {
+		_showDefaultOption = showDefaultOption;
+	}
 
 	@Override
 	protected void cleanUp() {
 		_classNameId = 0;
-        _defaultOptions = null;
-        _label = null;
-        _preferenceName = null;
-        _showDefaultOption = false;
+		_defaultOptions = null;
+		_label = null;
+		_preferenceName = null;
+		_showDefaultOption = false;
 	}
 
 	@Override
@@ -68,16 +69,15 @@ public class DDMTemplateMenuTag extends IncludeTag {
 			"liferay-ui:ddm-template-menu:classNameId",
 			String.valueOf(_classNameId));
 		request.setAttribute("liferay-ui:ddm-template-menu:defaultOptions",
-            _defaultOptions);
-		request.setAttribute(
-			"liferay-ui:ddm-template-menu:label", _label);
+			_defaultOptions);
+		request.setAttribute("liferay-ui:ddm-template-menu:label", _label);
 		request.setAttribute(
 			"liferay-ui:ddm-template-menu:preferenceName", _preferenceName);
-        request.setAttribute(
+		request.setAttribute(
 			"liferay-ui:ddm-template-menu:preferenceValue", _preferenceValue);
-        request.setAttribute(
-            "liferay-ui:ddm-template-menu:showDefaultOption",
-            _showDefaultOption);
+		request.setAttribute(
+			"liferay-ui:ddm-template-menu:showDefaultOption",
+			_showDefaultOption);
 	}
 
 	private static final String _PAGE =
@@ -87,7 +87,7 @@ public class DDMTemplateMenuTag extends IncludeTag {
 	private List<String> _defaultOptions;
 	private String _label;
 	private String _preferenceName;
-    private String _preferenceValue;
-    private boolean _showDefaultOption;
+	private String _preferenceValue;
+	private boolean _showDefaultOption;
 
 }

@@ -44,12 +44,12 @@ defaultDisplayStyles.add(RSSUtil.DISPLAY_STYLE_TITLE);
 	</aui:select>
 
 	<div class="display-template">
-        <liferay-ui:ddm-template-menu
-            classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
-            defaultOptions="<%= defaultDisplayStyles %>"
-            preferenceName="pageDisplayStyle"
-            preferenceValue="<%= pageDisplayStyle %>"
-        />
+		<liferay-ui:ddm-template-menu
+			classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
+			defaultOptions="<%= defaultDisplayStyles %>"
+			preferenceName="pageDisplayStyle"
+			preferenceValue="<%= pageDisplayStyle %>"
+		/>
 
 		<liferay-ui:ddm-template-selector
 			classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"

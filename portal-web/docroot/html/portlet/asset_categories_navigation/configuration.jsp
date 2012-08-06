@@ -87,12 +87,12 @@ String redirect = ParamUtil.getString(request, "redirect");
 		</div>
 
 		<div class="display-template">
-            <liferay-ui:ddm-template-menu
-                classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
-                preferenceName="displayTemplate"
-                preferenceValue="<%= displayTemplate %>"
-                showDefaultOption="<%= true %>"
-            />
+			<liferay-ui:ddm-template-menu
+				classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
+				preferenceName="displayTemplate"
+				preferenceValue="<%= displayTemplate %>"
+				showDefaultOption="<%= true %>"
+			/>
 
 			<liferay-ui:ddm-template-selector
 				classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"

@@ -19,7 +19,7 @@
 <c:choose>
 	<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
 
-        <%= PortletDisplayTemplatesUtil.renderDDMTemplate(renderRequest, renderResponse, portletDisplayDDMTemplateId, templateVocabularies) %>
+		<%= PortletDisplayTemplatesUtil.renderDDMTemplate(renderRequest, renderResponse, portletDisplayDDMTemplateId, templateVocabularies) %>
 
 	</c:when>
 	<c:otherwise>
