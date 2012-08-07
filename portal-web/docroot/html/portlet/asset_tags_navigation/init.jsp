@@ -16,8 +16,16 @@
 
 <%@ include file="/html/portlet/init.jsp" %>
 
-<%@ page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil" %><%@
-page import="com.liferay.portlet.asset.model.AssetRendererFactory" %>
+<%@ page import="com.liferay.portal.kernel.template.PortletDisplayTemplateHandler" %><%@
+page import="com.liferay.portal.kernel.template.PortletDisplayTemplateHandlerRegistryUtil" %><%@
+page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil" %><%@
+page import="com.liferay.portlet.asset.model.AssetRendererFactory" %><%@
+page import="com.liferay.portlet.asset.model.AssetTag" %><%@
+page import="com.liferay.portlet.asset.service.AssetTagServiceUtil" %><%@
+page import="com.liferay.portlet.asset.util.comparator.AssetTagCountComparator" %><%@
+page import="com.liferay.portlet.dynamicdatamapping.model.DDMTemplate" %><%@
+page import="com.liferay.portlet.portletdisplaytemplates.util.PortletDisplayTemplatesUtil" %><%@
+page import="com.liferay.portlet.dynamicdatamapping.model.DDMTemplate" %>
 
 <%
 PortletPreferences preferences = renderRequest.getPreferences();
@@ -33,6 +41,20 @@ String displayStyle = PrefsParamUtil.getString(preferences, request, "displaySty
 int maxAssetTags = PrefsParamUtil.getInteger(preferences, request, "maxAssetTags", 10);
 boolean showAssetCount = PrefsParamUtil.getBoolean(preferences, request, "showAssetCount");
 boolean showZeroAssetCount = PrefsParamUtil.getBoolean(preferences, request, "showZeroAssetCount");
+
+PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemplateHandlerRegistryUtil.getPortletDisplayTemplateHandler(AssetTag.class.getName());
+
+DDMTemplate portletDisplayDDMTemplate = null;
+long portletDisplayDDMTemplateId = 0;
+long portletDisplayDDMTemplateGroupId = PortletDisplayTemplatesUtil.getDDMTemplateGroupId(themeDisplay);
+
+if (displayStyle.startsWith("ddmTemplate_")) {
+	portletDisplayDDMTemplate = PortletDisplayTemplatesUtil.fetchDDMTemplate(portletDisplayDDMTemplateGroupId, displayStyle);
+
+	if (portletDisplayDDMTemplate != null) {
+		portletDisplayDDMTemplateId = portletDisplayDDMTemplate.getTemplateId();
+	}
+}
 %>
 
 <%@ include file="/html/portlet/asset_tags_navigation/init-ext.jsp" %>
