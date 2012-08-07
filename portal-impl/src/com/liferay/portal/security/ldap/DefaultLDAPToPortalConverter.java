@@ -24,15 +24,18 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.ContactConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.FullNameGenerator;
 import com.liferay.portal.security.auth.FullNameGeneratorFactory;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.ContactUtil;
 import com.liferay.portal.service.persistence.UserUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
+import com.liferay.portal.util.PropsValues;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -187,6 +190,29 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 
 		User user = UserUtil.create(0);
 
+		// Find corresponding portal user
+
+		User portalUser = null;
+
+		String openId = StringPool.BLANK;
+
+		String authType = PrefsPropsUtil.getString(
+			companyId, PropsKeys.COMPANY_SECURITY_AUTH_TYPE,
+			PropsValues.COMPANY_SECURITY_AUTH_TYPE);
+
+		if (authType.equals(CompanyConstants.AUTH_TYPE_SN) && !autoScreenName) {
+			portalUser = UserLocalServiceUtil.fetchUserByScreenName(
+				companyId, screenName);
+		}
+		else {
+			portalUser = UserLocalServiceUtil.fetchUserByEmailAddress(
+				companyId, emailAddress);
+		}
+
+		if (portalUser != null) {
+			openId = portalUser.getOpenId();
+		}
+
 		user.setCompanyId(companyId);
 		user.setEmailAddress(emailAddress);
 		user.setFirstName(firstName);
@@ -202,7 +228,7 @@ public class DefaultLDAPToPortalConverter implements LDAPToPortalConverter {
 
 		user.setLastName(lastName);
 		user.setMiddleName(middleName);
-		user.setOpenId(StringPool.BLANK);
+		user.setOpenId(openId);
 		user.setPasswordUnencrypted(password);
 		user.setScreenName(screenName);
 
