@@ -1995,6 +1995,8 @@ public interface PropsKeys {
 
 	public static final String SITEMINDER_USER_HEADER = "siteminder.user.header";
 
+	public static final String SITE_MAP_DISPLAY_STYLES_TEMPLATE_CONTENT = "site.map.display.styles.template.content";
+
 	public static final String SITES_CONTROL_PANEL_MEMBERS_VISIBLE = "sites.control.panel.members.visible";
 
 	public static final String SITES_EMAIL_FROM_ADDRESS = "sites.email.from.address";

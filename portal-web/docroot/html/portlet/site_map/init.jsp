@@ -16,8 +16,12 @@
 
 <%@ include file="/html/portlet/init.jsp" %>
 
-<%@ page import="com.liferay.portal.util.LayoutLister" %><%@
-page import="com.liferay.portal.util.LayoutView" %>
+<%@ page import="com.liferay.portal.kernel.template.PortletDisplayTemplateHandler" %><%@
+page import="com.liferay.portal.kernel.template.PortletDisplayTemplateHandlerRegistryUtil" %><%@
+page import="com.liferay.portal.util.LayoutLister" %><%@
+page import="com.liferay.portal.util.LayoutView" %><%@
+page import="com.liferay.portlet.dynamicdatamapping.model.DDMTemplate" %><%@
+page import="com.liferay.portlet.portletdisplaytemplates.util.PortletDisplayTemplatesUtil" %>
 
 <%
 PortletPreferences preferences = renderRequest.getPreferences();
@@ -30,6 +34,7 @@ if (Validator.isNotNull(portletResource)) {
 
 String rootLayoutUuid = GetterUtil.getString(preferences.getValue("rootLayoutUuid", StringPool.BLANK));
 int displayDepth = GetterUtil.getInteger(preferences.getValue("displayDepth", StringPool.BLANK));
+String displayStyle = GetterUtil.getString(preferences.getValue("displayStyle", StringPool.BLANK));
 boolean includeRootInTree = GetterUtil.getBoolean(preferences.getValue("includeRootInTree", StringPool.BLANK));
 boolean showCurrentPage = GetterUtil.getBoolean(preferences.getValue("showCurrentPage", StringPool.BLANK));
 boolean useHtmlTitle = GetterUtil.getBoolean(preferences.getValue("useHtmlTitle", StringPool.BLANK));
@@ -52,6 +57,19 @@ else {
 
 if (rootLayoutId == LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
 	includeRootInTree = false;
+}
+
+DDMTemplate portletDisplayDDMTemplate = null;
+long portletDisplayDDMTemplateGroupId = PortletDisplayTemplatesUtil.getDDMTemplateGroupId(themeDisplay);
+long portletDisplayDDMTemplateId = 0;
+PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemplateHandlerRegistryUtil.getPortletDisplayTemplateHandler(LayoutSet.class.getName());
+
+if (displayStyle.startsWith("ddmTemplate_")) {
+	portletDisplayDDMTemplate = PortletDisplayTemplatesUtil.fetchDDMTemplate(portletDisplayDDMTemplateGroupId, displayStyle);
+
+	if (portletDisplayDDMTemplate != null) {
+		portletDisplayDDMTemplateId = portletDisplayDDMTemplate.getTemplateId();
+	}
 }
 %>
 
