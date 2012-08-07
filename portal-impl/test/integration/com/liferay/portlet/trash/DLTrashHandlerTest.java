@@ -65,6 +65,18 @@ public class DLTrashHandlerTest extends BaseDLTrashHandlerTestCase {
 		Assert.assertFalse(folder.getName().contains(StringPool.SLASH));
 	}
 
+	protected long doAddSubEntry(long folderId1, long folderId2)
+		throws Exception {
+
+		return 0;
+	}
+
+	protected void doMoveSubEntryFromTrash(long subEntryId) throws Exception {
+	}
+
+	protected void doMoveSubEntryToTrash(long subEntryId) throws Exception {
+	}
+
 	protected void testDuplicate(
 			boolean duplicateFileEntry, boolean duplicateFolder)
 		throws Exception {
@@ -105,6 +117,10 @@ public class DLTrashHandlerTest extends BaseDLTrashHandlerTestCase {
 		Assert.assertEquals(initialNotInTrashCount, getNotInTrashCount());
 		Assert.assertEquals(
 			initialTrashEntriesCount + trashCount, getTrashEntriesCount());
+	}
+
+	@Override
+	protected void testTrashSubEntry(boolean deleteFolder) throws Exception {
 	}
 
 	private static final String _NAME = "Test Name";

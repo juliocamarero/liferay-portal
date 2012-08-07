@@ -15,6 +15,7 @@
 package com.liferay.portlet.trash;
 
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.ExecutionTestListeners;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -41,6 +42,25 @@ public class DLFileShortcutTrashHandlerTest extends BaseDLTrashHandlerTestCase {
 	@Test
 	public void testTrashAndRestore() throws Exception {
 		testTrash(false);
+	}
+
+	protected long doAddSubEntry(long folderId1, long folderId2)
+		throws Exception {
+
+		FileEntry fileEntry = addFileEntry(folderId2, "Subentry.txt");
+
+		DLFileShortcut dlFileShortcut = addFileShortcut(fileEntry, folderId1);
+
+		return dlFileShortcut.getFileShortcutId();
+	}
+
+	protected void doMoveSubEntryFromTrash(long subEntryId) throws Exception {
+		DLAppServiceUtil.moveFileShortcutFromTrash(
+			subEntryId, parentFolder.getFolderId(), new ServiceContext());
+	}
+
+	protected void doMoveSubEntryToTrash(long subEntryId) throws Exception {
+		DLAppServiceUtil.moveFileShortcutToTrash(subEntryId);
 	}
 
 	protected void testTrash(boolean delete) throws Exception {
