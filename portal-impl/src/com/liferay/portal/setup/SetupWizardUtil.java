@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Account;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Contact;
@@ -359,7 +360,7 @@ public class SetupWizardUtil {
 		ScreenNameGenerator screenNameGenerator =
 			ScreenNameGeneratorFactory.getInstance();
 
-		String screenName = "test";
+		String screenName = PropsValues.DEFAULT_ADMIN_EMAIL_ADDRESS_PREFIX;
 
 		try {
 			screenName = screenNameGenerator.generate(0, 0, emailAddress);
@@ -426,6 +427,21 @@ public class SetupWizardUtil {
 
 			user = UserLocalServiceUtil.getUserByEmailAddress(
 				themeDisplay.getCompanyId(), emailAddress);
+
+			String defaultAdminEmail =
+				PropsValues.DEFAULT_ADMIN_EMAIL_ADDRESS_PREFIX + "@" +
+					PropsValues.COMPANY_DEFAULT_WEB_ID;
+
+			if (!emailAddress.equals(defaultAdminEmail)) {
+				User testUser = UserLocalServiceUtil.fetchUserByEmailAddress(
+					themeDisplay.getCompanyId(), defaultAdminEmail);
+
+				if (testUser != null) {
+					UserLocalServiceUtil.updateStatus(
+						testUser.getUserId(),
+						WorkflowConstants.STATUS_INACTIVE);
+				}
+			}
 		}
 
 		user = UserLocalServiceUtil.updatePasswordReset(user.getUserId(), true);
