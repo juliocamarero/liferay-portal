@@ -81,6 +81,23 @@ public class DLFileEntryTrashHandlerTest extends BaseDLTrashHandlerTestCase {
 		testTrash(true, false, false, false, false);
 	}
 
+	protected long doAddSubEntry(long folderId1, long folderId2)
+		throws Exception {
+
+		FileEntry fileEntry = addFileEntry(folderId1, "Subentry.txt");
+
+		return fileEntry.getFileEntryId();
+	}
+
+	protected void doMoveSubEntryFromTrash(long subEntryId) throws Exception {
+		DLAppServiceUtil.moveFileEntryFromTrash(
+			subEntryId, parentFolder.getFolderId(), new ServiceContext());
+	}
+
+	protected void doMoveSubEntryToTrash(long subEntryId) throws Exception {
+		DLAppServiceUtil.moveFileEntryToTrash(subEntryId);
+	}
+
 	protected void testTrash(
 			boolean draft, boolean delete, boolean versioned,
 			boolean leaveCheckedOut, boolean fileRank)

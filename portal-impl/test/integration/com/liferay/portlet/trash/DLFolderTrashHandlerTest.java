@@ -17,6 +17,7 @@ package com.liferay.portlet.trash;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileVersion;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.ExecutionTestListeners;
@@ -89,6 +90,23 @@ public class DLFolderTrashHandlerTest extends BaseDLTrashHandlerTestCase {
 	@Test
 	public void testTrashAndRestoreAndTrashFile() throws Exception {
 		testTrash(false, true, true, false);
+	}
+
+	protected long doAddSubEntry(long folderId1, long folderId2)
+		throws Exception {
+
+		Folder folder = addFolder(folderId1, "Sub Folder");
+
+		return folder.getFolderId();
+	}
+
+	protected void doMoveSubEntryFromTrash(long subEntryId) throws Exception {
+		DLAppServiceUtil.moveFolderFromTrash(
+			subEntryId, parentFolder.getFolderId(), new ServiceContext());
+	}
+
+	protected void doMoveSubEntryToTrash(long subEntryId) throws Exception {
+		DLAppServiceUtil.moveFolderToTrash(subEntryId);
 	}
 
 	protected void testTrash(
