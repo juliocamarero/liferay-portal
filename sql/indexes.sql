@@ -874,8 +874,10 @@ create index IX_1AA07A6D on Website (companyId, classNameId, classPK, primary_);
 create index IX_F75690BB on Website (userId);
 
 create index IX_5D6FE3F0 on WikiNode (companyId);
+create index IX_B54332D6 on WikiNode (companyId, status);
 create index IX_B480A672 on WikiNode (groupId);
 create unique index IX_920CD8B1 on WikiNode (groupId, name);
+create index IX_23325358 on WikiNode (groupId, status);
 create index IX_6C112D7C on WikiNode (uuid_);
 create index IX_E0E6D12C on WikiNode (uuid_, companyId);
 create unique index IX_7609B2AE on WikiNode (uuid_, groupId);

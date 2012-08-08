@@ -155,6 +155,18 @@ public class WikiPageServiceSoap {
 		}
 	}
 
+	public static void deletePageByPageId(long pageId)
+		throws RemoteException {
+		try {
+			WikiPageServiceUtil.deletePageByPageId(pageId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static void deletePageAttachment(long nodeId,
 		java.lang.String title, java.lang.String fileName)
 		throws RemoteException {
@@ -321,12 +333,48 @@ public class WikiPageServiceSoap {
 		}
 	}
 
+	public static void moveEntryToTrash(long nodeId, java.lang.String title)
+		throws RemoteException {
+		try {
+			WikiPageServiceUtil.moveEntryToTrash(nodeId, title);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void moveEntryToTrash(long nodeId, java.lang.String title,
+		double version) throws RemoteException {
+		try {
+			WikiPageServiceUtil.moveEntryToTrash(nodeId, title, version);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static void movePage(long nodeId, java.lang.String title,
 		java.lang.String newTitle,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			WikiPageServiceUtil.movePage(nodeId, title, newTitle, serviceContext);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void restorePageFromTrash(long pageId)
+		throws RemoteException {
+		try {
+			WikiPageServiceUtil.restorePageFromTrash(pageId);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
