@@ -289,6 +289,7 @@ public class ServiceTestUtil {
 		IndexerRegistryUtil.register(new DLIndexer());
 		IndexerRegistryUtil.register(new MBIndexer());
 		IndexerRegistryUtil.register(new TrashIndexer());
+		IndexerRegistryUtil.register(new WikiIndexer());
 
 		// Upgrade
 
