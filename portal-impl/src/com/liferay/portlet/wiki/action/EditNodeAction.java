@@ -59,7 +59,10 @@ public class EditNodeAction extends PortletAction {
 				updateNode(actionRequest);
 			}
 			else if (cmd.equals(Constants.DELETE)) {
-				deleteNode(actionRequest);
+				deleteNode(actionRequest, false);
+			}
+			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
+				deleteNode(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribeNode(actionRequest);
@@ -119,14 +122,21 @@ public class EditNodeAction extends PortletAction {
 			getForward(renderRequest, "portlet.wiki.edit_node"));
 	}
 
-	protected void deleteNode(ActionRequest actionRequest) throws Exception {
+	protected void deleteNode(ActionRequest actionRequest, boolean moveToTrash)
+		throws Exception {
+
 		long nodeId = ParamUtil.getLong(actionRequest, "nodeId");
 
 		String oldName = getNodeName(nodeId);
 
 		WikiCacheThreadLocal.setClearCache(false);
 
-		WikiNodeServiceUtil.deleteNode(nodeId);
+		if (moveToTrash) {
+			WikiNodeServiceUtil.moveEntryToTrash(nodeId);
+		}
+		else {
+			WikiNodeServiceUtil.deleteNode(nodeId);
+		}
 
 		WikiCacheUtil.clearCache(nodeId);
 
