@@ -116,25 +116,28 @@ WikiPage wikiPage = (WikiPage)row.getObject();
 	<c:if test="<%= !wikiPage.isDraft() && WikiPagePermission.contains(permissionChecker, wikiPage.getNodeId(), wikiPage.getTitle(), ActionKeys.DELETE) %>">
 		<portlet:actionURL var="deleteURL">
 			<portlet:param name="struts_action" value="/wiki/edit_page" />
-			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+			<portlet:param name="<%= Constants.CMD %>" value="<%= (TrashUtil.isTrashEnabled(scopeGroupId)) ? Constants.MOVE_TO_TRASH : Constants.DELETE %>" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="nodeId" value="<%= String.valueOf(wikiPage.getNodeId()) %>" />
 			<portlet:param name="title" value="<%= HtmlUtil.unescape(wikiPage.getTitle()) %>" />
 		</portlet:actionURL>
 
-		<liferay-ui:icon-delete url="<%= deleteURL %>" />
+		<liferay-ui:icon-delete
+			trash="<%= TrashUtil.isTrashEnabled(scopeGroupId) %>"
+			url="<%= deleteURL %>"
+		/>
 	</c:if>
 
 	<c:if test="<%= wikiPage.isDraft() && WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.DELETE) %>">
 		<portlet:actionURL var="deleteURL">
 			<portlet:param name="struts_action" value="/wiki/edit_page" />
-			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+			<portlet:param name="<%= Constants.CMD %>" value="<%= (TrashUtil.isTrashEnabled(scopeGroupId)) ? Constants.MOVE_TO_TRASH : Constants.DELETE %>" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="nodeId" value="<%= String.valueOf(wikiPage.getNodeId()) %>" />
 			<portlet:param name="title" value="<%= HtmlUtil.unescape(wikiPage.getTitle()) %>" />
 			<portlet:param name="version" value="<%= String.valueOf(wikiPage.getVersion()) %>" />
 		</portlet:actionURL>
 
-		<liferay-ui:icon image="delete" message="discard-draft" url="<%= deleteURL %>" />
+		<liferay-ui:icon image="delete" message='<%= (TrashUtil.isTrashEnabled(scopeGroupId)) ? "move-to-the-recycle-bin" : "discard-draft" %>' url="<%= deleteURL %>" />
 	</c:if>
 </liferay-ui:icon-menu>

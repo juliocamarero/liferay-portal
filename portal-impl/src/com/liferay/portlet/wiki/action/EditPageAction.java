@@ -75,7 +75,10 @@ public class EditPageAction extends PortletAction {
 				page = updatePage(actionRequest);
 			}
 			else if (cmd.equals(Constants.DELETE)) {
-				deletePage(actionRequest);
+				deletePage(actionRequest, false);
+			}
+			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
+				deletePage(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.REVERT)) {
 				revertPage(actionRequest);
@@ -173,16 +176,28 @@ public class EditPageAction extends PortletAction {
 			getForward(renderRequest, "portlet.wiki.edit_page"));
 	}
 
-	protected void deletePage(ActionRequest actionRequest) throws Exception {
+	protected void deletePage(ActionRequest actionRequest, boolean moveToTrash)
+		throws Exception {
+
 		long nodeId = ParamUtil.getLong(actionRequest, "nodeId");
 		String title = ParamUtil.getString(actionRequest, "title");
 		double version = ParamUtil.getDouble(actionRequest, "version");
 
-		if (version > 0) {
-			WikiPageServiceUtil.deletePage(nodeId, title, version);
+		if (moveToTrash) {
+			if (version > 0) {
+				WikiPageServiceUtil.moveEntryToTrash(nodeId, title, version);
+			}
+			else {
+				WikiPageServiceUtil.moveEntryToTrash(nodeId, title);
+			}
 		}
 		else {
-			WikiPageServiceUtil.deletePage(nodeId, title);
+			if (version > 0) {
+				WikiPageServiceUtil.deletePage(nodeId, title, version);
+			}
+			else {
+				WikiPageServiceUtil.deletePage(nodeId, title);
+			}
 		}
 	}
 
