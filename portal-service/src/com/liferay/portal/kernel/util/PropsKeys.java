@@ -2305,6 +2305,8 @@ public interface PropsKeys {
 
 	public static final String WIDGET_SERVLET_MAPPING = "widget.servlet.mapping";
 
+	public static final String WIKI_DISPLAY_STYLES_TEMPLATE_CONTENT = "wiki.display.styles.template.content";
+
 	public static final String WIKI_EMAIL_FROM_ADDRESS = "wiki.email.from.address";
 
 	public static final String WIKI_EMAIL_FROM_NAME = "wiki.email.from.name";
