@@ -111,6 +111,8 @@ public interface PropsKeys {
 
 	public static final String ASSET_TAG_SUGGESTIONS_ENABLED = "asset.tag.suggestions.enabled";
 
+	public static final String ASSET_TAGS_NAVIGATION_DISPLAY_STYLES_TEMPLATE_CONTENT = "asset.tags.navigation.display.styles.template.content";
+
 	public static final String ASSET_VOCABULARY_DEFAULT = "asset.vocabulary.default";
 
 	public static final String AUDIT_MESSAGE_COM_LIFERAY_PORTAL_MODEL_LAYOUT_VIEW = "audit.message.com.liferay.portal.model.Layout.VIEW";
