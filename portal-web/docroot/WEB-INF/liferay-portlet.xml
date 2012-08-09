@@ -780,6 +780,7 @@
 		<icon>/html/icons/site_map.png</icon>
 		<struts-path>site_map</struts-path>
 		<configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
+		<portlet-display-template-handler>com.liferay.portlet.sitemap.template.SiteMapPortletDisplayTemplateHandler</portlet-display-template-handler>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<layout-cacheable>true</layout-cacheable>

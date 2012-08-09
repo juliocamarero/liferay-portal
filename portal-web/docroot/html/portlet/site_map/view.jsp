@@ -18,13 +18,27 @@
 
 <%
 List<Layout> rootLayouts = LayoutLocalServiceUtil.getLayouts(layout.getGroupId(), layout.isPrivateLayout(), rootLayoutId);
-
-StringBundler sb = new StringBundler();
-
-_buildSiteMap(layout, rootLayouts, rootLayout, includeRootInTree, displayDepth, showCurrentPage, useHtmlTitle, showHiddenPages, 1, themeDisplay, sb);
 %>
 
-<%= sb.toString() %>
+<c:choose>
+	<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
+
+		<%= PortletDisplayTemplatesUtil.renderDDMTemplate(renderRequest, renderResponse, portletDisplayDDMTemplateId, rootLayouts) %>
+
+	</c:when>
+	<c:otherwise>
+
+		<%
+		StringBundler sb = new StringBundler();
+
+		_buildSiteMap(layout, rootLayouts, rootLayout, includeRootInTree, displayDepth, showCurrentPage, useHtmlTitle, showHiddenPages, 1, themeDisplay, sb);
+		%>
+
+		<%= sb.toString() %>
+
+	</c:otherwise>
+</c:choose>
+
 
 <%!
 private void _buildLayoutView(Layout layout, String cssClass, boolean useHtmlTitle, ThemeDisplay themeDisplay, StringBundler sb) throws Exception {
