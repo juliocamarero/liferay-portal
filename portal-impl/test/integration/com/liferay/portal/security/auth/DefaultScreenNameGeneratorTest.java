@@ -17,6 +17,7 @@ package com.liferay.portal.security.auth;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.model.User;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.ExecutionTestListeners;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -54,12 +55,31 @@ public class DefaultScreenNameGeneratorTest {
 
 	@Test
 	public void testGenerateAlreadyExisting() throws Exception {
+		User user = TestPropsValues.getUser();
+
+		String existingScreenName = user.getScreenName();
+
 		String generatedScreenName = _screenNameGenerator.generate(
 			TestPropsValues.getCompanyId(), TestPropsValues.getUserId(),
-			"test@liferay.com");
+			existingScreenName + "@liferay.com");
 
-		Assert.assertNotSame("test", generatedScreenName);
-		Assert.assertEquals("test.1", generatedScreenName);
+		Assert.assertNotSame(existingScreenName, generatedScreenName);
+		Assert.assertEquals(existingScreenName + ".1", generatedScreenName);
+	}
+
+	@Test
+	public void testGenerateNoMailAddress() throws Exception {
+		long userId = TestPropsValues.getUserId();
+
+		String generatedScreenName = _screenNameGenerator.generate(
+			TestPropsValues.getCompanyId(), userId, null);
+
+		if (_usersScreenNameAllowNumeric) {
+			Assert.assertEquals(String.valueOf(userId), generatedScreenName);
+		}
+		else {
+			Assert.assertEquals("user." + userId, generatedScreenName);
+		}
 	}
 
 	@Test
@@ -76,6 +96,16 @@ public class DefaultScreenNameGeneratorTest {
 			Assert.assertNotSame("123", generatedScreenName);
 			Assert.assertEquals("user.123", generatedScreenName);
 		}
+	}
+
+	@Test
+	public void testGeneratePostfixUser() throws Exception {
+		long userId = TestPropsValues.getUserId();
+
+		String generatedScreenName = _screenNameGenerator.generate(
+			TestPropsValues.getCompanyId(), userId, "postfix@liferay.com");
+
+		Assert.assertEquals("postfix." + userId, generatedScreenName);
 	}
 
 	@Test
