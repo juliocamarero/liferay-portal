@@ -20,6 +20,7 @@ import com.liferay.portal.NoSuchUserGroupException;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.ldap.LDAPUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -1180,6 +1181,8 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 			}
 		}
 
+		updateUserProfile(ldapUser.getUser(), ldapUser.getContact(), user);
+
 		user = UserLocalServiceUtil.updateUser(
 			user.getUserId(), password, StringPool.BLANK, StringPool.BLANK,
 			passwordReset, ldapUser.getReminderQueryQuestion(),
@@ -1217,6 +1220,47 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 		}
 
 		return user;
+	}
+
+	protected void updateUserProfile(
+			User importedUser, Contact contact, User portalUser)
+		throws PortalException, SystemException {
+
+		Contact portalUserContact = portalUser.getContact();
+
+		contact.setPrefixId(portalUserContact.getPrefixId());
+
+		if (Validator.isNull(importedUser.getMiddleName())) {
+			importedUser.setMiddleName(portalUser.getMiddleName());
+		}
+
+		contact.setSuffixId(portalUserContact.getSuffixId());
+		contact.setMale(portalUserContact.getMale());
+
+		if (Validator.isNull(importedUser.getJobTitle())) {
+			importedUser.setJobTitle(portalUser.getJobTitle());
+		}
+
+		contact.setAimSn(portalUserContact.getAimSn());
+		contact.setIcqSn(portalUserContact.getIcqSn());
+		contact.setJabberSn(portalUserContact.getJabberSn());
+		contact.setSkypeSn(portalUserContact.getSkypeSn());
+		contact.setMsnSn(portalUserContact.getMsnSn());
+		contact.setYmSn(portalUserContact.getYmSn());
+
+		contact.setFacebookSn(portalUserContact.getFacebookSn());
+		contact.setMySpaceSn(portalUserContact.getMySpaceSn());
+		contact.setTwitterSn(portalUserContact.getTwitterSn());
+
+		contact.setSmsSn(portalUserContact.getSmsSn());
+
+		importedUser.setOpenId(portalUser.getOpenId());
+
+		importedUser.setLanguageId(portalUser.getLanguageId());
+		importedUser.setTimeZoneId(portalUser.getTimeZoneId());
+		importedUser.setGreeting(portalUser.getGreeting());
+
+		importedUser.setComments(portalUser.getComments());
 	}
 
 	private static final String _IMPORT_BY_GROUP = "group";
