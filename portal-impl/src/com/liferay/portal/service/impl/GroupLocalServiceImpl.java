@@ -592,26 +592,27 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		if (!group.isStagingGroup() &&
-			group.isOrganization() && group.isSite()) {
-
-			reInitializeLayout(group.getGroupId(), true, serviceContext);
-			reInitializeLayout(group.getGroupId(), false, serviceContext);
+		try {
+			layoutSetLocalService.deleteLayoutSet(
+				group.getGroupId(), true, serviceContext);
 		}
-		else {
-			try {
-				layoutSetLocalService.deleteLayoutSet(
-					group.getGroupId(), true, serviceContext);
-			}
-			catch (NoSuchLayoutSetException nslse) {
-			}
+		catch (NoSuchLayoutSetException nslse) {
+		}
 
-			try {
-				layoutSetLocalService.deleteLayoutSet(
-					group.getGroupId(), false, serviceContext);
-			}
-			catch (NoSuchLayoutSetException nslse) {
-			}
+		try {
+			layoutSetLocalService.deleteLayoutSet(
+				group.getGroupId(), false, serviceContext);
+		}
+		catch (NoSuchLayoutSetException nslse) {
+		}
+
+		boolean resetGroup = !group.isStagingGroup() &&
+			group.isOrganization() && group.isSite();
+
+		if (resetGroup) {
+			layoutSetLocalService.addLayoutSet(group.getGroupId(), true);
+
+			layoutSetLocalService.addLayoutSet(group.getGroupId(), false);
 		}
 
 		// Group roles
@@ -643,15 +644,12 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		teamLocalService.deleteTeams(group.getGroupId());
 
 		// Staging
+
 		unscheduleStaging(group);
 
 		if (group.hasStagingGroup()) {
-
-
 			try {
 				StagingUtil.disableStaging(group, group, serviceContext);
-
-				//deleteGroup(group.getStagingGroup().getGroupId());
 			}
 			catch (Exception e) {
 				if (_log.isErrorEnabled()) {
@@ -761,9 +759,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		// Group
 
-		if (!group.isStagingGroup() &&
-			group.isOrganization() && group.isSite()) {
-
+		if (resetGroup) {
 			group.setSite(false);
 
 			groupPersistence.update(group, false);
@@ -2696,48 +2692,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			if (name.equals(company.getName())) {
 				throw new DuplicateGroupException();
 			}
-		}
-	}
-
-	/**
-	 * Deletes a layoutset and creates a new one, and keeps it's logo if it had
-	 * one.
-	 * @param groupId - Id of the group the layoutset belongs to
-	 * @param privateLayoutSet - Determines if it's a private layoutset
-	 * @param serviceContext - The service context
-	 * @throws PortalException
-	 * @throws SystemException
-	 */
-	public void reInitializeLayout(long groupId, boolean privateLayoutSet,
-		ServiceContext serviceContext)
-		throws PortalException, SystemException
-	{
-		try {
-			LayoutSet layoutSet = layoutSetLocalService.getLayoutSet(groupId,
-				privateLayoutSet);
-			boolean logo = layoutSet.getLogo();
-			long logoId = layoutSet.getLogoId();
-
-			if (logo) {
-				layoutSet.setLogo(false);
-				layoutSet.setLogoId(0);
-				layoutSetPersistence.update(layoutSet, false);
-			}
-
-			layoutSetLocalService.deleteLayoutSet(groupId, privateLayoutSet,
-				serviceContext);
-
-			layoutSet = layoutSetLocalService.addLayoutSet(groupId,
-				privateLayoutSet);
-
-			if (logo) {
-				layoutSet.setLogo(logo);
-				layoutSet.setLogoId(logoId);
-				layoutSetPersistence.update(layoutSet, false);
-			}
-		}
-
-		catch(NoSuchLayoutSetException nsle) {
 		}
 	}
 
