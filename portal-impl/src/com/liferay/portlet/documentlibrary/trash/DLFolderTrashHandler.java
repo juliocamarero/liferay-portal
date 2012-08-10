@@ -24,14 +24,17 @@ import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.RepositoryServiceUtil;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderServiceUtil;
+import com.liferay.portlet.documentlibrary.service.permission.DLPermission;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.trash.DuplicateEntryException;
+import com.liferay.portlet.trash.TrashEntryConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
 
 import javax.portlet.PortletRequest;
@@ -40,13 +43,15 @@ import javax.portlet.PortletRequest;
  * Represents the trash handler for the folder entity.
  *
  * @author Alexander Chow
+ * @author Zsolt Berentey
  */
 public class DLFolderTrashHandler extends BaseTrashHandler {
 
 	public static final String CLASS_NAME = DLFolder.class.getName();
 
 	@Override
-	public void checkDuplicateTrashEntry(TrashEntry trashEntry, String newName)
+	public void checkDuplicateTrashEntry(
+			TrashEntry trashEntry, long containerId, String newName)
 		throws PortalException, SystemException {
 
 		DLFolder dlFolder = getDLFolder(trashEntry.getClassPK());
@@ -64,8 +69,12 @@ public class DLFolderTrashHandler extends BaseTrashHandler {
 				0, restoredTitle.indexOf(StringPool.FORWARD_SLASH));
 		}
 
+		if (containerId == TrashEntryConstants.DEFAULT_CONTAINER_ID) {
+			containerId = dlFolder.getParentFolderId();
+		}
+
 		DLFolder duplicatedFolder = DLFolderLocalServiceUtil.fetchFolder(
-			dlFolder.getGroupId(), dlFolder.getParentFolderId(), originalTitle);
+			dlFolder.getGroupId(), containerId, originalTitle);
 
 		if (duplicatedFolder != null) {
 			DuplicateEntryException dee = new DuplicateEntryException();
@@ -76,6 +85,13 @@ public class DLFolderTrashHandler extends BaseTrashHandler {
 
 			throw dee;
 		}
+	}
+
+	public void checkPermission(
+			PermissionChecker permissionChecker, long groupId, String actionId)
+		throws PortalException, SystemException {
+
+		DLPermission.check(permissionChecker, groupId, actionId);
 	}
 
 	/**
