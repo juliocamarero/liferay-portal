@@ -15,6 +15,8 @@
 package com.liferay.portal.security.ldap;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -39,6 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import javax.naming.ldap.LdapContext;
 import javax.portlet.PortletPreferences;
 
 import org.junit.Assert;
@@ -67,8 +70,14 @@ public class PortalLDAPImporterImplTest {
 
 	@Test
 	@Transactional
-	public void testImportLDAPUser() throws Exception {
+	public void testImportLDAPUsers() throws Exception {
 		configLDAPServer(_companyId);
+
+		if (!checkLDAPConnectivity(_ldapServerId, _companyId)) {
+			_log.warn("Connection with LDAP not available. Test won't execute");
+
+			return;
+		}
 
 		PortalLDAPImporterUtil.importFromLDAP();
 
@@ -194,6 +203,19 @@ public class PortalLDAPImporterImplTest {
 		return properties;
 	}
 
+	protected boolean checkLDAPConnectivity(long ldapServerId, long companyId)
+		throws Exception {
+
+		LdapContext ldapContext = PortalLDAPUtil.getContext(
+			ldapServerId, companyId);
+
+		if (ldapContext == null) {
+			return false;
+		}
+
+		return true;
+	}
+
 	protected void completeUsersFields(List<User> users) throws Exception {
 		for (int i = 0; i < users.size(); i++) {
 			User user = users.get(i);
@@ -292,6 +314,9 @@ public class PortalLDAPImporterImplTest {
 	private static final String _LDAP_USERS_DN = "dc=example,dc=com";
 
 	private static long _ldapServerId;
+
+	private static Log _log = LogFactoryUtil.getLog(
+		PortalLDAPImporterImplTest.class);
 
 	private long _companyId;
 
