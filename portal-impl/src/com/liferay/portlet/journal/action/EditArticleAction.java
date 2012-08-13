@@ -475,6 +475,12 @@ public class EditArticleAction extends PortletAction {
 		long classPK = ParamUtil.getLong(uploadPortletRequest, "classPK");
 		String articleId = ParamUtil.getString(
 			uploadPortletRequest, "articleId");
+		int pos = articleId.lastIndexOf(VERSION_SEPARATOR);
+
+		if (pos != -1) {
+			articleId = articleId.substring(0, pos);
+		}
+
 		boolean autoArticleId = ParamUtil.getBoolean(
 			uploadPortletRequest, "autoArticleId");
 		double version = ParamUtil.getDouble(uploadPortletRequest, "version");
