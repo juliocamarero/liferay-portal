@@ -16,10 +16,11 @@ package com.liferay.portlet.documentlibrary.trash;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
+import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
@@ -35,23 +36,12 @@ import javax.portlet.PortletRequest;
  *
  * @author Zsolt Berentey
  */
-public class DLFileShortcutTrashHandler extends BaseTrashHandler {
+public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 
 	/**
 	 * The class name of the file shortcut entity.
 	 */
 	public static final String CLASS_NAME = DLFileShortcut.class.getName();
-
-	@Override
-	public void checkAddPermission(
-			PermissionChecker permissionChecker, long groupId,
-			long containerModelId)
-		throws PortalException, SystemException {
-
-		DLFolderPermission.check(
-			permissionChecker, groupId, containerModelId,
-			ActionKeys.ADD_SHORTCUT);
-	}
 
 	/**
 	 * Deletes all file shortcuts with the matching primary keys.
@@ -130,12 +120,18 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 		return new DLFileShortcutTrashRenderer(fileShortcut);
 	}
 
-	public boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
+	public boolean hasTrashPermission(
+			PermissionChecker permissionChecker, long groupId, long classPK,
+			String trashActionId)
 		throws PortalException, SystemException {
 
-		return DLFileShortcutPermission.contains(
-			permissionChecker, classPK, actionId);
+		if (trashActionId.equals(TrashActionKeys.MOVE)) {
+			return DLFolderPermission.contains(
+				permissionChecker, groupId, classPK, ActionKeys.ADD_SHORTCUT);
+		}
+
+		return super.hasTrashPermission(
+			permissionChecker, groupId, classPK, trashActionId);
 	}
 
 	public boolean isInTrash(long classPK)
@@ -149,6 +145,24 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean isRestorable(long classPK)
+		throws PortalException, SystemException {
+
+		DLFileShortcut dlFileShortcut = getDLFileShortcut(classPK);
+
+		return !dlFileShortcut.isInTrashFolder();
+	}
+
+	@Override
+	public void moveTrashEntry(
+			long classPK, long containerId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DLAppServiceUtil.moveFileShortcutFromTrash(
+			classPK, containerId, serviceContext);
 	}
 
 	/**
@@ -165,6 +179,14 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 		for (long classPK : classPKs) {
 			DLAppServiceUtil.restoreFileShortcutFromTrash(classPK);
 		}
+	}
+
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return DLFileShortcutPermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 }

@@ -14,18 +14,14 @@
 
 package com.liferay.portlet.documentlibrary.trash;
 
-import com.liferay.portal.InvalidRepositoryException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.repository.Repository;
-import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
+import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.service.RepositoryServiceUtil;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
@@ -50,20 +46,9 @@ import javax.portlet.PortletRequest;
  * @author Manuel de la Peña
  * @author Zsolt Berentey
  */
-public class DLFileEntryTrashHandler extends BaseTrashHandler {
+public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 
 	public static final String CLASS_NAME = DLFileEntry.class.getName();
-
-	@Override
-	public void checkAddPermission(
-			PermissionChecker permissionChecker, long groupId,
-			long containerModelId)
-		throws PortalException, SystemException {
-
-		DLFolderPermission.check(
-			permissionChecker, groupId, containerModelId,
-			ActionKeys.ADD_DOCUMENT);
-	}
 
 	@Override
 	public void checkDuplicateTrashEntry(
@@ -161,12 +146,19 @@ public class DLFileEntryTrashHandler extends BaseTrashHandler {
 		return DLUtil.getAbsolutePath(portletRequest, dlFolder.getFolderId());
 	}
 
-	public boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
+	public boolean hasTrashPermission(
+			PermissionChecker permissionChecker, long groupId, long classPK,
+			String trashActionId)
 		throws PortalException, SystemException {
 
-		return DLFileEntryPermission.contains(
-			permissionChecker, classPK, actionId);
+		if (trashActionId.equals(TrashActionKeys.MOVE)) {
+			return DLFolderPermission.contains(
+					permissionChecker, groupId, classPK,
+					ActionKeys.ADD_DOCUMENT);
+		}
+
+		return super.hasTrashPermission(
+			permissionChecker, groupId, classPK, trashActionId);
 	}
 
 	public boolean isInTrash(long classPK)
@@ -181,6 +173,24 @@ public class DLFileEntryTrashHandler extends BaseTrashHandler {
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean isRestorable(long classPK)
+		throws PortalException, SystemException {
+
+		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
+
+		return !dlFileEntry.isInTrashFolder();
+	}
+
+	@Override
+	public void moveTrashEntry(
+			long classPK, long containerId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DLAppServiceUtil.moveFileEntryFromTrash(
+			classPK, containerId, serviceContext);
 	}
 
 	/**
@@ -215,21 +225,12 @@ public class DLFileEntryTrashHandler extends BaseTrashHandler {
 		DLFileVersionLocalServiceUtil.updateDLFileVersion(dlFileVersion, false);
 	}
 
-	protected DLFileEntry getDLFileEntry(long classPK)
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
 		throws PortalException, SystemException {
 
-		Repository repository = RepositoryServiceUtil.getRepositoryImpl(
-			0, classPK, 0);
-
-		if (!(repository instanceof LiferayRepository)) {
-			throw new InvalidRepositoryException(
-				"Repository " + repository.getRepositoryId() +
-					" does not support trash operations");
-		}
-
-		FileEntry fileEntry = repository.getFileEntry(classPK);
-
-		return (DLFileEntry)fileEntry.getModel();
+		return DLFileEntryPermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 }
