@@ -606,6 +606,15 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		catch (NoSuchLayoutSetException nslse) {
 		}
 
+		boolean resetGroup = !group.isStagingGroup() &&
+			group.isOrganization() && group.isSite();
+
+		if (resetGroup) {
+			layoutSetLocalService.addLayoutSet(group.getGroupId(), true);
+
+			layoutSetLocalService.addLayoutSet(group.getGroupId(), false);
+		}
+
 		// Group roles
 
 		userGroupRoleLocalService.deleteUserGroupRolesByGroupId(
@@ -639,7 +648,14 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		unscheduleStaging(group);
 
 		if (group.hasStagingGroup()) {
-			deleteGroup(group.getStagingGroup().getGroupId());
+			try {
+				StagingUtil.disableStaging(group, group, serviceContext);
+			}
+			catch (Exception e) {
+				if (_log.isErrorEnabled()) {
+					_log.error("Unable to disable staging for group: " + group);
+				}
+			}
 		}
 
 		// Themes
@@ -743,7 +759,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		// Group
 
-		if (group.isOrganization() && group.isSite()) {
+		if (resetGroup) {
 			group.setSite(false);
 
 			groupPersistence.update(group, false);
