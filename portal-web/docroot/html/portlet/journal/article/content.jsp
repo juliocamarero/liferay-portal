@@ -27,6 +27,11 @@ long classNameId = ParamUtil.getLong(request, "classNameId");
 String classPK = ParamUtil.getString(request, "classPK");
 
 String articleId = BeanParamUtil.getString(article, request, "articleId");
+if (article == null) {
+	int index = articleId.indexOf('_');
+	String articleIdNumber = articleId.substring(0, index);
+	article = JournalArticleLocalServiceUtil.getArticle(groupId, articleIdNumber);
+}
 String newArticleId = ParamUtil.getString(request, "newArticleId");
 String instanceIdKey = PwdGenerator.KEY1 + PwdGenerator.KEY2 + PwdGenerator.KEY3;
 
