@@ -21,8 +21,6 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import java.util.List;
 import java.util.Map;
 
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 import javax.servlet.jsp.PageContext;
 
 /**

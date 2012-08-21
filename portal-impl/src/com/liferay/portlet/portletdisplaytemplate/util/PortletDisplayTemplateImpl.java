@@ -240,8 +240,7 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 		template.put(PortletDisplayTemplateConstants.ENTRIES, entries);
 
 		if (entries.size() == 1) {
-			template.put(
-				PortletDisplayTemplateConstants.ENTRY, entries.get(0));
+			template.put(PortletDisplayTemplateConstants.ENTRY, entries.get(0));
 		}
 
 		// Other data
