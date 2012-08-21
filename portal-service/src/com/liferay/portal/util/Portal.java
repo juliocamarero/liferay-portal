@@ -354,7 +354,8 @@ public interface Portal {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public String getCanonicalURL(
-			String completeURL, ThemeDisplay themeDisplay, Layout layout)
+			String completeURL, ThemeDisplay themeDisplay, Layout layout,
+			boolean forceLayoutInUrl)
 		throws PortalException, SystemException;
 
 	/**

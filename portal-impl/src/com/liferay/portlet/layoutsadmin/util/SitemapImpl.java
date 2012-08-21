@@ -193,7 +193,7 @@ public class SitemapImpl implements Sitemap {
 			sb.append(journalArticle.getUrlTitle());
 
 			String articleURL = PortalUtil.getCanonicalURL(
-				sb.toString(), themeDisplay, layout);
+				sb.toString(), themeDisplay, layout, false);
 
 			addURLElement(
 				element, articleURL, null, journalArticle.getModifiedDate());
@@ -237,7 +237,7 @@ public class SitemapImpl implements Sitemap {
 			layout, themeDisplay);
 
 		layoutFullURL = PortalUtil.getCanonicalURL(
-			layoutFullURL, themeDisplay, layout);
+			layoutFullURL, themeDisplay, layout, false);
 
 		addURLElement(
 			element, layoutFullURL, typeSettingsProperties,
