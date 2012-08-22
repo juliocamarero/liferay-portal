@@ -40,7 +40,6 @@ import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.model.MBThreadConstants;
-import com.liferay.portlet.messageboards.service.MBMessageServiceUtil;
 import com.liferay.portlet.messageboards.service.base.MBMessageServiceBaseImpl;
 import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 import com.liferay.portlet.messageboards.service.permission.MBDiscussionPermission;
@@ -650,12 +649,14 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		if (parentMessageId > 0) {
-			MBMessage parentMessage = MBMessageServiceUtil.getMessage(
+			MBMessage parentMessage = mbMessagePersistence.fetchByPrimaryKey(
 				parentMessageId);
 
-			if (parentMessage.getCategoryId() != categoryId ||
-				parentMessage.getThreadId() != threadId ||
-				parentMessage.getGroupId() != groupId) {
+			if ((parentMessage == null) ||
+				(parentMessage.getCategoryId() != categoryId) ||
+				(parentMessage.getThreadId() != threadId) ||
+				(parentMessage.getGroupId() != groupId)) {
+
 				throw new PrincipalException();
 			}
 
@@ -666,13 +667,9 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 				return;
 			}
 
-			if ((parentMessage == null) ||
-				!MBCategoryPermission.contains(
-					getPermissionChecker(), groupId, categoryId,
-					ActionKeys.REPLY_TO_MESSAGE)) {
-
-				throw new PrincipalException();
-			}
+			MBCategoryPermission.check(
+				getPermissionChecker(), groupId, categoryId,
+				ActionKeys.REPLY_TO_MESSAGE);
 		}
 		else {
 			MBCategoryPermission.check(
