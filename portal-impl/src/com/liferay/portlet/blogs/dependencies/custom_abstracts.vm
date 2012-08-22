@@ -1,0 +1,79 @@
+#set ($assetEntryLocalService = $serviceLocator.findService("com.liferay.portlet.asset.service.AssetEntryLocalService"))
+#set ($blogsEntryClassName = "com.liferay.portlet.blogs.model.BlogsEntry")
+
+#foreach ($entry in $entries)
+	#set($assetEntry = $assetEntryLocalService.getEntry($blogsEntryClassName, $entry.getEntryId()))
+
+	#set ($viewURL = $renderResponse.createRenderURL())
+	$viewURL.setParameter("struts_action", "/blogs/view_entry")
+	$viewURL.setParameter("redirect", $portalUtil.getCurrentURL($request))
+	$viewURL.setParameter("urlTitle", $entry.getUrlTitle())
+
+	#set ($portletURL = $renderResponse.createRenderURL())
+
+	<div class="entry">
+		<div class="entry-content">
+			<div class="entry-title">
+				<h2><a href="$viewURL">$htmlUtil.escape($entry.getTitle())</a></h2>
+			</div>
+
+			<div class="entry-date">
+				$dateTool.format("dd MMM yyyy - HH:mm:ss", $entry.getCreateDate())
+			</div>
+
+			#if ($enableSocialBookmarks.equals("true"))
+				$theme.socialBookmarks($socialBookmarksDisplayStyle, "_blank", $socialBookmarksTypes, $entry.getTitle(), $viewURL.toString())
+			#end
+		</div>
+
+		<div class="entry-body">
+			#if ($validator.isNotNull($entry.getSmallImageURL()))
+				<div class="asset-small-image">
+					<img alt="" class="asset-small-image" src="$entry.getSmallImageURL()" width="150" />
+				</div>
+			#end
+
+			<div class="entry-author">
+				#language("written-by") $htmlUtil.escape($portalUtil.getUserName($entry.getUserId(), $entry.getUserName()))
+			</div>
+
+			#set ($summary = $entry.getDescription())
+
+			#if ($validator.isNull($summary))
+				#set ($summary = $entry.getContent())
+			#end
+
+			$stringUtil.shorten($htmlUtil.stripHtml($summary), 100)
+
+			<a href="$viewURL">#language("read-more") <span class="aui-helper-hidden-accessible">#language("about") $entry.getTitle()</span> &raquo; </a>
+		</div>
+
+		<div class="entry-footer">
+			#if ($enableFlags.equals("true"))
+				$theme.flags($blogsEntryClassName, $entry.getEntryId(), $entry.getTitle(), true, "", $entry.getUserId())
+			#end
+
+			<span class="entry-categories">
+				$theme.assetCategoriesSummary($blogsEntryClassName, $entry.getEntryId(), "", $portletURL)
+			</span>
+
+			<span class="entry-tags">
+				$theme.assetTagsSummary($blogsEntryClassName, $entry.getEntryId(), "", "", $portletURL)
+			</span>
+
+			#if ($enableRatings.equals("true"))
+				<div class="asset-ratings">
+					$theme.ratings($blogsEntryClassName, $entry.getEntryId(), 5, "stars", "")
+				</div>
+			#end
+
+			#if ($assetEntry && $enableRelatedAssets.equals("true"))
+				<div class="entry-links">
+					$theme.assetLinks($assetEntry.getEntryId(), $blogsEntryClassName, $entry.getEntryId())
+				</div>
+			#end
+		</div>
+	</div>
+
+	<div class="separator"><!-- --></div>
+#end

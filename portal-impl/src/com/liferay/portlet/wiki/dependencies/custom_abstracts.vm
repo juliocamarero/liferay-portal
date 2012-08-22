@@ -1,0 +1,74 @@
+#set ($assetEntryLocalService = $serviceLocator.findService("com.liferay.portlet.asset.service.AssetEntryLocalService"))
+#set ($wikiPageClassName = "com.liferay.portlet.wiki.model.WikiPage")
+#set ($assetEntry = $assetEntryLocalService.getEntry($wikiPageClassName, $entry.getResourcePrimKey()))
+
+<div class="wiki-body">
+	<h1 class="header-title">$entry.getTitle()</h1>
+	$theme.socialBookmarks("normal", "_blank", "", $entry.getTitle(), $viewURL.toString())
+
+	<div class="wiki-info"
+	<span class="author">#language("written-by") $htmlUtil.escape($portalUtil.getUserName($entry.getUserId(), $entry.getUserName()))</span>  |
+	<span class="date">$dateTool.format("dd MMM yyyy - HH:mm:ss", $entry.getCreateDate())</span> |
+	<span class="stats">$assetEntry.getViewCount() #language("views")</span>
+
+	<p>$htmlUtil.stripHtml($entry.getContent())</p>
+</div>
+
+<div class="separator"><!-- --></div>
+
+#if ($enablePageRatings.equals("true"))
+	<div class="page-ratings">
+		$theme.ratings($wikiPageClassName, $entry.getResourcePrimKey(), 5, "stars", "")
+	</div>
+#end
+
+#if ($assetEntry && $enableRelatedAssets.equals("true"))
+	<div class="entry-links">
+		$theme.assetLinks($assetEntry.getEntryId(), $wikiPageClassName, $entry.getResourcePrimKey())
+	</div>
+#end
+
+<div class="page-categorization">
+	<div class="page-categories">
+		#set ($categorizedPagesURL = $renderResponse.createRenderURL())
+		$categorizedPagesURL.setParameter("struts_action", "/wiki/view_categorized_pages")
+		$categorizedPagesURL.setParameter("nodeId", "$entry.getNodeId()")
+		$theme.assetCategoriesSummary($wikiPageClassName, $entry.getResourcePrimKey(), "", $categorizedPagesURL)
+	</div>
+
+	<div class="page-tags">
+		#set ($taggedPagesURL = $renderResponse.createRenderURL())
+		$taggedPagesURL.setParameter("struts_action", "/wiki/view_tagged_pages")
+		$taggedPagesURL.setParameter("nodeId", "$entry.getNodeId()")
+		$theme.assetTagsSummary($wikiPageClassName, $entry.getResourcePrimKey(), "", "", $taggedPagesURL)
+	</div>
+</div>
+
+#set ($childPages = $entry.getChildPages())
+
+#if (!$childPages.isEmpty())
+	<div class="child-pages">
+		<h2>#language("children-pages")</h2>
+
+		<table class="taglib-search-iterator">
+			<tr class="portlet-section-header results-header">
+				<th>#language("page")</th>
+				<th>#language("date")</th>
+				<th>#language("author")</th>
+			</tr>
+
+			#foreach ($childPage in $childPages)
+				<tr class="results-row">
+					#set ($childPageViewURL = $renderResponse.createRenderURL())
+					$childPageViewURL.setParameter("struts_action", "/wiki/view")
+					$childPageViewURL.setParameter("nodeName", $childPage.getNode().getName())
+					$childPageViewURL.setParameter("title", $childPage.getTitle())
+
+					<td><a href="$childPageViewURL">$childPage.getTitle()</a></td>
+					<td><a href="$childPageViewURL">$dateTool.format("dd MMM yyyy - HH:mm:ss", $childPage.getCreateDate())</a></td>
+					<td><a href="$childPageViewURL">$htmlUtil.escape($portalUtil.getUserName($childPage.getUserId(), $childPage.getUserName()))</a></td>
+				</tr>
+			#end
+		</table>
+	</div>
+#end
