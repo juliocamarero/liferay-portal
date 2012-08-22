@@ -40,6 +40,7 @@ import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.model.MBThreadConstants;
+import com.liferay.portlet.messageboards.service.MBMessageServiceUtil;
 import com.liferay.portlet.messageboards.service.base.MBMessageServiceBaseImpl;
 import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 import com.liferay.portlet.messageboards.service.permission.MBDiscussionPermission;
@@ -95,7 +96,7 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		checkReplyToPermission(groupId, categoryId, parentMessageId);
+		checkReplyToPermission(groupId, categoryId, threadId, parentMessageId);
 
 		if (lockLocalService.isLocked(MBThread.class.getName(), threadId)) {
 			throw new LockedThreadException();
@@ -609,7 +610,7 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 
 			checkReplyToPermission(
 				message.getGroupId(), message.getCategoryId(),
-				message.getParentMessageId());
+				message.getThreadId(), message.getParentMessageId());
 		}
 		else {
 			MBMessagePermission.check(
@@ -645,19 +646,25 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 	}
 
 	protected void checkReplyToPermission(
-			long groupId, long categoryId, long parentMessageId)
+			long groupId, long categoryId, long threadId, long parentMessageId)
 		throws PortalException, SystemException {
 
 		if (parentMessageId > 0) {
+			MBMessage parentMessage = MBMessageServiceUtil.getMessage(
+				parentMessageId);
+
+			if (parentMessage.getCategoryId() != categoryId ||
+				parentMessage.getThreadId() != threadId ||
+				parentMessage.getGroupId() != groupId) {
+				throw new PrincipalException();
+			}
+
 			if (MBCategoryPermission.contains(
 					getPermissionChecker(), groupId, categoryId,
 					ActionKeys.ADD_MESSAGE)) {
 
 				return;
 			}
-
-			MBMessage parentMessage = mbMessagePersistence.fetchByPrimaryKey(
-				parentMessageId);
 
 			if ((parentMessage == null) ||
 				!MBCategoryPermission.contains(
