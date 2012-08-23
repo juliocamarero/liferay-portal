@@ -33,6 +33,12 @@ public class PortletDisplayTemplateConstants {
 
 	public static final String RENDER_RESPONSE ="renderResponse";
 
+	public static final String THEME = "theme";
+
 	public static final String THEME_DISPLAY = "themeDisplay";
+
+	public static final String VELOCITY_TAGLIB = "velocityTaglib";
+
+	public static final String WRITER = "writer";
 
 }

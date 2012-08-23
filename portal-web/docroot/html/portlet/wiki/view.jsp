@@ -155,7 +155,7 @@ long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayT
 		entries.add(wikiPage);
 		%>
 
-		<%= PortletDisplayTemplateUtil.renderDDMTemplate(renderRequest, renderResponse, portletDisplayDDMTemplateId, entries) %>
+		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, entries) %>
 	</c:when>
 	<c:otherwise>
 
