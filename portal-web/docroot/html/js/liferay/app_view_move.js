@@ -201,14 +201,20 @@ AUI.add(
 										moveOnEnd: false
 									},
 									fn: A.Plugin.DDProxy
-								},
-								{
-									cfg: {
-										constrain2node: instance._portletContainer
-									},
-									fn: A.Plugin.DDConstrained
 								}
 							]
+						);
+
+						A.one('#_160_portlet_182').plug(
+							A.Plugin.Drop,
+							{
+								groups: dd.get('groups')
+							}
+						).drop.on(
+							'drop:hit',
+							function(event) {
+								console.log('dropping on the trash!');
+							}
 						);
 
 						if (TOUCH) {
@@ -276,14 +282,18 @@ AUI.add(
 
 						var dropTarget = event.drop.get(STR_NODE);
 
+						dropTarget.removeClass(CSS_ACTIVE_AREA);
+
 						var folderId = dropTarget.attr(DATA_FOLDER_ID);
 
-						var folderContainer = dropTarget.ancestor(STR_DOT + instance.get(STR_DISPLAY_STYLE));
+						if (folderId) {
+							var folderContainer = dropTarget.ancestor(STR_DOT + instance.get(STR_DISPLAY_STYLE));
 
-						var selectedItems = instance._ddHandler.dd.get(STR_DATA).selectedItems;
+							var selectedItems = instance._ddHandler.dd.get(STR_DATA).selectedItems;
 
-						if (selectedItems.indexOf(folderContainer) == -1) {
-							instance._moveEntries(folderId);
+							if (selectedItems.indexOf(folderContainer) == -1) {
+								instance._moveEntries(folderId);
+							}
 						}
 					},
 
