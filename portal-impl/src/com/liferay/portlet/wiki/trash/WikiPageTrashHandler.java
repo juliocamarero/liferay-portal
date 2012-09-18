@@ -156,6 +156,39 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 		return CLASS_NAME;
 	}
 
+	@Override
+	public String getRestoreLink(PortletRequest portletRequest, long classPK)
+		throws PortalException, SystemException {
+
+		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
+
+		long plid = PortalUtil.getPlidFromPortletId(
+			page.getGroupId(), PortletKeys.WIKI);
+
+		if (plid == LayoutConstants.DEFAULT_PLID) {
+			plid = PortalUtil.getControlPanelPlid(portletRequest);
+		}
+
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			portletRequest, PortletKeys.WIKI, plid,
+			PortletRequest.RENDER_PHASE);
+
+		portletURL.setParameter("struts_action", "/wiki/view");
+		portletURL.setParameter("nodeName", page.getNode().getName());
+		portletURL.setParameter("title", HtmlUtil.unescape(page.getTitle()));
+
+		return portletURL.toString();
+	}
+
+	@Override
+	public String getRestoreMessage(PortletRequest portletRequest, long classPK)
+		throws PortalException, SystemException {
+
+		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
+
+		return page.getTitle();
+	}
+
 	/**
 	 * Returns the trash renderer associated to the trash entry.
 	 *
