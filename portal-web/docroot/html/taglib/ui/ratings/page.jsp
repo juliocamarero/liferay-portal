@@ -62,7 +62,7 @@ if (ratingsEntry != null) {
 		<c:choose>
 			<c:when test='<%= type.equals("stars") %>'>
 				<c:choose>
-					<c:when test="<%= themeDisplay.isSignedIn() %>">
+					<c:when test="<%= themeDisplay.isSignedIn() && !TrashUtil.isInTrash(className, classPK) %>">
 						<div class="liferay-rating-vote" id="<%= randomNamespace %>ratingStar">
 							<div id="<%= randomNamespace %>ratingStarContent">
 								<div class="aui-rating-label-element"><liferay-ui:message key="your-rating" /></div>
@@ -123,13 +123,15 @@ if (ratingsEntry != null) {
 									(<%= ratingsStats.getTotalEntries() %> <%= LanguageUtil.get(pageContext, (ratingsStats.getTotalEntries() == 1) ? "vote" : "votes") %>)
 								</div>
 
-								<a class="aui-rating-element aui-rating-element-<%= (yourScore > 0) ? "on" : "off" %> aui-rating-thumb-up" href="javascript:;"></a>
+								<c:if test="<%= !TrashUtil.isInTrash(className, classPK) %>">
+									<a class="aui-rating-element aui-rating-element-<%= (yourScore > 0) ? "on" : "off" %> aui-rating-thumb-up" href="javascript:;"></a>
 
-								<a class="aui-rating-element aui-rating-element-<%= (yourScore < 0) ? "on" : "off" %> aui-rating-thumb-down" href="javascript:;"></a>
+									<a class="aui-rating-element aui-rating-element-<%= (yourScore < 0) ? "on" : "off" %> aui-rating-thumb-down" href="javascript:;"></a>
 
-								<aui:input label='<%= (yourScore == 1) ? "you-have-rated-this-as-good" : "rate-this-as-good" %>' name="ratingThumb" type="radio" value="up" />
+									<aui:input label='<%= (yourScore == 1) ? "you-have-rated-this-as-good" : "rate-this-as-good" %>' name="ratingThumb" type="radio" value="up" />
 
-								<aui:input label='<%= (yourScore == -1) ? "you-have-rated-this-as-bad" : "rate-this-as-bad" %>' name="ratingThumb" type="radio" value="down" />
+									<aui:input label='<%= (yourScore == -1) ? "you-have-rated-this-as-bad" : "rate-this-as-bad" %>' name="ratingThumb" type="radio" value="down" />
+								</c:if>
 							</div>
 						</div>
 					</c:when>
@@ -141,21 +143,23 @@ if (ratingsEntry != null) {
 		</c:choose>
 	</div>
 
-	<aui:script use="liferay-ratings">
-		Liferay.Ratings.register(
-			{
-				averageScore: <%= ratingsStats.getAverageScore() %>,
-				className: '<%= className %>',
-				classPK: '<%= classPK %>',
-				containerId: '<%= randomNamespace %>ratingContainer',
-				namespace: '<%= randomNamespace %>',
-				size: <%= numberOfStars %>,
-				totalEntries: <%= ratingsStats.getTotalEntries() %>,
-				totalScore: <%= ratingsStats.getTotalScore() %>,
-				type: '<%= type %>',
-				uri: '<%= url %>',
-				yourScore: <%= yourScore %>
-			}
-		);
-	</aui:script>
+	<c:if test="<%= !TrashUtil.isInTrash(className, classPK) %>">
+		<aui:script use="liferay-ratings">
+			Liferay.Ratings.register(
+				{
+					averageScore: <%= ratingsStats.getAverageScore() %>,
+					className: '<%= className %>',
+					classPK: '<%= classPK %>',
+					containerId: '<%= randomNamespace %>ratingContainer',
+					namespace: '<%= randomNamespace %>',
+					size: <%= numberOfStars %>,
+					totalEntries: <%= ratingsStats.getTotalEntries() %>,
+					totalScore: <%= ratingsStats.getTotalScore() %>,
+					type: '<%= type %>',
+					uri: '<%= url %>',
+					yourScore: <%= yourScore %>
+				}
+			);
+		</aui:script>
+	</c:if>
 </c:if>
