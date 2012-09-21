@@ -199,6 +199,10 @@ public class TrashImpl implements Trash {
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			className);
 
+		if (trashHandler == null) {
+			return false;
+		}
+
 		return trashHandler.isInTrash(classPK);
 	}
 
