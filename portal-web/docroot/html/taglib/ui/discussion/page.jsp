@@ -118,11 +118,9 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 					<c:choose>
 						<c:when test="<%= TrashUtil.isInTrash(className, classPK) %>">
-							<c:if test="<%= messagesCount > 1 %>">
-								<div class="portlet-msg-alert">
-									<liferay-ui:message key="commenting-is-disabled-because-this-item-is-in-the-recycle-bin" />
-								</div>
-							</c:if>
+							<div class="portlet-msg-alert">
+								<liferay-ui:message key="commenting-is-disabled-because-this-entry-is-in-the-recycle-bin" />
+							</div>
 						</c:when>
 						<c:otherwise>
 							<c:choose>
