@@ -1,0 +1,13 @@
+<%-- El boton --%>
+<aui:button disabled="false" name="blurButton" onClick='<%= renderResponse.getNamespace() + "blurFilter();" %>' value="Blur" />
+
+<%-- javascript --%>
+<aui:script>
+	function <portlet:namespace />blurFilter() {
+		<%= HtmlUtil.escape(uploadProgressId) %>.startProgress();
+
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "blur";
+		submitForm(document.<portlet:namespace />fm);
+	}
+</aui:script>
+

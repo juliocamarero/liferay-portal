@@ -1,0 +1,12 @@
+<%-- El boton --%>
+<aui:button disabled="false" name="greasseScaleButton" onClick='<%= renderResponse.getNamespace() + "greasseScaleFilter();" %>' value="Grises" />
+
+<%-- javascript --%>
+<aui:script>
+	function <portlet:namespace />greasseScaleFilter() {
+		<%= HtmlUtil.escape(uploadProgressId) %>.startProgress();
+
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "greassescale";
+		submitForm(document.<portlet:namespace />fm);
+	}
+</aui:script>

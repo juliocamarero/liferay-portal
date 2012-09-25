@@ -483,6 +483,10 @@
 			background-image: url(@theme_image_path@/common/edit.png);
 		}
 
+		.aui-icon-edit_inline {
+			background-image: url(@theme_image_path@/common/edit.png);
+		}
+
 		.aui-icon-lock {
 			background-image: url(@theme_image_path@/common/lock.png);
 		}

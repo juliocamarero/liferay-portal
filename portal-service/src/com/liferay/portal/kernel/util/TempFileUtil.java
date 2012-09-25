@@ -50,6 +50,17 @@ public class TempFileUtil {
 		return fileName;
 	}
 
+	public static void updateTempFile(
+			long userId, String fileName, String tempPathName, String fileExtension,
+				String version, InputStream inputStream)
+					throws PortalException, SystemException
+	{
+		String tempFileName = getTempFileName(userId, fileName, tempPathName);
+		DLStoreUtil.updateFile(_COMPANY_ID, _REPOSITORY_ID, tempFileName,
+				fileExtension, false, version, fileName, inputStream);
+	}
+
+
 	public static String addTempFile(
 			long userId, String fileName, String tempPathName,
 			InputStream inputStream)
@@ -110,6 +121,28 @@ public class TempFileUtil {
 		throws PortalException, SystemException {
 
 		deleteTempFile(_USER_ID, fileName, tempPathName);
+	}
+
+	public static void deleteTempFileVersion(
+			long userId, String fileName, String tempPathName, String versionLabel)
+		throws PortalException, SystemException {
+
+		String tempFileName = getTempFileName(userId, fileName, tempPathName);
+
+		deleteTempFileVersion(tempFileName, versionLabel);
+	}
+
+	public static void deleteTempFileVersion(String tempFileName, String versionLabel)
+		throws PortalException, SystemException {
+
+		DLStoreUtil.deleteFile(_COMPANY_ID, _REPOSITORY_ID, tempFileName, versionLabel);
+	}
+
+	public static InputStream getTempFileAsStream(String tempFileName, String version)
+		throws PortalException, SystemException {
+
+		return DLStoreUtil.getFileAsStream(
+			_COMPANY_ID, _REPOSITORY_ID, tempFileName, version);
 	}
 
 	public static InputStream getTempFileAsStream(String tempFileName)

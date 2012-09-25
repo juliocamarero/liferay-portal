@@ -405,6 +405,14 @@ public class DLUtil {
 			fileEntry, fileVersion, themeDisplay, queryString, true, true);
 	}
 
+	public static String getPreviewURL(
+		FileEntry fileEntry, FileVersion fileVersion, ThemeDisplay themeDisplay,
+		String queryString, String strDoc) {
+
+		return getPreviewURL(
+			fileEntry, fileVersion, themeDisplay, queryString, true, true, strDoc);
+	}
+
 	/**
 	 * @deprecated {@link #getPreviewURL(FileEntry, FileVersion, ThemeDisplay,
 	 *             String, boolean, boolean)}
@@ -420,6 +428,14 @@ public class DLUtil {
 	public static String getPreviewURL(
 		FileEntry fileEntry, FileVersion fileVersion, ThemeDisplay themeDisplay,
 		String queryString, boolean appendVersion, boolean absoluteURL) {
+		return getPreviewURL(
+				fileEntry, fileVersion, themeDisplay,
+				queryString, appendVersion, absoluteURL, "/documents/");
+	}
+
+	public static String getPreviewURL(
+		FileEntry fileEntry, FileVersion fileVersion, ThemeDisplay themeDisplay,
+		String queryString, boolean appendVersion, boolean absoluteURL, String strDoc) {
 
 		StringBundler sb = new StringBundler(15);
 
@@ -431,7 +447,8 @@ public class DLUtil {
 			sb.append(themeDisplay.getPathContext());
 		}
 
-		sb.append("/documents/");
+		//sb.append("/documents/");
+		sb.append(strDoc);
 		sb.append(fileEntry.getRepositoryId());
 		sb.append(StringPool.SLASH);
 		sb.append(fileEntry.getFolderId());

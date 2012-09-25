@@ -1,0 +1,60 @@
+<%-- CAMPOS PARA EL FILTRO GAUSSIANO --%>
+<aui:input name="<%=GaussianFilterInline.GAUSSIAN_RADIUS %>" type="hidden" value="" />
+<aui:input name="<%=GaussianFilterInline.GAUSSIAN_BLOOM %>" type="hidden" value="" />
+<aui:input name="<%=GaussianFilterInline.GAUSSIAN_BLOOM_THRESHOLD %>" type="hidden" value="" />
+<aui:input name="<%=GaussianFilterInline.GAUSSIAN_ANGLE %>" type="hidden" value="" />
+<aui:input name="<%=GaussianFilterInline.GAUSSIAN_SIDES %>" type="hidden" value="" />
+
+<%-- El boton --%>
+<aui:button disabled="false" name="gaussianButton" onClick='<%= renderResponse.getNamespace() + "showGaussianDialog();" %>' value="Gaussian" />
+
+<%-- javascript --%>
+<aui:script>
+	function <portlet:namespace />showGaussianDialog() {
+		AUI().use('aui-dialog', 'aui-overlay-manager', function(A) {
+			var options = {
+				bodyContent: '',
+				constrain2view: true,
+				draggable: true,
+				group: 'default',
+				height: 250,
+				stack: true,
+				title: 'Dialog',
+				width: 500 
+			};
+			var newDialog = new A.Dialog(
+				 A.merge(
+				 	options,
+				 	{ bodyContent: 'Radius: <input type="text" id="<%= renderResponse.getNamespace() + "GaussianRadiusDlg" %>" value="10"/><br/>' +
+				 					'Bloom: <input type="text" id="<%= renderResponse.getNamespace() + "GaussianBloomDlg" %>" value="2"/><br/>' +
+				 					'BloomThreshold: <input type="text" id="<%= renderResponse.getNamespace() + "GaussianBloomThresholdDlg" %>" value="192"/><br/>' +
+				 					'Angle: <input type="text" id="<%= renderResponse.getNamespace() + "GaussianAngleDlg" %>" value="0"/><br/>' +
+				 					'Sides: <input type="text" id="<%= renderResponse.getNamespace() + "GaussianSidesDlg" %>" value="5"/><br/>' +
+				 					'<input type="button" value="OK" onclick="<%= renderResponse.getNamespace() + "excuteGaussianFilter();"%>"/>'
+				 					,
+				 	modal: false,
+				 	title: 'Gaussian',
+				 	xy: [150, 150] }
+				 )
+			).render();
+		});
+	}
+	
+	function <portlet:namespace />excuteGaussianFilter() {
+		<%= HtmlUtil.escape(uploadProgressId) %>.startProgress();
+						 	
+		document.<portlet:namespace />fm.<portlet:namespace /><%= GaussianFilterInline.GAUSSIAN_RADIUS %>.value =
+			$('#<portlet:namespace />GaussianRadiusDlg').val();
+		document.<portlet:namespace />fm.<portlet:namespace /><%= GaussianFilterInline.GAUSSIAN_BLOOM %>.value =
+			$('#<portlet:namespace />GaussianBloomDlg').val();
+		document.<portlet:namespace />fm.<portlet:namespace /><%= GaussianFilterInline.GAUSSIAN_BLOOM_THRESHOLD %>.value =
+			$('#<portlet:namespace />GaussianBloomThresholdDlg').val();
+		document.<portlet:namespace />fm.<portlet:namespace /><%= GaussianFilterInline.GAUSSIAN_ANGLE %>.value =
+			$('#<portlet:namespace />GaussianAngleDlg').val();
+		document.<portlet:namespace />fm.<portlet:namespace /><%= GaussianFilterInline.GAUSSIAN_SIDES %>.value =
+			$('#<portlet:namespace />GaussianSidesDlg').val();
+
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "gaussian";
+		submitForm(document.<portlet:namespace />fm);
+	}
+</aui:script>

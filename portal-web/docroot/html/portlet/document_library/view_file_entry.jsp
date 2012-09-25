@@ -852,6 +852,22 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 				icon: 'edit',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "edit") %>'
 			},
+			<c:if test="<%=ImageProcessorUtil.isImageSupported(fileVersion)%>">
+			{
+
+				<portlet:renderURL var="editImageInlineURL">
+					<portlet:param name="struts_action" value="/document_library/edit_inline_image_entry" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+					<portlet:param name="createTemporalFile" value="true" />
+					<portlet:param name="fileEntryId" value="<%= String.valueOf(fileEntry.getFileEntryId()) %>" />
+				</portlet:renderURL>
+				handler: function(event) {
+					location.href = '<%= editImageInlineURL.toString() %>';
+				},
+				icon: 'edit_inline',
+				 label: '<%= UnicodeLanguageUtil.get(pageContext, "edit_inline") %>'
+				 },
+			</c:if>
 			{
 
 				<portlet:renderURL var="moveURL">

@@ -226,6 +226,14 @@ public class VirtualHostFilter extends BasePortalFilter {
 				return;
 			}
 		}
+		else if (friendlyURL.startsWith(_PATH_EDITINLINE)) {
+			if (WebServerServlet.hasFiles(request)) {
+				processFilter(
+					VirtualHostFilter.class, request, response, filterChain);
+
+				return;
+			}
+		}
 
 		LayoutSet layoutSet = (LayoutSet)request.getAttribute(
 			WebKeys.VIRTUAL_HOST_LAYOUT_SET);
@@ -314,6 +322,8 @@ public class VirtualHostFilter extends BasePortalFilter {
 	}
 
 	private static final String _PATH_DOCUMENTS = "/documents/";
+	
+	private static final String _PATH_EDITINLINE = "/editinline/";
 
 	private static final String _PRIVATE_GROUP_SERVLET_MAPPING =
 		PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;

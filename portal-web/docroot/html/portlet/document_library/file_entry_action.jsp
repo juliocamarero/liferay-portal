@@ -89,6 +89,13 @@ PortletURL viewFolderURL = liferayPortletResponse.createRenderURL();
 
 viewFolderURL.setParameter("struts_action", "/document_library/view");
 viewFolderURL.setParameter("folderId", String.valueOf(folderId));
+
+String mimeType = null;
+boolean isImageSupport = false;
+if(fileEntry != null) {
+	mimeType = fileEntry.getMimeType();
+	isImageSupport = ImageProcessorUtil.isImageSupported(mimeType);
+}
 %>
 
 <liferay-util:buffer var="iconMenu">
@@ -117,6 +124,17 @@ viewFolderURL.setParameter("folderId", String.valueOf(folderId));
 						image="edit"
 						url="<%= editURL %>"
 					/>
+					<c:if test="<%=isImageSupport%>">
+						<portlet:renderURL var="editImageInlineURL">
+							<portlet:param name="struts_action" value="/document_library/edit_inline_image_entry" />
+							<portlet:param name="redirect" value="<%= currentURL %>" />
+							<portlet:param name="createTemporalFile" value="true" />
+							<portlet:param name="fileEntryId" value="<%= String.valueOf(fileEntry.getFileEntryId()) %>" />
+						</portlet:renderURL>
+						<liferay-ui:icon
+							image="edit_inline"
+							url="<%= editImageInlineURL %>"/>
+					</c:if>
 				</c:if>
 
 				<c:if test="<%= showActions && DLFileEntryPermission.contains(permissionChecker, fileEntry, ActionKeys.UPDATE) %>">
@@ -210,6 +228,17 @@ viewFolderURL.setParameter("folderId", String.valueOf(folderId));
 						image="edit"
 						url="<%= editShortcutURL %>"
 					/>
+					<c:if test="<%=isImageSupport%>">
+						<portlet:renderURL var="editImageInlineShortcutURL">
+							<portlet:param name="struts_action" value="/document_library/edit_inline_image_entry" />
+							<portlet:param name="redirect" value="<%= currentURL %>" />
+							<portlet:param name="createTemporalFile" value="true" />
+							<portlet:param name="fileEntryId" value="<%= String.valueOf(fileEntry.getFileEntryId()) %>" />
+						</portlet:renderURL>
+						<liferay-ui:icon
+							image="edit_inline"
+							url="<%= editImageInlineShortcutURL %>"/>
+					</c:if>
 				</c:if>
 
 				<c:if test="<%= showActions && DLFileShortcutPermission.contains(permissionChecker, fileShortcut, ActionKeys.PERMISSIONS) %>">

@@ -1,0 +1,89 @@
+<%-- CAMPOS PARA SELECCION DE AREA --%>
+<aui:input name="<%=EditInlineImageEntryAction.CROP_ENABLED %>" type="hidden" value="false" />
+
+<aui:input name="<%=EditInlineImageEntryAction.CROP_X1 %>" type="hidden" value="" />
+<aui:input name="<%=EditInlineImageEntryAction.CROP_X2 %>" type="hidden" value="" />
+<aui:input name="<%=EditInlineImageEntryAction.CROP_Y1 %>" type="hidden" value="" />
+<aui:input name="<%=EditInlineImageEntryAction.CROP_Y2 %>" type="hidden" value="" />
+<aui:input name="<%=EditInlineImageEntryAction.CROP_W %>" type="hidden" value="" />
+<aui:input name="<%=EditInlineImageEntryAction.CROP_H %>" type="hidden" value="" />
+
+<%-- El boton --%>
+<aui:button disabled="false" name="enableCropButton" id="enableCropButton" onClick='<%= renderResponse.getNamespace() + "enableCrop();" %>' value="EnableCrop" />
+<aui:button disabled="false" name="disableCropButton" id="disableCropButton" onClick='<%= renderResponse.getNamespace() + "disableCrop();" %>' value="DisableCrop" />
+
+<%-- javascript --%>
+<aui:script>
+var jcropImg;
+
+AUI().use('get', function(A){
+	A.Get.script('/html/js/jquery/jquery-1.8.0.min.js', {
+		onSuccess: function() {
+			A.Get.script('/html/js/jquery/jquery.Jcrop.min.js', {
+				onSuccess: function() {
+					$('#<%= renderResponse.getNamespace() + "imgEditInline" %>').Jcrop({
+						onSelect: <%= renderResponse.getNamespace() + "assignCropSelection," %>
+						onRelease	: <%= renderResponse.getNamespace() + "deleteCropSelection" %>
+					}, function() {
+						jcropImg = this;
+						jcropImg.disable();
+					});
+
+					$(document).ready(function(){
+						<portlet:namespace />init();
+					});
+				}
+			});
+		}
+	});
+});
+	
+function <portlet:namespace />enableCrop() {
+	jcropImg.enable();
+	$('#<portlet:namespace />enableCropButton').toggle();
+	$('#<portlet:namespace />disableCropButton').toggle();
+}
+
+function <portlet:namespace />disableCrop() {
+	jcropImg.release();
+	jcropImg.disable();
+	document.<portlet:namespace />fm.<portlet:namespace />cropEnabled.value = "false";
+	$('#<portlet:namespace />enableCropButton').toggle();
+	$('#<portlet:namespace />disableCropButton').toggle();
+}
+
+function <portlet:namespace />init() {
+	$('#<portlet:namespace />disableCropButton').hide();
+}
+
+function <portlet:namespace />assignCropSelection(c) {
+	document.<portlet:namespace />fm.<portlet:namespace />cropX1.value = c.x;
+	document.<portlet:namespace />fm.<portlet:namespace />cropX2.value = c.x2;
+	document.<portlet:namespace />fm.<portlet:namespace />cropY1.value = c.y;
+	document.<portlet:namespace />fm.<portlet:namespace />cropY2.value = c.y2;
+	document.<portlet:namespace />fm.<portlet:namespace />cropW.value = c.w;
+	document.<portlet:namespace />fm.<portlet:namespace />cropH.value = c.h;
+	var image = $('#<%= renderResponse.getNamespace() + "imgEditInline" %>');
+	document.<portlet:namespace />fm.<portlet:namespace />widthImage.value = image.width();
+	document.<portlet:namespace />fm.<portlet:namespace />heightImage.value = image.height();
+	
+	document.<portlet:namespace />fm.<portlet:namespace />cropEnabled.value = "true";
+}
+	
+function <portlet:namespace />deleteCropSelection(c) {
+	document.<portlet:namespace />fm.<portlet:namespace />cropX1.value = 0;
+	document.<portlet:namespace />fm.<portlet:namespace />cropX2.value = 0;
+	document.<portlet:namespace />fm.<portlet:namespace />cropY1.value = 0;
+	document.<portlet:namespace />fm.<portlet:namespace />cropY2.value = 0;
+	document.<portlet:namespace />fm.<portlet:namespace />cropW.value = 0;
+	document.<portlet:namespace />fm.<portlet:namespace />cropH.value = 0;
+	var image = $('#<%= renderResponse.getNamespace() + "imgEditInline" %>');
+	document.<portlet:namespace />fm.<portlet:namespace />widthImage.value = 0;
+	document.<portlet:namespace />fm.<portlet:namespace />heightImage.value = 0;
+	
+	document.<portlet:namespace />fm.<portlet:namespace />cropEnabled.value = "false";
+}
+
+</aui:script>
+
+

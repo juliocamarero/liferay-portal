@@ -483,6 +483,11 @@
 			<forward name="portlet.document_library.error" path="portlet.document_library.error" />
 		</action>
 
+		<action path="/document_library/edit_inline_image_entry" type="com.liferay.portlet.documentlibrary.action.EditInlineImageEntryAction">
+			<forward name="portlet.document_library.edit_inline_image_entry" path="portlet.document_library.edit_inline_image_entry" />
+			<forward name="portlet.document_library.error" path="portlet.document_library.error" />
+		</action>
+
 		<action path="/document_library/edit_file_entry_discussion" type="com.liferay.portlet.messageboards.action.EditDiscussionAction">
 			<forward name="portlet.message_boards.error" path="portlet.document_library.error" />
 		</action>

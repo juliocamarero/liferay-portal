@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.BaseService;
 
 /**
@@ -520,6 +521,23 @@ public interface DLAppService extends BaseService {
 		java.lang.String fileName, java.lang.String tempFolderName)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+	/**
+	 * Borra el fichero temporal correspondiente a la version indicada.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  folderId the primary key of the folder where the file entry was
+	 *         eventually to reside
+	 * @param  fileName the file's original name
+	 * @param  tempFolderName the temporary folder's name
+	 * @throws PortalException if the file name was invalid
+	 * @throws SystemException if a system exception occurred
+	 * @see    com.liferay.portal.kernel.util.TempFileUtil
+	 */
+	public void deleteTempFileEntry(
+			long groupId, long folderId, java.lang.String fileName,
+			java.lang.String tempFolderName, java.lang.String versionLabel)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
 	* Returns all the file entries in the folder.
@@ -775,6 +793,35 @@ public interface DLAppService extends BaseService {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	/**
+	 * Devuelve un InputStream del fichero temporal pedido
+	 * @param userId 
+	 * @param fileName
+	 * @param tempPathName
+	 * @return
+	 * @throws PortalException Si el fichero no es encontrado.
+	 * @throws SystemException Si ocurre una excepcion del sistema.
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.io.InputStream getTempFileEntryAsStream(
+			long userId, java.lang.String fileName, java.lang.String tempPathName)
+					throws PortalException, SystemException;
+
+	/**
+	 * Devuelve un InputStream del fichero temporal pedido teniendo en cuenta la version indicada
+	 * @param userId 
+	 * @param fileName
+	 * @param tempPathName
+	 * @param version
+	 * @return
+	 * @throws PortalException Si el fichero no es encontrado.
+	 * @throws SystemException Si ocurre una excepcion del sistema.
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.io.InputStream getTempFileEntryAsStream(
+			long userId, java.lang.String fileName, java.lang.String tempPathName, String version)
+					throws PortalException, SystemException;
+	
 	/**
 	* Returns the file entry with the UUID and group.
 	*
@@ -1840,6 +1887,19 @@ public interface DLAppService extends BaseService {
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+	
+	/**
+	 * Actualiza un fichero temporal a la version indicada
+	 * @param fileName Nombre del fichero al que se actualiza la version
+	 * @param tempPathName Ruta al fichero al que se quiere actualizar la version
+	 * @param version Nueva version del fichero
+	 * @param inputStream Datos para la nueva version del fichero
+	 * @throws PortalException 
+	 * @throws PrincipalException 
+	 * @throws SystemException 
+	 */
+	public void updateTempFile(java.lang.String fileName, java.lang.String tempPathName,
+			java.lang.String version, java.io.InputStream inputStream) throws PrincipalException, PortalException, SystemException;
 
 	/**
 	* Updates a file shortcut to the existing file entry. This method is only

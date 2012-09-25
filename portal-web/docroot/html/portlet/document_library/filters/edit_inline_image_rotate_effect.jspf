@@ -1,0 +1,17 @@
+<%-- CAMPOS PARA ROTACION --%>
+<aui:input name="<%=RotateFilter.SENTIDO_ROTATE %>" type="hidden" value="" />
+	
+<%-- El boton --%>
+<aui:button disabled="false" name="rotateLeftButton" onClick='<%= renderResponse.getNamespace() + "rotate(\'left\');" %>' value="rotate_left" />
+<aui:button disabled="false" name="rotateRightButton" onClick='<%= renderResponse.getNamespace() + "rotate(\'right\');" %>' value="rotate_right" />
+
+<%-- javascript --%>
+<aui:script>
+	function <portlet:namespace />rotate(sentido) {
+		<%= HtmlUtil.escape(uploadProgressId) %>.startProgress();
+
+		document.<portlet:namespace />fm.<portlet:namespace /><%= RotateFilter.SENTIDO_ROTATE %>.value = sentido;
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "rotate";
+		submitForm(document.<portlet:namespace />fm);
+	}
+</aui:script>

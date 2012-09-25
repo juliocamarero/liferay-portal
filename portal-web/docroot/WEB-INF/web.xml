@@ -297,6 +297,15 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
+		<servlet-name>Edit inline Servlet</servlet-name>
+		<servlet-class>com.liferay.portal.webserver.EditInlineServlet</servlet-class>
+		<init-param>
+			<param-name>last_modified</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
 		<servlet-name>WebDAV Servlet</servlet-name>
 		<servlet-class>com.liferay.portal.webdav.WebDAVServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -739,6 +748,10 @@
 	<servlet-mapping>
 		<servlet-name>Web Server Servlet</servlet-name>
 		<url-pattern>/documents/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Edit inline Servlet</servlet-name>
+		<url-pattern>/editinline/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Web Server Servlet</servlet-name>
