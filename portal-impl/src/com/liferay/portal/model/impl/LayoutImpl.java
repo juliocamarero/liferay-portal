@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -59,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletException;
 import javax.portlet.PortletMode;
@@ -550,6 +552,37 @@ public class LayoutImpl extends LayoutBaseImpl {
 		return !isPrivateLayout();
 	}
 
+	public String getFriendlyURL() {
+		if (_friendlyURL == null) {
+			_friendlyURL =
+				LayoutFriendlyURLLocalServiceUtil.getLayoutFriendlyURL(
+					layout.getGroupId, layout.isPrivate(),
+					LocaleThreadLocal.getThemeDisplayLocale());
+
+			if (Validator.isNull(_friendlyURL)) {
+				_friendlyURL = super.getFriendlyURL();
+			}
+		}
+
+		return _friendlyURL;
+	}
+
+	public String getFriendlyURL(Locale locale) {
+		if (LocaleUtil.equals(locale, LocaleUtil.getDefault())) {
+			return getFriendlyURL();
+		}
+
+		return getFriendlyURLs().get(locale);
+	}
+
+	public Map<Locale, String> getFriendlyURLs () {
+		if (_friendlyURLs == null) {
+			// Obtain the friendlyURLs
+		}
+
+		return _friendlyURLs;
+	}
+
 	public boolean isRootLayout() {
 		if (getParentLayoutId() == LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
 			return true;
@@ -845,6 +878,8 @@ public class LayoutImpl extends LayoutBaseImpl {
 
 	private static String[] _friendlyURLKeywords;
 
+	private String _friendlyURL;
+	private Map<Locale, String> _friendlyURLs;
 	private LayoutSet _layoutSet;
 	private LayoutType _layoutType;
 	private UnicodeProperties _typeSettingsProperties;

@@ -569,6 +569,46 @@
 		<reference package-path="com.liferay.portlet.messageboards" entity="MBMessage" />
 		<reference package-path="com.liferay.portlet.ratings" entity="RatingsStats" />
 	</entity>
+	<entity name="LayoutFriendlyURL" local-service="true" remote-service="true">
+
+		<!-- PK fields -->
+
+		<column name="LayoutFriendlyURLId" type="long" primary="true" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+
+		<!-- Other fields -->
+		<column name="plid" type="long" />
+		<column name="privateLayout" type="boolean" />
+		<column name="layoutId" type="long" />
+		<column name="friendlyURL" type="String" />
+		<column name="languageId" type="String" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="languageId" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="Plid" return-type="Collection">
+			<finder-column name="plid" />
+		</finder>
+		<finder name="G_P_F_L" return-type="LayoutFriendlyURL" unique="true">
+			<finder-column name="groupId" />
+			<finder-column name="privateLayout" />
+			<finder-column name="languageId" />
+		</finder>
+
+		<!-- References -->
+	</entity>
 	<entity name="LayoutBranch" local-service="true" remote-service="true">
 
 		<!-- PK fields -->
