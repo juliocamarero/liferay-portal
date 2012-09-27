@@ -1758,7 +1758,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns a name ordered range of all the groups belonging to the parent
+	 * Returns an ordered range of all the groups belonging to the parent
 	 * group that match the class name IDs and keywords, optionally including
 	 * the user's inherited organization groups and user groups. System and
 	 * staged groups are not included.
@@ -1971,7 +1971,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns a name ordered range of all the groups belonging to the parent
+	 * Returns an ordered range of all the groups belonging to the parent
 	 * group that match the keywords, optionally including the user's inherited
 	 * organization groups and user groups. System and staged groups are not
 	 * included.
@@ -2175,7 +2175,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns a name ordered range of all the groups that match the class name
+	 * Returns a ordered range of all the groups that match the class name
 	 * IDs and keywords, optionally including the user's inherited
 	 * organization groups and user groups. System and staged groups are not
 	 * included.
@@ -2367,7 +2367,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns a name ordered range of all the groups that match the keywords,
+	 * Returns an ordered range of all the groups that match the keywords,
 	 * optionally including the user's inherited organization groups and user
 	 * groups. System and staged groups are not included.
 	 *
