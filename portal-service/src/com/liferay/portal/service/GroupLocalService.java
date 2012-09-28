@@ -1025,9 +1025,9 @@ public interface GroupLocalService extends BaseLocalService,
 	* </p>
 	*
 	* @param companyId the primary key of the company
-	* @param parentGroupId the primary key of the parent group
 	* @param classNameIds the class names of entities to include in the search
 	(optionally <code>null</code>)
+	* @param parentGroupId the primary key of the parent group
 	* @param keywords the keywords (space separated), which may occur in the
 	sites's name, or description (optionally <code>null</code>)
 	* @param params the finder params (optionally <code>null</code>). To
@@ -1045,14 +1045,14 @@ public interface GroupLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.portal.model.Group> search(
-		long companyId, long parentGroupId, long[] classNameIds,
+		long companyId, long[] classNameIds, long parentGroupId,
 		java.lang.String keywords,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* Returns a name ordered range of all the groups belonging to the parent
+	* Returns an ordered range of all the groups belonging to the parent
 	* group that match the class name IDs and keywords, optionally including
 	* the user's inherited organization groups and user groups. System and
 	* staged groups are not included.
@@ -1068,9 +1068,9 @@ public interface GroupLocalService extends BaseLocalService,
 	* </p>
 	*
 	* @param companyId the primary key of the company
-	* @param parentGroupId the primary key of the parent group
 	* @param classNameIds the group's class name IDs (optionally
 	<code>null</code>)
+	* @param parentGroupId the primary key of the parent group
 	* @param keywords the keywords (space separated), which may occur in the
 	sites's name, or description (optionally <code>null</code>)
 	* @param params the finder params (optionally <code>null</code>). To
@@ -1090,7 +1090,7 @@ public interface GroupLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.portal.model.Group> search(
-		long companyId, long parentGroupId, long[] classNameIds,
+		long companyId, long[] classNameIds, long parentGroupId,
 		java.lang.String keywords,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		int start, int end, com.liferay.portal.kernel.util.OrderByComparator obc)
@@ -1113,9 +1113,9 @@ public interface GroupLocalService extends BaseLocalService,
 	* </p>
 	*
 	* @param companyId the primary key of the company
-	* @param parentGroupId the primary key of the parent group
 	* @param classNameIds the class names of entities to include in the search
 	(optionally <code>null</code>)
+	* @param parentGroupId the primary key of the parent group
 	* @param name the group's name (optionally <code>null</code>)
 	* @param description the group's description (optionally
 	<code>null</code>)
@@ -1136,7 +1136,7 @@ public interface GroupLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.portal.model.Group> search(
-		long companyId, long parentGroupId, long[] classNameIds,
+		long companyId, long[] classNameIds, long parentGroupId,
 		java.lang.String name, java.lang.String description,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator, int start, int end)
@@ -1159,9 +1159,9 @@ public interface GroupLocalService extends BaseLocalService,
 	* </p>
 	*
 	* @param companyId the primary key of the company
-	* @param parentGroupId the primary key of the parent group
 	* @param classNameIds the group's class name IDs (optionally
 	<code>null</code>)
+	* @param parentGroupId the primary key of the parent group
 	* @param name the group's name (optionally <code>null</code>)
 	* @param description the group's description (optionally
 	<code>null</code>)
@@ -1184,7 +1184,7 @@ public interface GroupLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.portal.model.Group> search(
-		long companyId, long parentGroupId, long[] classNameIds,
+		long companyId, long[] classNameIds, long parentGroupId,
 		java.lang.String name, java.lang.String description,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator, int start, int end,
@@ -1231,7 +1231,7 @@ public interface GroupLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* Returns a name ordered range of all the groups belonging to the parent
+	* Returns an ordered range of all the groups belonging to the parent
 	* group that match the keywords, optionally including the user's inherited
 	* organization groups and user groups. System and staged groups are not
 	* included.
@@ -1402,7 +1402,7 @@ public interface GroupLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* Returns a name ordered range of all the groups that match the class name
+	* Returns an ordered range of all the groups that match the class name
 	* IDs and keywords, optionally including the user's inherited
 	* organization groups and user groups. System and staged groups are not
 	* included.
@@ -1575,7 +1575,7 @@ public interface GroupLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
-	* Returns a name ordered range of all the groups that match the keywords,
+	* Returns an ordered range of all the groups that match the keywords,
 	* optionally including the user's inherited organization groups and user
 	* groups. System and staged groups are not included.
 	*
@@ -1705,9 +1705,9 @@ public interface GroupLocalService extends BaseLocalService,
 	* included.
 	*
 	* @param companyId the primary key of the company
-	* @param parentGroupId the primary key of the parent group
 	* @param classNameIds the class names of entities to include in the search
 	(optionally <code>null</code>)
+	* @param parentGroupId the primary key of the parent group
 	* @param keywords the keywords (space separated), which may occur in the
 	sites's name, or description (optionally <code>null</code>)
 	* @param params the finder params (optionally <code>null</code>). To
@@ -1720,8 +1720,8 @@ public interface GroupLocalService extends BaseLocalService,
 	* @throws SystemException if a system exception occurred
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int searchCount(long companyId, long parentGroupId,
-		long[] classNameIds, java.lang.String keywords,
+	public int searchCount(long companyId, long[] classNameIds,
+		long parentGroupId, java.lang.String keywords,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
@@ -1732,9 +1732,9 @@ public interface GroupLocalService extends BaseLocalService,
 	* are not included.
 	*
 	* @param companyId the primary key of the company
-	* @param parentGroupId the primary key of the parent group
 	* @param classNameIds the class names of entities to include in the search
 	(optionally <code>null</code>)
+	* @param parentGroupId the primary key of the parent group
 	* @param name the group's name (optionally <code>null</code>)
 	* @param description the group's description (optionally
 	<code>null</code>)
@@ -1750,8 +1750,8 @@ public interface GroupLocalService extends BaseLocalService,
 	* @throws SystemException if a system exception occurred
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int searchCount(long companyId, long parentGroupId,
-		long[] classNameIds, java.lang.String name,
+	public int searchCount(long companyId, long[] classNameIds,
+		long parentGroupId, java.lang.String name,
 		java.lang.String description,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator)
