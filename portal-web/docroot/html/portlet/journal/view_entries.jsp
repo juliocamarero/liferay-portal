@@ -232,10 +232,10 @@ request.setAttribute("view.jsp-total", String.valueOf(total));
 			<c:when test="<%= (Validator.isNotNull(displayTerms.getStructureId())) %>">
 				<c:choose>
 					<c:when test="<%= total == 0 %>">
-						<liferay-ui:message arguments="<%= name %>" key="there-are-no-web-contents-with-structure-x" />
+						<liferay-ui:message arguments="<%= name %>" key="there-is-no-web-content-with-structure-x" />
 					</c:when>
 					<c:otherwise>
-						<liferay-ui:message arguments="<%= name %>" key="there-are-no-web-contents-with-structure-x-on-this-page" />
+						<liferay-ui:message arguments="<%= name %>" key="there-is-no-web-content-with-structure-x-on-this-page" />
 					</c:otherwise>
 				</c:choose>
 			</c:when>
@@ -245,7 +245,7 @@ request.setAttribute("view.jsp-total", String.valueOf(total));
 						<liferay-ui:message key="no-web-content-were-found" />
 					</c:when>
 					<c:otherwise>
-						<liferay-ui:message key="there-are-no-web-contents-on-this-page" />
+						<liferay-ui:message key="there-is-no-web-content-on-this-page" />
 					</c:otherwise>
 				</c:choose>
 			</c:otherwise>
