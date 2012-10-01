@@ -189,15 +189,9 @@ public class GetFileAction extends PortletAction {
 					groupId, folderId, title);
 			}
 			else if (Validator.isNotNull(name)) {
-				DLFileEntry dlFileEntry = null;
-
-				try {
-					dlFileEntry =
-						DLFileEntryLocalServiceUtil.getFileEntryByName(
-							groupId, folderId, name);
-				}
-				catch (NoSuchFileEntryException nsfee) {
-				}
+				DLFileEntry dlFileEntry =
+					DLFileEntryLocalServiceUtil.fetchFileEntryByName(
+						groupId, folderId, name);
 
 				if (dlFileEntry != null) {
 					fileEntry = new LiferayFileEntry(dlFileEntry);
