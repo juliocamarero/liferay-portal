@@ -1524,15 +1524,15 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 					else if (pathArray.length == 5) {
 						map.put("folderId", new String[] {pathArray[3]});
 
-						String name = HttpUtil.decodeURL(pathArray[4]);
+						String title = HttpUtil.decodeURL(pathArray[4]);
 
-						int pos = name.indexOf(StringPool.QUESTION);
+						int pos = title.indexOf(StringPool.QUESTION);
 
 						if (pos != -1) {
-							name = name.substring(0, pos);
+							title = title.substring(0, pos);
 						}
 
-						map.put("name", new String[] {name});
+						map.put("title", new String[] {title});
 					}
 					else if (pathArray.length > 5) {
 						String uuid = pathArray[5];
@@ -1575,6 +1575,7 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 					if (Validator.isNotNull(folderIdString)) {
 						long folderId = GetterUtil.getLong(folderIdString);
+						String title = MapUtil.getString(map, "title");
 						String name = MapUtil.getString(map, "name");
 
 						String groupIdString = MapUtil.getString(
@@ -1586,8 +1587,17 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 							groupId = portletDataContext.getScopeGroupId();
 						}
 
-						fileEntry = DLAppLocalServiceUtil.getFileEntry(
-							groupId, folderId, name);
+						if (Validator.isNotNull(title)) {
+							fileEntry = DLAppLocalServiceUtil.getFileEntry(
+								groupId, folderId, title);
+						}
+						else {
+							DLFileEntry dlFileEntry =
+								DLFileEntryLocalServiceUtil.getFileEntryByName(
+									groupId, folderId, name);
+
+							fileEntry = new LiferayFileEntry(dlFileEntry);
+						}
 					}
 					else if (map.containsKey("image_id") ||
 							map.containsKey("img_id") ||
