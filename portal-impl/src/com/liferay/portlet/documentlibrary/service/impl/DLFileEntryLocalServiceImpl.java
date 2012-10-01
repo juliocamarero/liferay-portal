@@ -755,6 +755,13 @@ public class DLFileEntryLocalServiceImpl
 		return dlFileEntryFinder.fetchByAnyImageId(imageId);
 	}
 
+	public DLFileEntry fetchFileEntryByName(
+			long groupId, long folderId, String name)
+		throws SystemException {
+
+		return dlFileEntryPersistence.fetchByG_F_N(groupId, folderId, name);
+	}
+
 	public List<DLFileEntry> getExtraSettingsFileEntries(int start, int end)
 		throws SystemException {
 
