@@ -190,8 +190,8 @@ public class JournalArticleLocalServiceImpl
 
 		validate(
 			user.getCompanyId(), groupId, classNameId, articleId, autoArticleId,
-			version, titleMap, content, expirationDate, type, structureId,
-			templateId, smallImage, smallImageURL, smallImageFile,
+			version, titleMap, content, type, structureId, templateId,
+			expirationDate, smallImage, smallImageURL, smallImageFile,
 			smallImageBytes);
 
 		if (autoArticleId) {
@@ -2114,7 +2114,7 @@ public class JournalArticleLocalServiceImpl
 
 		validate(
 			user.getCompanyId(), groupId, latestArticle.getClassNameId(),
-			titleMap, content, expirationDate, type, structureId, templateId,
+			titleMap, content, type, structureId, templateId, expirationDate,
 			smallImage, smallImageURL, smallImageFile, smallImageBytes);
 
 		if (addNewVersion) {
@@ -3497,8 +3497,8 @@ public class JournalArticleLocalServiceImpl
 
 	protected void validate(
 			long companyId, long groupId, long classNameId,
-			Map<Locale, String> titleMap, String content, Date expirationDate,
-			String type, String structureId, String templateId,
+			Map<Locale, String> titleMap, String content, String type,
+			String structureId, String templateId, Date expirationDate,
 			boolean smallImage, String smallImageURL, File smallImageFile,
 			byte[] smallImageBytes)
 		throws PortalException, SystemException {
@@ -3608,9 +3608,9 @@ public class JournalArticleLocalServiceImpl
 	protected void validate(
 			long companyId, long groupId, long classNameId, String articleId,
 			boolean autoArticleId, double version, Map<Locale, String> titleMap,
-			String content, Date expirationDate, String type,
-			String structureId, String templateId, boolean smallImage,
-			String smallImageURL, File smallImageFile, byte[] smallImageBytes)
+			String content, String type, String structureId, String templateId,
+			Date expirationDate, boolean smallImage, String smallImageURL,
+			File smallImageFile, byte[] smallImageBytes)
 		throws PortalException, SystemException {
 
 		if (!autoArticleId) {
@@ -3618,8 +3618,8 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		validate(
-			companyId, groupId, classNameId, titleMap, content, expirationDate,
-			type, structureId, templateId, smallImage, smallImageURL,
+			companyId, groupId, classNameId, titleMap, content, type,
+			structureId, templateId, expirationDate, smallImage, smallImageURL,
 			smallImageFile, smallImageBytes);
 	}
 
