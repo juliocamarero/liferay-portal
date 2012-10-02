@@ -85,8 +85,8 @@ public class PortalLifecycleUtil {
 		_inFlushDestroys = false;
 
 		if (_portalLifecyclesInit == null) {
-			_portalLifecyclesInit =
-				Collections.synchronizedList(new ArrayList<PortalLifecycle>());
+			_portalLifecyclesInit = Collections.synchronizedList(
+				new ArrayList<PortalLifecycle>());
 		}
 		else {
 			_portalLifecyclesInit.clear();
