@@ -322,6 +322,23 @@ public interface TrashHandler {
 		throws PortalException, SystemException;
 
 	/**
+	 * Returns <code>true</code> if the user has the given permission on the
+	 * entry with the primary key.
+	 *
+	 * @param  permissionChecker the permission checker
+	 * @param  classPK the primary key of the entry
+	 * @param  actionId the permission to check
+	 * @return <code>true</code> if the user has the given permission;
+	 *         <code>false</code> otherwise
+	 * @throws PortalException if the entry with the primary key could not be
+	 *         found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public boolean hasPermission(
+		PermissionChecker permissionChecker, long classPK, String actionId)
+	throws PortalException, SystemException;
+
+	/**
 	 * Returns <code>true</code> if the entry with the primary key is in the
 	 * trash.
 	 *

@@ -33,6 +33,7 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.trash.DuplicateEntryException;
@@ -158,6 +159,14 @@ public class DLFileEntryTrashHandler extends BaseTrashHandler {
 		DLFolder dlFolder = dlFileEntry.getFolder();
 
 		return DLUtil.getAbsolutePath(portletRequest, dlFolder.getFolderId());
+	}
+
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return DLFileEntryPermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 	public boolean isInTrash(long classPK)
