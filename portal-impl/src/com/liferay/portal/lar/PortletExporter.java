@@ -73,6 +73,7 @@ import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetCategoryPropertyLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagPropertyLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetCategoryUtil;
 import com.liferay.portlet.asset.service.persistence.AssetVocabularyUtil;
 import com.liferay.portlet.expando.model.ExpandoColumn;
@@ -1089,6 +1090,11 @@ public class PortletExporter {
 		if (rootPotletId.equals(PortletKeys.ASSET_PUBLISHER)) {
 			preferencesXML = updateAssetPublisherPortletPreferences(
 				preferencesXML, plid);
+		} else if (rootPotletId.equals(
+			PortletKeys.TAGS_CATEGORIES_NAVIGATION)) {
+
+			preferencesXML = updateCategoryNavigationPortletPreferences(
+				preferencesXML, plid);
 		}
 
 		Document document = SAXReaderUtil.read(preferencesXML);
@@ -1570,6 +1576,75 @@ public class PortletExporter {
 				updateAssetPublisherClassPKs(
 					jxPreferences, "queryValues" + index,
 					AssetCategory.class.getName());
+			}
+		}
+
+		return PortletPreferencesFactoryUtil.toXML(jxPreferences);
+	}
+
+	protected void updateCategoryNavigationClassPKs(
+			javax.portlet.PortletPreferences jxPreferences, String key,
+			String className)
+		throws Exception {
+
+		String[] oldValues = jxPreferences.getValues(key, null);
+
+		if (oldValues == null) {
+			return;
+		}
+
+		String[] newValues = new String[oldValues.length];
+
+		for (int i = 0; i < oldValues.length; i++) {
+			String oldValue = oldValues[i];
+
+			String newValue = oldValue;
+
+			String[] primaryKeys = StringUtil.split(oldValue);
+
+			for (String primaryKey : primaryKeys) {
+				if (!Validator.isNumber(primaryKey)) {
+					break;
+				}
+
+				long primaryKeyLong = GetterUtil.getLong(primaryKey);
+
+				String uuid = null;
+
+				if (className.equals(AssetVocabulary.class.getName())) {
+					AssetVocabulary vocabulary =
+						AssetVocabularyLocalServiceUtil.fetchAssetVocabulary(
+							primaryKeyLong);
+
+					if (vocabulary != null) {
+						uuid = vocabulary.getUuid();
+					}
+				}
+
+				newValue = StringUtil.replace(newValue, primaryKey, uuid);
+			}
+
+			newValues[i] = newValue;
+		}
+
+		jxPreferences.setValues(key, newValues);
+	}
+
+	protected String updateCategoryNavigationPortletPreferences(
+			String xml, long plid)
+		throws Exception {
+
+		javax.portlet.PortletPreferences jxPreferences =
+			PortletPreferencesFactoryUtil.fromDefaultXML(xml);
+
+		Enumeration<String> enu = jxPreferences.getNames();
+
+		while (enu.hasMoreElements()) {
+			String name = enu.nextElement();
+
+			if (name.equals("assetVocabularyIds")) {
+				updateCategoryNavigationClassPKs(
+					jxPreferences, name, AssetVocabulary.class.getName());
 			}
 		}
 
