@@ -746,7 +746,7 @@ public class MBUtil {
 		return true;
 	}
 
-	public static String replaceMessageBodyElements(
+	public static String replaceMessageBodyPaths(
 		String messageBody, ThemeDisplay themeDisplay) {
 
 		return StringUtil.replace(

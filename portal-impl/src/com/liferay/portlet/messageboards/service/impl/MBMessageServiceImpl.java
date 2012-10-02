@@ -745,7 +745,7 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 			else {
 				value = BBCodeTranslatorUtil.getHTML(message.getBody());
 
-				value = MBUtil.replaceMessageBodyElements(value, themeDisplay);
+				value = MBUtil.replaceMessageBodyPaths(value, themeDisplay);
 			}
 
 			syndContent.setValue(value);
