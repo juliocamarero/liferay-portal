@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -40,6 +41,7 @@ import com.liferay.portlet.wiki.model.WikiPageResource;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageResourceLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
+import com.liferay.portlet.wiki.service.permission.WikiPagePermission;
 
 import java.util.Date;
 
@@ -252,6 +254,14 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 
 		WikiPageResourceLocalServiceUtil.updateWikiPageResource(
 			pageResource, false);
+	}
+
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return WikiPagePermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 }

@@ -173,6 +173,16 @@ public class DLFolderTrashHandler extends BaseTrashHandler {
 		return new DLFolderTrashRenderer(folder);
 	}
 
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		DLFolder dlFolder = getDLFolder(classPK);
+
+		return DLFolderPermission.contains(
+			permissionChecker, dlFolder, actionId);
+	}
+
 	public boolean isInTrash(long classPK)
 		throws PortalException, SystemException {
 

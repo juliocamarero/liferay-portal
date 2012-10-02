@@ -24,6 +24,7 @@ import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileShortcutLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.permission.DLFileShortcutPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 
@@ -127,6 +128,14 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 			DLFileShortcutLocalServiceUtil.getDLFileShortcut(classPK);
 
 		return new DLFileShortcutTrashRenderer(fileShortcut);
+	}
+
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return DLFileShortcutPermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 	public boolean isInTrash(long classPK)
