@@ -151,9 +151,7 @@ for (int i = 0; i < locales.length; i++) {
 							sb.append(StringPool.AMPERSAND);
 							sb.append(name);
 							sb.append(StringPool.EQUAL);
-							sb.append(locales[i].getLanguage());
-							sb.append(StringPool.UNDERLINE);
-							sb.append(locales[i].getCountry());
+							sb.append(LocaleUtil.toLanguageId(locales[i]));
 							%>
 
 							<a class="taglib-language-list-text <%= ((i + 1) < locales.length) ? StringPool.BLANK : "last" %>" href="<%= HtmlUtil.escape(sb.toString()) %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>">
