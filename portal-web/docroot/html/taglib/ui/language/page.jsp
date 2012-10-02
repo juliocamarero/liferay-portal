@@ -141,28 +141,29 @@ for (int i = 0; i < locales.length; i++) {
 					<c:choose>
 						<c:when test="<%= currentLanguageId.equals(languageId) %>">
 							<span class="taglib-language-list-text <%= ((i + 1) < locales.length) ? StringPool.BLANK : "last" %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>">
-						</c:when>
-						<c:otherwise>
-							<a class="taglib-language-list-text <%= ((i + 1) < locales.length) ? StringPool.BLANK : "last" %>" href="<%= HtmlUtil.escape(HttpUtil.addParameter(formAction, name, LocaleUtil.toLanguageId(locales[i]))) %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>">
-						</c:otherwise>
-					</c:choose>
+								<%= language %>
 
-						<%= language %>
+								<c:if test="<%= duplicateLanguages.contains(locales[i].getLanguage()) %>">
+									(<%= country %>)
+								</c:if>
 
-						<c:if test="<%= duplicateLanguages.contains(locales[i].getLanguage()) %>">
-							(<%= country %>)
-						</c:if>
-
-						<c:if test="<%= LanguageUtil.isBetaLocale(locales[i]) %>">
-							[Beta]
-						</c:if>
-
-					<c:choose>
-						<c:when test="<%= currentLanguageId.equals(languageId) %>">
+								<c:if test="<%= LanguageUtil.isBetaLocale(locales[i]) %>">
+									[Beta]
+								</c:if>
 							</span>
 						</c:when>
 						<c:otherwise>
-							</a>
+							<aui:a class='<%= "taglib-language-list-text" + (((i + 1) < locales.length) ? StringPool.BLANK : " last") %>' href="<%= HttpUtil.addParameter(formAction, name, LocaleUtil.toLanguageId(locales[i])) %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>">
+								<%= language %>
+
+								<c:if test="<%= duplicateLanguages.contains(locales[i].getLanguage()) %>">
+									(<%= country %>)
+								</c:if>
+
+								<c:if test="<%= LanguageUtil.isBetaLocale(locales[i]) %>">
+									[Beta]
+								</c:if>
+							</aui:a>
 						</c:otherwise>
 					</c:choose>
 				</c:when>
