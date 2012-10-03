@@ -884,11 +884,21 @@ public class GetterUtil {
 	}
 
 	public static String getString(String value) {
-		return getString(value, DEFAULT_STRING);
+		return getString(value, DEFAULT_STRING, true);
 	}
 
 	public static String getString(String value, String defaultValue) {
-		return get(value, defaultValue);
+		return getString(value, defaultValue, true);
+	}
+
+	public static String getString(
+		String value, String defaultValue, boolean allowEmptyString) {
+
+		if (allowEmptyString || !Validator.isNull(value)) {
+			return get(value, defaultValue);
+		}
+
+		return defaultValue;
 	}
 
 	private static int _parseInt(String value, int defaultValue) {
