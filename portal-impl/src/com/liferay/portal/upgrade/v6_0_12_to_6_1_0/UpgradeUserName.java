@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.upgrade.v6_1_0;
+package com.liferay.portal.upgrade.v6_0_12_to_6_1_0;
 
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
@@ -32,10 +32,6 @@ public class UpgradeUserName extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		updateTable("BookmarksEntry", false);
-		updateTable("BookmarksFolder", false);
-		updateTable("IGFolder", false);
-		updateTable("IGImage", false);
 		updateTable("PollsVote", true);
 	}
 
