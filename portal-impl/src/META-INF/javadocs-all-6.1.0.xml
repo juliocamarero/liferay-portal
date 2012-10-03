@@ -4124,7 +4124,7 @@ which are later inherited by users assigned to the UserGroup
 			<comment><![CDATA[Deletes the group and its associated data.
 
 <p>
-The group is unstaged and its assets and resources including layouts, membership requests, subscriptions, teams, blogs, bookmarks, calendar events, image gallery, journals, message boards, polls, shopping related entities, software catalog, and wikis are also deleted.
+The group is unstaged and its assets and resources including layouts, membership requests, subscriptions, teams, blogs, bookmarks, calendar events, image gallery, journals, message boards, shopping related entities, software catalog, and wikis are also deleted.
 </p>]]></comment>
 			<param>
 				<name>group</name>
@@ -4147,7 +4147,7 @@ The group is unstaged and its assets and resources including layouts, membership
 			<comment><![CDATA[Deletes the group and its associated data.
 
 <p>
-The group is unstaged and its assets and resources including layouts, membership requests, subscriptions, teams, blogs, bookmarks, calendar events, image gallery, journals, message boards, polls, shopping related entities, software catalog, and wikis are also deleted.
+The group is unstaged and its assets and resources including layouts, membership requests, subscriptions, teams, blogs, bookmarks, calendar events, image gallery, journals, message boards, shopping related entities, software catalog, and wikis are also deleted.
 </p>]]></comment>
 			<param>
 				<name>groupId</name>
@@ -6077,7 +6077,7 @@ Useful when paginating results. Returns a maximum of <code>end - start</code> in
 			<comment><![CDATA[Deletes the group.
 
 <p>
-The group is unstaged and its assets and resources including layouts, membership requests, subscriptions, teams, blogs, bookmarks, calendar events, image gallery, journals, message boards, polls, shopping related entities, software catalog, and wikis are also deleted.
+The group is unstaged and its assets and resources including layouts, membership requests, subscriptions, teams, blogs, bookmarks, calendar events, image gallery, journals, message boards, shopping related entities, software catalog, and wikis are also deleted.
 </p>]]></comment>
 			<param>
 				<name>groupId</name>
