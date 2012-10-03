@@ -884,7 +884,7 @@ public class GetterUtil {
 	}
 
 	public static String getString(String value) {
-		return getString(value, DEFAULT_STRING, true);
+		return getString(value, DEFAULT_STRING);
 	}
 
 	public static String getString(String value, String defaultValue) {
@@ -894,11 +894,11 @@ public class GetterUtil {
 	public static String getString(
 		String value, String defaultValue, boolean allowEmptyString) {
 
-		if (allowEmptyString || !Validator.isNull(value)) {
-			return get(value, defaultValue);
+		if (!allowEmptyString && Validator.isNull(value)) {
+			return defaultValue;
 		}
 
-		return defaultValue;
+		return get(value, defaultValue);
 	}
 
 	private static int _parseInt(String value, int defaultValue) {
