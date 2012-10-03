@@ -2076,6 +2076,17 @@
 		<field name="ruleGroupId" type="long" />
 		<field name="priority" type="int" />
 	</model>
+	<model name="com.liferay.portlet.ratings.model.RatingsEntry">
+		<field name="entryId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="classNameId" type="long" />
+		<field name="classPK" type="long" />
+		<field name="score" type="double" />
+	</model>
 	<model name="com.liferay.portlet.ratings.model.RatingsStats">
 		<field name="statsId" type="long" />
 		<field name="classNameId" type="long" />
