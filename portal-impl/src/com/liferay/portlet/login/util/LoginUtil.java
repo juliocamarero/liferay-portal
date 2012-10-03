@@ -461,8 +461,10 @@ public class LoginUtil {
 		if (rememberMe) {
 			CookieKeysUtil.addCookie(request, response, loginCookie, secure);
 			CookieKeysUtil.addCookie(request, response, passwordCookie, secure);
-			CookieKeysUtil.addCookie(request, response, rememberMeCookie, secure);
-			CookieKeysUtil.addCookie(request, response, screenNameCookie, secure);
+			CookieKeysUtil.addCookie(
+				request, response, rememberMeCookie, secure);
+			CookieKeysUtil.addCookie(
+				request, response, screenNameCookie, secure);
 		}
 
 		AuthenticatedUserUUIDStoreUtil.register(userUUID);

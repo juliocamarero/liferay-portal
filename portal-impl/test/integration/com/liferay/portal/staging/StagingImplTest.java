@@ -34,9 +34,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -99,9 +97,7 @@ public class StagingImplTest {
 			serviceContext);
 	}
 
-	protected void enableLocalStaging(boolean stageJournal)
-		throws Exception {
-
+	protected void enableLocalStaging(boolean stageJournal) throws Exception {
 		Group group = ServiceTestUtil.addGroup();
 
 		ServiceTestUtil.addLayout(group.getGroupId(), "Page1");
