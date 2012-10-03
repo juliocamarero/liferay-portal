@@ -37,11 +37,12 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.calendar.model.CalEvent;
 
-import javax.portlet.PortletPreferences;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.portlet.PortletPreferences;
 
 /**
  * @author Sergio González
