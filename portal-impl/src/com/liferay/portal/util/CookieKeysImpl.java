@@ -34,10 +34,6 @@ import org.apache.commons.codec.binary.Hex;
  */
 public class CookieKeysImpl implements CookieKeys {
 
-	public final int MAX_AGE = 31536000;
-
-	public final int VERSION = 0;
-
 	public void addCookie(
 		HttpServletRequest request, HttpServletResponse response,
 		Cookie cookie) {
@@ -217,6 +213,6 @@ public class CookieKeysImpl implements CookieKeys {
 		}
 	}
 
-	private Log _log = LogFactoryUtil.getLog(CookieKeysUtil.class);
+	private Log _log = LogFactoryUtil.getLog(CookieKeysImpl.class);
 
 }
