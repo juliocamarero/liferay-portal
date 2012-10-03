@@ -122,7 +122,7 @@ public class LayoutSetStagingHandler implements InvocationHandler {
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		if ((serviceContext == null) || !serviceContext.isSignedIn()) {
+		if (serviceContext == null) {
 			return null;
 		}
 
@@ -130,7 +130,7 @@ public class LayoutSetStagingHandler implements InvocationHandler {
 			serviceContext, "layoutSetBranchId");
 
 		return LayoutSetBranchLocalServiceUtil.getUserLayoutSetBranch(
-			serviceContext.getUserId(), layoutSet.getGroupId(),
+			serviceContext.getGuestOrUserId(), layoutSet.getGroupId(),
 			layoutSet.isPrivateLayout(), layoutSet.getLayoutSetId(),
 			layoutSetBranchId);
 	}
