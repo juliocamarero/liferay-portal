@@ -97,24 +97,12 @@ public class CountryServiceImpl extends CountryServiceBaseImpl {
 		return countryPersistence.findAll();
 	}
 
-	public List<Country> getCountries(boolean active) throws SystemException {
-		List<Country> countries = countryPersistence.findByActive(active);
+	public List<Country> getCountries(boolean active)
+		throws SystemException, PortalException {
 
-		long userId = PrincipalThreadLocal.getUserId();
+		User user = getUser();
 
-		User user = UserLocalServiceUtil.fetchUser(userId);
-
-		if (user != null) {
-			String languageId = user.getLanguageId();
-
-			if (languageId != null) {
-				for (Country country : countries) {
-					country.setNameCurrentLanguageId(languageId);
-				}
-			}
-		}
-
-		return countries;
+		return getCountries(active, user.getLanguageId());
 	}
 
 	public List<Country> getCountries(boolean active, String languageId)
@@ -122,7 +110,7 @@ public class CountryServiceImpl extends CountryServiceBaseImpl {
 
 		List<Country> countryList = countryPersistence.findByActive(active);
 
-		if (languageId != null) {
+		if (Validator.isNotNull(languageId)) {
 			for (Country country : countryList) {
 				country.setNameCurrentLanguageId(languageId);
 			}
