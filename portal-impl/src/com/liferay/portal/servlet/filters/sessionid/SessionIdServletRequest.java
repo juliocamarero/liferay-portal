@@ -85,7 +85,7 @@ public class SessionIdServletRequest extends HttpServletRequestWrapper {
 			}
 
 			CookieKeysUtil.addCookie(
-					(HttpServletRequest) super.getRequest(), _response, cookie);
+					(HttpServletRequest)super.getRequest(), _response, cookie);
 
 			setAttribute(_JESSIONID_ALREADY_SET, Boolean.TRUE);
 		}
