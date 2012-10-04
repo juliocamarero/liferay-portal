@@ -71,6 +71,12 @@ portletURL.setParameter("tabs1", tabs1);
 	</div>
 </c:if>
 
+<liferay-ui:error key="trash.delete.error" message="you-do-not-have-permission-to-delete-this-item" />
+<liferay-ui:error key="trash.move.error" message="you-do-not-have-permission-to-move-this-item-to-the-selected-destination" />
+<liferay-ui:error key="trash.restore.error" message="you-do-not-have-permission-to-restore-this-item" />
+<liferay-ui:error key="trash.restore.overwrite.error" message="you-do-not-have-permission-to-replace-an-existing-item-with-the-selected-one" />
+<liferay-ui:error key="trash.restore.rename.error" message="you-do-not-have-permission-to-rename-this-item" />
+
 <c:if test="<%= group.isStagingGroup() %>">
 	<liferay-ui:tabs
 		names="staging,live"
@@ -151,7 +157,7 @@ portletURL.setParameter("tabs1", tabs1);
 				viewContentURL.setParameter("classPK", String.valueOf(entry.getClassPK()));
 			}
 			else {
-				viewContentURL.setParameter("entryId", String.valueOf(entry.getEntryId()));
+				viewContentURL.setParameter("trashEntryId", String.valueOf(entry.getEntryId()));
 			}
 
 			viewContentURL.setParameter("type", trashRenderer.getType());
@@ -184,7 +190,7 @@ portletURL.setParameter("tabs1", tabs1);
 
 					viewContentURL.setParameter("struts_action", "/trash/view_content");
 					viewContentURL.setParameter("redirect", currentURL);
-					viewContentURL.setParameter("entryId", String.valueOf(rootEntry.getEntryId()));
+					viewContentURL.setParameter("trashEntryId", String.valueOf(rootEntry.getEntryId()));
 					viewContentURL.setParameter("type", rootTrashRenderer.getType());
 					viewContentURL.setParameter("showActions", Boolean.FALSE.toString());
 					viewContentURL.setParameter("showAssetMetadata", Boolean.TRUE.toString());
@@ -256,8 +262,7 @@ portletURL.setParameter("tabs1", tabs1);
 		<liferay-portlet:renderURLParams varImpl="searchURL" />
 		<aui:input name="<%= Constants.CMD %>" type="hidden" value="" />
 		<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
-		<aui:input name="deleteEntryIds" type="hidden" />
-		<aui:input name="restoreEntryIds" type="hidden" />
+		<aui:input name="trashEntryIds" type="hidden" />
 
 		<aui:button-row>
 			<liferay-ui:search-form
