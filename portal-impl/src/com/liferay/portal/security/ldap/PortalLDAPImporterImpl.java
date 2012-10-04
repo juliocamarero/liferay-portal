@@ -1071,10 +1071,9 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 	protected void setProperty(
 		Object bean1, Object bean2, String propertyName) {
 
-		Object value = BeanPropertiesUtil.getObject(bean1, propertyName);
 		Object defaultValue = BeanPropertiesUtil.getObject(bean2, propertyName);
 
-		if ((value == null) || value.equals(StringPool.BLANK)) {
+		if ((defaultValue != null) && !defaultValue.equals(StringPool.BLANK)) {
 			BeanPropertiesUtil.setProperty(bean1, propertyName, defaultValue);
 		}
 	}
@@ -1252,8 +1251,9 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 	}
 
 	private static final String[] _CONTACT_PROPERTY_NAMES = {
-		"aimSn", "facebookSn", "icqSn", "jabberSn", "male", "mySpaceSn",
-		"prefixId", "skypeSn", "smsSn", "suffixId", "twitterSn", "ymSn"
+		"aimSn", "facebookSn", "icqSn", "jabberSn", "male", "msnSn",
+		"mySpaceSn", "prefixId", "skypeSn", "smsSn", "suffixId", "twitterSn",
+		"ymSn"
 	};
 
 	private static final String _IMPORT_BY_GROUP = "group";
