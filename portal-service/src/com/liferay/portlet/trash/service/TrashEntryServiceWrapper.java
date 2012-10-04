@@ -63,6 +63,18 @@ public class TrashEntryServiceWrapper implements TrashEntryService,
 		_trashEntryService.deleteEntries(groupId);
 	}
 
+	public void deleteEntries(long[] entryIds)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_trashEntryService.deleteEntries(entryIds);
+	}
+
+	public void deleteEntry(long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_trashEntryService.deleteEntry(entryId);
+	}
+
 	/**
 	* Returns the trash entries with the matching group ID.
 	*
@@ -98,6 +110,22 @@ public class TrashEntryServiceWrapper implements TrashEntryService,
 		throws com.liferay.portal.kernel.exception.SystemException,
 			com.liferay.portal.security.auth.PrincipalException {
 		return _trashEntryService.getEntries(groupId, start, end, obc);
+	}
+
+	public void moveEntry(long groupId, long entryId,
+		long destinationContainerModelId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_trashEntryService.moveEntry(groupId, entryId,
+			destinationContainerModelId, serviceContext);
+	}
+
+	public com.liferay.portlet.trash.model.TrashEntry restoreEntry(
+		long entryId, long overrideClassPK, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _trashEntryService.restoreEntry(entryId, overrideClassPK, name);
 	}
 
 	/**
