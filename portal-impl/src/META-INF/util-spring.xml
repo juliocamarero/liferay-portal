@@ -690,6 +690,11 @@
 			<bean class="com.liferay.portal.struts.StrutsActionRegistryImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.util.CookieUtil" class="com.liferay.portal.util.CookieUtil">
+		<property name="Cookie">
+			<bean class="com.liferay.portal.util.CookieImpl" />
+		</property>
+	</bean>
 	<bean id="com.liferay.portal.util.CustomJspRegistryUtil" class="com.liferay.portal.util.CustomJspRegistryUtil">
 		<property name="customJspRegistry">
 			<bean class="com.liferay.portal.util.CustomJspRegistryImpl" />
