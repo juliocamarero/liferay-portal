@@ -45,6 +45,14 @@ public class AuthVerifierPipeline {
 
 	public static final String AUTH_TYPE = "auth.type";
 
+	public static String getAuthVerifierPropertyName(String className) {
+		String simpleClassName = StringUtil.extractLast(
+			className, StringPool.PERIOD);
+
+		return PropsKeys.AUTH_VERIFIER.concat(simpleClassName).concat(
+			StringPool.PERIOD);
+	}
+
 	public static void register(
 		AuthVerifierConfiguration authVerifierConfiguration) {
 
@@ -125,15 +133,8 @@ public class AuthVerifierPipeline {
 
 				authVerifierConfiguration.setAuthVerifier(authVerifier);
 
-				String authVerifierPropertyName = PropsKeys.AUTH_VERIFIER;
-
-				authVerifierPropertyName +=
-					StringUtil.extractLast(
-						authVerifierClassName, StringPool.PERIOD);
-				authVerifierPropertyName += StringPool.PERIOD;
-
 				Properties properties = PropsUtil.getProperties(
-					authVerifierPropertyName, true);
+					getAuthVerifierPropertyName(authVerifierClassName), true);
 
 				authVerifierConfiguration.setProperties(properties);
 

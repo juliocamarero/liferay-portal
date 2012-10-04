@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing ExpandoRow in entity cache.
  *
@@ -35,12 +37,14 @@ public class ExpandoRowCacheModel implements CacheModel<ExpandoRow>,
 	Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(11);
 
 		sb.append("{rowId=");
 		sb.append(rowId);
 		sb.append(", companyId=");
 		sb.append(companyId);
+		sb.append(", modifiedDate=");
+		sb.append(modifiedDate);
 		sb.append(", tableId=");
 		sb.append(tableId);
 		sb.append(", classPK=");
@@ -55,6 +59,14 @@ public class ExpandoRowCacheModel implements CacheModel<ExpandoRow>,
 
 		expandoRowImpl.setRowId(rowId);
 		expandoRowImpl.setCompanyId(companyId);
+
+		if (modifiedDate == Long.MIN_VALUE) {
+			expandoRowImpl.setModifiedDate(null);
+		}
+		else {
+			expandoRowImpl.setModifiedDate(new Date(modifiedDate));
+		}
+
 		expandoRowImpl.setTableId(tableId);
 		expandoRowImpl.setClassPK(classPK);
 
@@ -66,6 +78,7 @@ public class ExpandoRowCacheModel implements CacheModel<ExpandoRow>,
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		rowId = objectInput.readLong();
 		companyId = objectInput.readLong();
+		modifiedDate = objectInput.readLong();
 		tableId = objectInput.readLong();
 		classPK = objectInput.readLong();
 	}
@@ -74,12 +87,14 @@ public class ExpandoRowCacheModel implements CacheModel<ExpandoRow>,
 		throws IOException {
 		objectOutput.writeLong(rowId);
 		objectOutput.writeLong(companyId);
+		objectOutput.writeLong(modifiedDate);
 		objectOutput.writeLong(tableId);
 		objectOutput.writeLong(classPK);
 	}
 
 	public long rowId;
 	public long companyId;
+	public long modifiedDate;
 	public long tableId;
 	public long classPK;
 }
