@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.util.CookieUtil;
+import com.liferay.portal.util.CookieKeys;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -264,7 +264,7 @@ public class OpenSSOUtil {
 
 		String cookieName = _getCookieNames(serviceUrl)[0];
 
-		return CookieUtil.get(request, cookieName);
+		return CookieKeys.get(request, cookieName);
 	}
 
 	private boolean _isAuthenticated(
@@ -278,7 +278,7 @@ public class OpenSSOUtil {
 		String[] cookieNames = _getCookieNames(serviceUrl);
 
 		for (String cookieName : cookieNames) {
-			if (CookieUtil.get(request, cookieName) != null) {
+			if (CookieKeys.get(request, cookieName) != null) {
 				hasCookieNames = true;
 
 				break;
@@ -398,7 +398,7 @@ public class OpenSSOUtil {
 		StringBundler sb = new StringBundler(cookieNames.length * 4);
 
 		for (String cookieName : cookieNames) {
-			String cookieValue = CookieUtil.get(request, cookieName);
+			String cookieValue = CookieKeys.get(request, cookieName);
 
 			sb.append(cookieName);
 			sb.append(StringPool.EQUAL);
