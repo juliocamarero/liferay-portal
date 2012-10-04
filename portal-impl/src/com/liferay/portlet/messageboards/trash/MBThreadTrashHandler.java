@@ -21,9 +21,12 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.documentlibrary.NoSuchDirectoryException;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.messageboards.model.MBThread;
+import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
+import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.Date;
@@ -89,7 +92,7 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 		}
 	}
 
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission) {
+	public void deleteTrashEntries(long[] classPKs) {
 	}
 
 	public String getClassName() {
@@ -100,7 +103,17 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 		return false;
 	}
 
-	public void restoreTrashEntries(long[] classPKs) {
+	public void restoreTrashEntries(long userId, long[] classPKs) {
+	}
+
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		MBThread thread = MBThreadLocalServiceUtil.getThread(classPK);
+
+		return MBMessagePermission.contains(
+			permissionChecker, thread.getRootMessageId(), actionId);
 	}
 
 }

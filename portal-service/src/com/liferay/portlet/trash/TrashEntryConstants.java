@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
@@ -12,15 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<portlet:actionURL var="deleteEntryURL">
-	<portlet:param name="struts_action" value="/trash/edit_entry" />
-	<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
-	<portlet:param name="redirect" value="<%= redirect %>" />
-	<portlet:param name="trashEntryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
-</portlet:actionURL>
+package com.liferay.portlet.trash;
 
-<liferay-ui:icon-delete
-	url="<%= deleteEntryURL %>"
-/>
+/**
+ * @author Zsolt Berentey
+ */
+public class TrashEntryConstants {
+
+	public static final int DEFAULT_CONTAINER_ID = -1;
+
+}

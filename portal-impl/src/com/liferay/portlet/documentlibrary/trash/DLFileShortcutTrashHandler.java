@@ -16,12 +16,17 @@ package com.liferay.portlet.documentlibrary.trash;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
+import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
+import com.liferay.portlet.documentlibrary.service.DLAppHelperLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileShortcutLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.permission.DLFileShortcutPermission;
+import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 
 import javax.portlet.PortletRequest;
@@ -31,7 +36,7 @@ import javax.portlet.PortletRequest;
  *
  * @author Zsolt Berentey
  */
-public class DLFileShortcutTrashHandler extends BaseTrashHandler {
+public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 
 	/**
 	 * The class name of the file shortcut entity.
@@ -42,22 +47,15 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 	 * Deletes all file shortcuts with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the file shortcuts to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         file shortcut
 	 * @throws PortalException if any one of the file shortcuts could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			if (checkPermission) {
-				DLAppServiceUtil.deleteFileShortcut(classPK);
-			}
-			else {
-				DLAppLocalServiceUtil.deleteFileShortcut(classPK);
-			}
+			DLAppLocalServiceUtil.deleteFileShortcut(classPK);
 		}
 	}
 
@@ -115,6 +113,20 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 		return new DLFileShortcutTrashRenderer(fileShortcut);
 	}
 
+	public boolean hasTrashPermission(
+			PermissionChecker permissionChecker, long groupId, long classPK,
+			String trashActionId)
+		throws PortalException, SystemException {
+
+		if (trashActionId.equals(TrashActionKeys.MOVE)) {
+			return DLFolderPermission.contains(
+				permissionChecker, groupId, classPK, ActionKeys.ADD_SHORTCUT);
+		}
+
+		return super.hasTrashPermission(
+			permissionChecker, groupId, classPK, trashActionId);
+	}
+
 	public boolean isInTrash(long classPK)
 		throws PortalException, SystemException {
 
@@ -128,20 +140,50 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 		return false;
 	}
 
+	@Override
+	public boolean isRestorable(long classPK)
+		throws PortalException, SystemException {
+
+		DLFileShortcut dlFileShortcut = getDLFileShortcut(classPK);
+
+		return !dlFileShortcut.isInTrashFolder();
+	}
+
+	@Override
+	public void moveTrashEntry(
+			long userId, long classPK, long containerModelId,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DLAppHelperLocalServiceUtil.moveFileShortcutFromTrash(
+			userId, getDLFileShortcut(classPK), containerModelId,
+			serviceContext);
+	}
+
 	/**
 	 * Restores all file entries with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary keys of the file shortcuts to be deleted
 	 * @throws PortalException if any one of the file shortcuts could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			DLAppServiceUtil.restoreFileShortcutFromTrash(classPK);
+			DLAppHelperLocalServiceUtil.restoreFileShortcutFromTrash(
+				userId, getDLFileShortcut(classPK));
 		}
+	}
+
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return DLFileShortcutPermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 }

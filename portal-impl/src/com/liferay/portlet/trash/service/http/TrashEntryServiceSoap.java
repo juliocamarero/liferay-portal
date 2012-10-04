@@ -83,6 +83,28 @@ public class TrashEntryServiceSoap {
 		}
 	}
 
+	public static void deleteEntries(long[] entryIds) throws RemoteException {
+		try {
+			TrashEntryServiceUtil.deleteEntries(entryIds);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteEntry(long entryId) throws RemoteException {
+		try {
+			TrashEntryServiceUtil.deleteEntry(entryId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	/**
 	* Returns the trash entries with the matching group ID.
 	*
@@ -128,6 +150,37 @@ public class TrashEntryServiceSoap {
 					start, end, obc);
 
 			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void moveEntry(long groupId, long entryId,
+		long destinationContainerModelId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			TrashEntryServiceUtil.moveEntry(groupId, entryId,
+				destinationContainerModelId, serviceContext);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.portlet.trash.model.TrashEntrySoap restoreEntry(
+		long entryId, long overrideClassPK, java.lang.String name)
+		throws RemoteException {
+		try {
+			com.liferay.portlet.trash.model.TrashEntry returnValue = TrashEntryServiceUtil.restoreEntry(entryId,
+					overrideClassPK, name);
+
+			return com.liferay.portlet.trash.model.TrashEntrySoap.toSoapModel(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

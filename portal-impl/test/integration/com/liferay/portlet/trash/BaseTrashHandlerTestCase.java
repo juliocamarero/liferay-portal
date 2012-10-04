@@ -381,7 +381,8 @@ public abstract class BaseTrashHandlerTestCase {
 			Assert.assertNull(fetchAssetEntry(baseModel));
 		}
 		else {
-			trashHandler.restoreTrashEntry(getTrashEntryClassPK(baseModel));
+			trashHandler.restoreTrashEntry(
+				serviceContext.getUserId(), getTrashEntryClassPK(baseModel));
 
 			Assert.assertEquals(
 				initialBaseModelsCount + 1,
@@ -636,7 +637,8 @@ public abstract class BaseTrashHandlerTestCase {
 			Assert.assertNull(fetchAssetEntry(baseModel));
 		}
 		else {
-			trashHandler.restoreTrashEntry(getTrashEntryClassPK(baseModel));
+			trashHandler.restoreTrashEntry(
+				serviceContext.getUserId(), getTrashEntryClassPK(baseModel));
 
 			Assert.assertEquals(
 				initialBaseModelsCount + 1,

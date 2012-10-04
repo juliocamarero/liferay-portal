@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CompanyConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -39,7 +40,7 @@ import com.liferay.portlet.wiki.model.WikiPageConstants;
 import com.liferay.portlet.wiki.model.WikiPageResource;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageResourceLocalServiceUtil;
-import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
+import com.liferay.portlet.wiki.service.permission.WikiPagePermission;
 
 import java.util.Date;
 
@@ -53,7 +54,8 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	public static final String CLASS_NAME = WikiPage.class.getName();
 
 	@Override
-	public void checkDuplicateTrashEntry(TrashEntry trashEntry, String newName)
+	public void checkDuplicateTrashEntry(
+			TrashEntry trashEntry, long containerModelId, String newName)
 		throws PortalException, SystemException {
 
 		WikiPage page = WikiPageLocalServiceUtil.getPage(
@@ -68,7 +70,7 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 		String originalTitle = TrashUtil.stripTrashNamespace(restoredTitle);
 
 		WikiPage duplicatePage = WikiPageLocalServiceUtil.fetchPage(
-			page.getNodeId(), originalTitle, page.getVersion());
+			containerModelId, originalTitle, page.getVersion());
 
 		if (duplicatePage != null) {
 			DuplicateEntryException dee = new DuplicateEntryException();
@@ -125,25 +127,17 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	 * Deletes all wiki page with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the wiki pages to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         folder
 	 * @throws PortalException if any one of the wiki pages could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
 			WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
 
-			if (checkPermission) {
-				WikiPageServiceUtil.deletePage(
-					page.getNodeId(), page.getTitle());
-			}
-			else {
-				WikiPageLocalServiceUtil.deletePage(
-					page.getNodeId(), page.getTitle());
-			}
+			WikiPageLocalServiceUtil.deletePage(
+				page.getNodeId(), page.getTitle());
 		}
 	}
 
@@ -221,20 +215,23 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	/**
 	 * Restores all wiki pages with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary keys of the wiki pages to be deleted
 	 * @throws PortalException if any one of the wiki pages could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			WikiPageServiceUtil.restorePageFromTrash(classPK);
+			WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
+
+			WikiPageLocalServiceUtil.restorePageFromTrash(userId, page);
 		}
 	}
 
 	@Override
-	public void updateTitle(long classPK, String name)
+	public void updateTitle(long userId, long classPK, String name)
 		throws PortalException, SystemException {
 
 		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
@@ -251,6 +248,14 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 
 		WikiPageResourceLocalServiceUtil.updateWikiPageResource(
 			pageResource, false);
+	}
+
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return WikiPagePermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 }

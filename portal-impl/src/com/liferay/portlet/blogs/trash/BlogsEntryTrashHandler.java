@@ -17,9 +17,11 @@ package com.liferay.portlet.blogs.trash;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.trash.BaseTrashHandler;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.service.BlogsEntryServiceUtil;
+import com.liferay.portlet.blogs.service.permission.BlogsEntryPermission;
 
 /**
  * Represents the trash handler for blogs entries entity.
@@ -34,22 +36,15 @@ public class BlogsEntryTrashHandler extends BaseTrashHandler {
 	 * Deletes all blogs entries with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the blogs entries to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         blog entry
 	 * @throws PortalException if any one of the blogs entries could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			if (checkPermission) {
-				BlogsEntryServiceUtil.deleteEntry(classPK);
-			}
-			else {
-				BlogsEntryLocalServiceUtil.deleteEntry(classPK);
-			}
+			BlogsEntryLocalServiceUtil.deleteEntry(classPK);
 		}
 	}
 
@@ -73,17 +68,26 @@ public class BlogsEntryTrashHandler extends BaseTrashHandler {
 	/**
 	 * Restores all blogs entries with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary key of the blogs entry to be restored
 	 * @throws PortalException if any one of the blogs entries could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			BlogsEntryServiceUtil.restoreEntryFromTrash(classPK);
+			BlogsEntryLocalServiceUtil.restoreEntryFromTrash(userId, classPK);
 		}
+	}
+
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return BlogsEntryPermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 }

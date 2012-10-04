@@ -14,36 +14,19 @@
 
 package com.liferay.portal.kernel.trash;
 
-import java.util.Locale;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
 /**
+ * Contains constant versions of action IDs related to trash.
+ *
  * @author Zsolt Berentey
  */
-public interface TrashRenderer {
+public class TrashActionKeys {
 
-	public String getIconPath(PortletRequest portletRequest);
+	public static final String MOVE = "MOVE";
 
-	public String getPortletId();
+	public static final String OVERWRITE = "OVERWRITE";
 
-	public String getRestorePath(RenderRequest renderRequest);
+	public static final String RENAME = "RENAME";
 
-	public String getSummary(Locale locale);
-
-	public String getTitle(Locale locale);
-
-	public String getType();
-
-	public String render(
-			RenderRequest renderRequest, RenderResponse renderResponse,
-			String template)
-		throws Exception;
-
-	public String renderActions(
-			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws Exception;
+	public static final String RESTORE = "RESTORE";
 
 }

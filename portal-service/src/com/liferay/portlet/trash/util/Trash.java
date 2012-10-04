@@ -17,17 +17,28 @@ package com.liferay.portlet.trash.util;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.util.Date;
 import java.util.List;
 
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Julio Camarero
  */
 public interface Trash {
+
+	public void addContainerBreadcrumbEntries(
+			HttpServletRequest request, TrashHandler trashHandler,
+			PortletURL containerURL)
+		throws PortalException, SystemException;
 
 	public String appendTrashNamespace(String title);
 
@@ -45,6 +56,8 @@ public interface Trash {
 		String orderByCol, String orderByType);
 
 	public int getMaxAge(Group group) throws PortalException, SystemException;
+
+	public String getNewName(ThemeDisplay themeDisplay, String oldName);
 
 	public String getTrashTime(String title, String separator);
 

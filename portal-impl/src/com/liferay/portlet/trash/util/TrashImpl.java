@@ -16,6 +16,7 @@ package com.liferay.portlet.trash.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
@@ -23,6 +24,8 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -31,10 +34,15 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.documentlibrary.NoSuchFileException;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -44,15 +52,84 @@ import com.liferay.portlet.trash.util.comparator.EntryCreateDateComparator;
 import com.liferay.portlet.trash.util.comparator.EntryTypeComparator;
 import com.liferay.portlet.trash.util.comparator.EntryUserNameComparator;
 
+import java.text.Format;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Sergio González
  * @author Julio Camarero
  */
 public class TrashImpl implements Trash {
+
+	public void addContainerBreadcrumbEntries(
+			HttpServletRequest request, TrashHandler trashHandler,
+			PortletURL containerURL)
+		throws PortalException, SystemException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Locale locale = themeDisplay.getLocale();
+
+		ContainerModel containerModel =
+			(ContainerModel)request.getAttribute(
+				WebKeys.TRASH_DESTINATION_CONTAINER_MODEL);
+
+		List<ContainerModel> containerModels = new ArrayList<ContainerModel>();
+
+		if (containerModel != null) {
+			containerModels.add(containerModel);
+
+			ContainerModel curContainerModel = containerModel;
+
+			while (curContainerModel.getParentContainerModelId() > 0) {
+				curContainerModel = trashHandler.getContainerModel(
+					curContainerModel.getParentContainerModelId());
+
+				containerModels.add(curContainerModel);
+			}
+		}
+
+		String rootContainerModelName = LanguageUtil.get(
+			locale, trashHandler.getRootContainerModelName());
+
+		if (!containerModels.isEmpty()) {
+			containerURL.setParameter("containerModelId", "0");
+
+			PortalUtil.addPortletBreadcrumbEntry(
+				request, rootContainerModelName, containerURL.toString());
+		}
+		else {
+			PortalUtil.addPortletBreadcrumbEntry(
+				request, rootContainerModelName, null);
+		}
+
+		for (ContainerModel curContainerModel : containerModels) {
+			if (curContainerModel.getContainerModelId() ==
+					containerModel.getContainerModelId()) {
+
+				PortalUtil.addPortletBreadcrumbEntry(
+					request, curContainerModel.getContainerModelName(), null);
+			}
+			else {
+				containerURL.setParameter(
+					"containerModelId",
+					String.valueOf(curContainerModel.getContainerModelId()));
+
+				PortalUtil.addPortletBreadcrumbEntry(
+					request, curContainerModel.getContainerModelName(),
+					containerURL.toString());
+			}
+		}
+	}
 
 	public String appendTrashNamespace(String title) {
 		return appendTrashNamespace(title, StringPool.SLASH);
@@ -181,6 +258,24 @@ public class TrashImpl implements Trash {
 		return GetterUtil.getInteger(
 			typeSettingsProperties.getProperty("trashEntriesMaxAge"),
 			trashEntriesMaxAge);
+	}
+
+	public String getNewName(ThemeDisplay themeDisplay, String oldName) {
+		Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(
+			themeDisplay.getLocale(), themeDisplay.getTimeZone());
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(oldName);
+		sb.append(StringPool.SPACE);
+		sb.append(StringPool.OPEN_PARENTHESIS);
+		sb.append(
+			StringUtil.replace(
+				dateFormatDateTime.format(new Date()), CharPool.SLASH,
+				CharPool.PERIOD));
+		sb.append(StringPool.CLOSE_PARENTHESIS);
+
+		return sb.toString();
 	}
 
 	public String getTrashTime(String title, String separator) {

@@ -18,12 +18,18 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Julio Camarero
@@ -43,6 +49,15 @@ public class TrashUtil {
 	public static final int TRASH_ENABLED_BY_DEFAULT = 2;
 
 	public static final String TRASH_TIME_SEPARATOR = "_TRASH_TIME_";
+
+	public static void addContainerBreadcrumbEntries(
+			HttpServletRequest request, TrashHandler trashHandler,
+			PortletURL containerURL)
+		throws PortalException, SystemException {
+
+		getTrash().addContainerBreadcrumbEntries(
+			request, trashHandler, containerURL);
+	}
 
 	public static String appendTrashNamespace(String title) {
 		return getTrash().appendTrashNamespace(title);
@@ -77,6 +92,10 @@ public class TrashUtil {
 		throws PortalException, SystemException {
 
 		return getTrash().getMaxAge(group);
+	}
+
+	public static String getNewName(ThemeDisplay themeDisplay, String oldName) {
+		return getTrash().getNewName(themeDisplay, oldName);
 	}
 
 	public static Trash getTrash() {
