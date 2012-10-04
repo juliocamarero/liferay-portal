@@ -65,22 +65,10 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		throws PortalException, SystemException {
 	}
 
-	public void deleteTrashEntries(long[] classPKs)
-		throws PortalException, SystemException {
-
-		deleteTrashEntries(classPKs, true);
-	}
-
 	public void deleteTrashEntry(long classPK)
 		throws PortalException, SystemException {
 
 		deleteTrashEntries(new long[] {classPK});
-	}
-
-	public void deleteTrashEntry(long classPK, boolean checkPermission)
-		throws PortalException, SystemException {
-
-		deleteTrashEntries(new long[] {classPK}, checkPermission);
 	}
 
 	public ContainerModel getContainerModel(long containerModelId)
@@ -181,11 +169,12 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	public void moveTrashEntry(
-			long classPK, long containerModelId, ServiceContext serviceContext)
+			long userId, long classPK, long containerModelId,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		if (isRestorable(classPK)) {
-			restoreTrashEntry(classPK);
+			restoreTrashEntry(userId, classPK);
 		}
 
 		_log.error("moveTrashEntry() is not implemented in " +
@@ -194,13 +183,13 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		throw new SystemException();
 	}
 
-	public void restoreTrashEntry(long classPK)
+	public void restoreTrashEntry(long userId, long classPK)
 		throws PortalException, SystemException {
 
-		restoreTrashEntries(new long[] {classPK});
+		restoreTrashEntries(userId, new long[] {classPK});
 	}
 
-	public void updateTitle(long classPK, String title)
+	public void updateTitle(long userId, long classPK, String title)
 		throws PortalException, SystemException {
 	}
 

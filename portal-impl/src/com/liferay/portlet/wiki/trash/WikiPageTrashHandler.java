@@ -40,7 +40,6 @@ import com.liferay.portlet.wiki.model.WikiPageConstants;
 import com.liferay.portlet.wiki.model.WikiPageResource;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageResourceLocalServiceUtil;
-import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
 import com.liferay.portlet.wiki.service.permission.WikiPagePermission;
 
 import java.util.Date;
@@ -128,25 +127,17 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	 * Deletes all wiki page with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the wiki pages to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         folder
 	 * @throws PortalException if any one of the wiki pages could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
 			WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
 
-			if (checkPermission) {
-				WikiPageServiceUtil.deletePage(
-					page.getNodeId(), page.getTitle());
-			}
-			else {
-				WikiPageLocalServiceUtil.deletePage(
-					page.getNodeId(), page.getTitle());
-			}
+			WikiPageLocalServiceUtil.deletePage(
+				page.getNodeId(), page.getTitle());
 		}
 	}
 
@@ -224,20 +215,23 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	/**
 	 * Restores all wiki pages with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary keys of the wiki pages to be deleted
 	 * @throws PortalException if any one of the wiki pages could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			WikiPageServiceUtil.restorePageFromTrash(classPK);
+			WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
+
+			WikiPageLocalServiceUtil.restorePageFromTrash(userId, page);
 		}
 	}
 
 	@Override
-	public void updateTitle(long classPK, String name)
+	public void updateTitle(long userId, long classPK, String name)
 		throws PortalException, SystemException {
 
 		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);

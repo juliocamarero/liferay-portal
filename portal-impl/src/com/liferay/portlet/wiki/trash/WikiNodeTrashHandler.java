@@ -26,7 +26,6 @@ import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.asset.WikiNodeTrashRenderer;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
-import com.liferay.portlet.wiki.service.WikiNodeServiceUtil;
 import com.liferay.portlet.wiki.service.permission.WikiNodePermission;
 /*
  * @author Eudaldo Alonso
@@ -69,21 +68,14 @@ public class WikiNodeTrashHandler extends BaseTrashHandler {
 	 * Deletes all wiki nodes with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the wiki nodes to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         folder
 	 * @throws PortalException if any one of the wiki nodes could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			if (checkPermission) {
-				WikiNodeServiceUtil.deleteNode(classPK);
-			}
-			else {
-				WikiNodeLocalServiceUtil.deleteNode(classPK);
-			}
+			WikiNodeLocalServiceUtil.deleteNode(classPK);
 		}
 	}
 
@@ -124,20 +116,23 @@ public class WikiNodeTrashHandler extends BaseTrashHandler {
 	/**
 	 * Restores all wiki nodes with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary keys of the wiki nodes to be deleted
 	 * @throws PortalException if any one of the wiki nodes could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			WikiNodeServiceUtil.restoreNodeFromTrash(classPK);
+			WikiNode node = WikiNodeLocalServiceUtil.getNode(classPK);
+
+			WikiNodeLocalServiceUtil.restoreNodeFromTrash(userId, node);
 		}
 	}
 
 	@Override
-	public void updateTitle(long classPK, String name)
+	public void updateTitle(long userId, long classPK, String name)
 		throws PortalException, SystemException {
 
 		WikiNode node = WikiNodeLocalServiceUtil.getNode(classPK);

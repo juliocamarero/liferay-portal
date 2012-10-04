@@ -129,19 +129,6 @@ public interface TrashHandler {
 		throws PortalException, SystemException;
 
 	/**
-	 * Deletes all trash entries with the primary keys.
-	 *
-	 * @param  classPKs the primary keys of the entries to delete
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         trash entry
-	 * @throws PortalException if an entry with the primary key could not be
-	 *         found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
-		throws PortalException, SystemException;
-
-	/**
 	 * Deletes the entry with the primary key.
 	 *
 	 * @param  classPK the primary key of the entry to delete
@@ -150,19 +137,6 @@ public interface TrashHandler {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public void deleteTrashEntry(long classPK)
-		throws PortalException, SystemException;
-
-	/**
-	 * Deletes the entry with the primary key.
-	 *
-	 * @param  classPK the primary key of the entry to delete
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         trash entry
-	 * @throws PortalException if an entry with the primary key could not be
-	 *         found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public void deleteTrashEntry(long classPK, boolean checkPermission)
 		throws PortalException, SystemException;
 
 	/**
@@ -357,6 +331,7 @@ public interface TrashHandler {
 	 * Move the entry with the primary key to a new destination identified by
 	 * container model ID.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPK the primary key of the entry
 	 * @param  containerModelId the primary key of the destination container
 	 *         model
@@ -366,41 +341,45 @@ public interface TrashHandler {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public void moveTrashEntry(
-			long classPK, long containerModelId, ServiceContext serviceContext)
+			long userId, long classPK, long containerModelId,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException;
 
 	/**
 	 * Restores all entries with the primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary keys of the entries to restore
 	 * @throws PortalException if an entry with the primary key could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException;
 
 	/**
 	 * Restore the entry defined by the primary key
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPK the primary key of the entry to restore
 	 * @throws PortalException if an entry with the primary key could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntry(long classPK)
+	public void restoreTrashEntry(long userId, long classPK)
 		throws PortalException, SystemException;
 
 	/**
 	 * Updates the title of the trash entry with the primary key before restore.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPK the primary key of the entry
 	 * @param  title the title to be assigned
 	 * @throws PortalException if the entry with the primary key could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void updateTitle(long classPK, String title)
+	public void updateTitle(long userId, long classPK, String title)
 		throws PortalException, SystemException;
 
 }

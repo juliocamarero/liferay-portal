@@ -16,6 +16,8 @@ package com.liferay.portlet.documentlibrary.trash;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.repository.Repository;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -25,8 +27,8 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.service.DLAppHelperLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
@@ -93,21 +95,14 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 	 * Deletes all file entries with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the file entries to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         file entry
 	 * @throws PortalException if any one of the file entries could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			if (checkPermission) {
-				DLAppServiceUtil.deleteFileEntry(classPK);
-			}
-			else {
-				DLAppLocalServiceUtil.deleteFileEntry(classPK);
-			}
+			DLAppLocalServiceUtil.deleteFileEntry(classPK);
 		}
 	}
 
@@ -186,30 +181,41 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 
 	@Override
 	public void moveTrashEntry(
-			long classPK, long containerId, ServiceContext serviceContext)
+			long userId, long classPK, long containerModelId,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		DLAppServiceUtil.moveFileEntryFromTrash(
-			classPK, containerId, serviceContext);
+		Repository repository = getRepository(classPK);
+
+		FileEntry fileEntry = repository.getFileEntry(classPK);
+
+		DLAppHelperLocalServiceUtil.moveFileEntryFromTrash(
+			userId, fileEntry, containerModelId, serviceContext);
 	}
 
 	/**
 	 * Restores all file entries with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary keys of the file entries to be deleted
 	 * @throws PortalException if any one of the file entries could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			DLAppServiceUtil.restoreFileEntryFromTrash(classPK);
+			Repository repository = getRepository(classPK);
+
+			FileEntry fileEntry = repository.getFileEntry(classPK);
+
+			DLAppHelperLocalServiceUtil.restoreFileEntryFromTrash(
+				userId, fileEntry);
 		}
 	}
 
 	@Override
-	public void updateTitle(long classPK, String name)
+	public void updateTitle(long userId, long classPK, String name)
 		throws PortalException, SystemException {
 
 		DLFileEntry dlFileEntry = getDLFileEntry(classPK);

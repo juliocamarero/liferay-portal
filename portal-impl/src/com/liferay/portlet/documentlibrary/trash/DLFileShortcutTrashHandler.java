@@ -22,8 +22,8 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
+import com.liferay.portlet.documentlibrary.service.DLAppHelperLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileShortcutLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileShortcutPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
@@ -47,22 +47,15 @@ public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 	 * Deletes all file shortcuts with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the file shortcuts to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         file shortcut
 	 * @throws PortalException if any one of the file shortcuts could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			if (checkPermission) {
-				DLAppServiceUtil.deleteFileShortcut(classPK);
-			}
-			else {
-				DLAppLocalServiceUtil.deleteFileShortcut(classPK);
-			}
+			DLAppLocalServiceUtil.deleteFileShortcut(classPK);
 		}
 	}
 
@@ -158,26 +151,30 @@ public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 
 	@Override
 	public void moveTrashEntry(
-			long classPK, long containerId, ServiceContext serviceContext)
+			long userId, long classPK, long containerModelId,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		DLAppServiceUtil.moveFileShortcutFromTrash(
-			classPK, containerId, serviceContext);
+		DLAppHelperLocalServiceUtil.moveFileShortcutFromTrash(
+			userId, getDLFileShortcut(classPK), containerModelId,
+			serviceContext);
 	}
 
 	/**
 	 * Restores all file entries with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary keys of the file shortcuts to be deleted
 	 * @throws PortalException if any one of the file shortcuts could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			DLAppServiceUtil.restoreFileShortcutFromTrash(classPK);
+			DLAppHelperLocalServiceUtil.restoreFileShortcutFromTrash(
+				userId, getDLFileShortcut(classPK));
 		}
 	}
 

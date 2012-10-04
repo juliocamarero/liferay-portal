@@ -92,7 +92,7 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 		}
 	}
 
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission) {
+	public void deleteTrashEntries(long[] classPKs) {
 	}
 
 	public String getClassName() {

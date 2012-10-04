@@ -284,7 +284,8 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 			entry, destinationContainerModelId, StringPool.BLANK);
 
 		trashHandler.moveTrashEntry(
-			entry.getClassPK(), destinationContainerModelId, serviceContext);
+			getUserId(), entry.getClassPK(), destinationContainerModelId,
+			serviceContext);
 	}
 
 	/**
@@ -351,7 +352,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 				throw new PrincipalException("trash.restore.rename.error");
 			}
 
-			trashHandler.updateTitle(entry.getClassPK(), name);
+			trashHandler.updateTitle(getUserId(), entry.getClassPK(), name);
 		}
 
 		if (!trashHandler.hasTrashPermission(
@@ -364,7 +365,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 		trashHandler.checkDuplicateTrashEntry(
 			entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, null);
 
-		trashHandler.restoreTrashEntry(entry.getClassPK());
+		trashHandler.restoreTrashEntry(getUserId(), entry.getClassPK());
 
 		return entry;
 	}

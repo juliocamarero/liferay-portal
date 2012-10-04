@@ -16,6 +16,7 @@ package com.liferay.portlet.documentlibrary.trash;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.repository.Repository;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashRenderer;
@@ -25,10 +26,9 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.service.DLAppHelperLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFolderServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.trash.DuplicateEntryException;
@@ -90,21 +90,14 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 	 * Deletes all folders with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the folders to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         folder
 	 * @throws PortalException if any one of the folders could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			if (checkPermission) {
-				DLFolderServiceUtil.deleteFolder(classPK, false);
-			}
-			else {
-				DLFolderLocalServiceUtil.deleteFolder(classPK, false);
-			}
+			DLFolderLocalServiceUtil.deleteFolder(classPK, false);
 		}
 	}
 
@@ -196,30 +189,40 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 
 	@Override
 	public void moveTrashEntry(
-			long classPK, long containerId, ServiceContext serviceContext)
+			long userId, long classPK, long containerModelId,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		DLAppServiceUtil.moveFolderFromTrash(
-			classPK, containerId, serviceContext);
+		Repository repository = getRepository(classPK);
+
+		Folder folder = repository.getFolder(classPK);
+
+		DLAppHelperLocalServiceUtil.moveFolderFromTrash(
+			userId, folder, containerModelId, serviceContext);
 	}
 
 	/**
 	 * Restores all folders with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary keys of the folders to be deleted
 	 * @throws PortalException if any one of the folders could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			DLAppServiceUtil.restoreFolderFromTrash(classPK);
+			Repository repository = getRepository(classPK);
+
+			Folder folder = repository.getFolder(classPK);
+
+			DLAppHelperLocalServiceUtil.restoreFolderFromTrash(userId, folder);
 		}
 	}
 
 	@Override
-	public void updateTitle(long classPK, String name)
+	public void updateTitle(long userId, long classPK, String name)
 		throws PortalException, SystemException {
 
 		DLFolder dlFolder = getDLFolder(classPK);

@@ -36,22 +36,15 @@ public class BlogsEntryTrashHandler extends BaseTrashHandler {
 	 * Deletes all blogs entries with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the blogs entries to be deleted
-	 * @param  checkPermission whether to check permission before deleting each
-	 *         blog entry
 	 * @throws PortalException if any one of the blogs entries could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
+	public void deleteTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			if (checkPermission) {
-				BlogsEntryServiceUtil.deleteEntry(classPK);
-			}
-			else {
-				BlogsEntryLocalServiceUtil.deleteEntry(classPK);
-			}
+			BlogsEntryLocalServiceUtil.deleteEntry(classPK);
 		}
 	}
 
@@ -75,16 +68,17 @@ public class BlogsEntryTrashHandler extends BaseTrashHandler {
 	/**
 	 * Restores all blogs entries with the matching primary keys.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  classPKs the primary key of the blogs entry to be restored
 	 * @throws PortalException if any one of the blogs entries could not be
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void restoreTrashEntries(long[] classPKs)
+	public void restoreTrashEntries(long userId, long[] classPKs)
 		throws PortalException, SystemException {
 
 		for (long classPK : classPKs) {
-			BlogsEntryServiceUtil.restoreEntryFromTrash(classPK);
+			BlogsEntryLocalServiceUtil.restoreEntryFromTrash(userId, classPK);
 		}
 	}
 
