@@ -714,6 +714,7 @@ create table ExpandoColumn (
 create table ExpandoRow (
 	rowId_ LONG not null primary key,
 	companyId LONG,
+	modifiedDate DATE null,
 	tableId LONG,
 	classPK LONG
 );

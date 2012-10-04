@@ -2320,6 +2320,9 @@
 				<column name="ROWID_" />
 			</id>
 			<basic name="companyId" />
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<basic name="tableId" />
 			<basic name="classPK" />
 			<transient name="modelAttributes" />

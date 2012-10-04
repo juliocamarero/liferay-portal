@@ -1636,6 +1636,7 @@
 	<model name="com.liferay.portlet.expando.model.ExpandoRow">
 		<field name="rowId" type="long" />
 		<field name="companyId" type="long" />
+		<field name="modifiedDate" type="Date" />
 		<field name="tableId" type="long" />
 		<field name="classPK" type="long" />
 	</model>
