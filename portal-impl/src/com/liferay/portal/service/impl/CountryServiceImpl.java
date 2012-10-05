@@ -25,8 +25,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Country;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalException;
-import com.liferay.portal.security.auth.PrincipalThreadLocal;
-import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.base.CountryServiceBaseImpl;
 
 import java.util.List;
@@ -98,17 +96,17 @@ public class CountryServiceImpl extends CountryServiceBaseImpl {
 	}
 
 	public List<Country> getCountries(boolean active)
-		throws SystemException, PortalException {
+		throws PortalException, SystemException {
 
 		User user = getUser();
 
-		return _getCountriesAndSetLanguage(active, user.getLanguageId());
+		return getCountriesAndSetLanguage(active, user.getLanguageId());
 	}
 
 	public List<Country> getCountries(boolean active, String languageId)
 		throws SystemException {
 
-		return _getCountriesAndSetLanguage(active, languageId);
+		return getCountriesAndSetLanguage(active, languageId);
 	}
 
 	public Country getCountry(long countryId)
@@ -135,7 +133,7 @@ public class CountryServiceImpl extends CountryServiceBaseImpl {
 		return countryPersistence.findByName(name);
 	}
 
-	private List<Country> _getCountriesAndSetLanguage(
+	protected List<Country> getCountriesAndSetLanguage(
 		boolean active, String languageId)
 		throws SystemException {
 
