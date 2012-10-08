@@ -271,6 +271,17 @@ portletURL.setParameter("tabs1", tabs1);
 	<liferay-ui:search-iterator type='<%= aproximate ? "more" : "regular" %>' />
 </liferay-ui:search-container>
 
+<portlet:actionURL var="moveEntryURL">
+	<portlet:param name="struts_action" value="/trash/edit_entry" />
+</portlet:actionURL>
+
+<aui:form action="<%= moveEntryURL.toString() %>" method="post" name="fm1">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.MOVE %>" />
+	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
+	<aui:input name="trashEntryId" type="hidden" value="" />
+	<aui:input name="containerModelId" type="hidden" value="" />
+</aui:form>
+
 <aui:script use="liferay-restore-entry">
 	new Liferay.RestoreEntry(
 		{
@@ -279,6 +290,15 @@ portletURL.setParameter("tabs1", tabs1);
 			restoreEntryURL: '<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/trash/restore_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>'
 		}
 	);
+</aui:script>
+
+<aui:script>
+	function <portlet:namespace />selectContainer(trashEntryId, containerModelId) {
+		document.<portlet:namespace />fm1.<portlet:namespace />trashEntryId.value = trashEntryId;
+		document.<portlet:namespace />fm1.<portlet:namespace />containerModelId.value = containerModelId;
+
+		submitForm(document.<portlet:namespace />fm1);
+	}
 </aui:script>
 
 <%
