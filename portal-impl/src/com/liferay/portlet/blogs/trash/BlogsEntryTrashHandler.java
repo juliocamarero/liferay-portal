@@ -97,4 +97,12 @@ public class BlogsEntryTrashHandler extends BaseTrashHandler {
 		}
 	}
 
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return BlogsEntryPermission.contains(
+			permissionChecker, classPK, actionId);
+	}
+
 }
