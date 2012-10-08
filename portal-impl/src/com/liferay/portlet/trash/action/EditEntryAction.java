@@ -26,6 +26,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
@@ -74,6 +76,9 @@ public class EditEntryAction extends PortletAction {
 			else if (cmd.equals(Constants.EMPTY_TRASH)) {
 				emptyTrash(actionRequest);
 			}
+			else if (cmd.equals(Constants.MOVE)) {
+				entries = moveEntry(actionRequest);
+			}
 			else if (cmd.equals(Constants.RENAME)) {
 				entries = restoreRename(actionRequest);
 			}
@@ -90,7 +95,7 @@ public class EditEntryAction extends PortletAction {
 			}
 
 			if (cmd.equals(Constants.RENAME) || cmd.equals(Constants.RESTORE) ||
-				cmd.equals(Constants.OVERRIDE)) {
+				cmd.equals(Constants.OVERRIDE) || cmd.equals(Constants.MOVE)) {
 
 				addRestoreData(
 					(LiferayPortletConfig)portletConfig, actionRequest,
@@ -223,6 +228,29 @@ public class EditEntryAction extends PortletAction {
 			WebKeys.THEME_DISPLAY);
 
 		TrashEntryServiceUtil.deleteEntries(themeDisplay.getScopeGroupId());
+	}
+
+	protected TrashEntry[] moveEntry(ActionRequest actionRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long containerModelId = ParamUtil.getLong(
+			actionRequest, "containerModelId");
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
+
+		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
+			trashEntryId);
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			entry.getClassName(), actionRequest);
+
+		TrashEntryServiceUtil.moveEntry(
+			themeDisplay.getScopeGroupId(), trashEntryId, containerModelId,
+			serviceContext);
+
+		return new TrashEntry[] {entry};
 	}
 
 	protected TrashEntry[] restoreEntries(ActionRequest actionRequest)

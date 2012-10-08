@@ -15,15 +15,19 @@
 package com.liferay.portlet.trash.service.impl;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.model.TrashEntryList;
@@ -161,6 +165,69 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 		trashEntriesList.setCount(filteredEntriesCount);
 
 		return trashEntriesList;
+	}
+
+	/**
+	 * Restores the trash entry with the primary key by moving it to a new
+	 * location identified by destination container model ID.
+	 *
+	 * <p>
+	 * This method throws a PrincipalException if the user didn't have the
+	 * permissions to perform one of the necessary operations. The exception is
+	 * created with different messages for different operations:
+	 * </p>
+	 *
+	 * <ul>
+	 * <li>
+	 * trash.move.error - if the permission to add the item to the new
+	 * destination was missing
+	 * </li>
+	 * <li>
+	 * trash.restore.error - if the permission to restore the item from trash
+	 * was missing
+	 * </li>
+	 * </ul>
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  entryId the primary key of the trash entry
+	 * @param  destinationContainerModelId the primary key of the new location
+	 * @param  serviceContext the service context (optionally <code>null</code>)
+	 * @throws PortalException if the user didn't have permission to add the
+	 *         entry to its new location or to restore it from the trash in
+	 *         general
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void moveEntry(
+			long groupId, long entryId, long destinationContainerModelId,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		PermissionChecker permissionChecker = getPermissionChecker();
+
+		TrashEntry entry = trashEntryLocalService.getTrashEntry(entryId);
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			entry.getClassName());
+
+		if (!trashHandler.hasTrashPermission(
+				permissionChecker, groupId, destinationContainerModelId,
+				TrashActionKeys.MOVE)) {
+
+			throw new PrincipalException("trash.move.error");
+		}
+
+		if (!trashHandler.hasTrashPermission(
+				permissionChecker, 0, entry.getClassPK(),
+				TrashActionKeys.RESTORE)) {
+
+			throw new PrincipalException("trash.restore.error");
+		}
+
+		trashHandler.checkDuplicateTrashEntry(
+			entry, destinationContainerModelId, StringPool.BLANK);
+
+		trashHandler.moveTrashEntry(
+			entry.getClassPK(), destinationContainerModelId, serviceContext);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
