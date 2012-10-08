@@ -117,15 +117,6 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 		return new DLFileShortcutTrashRenderer(fileShortcut);
 	}
 
-	@Override
-	public boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException, SystemException {
-
-		return DLFileShortcutPermission.contains(
-			permissionChecker, classPK, actionId);
-	}
-
 	public boolean isInTrash(long classPK)
 		throws PortalException, SystemException {
 
@@ -153,6 +144,15 @@ public class DLFileShortcutTrashHandler extends BaseTrashHandler {
 		for (long classPK : classPKs) {
 			DLAppServiceUtil.restoreFileShortcutFromTrash(classPK);
 		}
+	}
+
+	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		return DLFileShortcutPermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 }

@@ -114,7 +114,17 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 		return false;
 	}
 
-	public void restoreTrashEntries(long[] classPKs) {
+	public void restoreTrashEntries(long userId, long[] classPKs) {
+	}
+
+	protected boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException, SystemException {
+
+		MBThread thread = MBThreadLocalServiceUtil.getThread(classPK);
+
+		return MBMessagePermission.contains(
+			permissionChecker, thread.getRootMessageId(), actionId);
 	}
 
 }
