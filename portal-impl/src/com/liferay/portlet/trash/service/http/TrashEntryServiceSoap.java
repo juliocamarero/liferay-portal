@@ -84,6 +84,57 @@ public class TrashEntryServiceSoap {
 	}
 
 	/**
+	* Deletes the trash entries with the primary keys.
+	*
+	* @param entryIds the primary keys of the trash entries
+	* @throws PortalException if the user didn't have permission to delete one
+	or more entries
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void deleteEntries(long[] entryIds) throws RemoteException {
+		try {
+			TrashEntryServiceUtil.deleteEntries(entryIds);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* Deletes the trash entry with the primary key.
+	*
+	* <p>
+	* This method throws a PrincipalException if the user didn't have the
+	* permissions to perform the necessary operation. The exception is created
+	* with different messages for different operations:
+	* </p>
+	*
+	* <ul>
+	* <li>
+	* trash.restore.error - if the permission to restore the item from trash
+	* was missing
+	* </li>
+	* </ul>
+	*
+	* @param entryId the primary key of the trash entry
+	* @throws PortalException if the user didn't have permission to delete the
+	entry
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void deleteEntry(long entryId) throws RemoteException {
+		try {
+			TrashEntryServiceUtil.deleteEntry(entryId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
 	* Returns the trash entries with the matching group ID.
 	*
 	* @param groupId the primary key of the group
@@ -173,6 +224,57 @@ public class TrashEntryServiceSoap {
 		try {
 			TrashEntryServiceUtil.moveEntry(groupId, entryId,
 				destinationContainerModelId, serviceContext);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* Restores to trash entry to its original location. In case of duplication,
+	* on of the optional parameters are set indicating either to overwrite the
+	* existing item or to rename the entry before restore.
+	*
+	* <p>
+	* This method throws a PrincipalException if the user didn't have the
+	* permissions to perform one of the necessary operations. The exception is
+	* created with different messages for different operations:
+	* </p>
+	*
+	* <ul>
+	* <li>
+	* trash.restore.error - if the permission to restore the item from trash
+	* was missing
+	* </li>
+	* <li>
+	* trash.restore.overwrite.error - if the permission to delete the existing
+	* item was missing
+	* </li>
+	* <li>
+	* trash.restore.rename.error - if the permission to rename the entry was
+	* missing
+	* </li>
+	* </ul>
+	*
+	* @param entryId the primary key of the trash entry
+	* @param overrideClassPK the primary key of the item to overwrite
+	* @param name the new name of the entry (optionally <code>null</code>)
+	* @return the trash entry that was restored
+	* @throws PortalException if the user didn't have permission to overwrite
+	an existing item, to rename the entry or to restore the entry
+	from the trash in general
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portlet.trash.model.TrashEntrySoap restoreEntry(
+		long entryId, long overrideClassPK, java.lang.String name)
+		throws RemoteException {
+		try {
+			com.liferay.portlet.trash.model.TrashEntry returnValue = TrashEntryServiceUtil.restoreEntry(entryId,
+					overrideClassPK, name);
+
+			return com.liferay.portlet.trash.model.TrashEntrySoap.toSoapModel(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
