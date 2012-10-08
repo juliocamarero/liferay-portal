@@ -28,6 +28,7 @@ import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -195,6 +196,12 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	protected AssetRendererFactory getAssetRendererFactory() {
 		return AssetRendererFactoryRegistryUtil.
 			getAssetRendererFactoryByClassName(getClassName());
+	}
+
+	protected TrashEntry getTrashEntry(long trashEntryId)
+		throws PortalException, SystemException {
+
+		return TrashEntryLocalServiceUtil.getEntry(trashEntryId);
 	}
 
 	protected abstract boolean hasPermission(
