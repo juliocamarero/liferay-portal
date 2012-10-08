@@ -1286,15 +1286,21 @@ public class DLFileEntryLocalServiceImpl
 
 		int oldStatus = dlFileVersion.getStatus();
 
+		int oldDLFileVersionStatus = WorkflowConstants.STATUS_ANY;
+
+		List<ObjectValuePair<Long, Integer>> dlFileVersionStatusOVPs =
+			new ArrayList<ObjectValuePair<Long, Integer>>();
+
 		List<DLFileVersion> dlFileVersions =
 			(List<DLFileVersion>)workflowContext.get("dlFileVersions");
 
-		DLFileVersion oldDLFileVersion = dlFileVersions.get(0);
+		if ((dlFileVersions != null) && (dlFileVersions.size() > 0)) {
+			DLFileVersion oldDLFileVersion = dlFileVersions.get(0);
 
-		int oldDLFileVersionStatus = oldDLFileVersion.getStatus();
+			oldDLFileVersionStatus = oldDLFileVersion.getStatus();
 
-		List<ObjectValuePair<Long, Integer>> dlFileVersionStatusOVPs =
-			getDlFileVersionStatuses(dlFileVersions);
+			dlFileVersionStatusOVPs = getDlFileVersionStatuses(dlFileVersions);
+		}
 
 		dlFileVersion.setStatus(status);
 		dlFileVersion.setStatusByUserId(user.getUserId());
