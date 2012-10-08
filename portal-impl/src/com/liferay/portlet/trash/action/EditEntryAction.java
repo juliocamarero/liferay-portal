@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
@@ -102,13 +103,13 @@ public class EditEntryAction extends PortletAction {
 				entries = moveEntry(actionRequest);
 			}
 			else if (cmd.equals(Constants.RENAME)) {
-				entries = restoreRename(actionRequest);
+				entries = restoreEntryRename(actionRequest);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
 				entries = restoreEntries(actionRequest);
 			}
 			else if (cmd.equals(Constants.OVERRIDE)) {
-				entries = restoreOverride(actionRequest);
+				entries = restoreEntryOverwrite(actionRequest);
 			}
 			else if (cmd.equals("checkEntry")) {
 				checkEntry(actionRequest, actionResponse);
@@ -125,6 +126,14 @@ public class EditEntryAction extends PortletAction {
 			}
 
 			sendRedirect(actionRequest, actionResponse);
+		}
+		catch (PrincipalException pe) {
+			if (pe.getMessage() != null) {
+				SessionErrors.add(actionRequest, pe.getMessage());
+			}
+			else {
+				SessionErrors.add(actionRequest, pe.getClass());
+			}
 		}
 		catch (Exception e) {
 			SessionErrors.add(actionRequest, e.getClass());
@@ -224,13 +233,7 @@ public class EditEntryAction extends PortletAction {
 	protected void deleteEntries(ActionRequest actionRequest) throws Exception {
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
-			trashEntryId);
-
-		TrashHandler trashHandler =
-			TrashHandlerRegistryUtil.getTrashHandler(entry.getClassName());
-
-		trashHandler.deleteTrashEntry(entry.getClassPK());
+		TrashEntryServiceUtil.deleteEntry(trashEntryId);
 	}
 
 	protected void emptyTrash(ActionRequest actionRequest) throws Exception {
@@ -268,55 +271,33 @@ public class EditEntryAction extends PortletAction {
 
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
-			trashEntryId);
-
-		TrashHandler trashHandler =
-			TrashHandlerRegistryUtil.getTrashHandler(entry.getClassName());
-
-		trashHandler.checkDuplicateTrashEntry(
-			entry, TrashEntryConstants.DEFAULT_CONTAINER_ID,
-			StringPool.BLANK);
-
-		trashHandler.restoreTrashEntry(entry.getClassPK());
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
+			trashEntryId, 0, null);
 
 		return new TrashEntry[] {entry};
 	}
 
-	protected TrashEntry[] restoreOverride(ActionRequest actionRequest)
+	protected TrashEntry[] restoreEntryOverwrite(ActionRequest actionRequest)
 		throws Exception {
 
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
-			trashEntryId);
-
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			entry.getClassName());
-
 		long duplicateEntryId = ParamUtil.getLong(
 			actionRequest, "duplicateEntryId");
 
-		trashHandler.deleteTrashEntries(new long[] {duplicateEntryId});
-
-		trashHandler.restoreTrashEntry(entry.getClassPK());
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
+			trashEntryId, duplicateEntryId, null);
 
 		return new TrashEntry[] {entry};
 	}
 
-	protected TrashEntry[] restoreRename(ActionRequest actionRequest)
+	protected TrashEntry[] restoreEntryRename(ActionRequest actionRequest)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
-
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
-			trashEntryId);
-
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			entry.getClassName());
 
 		String newName = ParamUtil.getString(actionRequest, "newName");
 
@@ -326,9 +307,8 @@ public class EditEntryAction extends PortletAction {
 			newName = getNewName(themeDisplay, oldName);
 		}
 
-		trashHandler.updateTitle(entry.getClassPK(), newName);
-
-		trashHandler.restoreTrashEntry(entry.getClassPK());
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
+			trashEntryId, 0, newName);
 
 		return new TrashEntry[] {entry};
 	}
