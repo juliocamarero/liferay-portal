@@ -134,9 +134,8 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 
 		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
 
-		DLFolder dlFolder = dlFileEntry.getFolder();
-
-		return DLUtil.getAbsolutePath(portletRequest, dlFolder.getFolderId());
+		return DLUtil.getAbsolutePath(
+			portletRequest, dlFileEntry.getFolderId());
 	}
 
 	@Override
