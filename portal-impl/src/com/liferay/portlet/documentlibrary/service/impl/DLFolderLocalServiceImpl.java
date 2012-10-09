@@ -507,7 +507,7 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 
 		// Workflow definitions
 
-		List<ObjectValuePair<Long, String>> workflowDefinitions =
+		List<ObjectValuePair<Long, String>> workflowDefinitionOVPs =
 			new ArrayList<ObjectValuePair<Long, String>>();
 
 		if (fileEntryTypeIds.isEmpty()) {
@@ -515,7 +515,7 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 				DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_ALL);
 		}
 		else {
-			workflowDefinitions.add(
+			workflowDefinitionOVPs.add(
 				new ObjectValuePair<Long, String>(
 					DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_ALL,
 					StringPool.BLANK));
@@ -525,7 +525,7 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 			String workflowDefinition = ParamUtil.getString(
 				serviceContext, "workflowDefinition" + fileEntryTypeId);
 
-			workflowDefinitions.add(
+			workflowDefinitionOVPs.add(
 				new ObjectValuePair<Long, String>(
 					fileEntryTypeId, workflowDefinition));
 		}
@@ -533,7 +533,7 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 		workflowDefinitionLinkLocalService.updateWorkflowDefinitionLinks(
 			serviceContext.getUserId(), serviceContext.getCompanyId(),
 			serviceContext.getScopeGroupId(), DLFolder.class.getName(),
-			folderId, workflowDefinitions);
+			folderId, workflowDefinitionOVPs);
 
 		return dlFolder;
 	}
