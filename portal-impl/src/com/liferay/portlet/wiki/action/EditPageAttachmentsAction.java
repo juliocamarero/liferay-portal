@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Constants;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -43,14 +42,12 @@ import com.liferay.portlet.documentlibrary.FileNameException;
 import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.action.EditFileEntryAction;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
-import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.portlet.wiki.NoSuchNodeException;
 import com.liferay.portlet.wiki.NoSuchPageException;
 import com.liferay.portlet.wiki.model.WikiPage;
-import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
+import com.liferay.portlet.wiki.util.WikiPageAttachmentUtil;
 
 import java.io.InputStream;
 
@@ -423,13 +420,8 @@ public class EditPageAttachmentsAction extends EditFileEntryAction {
 			DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getFileEntry(
 				restoreEntryId);
 
-			DLFolder dlFolder = DLFolderLocalServiceUtil.getDLFolder(
-				dlFileEntry.getFolderId());
-
-			long resourcePrimKey = GetterUtil.getLong(dlFolder.getName());
-
-			WikiPage wikiPage = WikiPageLocalServiceUtil.getPage(
-				resourcePrimKey);
+			WikiPage wikiPage = WikiPageAttachmentUtil.getPageByFileEntryId(
+				dlFileEntry.getFileEntryId());
 
 			WikiPageServiceUtil.restorePageAttachmentFromTrash(
 				wikiPage.getNodeId(), wikiPage.getTitle(),
