@@ -60,6 +60,13 @@ public class CommonPermissionImpl implements CommonPermission {
 			OrganizationPermissionUtil.check(
 				permissionChecker, classPK, actionId);
 		}
+		else if (className.equals(User.class.getName())) {
+			User user = UserLocalServiceUtil.getUserById(classPK);
+
+			UserPermissionUtil.check(
+				permissionChecker, user.getUserId(), user.getOrganizationIds(),
+				actionId);
+		}
 		else {
 			if (_log.isWarnEnabled()) {
 				_log.warn("Invalid class name " + className);
