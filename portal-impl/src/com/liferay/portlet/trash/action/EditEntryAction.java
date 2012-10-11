@@ -29,10 +29,14 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.trash.DuplicateEntryException;
+import com.liferay.portlet.trash.TrashEntryConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
@@ -95,14 +99,17 @@ public class EditEntryAction extends PortletAction {
 			else if (cmd.equals(Constants.EMPTY_TRASH)) {
 				emptyTrash(actionRequest);
 			}
+			else if (cmd.equals(Constants.MOVE)) {
+				entries = moveEntry(actionRequest);
+			}
 			else if (cmd.equals(Constants.RENAME)) {
-				entries = restoreRename(actionRequest);
+				entries = restoreEntryRename(actionRequest);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
 				entries = restoreEntries(actionRequest);
 			}
 			else if (cmd.equals(Constants.OVERRIDE)) {
-				entries = restoreOverride(actionRequest);
+				entries = restoreEntryOverwrite(actionRequest);
 			}
 			else if (cmd.equals("checkEntry")) {
 				checkEntry(actionRequest, actionResponse);
@@ -111,7 +118,7 @@ public class EditEntryAction extends PortletAction {
 			}
 
 			if (cmd.equals(Constants.RENAME) || cmd.equals(Constants.RESTORE) ||
-				cmd.equals(Constants.OVERRIDE)) {
+				cmd.equals(Constants.OVERRIDE) || cmd.equals(Constants.MOVE)) {
 
 				addRestoreData(
 					(LiferayPortletConfig)portletConfig, actionRequest,
@@ -119,6 +126,14 @@ public class EditEntryAction extends PortletAction {
 			}
 
 			sendRedirect(actionRequest, actionResponse);
+		}
+		catch (PrincipalException pe) {
+			if (pe.getMessage() != null) {
+				SessionErrors.add(actionRequest, pe.getMessage());
+			}
+			else {
+				SessionErrors.add(actionRequest, pe.getClass());
+			}
 		}
 		catch (Exception e) {
 			SessionErrors.add(actionRequest, e.getClass());
@@ -187,11 +202,12 @@ public class EditEntryAction extends PortletAction {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long entryId = ParamUtil.getLong(actionRequest, "entryId");
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
 		String newName = ParamUtil.getString(actionRequest, "newName");
 
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(entryId);
+		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
+			trashEntryId);
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			entry.getClassName());
@@ -199,7 +215,8 @@ public class EditEntryAction extends PortletAction {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		try {
-			trashHandler.checkDuplicateTrashEntry(entry, newName);
+			trashHandler.checkDuplicateTrashEntry(
+				entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, newName);
 
 			jsonObject.put("success", true);
 		}
@@ -214,28 +231,9 @@ public class EditEntryAction extends PortletAction {
 	}
 
 	protected void deleteEntries(ActionRequest actionRequest) throws Exception {
-		long entryId = ParamUtil.getLong(actionRequest, "entryId");
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
-		if (entryId > 0) {
-			deleteEntry(entryId);
-		}
-		else {
-			long[] deleteEntryIds = StringUtil.split(
-				ParamUtil.getString(actionRequest, "deleteEntryIds"), 0L);
-
-			for (int i = 0; i < deleteEntryIds.length; i++) {
-				deleteEntry(deleteEntryIds[i]);
-			}
-		}
-	}
-
-	protected void deleteEntry(long entryId) throws Exception {
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(entryId);
-
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			entry.getClassName());
-
-		trashHandler.deleteTrashEntry(entry.getClassPK());
+		TrashEntryServiceUtil.deleteEntry(trashEntryId);
 	}
 
 	protected void emptyTrash(ActionRequest actionRequest) throws Exception {
@@ -245,77 +243,61 @@ public class EditEntryAction extends PortletAction {
 		TrashEntryServiceUtil.deleteEntries(themeDisplay.getScopeGroupId());
 	}
 
-	protected TrashEntry[] restoreEntries(ActionRequest actionRequest)
+	protected TrashEntry[] moveEntry(ActionRequest actionRequest)
 		throws Exception {
 
-		long entryId = ParamUtil.getLong(actionRequest, "entryId");
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		TrashEntry[] entry = null;
-
-		if (entryId > 0) {
-			entry = restoreEntry(entryId);
-		}
-		else {
-			long[] restoreEntryIds = StringUtil.split(
-				ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
-
-			entry = new TrashEntry[restoreEntryIds.length];
-
-			for (int i = 0; i < restoreEntryIds.length; i++) {
-				entry[i] = restoreEntry(restoreEntryIds[i])[0];
-			}
-		}
-
-		return entry;
-	}
-
-	protected TrashEntry[] restoreEntry(long entryId) throws Exception {
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(entryId);
-
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			entry.getClassName());
-
-		trashHandler.checkDuplicateTrashEntry(entry, StringPool.BLANK);
-
-		trashHandler.restoreTrashEntry(entry.getClassPK());
-
-		return new TrashEntry[] {entry};
-	}
-
-	protected TrashEntry[] restoreOverride(ActionRequest actionRequest)
-		throws Exception {
-
+		long containerModelId = ParamUtil.getLong(
+			actionRequest, "containerModelId");
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
 		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
 			trashEntryId);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			entry.getClassName());
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			entry.getClassName(), actionRequest);
 
-		long duplicateEntryId = ParamUtil.getLong(
-			actionRequest, "duplicateEntryId");
-
-		trashHandler.deleteTrashEntries(new long[] {duplicateEntryId});
-
-		trashHandler.restoreTrashEntry(entry.getClassPK());
+		TrashEntryServiceUtil.moveEntry(
+			themeDisplay.getScopeGroupId(), trashEntryId, containerModelId,
+			serviceContext);
 
 		return new TrashEntry[] {entry};
 	}
 
-	protected TrashEntry[] restoreRename(ActionRequest actionRequest)
+	protected TrashEntry[] restoreEntries(ActionRequest actionRequest)
+		throws Exception {
+
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
+
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
+			trashEntryId, 0, null);
+
+		return new TrashEntry[] {entry};
+	}
+
+	protected TrashEntry[] restoreEntryOverwrite(ActionRequest actionRequest)
+		throws Exception {
+
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
+
+		long duplicateEntryId = ParamUtil.getLong(
+			actionRequest, "duplicateEntryId");
+
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
+			trashEntryId, duplicateEntryId, null);
+
+		return new TrashEntry[] {entry};
+	}
+
+	protected TrashEntry[] restoreEntryRename(ActionRequest actionRequest)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
-
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
-			trashEntryId);
-
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			entry.getClassName());
 
 		String newName = ParamUtil.getString(actionRequest, "newName");
 
@@ -325,9 +307,8 @@ public class EditEntryAction extends PortletAction {
 			newName = getNewName(themeDisplay, oldName);
 		}
 
-		trashHandler.updateTitle(entry.getClassPK(), newName);
-
-		trashHandler.restoreTrashEntry(entry.getClassPK());
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
+			trashEntryId, 0, newName);
 
 		return new TrashEntry[] {entry};
 	}
