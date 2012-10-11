@@ -300,7 +300,7 @@ public class UpgradeWikiAttachments extends UpgradeProcess {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-				"select folderId from DLFolder  where repositoryId = ? and " +
+				"select folderId from DLFolder where repositoryId = ? and " +
 					"parentFolderId = ? and name = ?");
 
 			ps.setLong(1, repositoryId);
@@ -392,8 +392,8 @@ public class UpgradeWikiAttachments extends UpgradeProcess {
 		String portletId = PortletKeys.WIKI;
 
 		long repositoryId = getRepository(
-			groupId, companyId, userId, userName, createDate,
-			classNameId, portletId, portletId);
+			groupId, companyId, userId, userName, createDate, classNameId,
+			portletId, portletId);
 
 		long repositoryFolderId = getFolder(
 			groupId, companyId, userId, userName, createDate, repositoryId,
