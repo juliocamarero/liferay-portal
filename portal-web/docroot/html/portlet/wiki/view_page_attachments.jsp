@@ -76,6 +76,8 @@ if (viewTrashAttachments) {
 	status = WorkflowConstants.STATUS_IN_TRASH;
 }
 
+int attachmentsCount = PortletFileRepositoryUtil.getPortletFileEntriesCount(themeDisplay.getScopeGroupId(), wikiPage.getAttachmentsFolderId(), status);
+
 PortletURL iteratorURL = renderResponse.createRenderURL();
 
 iteratorURL.setParameter("struts_action", "/wiki/view_page_attachments");
@@ -102,7 +104,7 @@ iteratorURL.setParameter("viewTrashAttachments", String.valueOf(viewTrashAttachm
 				confirmMessage="are-you-sure-you-want-to-remove-the-attachments-for-this-page"
 				emptyMessage="remove-the-attachments-for-this-page"
 				portletURL="<%= emptyTrashURL.toString() %>"
-				totalEntries="<%= deletedAttachmentsSize %>"
+				totalEntries="<%= attachmentsCount %>"
 			/>
 		</c:when>
 		<c:otherwise>
@@ -140,7 +142,7 @@ iteratorURL.setParameter("viewTrashAttachments", String.valueOf(viewTrashAttachm
 >
 	<liferay-ui:search-container-results
 		results="<%= PortletFileRepositoryUtil.getPortletFileEntries(themeDisplay.getScopeGroupId(), wikiPage.getAttachmentsFolderId(), status, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
-		total="<%= PortletFileRepositoryUtil.getPortletFileEntriesCount(themeDisplay.getScopeGroupId(), wikiPage.getAttachmentsFolderId(), status) %>"
+		total="<%= attachmentsCount %>"
 	/>
 
 	<liferay-ui:search-container-row
