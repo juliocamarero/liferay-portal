@@ -151,7 +151,7 @@ portletURL.setParameter("tabs1", tabs1);
 				viewContentURL.setParameter("classPK", String.valueOf(entry.getClassPK()));
 			}
 			else {
-				viewContentURL.setParameter("entryId", String.valueOf(entry.getEntryId()));
+				viewContentURL.setParameter("trashEntryId", String.valueOf(entry.getEntryId()));
 			}
 
 			viewContentURL.setParameter("type", trashRenderer.getType());
@@ -184,7 +184,7 @@ portletURL.setParameter("tabs1", tabs1);
 
 					viewContentURL.setParameter("struts_action", "/trash/view_content");
 					viewContentURL.setParameter("redirect", currentURL);
-					viewContentURL.setParameter("entryId", String.valueOf(rootEntry.getEntryId()));
+					viewContentURL.setParameter("trashEntryId", String.valueOf(rootEntry.getEntryId()));
 					viewContentURL.setParameter("type", rootTrashRenderer.getType());
 					viewContentURL.setParameter("showActions", Boolean.FALSE.toString());
 					viewContentURL.setParameter("showAssetMetadata", Boolean.TRUE.toString());
@@ -256,8 +256,6 @@ portletURL.setParameter("tabs1", tabs1);
 		<liferay-portlet:renderURLParams varImpl="searchURL" />
 		<aui:input name="<%= Constants.CMD %>" type="hidden" value="" />
 		<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
-		<aui:input name="deleteEntryIds" type="hidden" />
-		<aui:input name="restoreEntryIds" type="hidden" />
 
 		<aui:button-row>
 			<liferay-ui:search-form
@@ -271,6 +269,17 @@ portletURL.setParameter("tabs1", tabs1);
 	<liferay-ui:search-iterator type='<%= aproximate ? "more" : "regular" %>' />
 </liferay-ui:search-container>
 
+<portlet:actionURL var="moveEntryURL">
+	<portlet:param name="struts_action" value="/trash/edit_entry" />
+</portlet:actionURL>
+
+<aui:form action="<%= moveEntryURL.toString() %>" method="post" name="fm1">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.MOVE %>" />
+	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
+	<aui:input name="trashEntryId" type="hidden" value="" />
+	<aui:input name="containerModelId" type="hidden" value="" />
+</aui:form>
+
 <aui:script use="liferay-restore-entry">
 	new Liferay.RestoreEntry(
 		{
@@ -279,6 +288,15 @@ portletURL.setParameter("tabs1", tabs1);
 			restoreEntryURL: '<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/trash/restore_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>'
 		}
 	);
+</aui:script>
+
+<aui:script>
+	function <portlet:namespace />selectContainer(trashEntryId, containerModelId) {
+		document.<portlet:namespace />fm1.<portlet:namespace />trashEntryId.value = trashEntryId;
+		document.<portlet:namespace />fm1.<portlet:namespace />containerModelId.value = containerModelId;
+
+		submitForm(document.<portlet:namespace />fm1);
+	}
 </aui:script>
 
 <%

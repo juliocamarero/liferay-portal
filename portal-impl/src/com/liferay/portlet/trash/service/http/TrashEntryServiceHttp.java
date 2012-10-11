@@ -159,6 +159,40 @@ public class TrashEntryServiceHttp {
 		}
 	}
 
+	public static void moveEntry(HttpPrincipal httpPrincipal, long groupId,
+		long entryId, long destinationContainerModelId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(TrashEntryServiceUtil.class.getName(),
+					"moveEntry", _moveEntryParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
+					entryId, destinationContainerModelId, serviceContext);
+
+			try {
+				TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(TrashEntryServiceHttp.class);
 	private static final Class<?>[] _deleteEntriesParameterTypes0 = new Class[] {
 			long.class
@@ -169,5 +203,9 @@ public class TrashEntryServiceHttp {
 	private static final Class<?>[] _getEntriesParameterTypes2 = new Class[] {
 			long.class, int.class, int.class,
 			com.liferay.portal.kernel.util.OrderByComparator.class
+		};
+	private static final Class<?>[] _moveEntryParameterTypes3 = new Class[] {
+			long.class, long.class, long.class,
+			com.liferay.portal.service.ServiceContext.class
 		};
 }
