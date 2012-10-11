@@ -32,6 +32,7 @@ import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.documentlibrary.NoSuchDirectoryException;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.trash.DuplicateEntryException;
+import com.liferay.portlet.trash.TrashEntryConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.asset.WikiPageAssetRenderer;
@@ -69,6 +70,10 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 		}
 
 		String originalTitle = TrashUtil.stripTrashNamespace(restoredTitle);
+
+		if (containerModelId == TrashEntryConstants.DEFAULT_CONTAINER_ID) {
+			containerModelId = page.getNodeId();
+		}
 
 		WikiPage duplicatePage = WikiPageLocalServiceUtil.fetchPage(
 			containerModelId, originalTitle, page.getVersion());
