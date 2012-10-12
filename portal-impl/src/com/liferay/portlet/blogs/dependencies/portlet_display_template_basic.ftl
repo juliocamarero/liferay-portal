@@ -3,11 +3,14 @@
 <#assign liferay_ui = taglibLiferayHash["/WEB-INF/tld/liferay-ui.tld"] />
 
 <#assign assetEntryLocalService = serviceLocator.findService("com.liferay.portlet.asset.service.AssetEntryLocalService") />
+
 <#assign blogsEntryClassName = "com.liferay.portlet.blogs.model.BlogsEntry" />
+
 <#assign assetEntry = assetEntryLocalService.getEntry(blogsEntryClassName, entry.getEntryId()) />
 
 <#list entries as entry>
 	<#assign assetEntry = assetEntryLocalService.getEntry(blogsEntryClassName, entry.getEntryId()) />
+
 	<#assign viewURL = renderResponse.createRenderURL() />
 
 	${viewURL.setParameter("struts_action", "/blogs/view_entry")}
@@ -34,7 +37,7 @@
 
 			${stringUtil.shorten(htmlUtil.stripHtml(summary), 100)}
 
-			<a href="${viewURL}"><@liferay.language key="read-more" /> <span class="aui-helper-hidden-accessible"><@liferay.language key="about"/> ${entry.getTitle()}</span> &raquo; </a>
+			<a href="${viewURL}"><@liferay.language key="read-more" /> <span class="aui-helper-hidden-accessible"><@liferay.language key="about"/> ${entry.getTitle()}</span> &raquo;</a>
 		</div>
 
 		<div class="entry-footer">
