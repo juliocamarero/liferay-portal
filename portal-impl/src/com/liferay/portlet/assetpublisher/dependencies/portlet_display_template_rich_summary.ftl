@@ -5,8 +5,8 @@
 <#assign liferay_ui = taglibLiferayHash["/WEB-INF/tld/liferay-ui.tld"] />
 
 <#list entries as entry>
-	<#assign entry = entry>
 	<#assign assetRenderer = entry.getAssetRenderer() />
+
 	<#assign viewURL = assetPublisherHelper.getAssetViewURL(renderRequest, renderResponse, entry) />
 
 	<#if assetLinkBehavior != "showFullContent">
@@ -16,7 +16,9 @@
 	<div class="asset-abstract">
 		<div class="lfr-meta-actions asset-actions">
 			<@print_icon />
+
 			<@flags />
+
 			<@edit_icon />
 		</div>
 
@@ -25,7 +27,9 @@
 		</h3>
 
 		<@metadata_field fieldName="tags" />
+
 		<@metadata_field fieldName="create-date" />
+
 		<@metadata_field fieldName="view-count" />
 
 		<div class="asset-content">
@@ -36,11 +40,13 @@
 
 				${assetRenderer.getSummary(locale)}
 
-				<a href="${viewURL}"><@liferay.language key="read-more" /><span class="aui-helper-hidden-accessible"><@liferay.language key="about"/>${entry.getTitle(locale)}</span>&raquo;</a>
+				<a href="${viewURL}"><@liferay.language key="read-more" /><span class="aui-helper-hidden-accessible"><@liferay.language key="about"/>${entry.getTitle(locale)}</span> &raquo;</a>
 			</div>
 
 			<@ratings />
+
 			<@related_assets />
+
 			<@discussion />
 		</div>
 	</div>
@@ -48,7 +54,7 @@
 </#list>
 
 <#macro discussion>
-	<#if validator.isNotNull(assetRenderer.getDiscussionPath()) && enableComments == "true">
+	<#if validator.isNotNull(assetRenderer.getDiscussionPath()) && (enableComments == "true")>
 		<br />
 
 		<#assign discussionURL = renderResponse.createActionURL() />
@@ -72,13 +78,14 @@
 	<#if assetRenderer.hasEditPermission(themeDisplay.getPermissionChecker())>
 		<#assign redirectURL = renderResponse.createRenderURL() />
 
-		${redirectURL.setWindowState("pop_up")}
 		${redirectURL.setParameter("struts_action", "/asset_publisher/add_asset_redirect")}
+		${redirectURL.setWindowState("pop_up")}
 
 		<#assign editPortletURL = assetRenderer.getURLEdit(renderRequest, renderResponse, windowStateFactory.getWindowState("pop_up"), redirectURL) />
 
 		<#if validator.isNotNull(editPortletURL)>
 			<#assign title = languageUtil.format(locale, "edit-x", htmlUtil.escape(assetRenderer.getTitle(locale))) />
+
 			<#assign taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id:'" + renderResponse.getNamespace() + "editAsset', title: '" + title + "', uri:'" + htmlUtil.escapeURL(editPortletURL.toString()) + "'});" />
 
 			<@liferay_ui["icon"]
@@ -104,10 +111,8 @@
 
 <#macro metadata_field fieldName>
 	<#assign dateFormat = "dd MMM yyyy - HH:mm:ss" />
-	<#assign metadataFieldArray = stringUtil.split(metadataFields) />
-	<#assign portletURL = renderResponse.createRenderURL() />
 
-	<#if (metadataFieldArray?seq_contains(metadataFieldName))>
+	<#if stringUtil.split(metadataFields)?seq_contains(metadataFieldName)>
 		<span class="metadata-entry metadata-"${metadataFieldName}">
 			<#switch fieldName>
 				<#case "author">
