@@ -29,6 +29,10 @@ if (!DDLRecordSetPermission.contains(permissionChecker, recordSet.getRecordSetId
 	editable = false;
 }
 
+if (stagedPortlet) {
+	editable = false;
+}
+
 DDMStructure ddmStructure = recordSet.getDDMStructure();
 %>
 
