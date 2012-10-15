@@ -31,6 +31,10 @@ if (!DDLRecordSetPermission.contains(permissionChecker, recordSet.getRecordSetId
 	editable = false;
 }
 
+if (stagedPortlet) {
+	editable = false;
+}
+
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/dynamic_data_lists/view_record_set");
