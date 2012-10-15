@@ -34,8 +34,6 @@ public class RSSUtil {
 
 	public static final String ATOM = "atom";
 
-	public static final double[] ATOM_VERSIONS = new double[] {0.3, 1.0};
-
 	public static final String DISPLAY_STYLE_ABSTRACT = "abstract";
 
 	public static final String DISPLAY_STYLE_FULL_CONTENT = "full-content";
@@ -44,14 +42,16 @@ public class RSSUtil {
 
 	public static final String ENTRY_TYPE_DEFAULT = "html";
 
+	public static final String FEED_FORMAT_DEFAULT = "atom10";
+
+	public static final String[] FEED_FORMATS = new String[] {
+		"atom10", "rss10", "rss20"
+	};
+
 	public static final String FEED_TYPE_DEFAULT = getFeedType(
 		RSSUtil.TYPE_DEFAULT, RSSUtil.VERSION_DEFAULT);
 
 	public static final String RSS = "rss";
-
-	public static final double[] RSS_VERSIONS = new double[] {
-		0.9, 0.91, 0.93, 0.94, 1.0, 2.0
-	};
 
 	public static final String TYPE_DEFAULT = ATOM;
 
@@ -79,6 +79,12 @@ public class RSSUtil {
 
 	public static String getFeedType(String type, double version) {
 		return type + StringPool.UNDERLINE + version;
+	}
+
+	public static String getFormat(String type, double version) {
+		String feedType = getFeedType(type, version);
+
+		return feedType.replaceAll("[_\\.]", StringPool.BLANK);
 	}
 
 	public static String getFormatType(String format) {
