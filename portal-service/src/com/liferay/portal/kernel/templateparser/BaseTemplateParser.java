@@ -32,6 +32,7 @@ import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,6 +169,14 @@ public abstract class BaseTemplateParser implements TemplateParser {
 		return CompanyLocalServiceUtil.getCompany(getCompanyId());
 	}
 
+	protected long getCompanyGroupId() {
+		if (_themeDisplay != null) {
+			return _themeDisplay.getCompanyGroupId();
+		}
+
+		return GetterUtil.getLong(_tokens.get("company_group_id"));
+	}
+
 	protected long getCompanyId() {
 		if (_themeDisplay != null) {
 			return _themeDisplay.getCompanyId();
@@ -190,14 +199,6 @@ public abstract class BaseTemplateParser implements TemplateParser {
 		}
 
 		return GetterUtil.getLong(_tokens.get("group_id"));
-	}
-
-	protected long getCompanyGroupId() {
-		if (_themeDisplay != null) {
-			return _themeDisplay.getCompanyGroupId();
-		}
-
-		return GetterUtil.getLong(_tokens.get("company_group_id"));
 	}
 
 	protected abstract TemplateContext getTemplateContext() throws Exception;
