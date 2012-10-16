@@ -1,6 +1,6 @@
 <#ftl strip_whitespace=true>
 
-<#-- Use computer number format to prevent issues with locale settings -->
+<#-- Use computer number format to prevent issues with locale settings. See LPS-30525 -->
 
 <#setting number_format="computer">
 
