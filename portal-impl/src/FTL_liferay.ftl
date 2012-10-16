@@ -1,5 +1,9 @@
 <#ftl strip_whitespace=true>
 
+<#-- Use computer number format to prevent issues with locale settings -->
+
+<#setting number_format="computer">
+
 <#assign css_main_file = "" />
 
 <#if themeDisplay??>
