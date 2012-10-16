@@ -17,12 +17,14 @@ package com.liferay.portlet.wiki.attachments;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.WikiPageConstants;
@@ -30,6 +32,8 @@ import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 
 import java.io.File;
+
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -72,14 +76,10 @@ public class WikiAttachmentsTrashTest {
 			ServiceTestUtil.randomString(), null, WikiPageConstants.NEW, true,
 			serviceContext);
 
-		String[] attachmentsFiles = wikiPage.getAttachmentsFiles();
+		int initialNotInTrashCount = wikiPage.getAttachmentsFilesCount();
 
-		int initialNotInTrashCount = attachmentsFiles.length;
-
-		String[] deletedAttachmentsFiles =
-			wikiPage.getDeletedAttachmentsFiles();
-
-		int initialTrashEntriesCount = deletedAttachmentsFiles.length;
+		int initialTrashEntriesCount =
+			wikiPage.getDeletedAttachmentsFilesCount();
 
 		Class<?> clazz = getClass();
 
@@ -91,64 +91,58 @@ public class WikiAttachmentsTrashTest {
 		if ((fileBytes != null) && (fileBytes.length > 0)) {
 			file = FileUtil.createTempFile(fileBytes);
 		}
+		
+		String fileName = ServiceTestUtil.randomString() + ".txt";
 
 		WikiPageLocalServiceUtil.addPageAttachment(
 			TestPropsValues.getUserId(), wikiNode.getNodeId(),
-			wikiPage.getTitle(), ServiceTestUtil.randomString() + ".txt", file);
-
-		attachmentsFiles = wikiPage.getAttachmentsFiles();
+			wikiPage.getTitle(), fileName, file);
 
 		Assert.assertEquals(
-			initialNotInTrashCount + 1, attachmentsFiles.length);
-
-		deletedAttachmentsFiles = wikiPage.getDeletedAttachmentsFiles();
+			initialNotInTrashCount + 1, wikiPage.getAttachmentsFilesCount());
 
 		Assert.assertEquals(
-			initialTrashEntriesCount, deletedAttachmentsFiles.length);
+			initialTrashEntriesCount,
+			wikiPage.getDeletedAttachmentsFilesCount());
 
-		String fileName = attachmentsFiles[0];
+		long fileEntryId = WikiPageLocalServiceUtil.movePageAttachmentToTrash(
+			TestPropsValues.getUserId(), wikiPage.getNodeId(),
+			wikiPage.getTitle(), fileName);
 
-		WikiPageLocalServiceUtil.movePageAttachmentToTrash(
-			wikiNode.getNodeId(), wikiPage.getTitle(), fileName);
-
-		attachmentsFiles = wikiPage.getAttachmentsFiles();
-
-		Assert.assertEquals(initialNotInTrashCount, attachmentsFiles.length);
-
-		deletedAttachmentsFiles = wikiPage.getDeletedAttachmentsFiles();
+		DLFileEntry dlFileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
+			fileEntryId);
 
 		Assert.assertEquals(
-			initialTrashEntriesCount + 1, deletedAttachmentsFiles.length);
+			initialNotInTrashCount, wikiPage.getAttachmentsFilesCount());
 
-		fileName = deletedAttachmentsFiles[0];
+		Assert.assertEquals(
+			initialTrashEntriesCount + 1,
+			wikiPage.getDeletedAttachmentsFilesCount());
 
 		if (restore) {
-			WikiPageLocalServiceUtil.movePageAttachmentFromTrash(
-				wikiNode.getNodeId(), wikiPage.getTitle(), fileName);
-
-			attachmentsFiles = wikiPage.getAttachmentsFiles();
-
-			Assert.assertEquals(
-				initialNotInTrashCount + 1, attachmentsFiles.length);
-
-			deletedAttachmentsFiles = wikiPage.getDeletedAttachmentsFiles();
+			WikiPageLocalServiceUtil.restorePageAttachmentFromTrash(
+				TestPropsValues.getUserId(), wikiPage.getNodeId(),
+				wikiPage.getTitle(), dlFileEntry.getTitle());
 
 			Assert.assertEquals(
-				initialTrashEntriesCount, deletedAttachmentsFiles.length);
+				initialNotInTrashCount + 1,
+				wikiPage.getAttachmentsFilesCount());
+
+			Assert.assertEquals(
+				initialTrashEntriesCount,
+				wikiPage.getDeletedAttachmentsFilesCount());
 		}
 		else {
 			WikiPageLocalServiceUtil.deletePageAttachment(
-				wikiNode.getNodeId(), wikiPage.getTitle(), fileName);
-
-			attachmentsFiles = wikiPage.getAttachmentsFiles();
-
-			Assert.assertEquals(
-				initialNotInTrashCount, attachmentsFiles.length);
-
-			deletedAttachmentsFiles = wikiPage.getDeletedAttachmentsFiles();
+				wikiPage.getNodeId(), wikiPage.getTitle(),
+				dlFileEntry.getTitle());
 
 			Assert.assertEquals(
-				initialTrashEntriesCount, deletedAttachmentsFiles.length);
+				initialNotInTrashCount, wikiPage.getAttachmentsFilesCount());
+
+			Assert.assertEquals(
+				initialTrashEntriesCount,
+				wikiPage.getDeletedAttachmentsFilesCount());
 		}
 	}
 
