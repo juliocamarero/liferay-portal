@@ -1,46 +1,49 @@
-<#setting number_format="computer">
-
 <#assign aui = taglibLiferayHash["/WEB-INF/tld/aui.tld"] />
 <#assign liferay_portlet = taglibLiferayHash["/WEB-INF/tld/liferay-portlet.tld"] />
 <#assign liferay_ui = taglibLiferayHash["/WEB-INF/tld/liferay-ui.tld"] />
 
 <#list entries as entry>
-	<#assign assetRenderer = entry.getAssetRenderer() />
 
-	<#assign viewURL = assetPublisherHelper.getAssetViewURL(renderRequest, renderResponse, entry) />
+	<#-- Assign the loop variable to a plain variable to make it visible from macros -->
+
+	<#assign entry = entry />
+
+	<#assign asset_renderer = entry.getAssetRenderer() />
+
+	<#assign view_url = assetPublisherHelper.getAssetViewURL(renderRequest, renderResponse, entry) />
 
 	<#if assetLinkBehavior != "showFullContent">
-		<#assign viewURL = assetRenderer.getURLViewInContext(renderRequest, renderResponse, viewURL) />
+		<#assign view_url = asset_renderer.getURLViewInContext(renderRequest, renderResponse, view_url) />
 	</#if>
 
 	<div class="asset-abstract">
 		<div class="lfr-meta-actions asset-actions">
 			<@print_icon />
 
-			<@flags />
+			<@flags_icon />
 
 			<@edit_icon />
 		</div>
 
 		<h3 class="asset-title">
-			<a href="${viewURL}"><img alt="" src="${assetRenderer.getIconPath(renderRequest)}"/>${entry.getTitle(locale)}</a>
+			<a href="${view_url}"><img alt="" src="${asset_renderer.getIconPath(renderRequest)}"/>${entry.getTitle(locale)}</a>
 		</h3>
 
-		<@metadata_field fieldName="tags" />
+		<@metadata_field field_name="tags" />
 
-		<@metadata_field fieldName="create-date" />
+		<@metadata_field field_name="create-date" />
 
-		<@metadata_field fieldName="view-count" />
+		<@metadata_field field_name="view-count" />
 
 		<div class="asset-content">
 			<@social_bookmarks />
 
 			<div class="asset-summary">
-				<@metadata_field fieldName="author" />
+				<@metadata_field field_name="author" />
 
-				${assetRenderer.getSummary(locale)}
+				${asset_renderer.getSummary(locale)}
 
-				<a href="${viewURL}"><@liferay.language key="read-more" /><span class="aui-helper-hidden-accessible"><@liferay.language key="about"/>${entry.getTitle(locale)}</span> &raquo;</a>
+				<a href="${view_url}"><@liferay.language key="read-more" /><span class="aui-helper-hidden-accessible"><@liferay.language key="about"/>${entry.getTitle(locale)}</span> &raquo;</a>
 			</div>
 
 			<@ratings />
@@ -54,50 +57,50 @@
 </#list>
 
 <#macro discussion>
-	<#if validator.isNotNull(assetRenderer.getDiscussionPath()) && (enableComments == "true")>
+	<#if validator.isNotNull(asset_renderer.getDiscussionPath()) && (enableComments == "true")>
 		<br />
 
-		<#assign discussionURL = renderResponse.createActionURL() />
+		<#assign discussion_url = renderResponse.createActionURL() />
 
-		${discussionURL.setParameter("struts_action", "/asset_publisher/" + assetRenderer.getDiscussionPath())}
+		${discussion_url.setParameter("struts_action", "/asset_publisher/" + asset_renderer.getDiscussionPath())}
 
 		<@liferay_ui["discussion"]
 			className=entry.getClassName()
 			classPK=entry.getClassPK()
-			formAction=discussionURL?string
+			formAction=discussion_url?string
 			formName="fm" + entry.getClassPK()
 			ratingsEnabled=enableCommentRatings == "true"
 			redirect=portalUtil.getCurrentURL(request)
-			subject=assetRenderer.getTitle(locale)
-			userId=assetRenderer.getUserId()
+			subject=asset_renderer.getTitle(locale)
+			userId=asset_renderer.getUserId()
 		/>
 	</#if>
 </#macro>
 
 <#macro edit_icon>
-	<#if assetRenderer.hasEditPermission(themeDisplay.getPermissionChecker())>
-		<#assign redirectURL = renderResponse.createRenderURL() />
+	<#if asset_renderer.hasEditPermission(themeDisplay.getPermissionChecker())>
+		<#assign redirect_url = renderResponse.createRenderURL() />
 
-		${redirectURL.setParameter("struts_action", "/asset_publisher/add_asset_redirect")}
-		${redirectURL.setWindowState("pop_up")}
+		${redirect_url.setParameter("struts_action", "/asset_publisher/add_asset_redirect")}
+		${redirect_url.setWindowState("pop_up")}
 
-		<#assign editPortletURL = assetRenderer.getURLEdit(renderRequest, renderResponse, windowStateFactory.getWindowState("pop_up"), redirectURL) />
+		<#assign edit_portlet_url = asset_renderer.getURLEdit(renderRequest, renderResponse, windowStateFactory.getWindowState("pop_up"), redirect_url) />
 
-		<#if validator.isNotNull(editPortletURL)>
-			<#assign title = languageUtil.format(locale, "edit-x", htmlUtil.escape(assetRenderer.getTitle(locale))) />
+		<#if validator.isNotNull(edit_portlet_url)>
+			<#assign title = languageUtil.format(locale, "edit-x", htmlUtil.escape(asset_renderer.getTitle(locale))) />
 
-			<#assign taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id:'" + renderResponse.getNamespace() + "editAsset', title: '" + title + "', uri:'" + htmlUtil.escapeURL(editPortletURL.toString()) + "'});" />
+			<#assign taglib_edit_url = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id:'" + renderResponse.getNamespace() + "editAsset', title: '" + title + "', uri:'" + htmlUtil.escapeURL(edit_portlet_url.toString()) + "'});" />
 
 			<@liferay_ui["icon"]
 				image="edit"
 				message=title
-				url=taglibEditURL?string
+				url=taglib_edit_url?string
 			/>
 		</#if>
 	</#if>
 </#macro>
 
-<#macro flags>
+<#macro flags_icon>
 	<#if enableFlags == "true">
 		<@liferay_ui["flags"]
 			className=entry.getClassName()
@@ -109,14 +112,14 @@
 	</#if>
 </#macro>
 
-<#macro metadata_field fieldName>
-	<#assign dateFormat = "dd MMM yyyy - HH:mm:ss" />
+<#macro metadata_field field_name>
+	<#assign date_format = "dd MMM yyyy - HH:mm:ss" />
 
 	<#if stringUtil.split(metadataFields)?seq_contains(metadataFieldName)>
 		<span class="metadata-entry metadata-"${metadataFieldName}">
-			<#switch fieldName>
+			<#switch field_name>
 				<#case "author">
-					<@liferay.language key="by" /> ${portalUtil.getUserName(assetRenderer.getUserId(), assetRenderer.getUserName())}
+					<@liferay.language key="by" /> ${portalUtil.getUserName(asset_renderer.getUserId(), asset_renderer.getUserName())}
 
 					<#break>
 				<#case "categories">
@@ -128,15 +131,15 @@
 
 					<#break>
 				<#case "create-date">
-					${dateUtil.getDate(entry.getCreateDate(), dateFormat, locale)}
+					${dateUtil.getDate(entry.getCreateDate(), date_format, locale)}
 
 					<#break>
 				<#case "expiration-date">
-					${dateUtil.getDate(entry.getExpirationDate(), dateFormat, locale)}
+					${dateUtil.getDate(entry.getExpirationDate(), date_format, locale)}
 
 					<#break>
 				<#case "modified-date">
-					${dateUtil.getDate(entry.getModifiedDate(), dateFormat, locale)}
+					${dateUtil.getDate(entry.getModifiedDate(), date_format, locale)}
 
 					<#break>
 				<#case "priority">
@@ -144,7 +147,7 @@
 
 					<#break>
 				<#case "publish-date">
-					${ddateUtil.getDate(entry.getPublishDate(), dateFormat, locale)}
+					${ddateUtil.getDate(entry.getPublishDate(), date_format, locale)}
 
 					<#break>
 				<#case "tags">
@@ -170,30 +173,32 @@
 
 <#macro print_icon>
 	<#if enablePrint == "true" >
-		<#assign printPortletURL = renderResponse.createRenderURL() />
+		<#assign print_portlet_url = renderResponse.createRenderURL() />
 
-		${printPortletURL.setWindowState("pop_up")}
-		${printPortletURL.setParameter("struts_action", "/asset_publisher/view_content")}
-		${printPortletURL.setParameter("assetEntryId", entry.getEntryId()?string)}
-		${printPortletURL.setParameter("viewMode", "print")}
-		${printPortletURL.setParameter("type", entry.getAssetRendererFactory().getType())}
+		${print_portlet_url.setWindowState("pop_up")}
+		${print_portlet_url.setParameter("struts_action", "/asset_publisher/view_content")}
+		${print_portlet_url.setParameter("assetEntryId", entry.getEntryId()?string)}
+		${print_portlet_url.setParameter("viewMode", "print")}
+		${print_portlet_url.setParameter("type", entry.getAssetRendererFactory().getType())}
 
-		<#if (validator.isNotNull(assetRenderer.getUrlTitle()))>
-			<#if (assetRenderer.getGroupId() != themeDisplay.getScopeGroupId())>
-				${printPortletURL.setParameter("groupId", assetRenderer.getGroupId()?string)}
+		<#if (validator.isNotNull(asset_renderer.getUrlTitle()))>
+			<#if (asset_renderer.getGroupId() != themeDisplay.getScopeGroupId())>
+				${print_portlet_url.setParameter("groupId", asset_renderer.getGroupId()?string)}
 			</#if>
 
-			${printPortletURL.setParameter("urlTitle", assetRenderer.getUrlTitle())}
+			${print_portlet_url.setParameter("urlTitle", asset_renderer.getUrlTitle())}
 		</#if>
 
-		<#assign formatParams = ["aui-helper-hidden-accessible", htmlUtil.escape(assetRenderer.getTitle(locale))] />
-		<#assign title = languageUtil.format(locale, "print-x-x", formatParams) />
-		<#assign taglibPrintURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id:'" + renderResponse.getNamespace() + "printAsset', title: '" + title + "', uri:'" + htmlUtil.escapeURL(printPortletURL.toString()) + "'});" />
+		<#assign format_params = ["aui-helper-hidden-accessible", htmlUtil.escape(asset_renderer.getTitle(locale))] />
+
+		<#assign title = languageUtil.format(locale, "print-x-x", format_params) />
+
+		<#assign taglib_print_url = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id:'" + renderResponse.getNamespace() + "printAsset', title: '" + title + "', uri:'" + htmlUtil.escapeURL(print_portlet_url.toString()) + "'});" />
 
 		<@liferay_ui["icon"]
 			image="print"
 			message="print"
-			url=taglibPrintURL?string
+			url=taglib_print_url?string
 		/>
 	</#if>
 </#macro>
@@ -223,7 +228,7 @@
 			displayStyle="${socialBookmarksDisplayStyle}"
 			target="_blank"
 			title=entry.getTitle(locale)
-			url=viewURL
+			url=view_url
 		/>
 	</#if>
 </#macro>

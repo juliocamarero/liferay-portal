@@ -2,25 +2,23 @@
 <#assign liferay_portlet = taglibLiferayHash["/WEB-INF/tld/liferay-portlet.tld"] />
 <#assign liferay_ui = taglibLiferayHash["/WEB-INF/tld/liferay-ui.tld"] />
 
-<#assign assetEntryLocalService = serviceLocator.findService("com.liferay.portlet.asset.service.AssetEntryLocalService") />
+<#assign asset_entry_local_service = serviceLocator.findService("com.liferay.portlet.asset.service.AssetEntryLocalService") />
 
-<#assign blogsEntryClassName = "com.liferay.portlet.blogs.model.BlogsEntry" />
-
-<#assign assetEntry = assetEntryLocalService.getEntry(blogsEntryClassName, entry.getEntryId()) />
+<#assign blogs_entry_class_name = "com.liferay.portlet.blogs.model.BlogsEntry" />
 
 <#list entries as entry>
-	<#assign assetEntry = assetEntryLocalService.getEntry(blogsEntryClassName, entry.getEntryId()) />
+	<#assign asset_entry = asset_entry_local_service.getEntry(blogs_entry_class_name, entry.getEntryId()) />
 
-	<#assign viewURL = renderResponse.createRenderURL() />
+	<#assign view_url = renderResponse.createRenderURL() />
 
-	${viewURL.setParameter("struts_action", "/blogs/view_entry")}
-	${viewURL.setParameter("redirect", portalUtil.getCurrentURL(request))}
-	${viewURL.setParameter("urlTitle", entry.getUrlTitle())}
+	${view_url.setParameter("struts_action", "/blogs/view_entry")}
+	${view_url.setParameter("redirect", portalUtil.getCurrentURL(request))}
+	${view_url.setParameter("urlTitle", entry.getUrlTitle())}
 
 	<div class="entry">
 		<div class="entry-content">
 			<div class="entry-title">
-				<h2><a href="${viewURL}">${htmlUtil.escape(entry.getTitle())}</a></h2>
+				<h2><a href="${view_url}">${htmlUtil.escape(entry.getTitle())}</a></h2>
 			</div>
 		</div>
 
@@ -37,7 +35,7 @@
 
 			${stringUtil.shorten(htmlUtil.stripHtml(summary), 100)}
 
-			<a href="${viewURL}"><@liferay.language key="read-more" /> <span class="aui-helper-hidden-accessible"><@liferay.language key="about"/> ${entry.getTitle()}</span> &raquo;</a>
+			<a href="${view_url}"><@liferay.language key="read-more" /> <span class="aui-helper-hidden-accessible"><@liferay.language key="about"/> ${entry.getTitle()}</span> &raquo;</a>
 		</div>
 
 		<div class="entry-footer">
@@ -47,7 +45,7 @@
 
 			<#if (enableFlags == "true")>
 				<@liferay_ui["flags"]
-					className=blogsEntryClassName
+					className=blogs_entry_class_name
 					classPK=entry.getEntryId()
 					contentTitle=entry.getTitle()
 					reportedUserId=entry.getUserId()
@@ -56,7 +54,7 @@
 
 			<span class="entry-categories">
 				<@liferay_ui["asset-categories-summary"]
-					className=blogsEntryClassName
+					className=blogs_entry_class_name
 					classPK=entry.getEntryId()
 					portletURL=renderResponse.createRenderURL()
 				/>
@@ -64,7 +62,7 @@
 
 			<span class="entry-tags">
 				<@liferay_ui["asset-tags-summary"]
-					className=blogsEntryClassName
+					className=blogs_entry_class_name
 					classPK=entry.getEntryId()
 					portletURL=renderResponse.createRenderURL()
 				/>
