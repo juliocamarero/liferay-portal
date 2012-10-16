@@ -2,28 +2,29 @@
 <#assign liferay_portlet = taglibLiferayHash["/WEB-INF/tld/liferay-portlet.tld"] />
 <#assign liferay_ui = taglibLiferayHash["/WEB-INF/tld/liferay-ui.tld"] />
 
-<#assign assetTagService = serviceLocator.findService("com.liferay.portlet.asset.service.AssetTagService")>
+<#assign asset_tag_service = serviceLocator.findService("com.liferay.portlet.asset.service.AssetTagService")>
 
 <#if entries?has_content>
-	<#assign classNameId = getterUtil.getLong(classNameId, 0) />
-	<#assign groupId = themeDisplay.getScopeGroupId() />
-	<#assign maxCount = 1 />
-	<#assign minCount = 1 />
+	<#assign class_name_id = getterUtil.getLong(classNameId, 0) />
+	<#assign group_id = themeDisplay.getScopeGroupId() />
+
+	<#assign max_count = 1 />
+	<#assign min_count = 1 />
 	<#assign multiplier = 1 />
 
 	<#list entries as entry>
-		<#if (classNameId > 0)>
-			<#assign count = assetTagService.getTagsCount(groupId, classNameId, entry.getName()) />
+		<#if (class_name_id > 0)>
+			<#assign count = asset_tag_service.getTagsCount(group_id, class_name_id, entry.getName()) />
 		<#else>
-			<#assign count = assetTagService.getTagsCount(groupId, entry.getName()) />
+			<#assign count = asset_tag_service.getTagsCount(group_id, entry.getName()) />
 		</#if>
 
-		<#assign maxCount = max(maxCount, count) />
-		<#assign minCount = max(minCount, count) />
+		<#assign max_count = max(max_count, count) />
+		<#assign min_count = max(min_count, count) />
 	</#list>
 
-	<#if maxCount != minCount>
-		<#assign multiplier = 3 / (maxCount - minCount) />
+	<#if max_count != min_count>
+		<#assign multiplier = 3 / (max_count - min_count) />
 	</#if>
 
 	<#assign count = 0 />
@@ -33,16 +34,15 @@
 			<#assign tagURL = renderResponse.createRenderURL() />
 
 			${tagURL.setParameter("resetCur", "true")}
-			${tagURL.setParameter("tag", "true")}
-			${tagURL.setParameter("resetCur", entry.getName())}
+			${tagURL.setParameter("tag", entry.getName())}
 
-			<#if (classNameId > 0)>
-				<#assign count = assetTagService.getTagsCount(groupId, classNameId, entry.getName()) />
+			<#if (class_name_id > 0)>
+				<#assign count = asset_tag_service.getTagsCount(group_id, class_name_id, entry.getName()) />
 			<#else>
-				<#assign count = assetTagService.getTagsCount(groupId, entry.getName()) />
+				<#assign count = asset_tag_service.getTagsCount(group_id, entry.getName()) />
 			</#if>
 
-			<#assign popularity = (1 + ((maxCount - (maxCount - (count - minCount))) * multiplier)) />
+			<#assign popularity = (1 + ((max_count - (max_count - (count - min_count))) * multiplier)) />
 
 			<#if popularity < 1>
 				<#assign color = "green" />
