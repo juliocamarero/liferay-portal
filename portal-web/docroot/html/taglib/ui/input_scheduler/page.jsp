@@ -23,12 +23,10 @@
 	<%
 	Calendar cal = CalendarFactoryUtil.getCalendar(timeZone, locale);
 
-	String timeFormatPattern = ((SimpleDateFormat)(DateFormat.getTimeInstance(DateFormat.SHORT, locale))).toPattern();
+	int hour = cal.get(Calendar.HOUR_OF_DAY);
 
-	int hour = cal.get(Calendar.HOUR);
-
-	if (!timeFormatPattern.contains("a")) {
-		hour = cal.get(Calendar.HOUR_OF_DAY);
+	if (DateUtil.isFormatAmPm(locale)) {
+		hour = cal.get(Calendar.HOUR);
 	}
 	%>
 
