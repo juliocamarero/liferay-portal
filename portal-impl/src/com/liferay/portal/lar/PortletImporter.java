@@ -1197,7 +1197,7 @@ public class PortletImporter {
 				else if (rootPotletId.equals(
 							PortletKeys.TAGS_CATEGORIES_NAVIGATION)) {
 
-					xml = updateCategoryNavigationPortletPreferences(
+					xml = updateAssetCategoriesNavigationPortletPreferences(
 						portletDataContext, companyId, ownerId, ownerType, plid,
 						portletId, xml);
 				}
@@ -1827,7 +1827,7 @@ public class PortletImporter {
 		return PortletPreferencesFactoryUtil.toXML(jxPreferences);
 	}
 
-	protected String updateCategoryNavigationPortletPreferences(
+	protected String updateAssetCategoriesNavigationPortletPreferences(
 			PortletDataContext portletDataContext, long companyId, long ownerId,
 			int ownerType, long plid, String portletId, String xml)
 		throws Exception {
@@ -1976,6 +1976,22 @@ public class PortletImporter {
 						}
 					}
 					else if (className.equals(
+							AssetVocabulary.class.getName())) {
+
+						AssetVocabulary vocabulary =
+							AssetVocabularyUtil.fetchByUUID_G(
+								uuid, portletDataContext.getScopeGroupId());
+
+						if (vocabulary == null) {
+							vocabulary = AssetVocabularyUtil.fetchByUUID_G(
+								uuid, companyGroupId);
+						}
+
+						if (vocabulary != null) {
+							newPrimaryKey = vocabulary.getVocabularyId();
+						}
+					}
+					else if (className.equals(
 							JournalStructure.class.getName())) {
 
 						JournalStructure structure =
@@ -1989,22 +2005,6 @@ public class PortletImporter {
 
 						if (structure != null) {
 							newPrimaryKey = structure.getId();
-						}
-					}
-					else if (className.equals(
-								AssetVocabulary.class.getName())) {
-
-						AssetVocabulary vocabulary =
-							AssetVocabularyUtil.fetchByUUID_G(
-								uuid, portletDataContext.getScopeGroupId());
-
-						if (vocabulary == null) {
-							vocabulary = AssetVocabularyUtil.fetchByUUID_G(
-								uuid, companyGroupId);
-						}
-
-						if (vocabulary != null) {
-							newPrimaryKey = vocabulary.getVocabularyId();
 						}
 					}
 				}
