@@ -1,10 +1,13 @@
-<#setting number_format="computer">
-
 <#assign aui = taglibLiferayHash["/WEB-INF/tld/aui.tld"] />
 <#assign liferay_portlet = taglibLiferayHash["/WEB-INF/tld/liferay-portlet.tld"] />
 <#assign liferay_ui = taglibLiferayHash["/WEB-INF/tld/liferay-ui.tld"] />
 
 <#list entries as entry>
+
+	<#-- Assign the loop variable to a plain variable to make it visible from macros -->
+
+	<#assign entry = entry />
+
 	<#assign assetRenderer = entry.getAssetRenderer() />
 
 	<#assign viewURL = assetPublisherHelper.getAssetViewURL(renderRequest, renderResponse, entry) />
@@ -17,7 +20,7 @@
 		<div class="lfr-meta-actions asset-actions">
 			<@print_icon />
 
-			<@flags />
+			<@flags_icon />
 
 			<@edit_icon />
 		</div>
@@ -97,7 +100,7 @@
 	</#if>
 </#macro>
 
-<#macro flags>
+<#macro flags_icon>
 	<#if enableFlags == "true">
 		<@liferay_ui["flags"]
 			className=entry.getClassName()
@@ -187,7 +190,9 @@
 		</#if>
 
 		<#assign formatParams = ["aui-helper-hidden-accessible", htmlUtil.escape(assetRenderer.getTitle(locale))] />
+
 		<#assign title = languageUtil.format(locale, "print-x-x", formatParams) />
+
 		<#assign taglibPrintURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id:'" + renderResponse.getNamespace() + "printAsset', title: '" + title + "', uri:'" + htmlUtil.escapeURL(printPortletURL.toString()) + "'});" />
 
 		<@liferay_ui["icon"]

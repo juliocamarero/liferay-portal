@@ -1,12 +1,13 @@
-<#setting number_format="computer">
-
 <#assign aui = taglibLiferayHash["/WEB-INF/tld/aui.tld"] />
 <#assign liferay_portlet = taglibLiferayHash["/WEB-INF/tld/liferay-portlet.tld"] />
 <#assign liferay_ui = taglibLiferayHash["/WEB-INF/tld/liferay-ui.tld"] />
 
 <#assign assetEntryLocalService = serviceLocator.findService("com.liferay.portlet.asset.service.AssetEntryLocalService") />
+
 <#assign wikiPageClassName = "com.liferay.portlet.wiki.model.WikiPage" />
+
 <#assign assetEntry = assetEntryLocalService.getEntry(wikiPageClassName, entry.getResourcePrimKey()) />
+
 <#assign assetRenderer = assetEntry.getAssetRenderer() />
 
 <div class="taglib-header">
@@ -15,7 +16,9 @@
 
 <div style="float:right">
 	<@edit_icon />
+
 	<@details_icon />
+
 	<@print_icon />
 </div>
 
@@ -47,6 +50,7 @@
 	 <br />
 
 	<@ratings entry=entry cssClass="page-ratings"/>
+
 	<@related_assets />
 </div>
 
@@ -118,6 +122,7 @@
 <#macro add_child_icon>
 	<#if assetRenderer.hasEditPermission(themeDisplay.getPermissionChecker())>
 		<#assign redirectURL = portalUtil.getCurrentURL(request) />
+
 		<#assign addPageURL = renderResponse.createRenderURL() />
 
 		${addPageURL.setParameter("struts_action", "/wiki/edit_page")}
@@ -138,6 +143,7 @@
 
 <#macro attatchments_icon>
 	<#assign attachments = entry.getAttachmentsFiles() />
+
 	<#assign viewAttachmentsURL = renderResponse.createRenderURL() />
 
 	${viewAttachmentsURL.setParameter("struts_action", "/wiki/view_page_attachments") }
@@ -152,6 +158,7 @@
 
 <#macro details_icon>
 	<#assign redirectURL = portalUtil.getCurrentURL(request) />
+
 	<#assign viewPageDetailsURL = renderResponse.createRenderURL() />
 
 	${viewPageDetailsURL.setParameter("struts_action", "/wiki/view_page_details")}
@@ -188,6 +195,7 @@
 <#macro edit_icon>
 	<#if assetRenderer.hasEditPermission(themeDisplay.getPermissionChecker())>
 		<#assign redirectURL = portalUtil.getCurrentURL(request) />
+
 		<#assign editPageURL = renderResponse.createRenderURL() />
 
 		${editPageURL.setParameter("struts_action", "/wiki/edit_page")}
@@ -205,8 +213,10 @@
 
 <#macro print_icon>
 	<#assign printPortletURL = renderResponse.createRenderURL() />
+
 	${printPortletURL.setWindowState("pop_up")}
 	${printPortletURL.setParameter("viewMode", "print")}
+
 	<#assign formatParams = ["aui-helper-hidden-accessible", htmlUtil.escape(assetRenderer.getTitle(locale))] />
 	<#assign title = languageUtil.format(locale, "print-x-x", formatParams) />
 	<#assign taglibPrintURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id:'" + renderResponse.getNamespace() + "printAsset', title: '" + title + "', uri:'" + htmlUtil.escapeURL(printPortletURL.toString()) + "'});" />

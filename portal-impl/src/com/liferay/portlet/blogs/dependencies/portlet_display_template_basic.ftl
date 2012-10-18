@@ -6,8 +6,6 @@
 
 <#assign blogsEntryClassName = "com.liferay.portlet.blogs.model.BlogsEntry" />
 
-<#assign assetEntry = assetEntryLocalService.getEntry(blogsEntryClassName, entry.getEntryId()) />
-
 <#list entries as entry>
 	<#assign assetEntry = assetEntryLocalService.getEntry(blogsEntryClassName, entry.getEntryId()) />
 
