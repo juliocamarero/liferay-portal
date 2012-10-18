@@ -7,6 +7,7 @@
 <#if entries?has_content>
 	<#assign classNameId = getterUtil.getLong(classNameId, 0) />
 	<#assign groupId = themeDisplay.getScopeGroupId() />
+
 	<#assign maxCount = 1 />
 	<#assign minCount = 1 />
 	<#assign multiplier = 1 />
@@ -33,8 +34,7 @@
 			<#assign tagURL = renderResponse.createRenderURL() />
 
 			${tagURL.setParameter("resetCur", "true")}
-			${tagURL.setParameter("tag", "true")}
-			${tagURL.setParameter("resetCur", entry.getName())}
+			${tagURL.setParameter("tag", entry.getName())}
 
 			<#if (classNameId > 0)>
 				<#assign count = assetTagService.getTagsCount(groupId, classNameId, entry.getName()) />
