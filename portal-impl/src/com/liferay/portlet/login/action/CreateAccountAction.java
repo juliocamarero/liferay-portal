@@ -48,8 +48,6 @@ import com.liferay.portal.WebsiteURLException;
 import com.liferay.portal.kernel.captcha.CaptchaMaxChallengesException;
 import com.liferay.portal.kernel.captcha.CaptchaTextException;
 import com.liferay.portal.kernel.captcha.CaptchaUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.Constants;
@@ -478,7 +476,5 @@ public class CreateAccountAction extends PortletAction {
 	private static final boolean _AUTO_SCREEN_NAME = false;
 
 	private static final boolean _CHECK_METHOD_ON_PROCESS_ACTION = false;
-
-	private static Log _log = LogFactoryUtil.getLog(OpenIdAction.class);
 
 }
