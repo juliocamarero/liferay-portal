@@ -37,11 +37,16 @@ String thumbnailSrc = (String)request.getAttribute("liferay-ui:app-view-entry:th
 String thumbnailStyle = (String)request.getAttribute("liferay-ui:app-view-entry:thumbnailStyle");
 String title = (String)request.getAttribute("liferay-ui:app-view-entry:title");
 String url = (String)request.getAttribute("liferay-ui:app-view-entry:url");
+
+title = HtmlUtil.escape(HtmlUtil.unescape(title));
+description = HtmlUtil.escape(HtmlUtil.unescape(description));
+
+String shortTitle = HtmlUtil.escape(StringUtil.shorten(HtmlUtil.unescape(title), 60));
 %>
 
 <c:choose>
 	<c:when test='<%= displayStyle.equals("icon") %>'>
-		<div class="app-view-entry-taglib entry-display-style display-<%= displayStyle %> <%= showCheckbox ? "selectable" : StringPool.BLANK %>" data-draggable="<%= showCheckbox ? Boolean.TRUE.toString() : Boolean.FALSE.toString() %>" data-title="<%= StringUtil.shorten(title, 60) %>">
+		<div class="app-view-entry-taglib entry-display-style display-<%= displayStyle %> <%= showCheckbox ? "selectable" : StringPool.BLANK %>" data-draggable="<%= showCheckbox ? Boolean.TRUE.toString() : Boolean.FALSE.toString() %>" data-title="<%= shortTitle %>">
 			<c:if test="<%= showCheckbox %>">
 					<aui:input cssClass="overlay entry-selector" label="" name="<%= RowChecker.ROW_IDS + rowCheckerName %>" type="checkbox" value="<%= rowCheckerId %>" />
 			</c:if>
@@ -69,7 +74,7 @@ String url = (String)request.getAttribute("liferay-ui:app-view-entry:url");
 				</div>
 
 				<span class="entry-title">
-					<%= StringUtil.shorten(title, 60) %>
+					<%= shortTitle %>
 
 					<c:if test="<%= !folder && ((status == WorkflowConstants.STATUS_DRAFT) || (status == WorkflowConstants.STATUS_PENDING)) %>">
 
@@ -86,8 +91,8 @@ String url = (String)request.getAttribute("liferay-ui:app-view-entry:url");
 		</div>
 	</c:when>
 	<c:when test='<%= displayStyle.equals("descriptive") %>'>
-		<div class="app-view-entry-taglib entry-display-style display-<%= displayStyle %> <%= showCheckbox ? "selectable" : StringPool.BLANK %>" data-draggable="<%= showCheckbox ? Boolean.TRUE.toString() : Boolean.FALSE.toString() %>" data-title="<%= StringUtil.shorten(title, 60) %>">
-			<a class="entry-link" data-folder="<%= folder ? Boolean.TRUE.toString() : Boolean.FALSE.toString() %>" data-folder-id="<%= rowCheckerId %>" href="<%= url %>" title="<%= HtmlUtil.escape(title) + " - " + HtmlUtil.escape(description) %>">
+		<div class="app-view-entry-taglib entry-display-style display-<%= displayStyle %> <%= showCheckbox ? "selectable" : StringPool.BLANK %>" data-draggable="<%= showCheckbox ? Boolean.TRUE.toString() : Boolean.FALSE.toString() %>" data-title="<%= title %>">
+			<a class="entry-link" data-folder="<%= folder ? Boolean.TRUE.toString() : Boolean.FALSE.toString() %>" data-folder-id="<%= rowCheckerId %>" href="<%= url %>" title="<%= HtmlUtil.escapeAttribute(HtmlUtil.unescape(title) + " - " + HtmlUtil.unescape(description)) %>">
 				<div class="entry-thumbnail" style="<%= thumbnailDivStyle %>">
 					<img alt="" border="no" src="<%= thumbnailSrc %>" style="<%= thumbnailStyle %>" />
 
@@ -101,7 +106,7 @@ String url = (String)request.getAttribute("liferay-ui:app-view-entry:url");
 				</div>
 
 				<span class="entry-title">
-					<%= HtmlUtil.escape(title) %>
+					<%= title %>
 
 					<c:if test="<%= !folder && ((status == WorkflowConstants.STATUS_DRAFT) || (status == WorkflowConstants.STATUS_PENDING)) %>">
 
@@ -116,7 +121,7 @@ String url = (String)request.getAttribute("liferay-ui:app-view-entry:url");
 				</span>
 
 				<span class="entry-description">
-					<%= HtmlUtil.escape(description) %>
+					<%= description %>
 
 					<c:if test="<%= Validator.isNotNull(assetCategoryClassName) && (assetCategoryClassPK > 0) %>">
 						<div class="categories">
