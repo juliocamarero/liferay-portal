@@ -25,12 +25,12 @@ import com.liferay.portal.kernel.util.MethodParametersResolverUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.MethodParametersResolverImpl;
+import com.liferay.portal.util.PropsImpl;
 
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.liferay.portal.util.PropsImpl;
 import org.powermock.api.mockito.PowerMockito;
 
 import org.springframework.mock.web.MockHttpServletRequest;
