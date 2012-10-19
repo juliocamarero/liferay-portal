@@ -579,13 +579,14 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		List<MBCategory> categories = getCategories(
-			category.getGroupId(), category.getCategoryId(),
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+			category.getGroupId(), category.getCategoryId(), QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 
 		for (MBCategory curCategory : categories) {
 			updateChildrenCategoriesDisplayStyle(curCategory, displayStyle);
 
 			curCategory.setDisplayStyle(displayStyle);
+
 			mbCategoryPersistence.update(curCategory, false);
 		}
 	}
