@@ -27,7 +27,7 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 
 String defaultDisplayStyle = MBCategoryConstants.DEFAULT_DISPLAY_STYLE;
 
-if (category == null && parentCategoryId > 0) {
+if ((category == null) && (parentCategoryId > 0)) {
 	MBCategory parentCategory = MBCategoryLocalServiceUtil.getCategory(parentCategoryId);
 
 	defaultDisplayStyle = parentCategory.getDisplayStyle();
