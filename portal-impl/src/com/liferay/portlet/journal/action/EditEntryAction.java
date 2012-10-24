@@ -14,7 +14,12 @@
 
 package com.liferay.portlet.journal.action;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.portlet.LiferayPortletConfig;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -37,6 +42,9 @@ import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderServiceUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
@@ -49,6 +57,7 @@ import org.apache.struts.action.ActionMapping;
 
 /**
  * @author Sergio González
+ * @author Levente Hudák
  */
 public class EditEntryAction extends PortletAction {
 
@@ -64,13 +73,21 @@ public class EditEntryAction extends PortletAction {
 			if (cmd.equals(Constants.DELETE) ||
 				cmd.equals(Constants.DELETE_VERSIONS)) {
 
-				deleteEntries(actionRequest);
+				deleteEntries(
+					(LiferayPortletConfig)portletConfig, actionRequest, false);
 			}
 			else if (cmd.equals(Constants.EXPIRE)) {
 				expireEntries(actionRequest);
 			}
 			else if (cmd.equals(Constants.MOVE)) {
 				moveEntries(actionRequest);
+			}
+			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
+				deleteEntries(
+					(LiferayPortletConfig)portletConfig, actionRequest, true);
+			}
+			else if (cmd.equals(Constants.RESTORE)) {
+				restoreEntries(actionRequest);
 			}
 
 			String redirect = PortalUtil.escapeRedirect(
@@ -141,7 +158,14 @@ public class EditEntryAction extends PortletAction {
 		return mapping.findForward(getForward(renderRequest, forward));
 	}
 
-	protected void deleteEntries(ActionRequest actionRequest) throws Exception {
+	protected void deleteEntries(
+			LiferayPortletConfig liferayPortletConfig,
+			ActionRequest actionRequest, boolean moveToTrash)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
 		long[] deleteFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "folderIds"), 0L);
 
@@ -153,7 +177,37 @@ public class EditEntryAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "articleIds"));
 
 		for (String deleteArticleId : deleteArticleIds) {
-			ActionUtil.deleteArticle(actionRequest, deleteArticleId);
+			if (moveToTrash) {
+				JournalArticleServiceUtil.moveArticleToTrash(
+					themeDisplay.getUserId(), themeDisplay.getScopeGroupId(),
+					deleteArticleId);
+
+			}
+			else {
+				ActionUtil.deleteArticle(actionRequest, deleteArticleId);
+			}
+		}
+
+		if (moveToTrash &&
+			((deleteFolderIds.length > 0) ||
+			(deleteArticleIds.length > 0))) {
+
+			Map<String, String[]> data = new HashMap<String, String[]>();
+
+			data.put(
+				"restoreFolderIds", ArrayUtil.toStringArray(deleteFolderIds));
+			data.put(
+				"restoreArticleIds", ArrayUtil.toStringArray(deleteArticleIds));
+
+			SessionMessages.add(
+				actionRequest,
+				liferayPortletConfig.getPortletId() +
+					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+
+			SessionMessages.add(
+				actionRequest,
+				liferayPortletConfig.getPortletId() +
+					SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
 		}
 	}
 
@@ -220,6 +274,21 @@ public class EditEntryAction extends PortletAction {
 		for (String articleId : articleIds) {
 			JournalArticleServiceUtil.moveArticle(
 				themeDisplay.getScopeGroupId(), articleId, newFolderId);
+		}
+	}
+
+	protected void restoreEntries(ActionRequest actionRequest)
+		throws PortalException, SystemException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String[] restoreArticleIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "restoreArticleIds"));
+
+		for (String restoreFileEntryId : restoreArticleIds) {
+			JournalArticleServiceUtil.restoreArticleFromTrash(
+				themeDisplay.getScopeGroupId(), restoreFileEntryId);
 		}
 	}
 

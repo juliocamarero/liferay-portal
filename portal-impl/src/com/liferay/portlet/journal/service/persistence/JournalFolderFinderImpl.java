@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -124,6 +125,8 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 
 			qPos.add(groupId);
 
+			qPos.add(WorkflowConstants.STATUS_IN_TRASH);
+
 			if (folderId >= 0) {
 				qPos.add(folderId);
 			}
@@ -197,6 +200,8 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 			}
 
 			qPos.add(groupId);
+
+			qPos.add(WorkflowConstants.STATUS_IN_TRASH);
 
 			if (folderId >= 0) {
 				qPos.add(folderId);

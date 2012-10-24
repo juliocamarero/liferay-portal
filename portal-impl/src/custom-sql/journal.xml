@@ -48,7 +48,7 @@
 							(displayDate >= ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 							(displayDate <= ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 							(
-								(status = ?) AND
+								(status <> ?) AND
 								(reviewDate <= ? [$AND_OR_NULL_CHECK$])
 							)
 						)
@@ -129,7 +129,7 @@
 							(displayDate >= ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 							(displayDate <= ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 							(
-								(status = ?) AND
+								(status <> ?) AND
 								(reviewDate <= ? [$AND_OR_NULL_CHECK$])
 							)
 						)
@@ -191,7 +191,11 @@
 				JournalArticle
 			WHERE
 				(JournalArticle.groupId = ?) AND
-				(JournalArticle.classNameId = 0)
+
+				(JournalArticle.classNameId = 0) AND
+
+				(JournalArticle.status <> ?)
+
 				[$ARTICLE_FOLDER_ID$]
 		]]>
 	</sql>
@@ -214,7 +218,11 @@
 				JournalArticle
 			WHERE
 				(JournalArticle.groupId = ?) AND
-				(JournalArticle.classNameId = 0)
+
+				(JournalArticle.classNameId = 0) AND
+
+				(JournalArticle.status <> ?)
+
 				[$ARTICLE_FOLDER_ID$]
 			GROUP BY
 				JournalArticle.folderId, JournalArticle.articleId, JournalArticle.displayDate
