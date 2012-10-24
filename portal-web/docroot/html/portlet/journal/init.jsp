@@ -115,6 +115,7 @@ page import="com.liferay.portlet.journal.service.permission.JournalTemplatePermi
 page import="com.liferay.portlet.journal.util.JournalUtil" %><%@
 page import="com.liferay.portlet.journalcontent.util.JournalContentUtil" %><%@
 page import="com.liferay.portlet.layoutconfiguration.util.RuntimePageUtil" %><%@
+page import="com.liferay.portlet.trash.util.TrashUtil" %><%@
 page import="com.liferay.util.RSSUtil" %>
 
 <%@ page import="java.net.URLDecoder" %>
