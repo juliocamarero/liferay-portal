@@ -14,8 +14,11 @@
 
 package com.liferay.portlet.journal.asset;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
@@ -29,6 +32,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
@@ -50,7 +54,8 @@ import javax.portlet.RenderResponse;
  * @author Sergio González
  * @author Raymond Augé
  */
-public class JournalArticleAssetRenderer extends BaseAssetRenderer {
+public class JournalArticleAssetRenderer
+	extends BaseAssetRenderer implements TrashRenderer {
 
 	public JournalArticleAssetRenderer(JournalArticle article) {
 		_article = article;
@@ -95,12 +100,22 @@ public class JournalArticleAssetRenderer extends BaseAssetRenderer {
 		return _article.getGroupId();
 	}
 
+	public String getPortletId() {
+		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
+
+		return assetRendererFactory.getPortletId();
+	}
+
 	public String getSummary(Locale locale) {
 		return _article.getDescription(locale);
 	}
 
 	public String getTitle(Locale locale) {
 		return _article.getTitle(locale);
+	}
+
+	public String getType() {
+		return JournalArticleAssetRendererFactory.TYPE;
 	}
 
 	@Override
@@ -205,6 +220,13 @@ public class JournalArticleAssetRenderer extends BaseAssetRenderer {
 	@Override
 	public String getViewInContextMessage() {
 		return "view";
+	}
+
+	public boolean hasDeletePermission(PermissionChecker permissionChecker)
+		throws PortalException, SystemException {
+
+		return JournalArticlePermission.contains(
+			permissionChecker, _article, ActionKeys.DELETE);
 	}
 
 	@Override
