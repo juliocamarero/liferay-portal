@@ -26,16 +26,27 @@ ServiceContext#deriveDefaultPermissions(long, String).
 <%@ page import="com.liferay.taglib.ui.InputPermissionsParamsTag" %>
 
 <%
+String guestPermissionsName = "guestPermissions";
+String groupPermissionsName = "groupPermissions";
+
+String modelName = (String)request.getAttribute("liferay-ui:input-permissions:modelName");
+
 String normalizedNamespace = namespace;
 
 if (normalizedNamespace.endsWith(StringPool.UNDERLINE)) {
 	normalizedNamespace = normalizedNamespace.substring(0, normalizedNamespace.length() - 1);
 }
 
-String uniqueNamespace = PortalUtil.getUniqueElementId(request, "liferay-ui:input-permissions", normalizedNamespace) + StringPool.UNDERLINE;
+String uniqueNamespace = PortalUtil.getUniqueElementId(request, "liferay-ui:input-permissions", normalizedNamespace);
+
+if (!uniqueNamespace.equals(normalizedNamespace)) {
+	guestPermissionsName = guestPermissionsName + StringPool.UNDERLINE + modelName;
+	groupPermissionsName = groupPermissionsName + StringPool.UNDERLINE + modelName;
+}
+
+uniqueNamespace = uniqueNamespace + StringPool.UNDERLINE;
 
 String formName = namespace + request.getAttribute("liferay-ui:input-permissions:formName");
-String modelName = (String)request.getAttribute("liferay-ui:input-permissions:modelName");
 %>
 
 <c:choose>
@@ -53,15 +64,15 @@ String modelName = (String)request.getAttribute("liferay-ui:input-permissions:mo
 
 		String[] roleNames = new String[] {RoleConstants.GUEST, defaultGroupRole.getName()};
 
-		List groupPermissions = ListUtil.fromArray(request.getParameterValues("groupPermissions"));
-		List guestPermissions = ListUtil.fromArray(request.getParameterValues("guestPermissions"));
+		List groupPermissions = ListUtil.fromArray(request.getParameterValues(groupPermissionsName));
+		List guestPermissions = ListUtil.fromArray(request.getParameterValues(guestPermissionsName));
 
 		List supportedActions = (List)request.getAttribute("liferay-ui:input-permissions:supportedActions");
 		List groupDefaultActions = (List)request.getAttribute("liferay-ui:input-permissions:groupDefaultActions");
 		List guestDefaultActions = (List)request.getAttribute("liferay-ui:input-permissions:guestDefaultActions");
 		List guestUnsupportedActions = (List)request.getAttribute("liferay-ui:input-permissions:guestUnsupportedActions");
 
-		boolean submitted = (request.getParameter("groupPermissions") != null);
+		boolean submitted = (request.getParameter(groupPermissionsName) != null);
 
 		boolean inputPermissionsShowOptions = ParamUtil.getBoolean(request, "inputPermissionsShowOptions");
 
@@ -174,11 +185,11 @@ String modelName = (String)request.getAttribute("liferay-ui:input-permissions:mo
 
 					if (roleName.equals(RoleConstants.GUEST)) {
 						checkboxFieldId = uniqueNamespace + "guestPermissions";
-						checkboxFieldName = namespace + "guestPermissions";
+						checkboxFieldName = namespace + guestPermissionsName;
 					}
 					else {
 						checkboxFieldId = uniqueNamespace + "groupPermissions";
-						checkboxFieldName = namespace + "groupPermissions";
+						checkboxFieldName = namespace + groupPermissionsName;
 					}
 
 					checkboxFieldId = checkboxFieldId + StringPool.UNDERLINE + action;
