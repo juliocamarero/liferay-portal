@@ -269,6 +269,19 @@ public class MBMessageIndexer extends BaseIndexer {
 
 		document.addKeyword("threadId", message.getThreadId());
 
+		if (!message.isInTrash() && message.isInTrashThread()) {
+			addTrashFields(
+				document, MBThread.class.getName(), message.getThreadId(), null,
+				null, null);
+
+			document.addKeyword(
+				Field.ROOT_ENTRY_CLASS_NAME, MBThread.class.getName());
+			document.addKeyword(
+				Field.ROOT_ENTRY_CLASS_PK, message.getThreadId());
+			document.addKeyword(
+				Field.STATUS, WorkflowConstants.STATUS_IN_TRASH);
+		}
+
 		return document;
 	}
 
