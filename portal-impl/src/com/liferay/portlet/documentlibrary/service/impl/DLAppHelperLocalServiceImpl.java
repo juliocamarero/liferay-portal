@@ -63,6 +63,7 @@ import com.liferay.portlet.trash.util.TrashUtil;
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -983,18 +984,22 @@ public class DLAppHelperLocalServiceImpl
 
 			// Social
 
-			int activityType = DLActivityKeys.UPDATE_FILE_ENTRY;
+			if ((oldStatus != WorkflowConstants.STATUS_IN_TRASH) &&
+				!latestFileVersion.isInTrashFolder()) {
 
-			if (latestFileVersionVersion.equals(
-					DLFileEntryConstants.VERSION_DEFAULT)) {
+				Date activityDate = latestFileVersion.getModifiedDate();
+				int activityType = DLActivityKeys.UPDATE_FILE_ENTRY;
 
-				activityType = DLActivityKeys.ADD_FILE_ENTRY;
-			}
+				if (latestFileVersionVersion.equals(
+						DLFileEntryConstants.VERSION_DEFAULT)) {
 
-			if (oldStatus != WorkflowConstants.STATUS_IN_TRASH) {
+					activityDate = latestFileVersion.getCreateDate();
+					activityType = DLActivityKeys.ADD_FILE_ENTRY;
+				}
+
 				socialActivityLocalService.addUniqueActivity(
 					latestFileVersion.getStatusByUserId(),
-					fileEntry.getGroupId(), latestFileVersion.getCreateDate(),
+					fileEntry.getGroupId(), activityDate,
 					DLFileEntryConstants.getClassName(),
 					fileEntry.getFileEntryId(), activityType, StringPool.BLANK,
 					0);
