@@ -125,7 +125,7 @@ public class LayoutSetStagingHandler
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		if ((serviceContext == null) || !serviceContext.isSignedIn()) {
+		if (serviceContext == null) {
 			return null;
 		}
 
@@ -133,7 +133,7 @@ public class LayoutSetStagingHandler
 			serviceContext, "layoutSetBranchId");
 
 		return LayoutSetBranchLocalServiceUtil.getUserLayoutSetBranch(
-			serviceContext.getUserId(), layoutSet.getGroupId(),
+			serviceContext.getGuestOrUserId(), layoutSet.getGroupId(),
 			layoutSet.isPrivateLayout(), layoutSet.getLayoutSetId(),
 			layoutSetBranchId);
 	}
