@@ -107,10 +107,10 @@ import com.liferay.portlet.journal.util.comparator.ArticleIDComparator;
 import com.liferay.portlet.journal.util.comparator.ArticleVersionComparator;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 
+import javax.portlet.PortletPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -120,8 +120,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import javax.portlet.PortletPreferences;
 
 /**
  * @author Brian Wing Shun Chan
@@ -3513,6 +3511,8 @@ public class JournalArticleLocalServiceImpl
 			byte[] smallImageBytes)
 		throws PortalException, SystemException {
 
+		boolean isJournalArticle = (classNameId == 0);
+
 		Locale articleDefaultLocale = LocaleUtil.fromLanguageId(
 			LocalizationUtil.getDefaultLocale(content));
 
@@ -3529,7 +3529,7 @@ public class JournalArticleLocalServiceImpl
 			throw le;
 		}
 
-		if ((classNameId == 0) &&
+		if (isJournalArticle &&
 			(titleMap.isEmpty() ||
 			 Validator.isNull(titleMap.get(articleDefaultLocale)))) {
 
@@ -3568,7 +3568,7 @@ public class JournalArticleLocalServiceImpl
 					throw new NoSuchTemplateException();
 				}
 			}
-			else if (classNameId == 0) {
+			else if (isJournalArticle) {
 				throw new NoSuchTemplateException();
 			}
 		}
