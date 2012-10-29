@@ -124,7 +124,7 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 			String layoutName = _getLayoutName(
 				commandArgument.getCurrentFolder());
 
-			Layout layout = _getLayout(layoutName, group.getGroupId());
+			Layout layout = _getLayout(group.getGroupId(), layoutName);
 
 			if (layout == null) {
 				return;
@@ -192,7 +192,7 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 				String layoutName = _getLayoutName(
 					commandArgument.getCurrentFolder());
 
-				Layout layout = _getLayout(layoutName, group.getGroupId());
+				Layout layout = _getLayout(group.getGroupId(), layoutName);
 
 				if (layout != null) {
 					List<Layout> layoutChildren = layout.getChildren();
@@ -214,7 +214,7 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 		}
 	}
 
-	private Layout _getLayout(String layoutName, long groupId)
+	private Layout _getLayout(long groupId, String layoutName)
 		throws Exception {
 
 		Layout layout = null;
@@ -231,11 +231,13 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 		try {
 			layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
 				groupId, true, layoutName);
+
+			return layout;
 		}
 		catch (NoSuchLayoutException nsle) {
 		}
 
-		return layout;
+		return null;
 	}
 
 	private String _getLayoutName(Layout layout) {
