@@ -75,7 +75,7 @@ String fileName = (String)objArray[2];
 				</portlet:actionURL>
 
 				<liferay-ui:icon-delete
-					message="remove"
+					message='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "remove" : "delete" %>'
 					trash="<%= true %>"
 					url="<%= deleteURL %>"
 				/>
