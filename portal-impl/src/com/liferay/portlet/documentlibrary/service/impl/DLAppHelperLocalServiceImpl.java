@@ -445,8 +445,22 @@ public class DLAppHelperLocalServiceImpl
 
 			// App helper
 
-			return dlAppService.moveFileEntry(
+			fileEntry = dlAppService.moveFileEntry(
 				fileEntry.getFileEntryId(), newFolderId, serviceContext);
+
+			// Social
+
+			socialActivityCounterLocalService.enableActivityCounters(
+				DLFileEntryConstants.getClassName(),
+				fileEntry.getFileEntryId());
+
+			socialActivityLocalService.addActivity(
+				userId, fileEntry.getGroupId(),
+				DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId(),
+				SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+				StringPool.BLANK, 0);
+
+			return fileEntry;
 		}
 	}
 
