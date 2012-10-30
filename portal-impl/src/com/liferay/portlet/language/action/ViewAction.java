@@ -106,7 +106,7 @@ public class ViewAction extends PortletAction {
 
 		String queryString = StringPool.BLANK;
 
-		String originalFriendlyURL = StringPool.BLANK;
+		String friendlyURL = StringPool.BLANK;
 
 		int pos = redirect.indexOf(Portal.FRIENDLY_URL_SEPARATOR);
 
@@ -117,28 +117,35 @@ public class ViewAction extends PortletAction {
 		if (pos != -1) {
 			queryString = redirect.substring(pos);
 
-			originalFriendlyURL = redirect.substring(0, pos);
+			friendlyURL = redirect.substring(0, pos);
 		}
 
-		String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(
-			themeDisplay.getScopeGroup(), false, themeDisplay);
+		if (PortalUtil.isGroupFriendlyURL(
+				friendlyURL, layout.getGroup().getFriendlyURL(),
+				layout.getFriendlyURL())) {
 
-		if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) {
-			if (groupFriendlyURL.equals(originalFriendlyURL)) {
-				redirect = groupFriendlyURL;
+			// Create group friendly URL for redirect - LPS-30648
+
+			if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) {
+				redirect = friendlyURL;
 			}
 			else {
-				redirect = PortalUtil.getLayoutURL(layout, themeDisplay);
-			}
-
-			if (themeDisplay.isI18n()) {
-				redirect = layout.getFriendlyURL();
+				redirect = PortalUtil.getGroupFriendlyURL(
+					themeDisplay.getScopeGroup(), layout.isPrivateLayout(),
+					themeDisplay, locale);
 			}
 		}
 		else {
-			if (groupFriendlyURL.equals(originalFriendlyURL)) {
-				redirect = PortalUtil.getGroupFriendlyURL(
-					themeDisplay.getScopeGroup(), false, themeDisplay, locale);
+
+			// Create layout friendly URL for redirect - LPS-30648
+
+			if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) {
+				if (themeDisplay.isI18n()) {
+					redirect = layout.getFriendlyURL();
+				}
+				else {
+					redirect = PortalUtil.getLayoutURL(layout, themeDisplay);
+				}
 			}
 			else {
 				redirect = PortalUtil.getLayoutFriendlyURL(
