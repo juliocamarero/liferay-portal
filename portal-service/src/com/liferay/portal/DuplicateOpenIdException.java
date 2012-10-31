@@ -12,30 +12,29 @@
  * details.
  */
 
-package com.liferay.portal.jsonwebservice;
+package com.liferay.portal;
 
-import com.liferay.portal.kernel.util.CharPool;
-import com.liferay.portal.kernel.util.StringUtil;
-
-import jodd.asm.EmptyClassVisitor;
+import com.liferay.portal.kernel.exception.PortalException;
 
 /**
- * @author Igor Spasic
+ * @author Brian Wing Shun Chan
  */
-public class JSONWebServiceClassVisitor extends EmptyClassVisitor {
+public class DuplicateOpenIdException extends PortalException {
 
-	public String getClassName() {
-		return _className;
+	public DuplicateOpenIdException() {
+		super();
 	}
 
-	@Override
-	public void visit(
-		int version, int access, String name, String signature,
-		String superName, String[] interfaces) {
-
-		_className = StringUtil.replace(name, CharPool.SLASH, CharPool.PERIOD);
+	public DuplicateOpenIdException(String msg) {
+		super(msg);
 	}
 
-	private String _className;
+	public DuplicateOpenIdException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+
+	public DuplicateOpenIdException(Throwable cause) {
+		super(cause);
+	}
 
 }
