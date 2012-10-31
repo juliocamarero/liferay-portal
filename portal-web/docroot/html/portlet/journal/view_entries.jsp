@@ -190,8 +190,8 @@ int total = 0;
 	<c:when test='<%= displayTerms.getNavigation().equals("mine") %>'>
 
 		<%
-		results = JournalArticleServiceUtil.getArticlesByUserId(scopeGroupId, themeDisplay.getUserId(), defaultClassNameId, entryStart, entryEnd, searchContainer.getOrderByComparator());
-		total = JournalArticleServiceUtil.getArticlesCountByUserId(scopeGroupId, themeDisplay.getUserId(), defaultClassNameId);
+		results = JournalArticleServiceUtil.getArticlesByUserId(scopeGroupId, themeDisplay.getUserId(), entryStart, entryEnd, searchContainer.getOrderByComparator());
+		total = JournalArticleServiceUtil.getArticlesCountByUserId(scopeGroupId, themeDisplay.getUserId());
 
 		searchContainer.setResults(results);
 		searchContainer.setTotal(total);

@@ -291,12 +291,12 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	}
 
 	public List<JournalArticle> getArticlesByUserId(
-			long groupId, long userId, long classNameId, int start, int end,
+			long groupId, long userId, int start, int end,
 			OrderByComparator obc)
 		throws SystemException {
 
 		return journalArticlePersistence.filterFindByG_U_C(
-			groupId, userId, classNameId, start, end, obc);
+			groupId, userId, start, end, obc);
 	}
 
 	public int getArticlesCount(long groupId, long folderId)
@@ -317,12 +317,10 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 		return journalArticlePersistence.filterCountByG_S(groupId, structureId);
 	}
 
-	public int getArticlesCountByUserId(
-			long groupId, long userId, long classNameId)
+	public int getArticlesCountByUserId(long groupId, long userId)
 		throws SystemException {
 
-		return journalArticlePersistence.filterCountByG_U_C(
-			groupId, userId, classNameId);
+		return journalArticlePersistence.filterCountByG_U_C(groupId, userId);
 	}
 
 	public JournalArticle getDisplayArticleByUrlTitle(
