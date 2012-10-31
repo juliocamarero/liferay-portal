@@ -22,11 +22,14 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
@@ -44,6 +47,8 @@ import com.liferay.portlet.bookmarks.service.base.BookmarksEntryLocalServiceBase
 import com.liferay.portlet.bookmarks.social.BookmarksActivityKeys;
 import com.liferay.portlet.bookmarks.util.BookmarksUtil;
 import com.liferay.portlet.bookmarks.util.comparator.EntryModifiedDateComparator;
+import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.util.Date;
 import java.util.List;
@@ -55,6 +60,7 @@ import javax.portlet.PortletPreferences;
 /**
  * @author Brian Wing Shun Chan
  * @author Raymond Augé
+ * @author Levente Hudák
  */
 public class BookmarksEntryLocalServiceImpl
 	extends BookmarksEntryLocalServiceBaseImpl {
@@ -93,6 +99,10 @@ public class BookmarksEntryLocalServiceImpl
 		entry.setUrl(url);
 		entry.setDescription(description);
 		entry.setExpandoBridgeAttributes(serviceContext);
+		entry.setStatus(WorkflowConstants.STATUS_APPROVED);
+		entry.setStatusByUserId(userId);
+		entry.setStatusByUserName(user.getScreenName());
+		entry.setStatusDate(now);
 
 		bookmarksEntryPersistence.update(entry);
 
@@ -164,6 +174,11 @@ public class BookmarksEntryLocalServiceImpl
 			entry.getCompanyId(), BookmarksEntry.class.getName(),
 			entry.getEntryId());
 
+		// Trash
+
+		trashEntryLocalService.deleteEntry(
+			BookmarksEntry.class.getName(), entry.getEntryId());
+
 		return entry;
 	}
 
@@ -181,8 +196,8 @@ public class BookmarksEntryLocalServiceImpl
 			long groupId, long folderId, int start, int end)
 		throws SystemException {
 
-		return bookmarksEntryPersistence.findByG_F(
-			groupId, folderId, start, end);
+		return bookmarksEntryPersistence.findByG_F_S(
+			groupId, folderId, WorkflowConstants.STATUS_APPROVED, start, end);
 	}
 
 	public List<BookmarksEntry> getEntries(
@@ -190,14 +205,16 @@ public class BookmarksEntryLocalServiceImpl
 			OrderByComparator orderByComparator)
 		throws SystemException {
 
-		return bookmarksEntryPersistence.findByG_F(
-			groupId, folderId, start, end, orderByComparator);
+		return bookmarksEntryPersistence.findByG_F_S(
+			groupId, folderId, WorkflowConstants.STATUS_APPROVED, start, end,
+			orderByComparator);
 	}
 
 	public int getEntriesCount(long groupId, long folderId)
 		throws SystemException {
 
-		return bookmarksEntryPersistence.countByG_F(groupId, folderId);
+		return bookmarksEntryPersistence.countByG_F_S(
+			groupId, folderId, WorkflowConstants.STATUS_APPROVED);
 	}
 
 	public BookmarksEntry getEntry(long entryId)
@@ -209,17 +226,19 @@ public class BookmarksEntryLocalServiceImpl
 	public int getFoldersEntriesCount(long groupId, List<Long> folderIds)
 		throws SystemException {
 
-		return bookmarksEntryPersistence.countByG_F(
+		return bookmarksEntryPersistence.countByG_F_S(
 			groupId,
-			ArrayUtil.toArray(folderIds.toArray(new Long[folderIds.size()])));
+			ArrayUtil.toArray(folderIds.toArray(new Long[folderIds.size()])),
+			WorkflowConstants.STATUS_APPROVED);
 	}
 
 	public List<BookmarksEntry> getGroupEntries(
 			long groupId, int start, int end)
 		throws SystemException {
 
-		return bookmarksEntryPersistence.findByGroupId(
-			groupId, start, end, new EntryModifiedDateComparator());
+		return bookmarksEntryPersistence.findByG_S(
+			groupId, WorkflowConstants.STATUS_APPROVED, start, end,
+			new EntryModifiedDateComparator());
 	}
 
 	public List<BookmarksEntry> getGroupEntries(
@@ -229,32 +248,109 @@ public class BookmarksEntryLocalServiceImpl
 		OrderByComparator orderByComparator = new EntryModifiedDateComparator();
 
 		if (userId <= 0) {
-			return bookmarksEntryPersistence.findByGroupId(
-				groupId, start, end, orderByComparator);
+			return bookmarksEntryPersistence.findByG_S(
+				groupId, WorkflowConstants.STATUS_APPROVED, start, end,
+				orderByComparator);
 		}
 		else {
-			return bookmarksEntryPersistence.findByG_U(
-				groupId, userId, start, end, orderByComparator);
+			return bookmarksEntryPersistence.findByG_U_S(
+				groupId, userId, WorkflowConstants.STATUS_APPROVED, start, end,
+				orderByComparator);
 		}
 	}
 
 	public int getGroupEntriesCount(long groupId) throws SystemException {
-		return bookmarksEntryPersistence.countByGroupId(groupId);
+		return bookmarksEntryPersistence.countByG_S(
+			groupId, WorkflowConstants.STATUS_APPROVED);
 	}
 
 	public int getGroupEntriesCount(long groupId, long userId)
 		throws SystemException {
 
 		if (userId <= 0) {
-			return bookmarksEntryPersistence.countByGroupId(groupId);
+			return getGroupEntriesCount(groupId);
 		}
 		else {
-			return bookmarksEntryPersistence.countByG_U(groupId, userId);
+			return bookmarksEntryPersistence.countByG_U_S(
+				groupId, userId, WorkflowConstants.STATUS_APPROVED);
 		}
 	}
 
 	public List<BookmarksEntry> getNoAssetEntries() throws SystemException {
 		return bookmarksEntryFinder.findByNoAssets();
+	}
+
+	public void moveEntriesToTrash(long groupId, long userId)
+		throws PortalException, SystemException {
+
+		List<BookmarksEntry> entries = bookmarksEntryPersistence.findByG_S(
+			groupId, WorkflowConstants.STATUS_APPROVED);
+
+		for (BookmarksEntry entry : entries) {
+			moveEntryToTrash(userId, entry);
+		}
+	}
+
+	public BookmarksEntry moveEntryFromTrash(
+			long userId, long entryId, long parentFolderId)
+		throws PortalException, SystemException {
+
+		restoreEntryFromTrash(userId, entryId);
+
+		return moveEntry(entryId, parentFolderId);
+	}
+
+	public BookmarksEntry moveEntryToTrash(long userId, BookmarksEntry entry)
+		throws PortalException, SystemException {
+
+		User user = userPersistence.findByPrimaryKey(userId);
+
+		Date now = new Date();
+
+		entry.setStatus(WorkflowConstants.STATUS_IN_TRASH);
+		entry.setStatusByUserId(userId);
+		entry.setStatusByUserName(user.getScreenName());
+		entry.setStatusDate(now);
+
+		updateBookmarksEntry(entry);
+
+		// Asset
+
+		assetEntryLocalService.updateVisible(
+			BookmarksEntry.class.getName(), entry.getEntryId(), false);
+
+		// Social
+
+		socialActivityCounterLocalService.disableActivityCounters(
+			BookmarksEntry.class.getName(), entry.getEntryId());
+
+		socialActivityLocalService.addActivity(
+			userId, entry.getGroupId(), BookmarksEntry.class.getName(),
+			entry.getEntryId(), SocialActivityConstants.TYPE_MOVE_TO_TRASH,
+			StringPool.BLANK, 0);
+
+		// Indexer
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			BookmarksEntry.class.getName());
+
+		indexer.reindex(entry);
+
+		// Trash
+
+		trashEntryLocalService.addTrashEntry(
+			userId, entry.getGroupId(), BookmarksEntry.class.getName(),
+			entry.getEntryId(), entry.getStatus(), null, null);
+
+		return entry;
+	}
+
+	public BookmarksEntry moveEntryToTrash(long userId, long entryId)
+		throws PortalException, SystemException {
+
+		BookmarksEntry entry = getEntry(entryId);
+
+		return moveEntryToTrash(userId, entry);
 	}
 
 	public BookmarksEntry openEntry(long userId, long entryId)
@@ -271,6 +367,54 @@ public class BookmarksEntryLocalServiceImpl
 			userId, BookmarksEntry.class.getName(), entryId, 1);
 
 		return entry;
+	}
+
+	public void restoreEntryFromTrash(long userId, long entryId)
+		throws PortalException, SystemException {
+
+		User user = userPersistence.findByPrimaryKey(userId);
+
+		Date now = new Date();
+
+		TrashEntry trashEntry = trashEntryLocalService.getEntry(
+			BookmarksEntry.class.getName(), entryId);
+
+		// Entry
+
+		BookmarksEntry entry = getEntry(entryId);
+
+		entry.setStatus(WorkflowConstants.STATUS_APPROVED);
+		entry.setStatusByUserId(userId);
+		entry.setStatusByUserName(user.getScreenName());
+		entry.setStatusDate(now);
+
+		updateBookmarksEntry(entry);
+
+		// Asset
+
+		assetEntryLocalService.updateVisible(
+			BookmarksEntry.class.getName(), entry.getEntryId(), true);
+
+		// Social
+
+		socialActivityCounterLocalService.enableActivityCounters(
+			BookmarksEntry.class.getName(), entryId);
+
+		socialActivityLocalService.addActivity(
+			userId, entry.getGroupId(), BookmarksEntry.class.getName(), entryId,
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
+			0);
+
+		// Indexer
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			BookmarksEntry.class.getName());
+
+		indexer.delete(entry);
+
+		// Trash
+
+		trashEntryLocalService.deleteEntry(trashEntry.getEntryId());
 	}
 
 	public void subscribeEntry(long userId, long entryId)
@@ -317,6 +461,8 @@ public class BookmarksEntryLocalServiceImpl
 
 		// Entry
 
+		User user = userPersistence.findByPrimaryKey(userId);
+
 		BookmarksEntry entry = bookmarksEntryPersistence.findByPrimaryKey(
 			entryId);
 
@@ -332,6 +478,9 @@ public class BookmarksEntryLocalServiceImpl
 		entry.setUrl(url);
 		entry.setDescription(description);
 		entry.setExpandoBridgeAttributes(serviceContext);
+		entry.setStatusByUserId(userId);
+		entry.setStatusByUserName(user.getScreenName());
+		entry.setStatusDate(new Date());
 
 		bookmarksEntryPersistence.update(entry);
 
@@ -377,6 +526,18 @@ public class BookmarksEntryLocalServiceImpl
 		}
 
 		return folderId;
+	}
+
+	protected BookmarksEntry moveEntry(long entryId, long parentFolderId)
+		throws PortalException, SystemException {
+
+		BookmarksEntry entry = getBookmarksEntry(entryId);
+
+		entry.setFolderId(parentFolderId);
+
+		updateBookmarksEntry(entry);
+
+		return entry;
 	}
 
 	protected void notifySubscribers(
