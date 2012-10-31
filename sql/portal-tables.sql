@@ -258,7 +258,11 @@ create table BookmarksEntry (
 	url STRING null,
 	description STRING null,
 	visits INTEGER,
-	priority INTEGER
+	priority INTEGER,
+	status INTEGER,
+	statusByUserId LONG,
+	statusByUserName VARCHAR(75) null,
+	statusDate DATE null
 );
 
 create table BookmarksFolder (
