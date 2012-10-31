@@ -1002,12 +1002,14 @@ public class DLAppHelperLocalServiceImpl
 				!latestFileVersion.isInTrashFolder()) {
 
 				Date activityDate = latestFileVersion.getModifiedDate();
+
 				int activityType = DLActivityKeys.UPDATE_FILE_ENTRY;
 
 				if (latestFileVersionVersion.equals(
 						DLFileEntryConstants.VERSION_DEFAULT)) {
 
 					activityDate = latestFileVersion.getCreateDate();
+
 					activityType = DLActivityKeys.ADD_FILE_ENTRY;
 				}
 
