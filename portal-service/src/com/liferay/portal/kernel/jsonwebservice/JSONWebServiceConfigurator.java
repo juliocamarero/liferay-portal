@@ -14,27 +14,27 @@
 
 package com.liferay.portal.kernel.jsonwebservice;
 
-import com.liferay.portal.kernel.util.MethodParameter;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 
-import java.lang.reflect.Method;
+import java.io.InputStream;
+
+import javax.servlet.ServletContext;
 
 /**
- * @author Igor Spasic
+ * @author Raymond Augé
  */
-public interface JSONWebServiceActionMapping {
+public interface JSONWebServiceConfigurator {
 
-	public Class<?> getActionClass();
+	public void clean();
 
-	public Method getActionMethod();
+	public void configure() throws PortalException, SystemException;
 
-	public String getContextPath();
+	public int getRegisteredActionsCount();
 
-	public String getMethod();
+	public void init(ServletContext servletContext, ClassLoader classLoader);
 
-	public MethodParameter[] getMethodParameters();
-
-	public String getPath();
-
-	public String getSignature();
+	public void registerClass(String className, InputStream inputStream)
+		throws Exception;
 
 }
