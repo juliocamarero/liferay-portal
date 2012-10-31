@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
@@ -12,22 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/users_admin/init.jsp" %>
+package com.liferay.portal.kernel.jsonwebservice;
 
-<%
-User selUser = (User)request.getAttribute("user.selUser");
-%>
+import java.io.IOException;
+import java.io.InputStream;
 
-<liferay-ui:error-marker key="errorSection" value="openId" />
+/**
+ * @author Raymond Augé
+ */
+public interface JSONWebServiceClassVisitorFactory {
 
-<aui:model-context bean="<%= selUser %>" model="<%= User.class %>" />
+	public JSONWebServiceClassVisitor create(InputStream inputStream)
+		throws IOException;
 
-<h3><liferay-ui:message key="open-id" /></h3>
-
-<liferay-ui:error exception="<%= DuplicateOpenIdException.class %>" message="a-user-with-that-open-id-already-exists" />
-
-<aui:fieldset>
-	<aui:input label="" name="openId" />
-</aui:fieldset>
+}
