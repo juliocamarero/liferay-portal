@@ -168,11 +168,23 @@ public class OrganizationLocalServiceImpl
 
 		organizationPersistence.update(organization);
 
+		long parentGroupId = GroupConstants.DEFAULT_PARENT_GROUP_ID;
+
+		if (parentOrganizationId !=
+				OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) {
+
+			Organization parentOrganization =
+				organizationPersistence.fetchByPrimaryKey(parentOrganizationId);
+
+			if (parentOrganization != null) {
+				parentGroupId = parentOrganization.getGroupId();
+			}
+		}
+
 		// Group
 
 		Group group = groupLocalService.addGroup(
-			userId, GroupConstants.DEFAULT_PARENT_GROUP_ID,
-			Organization.class.getName(), organizationId,
+			userId, parentGroupId, Organization.class.getName(), organizationId,
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, name, null,
 			GroupConstants.TYPE_SITE_PRIVATE, null, site, true, null);
 
