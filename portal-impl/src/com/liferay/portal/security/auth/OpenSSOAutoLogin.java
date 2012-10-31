@@ -16,8 +16,6 @@ package com.liferay.portal.security.auth;
 
 import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -47,12 +45,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author Brian Wing Shun Chan
  * @author Prashant Dighe
  */
-public class OpenSSOAutoLogin implements AutoLogin {
+public class OpenSSOAutoLogin extends BaseAutoLogin {
 
 	public String[] login(
-		HttpServletRequest request, HttpServletResponse response) {
-
-		String[] credentials = null;
+			HttpServletRequest request, HttpServletResponse response)
+		throws AutoLoginException {
 
 		try {
 			long companyId = PortalUtil.getCompanyId(request);
@@ -61,14 +58,14 @@ public class OpenSSOAutoLogin implements AutoLogin {
 					companyId, PropsKeys.OPEN_SSO_AUTH_ENABLED,
 					PropsValues.OPEN_SSO_AUTH_ENABLED)) {
 
-				return credentials;
+				return null;
 			}
 
 			String serviceUrl = PrefsPropsUtil.getString(
 				companyId, PropsKeys.OPEN_SSO_SERVICE_URL);
 
 			if (!OpenSSOUtil.isAuthenticated(request, serviceUrl)) {
-				return credentials;
+				return null;
 			}
 
 			boolean ldapImportEnabled = PrefsPropsUtil.getBoolean(
@@ -95,8 +92,8 @@ public class OpenSSOAutoLogin implements AutoLogin {
 			String firstName = nameValues.get(firstNameAttr);
 			String lastName = nameValues.get(lastNameAttr);
 
-			if (_log.isDebugEnabled()) {
-				_log.debug(
+			if (getLog().isDebugEnabled()) {
+				getLog().debug(
 					"Validating user information for " + firstName + " " +
 						lastName + " with screen name " + screenName +
 						" and email address " + emailAddress);
@@ -142,7 +139,9 @@ public class OpenSSOAutoLogin implements AutoLogin {
 			}
 			else {
 				if (Validator.isNull(emailAddress)) {
-					throw new AutoLoginException("Email address is null");
+					return handleException(
+						request, response,
+						new Exception("Email address is null"));
 				}
 			}
 
@@ -169,8 +168,8 @@ public class OpenSSOAutoLogin implements AutoLogin {
 					locale = themeDisplay.getLocale();
 				}
 
-				if (_log.isDebugEnabled()) {
-					_log.debug("Adding user " + screenName);
+				if (getLog().isDebugEnabled()) {
+					getLog().debug("Adding user " + screenName);
 				}
 
 				user = addUser(
@@ -190,17 +189,17 @@ public class OpenSSOAutoLogin implements AutoLogin {
 				request.setAttribute(AutoLogin.AUTO_LOGIN_REDIRECT, redirect);
 			}
 
-			credentials = new String[3];
+			String[] credentials = new String[3];
 
 			credentials[0] = String.valueOf(user.getUserId());
 			credentials[1] = user.getPassword();
 			credentials[2] = Boolean.TRUE.toString();
+
+			return credentials;
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			return handleException(request, response, e);
 		}
-
-		return credentials;
 	}
 
 	protected User addUser(
@@ -237,7 +236,5 @@ public class OpenSSOAutoLogin implements AutoLogin {
 			birthdayMonth, birthdayDay, birthdayYear, jobTitle, groupIds,
 			organizationIds, roleIds, userGroupIds, sendEmail, serviceContext);
 	}
-
-	private static Log _log = LogFactoryUtil.getLog(OpenSSOAutoLogin.class);
 
 }

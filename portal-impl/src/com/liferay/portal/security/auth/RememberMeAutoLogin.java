@@ -14,8 +14,6 @@
 
 package com.liferay.portal.security.auth;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
@@ -33,15 +31,13 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Brian Wing Shun Chan
  */
-public class RememberMeAutoLogin implements AutoLogin {
+public class RememberMeAutoLogin extends BaseAutoLogin {
 
 	public String[] login(
 			HttpServletRequest request, HttpServletResponse response)
 		throws AutoLoginException {
 
 		try {
-			String[] credentials = null;
-
 			String autoUserId = CookieKeys.getCookie(
 				request, CookieKeys.ID, false);
 			String autoPassword = CookieKeys.getCookie(
@@ -64,6 +60,8 @@ public class RememberMeAutoLogin implements AutoLogin {
 					rememberMe = Boolean.TRUE.toString();
 				}
 			}
+
+			String[] credentials = null;
 
 			if (Validator.isNotNull(autoUserId) &&
 				Validator.isNotNull(autoPassword) &&
@@ -96,21 +94,28 @@ public class RememberMeAutoLogin implements AutoLogin {
 				long userId = GetterUtil.getLong(credentials[0]);
 
 				if (defaultUser.getUserId() == userId) {
-					credentials = null;
-
 					removeCookies(request, response);
+
+					return null;
 				}
 			}
 
 			return credentials;
 		}
 		catch (Exception e) {
-			_log.warn(e, e);
-
-			removeCookies(request, response);
-
-			throw new AutoLoginException(e);
+			return handleException(request, response, e);
 		}
+	}
+
+	@Override
+	protected String[] doHandleException(
+			HttpServletRequest request, HttpServletResponse response,
+			Exception e)
+		throws AutoLoginException {
+
+		removeCookies(request, response);
+
+		throw new AutoLoginException(e);
 	}
 
 	protected void removeCookies(
@@ -130,7 +135,5 @@ public class RememberMeAutoLogin implements AutoLogin {
 
 		CookieKeys.addCookie(request, response, cookie);
 	}
-
-	private static Log _log = LogFactoryUtil.getLog(RememberMeAutoLogin.class);
 
 }

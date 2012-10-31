@@ -14,8 +14,6 @@
 
 package com.liferay.portal.security.auth;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
@@ -29,31 +27,32 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Bruno Farache
  */
-public class NtlmAutoLogin implements AutoLogin {
+public class NtlmAutoLogin extends BaseAutoLogin {
 
 	public String[] login(
-		HttpServletRequest request, HttpServletResponse response) {
-
-		String[] credentials = null;
+			HttpServletRequest request, HttpServletResponse response)
+		throws AutoLoginException {
 
 		try {
 			long companyId = PortalUtil.getCompanyId(request);
 
 			if (!AuthSettingsUtil.isNtlmEnabled(companyId)) {
-				return credentials;
+				return null;
 			}
 
 			String screenName = (String)request.getAttribute(
 				WebKeys.NTLM_REMOTE_USER);
 
 			if (screenName == null) {
-				return credentials;
+				return null;
 			}
 
 			request.removeAttribute(WebKeys.NTLM_REMOTE_USER);
 
 			User user = PortalLDAPImporterUtil.importLDAPUserByScreenName(
 				companyId, screenName);
+
+			String[] credentials = null;
 
 			if (user != null) {
 				String redirect = ParamUtil.getString(request, "redirect");
@@ -69,14 +68,12 @@ public class NtlmAutoLogin implements AutoLogin {
 				credentials[1] = user.getPassword();
 				credentials[2] = Boolean.TRUE.toString();
 			}
+
+			return credentials;
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			return handleException(request, response, e);
 		}
-
-		return credentials;
 	}
-
-	private static Log _log = LogFactoryUtil.getLog(NtlmAutoLogin.class);
 
 }

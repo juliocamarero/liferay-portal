@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Mika Koivisto
  * @author Wesley Gong
  */
-public class SiteMinderAutoLogin implements AutoLogin {
+public class SiteMinderAutoLogin extends BaseAutoLogin {
 
 	public String[] login(
 			HttpServletRequest request, HttpServletResponse response)
@@ -100,7 +100,7 @@ public class SiteMinderAutoLogin implements AutoLogin {
 			return credentials;
 		}
 		catch (Exception e) {
-			throw new AutoLoginException(e);
+			return handleException(request, response, e);
 		}
 	}
 
