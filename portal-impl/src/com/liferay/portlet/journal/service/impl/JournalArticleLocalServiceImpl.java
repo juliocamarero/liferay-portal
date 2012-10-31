@@ -155,10 +155,32 @@ public class JournalArticleLocalServiceImpl
 		User user = userPersistence.findByPrimaryKey(userId);
 		articleId = articleId.trim().toUpperCase();
 
-		Date displayDate = PortalUtil.getDate(
-			displayDateMonth, displayDateDay, displayDateYear, displayDateHour,
-			displayDateMinute, user.getTimeZone(),
-			ArticleDisplayDateException.class);
+		Date displayDate = null;
+
+		if (classNameId != 0) {
+			if (!Validator.isGregorianDate(
+					expirationDateMonth, expirationDateDay,
+					expirationDateYear)) {
+
+				neverExpire = true;
+			}
+
+			if (!Validator.isGregorianDate(
+					reviewDateMonth, reviewDateDay, reviewDateYear)) {
+
+				neverReview = true;
+			}
+		}
+		else {
+			if (Validator.isGregorianDate(
+					displayDateMonth, displayDateDay, displayDateYear)) {
+
+				displayDate = PortalUtil.getDate(
+					displayDateMonth, displayDateDay, displayDateYear,
+					displayDateHour, displayDateMinute, user.getTimeZone(),
+					ArticleDisplayDateException.class);
+			}
+		}
 
 		Date expirationDate = null;
 
@@ -2040,37 +2062,6 @@ public class JournalArticleLocalServiceImpl
 		User user = userPersistence.findByPrimaryKey(userId);
 		articleId = articleId.trim().toUpperCase();
 
-		Date displayDate = PortalUtil.getDate(
-			displayDateMonth, displayDateDay, displayDateYear, displayDateHour,
-			displayDateMinute, user.getTimeZone(),
-			ArticleDisplayDateException.class);
-
-		Date expirationDate = null;
-
-		if (!neverExpire) {
-			expirationDate = PortalUtil.getDate(
-				expirationDateMonth, expirationDateDay, expirationDateYear,
-				expirationDateHour, expirationDateMinute, user.getTimeZone(),
-				ArticleExpirationDateException.class);
-		}
-
-		Date now = new Date();
-
-		boolean expired = false;
-
-		if ((expirationDate != null) && expirationDate.before(now)) {
-			expired = true;
-		}
-
-		Date reviewDate = null;
-
-		if (!neverReview) {
-			reviewDate = PortalUtil.getDate(
-				reviewDateMonth, reviewDateDay, reviewDateYear, reviewDateHour,
-				reviewDateMinute, user.getTimeZone(),
-				ArticleReviewDateException.class);
-		}
-
 		byte[] smallImageBytes = null;
 
 		try {
@@ -2116,6 +2107,59 @@ public class JournalArticleLocalServiceImpl
 
 				version = MathUtil.format(latestVersion + 0.1, 1, 1);
 			}
+		}
+
+		Date displayDate = null;
+
+		if (article.getClassNameId() != 0) {
+			if (!Validator.isGregorianDate(
+					expirationDateMonth, expirationDateDay,
+					expirationDateYear)) {
+
+				neverExpire = true;
+			}
+
+			if (!Validator.isGregorianDate(
+					reviewDateMonth, reviewDateDay, reviewDateYear)) {
+
+				neverReview = true;
+			}
+		}
+		else {
+			if (Validator.isGregorianDate(
+					displayDateMonth, displayDateDay, displayDateYear)) {
+
+				displayDate = PortalUtil.getDate(
+					displayDateMonth, displayDateDay, displayDateYear,
+					displayDateHour, displayDateMinute, user.getTimeZone(),
+					ArticleDisplayDateException.class);
+			}
+		}
+
+		Date expirationDate = null;
+
+		if (!neverExpire) {
+			expirationDate = PortalUtil.getDate(
+				expirationDateMonth, expirationDateDay, expirationDateYear,
+				expirationDateHour, expirationDateMinute, user.getTimeZone(),
+				ArticleExpirationDateException.class);
+		}
+
+		Date now = new Date();
+
+		boolean expired = false;
+
+		if ((expirationDate != null) && expirationDate.before(now)) {
+			expired = true;
+		}
+
+		Date reviewDate = null;
+
+		if (!neverReview) {
+			reviewDate = PortalUtil.getDate(
+				reviewDateMonth, reviewDateDay, reviewDateYear, reviewDateHour,
+				reviewDateMinute, user.getTimeZone(),
+				ArticleReviewDateException.class);
 		}
 
 		validate(
@@ -3568,12 +3612,14 @@ public class JournalArticleLocalServiceImpl
 					throw new NoSuchTemplateException();
 				}
 			}
-			else if (classNameId == 0) {
+			else if ((classNameId == 0)) {
 				throw new NoSuchTemplateException();
 			}
 		}
 
-		if ((expirationDate != null) && expirationDate.before(new Date())) {
+		if ((classNameId == 0) && (expirationDate != null) &&
+			expirationDate.before(new Date())) {
+
 			throw new ArticleExpirationDateException();
 		}
 
