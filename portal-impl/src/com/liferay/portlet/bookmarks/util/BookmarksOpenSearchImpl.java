@@ -35,7 +35,7 @@ public class BookmarksOpenSearchImpl extends HitsOpenSearchImpl {
 
 	@Override
 	public String getPortletId() {
-		return BookmarksIndexer.PORTLET_ID;
+		return BookmarksEntryIndexer.PORTLET_ID;
 	}
 
 	@Override
