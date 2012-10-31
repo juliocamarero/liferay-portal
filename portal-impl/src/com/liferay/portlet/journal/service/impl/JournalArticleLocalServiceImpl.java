@@ -155,26 +155,31 @@ public class JournalArticleLocalServiceImpl
 		User user = userPersistence.findByPrimaryKey(userId);
 		articleId = articleId.trim().toUpperCase();
 
-		boolean neverDisplay = false;
 		Date displayDate = null;
 
 		if (classNameId != 0) {
-			neverDisplay = true;
-			neverExpire = neverExpire ||
-				!Validator.isGregorianDate(
-					expirationDateMonth, expirationDateDay, expirationDateYear);
-			neverReview = neverReview ||
-				!Validator.isGregorianDate(
-					reviewDateMonth, reviewDateDay, reviewDateYear);
-		}
+			if (!Validator.isGregorianDate(
+					expirationDateMonth, expirationDateDay,
+					expirationDateYear)) {
 
-		if (!neverDisplay &&
-			Validator.isGregorianDate(
-				displayDateMonth, displayDateDay, displayDateYear)) {
-			displayDate = PortalUtil.getDate(
-				displayDateMonth, displayDateDay, displayDateYear,
-				displayDateHour, displayDateMinute, user.getTimeZone(),
-				ArticleDisplayDateException.class);
+				neverExpire = true;
+			}
+
+			if (!Validator.isGregorianDate(
+					reviewDateMonth, reviewDateDay, reviewDateYear)) {
+
+				neverReview = true;
+			}
+		}
+		else {
+			if (Validator.isGregorianDate(
+					displayDateMonth, displayDateDay, displayDateYear)) {
+
+				displayDate = PortalUtil.getDate(
+					displayDateMonth, displayDateDay, displayDateYear,
+					displayDateHour, displayDateMinute, user.getTimeZone(),
+					ArticleDisplayDateException.class);
+			}
 		}
 
 		Date expirationDate = null;
@@ -2104,26 +2109,31 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 
-		boolean neverDisplay = false;
 		Date displayDate = null;
 
 		if (article.getClassNameId() != 0) {
-			neverDisplay = true;
-			neverExpire = neverExpire ||
-				!Validator.isGregorianDate(
-					expirationDateMonth, expirationDateDay, expirationDateYear);
-			neverReview = neverReview ||
-				!Validator.isGregorianDate(
-					reviewDateMonth, reviewDateDay, reviewDateYear);
-		}
+			if (!Validator.isGregorianDate(
+					expirationDateMonth, expirationDateDay,
+					expirationDateYear)) {
 
-		if (!neverDisplay &&
-				Validator.isGregorianDate(
+				neverExpire = true;
+			}
+
+			if (!Validator.isGregorianDate(
+					reviewDateMonth, reviewDateDay, reviewDateYear)) {
+
+				neverReview = true;
+			}
+		}
+		else {
+			if (Validator.isGregorianDate(
 					displayDateMonth, displayDateDay, displayDateYear)) {
-			displayDate = PortalUtil.getDate(
-				displayDateMonth, displayDateDay, displayDateYear,
-				displayDateHour, displayDateMinute, user.getTimeZone(),
-				ArticleDisplayDateException.class);
+
+				displayDate = PortalUtil.getDate(
+					displayDateMonth, displayDateDay, displayDateYear,
+					displayDateHour, displayDateMinute, user.getTimeZone(),
+					ArticleDisplayDateException.class);
+			}
 		}
 
 		Date expirationDate = null;
@@ -3547,8 +3557,6 @@ public class JournalArticleLocalServiceImpl
 			byte[] smallImageBytes)
 		throws PortalException, SystemException {
 
-		boolean isJournalArticle = (classNameId == 0);
-
 		Locale articleDefaultLocale = LocaleUtil.fromLanguageId(
 			LocalizationUtil.getDefaultLocale(content));
 
@@ -3565,7 +3573,7 @@ public class JournalArticleLocalServiceImpl
 			throw le;
 		}
 
-		if (isJournalArticle &&
+		if ((classNameId == 0) &&
 			(titleMap.isEmpty() ||
 			 Validator.isNull(titleMap.get(articleDefaultLocale)))) {
 
@@ -3604,12 +3612,12 @@ public class JournalArticleLocalServiceImpl
 					throw new NoSuchTemplateException();
 				}
 			}
-			else if (isJournalArticle) {
+			else if ((classNameId == 0)) {
 				throw new NoSuchTemplateException();
 			}
 		}
 
-		if (isJournalArticle && (expirationDate != null) &&
+		if ((classNameId == 0) && (expirationDate != null) &&
 			expirationDate.before(new Date())) {
 
 			throw new ArticleExpirationDateException();
