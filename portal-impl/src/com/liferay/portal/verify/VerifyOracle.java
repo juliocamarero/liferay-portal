@@ -60,9 +60,12 @@ public class VerifyOracle extends VerifyProcess {
 				String columnName = rs.getString(2);
 				int dataLength = rs.getInt(3);
 
-				if (buildNumber == ReleaseInfo.RELEASE_5_2_9_BUILD_NUMBER ||
+				if (((buildNumber >= ReleaseInfo.RELEASE_5_2_9_BUILD_NUMBER) &&
+						(buildNumber <
+							ReleaseInfo.RELEASE_6_0_0_BUILD_NUMBER)) ||
 					((buildNumber >= ReleaseInfo.RELEASE_6_0_5_BUILD_NUMBER) &&
-					(buildNumber < ReleaseInfo.RELEASE_6_1_20_BUILD_NUMBER))) {
+						(buildNumber <
+							ReleaseInfo.RELEASE_6_1_20_BUILD_NUMBER))) {
 
 					if (dataLength != 4000) {
 						dataLength = dataLength / 4;
