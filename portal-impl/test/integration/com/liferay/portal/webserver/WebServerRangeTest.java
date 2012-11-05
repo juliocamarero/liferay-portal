@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.webdav.methods.Method;
+import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -169,7 +170,7 @@ public class WebServerRangeTest extends BaseWebServerTestCase {
 
 		String fileName = "Test Range.txt";
 
-		FileEntry fileEntry = addFileEntry(
+		FileEntry fileEntry = DLAppTestUtil.addFileEntry(
 			parentFolder.getFolderId(), fileName, fileName,
 			_SAMPLE_DATA.getBytes());
 
