@@ -33,6 +33,7 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
+import com.liferay.portlet.bookmarks.util.BookmarksTestUtil;
 
 import java.util.List;
 
@@ -45,30 +46,30 @@ import org.junit.runner.RunWith;
  */
 @ExecutionTestListeners(listeners = {EnvironmentExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-public class BookmarksFolderServiceTest extends BaseBookmarksServiceTestCase {
+public class BookmarksFolderServiceTest {
 
 	@Test
 	public void testAddFolder() throws Exception {
-		addFolder();
+		BookmarksTestUtil.addFolder();
 	}
 
 	@Test
 	public void testAddSubfolder() throws Exception {
-		BookmarksFolder folder = addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder();
 
-		addFolder(folder.getFolderId());
+		BookmarksTestUtil.addFolder(folder.getFolderId());
 	}
 
 	@Test
 	public void testDeleteFolder() throws Exception {
-		BookmarksFolder folder = addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder();
 
 		BookmarksFolderServiceUtil.deleteFolder(folder.getFolderId());
 	}
 
 	@Test
 	public void testGetFolder() throws Exception {
-		BookmarksFolder folder = addFolder();
+		BookmarksFolder folder = BookmarksTestUtil.addFolder();
 
 		BookmarksFolderServiceUtil.getFolder(folder.getFolderId());
 	}
@@ -83,7 +84,7 @@ public class BookmarksFolderServiceTest extends BaseBookmarksServiceTestCase {
 
 		LuceneHelperUtil.startup(TestPropsValues.getCompanyId());
 
-		BookmarksEntry entry = addEntry();
+		BookmarksEntry entry = BookmarksTestUtil.addEntry();
 
 		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
 
@@ -144,10 +145,10 @@ public class BookmarksFolderServiceTest extends BaseBookmarksServiceTestCase {
 
 		Assert.assertEquals(query.toString(), 0, hits.getLength());
 
-		addEntry();
-		addEntry();
-		addEntry();
-		addEntry();
+		BookmarksTestUtil.addEntry();
+		BookmarksTestUtil.addEntry();
+		BookmarksTestUtil.addEntry();
+		BookmarksTestUtil.addEntry();
 
 		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
 
