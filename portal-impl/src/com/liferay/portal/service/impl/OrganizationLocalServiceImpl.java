@@ -1610,12 +1610,13 @@ public class OrganizationLocalServiceImpl
 
 		Group group = organization.getGroup();
 
-		boolean moveSiteHierarchy = checkMoveSiteHierarchy(
-			oldParentOrganizationId, group.getParentGroupId());
+		boolean isParentOrganizationParentGroup =
+			isOrganizationGroup(
+				group.getParentGroupId(), oldParentOrganizationId);
 
 		long parentGroupId = group.getParentGroupId();
 
-		if (moveSiteHierarchy) {
+		if (isParentOrganizationParentGroup) {
 			if (parentOrganizationId !=
 				OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) {
 
@@ -1630,7 +1631,7 @@ public class OrganizationLocalServiceImpl
 			}
 		}
 
-		if (!oldName.equals(name) || moveSiteHierarchy) {
+		if (!oldName.equals(name) || isParentOrganizationParentGroup) {
 			groupLocalService.updateGroup(
 				group.getGroupId(), parentGroupId, name, group.getDescription(),
 				group.getType(), group.getFriendlyURL(), group.isActive(),
@@ -1686,24 +1687,23 @@ public class OrganizationLocalServiceImpl
 		}
 	}
 
-	protected boolean checkMoveSiteHierarchy(
-			long parentOrganizationId, long parentGroupId)
+	protected boolean isOrganizationGroup(long groupId, long organizationId)
 		throws PortalException, SystemException {
 
-		if ((parentOrganizationId ==
+		if ((organizationId ==
 				OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) &&
-			(parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID)) {
+			(groupId == GroupConstants.DEFAULT_PARENT_GROUP_ID)) {
 
 			return true;
 		}
 
-		if (parentOrganizationId !=
+		if (organizationId !=
 				OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) {
 
-			Organization parentOrganization =
-				organizationPersistence.fetchByPrimaryKey(parentOrganizationId);
+			Organization organization =
+				organizationPersistence.fetchByPrimaryKey(organizationId);
 
-			if (parentOrganization.getGroupId() == parentGroupId) {
+			if (organization.getGroupId() == groupId) {
 				return true;
 			}
 		}
