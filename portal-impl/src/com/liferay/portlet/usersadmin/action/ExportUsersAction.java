@@ -162,7 +162,19 @@ public class ExportUsersAction extends PortletAction {
 		UserSearchTerms searchTerms =
 			(UserSearchTerms)userSearch.getSearchTerms();
 
-		searchTerms.setStatus(WorkflowConstants.STATUS_APPROVED);
+		int userStatus = searchTerms.getStatus();
+
+		if (userStatus == WorkflowConstants.STATUS_ANY) {
+			searchTerms.setStatus(WorkflowConstants.STATUS_ANY);
+		}
+
+		else if (userStatus == WorkflowConstants.STATUS_INACTIVE) {
+			searchTerms.setStatus(WorkflowConstants.STATUS_INACTIVE);
+		}
+
+		else if (userStatus == WorkflowConstants.STATUS_APPROVED) {
+			searchTerms.setStatus(WorkflowConstants.STATUS_APPROVED);
+		}
 
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
