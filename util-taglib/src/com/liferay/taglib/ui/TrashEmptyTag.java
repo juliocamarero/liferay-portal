@@ -96,7 +96,8 @@ public class TrashEmptyTag extends IncludeTag {
 	private static final String _EMPTY_MESSAGE = "empty-the-recycle-bin";
 
 	private static final String _INFO_MESSAGE =
-		"entries-that-have-been-in-recycle-bin-for-more-than-x-days-will-be-automatically-deleted";
+		"entries-that-have-been-in-recycle-bin-for-more-than-x-days-will-be-" +
+			"automatically-deleted";
 
 	private static final String _PAGE = "/html/taglib/ui/trash_empty/page.jsp";
 
