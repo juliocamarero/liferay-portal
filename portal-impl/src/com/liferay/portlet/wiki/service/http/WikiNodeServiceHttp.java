@@ -61,7 +61,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"addNode", _addNodeParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, name,
@@ -97,7 +97,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"deleteNode", _deleteNodeParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, nodeId);
@@ -129,7 +129,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"getNode", _getNodeParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, nodeId);
@@ -165,7 +165,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"getNode", _getNodeParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
@@ -203,7 +203,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"importPages", _importPagesParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, nodeId,
@@ -236,7 +236,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"moveNodeToTrash", _moveNodeToTrashParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, nodeId);
@@ -272,7 +272,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"restoreNodeFromTrash", _restoreNodeFromTrashParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, nodeId);
@@ -303,7 +303,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"subscribeNode", _subscribeNodeParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, nodeId);
@@ -334,7 +334,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"unsubscribeNode", _unsubscribeNodeParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, nodeId);
@@ -368,7 +368,7 @@ public class WikiNodeServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
-			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class,
+			MethodKey methodKey = new MethodKey(WikiNodeServiceUtil.class.getName(),
 					"updateNode", _updateNodeParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, nodeId,
