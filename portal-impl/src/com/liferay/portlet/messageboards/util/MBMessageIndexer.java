@@ -46,6 +46,7 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.messageboards.NoSuchDiscussionException;
+import com.liferay.portlet.messageboards.asset.MBMessageAssetRendererFactory;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessage;
@@ -272,7 +273,7 @@ public class MBMessageIndexer extends BaseIndexer {
 		if (!message.isInTrash() && message.isInTrashThread()) {
 			addTrashFields(
 				document, MBThread.class.getName(), message.getThreadId(), null,
-				null, null);
+				null, MBMessageAssetRendererFactory.TYPE);
 
 			document.addKeyword(
 				Field.ROOT_ENTRY_CLASS_NAME, MBThread.class.getName());
