@@ -167,13 +167,11 @@ public class ExportUsersAction extends PortletAction {
 		if (userStatus == WorkflowConstants.STATUS_ANY) {
 			searchTerms.setStatus(WorkflowConstants.STATUS_ANY);
 		}
-
-		else if (userStatus == WorkflowConstants.STATUS_INACTIVE) {
-			searchTerms.setStatus(WorkflowConstants.STATUS_INACTIVE);
-		}
-
 		else if (userStatus == WorkflowConstants.STATUS_APPROVED) {
 			searchTerms.setStatus(WorkflowConstants.STATUS_APPROVED);
+		}
+		else if (userStatus == WorkflowConstants.STATUS_INACTIVE) {
+			searchTerms.setStatus(WorkflowConstants.STATUS_INACTIVE);
 		}
 
 		LinkedHashMap<String, Object> params =
