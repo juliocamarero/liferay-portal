@@ -36,7 +36,6 @@ import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -55,13 +54,11 @@ public class WikiAttachmentsTrashTest {
 		_group = ServiceTestUtil.addGroup();
 	}
 
-	@Test
 	@Transactional
 	public void testTrashAndDelete() throws Exception {
 		trashWikiAttachments(false);
 	}
 
-	@Test
 	@Transactional
 	public void testTrashAndRestore() throws Exception {
 		trashWikiAttachments(true);
