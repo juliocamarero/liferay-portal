@@ -318,6 +318,18 @@ public abstract class BaseJSONWebServiceConfigurator
 				}
 			}
 
+			if (_excludedMethodNames != null) {
+				String methodName = method.getName();
+
+				for (String excludedMethodName : _excludedMethodNames) {
+					if (excludedMethodName.equals(methodName)) {
+						registerMethod = false;
+
+						break;
+					}
+				}
+			}
+
 			if (registerMethod) {
 				registerJSONWebServiceAction(actionClass, method);
 			}
@@ -359,6 +371,8 @@ public abstract class BaseJSONWebServiceConfigurator
 
 	private ClassLoader _classLoader;
 	private String _contextPath;
+	private String[] _excludedMethodNames = new String[] {
+		"getBeanIdentifier", "setBeanIdentifier"};
 	private Set<String> _invalidHttpMethods = SetUtil.fromArray(
 		PropsUtil.getArray(PropsKeys.JSONWS_WEB_SERVICE_INVALID_HTTP_METHODS));
 	private final byte[] _jsonWebServiceAnnotationBytes = getTypeSignatureBytes(
