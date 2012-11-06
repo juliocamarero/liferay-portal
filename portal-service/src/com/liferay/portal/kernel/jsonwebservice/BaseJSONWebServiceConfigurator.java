@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContextPathUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -286,6 +287,14 @@ public abstract class BaseJSONWebServiceConfigurator
 				continue;
 			}
 
+			if (_excludedMethodNames != null) {
+				String methodName = method.getName();
+
+				if (ArrayUtil.contains(_excludedMethodNames, methodName)) {
+					continue;
+				}
+			}
+
 			boolean registerMethod = false;
 
 			JSONWebService methodJSONWebService = method.getAnnotation(
@@ -314,18 +323,6 @@ public abstract class BaseJSONWebServiceConfigurator
 							JSONWebServiceMode.IGNORE)) {
 
 						registerMethod = true;
-					}
-				}
-			}
-
-			if (_excludedMethodNames != null) {
-				String methodName = method.getName();
-
-				for (String excludedMethodName : _excludedMethodNames) {
-					if (excludedMethodName.equals(methodName)) {
-						registerMethod = false;
-
-						break;
 					}
 				}
 			}
