@@ -256,6 +256,8 @@ portletURL.setParameter("tabs1", tabs1);
 		<liferay-portlet:renderURLParams varImpl="searchURL" />
 		<aui:input name="<%= Constants.CMD %>" type="hidden" value="" />
 		<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
+		<aui:input name="deleteTrashEntryIds" type="hidden" />
+		<aui:input name="restoreTrashEntryIds" type="hidden" />
 
 		<aui:button-row>
 			<liferay-ui:search-form

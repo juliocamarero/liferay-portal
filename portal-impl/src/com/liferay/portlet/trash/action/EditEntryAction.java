@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -164,6 +165,20 @@ public class EditEntryAction extends PortletAction {
 	protected void deleteEntries(ActionRequest actionRequest) throws Exception {
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
+		if (trashEntryId > 0) {
+			deleteEntry(trashEntryId);
+		}
+		else {
+			long[] deleteEntryIds = StringUtil.split(
+				ParamUtil.getString(actionRequest, "deleteThrashEntryIds"), 0L);
+
+			for (int i = 0; i < deleteEntryIds.length; i++) {
+				deleteEntry(deleteEntryIds[i]);
+			}
+		}
+	}
+
+	protected void deleteEntry(long trashEntryId) throws Exception {
 		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
 			trashEntryId);
 
@@ -185,6 +200,26 @@ public class EditEntryAction extends PortletAction {
 
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
+		TrashEntry[] entry = null;
+
+		if (trashEntryId > 0) {
+			entry = restoreEntry(trashEntryId);
+		}
+		else {
+			long[] restoreEntryIds = StringUtil.split(
+				ParamUtil.getString(actionRequest, "restoreTrashEntryIds"), 0L);
+
+			entry = new TrashEntry[restoreEntryIds.length];
+
+			for (int i = 0; i < restoreEntryIds.length; i++) {
+				entry[i] = restoreEntry(restoreEntryIds[i])[0];
+			}
+		}
+
+		return entry;
+	}
+
+	protected TrashEntry[] restoreEntry(long trashEntryId) throws Exception {
 		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
 			trashEntryId);
 
