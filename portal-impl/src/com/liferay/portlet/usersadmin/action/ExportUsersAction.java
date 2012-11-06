@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.util.ProgressTracker;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Tuple;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -161,18 +160,6 @@ public class ExportUsersAction extends PortletAction {
 
 		UserSearchTerms searchTerms =
 			(UserSearchTerms)userSearch.getSearchTerms();
-
-		int userStatus = searchTerms.getStatus();
-
-		if (userStatus == WorkflowConstants.STATUS_ANY) {
-			searchTerms.setStatus(WorkflowConstants.STATUS_ANY);
-		}
-		else if (userStatus == WorkflowConstants.STATUS_APPROVED) {
-			searchTerms.setStatus(WorkflowConstants.STATUS_APPROVED);
-		}
-		else if (userStatus == WorkflowConstants.STATUS_INACTIVE) {
-			searchTerms.setStatus(WorkflowConstants.STATUS_INACTIVE);
-		}
 
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
