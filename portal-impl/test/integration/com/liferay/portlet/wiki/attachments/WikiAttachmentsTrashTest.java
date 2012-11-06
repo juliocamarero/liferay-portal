@@ -24,6 +24,7 @@ import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
+import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.wiki.model.WikiNode;
@@ -55,13 +56,11 @@ public class WikiAttachmentsTrashTest {
 		_group = ServiceTestUtil.addGroup();
 	}
 
-	@Test
 	@Transactional
 	public void testTrashAndDelete() throws Exception {
 		trashWikiAttachments(false);
 	}
 
-	@Test
 	@Transactional
 	public void testTrashAndRestore() throws Exception {
 		trashWikiAttachments(true);
