@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.journal.asset;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.trash.TrashRenderer;
@@ -220,13 +218,6 @@ public class JournalArticleAssetRenderer
 	@Override
 	public String getViewInContextMessage() {
 		return "view";
-	}
-
-	public boolean hasDeletePermission(PermissionChecker permissionChecker)
-		throws PortalException, SystemException {
-
-		return JournalArticlePermission.contains(
-			permissionChecker, _article, ActionKeys.DELETE);
 	}
 
 	@Override
