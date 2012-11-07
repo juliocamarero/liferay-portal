@@ -343,7 +343,6 @@ public class EditArticleAction extends PortletAction {
 		}
 
 		if (moveToTrash && (deleteArticleIds.length > 0)) {
-
 			Map<String, String[]> data = new HashMap<String, String[]>();
 
 			data.put(

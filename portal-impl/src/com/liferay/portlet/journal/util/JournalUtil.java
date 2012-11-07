@@ -450,7 +450,7 @@ public class JournalUtil {
 
 		List<JournalFolder> journalFolders = journalFolder.getAncestors();
 
-		StringBundler sb = new StringBundler((journalFolders.size() * 4) + 6);
+		StringBundler sb = new StringBundler((journalFolders.size() * 3) + 5);
 
 		sb.append(themeDisplay.translate("home"));
 		sb.append(StringPool.SPACE);
@@ -458,14 +458,12 @@ public class JournalUtil {
 		for (int i = journalFolders.size() - 1; i >= 0; i--) {
 			JournalFolder curJournalFolder = journalFolders.get(i);
 
-			sb.append(StringPool.GREATER_THAN);
-			sb.append(StringPool.GREATER_THAN);
+			sb.append(StringPool.RAQUO);
 			sb.append(StringPool.SPACE);
 			sb.append(curJournalFolder.getName());
 		}
 
-		sb.append(StringPool.GREATER_THAN);
-		sb.append(StringPool.GREATER_THAN);
+		sb.append(StringPool.RAQUO);
 		sb.append(StringPool.SPACE);
 		sb.append(journalFolder.getName());
 

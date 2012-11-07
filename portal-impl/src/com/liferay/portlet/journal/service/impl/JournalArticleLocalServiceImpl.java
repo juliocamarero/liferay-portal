@@ -759,7 +759,6 @@ public class JournalArticleLocalServiceImpl
 		// Article
 
 		journalArticlePersistence.remove(article);
-
 	}
 
 	public void deleteArticle(
@@ -1697,7 +1696,9 @@ public class JournalArticleLocalServiceImpl
 			long userId, long groupId, String articleId)
 		throws PortalException, SystemException {
 
-		List<JournalArticle> articleVersions = new ArrayList(
+		// Article
+
+		List<JournalArticle> articleVersions = ListUtil.copy(
 			getArticles(groupId, articleId));
 
 		JournalArticle latestVersion = articleVersions.remove(0);
@@ -1718,7 +1719,7 @@ public class JournalArticleLocalServiceImpl
 		// Social
 
 		socialActivityCounterLocalService.disableActivityCounters(
-				JournalArticle.class.getName(), latestVersion.getId());
+			JournalArticle.class.getName(), latestVersion.getId());
 
 		socialActivityLocalService.addActivity(
 			userId, latestVersion.getGroupId(), JournalArticle.class.getName(),
@@ -1791,11 +1792,10 @@ public class JournalArticleLocalServiceImpl
 			"trashVersions", (Serializable)trashVersions);
 
 		updateStatus(
-			userId, article.getId(), WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			userId, article.getId(), trashEntry.getStatus(), serviceContext);
 
 		socialActivityCounterLocalService.enableActivityCounters(
-				JournalArticle.class.getName(), article.getResourcePrimKey());
+			JournalArticle.class.getName(), article.getResourcePrimKey());
 
 		socialActivityLocalService.addActivity(
 			userId, article.getGroupId(), JournalArticle.class.getName(),
@@ -2591,10 +2591,10 @@ public class JournalArticleLocalServiceImpl
 
 		journalArticlePersistence.update(article);
 
-		if (hasModifiedLatestApprovedVersion(
+		if ((status != WorkflowConstants.STATUS_IN_TRASH) &&
+			hasModifiedLatestApprovedVersion(
 				article.getGroupId(), article.getArticleId(),
-				article.getVersion()) &&
-				(status != WorkflowConstants.STATUS_IN_TRASH)) {
+				article.getVersion())) {
 
 			if (status == WorkflowConstants.STATUS_APPROVED) {
 				updateUrlTitles(

@@ -164,7 +164,7 @@ public class EditEntryAction extends PortletAction {
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
+			WebKeys.THEME_DISPLAY);
 
 		long[] deleteFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "folderIds"), 0L);
@@ -181,7 +181,6 @@ public class EditEntryAction extends PortletAction {
 				JournalArticleServiceUtil.moveArticleToTrash(
 					themeDisplay.getUserId(), themeDisplay.getScopeGroupId(),
 					deleteArticleId);
-
 			}
 			else {
 				ActionUtil.deleteArticle(actionRequest, deleteArticleId);
@@ -286,9 +285,9 @@ public class EditEntryAction extends PortletAction {
 		String[] restoreArticleIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreArticleIds"));
 
-		for (String restoreFileEntryId : restoreArticleIds) {
+		for (String restoreArticleId : restoreArticleIds) {
 			JournalArticleServiceUtil.restoreArticleFromTrash(
-				themeDisplay.getScopeGroupId(), restoreFileEntryId);
+				themeDisplay.getScopeGroupId(), restoreArticleId);
 		}
 	}
 
