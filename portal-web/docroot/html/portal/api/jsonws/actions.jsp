@@ -122,20 +122,20 @@ Set<String> contextPaths = JSONWebServiceActionsManagerUtil.getContextPaths();
 	var AArray = A.Array;
 
  	<c:if test="<%= contextPaths.size() > 1 %>">
-	A.one('#<portlet:namespace />contextPath').on(
-		'change',
-		function(event){
-			var contextPath = event.currentTarget.val();
+		A.one('#<portlet:namespace />contextPath').on(
+			'change',
+			function(event){
+				var contextPath = event.currentTarget.val();
 
-			var location = '<%= jsonWSPath %>';
+				var location = '<%= jsonWSPath %>';
 
-			if (contextPath && (contextPath != '/')) {
-				location = Liferay.Util.addParams('contextPath=' + contextPath, location);
+				if (contextPath && (contextPath != '/')) {
+					location = Liferay.Util.addParams('contextPath=' + contextPath, location);
+				}
+
+				window.location.href = location;
 			}
-
-			window.location.href = location;
-		}
-	);
+		);
  	</c:if>
 
 	var ServiceFilter = A.Component.create(
