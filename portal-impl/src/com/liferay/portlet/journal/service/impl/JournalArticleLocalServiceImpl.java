@@ -756,11 +756,6 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 
-		// Trash
-
-		trashEntryLocalService.deleteEntry(
-			JournalArticle.class.getName(), article.getResourcePrimKey());
-
 		// Article
 
 		journalArticlePersistence.remove(article);
@@ -788,6 +783,15 @@ public class JournalArticleLocalServiceImpl
 
 		for (JournalArticle article : articles) {
 			deleteArticle(article, null, serviceContext);
+		}
+
+		// Trash
+
+		if (!articles.isEmpty()) {
+			JournalArticle article = articles.get(0);
+
+			trashEntryLocalService.deleteEntry(
+				JournalArticle.class.getName(), article.getResourcePrimKey());
 		}
 	}
 
