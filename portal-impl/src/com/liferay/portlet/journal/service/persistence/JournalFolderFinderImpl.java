@@ -41,14 +41,14 @@ import java.util.List;
 public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 	implements JournalFolderFinder {
 
-	public static final String COUNT_A_BY_G_F =
-		JournalFolderFinder.class.getName() + ".countA_ByG_F";
+	public static final String COUNT_A_BY_G_F_NotS =
+		JournalFolderFinder.class.getName() + ".countA_ByG_F_NotS";
 
 	public static final String COUNT_F_BY_G_F =
 		JournalFolderFinder.class.getName() + ".countF_ByG_F";
 
-	public static final String FIND_A_BY_G_F =
-		JournalFolderFinder.class.getName() + ".findA_ByG_F";
+	public static final String FIND_A_BY_G_F_NotS =
+		JournalFolderFinder.class.getName() + ".findA_ByG_F_NotS";
 
 	public static final String FIND_F_BY_G_F =
 		JournalFolderFinder.class.getName() + ".findF_ByG_F";
@@ -245,7 +245,7 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 	}
 
 	protected String getArticlesSQL(long groupId, boolean inlineSQLHelper) {
-		String sql = CustomSQLUtil.get(FIND_A_BY_G_F);
+		String sql = CustomSQLUtil.get(FIND_A_BY_G_F_NotS);
 
 		if (inlineSQLHelper) {
 			sql = InlineSQLHelperUtil.replacePermissionCheck(
@@ -259,7 +259,7 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 	protected String getCountArticlesSQL(
 		long groupId, boolean inlineSQLHelper) {
 
-		String sql = CustomSQLUtil.get(COUNT_A_BY_G_F);
+		String sql = CustomSQLUtil.get(COUNT_A_BY_G_F_NotS);
 
 		if (inlineSQLHelper) {
 			sql = InlineSQLHelperUtil.replacePermissionCheck(
