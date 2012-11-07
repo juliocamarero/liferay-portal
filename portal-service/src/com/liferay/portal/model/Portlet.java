@@ -485,6 +485,8 @@ public interface Portlet extends PortletModel, PersistedModel {
 	*/
 	public boolean getMaximizeHelp();
 
+	public java.util.List<java.lang.String> getModelDataHandlerClasses();
+
 	/**
 	* Returns the name of the open search class of the portlet.
 	*
@@ -1721,6 +1723,9 @@ public interface Portlet extends PortletModel, PersistedModel {
 	maximized state when the user goes into the help mode
 	*/
 	public void setMaximizeHelp(boolean maximizeHelp);
+
+	public void setModelDataHandlerClasses(
+		java.util.List<java.lang.String> modelDataHandlerClasses);
 
 	/**
 	* Sets the name of the open search class of the portlet.
