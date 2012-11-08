@@ -101,6 +101,46 @@ public class TrashEntryServiceWrapper implements TrashEntryService,
 	}
 
 	/**
+	* Restores the trash entry by moving it to a new
+	* location identified by destination container model ID.
+	*
+	* <p>
+	* This method throws a PrincipalException if the user didn't have the
+	* permissions to perform one of the necessary operations. The exception is
+	* created with different messages for different operations:
+	* </p>
+	*
+	* <ul>
+	* <li>
+	* trash.move.error - if the permission to add the item to the new
+	* destination was missing
+	* </li>
+	* <li>
+	* trash.restore.error - if the permission to restore the item from trash
+	* was missing
+	* </li>
+	* </ul>
+	*
+	* @param className the class name of the entry
+	* @param classPK the primary key of the entry
+	* @param destinationContainerModelId the primary key of the new location
+	* @param serviceContext the service context (optionally <code>null</code>)
+	* @throws PortalException if the user didn't have permission to add the
+	entry to its new location or to restore it from the trash in
+	general
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portlet.trash.model.TrashEntry moveEntry(
+		java.lang.String className, long classPK,
+		long destinationContainerModelId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _trashEntryService.moveEntry(className, classPK,
+			destinationContainerModelId, serviceContext);
+	}
+
+	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */
 	public TrashEntryService getWrappedTrashEntryService() {
