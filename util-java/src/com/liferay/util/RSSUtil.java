@@ -15,7 +15,12 @@
 package com.liferay.util;
 
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -29,12 +34,11 @@ import org.jdom.IllegalDataException;
 
 /**
  * @author Brian Wing Shun Chan
+ * @author Eduardo Garcia
  */
 public class RSSUtil {
 
 	public static final String ATOM = "atom";
-
-	public static final double[] ATOM_VERSIONS = new double[] {0.3, 1.0};
 
 	public static final String DISPLAY_STYLE_ABSTRACT = "abstract";
 
@@ -44,18 +48,22 @@ public class RSSUtil {
 
 	public static final String ENTRY_TYPE_DEFAULT = "html";
 
-	public static final String FEED_TYPE_DEFAULT = getFeedType(
-		RSSUtil.TYPE_DEFAULT, RSSUtil.VERSION_DEFAULT);
+	public static final String FEED_FORMAT_DEFAULT = _getFeedFormatDefault();
+
+	public static final String[] FEED_FORMATS = _getFeedFormats();
+
+	/**
+	 * @deprecated Renamed to {@link #FEED_FORMAT_DEFAULT}
+	 */
+	public static final String FEED_TYPE_DEFAULT = FEED_FORMAT_DEFAULT;
 
 	public static final String RSS = "rss";
 
-	public static final double[] RSS_VERSIONS = new double[] {
-		0.9, 0.91, 0.93, 0.94, 1.0, 2.0
-	};
+	public static final String TYPE_DEFAULT = getFeedFormatType(
+		FEED_FORMAT_DEFAULT);
 
-	public static final String TYPE_DEFAULT = ATOM;
-
-	public static final double VERSION_DEFAULT = 1.0;
+	public static final double VERSION_DEFAULT = getFeedFormatVersion(
+		FEED_FORMAT_DEFAULT);
 
 	public static String export(SyndFeed feed) throws FeedException {
 		RSSThreadLocal.setExportRSS(true);
@@ -77,8 +85,53 @@ public class RSSUtil {
 		}
 	}
 
-	public static String getFeedType(String type, double version) {
+	public static String getFeedFormat(String type, double version) {
 		return type + StringPool.UNDERLINE + version;
+	}
+
+	public static String getFeedFormatName(String feedFormat) {
+		String type = getFeedFormatType(feedFormat);
+		double version = getFeedFormatVersion(feedFormat);
+
+		if (type.equals(ATOM)) {
+			type = "Atom";
+		}
+		else if (type.equals(RSS)) {
+			type = "RSS";
+		}
+
+		return type + StringPool.SPACE + version;
+	}
+
+	public static String getFeedFormatType(String feedFormat) {
+		if (feedFormat != null) {
+			String[] parts = StringUtil.split(feedFormat, StringPool.UNDERLINE);
+
+			if (parts.length == 2) {
+				return GetterUtil.getString(parts[0], TYPE_DEFAULT);
+			}
+		}
+
+		return TYPE_DEFAULT;
+	}
+
+	public static double getFeedFormatVersion(String feedFormat) {
+		if (feedFormat != null) {
+			String[] parts = StringUtil.split(feedFormat, StringPool.UNDERLINE);
+
+			if (parts.length == 2) {
+				return GetterUtil.getDouble(parts[1], VERSION_DEFAULT);
+			}
+		}
+
+		return VERSION_DEFAULT;
+	}
+
+	/**
+	 * @deprecated Renamed to {@link #getFeedFormat}
+	 */
+	public static String getFeedType(String type, double version) {
+		return getFeedFormat(type, version);
 	}
 
 	public static String getFormatType(String format) {
@@ -119,6 +172,23 @@ public class RSSUtil {
 		}
 
 		return VERSION_DEFAULT;
+	}
+
+	private static String _getFeedFormatDefault() {
+		if (Validator.isNull(
+				PropsUtil.get(PropsKeys.RSS_FEED_FORMAT_DEFAULT))) {
+			return getFeedFormat(ATOM, 1.0);
+		}
+
+		return PropsUtil.get(PropsKeys.RSS_FEED_FORMAT_DEFAULT);
+	}
+
+	private static String[] _getFeedFormats() {
+		if (Validator.isNull(PropsUtil.get(PropsKeys.RSS_FEED_FORMATS))) {
+			return new String[] {FEED_FORMAT_DEFAULT};
+		}
+
+		return PropsUtil.getArray(PropsKeys.RSS_FEED_FORMATS);
 	}
 
 	private static String _regexpStrip(String text) {
