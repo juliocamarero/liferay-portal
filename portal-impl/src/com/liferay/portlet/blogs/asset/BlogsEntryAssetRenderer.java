@@ -156,11 +156,6 @@ public class BlogsEntryAssetRenderer
 		return _entry.getUuid();
 	}
 
-	public boolean hasDeletePermission(PermissionChecker permissionChecker) {
-		return BlogsEntryPermission.contains(
-			permissionChecker, _entry, ActionKeys.DELETE);
-	}
-
 	@Override
 	public boolean hasEditPermission(PermissionChecker permissionChecker) {
 		return BlogsEntryPermission.contains(

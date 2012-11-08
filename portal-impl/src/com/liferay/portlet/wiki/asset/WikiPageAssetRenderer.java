@@ -189,11 +189,6 @@ public class WikiPageAssetRenderer
 		return _page.getUuid();
 	}
 
-	public boolean hasDeletePermission(PermissionChecker permissionChecker) {
-		return WikiPagePermission.contains(
-			permissionChecker, _page, ActionKeys.DELETE);
-	}
-
 	@Override
 	public boolean hasEditPermission(PermissionChecker permissionChecker) {
 		return WikiPagePermission.contains(
