@@ -14,35 +14,45 @@
 
 package com.liferay.portal.security.auth;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Mate Thurzo
  */
-public interface AutoLogin {
+public abstract class BaseAutoLogin implements AutoLogin {
 
-	/**
-	 * Set a request attribute with this variable to tell the AutoLoginFilter to
-	 * stop processing filters and redirect the user to a specified location.
-	 */
-	public static final String AUTO_LOGIN_REDIRECT = "AUTO_LOGIN_REDIRECT";
-
-	/**
-	 * Set a request attribute with this variable to tell the AutoLoginFilter to
-	 * continue processing filters and then redirect the user to a specified
-	 * location.
-	 */
-	public static final String AUTO_LOGIN_REDIRECT_AND_CONTINUE =
-		"AUTO_LOGIN_REDIRECT_AND_CONTINUE";
-
-	public String[] handleException(
+	public final String[] handleException(
 			HttpServletRequest request, HttpServletResponse response,
 			Exception e)
-		throws AutoLoginException;
+		throws AutoLoginException {
 
-	public String[] login(
-			HttpServletRequest request, HttpServletResponse response)
-		throws AutoLoginException;
+		return doHandleException(request, response, e);
+	}
+
+	protected String[] doHandleException(
+			HttpServletRequest request, HttpServletResponse response,
+			Exception e)
+		throws AutoLoginException {
+
+		if (request.getAttribute(AutoLogin.AUTO_LOGIN_REDIRECT) == null) {
+			throw new AutoLoginException(e);
+		}
+
+		if (_log.isErrorEnabled()) {
+			_log.error(e, e);
+		}
+
+		return null;
+	}
+
+	protected Log getLog() {
+		return _log;
+	}
+
+	private Log _log = LogFactoryUtil.getLog(getClass());
 
 }
