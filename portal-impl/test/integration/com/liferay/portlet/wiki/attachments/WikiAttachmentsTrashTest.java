@@ -77,14 +77,10 @@ public class WikiAttachmentsTrashTest {
 		}
 
 		if (_wikiPage != null) {
-			WikiPageLocalServiceUtil.deletePage(_wikiPage);
-
 			_wikiPage = null;
 		}
 
 		if (_wikiNode != null) {
-			WikiNodeLocalServiceUtil.deleteNode(_wikiNode);
-
 			_wikiNode = null;
 		}
 	}
