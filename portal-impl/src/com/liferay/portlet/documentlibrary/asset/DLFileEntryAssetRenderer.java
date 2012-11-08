@@ -204,13 +204,6 @@ public class DLFileEntryAssetRenderer
 		return _fileEntry.getUuid();
 	}
 
-	public boolean hasDeletePermission(PermissionChecker permissionChecker)
-		throws PortalException, SystemException {
-
-		return DLFileEntryPermission.contains(
-			permissionChecker, _fileEntry.getFileEntryId(), ActionKeys.DELETE);
-	}
-
 	@Override
 	public boolean hasEditPermission(PermissionChecker permissionChecker)
 		throws PortalException, SystemException {
