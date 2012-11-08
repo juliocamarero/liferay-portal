@@ -3454,9 +3454,10 @@ public class JournalArticleLocalServiceImpl
 
 		// Validate expiration date
 
-		if ((article.getClassNameId() == 0) && (expirationDate != null) &&
-				expirationDate.before(new Date()) &&
-				!ImportExportThreadLocal.isImportInProcess()) {
+		if ((article.getClassNameId() ==
+				JournalArticleConstants.CLASSNAME_ID_DEFAULT) &&
+			(expirationDate != null) && expirationDate.before(new Date()) &&
+			!ImportExportThreadLocal.isImportInProcess()) {
 
 			throw new ArticleExpirationDateException();
 		}
