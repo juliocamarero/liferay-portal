@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -89,7 +90,7 @@ public class RSSUtil {
 	}
 
 	public static String getFeedTypeFormat(String feedType) {
-		if (feedType != null) {
+		if (Validator.isNotNull(feedType)) {
 			String[] parts = StringUtil.split(feedType, StringPool.UNDERLINE);
 
 			if (parts.length == 2) {
@@ -115,7 +116,7 @@ public class RSSUtil {
 	}
 
 	public static double getFeedTypeVersion(String feedType) {
-		if (feedType != null) {
+		if (Validator.isNotNull(feedType)) {
 			String[] parts = StringUtil.split(feedType, StringPool.UNDERLINE);
 
 			if (parts.length == 2) {
@@ -128,7 +129,7 @@ public class RSSUtil {
 
 	public static String getFormatType(String format) {
 		if (format == null) {
-			return TYPE_DEFAULT;
+			return FORMAT_DEFAULT;
 		}
 
 		int x = format.indexOf(ATOM);
@@ -143,7 +144,7 @@ public class RSSUtil {
 			return RSS;
 		}
 
-		return TYPE_DEFAULT;
+		return FORMAT_DEFAULT;
 	}
 
 	public static double getFormatVersion(String format) {
