@@ -117,14 +117,16 @@ public class EditGroupAction extends PortletAction {
 				String oldStagingFriendlyURL = (String)returnValue[2];
 				long newRefererPlid = (Long)returnValue[3];
 
+				closeRedirect = updateCloseRedirect(
+					closeRedirect, group, themeDisplay, oldFriendlyURL,
+					oldStagingFriendlyURL);
+
+				redirect = HttpUtil.setParameter(
+					redirect, "closeRedirect", closeRedirect);
 				redirect = HttpUtil.setParameter(
 					redirect, "doAsGroupId", group.getGroupId());
 				redirect = HttpUtil.setParameter(
 					redirect, "refererPlid", newRefererPlid);
-
-				closeRedirect = updateCloseRedirect(
-					closeRedirect, group, themeDisplay, oldFriendlyURL,
-					oldStagingFriendlyURL);
 			}
 			else if (cmd.equals(Constants.DEACTIVATE) ||
 					 cmd.equals(Constants.RESTORE)) {
