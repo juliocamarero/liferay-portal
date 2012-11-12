@@ -32,6 +32,10 @@ organizationParams.put("organizationsGroups", new Long(groupId));
 
 int organizationsCount = OrganizationLocalServiceUtil.searchCount(company.getCompanyId(), OrganizationConstants.ANY_PARENT_ORGANIZATION_ID, null, null, null, null, organizationParams);
 
+if (group.isOrganization()) {
+	organizationsCount += 1;
+}
+
 LinkedHashMap<String, Object> userGroupParams = new LinkedHashMap<String, Object>();
 
 userGroupParams.put("userGroupsGroups", new Long(groupId));
