@@ -36,7 +36,7 @@ WikiPage wikiPage = WikiPageAttachmentUtil.getPageByFileEntryId(attachmentsFileE
 				%>
 
 				<portlet:actionURL var="restoreEntryURL">
-					<portlet:param name="struts_action" value="/wiki/edit_entry" />
+					<portlet:param name="struts_action" value="/wiki/restore_page_attachment" />
 					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.RESTORE %>" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="trashEntryId" value="<%= String.valueOf(trashEntry.getEntryId()) %>" />
