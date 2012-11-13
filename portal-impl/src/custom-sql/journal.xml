@@ -48,7 +48,7 @@
 							(displayDate >= ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 							(displayDate <= ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 							(
-								(status = ?) AND
+								(status != ?) AND
 								(reviewDate <= ? [$AND_OR_NULL_CHECK$])
 							)
 						)
@@ -129,7 +129,7 @@
 							(displayDate >= ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 							(displayDate <= ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 							(
-								(status = ?) AND
+								(status != ?) AND
 								(reviewDate <= ? [$AND_OR_NULL_CHECK$])
 							)
 						)
@@ -183,7 +183,7 @@
 				feedId ASC
 		]]>
 	</sql>
-	<sql id="com.liferay.portlet.journal.service.persistence.JournalFolderFinder.countA_ByG_F">
+	<sql id="com.liferay.portlet.journal.service.persistence.JournalFolderFinder.countA_ByG_F_NotS">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT JournalArticle.articleId) AS COUNT_VALUE
@@ -191,7 +191,11 @@
 				JournalArticle
 			WHERE
 				(JournalArticle.groupId = ?) AND
-				(JournalArticle.classNameId = 0)
+
+				(JournalArticle.classNameId = 0) AND
+
+				(JournalArticle.status != ?)
+
 				[$ARTICLE_FOLDER_ID$]
 		]]>
 	</sql>
@@ -206,7 +210,7 @@
 				[$FOLDER_PARENT_FOLDER_ID$]
 		]]>
 	</sql>
-	<sql id="com.liferay.portlet.journal.service.persistence.JournalFolderFinder.findA_ByG_F">
+	<sql id="com.liferay.portlet.journal.service.persistence.JournalFolderFinder.findA_ByG_F_NotS">
 		<![CDATA[
 			SELECT
 				DISTINCT JournalArticle.folderId AS modelFolderId, JournalArticle.articleId as articleId, MAX(JournalArticle.version) AS version, JournalArticle.displayDate as displayDate, 0 AS modelFolder
@@ -214,7 +218,11 @@
 				JournalArticle
 			WHERE
 				(JournalArticle.groupId = ?) AND
-				(JournalArticle.classNameId = 0)
+
+				(JournalArticle.classNameId = 0) AND
+
+				(JournalArticle.status != ?)
+
 				[$ARTICLE_FOLDER_ID$]
 			GROUP BY
 				JournalArticle.folderId, JournalArticle.articleId, JournalArticle.displayDate
@@ -223,7 +231,7 @@
 	<sql id="com.liferay.portlet.journal.service.persistence.JournalFolderFinder.findF_ByG_F">
 		<![CDATA[
 			SELECT
-				DISTINCT folderId AS modelFolderId, 0 AS articleId, 0 AS version, JournalFolder.createDate as displayDate, 1 AS modelFolder
+				DISTINCT folderId AS modelFolderId, '' AS articleId, 0 AS version, JournalFolder.createDate as displayDate, 1 AS modelFolder
 			FROM
 				JournalFolder
 			WHERE
