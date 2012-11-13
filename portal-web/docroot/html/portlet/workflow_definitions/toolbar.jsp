@@ -39,7 +39,7 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view-all");
 
 	<c:if test='<%= DeployManagerUtil.isDeployed("kaleo-designer-portlet") %>'>
 		<span class="lfr-toolbar-button add-button">
-			<a href="javascript:Liferay.Util.getOpener().<%= renderResponse.getNamespace() %>openKaleoDesigner('', '0', '', Liferay.Util.getWindowName());"><liferay-ui:message arguments="definition" key="add-new-x" %>' /></a>
+			<a href="javascript:Liferay.Util.getOpener().<%= renderResponse.getNamespace() %>openKaleoDesigner('', '0', '', Liferay.Util.getWindowName());"><liferay-ui:message arguments="definition" key="add-new-x" /></a>
 		</span>
 	</c:if>
 
