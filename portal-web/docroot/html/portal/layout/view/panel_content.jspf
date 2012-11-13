@@ -47,8 +47,54 @@ if (!denyAccess && (themeDisplay.isStatePopUp() || (layoutTypePortlet.hasStateMa
 		content = LayoutTemplateLocalServiceUtil.getContent("max", true, theme.getThemeId());
 	}
 
+	StringBundler sb = null;
+
 	if (Validator.isNotNull(velocityTemplateId) && Validator.isNotNull(content)) {
-		RuntimePageUtil.processTemplate(pageContext, ppid, new StringTemplateResource(velocityTemplateId, content));
+		sb = RuntimePageUtil.processTemplate(pageContext, ppid, new StringTemplateResource(velocityTemplateId, content), true);
+	}
+
+	if (sb != null) {
+		if (themeDisplay.getControlPanelCategory() == "") {
+			%>
+
+			<nav class="site-breadcrumbs" id="breadcrumbs">
+
+			<%
+		}
+		else {
+			%>
+
+			<nav class="site-breadcrumbs control-panel-category" id="breadcrumbs">
+
+			<%
+		}
+			%>
+
+			<ul class="breadcrumbs breadcrumbs-horizontal lfr-component">
+
+			<%
+			List<BreadcrumbEntry> entries = PortalUtil.getPortletBreadcrumbs(request);
+
+			if (entries != null) {
+				for (BreadcrumbEntry breadcrumbEntry : entries) {
+					%>
+
+					<li>
+						<span>
+							<a href="<%= breadcrumbEntry.getURL() %>"> <%= breadcrumbEntry.getTitle() %></a>
+						</span>
+					</li>
+
+					<%
+				}
+			}
+		%>
+
+		</ul>
+		</nav>
+
+		<%
+		sb.writeTo(pageContext.getOut());
 	}
 }
 else {
