@@ -100,11 +100,8 @@ public class LayoutsLocalPublisherMessageListener
 			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
 				sourceGroupId, privateLayout);
 
-			UnicodeProperties settingsProperties =
-				layoutSet.getSettingsProperties();
-
 			long lastPublishDate = GetterUtil.getLong(
-				settingsProperties.getProperty("last-publish-date"));
+				layoutSet.getSettingsProperty("last-publish-date"));
 
 			if (lastPublishDate > 0) {
 				endDate = new Date();

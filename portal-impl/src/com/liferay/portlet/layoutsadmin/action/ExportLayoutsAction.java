@@ -145,11 +145,8 @@ public class ExportLayoutsAction extends PortletAction {
 				LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
 					groupId, privateLayout);
 
-				UnicodeProperties settingsProperties =
-					layoutSet.getSettingsProperties();
-
 				long lastPublishDate = GetterUtil.getLong(
-					settingsProperties.getProperty("last-publish-date"));
+					layoutSet.getSettingsProperty("last-publish-date"));
 
 				if (lastPublishDate > 0) {
 					endDate = new Date();
