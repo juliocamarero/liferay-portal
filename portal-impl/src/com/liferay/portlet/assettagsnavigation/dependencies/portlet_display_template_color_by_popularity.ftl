@@ -51,8 +51,9 @@
 			<li class="taglib-asset-tags-summary">
 				<a class ="tag" style="color:${color}" href="${tagURL}">
 					${entry.getName()}
+
 					<#if (showAssetCount == "true")>
-						${count}
+						<span class="tag-asset-count">(${count})</span>
 					</#if>
 				</a>
 			</li>
@@ -63,5 +64,9 @@
 </#if>
 
 <#function max x y>
-	<#if (x<y)><#return y><#else><#return x></#if>
+	<#if (x<y)>
+		<#return y>
+	<#else>
+		<#return x>
+	</#if>
 </#function>
