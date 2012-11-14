@@ -1552,7 +1552,7 @@ rerun this task.
 
 							set "MW_HOME=${app.server.weblogic.dir.windows}"
 
-							set "JAVA_OPTIONS=-da:org.aspectj... -da:org.apache.lucene..."
+							set "JAVA_OPTIONS=-da:org.apache.lucene... -da:org.aspectj..."
 						]]>
 					</replacevalue>
 				</replace>
@@ -1640,7 +1640,7 @@ rerun this task.
 
 							export MW_HOME="${app.server.weblogic.dir}"
 
-							export JAVA_OPTIONS="${JAVA_OPTIONS} -da:org.aspectj... -da:org.apache.lucene..."
+							export JAVA_OPTIONS="${JAVA_OPTIONS} -da:org.apache.lucene... -da:org.aspectj..."
 						]]>
 					</replacevalue>
 				</replace>
