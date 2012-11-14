@@ -178,11 +178,12 @@ public class OrganizationFinderImpl
 
 			StringBundler sb = new StringBundler();
 
-			boolean doUnion = Validator.isNotNull(
-				params.get("groupOrganization"));
+			Long groupOrganization = (Long)params.get("groupOrganization");
+
+			boolean doUnion = Validator.isNotNull(groupOrganization);
 
 			if (doUnion) {
-				sb.append("(");
+				sb.append(StringPool.OPEN_PARENTHESIS);
 				sb.append(CustomSQLUtil.get(COUNT_BY_GROUP_ID));
 				sb.append(") UNION ALL (");
 			}
@@ -192,6 +193,10 @@ public class OrganizationFinderImpl
 			}
 			else {
 				sb.append(CustomSQLUtil.get(COUNT_BY_C_PO_N_S_C_Z_R_C));
+			}
+
+			if (doUnion) {
+				sb.append(StringPool.CLOSE_PARENTHESIS);
 			}
 
 			String sql = sb.toString();
@@ -226,10 +231,6 @@ public class OrganizationFinderImpl
 				parentOrganizationIdComparator.equals(StringPool.EQUAL) ?
 				StringPool.EQUAL : StringPool.NOT_EQUAL);
 			sql = CustomSQLUtil.replaceAndOperator(sql, andOperator);
-
-			if (doUnion) {
-				sql = sql.concat(StringPool.CLOSE_PARENTHESIS);
-			}
 
 			SQLQuery q = session.createSQLQuery(sql);
 
@@ -295,7 +296,7 @@ public class OrganizationFinderImpl
 
 		StringBundler sb = new StringBundler();
 
-		sb.append("(");
+		sb.append(StringPool.OPEN_PARENTHESIS);
 
 		String sql = CustomSQLUtil.get(FIND_BY_COMPANY_ID);
 
@@ -416,9 +417,13 @@ public class OrganizationFinderImpl
 
 		StringBundler sb = new StringBundler();
 
-		sb.append("(");
+		sb.append(StringPool.OPEN_PARENTHESIS);
 
-		if (Validator.isNotNull(params.get("groupOrganization"))) {
+		Long groupOrganization = (Long)params.get("groupOrganization");
+
+		boolean doUnion = Validator.isNotNull(groupOrganization);
+
+		if (doUnion) {
 			sb.append(CustomSQLUtil.get(FIND_BY_GROUP_ID));
 			sb.append(") UNION ALL (");
 		}
