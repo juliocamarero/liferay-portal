@@ -108,10 +108,10 @@ iteratorURL.setParameter("viewTrashAttachments", String.valueOf(viewTrashAttachm
 		<c:otherwise>
 
 			<%
-			int deletedAttachmentsSize = wikiPage.getDeletedAttachmentsFileEntriesCount();
+			int deletedAttachmentsCount = wikiPage.getDeletedAttachmentsFileEntriesCount();
 			%>
 
-			<c:if test="<%= TrashUtil.isTrashEnabled(scopeGroupId) && (deletedAttachmentsSize > 0) %>">
+			<c:if test="<%= TrashUtil.isTrashEnabled(scopeGroupId) && (deletedAttachmentsCount > 0) %>">
 				<portlet:renderURL var="viewTrashAttachmentsURL">
 					<portlet:param name="struts_action" value="/wiki/view_page_attachments" />
 					<portlet:param name="tabs1" value="attachments" />
@@ -125,7 +125,7 @@ iteratorURL.setParameter("viewTrashAttachments", String.valueOf(viewTrashAttachm
 					cssClass="trash-attachments"
 					image="delete"
 					label="<%= true %>"
-					message='<%= LanguageUtil.format(pageContext, (deletedAttachmentsSize == 1) ? "x-recently-removed-attachment" : "x-recently-removed-attachments", deletedAttachmentsSize) %>'
+					message='<%= LanguageUtil.format(pageContext, (deletedAttachmentsCount == 1) ? "x-recently-removed-attachment" : "x-recently-removed-attachments", deletedAttachmentsCount) %>'
 					url="<%= viewTrashAttachmentsURL %>"
 				/>
 			</c:if>
