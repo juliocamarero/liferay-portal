@@ -1077,6 +1077,9 @@ public interface Portal {
 
 	public boolean isGroupAdmin(User user, long groupId) throws Exception;
 
+	public boolean isGroupFriendlyURL(
+		String fullURL, String groupFriendlyURL, String layoutFriendlyURL);
+
 	public boolean isGroupOwner(User user, long groupId) throws Exception;
 
 	public boolean isLayoutDescendant(Layout layout, long layoutId)

@@ -4942,6 +4942,18 @@ public class PortalImpl implements Portal {
 		return permissionChecker.isGroupAdmin(groupId);
 	}
 
+	public boolean isGroupFriendlyURL(
+		String fullURL, String groupFriendlyURL, String layoutFriendlyURL) {
+
+		if (fullURL.endsWith(groupFriendlyURL) &&
+			!fullURL.endsWith(groupFriendlyURL.concat(layoutFriendlyURL))) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	public boolean isGroupOwner(User user, long groupId) throws Exception {
 		PermissionChecker permissionChecker =
 			PermissionCheckerFactoryUtil.create(user);
