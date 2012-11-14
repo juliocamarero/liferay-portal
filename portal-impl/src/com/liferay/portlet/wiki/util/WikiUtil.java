@@ -399,10 +399,13 @@ public class WikiUtil {
 
 	public static int getPageTitleMaxLength() {
 		String value = ModelHintsUtil.getValue(
-				WikiPage.class.getName(), "title", "max-length",
-				ModelHintsConstants.TEXT_MAX_LENGTH);
+			WikiPage.class.getName(), "title", "max-length",
+			ModelHintsConstants.TEXT_MAX_LENGTH);
 
-		return GetterUtil.getInteger(value) - _RESERVED_TRASH_TIMESTAMP_SPACE;
+		int pageTitleMaxLength =
+			GetterUtil.getInteger(value) - _RESERVED_TRASH_TIMESTAMP_SPACE;
+
+		return pageTitleMaxLength;
 	}
 
 	public static List<WikiNode> orderNodes(

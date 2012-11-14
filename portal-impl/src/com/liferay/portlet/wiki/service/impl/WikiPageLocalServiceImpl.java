@@ -1152,8 +1152,10 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		String title = page.getTitle();
 
-		if (title.length() > WikiUtil.getPageTitleMaxLength()) {
-			title = title.substring(0, WikiUtil.getPageTitleMaxLength());
+		int pageTitleMaxLength = WikiUtil.getPageTitleMaxLength();
+
+		if (title.length() > pageTitleMaxLength) {
+			title = title.substring(0, pageTitleMaxLength);
 		}
 
 		title = TrashUtil.appendTrashNamespace(title);
