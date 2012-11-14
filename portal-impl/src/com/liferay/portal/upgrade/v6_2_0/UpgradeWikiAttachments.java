@@ -43,19 +43,19 @@ public class UpgradeWikiAttachments extends BaseUpgradeAttachments {
 			Timestamp createDate)
 		throws Exception {
 
-		long repositoryId = getRepository(
+		long repositoryId = getRepositoryId(
 			groupId, companyId, userId, userName, createDate, getClassNameId(),
 			getPortletId());
 
-		long repositoryFolderId = getFolder(
+		long repositoryFolderId = getFolderId(
 			groupId, companyId, userId, userName, createDate, repositoryId,
 			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, getPortletId(), false);
 
-		long nodeFolderId = getFolder(
+		long nodeFolderId = getFolderId(
 			groupId, companyId, userId, userName, createDate, repositoryId,
 			repositoryFolderId, String.valueOf(containerId), false);
 
-		long pageFolderId = getFolder(
+		long pageFolderId = getFolderId(
 			groupId, companyId, userId, userName, createDate, repositoryId,
 			nodeFolderId, String.valueOf(resourcePrimKey), false);
 

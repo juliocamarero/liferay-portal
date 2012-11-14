@@ -311,7 +311,7 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 	protected abstract String getDirName(long resourcePrimKey);
 
-	protected long getFolder(
+	protected long getFolderId(
 			long groupId, long companyId, long userId, String userName,
 			Timestamp createDate, long repositoryId, long parentFolderId,
 			String name, boolean hidden)
@@ -351,7 +351,7 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 	protected abstract String getPortletId();
 
-	protected long getRepository(
+	protected long getRepositoryId(
 			long groupId, long companyId, long userId, String userName,
 			Timestamp createDate, long classNameId, String portletId)
 		throws Exception {
@@ -405,7 +405,7 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 		Timestamp createDate = new Timestamp(date.getTime());
 
-		long repositoryId = getRepository(
+		long repositoryId = getRepositoryId(
 			groupId, companyId, userId, userName, createDate, getClassNameId(),
 			getPortletId());
 
