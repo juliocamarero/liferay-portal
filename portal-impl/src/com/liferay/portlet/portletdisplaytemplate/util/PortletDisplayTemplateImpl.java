@@ -111,19 +111,7 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 		try {
 			Group scopeGroup = themeDisplay.getScopeGroup();
 
-			if (scopeGroup.hasStagingGroup()) {
-				Group stagingGroup = GroupLocalServiceUtil.getStagingGroup(
-					scopeGroup.getGroupId());
-
-				if (GetterUtil.getBoolean(
-						scopeGroup.getTypeSettingsProperty(
-							StagingConstants.STAGED_PORTLET +
-								PortletKeys.PORTLET_DISPLAY_TEMPLATES))) {
-
-					return stagingGroup.getGroupId();
-				}
-			}
-			else if (scopeGroup.getLiveGroupId() > 0) {
+			if (scopeGroup.getLiveGroupId() > 0) {
 				Group liveGroup = scopeGroup.getLiveGroup();
 
 				if (!GetterUtil.getBoolean(
