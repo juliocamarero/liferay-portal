@@ -169,18 +169,19 @@ iteratorURL.setParameter("viewTrashAttachments", String.valueOf(viewTrashAttachm
 			<portlet:param name="status" value="<%= String.valueOf(status) %>" />
 		</liferay-portlet:actionURL>
 
-		<%
-		String fileName = dlFileEntry.getTitle();
-
-		if (viewTrashAttachments) {
-			fileName = TrashUtil.stripTrashNamespace(fileName);
-		}
-		%>
-
 		<liferay-ui:search-container-column-text
 			href="<%= rowURL %>"
 			name="file-name"
 		>
+
+			<%
+			String fileName = dlFileEntry.getTitle();
+
+			if (viewTrashAttachments) {
+				fileName = TrashUtil.stripTrashNamespace(fileName);
+			}
+			%>
+
 			<img align="left" border="0" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= DLUtil.getFileIcon(dlFileEntry.getExtension()) %>.png"> <%= fileName %>
 		</liferay-ui:search-container-column-text>
 
