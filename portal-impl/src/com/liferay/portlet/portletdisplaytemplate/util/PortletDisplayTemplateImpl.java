@@ -28,6 +28,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.PortletURLUtil;
 import com.liferay.portlet.dynamicdatalists.util.DDLTransformer;
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
@@ -208,6 +209,11 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 
 		contextObjects.put(
 			PortletDisplayTemplateConstants.RENDER_RESPONSE, renderResponse);
+		
+		contextObjects.put(
+			PortletDisplayTemplateConstants.CURRENT_URL,
+			PortletURLUtil.getCurrent(renderRequest, renderResponse)
+				.toString());
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
