@@ -490,14 +490,14 @@
 	<sql id="com.liferay.portal.service.persistence.OrganizationFinder.countByGroupId">
 		<![CDATA[
 			SELECT
-				COUNT(DISTINCT Organization_.organizationId) AS COUNT_VALUE
+				COUNT(*) AS COUNT_VALUE
 			FROM
 				Organization_
 			INNER JOIN
 				Group_ ON
 					(Group_.classPK = Organization_.organizationId)
 			WHERE
-				Group_.groupId = ?
+				(Group_.groupId = ?)
 		]]>
 	</sql>
 	<sql id="com.liferay.portal.service.persistence.OrganizationFinder.countByOrganizationId">
@@ -596,7 +596,7 @@
 				Group_ ON
 					(Group_.classPK = Organization_.organizationId)
 			WHERE
-				Group_.groupId = ?
+				(Group_.groupId = ?)
 		]]>
 	</sql>
 	<sql id="com.liferay.portal.service.persistence.OrganizationFinder.findByC_PO_N_L_S_C_Z_R_C">
