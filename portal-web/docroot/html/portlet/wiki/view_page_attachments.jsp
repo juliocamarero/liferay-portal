@@ -143,10 +143,20 @@ iteratorURL.setParameter("viewTrashAttachments", String.valueOf(viewTrashAttachm
 	emptyResultsMessage="<%= emptyResultsMessage %>"
 	iteratorURL="<%= iteratorURL %>"
 >
-	<liferay-ui:search-container-results
-		results="<%= PortletFileRepositoryUtil.getPortletFileEntries(themeDisplay.getScopeGroupId(), wikiPage.getAttachmentsFolderId(), status, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
-		total="<%= PortletFileRepositoryUtil.getPortletFileEntriesCount(themeDisplay.getScopeGroupId(), wikiPage.getAttachmentsFolderId(), status) %>"
-	/>
+	<c:choose>
+		<c:when test="<%= viewTrashAttachments %>">
+			<liferay-ui:search-container-results
+				results="<%= wikiPage.getDeletedAttachmentsFileEntries(searchContainer.getStart(), searchContainer.getEnd()) %>"
+				total="<%= wikiPage.getDeletedAttachmentsFileEntriesCount() %>"
+			/>
+		</c:when>
+		<c:otherwise>
+			<liferay-ui:search-container-results
+				results="<%= wikiPage.getAttachmentsFileEntries(searchContainer.getStart(), searchContainer.getEnd()) %>"
+				total="<%= wikiPage.getAttachmentsFilesCount() %>"
+			/>
+		</c:otherwise>
+	</c:choose>
 
 	<liferay-ui:search-container-row
 		className="com.liferay.portal.kernel.repository.model.FileEntry"
