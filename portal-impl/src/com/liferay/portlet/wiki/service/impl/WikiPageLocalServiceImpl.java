@@ -1150,7 +1150,15 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	public WikiPage movePageToTrash(long userId, WikiPage page)
 		throws PortalException, SystemException {
 
-		String title = TrashUtil.appendTrashNamespace(page.getTitle());
+		String title = page.getTitle();
+
+		int pageTitleMaxLength = WikiUtil.getPageTitleMaxLength();
+
+		if (title.length() > pageTitleMaxLength) {
+			title = title.substring(0, pageTitleMaxLength);
+		}
+
+		title = TrashUtil.appendTrashNamespace(title);
 
 		page.setTitle(title);
 
