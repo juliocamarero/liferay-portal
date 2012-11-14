@@ -1,8 +1,6 @@
 <#assign liferay_ui = taglibLiferayHash["/WEB-INF/tld/liferay-ui.tld"] />
 
 <#list entries as entry>
-	<#assign blogsEntryClassName = "com.liferay.portlet.blogs.model.BlogsEntry" />
-
 	<#assign viewURL = renderResponse.createRenderURL() />
 
 	${viewURL.setParameter("struts_action", "/blogs/view_entry")}
@@ -36,6 +34,8 @@
 			<span class="entry-date">
 				${dateUtil.getDate(entry.getCreateDate(), "dd MMM yyyy - HH:mm:ss", locale)}
 			</span>
+
+			<#assign blogsEntryClassName = "com.liferay.portlet.blogs.model.BlogsEntry" />
 
 			<#if (enableFlags == "true")>
 				<@liferay_ui["flags"]

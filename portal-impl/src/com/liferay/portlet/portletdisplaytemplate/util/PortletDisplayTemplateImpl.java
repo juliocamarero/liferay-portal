@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -209,11 +210,12 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 
 		contextObjects.put(
 			PortletDisplayTemplateConstants.RENDER_RESPONSE, renderResponse);
-		
+
+		PortletURL currentURL = PortletURLUtil.getCurrent(
+			renderRequest, renderResponse);
+
 		contextObjects.put(
-			PortletDisplayTemplateConstants.CURRENT_URL,
-			PortletURLUtil.getCurrent(renderRequest, renderResponse)
-				.toString());
+			PortletDisplayTemplateConstants.CURRENT_URL, currentURL.toString());
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
