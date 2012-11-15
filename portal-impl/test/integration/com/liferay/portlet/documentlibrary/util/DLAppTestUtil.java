@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.Group;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.documentlibrary.NoSuchFolderException;
@@ -35,50 +34,56 @@ import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
  */
 public abstract class DLAppTestUtil {
 
-	public static FileEntry addFileEntry(boolean rootFolder, String fileName)
+	public static FileEntry addFileEntry(
+			long groupId, long parentFolderId, boolean rootFolder,
+			String fileName)
 		throws Exception {
 
-		return addFileEntry(rootFolder, fileName, fileName);
+		return addFileEntry(
+			groupId, parentFolderId, rootFolder, fileName, fileName);
 	}
 
 	public static FileEntry addFileEntry(
-			boolean rootFolder, String sourceFileName, String title)
+			long groupId, long parentFolderId, boolean rootFolder,
+			String sourceFileName, String title)
 		throws Exception {
 
 		long folderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
 
 		if (!rootFolder) {
-			folderId = parentFolder.getFolderId();
+			folderId = parentFolderId;
 		}
 
-		return addFileEntry(folderId, sourceFileName, title);
-	}
-
-	public static FileEntry addFileEntry(long folderId, String fileName)
-		throws Exception {
-
-		return addFileEntry(folderId, fileName, fileName);
+		return addFileEntry(groupId, folderId, sourceFileName, title);
 	}
 
 	public static FileEntry addFileEntry(
-			long folderId, String sourceFileName, String title)
+			long groupId, long folderId, String fileName)
 		throws Exception {
 
-		return addFileEntry(folderId, sourceFileName, title, null);
+		return addFileEntry(groupId, folderId, fileName, fileName);
 	}
 
 	public static FileEntry addFileEntry(
-			long folderId, String sourceFileName, String title, byte[] bytes)
+			long groupId, long folderId, String sourceFileName, String title)
+		throws Exception {
+
+		return addFileEntry(groupId, folderId, sourceFileName, title, null);
+	}
+
+	public static FileEntry addFileEntry(
+			long groupId, long folderId, String sourceFileName, String title,
+			byte[] bytes)
 		throws Exception {
 
 		return addFileEntry(
-			folderId, sourceFileName, title, bytes,
+			groupId, folderId, sourceFileName, title, bytes,
 			WorkflowConstants.ACTION_PUBLISH);
 	}
 
 	public static FileEntry addFileEntry(
-			long folderId, String sourceFileName, String title, byte[] bytes,
-			int workflowAction)
+			long groupId, long folderId, String sourceFileName, String title,
+			byte[] bytes, int workflowAction)
 		throws Exception {
 
 		String description = StringPool.BLANK;
@@ -92,49 +97,52 @@ public abstract class DLAppTestUtil {
 
 		serviceContext.setAddGroupPermissions(true);
 		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setScopeGroupId(group.getGroupId());
+		serviceContext.setScopeGroupId(groupId);
 		serviceContext.setWorkflowAction(workflowAction);
 
-		return DLAppServiceUtil.addFileEntry(
-			group.getGroupId(), folderId, sourceFileName,
+		return DLAppLocalServiceUtil.addFileEntry(
+			TestPropsValues.getUserId(), groupId, folderId, sourceFileName,
 			ContentTypes.TEXT_PLAIN, title, description, changeLog, bytes,
 			serviceContext);
 	}
 
-	public static DLFileRank addDLFileRank(long fileEntryId) throws Exception {
+	public static DLFileRank addDLFileRank(long groupId, long fileEntryId)
+		throws Exception {
+
 		ServiceContext serviceContext = new ServiceContext();
 
 		serviceContext.setAddGroupPermissions(true);
 		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setScopeGroupId(group.getGroupId());
+		serviceContext.setScopeGroupId(groupId);
 
 		return DLAppLocalServiceUtil.addFileRank(
-			group.getGroupId(), TestPropsValues.getCompanyId(),
+			groupId, TestPropsValues.getCompanyId(),
 			TestPropsValues.getUserId(), fileEntryId, serviceContext);
 	}
 
-	public static DLFileShortcut addDLFileShortcut(FileEntry fileEntry)
+	public static DLFileShortcut addDLFileShortcut(
+			long groupId, FileEntry fileEntry)
 		throws Exception {
 
-		return addDLFileShortcut(fileEntry, fileEntry.getFolderId());
+		return addDLFileShortcut(fileEntry, groupId, fileEntry.getFolderId());
 	}
 
 	public static DLFileShortcut addDLFileShortcut(
-			FileEntry fileEntry, long folderId)
+			FileEntry fileEntry, long groupId, long folderId)
 		throws Exception {
 
 		ServiceContext serviceContext = new ServiceContext();
 
 		serviceContext.setAddGroupPermissions(true);
 		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setScopeGroupId(group.getGroupId());
+		serviceContext.setScopeGroupId(groupId);
 
 		return DLAppServiceUtil.addFileShortcut(
-			group.getGroupId(), folderId, fileEntry.getFileEntryId(),
-			serviceContext);
+			groupId, folderId, fileEntry.getFileEntryId(), serviceContext);
 	}
 
-	public static Folder addFolder(boolean rootFolder, String name)
+	public static Folder addFolder(
+			long groupId, Folder parentFolder, boolean rootFolder, String name)
 		throws Exception {
 
 		long parentFolderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
@@ -143,17 +151,19 @@ public abstract class DLAppTestUtil {
 			parentFolderId = parentFolder.getFolderId();
 		}
 
-		return addFolder(parentFolderId, name);
-	}
-
-	public static Folder addFolder(long parentFolderId, String name)
-		throws Exception {
-
-		return addFolder(parentFolderId, name, false);
+		return addFolder(groupId, parentFolderId, name);
 	}
 
 	public static Folder addFolder(
-			long parentFolderId, String name, boolean deleteExisting)
+			long groupId, long parentFolderId, String name)
+		throws Exception {
+
+		return addFolder(groupId, parentFolderId, name, false);
+	}
+
+	public static Folder addFolder(
+			long groupId, long parentFolderId, String name,
+			boolean deleteExisting)
 		throws Exception {
 
 		String description = StringPool.BLANK;
@@ -162,31 +172,30 @@ public abstract class DLAppTestUtil {
 
 		serviceContext.setAddGroupPermissions(true);
 		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setScopeGroupId(group.getGroupId());
+		serviceContext.setScopeGroupId(groupId);
 
 		if (deleteExisting) {
 			try {
-				DLAppServiceUtil.deleteFolder(
-					group.getGroupId(), parentFolderId, name);
+				DLAppServiceUtil.deleteFolder(groupId, parentFolderId, name);
 			}
 			catch (NoSuchFolderException nsfe) {
 			}
 		}
 
 		return DLAppServiceUtil.addFolder(
-			group.getGroupId(), parentFolderId, name, description,
-			serviceContext);
+			groupId, parentFolderId, name, description, serviceContext);
 	}
 
 	public static FileEntry updateFileEntry(
-			long fileEntryId, String sourceFileName, String title)
+			long groupId, long fileEntryId, String sourceFileName, String title)
 		throws Exception {
 
-		return updateFileEntry(fileEntryId, sourceFileName, title, false);
+		return updateFileEntry(
+			groupId, fileEntryId, sourceFileName, title, false);
 	}
 
 	public static FileEntry updateFileEntry(
-			long fileEntryId, String sourceFileName, String title,
+			long groupId, long fileEntryId, String sourceFileName, String title,
 			boolean majorVersion)
 		throws Exception {
 
@@ -205,7 +214,7 @@ public abstract class DLAppTestUtil {
 
 		serviceContext.setAddGroupPermissions(true);
 		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setScopeGroupId(group.getGroupId());
+		serviceContext.setScopeGroupId(groupId);
 
 		return DLAppServiceUtil.updateFileEntry(
 			fileEntryId, sourceFileName, ContentTypes.TEXT_PLAIN, title,
@@ -214,8 +223,5 @@ public abstract class DLAppTestUtil {
 
 	public static final String CONTENT =
 		"Content: Enterprise. Open Source. For Life.";
-
-	public static Group group;
-	public static Folder parentFolder;
 
 }
