@@ -43,6 +43,7 @@ import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.PortletImpl;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
+import com.liferay.portal.search.lucene.LuceneHelperUtil;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
@@ -232,6 +233,14 @@ public class ServiceTestUtil {
 
 	public static void destroyServices() {
 		_deleteDLDirectories();
+
+		try {
+			FileUtil.deltree(
+				PropsValues.LUCENE_DIR + TestPropsValues.getCompanyId());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static SearchContext getSearchContext() throws Exception {
@@ -300,6 +309,21 @@ public class ServiceTestUtil {
 
 		try {
 			JCRFactoryUtil.prepare();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// Lucene
+
+		try {
+			FileUtil.deltree(
+				PropsValues.LUCENE_DIR + TestPropsValues.getCompanyId());
+
+			FileUtil.mkdirs(
+				PropsValues.LUCENE_DIR + TestPropsValues.getCompanyId());
+
+			LuceneHelperUtil.startup(TestPropsValues.getCompanyId());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
