@@ -35,9 +35,9 @@ public class BlogsTestUtil {
 	public static BlogsEntry addBlogsEntry(Group group, boolean approved)
 		throws Exception {
 
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
 
-		serviceContext.setScopeGroupId(group.getGroupId());
 		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
 
 		String title = "Title";
