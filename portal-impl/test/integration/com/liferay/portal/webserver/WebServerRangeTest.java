@@ -171,7 +171,7 @@ public class WebServerRangeTest extends BaseWebServerTestCase {
 		String fileName = "Test Range.txt";
 
 		FileEntry fileEntry = DLAppTestUtil.addFileEntry(
-			parentFolder.getFolderId(), fileName, fileName,
+			group.getGroupId(), parentFolder.getFolderId(), fileName, fileName,
 			_SAMPLE_DATA.getBytes());
 
 		String path =
