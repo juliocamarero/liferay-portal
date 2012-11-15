@@ -95,8 +95,13 @@ organizationSearch.setEmptyResultsMessage(emptyResultsMessage);
 		<liferay-ui:search-container-column-text
 			name="name"
 			orderable="<%= true %>"
-			property="name"
-		/>
+		>
+			<%= organization.getName() %>
+
+			<c:if test="<%= group.getOrganizationId() == organization.getOrganizationId() %>">
+				<liferay-ui:icon-help message='<%= LanguageUtil.format(pageContext, "this-site-belongs-to-x-which-is-an-organization-of-type-x", new String[] {organization.getName(), LanguageUtil.get(pageContext, organization.getType())}) + StringPool.SPACE + LanguageUtil.format(pageContext, "all-users-of-x-are-automatically-members-of-the-site", organization.getName()) %>' />
+			</c:if>
+		</liferay-ui:search-container-column-text>
 
 		<liferay-ui:search-container-column-text
 			buffer="buffer"

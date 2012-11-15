@@ -116,11 +116,6 @@ if (group.isOrganization()) {
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" persistState="<%= true %>" title='<%= LanguageUtil.format(pageContext, "users-that-belong-to-x-x", new String[] {organization.getName(), String.valueOf(organizationUsersCount)}) %>'>
-			<div class="organizations-msg-info portlet-msg">
-				<liferay-ui:message arguments="<%= new String[] {organization.getName(), LanguageUtil.get(pageContext, organization.getType())} %>" key="this-site-belongs-to-x-which-is-an-organization-of-type-x" />
-				<liferay-ui:message arguments="<%= organization.getName() %>" key="all-users-of-x-are-automatically-members-of-the-site" />
-			</div>
-
 			<liferay-ui:search-iterator paginate="<%= false %>" />
 		</liferay-ui:panel>
 
