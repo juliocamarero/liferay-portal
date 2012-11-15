@@ -48,7 +48,7 @@
 
 	 <br />
 
-	<@getRatings entry=entry cssClass="page-ratings"/>
+	<@getRatings cssClass="page-ratings" entry=entry />
 
 	<@getRelatedAssets />
 </div>
@@ -106,7 +106,7 @@
 					<td><a href="${childPageViewURL}">${childPage.getTitle()}</a></td>
 					<td><a href="${childPageViewURL}">${dateUtil.getDate(childPage.getModifiedDate(),"dd MMM yyyy - HH:mm:ss", locale)} <@liferay.language key="by" /> ${htmlUtil.escape(portalUtil.getUserName(childPage.getUserId(), childPage.getUserName()))}</a></td>
 					<td>
-						<@getRatings entry=childPage cssClass="child-ratings"/>
+						<@getRatings cssClass="child-ratings" entry=childPage />
 					</td>
 					<td><span class="stats">${assetEntryLocalService.getEntry(wikiPageClassName, childPage.getResourcePrimKey()).getViewCount()}</span></td>
 				</tr>
@@ -218,7 +218,7 @@
 	/>
 </#macro>
 
-<#macro getRatings entry cssClass>
+<#macro getRatings cssClass entry>
 	<#if enablePageRatings == "true">
 		<div class="${cssClass}">
 			<@liferay_ui["ratings"]
