@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Contact;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.User;
 import com.liferay.portal.struts.PortletAction;
@@ -68,8 +69,6 @@ public class ViewAction extends PortletAction {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Layout layout = themeDisplay.getLayout();
-
 		String languageId = ParamUtil.getString(actionRequest, "languageId");
 
 		Locale locale = LocaleUtil.fromLanguageId(languageId);
@@ -106,7 +105,7 @@ public class ViewAction extends PortletAction {
 
 		String queryString = StringPool.BLANK;
 
-		String friendlyURL = StringPool.BLANK;
+		String layoutURL = StringPool.BLANK;
 
 		int pos = redirect.indexOf(Portal.FRIENDLY_URL_SEPARATOR);
 
@@ -117,17 +116,21 @@ public class ViewAction extends PortletAction {
 		if (pos != -1) {
 			queryString = redirect.substring(pos);
 
-			friendlyURL = redirect.substring(0, pos);
+			layoutURL = redirect.substring(0, pos);
 		}
 
+		Layout layout = themeDisplay.getLayout();
+
+		Group group = layout.getGroup();
+
 		if (PortalUtil.isGroupFriendlyURL(
-				friendlyURL, layout.getGroup().getFriendlyURL(),
+				layoutURL, group.getFriendlyURL(),
 				layout.getFriendlyURL())) {
 
-			// Create group friendly URL for redirect - LPS-30648
+			// See LPS-30648
 
 			if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) {
-				redirect = friendlyURL;
+				redirect = layoutURL;
 			}
 			else {
 				redirect = PortalUtil.getGroupFriendlyURL(
@@ -136,9 +139,6 @@ public class ViewAction extends PortletAction {
 			}
 		}
 		else {
-
-			// Create layout friendly URL for redirect - LPS-30648
-
 			if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) {
 				if (themeDisplay.isI18n()) {
 					redirect = layout.getFriendlyURL();
