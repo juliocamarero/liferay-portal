@@ -16,20 +16,16 @@ package com.liferay.portlet.social.service;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.social.model.SocialActivityDefinition;
-import com.liferay.portlet.social.util.SocialActivityTestUtil;
 import com.liferay.portlet.social.util.SocialConfigurationUtil;
 
 import java.util.List;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -44,22 +40,6 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class SocialActivitySettingLocalServiceTest
 	extends BaseSocialActivityTestCase {
-
-	@BeforeClass
-	public static void setUp() throws Exception {
-		BaseSocialActivityTestCase.setUp();
-
-		ServiceTestUtil.addGroup();
-
-		SocialActivityTestUtil.addUsers();
-
-		SocialActivityTestUtil.addAsset();
-	}
-
-	@AfterClass
-	public static void tearDown() throws Exception {
-		BaseSocialActivityTestCase.tearDown();
-	}
 
 	@Test
 	public void testGetActivityDefinition() throws Exception {
