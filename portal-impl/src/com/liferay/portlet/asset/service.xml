@@ -450,6 +450,11 @@
 			<finder-column name="userId" />
 			<finder-column name="classPK" />
 		</finder>
+		<finder name="U_C_C" return-type="FavoriteAsset" >
+			<finder-column name="userId" />
+			<finder-column name="classNameId"  />
+			<finder-column name="classPK" />
+		</finder>
 	</entity>
 	<exceptions>
 		<exception>AssetCategory</exception>

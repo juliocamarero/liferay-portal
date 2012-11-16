@@ -60,11 +60,13 @@ public class FavoriteAssetLocalServiceImpl
 		favoriteAssetPersistence.removeByU_C(userId, classPK);
 	}
 
-	public boolean isFavorite(long userId, long classPK)
+	public boolean isFavorite(long userId, String className, long classPK)
 		throws SystemException {
 
-		FavoriteAsset favoriteAsset = favoriteAssetPersistence.fetchByU_C(
-			userId, classPK);
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		FavoriteAsset favoriteAsset = favoriteAssetPersistence.fetchByU_C_C(
+			userId, classNameId, classPK);
 
 		return (favoriteAsset != null);
 	}

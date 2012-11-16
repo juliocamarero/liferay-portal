@@ -49,10 +49,10 @@ public class FavoriteAssetServiceImpl extends FavoriteAssetServiceBaseImpl {
 		favoriteAssetLocalService.deleteFavoriteAsset(userId, classPK);
 	}
 
-	public boolean isFavorite(long userId, long classPK)
+	public boolean isFavorite(long userId, String className, long classPK)
 		throws SystemException {
 
-		return favoriteAssetLocalService.isFavorite(userId, classPK);
+		return favoriteAssetLocalService.isFavorite(userId, className, classPK);
 	}
 
 }
