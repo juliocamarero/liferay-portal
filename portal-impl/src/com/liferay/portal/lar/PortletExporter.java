@@ -839,7 +839,7 @@ public class PortletExporter {
 
 		if (exportPortletSetup) {
 			if (!portlet.isPreferencesUniquePerLayout() &&
-					portlet.isPreferencesOwnedByGroup()) {
+				portlet.isPreferencesOwnedByGroup()) {
 
 				exportPortletPreferences(
 					portletDataContext, portletDataContext.getScopeGroupId(),
@@ -1147,12 +1147,12 @@ public class PortletExporter {
 		String path = getPortletPreferencesPath(
 			portletDataContext, portletId, ownerId, ownerType, plid);
 
+		Element portletPreferencesElement = parentElement.addElement(
+			"portlet-preferences");
+
+		portletPreferencesElement.addAttribute("path", path);
+
 		if (portletDataContext.isPathNotProcessed(path)) {
-			Element portletPreferencesElement = parentElement.addElement(
-				"portlet-preferences");
-
-			portletPreferencesElement.addAttribute("path", path);
-
 			portletDataContext.addZipEntry(
 				path, document.formattedString(StringPool.TAB, false, false));
 		}
