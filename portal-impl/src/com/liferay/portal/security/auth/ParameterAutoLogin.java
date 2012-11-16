@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Minhchau Dang
  * @author Tomas Polesovsky
  */
-public class ParameterAutoLogin implements AuthVerifier, AutoLogin {
+public class ParameterAutoLogin extends BaseAutoLogin implements AuthVerifier {
 
 	public String getAuthType() {
 		return ParameterAutoLogin.class.getSimpleName();
@@ -102,7 +102,7 @@ public class ParameterAutoLogin implements AuthVerifier, AutoLogin {
 			return credentials;
 		}
 		catch (Exception e) {
-			throw new AutoLoginException(e);
+			return handleException(request, response, e);
 		}
 	}
 

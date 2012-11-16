@@ -14,8 +14,6 @@
 
 package com.liferay.portal.security.auth;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
@@ -38,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Brian Wing Shun Chan
  * @author Wesley Gong
  */
-public class RequestHeaderAutoLogin implements AutoLogin {
+public class RequestHeaderAutoLogin extends BaseAutoLogin {
 
 	public RequestHeaderAutoLogin() {
 		String[] hostsAllowedArray = PropsUtil.getArray(
@@ -50,23 +48,22 @@ public class RequestHeaderAutoLogin implements AutoLogin {
 	}
 
 	public String[] login(
-		HttpServletRequest request, HttpServletResponse response) {
-
-		String[] credentials = null;
+			HttpServletRequest request, HttpServletResponse response)
+		throws AutoLoginException {
 
 		String remoteAddr = request.getRemoteAddr();
 
 		if (AuthSettingsUtil.isAccessAllowed(request, _hostsAllowed)) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Access allowed for " + remoteAddr);
+			if (getLog().isDebugEnabled()) {
+				getLog().debug("Access allowed for " + remoteAddr);
 			}
 		}
 		else {
-			if (_log.isWarnEnabled()) {
-				_log.warn("Access denied for " + remoteAddr);
+			if (getLog().isWarnEnabled()) {
+				getLog().warn("Access denied for " + remoteAddr);
 			}
 
-			return credentials;
+			return null;
 		}
 
 		try {
@@ -76,7 +73,7 @@ public class RequestHeaderAutoLogin implements AutoLogin {
 				HttpHeaders.LIFERAY_SCREEN_NAME);
 
 			if (Validator.isNull(screenName)) {
-				return credentials;
+				return null;
 			}
 
 			User user = null;
@@ -98,7 +95,7 @@ public class RequestHeaderAutoLogin implements AutoLogin {
 					companyId, screenName);
 			}
 
-			credentials = new String[3];
+			String[] credentials = new String[3];
 
 			credentials[0] = String.valueOf(user.getUserId());
 			credentials[1] = user.getPassword();
@@ -107,14 +104,9 @@ public class RequestHeaderAutoLogin implements AutoLogin {
 			return credentials;
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			return handleException(request, response, e);
 		}
-
-		return credentials;
 	}
-
-	private static Log _log = LogFactoryUtil.getLog(
-		RequestHeaderAutoLogin.class);
 
 	private Set<String> _hostsAllowed = new HashSet<String>();
 
