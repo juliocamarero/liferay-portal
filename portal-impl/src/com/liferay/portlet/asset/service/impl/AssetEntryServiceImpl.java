@@ -446,6 +446,35 @@ public class AssetEntryServiceImpl extends AssetEntryServiceBaseImpl {
 		return false;
 	}
 
+	public List<AssetEntry> getFavoriteEntries(long userId)
+		throws SystemException, PortalException {
+
+		return assetEntryLocalService.getFavoriteEntries(
+			userId, StringPool.BLANK, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
+
+	public List<AssetEntry> getFavoriteEntries(long userId, String className)
+		throws SystemException, PortalException {
+
+		return assetEntryLocalService.getFavoriteEntries(
+			userId, className, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
+
+	public List<AssetEntry> getFavoriteEntries(long userId, int start, int end)
+		throws SystemException, PortalException {
+
+		return assetEntryLocalService.getFavoriteEntries(
+			userId, StringPool.BLANK, start, end);
+	}
+
+	public List<AssetEntry> getFavoriteEntries(
+			long userId, String className, int start, int end)
+		throws SystemException {
+
+		return assetEntryLocalService.getFavoriteEntries(
+			userId, className, start, end);
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(
 		AssetEntryServiceImpl.class);
 

@@ -57,7 +57,7 @@ public class FavoriteAssetLocalServiceImpl
 	public void deleteFavoriteAsset(long userId, long classPK)
 		throws NoSuchFavoriteAssetException, SystemException {
 
-		favoriteAssetPersistence.removeByU_C(userId, classPK);
+		favoriteAssetPersistence.removeByU_CPK(userId, classPK);
 	}
 
 	public boolean isFavorite(long userId, String className, long classPK)

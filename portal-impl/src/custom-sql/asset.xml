@@ -176,6 +176,18 @@
 				([$TAG_ID$])
 		]]>
 	</sql>
+	<sql id="com.liferay.portlet.asset.service.persistence.AssetEntryFinder.findFavoriteEntries">
+		<![CDATA[
+			SELECT
+				{AssetEntry.*}
+			FROM
+				AssetEntry
+			INNER JOIN
+				FavoriteAsset ON (AssetEntry.classPK = FavoriteAsset.classPK)
+			WHERE
+				(FavoriteAsset.userId = ?)
+		]]>
+	</sql>
 	<sql id="com.liferay.portlet.asset.service.persistence.AssetLinkFinder.findByE1_V">
 		<![CDATA[
 			SELECT

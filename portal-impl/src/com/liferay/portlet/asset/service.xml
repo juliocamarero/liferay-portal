@@ -446,7 +446,11 @@
 		<finder name="UserId" return-type="Collection" >
 			<finder-column name="userId" />
 		</finder>
-		<finder name="U_C" return-type="FavoriteAsset" >
+		<finder name="U_CNI" return-type="Collection" >
+			<finder-column name="userId" />
+			<finder-column name="classNameId" />
+		</finder>
+		<finder name="U_CPK" return-type="FavoriteAsset" >
 			<finder-column name="userId" />
 			<finder-column name="classPK" />
 		</finder>
