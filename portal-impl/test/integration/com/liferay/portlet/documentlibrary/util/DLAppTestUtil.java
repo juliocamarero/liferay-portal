@@ -90,7 +90,7 @@ public abstract class DLAppTestUtil {
 		String changeLog = StringPool.BLANK;
 
 		if ((bytes == null) && Validator.isNotNull(sourceFileName)) {
-			bytes = CONTENT.getBytes();
+			bytes = _CONTENT.getBytes();
 		}
 
 		ServiceContext serviceContext = new ServiceContext();
@@ -205,7 +205,7 @@ public abstract class DLAppTestUtil {
 		byte[] bytes = null;
 
 		if (Validator.isNotNull(sourceFileName)) {
-			String newContent = CONTENT + "\n" + System.currentTimeMillis();
+			String newContent = _CONTENT + "\n" + System.currentTimeMillis();
 
 			bytes = newContent.getBytes();
 		}
@@ -221,7 +221,7 @@ public abstract class DLAppTestUtil {
 			description, changeLog, majorVersion, bytes, serviceContext);
 	}
 
-	public static final String CONTENT =
+	private static final String _CONTENT =
 		"Content: Enterprise. Open Source. For Life.";
 
 }
