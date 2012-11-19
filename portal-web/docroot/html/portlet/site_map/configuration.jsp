@@ -111,13 +111,8 @@ List layoutList = layoutView.getList();
 			<liferay-ui:ddm-template-menu
 				classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
 				preferenceValue="<%= displayStyle %>"
-				showEmptyOption="<%= true %>"
-			/>
-
-			<liferay-ui:ddm-template-selector
-				classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
-				message='<%= LanguageUtil.format(pageContext, "manage-display-templates-for-x", themeDisplay.getScopeGroupName(), false) %>'
 				refreshURL="<%= currentURL %>"
+				showEmptyOption="<%= true %>"
 			/>
 		</div>
 	</aui:fieldset>

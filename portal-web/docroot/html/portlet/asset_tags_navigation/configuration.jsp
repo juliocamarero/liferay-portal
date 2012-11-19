@@ -74,11 +74,6 @@ String redirect = ParamUtil.getString(request, "redirect");
 							classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
 							displayStyles="<%= displayStyles %>"
 							preferenceValue="<%= displayStyle %>"
-						/>
-
-						<liferay-ui:ddm-template-selector
-							classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
-							message='<%= LanguageUtil.format(pageContext, "manage-display-templates-for-x", themeDisplay.getScopeGroupName(), false) %>'
 							refreshURL="<%= currentURL %>"
 						/>
 					</div>
