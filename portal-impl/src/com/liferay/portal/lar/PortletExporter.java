@@ -838,20 +838,31 @@ public class PortletExporter {
 		// Portlet preferences
 
 		if (exportPortletSetup) {
-			exportPortletPreferences(
-				portletDataContext, PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false, layout, plid,
-				portletId, portletElement);
+			if (!portlet.isPreferencesUniquePerLayout() &&
+				portlet.isPreferencesOwnedByGroup()) {
 
-			exportPortletPreferences(
-				portletDataContext, portletDataContext.getScopeGroupId(),
-				PortletKeys.PREFS_OWNER_TYPE_GROUP, false, layout, plid,
-				portletId, portletElement);
+				exportPortletPreferences(
+					portletDataContext, portletDataContext.getScopeGroupId(),
+					PortletKeys.PREFS_OWNER_TYPE_GROUP, false, layout,
+					PortletKeys.PREFS_PLID_SHARED, portlet.getRootPortletId(),
+					portletElement);
+			}
+			else {
+				exportPortletPreferences(
+					portletDataContext, PortletKeys.PREFS_OWNER_ID_DEFAULT,
+					PortletKeys.PREFS_OWNER_TYPE_LAYOUT, false, layout, plid,
+					portletId, portletElement);
 
-			exportPortletPreferences(
-				portletDataContext, portletDataContext.getCompanyId(),
-				PortletKeys.PREFS_OWNER_TYPE_COMPANY, false, layout, plid,
-				portletId, portletElement);
+				exportPortletPreferences(
+					portletDataContext, portletDataContext.getScopeGroupId(),
+					PortletKeys.PREFS_OWNER_TYPE_GROUP, false, layout, plid,
+					portletId, portletElement);
+
+				exportPortletPreferences(
+					portletDataContext, portletDataContext.getCompanyId(),
+					PortletKeys.PREFS_OWNER_TYPE_COMPANY, false, layout, plid,
+					portletId, portletElement);
+			}
 		}
 
 		// Portlet preferences
