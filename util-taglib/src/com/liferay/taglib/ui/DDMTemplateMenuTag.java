@@ -33,6 +33,10 @@ public class DDMTemplateMenuTag extends IncludeTag {
 		_displayStyles = displayStyles;
 	}
 
+	public void setIcon(String icon) {
+		_icon = icon;
+	}
+
 	public void setLabel(String label) {
 		_label = label;
 	}
@@ -45,6 +49,10 @@ public class DDMTemplateMenuTag extends IncludeTag {
 		_preferenceValue = preferenceValue;
 	}
 
+	public void setRefreshURL(String refreshURL) {
+		_refreshURL = refreshURL;
+	}
+
 	public void setShowEmptyOption(boolean showEmptyOption) {
 		_showEmptyOption = showEmptyOption;
 	}
@@ -53,9 +61,11 @@ public class DDMTemplateMenuTag extends IncludeTag {
 	protected void cleanUp() {
 		_classNameId = 0;
 		_displayStyles = null;
+		_icon = null;
 		_label = "display-template";
 		_preferenceName = "displayStyle";
 		_preferenceValue = null;
+		_refreshURL = null;
 		_showEmptyOption = false;
 	}
 
@@ -71,11 +81,14 @@ public class DDMTemplateMenuTag extends IncludeTag {
 			String.valueOf(_classNameId));
 		request.setAttribute(
 			"liferay-ui:ddm-template-menu:displayStyles", _displayStyles);
+		request.setAttribute("liferay-ui:ddm-template-menu:icon", _icon);
 		request.setAttribute("liferay-ui:ddm-template-menu:label", _label);
 		request.setAttribute(
 			"liferay-ui:ddm-template-menu:preferenceName", _preferenceName);
 		request.setAttribute(
 			"liferay-ui:ddm-template-menu:preferenceValue", _preferenceValue);
+		request.setAttribute(
+			"liferay-ui:ddm-template-menu:refreshURL", _refreshURL);
 		request.setAttribute(
 			"liferay-ui:ddm-template-menu:showEmptyOption",
 			String.valueOf(_showEmptyOption));
@@ -87,8 +100,10 @@ public class DDMTemplateMenuTag extends IncludeTag {
 	private long _classNameId;
 	private List<String> _displayStyles;
 	private String _label = "display-template";
+	private String _icon;
 	private String _preferenceName = "displayStyle";
 	private String _preferenceValue;
+	private String _refreshURL;
 	private boolean _showEmptyOption;
 
 }
