@@ -15,6 +15,7 @@
 package com.liferay.portlet.layoutconfiguration.util;
 
 import com.liferay.portal.kernel.template.TemplateResource;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portlet.layoutconfiguration.util.xml.RuntimeLogic;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +33,14 @@ public interface RuntimePage {
 			PageContext pageContext, TemplateResource templateResource)
 		throws Exception;
 
-	public void processTemplate(
+	public StringBundler processTemplate(
 			PageContext pageContext, String portletId,
 			TemplateResource templateResource)
+		throws Exception;
+
+	public StringBundler processTemplate(
+			PageContext pageContext, String portletId,
+			TemplateResource templateResource, boolean returnStringBundler)
 		throws Exception;
 
 	public void processTemplate(
