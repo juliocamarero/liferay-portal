@@ -426,7 +426,7 @@ public class PortletImporter {
 
 			importPortletPreferences(
 				portletDataContext, layout.getCompanyId(), groupId, layout,
-				portletId, portletElement, importPortletSetup,
+				portlet, portletElement, importPortletSetup,
 				importPortletArchivedSetups, importPortletUserPreferences, true,
 				importData);
 
@@ -1067,7 +1067,7 @@ public class PortletImporter {
 
 	protected void importPortletPreferences(
 			PortletDataContext portletDataContext, long companyId, long groupId,
-			Layout layout, String portletId, Element parentElement,
+			Layout layout, Portlet portlet, Element parentElement,
 			boolean importPortletSetup, boolean importPortletArchivedSetups,
 			boolean importPortletUserPreferences, boolean preserveScopeLayoutId,
 			boolean importPortletData)
@@ -1077,6 +1077,8 @@ public class PortletImporter {
 		long plid = 0;
 		String scopeType = StringPool.BLANK;
 		String scopeLayoutUuid = StringPool.BLANK;
+
+		String portletId = portlet.getPortletId();
 
 		if (layout != null) {
 			plid = layout.getPlid();
@@ -1150,6 +1152,10 @@ public class PortletImporter {
 				if (ownerType == PortletKeys.PREFS_OWNER_TYPE_GROUP) {
 					plid = PortletKeys.PREFS_PLID_SHARED;
 					ownerId = portletDataContext.getScopeGroupId();
+
+					if (!portlet.isPreferencesUniquePerLayout()) {
+						portletId = portlet.getRootPortletId();
+					}
 				}
 
 				boolean defaultUser = GetterUtil.getBoolean(
@@ -1188,23 +1194,6 @@ public class PortletImporter {
 
 				String rootPotletId = PortletConstants.getRootPortletId(
 					portletId);
-
-				// See LPS-30387
-
-				Portlet portlet = PortletLocalServiceUtil.getPortletById(
-					portletId);
-
-				if (portlet == null) {
-					portlet = PortletLocalServiceUtil.getPortletById(
-						rootPotletId);
-				}
-
-				if ((portlet != null) &&
-					(ownerType == PortletKeys.PREFS_OWNER_TYPE_GROUP) &&
-					!portlet.isPreferencesUniquePerLayout()) {
-
-					portletId = rootPotletId;
-				}
 
 				// Portlet specific preferences changes
 
