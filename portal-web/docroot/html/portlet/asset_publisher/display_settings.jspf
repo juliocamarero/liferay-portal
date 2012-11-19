@@ -26,11 +26,6 @@
 			displayStyles="<%= Arrays.asList(PropsValues.ASSET_PUBLISHER_DISPLAY_STYLES) %>"
 			label="display-template"
 			preferenceValue="<%= displayStyle %>"
-		/>
-
-		<liferay-ui:ddm-template-selector
-			classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
-			message='<%= LanguageUtil.format(pageContext, "manage-display-templates-for-x", themeDisplay.getScopeGroupName(), false) %>'
 			refreshURL="<%= configurationRenderURL.toString() %>"
 		/>
 	</div>
