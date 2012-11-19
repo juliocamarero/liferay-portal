@@ -14,8 +14,8 @@
 				<#assign count = assetTagService.getTagsCount(themeDisplay.getScopeGroupId(), entry.getName()) />
 			</#if>
 
-			<#assign maxCount = max(maxCount, count) />
-			<#assign minCount = max(minCount, count) />
+			<#assign maxCount = liferay.max(maxCount, count) />
+			<#assign minCount = liferay.min(minCount, count) />
 		</#list>
 
 		<#assign multiplier = 1 />
