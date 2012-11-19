@@ -3860,6 +3860,7 @@
 			<transient name="layoutCacheable" />
 			<transient name="maximizeEdit" />
 			<transient name="maximizeHelp" />
+			<transient name="modelDataHandlerClasses" />
 			<transient name="openSearchClass" />
 			<transient name="parentStrutsPath" />
 			<transient name="permissionPropagatorClass" />
