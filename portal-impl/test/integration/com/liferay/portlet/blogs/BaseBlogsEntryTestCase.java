@@ -66,11 +66,12 @@ public class BaseBlogsEntryTestCase {
 		String smallImageFileName = StringPool.BLANK;
 		InputStream smallImageInputStream = null;
 
-		BlogsEntry blogsEntry = BlogsEntryServiceUtil.addEntry(
-			title, description, content, displayDateMonth, displayDateDay,
-			displayDateYear, displayDateHour, displayDateMinute, allowPingbacks,
-			allowTrackbacks, trackbacks, smallImage, smallImageURL,
-			smallImageFileName, smallImageInputStream, serviceContext);
+		BlogsEntry blogsEntry = BlogsEntryLocalServiceUtil.addEntry(
+			getUserId(), title, description, content, displayDateMonth,
+			displayDateDay, displayDateYear, displayDateHour, displayDateMinute,
+			allowPingbacks, allowTrackbacks, trackbacks, smallImage,
+			smallImageURL, smallImageFileName, smallImageInputStream,
+			serviceContext);
 
 		if (approved) {
 			BlogsEntryLocalServiceUtil.updateStatus(
