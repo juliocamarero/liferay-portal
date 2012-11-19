@@ -39,16 +39,15 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
-
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
-import com.liferay.portlet.blogs.service.BlogsEntryServiceUtil;
+
+import java.io.InputStream;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.InputStream;
 
 /**
  * @author Julio Camarero
@@ -56,10 +55,11 @@ import java.io.InputStream;
 @ExecutionTestListeners(
 	listeners = {
 		EnvironmentExecutionTestListener.class,
-		TransactionalCallbackAwareExecutionTestListener.class,
-		MainServletExecutionTestListener.class
+		MainServletExecutionTestListener.class,
+		TransactionalCallbackAwareExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
+@Transactional
 public class GroupServiceTest {
 
 	@Before
@@ -68,7 +68,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsCustomRole() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -83,7 +82,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsCustomRoleInSubsite() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -101,7 +99,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsRegularUser() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -114,7 +111,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsSiteAdmin() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -129,7 +125,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsSubsiteAdmin() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -147,13 +142,16 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testDeleteSite() throws Exception {
 		Group group = ServiceTestUtil.addGroup("Test deletion");
 
 		long groupId = group.getGroupId();
 
-		BlogsEntry entry = _addBlogsEntry(groupId);
+		User user = ServiceTestUtil.addUser(
+			ServiceTestUtil.randomString(), false,
+			new long[] {group.getGroupId()});
+
+		BlogsEntry entry = _addBlogsEntry(groupId, user.getUserId());
 
 		long entryId = entry.getEntryId();
 
@@ -169,7 +167,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testScopes() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -190,7 +187,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testSubsites() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 		Group group11 = ServiceTestUtil.addGroup(
@@ -206,7 +202,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsCustomRole() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -221,7 +216,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsCustomRoleInSubsite() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -239,7 +233,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsRegularUser() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -252,7 +245,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsSiteAdmin() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -267,7 +259,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsSubsiteAdmin() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -282,6 +273,40 @@ public class GroupServiceTest {
 		_testGroup(
 			user, group1, group11, null, false, true, false, true, false, true,
 			true);
+	}
+
+	private BlogsEntry _addBlogsEntry(long groupId, long userId)
+		throws Exception {
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		serviceContext.setScopeGroupId(groupId);
+		serviceContext.setWorkflowAction(WorkflowConstants.STATUS_APPROVED);
+
+		String title = "Title";
+		String description = "Description";
+		String content = "Content";
+		int displayDateMonth = 1;
+		int displayDateDay = 1;
+		int displayDateYear = 2012;
+		int displayDateHour = 12;
+		int displayDateMinute = 0;
+		boolean allowPingbacks = true;
+		boolean allowTrackbacks = true;
+		String[] trackbacks = new String[0];
+		boolean smallImage = false;
+		String smallImageURL = StringPool.BLANK;
+		String smallImageFileName = StringPool.BLANK;
+		InputStream smallImageInputStream = null;
+
+		BlogsEntry blogsEntry = BlogsEntryLocalServiceUtil.addEntry(
+			userId, title, description, content, displayDateMonth,
+			displayDateDay, displayDateYear, displayDateHour, displayDateMinute,
+			allowPingbacks, allowTrackbacks, trackbacks, smallImage,
+			smallImageURL, smallImageFileName, smallImageInputStream,
+			serviceContext);
+
+		return blogsEntry;
 	}
 
 	private Group _addGroup(
@@ -309,37 +334,6 @@ public class GroupServiceTest {
 		return GroupServiceUtil.addGroup(
 			parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, name,
 			description, type, friendlyURL, site, active, serviceContext);
-	}
-
-	private BlogsEntry _addBlogsEntry(long groupId) throws Exception {
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
-
-		serviceContext.setScopeGroupId(groupId);
-		serviceContext.setWorkflowAction(WorkflowConstants.STATUS_APPROVED);
-
-		String title = "Title";
-		String description = "Description";
-		String content = "Content";
-		int displayDateMonth = 1;
-		int displayDateDay = 1;
-		int displayDateYear = 2012;
-		int displayDateHour = 12;
-		int displayDateMinute = 0;
-		boolean allowPingbacks = true;
-		boolean allowTrackbacks = true;
-		String[] trackbacks = new String[0];
-		boolean smallImage = false;
-		String smallImageURL = StringPool.BLANK;
-		String smallImageFileName = StringPool.BLANK;
-		InputStream smallImageInputStream = null;
-
-		BlogsEntry blogsEntry = BlogsEntryServiceUtil.addEntry(
-			title, description, content, displayDateMonth, displayDateDay,
-			displayDateYear, displayDateHour, displayDateMinute, allowPingbacks,
-			allowTrackbacks, trackbacks, smallImage, smallImageURL,
-			smallImageFileName, smallImageInputStream, serviceContext);
-
-		return blogsEntry;
 	}
 
 	private void _givePermissionToManageSubsites(User user, Group group)
