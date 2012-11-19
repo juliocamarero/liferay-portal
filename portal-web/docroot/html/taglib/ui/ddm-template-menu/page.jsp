@@ -24,14 +24,19 @@
 <%
 long classNameId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:ddm-template-menu:classNameId"));
 List<String> displayStyles = (List<String>)request.getAttribute("liferay-ui:ddm-template-menu:displayStyles");
+String icon = GetterUtil.getString((String)request.getAttribute("liferay-ui:ddm-template-menu:icon"), "configuration");
 String label = (String)request.getAttribute("liferay-ui:ddm-template-menu:label");
 String preferenceName = (String)request.getAttribute("liferay-ui:ddm-template-menu:preferenceName");
 String preferenceValue = (String)request.getAttribute("liferay-ui:ddm-template-menu:preferenceValue");
+String refreshURL = (String)request.getAttribute("liferay-ui:ddm-template-menu:refreshURL");
+
 boolean showEmptyOption = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:ddm-template-menu:showEmptyOption"));
 
 DDMTemplate ddmTemplate = null;
 
 long ddmTemplateGroupId = PortletDisplayTemplateUtil.getDDMTemplateGroupId(themeDisplay);
+
+Group ddmTemplateGroup = GroupServiceUtil.getGroup(ddmTemplateGroupId);
 
 if (preferenceValue.startsWith("ddmTemplate_")) {
 	ddmTemplate = PortletDisplayTemplateUtil.fetchDDMTemplate(ddmTemplateGroupId, preferenceValue);
@@ -44,6 +49,21 @@ List<DDMTemplate> groupPortletDDMTemplates = null;
 if (ddmTemplateGroupId != themeDisplay.getCompanyGroupId()) {
 	groupPortletDDMTemplates = DDMTemplateLocalServiceUtil.getTemplates(ddmTemplateGroupId, classNameId, 0);
 }
+
+String message = LanguageUtil.format(pageContext, "manage-display-templates-for-x", ddmTemplateGroup.getName(), false);
+
+long controlPanelPlid = PortalUtil.getControlPanelPlid(company.getCompanyId());
+
+LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(request, PortletKeys.PORTLET_DISPLAY_TEMPLATES, controlPanelPlid, PortletRequest.RENDER_PHASE);
+
+liferayPortletURL.setDoAsGroupId(ddmTemplateGroupId);
+liferayPortletURL.setParameter("struts_action", "/dynamic_data_mapping/view_template");
+liferayPortletURL.setPortletMode(PortletMode.VIEW);
+liferayPortletURL.setWindowState(LiferayWindowState.POP_UP);
+
+String liferayPortletURLString = liferayPortletURL.toString();
+
+liferayPortletURLString = HttpUtil.addParameter(liferayPortletURLString, "classNameId", classNameId);
 %>
 
 <aui:select id="displayStyle" label="<%= label %>" name='<%= "preferences--" + preferenceName + "--" %>'>
@@ -105,3 +125,40 @@ if (ddmTemplateGroupId != themeDisplay.getCompanyGroupId()) {
 		</optgroup>
 	</c:if>
 </aui:select>
+
+<liferay-ui:icon cssClass="manage-display-templates" id="selectDDMTemplate" image="<%= icon %>" label="<%= true %>" message="<%= message %>" url="javascript:;" />
+
+<aui:script use="aui-base">
+	var selectDDMTemplate = A.one('#<portlet:namespace />selectDDMTemplate');
+
+	if (selectDDMTemplate) {
+		var windowId = A.guid();
+
+		selectDDMTemplate.on(
+			'click',
+			function (event) {
+				Liferay.Util.openWindow(
+					{
+						dialog: {
+							constrain: true,
+							width: 820
+						},
+						id: windowId,
+						title: '<%= UnicodeLanguageUtil.get(pageContext, "application-display-templates") %>',
+						uri: '<%= liferayPortletURLString %>'
+					},
+					function (ddmPortletWindow) {
+						ddmPortletWindow.once(
+							'visibleChange',
+							function(event) {
+								if (!event.newVal) {
+									submitForm(document.<portlet:namespace />fm, '<%= refreshURL %>');
+								}
+							}
+						);
+					}
+				);
+			}
+		);
+	}
+</aui:script>
