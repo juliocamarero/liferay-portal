@@ -34,6 +34,41 @@ import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
  */
 public abstract class DLAppTestUtil {
 
+	public static DLFileRank addDLFileRank(long groupId, long fileEntryId)
+		throws Exception {
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setAddGroupPermissions(true);
+		serviceContext.setAddGuestPermissions(true);
+		serviceContext.setScopeGroupId(groupId);
+
+		return DLAppLocalServiceUtil.addFileRank(
+			groupId, TestPropsValues.getCompanyId(),
+			TestPropsValues.getUserId(), fileEntryId, serviceContext);
+	}
+
+	public static DLFileShortcut addDLFileShortcut(
+			FileEntry fileEntry, long groupId, long folderId)
+		throws Exception {
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setAddGroupPermissions(true);
+		serviceContext.setAddGuestPermissions(true);
+		serviceContext.setScopeGroupId(groupId);
+
+		return DLAppServiceUtil.addFileShortcut(
+			groupId, folderId, fileEntry.getFileEntryId(), serviceContext);
+	}
+
+	public static DLFileShortcut addDLFileShortcut(
+			long groupId, FileEntry fileEntry)
+		throws Exception {
+
+		return addDLFileShortcut(fileEntry, groupId, fileEntry.getFolderId());
+	}
+
 	public static FileEntry addFileEntry(
 			long groupId, long parentFolderId, boolean rootFolder,
 			String fileName)
@@ -104,41 +139,6 @@ public abstract class DLAppTestUtil {
 			TestPropsValues.getUserId(), groupId, folderId, sourceFileName,
 			ContentTypes.TEXT_PLAIN, title, description, changeLog, bytes,
 			serviceContext);
-	}
-
-	public static DLFileRank addDLFileRank(long groupId, long fileEntryId)
-		throws Exception {
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		serviceContext.setAddGroupPermissions(true);
-		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setScopeGroupId(groupId);
-
-		return DLAppLocalServiceUtil.addFileRank(
-			groupId, TestPropsValues.getCompanyId(),
-			TestPropsValues.getUserId(), fileEntryId, serviceContext);
-	}
-
-	public static DLFileShortcut addDLFileShortcut(
-			long groupId, FileEntry fileEntry)
-		throws Exception {
-
-		return addDLFileShortcut(fileEntry, groupId, fileEntry.getFolderId());
-	}
-
-	public static DLFileShortcut addDLFileShortcut(
-			FileEntry fileEntry, long groupId, long folderId)
-		throws Exception {
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		serviceContext.setAddGroupPermissions(true);
-		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setScopeGroupId(groupId);
-
-		return DLAppServiceUtil.addFileShortcut(
-			groupId, folderId, fileEntry.getFileEntryId(), serviceContext);
 	}
 
 	public static Folder addFolder(

@@ -37,20 +37,6 @@ import org.junit.BeforeClass;
  */
 public class BaseSocialActivityTestCase {
 
-	@Before
-	public void beforeTest() throws Exception {
-		_group = ServiceTestUtil.addGroup();
-
-		_actorUser = ServiceTestUtil.deleteAddUser(
-			"actor", false, new long[] {_group.getGroupId()});
-
-		_creatorUser = ServiceTestUtil.deleteAddUser(
-			"creator", false, new long[] {_group.getGroupId()});
-
-		_assetEntry = SocialActivityTestUtil.addAsset(
-			_group, _creatorUser, null);
-	}
-
 	@BeforeClass
 	public static void setUp() throws Exception {
 		_userClassNameId = PortalUtil.getClassNameId(User.class.getName());
@@ -64,6 +50,20 @@ public class BaseSocialActivityTestCase {
 
 		SocialConfigurationUtil.read(
 			clazz.getClassLoader(), new String[] {xml});
+	}
+
+	@Before
+	public void beforeTest() throws Exception {
+		_group = ServiceTestUtil.addGroup();
+
+		_actorUser = ServiceTestUtil.deleteAddUser(
+			"actor", false, new long[] {_group.getGroupId()});
+
+		_creatorUser = ServiceTestUtil.deleteAddUser(
+			"creator", false, new long[] {_group.getGroupId()});
+
+		_assetEntry = SocialActivityTestUtil.addAsset(
+			_group, _creatorUser, null);
 	}
 
 	@After
