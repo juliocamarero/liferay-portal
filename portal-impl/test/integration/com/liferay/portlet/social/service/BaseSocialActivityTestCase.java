@@ -18,19 +18,39 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.social.util.SocialActivityTestUtil;
 import com.liferay.portlet.social.util.SocialConfigurationUtil;
 
 import java.io.InputStream;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 /**
  * @author Zsolt Berentey
  */
 public class BaseSocialActivityTestCase {
 
+	@Before
+	public void beforeTest() throws Exception {
+		_group = ServiceTestUtil.addGroup();
+
+		_actorUser = ServiceTestUtil.addUser(
+			"actor", false, new long[] {_group.getGroupId()});
+
+		_creatorUser = ServiceTestUtil.addUser(
+			"creator", false, new long[] {_group.getGroupId()});
+
+		SocialActivityTestUtil.addAsset();
+	}
+
+	@BeforeClass
 	public static void setUp() throws Exception {
 		_userClassNameId = PortalUtil.getClassNameId(User.class.getName());
 
@@ -45,7 +65,8 @@ public class BaseSocialActivityTestCase {
 			clazz.getClassLoader(), new String[] {xml});
 	}
 
-	public static void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		if (_actorUser != null) {
 			UserLocalServiceUtil.deleteUser(_actorUser);
 
