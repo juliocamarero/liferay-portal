@@ -47,7 +47,8 @@ public class BaseSocialActivityTestCase {
 		_creatorUser = ServiceTestUtil.addUser(
 			"creator", false, new long[] {_group.getGroupId()});
 
-		SocialActivityTestUtil.addAsset();
+		_assetEntry = SocialActivityTestUtil.addAsset(
+			_group, _creatorUser, null);
 	}
 
 	@BeforeClass
