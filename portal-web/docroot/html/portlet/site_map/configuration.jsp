@@ -108,7 +108,7 @@ List layoutList = layoutView.getList();
 			PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemplateHandlerRegistryUtil.getPortletDisplayTemplateHandler(LayoutSet.class.getName());
 			%>
 
-			<liferay-ui:ddm-template-menu
+			<liferay-ui:ddm-template-select
 				classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
 				preferenceValue="<%= displayStyle %>"
 				refreshURL="<%= currentURL %>"
