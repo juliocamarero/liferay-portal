@@ -1767,7 +1767,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 							query.append(_FILTER_SQL_SELECT_${entity.alias?upper_case}_NO_INLINE_DISTINCT_WHERE_1);
 						}
 
-						<#include "persistence_impl_finder_cols.ftl">
+						<#include "persistence_impl_finder_cols_sqlquery.ftl">
 
 						if (!getDB().isSupportsInlineDistinct()) {
 							query.append(_FILTER_SQL_SELECT_${entity.alias?upper_case}_NO_INLINE_DISTINCT_WHERE_2);
@@ -1950,7 +1950,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 							query.append(_FILTER_SQL_SELECT_${entity.alias?upper_case}_NO_INLINE_DISTINCT_WHERE_1);
 						}
 
-						<#include "persistence_impl_finder_cols.ftl">
+						<#include "persistence_impl_finder_cols_sqlquery.ftl">
 
 						if (!getDB().isSupportsInlineDistinct()) {
 							query.append(_FILTER_SQL_SELECT_${entity.alias?upper_case}_NO_INLINE_DISTINCT_WHERE_2);
@@ -2962,7 +2962,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 					query.append(_FILTER_SQL_COUNT_${entity.alias?upper_case}_WHERE);
 
-					<#include "persistence_impl_finder_cols.ftl">
+					<#include "persistence_impl_finder_cols_sqlquery.ftl">
 
 					String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
 
@@ -4291,7 +4291,15 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				<#assign finderColConjunction = " AND " + finder.where>
 			</#if>
 
+			<#assign finderColName = finderCol.name finderColNameSuffix = "">
+
 			<#include "persistence_impl_finder_cols_defs.ftl">
+
+			<#if finderCol.name != finderCol.DBName>
+				<#assign finderColName = finderCol.DBName finderColNameSuffix = "_">
+
+				<#include "persistence_impl_finder_cols_defs.ftl">
+		    </#if>
 		</#list>
 	</#list>
 
