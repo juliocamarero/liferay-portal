@@ -1322,6 +1322,13 @@ public class UserWrapper implements User, ModelWrapper<User> {
 		return _user.getGroups();
 	}
 
+	public java.util.List<com.liferay.portal.model.Group> getGroups(
+		boolean includeInherited)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _user.getGroups(includeInherited);
+	}
+
 	public java.util.Locale getLocale() {
 		return _user.getLocale();
 	}

@@ -47,7 +47,7 @@ if (Validator.isNotNull(groupIds)) {
 	groups = GroupLocalServiceUtil.getGroups(groupIdsArray);
 }
 else if (selUser != null) {
-	groups = GroupLocalServiceUtil.getUserGroups(selUser.getUserId(), true);
+	groups = selUser.getGroups(true);
 
 	if (filterManageableGroups) {
 		groups = UsersAdminUtil.filterGroups(permissionChecker, groups);

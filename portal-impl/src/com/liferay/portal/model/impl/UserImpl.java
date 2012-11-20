@@ -262,6 +262,13 @@ public class UserImpl extends UserBaseImpl {
 		return GroupLocalServiceUtil.getUserGroups(getUserId());
 	}
 
+	public List<Group> getGroups(boolean includeInherited)
+		throws PortalException, SystemException {
+
+		return GroupLocalServiceUtil.getUserGroups(
+			getUserId(), includeInherited);
+	}
+
 	public Locale getLocale() {
 		return _locale;
 	}
