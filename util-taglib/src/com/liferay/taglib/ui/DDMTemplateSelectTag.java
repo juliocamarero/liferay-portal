@@ -99,8 +99,8 @@ public class DDMTemplateSelectTag extends IncludeTag {
 
 	private long _classNameId;
 	private List<String> _displayStyles;
-	private String _label = "display-template";
 	private String _icon;
+	private String _label = "display-template";
 	private String _preferenceName = "displayStyle";
 	private String _preferenceValue;
 	private String _refreshURL;
