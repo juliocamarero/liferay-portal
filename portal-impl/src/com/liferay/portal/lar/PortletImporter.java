@@ -1078,12 +1078,24 @@ public class PortletImporter {
 		String scopeType = StringPool.BLANK;
 		String scopeLayoutUuid = StringPool.BLANK;
 
-		String portletId = portlet.getPortletId();
+		String portletId = StringPool.BLANK;
+
+		if (portlet != null) {
+			portletId = portlet.getPortletId();
+		}
+		else {
+			portletId = parentElement.attributeValue("portlet-id");
+
+			portlet = PortletLocalServiceUtil.getPortletById(
+				portletDataContext.getCompanyId(), portletId);
+		}
 
 		if (layout != null) {
 			plid = layout.getPlid();
 
-			if (preserveScopeLayoutId && (portletId != null)) {
+			if (preserveScopeLayoutId && (portletId != null) &&
+				portlet.isPreferencesUniquePerLayout()) {
+
 				javax.portlet.PortletPreferences jxPreferences =
 					PortletPreferencesFactoryUtil.getLayoutPortletSetup(
 						layout, portletId);
@@ -1216,7 +1228,9 @@ public class PortletImporter {
 			}
 		}
 
-		if (preserveScopeLayoutId && (layout != null)) {
+		if (preserveScopeLayoutId && (layout != null) &&
+			portlet.isPreferencesUniquePerLayout()) {
+
 			javax.portlet.PortletPreferences jxPreferences =
 				PortletPreferencesFactoryUtil.getLayoutPortletSetup(
 					layout, portletId);
