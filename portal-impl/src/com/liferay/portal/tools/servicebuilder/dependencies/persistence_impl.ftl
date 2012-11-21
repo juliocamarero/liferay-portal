@@ -8,6 +8,10 @@
 	<#assign pkColumn = entity.getPKList()?first>
 </#if>
 
+<#assign colNameEscapeSuffix = "_">
+
+<#assign sqlQuery = false>
+
 package ${packagePath}.service.persistence;
 
 <#assign noSuchEntity = serviceBuilder.getNoSuchEntityException(entity)>
@@ -1727,6 +1731,8 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					}
 
 					<#if entity.isPermissionedModel()>
+						<#assign sqlQuery = false>
+
 						<#include "persistence_impl_find_by_query.ftl">
 
 						String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, _FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
@@ -1766,6 +1772,8 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						else {
 							query.append(_FILTER_SQL_SELECT_${entity.alias?upper_case}_NO_INLINE_DISTINCT_WHERE_1);
 						}
+
+						<#assign sqlQuery = true>
 
 						<#include "persistence_impl_finder_cols.ftl">
 
@@ -1949,6 +1957,8 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						else {
 							query.append(_FILTER_SQL_SELECT_${entity.alias?upper_case}_NO_INLINE_DISTINCT_WHERE_1);
 						}
+
+						<#assign sqlQuery = true>
 
 						<#include "persistence_impl_finder_cols.ftl">
 
@@ -2251,6 +2261,8 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 							else {
 								query.append(_FILTER_SQL_SELECT_${entity.alias?upper_case}_NO_INLINE_DISTINCT_WHERE_1);
 							}
+
+							<#assign sqlQuery = true>
 
 							<#include "persistence_impl_finder_arrayable_cols.ftl">
 
@@ -2958,6 +2970,8 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						closeSession(session);
 					}
 				<#else>
+					<#assign sqlQuery = true>
+
 					StringBundler query = new StringBundler(${finderColsList?size + 1});
 
 					query.append(_FILTER_SQL_COUNT_${entity.alias?upper_case}_WHERE);
@@ -3082,6 +3096,8 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 							closeSession(session);
 						}
 					<#else>
+						<#assign sqlQuery = true>
+
 						StringBundler query = new StringBundler();
 
 						query.append(_FILTER_SQL_COUNT_${entity.alias?upper_case}_WHERE);
@@ -4291,7 +4307,15 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				<#assign finderColConjunction = " AND " + finder.where>
 			</#if>
 
+			<#assign finderColName = finderCol.name finderColNameSuffix = "">
+
 			<#include "persistence_impl_finder_cols_defs.ftl">
+
+			<#if finderCol.name != finderCol.DBName>
+				<#assign finderColName = finderCol.DBName finderColNameSuffix = colNameEscapeSuffix>
+
+				<#include "persistence_impl_finder_cols_defs.ftl">
+		    </#if>
 		</#list>
 	</#list>
 
