@@ -56,8 +56,8 @@ import java.io.InputStream;
 @ExecutionTestListeners(
 	listeners = {
 		EnvironmentExecutionTestListener.class,
-		TransactionalCallbackAwareExecutionTestListener.class,
-		MainServletExecutionTestListener.class
+		MainServletExecutionTestListener.class,
+		TransactionalCallbackAwareExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class GroupServiceTest {
