@@ -43,6 +43,7 @@ import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.PortletImpl;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
+import com.liferay.portal.search.lucene.LuceneHelperUtil;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
@@ -192,46 +193,26 @@ public class ServiceTestUtil {
 			String screenName, boolean autoScreenName, long[] groupIds)
 		throws Exception {
 
-		User user = UserLocalServiceUtil.fetchUserByScreenName(
-			TestPropsValues.getCompanyId(), screenName);
+		return _addUser(null, screenName, autoScreenName, groupIds, false);
+	}
 
-		if (user != null) {
-			return user;
-		}
+	public static User deleteAddUser(
+			String screenName, boolean autoScreenName, long[] groupIds)
+		throws Exception {
 
-		boolean autoPassword = true;
-		String password1 = StringPool.BLANK;
-		String password2 = StringPool.BLANK;
-		String emailAddress = "ServiceTestSuite." + nextLong() + "@liferay.com";
-		long facebookId = 0;
-		String openId = StringPool.BLANK;
-		Locale locale = LocaleUtil.getDefault();
-		String firstName = "ServiceTestSuite";
-		String middleName = StringPool.BLANK;
-		String lastName = "ServiceTestSuite";
-		int prefixId = 0;
-		int suffixId = 0;
-		boolean male = true;
-		int birthdayMonth = Calendar.JANUARY;
-		int birthdayDay = 1;
-		int birthdayYear = 1970;
-		String jobTitle = StringPool.BLANK;
-		long[] organizationIds = null;
-		long[] roleIds = null;
-		long[] userGroupIds = null;
-		boolean sendMail = false;
-
-		return UserLocalServiceUtil.addUser(
-			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
-			autoPassword, password1, password2, autoScreenName, screenName,
-			emailAddress, facebookId, openId, locale, firstName, middleName,
-			lastName, prefixId, suffixId, male, birthdayMonth, birthdayDay,
-			birthdayYear, jobTitle, groupIds, organizationIds, roleIds,
-			userGroupIds, sendMail, getServiceContext());
+		return _addUser(null, screenName, autoScreenName, groupIds, true);
 	}
 
 	public static void destroyServices() {
 		_deleteDLDirectories();
+
+		try {
+			FileUtil.deltree(
+				PropsValues.LUCENE_DIR + TestPropsValues.getCompanyId());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static SearchContext getSearchContext() throws Exception {
@@ -300,6 +281,21 @@ public class ServiceTestUtil {
 
 		try {
 			JCRFactoryUtil.prepare();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// Lucene
+
+		try {
+			FileUtil.deltree(
+				PropsValues.LUCENE_DIR + TestPropsValues.getCompanyId());
+
+			FileUtil.mkdirs(
+				PropsValues.LUCENE_DIR + TestPropsValues.getCompanyId());
+
+			LuceneHelperUtil.startup(TestPropsValues.getCompanyId());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -455,6 +451,62 @@ public class ServiceTestUtil {
 
 	public static String randomString() throws Exception {
 		return PwdGenerator.getPassword();
+	}
+
+	private static User _addUser(
+			Group group, String screenName, boolean autoScreenName,
+			long[] groupIds, boolean delete)
+		throws Exception {
+
+		User user = UserLocalServiceUtil.fetchUserByScreenName(
+			TestPropsValues.getCompanyId(), screenName);
+
+		if (user != null) {
+			if (!delete) {
+				return user;
+			}
+
+			UserLocalServiceUtil.deleteUser(user);
+		}
+
+		boolean autoPassword = true;
+		String password1 = StringPool.BLANK;
+		String password2 = StringPool.BLANK;
+		String emailAddress = "ServiceTestSuite." + nextLong() + "@liferay.com";
+		long facebookId = 0;
+		String openId = StringPool.BLANK;
+		Locale locale = LocaleUtil.getDefault();
+		String firstName = "ServiceTestSuite";
+		String middleName = StringPool.BLANK;
+		String lastName = "ServiceTestSuite";
+		int prefixId = 0;
+		int suffixId = 0;
+		boolean male = true;
+		int birthdayMonth = Calendar.JANUARY;
+		int birthdayDay = 1;
+		int birthdayYear = 1970;
+		String jobTitle = StringPool.BLANK;
+		long[] organizationIds = null;
+		long[] roleIds = null;
+		long[] userGroupIds = null;
+		boolean sendMail = false;
+
+		ServiceContext serviceContext = null;
+
+		if (group != null) {
+			serviceContext = getServiceContext(group.getGroupId());
+		}
+		else {
+			serviceContext = getServiceContext();
+		}
+
+		return UserLocalServiceUtil.addUser(
+			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
+			autoPassword, password1, password2, autoScreenName, screenName,
+			emailAddress, facebookId, openId, locale, firstName, middleName,
+			lastName, prefixId, suffixId, male, birthdayMonth, birthdayDay,
+			birthdayYear, jobTitle, groupIds, organizationIds, roleIds,
+			userGroupIds, sendMail, serviceContext);
 	}
 
 	private static void _checkClassNames() {
