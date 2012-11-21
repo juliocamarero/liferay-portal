@@ -130,7 +130,7 @@ public class SitesUtil {
 
 		portletURL.setParameter("struts_action", "/sites_admin/view");
 
-		List<Group> ancestorGroups= group.getAncestors();
+		List<Group> ancestorGroups = group.getAncestors();
 
 		Collections.reverse(ancestorGroups);
 
