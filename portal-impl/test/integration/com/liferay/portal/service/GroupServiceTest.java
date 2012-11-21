@@ -60,6 +60,7 @@ import java.io.InputStream;
 		TransactionalCallbackAwareExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
+@Transactional
 public class GroupServiceTest {
 
 	@Before
@@ -68,7 +69,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsCustomRole() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -83,7 +83,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsCustomRoleInSubsite() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -101,7 +100,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsRegularUser() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -114,7 +112,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsSiteAdmin() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -129,7 +126,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testAddPermissionsSubsiteAdmin() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -147,7 +143,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testDeleteSite() throws Exception {
 		Group group = ServiceTestUtil.addGroup("Test deletion");
 
@@ -169,7 +164,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testScopes() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -190,7 +184,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testSubsites() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 		Group group11 = ServiceTestUtil.addGroup(
@@ -206,7 +199,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsCustomRole() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -221,7 +213,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsCustomRoleInSubsite() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -239,7 +230,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsRegularUser() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -252,7 +242,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsSiteAdmin() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
@@ -267,7 +256,6 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	@Transactional
 	public void testUpdatePermissionsSubsiteAdmin() throws Exception {
 		Group group1 = ServiceTestUtil.addGroup("Test 1");
 
