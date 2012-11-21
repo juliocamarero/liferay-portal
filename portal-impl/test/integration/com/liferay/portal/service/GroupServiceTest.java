@@ -148,7 +148,11 @@ public class GroupServiceTest {
 
 		long groupId = group.getGroupId();
 
-		BlogsEntry entry = _addBlogsEntry(groupId);
+		User user = ServiceTestUtil.addUser(
+			ServiceTestUtil.randomString(), false,
+			new long[] {group.getGroupId()});
+
+		BlogsEntry entry = _addBlogsEntry(groupId, user.getUserId());
 
 		long entryId = entry.getEntryId();
 
@@ -299,7 +303,9 @@ public class GroupServiceTest {
 			description, type, friendlyURL, site, active, serviceContext);
 	}
 
-	private BlogsEntry _addBlogsEntry(long groupId) throws Exception {
+	private BlogsEntry _addBlogsEntry(long groupId, long userId)
+		throws Exception {
+
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
 		serviceContext.setScopeGroupId(groupId);
@@ -321,8 +327,8 @@ public class GroupServiceTest {
 		String smallImageFileName = StringPool.BLANK;
 		InputStream smallImageInputStream = null;
 
-		BlogsEntry blogsEntry = BlogsEntryServiceUtil.addEntry(
-			title, description, content, displayDateMonth, displayDateDay,
+		BlogsEntry blogsEntry = BlogsEntryLocalServiceUtil.addEntry(
+			userId, title, description, content, displayDateMonth, displayDateDay,
 			displayDateYear, displayDateHour, displayDateMinute, allowPingbacks,
 			allowTrackbacks, trackbacks, smallImage, smallImageURL,
 			smallImageFileName, smallImageInputStream, serviceContext);
