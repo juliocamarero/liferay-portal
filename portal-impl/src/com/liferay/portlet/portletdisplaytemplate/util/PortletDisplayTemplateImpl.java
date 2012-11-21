@@ -18,9 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.GenericServletWrapper;
 import com.liferay.portal.kernel.servlet.PipingServletResponse;
-import com.liferay.portal.kernel.staging.StagingConstants;
 import com.liferay.portal.kernel.templateparser.Transformer;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -112,38 +110,29 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 	public long getDDMTemplateGroupId(ThemeDisplay themeDisplay) {
 		try {
 			Group scopeGroup = themeDisplay.getScopeGroup();
+			Group layoutGroup = themeDisplay.getLayout().getGroup();
 
-			if (scopeGroup.hasStagingGroup()) {
-				Group stagingGroup = GroupLocalServiceUtil.getStagingGroup(
-					scopeGroup.getGroupId());
+			boolean pdtStaged = scopeGroup.isStagedPortlet(
+				PortletKeys.PORTLET_DISPLAY_TEMPLATES);
 
-				if (GetterUtil.getBoolean(
-						scopeGroup.getTypeSettingsProperty(
-							StagingConstants.STAGED_PORTLET +
-								PortletKeys.PORTLET_DISPLAY_TEMPLATES))) {
-
-					return stagingGroup.getGroupId();
+			if (layoutGroup.isStagingGroup()) {
+				if (pdtStaged && !scopeGroup.isStagingGroup()) {
+					scopeGroup = scopeGroup.getStagingGroup();
+				}
+				else if (!pdtStaged && scopeGroup.isStagingGroup()) {
+					scopeGroup = scopeGroup.getLiveGroup();
 				}
 			}
-			else if (scopeGroup.getLiveGroupId() > 0) {
-				Group liveGroup = scopeGroup.getLiveGroup();
 
-				if (!GetterUtil.getBoolean(
-						liveGroup.getTypeSettingsProperty(
-							StagingConstants.STAGED_PORTLET +
-								PortletKeys.PORTLET_DISPLAY_TEMPLATES))) {
-
-					return liveGroup.getGroupId();
-				}
-			}
+			return scopeGroup.getGroupId();
 		}
 		catch (Exception e) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(e, e);
 			}
-		}
 
-		return themeDisplay.getScopeGroupId();
+			return themeDisplay.getScopeGroupId();
+		}
 	}
 
 	public long getPortletDisplayTemplateDDMTemplateId(
@@ -153,6 +142,9 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 
 		long portletDisplayDDMTemplateGroupId = getDDMTemplateGroupId(
 			themeDisplay);
+
+		System.out.println("portletDisplayDDMTemplateGroupId = " +
+			portletDisplayDDMTemplateGroupId);
 
 		if (displayStyle.startsWith("ddmTemplate_")) {
 			DDMTemplate portletDisplayDDMTemplate = fetchDDMTemplate(

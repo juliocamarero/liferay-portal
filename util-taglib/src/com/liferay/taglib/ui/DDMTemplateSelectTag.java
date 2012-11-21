@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Juan Fernández
  */
-public class DDMTemplateMenuTag extends IncludeTag {
+public class DDMTemplateSelectTag extends IncludeTag {
 
 	public void setClassNameId(long classNameId) {
 		_classNameId = classNameId;
@@ -31,6 +31,10 @@ public class DDMTemplateMenuTag extends IncludeTag {
 
 	public void setDisplayStyles(List<String> displayStyles) {
 		_displayStyles = displayStyles;
+	}
+
+	public void setIcon(String icon) {
+		_icon = icon;
 	}
 
 	public void setLabel(String label) {
@@ -45,6 +49,10 @@ public class DDMTemplateMenuTag extends IncludeTag {
 		_preferenceValue = preferenceValue;
 	}
 
+	public void setRefreshURL(String refreshURL) {
+		_refreshURL = refreshURL;
+	}
+
 	public void setShowEmptyOption(boolean showEmptyOption) {
 		_showEmptyOption = showEmptyOption;
 	}
@@ -53,9 +61,11 @@ public class DDMTemplateMenuTag extends IncludeTag {
 	protected void cleanUp() {
 		_classNameId = 0;
 		_displayStyles = null;
+		_icon = null;
 		_label = "display-template";
 		_preferenceName = "displayStyle";
 		_preferenceValue = null;
+		_refreshURL = null;
 		_showEmptyOption = false;
 	}
 
@@ -67,28 +77,33 @@ public class DDMTemplateMenuTag extends IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:classNameId",
+			"liferay-ui:ddm-template-select:classNameId",
 			String.valueOf(_classNameId));
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:displayStyles", _displayStyles);
-		request.setAttribute("liferay-ui:ddm-template-menu:label", _label);
+			"liferay-ui:ddm-template-select:displayStyles", _displayStyles);
+		request.setAttribute("liferay-ui:ddm-template-select:icon", _icon);
+		request.setAttribute("liferay-ui:ddm-template-select:label", _label);
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:preferenceName", _preferenceName);
+			"liferay-ui:ddm-template-select:preferenceName", _preferenceName);
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:preferenceValue", _preferenceValue);
+			"liferay-ui:ddm-template-select:preferenceValue", _preferenceValue);
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:showEmptyOption",
+			"liferay-ui:ddm-template-select:refreshURL", _refreshURL);
+		request.setAttribute(
+			"liferay-ui:ddm-template-select:showEmptyOption",
 			String.valueOf(_showEmptyOption));
 	}
 
 	private static final String _PAGE =
-		"/html/taglib/ui/ddm-template-menu/page.jsp";
+		"/html/taglib/ui/ddm-template-select/page.jsp";
 
 	private long _classNameId;
 	private List<String> _displayStyles;
+	private String _icon;
 	private String _label = "display-template";
 	private String _preferenceName = "displayStyle";
 	private String _preferenceValue;
+	private String _refreshURL;
 	private boolean _showEmptyOption;
 
 }
