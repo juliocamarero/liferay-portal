@@ -29,16 +29,16 @@ import javax.servlet.jsp.PageContext;
  */
 public interface RuntimePage {
 
+	public StringBundler getProcessedTemplate(
+			PageContext pageContext, String portletId,
+			TemplateResource templateResource)
+		throws Exception;
+
 	public void processCustomizationSettings(
 			PageContext pageContext, TemplateResource templateResource)
 		throws Exception;
 
 	public void processTemplate(
-			PageContext pageContext, String portletId,
-			TemplateResource templateResource)
-		throws Exception;
-
-	public StringBundler processTemplateSilently(
 			PageContext pageContext, String portletId,
 			TemplateResource templateResource)
 		throws Exception;

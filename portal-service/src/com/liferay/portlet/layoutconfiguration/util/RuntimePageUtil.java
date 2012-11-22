@@ -30,6 +30,15 @@ import javax.servlet.jsp.PageContext;
  */
 public class RuntimePageUtil {
 
+	public static StringBundler getProcessedTemplate(
+		PageContext pageContext, String portletId,
+		TemplateResource templateResource)
+		throws Exception {
+
+		return getRuntimePage().getProcessedTemplate(
+			pageContext, portletId, templateResource);
+	}
+
 	public static RuntimePage getRuntimePage() {
 		PortalRuntimePermission.checkGetBeanProperty(RuntimePageUtil.class);
 
@@ -50,15 +59,6 @@ public class RuntimePageUtil {
 		throws Exception {
 
 		getRuntimePage().processTemplate(
-			pageContext, portletId, templateResource);
-	}
-
-	public static StringBundler processTemplateSilently(
-			PageContext pageContext, String portletId,
-			TemplateResource templateResource)
-		throws Exception {
-
-		return getRuntimePage().processTemplateSilently(
 			pageContext, portletId, templateResource);
 	}
 
