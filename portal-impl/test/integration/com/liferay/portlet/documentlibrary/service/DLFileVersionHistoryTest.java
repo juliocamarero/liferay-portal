@@ -119,19 +119,23 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 	protected void deleteVersion(boolean versioned, boolean leaveCheckedOut)
 		throws Exception {
 
-		_fileEntry = DLAppTestUtil.addFileEntry(false, _VERSION_1_0);
+		_fileEntry = DLAppTestUtil.addFileEntry(
+			group.getGroupId(), parentFolder.getFolderId(), false,
+			_VERSION_1_0);
 
 		long fileEntryId = _fileEntry.getFileEntryId();
 
 		if (versioned) {
-			DLAppTestUtil.updateFileEntry(fileEntryId, null, _VERSION_1_1);
+			DLAppTestUtil.updateFileEntry(
+				group.getGroupId(), fileEntryId, null, _VERSION_1_1);
 		}
 
 		if (leaveCheckedOut) {
 			DLAppServiceUtil.checkOutFileEntry(
 				fileEntryId, new ServiceContext());
 
-			DLAppTestUtil.updateFileEntry(fileEntryId, null, _VERSION_PWC);
+			DLAppTestUtil.updateFileEntry(
+				group.getGroupId(), fileEntryId, null, _VERSION_PWC);
 		}
 
 		if (versioned && leaveCheckedOut) {
@@ -213,19 +217,23 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 	protected void revertVersion(boolean versioned, boolean leaveCheckedOut)
 		throws Exception {
 
-		_fileEntry = DLAppTestUtil.addFileEntry(false, _VERSION_1_0);
+		_fileEntry = DLAppTestUtil.addFileEntry(
+			group.getGroupId(), parentFolder.getFolderId(), false,
+			_VERSION_1_0);
 
 		long fileEntryId = _fileEntry.getFileEntryId();
 
 		if (versioned) {
-			DLAppTestUtil.updateFileEntry(fileEntryId, null, _VERSION_1_1);
+			DLAppTestUtil.updateFileEntry(
+				group.getGroupId(), fileEntryId, null, _VERSION_1_1);
 		}
 
 		if (leaveCheckedOut) {
 			DLAppServiceUtil.checkOutFileEntry(
 				fileEntryId, new ServiceContext());
 
-			DLAppTestUtil.updateFileEntry(fileEntryId, null, _VERSION_PWC);
+			DLAppTestUtil.updateFileEntry(
+				group.getGroupId(), fileEntryId, null, _VERSION_PWC);
 		}
 
 		if (versioned && leaveCheckedOut) {

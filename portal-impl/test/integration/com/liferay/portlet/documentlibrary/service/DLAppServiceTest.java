@@ -69,6 +69,10 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 
+		_fileEntry = DLAppTestUtil.addFileEntry(
+			group.getGroupId(), parentFolder.getFolderId(), false,
+			"Test DLAppService.txt");
+
 		_userIds = new long[ServiceTestUtil.THREAD_COUNT];
 
 		for (int i = 0; i < ServiceTestUtil.THREAD_COUNT; i++) {
@@ -340,9 +344,9 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 
 		_fileEntry = fileEntry;
 
-		search(false, "hello", true);
-		search(false, "world", true);
-		search(false, "liferay", false);
+		search(_fileEntry, false, "hello", true);
+		search(_fileEntry, false, "world", true);
+		search(_fileEntry, false, "liferay", false);
 
 		assetTagNames = new String[] {"hello", "world", "liferay"};
 
@@ -361,9 +365,9 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 
 		_fileEntry = fileEntry;
 
-		search(false, "hello", true);
-		search(false, "world", true);
-		search(false, "liferay", true);
+		search(_fileEntry, false, "hello", true);
+		search(_fileEntry, false, "world", true);
+		search(_fileEntry, false, "liferay", true);
 
 		DLAppServiceUtil.deleteFileEntry(_fileEntry.getFileEntryId());
 
@@ -384,7 +388,8 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 	public void testVersionLabel() throws Exception {
 		String fileName = "TestVersion.txt";
 
-		FileEntry fileEntry = DLAppTestUtil.addFileEntry(false, fileName);
+		FileEntry fileEntry = DLAppTestUtil.addFileEntry(
+			group.getGroupId(), parentFolder.getFolderId(), false, fileName);
 
 		Assert.assertEquals(
 			"Version label incorrect after add", "1.0", fileEntry.getVersion());
@@ -404,19 +409,22 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 	}
 
 	protected FileEntry addFileEntry(boolean rootFolder) throws Exception {
-		return DLAppTestUtil.addFileEntry(rootFolder, "Title.txt");
+		return DLAppTestUtil.addFileEntry(
+			group.getGroupId(), parentFolder.getFolderId(), rootFolder,
+			"Title.txt");
 	}
 
 	protected void search(
-			boolean rootFolder, String keywords, boolean assertTrue)
+			FileEntry fileEntry, boolean rootFolder, String keywords,
+			boolean assertTrue)
 		throws Exception {
 
 		SearchContext searchContext = new SearchContext();
 
 		searchContext.setAttribute("paginationType", "regular");
-		searchContext.setCompanyId(_fileEntry.getCompanyId());
-		searchContext.setFolderIds(new long[] {_fileEntry.getFolderId()});
-		searchContext.setGroupIds(new long[] {_fileEntry.getRepositoryId()});
+		searchContext.setCompanyId(fileEntry.getCompanyId());
+		searchContext.setFolderIds(new long[] {fileEntry.getFolderId()});
+		searchContext.setGroupIds(new long[] {fileEntry.getRepositoryId()});
 		searchContext.setKeywords(keywords);
 
 		QueryConfig queryConfig = new QueryConfig();
@@ -439,7 +447,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 			long fileEntryId = GetterUtil.getLong(
 				document.get(Field.ENTRY_CLASS_PK));
 
-			if (fileEntryId == _fileEntry.getFileEntryId()) {
+			if (fileEntryId == fileEntry.getFileEntryId()) {
 				found = true;
 
 				break;
@@ -466,16 +474,14 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 	}
 
 	protected void searchFile(boolean rootFolder) throws Exception {
-		addFileEntry(rootFolder);
+		FileEntry fileEntry = addFileEntry(rootFolder);
 
 		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
 
-		search(rootFolder, "title", true);
-		search(rootFolder, "content", true);
+		search(fileEntry, rootFolder, "title", true);
+		search(fileEntry, rootFolder, "content", true);
 
-		DLAppServiceUtil.deleteFileEntry(_fileEntry.getFileEntryId());
-
-		_fileEntry = null;
+		DLAppServiceUtil.deleteFileEntry(fileEntry.getFileEntryId());
 	}
 
 	protected FileEntry updateFileEntry(
@@ -483,7 +489,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 		throws Exception {
 
 		return DLAppTestUtil.updateFileEntry(
-			fileEntryId, fileName, fileName, majorVersion);
+			group.getGroupId(), fileEntryId, fileName, fileName, majorVersion);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(DLAppServiceTest.class);
@@ -509,7 +515,8 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 		protected void doRun() throws Exception {
 			try {
 				FileEntry fileEntry = DLAppTestUtil.addFileEntry(
-					false, "Test-" + _index + ".txt");
+					group.getGroupId(), parentFolder.getFolderId(), false,
+					"Test-" + _index + ".txt");
 
 				_fileEntryIds[_index] = fileEntry.getFileEntryId();
 
