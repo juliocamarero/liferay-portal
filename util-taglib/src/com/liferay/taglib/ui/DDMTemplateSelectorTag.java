@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Juan Fernández
  */
-public class DDMTemplateSelectTag extends IncludeTag {
+public class DDMTemplateSelectorTag extends IncludeTag {
 
 	public void setClassNameId(long classNameId) {
 		_classNameId = classNameId;

@@ -45,7 +45,7 @@
 		displayStyles.add(RSSUtil.DISPLAY_STYLE_TITLE);
 		%>
 
-		<liferay-ui:ddm-template-select
+		<liferay-ui:ddm-template-selector
 			classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
 			displayStyles="<%= displayStyles %>"
 			preferenceName="pageDisplayStyle"

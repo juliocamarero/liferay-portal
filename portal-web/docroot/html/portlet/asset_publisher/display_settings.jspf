@@ -21,7 +21,7 @@
 		PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemplateHandlerRegistryUtil.getPortletDisplayTemplateHandler(AssetEntry.class.getName());
 		%>
 
-		<liferay-ui:ddm-template-select
+		<liferay-ui:ddm-template-selector
 			classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
 			displayStyles="<%= Arrays.asList(PropsValues.ASSET_PUBLISHER_DISPLAY_STYLES) %>"
 			label="display-template"

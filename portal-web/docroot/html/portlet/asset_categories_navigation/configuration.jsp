@@ -90,7 +90,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 			PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemplateHandlerRegistryUtil.getPortletDisplayTemplateHandler(AssetCategory.class.getName());
 			%>
 
-			<liferay-ui:ddm-template-select
+			<liferay-ui:ddm-template-selector
 				classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
 				preferenceName="displayTemplate"
 				preferenceValue="<%= displayTemplate %>"

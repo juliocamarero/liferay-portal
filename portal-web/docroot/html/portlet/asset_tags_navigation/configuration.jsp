@@ -70,7 +70,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 						displayStyles.add("cloud");
 						%>
 
-						<liferay-ui:ddm-template-select
+						<liferay-ui:ddm-template-selector
 							classNameId="<%= PortalUtil.getClassNameId(portletDisplayTemplateHandler.getClassName()) %>"
 							displayStyles="<%= displayStyles %>"
 							preferenceValue="<%= displayStyle %>"
