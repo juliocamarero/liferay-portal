@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Juan Fernández
  */
-public class DDMTemplateMenuTag extends IncludeTag {
+public class DDMTemplateSelectTag extends IncludeTag {
 
 	public void setClassNameId(long classNameId) {
 		_classNameId = classNameId;
@@ -77,25 +77,25 @@ public class DDMTemplateMenuTag extends IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:classNameId",
+			"liferay-ui:ddm-template-select:classNameId",
 			String.valueOf(_classNameId));
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:displayStyles", _displayStyles);
-		request.setAttribute("liferay-ui:ddm-template-menu:icon", _icon);
-		request.setAttribute("liferay-ui:ddm-template-menu:label", _label);
+			"liferay-ui:ddm-template-select:displayStyles", _displayStyles);
+		request.setAttribute("liferay-ui:ddm-template-select:icon", _icon);
+		request.setAttribute("liferay-ui:ddm-template-select:label", _label);
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:preferenceName", _preferenceName);
+			"liferay-ui:ddm-template-select:preferenceName", _preferenceName);
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:preferenceValue", _preferenceValue);
+			"liferay-ui:ddm-template-select:preferenceValue", _preferenceValue);
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:refreshURL", _refreshURL);
+			"liferay-ui:ddm-template-select:refreshURL", _refreshURL);
 		request.setAttribute(
-			"liferay-ui:ddm-template-menu:showEmptyOption",
+			"liferay-ui:ddm-template-select:showEmptyOption",
 			String.valueOf(_showEmptyOption));
 	}
 
 	private static final String _PAGE =
-		"/html/taglib/ui/ddm-template-menu/page.jsp";
+		"/html/taglib/ui/ddm-template-select/page.jsp";
 
 	private long _classNameId;
 	private List<String> _displayStyles;
