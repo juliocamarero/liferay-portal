@@ -33,7 +33,8 @@ public abstract class BaseDLAppTestCase {
 		group = ServiceTestUtil.addGroup();
 
 		parentFolder = DLAppTestUtil.addFolder(
-			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, "Test Folder", true);
+			group.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			"Test Folder", true);
 	}
 
 	@After
