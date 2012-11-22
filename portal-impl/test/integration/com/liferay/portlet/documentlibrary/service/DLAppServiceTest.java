@@ -96,10 +96,9 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 
 	@Test
 	public void testAddFileEntriesConcurrently() throws Exception {
-		DoAsUserThread[] doAsUserThreads =
-			new DoAsUserThread[ServiceTestUtil.THREAD_COUNT];
+		DoAsUserThread[] doAsUserThreads = new DoAsUserThread[_userIds.length];
 
-		_fileEntryIds = new long[ServiceTestUtil.THREAD_COUNT];
+		_fileEntryIds = new long[_userIds.length];
 
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < doAsUserThreads.length; j++) {
@@ -128,8 +127,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 			}
 
 			String message =
-				"Only " + successCount + " out of " +
-					ServiceTestUtil.THREAD_COUNT;
+				"Only " + successCount + " out of " + _userIds.length;
 
 			if (i == 0) {
 				message += " threads added file entries successfully";
@@ -138,8 +136,7 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				message += " threads retrieved file entries successfully";
 			}
 
-			Assert.assertTrue(
-				message, successCount == ServiceTestUtil.THREAD_COUNT);
+			Assert.assertTrue(message, successCount == _userIds.length);
 		}
 	}
 
