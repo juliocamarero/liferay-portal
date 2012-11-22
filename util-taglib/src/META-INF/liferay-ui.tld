@@ -640,8 +640,8 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>ddm-template-menu</name>
-		<tag-class>com.liferay.taglib.ui.DDMTemplateMenuTag</tag-class>
+		<name>ddm-template-select</name>
+		<tag-class>com.liferay.taglib.ui.DDMTemplateSelectTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
 			<name>classNameId</name>

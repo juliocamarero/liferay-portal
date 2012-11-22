@@ -22,15 +22,15 @@
 <%@ page import="com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateUtil" %>
 
 <%
-long classNameId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:ddm-template-menu:classNameId"));
-List<String> displayStyles = (List<String>)request.getAttribute("liferay-ui:ddm-template-menu:displayStyles");
-String icon = GetterUtil.getString((String)request.getAttribute("liferay-ui:ddm-template-menu:icon"), "configuration");
-String label = (String)request.getAttribute("liferay-ui:ddm-template-menu:label");
-String preferenceName = (String)request.getAttribute("liferay-ui:ddm-template-menu:preferenceName");
-String preferenceValue = (String)request.getAttribute("liferay-ui:ddm-template-menu:preferenceValue");
-String refreshURL = (String)request.getAttribute("liferay-ui:ddm-template-menu:refreshURL");
+long classNameId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:ddm-template-select:classNameId"));
+List<String> displayStyles = (List<String>)request.getAttribute("liferay-ui:ddm-template-select:displayStyles");
+String icon = GetterUtil.getString((String)request.getAttribute("liferay-ui:ddm-template-select:icon"), "configuration");
+String label = (String)request.getAttribute("liferay-ui:ddm-template-select:label");
+String preferenceName = (String)request.getAttribute("liferay-ui:ddm-template-select:preferenceName");
+String preferenceValue = (String)request.getAttribute("liferay-ui:ddm-template-select:preferenceValue");
+String refreshURL = (String)request.getAttribute("liferay-ui:ddm-template-select:refreshURL");
 
-boolean showEmptyOption = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:ddm-template-menu:showEmptyOption"));
+boolean showEmptyOption = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:ddm-template-select:showEmptyOption"));
 
 DDMTemplate ddmTemplate = null;
 
