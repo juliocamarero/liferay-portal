@@ -75,14 +75,6 @@ public class BookmarksFolderServiceTest extends BaseBookmarksServiceTestCase {
 
 	@Test
 	public void testSearch() throws Exception {
-		FileUtil.deltree(
-			PropsValues.LUCENE_DIR + TestPropsValues.getCompanyId());
-
-		FileUtil.mkdirs(
-			PropsValues.LUCENE_DIR + TestPropsValues.getCompanyId());
-
-		LuceneHelperUtil.startup(TestPropsValues.getCompanyId());
-
 		BookmarksEntry entry = addEntry();
 
 		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
