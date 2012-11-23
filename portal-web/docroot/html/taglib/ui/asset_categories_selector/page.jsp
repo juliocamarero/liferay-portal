@@ -155,10 +155,13 @@ private long[] _filterCategoryIds(long vocabularyId, long[] categoryIds) throws 
 	List<Long> filteredCategoryIds = new ArrayList<Long>();
 
 	for (long categoryId : categoryIds) {
-		AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(categoryId);
+		try{
+			AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(categoryId);
 
-		if (category.getVocabularyId() == vocabularyId) {
-			filteredCategoryIds.add(category.getCategoryId());
+			if (category.getVocabularyId() == vocabularyId) {
+				filteredCategoryIds.add(category.getCategoryId());
+			}
+		} catch (NoSuchCategoryException nsce){
 		}
 	}
 
@@ -181,12 +184,15 @@ private String[] _getCategoryIdsTitles(String categoryIds, String categoryNames,
 			StringBundler sb = new StringBundler(categoryIdsArray.length * 2);
 
 			for (long categoryId : categoryIdsArray) {
-				AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(categoryId);
+				try {
+					AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(categoryId);
 
-				category = category.toEscapedModel();
+					category = category.toEscapedModel();
 
-				sb.append(category.getTitle(themeDisplay.getLocale()));
-				sb.append(_CATEGORY_SEPARATOR);
+					sb.append(category.getTitle(themeDisplay.getLocale()));
+					sb.append(_CATEGORY_SEPARATOR);
+				} catch (NoSuchCategoryException nsce){
+				}
 			}
 
 			sb.setIndex(sb.index() - 1);
