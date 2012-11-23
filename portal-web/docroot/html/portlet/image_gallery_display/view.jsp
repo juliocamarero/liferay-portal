@@ -65,6 +65,7 @@ long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayT
 		%>
 
 		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, fileEntries, contextObjects) %>
+
 	</c:when>
 	<c:otherwise>
 
