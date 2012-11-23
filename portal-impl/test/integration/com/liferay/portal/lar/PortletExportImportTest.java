@@ -276,7 +276,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		javax.portlet.PortletPreferences jxGroupPreferencesNavigationPortlet =
 			getGroupPortletPreferences(
 				_group.getCompanyId(), _group.getGroupId(),
-				_NAVIGATION_PORTLET_ID);
+				PortletKeys.NAVIGATION);
 
 		Assert.assertEquals(0, jxPreferencesPortletOne.getMap().size());
 		Assert.assertEquals(0, jxPreferencesPortletTwo.getMap().size());
@@ -345,7 +345,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		throws Exception {
 
 		Portlet navigationPortlet = PortletLocalServiceUtil.getPortletById(
-			layout.getCompanyId(), _NAVIGATION_PORTLET_ID);
+			layout.getCompanyId(), PortletKeys.NAVIGATION);
 
 		if (navigationPortlet.getPreferencesUniquePerLayout()) {
 			navigationPortlet.setPreferencesUniquePerLayout(false);
@@ -356,7 +356,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			(LayoutTypePortlet) layout.getLayoutType();
 
 		String navigationPortletId = layoutTypePortlet.addPortletId(
-			userId, _NAVIGATION_PORTLET_ID, columnId, -1);
+			userId, PortletKeys.NAVIGATION, columnId, -1);
 
 		LayoutLocalServiceUtil.updateLayout(
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
@@ -450,8 +450,6 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 
 		return portletPreferences;
 	}
-
-	private static final String _NAVIGATION_PORTLET_ID = "71";
 
 	private Group _group;
 	private Group _layoutSetPrototypeGroup;
