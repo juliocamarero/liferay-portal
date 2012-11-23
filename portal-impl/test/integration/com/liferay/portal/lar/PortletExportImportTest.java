@@ -250,15 +250,21 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 	public void testExportImportPreferencesUniquePerLayoutTypePortlet()
 		throws Exception {
 
+		UnicodeProperties unicodeProperties = new UnicodeProperties();
+
+		unicodeProperties.setProperty("bulletStyle", "Dots");
+
 		String layoutSetPrototypeNavigationPortletIdA =
-			addNavigationPortletToLayout(
+			addPortletToLayout(
 				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
-				"column-1");
+				"column-1", PortletKeys.NAVIGATION, unicodeProperties, true,
+				true);
 
 		String layoutSetPrototypeNavigationPortletIdB =
-			addNavigationPortletToLayout(
+			addPortletToLayout(
 				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
-				"column-1");
+				"column-1", PortletKeys.NAVIGATION, unicodeProperties, true,
+				true);
 
 		Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
 			_group.getGroupId(), false,
@@ -339,39 +345,6 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		updatePortletPreferences(layout.getPlid(), journalPortletId, prefs);
 
 		return journalPortletId;
-	}
-
-	protected String addNavigationPortletToLayout(
-			long userId, Layout layout, String columnId)
-		throws Exception {
-
-		Portlet navigationPortlet = PortletLocalServiceUtil.getPortletById(
-			layout.getCompanyId(), PortletKeys.NAVIGATION);
-
-		if (navigationPortlet.getPreferencesUniquePerLayout()) {
-			navigationPortlet.setPreferencesUniquePerLayout(false);
-			navigationPortlet.setPreferencesOwnedByGroup(true);
-		}
-
-		LayoutTypePortlet layoutTypePortlet =
-			(LayoutTypePortlet) layout.getLayoutType();
-
-		String navigationPortletId = layoutTypePortlet.addPortletId(
-			userId, PortletKeys.NAVIGATION, columnId, -1);
-
-		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
-
-		javax.portlet.PortletPreferences prefs = getGroupPortletPreferences(
-			layout.getCompanyId(), layout.getGroupId(), navigationPortletId);
-
-		prefs.setValue("bulletStyle", "Dots");
-
-		updateGroupPortletPreferences(
-			layout.getGroupId(), navigationPortletId, prefs);
-
-		return navigationPortletId;
 	}
 
 	protected String addPortletToLayout(
