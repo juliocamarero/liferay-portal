@@ -33,43 +33,33 @@ public class AutoEscapeBeanHandlerTest {
 	public void setUp() throws Exception {
 		new HtmlUtil().setHtml(new HtmlImpl());
 
-		_model = new AutoEscapeFooImpl(UNESCAPED_TEXT);
+		_model = new ModelImpl(UNESCAPED_TEXT);
 	}
 
 	@Test
 	public void testToEscapedModel() {
-		AutoEscapeFoo escapedModel = toEscapedModel();
+		Model escapedModel = _model.toEscapedModel();
 
 		Assert.assertEquals(ESCAPED_TEXT, escapedModel.getAttribute());
-	}
-
-	protected AutoEscapeFoo toEscapedModel() {
-		return (AutoEscapeFoo) ProxyUtil.newProxyInstance(
-			_classLoader, _escapedModelInterfaces,
-			new AutoEscapeBeanHandler(_model));
 	}
 
 	private static final String ESCAPED_TEXT = "old mc&#039;donald";
 
 	private static final String UNESCAPED_TEXT = "old mc'donald";
 
-	private static ClassLoader _classLoader =
-		AutoEscapeFoo.class.getClassLoader();
+	private Model _model;
 
-	private static Class<?>[] _escapedModelInterfaces =
-		new Class[] { AutoEscapeFoo.class };
-
-	private AutoEscapeFoo _model;
-
-	private interface AutoEscapeFoo extends Serializable {
+	private interface Model extends Serializable {
 
 		@AutoEscape
 		public String getAttribute();
+
+		public Model toEscapedModel();
 	}
 
-	private class AutoEscapeFooImpl implements AutoEscapeFoo {
+	private class ModelImpl implements Model {
 
-		public AutoEscapeFooImpl(String value) {
+		public ModelImpl(String value) {
 			_attribute = value;
 		}
 
@@ -77,7 +67,17 @@ public class AutoEscapeBeanHandlerTest {
 			return _attribute;
 		}
 
+		public Model toEscapedModel() {
+			return (Model) ProxyUtil.newProxyInstance(
+				getClass().getClassLoader(), _escapedModelInterfaces,
+				new AutoEscapeBeanHandler(this));
+		}
+
+		private Class<?>[] _escapedModelInterfaces =
+			new Class[] { Model.class };
+
 		private String _attribute;
+
 	}
 
 }
