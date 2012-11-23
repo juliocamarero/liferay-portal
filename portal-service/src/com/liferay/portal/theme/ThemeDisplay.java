@@ -505,6 +505,10 @@ public class ThemeDisplay
 		return _urlHome;
 	}
 
+	/**
+	 * @deprecated Use <code>htmlUtil.escape(
+	$theme_display.getURLPageSettings().toString()) + "#layout")</code>.
+	 */
 	public String getURLLayoutTemplates() {
 		return _urlLayoutTemplates;
 	}
