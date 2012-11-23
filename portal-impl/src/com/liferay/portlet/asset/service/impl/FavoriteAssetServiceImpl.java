@@ -14,7 +14,9 @@
 
 package com.liferay.portlet.asset.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.NoSuchFavoriteAssetException;
 import com.liferay.portlet.asset.model.FavoriteAsset;
 import com.liferay.portlet.asset.service.base.FavoriteAssetServiceBaseImpl;
@@ -36,15 +38,15 @@ import com.liferay.portlet.asset.service.base.FavoriteAssetServiceBaseImpl;
 public class FavoriteAssetServiceImpl extends FavoriteAssetServiceBaseImpl {
 
 	public FavoriteAsset addFavoriteAsset(
-			long userId, String className, long classPK)
-		throws SystemException {
+			long groupId, long userId, String className, long classPK)
+		throws SystemException, PortalException {
 
 		return favoriteAssetLocalService.addFavoriteAsset(
-			userId, className, classPK);
+			groupId, userId, className, classPK);
 	}
 
 	public void deleteFavoriteAsset(long userId, long classPK)
-		throws NoSuchFavoriteAssetException, SystemException {
+		throws PortalException, SystemException {
 
 		favoriteAssetLocalService.deleteFavoriteAsset(userId, classPK);
 	}
