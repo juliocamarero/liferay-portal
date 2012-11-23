@@ -410,6 +410,153 @@ public class AssetEntryServiceHttp {
 		}
 	}
 
+	public static java.util.List<com.liferay.portlet.asset.model.AssetEntry> getBookmarkedEntries(
+		HttpPrincipal httpPrincipal, long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(AssetEntryServiceUtil.class,
+					"getBookmarkedEntries",
+					_getBookmarkedEntriesParameterTypes15);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, userId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<com.liferay.portlet.asset.model.AssetEntry>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static java.util.List<com.liferay.portlet.asset.model.AssetEntry> getBookmarkedEntries(
+		HttpPrincipal httpPrincipal, long userId, java.lang.String className)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(AssetEntryServiceUtil.class,
+					"getBookmarkedEntries",
+					_getBookmarkedEntriesParameterTypes16);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, userId,
+					className);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<com.liferay.portlet.asset.model.AssetEntry>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static java.util.List<com.liferay.portlet.asset.model.AssetEntry> getBookmarkedEntries(
+		HttpPrincipal httpPrincipal, long userId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(AssetEntryServiceUtil.class,
+					"getBookmarkedEntries",
+					_getBookmarkedEntriesParameterTypes17);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, userId,
+					start, end);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<com.liferay.portlet.asset.model.AssetEntry>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static java.util.List<com.liferay.portlet.asset.model.AssetEntry> getBookmarkedEntries(
+		HttpPrincipal httpPrincipal, long userId, java.lang.String className,
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(AssetEntryServiceUtil.class,
+					"getBookmarkedEntries",
+					_getBookmarkedEntriesParameterTypes18);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, userId,
+					className, start, end);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<com.liferay.portlet.asset.model.AssetEntry>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(AssetEntryServiceHttp.class);
 	private static final Class<?>[] _getCompanyEntriesParameterTypes0 = new Class[] {
 			long.class, int.class, int.class
@@ -458,5 +605,17 @@ public class AssetEntryServiceHttp {
 			java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, int.class, int.class,
 			java.lang.Integer.class, boolean.class
+		};
+	private static final Class<?>[] _getBookmarkedEntriesParameterTypes15 = new Class[] {
+			long.class
+		};
+	private static final Class<?>[] _getBookmarkedEntriesParameterTypes16 = new Class[] {
+			long.class, java.lang.String.class
+		};
+	private static final Class<?>[] _getBookmarkedEntriesParameterTypes17 = new Class[] {
+			long.class, int.class, int.class
+		};
+	private static final Class<?>[] _getBookmarkedEntriesParameterTypes18 = new Class[] {
+			long.class, java.lang.String.class, int.class, int.class
 		};
 }
