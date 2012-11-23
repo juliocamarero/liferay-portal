@@ -333,6 +333,34 @@ public class AssetEntryLocalServiceWrapper implements AssetEntryLocalService,
 		return _assetEntryLocalService.getEntry(className, classPK);
 	}
 
+	public java.util.List<com.liferay.portlet.asset.model.AssetEntry> getBookmarkedEntries(
+		long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryLocalService.getBookmarkedEntries(userId);
+	}
+
+	public java.util.List<com.liferay.portlet.asset.model.AssetEntry> getBookmarkedEntries(
+		long userId, java.lang.String className)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryLocalService.getBookmarkedEntries(userId, className);
+	}
+
+	public java.util.List<com.liferay.portlet.asset.model.AssetEntry> getBookmarkedEntries(
+		long userId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryLocalService.getBookmarkedEntries(userId, start, end);
+	}
+
+	public java.util.List<com.liferay.portlet.asset.model.AssetEntry> getBookmarkedEntries(
+		long userId, java.lang.String className, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetEntryLocalService.getBookmarkedEntries(userId, className,
+			start, end);
+	}
+
 	public com.liferay.portlet.asset.model.AssetEntry getNextEntry(long entryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
