@@ -429,11 +429,11 @@
 
 		<reference package-path="com.liferay.portal" entity="Group" />
 	</entity>
-	<entity name="FavoriteAsset" local-service="true" remote-service="true" uuid="true">
+	<entity name="AssetBookmark" local-service="true" remote-service="true" uuid="true">
 
 		<!-- PK fields -->
 
-		<column name="favoriteId" type="long" primary="true" />
+		<column name="bookmarkId" type="long" primary="true" />
 
 		<!-- Other fields -->
 
@@ -450,11 +450,11 @@
 			<finder-column name="userId" />
 			<finder-column name="classNameId" />
 		</finder>
-		<finder name="U_CPK" return-type="FavoriteAsset" >
+		<finder name="U_CPK" return-type="AssetBookmark" >
 			<finder-column name="userId" />
 			<finder-column name="classPK" />
 		</finder>
-		<finder name="U_C_C" return-type="FavoriteAsset" >
+		<finder name="U_C_C" return-type="AssetBookmark" >
 			<finder-column name="userId" />
 			<finder-column name="classNameId"  />
 			<finder-column name="classPK" />
