@@ -17,6 +17,12 @@ create index IX_F2949120 on AnnouncementsEntry (uuid_, companyId);
 create index IX_9C7EB9F on AnnouncementsFlag (entryId);
 create unique index IX_4539A99C on AnnouncementsFlag (userId, entryId, value);
 
+create index IX_5D65F2A6 on AssetBookmark (userId);
+create index IX_57DD0468 on AssetBookmark (userId, classNameId);
+create index IX_8EB6447B on AssetBookmark (userId, classNameId, classPK);
+create index IX_B3227BFD on AssetBookmark (userId, classPK);
+create index IX_ABC891C8 on AssetBookmark (uuid_);
+
 create index IX_E639E2F6 on AssetCategory (groupId);
 create index IX_510B46AC on AssetCategory (groupId, parentCategoryId, name);
 create index IX_2008FACB on AssetCategory (groupId, vocabularyId);
