@@ -43,6 +43,14 @@ public class AutoEscapeBeanHandlerTest {
 		Assert.assertEquals(ESCAPED_TEXT, escapedModel.getAttribute());
 	}
 
+	@Test
+	public void testToEscapedModelUnescapedAttribute() {
+		Model escapedModel = _model.toEscapedModel();
+
+		Assert.assertEquals(
+			UNESCAPED_TEXT, escapedModel.getUnescapedAttribute());
+	}
+
 	private static final String ESCAPED_TEXT = "old mc&#039;donald";
 
 	private static final String UNESCAPED_TEXT = "old mc'donald";
@@ -54,6 +62,8 @@ public class AutoEscapeBeanHandlerTest {
 		@AutoEscape
 		public String getAttribute();
 
+		public String getUnescapedAttribute();
+
 		public Model toEscapedModel();
 	}
 
@@ -61,10 +71,15 @@ public class AutoEscapeBeanHandlerTest {
 
 		public ModelImpl(String value) {
 			_attribute = value;
+			_unescapedAttribute = value;
 		}
 
 		public String getAttribute() {
 			return _attribute;
+		}
+
+		public String getUnescapedAttribute() {
+			return _unescapedAttribute;
 		}
 
 		public Model toEscapedModel() {
@@ -77,6 +92,7 @@ public class AutoEscapeBeanHandlerTest {
 			new Class[] { Model.class };
 
 		private String _attribute;
+		private String _unescapedAttribute;
 
 	}
 
