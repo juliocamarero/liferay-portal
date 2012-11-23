@@ -109,7 +109,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			addPortletToLayout(
 				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
 				"column-1", PortletKeys.JOURNAL_CONTENT, unicodeProperties,
-				false, false);
+				true, true);
 
 		// Create site from site template
 
@@ -260,7 +260,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 	}
 
 	@Test
-	public void testExportImportPreferencesUniquePerLayoutTypePortlet()
+	public void testExportImportPreferencesNonUniquePerLayoutTypePortlet()
 		throws Exception {
 
 		UnicodeProperties unicodeProperties = new UnicodeProperties();
@@ -270,13 +270,15 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		String layoutSetPrototypeNavigationPortletIdA =
 			addPortletToLayout(
 				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
-				"column-1", PortletKeys.NAVIGATION, unicodeProperties, true,
+				"column-1", PortletKeys.NAVIGATION, unicodeProperties, false,
 				true);
+
+		unicodeProperties.setProperty("bulletStyle", "Arrows");
 
 		String layoutSetPrototypeNavigationPortletIdB =
 			addPortletToLayout(
 				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
-				"column-1", PortletKeys.NAVIGATION, unicodeProperties, true,
+				"column-1", PortletKeys.NAVIGATION, unicodeProperties, false,
 				true);
 
 		Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
@@ -302,7 +304,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		Assert.assertEquals(0, jxPreferencesPortletTwo.getMap().size());
 
 		Assert.assertEquals(
-			"Dots",
+			"Arrows",
 			jxGroupPreferencesNavigationPortlet.getValue(
 				"bulletStyle", StringPool.BLANK));
 	}
@@ -336,16 +338,14 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 	protected String addPortletToLayout(
 			long userId, Layout layout, String columnId, String portletId,
 			UnicodeProperties unicodeProperties,
-			boolean preferencesUniquePerLayout, boolean groupPortletPreferences)
+			boolean preferencesUniquePerLayout, boolean preferencesOwnedByGroup)
 		throws Exception {
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			layout.getCompanyId(), portletId);
 
-		if (preferencesUniquePerLayout) {
-			portlet.setPreferencesUniquePerLayout(false);
-			portlet.setPreferencesOwnedByGroup(true);
-		}
+		portlet.setPreferencesUniquePerLayout(preferencesUniquePerLayout);
+		portlet.setPreferencesOwnedByGroup(preferencesOwnedByGroup);
 
 		LayoutTypePortlet layoutTypePortlet =
 			(LayoutTypePortlet) layout.getLayoutType();
@@ -359,7 +359,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 
 		javax.portlet.PortletPreferences prefs = null;
 
-		if (groupPortletPreferences) {
+		if (!preferencesUniquePerLayout) {
 			prefs = getGroupPortletPreferences(
 				layout.getCompanyId(), layout.getGroupId(), layoutPortletId);
 		}
@@ -372,7 +372,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			prefs.setValue(key, unicodeProperties.get(key));
 		}
 
-		if (groupPortletPreferences) {
+		if (!preferencesUniquePerLayout) {
 			updateGroupPortletPreferences(
 				layout.getGroupId(), layoutPortletId, prefs);
 		}
