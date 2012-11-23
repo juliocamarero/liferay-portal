@@ -93,10 +93,23 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			_layoutSetPrototypeGroup.getGroupId(), 0, "Test Article",
 			"Test Content");
 
+		UnicodeProperties unicodeProperties = new UnicodeProperties();
+
+		unicodeProperties.setProperty(
+			"articleId", _layoutSetPrototypeJournalArticle.getArticleId());
+
+		unicodeProperties.setProperty(
+			"groupId",
+			String.valueOf(_layoutSetPrototypeJournalArticle.getGroupId()));
+
+		unicodeProperties.setProperty(
+			"showAvailableLocales", Boolean.TRUE.toString());
+
 		_layoutSetPrototypeJournalContentPortletId =
-			addJournalContentPortletToLayout(
+			addPortletToLayout(
 				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
-				_layoutSetPrototypeJournalArticle, "column-1");
+				"column-1", PortletKeys.JOURNAL_CONTENT, unicodeProperties,
+				false, false);
 
 		// Create site from site template
 
@@ -318,33 +331,6 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			"general", null, null, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true,
 			0, 0, 0, 0, 0, true, false, false, null, null, null, null,
 			serviceContext);
-	}
-
-	protected String addJournalContentPortletToLayout(
-			long userId, Layout layout, JournalArticle journalArticle,
-			String columnId)
-		throws Exception {
-
-		LayoutTypePortlet layoutTypePortlet =
-			(LayoutTypePortlet) layout.getLayoutType();
-
-		String journalPortletId = layoutTypePortlet.addPortletId(
-			userId, PortletKeys.JOURNAL_CONTENT, columnId, -1);
-
-		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
-
-		javax.portlet.PortletPreferences prefs = getPortletPreferences(
-			layout.getCompanyId(), layout.getPlid(), journalPortletId);
-
-		prefs.setValue("articleId", journalArticle.getArticleId());
-		prefs.setValue("groupId", String.valueOf(journalArticle.getGroupId()));
-		prefs.setValue("showAvailableLocales", Boolean.TRUE.toString());
-
-		updatePortletPreferences(layout.getPlid(), journalPortletId, prefs);
-
-		return journalPortletId;
 	}
 
 	protected String addPortletToLayout(
