@@ -53,8 +53,8 @@ public class AssetEntryFinderImpl
 	public static final String FIND_BY_AND_TAG_IDS =
 		AssetEntryFinder.class.getName() + ".findByAndTagIds";
 
-	public static final String FIND_FAVORITE_ENTRIES =
-		AssetEntryFinder.class.getName() + ".findFavoriteEntries";
+	public static final String FIND_BOOKMARKED_ENTRIES =
+		AssetEntryFinder.class.getName() + ".findBookmarkedEntries";
 
 	public int countEntries(AssetEntryQuery entryQuery) throws SystemException {
 		Session session = null;
@@ -105,7 +105,7 @@ public class AssetEntryFinderImpl
 		}
 	}
 
-	public List<AssetEntry> findFavoriteEntries(
+	public List<AssetEntry> findBookmarkedEntries(
 			long userId, long classNameId, int start, int end)
 		throws SystemException {
 
@@ -114,7 +114,7 @@ public class AssetEntryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(FIND_FAVORITE_ENTRIES);
+			String sql = CustomSQLUtil.get(FIND_BOOKMARKED_ENTRIES);
 
 			SQLQuery q = session.createSQLQuery(sql);
 

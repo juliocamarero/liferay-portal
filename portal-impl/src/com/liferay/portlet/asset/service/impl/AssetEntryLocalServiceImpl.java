@@ -176,6 +176,35 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		return assetEntryPersistence.countByCompanyId(companyId);
 	}
 
+	public List<AssetEntry> getBookmarkedEntries(long userId)
+		throws PortalException, SystemException {
+
+		return getBookmarkedEntries(
+			userId, StringPool.BLANK, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
+
+	public List<AssetEntry> getBookmarkedEntries(long userId, String className)
+		throws PortalException, SystemException {
+
+		return getBookmarkedEntries(
+			userId, className, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
+
+	public List<AssetEntry> getBookmarkedEntries(
+			long userId, int start, int end)
+		throws PortalException, SystemException {
+
+		return getBookmarkedEntries(userId, StringPool.BLANK, start, end);
+	}
+
+	public List<AssetEntry> getBookmarkedEntries(
+			long userId, String className, int start, int end)
+		throws SystemException {
+
+		return assetEntryFinder.findBookmarkedEntries(
+			userId, PortalUtil.getClassNameId(className), start, end);
+	}
+
 	public List<AssetEntry> getEntries(AssetEntryQuery entryQuery)
 		throws SystemException {
 
@@ -206,34 +235,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		long classNameId = PortalUtil.getClassNameId(className);
 
 		return assetEntryPersistence.findByC_C(classNameId, classPK);
-	}
-
-	public List<AssetEntry> getFavoriteEntries(long userId)
-		throws SystemException, PortalException {
-
-		return getFavoriteEntries(
-			userId, StringPool.BLANK, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-	}
-
-	public List<AssetEntry> getFavoriteEntries(long userId, String className)
-		throws SystemException, PortalException {
-
-		return getFavoriteEntries(
-				userId, className, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-	}
-
-	public List<AssetEntry> getFavoriteEntries(long userId, int start, int end)
-		throws SystemException, PortalException {
-
-		return getFavoriteEntries(userId, StringPool.BLANK, start, end);
-	}
-
-	public List<AssetEntry> getFavoriteEntries(
-			long userId, String className, int start, int end)
-		throws SystemException {
-
-		return assetEntryFinder.findFavoriteEntries(
-			userId, PortalUtil.getClassNameId(className), start, end);
 	}
 
 	public AssetEntry getNextEntry(long entryId)

@@ -176,16 +176,16 @@
 				([$TAG_ID$])
 		]]>
 	</sql>
-	<sql id="com.liferay.portlet.asset.service.persistence.AssetEntryFinder.findFavoriteEntries">
+	<sql id="com.liferay.portlet.asset.service.persistence.AssetEntryFinder.findBookmarkedEntries">
 		<![CDATA[
 			SELECT
 				{AssetEntry.*}
 			FROM
 				AssetEntry
 			INNER JOIN
-				FavoriteAsset ON (AssetEntry.classPK = FavoriteAsset.classPK)
+				AssetBookmark ON (AssetEntry.classPK = AssetBookmark.classPK)
 			WHERE
-				(FavoriteAsset.userId = ?)
+				(AssetBookmark.userId = ?)
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.asset.service.persistence.AssetLinkFinder.findByE1_V">

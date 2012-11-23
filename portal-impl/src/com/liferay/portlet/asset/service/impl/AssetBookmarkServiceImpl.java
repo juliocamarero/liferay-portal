@@ -16,45 +16,44 @@ package com.liferay.portlet.asset.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.asset.NoSuchFavoriteAssetException;
-import com.liferay.portlet.asset.model.FavoriteAsset;
-import com.liferay.portlet.asset.service.base.FavoriteAssetServiceBaseImpl;
+import com.liferay.portlet.asset.model.AssetBookmark;
+import com.liferay.portlet.asset.service.base.AssetBookmarkServiceBaseImpl;
 
 /**
  * The implementation of the favorite asset remote service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.portlet.asset.service.FavoriteAssetService} interface.
+ * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.portlet.asset.service.AssetBookmarkService} interface.
  *
  * <p>
  * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
  * </p>
  *
  * @author Juan Fernández
- * @see com.liferay.portlet.asset.service.base.FavoriteAssetServiceBaseImpl
- * @see com.liferay.portlet.asset.service.FavoriteAssetServiceUtil
+ * @see com.liferay.portlet.asset.service.base.AssetBookmarkServiceBaseImpl
+ * @see com.liferay.portlet.asset.service.AssetBookmarkServiceUtil
  */
-public class FavoriteAssetServiceImpl extends FavoriteAssetServiceBaseImpl {
+public class AssetBookmarkServiceImpl extends AssetBookmarkServiceBaseImpl {
 
-	public FavoriteAsset addFavoriteAsset(
+	public AssetBookmark addAssetBookmark(
 			long groupId, long userId, String className, long classPK)
-		throws SystemException, PortalException {
+		throws PortalException, SystemException {
 
-		return favoriteAssetLocalService.addFavoriteAsset(
+		return assetBookmarkLocalService.addAssetBookmark(
 			groupId, userId, className, classPK);
 	}
 
-	public void deleteFavoriteAsset(long userId, long classPK)
+	public void deleteAssetBookmark(long userId, long classPK)
 		throws PortalException, SystemException {
 
-		favoriteAssetLocalService.deleteFavoriteAsset(userId, classPK);
+		assetBookmarkLocalService.deleteAssetBookmark(userId, classPK);
 	}
 
-	public boolean isFavorite(long userId, String className, long classPK)
+	public boolean isBookmarked(long userId, String className, long classPK)
 		throws SystemException {
 
-		return favoriteAssetLocalService.isFavorite(userId, className, classPK);
+		return assetBookmarkLocalService.isBookmarked(
+			userId, className, classPK);
 	}
 
 }

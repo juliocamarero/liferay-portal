@@ -18,8 +18,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.asset.model.FavoriteAsset;
-import com.liferay.portlet.asset.service.base.FavoriteAssetLocalServiceBaseImpl;
+import com.liferay.portlet.asset.model.AssetBookmark;
+import com.liferay.portlet.asset.service.base.AssetBookmarkLocalServiceBaseImpl;
 
 import java.util.Date;
 
@@ -27,76 +27,76 @@ import java.util.Date;
  * The implementation of the favorite asset local service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.portlet.asset.service.FavoriteAssetLocalService} interface.
+ * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.portlet.asset.service.AssetBookmarkLocalService} interface.
  *
  * <p>
  * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
  * </p>
  *
  * @author Juan Fernández
- * @see com.liferay.portlet.asset.service.base.FavoriteAssetLocalServiceBaseImpl
- * @see com.liferay.portlet.asset.service.FavoriteAssetLocalServiceUtil
+ * @see com.liferay.portlet.asset.service.base.AssetBookmarkLocalServiceBaseImpl
+ * @see com.liferay.portlet.asset.service.AssetBookmarkLocalServiceUtil
  */
-public class FavoriteAssetLocalServiceImpl
-	extends FavoriteAssetLocalServiceBaseImpl {
+public class AssetBookmarkLocalServiceImpl
+	extends AssetBookmarkLocalServiceBaseImpl {
 
-	public FavoriteAsset addFavoriteAsset(
+	public AssetBookmark addAssetBookmark(
 			long groupId, long userId, String className, long classPK)
-		throws SystemException, PortalException {
+		throws PortalException, SystemException {
 
 		long favoriteId = counterLocalService.increment();
 
-		FavoriteAsset favoriteAsset = favoriteAssetPersistence.create(
+		AssetBookmark assetBookmark = assetBookmarkPersistence.create(
 			favoriteId);
 
-		favoriteAsset.setUserId(userId);
-		favoriteAsset.setClassNameId(PortalUtil.getClassNameId(className));
-		favoriteAsset.setClassPK(classPK);
+		assetBookmark.setUserId(userId);
+		assetBookmark.setClassNameId(PortalUtil.getClassNameId(className));
+		assetBookmark.setClassPK(classPK);
 
-		favoriteAsset = favoriteAssetPersistence.update(favoriteAsset);
+		assetBookmark = assetBookmarkPersistence.update(assetBookmark);
 
 		// Asset
 
-		updateAsset(groupId, userId, favoriteAsset, null);
+		updateAsset(groupId, userId, assetBookmark, null);
 
-		return favoriteAsset;
+		return assetBookmark;
 	}
 
-	public void deleteFavoriteAsset(long userId, long classPK)
+	public void deleteAssetBookmark(long userId, long classPK)
 		throws PortalException, SystemException {
 
-		favoriteAssetPersistence.removeByU_CPK(userId, classPK);
+		assetBookmarkPersistence.removeByU_CPK(userId, classPK);
 
 		// Asset
 
 		assetEntryLocalService.deleteEntry(
-			FavoriteAsset.class.getName(), classPK);
+			AssetBookmark.class.getName(), classPK);
 	}
 
-	public boolean isFavorite(long userId, String className, long classPK)
+	public boolean isBookmarked(long userId, String className, long classPK)
 		throws SystemException {
 
 		long classNameId = PortalUtil.getClassNameId(className);
 
-		FavoriteAsset favoriteAsset = favoriteAssetPersistence.fetchByU_C_C(
+		AssetBookmark assetBookmark = assetBookmarkPersistence.fetchByU_C_C(
 			userId, classNameId, classPK);
 
-		return (favoriteAsset != null);
+		return (assetBookmark != null);
 	}
 
 	public void updateAsset(
-			long groupId, long userId, FavoriteAsset favoriteAsset,
+			long groupId, long userId, AssetBookmark assetBookmark,
 			long[] assetCategoryIds)
-		throws SystemException, PortalException {
+		throws PortalException, SystemException {
 
 		Date now = new Date();
 
 		assetEntryLocalService.updateEntry(
-			userId, groupId, now, now, FavoriteAsset.class.getName(),
-			favoriteAsset.getClassPK(), favoriteAsset.getUuid(), 0,
+			userId, groupId, now, now, AssetBookmark.class.getName(),
+			assetBookmark.getClassPK(), assetBookmark.getUuid(), 0,
 			assetCategoryIds, null, true, null, null, null,
-			ContentTypes.TEXT_HTML, null, null, null, null, null, 0, 0,
-			null, false);
+			ContentTypes.TEXT_HTML, null, null, null, null, null, 0, 0, null,
+			false);
 	}
 
 }
