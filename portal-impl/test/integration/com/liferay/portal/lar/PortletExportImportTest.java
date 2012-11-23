@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -371,6 +372,56 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			layout.getGroupId(), navigationPortletId, prefs);
 
 		return navigationPortletId;
+	}
+
+	protected String addPortletToLayout(
+			long userId, Layout layout, String columnId, String portletId,
+			UnicodeProperties unicodeProperties,
+			boolean preferencesUniquePerLayout, boolean groupPortletPreferences)
+		throws Exception {
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			layout.getCompanyId(), portletId);
+
+		if (preferencesUniquePerLayout) {
+			portlet.setPreferencesUniquePerLayout(false);
+			portlet.setPreferencesOwnedByGroup(true);
+		}
+
+		LayoutTypePortlet layoutTypePortlet =
+			(LayoutTypePortlet) layout.getLayoutType();
+
+		String layoutPortletId = layoutTypePortlet.addPortletId(
+			userId, portletId, columnId, -1);
+
+		LayoutLocalServiceUtil.updateLayout(
+			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
+			layout.getTypeSettings());
+
+		javax.portlet.PortletPreferences prefs = null;
+
+		if (groupPortletPreferences) {
+			prefs = getGroupPortletPreferences(
+				layout.getCompanyId(), layout.getGroupId(), layoutPortletId);
+		}
+		else {
+			prefs = getPortletPreferences(
+				layout.getCompanyId(), layout.getPlid(), layoutPortletId);
+		}
+
+		for (String key : unicodeProperties.keySet()) {
+			prefs.setValue(key, unicodeProperties.get(key));
+		}
+
+		if (groupPortletPreferences) {
+			updateGroupPortletPreferences(
+				layout.getGroupId(), layoutPortletId, prefs);
+		}
+		else {
+			updatePortletPreferences(layout.getPlid(), layoutPortletId, prefs);
+		}
+
+		return layoutPortletId;
 	}
 
 	protected String getArticleContent(String content, String localeId) {
