@@ -26,6 +26,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
@@ -77,8 +79,14 @@ public class EditEntryAction extends PortletAction {
 			else if (cmd.equals(Constants.DELETE)) {
 				deleteEntries(actionRequest);
 			}
+			else if (cmd.equals(Constants.DELETE_ENTRY)) {
+				deleteEntry(actionRequest);
+			}
 			else if (cmd.equals(Constants.EMPTY_TRASH)) {
 				emptyTrash(actionRequest);
+			}
+			else if (cmd.equals(Constants.MOVE_ENTRY)) {
+				moveEntry(actionRequest);
 			}
 			else if (cmd.equals(Constants.RENAME)) {
 				entries = restoreRename(actionRequest);
@@ -91,7 +99,8 @@ public class EditEntryAction extends PortletAction {
 			}
 
 			if (cmd.equals(Constants.RENAME) || cmd.equals(Constants.RESTORE) ||
-				cmd.equals(Constants.OVERRIDE)) {
+				cmd.equals(Constants.OVERRIDE) ||
+				cmd.equals(Constants.MOVE_ENTRY)) {
 
 				addRestoreData(
 					(LiferayPortletConfig)portletConfig, actionRequest,
@@ -130,6 +139,7 @@ public class EditEntryAction extends PortletAction {
 
 		for (int i = 0; i < entries.size(); i++) {
 			ObjectValuePair<String, Long> entry = entries.get(i);
+
 			TrashHandler trashHandler =
 				TrashHandlerRegistryUtil.getTrashHandler(entry.getKey());
 
@@ -191,11 +201,46 @@ public class EditEntryAction extends PortletAction {
 		trashHandler.deleteTrashEntry(entry.getClassPK());
 	}
 
+	protected void deleteEntry(ActionRequest actionRequest) throws Exception {
+		String className = ParamUtil.getString(actionRequest, "className");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			className);
+
+		trashHandler.deleteTrashEntry(classPK);
+	}
+
 	protected void emptyTrash(ActionRequest actionRequest) throws Exception {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		TrashEntryServiceUtil.deleteEntries(themeDisplay.getScopeGroupId());
+	}
+
+	protected List<ObjectValuePair<String, Long>> moveEntry(
+			ActionRequest actionRequest)
+		throws Exception {
+
+		long containerModelId = ParamUtil.getLong(
+			actionRequest, "containerModelId");
+		String className = ParamUtil.getString(actionRequest, "className");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			className);
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			className, actionRequest);
+
+		trashHandler.moveEntry(classPK, containerModelId, serviceContext);
+
+		List<ObjectValuePair<String, Long>> entries =
+			new ArrayList<ObjectValuePair<String, Long>>();
+
+		entries.add(new ObjectValuePair<String, Long>(className, classPK));
+
+		return entries;
 	}
 
 	protected List<ObjectValuePair<String, Long>> restoreEntries(
