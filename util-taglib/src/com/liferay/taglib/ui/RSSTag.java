@@ -56,9 +56,9 @@ public class RSSTag extends IncludeTag {
 
 	@Override
 	protected void cleanUp() {
-		_delta = _DEFAULT_DELTA;
-		_displayStyle = _DEFAULT_DISPLAY_STYLE;
-		_feedType = _DEFAULT_FEED_TYPE;
+		_delta = SearchContainer.DEFAULT_DELTA;
+		_displayStyle = RSSUtil.DISPLAY_STYLE_ABSTRACT;
+		_feedType = RSSUtil.FEED_TYPE_DEFAULT;
 		_name = null;
 		_resourceURL = null;
 		_url = null;
@@ -83,18 +83,18 @@ public class RSSTag extends IncludeTag {
 		if (_resourceURL != null) {
 			_resourceURL.setCacheability(ResourceURL.FULL);
 
-			if ((_delta > 0) && (_delta != _DEFAULT_DELTA)) {
+			if ((_delta > 0) && (_delta != SearchContainer.DEFAULT_DELTA)) {
 				_resourceURL.setParameter("max", String.valueOf(_delta));
 			}
 
 			if (Validator.isNotNull(_displayStyle) &&
-					!_displayStyle.equals(_DEFAULT_DISPLAY_STYLE)) {
+					!_displayStyle.equals(RSSUtil.DISPLAY_STYLE_ABSTRACT)) {
 
 				_resourceURL.setParameter("displayStyle", _displayStyle);
 			}
 
 			if (Validator.isNotNull(_feedType) &&
-					!_feedType.equals(_DEFAULT_FEED_TYPE)) {
+					!_feedType.equals(RSSUtil.FEED_TYPE_DEFAULT)) {
 
 				_resourceURL.setParameter(
 					"type", RSSUtil.getFeedTypeFormat(_feedType));
@@ -110,19 +110,19 @@ public class RSSTag extends IncludeTag {
 			return _resourceURL.toString();
 		}
 		else if (Validator.isNotNull(_url)) {
-			if ((_delta > 0) && (_delta != _DEFAULT_DELTA)) {
+			if ((_delta > 0) && (_delta != SearchContainer.DEFAULT_DELTA)) {
 				_url = HttpUtil.addParameter(_url, "max", _delta);
 			}
 
 			if (Validator.isNotNull(_displayStyle) &&
-					!_displayStyle.equals(_DEFAULT_DISPLAY_STYLE)) {
+					!_displayStyle.equals(RSSUtil.DISPLAY_STYLE_ABSTRACT)) {
 
 				_url = HttpUtil.addParameter(
 					_url, "displayStyle", _displayStyle);
 			}
 
 			if (Validator.isNotNull(_feedType) &&
-					!_feedType.equals(_DEFAULT_FEED_TYPE)) {
+					!_feedType.equals(RSSUtil.FEED_TYPE_DEFAULT)) {
 
 				_url = HttpUtil.addParameter(
 					_url, "type", RSSUtil.getFeedTypeFormat(_feedType));
@@ -143,18 +143,11 @@ public class RSSTag extends IncludeTag {
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
 
-	private static final int _DEFAULT_DELTA = SearchContainer.DEFAULT_DELTA;
-
-	private static final String _DEFAULT_DISPLAY_STYLE =
-		RSSUtil.DISPLAY_STYLE_ABSTRACT;
-
-	private static final String _DEFAULT_FEED_TYPE= RSSUtil.FEED_TYPE_DEFAULT;
-
 	private static final String _PAGE = "/html/taglib/ui/rss/page.jsp";
 
-	private int _delta;
-	private String _displayStyle;
-	private String _feedType;
+	private int _delta = SearchContainer.DEFAULT_DELTA;
+	private String _displayStyle = RSSUtil.DISPLAY_STYLE_ABSTRACT;
+	private String _feedType = RSSUtil.FEED_TYPE_DEFAULT;
 	private String _name;
 	private ResourceURL _resourceURL;
 	private String _url;
