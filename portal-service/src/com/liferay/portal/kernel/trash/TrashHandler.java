@@ -386,6 +386,8 @@ public interface TrashHandler {
 	public boolean isInTrash(long classPK)
 		throws PortalException, SystemException;
 
+	public boolean isMovable();
+
 	/**
 	 * Returns <code>true</code> if the model entity can be restored to its
 	 * original location.

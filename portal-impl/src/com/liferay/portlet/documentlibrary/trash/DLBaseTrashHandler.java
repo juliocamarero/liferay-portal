@@ -175,6 +175,10 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 		return trashRenderers;
 	}
 
+	public boolean isMovable() {
+		return true;
+	}
+
 	protected DLFolder getDLFolder(long classPK)
 		throws PortalException, SystemException {
 
