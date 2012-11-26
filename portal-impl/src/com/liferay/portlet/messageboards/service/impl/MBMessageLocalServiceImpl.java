@@ -1237,12 +1237,10 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		FileEntry fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
 			message.getGroupId(), message.getAttachmentsFolderId(), fileName);
 
-		long fileEntryId = fileEntry.getFileEntryId();
-
 		PortletFileRepositoryUtil.movePortletFileEntryToTrash(
-			userId, fileEntryId);
+			userId, fileEntry.getFileEntryId());
 
-		return fileEntryId;
+		return fileEntry.getFileEntryId();
 	}
 
 	public void restoreMessageAttachmentFromTrash(
