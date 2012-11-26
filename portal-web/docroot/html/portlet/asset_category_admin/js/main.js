@@ -1669,7 +1669,9 @@ AUI.add(
 								errorKey = Liferay.Language.get('that-category-already-exists');
 							}
 							else if ((exception.indexOf('CategoryNameException') > -1) ||
-									(exception.indexOf('AssetCategoryException') > -1)) {
+									(exception.indexOf('AssetCategoryException') > -1) ||
+									(exception.indexOf('CategoryPropertyKeyException') > -1) ||
+									(exception.indexOf('CategoryPropertyValueException') > -1)) {
 
 								errorKey = Liferay.Language.get('one-of-your-fields-contains-invalid-characters');
 							}
