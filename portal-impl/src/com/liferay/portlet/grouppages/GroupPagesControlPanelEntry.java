@@ -17,53 +17,44 @@ package com.liferay.portlet.grouppages;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.security.permission.ActionKeys;
-import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletCategoryKeys;
-import com.liferay.portlet.BaseControlPanelEntry;
+import com.liferay.portlet.DefaultControlPanelEntry;
 
 /**
  * @author Jorge Ferrer
  * @author Sergio González
  */
-public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {
+public class GroupPagesControlPanelEntry extends DefaultControlPanelEntry {
 
-	public boolean isVisible(
-			PermissionChecker permissionChecker, Portlet portlet)
+	@Override
+	public boolean hasPermissionDenied(
+			Portlet portlet, String category, ThemeDisplay themeDisplay)
 		throws Exception {
+		String controlPanelCategory = themeDisplay.getControlPanelCategory();
+
+		if (controlPanelCategory.equals(PortletCategoryKeys.CONTENT)) {
+			return true;
+		}
+
+		Group scopeGroup = themeDisplay.getScopeGroup();
+
+		if (scopeGroup.isCompany()) {
+			return true;
+		}
 
 		return false;
 	}
 
 	@Override
-	public boolean isVisible(
+	public boolean hasPermissionImplicit(
 			Portlet portlet, String category, ThemeDisplay themeDisplay)
 		throws Exception {
 
-		String controlPanelCategory = themeDisplay.getControlPanelCategory();
-
-		if (controlPanelCategory.equals(PortletCategoryKeys.CONTENT)) {
-			return false;
-		}
-
-		boolean visible = super.isVisible(portlet, category, themeDisplay);
-
-		if (!visible) {
-			visible = GroupPermissionUtil.contains(
-				themeDisplay.getPermissionChecker(),
-				themeDisplay.getScopeGroupId(), ActionKeys.MANAGE_LAYOUTS);
-		}
-
-		if (visible) {
-			Group scopeGroup = themeDisplay.getScopeGroup();
-
-			if (scopeGroup.isCompany()) {
-				visible = false;
-			}
-		}
-
-		return visible;
+		return GroupPermissionUtil.contains(
+					themeDisplay.getPermissionChecker(),
+					themeDisplay.getScopeGroupId(), ActionKeys.MANAGE_LAYOUTS);
 	}
 
 }
