@@ -85,6 +85,9 @@ public class EditEntryAction extends PortletAction {
 			else if (cmd.equals(Constants.EMPTY_TRASH)) {
 				emptyTrash(actionRequest);
 			}
+			else if (cmd.equals(Constants.MOVE)) {
+				entries = moveTrashEntry(actionRequest);
+			}
 			else if (cmd.equals(Constants.MOVE_ENTRY)) {
 				moveEntry(actionRequest);
 			}
@@ -99,7 +102,7 @@ public class EditEntryAction extends PortletAction {
 			}
 
 			if (cmd.equals(Constants.RENAME) || cmd.equals(Constants.RESTORE) ||
-				cmd.equals(Constants.OVERRIDE) ||
+				cmd.equals(Constants.OVERRIDE) || cmd.equals(Constants.MOVE) ||
 				cmd.equals(Constants.MOVE_ENTRY)) {
 
 				addRestoreData(
@@ -239,6 +242,36 @@ public class EditEntryAction extends PortletAction {
 			new ArrayList<ObjectValuePair<String, Long>>();
 
 		entries.add(new ObjectValuePair<String, Long>(className, classPK));
+
+		return entries;
+	}
+
+	protected List<ObjectValuePair<String, Long>> moveTrashEntry(
+			ActionRequest actionRequest)
+		throws Exception {
+
+		long containerModelId = ParamUtil.getLong(
+			actionRequest, "containerModelId");
+		String className = ParamUtil.getString(actionRequest, "className");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
+
+		TrashEntry entry = TrashEntryLocalServiceUtil.getEntry(
+			className, classPK);
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			className);
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			className, actionRequest);
+
+		trashHandler.moveTrashEntry(classPK, containerModelId, serviceContext);
+
+		List<ObjectValuePair<String, Long>> entries =
+			new ArrayList<ObjectValuePair<String, Long>>();
+
+		entries.add(
+			new ObjectValuePair<String, Long>(
+				entry.getClassName(), entry.getClassPK()));
 
 		return entries;
 	}
