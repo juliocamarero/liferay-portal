@@ -1228,15 +1228,21 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			userId, classNameId, classPK, status);
 	}
 
-	public void moveMessageAttachmentToTrash(
+	public long moveMessageAttachmentToTrash(
 			long userId, long messageId, String fileName)
 		throws PortalException, SystemException {
 
 		MBMessage message = getMessage(messageId);
 
+		FileEntry fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
+			message.getGroupId(), message.getAttachmentsFolderId(), fileName);
+
+		long fileEntryId = fileEntry.getFileEntryId();
+
 		PortletFileRepositoryUtil.movePortletFileEntryToTrash(
-			message.getGroupId(), userId, message.getAttachmentsFolderId(),
-			fileName);
+			userId, fileEntryId);
+
+		return fileEntryId;
 	}
 
 	public void restoreMessageAttachmentFromTrash(

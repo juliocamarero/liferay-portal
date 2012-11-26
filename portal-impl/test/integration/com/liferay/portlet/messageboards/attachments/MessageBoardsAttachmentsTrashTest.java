@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
+import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -114,13 +115,6 @@ public class MessageBoardsAttachmentsTrashTest {
 
 	private void trashMessageBoardsAttachments(boolean restore)
 		throws Exception {
-
-		User user = TestPropsValues.getUser();
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		serviceContext.setScopeGroupId(_group.getGroupId());
-
 		int initialNotInTrashCount = _message.getAttachmentsFileEntriesCount();
 
 		int initialTrashEntriesCount =
@@ -134,57 +128,64 @@ public class MessageBoardsAttachmentsTrashTest {
 			existingFiles.add(fileEntry.getTitle());
 		}
 
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setScopeGroupId(_group.getGroupId());
+
+		String fileName = "OSX_Test.docx";
+
 		_message = MBMessageLocalServiceUtil.updateMessage(
-			user.getUserId(), _message.getMessageId(), "Subject", "Body",
-			getInputStreamOVPs("OSX_Test.docx"), existingFiles, 0, false,
+			TestPropsValues.getUserId(), _message.getMessageId(), "Subject",
+			"Body", getInputStreamOVPs(fileName), existingFiles, 0, false,
 			serviceContext);
 
 		Assert.assertEquals(
 			initialNotInTrashCount + 1,
 			_message.getAttachmentsFileEntriesCount());
-
 		Assert.assertEquals(
 			initialTrashEntriesCount,
 			_message.getDeletedAttachmentsFileEntriesCount());
 
-		FileEntry attachmentFileEntry = fileEntries.get(0);
+		long fileEntryId =
+			MBMessageLocalServiceUtil.moveMessageAttachmentToTrash(
+				TestPropsValues.getUserId(), _message.getMessageId(), fileName);
 
-		MBMessageLocalServiceUtil.moveMessageAttachmentToTrash(
-			user.getUserId(), _message.getMessageId(),
-			attachmentFileEntry.getTitle());
+		FileEntry fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
+			fileEntryId);
+
+		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
 
 		Assert.assertEquals(
 			initialNotInTrashCount, _message.getAttachmentsFileEntriesCount());
-
 		Assert.assertEquals(
 			initialTrashEntriesCount + 1,
 			_message.getDeletedAttachmentsFileEntriesCount());
 
-		List<FileEntry> deletedAttachmentsFileEntries =
-			_message.getDeletedAttachmentsFileEntries(0, 1);
-
-		FileEntry deleteAttachmentFileEntry = deletedAttachmentsFileEntries.get(
-			0);
-
-		DLFileEntry dlFileEntry =
-			(DLFileEntry)deleteAttachmentFileEntry.getModel();
-
 		if (restore) {
 			MBMessageLocalServiceUtil.restoreMessageAttachmentFromTrash(
-				user.getUserId(), _message.getMessageId(),
+				TestPropsValues.getUserId(), _message.getMessageId(),
 				dlFileEntry.getTitle());
 
 			Assert.assertEquals(
 				initialNotInTrashCount + 1,
 				_message.getAttachmentsFileEntriesCount());
-
 			Assert.assertEquals(
 				initialTrashEntriesCount,
 				_message.getDeletedAttachmentsFileEntriesCount());
+
+			MBMessageLocalServiceUtil.deleteMessageAttachment(
+				_message.getMessageId(), fileName);
 		}
 		else {
 			MBMessageLocalServiceUtil.deleteMessageAttachment(
 				_message.getMessageId(), dlFileEntry.getTitle());
+
+			Assert.assertEquals(
+				initialNotInTrashCount,
+				_message.getAttachmentsFileEntriesCount());
+			Assert.assertEquals(
+				initialTrashEntriesCount,
+				_message.getDeletedAttachmentsFileEntriesCount());
 		}
 	}
 
