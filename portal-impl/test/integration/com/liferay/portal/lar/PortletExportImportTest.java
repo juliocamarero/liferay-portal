@@ -20,11 +20,14 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutTypePortlet;
+import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
@@ -90,10 +93,23 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			_layoutSetPrototypeGroup.getGroupId(), 0, "Test Article",
 			"Test Content");
 
+		UnicodeProperties unicodeProperties = new UnicodeProperties();
+
+		unicodeProperties.setProperty(
+			"articleId", _layoutSetPrototypeJournalArticle.getArticleId());
+
+		unicodeProperties.setProperty(
+			"groupId",
+			String.valueOf(_layoutSetPrototypeJournalArticle.getGroupId()));
+
+		unicodeProperties.setProperty(
+			"showAvailableLocales", Boolean.TRUE.toString());
+
 		_layoutSetPrototypeJournalContentPortletId =
-			addJournalContentPortletToLayout(
+			addPortletToLayout(
 				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
-				_layoutSetPrototypeJournalArticle, "column-1");
+				"column-1", PortletKeys.JOURNAL_CONTENT, unicodeProperties,
+				true, true);
 
 		// Create site from site template
 
@@ -243,6 +259,56 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			jxPreferences.getValue("lfrScopeType", StringPool.BLANK));
 	}
 
+	@Test
+	public void testExportImportPreferencesNonUniquePerLayoutTypePortlet()
+		throws Exception {
+
+		UnicodeProperties unicodeProperties = new UnicodeProperties();
+
+		unicodeProperties.setProperty("bulletStyle", "Dots");
+
+		String layoutSetPrototypeNavigationPortletIdA =
+			addPortletToLayout(
+				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
+				"column-1", PortletKeys.NAVIGATION, unicodeProperties, false,
+				true);
+
+		unicodeProperties.setProperty("bulletStyle", "Arrows");
+
+		String layoutSetPrototypeNavigationPortletIdB =
+			addPortletToLayout(
+				TestPropsValues.getUserId(), _layoutSetPrototypeLayout,
+				"column-1", PortletKeys.NAVIGATION, unicodeProperties, false,
+				true);
+
+		Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
+			_group.getGroupId(), false,
+			_layoutSetPrototypeLayout.getFriendlyURL());
+
+		javax.portlet.PortletPreferences jxPreferencesPortletOne =
+			getPortletPreferences(
+				_group.getCompanyId(), layout.getPlid(),
+				layoutSetPrototypeNavigationPortletIdA);
+
+		javax.portlet.PortletPreferences jxPreferencesPortletTwo =
+			getPortletPreferences(
+				_group.getCompanyId(), layout.getPlid(),
+				layoutSetPrototypeNavigationPortletIdB);
+
+		javax.portlet.PortletPreferences jxGroupPreferencesNavigationPortlet =
+			getGroupPortletPreferences(
+				_group.getCompanyId(), _group.getGroupId(),
+				PortletKeys.NAVIGATION);
+
+		Assert.assertEquals(0, jxPreferencesPortletOne.getMap().size());
+		Assert.assertEquals(0, jxPreferencesPortletTwo.getMap().size());
+
+		Assert.assertEquals(
+			"Arrows",
+			jxGroupPreferencesNavigationPortlet.getValue(
+				"bulletStyle", StringPool.BLANK));
+	}
+
 	protected JournalArticle addJournalArticle(
 			long groupId, long folderId, String name, String content)
 		throws Exception {
@@ -269,31 +335,52 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			serviceContext);
 	}
 
-	protected String addJournalContentPortletToLayout(
-			long userId, Layout layout, JournalArticle journalArticle,
-			String columnId)
+	protected String addPortletToLayout(
+			long userId, Layout layout, String columnId, String portletId,
+			UnicodeProperties unicodeProperties,
+			boolean preferencesUniquePerLayout, boolean preferencesOwnedByGroup)
 		throws Exception {
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			layout.getCompanyId(), portletId);
+
+		portlet.setPreferencesUniquePerLayout(preferencesUniquePerLayout);
+		portlet.setPreferencesOwnedByGroup(preferencesOwnedByGroup);
 
 		LayoutTypePortlet layoutTypePortlet =
 			(LayoutTypePortlet) layout.getLayoutType();
 
-		String journalPortletId = layoutTypePortlet.addPortletId(
-			userId, PortletKeys.JOURNAL_CONTENT, columnId, -1);
+		String layoutPortletId = layoutTypePortlet.addPortletId(
+			userId, portletId, columnId, -1);
 
 		LayoutLocalServiceUtil.updateLayout(
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			layout.getTypeSettings());
 
-		javax.portlet.PortletPreferences prefs = getPortletPreferences(
-			layout.getCompanyId(), layout.getPlid(), journalPortletId);
+		javax.portlet.PortletPreferences prefs = null;
 
-		prefs.setValue("articleId", journalArticle.getArticleId());
-		prefs.setValue("groupId", String.valueOf(journalArticle.getGroupId()));
-		prefs.setValue("showAvailableLocales", Boolean.TRUE.toString());
+		if (!preferencesUniquePerLayout) {
+			prefs = getGroupPortletPreferences(
+				layout.getCompanyId(), layout.getGroupId(), layoutPortletId);
+		}
+		else {
+			prefs = getPortletPreferences(
+				layout.getCompanyId(), layout.getPlid(), layoutPortletId);
+		}
 
-		updatePortletPreferences(layout.getPlid(), journalPortletId, prefs);
+		for (String key : unicodeProperties.keySet()) {
+			prefs.setValue(key, unicodeProperties.get(key));
+		}
 
-		return journalPortletId;
+		if (!preferencesUniquePerLayout) {
+			updateGroupPortletPreferences(
+				layout.getGroupId(), layoutPortletId, prefs);
+		}
+		else {
+			updatePortletPreferences(layout.getPlid(), layoutPortletId, prefs);
+		}
+
+		return layoutPortletId;
 	}
 
 	protected String getArticleContent(String content, String localeId) {
@@ -311,13 +398,24 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		return sb.toString();
 	}
 
+	protected javax.portlet.PortletPreferences getGroupPortletPreferences(
+			long companyId, long groupId, String portletId)
+		throws Exception {
+
+		String rootPortletId = PortletConstants.getRootPortletId(portletId);
+
+		return PortletPreferencesLocalServiceUtil.getPreferences(
+			companyId, groupId, PortletKeys.PREFS_OWNER_TYPE_GROUP,
+			PortletKeys.PREFS_PLID_SHARED, rootPortletId);
+	}
+
 	protected javax.portlet.PortletPreferences getPortletPreferences(
-			long companyId, long plid, String portletId)
+			long companyId, long plId, String portletId)
 		throws Exception {
 
 		return PortletPreferencesLocalServiceUtil.getPreferences(
 			companyId, PortletKeys.PREFS_OWNER_ID_DEFAULT,
-			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid, portletId);
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plId, portletId);
 	}
 
 	protected JournalArticle updateArticle(
@@ -332,6 +430,21 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		_layoutSetPrototypeJournalArticle.setContent(xmlContent);
 
 		return JournalArticleUtil.update(journalArticle);
+	}
+
+	protected PortletPreferences updateGroupPortletPreferences(
+			long groupId, String portletId,
+			javax.portlet.PortletPreferences jxPreferences)
+		throws Exception {
+
+		String rootPortletId = PortletConstants.getRootPortletId(portletId);
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.updatePreferences(
+				groupId, PortletKeys.PREFS_OWNER_TYPE_GROUP,
+				PortletKeys.PREFS_PLID_SHARED, rootPortletId, jxPreferences);
+
+		return portletPreferences;
 	}
 
 	protected PortletPreferences updatePortletPreferences(

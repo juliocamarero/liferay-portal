@@ -1078,10 +1078,22 @@ public class PortletImporter {
 		String scopeType = StringPool.BLANK;
 		String scopeLayoutUuid = StringPool.BLANK;
 
+		if (portletId == null) {
+			portletId = parentElement.attributeValue("portlet-id");
+		}
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			portletDataContext.getCompanyId(), portletId);
+
+		boolean preferencesUniquePerLayout =
+			portlet.isPreferencesUniquePerLayout();
+
 		if (layout != null) {
 			plid = layout.getPlid();
 
-			if (preserveScopeLayoutId && (portletId != null)) {
+			if (preserveScopeLayoutId && (portletId != null) &&
+				preferencesUniquePerLayout) {
+
 				javax.portlet.PortletPreferences jxPreferences =
 					PortletPreferencesFactoryUtil.getLayoutPortletSetup(
 						layout, portletId);
@@ -1150,14 +1162,14 @@ public class PortletImporter {
 				if (ownerType == PortletKeys.PREFS_OWNER_TYPE_GROUP) {
 					plid = PortletKeys.PREFS_PLID_SHARED;
 					ownerId = portletDataContext.getScopeGroupId();
+
+					if (!preferencesUniquePerLayout) {
+						portletId = portlet.getRootPortletId();
+					}
 				}
 
 				boolean defaultUser = GetterUtil.getBoolean(
 					element.attributeValue("default-user"));
-
-				if (portletId == null) {
-					portletId = element.attributeValue("portlet-id");
-				}
 
 				if (ownerType == PortletKeys.PREFS_OWNER_TYPE_ARCHIVED) {
 					portletId = PortletConstants.getRootPortletId(portletId);
@@ -1186,8 +1198,9 @@ public class PortletImporter {
 					ownerId = defaultUserId;
 				}
 
-				String rootPotletId = PortletConstants.getRootPortletId(
-					portletId);
+				String rootPotletId = portlet.getRootPortletId();
+
+				// Portlet specific preferences changes
 
 				if (rootPotletId.equals(PortletKeys.ASSET_PUBLISHER)) {
 					xml = updateAssetPublisherPortletPreferences(
@@ -1208,7 +1221,9 @@ public class PortletImporter {
 			}
 		}
 
-		if (preserveScopeLayoutId && (layout != null)) {
+		if (preserveScopeLayoutId && (layout != null) &&
+			preferencesUniquePerLayout) {
+
 			javax.portlet.PortletPreferences jxPreferences =
 				PortletPreferencesFactoryUtil.getLayoutPortletSetup(
 					layout, portletId);
