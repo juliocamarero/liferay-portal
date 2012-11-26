@@ -26,6 +26,13 @@ import com.liferay.portal.security.permission.PermissionChecker;
 public class GroupPermissionUtil {
 
 	public static void check(
+			PermissionChecker permissionChecker, String actionId)
+		throws PortalException, SystemException {
+
+		getGroupPermission().check(permissionChecker, actionId);
+	}
+
+	public static void check(
 			PermissionChecker permissionChecker, Group group, String actionId)
 		throws PortalException, SystemException {
 
@@ -37,6 +44,14 @@ public class GroupPermissionUtil {
 		throws PortalException, SystemException {
 
 		getGroupPermission().check(permissionChecker, groupId, actionId);
+	}
+
+	public static boolean contains(
+		PermissionChecker permissionChecker, String actionId)
+		throws PortalException, SystemException {
+
+		return getGroupPermission().contains(
+			permissionChecker, actionId);
 	}
 
 	public static boolean contains(
