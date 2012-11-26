@@ -35,16 +35,16 @@ public class GroupPagesControlPanelEntry extends DefaultControlPanelEntry {
 		String controlPanelCategory = themeDisplay.getControlPanelCategory();
 
 		if (controlPanelCategory.equals(PortletCategoryKeys.CONTENT)) {
-			return false;
+			return true;
 		}
 
 		Group scopeGroup = themeDisplay.getScopeGroup();
 
 		if (scopeGroup.isCompany()) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
