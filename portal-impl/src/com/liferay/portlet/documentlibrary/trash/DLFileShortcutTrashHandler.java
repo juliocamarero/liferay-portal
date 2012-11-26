@@ -126,6 +126,27 @@ public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 		return !dlFileShortcut.isInTrashFolder();
 	}
 
+	@Override
+	public void moveEntry(
+			long classPK, long containerId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DLFileShortcut dlFileShortcut = getDLFileShortcut(classPK);
+
+		DLAppServiceUtil.updateFileShortcut(
+			classPK, containerId, dlFileShortcut.getToFileEntryId(),
+			serviceContext);
+	}
+
+	@Override
+	public void moveTrashEntry(
+			long classPK, long containerId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DLAppServiceUtil.moveFileShortcutFromTrash(
+			classPK, containerId, serviceContext);
+	}
+
 	public void restoreTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 

@@ -172,6 +172,23 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 		return !dlFolder.isInTrashFolder();
 	}
 
+	@Override
+	public void moveEntry(
+			long classPK, long containerId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DLAppServiceUtil.moveFolder(classPK, containerId, serviceContext);
+	}
+
+	@Override
+	public void moveTrashEntry(
+			long classPK, long containerId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DLAppServiceUtil.moveFolderFromTrash(
+			classPK, containerId, serviceContext);
+	}
+
 	public void restoreTrashEntries(long[] classPKs)
 		throws PortalException, SystemException {
 
