@@ -49,6 +49,8 @@ public interface Constants {
 
 	public static final String DELETE = "delete";
 
+	public static final String DELETE_ENTRY = "delete_entry";
+
 	public static final String DELETE_TEMP = "delete_temp";
 
 	public static final String DELETE_TRANSLATION = "delete_translation";
@@ -76,6 +78,8 @@ public interface Constants {
 	public static final String MERGE = "merge";
 
 	public static final String MOVE = "move";
+
+	public static final String MOVE_ENTRY = "move_entry";
 
 	public static final String MOVE_FROM_TRASH = "move_from_trash";
 
