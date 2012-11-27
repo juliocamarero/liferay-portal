@@ -168,11 +168,14 @@ public class DDMStructureLocalServiceImpl
 
 		DDMStructure structure = getStructure(structureId);
 
+		String newStructureKey = String.valueOf(
+			counterLocalService.increment());
+
 		return addStructure(
 			userId, structure.getGroupId(), structure.getParentStructureId(),
-			structure.getClassNameId(), null, nameMap, descriptionMap,
-			structure.getXsd(), structure.getStorageType(), structure.getType(),
-			serviceContext);
+			structure.getClassNameId(), newStructureKey, nameMap,
+			descriptionMap, structure.getXsd(), structure.getStorageType(),
+			structure.getType(), serviceContext);
 	}
 
 	public void deleteStructure(DDMStructure structure)
