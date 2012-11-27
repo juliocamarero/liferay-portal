@@ -218,16 +218,6 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 	protected DLFolder getDLFolder(long classPK)
 		throws PortalException, SystemException {
 
-		Repository repository = getRepository(classPK);
-
-		Folder folder = repository.getFolder(classPK);
-
-		return (DLFolder)folder.getModel();
-	}
-
-	protected Repository getRepository(long classPK)
-		throws PortalException, SystemException {
-
 		Repository repository = RepositoryServiceUtil.getRepositoryImpl(
 			classPK, 0, 0);
 
@@ -237,7 +227,12 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 					" does not support trash operations");
 		}
 
-		return repository;
+		Folder folder = repository.getFolder(classPK);
+
+		return (DLFolder)folder.getModel();
 	}
+
+	protected abstract Repository getRepository(long classPK)
+		throws PortalException, SystemException;
 
 }
