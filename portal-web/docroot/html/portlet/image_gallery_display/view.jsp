@@ -54,17 +54,9 @@ long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayT
 		String[] mediaGalleryMimeTypes = DLUtil.getMediaGalleryMimeTypes(preferences, renderRequest);
 
 		List fileEntries = DLAppServiceUtil.getGroupFileEntries(scopeGroupId, themeDisplay.getUserId(), folderId, mediaGalleryMimeTypes, status, 0, SearchContainer.DEFAULT_DELTA, null);
-
-		String[] audioMimeTypes = ArrayUtil.toStringArray(AudioProcessorUtil.getAudioMimeTypes().toArray());
-		String[] videoMimeTypes = ArrayUtil.toStringArray(VideoProcessorUtil.getVideoMimeTypes().toArray());
-
-		Map<String, Object> contextObjects = new HashMap<String, Object>();
-
-		contextObjects.put("audioMimeTypes", audioMimeTypes);
-		contextObjects.put("videoMimeTypes", videoMimeTypes);
 		%>
 
-		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, fileEntries, contextObjects) %>
+		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, fileEntries) %>
 	</c:when>
 	<c:otherwise>
 
