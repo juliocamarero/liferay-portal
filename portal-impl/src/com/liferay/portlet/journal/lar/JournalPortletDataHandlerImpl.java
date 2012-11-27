@@ -1664,11 +1664,13 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 				if (Validator.isNotNull(contextPath)) {
 					int beginContextPath = beginPos - contextPath.length();
 
-					if ((beginContextPath >= 0) &&
-						contextPath.equals(
-							content.substring(beginContextPath, beginPos))) {
+					if (beginContextPath >= 0) {
+						String curContextPath =
+							content.substring(beginContextPath, beginPos);
 
-						beginPos = beginContextPath;
+						if (contextPath.equals(curContextPath)) {
+							beginPos = beginContextPath;
+						}
 					}
 				}
 
