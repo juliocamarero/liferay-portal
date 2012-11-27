@@ -37,7 +37,7 @@ portletURL.setParameter("struts_action", "/trash/view");
 portletURL.setParameter("tabs1", tabs1);
 %>
 
-<liferay-ui:trash-restore-path />
+<liferay-util:include page="/html/portlet/trash/restore_path.jsp" />
 
 <c:if test="<%= group.isStagingGroup() %>">
 	<liferay-ui:tabs

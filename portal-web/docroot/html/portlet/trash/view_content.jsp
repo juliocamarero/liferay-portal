@@ -16,7 +16,7 @@
 
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
-<liferay-ui:trash-restore-path />
+<liferay-util:include page="/html/portlet/trash/restore_path.jsp" />
 
 <div class="asset-content">
 
