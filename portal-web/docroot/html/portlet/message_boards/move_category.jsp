@@ -29,7 +29,7 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 <liferay-ui:header
 	backURL="<%= redirect %>"
 	localizeTitle="<%= (category == null) %>"
-	title='<%= LanguageUtil.get(pageContext, "move") + StringPool.SPACE + category.getName() %>'
+	title='<%= LanguageUtil.format(pageContext, "move-x", category.getName()) %>'
 />
 
 <portlet:actionURL var="moveCategoryURL">
@@ -37,7 +37,6 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 </portlet:actionURL>
 
 <aui:form action="<%= moveCategoryURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="mbCategoryId" type="hidden" value="<%= categoryId %>" />
 	<aui:input name="parentCategoryId" type="hidden" value="<%= parentCategoryId %>" />
@@ -48,15 +47,15 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 		<aui:field-wrapper label="parent-category">
 
 			<%
-				String parentCategoryName = StringPool.BLANK;
+			String parentCategoryName = StringPool.BLANK;
 
-				try {
-					MBCategory parentCategory = MBCategoryLocalServiceUtil.getCategory(parentCategoryId);
+			try {
+				MBCategory parentCategory = MBCategoryLocalServiceUtil.getCategory(parentCategoryId);
 
-					parentCategoryName = parentCategory.getName();
-				}
-				catch (NoSuchCategoryException nsce) {
-				}
+				parentCategoryName = parentCategory.getName();
+			}
+			catch (NoSuchCategoryException nsce) {
+			}
 			%>
 
 			<portlet:renderURL var="viewCategoryURL">
@@ -72,7 +71,7 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 			</portlet:renderURL>
 
 			<%
-				String taglibOpenCategoryWindow = "var categoryWindow = window.open('" + HtmlUtil.escape(selectCategoryURL) + "','category', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680'); void(''); categoryWindow.focus();";
+			String taglibOpenCategoryWindow = "var categoryWindow = window.open('" + HtmlUtil.escape(selectCategoryURL) + "','category', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680'); void(''); categoryWindow.focus();";
 			%>
 
 			<aui:button onClick="<%= taglibOpenCategoryWindow %>" value="select" />
