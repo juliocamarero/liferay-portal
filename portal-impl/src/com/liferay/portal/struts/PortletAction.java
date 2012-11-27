@@ -249,6 +249,38 @@ public class PortletAction extends Action {
 		return _CHECK_METHOD_ON_PROCESS_ACTION;
 	}
 
+	protected boolean isDisplaySuccessMessage(ActionRequest actionRequest)
+		throws SystemException {
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
+		LayoutTypePortlet layoutTypePortlet =
+			themeDisplay.getLayoutTypePortlet();
+
+		boolean hasPortletId = false;
+
+		String portletId = (String)actionRequest.getAttribute(
+			WebKeys.PORTLET_ID);
+
+		try {
+			hasPortletId = layoutTypePortlet.hasPortletId(portletId);
+		}
+		catch (Exception e) {
+		}
+
+		Layout layout = layoutTypePortlet.getLayout();
+
+		if (layout.isTypeControlPanel()) {
+			hasPortletId = true;
+		}
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			themeDisplay.getCompanyId(), portletId);
+
+		return hasPortletId || portlet.isAddDefaultResource();
+	}
+
 	protected boolean redirectToLogin(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws IOException {
@@ -283,36 +315,10 @@ public class PortletAction extends Action {
 			String redirect)
 		throws IOException, SystemException {
 
-		if (SessionErrors.isEmpty(actionRequest)) {
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		if (SessionErrors.isEmpty(actionRequest) &&
+			isDisplaySuccessMessage(actionRequest)) {
 
-			LayoutTypePortlet layoutTypePortlet =
-				themeDisplay.getLayoutTypePortlet();
-
-			boolean hasPortletId = false;
-
-			String portletId = (String)actionRequest.getAttribute(
-				WebKeys.PORTLET_ID);
-
-			try {
-				hasPortletId = layoutTypePortlet.hasPortletId(portletId);
-			}
-			catch (Exception e) {
-			}
-
-			Layout layout = layoutTypePortlet.getLayout();
-
-			if (layout.isTypeControlPanel()) {
-				hasPortletId = true;
-			}
-
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(
-				themeDisplay.getCompanyId(), portletId);
-
-			if (hasPortletId || portlet.isAddDefaultResource()) {
-				addSuccessMessage(actionRequest, actionResponse);
-			}
+			addSuccessMessage(actionRequest, actionResponse);
 		}
 
 		if (Validator.isNull(redirect)) {
