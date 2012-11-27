@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.security.auth.PrincipalException;
@@ -298,6 +299,12 @@ public class PortletAction extends Action {
 				hasPortletId = layoutTypePortlet.hasPortletId(portletId);
 			}
 			catch (Exception e) {
+			}
+
+			Layout layout = layoutTypePortlet.getLayout();
+
+			if (layout.isTypeControlPanel()) {
+				hasPortletId = true;
 			}
 
 			Portlet portlet = PortletLocalServiceUtil.getPortletById(
