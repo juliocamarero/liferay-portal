@@ -17,7 +17,6 @@
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
 <%
-long containerModelId = 0;
 String className = ParamUtil.getString(request, "className");
 long classPK = ParamUtil.getLong(request, "classPK");
 
@@ -25,6 +24,8 @@ TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
 TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
 
 ContainerModel containerModel = (ContainerModel)request.getAttribute(WebKeys.TRASH_CONTAINER_MODEL);
+
+long containerModelId = 0;
 
 if (containerModel != null) {
 	containerModelId = containerModel.getContainerModelId();
@@ -38,9 +39,6 @@ containerURL.setParameter("classPK", String.valueOf(classPK));
 containerURL.setParameter("containerModelClassName", trashHandler.getContainerModelClassName());
 
 TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler, containerModel, containerURL);
-
-String header = LanguageUtil.format(pageContext, "select-x", trashHandler.getContainerModelName(), true);
-String headerName2 = LanguageUtil.format(pageContext, "num-of-x", trashHandler.getContainerModelName(), true);
 %>
 
 <div class="portlet-msg-alert">
@@ -49,7 +47,7 @@ String headerName2 = LanguageUtil.format(pageContext, "num-of-x", trashHandler.g
 
 <aui:form method="post" name="fm">
 	<liferay-ui:header
-		title="<%= header %>"
+		title='<%= LanguageUtil.format(pageContext, "select-x", trashHandler.getContainerModelName(), true) %>'
 	/>
 
 	<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
@@ -102,7 +100,7 @@ String headerName2 = LanguageUtil.format(pageContext, "num-of-x", trashHandler.g
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
-				name="<%= headerName2 %>"
+				name='<%= LanguageUtil.format(pageContext, "num-of-x", trashHandler.getContainerModelName(), true) %>'
 				value="<%= String.valueOf(trashHandler.getContainerModelsCount(classPK, curContainerModel.getContainerModelId())) %>"
 			/>
 
@@ -130,13 +128,11 @@ String headerName2 = LanguageUtil.format(pageContext, "num-of-x", trashHandler.g
 
 			<%
 			String taglibSelectOnClick = renderResponse.getNamespace() + "selectContainer('"+ className + "', " + classPK + ", " + containerModelId + ");";
-
-			String taglibSelectName = LanguageUtil.format(pageContext, "choose-this-x", trashHandler.getContainerModelName(), true);
 			%>
 
 			<aui:button
 				onClick="<%= taglibSelectOnClick %>"
-				value="<%= taglibSelectName %>"
+				value='<%= LanguageUtil.format(pageContext, "choose-this-x", trashHandler.getContainerModelName(), true) %>'
 			/>
 		</aui:button-row>
 

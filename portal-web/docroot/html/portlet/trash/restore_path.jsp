@@ -71,7 +71,7 @@
 		}
 	);
 
-	A.all('.restore-button').on(
+	A.getBody().delegate(
 		'click',
 		function(event) {
 			var target = event.target;
@@ -88,7 +88,8 @@
 					uri: target.attr('data-uri')
 				}
 			);
-		}
+		},
+		'.trash-restore-link'
 	);
 
 	Liferay.provide(

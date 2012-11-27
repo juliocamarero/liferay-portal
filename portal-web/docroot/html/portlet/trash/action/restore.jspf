@@ -34,7 +34,7 @@ TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(entry.getCl
 		%>
 
 		<liferay-ui:icon
-			cssClass="restore-button"
+			cssClass="trash-restore-link"
 			data="<%= data %>"
 			image="undo"
 			message="restore"

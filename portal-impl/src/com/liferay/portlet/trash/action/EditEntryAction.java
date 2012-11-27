@@ -174,27 +174,33 @@ public class EditEntryAction extends PortletAction {
 	protected void deleteEntries(ActionRequest actionRequest) throws Exception {
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
-		long[] deleteEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "deleteThrashEntryIds"), 0L);
-
 		if (trashEntryId > 0) {
 			TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
 				trashEntryId);
 
 			deleteEntry(entry.getClassName(), entry.getClassPK());
+
+			return;
 		}
-		else if (deleteEntryIds.length > 0) {
+
+		long[] deleteEntryIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "deleteThrashEntryIds"), 0L);
+
+		if (deleteEntryIds.length > 0) {
 			for (int i = 0; i < deleteEntryIds.length; i++) {
 				TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
 					deleteEntryIds[i]);
 
 				deleteEntry(entry.getClassName(), entry.getClassPK());
 			}
-		}
-		else {
-			String className = ParamUtil.getString(actionRequest, "className");
-			long classPK = ParamUtil.getLong(actionRequest, "classPK");
 
+			return;
+		}
+
+		String className = ParamUtil.getString(actionRequest, "className");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
+
+		if (Validator.isNotNull(className) && (classPK > 0)) {
 			deleteEntry(className, classPK);
 		}
 	}
@@ -223,21 +229,6 @@ public class EditEntryAction extends PortletAction {
 
 		ObjectValuePair<String, Long> entryOVP =
 			new ObjectValuePair<String, Long>(className, classPK);
-
-		entryOVPs.add(entryOVP);
-
-		return entryOVPs;
-	}
-
-	protected List<ObjectValuePair<String, Long>> getEntryOVPs(
-		TrashEntry entry) {
-
-		List<ObjectValuePair<String, Long>> entryOVPs =
-			new ArrayList<ObjectValuePair<String, Long>>();
-
-		ObjectValuePair<String, Long> entryOVP =
-			new ObjectValuePair<String, Long>(
-				entry.getClassName(), entry.getClassPK());
 
 		entryOVPs.add(entryOVP);
 
@@ -309,7 +300,7 @@ public class EditEntryAction extends PortletAction {
 
 		trashHandler.restoreTrashEntry(entry.getClassPK());
 
-		return getEntryOVPs(entry);
+		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
 	}
 
 	protected List<ObjectValuePair<String, Long>> restoreOverride(
@@ -331,7 +322,7 @@ public class EditEntryAction extends PortletAction {
 
 		trashHandler.restoreTrashEntry(entry.getClassPK());
 
-		return getEntryOVPs(entry);
+		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
 	}
 
 	protected List<ObjectValuePair<String, Long>> restoreRename(
@@ -361,7 +352,7 @@ public class EditEntryAction extends PortletAction {
 
 		trashHandler.restoreTrashEntry(entry.getClassPK());
 
-		return getEntryOVPs(entry);
+		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
 	}
 
 }
