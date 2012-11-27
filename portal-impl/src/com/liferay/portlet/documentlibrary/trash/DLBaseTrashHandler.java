@@ -121,7 +121,8 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 
 		Repository repository = getRepository(classPK);
 
-		return repository.getFileEntriesCount(classPK);
+		return repository.getFileEntriesAndFileShortcutsCount(
+			classPK, WorkflowConstants.STATUS_ANY);
 	}
 
 	@Override
