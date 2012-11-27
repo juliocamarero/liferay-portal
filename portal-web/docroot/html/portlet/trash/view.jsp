@@ -37,39 +37,7 @@ portletURL.setParameter("struts_action", "/trash/view");
 portletURL.setParameter("tabs1", tabs1);
 %>
 
-<c:if test="<%= SessionMessages.contains(renderRequest, portletDisplay.getId() + SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA) %>">
-	<div class="portlet-msg-success">
-
-		<%
-		Map<String, List<String>> data = (HashMap<String, List<String>>)SessionMessages.get(renderRequest, portletDisplay.getId() + SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA);
-
-		List<String> restoreLinks = data.get("restoreLinks");
-		List<String> restoreMessages = data.get("restoreMessages");
-		%>
-
-		<c:choose>
-			<c:when test="<%= (data != null) && (restoreLinks != null) && (restoreMessages != null) && (restoreLinks.size() > 0) && (restoreMessages.size() > 0) %>">
-
-				<%
-				StringBundler sb = new StringBundler(5 * restoreMessages.size());
-
-				for (int i = 0; i < restoreLinks.size(); i++) {
-					sb.append("<a href=\"");
-					sb.append(restoreLinks.get(i));
-					sb.append("\">");
-					sb.append(restoreMessages.get(i));
-					sb.append("</a> ");
-				}
-				%>
-
-				<liferay-ui:message arguments="<%= sb.toString() %>" key="the-item-has-been-restored-to-x" />
-			</c:when>
-			<c:otherwise>
-				<liferay-ui:message key="the-item-has-been-restored" />
-			</c:otherwise>
-		</c:choose>
-	</div>
-</c:if>
+<liferay-ui:trash-restore-path />
 
 <c:if test="<%= group.isStagingGroup() %>">
 	<liferay-ui:tabs
@@ -271,7 +239,19 @@ portletURL.setParameter("tabs1", tabs1);
 	<liferay-ui:search-iterator type='<%= approximate ? "more" : "regular" %>' />
 </liferay-ui:search-container>
 
-<aui:script use="liferay-restore-entry">
+<portlet:actionURL var="selectContainerURL">
+	<portlet:param name="struts_action" value="/trash/edit_entry" />
+</portlet:actionURL>
+
+<aui:form action="<%= selectContainerURL.toString() %>" method="post" name="selectContainerForm">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.MOVE %>" />
+	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+	<aui:input name="className" type="hidden" value="" />
+	<aui:input name="classPK" type="hidden" value="" />
+	<aui:input name="containerModelId" type="hidden" value="" />
+</aui:form>
+
+<aui:script use="aui-dialog-iframe,liferay-restore-entry,liferay-util-window">
 	new Liferay.RestoreEntry(
 		{
 			checkEntryURL: '<portlet:actionURL><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.CHECK %>" /><portlet:param name="struts_action" value="/trash/edit_entry" /></portlet:actionURL>',
@@ -279,6 +259,40 @@ portletURL.setParameter("tabs1", tabs1);
 			restoreEntryURL: '<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/trash/restore_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>'
 		}
 	);
+
+	A.all('.restore-button').on(
+		'click',
+		function(event) {
+			var target = event.target;
+
+			Liferay.Util.openWindow(
+				{
+					dialog: {
+						align: Liferay.Util.Window.ALIGN_CENTER,
+						cssClass: '',
+						modal: true,
+						width: 700
+					},
+					title: '<%= UnicodeLanguageUtil.get(pageContext, "warning") %>',
+					uri: target.attr('data-uri')
+				}
+			);
+		}
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />submitForm',
+		function(className, classPK, containerModelId) {
+			document.<portlet:namespace />selectContainerForm.<portlet:namespace />className.value = className;
+			document.<portlet:namespace />selectContainerForm.<portlet:namespace />classPK.value = classPK;
+			document.<portlet:namespace />selectContainerForm.<portlet:namespace />containerModelId.value = containerModelId;
+
+			submitForm(document.<portlet:namespace />selectContainerForm);
+		},
+		['aui-base']
+	);
+
 </aui:script>
 
 <%
