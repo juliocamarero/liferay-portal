@@ -252,16 +252,22 @@ public class PortletAction extends Action {
 	protected boolean isDisplaySuccessMessage(ActionRequest actionRequest)
 		throws SystemException {
 
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		LayoutTypePortlet layoutTypePortlet =
 			themeDisplay.getLayoutTypePortlet();
 
-		boolean hasPortletId = false;
+		Layout layout = layoutTypePortlet.getLayout();
+
+		if (layout.isTypeControlPanel()) {
+			return true;
+		}
 
 		String portletId = (String)actionRequest.getAttribute(
 			WebKeys.PORTLET_ID);
+
+		boolean hasPortletId = false;
 
 		try {
 			hasPortletId = layoutTypePortlet.hasPortletId(portletId);
@@ -269,16 +275,15 @@ public class PortletAction extends Action {
 		catch (Exception e) {
 		}
 
-		Layout layout = layoutTypePortlet.getLayout();
-
-		if (layout.isTypeControlPanel()) {
-			hasPortletId = true;
-		}
-
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			themeDisplay.getCompanyId(), portletId);
 
-		return hasPortletId || portlet.isAddDefaultResource();
+		if (hasPortletId || portlet.isAddDefaultResource()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	protected boolean redirectToLogin(
