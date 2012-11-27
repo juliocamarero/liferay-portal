@@ -36,7 +36,7 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 	<portlet:param name="struts_action" value="/message_boards/move_category" />
 </portlet:actionURL>
 
-<aui:form action="<%= moveCategoryURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveCategory();" %>'>
+<aui:form action="<%= moveCategoryURL %>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="mbCategoryId" type="hidden" value="<%= categoryId %>" />
@@ -98,11 +98,6 @@ long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategory
 
 		nameEl.href = "";
 		nameEl.innerHTML = "";
-	}
-
-	function <portlet:namespace />saveCategory() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (category == null) ? Constants.ADD : Constants.UPDATE %>";
-		submitForm(document.<portlet:namespace />fm);
 	}
 
 	function <portlet:namespace />selectCategory(parentCategoryId, parentCategoryName) {
