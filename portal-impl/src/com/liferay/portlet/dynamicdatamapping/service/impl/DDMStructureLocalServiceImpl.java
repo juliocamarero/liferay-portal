@@ -79,10 +79,12 @@ public class DDMStructureLocalServiceImpl
 		// Structure
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		structureKey = structureKey.trim().toUpperCase();
 
 		if (Validator.isNull(structureKey)) {
 			structureKey = String.valueOf(counterLocalService.increment());
+		}
+		else {
+			structureKey = structureKey.trim().toUpperCase();
 		}
 
 		try {
@@ -166,11 +168,14 @@ public class DDMStructureLocalServiceImpl
 
 		DDMStructure structure = getStructure(structureId);
 
+		String newStructureKey = String.valueOf(
+			counterLocalService.increment());
+
 		return addStructure(
 			userId, structure.getGroupId(), structure.getParentStructureId(),
-			structure.getClassNameId(), null, nameMap, descriptionMap,
-			structure.getXsd(), structure.getStorageType(), structure.getType(),
-			serviceContext);
+			structure.getClassNameId(), newStructureKey, nameMap,
+			descriptionMap, structure.getXsd(), structure.getStorageType(),
+			structure.getType(), serviceContext);
 	}
 
 	public void deleteStructure(DDMStructure structure)
