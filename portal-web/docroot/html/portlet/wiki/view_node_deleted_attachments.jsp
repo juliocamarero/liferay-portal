@@ -19,12 +19,6 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-boolean viewTrashAttachments = ParamUtil.getBoolean(request, "viewTrashAttachments");
-
-if (!TrashUtil.isTrashEnabled(scopeGroupId)) {
-	viewTrashAttachments = false;
-}
-
 WikiNode node = (WikiNode)request.getAttribute(WebKeys.WIKI_NODE);
 
 List<FileEntry> attachmentsFileEntries = node.getDeletedAttachmentsFiles();
@@ -78,20 +72,11 @@ iteratorURL.setParameter("viewTrashAttachments", Boolean.TRUE.toString());
 
 	<liferay-ui:search-container-row
 		className="com.liferay.portal.kernel.repository.model.FileEntry"
-		escapedModel="<%= true %>"
-		keyProperty="fileEntryId"
 		modelVar="fileEntry"
-		rowVar="row"
-		>
+	>
 
 		<%
 		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
-
-		int status = WorkflowConstants.STATUS_APPROVED;
-
-		if (viewTrashAttachments) {
-			status = WorkflowConstants.STATUS_IN_TRASH;
-		}
 
 		WikiPage wikiPage = WikiPageAttachmentsUtil.getPage(dlFileEntry.getFileEntryId());
 		%>
@@ -102,35 +87,26 @@ iteratorURL.setParameter("viewTrashAttachments", Boolean.TRUE.toString());
 			<portlet:param name="nodeId" value="<%= String.valueOf(node.getNodeId()) %>" />
 			<portlet:param name="title" value="<%= wikiPage.getTitle() %>" />
 			<portlet:param name="fileName" value="<%= dlFileEntry.getTitle() %>" />
-			<portlet:param name="status" value="<%= String.valueOf(status) %>" />
+			<portlet:param name="status" value="<%= String.valueOf(WorkflowConstants.STATUS_IN_TRASH) %>" />
 		</liferay-portlet:actionURL>
 
 		<liferay-ui:search-container-column-text
 			href="<%= rowURL %>"
 			name="file-name"
-			>
-
-			<%
-				String fileName = dlFileEntry.getTitle();
-
-				if (viewTrashAttachments) {
-					fileName = TrashUtil.stripTrashNamespace(fileName);
-				}
-			%>
-
-			<img align="left" alt="" border="0" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= DLUtil.getFileIcon(dlFileEntry.getExtension()) %>.png"> <%= fileName %>
+		>
+			<img align="left" alt="" border="0" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= DLUtil.getFileIcon(fileEntry.getExtension()) %>.png"> <%= fileEntry.getTitle() %>
 		</liferay-ui:search-container-column-text>
 
 		<liferay-ui:search-container-column-text
 			href="<%= rowURL %>"
 			name="size"
-			value="<%= TextFormatter.formatStorageSize(dlFileEntry.getSize(), locale) %>"
-			/>
+			value="<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>"
+		/>
 
 		<liferay-ui:search-container-column-jsp
 			align="right"
 			path="/html/portlet/wiki/page_attachment_action.jsp"
-			/>
+		/>
 	</liferay-ui:search-container-row>
 
 	<liferay-ui:search-iterator />
