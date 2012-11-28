@@ -60,6 +60,10 @@ public class PropsUtil {
 		return _props;
 	}
 
+	public static String[] getStringArray(String name, String delimiter) {
+		return getProps().getStringArray(name, delimiter);
+	}
+
 	public static void setProps(Props props) {
 		PortalRuntimePermission.checkSetBeanProperty(PropsUtil.class);
 
