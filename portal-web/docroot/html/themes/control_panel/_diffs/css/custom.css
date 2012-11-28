@@ -131,14 +131,6 @@ body.portal-popup:after, body.portal-popup:before {
 	color: #5C85AD;
 }
 
-#breadcrumbs.control-panel-category {
-	top: 10px;
-}
-
-.panels-minimized #breadcrumbs {
-	left: 57px;
-}
-
 .lfr-panel-container {
 	background: transparent;
 	border-width: 0;
