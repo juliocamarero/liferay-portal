@@ -842,7 +842,7 @@ public class DLImpl implements DL {
 		String[] fileIcons = null;
 
 		try {
-			fileIcons = PrefsPropsUtil.getStringArray(
+			fileIcons = PropsUtil.getStringArray(
 				PropsKeys.DL_FILE_ICONS, StringPool.COMMA);
 		}
 		catch (Exception e) {

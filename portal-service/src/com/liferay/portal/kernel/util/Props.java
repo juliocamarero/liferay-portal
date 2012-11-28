@@ -37,4 +37,6 @@ public interface Props {
 
 	public Properties getProperties(String prefix, boolean removePrefix);
 
+	public String[] getStringArray(String name, String delimiter);
+
 }

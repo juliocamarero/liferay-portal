@@ -16,6 +16,7 @@ package com.liferay.portal.util;
 
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Properties;
 
@@ -50,6 +51,12 @@ public class PropsImpl implements Props {
 
 	public Properties getProperties(String prefix, boolean removePrefix) {
 		return PropsUtil.getProperties(prefix, removePrefix);
+	}
+
+	public String[] getStringArray(String name, String delimiter) {
+		String value = PropsUtil.get(name);
+
+		return StringUtil.split(value, delimiter);
 	}
 
 }
