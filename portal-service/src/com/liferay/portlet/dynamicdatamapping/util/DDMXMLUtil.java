@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 
 import java.util.Locale;
@@ -40,6 +41,19 @@ public class DDMXMLUtil {
 		PortalRuntimePermission.checkGetBeanProperty(DDMXMLUtil.class);
 
 		return _ddmXML;
+	}
+
+	public static Fields getFields(long ddmStructureId, String xml)
+		throws SystemException, PortalException {
+
+		return getDDMXML().getFields(ddmStructureId, xml);
+	}
+
+	public static Fields getFields(
+			long ddmStructureId, XPath conditionXPath, String xml)
+		throws PortalException, SystemException {
+
+		return getDDMXML().getFields(ddmStructureId, conditionXPath, xml);
 	}
 
 	public static String getXML(Fields fields)
