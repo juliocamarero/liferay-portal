@@ -50,6 +50,36 @@ import java.util.List;
  */
 public class AssetEntryServiceImpl extends AssetEntryServiceBaseImpl {
 
+	public List<AssetEntry> getBookmarkedEntries(long userId)
+		throws PortalException, SystemException {
+
+		return assetEntryLocalService.getBookmarkedEntries(
+			userId, StringPool.BLANK, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
+
+	public List<AssetEntry> getBookmarkedEntries(long userId, String className)
+		throws PortalException, SystemException {
+
+		return assetEntryLocalService.getBookmarkedEntries(
+			userId, className, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
+
+	public List<AssetEntry> getBookmarkedEntries(
+		long userId, int start, int end)
+		throws PortalException, SystemException {
+
+		return assetEntryLocalService.getBookmarkedEntries(
+			userId, StringPool.BLANK, start, end);
+	}
+
+	public List<AssetEntry> getBookmarkedEntries(
+		long userId, String className, int start, int end)
+		throws SystemException {
+
+		return assetEntryLocalService.getBookmarkedEntries(
+			userId, className, start, end);
+	}
+
 	public List<AssetEntry> getCompanyEntries(
 			long companyId, int start, int end)
 		throws SystemException {
