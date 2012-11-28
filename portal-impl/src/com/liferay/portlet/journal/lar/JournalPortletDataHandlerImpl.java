@@ -1659,6 +1659,21 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 				String dlReference = "[$dl-reference=" + path + "$]";
 
+				String contextPath = PortalUtil.getPathContext();
+
+				if (Validator.isNotNull(contextPath)) {
+					int beginContextPath = beginPos - contextPath.length();
+
+					if (beginContextPath >= 0) {
+						String curContextPath =
+							content.substring(beginContextPath, beginPos);
+
+						if (contextPath.equals(curContextPath)) {
+							beginPos = beginContextPath;
+						}
+					}
+				}
+
 				sb.replace(beginPos, endPos, dlReference);
 			}
 			catch (Exception e) {
