@@ -71,11 +71,13 @@ iteratorURL.setParameter("viewTrashAttachments", Boolean.TRUE.toString());
 	/>
 
 	<liferay-ui:search-container-row
-		className="com.liferay.portlet.documentlibrary.model.DLFileEntry"
-		modelVar="dlFileEntry"
+		className="com.liferay.portal.kernel.repository.model.FileEntry"
+		modelVar="fileEntry"
 	>
 
 		<%
+		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
+
 		WikiPage wikiPage = WikiPageAttachmentsUtil.getPage(dlFileEntry.getFileEntryId());
 		%>
 
@@ -92,19 +94,13 @@ iteratorURL.setParameter("viewTrashAttachments", Boolean.TRUE.toString());
 			href="<%= rowURL %>"
 			name="file-name"
 		>
-			<img align="left" alt="" border="0" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= DLUtil.getFileIcon(dlFileEntry.getExtension()) %>.png"> <%= TrashUtil.stripTrashNamespace(dlFileEntry.getTitle()) %>
+			<img align="left" alt="" border="0" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= DLUtil.getFileIcon(fileEntry.getExtension()) %>.png"> <%= fileEntry.getTitle() %>
 		</liferay-ui:search-container-column-text>
 
 		<liferay-ui:search-container-column-text
 			href="<%= rowURL %>"
-			name="page"
-			value="<%= wikiPage.getTitle() %>"
-		/>
-
-		<liferay-ui:search-container-column-text
-			href="<%= rowURL %>"
 			name="size"
-			value="<%= TextFormatter.formatStorageSize(dlFileEntry.getSize(), locale) %>"
+			value="<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>"
 		/>
 
 		<liferay-ui:search-container-column-jsp
