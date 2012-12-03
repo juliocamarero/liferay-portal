@@ -65,7 +65,9 @@ if (!denyAccess && (themeDisplay.isStatePopUp() || (layoutTypePortlet.hasStateMa
 	</div>
 
 	<%
-	sb.writeTo(pageContext.getOut());
+	if (sb != null) {
+		sb.writeTo(pageContext.getOut());
+	}
 }
 else {
 	String description = StringPool.BLANK;
