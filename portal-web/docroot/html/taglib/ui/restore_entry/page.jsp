@@ -17,28 +17,27 @@
 <%@ include file="/html/common/init.jsp" %>
 
 <%
-String duplicateCheckEntryAction = (String)request.getAttribute("liferay-ui:restore-entry:duplicateCheckEntryAction");
+String duplicateEntryAction = (String)request.getAttribute("liferay-ui:restore-entry:duplicateEntryAction");
 String overrideMessage = (String)request.getAttribute("liferay-ui:restore-entry:overrideMessage");
 String renameMessage = (String)request.getAttribute("liferay-ui:restore-entry:renameMessage");
 String restoreEntryAction = (String)request.getAttribute("liferay-ui:restore-entry:restoreEntryAction");
 %>
 
 <aui:script use="liferay-restore-entry">
-
 	<portlet:actionURL var="restoreEntryURL">
 		<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.CHECK %>" />
 		<portlet:param name="struts_action" value="<%= restoreEntryAction %>" />
 	</portlet:actionURL>
 
-	<portlet:renderURL var="duplicateCheckEntryURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-		<portlet:param name="struts_action" value="<%= duplicateCheckEntryAction %>" />
+	<portlet:renderURL var="duplicateEntryURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+		<portlet:param name="struts_action" value="<%= duplicateEntryAction %>" />
 		<portlet:param name="redirect" value="<%= PortalUtil.getCurrentURL(request) %>" />
 		<portlet:param name="restoreEntryAction" value="<%= restoreEntryAction %>" />
 	</portlet:renderURL>
 
 	new Liferay.RestoreEntry(
 		{
-			duplicateCheckEntryURL: '<%= duplicateCheckEntryURL %>',
+			duplicateEntryURL: '<%= duplicateEntryURL %>',
 			namespace: '<portlet:namespace />',
 			overrideMessage: '<%= overrideMessage %>',
 			renameMessage: '<%= renameMessage %>',

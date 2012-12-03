@@ -12,7 +12,7 @@ AUI.add(
 		var RestoreEntry = A.Component.create(
 			{
 				ATTRS: {
-					duplicateCheckEntryURL: {
+					duplicateEntryURL: {
 						validator: isString
 					},
 
@@ -83,7 +83,7 @@ AUI.add(
 								trashEntryId: responseData.trashEntryId
 							};
 
-							instance._showPopup(data, instance.get('duplicateCheckEntryURL'));
+							instance._showPopup(data, instance.get('duplicateEntryURL'));
 						}
 					},
 
