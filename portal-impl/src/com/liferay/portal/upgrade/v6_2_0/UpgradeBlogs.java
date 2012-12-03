@@ -33,6 +33,16 @@ public class UpgradeBlogs extends BaseUpgradePortletPreferences {
 
 	@Override
 	protected void doUpgrade() throws Exception {
+		updateEntries();
+		updatePortletPreferences();
+	}
+
+	@Override
+	protected String[] getPortletIds() {
+		return new String[] {"33"};
+	}
+
+	protected void updateEntries() throws Exception {
 		try {
 			runSQL("alter_column_type BlogsEntry description STRING null");
 		}
@@ -45,13 +55,6 @@ public class UpgradeBlogs extends BaseUpgradePortletPreferences {
 
 			upgradeTable.updateTable();
 		}
-
-		updatePortletPreferences();
-	}
-
-	@Override
-	protected String[] getPortletIds() {
-		return new String[] {"33"};
 	}
 
 	@Override
