@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RestoreEntryTag extends IncludeTag {
 
-	public void setDuplicateCheckEntryAction(String duplicateCheckEntryAction) {
-		_duplicateCheckEntryAction = duplicateCheckEntryAction;
+	public void setDuplicateEntryAction(String duplicateEntryAction) {
+		_duplicateEntryAction = duplicateEntryAction;
 	}
 
 	public void setOverrideMessage(String overrideMessage) {
@@ -35,15 +35,13 @@ public class RestoreEntryTag extends IncludeTag {
 		_renameMessage = renameMessage;
 	}
 
-	public void setRestoreEntryAction( String restoreEntryAction) {
+	public void setRestoreEntryAction(String restoreEntryAction) {
 		_restoreEntryAction = restoreEntryAction;
 	}
 
 	@Override
 	protected void cleanUp() {
-		super.cleanUp();
-
-		_duplicateCheckEntryAction = _DUPLICATE_CHECK_ENTRY_ACTION;
+		_duplicateEntryAction = _DUPLICATE_ENTRY_ACTION;
 		_overrideMessage = _OVERRIDE_MESSAGE;
 		_renameMessage = _RENAME_MESSAGE;
 		_restoreEntryAction = _RESTORE_ENTRY_ACTION;
@@ -61,11 +59,9 @@ public class RestoreEntryTag extends IncludeTag {
 
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
-		super.setAttributes(request);
-
 		request.setAttribute(
-			"liferay-ui:restore-entry:duplicateCheckEntryAction",
-			_duplicateCheckEntryAction);
+			"liferay-ui:restore-entry:duplicateEntryAction",
+			_duplicateEntryAction);
 		request.setAttribute(
 			"liferay-ui:restore-entry:overrideMessage", _overrideMessage);
 		request.setAttribute(
@@ -76,7 +72,7 @@ public class RestoreEntryTag extends IncludeTag {
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
 
-	private static final String _DUPLICATE_CHECK_ENTRY_ACTION =
+	private static final String _DUPLICATE_ENTRY_ACTION =
 		"/trash/restore_entry";
 
 	private static final String _OVERRIDE_MESSAGE =
@@ -90,7 +86,7 @@ public class RestoreEntryTag extends IncludeTag {
 
 	private static final String _RESTORE_ENTRY_ACTION = "/trash/edit_entry";
 
-	private String _duplicateCheckEntryAction = _DUPLICATE_CHECK_ENTRY_ACTION;
+	private String _duplicateEntryAction = _DUPLICATE_ENTRY_ACTION;
 	private String _overrideMessage = _OVERRIDE_MESSAGE;
 	private String _renameMessage = _RENAME_MESSAGE;
 	private String _restoreEntryAction = _RESTORE_ENTRY_ACTION;
