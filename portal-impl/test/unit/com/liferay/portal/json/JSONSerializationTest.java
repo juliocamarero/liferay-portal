@@ -21,8 +21,6 @@ import com.liferay.portal.kernel.search.HitsImpl;
 import junit.framework.TestCase;
 
 /**
- * Tests for classes with non-default serialization.
- *
  * @author Igor Spasic
  */
 public class JSONSerializationTest extends TestCase {
@@ -40,8 +38,6 @@ public class JSONSerializationTest extends TestCase {
 		JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 
 		String jsonString = jsonSerializer.serialize(hits);
-
-		System.out.println(jsonString);
 
 		assertTrue(jsonString.contains("\"docs\":null"));
 		assertTrue(jsonString.contains("\"scores\":[]"));
