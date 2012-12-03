@@ -1761,22 +1761,22 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 		StringBuilder sb = new StringBuilder(content);
 
-		String friendlyURLPrivateGroupPath =
+		String privateGroupServletMapping =
 			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-		String friendlyURLPrivateUserPath =
+		String privateUserServletMapping =
 			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
-		String friendlyURLPublicPath =
+		String publicServletMapping =
 			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
 
 		String portalContextPath = PortalUtil.getPathContext();
 
 		if (Validator.isNotNull(portalContextPath)) {
-			friendlyURLPrivateGroupPath = portalContextPath.concat(
-				friendlyURLPrivateGroupPath);
-			friendlyURLPrivateUserPath = portalContextPath.concat(
-				friendlyURLPrivateUserPath);
-			friendlyURLPublicPath = portalContextPath.concat(
-				friendlyURLPublicPath);
+			privateGroupServletMapping = portalContextPath.concat(
+				privateGroupServletMapping);
+			privateUserServletMapping = portalContextPath.concat(
+				privateUserServletMapping);
+			publicServletMapping = portalContextPath.concat(
+				publicServletMapping);
 		}
 
 		String href = "href=";
@@ -1853,9 +1853,9 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 			String url = content.substring(beginPos + hrefLength, endPos);
 
-			if (!url.startsWith(friendlyURLPrivateGroupPath) &&
-				!url.startsWith(friendlyURLPrivateUserPath) &&
-				!url.startsWith(friendlyURLPublicPath)) {
+			if (!url.startsWith(privateGroupServletMapping) &&
+				!url.startsWith(privateUserServletMapping) &&
+				!url.startsWith(publicServletMapping)) {
 
 				beginPos--;
 
@@ -1895,19 +1895,24 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 					"@data_handler_group_friendly_url@");
 			}
 
-			String dataHandlerMapper = StringPool.BLANK;
+			String dataHandlerServletMapping = StringPool.BLANK;
 
-			if (url.startsWith(friendlyURLPrivateGroupPath)) {
-				dataHandlerMapper = "@data_handler_private_group_friendly_url@";
+			if (url.startsWith(privateGroupServletMapping)) {
+				dataHandlerServletMapping =
+					"@data_handler_private_group_servlet_mapping@";
 			}
-			else if (url.startsWith(friendlyURLPrivateUserPath)) {
-				dataHandlerMapper = "@data_handler_private_user_friendly_url@";
+			else if (url.startsWith(privateUserServletMapping)) {
+				dataHandlerServletMapping =
+					"@data_handler_private_user_servlet_mapping@";
 			}
 			else {
-				dataHandlerMapper = "@data_handler_public_friendly_url@";
+				dataHandlerServletMapping =
+					"@data_handler_public_servlet_mapping@";
 			}
 
-			sb.replace(beginPos + hrefLength, beginGroupPos, dataHandlerMapper);
+			sb.replace(
+				beginPos + hrefLength, beginGroupPos,
+				dataHandlerServletMapping);
 
 			beginPos--;
 		}
@@ -2387,35 +2392,35 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
-		String friendlyURLPrivateGroupPath =
+		String privateGroupServletMapping =
 			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-		String friendlyURLPrivateUserPath =
+		String privateUserServletMapping =
 			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
-		String friendlyURLPublicPath =
+		String publicServletMapping =
 			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
 
 		String portalContextPath = PortalUtil.getPathContext();
 
 		if (Validator.isNotNull(portalContextPath)) {
-			friendlyURLPrivateGroupPath = portalContextPath.concat(
-				friendlyURLPrivateGroupPath);
-			friendlyURLPrivateUserPath = portalContextPath.concat(
-				friendlyURLPrivateUserPath);
-			friendlyURLPublicPath = portalContextPath.concat(
-				friendlyURLPublicPath);
+			privateGroupServletMapping = portalContextPath.concat(
+				privateGroupServletMapping);
+			privateUserServletMapping = portalContextPath.concat(
+				privateUserServletMapping);
+			publicServletMapping = portalContextPath.concat(
+				publicServletMapping);
 		}
 
 		content = StringUtil.replace(
-			content, "@data_handler_private_group_friendly_url@",
-			friendlyURLPrivateGroupPath);
+			content, "@data_handler_private_group_servlet_mapping@",
+			privateGroupServletMapping);
 
 		content = StringUtil.replace(
-			content, "@data_handler_private_user_friendly_url@",
-			friendlyURLPrivateUserPath);
+			content, "@data_handler_private_user_servlet_mapping@",
+			privateUserServletMapping);
 
 		content = StringUtil.replace(
-			content, "@data_handler_public_friendly_url@",
-			friendlyURLPublicPath);
+			content, "@data_handler_public_servlet_mapping@",
+			publicServletMapping);
 
 		Group group = GroupLocalServiceUtil.getGroup(
 			portletDataContext.getScopeGroupId());
