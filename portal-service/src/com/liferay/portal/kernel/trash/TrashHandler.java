@@ -260,7 +260,7 @@ public interface TrashHandler {
 	public ContainerModel getParentContainerModel(long classPK)
 		throws PortalException, SystemException;
 
-	public List<ContainerModel> getParentContainerModels(long containerModelId)
+	public List<ContainerModel> getParentContainerModels(long classPK)
 		throws PortalException, SystemException;
 
 	/**
