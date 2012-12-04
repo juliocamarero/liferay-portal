@@ -57,16 +57,17 @@ double version = BeanParamUtil.getDouble(article, request, "version", JournalArt
 
 String structureId = BeanParamUtil.getString(article, request, "structureId");
 
-DDMStructure ddmStructure = null;
 long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
 
-long structureGroupId = groupId;
+DDMStructure ddmStructure = null;
+
+long ddmStructureGroupId = groupId;
 
 if (ddmStructureId > 0) {
 	try {
 		ddmStructure = DDMStructureLocalServiceUtil.getStructure(ddmStructureId);
 
-		structureGroupId = ddmStructure.getGroupId();
+		ddmStructureGroupId = ddmStructure.getGroupId();
 	}
 	catch (NoSuchStructureException nsse2) {
 	}
@@ -75,7 +76,7 @@ else if (Validator.isNotNull(structureId)) {
 	try {
 		ddmStructure = DDMStructureLocalServiceUtil.getStructure(scopeGroupId, structureId);
 
-		structureGroupId = ddmStructure.getGroupId();
+		ddmStructureGroupId = ddmStructure.getGroupId();
 	}
 	catch (NoSuchStructureException nsse) {
 	}
