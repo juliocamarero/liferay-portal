@@ -306,7 +306,7 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 
 		<%@ include file="/html/portlet/message_boards/view_threads.jspf" %>
 
-		<c:if test='<%= PortalUtil.isRSSFeedsEnabled() && topLink.equals("recent-posts") %>'>
+		<c:if test='<%= enableRSS && topLink.equals("recent-posts") %>'>
 
 			<%
 			rssURL.setParameter("groupId", String.valueOf(scopeGroupId));
@@ -320,20 +320,13 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 
 			<br />
 
-			<table class="lfr-table">
-			<tr>
-				<td>
-					<liferay-ui:icon
-						image="rss"
-						label="<%= true %>"
-						message="subscribe-to-recent-posts"
-						method="get"
-						target="_blank"
-						url="<%= rssURL.toString() %>"
-					/>
-				</td>
-			</tr>
-			</table>
+			<liferay-ui:rss
+				delta="<%= rssDelta %>"
+				displayStyle="<%= rssDisplayStyle %>"
+				feedType="<%= rssFeedType %>"
+				message="subscribe-to-recent-posts"
+				resourceURL="<%= rssURL %>"
+			/>
 		</c:if>
 
 		<%
