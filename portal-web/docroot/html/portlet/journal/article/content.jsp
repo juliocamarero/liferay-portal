@@ -228,16 +228,11 @@ if (Validator.isNotNull(content)) {
 									</span>
 
 									<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
-
-										<%
-										String openDDMStructureSelectorUrl = "javascript:" + renderResponse.getNamespace() + "openDDMStructureSelector();";
-										%>
-
 										<liferay-ui:icon
 											image="add"
 											label="<%= true %>"
 											message="select"
-											url='<%= openDDMStructureSelectorUrl %>'
+											url='<%= "javascript:" + renderResponse.getNamespace() + "openDDMStructureSelector();" %>'
 										/>
 
 										<c:if test="<%= Validator.isNotNull(structureId) %>">
@@ -692,14 +687,16 @@ if (Validator.isNotNull(content)) {
 					<%
 					long controlPanelPlid = PortalUtil.getControlPanelPlid(company.getCompanyId());
 
-					DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(groupId, templateId);
-
 					LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(request, PortletKeys.PORTLET_DISPLAY_TEMPLATES, controlPanelPlid, PortletRequest.RENDER_PHASE);
 
 					liferayPortletURL.setDoAsGroupId(groupId);
 					liferayPortletURL.setParameter("struts_action", "/dynamic_data_mapping/edit_template");
 					liferayPortletURL.setParameter("groupId", String.valueOf(groupId));
+
+					DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(groupId, templateId);
+
 					liferayPortletURL.setParameter("templateId", ((ddmTemplate != null) ? String.valueOf(ddmTemplate.getTemplateId()) : ""));
+
 					liferayPortletURL.setPortletMode(PortletMode.VIEW);
 					liferayPortletURL.setWindowState(LiferayWindowState.POP_UP);
 

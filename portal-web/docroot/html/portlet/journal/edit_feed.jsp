@@ -27,9 +27,10 @@ String feedId = BeanParamUtil.getString(feed, request, "feedId");
 String newFeedId = ParamUtil.getString(request, "newFeedId");
 
 String structureId = BeanParamUtil.getString(feed, request, "structureId");
-long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
 
 DDMStructure ddmStructure = null;
+
+long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
 
 String ddmStructureName = StringPool.BLANK;
 
@@ -38,12 +39,13 @@ if (Validator.isNotNull(structureId)) {
 		ddmStructure = DDMStructureLocalServiceUtil.getStructure(groupId, structureId, true);
 
 		ddmStructureId = ddmStructure.getStructureId();
+
 		ddmStructureName = ddmStructure.getName(locale);
 	}
 	catch (NoSuchStructureException nsse) {
 	}
 }
-else if (Validator.isNotNull(ddmStructureId)) {
+else if (ddmStructureId > 0) {
 	try {
 		ddmStructure = DDMStructureLocalServiceUtil.getStructure(ddmStructureId);
 

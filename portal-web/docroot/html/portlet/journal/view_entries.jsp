@@ -74,8 +74,6 @@ searchContainer.setRowChecker(entriesChecker);
 ArticleDisplayTerms displayTerms = (ArticleDisplayTerms)searchContainer.getDisplayTerms();
 
 boolean showAddArticleButton = JournalPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_ARTICLE);
-
-String ddmStructureName = LanguageUtil.get(pageContext, "basic-web-content");
 %>
 
 <c:if test="<%= Validator.isNotNull(displayTerms.getStructureId()) %>">
@@ -85,14 +83,16 @@ String ddmStructureName = LanguageUtil.get(pageContext, "basic-web-content");
 		<div class="portlet-msg-info">
 
 			<%
+			String ddmStructureName = LanguageUtil.get(pageContext, "basic-web-content");
+
 			String structureId = StringPool.BLANK;
 
 			if (!displayTerms.getStructureId().equals("0")) {
+				structureId = displayTerms.getStructureId();
+
 				DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(scopeGroupId, displayTerms.getStructureId());
 
 				ddmStructureName = ddmStructure.getName(locale);
-
-				structureId = displayTerms.getStructureId();
 			}
 			%>
 
@@ -118,6 +118,7 @@ String ddmStructureName = LanguageUtil.get(pageContext, "basic-web-content");
 
 			<%
 			DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.getTemplate(scopeGroupId, displayTerms.getTemplateId());
+
 			DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(ddmTemplate.getClassPK());
 			%>
 

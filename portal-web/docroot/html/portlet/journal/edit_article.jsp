@@ -57,9 +57,9 @@ double version = BeanParamUtil.getDouble(article, request, "version", JournalArt
 
 String structureId = BeanParamUtil.getString(article, request, "structureId");
 
-long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
-
 DDMStructure ddmStructure = null;
+
+long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
 
 long ddmStructureGroupId = groupId;
 
