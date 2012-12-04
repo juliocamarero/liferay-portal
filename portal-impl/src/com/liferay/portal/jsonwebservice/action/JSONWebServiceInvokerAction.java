@@ -387,9 +387,7 @@ public class JSONWebServiceInvokerAction implements JSONWebServiceAction {
 			else {
 				Object value = statementData.get(key);
 
-				key = CamelCaseUtil.normalizeCamelCase(key);
-
-				parameterMap.put(key, value);
+				parameterMap.put(CamelCaseUtil.normalizeCamelCase(key), value);
 			}
 		}
 

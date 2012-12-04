@@ -72,7 +72,7 @@ public class JSONWebServiceInvokerTest extends BaseJSONWebServiceTestCase {
 	}
 
 	@Test
-	public void testCamel() throws Exception {
+	public void testCamelCaseNormalizedParameters() throws Exception {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
 		Map<String, Object> params = new LinkedHashMap<String, Object>();

@@ -82,14 +82,14 @@ public class JSONWebServiceTest extends BaseJSONWebServiceTestCase {
 	}
 
 	@Test
-	public void testCamel() throws Exception {
+	public void testCamelCaseNormalizedParameters() throws Exception {
 		MockHttpServletRequest mockHttpServletRequest = createHttpRequest(
 			"/foo/camel/good-name/goodboy/bad-name/badboy");
 
 		JSONWebServiceAction jsonWebServiceAction = lookupJSONWebServiceAction(
 			mockHttpServletRequest);
 
-		String result = (String) jsonWebServiceAction.invoke();
+		String result = (String)jsonWebServiceAction.invoke();
 
 		Assert.assertEquals("goodboy*badboy", result);
 
@@ -101,7 +101,7 @@ public class JSONWebServiceTest extends BaseJSONWebServiceTestCase {
 		jsonWebServiceAction = lookupJSONWebServiceAction(
 			mockHttpServletRequest);
 
-		result = (String) jsonWebServiceAction.invoke();
+		result = (String)jsonWebServiceAction.invoke();
 
 		Assert.assertEquals("goodboy*badboy", result);
 
@@ -112,7 +112,7 @@ public class JSONWebServiceTest extends BaseJSONWebServiceTestCase {
 		jsonWebServiceAction = lookupJSONWebServiceAction(
 			mockHttpServletRequest);
 
-		result = (String) jsonWebServiceAction.invoke();
+		result = (String)jsonWebServiceAction.invoke();
 
 		Assert.assertEquals("goodboy*badboy", result);
 	}
