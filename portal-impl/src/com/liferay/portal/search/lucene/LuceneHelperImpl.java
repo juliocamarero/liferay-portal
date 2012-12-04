@@ -49,6 +49,7 @@ import com.liferay.portal.search.lucene.cluster.LuceneClusterUtil;
 import com.liferay.portal.search.lucene.highlight.QueryTermExtractor;
 import com.liferay.portal.security.auth.TransientTokenUtil;
 import com.liferay.portal.util.PortalInstances;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.util.lucene.KeywordsUtil;
 
@@ -638,9 +639,24 @@ public class LuceneHelperImpl implements LuceneHelper {
 
 			InetAddress inetAddress = clusterNode.getInetAddress();
 
+			String luceneDumpFolder = "/lucene/dump";
+
+			String context = PortalUtil.getPathContext();
+
+			if (Validator.isNotNull(context)) {
+
+				if (context.endsWith(StringPool.SLASH)) {
+					luceneDumpFolder = context.concat("lucene/dump");
+				}
+				else {
+					luceneDumpFolder = context.concat("/lucene/dump");
+				}
+
+			}
+
 			URL url = new URL(
 				"http", inetAddress.getHostAddress(), clusterNode.getPort(),
-				"/lucene/dump");
+				luceneDumpFolder);
 
 			return new ObjectValuePair<String, URL>(transientToken, url);
 		}
