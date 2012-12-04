@@ -88,9 +88,8 @@ boolean showAddArticleButton = JournalPermission.contains(permissionChecker, sco
 			String structureId = StringPool.BLANK;
 
 			if (!displayTerms.getStructureId().equals("0")) {
-				JournalStructure structure = JournalStructureLocalServiceUtil.getStructure(scopeGroupId, displayTerms.getStructureId());
-
-				structureName = structure.getName(locale);
+				DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(scopeGroupId, displayTerms.getStructureId());
+				structureName = ddmStructure.getName(locale);
 
 				structureId = displayTerms.getStructureId();
 			}
@@ -117,8 +116,8 @@ boolean showAddArticleButton = JournalPermission.contains(permissionChecker, sco
 		<div class="portlet-msg-info">
 
 			<%
-			JournalTemplate template = JournalTemplateLocalServiceUtil.getTemplate(scopeGroupId, displayTerms.getTemplateId());
-			JournalStructure structure = JournalStructureLocalServiceUtil.getStructure(scopeGroupId, template.getStructureId());
+			DDMTemplate template = DDMTemplateLocalServiceUtil.getTemplate(scopeGroupId, displayTerms.getTemplateId());
+			DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(template.getClassPK());
 			%>
 
 			<liferay-portlet:renderURL varImpl="addArticlesURL" windowState="<%= LiferayWindowState.MAXIMIZED.toString() %>">
@@ -127,11 +126,11 @@ boolean showAddArticleButton = JournalPermission.contains(permissionChecker, sco
 				<portlet:param name="redirect" value="<%= currentURL %>" />
 				<portlet:param name="backURL" value="<%= currentURL %>" />
 				<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
-				<portlet:param name="structureId" value="<%= template.getStructureId() %>" />
+				<portlet:param name="structureId" value="<%= ddmStructure.getStructureKey() %>" />
 				<portlet:param name="templateId" value="<%= displayTerms.getTemplateId() %>" />
 			</liferay-portlet:renderURL>
 
-			<liferay-ui:message arguments="<%= template.getName(locale) %>" key="showing-content-filtered-by-template-x" /> (<a href="<%= addArticlesURL.toString() %>"><liferay-ui:message arguments="<%= structure.getName(locale) %>" key="add-new-x" /></a>)
+			<liferay-ui:message arguments="<%= template.getName(locale) %>" key="showing-content-filtered-by-template-x" /> (<a href="<%= addArticlesURL.toString() %>"><liferay-ui:message arguments="<%= ddmStructure.getName(locale) %>" key="add-new-x" /></a>)
 		</div>
 	</c:if>
 </c:if>
