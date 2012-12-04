@@ -202,10 +202,16 @@ portletURL.setParameter("tabs1", tabs1);
 		/>
 
 		<c:choose>
-			<c:when test="<%= entry.getRootEntry() == null || Validator.isNotNull(trashRenderer.renderActions(renderRequest, renderResponse)) %>">
+			<c:when test="<%= Validator.isNotNull(trashRenderer.renderActions(renderRequest, renderResponse)) %>">
 				<liferay-ui:search-container-column-jsp
 					align="right"
-					path='<%= entry.getRootEntry() == null ? "/html/portlet/trash/entry_action.jsp" : trashRenderer.renderActions(renderRequest, renderResponse) %>'
+					path='<%= trashRenderer.renderActions(renderRequest, renderResponse) %>'
+				/>
+			</c:when>
+			<c:when test="<%= entry.getRootEntry() == null %>">
+				<liferay-ui:search-container-column-jsp
+					align="right"
+					path="/html/portlet/trash/entry_action.jsp"
 				/>
 			</c:when>
 			<c:otherwise>
