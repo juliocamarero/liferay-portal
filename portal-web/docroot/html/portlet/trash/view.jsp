@@ -209,7 +209,16 @@ portletURL.setParameter("tabs1", tabs1);
 				/>
 			</c:when>
 			<c:otherwise>
-				<liferay-ui:search-container-column-text> </liferay-ui:search-container-column-text>
+				<liferay-ui:search-container-column-text align="right">
+
+					<%
+					request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+
+					request.setAttribute("curTrashRenderer", trashRenderer);
+					%>
+
+					<liferay-util:include page="/html/portlet/trash/view_content_action.jsp" />
+				</liferay-ui:search-container-column-text>
 			</c:otherwise>
 		</c:choose>
 	</liferay-ui:search-container-row>
