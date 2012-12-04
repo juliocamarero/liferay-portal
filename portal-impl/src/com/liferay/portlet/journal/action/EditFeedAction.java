@@ -165,10 +165,11 @@ public class EditFeedAction extends PortletAction {
 			actionRequest, "targetPortletId");
 		String contentField = ParamUtil.getString(
 			actionRequest, "contentField");
+
 		long ddmStructureId = ParamUtil.getLong(
 			actionRequest, "ddmStructureId");
 
-		if (Validator.isNotNull(ddmStructureId)) {
+		if (ddmStructureId > 0) {
 			DDMStructure ddmStructure =
 				DDMStructureLocalServiceUtil.fetchDDMStructure(ddmStructureId);
 
