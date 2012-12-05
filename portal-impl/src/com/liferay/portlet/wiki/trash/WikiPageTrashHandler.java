@@ -131,12 +131,12 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
-	public List<ContainerModel> getParentContainerModels(long containerModelId)
+	public List<ContainerModel> getParentContainerModels(long classPK)
 		throws PortalException, SystemException {
 
 		List<ContainerModel> containerModels = new ArrayList<ContainerModel>();
 
-		containerModels.add(getParentContainerModel(containerModelId));
+		containerModels.add(getParentContainerModel(classPK));
 
 		return containerModels;
 	}
