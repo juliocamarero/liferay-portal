@@ -372,9 +372,7 @@ public class JSONWebServiceActionsManagerImpl
 		return index;
 	}
 
-	private String[] _resolvePaths(
-		HttpServletRequest request, String path) {
-
+	private String[] _resolvePaths(HttpServletRequest request, String path) {
 		String servletContextPath = null;
 
 		int slashIndex = path.indexOf(CharPool.FORWARD_SLASH, 1);
