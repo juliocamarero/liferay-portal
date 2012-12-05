@@ -1477,10 +1477,12 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		int oldStatus = page.getStatus();
 
-		page.setStatus(status);
-		page.setStatusByUserId(userId);
-		page.setStatusByUserName(user.getFullName());
-		page.setStatusDate(now);
+		if (nodeStatus != WorkflowConstants.STATUS_IN_TRASH) {
+			page.setStatus(status);
+			page.setStatusByUserId(userId);
+			page.setStatusByUserName(user.getFullName());
+			page.setStatusDate(now);
+		}
 
 		if (status == WorkflowConstants.STATUS_APPROVED) {
 
