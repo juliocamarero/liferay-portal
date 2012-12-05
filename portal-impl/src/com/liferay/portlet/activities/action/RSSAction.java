@@ -63,6 +63,9 @@ public class RSSAction extends com.liferay.portal.struts.RSSAction {
 			List<SocialActivity> activities)
 		throws Exception {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		SyndFeed syndFeed = new SyndFeedImpl();
 
 		syndFeed.setDescription(GetterUtil.getString(description, name));
@@ -70,9 +73,6 @@ public class RSSAction extends com.liferay.portal.struts.RSSAction {
 		List<SyndEntry> syndEntries = new ArrayList<SyndEntry>();
 
 		syndFeed.setEntries(syndEntries);
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
 
 		for (SocialActivity activity : activities) {
 			SocialActivityFeedEntry activityFeedEntry =
