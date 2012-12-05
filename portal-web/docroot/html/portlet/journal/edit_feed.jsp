@@ -209,14 +209,7 @@ if (feed != null) {
 				<aui:field-wrapper label="structure">
 					<aui:input name="structureId" type="hidden" value="<%= structureId %>" />
 
-					<portlet:renderURL var="structureURL">
-						<portlet:param name="struts_action" value="/journal/edit_structure" />
-						<portlet:param name="redirect" value="<%= currentURL %>" />
-						<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-						<portlet:param name="parentStructureId" value="<%= structureId %>" />
-					</portlet:renderURL>
-
-					<aui:a href="<%= structureURL %>" id="structureName" label="<%= HtmlUtil.escape(ddmStructureName) %>" />
+					<%= HtmlUtil.escape(ddmStructureName) %>
 
 					<aui:button name="selectStructureButton" onClick='<%= renderResponse.getNamespace() + "openStructureSelector();" %>' value="select" />
 
@@ -227,8 +220,6 @@ if (feed != null) {
 					<c:choose>
 						<c:when test="<%= ddmTemplates.isEmpty() %>">
 							<aui:input name="templateId" type="hidden" value="<%= templateId %>" />
-
-							<aui:button name="selectTemplateButton" onClick='<%= renderResponse.getNamespace() + "openTemplateSelector();" %>' value="select" />
 						</c:when>
 						<c:otherwise>
 							<liferay-ui:table-iterator
@@ -247,15 +238,6 @@ if (feed != null) {
 								%>
 
 								<aui:input checked="<%= templateChecked %>" name="templateId" type="radio" value="<%= tableIteratorObj.getTemplateId() %>" />
-
-								<portlet:renderURL var="templateURL">
-									<portlet:param name="struts_action" value="/journal/edit_template" />
-									<portlet:param name="redirect" value="<%= currentURL %>" />
-									<portlet:param name="groupId" value="<%= String.valueOf(tableIteratorObj.getGroupId()) %>" />
-									<portlet:param name="templateId" value="<%= String.valueOf(tableIteratorObj.getTemplateId()) %>" />
-								</portlet:renderURL>
-
-								<aui:a href="<%= templateURL %>"><%= tableIteratorObj.getName() %></aui:a>
 
 								<c:if test="<%= tableIteratorObj.isSmallImage() %>">
 									<br />
@@ -397,21 +379,7 @@ if (feed != null) {
 			storageType: '<%= PropsValues.DYNAMIC_DATA_LISTS_STORAGE_TYPE %>',
 			structureName: 'structure',
 			structureType: 'com.liferay.portlet.journal.model.JournalArticle',
-			templateType: '<%= DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY %>',
 			title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
-			}
-		);
-	}
-
-	function <portlet:namespace />openTemplateSelector() {
-		Liferay.Util.openWindow(
-			{
-				dialog: {
-					width: 680
-				},
-				id: '<portlet:namespace />templateSelector',
-				title: '<%= UnicodeLanguageUtil.get(pageContext, "template") %>',
-				uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/journal/select_template" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /></portlet:renderURL>'
 			}
 		);
 	}

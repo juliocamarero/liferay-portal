@@ -36,6 +36,8 @@ if (!ArrayUtil.contains(displayViews, displayStyle)) {
 	displayStyle = displayViews[0];
 }
 
+String ddmStructureName = LanguageUtil.get(pageContext, "basic-web-content");
+
 PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/journal/view");
@@ -83,8 +85,6 @@ boolean showAddArticleButton = JournalPermission.contains(permissionChecker, sco
 		<div class="portlet-msg-info">
 
 			<%
-			String ddmStructureName = LanguageUtil.get(pageContext, "basic-web-content");
-
 			String structureId = StringPool.BLANK;
 
 			if (!displayTerms.getStructureId().equals("0")) {
