@@ -89,7 +89,14 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 
 		List<ContainerModel> containerModels = new ArrayList<ContainerModel>();
 
-		ContainerModel containerModel = getContainerModel(containerModelId);
+		ContainerModel containerModel = getParentContainerModel(
+			containerModelId);
+
+		if (containerModel == null) {
+			return containerModels;
+		}
+
+		containerModels.add(containerModel);
 
 		while (containerModel.getParentContainerModelId() > 0) {
 			containerModel = getContainerModel(
