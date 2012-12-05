@@ -936,6 +936,10 @@
 			<value>/html/portlet/journal_articles/configuration.jsp</value>
 		</init-param>
 		<init-param>
+			<name>ddm-resource</name>
+			<value>com.liferay.portlet.journal</value>
+		</init-param>
+		<init-param>
 			<name>template-path</name>
 			<value>/html/portlet/journal_articles/</value>
 		</init-param>
