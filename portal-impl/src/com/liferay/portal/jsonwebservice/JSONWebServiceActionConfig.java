@@ -70,13 +70,17 @@ public class JSONWebServiceActionConfig
 			return true;
 		}
 
-		if (object instanceof JSONWebServiceActionConfig) {
-			JSONWebServiceActionConfig jsonWebServiceActionConfig =
-				(JSONWebServiceActionConfig)object;
+		if ((object == null) ||
+			!(object instanceof JSONWebServiceActionConfig)) {
 
-			if (_signature.equals(jsonWebServiceActionConfig._signature)) {
-				return true;
-			}
+			return false;
+		}
+
+		JSONWebServiceActionConfig jsonWebServiceActionConfig =
+			(JSONWebServiceActionConfig)object;
+
+		if (_signature.equals(jsonWebServiceActionConfig.getSignature())) {
+			return true;
 		}
 
 		return false;
