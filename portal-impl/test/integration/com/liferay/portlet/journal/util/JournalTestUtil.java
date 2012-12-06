@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.util;
 
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.ServiceContext;
@@ -23,6 +24,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
+import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -47,18 +49,11 @@ public class JournalTestUtil {
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
-		StringBundler sb = new StringBundler();
-
-		sb.append("<?xml version=\"1.0\"?><root available-locales=");
-		sb.append("\"en_US\" default-locale=\"en_US\">");
-		sb.append("<static-content language-id=\"en_US\"><![CDATA[<p>");
-		sb.append(content);
-		sb.append("</p>]]>");
-		sb.append("</static-content></root>");
+		content = getArticleContent(content, englishLocale.toString());
 
 		return JournalArticleLocalServiceUtil.addArticle(
 			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
-			StringPool.BLANK, true, 1, titleMap, descriptionMap, sb.toString(),
+			StringPool.BLANK, true, 1, titleMap, descriptionMap, content,
 			"general", null, null, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true,
 			0, 0, 0, 0, 0, true, false, false, null, null, null, null,
 			serviceContext);
@@ -80,6 +75,35 @@ public class JournalTestUtil {
 		return JournalFolderLocalServiceUtil.addFolder(
 			TestPropsValues.getUserId(), groupId, parentFolderId, name,
 			"This is a test folder.", serviceContext);
+	}
+
+	public static JournalArticle updateArticle(
+		JournalArticle journalArticle, String content) throws Exception {
+
+		Locale locale = LocaleUtil.getDefault();
+
+		String localeId = locale.toString();
+
+		String xmlContent = getArticleContent(content, localeId);
+
+		journalArticle.setContent(xmlContent);
+
+		return JournalArticleUtil.update(journalArticle);
+	}
+
+	protected static String getArticleContent(String content, String localeId) {
+		StringBundler sb = new StringBundler();
+
+		sb.append("<?xml version=\"1.0\"?><root available-locales=");
+		sb.append("\"" + localeId + "\" ");
+		sb.append("default-locale=\"" + localeId + "\">");
+		sb.append("<static-content language-id=\"" + localeId + "\">");
+		sb.append("<![CDATA[<p>");
+		sb.append(content);
+		sb.append("</p>]]>");
+		sb.append("</static-content></root>");
+
+		return sb.toString();
 	}
 
 }
