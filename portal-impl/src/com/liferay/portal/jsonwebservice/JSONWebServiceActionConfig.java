@@ -64,6 +64,24 @@ public class JSONWebServiceActionConfig
 		return _signature.compareTo(jsonWebServiceActionConfig._signature);
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (object instanceof JSONWebServiceActionConfig) {
+			JSONWebServiceActionConfig jsonWebServiceActionConfig =
+				(JSONWebServiceActionConfig)object;
+
+			if (_signature.equals(jsonWebServiceActionConfig._signature)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public Class<?> getActionClass() {
 		return _actionClass;
 	}
@@ -94,6 +112,11 @@ public class JSONWebServiceActionConfig
 
 	public String getSignature() {
 		return _signature;
+	}
+
+	@Override
+	public int hashCode() {
+		return _signature.hashCode();
 	}
 
 	@Override
