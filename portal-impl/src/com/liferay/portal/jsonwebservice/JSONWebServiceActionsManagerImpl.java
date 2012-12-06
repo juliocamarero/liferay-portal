@@ -236,6 +236,7 @@ public class JSONWebServiceActionsManagerImpl
 				_log.debug(
 					"JSON Web Service action already registered: " + path);
 			}
+
 			return;
 		}
 
