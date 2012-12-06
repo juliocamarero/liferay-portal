@@ -22,10 +22,9 @@
 <%@ page import="com.liferay.portlet.social.service.SocialActivityLocalServiceUtil" %>
 
 <%
+List<SocialActivity> activities = (List<SocialActivity>)request.getAttribute("liferay-ui:social-activities:activities");
 String className = (String)request.getAttribute("liferay-ui:social-activities:className");
 long classPK = GetterUtil.getLong((String)request.getAttribute("liferay-ui:social-activities:classPK"));
-List<SocialActivity> activities = (List<SocialActivity>)request.getAttribute("liferay-ui:social-activities:activities");
-
 int feedDelta = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:social-activities:feedDelta"));
 String feedDisplayStyle = (String)request.getAttribute("liferay-ui:social-activities:feedDisplayStyle");
 boolean feedEnabled = !PortalUtil.isRSSFeedsEnabled() ? false : GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:social-activities:feedEnabled"));

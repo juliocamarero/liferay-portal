@@ -58,7 +58,7 @@ import javax.portlet.ResourceResponse;
 public class RSSAction extends com.liferay.portal.struts.RSSAction {
 
 	protected String exportToRSS(
-			PortletRequest portletRequest, String name, String description,
+			PortletRequest portletRequest, String title, String description,
 			String format, double version, String displayStyle,
 			List<SocialActivity> activities)
 		throws Exception {
@@ -68,7 +68,7 @@ public class RSSAction extends com.liferay.portal.struts.RSSAction {
 
 		SyndFeed syndFeed = new SyndFeedImpl();
 
-		syndFeed.setDescription(GetterUtil.getString(description, name));
+		syndFeed.setDescription(GetterUtil.getString(description, title));
 
 		List<SyndEntry> syndEntries = new ArrayList<SyndEntry>();
 
@@ -140,7 +140,7 @@ public class RSSAction extends com.liferay.portal.struts.RSSAction {
 		alternateSyndLink.setRel("alternate");
 
 		syndFeed.setPublishedDate(new Date());
-		syndFeed.setTitle(name);
+		syndFeed.setTitle(title);
 		syndFeed.setUri(link);
 
 		return RSSUtil.export(syndFeed);
@@ -179,7 +179,7 @@ public class RSSAction extends com.liferay.portal.struts.RSSAction {
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
 
-		String title = ParamUtil.getString(resourceRequest, "feedTitle");
+		String feedTitle = ParamUtil.getString(resourceRequest, "feedTitle");
 		String format = ParamUtil.getString(
 			resourceRequest, "type", RSSUtil.FORMAT_DEFAULT);
 		double version = ParamUtil.getDouble(
@@ -193,7 +193,7 @@ public class RSSAction extends com.liferay.portal.struts.RSSAction {
 		List<SocialActivity> activities = getActivities(resourceRequest, max);
 
 		String rss = exportToRSS(
-			resourceRequest, title, null, format, version, displayStyle,
+			resourceRequest, feedTitle, null, format, version, displayStyle,
 			activities);
 
 		return rss.getBytes(StringPool.UTF8);
