@@ -14,6 +14,8 @@
  */
 --%>
 
+<%@ include file="/html/portlet/dynamic_data_mapping/init.jsp" %>
+
 <%
 String langType = ParamUtil.getString(request, "langType");
 
@@ -23,10 +25,10 @@ String editorContentOutputElement = ParamUtil.getString(request, "editorContentO
 String editorType = ParamUtil.getString(request, "editorType");
 
 if (Validator.isNotNull(editorType)) {
-	portalPreferences.setValue(PortletKeys.JOURNAL, "editor-type", editorType);
+	portalPreferences.setValue(PortletKeys.DYNAMIC_DATA_MAPPING, "editor-type", editorType);
 }
 else {
-	editorType = portalPreferences.getValue(PortletKeys.JOURNAL, "editor-type", "plain");
+	editorType = portalPreferences.getValue(PortletKeys.DYNAMIC_DATA_MAPPING, "editor-type", "plain");
 }
 
 boolean useRichEditor = editorType.equals("rich");
@@ -41,25 +43,18 @@ else if (langType.equals("xml") || langType.equals("xsl") || langType.equals("xs
 }
 %>
 
-<aui:form method="post" name="editorForm">
-	<aui:fieldset>
-		<aui:select name="editorType">
-			<aui:option label="plain" value="plain" />
-			<aui:option label="rich" selected="<%= useRichEditor %>" value="rich" />
-		</aui:select>
+<aui:fieldset>
+	<aui:select name="editorType">
+		<aui:option label="plain" value="plain" />
+		<aui:option label="rich" selected="<%= useRichEditor %>" value="rich" />
+	</aui:select>
 
-		<div class="lfr-plain-editor <%= useRichEditor ? "aui-helper-hidden" : StringPool.BLANK %>" id="<portlet:namespace />plainEditor">
-			<aui:input cssClass="lfr-template-editor" inputCssClass="lfr-editor-textarea" label="" name="plainEditorField" onKeyDown="Liferay.Util.checkTab(this); Liferay.Util.disableEsc();" type="textarea" value="" wrap="off" />
-		</div>
+	<div class="lfr-plain-editor <%= useRichEditor ? "aui-helper-hidden" : StringPool.BLANK %>" id="<portlet:namespace />plainEditor">
+		<aui:input cssClass="lfr-template-editor" inputCssClass="lfr-editor-textarea" label="" name="plainEditorField" onKeyDown="Liferay.Util.checkTab(this); Liferay.Util.disableEsc();" type="textarea" value="" wrap="off" />
+	</div>
 
-		<div class="lfr-rich-editor <%= !useRichEditor ? "aui-helper-hidden" : StringPool.BLANK %>" id="<portlet:namespace />richEditor"></div>
-	</aui:fieldset>
-
-	<aui:button-row>
-		<aui:button name="update-button" value="update" />
-		<aui:button type="cancel" />
-	</aui:button-row>
-</aui:form>
+	<div class="lfr-rich-editor <%= !useRichEditor ? "aui-helper-hidden" : StringPool.BLANK %>" id="<portlet:namespace />richEditor"></div>
+</aui:fieldset>
 
 <aui:script use="aui-ace-editor,aui-dialog,aui-io-request">
 	var editorType = '<%= HtmlUtil.escapeJS(editorType) %>';
