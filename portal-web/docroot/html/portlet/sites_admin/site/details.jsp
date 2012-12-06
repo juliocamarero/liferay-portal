@@ -146,7 +146,9 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 									String servletContextName = settingsProperties.getProperty("customJspServletContextName", StringPool.BLANK);
 								%>
 
-									<aui:option data-servletContextName="<%= servletContextName %>" value="<%= curLayoutSetPrototype.getLayoutSetPrototypeId() %>"><%= HtmlUtil.escape(curLayoutSetPrototype.getName(user.getLanguageId())) %></aui:option>
+									<c:if test="<%= (privateLayoutSetPrototype == null) || (curLayoutSetPrototype.getLayoutSetPrototypeId() != privateLayoutSetPrototype.getLayoutSetPrototypeId()) %>">
+										<aui:option data-servletContextName="<%= servletContextName %>" value="<%= curLayoutSetPrototype.getLayoutSetPrototypeId() %>"><%= HtmlUtil.escape(curLayoutSetPrototype.getName(user.getLanguageId())) %></aui:option>
+									</c:if>
 
 								<%
 								}
@@ -218,7 +220,9 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 									String servletContextName = settingsProperties.getProperty("customJspServletContextName", StringPool.BLANK);
 								%>
 
-									<aui:option data-servletContextName="<%= servletContextName %>" value="<%= curLayoutSetPrototype.getLayoutSetPrototypeId() %>"><%= HtmlUtil.escape(curLayoutSetPrototype.getName(user.getLanguageId())) %></aui:option>
+									<c:if test="<%= (publicLayoutSetPrototype == null) || (curLayoutSetPrototype.getLayoutSetPrototypeId() != publicLayoutSetPrototype.getLayoutSetPrototypeId()) %>">
+										<aui:option data-servletContextName="<%= servletContextName %>" value="<%= curLayoutSetPrototype.getLayoutSetPrototypeId() %>"><%= HtmlUtil.escape(curLayoutSetPrototype.getName(user.getLanguageId())) %></aui:option>
+									</c:if>
 
 								<%
 								}
