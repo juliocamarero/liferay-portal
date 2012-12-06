@@ -34,6 +34,19 @@ import java.util.List;
 public class MBCategoryServiceImpl extends MBCategoryServiceBaseImpl {
 
 	public MBCategory addCategory(
+			long userId, long parentCategoryId, String name, String description,
+			ServiceContext serviceContext)
+			throws PortalException, SystemException {
+
+		MBCategoryPermission.check(
+			getPermissionChecker(), serviceContext.getScopeGroupId(),
+			parentCategoryId, ActionKeys.ADD_CATEGORY);
+
+		return mbCategoryLocalService.addCategory(
+			userId, parentCategoryId, name, description, serviceContext);
+	}
+
+	public MBCategory addCategory(
 			long parentCategoryId, String name, String description,
 			String displayStyle, String emailAddress, String inProtocol,
 			String inServerName, int inServerPort, boolean inUseSSL,
@@ -56,6 +69,17 @@ public class MBCategoryServiceImpl extends MBCategoryServiceBaseImpl {
 			mailingListActive, allowAnonymousEmail, serviceContext);
 	}
 
+	public void deleteCategory(long categoryId, boolean includeTrashedEntries)
+		throws PortalException, SystemException {
+
+		MBCategory category = mbCategoryLocalService.getCategory(categoryId);
+
+		MBCategoryPermission.check(
+			getPermissionChecker(), category, ActionKeys.DELETE);
+
+		mbCategoryLocalService.deleteCategory(category, includeTrashedEntries);
+	}
+
 	public void deleteCategory(long groupId, long categoryId)
 		throws PortalException, SystemException {
 
@@ -69,12 +93,26 @@ public class MBCategoryServiceImpl extends MBCategoryServiceBaseImpl {
 		return mbCategoryPersistence.filterFindByGroupId(groupId);
 	}
 
+	public List<MBCategory> getCategories(long groupId, int status)
+		throws SystemException {
+
+		return mbCategoryPersistence.findByG_S(groupId, status);
+	}
+
 	public List<MBCategory> getCategories(
 			long groupId, long parentCategoryId, int start, int end)
 		throws SystemException {
 
 		return mbCategoryPersistence.filterFindByG_P(
 			groupId, parentCategoryId, start, end);
+	}
+
+	public List<MBCategory> getCategories(
+			long groupId, long parentCategoryId, int status, int start, int end)
+		throws SystemException {
+
+		return mbCategoryLocalService.getCategories(
+			groupId, parentCategoryId, status, start, end);
 	}
 
 	public List<MBCategory> getCategories(
@@ -85,6 +123,15 @@ public class MBCategoryServiceImpl extends MBCategoryServiceBaseImpl {
 			groupId, parentCategoryIds, start, end);
 	}
 
+	public List<MBCategory> getCategories(
+			long groupId, long[] parentCategoryIds, int status, int start,
+			int end)
+		throws SystemException {
+
+		return mbCategoryLocalService.getCategories(
+			groupId, parentCategoryIds, status, start, end);
+	}
+
 	public int getCategoriesCount(long groupId, long parentCategoryId)
 		throws SystemException {
 
@@ -92,11 +139,27 @@ public class MBCategoryServiceImpl extends MBCategoryServiceBaseImpl {
 			groupId, parentCategoryId);
 	}
 
+	public int getCategoriesCount(
+			long groupId, long parentCategoryId, int status)
+		throws SystemException {
+
+		return mbCategoryLocalService.getCategoriesCount(
+			groupId, parentCategoryId, status);
+	}
+
 	public int getCategoriesCount(long groupId, long[] parentCategoryIds)
 		throws SystemException {
 
 		return mbCategoryPersistence.filterCountByG_P(
 			groupId, parentCategoryIds);
+	}
+
+	public int getCategoriesCount(
+			long groupId, long[] parentCategoryIds, int status)
+		throws SystemException {
+
+		return mbCategoryLocalService.getCategoriesCount(
+			groupId, parentCategoryIds, status);
 	}
 
 	public MBCategory getCategory(long categoryId)
@@ -183,6 +246,42 @@ public class MBCategoryServiceImpl extends MBCategoryServiceBaseImpl {
 
 		return mbCategoryLocalService.moveCategory(
 			categoryId, parentCategoryId, mergeWithParentCategory);
+	}
+
+	public MBCategory moveCategoryFromTrash(long categoryId, long newCategoryId)
+		throws PortalException, SystemException {
+
+		MBCategory category = mbCategoryLocalService.getCategory(categoryId);
+
+		MBCategoryPermission.check(
+			getPermissionChecker(), category, ActionKeys.UPDATE);
+
+		return mbCategoryLocalService.moveCategoryFromTrash(
+			getUserId(), categoryId, newCategoryId);
+	}
+
+	public MBCategory moveCategoryToTrash(long categoryId)
+		throws PortalException, SystemException {
+
+		MBCategory category = mbCategoryLocalService.getCategory(categoryId);
+
+		MBCategoryPermission.check(
+			getPermissionChecker(), category, ActionKeys.DELETE);
+
+		return mbCategoryLocalService.moveCategoryToTrash(
+			getUserId(), categoryId);
+	}
+
+	public void restoreCategoryFromTrash(long categoryId)
+		throws PortalException, SystemException {
+
+		MBCategory category = mbCategoryLocalService.getCategory(categoryId);
+
+		MBCategoryPermission.check(
+			getPermissionChecker(), category, ActionKeys.DELETE);
+
+		mbCategoryLocalService.restoreCategoryFromTrash(
+			getUserId(), categoryId);
 	}
 
 	public void subscribeCategory(long groupId, long categoryId)
