@@ -71,19 +71,6 @@ public class DDMStructureLocalServiceImpl
 	extends DDMStructureLocalServiceBaseImpl {
 
 	public DDMStructure addStructure(
-			long userId, long groupId, long classNameId,
-			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
-			String xsd, ServiceContext serviceContext)
-		throws PortalException, SystemException {
-
-		return addStructure(
-			userId, groupId, DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,
-			classNameId, null, nameMap, descriptionMap, xsd,
-			PropsValues.DYNAMIC_DATA_LISTS_STORAGE_TYPE,
-			DDMStructureConstants.TYPE_DEFAULT, serviceContext);
-	}
-
-	public DDMStructure addStructure(
 			long userId, long groupId, long parentStructureId, long classNameId,
 			String structureKey, Map<Locale, String> nameMap,
 			Map<Locale, String> descriptionMap, String xsd, String storageType,
@@ -150,6 +137,19 @@ public class DDMStructureLocalServiceImpl
 		}
 
 		return structure;
+	}
+
+	public DDMStructure addStructure(
+			long userId, long groupId, long classNameId,
+			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
+			String xsd, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return addStructure(
+			userId, groupId, DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,
+			classNameId, null, nameMap, descriptionMap, xsd,
+			PropsValues.DYNAMIC_DATA_LISTS_STORAGE_TYPE,
+			DDMStructureConstants.TYPE_DEFAULT, serviceContext);
 	}
 
 	public void addStructureResources(

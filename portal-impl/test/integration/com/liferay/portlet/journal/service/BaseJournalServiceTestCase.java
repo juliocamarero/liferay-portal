@@ -72,8 +72,7 @@ public class BaseJournalServiceTestCase {
 			null, xsd, serviceContext);
 	}
 
-	protected DDMTemplate addTemplate(
-			long structureId, String xsl, String lang)
+	protected DDMTemplate addTemplate(long structureId, String xsl, String lang)
 		throws Exception {
 
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
