@@ -440,15 +440,7 @@ if (hints != null) {
 						</c:otherwise>
 					</c:choose>
 
-					<c:if test="<%= autoSize %>">
-						<%
-							String mainLanguageId = defaultLanguageId;
-
-							if (Validator.isNotNull(languageId)) {
-								mainLanguageId = languageId;
-							}
-
-						%>
+					<c:if test="<%= autoSize && !localized  %>">
 						<aui:script use="liferay-textarea">
 							new Liferay.Textarea(
 								{
@@ -460,8 +452,7 @@ if (hints != null) {
 									</c:if>
 
 									,
-									node: '#<%= namespace %><%= id %>' + '<%= StringPool.UNDERLINE %>' + '<%= mainLanguageId %>',
-
+									node: '#<%= namespace %><%= id %>',
 									width: <%= displayWidth %>
 								}
 							).render();
@@ -480,7 +471,6 @@ if (hints != null) {
 					);
 				</aui:script>
 			</c:if>
-
 		</c:when>
 	</c:choose>
 </c:if>
