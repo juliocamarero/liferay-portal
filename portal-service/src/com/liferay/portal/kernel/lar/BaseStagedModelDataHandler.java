@@ -24,30 +24,56 @@ import com.liferay.portal.model.StagedModel;
 public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	implements StagedModelDataHandler<T> {
 
-	public void export(
-		T stagedModel, PortletDataContext portletDataContext,
-		Element... elements) {
+	public final void export(
+			T stagedModel, PortletDataContext portletDataContext,
+			Element... elements)
+		throws PortletDataException {
+
+		try {
+			doExport(stagedModel, portletDataContext, elements);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
 	}
 
 	public abstract String getClassName();
 
-	public void importData(
-		Element stagedModelElement, PortletDataContext portletDataContext) {
+	public final void importData(
+			Element stagedModelElement, PortletDataContext portletDataContext)
+		throws PortletDataException {
 
 		String path = stagedModelElement.attributeValue("path");
 
 		T stagedModel = (T)portletDataContext.getZipEntryAsObject(
 			stagedModelElement, path);
 
+		importData(stagedModel, path, portletDataContext);
+	}
+
+	public final void importData(
+			T stagedModel, String path, PortletDataContext portletDataContext)
+		throws PortletDataException {
+
 		if (!portletDataContext.isPathNotProcessed(path)) {
 			return;
 		}
 
-		importData(stagedModel, path, portletDataContext);
+		try {
+			doImportData(stagedModel, path, portletDataContext);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
 	}
 
-	public void importData(
-		T stagedModel, String path, PortletDataContext portletDataContext) {
-	}
+	protected abstract void doExport(
+			T stagedModel, PortletDataContext portletDataContext,
+			Element... elements)
+		throws Exception;
+
+	protected abstract void doImportData(
+			T stagedModel, String path, PortletDataContext portletDataContext)
+		throws Exception;
 
 }
