@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -295,8 +296,9 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			OrderByComparator obc)
 		throws SystemException {
 
-		return journalArticlePersistence.filterFindByG_U_C(
-			groupId, userId, classNameId, start, end, obc);
+		return journalArticlePersistence.filterFindByG_U_C_NotS(
+			groupId, userId, classNameId, WorkflowConstants.STATUS_IN_TRASH,
+			start, end, obc);
 	}
 
 	public int getArticlesCount(long groupId, long folderId)
@@ -321,8 +323,8 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			long groupId, long userId, long classNameId)
 		throws SystemException {
 
-		return journalArticlePersistence.filterCountByG_U_C(
-			groupId, userId, classNameId);
+		return journalArticlePersistence.filterCountByG_U_C_NotS(
+			groupId, userId, classNameId, WorkflowConstants.STATUS_IN_TRASH);
 	}
 
 	public JournalArticle getDisplayArticleByUrlTitle(
