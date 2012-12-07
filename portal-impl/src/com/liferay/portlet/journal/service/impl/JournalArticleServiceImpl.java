@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
@@ -29,8 +30,10 @@ import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.service.permission.JournalPermission;
 
 import java.io.File;
+import java.io.Serializable;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,6 +41,7 @@ import java.util.Map;
 /**
  * @author Brian Wing Shun Chan
  * @author Raymond Augé
+ * @author Levente Hudák
  */
 public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 
@@ -128,6 +132,13 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 
 		journalArticleLocalService.deleteArticle(
 			groupId, articleId, version, articleURL, serviceContext);
+	}
+
+	public void deleteArticle(
+			long groupId, String articleId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		deleteArticle(groupId, articleId, StringPool.BLANK, serviceContext);
 	}
 
 	public void deleteArticle(
@@ -419,6 +430,16 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 		}
 	}
 
+	public JournalArticle moveArticleToTrash(long groupId, String articleId)
+		throws PortalException, SystemException {
+
+		JournalArticlePermission.check(
+			getPermissionChecker(), groupId, articleId, ActionKeys.DELETE);
+
+		return journalArticleLocalService.moveArticleToTrash(
+			getUserId(), groupId, articleId);
+	}
+
 	public void removeArticleLocale(long companyId, String languageId)
 		throws PortalException, SystemException {
 
@@ -441,6 +462,27 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 
 		return journalArticleLocalService.removeArticleLocale(
 			groupId, articleId, version, languageId);
+	}
+
+	public void restoreArticleFromTrash(long resourcePrimKey)
+		throws PortalException, SystemException {
+
+		JournalArticle article = getLatestArticle(resourcePrimKey);
+
+		JournalArticlePermission.check(
+			getPermissionChecker(), article, ActionKeys.DELETE);
+
+		journalArticleLocalService.restoreArticleFromTrash(
+			getUserId(), article);
+	}
+
+	public void restoreArticleFromTrash(long groupId, String articleId)
+		throws PortalException, SystemException {
+
+		JournalArticle article = getLatestArticle(
+			groupId, articleId, WorkflowConstants.STATUS_IN_TRASH);
+
+		restoreArticleFromTrash(article.getResourcePrimKey());
 	}
 
 	public List<JournalArticle> search(
@@ -660,7 +702,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 
 		return journalArticleLocalService.updateStatus(
 			getUserId(), groupId, articleId, version, status, articleURL,
-			serviceContext);
+			new HashMap<String, Serializable>(), serviceContext);
 	}
 
 }
