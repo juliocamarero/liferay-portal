@@ -639,24 +639,19 @@ public class LuceneHelperImpl implements LuceneHelper {
 
 			InetAddress inetAddress = clusterNode.getInetAddress();
 
-			String luceneDumpFolder = "/lucene/dump";
+			String contextPath = PortalUtil.getPathContext();
 
-			String context = PortalUtil.getPathContext();
+			StringBuilder luceneDumpURI = new StringBuilder(contextPath);
 
-			if (Validator.isNotNull(context)) {
-
-				if (context.endsWith(StringPool.SLASH)) {
-					luceneDumpFolder = context.concat("lucene/dump");
-				}
-				else {
-					luceneDumpFolder = context.concat("/lucene/dump");
-				}
-
+			if (!contextPath.endsWith(StringPool.SLASH)) {
+				luceneDumpURI.append(StringPool.SLASH);
 			}
+
+			luceneDumpURI.append("lucene/dump");
 
 			URL url = new URL(
 				"http", inetAddress.getHostAddress(), clusterNode.getPort(),
-				luceneDumpFolder);
+				luceneDumpURI.toString());
 
 			return new ObjectValuePair<String, URL>(transientToken, url);
 		}
