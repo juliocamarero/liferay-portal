@@ -149,16 +149,16 @@ public class EditLayoutsAction extends PortletAction {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String redirect = ParamUtil.getString(actionRequest, "redirect");
+		String closeRedirect = ParamUtil.getString(
+			actionRequest, "closeRedirect");
+
+		Layout layout = null;
+		String oldFriendlyURL = StringPool.BLANK;
+
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
 		try {
-			String redirect = ParamUtil.getString(actionRequest, "redirect");
-			String closeRedirect = ParamUtil.getString(
-				actionRequest, "closeRedirect");
-
-			Layout layout = null;
-			String oldFriendlyURL = StringPool.BLANK;
-
 			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
 				Object[] returnValue = updateLayout(
 					actionRequest, actionResponse);
@@ -289,6 +289,22 @@ public class EditLayoutsAction extends PortletAction {
 				else {
 					SessionErrors.add(actionRequest, e.getClass(), e);
 				}
+
+				if (Validator.isNotNull(closeRedirect)) {
+					redirect = HttpUtil.setParameter(
+						redirect, "closeRedirect", closeRedirect);
+
+					LiferayPortletConfig liferayPortletConfig =
+						(LiferayPortletConfig)portletConfig;
+
+					SessionMessages.add(
+						actionRequest,
+						liferayPortletConfig.getPortletId() +
+							SessionMessages.KEY_SUFFIX_CLOSE_REDIRECT,
+						closeRedirect);
+				}
+
+				sendRedirect(actionRequest, actionResponse, redirect);
 			}
 			else if (e instanceof DuplicateLockException ||
 					 e instanceof LayoutPrototypeException ||
@@ -298,8 +314,7 @@ public class EditLayoutsAction extends PortletAction {
 
 				SessionErrors.add(actionRequest, e.getClass(), e);
 
-				String redirect = ParamUtil.getString(
-					actionRequest, "pagesRedirect");
+				redirect = ParamUtil.getString(actionRequest, "pagesRedirect");
 
 				sendRedirect(actionRequest, actionResponse, redirect);
 			}
