@@ -66,7 +66,9 @@ if (Validator.isNotNull(organizationIds)) {
 else {
 	if (selUser != null) {
 		organizations = selUser.getOrganizations();
-	} else if (filterManageableOrganizations) {
+	}
+
+	if (filterManageableOrganizations) {
 		organizations = UsersAdminUtil.filterOrganizations(permissionChecker, organizations);
 	}
 }
