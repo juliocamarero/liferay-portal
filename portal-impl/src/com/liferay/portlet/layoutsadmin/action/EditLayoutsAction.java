@@ -247,21 +247,9 @@ public class EditLayoutsAction extends PortletAction {
 				updateLayoutRevision(actionRequest, themeDisplay);
 			}
 
-			if (Validator.isNotNull(closeRedirect)) {
-				redirect = HttpUtil.setParameter(
-					redirect, "closeRedirect", closeRedirect);
-
-				LiferayPortletConfig liferayPortletConfig =
-					(LiferayPortletConfig)portletConfig;
-
-				SessionMessages.add(
-					actionRequest,
-					liferayPortletConfig.getPortletId() +
-						SessionMessages.KEY_SUFFIX_CLOSE_REDIRECT,
-					closeRedirect);
-			}
-
-			sendRedirect(actionRequest, actionResponse, redirect);
+			sendRedirect(
+				actionRequest, actionResponse, portletConfig, redirect,
+				closeRedirect);
 		}
 		catch (Exception e) {
 			if (e instanceof NoSuchLayoutException ||
@@ -281,30 +269,11 @@ public class EditLayoutsAction extends PortletAction {
 					 e instanceof RequiredLayoutException ||
 					 e instanceof UploadException) {
 
-				if (e instanceof LayoutFriendlyURLException) {
-					SessionErrors.add(
-						actionRequest,
-						LayoutFriendlyURLException.class.getName(), e);
-				}
-				else {
-					SessionErrors.add(actionRequest, e.getClass(), e);
-				}
+				SessionErrors.add(actionRequest, e.getClass(), e);
 
-				if (Validator.isNotNull(closeRedirect)) {
-					redirect = HttpUtil.setParameter(
-						redirect, "closeRedirect", closeRedirect);
-
-					LiferayPortletConfig liferayPortletConfig =
-						(LiferayPortletConfig)portletConfig;
-
-					SessionMessages.add(
-						actionRequest,
-						liferayPortletConfig.getPortletId() +
-							SessionMessages.KEY_SUFFIX_CLOSE_REDIRECT,
-						closeRedirect);
-				}
-
-				sendRedirect(actionRequest, actionResponse, redirect);
+				sendRedirect(
+					actionRequest, actionResponse, portletConfig, redirect,
+					closeRedirect);
 			}
 			else if (e instanceof DuplicateLockException ||
 					 e instanceof LayoutPrototypeException ||
@@ -1190,6 +1159,28 @@ public class EditLayoutsAction extends PortletAction {
 			device, deviceThemeId);
 
 		return typeSettingsProperties;
+	}
+
+	private void sendRedirect(
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			PortletConfig portletConfig, String redirect, String closeRedirect)
+		throws Exception {
+
+		if (Validator.isNotNull(closeRedirect)) {
+			redirect = HttpUtil.setParameter(
+				redirect, "closeRedirect", closeRedirect);
+
+			LiferayPortletConfig liferayPortletConfig =
+				(LiferayPortletConfig)portletConfig;
+
+			SessionMessages.add(
+				actionRequest,
+				liferayPortletConfig.getPortletId() +
+					SessionMessages.KEY_SUFFIX_CLOSE_REDIRECT,
+				closeRedirect);
+		}
+
+		sendRedirect(actionRequest, actionResponse, redirect);
 	}
 
 	private static final boolean _CHECK_METHOD_ON_PROCESS_ACTION = false;
