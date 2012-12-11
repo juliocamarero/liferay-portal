@@ -916,9 +916,9 @@ public class PluginPackageUtil {
 		String moduleArtifactId = displayPrefix + "-" + pluginType;
 
 		String moduleVersion = GetterUtil.getString(
-			properties.getProperty("module-version"), null);
+			properties.getProperty("module-version"));
 
-		if (moduleVersion == null) {
+		if (Validator.isNull(moduleVersion)) {
 			int moduleVersionPos = pos + pluginType.length() + 2;
 
 			if (displayName.length() > moduleVersionPos) {
