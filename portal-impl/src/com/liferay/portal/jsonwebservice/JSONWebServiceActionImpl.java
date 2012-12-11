@@ -99,17 +99,15 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 		return array;
 	}
 
-	private Object _convertValueToParameterType(
-			Object value, Class<?> parameterType,
-			Class<?>[] genericParameterTypes) {
+	private Object _convertValueToParameterValue(
+		Object value, Class<?> parameterType,
+		Class<?>[] genericParameterTypes) {
 
 		if (parameterType.isArray()) {
-			Class<?> valueType = value.getClass();
-
 			List<?> list = null;
 
 			if (value instanceof List) {
-				list = (List) value;
+				list = (List)value;
 			}
 			else {
 				String stringValue = value.toString();
@@ -127,14 +125,11 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 
 			return _convertListToArray(list, parameterType.getComponentType());
 		}
-
-		if (parameterType.equals(List.class)) {
+		else if (parameterType.equals(List.class)) {
 			List<?> list = null;
 
-			Class<?> valueType = value.getClass();
-
 			if (value instanceof List) {
-				list = (List<?>) value;
+				list = (List<?>)value;
 			}
 			else {
 				String stringValue = value.toString();
@@ -154,8 +149,7 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 
 			return list;
 		}
-
-		if (parameterType.equals(Map.class)) {
+		else if (parameterType.equals(Map.class)) {
 			String stringValue = value.toString();
 
 			stringValue = stringValue.trim();
@@ -167,8 +161,7 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 
 			return map;
 		}
-
-		if (parameterType.equals(Calendar.class)) {
+		else if (parameterType.equals(Calendar.class)) {
 			Calendar calendar = Calendar.getInstance();
 
 			calendar.setLenient(false);
@@ -183,36 +176,36 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 
 			return calendar;
 		}
-
-		if (parameterType.equals(Locale.class)) {
+		else if (parameterType.equals(Locale.class)) {
 			String stringValue = value.toString();
 
 			stringValue = stringValue.trim();
 
 			return LocaleUtil.fromLanguageId(stringValue);
 		}
+		else {
+			Object parameterValue = null;
 
-		Object parameterValue = null;
+			try {
+				parameterValue = TypeConverterManager.convertType(
+					value, parameterType);
+			}
+			catch (ClassCastException cce) {
+				String stringValue = value.toString();
 
-		try {
-			parameterValue = TypeConverterManager.convertType(
-				value, parameterType);
-		}
-		catch (ClassCastException cce) {
-			String stringValue = value.toString();
+				stringValue = stringValue.trim();
 
-			stringValue = stringValue.trim();
+				if (!stringValue.startsWith(StringPool.OPEN_CURLY_BRACE)) {
 
-			if (!stringValue.startsWith(StringPool.OPEN_CURLY_BRACE)) {
+					throw cce;
+				}
 
-				throw cce;
+				parameterValue = JSONFactoryUtil.looseDeserializeSafe(
+					stringValue, parameterType);
 			}
 
-			parameterValue = JSONFactoryUtil.looseDeserializeSafe(
-				stringValue, parameterType);
+			return parameterValue;
 		}
-
-		return parameterValue;
 	}
 
 	private Object _createDefaultParameterValue(
@@ -369,7 +362,7 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 						parameterName, parameterType);
 				}
 				else {
-					parameterValue = _convertValueToParameterType(
+					parameterValue = _convertValueToParameterValue(
 						value, parameterType,
 						methodParameters[i].getGenericTypes());
 				}

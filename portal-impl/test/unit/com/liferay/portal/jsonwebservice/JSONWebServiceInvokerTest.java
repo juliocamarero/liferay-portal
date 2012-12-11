@@ -274,6 +274,95 @@ public class JSONWebServiceInvokerTest extends BaseJSONWebServiceTestCase {
 	}
 
 	@Test
+	public void testSerializationComplexObjects1() throws Exception {
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+
+		map.put("/foo/search", params);
+
+		params.put("name", "target");
+		params.put("params", new String[] {"active:false:boolean"});
+
+		String json = toJSON(map, "*.params");
+
+		JSONWebServiceAction jsonWebServiceAction = prepareInvokerAction(json);
+
+		Object result = jsonWebServiceAction.invoke();
+
+		JSONWebServiceInvokerAction.InvokerResult invokerResult =
+			(JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals(
+			"\"search target>active:false:boolean\"", toJSON(invokerResult));
+
+		params.put("params", new String[] {"active", "false", "boolean"});
+
+		json = toJSON(map, "*.params");
+
+		jsonWebServiceAction = prepareInvokerAction(json);
+
+		result = jsonWebServiceAction.invoke();
+
+		invokerResult = (JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals(
+			"\"search target>active,false,boolean\"", toJSON(invokerResult));
+	}
+
+	@Test
+	public void testSerializationComplexObjects2() throws Exception {
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+
+		map.put("/foo/complex", params);
+
+		params.put("longs", "1,2,3");
+		params.put("ints", "1,2");
+		params.put("map", "{'key' : 122}");
+
+		String json = toJSON(map);
+
+		JSONWebServiceAction jsonWebServiceAction = prepareInvokerAction(json);
+
+		Object result = jsonWebServiceAction.invoke();
+
+		JSONWebServiceInvokerAction.InvokerResult invokerResult =
+			(JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals("6", toJSON(invokerResult));
+	}
+
+	@Test
+	public void testSerializationComplexObjects3() throws Exception {
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+
+		map.put("/foo/complex", params);
+
+		params.put("longs", new long[] {1,2,3});
+		params.put("ints", new int[] {1,2});
+
+		Map<String, Integer> map2 = new HashMap<String, Integer>(1);
+		map2.put("key", Integer.valueOf(122));
+
+		params.put("map", map2);
+
+		String json = toJSON(map, "*.ints", "*.longs", "*.map");
+
+		JSONWebServiceAction jsonWebServiceAction = prepareInvokerAction(json);
+
+		Object result = jsonWebServiceAction.invoke();
+
+		JSONWebServiceInvokerAction.InvokerResult invokerResult =
+			(JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals("6", toJSON(invokerResult));
+	}
+
+	@Test
 	public void testSerializationHack() throws Exception {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
@@ -331,97 +420,6 @@ public class JSONWebServiceInvokerTest extends BaseJSONWebServiceTestCase {
 
 		Assert.assertEquals(
 			"{\"array\":[1,2,3],\"value\":\"value\"}", toJSON(invokerResult));
-	}
-
-	@Test
-	public void testSerializationComplexObjects() throws Exception {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-
-		Map<String, Object> params = new LinkedHashMap<String, Object>();
-
-		map.put("/foo/search", params);
-
-		params.put("name", "target");
-		params.put("params", new String[] {"active:false:boolean"});
-
-		String json = toJSON(map, "*.params");
-
-		System.out.println(json);
-
-		JSONWebServiceAction jsonWebServiceAction = prepareInvokerAction(json);
-
-		Object result = jsonWebServiceAction.invoke();
-
-		JSONWebServiceInvokerAction.InvokerResult invokerResult =
-					(JSONWebServiceInvokerAction.InvokerResult)result;
-
-		Assert.assertEquals(
-			"\"search target>active:false:boolean\"", toJSON(invokerResult));
-
-		params.put("params", new String[] {"active", "false", "boolean"});
-
-		json = toJSON(map, "*.params");
-
-		jsonWebServiceAction = prepareInvokerAction(json);
-
-		result = jsonWebServiceAction.invoke();
-
-		invokerResult = (JSONWebServiceInvokerAction.InvokerResult)result;
-
-		Assert.assertEquals(
-			"\"search target>active,false,boolean\"", toJSON(invokerResult));
-	}
-
-	@Test
-	public void testSerializationComplexObjects2() throws Exception {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-
-		Map<String, Object> params = new LinkedHashMap<String, Object>();
-
-		map.put("/foo/complex", params);
-
-		params.put("longs", "1,2,3");
-		params.put("ints", "1,2");
-		params.put("map", "{'key' : 122}");
-
-		String json = toJSON(map);
-
-		JSONWebServiceAction jsonWebServiceAction = prepareInvokerAction(json);
-
-		Object result = jsonWebServiceAction.invoke();
-
-		JSONWebServiceInvokerAction.InvokerResult invokerResult =
-					(JSONWebServiceInvokerAction.InvokerResult)result;
-
-		Assert.assertEquals("6", toJSON(invokerResult));
-	}
-
-	@Test
-	public void testSerializationComplexObjects3() throws Exception {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-
-		Map<String, Object> params = new LinkedHashMap<String, Object>();
-
-		map.put("/foo/complex", params);
-
-		params.put("longs", new long[] {1,2,3});
-		params.put("ints", new int[] {1,2});
-
-		Map<String, Integer> map2 = new HashMap<String, Integer>(1);
-		map2.put("key", Integer.valueOf(122));
-
-		params.put("map", map2);
-
-		String json = toJSON(map, "*.ints", "*.longs", "*.map");
-
-		JSONWebServiceAction jsonWebServiceAction = prepareInvokerAction(json);
-
-		Object result = jsonWebServiceAction.invoke();
-
-		JSONWebServiceInvokerAction.InvokerResult invokerResult =
-					(JSONWebServiceInvokerAction.InvokerResult)result;
-
-		Assert.assertEquals("6", toJSON(invokerResult));
 	}
 
 	@Test
