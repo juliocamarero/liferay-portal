@@ -20,6 +20,28 @@ String scriptContent = ParamUtil.getString(request, "scriptContent");
 if (Validator.isNotNull(scriptContent)) {
 	script = scriptContent;
 }
+
+String langType = ParamUtil.getString(request, "langType");
+
+String editorType = ParamUtil.getString(request, "editorType");
+
+if (Validator.isNotNull(editorType)) {
+	portalPreferences.setValue(PortletKeys.DYNAMIC_DATA_MAPPING, "editor-type", editorType);
+}
+else {
+	editorType = portalPreferences.getValue(PortletKeys.DYNAMIC_DATA_MAPPING, "editor-type", "plain");
+}
+
+boolean useRichEditor = editorType.equals("rich");
+
+String editorMode = "php";
+
+if (langType.equals("css")) {
+	editorMode = "css";
+}
+else if (langType.equals("xml") || langType.equals("xsl") || langType.equals("xsd")) {
+	editorMode = "xml";
+}
 %>
 
 <aui:input name="scriptContent" type="hidden" value="<%= script %>" />
@@ -38,43 +60,110 @@ if (Validator.isNotNull(scriptContent)) {
 
 </aui:select>
 
-<aui:field-wrapper label="script">
+<aui:field-wrapper label="script-file">
 	<aui:input label="" name="script" type="file" />
 
-	<aui:button name="editorButton" value="launch-editor" />
+	<aui:fieldset>
+		<liferay-ui:panel-container extended="<%= false %>" id="templateScriptPanelContainer" persistState="<%= true %>">
+			<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="templateScriptSectionPanel" persistState="<%= true %>" title="script">
+				<aui:select name="editorType">
+					<aui:option label="rich" selected="<%= useRichEditor %>" value="rich" />
+					<aui:option label="plain" value="plain" />
+				</aui:select>
+			
+
+				<div class="lfr-plain-editor <%= useRichEditor ? "aui-helper-hidden" : StringPool.BLANK %>" id="<portlet:namespace />plainEditor">
+					<aui:input cssClass="lfr-template-editor" inputCssClass="lfr-editor-textarea" label="" name="plainEditorField" onKeyDown="Liferay.Util.checkTab(this); Liferay.Util.disableEsc();" type="textarea" value="" wrap="off" />
+				</div>
+
+				<div class="lfr-rich-editor <%= !useRichEditor ? "aui-helper-hidden" : StringPool.BLANK %>" id="<portlet:namespace />richEditor"></div>
+			</liferay-ui:panel>
+		</liferay-ui:panel-container>
+	</aui:fieldset>
 </aui:field-wrapper>
 
-<aui:script>
-	Liferay.Util.inlineEditor(
-		{
-			button: '#<portlet:namespace />editorButton',
-			cache: false,
-			id: '<portlet:namespace />scriptContentIFrame',
-			textarea: '<portlet:namespace />scriptContent',
-			title: '<%= UnicodeLanguageUtil.get(pageContext, "editor") %>',
+<aui:script use="aui-ace-editor">
+	var editorType = '<%= HtmlUtil.escapeJS(editorType) %>';
 
-			<%
-			long controlPanelPlid = PortalUtil.getControlPanelPlid(company.getCompanyId());
+	var editorContentElement = A.one('#<portlet:namespace />scriptContent');
 
-			PortletURL portletURL = PortletURLFactoryUtil.create(request, PortletKeys.JOURNAL, controlPanelPlid, PortletRequest.RENDER_PHASE);
+	var plainEditorField = A.one('#<portlet:namespace />plainEditorField');
 
-			portletURL.setParameter("struts_action", "/journal/edit_template_xsl");
-			portletURL.setParameter("editorContentInputElement", "#" + renderResponse.getNamespace() + "scriptContent");
-			portletURL.setParameter("editorContentOutputElement", "#" + renderResponse.getNamespace() + "scriptContent");
-			portletURL.setPortletMode(PortletMode.VIEW);
-			portletURL.setWindowState(LiferayWindowState.POP_UP);
-			%>
+	var richEditor;
 
-			uri: '<%= portletURL.toString() %>&langType=' + document.<portlet:namespace />fm.<portlet:namespace />language.value
+	var prevEditorContent;
+
+	function getEditorContent(type) {
+		var content = '';
+
+		if (type == 'plain') {
+			content = plainEditorField.val();
 		}
-	);
+		else {
+			content = richEditor.getSession().getValue();
+		}
 
-	Liferay.provide(
-		window,
-		'<portlet:namespace />saveTemplate',
-		function() {
-			submitForm(document.<portlet:namespace />fm);
+		return content;
+	}
+
+	function setEditorContent(type, content) {
+		if (type == 'plain') {
+			plainEditorField.val(content);
+		}
+		else {
+			richEditor.getSession().setValue(content);
+		}
+
+		prevEditorContent = content;
+	}
+
+	function updateEditorType(event) {
+		var oldEditorType = editorType;
+
+		var newEditorType = A.one('#<portlet:namespace />editorType').val();
+
+		var oldEditorContent = getEditorContent(oldEditorType);
+
+		setEditorContent(newEditorType, oldEditorContent);
+
+		var richEditorType = (newEditorType != 'plain');
+
+		A.one('#<portlet:namespace />plainEditor').toggle(!richEditorType);
+		A.one('#<portlet:namespace />richEditor').toggle(richEditorType);
+
+		if (richEditorType) {
+			richEditor.editor.resize();
+		}
+
+		var uri = '<portlet:renderURL><portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template_xsl" /></portlet:renderURL>&editorType=' + newEditorType;
+
+		A.io.request(uri);
+
+		editorType = newEditorType;
+	}
+
+	A.on(
+		'domready',
+		function(event) {
+			richEditor = new A.AceEditor(
+				{
+					boundingBox: '#<portlet:namespace />richEditor',
+					width: '100%',
+					height: '400',
+					mode: '<%= editorMode %>'
+				}
+			).render();
+
+			if (editorContentElement) {
+				setEditorContent(editorType, editorContentElement.val());
+			}
+
+			A.one('#<portlet:namespace />editorType').on('change', updateEditorType);
+
+			Liferay.on('<portlet:namespace />saveTemplate', function(event) {
+				editorContentElement.val(getEditorContent());
+			});
 		},
-		['aui-base']
+		'#<portlet:namespace />richEditor'
 	);
 </aui:script>
