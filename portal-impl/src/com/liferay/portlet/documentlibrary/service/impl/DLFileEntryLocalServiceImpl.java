@@ -359,7 +359,7 @@ public class DLFileEntryLocalServiceImpl
 				DLSyncConstants.EVENT_UPDATE);
 		}
 
-		lockLocalService.unlock(DLFileEntry.class.getName(), fileEntryId);
+		unlockFileEntry(fileEntryId);
 	}
 
 	/**
@@ -708,8 +708,7 @@ public class DLFileEntryLocalServiceImpl
 
 		// Lock
 
-		lockLocalService.unlock(
-			DLFileEntry.class.getName(), dlFileEntry.getFileEntryId());
+		unlockFileEntry(dlFileEntry.getFileEntryId());
 
 		// File
 
@@ -1754,33 +1753,6 @@ public class DLFileEntryLocalServiceImpl
 			expirationTime);
 	}
 
-	protected void doUnlockFileEntry(long fileEntryId, String lockUuid)
-		throws PortalException, SystemException {
-
-		if (Validator.isNotNull(lockUuid)) {
-			try {
-				Lock lock = lockLocalService.getLock(
-					DLFileEntry.class.getName(), fileEntryId);
-
-				if (!lock.getUuid().equals(lockUuid)) {
-					throw new InvalidLockException("UUIDs do not match");
-				}
-			}
-			catch (PortalException pe) {
-				if ((pe instanceof ExpiredLockException) ||
-					(pe instanceof NoSuchLockException)) {
-				}
-				else {
-					throw pe;
-				}
-			}
-		}
-
-		if (!isFileEntryCheckedOut(fileEntryId)) {
-			lockLocalService.unlock(DLFileEntry.class.getName(), fileEntryId);
-		}
-	}
-
 	protected List<ObjectValuePair<Long, Integer>> getDlFileVersionStatuses(
 		List<DLFileVersion> dlFileVersions) {
 
@@ -2177,8 +2149,7 @@ public class DLFileEntryLocalServiceImpl
 		catch (NoSuchModelException nsme) {
 		}
 
-		lockLocalService.unlock(
-			DLFileEntry.class.getName(), dlFileEntry.getFileEntryId());
+		unlockFileEntry(dlFileEntry.getFileEntryId());
 	}
 
 	protected void setFileVersion(DLFileEntry dlFileEntry)
