@@ -149,16 +149,16 @@ public class EditLayoutsAction extends PortletAction {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String redirect = ParamUtil.getString(actionRequest, "redirect");
+		String closeRedirect = ParamUtil.getString(
+			actionRequest, "closeRedirect");
+
+		Layout layout = null;
+		String oldFriendlyURL = StringPool.BLANK;
+
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
 		try {
-			String redirect = ParamUtil.getString(actionRequest, "redirect");
-			String closeRedirect = ParamUtil.getString(
-				actionRequest, "closeRedirect");
-
-			Layout layout = null;
-			String oldFriendlyURL = StringPool.BLANK;
-
 			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
 				Object[] returnValue = updateLayout(
 					actionRequest, actionResponse);
@@ -247,21 +247,9 @@ public class EditLayoutsAction extends PortletAction {
 				updateLayoutRevision(actionRequest, themeDisplay);
 			}
 
-			if (Validator.isNotNull(closeRedirect)) {
-				redirect = HttpUtil.setParameter(
-					redirect, "closeRedirect", closeRedirect);
-
-				LiferayPortletConfig liferayPortletConfig =
-					(LiferayPortletConfig)portletConfig;
-
-				SessionMessages.add(
-					actionRequest,
-					liferayPortletConfig.getPortletId() +
-						SessionMessages.KEY_SUFFIX_CLOSE_REDIRECT,
-					closeRedirect);
-			}
-
-			sendRedirect(actionRequest, actionResponse, redirect);
+			sendRedirect(
+				actionRequest, actionResponse, portletConfig, redirect,
+				closeRedirect);
 		}
 		catch (Exception e) {
 			if (e instanceof NoSuchLayoutException ||
@@ -281,14 +269,11 @@ public class EditLayoutsAction extends PortletAction {
 					 e instanceof RequiredLayoutException ||
 					 e instanceof UploadException) {
 
-				if (e instanceof LayoutFriendlyURLException) {
-					SessionErrors.add(
-						actionRequest,
-						LayoutFriendlyURLException.class.getName(), e);
-				}
-				else {
-					SessionErrors.add(actionRequest, e.getClass(), e);
-				}
+				SessionErrors.add(actionRequest, e.getClass(), e);
+
+				sendRedirect(
+					actionRequest, actionResponse, portletConfig, redirect,
+					closeRedirect);
 			}
 			else if (e instanceof DuplicateLockException ||
 					 e instanceof LayoutPrototypeException ||
@@ -298,8 +283,7 @@ public class EditLayoutsAction extends PortletAction {
 
 				SessionErrors.add(actionRequest, e.getClass(), e);
 
-				String redirect = ParamUtil.getString(
-					actionRequest, "pagesRedirect");
+				redirect = ParamUtil.getString(actionRequest, "pagesRedirect");
 
 				sendRedirect(actionRequest, actionResponse, redirect);
 			}
@@ -1175,6 +1159,28 @@ public class EditLayoutsAction extends PortletAction {
 			device, deviceThemeId);
 
 		return typeSettingsProperties;
+	}
+
+	private void sendRedirect(
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			PortletConfig portletConfig, String redirect, String closeRedirect)
+		throws Exception {
+
+		if (Validator.isNotNull(closeRedirect)) {
+			redirect = HttpUtil.setParameter(
+				redirect, "closeRedirect", closeRedirect);
+
+			LiferayPortletConfig liferayPortletConfig =
+				(LiferayPortletConfig)portletConfig;
+
+			SessionMessages.add(
+				actionRequest,
+				liferayPortletConfig.getPortletId() +
+					SessionMessages.KEY_SUFFIX_CLOSE_REDIRECT,
+				closeRedirect);
+		}
+
+		sendRedirect(actionRequest, actionResponse, redirect);
 	}
 
 	private static final boolean _CHECK_METHOD_ON_PROCESS_ACTION = false;
