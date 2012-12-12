@@ -27,82 +27,88 @@ String message = GetterUtil.getString((String)request.getAttribute("liferay-ui:f
 long reportedUserId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:flags:reportedUserId"));
 %>
 
-<div class="taglib-flags" title="<liferay-ui:message key="<%= message %>" />">
-	<liferay-ui:icon
-		cssClass="<%= randomNamespace %>"
-		image="../ratings/flagged_icon"
-		imageHover="../ratings/flagged_icon_hover"
-		label="<%= label %>"
-		message="<%= message %>"
-		url="javascript:;"
-	/>
-</div>
-
 <c:choose>
-	<c:when test="<%= PropsValues.FLAGS_GUEST_USERS_ENABLED || themeDisplay.isSignedIn() %>">
-		<aui:script use="aui-dialog">
-			var icon = A.one('.<%= randomNamespace %>');
+	<c:when test="<%= TrashUtil.isInTrash(className, classPK) %>">
+		<liferay-ui:message key="flags-are-disabled-because-this-entry-is-in-the-recycle-bin" />
+	</c:when>
+	<c:otherwise>
+		<div class="taglib-flags" title="<liferay-ui:message key="<%= message %>" />">
+			<liferay-ui:icon
+				cssClass="<%= randomNamespace %>"
+				image="../ratings/flagged_icon"
+				imageHover="../ratings/flagged_icon_hover"
+				label="<%= label %>"
+				message="<%= message %>"
+				url="javascript:;"
+			/>
+		</div>
+		<c:choose>
+			<c:when test="<%= PropsValues.FLAGS_GUEST_USERS_ENABLED || themeDisplay.isSignedIn() %>">
+				<aui:script use="aui-dialog">
+					var icon = A.one('.<%= randomNamespace %>');
 
-			if (icon) {
-				icon.on(
-					'click',
-					function() {
-						var popup = new A.Dialog(
-							{
-								align: Liferay.Util.Window.ALIGN_CENTER,
-								destroyOnClose: true,
-								draggable: true,
-								modal: true,
-								stack: true,
-								title: '<%= UnicodeLanguageUtil.get(pageContext, "report-inappropriate-content") %>',
-								width: 435
-							}
-						).render();
+					if (icon) {
+						icon.on(
+							'click',
+							function() {
+								var popup = new A.Dialog(
+									{
+										align: Liferay.Util.Window.ALIGN_CENTER,
+										destroyOnClose: true,
+										draggable: true,
+										modal: true,
+										stack: true,
+										title: '<%= UnicodeLanguageUtil.get(pageContext, "report-inappropriate-content") %>',
+										width: 435
+									}
+								).render();
 
-						popup.plug(
-							A.Plugin.IO, {
-								data: {
-									className: '<%= className %>',
-									classPK: '<%= classPK %>',
-									contentTitle: '<%= HtmlUtil.escapeJS(contentTitle) %>',
-									contentURL: '<%= HtmlUtil.escapeJS(PortalUtil.getPortalURL(request) + currentURL) %>',
-									reportedUserId: '<%= reportedUserId %>'
-								},
-								uri: '<liferay-portlet:renderURL portletName="<%= PortletKeys.FLAGS %>" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/flags/edit_entry" /></liferay-portlet:renderURL>'
+								popup.plug(
+									A.Plugin.IO, {
+										data: {
+											className: '<%= className %>',
+											classPK: '<%= classPK %>',
+											contentTitle: '<%= HtmlUtil.escapeJS(contentTitle) %>',
+											contentURL: '<%= HtmlUtil.escapeJS(PortalUtil.getPortalURL(request) + currentURL) %>',
+											reportedUserId: '<%= reportedUserId %>'
+										},
+										uri: '<liferay-portlet:renderURL portletName="<%= PortletKeys.FLAGS %>" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/flags/edit_entry" /></liferay-portlet:renderURL>'
+									}
+								);
 							}
 						);
 					}
-				);
-			}
-		</aui:script>
-	</c:when>
-	<c:otherwise>
-		<div id="<%= randomNamespace %>signIn" style="display:none">
-			<liferay-ui:message key="please-sign-in-to-flag-this-as-inappropriate" />
-		</div>
+				</aui:script>
+			</c:when>
+			<c:otherwise>
+				<div id="<%= randomNamespace %>signIn" style="display:none">
+					<liferay-ui:message key="please-sign-in-to-flag-this-as-inappropriate" />
+				</div>
 
-		<aui:script use="aui-dialog">
-			var icon = A.one('.<%= randomNamespace %>');
+				<aui:script use="aui-dialog">
+					var icon = A.one('.<%= randomNamespace %>');
 
-			if (icon) {
-				icon.on(
-					'click',
-					function(event) {
-						var popup = new A.Dialog(
-							{
-								align: Liferay.Util.Window.ALIGN_CENTER,
-								bodyContent: A.one('#<%= randomNamespace %>signIn').html(),
-								destroyOnClose: true,
-								title: '<%= UnicodeLanguageUtil.get(pageContext, "report-inappropriate-content") %>',
-								modal: true,
-								width: 500
+					if (icon) {
+						icon.on(
+							'click',
+							function(event) {
+								var popup = new A.Dialog(
+									{
+										align: Liferay.Util.Window.ALIGN_CENTER,
+										bodyContent: A.one('#<%= randomNamespace %>signIn').html(),
+										destroyOnClose: true,
+										title: '<%= UnicodeLanguageUtil.get(pageContext, "report-inappropriate-content") %>',
+										modal: true,
+										width: 500
+									}
+								).render();
+
+								event.preventDefault();
 							}
-						).render();
-
-						event.preventDefault();
+						);
 					}
-				);
-			}
-		</aui:script>
+				</aui:script>
+			</c:otherwise>
+		</c:choose>
 	</c:otherwise>
 </c:choose>
