@@ -32,13 +32,22 @@ String rowBreak = (String)request.getAttribute("liferay-ui:error:rowBreak");
 		</c:if>
 	</c:when>
 	<c:when test="<%= key == null %>">
-		<c:if test="<%= !SessionErrors.isEmpty(portletRequest) %>">
-			<div class="portlet-msg-error">
-				<liferay-ui:message key="your-request-failed-to-complete" />
-			</div>
+		<c:choose>
+			<c:when test="<%= SessionErrors.contains(portletRequest, SanitizerException.class) %>">
+				<div class="portlet-msg-error">
+					<liferay-ui:message key="your-request-failed-to-complete-because-some-of-the-data-entered-could-not-be-sanitized" />
+				</div>
 
-			<%= rowBreak %>
-		</c:if>
+				<%= rowBreak %>
+			</c:when>
+			<c:when test="<%= !SessionErrors.isEmpty(portletRequest) %>">
+				<div class="portlet-msg-error">
+					<liferay-ui:message key="your-request-failed-to-complete" />
+				</div>
+
+				<%= rowBreak %>
+			</c:when>
+		</c:choose>
 	</c:when>
 	<c:otherwise>
 		<c:if test="<%= SessionErrors.contains(portletRequest, key) %>">
