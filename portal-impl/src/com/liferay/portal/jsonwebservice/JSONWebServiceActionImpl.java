@@ -145,9 +145,7 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 					stringValue, ArrayList.class);
 			}
 
-			list = _generifyList(list, genericParameterTypes);
-
-			return list;
+			return _generifyList(list, genericParameterTypes);
 		}
 		else if (parameterType.equals(Map.class)) {
 			String stringValue = value.toString();
@@ -157,9 +155,7 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 			Map<?, ?> map = JSONFactoryUtil.looseDeserializeSafe(
 				stringValue, HashMap.class);
 
-			map = _generifyMap(map, genericParameterTypes);
-
-			return map;
+			return _generifyMap(map, genericParameterTypes);
 		}
 		else if (parameterType.equals(Calendar.class)) {
 			Calendar calendar = Calendar.getInstance();
