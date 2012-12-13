@@ -123,18 +123,16 @@ if (ratingsEntry != null) {
 									(<%= ratingsStats.getTotalEntries() %> <%= LanguageUtil.get(pageContext, (ratingsStats.getTotalEntries() == 1) ? "vote" : "votes") %>)
 								</div>
 
-								<c:if test="<%= !TrashUtil.isInTrash(className, classPK) %>">
-									<a class="aui-rating-element aui-rating-element-<%= (yourScore > 0) ? "on" : "off" %> aui-rating-thumb-up" href="javascript:;"></a>
+								<a class="aui-rating-element aui-rating-element-<%= (yourScore > 0) ? "on" : "off" %> aui-rating-thumb-up" href="javascript:;" title="<%= TrashUtil.isInTrash(className, classPK) ? LanguageUtil.get(pageContext, "ratings-are-disabled-because-this-entry-is-in-the-recycle-bin") : StringPool.BLANK %>"></a>
 
-									<a class="aui-rating-element aui-rating-element-<%= (yourScore < 0) ? "on" : "off" %> aui-rating-thumb-down" href="javascript:;"></a>
+								<a class="aui-rating-element aui-rating-element-<%= (yourScore < 0) ? "on" : "off" %> aui-rating-thumb-down" href="javascript:;" title="<%= TrashUtil.isInTrash(className, classPK) ? LanguageUtil.get(pageContext, "ratings-are-disabled-because-this-entry-is-in-the-recycle-bin") : StringPool.BLANK %>"></a>
+
+								<c:if test="<%= !TrashUtil.isInTrash(className, classPK) %>">
 
 									<%
 									String taglibLabel = "rate-this-as-good";
 
-									if (TrashUtil.isInTrash(className, classPK)) {
-										taglibLabel = "ratings-are-disabled-because-this-entry-is-in-the-recycle-bin";
-									}
-									else if (yourScore == 1) {
+									if (yourScore == 1) {
 										taglibLabel = "you-have-rated-this-as-good";
 									}
 									%>
@@ -144,10 +142,7 @@ if (ratingsEntry != null) {
 									<%
 									taglibLabel = "rate-this-as-bad";
 
-									if (TrashUtil.isInTrash(className, classPK)) {
-										taglibLabel = "ratings-are-disabled-because-this-entry-is-in-the-recycle-bin";
-									}
-									else if (yourScore == -1) {
+									if (yourScore == -1) {
 										taglibLabel = "you-have-rated-this-as-bad";
 									}
 									%>
