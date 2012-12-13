@@ -1606,10 +1606,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 			// Indexer
 
-			String oldTitle = page.getTitle();
-
-			page.setTitle(TrashUtil.getOriginalTitle(oldTitle));
-
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				WikiPage.class);
 
@@ -1618,8 +1614,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			// Cache
 
 			clearPageCache(page);
-
-			page.setTitle(oldTitle);
 		}
 
 		// Head
