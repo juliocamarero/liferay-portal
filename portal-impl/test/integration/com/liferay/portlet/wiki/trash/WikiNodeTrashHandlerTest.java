@@ -25,6 +25,7 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.trash.BaseTrashHandlerTestCase;
+import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
 
@@ -82,8 +83,13 @@ public class WikiNodeTrashHandlerTest extends BaseTrashHandlerTestCase {
 
 		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
 
+		String randomTitle = ServiceTestUtil.randomString(
+			_MAX_NODE_NAME_LENGTH - getSearchKeywords().length());
+
+		String nodeTitle = getSearchKeywords().concat(randomTitle);
+
 		return WikiNodeLocalServiceUtil.addNode(
-			TestPropsValues.getUserId(), getSearchKeywords(),
+			TestPropsValues.getUserId(), nodeTitle,
 			ServiceTestUtil.randomString(), serviceContext);
 	}
 
@@ -119,6 +125,13 @@ public class WikiNodeTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
+	protected String getUniqueTitle(BaseModel<?> baseModel) {
+		WikiNode wikiNode = (WikiNode)baseModel;
+
+		return TrashUtil.getOriginalTitle(wikiNode.getName());
+	}
+
+	@Override
 	protected boolean isAssetableModel() {
 		return false;
 	}
@@ -133,5 +146,7 @@ public class WikiNodeTrashHandlerTest extends BaseTrashHandlerTestCase {
 		WikiNodeLocalServiceUtil.moveNodeToTrash(
 			TestPropsValues.getUserId(), primaryKey);
 	}
+
+	private static final int _MAX_NODE_NAME_LENGTH = 75;
 
 }
