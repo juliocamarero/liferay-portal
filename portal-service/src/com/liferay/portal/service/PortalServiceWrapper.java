@@ -108,6 +108,11 @@ public class PortalServiceWrapper implements PortalService,
 		return _portalService.testHasClassName();
 	}
 
+	public void testHibernateFirstLevelCacheAutoSyncOnTxCreation()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_portalService.testHibernateFirstLevelCacheAutoSyncOnTxCreation();
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */
