@@ -239,6 +239,10 @@ public class TrashImpl implements Trash {
 		return sb.toString();
 	}
 
+	public String getOriginalTitle(String title) {
+		return getOriginalTitle(title, StringPool.SLASH);
+	}
+
 	public String getTrashTime(String title, String separator) {
 		int index = title.lastIndexOf(separator);
 
@@ -295,20 +299,6 @@ public class TrashImpl implements Trash {
 		return false;
 	}
 
-	public String stripTrashNamespace(String title) {
-		return stripTrashNamespace(title, StringPool.SLASH);
-	}
-
-	public String stripTrashNamespace(String title, String separator) {
-		int index = title.lastIndexOf(separator);
-
-		if (index < 0) {
-			return title;
-		}
-
-		return title.substring(0, index);
-	}
-
 	protected void addBreadcrumbEntries(
 			HttpServletRequest request, String className, long classPK,
 			String paramName, PortletURL containerModelURL)
@@ -339,6 +329,38 @@ public class TrashImpl implements Trash {
 
 		PortalUtil.addPortletBreadcrumbEntry(
 			request, trashRenderer.getTitle(themeDisplay.getLocale()), null);
+	}
+
+	protected String getOriginalTitle(String title, String prefix) {
+		int index = title.indexOf(prefix);
+
+		if (index != 0) {
+			return title;
+		}
+
+		title = title.substring(1, title.length());
+
+		long trashEntryId = GetterUtil.getLong(title);
+
+		if (trashEntryId <= 0) {
+			return title;
+		}
+
+		try {
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				trashEntryId);
+
+			title = trashEntry.getTypeSettingsProperty("title");
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"No TrashEntry exists with ID " +
+						String.valueOf(trashEntryId));
+			}
+		}
+
+		return title;
 	}
 
 	protected String getTrashTitle(long trashEntryId, String prefix) {
