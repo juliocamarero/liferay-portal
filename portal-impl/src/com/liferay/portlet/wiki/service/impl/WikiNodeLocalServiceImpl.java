@@ -457,13 +457,7 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 			WikiNode.class);
 
 		if (status == WorkflowConstants.STATUS_IN_TRASH) {
-			String oldName = node.getName();
-
-			node.setName(TrashUtil.getOriginalTitle(oldName));
-
 			indexer.reindex(node);
-
-			node.setName(oldName);
 		}
 		else {
 			indexer.delete(node);
