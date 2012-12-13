@@ -235,7 +235,7 @@ if (Validator.isNotNull(content)) {
 											url='<%= "javascript:" + renderResponse.getNamespace() + "openDDMStructureSelector();" %>'
 										/>
 
-										<c:if test="<%= Validator.isNotNull(structureId) %>">
+										<c:if test="<%= Validator.isNotNull(structureId) || (ddmStructure != null) %>">
 											<span class="default-link">(<a href="javascript:;" id="<portlet:namespace />loadDefaultStructure"><liferay-ui:message key="use-default" /></a>)</span>
 										</c:if>
 
