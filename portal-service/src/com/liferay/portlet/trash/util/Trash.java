@@ -59,6 +59,8 @@ public interface Trash {
 
 	public String getNewName(ThemeDisplay themeDisplay, String oldName);
 
+	public String getOriginalTitle(String title);
+
 	public String getTrashTime(String title, String separator);
 
 	public String getTrashTitle(long trashEntryId);
@@ -68,9 +70,5 @@ public interface Trash {
 
 	public boolean isTrashEnabled(long groupId)
 		throws PortalException, SystemException;
-
-	public String stripTrashNamespace(String title);
-
-	public String stripTrashNamespace(String title, String separator);
 
 }

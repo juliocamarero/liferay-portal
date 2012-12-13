@@ -207,7 +207,7 @@ public class LiferayFileEntry extends LiferayModel implements FileEntry {
 	}
 
 	public String getTitle() {
-		return TrashUtil.stripTrashNamespace(_dlFileEntry.getTitle());
+		return TrashUtil.getOriginalTitle(_dlFileEntry.getTitle());
 	}
 
 	public long getUserId() {
