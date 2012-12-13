@@ -151,7 +151,7 @@ public class AssetEntryFinderImpl
 			sb.append(sql);
 
 			if ((i + 1) < tagIds.length) {
-				sb.append(" AND AssetEntry.entryId IN (");
+				sb.append(" OR AssetEntry.entryId IN (");
 			}
 		}
 
