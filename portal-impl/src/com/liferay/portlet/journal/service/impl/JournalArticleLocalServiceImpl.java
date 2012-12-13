@@ -112,6 +112,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -2190,6 +2191,15 @@ public class JournalArticleLocalServiceImpl
 
 		if (article.getSmallImageId() == 0) {
 			article.setSmallImageId(counterLocalService.increment());
+		}
+		else {
+			Image oldImage = imageLocalService.getImage(
+				article.getSmallImageId());
+
+			if ((oldImage != null) && (smallImageBytes != null) &&
+				(!Arrays.equals(oldImage.getTextObj(), smallImageBytes))) {
+					article.setSmallImageId(counterLocalService.increment());
+			}
 		}
 
 		article.setSmallImageURL(smallImageURL);
