@@ -67,14 +67,6 @@ public class TrashUtil {
 			request, className, classPK, containerModelURL);
 	}
 
-	public static String appendTrashNamespace(String title) {
-		return getTrash().appendTrashNamespace(title);
-	}
-
-	public static String appendTrashNamespace(String title, String separator) {
-		return getTrash().appendTrashNamespace(title, separator);
-	}
-
 	public static void deleteEntriesAttachments(
 			long companyId, long repositoryId, Date date,
 			String[] attachmentFileNames)
@@ -114,6 +106,10 @@ public class TrashUtil {
 
 	public static String getTrashTime(String title, String separator) {
 		return getTrash().getTrashTime(title, separator);
+	}
+
+	public static String getTrashTitle(long trashEntryId) {
+		return getTrash().getTrashTitle(trashEntryId);
 	}
 
 	public static boolean isInTrash(String className, long classPK)

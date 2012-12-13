@@ -346,13 +346,20 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 	public WikiNode moveNodeToTrash(long userId, WikiNode node)
 		throws PortalException, SystemException {
 
-		node.setName(TrashUtil.appendTrashNamespace(node.getName()));
-
-		wikiNodePersistence.update(node);
-
-		return updateStatus(
+		WikiNode updatedNode = updateStatus(
 			userId, node, WorkflowConstants.STATUS_IN_TRASH,
 			new ServiceContext());
+
+		// File entry
+
+		TrashEntry trashEntry = trashEntryLocalService.getEntry(
+			WikiNode.class.getName(), updatedNode.getNodeId());
+
+		String trashTitle = TrashUtil.getTrashTitle(trashEntry.getEntryId());
+
+		updatedNode.setName(trashTitle);
+
+		return wikiNodePersistence.update(updatedNode);
 	}
 
 	public void restoreNodeFromTrash(long userId, WikiNode node)

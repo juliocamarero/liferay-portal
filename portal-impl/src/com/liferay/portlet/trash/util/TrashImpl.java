@@ -106,20 +106,6 @@ public class TrashImpl implements Trash {
 			request, className, classPK, "containerModelId", containerModelURL);
 	}
 
-	public String appendTrashNamespace(String title) {
-		return appendTrashNamespace(title, StringPool.SLASH);
-	}
-
-	public String appendTrashNamespace(String title, String separator) {
-		StringBundler sb = new StringBundler(3);
-
-		sb.append(title);
-		sb.append(separator);
-		sb.append(System.currentTimeMillis());
-
-		return sb.toString();
-	}
-
 	public void deleteEntriesAttachments(
 			long companyId, long repositoryId, Date date,
 			String[] attachmentFileNames)
@@ -263,6 +249,10 @@ public class TrashImpl implements Trash {
 		return title.substring(index + 1, title.length());
 	}
 
+	public String getTrashTitle(long trashEntryId) {
+		return getTrashTitle(trashEntryId, StringPool.SLASH);
+	}
+
 	public boolean isInTrash(String className, long classPK)
 		throws PortalException, SystemException {
 
@@ -349,6 +339,10 @@ public class TrashImpl implements Trash {
 
 		PortalUtil.addPortletBreadcrumbEntry(
 			request, trashRenderer.getTitle(themeDisplay.getLocale()), null);
+	}
+
+	protected String getTrashTitle(long trashEntryId, String prefix) {
+		return prefix.concat(String.valueOf(trashEntryId));
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(TrashImpl.class);
