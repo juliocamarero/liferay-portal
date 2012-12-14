@@ -204,9 +204,7 @@ public abstract class BaseTrashHandlerTestCase {
 	protected boolean isBaseModelTrashName(ClassedModel classedModel) {
 		String baseModelName = getBaseModelName(classedModel);
 
-		int index = baseModelName.lastIndexOf(StringPool.SLASH);
-
-		if (index == 0) {
+		if (baseModelName.startsWith(StringPool.SLASH)) {
 			return true;
 		}
 		else {
