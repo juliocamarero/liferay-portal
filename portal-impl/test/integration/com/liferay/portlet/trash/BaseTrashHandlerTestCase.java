@@ -176,6 +176,8 @@ public abstract class BaseTrashHandlerTestCase {
 		return (Long)classedModel.getPrimaryKeyObj();
 	}
 
+	protected abstract String getUniqueTitle(BaseModel<?> baseModel);
+
 	protected WorkflowedModel getWorkflowedModel(ClassedModel baseModel)
 		throws Exception {
 
@@ -202,7 +204,14 @@ public abstract class BaseTrashHandlerTestCase {
 	protected boolean isBaseModelTrashName(ClassedModel classedModel) {
 		String baseModelName = getBaseModelName(classedModel);
 
-		return baseModelName.contains(StringPool.SLASH);
+		int index = baseModelName.lastIndexOf(StringPool.SLASH);
+
+		if (index == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	protected boolean isIndexableBaseModel() {
@@ -288,6 +297,8 @@ public abstract class BaseTrashHandlerTestCase {
 		BaseModel<?> baseModel = addBaseModel(
 			parentBaseModel, approved, serviceContext);
 
+		String uniqueTitle = getUniqueTitle(baseModel);
+
 		Assert.assertEquals(
 			initialBaseModelsCount + 1,
 			getBaseModelsNotInTrashCount(parentBaseModel));
@@ -338,6 +349,10 @@ public abstract class BaseTrashHandlerTestCase {
 			Assert.assertEquals(
 				initialTrashEntriesSearchCount + 1,
 				searchTrashEntriesCount(getSearchKeywords(), serviceContext));
+		}
+
+		if (uniqueTitle != null) {
+			Assert.assertEquals(uniqueTitle, getUniqueTitle(baseModel));
 		}
 
 		TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
@@ -415,6 +430,10 @@ public abstract class BaseTrashHandlerTestCase {
 
 			if (isAssetableModel()) {
 				Assert.assertEquals(approved, isAssetEntryVisible(baseModel));
+			}
+
+			if (uniqueTitle != null) {
+				Assert.assertEquals(uniqueTitle, getUniqueTitle(baseModel));
 			}
 		}
 	}
