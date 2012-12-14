@@ -35,6 +35,10 @@ public interface PortletConfigFactory {
 			long companyId, String portletId, ServletContext servletContext)
 		throws PortletException, SystemException;
 
+	public PortletConfig getPortletConfig(
+			Portlet portlet, ServletContext servletContext)
+		throws PortletException, SystemException;
+
 	public PortletConfig update(Portlet portlet);
 
 }

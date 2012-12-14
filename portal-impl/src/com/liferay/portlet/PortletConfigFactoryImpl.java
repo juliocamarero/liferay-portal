@@ -74,6 +74,13 @@ public class PortletConfigFactoryImpl implements PortletConfigFactory {
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			companyId, portletId);
 
+		return getPortletConfig(portlet, servletContext);
+	}
+
+	public PortletConfig getPortletConfig(
+			Portlet portlet, ServletContext servletContext)
+		throws PortletException, SystemException {
+
 		InvokerPortlet invokerPortlet = PortletInstanceFactoryUtil.create(
 			portlet, servletContext);
 

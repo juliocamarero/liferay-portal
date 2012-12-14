@@ -46,6 +46,14 @@ public class PortletConfigFactoryUtil {
 			companyId, portletId, servletContext);
 	}
 
+	public static PortletConfig getPortletConfig(
+			Portlet portlet, ServletContext servletContext)
+		throws PortletException, SystemException {
+
+		return getPortletConfigFactory().getPortletConfig(
+			portlet, servletContext);
+	}
+
 	public static PortletConfigFactory getPortletConfigFactory() {
 		PortalRuntimePermission.checkGetBeanProperty(
 			PortletConfigFactoryUtil.class);
