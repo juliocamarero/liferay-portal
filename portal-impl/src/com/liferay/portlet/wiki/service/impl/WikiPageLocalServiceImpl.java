@@ -1594,8 +1594,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 			// Trash
 
-			UnicodeProperties typeSettingsProperties =
-				new UnicodeProperties();
+			UnicodeProperties typeSettingsProperties = new UnicodeProperties();
 
 			typeSettingsProperties.put("title", page.getTitle());
 
