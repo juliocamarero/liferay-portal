@@ -65,7 +65,7 @@ private String _buildTagsNavigation(long groupId, String selectedTagName, Portle
 		tags = AssetTagServiceUtil.getTags(groupId, classNameId, null, 0, maxAssetTags, new AssetTagCountComparator());
 	}
 	else {
-		tags = AssetTagServiceUtil.getGroupTags(groupId, 0, maxAssetTags, new AssetTagCountComparator());
+		tags = AssetTagServiceUtil.getVisibleAssetTags(groupId, 0, maxAssetTags, new AssetTagCountComparator());
 	}
 
 	if (tags.isEmpty()) {

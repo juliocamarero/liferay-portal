@@ -201,6 +201,13 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 		return assetTagFinder.filterCountByG_N_P(groupId, name, tagProperties);
 	}
 
+	public List<AssetTag> getVisibleAssetTags(
+			long groupId, int start, int end, OrderByComparator obc)
+		throws SystemException {
+
+		return assetTagFinder.filterFindByGroupId(groupId, start, end, obc);
+	}
+
 	public void mergeTags(
 			long fromTagId, long toTagId, boolean overrideProperties)
 		throws PortalException, SystemException {
