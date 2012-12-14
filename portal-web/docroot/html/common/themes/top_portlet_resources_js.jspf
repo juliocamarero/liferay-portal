@@ -26,24 +26,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String headerPortalJavaScript : curPortlet.getHeaderPortalJavaScript()) {
-			if (!HttpUtil.hasProtocol(headerPortalJavaScript)) {
-				Portlet curRootPortlet = curPortlet.getRootPortlet();
+		List<String> headerPortalJavaScripts = PortalUtil.getHeaderPortalJavascriptProcessed(curPortlet, request);
 
-				headerPortalJavaScript = PortalUtil.getStaticResourceURL(request, PortalUtil.getPathContext() + headerPortalJavaScript, curRootPortlet.getTimestamp());
-			}
-
-			if (!headerPortalJavaScript.contains(Http.PROTOCOL_DELIMITER)) {
-				String cdnBaseURL = themeDisplay.getCDNBaseURL();
-
-				headerPortalJavaScript = cdnBaseURL.concat(headerPortalJavaScript);
-			}
-
-			if (!portletResourceStaticURLs.contains(headerPortalJavaScript) && !themeDisplay.isIncludedJs(headerPortalJavaScript)) {
-				portletResourceStaticURLs.add(headerPortalJavaScript);
+		for (String curHeaderPortalJavaScript : headerPortalJavaScripts) {
+			if (!portletResourceStaticURLs.contains(curHeaderPortalJavaScript) && !themeDisplay.isIncludedJs(curHeaderPortalJavaScript)) {
+				portletResourceStaticURLs.add(curHeaderPortalJavaScript);
 	%>
 
-				<script src="<%= HtmlUtil.escape(headerPortalJavaScript) %>" type="text/javascript"></script>
+				<script src="<%= HtmlUtil.escape(curHeaderPortalJavaScript) %>" type="text/javascript"></script>
 
 	<%
 			}
@@ -51,24 +41,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String headerPortletJavaScript : curPortlet.getHeaderPortletJavaScript()) {
-			if (!HttpUtil.hasProtocol(headerPortletJavaScript)) {
-				Portlet curRootPortlet = curPortlet.getRootPortlet();
+		List<String> headerPortletJavaScripts = PortalUtil.getHeaderPortletJavascriptProcessed(curPortlet, request);
 
-				headerPortletJavaScript = PortalUtil.getStaticResourceURL(request, curPortlet.getStaticResourcePath() + headerPortletJavaScript, curRootPortlet.getTimestamp());
-			}
-
-			if (!headerPortletJavaScript.contains(Http.PROTOCOL_DELIMITER)) {
-				String cdnBaseURL = themeDisplay.getCDNBaseURL();
-
-				headerPortletJavaScript = cdnBaseURL.concat(headerPortletJavaScript);
-			}
-
-			if (!portletResourceStaticURLs.contains(headerPortletJavaScript)) {
-				portletResourceStaticURLs.add(headerPortletJavaScript);
+		for (String curHeaderPortletJavaScript : headerPortletJavaScripts) {
+			if (!portletResourceStaticURLs.contains(curHeaderPortletJavaScript)) {
+				portletResourceStaticURLs.add(curHeaderPortletJavaScript);
 	%>
 
-				<script src="<%= HtmlUtil.escape(headerPortletJavaScript) %>" type="text/javascript"></script>
+				<script src="<%= HtmlUtil.escape(curHeaderPortletJavaScript) %>" type="text/javascript"></script>
 
 	<%
 			}

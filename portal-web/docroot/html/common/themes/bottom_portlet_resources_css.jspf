@@ -26,24 +26,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String footerPortalCss : curPortlet.getFooterPortalCss()) {
-			if (!HttpUtil.hasProtocol(footerPortalCss)) {
-				Portlet curRootPortlet = curPortlet.getRootPortlet();
+		List<String> footerPortalCsss = PortalUtil.getFooterPortalCssProcessed(curPortlet, request);
 
-				footerPortalCss = PortalUtil.getStaticResourceURL(request, PortalUtil.getPathContext() + footerPortalCss, curRootPortlet.getTimestamp());
-			}
-
-			if (!footerPortalCss.contains(Http.PROTOCOL_DELIMITER)) {
-				String cdnBaseURL = themeDisplay.getCDNBaseURL();
-
-				footerPortalCss = cdnBaseURL.concat(footerPortalCss);
-			}
-
-			if (!portletResourceStaticURLs.contains(footerPortalCss)) {
-				portletResourceStaticURLs.add(footerPortalCss);
+		for (String curFooterPortalCss : footerPortalCsss) {
+			if (!portletResourceStaticURLs.contains(curFooterPortalCss)) {
+				portletResourceStaticURLs.add(curFooterPortalCss);
 	%>
 
-				<link href="<%= HtmlUtil.escape(footerPortalCss) %>" rel="stylesheet" type="text/css" />
+				<link href="<%= HtmlUtil.escape(curFooterPortalCss) %>" rel="stylesheet" type="text/css" />
 
 	<%
 			}
@@ -51,24 +41,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String footerPortletCss : curPortlet.getFooterPortletCss()) {
-			if (!HttpUtil.hasProtocol(footerPortletCss)) {
-				Portlet curRootPortlet = curPortlet.getRootPortlet();
+		List<String> footerPortletCsss = PortalUtil.getFooterPortletCssProcessed(curPortlet, request);
 
-				footerPortletCss = PortalUtil.getStaticResourceURL(request, curPortlet.getStaticResourcePath() + footerPortletCss, curRootPortlet.getTimestamp());
-			}
-
-			if (!footerPortletCss.contains(Http.PROTOCOL_DELIMITER)) {
-				String cdnBaseURL = themeDisplay.getCDNBaseURL();
-
-				footerPortletCss = cdnBaseURL.concat(footerPortletCss);
-			}
-
-			if (!portletResourceStaticURLs.contains(footerPortletCss)) {
-				portletResourceStaticURLs.add(footerPortletCss);
+		for (String curFooterPortletCss : footerPortletCsss) {
+			if (!portletResourceStaticURLs.contains(curFooterPortletCss)) {
+				portletResourceStaticURLs.add(curFooterPortletCss);
 	%>
 
-				<link href="<%= HtmlUtil.escape(footerPortletCss) %>" rel="stylesheet" type="text/css" />
+				<link href="<%= HtmlUtil.escape(curFooterPortletCss) %>" rel="stylesheet" type="text/css" />
 
 	<%
 			}
