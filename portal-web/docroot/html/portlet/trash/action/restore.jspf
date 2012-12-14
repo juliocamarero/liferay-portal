@@ -41,7 +41,7 @@ TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(entry.getCl
 			url="javascript:;"
 		/>
 	</c:when>
-	<c:otherwise>
+	<c:when test="<%= !trashHandler.isInTrashFolder(entry.getClassPK()) %>">
 		<portlet:actionURL var="restoreEntryURL">
 			<portlet:param name="struts_action" value="/trash/edit_entry" />
 			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.RESTORE %>" />
@@ -59,5 +59,5 @@ TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(entry.getCl
 			onClick="<%= taglibOnClick %>"
 			url="javascript:;"
 		/>
-	</c:otherwise>
+	</c:when>
 </c:choose>
