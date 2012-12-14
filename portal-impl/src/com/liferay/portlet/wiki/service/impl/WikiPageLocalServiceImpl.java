@@ -1142,12 +1142,12 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	public WikiPage movePageToTrash(long userId, WikiPage page)
 		throws PortalException, SystemException {
 
-		WikiPage updatedPage = updateStatus(
+		page = updateStatus(
 			userId, page, WorkflowConstants.STATUS_IN_TRASH,
 			new ServiceContext());
 
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
-			WikiPage.class.getName(), updatedPage.getResourcePrimKey());
+			WikiPage.class.getName(), page.getResourcePrimKey());
 
 		String trashTitle = TrashUtil.getTrashTitle(trashEntry.getEntryId());
 
@@ -1168,9 +1168,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		wikiPageResourcePersistence.update(pageResource);
 
-		updatedPage.setTitle(trashTitle);
+		page.setTitle(trashTitle);
 
-		return wikiPagePersistence.update(updatedPage);
+		return wikiPagePersistence.update(page);
 	}
 
 	public void restorePageAttachmentFromTrash(
