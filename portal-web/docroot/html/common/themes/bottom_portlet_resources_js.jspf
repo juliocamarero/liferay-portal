@@ -26,12 +26,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String footerPortalJavaScript : PortalUtil.getFooterPortalJavascriptProcessed(curPortlet, request)) {
-			if (!portletResourceStaticURLs.contains(footerPortalJavaScript) && !themeDisplay.isIncludedJs(footerPortalJavaScript)) {
-				portletResourceStaticURLs.add(footerPortalJavaScript);
+		List<String> footerPortalJavaScripts = PortalUtil.getFooterPortalJavascriptProcessed(curPortlet, request);
+
+		for (String curFooterPortalJavaScript : footerPortalJavaScripts) {
+			if (!portletResourceStaticURLs.contains(curFooterPortalJavaScript) && !themeDisplay.isIncludedJs(curFooterPortalJavaScript)) {
+				portletResourceStaticURLs.add(curFooterPortalJavaScript);
 	%>
 
-				<script src="<%= HtmlUtil.escape(footerPortalJavaScript) %>" type="text/javascript"></script>
+				<script src="<%= HtmlUtil.escape(curFooterPortalJavaScript) %>" type="text/javascript"></script>
 
 	<%
 			}
@@ -39,12 +41,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String footerPortletJavaScript : PortalUtil.getFooterPortletJavascriptProcessed(curPortlet, request)) {
-			if (!portletResourceStaticURLs.contains(footerPortletJavaScript)) {
-				portletResourceStaticURLs.add(footerPortletJavaScript);
+		List<String> footerPortletJavaScripts = PortalUtil.getFooterPortletJavascriptProcessed(curPortlet, request);
+
+		for (String curFooterPortletJavaScript : footerPortletJavaScripts) {
+			if (!portletResourceStaticURLs.contains(curFooterPortletJavaScript)) {
+				portletResourceStaticURLs.add(curFooterPortletJavaScript);
 	%>
 
-				<script src="<%= HtmlUtil.escape(footerPortletJavaScript) %>" type="text/javascript"></script>
+				<script src="<%= HtmlUtil.escape(curFooterPortletJavaScript) %>" type="text/javascript"></script>
 
 	<%
 			}

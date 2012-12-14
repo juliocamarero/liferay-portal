@@ -26,12 +26,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String headerPortalJavaScript : PortalUtil.getHeaderPortalJavascriptProcessed(curPortlet, request)) {
-			if (!portletResourceStaticURLs.contains(headerPortalJavaScript) && !themeDisplay.isIncludedJs(headerPortalJavaScript)) {
-				portletResourceStaticURLs.add(headerPortalJavaScript);
+		List<String> headerPortalJavaScripts = PortalUtil.getHeaderPortalJavascriptProcessed(curPortlet, request);
+
+		for (String curHeaderPortalJavaScript : headerPortalJavaScripts) {
+			if (!portletResourceStaticURLs.contains(curHeaderPortalJavaScript) && !themeDisplay.isIncludedJs(curHeaderPortalJavaScript)) {
+				portletResourceStaticURLs.add(curHeaderPortalJavaScript);
 	%>
 
-				<script src="<%= HtmlUtil.escape(headerPortalJavaScript) %>" type="text/javascript"></script>
+				<script src="<%= HtmlUtil.escape(curHeaderPortalJavaScript) %>" type="text/javascript"></script>
 
 	<%
 			}
@@ -39,12 +41,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String headerPortletJavaScript : PortalUtil.getHeaderPortletJavascriptProcessed(curPortlet, request)) {
-			if (!portletResourceStaticURLs.contains(headerPortletJavaScript)) {
-				portletResourceStaticURLs.add(headerPortletJavaScript);
+		List<String> headerPortletJavaScripts = PortalUtil.getHeaderPortletJavascriptProcessed(curPortlet, request);
+
+		for (String curHeaderPortletJavaScript : headerPortletJavaScripts) {
+			if (!portletResourceStaticURLs.contains(curHeaderPortletJavaScript)) {
+				portletResourceStaticURLs.add(curHeaderPortletJavaScript);
 	%>
 
-				<script src="<%= HtmlUtil.escape(headerPortletJavaScript) %>" type="text/javascript"></script>
+				<script src="<%= HtmlUtil.escape(curHeaderPortletJavaScript) %>" type="text/javascript"></script>
 
 	<%
 			}

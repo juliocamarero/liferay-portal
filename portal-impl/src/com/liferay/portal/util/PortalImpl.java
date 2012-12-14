@@ -6388,8 +6388,6 @@ public class PortalImpl implements Portal {
 
 		for (String url : urls) {
 			if (!HttpUtil.hasProtocol(url)) {
-				Portlet rootPortlet = portlet.getRootPortlet();
-
 				String uri = null;
 
 				if (portal) {
@@ -6398,6 +6396,8 @@ public class PortalImpl implements Portal {
 				else {
 					uri = portlet.getStaticResourcePath() + url;
 				}
+
+				Portlet rootPortlet = portlet.getRootPortlet();
 
 				url = PortalUtil.getStaticResourceURL(
 					request, uri, rootPortlet.getTimestamp());

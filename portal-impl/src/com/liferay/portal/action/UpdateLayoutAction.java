@@ -51,6 +51,7 @@ import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.portlet.PortletPreferences;
@@ -377,58 +378,62 @@ public class UpdateLayoutAction extends JSONAction {
 		}
 
 		if (!portletOnLayout && portlet.isAjaxable()) {
-			Portlet rootPortlet = portlet.getRootPortlet();
+			List<String> footerPortalCsss =
+				PortalUtil.getFooterPortalCssProcessed(portlet, request);
 
-			for (String footerPortalCss :
-					PortalUtil.getFooterPortalCssProcessed(portlet, request)) {
-
-				footerCssSet.add(footerPortalCss);
+			for (String curFooterPortalCss : footerPortalCsss) {
+				footerCssSet.add(curFooterPortalCss);
 			}
 
-			for (String footerPortalJavaScript :
-					PortalUtil.getFooterPortalJavascriptProcessed(
-						portlet, request)) {
+			List<String> footerPortalJavaScripts =
+				PortalUtil.getFooterPortalJavascriptProcessed(portlet, request);
 
-				footerJavaScriptSet.add(footerPortalJavaScript);
+			for (String curFooterPortalJavaScript : footerPortalJavaScripts) {
+				footerJavaScriptSet.add(curFooterPortalJavaScript);
 			}
 
-			for (String footerPortletCss :
-					PortalUtil.getFooterPortletCssProcessed(portlet, request)) {
+			List<String> footerPortletCsss =
+				PortalUtil.getFooterPortletCssProcessed(portlet, request);
 
-				footerCssSet.add(footerPortletCss);
+			for (String curFooterPortletCss : footerPortletCsss) {
+				footerCssSet.add(curFooterPortletCss);
 			}
 
-			for (String footerPortletJavaScript :
-					PortalUtil.getFooterPortletJavascriptProcessed(
-						portlet, request)) {
+			List<String> footerPortletJavaScripts =
+				PortalUtil.getFooterPortletJavascriptProcessed(
+					portlet, request);
 
-				footerJavaScriptSet.add(footerPortletJavaScript);
+			for (String curFooterPortletJavaScript : footerPortletJavaScripts) {
+				footerJavaScriptSet.add(curFooterPortletJavaScript);
 			}
 
-			for (String headerPortalCss :
-					PortalUtil.getHeaderPortalCssProcessed(portlet, request)) {
+			List<String> headerPortalCsss =
+				PortalUtil.getHeaderPortalCssProcessed(portlet, request);
 
-				headerCssSet.add(headerPortalCss);
+			for (String curHeaderPortalCss : headerPortalCsss) {
+				headerCssSet.add(curHeaderPortalCss);
 			}
 
-			for (String headerPortalJavaScript :
-					PortalUtil.getHeaderPortalJavascriptProcessed(
-						portlet, request)) {
+			List<String> headerPortalJavaScripts =
+				PortalUtil.getHeaderPortalJavascriptProcessed(portlet, request);
 
-				headerJavaScriptSet.add(headerPortalJavaScript);
+			for (String curHeaderPortalJavaScript : headerPortalJavaScripts) {
+				headerJavaScriptSet.add(curHeaderPortalJavaScript);
 			}
 
-			for (String headerPortletCss :
-					PortalUtil.getHeaderPortletCssProcessed(portlet, request)) {
+			List<String> headerPortletCsss =
+				PortalUtil.getHeaderPortletCssProcessed(portlet, request);
 
-				headerCssSet.add(headerPortletCss);
+			for (String curHeaderPortletCss : headerPortletCsss) {
+				headerCssSet.add(curHeaderPortletCss);
 			}
 
-			for (String headerPortletJavaScript :
-					PortalUtil.getHeaderPortletJavascriptProcessed(
-						portlet, request)) {
+			List<String> headerPortletJavaScripts =
+				PortalUtil.getHeaderPortletJavascriptProcessed(
+					portlet, request);
 
-				headerJavaScriptSet.add(headerPortletJavaScript);
+			for (String curHeaderPortletJavaScript : headerPortletJavaScripts) {
+				headerJavaScriptSet.add(curHeaderPortletJavaScript);
 			}
 		}
 

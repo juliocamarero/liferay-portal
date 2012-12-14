@@ -26,12 +26,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String footerPortalCss : PortalUtil.getFooterPortalCssProcessed(curPortlet, request)) {
-			if (!portletResourceStaticURLs.contains(footerPortalCss)) {
-				portletResourceStaticURLs.add(footerPortalCss);
+		List<String> footerPortalCsss = PortalUtil.getFooterPortalCssProcessed(curPortlet, request);
+
+		for (String curFooterPortalCss : footerPortalCsss) {
+			if (!portletResourceStaticURLs.contains(curFooterPortalCss)) {
+				portletResourceStaticURLs.add(curFooterPortalCss);
 	%>
 
-				<link href="<%= HtmlUtil.escape(footerPortalCss) %>" rel="stylesheet" type="text/css" />
+				<link href="<%= HtmlUtil.escape(curFooterPortalCss) %>" rel="stylesheet" type="text/css" />
 
 	<%
 			}
@@ -39,12 +41,14 @@
 	}
 
 	for (Portlet curPortlet : portlets) {
-		for (String footerPortletCss : PortalUtil.getFooterPortletCssProcessed(curPortlet, request)) {
-			if (!portletResourceStaticURLs.contains(footerPortletCss)) {
-				portletResourceStaticURLs.add(footerPortletCss);
+		List<String> footerPortletCsss = PortalUtil.getFooterPortletCssProcessed(curPortlet, request);
+
+		for (String curFooterPortletCss : footerPortletCsss) {
+			if (!portletResourceStaticURLs.contains(curFooterPortletCss)) {
+				portletResourceStaticURLs.add(curFooterPortletCss);
 	%>
 
-				<link href="<%= HtmlUtil.escape(footerPortletCss) %>" rel="stylesheet" type="text/css" />
+				<link href="<%= HtmlUtil.escape(curFooterPortletCss) %>" rel="stylesheet" type="text/css" />
 
 	<%
 			}
