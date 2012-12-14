@@ -356,6 +356,12 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return true;
 	}
 
+	public boolean isInTrashFolder(long classPK)
+		throws PortalException, SystemException {
+
+		return false;
+	}
+
 	/**
 	 * @throws PortalException
 	 * @throws SystemException
