@@ -12,23 +12,30 @@
  * details.
  */
 
-package com.liferay.portal.lar;
+package com.liferay.portal.layout;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
+import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.sites.util.SitesUtil;
+
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,54 +46,52 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 
 /**
  * @author Julio Camarero
+ * @author László Csontos
  */
 @PrepareForTest({PortletLocalServiceUtil.class})
 
 @ExecutionTestListeners(
 	listeners = {
-		EnvironmentExecutionTestListener.class,
+		MainServletExecutionTestListener.class,
 		TransactionalCallbackAwareExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-public class LayoutExportImportTest extends BaseExportImportTestCase {
+@Transactional
+public class LayoutSetPrototypeTest extends BaseLayoutSetPrototypeTestCase {
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		FinderCacheUtil.clearCache();
+		ServiceContextThreadLocal.pushServiceContext(
+			ServiceTestUtil.getServiceContext());
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkDisabled() throws Exception {
 		runLayoutSetPrototype(false, false, false, false, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkDisabledWithPageAddition() throws Exception {
 		runLayoutSetPrototype(false, false, true, false, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkDisabledWithPageDeletion() throws Exception {
 		runLayoutSetPrototype(false, false, true, true, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabled() throws Exception {
 		runLayoutSetPrototype(true, false, false, false, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageAddition() throws Exception {
 		runLayoutSetPrototype(true, false, true, false, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageAdditionFromLPLinkDisabled()
 		throws Exception {
 
@@ -94,7 +99,6 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageAdditionFromLPLinkEnabled()
 		throws Exception {
 
@@ -102,15 +106,99 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageDeletion() throws Exception {
 		runLayoutSetPrototype(true, false, true, true, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageDeletionFromLP() throws Exception {
 		runLayoutSetPrototype(true, false, true, true, true);
+	}
+
+	@Test
+	public void testMergeLayoutPrototypeLayout() throws Exception {
+
+		// Add site template
+
+		LayoutSetPrototype layoutSetPrototype =
+			ServiceTestUtil.addLayoutSetPrototype(
+				ServiceTestUtil.randomString());
+
+		// Add page template
+
+		LayoutPrototype layoutPrototype = ServiceTestUtil.addLayoutPrototype(
+			ServiceTestUtil.randomString());
+
+		Layout layoutPrototypeLayout = layoutPrototype.getLayout();
+
+		// Add portlets to page template
+
+		Assert.assertNotNull(
+			ServiceTestUtil.addPortletToLayout(
+				layoutPrototypeLayout, PortletKeys.JOURNAL_CONTENT,
+				"column-1"));
+
+		Assert.assertNotNull(
+			ServiceTestUtil.addPortletToLayout(
+				layoutPrototypeLayout, PortletKeys.WIKI_DISPLAY, "column-2"));
+
+		updateLayoutTemplateId(layoutPrototypeLayout, "2_2_columns");
+
+		Group layoutSetPrototypeGroup = layoutSetPrototype.getGroup();
+
+		ServiceTestUtil.addLayout(
+			layoutSetPrototypeGroup.getGroupId(),
+			ServiceTestUtil.randomString(), layoutPrototype, true);
+
+		// Add site based on site template
+
+		Group group = ServiceTestUtil.addGroup(
+			GroupConstants.DEFAULT_PARENT_GROUP_ID,
+			ServiceTestUtil.randomString(),
+			layoutSetPrototype.getLayoutSetPrototypeId());
+
+		SitesUtil.updateLayoutSetPrototypesLinks(
+			group, layoutSetPrototype.getLayoutSetPrototypeId(), 0L, true,
+			false);
+
+		propagateChanges(group);
+
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			group.getGroupId(), false);
+
+		Layout layout = layouts.get(0);
+
+		SitesUtil.applyLayoutPrototype(layoutPrototype, layout, true);
+
+		// Change layout of page template
+
+		updateLayoutTemplateId(layoutPrototypeLayout, "1_column");
+
+		propagateChanges(layout);
+
+		// Compare if settings were successfully propagated
+
+		UnicodeProperties layoutProperties = layout.getTypeSettingsProperties();
+
+		int mergeFailCount = GetterUtil.getInteger(
+			layoutProperties.get(SitesUtil.MERGE_FAIL_COUNT));
+
+		Assert.assertEquals(0, mergeFailCount);
+
+		layoutProperties.remove(SitesUtil.LAST_MERGE_TIME);
+		layoutProperties.remove(SitesUtil.MERGE_FAIL_COUNT);
+
+		UnicodeProperties layoutPrototypeLayoutProperties =
+			layoutPrototypeLayout.getTypeSettingsProperties();
+
+		mergeFailCount = GetterUtil.getInteger(
+			layoutPrototypeLayoutProperties.get(SitesUtil.MERGE_FAIL_COUNT));
+
+		Assert.assertEquals(0, mergeFailCount);
+
+		layoutPrototypeLayoutProperties.remove(SitesUtil.MERGE_FAIL_COUNT);
+
+		Assert.assertEquals(layoutPrototypeLayoutProperties, layoutProperties);
 	}
 
 	protected void runLayoutSetPrototype(
@@ -161,7 +249,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 
 				updateLayoutTemplateId(layoutPrototypeLayout, "2_2_columns");
 
-				layout = addLayout(
+				layout = ServiceTestUtil.addLayout(
 					group.getGroupId(), ServiceTestUtil.randomString(),
 					layoutPrototype, layoutLinkEnabled);
 

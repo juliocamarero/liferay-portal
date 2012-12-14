@@ -39,7 +39,9 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.PortletImpl;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
@@ -53,6 +55,7 @@ import com.liferay.portal.tools.DBUpgrader;
 import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.TestPropsValues;
@@ -110,6 +113,12 @@ public class ServiceTestUtil {
 
 	public static Group addGroup(long parentGroupId, String name)
 		throws Exception {
+		return addGroup(parentGroupId, name, 0l);
+	}
+
+	public static Group addGroup(
+		long parentGroupId, String name, long layoutSetPrototypeId)
+			throws Exception {
 
 		Group group = GroupLocalServiceUtil.fetchGroup(
 			TestPropsValues.getCompanyId(), name);
@@ -125,10 +134,18 @@ public class ServiceTestUtil {
 		boolean site = true;
 		boolean active = true;
 
+		ServiceContext serviceContext = getServiceContext();
+
+		if (layoutSetPrototypeId > 0L) {
+			serviceContext.setAttribute("layoutSetPrototypeLinkEnabled", true);
+			serviceContext.setAttribute(
+				"layoutSetPrototypeId", layoutSetPrototypeId);
+		}
+
 		return GroupLocalServiceUtil.addGroup(
 			TestPropsValues.getUserId(), parentGroupId, null, 0,
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, name, description, type,
-			friendlyURL, site, active, getServiceContext());
+			friendlyURL, site, active, serviceContext);
 	}
 
 	public static Group addGroup(String name) throws Exception {
@@ -166,6 +183,38 @@ public class ServiceTestUtil {
 			getServiceContext());
 	}
 
+	public static Layout addLayout(
+			long groupId, String name, LayoutPrototype layoutPrototype,
+			boolean linkEnabled)
+		throws Exception {
+
+		String friendlyURL =
+			StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(name);
+
+		Layout layout = null;
+
+		try {
+			layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
+				groupId, false, friendlyURL);
+
+			return layout;
+		}
+		catch (NoSuchLayoutException nsle) {
+		}
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		serviceContext.setAttribute("layoutPrototypeLinkEnabled", linkEnabled);
+		serviceContext.setAttribute(
+			"layoutPrototypeUuid", layoutPrototype.getUuid());
+
+		return LayoutLocalServiceUtil.addLayout(
+			TestPropsValues.getUserId(), groupId, false,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, name, null,
+			"This is a test page.", LayoutConstants.TYPE_PORTLET, false,
+			friendlyURL, serviceContext);
+	}
+
 	public static LayoutPrototype addLayoutPrototype(String name)
 		throws Exception {
 
@@ -188,6 +237,18 @@ public class ServiceTestUtil {
 		return LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(
 			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
 			nameMap, null, true, true, getServiceContext());
+	}
+
+	public static String addPortletToLayout(
+		Layout layout, String portletId, String columnId) throws Exception {
+
+		LayoutTypePortlet layoutTypePortlet =
+			(LayoutTypePortlet) layout.getLayoutType();
+
+		portletId = layoutTypePortlet.addPortletId(
+			TestPropsValues.getUserId(), portletId, columnId, 0);
+
+		return portletId;
 	}
 
 	public static User addUser(
@@ -234,6 +295,15 @@ public class ServiceTestUtil {
 
 	public static void destroyServices() {
 		_deleteDLDirectories();
+	}
+
+	public static javax.portlet.PortletPreferences getPortletPreferences(
+			long companyId, long plid, String portletId)
+		throws Exception {
+
+		return PortletPreferencesLocalServiceUtil.getPreferences(
+			companyId, PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid, portletId);
 	}
 
 	public static SearchContext getSearchContext() throws Exception {
@@ -470,6 +540,20 @@ public class ServiceTestUtil {
 
 	public static String randomString() throws Exception {
 		return PwdGenerator.getPassword();
+	}
+
+	public static PortletPreferences updatePortletPreferences(
+			long plid, String portletId,
+			javax.portlet.PortletPreferences jxPreferences)
+		throws Exception {
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.updatePreferences(
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid, portletId,
+				jxPreferences);
+
+		return portletPreferences;
 	}
 
 	private static void _checkClassNames() {
