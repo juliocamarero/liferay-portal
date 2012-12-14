@@ -15,6 +15,7 @@
 package com.liferay.portal.service.impl;
 
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -25,11 +26,16 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.sender.DirectSynchronousMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SynchronousMessageSender;
+import com.liferay.portal.kernel.transaction.Propagation;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.model.ClassName;
+import com.liferay.portal.model.impl.ClassNameImpl;
+import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.service.PortalService;
 import com.liferay.portal.service.base.PortalServiceBaseImpl;
+import com.liferay.portal.service.persistence.ClassNameUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 
@@ -135,6 +141,56 @@ public class PortalServiceImpl extends PortalServiceBaseImpl {
 		}
 		else {
 			return false;
+		}
+	}
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public void testHibernateFirstLevelCacheAutoSyncOnTxCreation()
+		throws SystemException {
+
+		String testClassName = "testClassName";
+
+		// 1) Add in new tx
+
+		ClassName className = ClassNameLocalServiceUtil.addClassName(
+			testClassName);
+
+		try {
+
+			// 2) Fetch in current tx
+
+			// Clear the cache to force populate Hibernate 1st level cache
+			EntityCacheUtil.clearCache();
+
+			className = ClassNameUtil.fetchByPrimaryKey(
+				className.getClassNameId());
+
+			String newTestClassName = "newTestClassName";
+			ClassName newClassName = new ClassNameImpl();
+
+			newClassName.setPrimaryKey(className.getClassNameId());
+			newClassName.setValue(newTestClassName);
+
+			// 3) Update in new tx
+
+			ClassNameLocalServiceUtil.updateClassName(newClassName);
+
+			// 4) Refetch in current tx
+
+			className = ClassNameUtil.fetchByPrimaryKey(
+				className.getClassNameId());
+
+			if (!className.getValue().equals(newTestClassName)) {
+				throw new IllegalStateException(
+					"Expected " + newTestClassName + ", found " +
+						className.getClassName());
+			}
+		}
+		finally {
+
+			// 5) Clean up
+
+			ClassNameLocalServiceUtil.deleteClassName(className);
 		}
 	}
 

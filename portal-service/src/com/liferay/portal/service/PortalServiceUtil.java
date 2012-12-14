@@ -120,6 +120,11 @@ public class PortalServiceUtil {
 		return getService().testHasClassName();
 	}
 
+	public static void testHibernateFirstLevelCacheAutoSyncOnTxCreation()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService().testHibernateFirstLevelCacheAutoSyncOnTxCreation();
+	}
+
 	public static PortalService getService() {
 		if (_service == null) {
 			_service = (PortalService)PortalBeanLocatorUtil.locate(PortalService.class.getName());
