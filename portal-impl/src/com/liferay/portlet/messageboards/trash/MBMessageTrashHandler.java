@@ -50,6 +50,14 @@ public class MBMessageTrashHandler extends BaseTrashHandler {
 		}
 	}
 
+	public boolean isInTrashFolder(long classPK)
+		throws PortalException, SystemException {
+
+		MBMessage message = MBMessageLocalServiceUtil.getMBMessage(classPK);
+
+		return message.isInTrashThread();
+	}
+
 	public void restoreTrashEntries(long[] classPKs) {
 	}
 

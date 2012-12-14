@@ -172,6 +172,14 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 		return false;
 	}
 
+	public boolean isInTrashFolder(long classPK)
+		throws PortalException, SystemException {
+
+		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
+
+		return dlFileEntry.isInTrashFolder();
+	}
+
 	@Override
 	public boolean isRestorable(long classPK)
 		throws PortalException, SystemException {
