@@ -332,13 +332,11 @@ public class TrashImpl implements Trash {
 	}
 
 	protected String getOriginalTitle(String title, String prefix) {
-		int index = title.indexOf(prefix);
-
-		if (index != 0) {
+		if (!title.startsWith(prefix)) {
 			return title;
 		}
 
-		title = title.substring(1, title.length());
+		title = title.substring(prefix.length());
 
 		long trashEntryId = GetterUtil.getLong(title);
 
