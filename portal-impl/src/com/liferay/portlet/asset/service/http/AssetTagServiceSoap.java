@@ -302,6 +302,23 @@ public class AssetTagServiceSoap {
 		}
 	}
 
+	public static com.liferay.portlet.asset.model.AssetTagSoap[] getVisibleAssetTags(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.portlet.asset.model.AssetTag> returnValue =
+				AssetTagServiceUtil.getVisibleAssetTags(groupId, start, end, obc);
+
+			return com.liferay.portlet.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static void mergeTags(long fromTagId, long toTagId,
 		boolean overrideProperties) throws RemoteException {
 		try {

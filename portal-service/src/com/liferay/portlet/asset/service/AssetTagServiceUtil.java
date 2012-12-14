@@ -156,6 +156,13 @@ public class AssetTagServiceUtil {
 		return getService().getTagsCount(groupId, name, tagProperties);
 	}
 
+	public static java.util.List<com.liferay.portlet.asset.model.AssetTag> getVisibleAssetTags(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getVisibleAssetTags(groupId, start, end, obc);
+	}
+
 	public static void mergeTags(long fromTagId, long toTagId,
 		boolean overrideProperties)
 		throws com.liferay.portal.kernel.exception.PortalException,

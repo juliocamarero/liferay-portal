@@ -588,13 +588,46 @@ public class AssetTagServiceHttp {
 		}
 	}
 
+	public static java.util.List<com.liferay.portlet.asset.model.AssetTag> getVisibleAssetTags(
+		HttpPrincipal httpPrincipal, long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(AssetTagServiceUtil.class,
+					"getVisibleAssetTags", _getVisibleAssetTagsParameterTypes16);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
+					start, end, obc);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<com.liferay.portlet.asset.model.AssetTag>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static void mergeTags(HttpPrincipal httpPrincipal, long fromTagId,
 		long toTagId, boolean overrideProperties)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(AssetTagServiceUtil.class,
-					"mergeTags", _mergeTagsParameterTypes16);
+					"mergeTags", _mergeTagsParameterTypes17);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					fromTagId, toTagId, overrideProperties);
@@ -627,7 +660,7 @@ public class AssetTagServiceHttp {
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(AssetTagServiceUtil.class,
-					"mergeTags", _mergeTagsParameterTypes17);
+					"mergeTags", _mergeTagsParameterTypes18);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					fromTagIds, toTagId, overrideProperties);
@@ -660,7 +693,7 @@ public class AssetTagServiceHttp {
 		throws com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(AssetTagServiceUtil.class,
-					"search", _searchParameterTypes18);
+					"search", _searchParameterTypes19);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					name, tagProperties, start, end);
@@ -695,7 +728,7 @@ public class AssetTagServiceHttp {
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(AssetTagServiceUtil.class,
-					"updateTag", _updateTagParameterTypes19);
+					"updateTag", _updateTagParameterTypes20);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, tagId,
 					name, tagProperties, serviceContext);
@@ -779,17 +812,21 @@ public class AssetTagServiceHttp {
 	private static final Class<?>[] _getTagsCountParameterTypes15 = new Class[] {
 			long.class, java.lang.String.class, java.lang.String[].class
 		};
-	private static final Class<?>[] _mergeTagsParameterTypes16 = new Class[] {
-			long.class, long.class, boolean.class
+	private static final Class<?>[] _getVisibleAssetTagsParameterTypes16 = new Class[] {
+			long.class, int.class, int.class,
+			com.liferay.portal.kernel.util.OrderByComparator.class
 		};
 	private static final Class<?>[] _mergeTagsParameterTypes17 = new Class[] {
+			long.class, long.class, boolean.class
+		};
+	private static final Class<?>[] _mergeTagsParameterTypes18 = new Class[] {
 			long[].class, long.class, boolean.class
 		};
-	private static final Class<?>[] _searchParameterTypes18 = new Class[] {
+	private static final Class<?>[] _searchParameterTypes19 = new Class[] {
 			long.class, java.lang.String.class, java.lang.String[].class,
 			int.class, int.class
 		};
-	private static final Class<?>[] _updateTagParameterTypes19 = new Class[] {
+	private static final Class<?>[] _updateTagParameterTypes20 = new Class[] {
 			long.class, java.lang.String.class, java.lang.String[].class,
 			com.liferay.portal.service.ServiceContext.class
 		};
