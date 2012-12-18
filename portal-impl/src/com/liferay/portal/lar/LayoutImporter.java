@@ -383,7 +383,10 @@ public class LayoutImporter {
 			if (!ArrayUtil.contains(
 					targetAvailableLocales, sourceAvailableLocale)) {
 
-				LocaleException le = new LocaleException();
+				LocaleException le = new LocaleException(String.format(
+					"Locale '%s' is specified as available in imported LAR " +
+					"file, but is not available in portal with companyId '%s'.",
+					sourceAvailableLocale, companyId));
 
 				le.setSourceAvailableLocales(sourceAvailableLocales);
 				le.setTargetAvailableLocales(targetAvailableLocales);
