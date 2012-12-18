@@ -63,6 +63,19 @@ public class BaseExportImportTestCase extends PowerMockito {
 			friendlyURL, serviceContext);
 	}
 
+	protected String addPortlet(
+			Layout layout, String portletId, String columnId)
+		throws Exception {
+
+		LayoutTypePortlet layoutTypePortlet =
+			(LayoutTypePortlet) layout.getLayoutType();
+
+		portletId = layoutTypePortlet.addPortletId(
+			TestPropsValues.getUserId(), portletId, columnId, 0);
+
+		return portletId;
+	}
+
 	protected void propagateChanges(Group group) throws Exception {
 		LayoutLocalServiceUtil.getLayouts(
 			group.getGroupId(), false,

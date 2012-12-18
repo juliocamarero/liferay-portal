@@ -110,6 +110,12 @@ public class ServiceTestUtil {
 
 	public static Group addGroup(long parentGroupId, String name)
 		throws Exception {
+		return addGroup(parentGroupId, name, 0l);
+	}
+
+	public static Group addGroup(
+		long parentGroupId, String name, long layoutSetPrototypeId)
+			throws Exception {
 
 		Group group = GroupLocalServiceUtil.fetchGroup(
 			TestPropsValues.getCompanyId(), name);
@@ -125,10 +131,18 @@ public class ServiceTestUtil {
 		boolean site = true;
 		boolean active = true;
 
+		ServiceContext serviceContext = getServiceContext();
+
+		if (layoutSetPrototypeId > 0L) {
+			serviceContext.setAttribute("layoutSetPrototypeLinkEnabled", true);
+			serviceContext.setAttribute(
+				"layoutSetPrototypeId", layoutSetPrototypeId);
+		}
+
 		return GroupLocalServiceUtil.addGroup(
 			TestPropsValues.getUserId(), parentGroupId, null, 0,
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, name, description, type,
-			friendlyURL, site, active, getServiceContext());
+			friendlyURL, site, active, serviceContext);
 	}
 
 	public static Group addGroup(String name) throws Exception {
