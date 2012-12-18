@@ -17,6 +17,8 @@ package com.liferay.portal.lar;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
@@ -32,6 +34,8 @@ import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.sites.util.SitesUtil;
+
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -116,6 +120,57 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 	@Transactional
 	public void testLSPLinkEnabledwithPageDeletionFromLP() throws Exception {
 		runLayoutSetPrototype(true, false, true, true, true);
+	}
+
+	@Test
+	@Transactional
+	public void testMergeLayoutPrototypeLayout() throws Exception {
+
+		Object[] preparedData = prepareLayoutSetPrototype(true, true, 2);
+
+		Group group = (Group) preparedData[1];
+
+		LayoutPrototype layoutPrototype = (LayoutPrototype) preparedData[2];
+
+		Layout layoutPrototypeLayout = layoutPrototype.getLayout();
+
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			group.getGroupId(), false);
+
+		Layout layout = layouts.get(0);
+
+		SitesUtil.applyLayoutPrototype(layoutPrototype, layout, true);
+
+		// Change layout of page template
+
+		updateLayoutTemplateId(layoutPrototypeLayout, "1_column");
+
+		propagateChanges(layout);
+
+		// Compare if settings were successfully propagated
+
+		UnicodeProperties layoutProperties = layout.getTypeSettingsProperties();
+
+		int mergeFailCount = GetterUtil.getInteger(
+			layoutProperties.get(SitesUtil.MERGE_FAIL_COUNT));
+
+		Assert.assertEquals(0, mergeFailCount);
+
+		layoutProperties.remove(SitesUtil.LAST_MERGE_TIME);
+		layoutProperties.remove(SitesUtil.MERGE_FAIL_COUNT);
+
+		UnicodeProperties layoutPrototypeLayoutProperties =
+			layoutPrototypeLayout.getTypeSettingsProperties();
+
+		mergeFailCount = GetterUtil.getInteger(
+			layoutPrototypeLayoutProperties.get(SitesUtil.MERGE_FAIL_COUNT));
+
+		Assert.assertEquals(0, mergeFailCount);
+
+		layoutPrototypeLayoutProperties.remove(SitesUtil.MERGE_FAIL_COUNT);
+
+		Assert.assertEquals(layoutPrototypeLayoutProperties, layoutProperties);
+
 	}
 
 	protected Object[] prepareLayoutSetPrototype(
