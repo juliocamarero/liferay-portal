@@ -88,8 +88,6 @@ public class JSONIncludesManagerTest extends TestCase {
 
 		assertTrue(json.contains("number"));
 		assertTrue(json.contains("value"));
-
-		System.out.println(json);
 	}
 
 	public void testOne() {
