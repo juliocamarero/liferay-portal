@@ -39,6 +39,7 @@ public class ByteHeaderInputStream extends FilterInputStream {
 	 */
 	public ByteHeaderInputStream(InputStream inputStream, byte[] header) {
 		super(inputStream);
+
 		_header = header;
 	}
 
@@ -58,6 +59,7 @@ public class ByteHeaderInputStream extends FilterInputStream {
 
 		if ((_headerPos + 1) < _header.length) {
 			_headerPos++;
+
 			return _header[_headerPos - 1];
 		}
 
@@ -104,13 +106,16 @@ public class ByteHeaderInputStream extends FilterInputStream {
 		if (_headerPos < _header.length) {
 			if (bytes == null) {
 				throw new NullPointerException();
-			} else if (off < 0 || len < 0 || len > bytes.length - off) {
+			}
+			else if (off < 0 || len < 0 || len > bytes.length - off) {
 				throw new IndexOutOfBoundsException();
-			} else if (len == 0) {
+			}
+			else if (len == 0) {
 				return 0;
 			}
 
 			int remainingBytes = _header.length - _headerPos;
+
 			int bytesToWrite = Math.min(remainingBytes, len);
 
 			System.arraycopy(_header, _headerPos, bytes, off, bytesToWrite);
