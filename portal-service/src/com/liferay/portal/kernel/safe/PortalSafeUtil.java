@@ -274,7 +274,8 @@ public class PortalSafeUtil {
 					companyId);
 
 				return companyGroup.getGroupId();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new PortalSafeException(
 					"Unable to load company groupId", e);
 			}
