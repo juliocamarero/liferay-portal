@@ -17,6 +17,7 @@ package com.liferay.portlet.rolesadmin.action;
 import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.RoleAssignmentException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -28,6 +29,8 @@ import com.liferay.portal.service.GroupServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.struts.PortletAction;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.WebKeys;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -121,8 +124,10 @@ public class EditRoleAssignmentsAction extends PortletAction {
 
 		Role role = RoleLocalServiceUtil.getRole(roleId);
 
-		if (role.getName().equals(RoleConstants.OWNER)) {
-			throw new RoleAssignmentException(role.getName());
+		String roleName = role.getName();
+
+		if (roleName.equals(RoleConstants.OWNER)) {
+			throw new RoleAssignmentException(roleName);
 		}
 
 		GroupServiceUtil.addRoleGroups(roleId, addGroupIds);
@@ -134,6 +139,9 @@ public class EditRoleAssignmentsAction extends PortletAction {
 
 		long roleId = ParamUtil.getLong(actionRequest, "roleId");
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		long[] addUserIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "addUserIds"), 0L);
 		long[] removeUserIds = StringUtil.split(
@@ -141,8 +149,13 @@ public class EditRoleAssignmentsAction extends PortletAction {
 
 		Role role = RoleLocalServiceUtil.getRole(roleId);
 
-		if (role.getName().equals(RoleConstants.OWNER)) {
-			throw new RoleAssignmentException(role.getName());
+		String roleName = role.getName();
+
+		if (roleName.equals(RoleConstants.OWNER) ||
+			(roleName.equals(RoleConstants.ADMINISTRATOR) &&
+				ArrayUtil.contains(removeUserIds, themeDisplay.getUserId()))) {
+
+			throw new RoleAssignmentException(roleName);
 		}
 
 		UserServiceUtil.addRoleUsers(roleId, addUserIds);
