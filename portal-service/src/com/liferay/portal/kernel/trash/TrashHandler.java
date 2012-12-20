@@ -518,6 +518,12 @@ public interface TrashHandler {
 	public boolean isInTrash(long classPK)
 		throws PortalException, SystemException;
 
+	/**
+	 * Returns <code>true</code> if the model entity with the primary key is in
+	 * a container that is in the Recycle Bin.
+	 *
+	 * @param  classPK the primary key of the model entity
+	 */
 	public boolean isInTrashContainer(long classPK)
 		throws PortalException, SystemException;
 
