@@ -38,8 +38,7 @@ catch (NoSuchStructureException nsee) {
 }
 
 long classNameId = PortalUtil.getClassNameId(DDMStructure.class);
-
-classPK = BeanParamUtil.getLong(structure, request, "structureId");
+long classPK = BeanParamUtil.getLong(structure, request, "structureId");
 
 String script = BeanParamUtil.getString(structure, request, "xsd");
 

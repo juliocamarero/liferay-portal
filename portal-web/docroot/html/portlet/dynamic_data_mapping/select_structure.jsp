@@ -18,6 +18,7 @@
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
+long classPK = ParamUtil.getLong(request, "classPK");
 %>
 
 <c:if test="<%= showToolbar %>">
