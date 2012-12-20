@@ -12,23 +12,31 @@
  * details.
  */
 
-package com.liferay.portal.lar;
+package com.liferay.portal.layout;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
+import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.sites.util.SitesUtil;
+
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,54 +47,53 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 
 /**
  * @author Julio Camarero
+ * @author László Csontos
  */
 @PrepareForTest({PortletLocalServiceUtil.class})
 
 @ExecutionTestListeners(
 	listeners = {
-		EnvironmentExecutionTestListener.class,
+		MainServletExecutionTestListener.class,
 		TransactionalCallbackAwareExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-public class LayoutExportImportTest extends BaseExportImportTestCase {
+@Transactional
+public class LayoutSetPrototypeTest extends BaseLayoutSetPrototypeTestCase {
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		FinderCacheUtil.clearCache();
+
+		ServiceContextThreadLocal.pushServiceContext(
+			ServiceTestUtil.getServiceContext());
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkDisabled() throws Exception {
 		runLayoutSetPrototype(false, false, false, false, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkDisabledWithPageAddition() throws Exception {
 		runLayoutSetPrototype(false, false, true, false, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkDisabledWithPageDeletion() throws Exception {
 		runLayoutSetPrototype(false, false, true, true, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabled() throws Exception {
 		runLayoutSetPrototype(true, false, false, false, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageAddition() throws Exception {
 		runLayoutSetPrototype(true, false, true, false, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageAdditionFromLPLinkDisabled()
 		throws Exception {
 
@@ -94,7 +101,6 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageAdditionFromLPLinkEnabled()
 		throws Exception {
 
@@ -102,21 +108,69 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageDeletion() throws Exception {
 		runLayoutSetPrototype(true, false, true, true, false);
 	}
 
 	@Test
-	@Transactional
 	public void testLSPLinkEnabledwithPageDeletionFromLP() throws Exception {
 		runLayoutSetPrototype(true, false, true, true, true);
 	}
 
-	protected void runLayoutSetPrototype(
-		boolean layoutSetLinkEnabled, boolean layoutLinkEnabled,
-		boolean addPage, boolean deletePage, boolean useLayoutPrototype)
+	@Test
+	public void testMergeLayoutPrototypeLayout() throws Exception {
+		Object[] preparedData = prepareLayoutSetPrototype(true, true, 2);
+
+		Group group = (Group) preparedData[1];
+
+		LayoutPrototype layoutPrototype = (LayoutPrototype) preparedData[2];
+
+		Layout layoutPrototypeLayout = layoutPrototype.getLayout();
+
+		Layout layout = LayoutLocalServiceUtil.fetchFirstLayout(
+			group.getGroupId(), false,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+
+		SitesUtil.applyLayoutPrototype(layoutPrototype, layout, true);
+
+		// Change layout of page template
+
+		layout = updateLayoutTemplateId(layoutPrototypeLayout, "1_column");
+
+		propagateChanges(layout);
+
+		// Compare if settings were successfully propagated
+
+		UnicodeProperties layoutProperties = layout.getTypeSettingsProperties();
+
+		int mergeFailCount = GetterUtil.getInteger(
+			layoutProperties.get(SitesUtil.MERGE_FAIL_COUNT));
+
+		Assert.assertEquals(0, mergeFailCount);
+
+		layoutProperties.remove(SitesUtil.LAST_MERGE_TIME);
+		layoutProperties.remove(SitesUtil.MERGE_FAIL_COUNT);
+
+		UnicodeProperties layoutPrototypeLayoutProperties =
+			layoutPrototypeLayout.getTypeSettingsProperties();
+
+		mergeFailCount = GetterUtil.getInteger(
+			layoutPrototypeLayoutProperties.get(SitesUtil.MERGE_FAIL_COUNT));
+
+		Assert.assertEquals(0, mergeFailCount);
+
+		layoutPrototypeLayoutProperties.remove(SitesUtil.MERGE_FAIL_COUNT);
+
+		Assert.assertEquals(layoutPrototypeLayoutProperties, layoutProperties);
+
+	}
+
+	protected Object[] prepareLayoutSetPrototype(
+			boolean layoutSetLinkEnabled, boolean addPageTemplate,
+			int numberOfLayouts)
 		throws Exception {
+
+		// Add site template
 
 		LayoutSetPrototype layoutSetPrototype =
 			ServiceTestUtil.addLayoutSetPrototype(
@@ -124,18 +178,55 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 
 		Group layoutSetPrototypeGroup = layoutSetPrototype.getGroup();
 
-		int layoutSetPrototypeLayoutsCount =
-			LayoutLocalServiceUtil.getLayoutsCount(
-				layoutSetPrototypeGroup, true);
+		for (int index = 0; index < numberOfLayouts; index++) {
+			ServiceTestUtil.addLayout(
+				layoutSetPrototypeGroup.getGroupId(),
+				ServiceTestUtil.randomString(), true);
+		}
 
-		ServiceTestUtil.addLayout(
-			layoutSetPrototypeGroup.getGroupId(),
-			ServiceTestUtil.randomString(), true);
-		ServiceTestUtil.addLayout(
-			layoutSetPrototypeGroup.getGroupId(),
-			ServiceTestUtil.randomString(), true);
+		Group group = null;
 
-		Group group = ServiceTestUtil.addGroup();
+		LayoutPrototype layoutPrototype = null;
+
+		if (addPageTemplate) {
+
+			// Add page template
+
+			layoutPrototype = ServiceTestUtil.addLayoutPrototype(
+				ServiceTestUtil.randomString());
+
+			Layout layoutPrototypeLayout = layoutPrototype.getLayout();
+
+			// Add portlets to page template
+
+			Assert.assertNotNull(
+				ServiceTestUtil.addPortletToLayout(
+					layoutPrototypeLayout, PortletKeys.JOURNAL_CONTENT,
+					"column-1"));
+
+			Assert.assertNotNull(
+				ServiceTestUtil.addPortletToLayout(
+					layoutPrototypeLayout, PortletKeys.WIKI_DISPLAY,
+					"column-2"));
+
+			updateLayoutTemplateId(layoutPrototypeLayout, "2_2_columns");
+
+			// Add page to site template
+
+			ServiceTestUtil.addLayout(
+				layoutSetPrototypeGroup.getGroupId(),
+				ServiceTestUtil.randomString(), layoutPrototype, true);
+
+			// Add site based on site template
+
+			group = ServiceTestUtil.addGroup(
+				GroupConstants.DEFAULT_PARENT_GROUP_ID,
+				ServiceTestUtil.randomString(),
+				layoutSetPrototype.getLayoutSetPrototypeId());
+
+		} else {
+			group = ServiceTestUtil.addGroup();
+		}
 
 		SitesUtil.updateLayoutSetPrototypesLinks(
 			group, layoutSetPrototype.getLayoutSetPrototypeId(), 0,
@@ -143,11 +234,30 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 
 		propagateChanges(group);
 
+		return new Object[] {layoutSetPrototypeGroup, group, layoutPrototype};
+
+	}
+
+	protected void runLayoutSetPrototype(
+			boolean layoutSetLinkEnabled, boolean layoutLinkEnabled,
+			boolean addPage, boolean deletePage, boolean useLayoutPrototype)
+		throws Exception {
+
+		Object[] preparedData = prepareLayoutSetPrototype(
+			layoutSetLinkEnabled, false, 2);
+
+		Group layoutSetPrototypeGroup = (Group) preparedData[0];
+
+		Group group = (Group) preparedData[1];
+
 		int groupLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
 			group, false);
 
-		Assert.assertEquals(
-			groupLayoutsCount, layoutSetPrototypeLayoutsCount + 2);
+		int layoutSetPrototypeLayoutsCount =
+			LayoutLocalServiceUtil.getLayoutsCount(
+				layoutSetPrototypeGroup, true);
+
+		Assert.assertEquals(groupLayoutsCount, layoutSetPrototypeLayoutsCount);
 
 		if (addPage) {
 			Layout layout = null;
@@ -161,7 +271,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 
 				updateLayoutTemplateId(layoutPrototypeLayout, "2_2_columns");
 
-				layout = addLayout(
+				layout = ServiceTestUtil.addLayout(
 					group.getGroupId(), ServiceTestUtil.randomString(),
 					layoutPrototype, layoutLinkEnabled);
 
@@ -191,7 +301,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 					group, false);
 
 				Assert.assertEquals(
-					groupLayoutsCount, layoutSetPrototypeLayoutsCount + 2);
+					groupLayoutsCount, layoutSetPrototypeLayoutsCount);
 			}
 
 			propagateChanges(group);
@@ -201,7 +311,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 
 			if (layoutSetLinkEnabled) {
 				Assert.assertEquals(
-					groupLayoutsCount, layoutSetPrototypeLayoutsCount + 3);
+					groupLayoutsCount, layoutSetPrototypeLayoutsCount + 1);
 
 				if (useLayoutPrototype) {
 					if (layoutLinkEnabled) {
@@ -230,7 +340,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 					if (!useLayoutPrototype) {
 						Assert.assertEquals(
 							groupLayoutsCount,
-							layoutSetPrototypeLayoutsCount + 3);
+							layoutSetPrototypeLayoutsCount + 1);
 
 						propagateChanges(group);
 					}
@@ -240,7 +350,7 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 				}
 
 				Assert.assertEquals(
-					groupLayoutsCount, layoutSetPrototypeLayoutsCount + 2);
+					groupLayoutsCount, layoutSetPrototypeLayoutsCount);
 			}
 		}
 	}
