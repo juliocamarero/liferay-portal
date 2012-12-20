@@ -57,7 +57,6 @@ page import="com.liferay.portlet.dynamicdatamapping.util.DDMXSDUtil" %>
 PortalPreferences portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(request);
 
 String chooseCallback = ParamUtil.getString(request, "chooseCallback");
-long classPK = ParamUtil.getLong(request, "classPK");
 String ddmResource = ParamUtil.getString(request, "ddmResource");
 String ddmResourceActionId = ParamUtil.getString(request, "ddmResourceActionId");
 String saveCallback = ParamUtil.getString(request, "saveCallback");
