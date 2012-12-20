@@ -19,23 +19,19 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Is able to prepend an array of bytes (header) so that it's read before the
- * wrapped InputStream.
- *
- * <p>
- * Class overrides read methods to flush the header buffer first and then
- * delegates reading operations to the original input stream.
- * </p>
+ * Wraps an input stream to include a header, overriding the input stream's read
+ * methods to flush the header buffer before delegating read operations to the
+ * underlying input stream.
  *
  * @author Tomas Polesovsky
  */
 public class ByteHeaderInputStream extends FilterInputStream {
 
 	/**
-	 * Creates new instance of the stream.
+	 * Constructs a byte header input stream with the header and input stream.
 	 *
-	 * @param inputStream InputStream to be wrapped
-	 * @param header bytes to be read before the inputStream
+	 * @param inputStream the input stream to be wrapped
+	 * @param header bytes to be read as a header before the input stream
 	 */
 	public ByteHeaderInputStream(InputStream inputStream, byte[] header) {
 		super(inputStream);
@@ -44,12 +40,13 @@ public class ByteHeaderInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Reads one byte from the header or delegates the call wrapped input stream
-	 * to return the data.
+	 * Returns the next byte available from the header or the next byte read
+	 * from the wrapped input stream.
 	 *
-	 * @return a next byte from the header or byte from <code>{@link
-	 *         FilterInputStream#read()}</code>
-	 * @throws IOException if the wrapped inputStream throws the exception
+	 * @return the next byte available from the header, or the next byte read
+	 *         from the wrapped input stream
+	 * @throws IOException if an IO exception occurred reading from the wrapped
+	 *         input stream
 	 */
 	@Override
 	public int read() throws IOException {
@@ -67,14 +64,21 @@ public class ByteHeaderInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Tries to fill the buffer with header or input stream content, method
-	 * delegates the call to <code>this.read(bytes, 0, bytes.length)</code>.
+	 * Reads from the header or from the wrapped input stream, filling up the
+	 * destination buffer.
 	 *
-	 * @param  bytes the buffer into which the data is read
+	 * <p>
+	 * If the header hasn't been completely flushed, the header is written into
+	 * the destination buffer. Otherwise the bytes are read from the wrapped
+	 * input stream.
+	 * </p>
+	 *
+	 * @param  bytes the destination buffer into which the data is read
 	 * @return the total number of bytes read into the buffer, or
-	 *         <code>-1</code> if there is no more data because the end of the
-	 *         stream has been reached.
-	 * @throws IOException if the wrapped inputStream throws the exception
+	 *         <code>-1</code> if there is no more data to be read given the end
+	 *         of the stream has been reached
+	 * @throws IOException if an IO exception occurred reading from the wrapped
+	 *         input stream
 	 */
 	@Override
 	public int read(byte[] bytes) throws IOException {
@@ -82,20 +86,25 @@ public class ByteHeaderInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Reads up to the len bytes from header or underlying input stream.
+	 * Reads up to <code>len</code> bytes from the header or from the wrapped
+	 * input stream, filling up the destination buffer starting at the specified
+	 * offset.
 	 *
 	 * <p>
-	 * If header hasn't been flushed yet, writes rest of the header into the
-	 * destination array. Otherwise delegates call to the wrapped input stream.
+	 * If the header hasn't been completely flushed, the header is written into
+	 * the destination buffer. Otherwise the bytes are read from the wrapped
+	 * input stream.
 	 * </p>
 	 *
-	 * @param  bytes the buffer into which the data is read
-	 * @param  off the start offset in the destination array
-	 * @param  len the maximum number of bytes read
+	 * @param  bytes the destination buffer into which the data is read
+	 * @param  off the offset or starting position to write into the destination
+	 *         buffer
+	 * @param  len the maximum number of bytes to read
 	 * @return the total number of bytes read into the buffer, or
-	 *         <code>-1</code> if there is no more data because the end of the
-	 *         stream has been reached.
-	 * @throws IOException if the wrapped inputStream throws the exception
+	 *         <code>-1</code> if there is no more data to be read given the end
+	 *         of the stream has been reached
+	 * @throws IOException if an IO exception occurred reading from the wrapped
+	 *         input stream
 	 */
 	@Override
 	public int read(byte[] bytes, int off, int len) throws IOException {
