@@ -61,7 +61,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -478,7 +477,7 @@ public class DDMImpl implements DDM {
 			if ((fieldValue == null) ||
 				fieldDataType.equals(FieldConstants.FILE_UPLOAD)) {
 
-				return Collections.<Serializable>emptyList();
+				return null;
 			}
 
 			if (fieldType.equals(DDMImpl.TYPE_RADIO) ||

@@ -981,9 +981,7 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		for (int i = 0; i < dlFileEntryTypes.size(); i++) {
 			DLFileEntryType dlFileEntryType = dlFileEntryTypes.get(i);
 
-			if (!isFileEntryTypeExportable(
-					portletDataContext.getCompanyId(), dlFileEntryType)) {
-
+			if (!isFileEntryTypeExportable(dlFileEntryType)) {
 				continue;
 			}
 
@@ -1031,9 +1029,7 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		fileEntryElement.addAttribute(
 			"fileEntryTypeUuid", dlFileEntryType.getUuid());
 
-		if (!isFileEntryTypeExportable(
-				portletDataContext.getCompanyId(), dlFileEntryType)) {
-
+		if (!isFileEntryTypeExportable(dlFileEntryType)) {
 			return;
 		}
 
@@ -1413,10 +1409,8 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 					portletDataContext.getCompanyId());
 
-				existingDLFileEntryType =
-						DLFileEntryTypeUtil.fetchByUUID_G(
-							dlFileEntryType.getUuid(),
-							companyGroup.getGroupId());
+				existingDLFileEntryType = DLFileEntryTypeUtil.fetchByUUID_G(
+					dlFileEntryType.getUuid(), companyGroup.getGroupId());
 			}
 
 			if (existingDLFileEntryType == null) {
@@ -1430,7 +1424,8 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 			}
 			else {
 				if (!isFileEntryTypeGlobal(
-						portletDataContext, existingDLFileEntryType)) {
+						portletDataContext.getCompanyId(),
+						existingDLFileEntryType)) {
 
 					DLFileEntryTypeLocalServiceUtil.updateFileEntryType(
 						userId, existingDLFileEntryType.getFileEntryTypeId(),
@@ -1450,7 +1445,7 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		}
 
 		if (!isFileEntryTypeGlobal(
-				portletDataContext, importedDLFileEntryType)) {
+				portletDataContext.getCompanyId(), importedDLFileEntryType)) {
 
 			portletDataContext.importClassedModel(
 				dlFileEntryType, importedDLFileEntryType, _NAMESPACE);
@@ -1776,25 +1771,27 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 	}
 
 	protected static boolean isFileEntryTypeExportable(
-			long companyId, DLFileEntryType dlFileEntryType)
+			DLFileEntryType dlFileEntryType)
 		throws PortalException, SystemException {
 
 		if (dlFileEntryType.getFileEntryTypeId() == 0) {
 			return false;
 		}
-		else {
-			return true;
-		}
+
+		return true;
 	}
 
 	protected static boolean isFileEntryTypeGlobal(
-		PortletDataContext portletDataContext, DLFileEntryType dlFileEntryType)
+			long companyId, DLFileEntryType dlFileEntryType)
 		throws PortalException, SystemException {
 
-		Group group = GroupLocalServiceUtil.getCompanyGroup(
-			portletDataContext.getCompanyId());
+		Group group = GroupLocalServiceUtil.getCompanyGroup(companyId);
 
-		return dlFileEntryType.getGroupId() == group.getGroupId();
+		if (dlFileEntryType.getGroupId() == group.getGroupId()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -1853,13 +1850,12 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 
 		List<DLFileEntryType> dlFileEntryTypes =
 			DLFileEntryTypeServiceUtil.getFileEntryTypes(
-				new long[] {portletDataContext.getScopeGroupId(),
-				companyGroup.getGroupId()});
+				new long[] {
+					portletDataContext.getScopeGroupId(),
+					companyGroup.getGroupId()});
 
 		for (DLFileEntryType dlFileEntryType : dlFileEntryTypes) {
-			if (!isFileEntryTypeExportable(
-					portletDataContext.getCompanyId(), dlFileEntryType)) {
-
+			if (!isFileEntryTypeExportable(dlFileEntryType)) {
 				continue;
 			}
 
