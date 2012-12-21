@@ -111,10 +111,8 @@ public class EditEntryAction extends PortletAction {
 			if (!windowState.equals(LiferayWindowState.POP_UP)) {
 				sendRedirect(actionRequest, actionResponse);
 			}
-			else {
-				if (Validator.isNotNull(redirect)) {
-					actionResponse.sendRedirect(redirect);
-				}
+			else if (Validator.isNotNull(redirect)) {
+				actionResponse.sendRedirect(redirect);
 			}
 		}
 		catch (Exception e) {
