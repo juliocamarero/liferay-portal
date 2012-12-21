@@ -40,7 +40,8 @@ public class AbsoluteRedirectsResponse extends HttpServletResponseWrapper {
 
 		if (ServerDetector.isWebLogic()) {
 			_request = new NonSerializableObjectRequestWrapper(request);
-		} else {
+		}
+		else {
 			_request = request;
 		}
 	}
