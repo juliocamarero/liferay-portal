@@ -253,7 +253,7 @@ serverURL.setParameter("tabs3", tabs3);
 				headerNames.add("property");
 				headerNames.add("value");
 
-				SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, serverURL, headerNames, "no-portal-properties-were-found-that-matched-the-keywords");
+				SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, serverURL, headerNames, emptyResultsMessage);
 
 				Map portalProps = new TreeMap();
 
