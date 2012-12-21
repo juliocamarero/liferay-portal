@@ -143,6 +143,12 @@ public interface AssetTagService extends BaseService {
 		java.lang.String[] tagProperties)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.asset.model.AssetTag> getVisibleAssetTags(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public void mergeTags(long fromTagId, long toTagId,
 		boolean overrideProperties)
 		throws com.liferay.portal.kernel.exception.PortalException,

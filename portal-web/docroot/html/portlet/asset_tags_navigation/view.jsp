@@ -30,7 +30,7 @@ long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayT
 			assetTags = AssetTagServiceUtil.getTags(scopeGroupId, classNameId, null, 0, maxAssetTags, new AssetTagCountComparator());
 		}
 		else {
-			assetTags = AssetTagServiceUtil.getGroupTags(scopeGroupId, 0, maxAssetTags, new AssetTagCountComparator());
+			assetTags = AssetTagServiceUtil.getVisibleAssetTags(scopeGroupId, 0, maxAssetTags, new AssetTagCountComparator());
 		}
 
 		assetTags = ListUtil.sort(assetTags);

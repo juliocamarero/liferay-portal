@@ -151,6 +151,13 @@ public class AssetTagServiceWrapper implements AssetTagService,
 		return _assetTagService.getTagsCount(groupId, name, tagProperties);
 	}
 
+	public java.util.List<com.liferay.portlet.asset.model.AssetTag> getVisibleAssetTags(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetTagService.getVisibleAssetTags(groupId, start, end, obc);
+	}
+
 	public void mergeTags(long fromTagId, long toTagId,
 		boolean overrideProperties)
 		throws com.liferay.portal.kernel.exception.PortalException,
