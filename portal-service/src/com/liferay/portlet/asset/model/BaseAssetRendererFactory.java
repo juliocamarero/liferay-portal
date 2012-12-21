@@ -47,7 +47,14 @@ public abstract class BaseAssetRendererFactory implements AssetRendererFactory {
 	public AssetEntry getAssetEntry(String className, long classPK)
 		throws PortalException, SystemException {
 
-		return AssetEntryLocalServiceUtil.getEntry(className, classPK);
+		AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(
+			className, classPK);
+
+		if (entry.isVisible()) {
+			return entry;
+		}
+
+		return null;
 	}
 
 	public AssetRenderer getAssetRenderer(long classPK)

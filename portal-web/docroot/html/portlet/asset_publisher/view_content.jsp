@@ -51,9 +51,17 @@ try {
 		classPK = assetRenderer.getClassPK();
 
 		assetEntry = assetRendererFactory.getAssetEntry(className, classPK);
+
+		if (assetEntry == null) {
+			throw new NoSuchModelException();
+		}
 	}
 	else {
 		assetEntry = assetRendererFactory.getAssetEntry(assetEntryId);
+
+		if (assetEntry == null) {
+			throw new NoSuchModelException();
+		}
 
 		className = PortalUtil.getClassName(assetEntry.getClassNameId());
 		classPK = assetEntry.getClassPK();
@@ -67,10 +75,6 @@ try {
 			assetRenderer = assetRendererFactory.getAssetRenderer(classPK, AssetRendererFactory.TYPE_LATEST_APPROVED);
 		}
 
-	}
-
-	if (assetEntry.getVisible() == false){
-		throw new NoSuchModelException();
 	}
 
 	String title = assetRenderer.getTitle(locale);

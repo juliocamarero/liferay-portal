@@ -83,7 +83,11 @@ public class LayoutRevisionAssetRendererFactory
 
 		assetEntry.setTitle(sb.toString());
 
-		return assetEntry;
+		if (assetEntry.isVisible()) {
+			return assetEntry;
+		}
+
+		return null;
 	}
 
 	public AssetRenderer getAssetRenderer(long layoutRevisionId, int type)
