@@ -71,13 +71,11 @@ type = ParamUtil.getString(request, "type", type);
 		long ddmStructureGroupId = groupId;
 
 		if (Validator.isNotNull(structureId)) {
-
 			ddmStructure = DDMStructureLocalServiceUtil.fetchStructure(groupId, structureId);
 
 			List<DDMTemplate> ddmTemplates = new ArrayList<DDMTemplate>();
 
 			if (ddmStructure != null) {
-
 				ddmStructureGroupId = ddmStructure.getGroupId();
 
 				ddmTemplates.addAll(DDMTemplateLocalServiceUtil.getTemplates(ddmStructureGroupId, PortalUtil.getClassNameId(DDMStructure.class), ddmStructure.getStructureId()));
