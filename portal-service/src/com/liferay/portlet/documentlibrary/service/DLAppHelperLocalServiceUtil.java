@@ -336,11 +336,11 @@ public class DLAppHelperLocalServiceUtil {
 			newStatus, workflowContext);
 	}
 
-	public static void updateStatuses(com.liferay.portal.model.User user,
+	public static void updateChildStatus(com.liferay.portal.model.User user,
 		java.util.List<java.lang.Object> dlFileEntriesAndDLFolders, int status)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		getService().updateStatuses(user, dlFileEntriesAndDLFolders, status);
+		getService().updateChildStatus(user, dlFileEntriesAndDLFolders, status);
 	}
 
 	public static DLAppHelperLocalService getService() {
