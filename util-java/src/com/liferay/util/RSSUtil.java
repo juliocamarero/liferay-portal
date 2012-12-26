@@ -42,9 +42,14 @@ public class RSSUtil {
 
 	public static final String DISPLAY_STYLE_ABSTRACT = "abstract";
 
+	public static final String DISPLAY_STYLE_DEFAULT =
+		_getDisplayStyleDefault();
+
 	public static final String DISPLAY_STYLE_FULL_CONTENT = "full-content";
 
 	public static final String DISPLAY_STYLE_TITLE = "title";
+
+	public static final String[] DISPLAY_STYLES = _getDisplayStyles();
 
 	public static final String ENTRY_TYPE_DEFAULT = "html";
 
@@ -166,6 +171,18 @@ public class RSSUtil {
 		}
 
 		return VERSION_DEFAULT;
+	}
+
+	private static String _getDisplayStyleDefault() {
+		return GetterUtil.getString(
+			PropsUtil.get(PropsKeys.RSS_FEED_DISPLAY_STYLE_DEFAULT),
+			DISPLAY_STYLE_FULL_CONTENT);
+	}
+
+	private static String[] _getDisplayStyles() {
+		return GetterUtil.getStringValues(
+			PropsUtil.getArray(PropsKeys.RSS_FEED_DISPLAY_STYLES),
+			new String[] {DISPLAY_STYLE_DEFAULT});
 	}
 
 	private static String _getFeedTypeDefault() {
