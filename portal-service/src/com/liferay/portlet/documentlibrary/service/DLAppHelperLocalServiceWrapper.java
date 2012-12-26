@@ -329,11 +329,11 @@ public class DLAppHelperLocalServiceWrapper implements DLAppHelperLocalService,
 			latestFileVersion, oldStatus, newStatus, workflowContext);
 	}
 
-	public void updateStatuses(com.liferay.portal.model.User user,
+	public void updateChildStatus(com.liferay.portal.model.User user,
 		java.util.List<java.lang.Object> dlFileEntriesAndDLFolders, int status)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_dlAppHelperLocalService.updateStatuses(user,
+		_dlAppHelperLocalService.updateChildStatus(user,
 			dlFileEntriesAndDLFolders, status);
 	}
 

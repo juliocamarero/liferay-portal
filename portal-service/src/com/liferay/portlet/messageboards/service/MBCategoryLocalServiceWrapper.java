@@ -555,11 +555,11 @@ public class MBCategoryLocalServiceWrapper implements MBCategoryLocalService,
 		return _mbCategoryLocalService.updateStatus(userId, categoryId, status);
 	}
 
-	public void updateStatuses(com.liferay.portal.model.User user,
+	public void updateChildStatus(com.liferay.portal.model.User user,
 		java.util.List<java.lang.Object> categoriesAndThreads, int status)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_mbCategoryLocalService.updateStatuses(user, categoriesAndThreads,
+		_mbCategoryLocalService.updateChildStatus(user, categoriesAndThreads,
 			status);
 	}
 

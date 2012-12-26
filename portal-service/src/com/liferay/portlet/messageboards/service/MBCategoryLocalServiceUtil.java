@@ -556,11 +556,11 @@ public class MBCategoryLocalServiceUtil {
 		return getService().updateStatus(userId, categoryId, status);
 	}
 
-	public static void updateStatuses(com.liferay.portal.model.User user,
+	public static void updateChildStatus(com.liferay.portal.model.User user,
 		java.util.List<java.lang.Object> categoriesAndThreads, int status)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		getService().updateStatuses(user, categoriesAndThreads, status);
+		getService().updateChildStatus(user, categoriesAndThreads, status);
 	}
 
 	public static MBCategoryLocalService getService() {
