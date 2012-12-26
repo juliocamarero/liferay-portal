@@ -68,6 +68,11 @@ private void _buildGuestGroupBreadcrumb(ThemeDisplay themeDisplay, StringBundler
 }
 
 private void _buildLayoutBreadcrumb(Layout selLayout, String selLayoutParam, boolean selectedLayout, PortletURL portletURL, ThemeDisplay themeDisplay, StringBundler sb) throws Exception {
+	if(selLayout.isHidden() || !LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), selLayout, ActionKeys.VIEW)){
+		sb.append("<li><span>&nbsp;</span></li>");
+		return;
+	}
+
 	String layoutURL = _getBreadcrumbLayoutURL(selLayout, selLayoutParam, portletURL, themeDisplay);
 	String target = PortalUtil.getLayoutTarget(selLayout);
 
