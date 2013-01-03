@@ -19,15 +19,15 @@ import com.liferay.portal.kernel.safe.model.Item;
 import java.util.List;
 
 /**
- * The interface for Portal Safe implementations.
+ * Specifies the Portal Safe interface.
  *
  * <p>
- * Implementations should use {@link
+ * Implementations should use the {@link
  * com.liferay.portal.kernel.safe.serializer.ItemSerializerRegistryUtil} to
- * convert {@link Item} into {@link
- * com.liferay.portal.kernel.safe.serializer.SerializedItem} and {@link
- * com.liferay.portal.kernel.safe.storage.Storage} to load or store the
- * serialized item into underlying safe storage.
+ * convert an {@link com.liferay.portal.kernel.safe.model.Item} into a {@link
+ * com.liferay.portal.kernel.safe.serializer.SerializedItem}, and use the {@link
+ * com.liferay.portal.kernel.safe.storage.Storage} interface to load or store
+ * the serialized item into underlying safe storage.
  * </p>
  *
  * @author Tomas Polesovsky
@@ -35,83 +35,109 @@ import java.util.List;
 public interface PortalSafe {
 
 	/**
-	 * Returns names of all {@link Item}s in the safe, stored under the
-	 * companyId and the groupId.
+	 * Returns names of all items in the safe associated with the company and
+	 * group.
 	 *
-	 * <p>
-	 * May throw {@link com.liferay.portal.kernel.safe.storage.StorageException}
-	 * if there is a problem with loading the item from the underlying storage
-	 * </p>
-	 *
-	 * @param  companyId ID of company to load items from
-	 * @param  groupId ID of group inside the company to load items from
-	 * @return not <code>null</code> list of accessible items names. These can
-	 *         be later used for loading or removing items from the safe.
-	 * @throws PortalSafeException if an error occurs
+	 * @param  companyId the primary key of the company
+	 * @param  groupId the primary key of the group
+	 * @return names of all items in the safe associated with the company and
+	 *         group. These names can be used for loading and removing items
+	 *         from the safe.
+	 * @throws PortalSafeException if a PortalSafeException occurred. The
+	 *         exception may be a {@link
+	 *         com.liferay.portal.kernel.safe.storage.StorageException} if there
+	 *         was a problem loading the item from the underlying storage.
 	 */
 	public List<String> listItemsNames(long companyId, long groupId)
 		throws PortalSafeException;
 
 	/**
-	 * Loads and returns an item described by the companyId, the groupId and the
-	 * item's name.
+	 * Loads the named item associated with the company and group.
 	 *
 	 * <p>
-	 * May throw <ul> <li> {@link
-	 * com.liferay.portal.kernel.safe.model.NoSuchItemException} if there is no
-	 * item found with the name </li> <li> {@link
-	 * com.liferay.portal.kernel.safe.serializer.NoSuchItemSerializerException}
-	 * if there is no serializer registered that is able to read the item </li>
-	 * <li> {@link com.liferay.portal.kernel.safe.storage.StorageException} if
-	 * there is a problem with loading the item from the underlying storage
-	 * </li> </ul>
+	 * The following {@link PortalSafeException}s can occur:
 	 * </p>
 	 *
-	 * @param  companyId ID of company to load items from
-	 * @param  groupId ID of group inside the company to load items from
-	 * @param  name name of the item to be loaded
-	 * @return descendant of {@link Item} interface
-	 * @throws PortalSafeException if an other error occurs
+	 * <ul>
+	 * <li>
+	 * {@link
+	 * com.liferay.portal.kernel.safe.model.NoSuchItemException} if no item is
+	 * found with the name
+	 * </li>
+	 * <li>
+	 * {@link
+	 * com.liferay.portal.kernel.safe.serializer.NoSuchItemSerializerException}
+	 * if no registered serializer can read the item
+	 * </li>
+	 * <li>
+	 * {@link com.liferay.portal.kernel.safe.storage.StorageException} if there
+	 * is a problem loading the item from the underlying storage
+	 * </li>
+	 * </ul>
+	 *
+	 * @param  companyId the primary key of the company
+	 * @param  groupId the primary key of the group
+	 * @param  name the item's name
+	 * @return the loaded item
+	 * @throws PortalSafeException if a PortalSafeException occurred
 	 */
 	public Item loadItem(long companyId, long groupId, String name)
 		throws PortalSafeException;
 
 	/**
-	 * Removes the item from the safe. Item is described by the companyId, the
-	 * groupId and the item's name.
+	 * Removes from the safe the named item associated with the company and
+	 * group.
 	 *
 	 * <p>
-	 * May throw <ul> <li> {@link
-	 * com.liferay.portal.kernel.safe.model.NoSuchItemException} if there is no
-	 * item found with the name </li> <li> {@link
-	 * com.liferay.portal.kernel.safe.storage.StorageException} if there is a
-	 * problem with accessing the item int the underlying storage </li> </ul>
+	 * The following {@link PortalSafeException}s can occur:
 	 * </p>
 	 *
-	 * @param  companyId ID of company to remove the item from
-	 * @param  groupId ID of group inside the company to remove the item from
-	 * @param  name name of the item to be removed
-	 * @throws PortalSafeException if some error occurs during deleting
+	 * <ul>
+	 * <li>
+	 * {@link
+	 * com.liferay.portal.kernel.safe.model.NoSuchItemException} if no item was
+	 * found with the name
+	 * </li>
+	 * <li>
+	 * {@link
+	 * com.liferay.portal.kernel.safe.storage.StorageException} if there was a
+	 * problem accessing the item from the underlying storage
+	 * </li>
+	 * </ul>
+	 *
+	 * @param  companyId the primary key of the company
+	 * @param  groupId the primary key of the group
+	 * @param  name the item's name
+	 * @throws PortalSafeException if a PortalSafeException occurred
 	 */
 	public void removeItem(long companyId, long groupId, String name)
 		throws PortalSafeException;
 
 	/**
-	 * Stores the item into safe.
+	 * Saves the item, associating it with the company and group.
 	 *
 	 * <p>
-	 * May throw <ul> <li> {@link
-	 * com.liferay.portal.kernel.safe.serializer.NoSuchItemSerializerException}
-	 * if there is no serializer registered that is able to convert the item
-	 * into its binary form </li> <li> {@link
-	 * com.liferay.portal.kernel.safe.storage.StorageException} if there is a
-	 * problem with saving the item into the underlying storage </li> </ul>
+	 * The following {@link PortalSafeException}s can occur:
 	 * </p>
 	 *
-	 * @param  companyId ID of company to save the item to
-	 * @param  groupId ID of group inside the company to save the item to
+	 * <ul>
+	 * <li>
+	 * {@link
+	 * com.liferay.portal.kernel.safe.serializer.NoSuchItemSerializerException}
+	 * if no registered serializer could serialize the item
+	 * </li>
+	 * <li>
+	 * {@link
+	 * com.liferay.portal.kernel.safe.storage.StorageException} if there was a
+	 * problem saving the item to the underlying storage
+	 * </li>
+	 * </ul>
+	 *
+	 * @param  companyId the primary key of the company to associate with the
+	 *         item
+	 * @param  groupId the primary key of the group to associate with the item
 	 * @param  item the item to be saved
-	 * @throws PortalSafeException if an other error occurs
+	 * @throws PortalSafeException if a PortalSafeException occurred
 	 */
 	public void saveItem(long companyId, long groupId, Item item)
 		throws PortalSafeException;
