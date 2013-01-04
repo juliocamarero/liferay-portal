@@ -878,6 +878,10 @@
 	<bean id="com.liferay.portlet.layoutconfiguration.util.RuntimePageUtil" class="com.liferay.portlet.layoutconfiguration.util.RuntimePageUtil">
 		<property name="runtimePage" ref="com.liferay.portlet.layoutconfiguration.util.RuntimePage" />
 	</bean>
+	<bean id="com.liferay.portlet.layoutsadmin.util.LayoutsAdmin" class="com.liferay.portlet.layoutsadmin.util.LayoutsAdminImpl" />
+	<bean id="com.liferay.portlet.layoutsadmin.util.LayoutsAdminUtil" class="com.liferay.portlet.layoutsadmin.util.LayoutsAdminUtil">
+		<property name="layoutsAdmin" ref="com.liferay.portlet.layoutsadmin.util.LayoutsAdmin" />
+	</bean>
 	<bean id="com.liferay.portlet.layoutsadmin.util.SitemapUtil" class="com.liferay.portlet.layoutsadmin.util.SitemapUtil">
 		<property name="sitemap">
 			<bean class="com.liferay.portlet.layoutsadmin.util.SitemapImpl" />
