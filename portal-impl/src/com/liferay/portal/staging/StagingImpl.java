@@ -285,8 +285,8 @@ public class StagingImpl implements Staging {
 					layouts.add(layout);
 				}
 
-				List<Layout> parentLayouts = getRemoteMissingParentLayouts(httpPrincipal,
-						layout, remoteGroupId);
+				List<Layout> parentLayouts = getRemoteMissingParentLayouts(
+					httpPrincipal, layout, remoteGroupId);
 
 				for (Layout parentLayout : parentLayouts) {
 					if (!layouts.contains(parentLayout)) {
@@ -649,11 +649,11 @@ public class StagingImpl implements Staging {
 
 		while (parentLayoutId > 0) {
 			Layout parentLayout = LayoutLocalServiceUtil.getLayout(
-					layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
+				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
 
 			try {
 				LayoutServiceHttp.getLayoutByUuidAndGroupId(httpPrincipal,
-						parentLayout.getUuid(), remoteGroupId);
+					parentLayout.getUuid(), remoteGroupId);
 
 				// If one parent is found all others are assumed to exist
 

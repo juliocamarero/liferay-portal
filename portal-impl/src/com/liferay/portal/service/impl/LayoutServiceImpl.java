@@ -526,16 +526,19 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	 * @param  uuid the universally unique identifier of the scope layout
 	 * @param  groupId the primary key of the group
 	 * @return the layout
-	 * @throws PortalException if a matching layout could not be found, if the user did not have permission to view the layout, or if some other portal exception occurred
+	 * @throws PortalException if a matching layout could not be found, if the
+	 *         user did not have permission to view the layout, or if some other
+	 *         portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
 	public Layout getLayoutByUuidAndGroupId(String uuid, long groupId)
-			throws PortalException, SystemException {
+		throws PortalException, SystemException {
 
-		Layout layout = layoutLocalService.getLayoutByUuidAndGroupId(uuid, groupId);
+		Layout layout = layoutLocalService.getLayoutByUuidAndGroupId(
+			uuid, groupId);
 
 		LayoutPermissionUtil.check(
-				getPermissionChecker(), layout.getPlid(), ActionKeys.VIEW);
+			getPermissionChecker(), layout.getPlid(), ActionKeys.VIEW);
 
 		return layout;
 	}
