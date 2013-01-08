@@ -74,7 +74,7 @@
 
 		<!-- PK fields -->
 
-		<column name="folderId" type="long" primary="true" />
+		<column name="folderId" type="long" primary="true" container-model="true" />
 
 		<!-- Group instance -->
 
@@ -94,7 +94,7 @@
 
 		<!-- Other fields -->
 
-		<column name="parentFolderId" type="long" />
+		<column name="parentFolderId" type="long" parent-container-model="true" />
 		<column name="name" type="String" />
 		<column name="description" type="String" />
 		<column name="status" type="int" />
