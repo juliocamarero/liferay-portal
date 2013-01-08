@@ -43,11 +43,11 @@ import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portlet.layoutsadmin.util.LayoutsAdminUtil;
 
 import java.io.File;
 import java.io.InputStream;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -568,7 +568,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		List<Layout> layouts = layoutLocalService.getLayouts(
 			groupId, privateLayout);
 
-		return filterLayouts(layouts);
+		return LayoutsAdminUtil.filterLayouts(getPermissionChecker(), layouts);
 	}
 
 	public List<Layout> getLayouts(
@@ -578,7 +578,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		List<Layout> layouts = layoutLocalService.getLayouts(
 			groupId, privateLayout, parentLayoutId);
 
-		return filterLayouts(layouts);
+		return LayoutsAdminUtil.filterLayouts(getPermissionChecker(), layouts);
 	}
 
 	/**
@@ -1189,23 +1189,6 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			getPermissionChecker(), plid, ActionKeys.UPDATE);
 
 		return layoutLocalService.updatePriority(plid, priority);
-	}
-
-	protected List<Layout> filterLayouts(List<Layout> layouts)
-		throws PortalException, SystemException {
-
-		List<Layout> filteredLayouts = new ArrayList<Layout>();
-
-		for (Layout layout : layouts) {
-			if (LayoutPermissionUtil.contains(
-					getPermissionChecker(), layout.getPlid(),
-					ActionKeys.VIEW)) {
-
-				filteredLayouts.add(layout);
-			}
-		}
-
-		return filteredLayouts;
 	}
 
 }
