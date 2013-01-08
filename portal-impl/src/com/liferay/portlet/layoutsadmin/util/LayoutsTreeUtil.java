@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.layoutsadmin.util;
 
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -75,7 +76,8 @@ public class LayoutsTreeUtil {
 		List<Layout> layoutAncestors = null;
 
 		List<Layout> layouts = LayoutServiceUtil.getLayouts(
-			groupId, privateLayout, parentLayoutId);
+			groupId, privateLayout, parentLayoutId, incomplete,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		long selPlid = ParamUtil.getLong(request, "selPlid");
 

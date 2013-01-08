@@ -604,6 +604,17 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		return filterLayouts(layouts);
 	}
 
+	public List<Layout> getLayouts(
+			long groupId, boolean privateLayout, long parentLayoutId,
+			boolean incomplete, int start, int end)
+		throws PortalException, SystemException {
+
+		List<Layout> layouts = layoutLocalService.getLayouts(
+			groupId, privateLayout, parentLayoutId, incomplete, start, end);
+
+		return filterLayouts(layouts);
+	}
+
 	/**
 	 * Imports the layouts from the byte array.
 	 *
