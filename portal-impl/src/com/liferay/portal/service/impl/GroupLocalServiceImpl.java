@@ -814,6 +814,20 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
+	 * Returns the list of children groups of type site for a given parent group
+	 *
+	 * @param  companyId the primary key of the company
+	 * @param  parentGroupId the primary key of the parent group.
+	 * @return the list of children groups of type site for a given parent group
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Group> getChildrenSites(long companyId, long parentGroupId)
+		throws SystemException {
+
+		return getGroups(companyId, parentGroupId, true);
+	}
+
+	/**
 	 * Returns the company group.
 	 *
 	 * @param  companyId the primary key of the company
@@ -1011,11 +1025,12 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Returns all the sites that are children of the parent group.
+	 * Returns all the groups that are children of the parent group.
 	 *
 	 * @param  companyId the primary key of the company
-	 * @param  parentGroupId the primary key of the parent group
-	 * @param  site whether the group is to be associated with a main site
+	 * @param  parentGroupId the primary key of the parent group.
+	 *         this can be set to -1 to be ignored
+	 * @param  site whether the returned groups are sites
 	 * @return the matching groups, or <code>null</code> if no matches were
 	 *         found
 	 * @throws SystemException if a system exception occurred

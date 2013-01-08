@@ -69,6 +69,18 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 			groups.add(company.getGroup());
 			groups.add(themeDisplay.getScopeGroup());
 
+			// Parent site
+
+			Group parentGroup = themeDisplay.getScopeGroup().getParentGroup();
+
+			if (parentGroup != null) {
+				groups.add(parentGroup);
+			}
+
+			// Children sites
+
+			groups.addAll(GroupLocalServiceUtil.getChildrenSites(themeDisplay.getCompanyId(), scopeGroupId));
+
 			for (Layout curLayout : LayoutLocalServiceUtil.getLayouts(layout.getGroupId(), layout.isPrivateLayout())) {
 				if (curLayout.hasScopeGroup()) {
 					groups.add(curLayout.getScopeGroup());

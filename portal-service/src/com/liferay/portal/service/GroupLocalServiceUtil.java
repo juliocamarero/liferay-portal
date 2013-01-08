@@ -415,6 +415,12 @@ public class GroupLocalServiceUtil {
 		return getService().fetchGroup(companyId, name);
 	}
 
+	public static java.util.List<com.liferay.portal.model.Group> getChildrenSites(
+		long companyId, long parentGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getChildrenSites(companyId, parentGroupId);
+	}
+
 	/**
 	* Returns the company group.
 	*
@@ -515,11 +521,12 @@ public class GroupLocalServiceUtil {
 	}
 
 	/**
-	* Returns all the sites that are children of the parent group.
+	* Returns all the groups that are children of the parent group.
 	*
 	* @param companyId the primary key of the company
-	* @param parentGroupId the primary key of the parent group
-	* @param site whether the group is to be associated with a main site
+	* @param parentGroupId the primary key of the parent group.
+	this can be set to -1 to be ignored
+	* @param site whether the returned groups are sites
 	* @return the matching groups, or <code>null</code> if no matches were
 	found
 	* @throws SystemException if a system exception occurred
