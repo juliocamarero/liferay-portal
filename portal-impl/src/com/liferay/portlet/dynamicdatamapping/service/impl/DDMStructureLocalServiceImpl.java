@@ -857,7 +857,6 @@ public class DDMStructureLocalServiceImpl
 		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
 		if (!ArrayUtil.contains(availableLocales, contentDefaultLocale)) {
-
 			Long companyId = CompanyThreadLocal.getCompanyId();
 
 			LocaleException le = new LocaleException("Locale '" +
