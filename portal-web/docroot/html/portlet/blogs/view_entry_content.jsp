@@ -158,14 +158,14 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 						</c:if>
 
 						<%
-						String summary = entry.getDescription();
+						String summary = HtmlUtil.escape(entry.getDescription());
 
 						if (Validator.isNull(summary)) {
-							summary = entry.getContent();
+							summary = HtmlUtil.stripHtml(entry.getContent());
 						}
 						%>
 
-						<%= StringUtil.shorten(HtmlUtil.stripHtml(summary), pageAbstractLength) %>
+						<%= StringUtil.shorten(summary, pageAbstractLength) %>
 
 						<br />
 
