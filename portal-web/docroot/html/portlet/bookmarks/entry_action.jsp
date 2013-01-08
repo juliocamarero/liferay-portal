@@ -108,13 +108,32 @@ else {
 			<portlet:param name="folderId" value="<%= String.valueOf(entry.getFolderId()) %>" />
 		</portlet:renderURL>
 
-		<portlet:actionURL var="deleteURL">
-			<portlet:param name="struts_action" value="/bookmarks/edit_entry" />
-			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
-			<portlet:param name="redirect" value="<%= view ? redirectURL : currentURL %>" />
-			<portlet:param name="entryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
-		</portlet:actionURL>
+		<c:choose>
+			<c:when test="<%= TrashUtil.isTrashEnabled(themeDisplay.getScopeGroupId()) %>">
+				<portlet:actionURL var="deleteURL">
+					<portlet:param name="struts_action" value="/bookmarks/edit_entry" />
+					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.MOVE_TO_TRASH %>" />
+					<portlet:param name="redirect" value="<%= view ? redirectURL : currentURL %>" />
+					<portlet:param name="entryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
+				</portlet:actionURL>
 
-		<liferay-ui:icon-delete url="<%= deleteURL %>" />
+				<liferay-ui:icon-delete
+					trash="<%= true %>"
+					url="<%= deleteURL %>"
+				/>
+			</c:when>
+			<c:otherwise>
+				<portlet:actionURL var="deleteURL">
+					<portlet:param name="struts_action" value="/bookmarks/edit_entry" />
+					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+					<portlet:param name="redirect" value="<%= view ? redirectURL : currentURL %>" />
+					<portlet:param name="entryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
+				</portlet:actionURL>
+
+				<liferay-ui:icon-delete
+					url="<%= deleteURL %>"
+				/>
+			</c:otherwise>
+		</c:choose>
 	</c:if>
 </liferay-ui:icon-menu>
