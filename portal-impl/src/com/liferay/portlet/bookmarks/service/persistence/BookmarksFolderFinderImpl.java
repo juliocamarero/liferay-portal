@@ -80,18 +80,18 @@ public class BookmarksFolderFinderImpl
 		return doCountBF_BE_ByG_F(groupId, folderId, queryDefinition, true);
 	}
 
-	public List<Object> findBF_BE_ByG_F(
-			long groupId, long folderId, QueryDefinition queryDefinition)
-		throws SystemException {
-
-		return doFindBF_BE_ByG_F(groupId, folderId, queryDefinition, false);
-	}
-
 	public List<Object> filterFindBF_BE_ByG_F(
 			long groupId, long folderId, QueryDefinition queryDefinition)
 		throws SystemException {
 
 		return doFindBF_BE_ByG_F(groupId, folderId, queryDefinition, true);
+	}
+
+	public List<Object> findBF_BE_ByG_F(
+			long groupId, long folderId, QueryDefinition queryDefinition)
+		throws SystemException {
+
+		return doFindBF_BE_ByG_F(groupId, folderId, queryDefinition, false);
 	}
 
 	protected int doCountBF_BE_ByG_F(
