@@ -588,20 +588,15 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	public List<Layout> getLayouts(long groupId, boolean privateLayout)
 		throws PortalException, SystemException {
 
-		List<Layout> layouts = layoutLocalService.getLayouts(
-			groupId, privateLayout);
-
-		return filterLayouts(layouts);
+		return layoutPersistence.filterFindByG_P(groupId, privateLayout);
 	}
 
 	public List<Layout> getLayouts(
 			long groupId, boolean privateLayout, long parentLayoutId)
 		throws PortalException, SystemException {
 
-		List<Layout> layouts = layoutLocalService.getLayouts(
+		return layoutPersistence.filterFindByG_P_P(
 			groupId, privateLayout, parentLayoutId);
-
-		return filterLayouts(layouts);
 	}
 
 	public List<Layout> getLayouts(
