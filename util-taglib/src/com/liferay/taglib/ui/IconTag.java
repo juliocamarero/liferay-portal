@@ -15,7 +15,6 @@
 package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
-import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PortalUtil;
@@ -27,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Brian Wing Shun Chan
- * @author Sampsa Sohlman
  */
 public class IconTag extends IncludeTag {
 
@@ -130,17 +128,6 @@ public class IconTag extends IncludeTag {
 		_url = null;
 	}
 
-	protected String getMenuIdNo(HttpServletRequest request) {
-		IntegerWrapper rowNo = (IntegerWrapper)request.getAttribute(
-			"liferay-ui:icon-menu:row-no");
-		if (rowNo==null) {
-			return "";
-		}
-
-		rowNo.increment();
-		return rowNo.toString();
-	}
-
 	protected String getMessage() {
 		return _message;
 	}
@@ -173,9 +160,7 @@ public class IconTag extends IncludeTag {
 			}
 
 			if (Validator.isNotNull(id) && Validator.isNotNull(message)) {
-				String no = getMenuIdNo(request);
-				id = id.concat(StringPool.UNDERLINE).concat(no).concat(
-					StringPool.UNDERLINE).concat(
+				id = id.concat(StringPool.UNDERLINE).concat(
 					FriendlyURLNormalizerUtil.normalize(message));
 			}
 			else {

@@ -16,7 +16,6 @@ package com.liferay.portal.kernel.util;
 
 /**
  * @author Brian Wing Shun Chan
- * @author Sampsa Sohlman
  */
 public class IntegerWrapper
 	extends PrimitiveWrapper implements Comparable<IntegerWrapper> {
@@ -61,11 +60,6 @@ public class IntegerWrapper
 
 	public void setValue(int value) {
 		_value = value;
-	}
-
-	@Override
-	public String toString() {
-		return String.valueOf(_value);
 	}
 
 	private int _value;
