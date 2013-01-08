@@ -146,6 +146,20 @@ public class JournalArticleServiceSoap {
 	}
 
 	public static void deleteArticle(long groupId, java.lang.String articleId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			JournalArticleServiceUtil.deleteArticle(groupId, articleId,
+				serviceContext);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteArticle(long groupId, java.lang.String articleId,
 		java.lang.String articleURL,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
@@ -556,6 +570,21 @@ public class JournalArticleServiceSoap {
 		}
 	}
 
+	public static com.liferay.portlet.journal.model.JournalArticleSoap moveArticleToTrash(
+		long groupId, java.lang.String articleId) throws RemoteException {
+		try {
+			com.liferay.portlet.journal.model.JournalArticle returnValue = JournalArticleServiceUtil.moveArticleToTrash(groupId,
+					articleId);
+
+			return com.liferay.portlet.journal.model.JournalArticleSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static void removeArticleLocale(long companyId,
 		java.lang.String languageId) throws RemoteException {
 		try {
@@ -576,6 +605,30 @@ public class JournalArticleServiceSoap {
 					articleId, version, languageId);
 
 			return com.liferay.portlet.journal.model.JournalArticleSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void restoreArticleFromTrash(long resourcePrimKey)
+		throws RemoteException {
+		try {
+			JournalArticleServiceUtil.restoreArticleFromTrash(resourcePrimKey);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void restoreArticleFromTrash(long groupId,
+		java.lang.String articleId) throws RemoteException {
+		try {
+			JournalArticleServiceUtil.restoreArticleFromTrash(groupId, articleId);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

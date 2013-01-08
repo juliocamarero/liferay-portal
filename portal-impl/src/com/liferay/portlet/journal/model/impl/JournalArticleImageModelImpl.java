@@ -105,7 +105,7 @@ public class JournalArticleImageModelImpl extends BaseModelImpl<JournalArticleIm
 	}
 
 	public Serializable getPrimaryKeyObj() {
-		return _articleImageId;
+		return new Long(_articleImageId);
 	}
 
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
