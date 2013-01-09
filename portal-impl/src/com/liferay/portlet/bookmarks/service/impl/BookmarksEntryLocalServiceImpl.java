@@ -22,8 +22,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -285,6 +283,7 @@ public class BookmarksEntryLocalServiceImpl
 		return bookmarksEntryFinder.findByNoAssets();
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	public BookmarksEntry moveEntry(long entryId, long parentFolderId)
 		throws PortalException, SystemException {
 
@@ -292,7 +291,7 @@ public class BookmarksEntryLocalServiceImpl
 
 		entry.setFolderId(parentFolderId);
 
-		updateBookmarksEntry(entry);
+		bookmarksEntryPersistence.update(entry);
 
 		return entry;
 	}
@@ -306,14 +305,14 @@ public class BookmarksEntryLocalServiceImpl
 		return moveEntry(entryId, parentFolderId);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	public BookmarksEntry moveEntryToTrash(long userId, BookmarksEntry entry)
 		throws PortalException, SystemException {
 
-		updateStatus(userId, entry, WorkflowConstants.STATUS_IN_TRASH);
-
-		return entry;
+		return updateStatus(userId, entry, WorkflowConstants.STATUS_IN_TRASH);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	public BookmarksEntry moveEntryToTrash(long userId, long entryId)
 		throws PortalException, SystemException {
 
@@ -338,7 +337,8 @@ public class BookmarksEntryLocalServiceImpl
 		return entry;
 	}
 
-	public void restoreEntryFromTrash(long userId, long entryId)
+	@Indexable(type = IndexableType.REINDEX)
+	public BookmarksEntry restoreEntryFromTrash(long userId, long entryId)
 		throws PortalException, SystemException {
 
 		BookmarksEntry entry = bookmarksEntryPersistence.findByPrimaryKey(
@@ -347,7 +347,7 @@ public class BookmarksEntryLocalServiceImpl
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
 			BookmarksEntry.class.getName(), entryId);
 
-		updateStatus(userId, entry, trashEntry.getStatus());
+		return updateStatus(userId, entry, trashEntry.getStatus());
 	}
 
 	public void subscribeEntry(long userId, long entryId)
@@ -437,7 +437,8 @@ public class BookmarksEntryLocalServiceImpl
 		return entry;
 	}
 
-	public void updateStatus(long userId, BookmarksEntry entry, int status)
+	public BookmarksEntry updateStatus(
+			long userId, BookmarksEntry entry, int status)
 		throws PortalException, SystemException {
 
 		int oldStatus = entry.getStatus();
@@ -501,12 +502,7 @@ public class BookmarksEntryLocalServiceImpl
 				entry.getEntryId(), oldStatus, null, null);
 		}
 
-		// Indexer
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			BookmarksEntry.class.getName());
-
-		indexer.reindex(entry);
+		return entry;
 	}
 
 	protected long getFolder(BookmarksEntry entry, long folderId)

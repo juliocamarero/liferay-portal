@@ -88,16 +88,6 @@ public class BookmarksFolderLocalServiceImpl
 	}
 
 	public void deleteFolder(
-			long folderId, boolean includeTrashedEntries)
-		throws PortalException, SystemException {
-
-		BookmarksFolder folder = bookmarksFolderLocalService.getFolder(
-			folderId);
-
-		deleteFolder(folder, includeTrashedEntries);
-	}
-
-	public void deleteFolder(
 			BookmarksFolder folder, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
@@ -151,6 +141,15 @@ public class BookmarksFolderLocalServiceImpl
 			folderId);
 
 		deleteFolder(folder);
+	}
+
+	public void deleteFolder(long folderId, boolean includeTrashedEntries)
+		throws PortalException, SystemException {
+
+		BookmarksFolder folder = bookmarksFolderLocalService.getFolder(
+			folderId);
+
+		deleteFolder(folder, includeTrashedEntries);
 	}
 
 	public void deleteFolders(long groupId)
@@ -208,7 +207,7 @@ public class BookmarksFolderLocalServiceImpl
 		throws SystemException {
 
 		return bookmarksFolderPersistence.findByG_P_S(
-				groupId, parentFolderId, status, start, end);
+			groupId, parentFolderId, status, start, end);
 	}
 
 	public List<Object> getFoldersAndEntries(long groupId, long folderId)
@@ -521,23 +520,10 @@ public class BookmarksFolderLocalServiceImpl
 					socialActivityCounterLocalService.disableActivityCounters(
 						BookmarksEntry.class.getName(), entry.getEntryId());
 
-					// Index
-
-					Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-						BookmarksEntry.class);
-
-					indexer.reindex(entry);
-
 					if (entry.getStatus() == WorkflowConstants.STATUS_PENDING) {
 						entry.setStatus(WorkflowConstants.STATUS_DRAFT);
 
 						bookmarksEntryPersistence.update(entry);
-
-						workflowInstanceLinkLocalService.
-							deleteWorkflowInstanceLink(
-								entry.getCompanyId(), entry.getGroupId(),
-								BookmarksEntry.class.getName(),
-								entry.getEntryId());
 					}
 				}
 				else {
@@ -556,14 +542,14 @@ public class BookmarksFolderLocalServiceImpl
 
 					socialActivityCounterLocalService.enableActivityCounters(
 						BookmarksEntry.class.getName(), entry.getEntryId());
-
-					// Index
-
-					Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-						BookmarksEntry.class);
-
-					indexer.reindex(entry);
 				}
+
+				// Index
+
+				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					BookmarksEntry.class);
+
+				indexer.reindex(entry);
 			}
 			else if (object instanceof BookmarksFolder) {
 				BookmarksFolder folder = (BookmarksFolder)object;
