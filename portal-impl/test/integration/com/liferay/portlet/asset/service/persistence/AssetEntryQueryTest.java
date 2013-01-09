@@ -27,8 +27,12 @@ import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.asset.model.AssetCategory;
+import com.liferay.portlet.asset.model.AssetVocabulary;
+import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.asset.service.impl.AssetEntryServiceImpl;
 import com.liferay.portlet.asset.util.AssetEntryTestUtil;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
@@ -52,19 +56,43 @@ public class AssetEntryQueryTest {
 	public void setUpAssetCategories() throws Exception {
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
-		_vocabularyId = AssetEntryTestUtil.addVocabulary(
-			"Test Vocabulary", serviceContext);
+		AssetVocabulary vocabulary =
+			AssetVocabularyLocalServiceUtil.addVocabulary(
+				TestPropsValues.getUserId(), "Test Vocabulary", serviceContext);
 
-		_fashionCategoryId = AssetEntryTestUtil.addCategory(
-			"Fashion", _vocabularyId, serviceContext);
-		_foodCategoryId = AssetEntryTestUtil.addCategory(
-			"Food", _vocabularyId, serviceContext);
-		_healthCategoryId = AssetEntryTestUtil.addCategory(
-			"Health", _vocabularyId, serviceContext);
-		_sportCategoryId = AssetEntryTestUtil.addCategory(
-			"Sport", _vocabularyId, serviceContext);
-		_travelCategoryId = AssetEntryTestUtil.addCategory(
-			"Travel", _vocabularyId, serviceContext);
+		_vocabularyId = vocabulary.getVocabularyId();
+
+		AssetCategory fashionCategory =
+			AssetCategoryLocalServiceUtil.addCategory(
+				TestPropsValues.getUserId(), "Fashion", _vocabularyId,
+				serviceContext);
+
+		_fashionCategoryId = fashionCategory.getCategoryId();
+
+		AssetCategory foodCategory = AssetCategoryLocalServiceUtil.addCategory(
+			TestPropsValues.getUserId(), "Food", _vocabularyId, serviceContext);
+
+		_foodCategoryId = foodCategory.getCategoryId();
+
+		AssetCategory healthCategory =
+			AssetCategoryLocalServiceUtil.addCategory(
+				TestPropsValues.getUserId(), "Health", _vocabularyId,
+				serviceContext);
+
+		_healthCategoryId = healthCategory.getCategoryId();
+
+		AssetCategory sportCategory = AssetCategoryLocalServiceUtil.addCategory(
+			TestPropsValues.getUserId(), "Sport", _vocabularyId,
+			serviceContext);
+
+		_sportCategoryId = sportCategory.getCategoryId();
+
+		AssetCategory travelCategory =
+			AssetCategoryLocalServiceUtil.addCategory(
+				TestPropsValues.getUserId(), "Travel", _vocabularyId,
+				serviceContext);
+
+		_travelCategoryId = travelCategory.getCategoryId();
 
 		_assetCategoryIds1 =
 			new long[] {_healthCategoryId, _sportCategoryId, _travelCategoryId};
