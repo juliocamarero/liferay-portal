@@ -12,11 +12,10 @@
  * details.
  */
 
-package integration.com.liferay.portlet.bookmarks.trash;
+package com.liferay.portlet.bookmarks.trash;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
@@ -83,14 +82,6 @@ public class BookmarksEntryTrashHandlerTest extends BaseTrashHandlerTestCase {
 		String url = "http://www.liferay.com";
 
 		String description = "Content: Enterprise. Open Source.";
-
-		serviceContext = (ServiceContext)serviceContext.clone();
-
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
-
-		if (approved) {
-			serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
-		}
 
 		return BookmarksEntryLocalServiceUtil.addEntry(
 			folder.getUserId(), folder.getGroupId(), folder.getFolderId(), name,
@@ -178,8 +169,8 @@ public class BookmarksEntryTrashHandlerTest extends BaseTrashHandlerTestCase {
 			group, serviceContext);
 
 		BookmarksEntryServiceUtil.moveEntryFromTrash(
-				(Long) classedModel.getPrimaryKeyObj(),
-				(Long) parentBaseModel.getPrimaryKeyObj());
+			(Long) classedModel.getPrimaryKeyObj(),
+			(Long) parentBaseModel.getPrimaryKeyObj());
 
 		return parentBaseModel;
 	}
@@ -191,7 +182,7 @@ public class BookmarksEntryTrashHandlerTest extends BaseTrashHandlerTestCase {
 
 	@Override
 	protected void moveParentBaseModelToTrash(long primaryKey)
-			throws Exception {
+		throws Exception {
 
 		BookmarksFolderServiceUtil.moveFolderToTrash(primaryKey);
 	}
@@ -202,7 +193,7 @@ public class BookmarksEntryTrashHandlerTest extends BaseTrashHandlerTestCase {
 		throws Exception {
 
 		BookmarksEntry entry = BookmarksEntryLocalServiceUtil.getEntry(
-				primaryKey);
+			primaryKey);
 
 		String description = "Content: Enterprise. Open Source. For Life.";
 

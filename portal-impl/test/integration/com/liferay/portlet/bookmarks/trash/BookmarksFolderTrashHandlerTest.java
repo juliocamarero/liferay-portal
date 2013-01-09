@@ -12,7 +12,7 @@
  * details.
  */
 
-package integration.com.liferay.portlet.bookmarks.trash;
+package com.liferay.portlet.bookmarks.trash;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.StringPool;
@@ -75,10 +75,6 @@ public class BookmarksFolderTrashHandlerTest extends BaseTrashHandlerTestCase {
 		BookmarksFolder parentFolder = (BookmarksFolder)parentBaseModel;
 
 		String name = getSearchKeywords();
-
-		serviceContext = (ServiceContext)serviceContext.clone();
-
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
 
 		return BookmarksFolderLocalServiceUtil.addFolder(
 			TestPropsValues.getUserId(), parentFolder.getFolderId(), name,
