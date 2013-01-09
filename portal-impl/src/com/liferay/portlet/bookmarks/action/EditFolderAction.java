@@ -67,11 +67,11 @@ public class EditFolderAction extends PortletAction {
 				updateFolder(actionRequest);
 			}
 			else if (cmd.equals(Constants.DELETE)) {
-				deleteFolder(
+				deleteFolders(
 					(LiferayPortletConfig)portletConfig, actionRequest, false);
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
-				deleteFolder(
+				deleteFolders(
 					(LiferayPortletConfig)portletConfig, actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
@@ -129,23 +129,33 @@ public class EditFolderAction extends PortletAction {
 			getForward(renderRequest, "portlet.bookmarks.edit_folder"));
 	}
 
-	protected void deleteFolder(
+	protected void deleteFolders(
 			LiferayPortletConfig liferayPortletConfig,
 			ActionRequest actionRequest, boolean moveToTrash)
 		throws Exception {
 
+		long[] deleteFolderIds = null;
+
 		long folderId = ParamUtil.getLong(actionRequest, "folderId");
 
-		long[] deleteFolderIds = new long[] {folderId};
-
-		if (moveToTrash) {
-			BookmarksFolderServiceUtil.moveFolderToTrash(folderId);
+		if (folderId > 0) {
+			deleteFolderIds = new long[] {folderId};
 		}
 		else {
-			BookmarksFolderServiceUtil.deleteFolder(folderId);
+			deleteFolderIds = StringUtil.split(
+				ParamUtil.getString(actionRequest, "folderIds"), 0L);
+		}
+
+		for (long deleteFolderId : deleteFolderIds) {
+			if (moveToTrash) {
+				BookmarksFolderServiceUtil.moveFolderToTrash(deleteFolderId);
+			}
+			else {
+				BookmarksFolderServiceUtil.deleteFolder(deleteFolderId);
+			}
 
 			AssetPublisherUtil.removeRecentFolderId(
-				actionRequest, BookmarksEntry.class.getName(), folderId);
+				actionRequest, BookmarksEntry.class.getName(), deleteFolderId);
 		}
 
 		if (moveToTrash && (deleteFolderIds.length > 0)) {
