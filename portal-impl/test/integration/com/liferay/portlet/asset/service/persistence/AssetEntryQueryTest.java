@@ -58,7 +58,8 @@ public class AssetEntryQueryTest {
 
 		AssetVocabulary vocabulary =
 			AssetVocabularyLocalServiceUtil.addVocabulary(
-				TestPropsValues.getUserId(), "Test Vocabulary", serviceContext);
+				TestPropsValues.getUserId(), ServiceTestUtil.randomString(),
+				serviceContext);
 
 		_vocabularyId = vocabulary.getVocabularyId();
 
