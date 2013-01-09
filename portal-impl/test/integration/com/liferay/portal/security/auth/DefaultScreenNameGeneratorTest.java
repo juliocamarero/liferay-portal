@@ -14,12 +14,13 @@
 
 package com.liferay.portal.security.auth;
 
+import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.pacl.PACLClassLoaderUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
-import com.liferay.portal.test.ExecutionTestListeners;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.TestPropsValues;
 
@@ -39,7 +40,11 @@ public class DefaultScreenNameGeneratorTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		_screenNameGenerator = ScreenNameGeneratorFactory.getInstance();
+		ClassLoader classLoader = PACLClassLoaderUtil.getPortalClassLoader();
+
+		_screenNameGenerator = (ScreenNameGenerator)classLoader.loadClass(
+			DefaultScreenNameGenerator.class.getName()).newInstance();
+
 		_usersScreenNameAllowNumeric = GetterUtil.getBoolean(
 			PropsUtil.get(PropsKeys.USERS_SCREEN_NAME_ALLOW_NUMERIC));
 	}
@@ -64,6 +69,7 @@ public class DefaultScreenNameGeneratorTest {
 			existingScreenName + "@liferay.com");
 
 		Assert.assertNotSame(existingScreenName, generatedScreenName);
+
 		Assert.assertEquals(existingScreenName + ".1", generatedScreenName);
 	}
 
@@ -106,12 +112,6 @@ public class DefaultScreenNameGeneratorTest {
 			TestPropsValues.getCompanyId(), userId, "postfix@liferay.com");
 
 		Assert.assertEquals("postfix." + userId, generatedScreenName);
-	}
-
-	@Test
-	public void testVerifyScreenNameGeneratorClass() {
-		Assert.assertEquals(
-			DefaultScreenNameGenerator.class, _screenNameGenerator.getClass());
 	}
 
 	private static ScreenNameGenerator _screenNameGenerator;
