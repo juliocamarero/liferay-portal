@@ -40,7 +40,7 @@ import javax.portlet.RenderResponse;
  */
 public class MBThreadTrashRenderer extends BaseTrashRenderer {
 
-	public static final String TYPE = "message_thread";
+	public static final String TYPE = "thread";
 
 	public MBThreadTrashRenderer(MBThread thread)
 		throws PortalException, SystemException {
