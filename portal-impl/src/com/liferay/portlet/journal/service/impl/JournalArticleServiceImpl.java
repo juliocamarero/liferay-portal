@@ -257,7 +257,8 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	public List<JournalArticle> getArticles(long groupId, long folderId)
 		throws SystemException {
 
-		return journalArticlePersistence.filterFindByG_F(groupId, folderId);
+		return journalArticlePersistence.filterFindByG_F_notST(
+			groupId, folderId, WorkflowConstants.STATUS_IN_TRASH);
 	}
 
 	public List<JournalArticle> getArticles(
@@ -265,8 +266,9 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			OrderByComparator obc)
 		throws SystemException {
 
-		return journalArticlePersistence.filterFindByG_F(
-			groupId, folderId, start, end, obc);
+		return journalArticlePersistence.filterFindByG_F_notST(
+			groupId, folderId, WorkflowConstants.STATUS_IN_TRASH, start, end,
+			obc);
 	}
 
 	public List<JournalArticle> getArticlesByArticleId(
@@ -317,7 +319,8 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	public int getArticlesCount(long groupId, long folderId)
 		throws SystemException {
 
-		return journalArticlePersistence.filterCountByG_F(groupId, folderId);
+		return journalArticlePersistence.filterCountByG_F_notST(
+			groupId, folderId, WorkflowConstants.STATUS_IN_TRASH);
 	}
 
 	public int getArticlesCountByArticleId(long groupId, String articleId)
