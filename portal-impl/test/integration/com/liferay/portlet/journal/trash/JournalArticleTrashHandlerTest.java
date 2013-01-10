@@ -35,6 +35,7 @@ import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.trash.BaseTrashHandlerTestCase;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -55,11 +56,6 @@ import org.junit.runner.RunWith;
 public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 
 	@Override
-	public void testTrashDuplicate() throws Exception {
-		Assert.assertTrue("This test does not apply yet", true);
-	}
-
-	@Override
 	public void testTrashParentAndDeleteParent() throws Exception {
 		Assert.assertTrue("This test does not apply yet", true);
 	}
@@ -70,7 +66,7 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
-	protected BaseModel<?> addBaseModel(
+	protected BaseModel<?> addBaseModelWithWorkflow(
 			BaseModel<?> parentBaseModel, boolean approved,
 			ServiceContext serviceContext)
 		throws Exception {
@@ -171,6 +167,13 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
+	protected String getBaseModelName(ClassedModel classedModel) {
+		JournalArticle article = (JournalArticle)classedModel;
+
+		return article.getArticleId();
+	}
+
+	@Override
 	protected int getBaseModelsNotInTrashCount(BaseModel<?> parentBaseModel)
 		throws Exception {
 
@@ -190,6 +193,15 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 		JournalArticle article = (JournalArticle)classedModel;
 
 		return article.getResourcePrimKey();
+	}
+
+	@Override
+	protected String getUniqueTitle(BaseModel<?> baseModel) {
+		JournalArticle article = (JournalArticle)baseModel;
+
+		String articleId = article.getArticleId();
+
+		return TrashUtil.getOriginalTitle(articleId);
 	}
 
 	@Override

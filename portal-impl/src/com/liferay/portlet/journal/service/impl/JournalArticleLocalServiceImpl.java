@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
@@ -111,6 +112,7 @@ import com.liferay.portlet.journal.util.comparator.ArticleVersionComparator;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.model.TrashVersion;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -1716,9 +1718,45 @@ public class JournalArticleLocalServiceImpl
 
 		workflowContext.put("articleVersions", (Serializable)articleVersions);
 
-		return updateStatus(
+		article = updateStatus(
 			userId, article.getId(), WorkflowConstants.STATUS_IN_TRASH,
 			workflowContext, new ServiceContext());
+
+		// Remove the existing index because we are changing the primary key of
+		// the Lucene's document (articleId)
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			JournalArticle.class);
+
+		indexer.delete(article);
+
+		TrashEntry trashEntry = trashEntryLocalService.getEntry(
+			JournalArticle.class.getName(), article.getResourcePrimKey());
+
+		String trashArticleId = TrashUtil.getTrashTitle(
+			trashEntry.getEntryId());
+
+		if ((articleVersions != null) && !articleVersions.isEmpty()) {
+			for (JournalArticle curArticleVersion : articleVersions) {
+				curArticleVersion.setArticleId(trashArticleId);
+
+				journalArticlePersistence.update(curArticleVersion);
+			}
+		}
+
+		JournalArticleResource articleResource =
+			journalArticleResourcePersistence.fetchByPrimaryKey(
+				article.getResourcePrimKey());
+
+		articleResource.setArticleId(trashArticleId);
+
+		journalArticleResourcePersistence.update(articleResource);
+
+		article.setArticleId(trashArticleId);
+
+		reindex(article);
+
+		return journalArticlePersistence.update(article);
 	}
 
 	public JournalArticle moveArticleToTrash(
@@ -1776,6 +1814,41 @@ public class JournalArticleLocalServiceImpl
 
 	public void restoreArticleFromTrash(long userId, JournalArticle article)
 		throws PortalException, SystemException {
+
+		// Remove the existing index because we are changing the primary key of
+		// the Lucene's document (articleId)
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			JournalArticle.class);
+
+		indexer.delete(article);
+
+		String trashArticleId = TrashUtil.getOriginalTitle(
+			article.getArticleId());
+
+		List<JournalArticle> articleVersions =
+			journalArticleLocalService.getArticles(
+				article.getGroupId(), article.getArticleId());
+
+		if ((articleVersions != null) && !articleVersions.isEmpty()) {
+			for (JournalArticle curArticleVersion : articleVersions) {
+				curArticleVersion.setArticleId(trashArticleId);
+
+				journalArticlePersistence.update(curArticleVersion);
+			}
+		}
+
+		article.setArticleId(trashArticleId);
+
+		journalArticlePersistence.update(article);
+
+		JournalArticleResource articleResource =
+			journalArticleResourcePersistence.fetchByPrimaryKey(
+				article.getResourcePrimKey());
+
+		articleResource.setArticleId(trashArticleId);
+
+		journalArticleResourcePersistence.update(articleResource);
 
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
 			JournalArticle.class.getName(), article.getResourcePrimKey());
@@ -2749,10 +2822,14 @@ public class JournalArticleLocalServiceImpl
 				journalArticlePersistence.update(curArticleVersion);
 			}
 
+			UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+			typeSettingsProperties.put("title", article.getArticleId());
+
 			trashEntryLocalService.addTrashEntry(
 				userId, article.getGroupId(), JournalArticle.class.getName(),
 				article.getResourcePrimKey(), oldArticleVersionStatus,
-				articleVersionStatusOVPs, null);
+				articleVersionStatusOVPs, typeSettingsProperties);
 
 			// Indexer
 
