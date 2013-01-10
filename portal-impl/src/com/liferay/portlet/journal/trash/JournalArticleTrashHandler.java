@@ -21,10 +21,14 @@ import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.journal.asset.JournalArticleAssetRenderer;
 import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.model.JournalArticleResource;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.util.JournalUtil;
+import com.liferay.portlet.trash.DuplicateEntryException;
+import com.liferay.portlet.trash.model.TrashEntry;
 
 import javax.portlet.PortletRequest;
 
@@ -37,6 +41,36 @@ import javax.portlet.PortletRequest;
 public class JournalArticleTrashHandler extends BaseTrashHandler {
 
 	public static final String CLASS_NAME = JournalArticle.class.getName();
+
+	@Override
+	public void checkDuplicateTrashEntry(
+			TrashEntry trashEntry, long containerModelId, String newName)
+		throws PortalException, SystemException {
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.getLatestArticle(
+				trashEntry.getClassPK());
+
+		String originalTitle = trashEntry.getTypeSettingsProperty("title");
+
+		JournalArticleResource articleResource =
+			JournalArticleResourceLocalServiceUtil.fetchArticleResource(
+				article.getGroupId(), originalTitle);
+
+		if (articleResource != null) {
+			DuplicateEntryException dee = new DuplicateEntryException();
+
+			JournalArticle duplicateArticle =
+				JournalArticleLocalServiceUtil.getArticle(
+					articleResource.getGroupId(), originalTitle);
+
+			dee.setDuplicateEntryId(duplicateArticle.getResourcePrimKey());
+			dee.setOldName(duplicateArticle.getArticleId());
+			dee.setTrashEntryId(trashEntry.getEntryId());
+
+			throw dee;
+		}
+	}
 
 	public void deleteTrashEntries(long[] classPKs, boolean checkPermission)
 		throws PortalException, SystemException {
@@ -107,6 +141,27 @@ public class JournalArticleTrashHandler extends BaseTrashHandler {
 		for (long classPK : classPKs) {
 			JournalArticleServiceUtil.restoreArticleFromTrash(classPK);
 		}
+	}
+
+	@Override
+	public void updateTitle(long classPK, String name)
+		throws PortalException, SystemException {
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.getLatestArticle(classPK);
+
+		article.setArticleId(name);
+
+		JournalArticleLocalServiceUtil.updateJournalArticle(article);
+
+		JournalArticleResource articleResource =
+			JournalArticleResourceLocalServiceUtil.getArticleResource(
+				article.getResourcePrimKey());
+
+		articleResource.setArticleId(name);
+
+		JournalArticleResourceLocalServiceUtil.updateJournalArticleResource(
+			articleResource);
 	}
 
 	@Override
