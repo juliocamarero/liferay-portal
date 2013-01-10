@@ -16,6 +16,9 @@ package com.liferay.portlet.journal.util;
 
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.PortalUtil;
@@ -130,6 +133,27 @@ public class JournalTestUtil {
 			serviceContext);
 	}
 
+	public static void addDynamicContent(
+		Element dynamicElement, String languageId, String value) {
+
+		Element dynamicContent = dynamicElement.addElement("dynamic-content");
+
+		dynamicContent.addAttribute("language-id", languageId);
+
+		dynamicContent.setText(value);
+	}
+
+	public static Element addDynamicElement(
+		Element element, String type, String name) {
+
+		Element dynamicElement = element.addElement("dynamic-element");
+
+		dynamicElement.addAttribute("name", name);
+		dynamicElement.addAttribute("type", type);
+
+		return dynamicElement;
+	}
+
 	public static JournalFolder addFolder(
 			long groupId, long parentFolderId, String name)
 		throws Exception {
@@ -146,6 +170,31 @@ public class JournalTestUtil {
 		return JournalFolderLocalServiceUtil.addFolder(
 			TestPropsValues.getUserId(), groupId, parentFolderId, name,
 			"This is a test folder.", serviceContext);
+	}
+
+	public static Document createDocument(
+		String availableLocales, String defaultLocale) {
+
+		Document document = SAXReaderUtil.createDocument();
+
+		Element rootElement = document.addElement("root");
+
+		rootElement.addAttribute("available-locales", availableLocales);
+		rootElement.addAttribute("default-locale", defaultLocale);
+		rootElement.addElement("request");
+
+		return document;
+	}
+
+	public static String getDefaultContent() {
+		Document document = createDocument("en_US", "en_US");
+
+		Element dynamicElement = addDynamicElement(
+			document.getRootElement(), "text", "name");
+
+		addDynamicContent(dynamicElement, "en_US", "Joe Bloggs");
+
+		return document.asXML();
 	}
 
 }
