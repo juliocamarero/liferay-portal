@@ -212,50 +212,6 @@
 			<%= trashRenderer.getSummary(locale) %>
 		</c:otherwise>
 	</c:choose>
-
-	<c:if test="<%= trashRenderer instanceof AssetRenderer %>">
-
-		<%
-		AssetRenderer assetRenderer = (AssetRenderer)trashRenderer;
-		%>
-
-		<c:if test="<%= !assetRenderer.getAssetRendererFactoryClassName().equals(DLFileEntryAssetRendererFactory.CLASS_NAME) %>">
-			<div class="asset-ratings">
-				<liferay-ui:ratings
-					className="<%= className %>"
-					classPK="<%= classPK %>"
-				/>
-			</div>
-
-			<%
-			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, classPK);
-			%>
-
-			<div class="asset-related-assets">
-				<liferay-ui:asset-links
-					assetEntryId="<%= assetEntry.getEntryId() %>"
-				/>
-			</div>
-
-			<c:if test="<%= Validator.isNotNull(assetRenderer.getDiscussionPath()) %>">
-				<portlet:actionURL var="discussionURL">
-					<portlet:param name="struts_action" value="/trash/edit_discussion" />
-				</portlet:actionURL>
-
-				<div class="asset-discussion">
-					<liferay-ui:discussion
-						className="<%= className %>"
-						classPK="<%= classPK %>"
-						formAction="<%= discussionURL %>"
-						formName='<%= "fm" + classPK %>'
-						redirect="<%= currentURL %>"
-						subject="<%= trashRenderer.getTitle(locale) %>"
-						userId="<%= assetEntry.getUserId() %>"
-					/>
-				</div>
-			</c:if>
-		</c:if>
-	</c:if>
 </div>
 
 <c:if test="<%= Validator.isNull(trashRenderer.renderActions(renderRequest, renderResponse)) %>">
