@@ -106,7 +106,7 @@ public class JournalTransformerTest {
 	public void testFTLTransformation() throws Exception {
 		Map<String, String> tokens = getTokens();
 
-		String xml = JournalTestUtil.getDefaultContent();
+		String xml = JournalTestUtil.getSampleStructuredContent();
 
 		String script = "${name.getData()} - ${viewMode}";
 
@@ -159,7 +159,7 @@ public class JournalTransformerTest {
 	public void testRegexTransformerListener() throws Exception {
 		Map<String, String> tokens = getTokens();
 
-		String xml = JournalTestUtil.getDefaultContent();
+		String xml = JournalTestUtil.getSampleStructuredContent();
 
 		String script = "Hello $name.getData(), Welcome to beta.sample.com.";
 
@@ -175,7 +175,7 @@ public class JournalTransformerTest {
 	public void testTokensTransformerListener() throws Exception {
 		Map<String, String> tokens = getTokens();
 
-		String xml = JournalTestUtil.getDefaultContent();
+		String xml = JournalTestUtil.getSampleStructuredContent();
 
 		String script = "@company_id@";
 
@@ -202,7 +202,7 @@ public class JournalTransformerTest {
 
 		tokens.put("article_resource_pk", "1");
 
-		String xml = JournalTestUtil.getDefaultContent();
+		String xml = JournalTestUtil.getSampleStructuredContent();
 
 		String script = "@view_counter@";
 
@@ -226,7 +226,7 @@ public class JournalTransformerTest {
 	public void testVMTransformation() throws Exception {
 		Map<String, String> tokens = getTokens();
 
-		String xml = JournalTestUtil.getDefaultContent();
+		String xml = JournalTestUtil.getSampleStructuredContent();
 
 		String script = "$name.getData()";
 

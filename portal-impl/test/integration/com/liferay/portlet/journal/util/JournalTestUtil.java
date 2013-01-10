@@ -30,6 +30,7 @@ import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUt
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
+import com.liferay.portlet.journal.model.JournalTemplateConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
 
@@ -96,6 +97,10 @@ public class JournalTestUtil {
 			serviceContext);
 	}
 
+	public static DDMStructure addDDMStructure() throws Exception {
+		return addDDMStructure(getSampleStructureXSD());
+	}
+
 	public static DDMStructure addDDMStructure(String xsd) throws Exception {
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 
@@ -110,6 +115,14 @@ public class JournalTestUtil {
 			TestPropsValues.getUserId(), TestPropsValues.getGroupId(),
 			PortalUtil.getClassNameId(JournalArticle.class.getName()), nameMap,
 			null, xsd, serviceContext);
+	}
+
+	public static DDMTemplate addDDMTemplate(long structureId)
+		throws Exception {
+
+		return addDDMTemplate(
+			structureId, getSampleTemplateXSL(),
+			JournalTemplateConstants.LANG_TYPE_VM);
 	}
 
 	public static DDMTemplate addDDMTemplate(
@@ -186,7 +199,7 @@ public class JournalTestUtil {
 		return document;
 	}
 
-	public static String getDefaultContent() {
+	public static String getSampleStructuredContent() {
 		Document document = createDocument("en_US", "en_US");
 
 		Element dynamicElement = addDynamicElement(
@@ -195,6 +208,21 @@ public class JournalTestUtil {
 		addDynamicContent(dynamicElement, "en_US", "Joe Bloggs");
 
 		return document.asXML();
+	}
+
+	public static String getSampleStructureXSD() {
+		Document document = SAXReaderUtil.createDocument();
+
+		Element rootElement = document.addElement("root");
+
+		addDynamicElement(rootElement, "text", "name");
+		addDynamicElement(rootElement, "text", "link");
+
+		return document.asXML();
+	}
+
+	public static String getSampleTemplateXSL() {
+		return "$name.getData()";
 	}
 
 }
