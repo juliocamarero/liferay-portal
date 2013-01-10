@@ -29,7 +29,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalTemplateConstants;
-import com.liferay.portlet.journal.service.BaseJournalServiceTestCase;
+import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.journal.util.JournalUtil;
 
 import java.util.Map;
@@ -48,7 +48,7 @@ import org.junit.runner.RunWith;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Transactional
-public class JournalTransformerTest extends BaseJournalServiceTestCase {
+public class JournalTransformerTest {
 
 	@Test
 	public void testContentTransformerListener() throws Exception {
@@ -61,11 +61,11 @@ public class JournalTransformerTest extends BaseJournalServiceTestCase {
 
 		String xsd = document.asXML();
 
-		DDMStructure ddmStructure = addDDMStructure(xsd);
+		DDMStructure ddmStructure = JournalTestUtil.addDDMStructure(xsd);
 
 		String xsl = "$name.getData()";
 
-		DDMTemplate ddmTemplate = addDDMTemplate(
+		DDMTemplate ddmTemplate = JournalTestUtil.addDDMTemplate(
 			ddmStructure.getStructureId(), xsl,
 			JournalTemplateConstants.LANG_TYPE_VM);
 
@@ -78,7 +78,7 @@ public class JournalTransformerTest extends BaseJournalServiceTestCase {
 
 		String xml = document.asXML();
 
-		JournalArticle article = addArticle(
+		JournalArticle article = JournalTestUtil.addArticle(
 			xml, ddmStructure.getStructureKey(), ddmTemplate.getTemplateKey());
 
 		Map<String, String> tokens = getTokens();
