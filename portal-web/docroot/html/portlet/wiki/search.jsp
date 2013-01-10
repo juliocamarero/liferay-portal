@@ -20,7 +20,6 @@
 String redirect = ParamUtil.getString(request, "redirect");
 
 WikiNode node = (WikiNode)request.getAttribute(WebKeys.WIKI_NODE);
-WikiPage wikiPage = null;
 
 long nodeId = BeanParamUtil.getLong(node, request, "nodeId");
 
@@ -33,6 +32,13 @@ if (node != null) {
 String keywords = ParamUtil.getString(request, "keywords");
 
 boolean createNewPage = true;
+
+PortletURL portletURL = renderResponse.createRenderURL();
+
+portletURL.setParameter("struts_action", "/wiki/search");
+portletURL.setParameter("redirect", redirect);
+portletURL.setParameter("nodeId", String.valueOf(nodeId));
+portletURL.setParameter("keywords", keywords);
 %>
 
 <liferay-portlet:renderURL varImpl="searchURL">
@@ -49,31 +55,12 @@ boolean createNewPage = true;
 		title="search"
 	/>
 
-	<%
-	PortletURL addPageURL = renderResponse.createRenderURL();
+	<liferay-ui:search-container
+		emptyResultsMessage='<%= LanguageUtil.format(pageContext, "no-pages-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>") %>'
+		iteratorURL="<%= portletURL %>"
+	>
 
-	addPageURL.setParameter("struts_action", "/wiki/edit_page");
-	addPageURL.setParameter("redirect", redirect);
-	addPageURL.setParameter("nodeId", String.valueOf(nodeId));
-	addPageURL.setParameter("title", keywords);
-	addPageURL.setParameter("editTitle", "1");
-
-	PortletURL portletURL = renderResponse.createRenderURL();
-
-	portletURL.setParameter("struts_action", "/wiki/search");
-	portletURL.setParameter("redirect", redirect);
-	portletURL.setParameter("nodeId", String.valueOf(nodeId));
-	portletURL.setParameter("keywords", keywords);
-
-	List<String> headerNames = new ArrayList<String>();
-
-	headerNames.add("#");
-	headerNames.add("wiki");
-	headerNames.add("page");
-
-	SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, portletURL, headerNames, LanguageUtil.format(pageContext, "no-pages-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>"));
-
-	try {
+		<%
 		Indexer indexer = IndexerRegistryUtil.getIndexer(WikiPage.class);
 
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
@@ -84,31 +71,22 @@ boolean createNewPage = true;
 		searchContext.setNodeIds(nodeIds);
 		searchContext.setStart(searchContainer.getStart());
 
-		Hits results = indexer.search(searchContext);
+		Hits resultsRows = indexer.search(searchContext);
+		%>
 
-		int total = results.getLength();
+		<liferay-ui:search-container-results
+			results="<%= ListUtil.fromArray(resultsRows.getDocs()) %>"
+			total="<%= resultsRows.getLength() %>"
+		/>
 
-		searchContainer.setTotal(total);
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.kernel.search.Document"
+			modelVar="document"
+		>
 
-		List resultRows = searchContainer.getResultRows();
-
-		for (int i = 0; i < results.getDocs().length; i++) {
-			Document doc = results.doc(i);
-
-			ResultRow row = new ResultRow(doc, i, i);
-
-			// Position
-
-			row.addText(searchContainer.getStart() + i + 1 + StringPool.PERIOD);
-
-			// Node and page
-
-			long curNodeId = GetterUtil.getLong(doc.get("nodeId"));
-			String title = doc.get("title");
-
-			if (title.equalsIgnoreCase(keywords)) {
-				createNewPage = false;
-			}
+			<%
+			long curNodeId = GetterUtil.getLong(document.get("nodeId"));
+			String title = document.get("title");
 
 			WikiNode curNode = null;
 
@@ -119,25 +97,31 @@ boolean createNewPage = true;
 				if (_log.isWarnEnabled()) {
 					_log.warn("Wiki search index is stale and contains node " + curNodeId);
 				}
-
-				continue;
 			}
+			%>
 
-			PortletURL rowURL = renderResponse.createRenderURL();
+			<liferay-ui:search-container-column-text
+				name="#"
+				value="<%= (index + 1) + StringPool.PERIOD %>"
+			/>
 
-			rowURL.setParameter("struts_action", "/wiki/view");
-			rowURL.setParameter("nodeName", node.getName());
-			rowURL.setParameter("title", title);
+			<portlet:actionURL var="rowURL">
+				<portlet:param name="struts_action" value="/wiki/view" />
+				<portlet:param name="nodeName" value="<%= node.getName() %>" />
+				<portlet:param name="title" value="<%= title %>" />
+			</portlet:actionURL>
 
-			row.addText(curNode.getName(), rowURL);
+			<liferay-ui:search-container-column-text
+				href="<%= rowURL %>"
+				name="wiki"
+				value='<%= (curNode != null) ? curNode.getName() : ""  %>'
+			/>
 
-			row.addText(title, rowURL);
-
-			// Add result row
-
-			resultRows.add(row);
-		}
-	%>
+			<liferay-ui:search-container-column-text
+				name="title"
+				value="<%= title %>"
+			/>
+		</liferay-ui:search-container-row>
 
 		<span class="aui-search-bar">
 			<aui:input inlineField="<%= true %>" label="" name="keywords" size="30" title="search-pages" type="text" value="<%= keywords %>" />
@@ -147,19 +131,20 @@ boolean createNewPage = true;
 
 		<br /><br />
 
+		<portlet:actionURL var="addPageURL">
+			<portlet:param name="struts_action" value="/wiki/edit_page" />
+			<portlet:param name="redirect" value="<%= redirect %>" />
+			<portlet:param name="nodeId" value="<%= String.valueOf(nodeId) %>" />
+			<portlet:param name="title" value="<%= keywords %>" />
+			<portlet:param name="editTitle" value="1" />
+		</portlet:actionURL>
+
 		<c:if test="<%= createNewPage %>">
 			<strong><aui:a cssClass="new-page" href="<%= addPageURL.toString() %>" label="create-a-new-page-on-this-topic" /></strong>
 		</c:if>
 
-		<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" type="more" />
-
-	<%
-	}
-	catch (Exception e) {
-		_log.error(e.getMessage());
-	}
-	%>
-
+		<liferay-ui:search-iterator type="more" />
+	</liferay-ui:search-container>
 </aui:form>
 
 <c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
