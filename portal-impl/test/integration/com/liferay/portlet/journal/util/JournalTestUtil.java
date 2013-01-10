@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.util;
 
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
@@ -30,6 +31,7 @@ import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUt
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
+import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.model.JournalTemplateConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
@@ -45,27 +47,43 @@ import java.util.Map;
 public class JournalTestUtil {
 
 	public static JournalArticle addArticle(
+			long groupId, String name, String content)
+		throws Exception {
+
+		return addArticle(
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, name,
+			content);
+	}
+
+	public static JournalArticle addArticle(
 			long groupId, long folderId, String name, String content)
 		throws Exception {
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
-		Locale englishLocale = new Locale("en", "US");
-
-		titleMap.put(englishLocale, name);
+		for (Locale locale : _locales) {
+			titleMap.put(locale, name.concat(LocaleUtil.toLanguageId(locale)));
+		}
 
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(3 + 6 * _locales.length);
 
 		sb.append("<?xml version=\"1.0\"?><root available-locales=");
-		sb.append("\"en_US\" default-locale=\"en_US\">");
-		sb.append("<static-content language-id=\"en_US\"><![CDATA[<p>");
-		sb.append(content);
-		sb.append("</p>]]>");
-		sb.append("</static-content></root>");
+		sb.append("\"en_US,es_ES,de_DE\" default-locale=\"en_US\">");
+
+		for (Locale locale : _locales) {
+			sb.append("<static-content language-id=\"");
+			sb.append(LocaleUtil.toLanguageId(locale));
+			sb.append("\"><![CDATA[<p>");
+			sb.append(content);
+			sb.append(LocaleUtil.toLanguageId(locale));
+			sb.append("</p>]]></static-content>");
+		}
+
+		sb.append("</root>");
 
 		return JournalArticleLocalServiceUtil.addArticle(
 			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
@@ -224,5 +242,29 @@ public class JournalTestUtil {
 	public static String getSampleTemplateXSL() {
 		return "$name.getData()";
 	}
+
+	public static JournalArticle updateArticle(
+			JournalArticle journalArticle, String title, String content)
+		throws Exception {
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		for (Locale locale : _locales) {
+			titleMap.put(locale, title.concat(LocaleUtil.toLanguageId(locale)));
+		}
+
+		return JournalArticleLocalServiceUtil.updateArticle(
+			journalArticle.getUserId(), journalArticle.getGroupId(),
+			journalArticle.getFolderId(), journalArticle.getArticleId(),
+			journalArticle.getVersion(), titleMap,
+			journalArticle.getDescriptionMap(), content,
+			journalArticle.getLayoutUuid(),
+			ServiceTestUtil.getServiceContext());
+	}
+
+	private static Locale[] _locales = {
+		new Locale("en", "US"), new Locale("es", "ES"),
+		new Locale("de", "DE")
+	};
 
 }
