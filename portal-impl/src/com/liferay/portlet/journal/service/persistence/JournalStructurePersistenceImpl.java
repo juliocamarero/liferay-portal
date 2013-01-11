@@ -5052,12 +5052,15 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 			new Object[] {
-				journalStructure.getUuid(), journalStructure.getGroupId()
+				journalStructure.getUuid(),
+				Long.valueOf(journalStructure.getGroupId())
 			}, journalStructure);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_S,
 			new Object[] {
-				journalStructure.getGroupId(), journalStructure.getStructureId()
+				Long.valueOf(journalStructure.getGroupId()),
+				
+			journalStructure.getStructureId()
 			}, journalStructure);
 
 		journalStructure.resetOriginalValues();
@@ -5136,7 +5139,8 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 	protected void cacheUniqueFindersCache(JournalStructure journalStructure) {
 		if (journalStructure.isNew()) {
 			Object[] args = new Object[] {
-					journalStructure.getUuid(), journalStructure.getGroupId()
+					journalStructure.getUuid(),
+					Long.valueOf(journalStructure.getGroupId())
 				};
 
 			FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -5145,7 +5149,8 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 				journalStructure);
 
 			args = new Object[] {
-					journalStructure.getGroupId(),
+					Long.valueOf(journalStructure.getGroupId()),
+					
 					journalStructure.getStructureId()
 				};
 
@@ -5161,7 +5166,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						journalStructure.getUuid(),
-						journalStructure.getGroupId()
+						Long.valueOf(journalStructure.getGroupId())
 					};
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
@@ -5173,7 +5178,8 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			if ((journalStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_FETCH_BY_G_S.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						journalStructure.getGroupId(),
+						Long.valueOf(journalStructure.getGroupId()),
+						
 						journalStructure.getStructureId()
 					};
 
@@ -5189,7 +5195,8 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		JournalStructureModelImpl journalStructureModelImpl = (JournalStructureModelImpl)journalStructure;
 
 		Object[] args = new Object[] {
-				journalStructure.getUuid(), journalStructure.getGroupId()
+				journalStructure.getUuid(),
+				Long.valueOf(journalStructure.getGroupId())
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -5199,7 +5206,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
 			args = new Object[] {
 					journalStructureModelImpl.getOriginalUuid(),
-					journalStructureModelImpl.getOriginalGroupId()
+					Long.valueOf(journalStructureModelImpl.getOriginalGroupId())
 				};
 
 			FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
@@ -5207,7 +5214,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		}
 
 		args = new Object[] {
-				journalStructure.getGroupId(), journalStructure.getStructureId()
+				Long.valueOf(journalStructure.getGroupId()),
+				
+				journalStructure.getStructureId()
 			};
 
 		FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_S, args);
@@ -5216,7 +5225,8 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		if ((journalStructureModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_S.getColumnBitmask()) != 0) {
 			args = new Object[] {
-					journalStructureModelImpl.getOriginalGroupId(),
+					Long.valueOf(journalStructureModelImpl.getOriginalGroupId()),
+					
 					journalStructureModelImpl.getOriginalStructureId()
 				};
 
@@ -5254,7 +5264,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 	 */
 	public JournalStructure remove(long id)
 		throws NoSuchStructureException, SystemException {
-		return remove((Serializable)id);
+		return remove(Long.valueOf(id));
 	}
 
 	/**
@@ -5396,7 +5406,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						journalStructureModelImpl.getOriginalUuid(),
-						journalStructureModelImpl.getOriginalCompanyId()
+						Long.valueOf(journalStructureModelImpl.getOriginalCompanyId())
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -5405,7 +5415,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 
 				args = new Object[] {
 						journalStructureModelImpl.getUuid(),
-						journalStructureModelImpl.getCompanyId()
+						Long.valueOf(journalStructureModelImpl.getCompanyId())
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C, args);
@@ -5416,14 +5426,16 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			if ((journalStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						journalStructureModelImpl.getOriginalGroupId()
+						Long.valueOf(journalStructureModelImpl.getOriginalGroupId())
 					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 					args);
 
-				args = new Object[] { journalStructureModelImpl.getGroupId() };
+				args = new Object[] {
+						Long.valueOf(journalStructureModelImpl.getGroupId())
+					};
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
@@ -5473,7 +5485,8 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			if ((journalStructureModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						journalStructureModelImpl.getOriginalGroupId(),
+						Long.valueOf(journalStructureModelImpl.getOriginalGroupId()),
+						
 						journalStructureModelImpl.getOriginalParentStructureId()
 					};
 
@@ -5482,7 +5495,8 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 					args);
 
 				args = new Object[] {
-						journalStructureModelImpl.getGroupId(),
+						Long.valueOf(journalStructureModelImpl.getGroupId()),
+						
 						journalStructureModelImpl.getParentStructureId()
 					};
 

@@ -162,7 +162,7 @@ public class JournalFolderModelImpl extends BaseModelImpl<JournalFolder>
 	}
 
 	public Serializable getPrimaryKeyObj() {
-		return _folderId;
+		return new Long(_folderId);
 	}
 
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {

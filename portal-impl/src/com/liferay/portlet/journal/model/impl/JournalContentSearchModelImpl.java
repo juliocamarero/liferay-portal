@@ -102,7 +102,7 @@ public class JournalContentSearchModelImpl extends BaseModelImpl<JournalContentS
 	}
 
 	public Serializable getPrimaryKeyObj() {
-		return _contentSearchId;
+		return new Long(_contentSearchId);
 	}
 
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {

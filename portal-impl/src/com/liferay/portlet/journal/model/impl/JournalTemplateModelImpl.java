@@ -183,7 +183,7 @@ public class JournalTemplateModelImpl extends BaseModelImpl<JournalTemplate>
 	}
 
 	public Serializable getPrimaryKeyObj() {
-		return _id;
+		return new Long(_id);
 	}
 
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
