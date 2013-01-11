@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
@@ -132,13 +131,6 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 
 		journalArticleLocalService.deleteArticle(
 			groupId, articleId, version, articleURL, serviceContext);
-	}
-
-	public void deleteArticle(
-			long groupId, String articleId, ServiceContext serviceContext)
-		throws PortalException, SystemException {
-
-		deleteArticle(groupId, articleId, StringPool.BLANK, serviceContext);
 	}
 
 	public void deleteArticle(
