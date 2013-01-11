@@ -990,7 +990,7 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 			}
 
 			if (defaultFileEntryTypeId ==
-				dlFileEntryType.getFileEntryTypeId()) {
+					dlFileEntryType.getFileEntryTypeId()) {
 
 				defaultFileEntryTypeUuid = dlFileEntryType.getUuid();
 			}
@@ -999,7 +999,6 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 				exportFileEntryType(
 					portletDataContext, fileEntryTypesElement, dlFileEntryType);
 			}
-
 		}
 
 		folderElement.addAttribute(
@@ -1706,21 +1705,23 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 				fileEntryTypeUuid, portletDataContext.getScopeGroupId());
 
 			if (dlFileEntryType == null) {
+				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+					portletDataContext.getCompanyId());
 
-				if (fileEntryTypeUuid.equals("@basic_document@")) {
-					dlFileEntryType = DLFileEntryTypeLocalServiceUtil.
-						fetchDLFileEntryType(0);
-				}
-				else {
-					dlFileEntryType = DLFileEntryTypeUtil.fetchByUUID_G(
-						fileEntryTypeUuid,GroupLocalServiceUtil.getCompanyGroup(
-						folder.getCompanyId()).getGroupId());
-				}
+				dlFileEntryType = DLFileEntryTypeUtil.fetchByUUID_G(
+					fileEntryTypeUuid, companyGroup.getGroupId());
 			}
 
 			if (dlFileEntryType == null) {
 				dlFileEntryType = DLFileEntryTypeUtil.fetchByUUID_G(
 					fileEntryTypeUuid, 0);
+			}
+
+			if ((dlFileEntryType == null) &&
+				fileEntryTypeUuid.equals("@basic_document@")) {
+
+				dlFileEntryType =
+					DLFileEntryTypeLocalServiceUtil.fetchDLFileEntryType(0);
 			}
 
 			if (dlFileEntryType == null) {
@@ -1737,18 +1738,16 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		if (!fileEntryTypeIds.isEmpty()) {
 			DLFolder dlFolder = (DLFolder)folder.getModel();
 
-			if (Validator.isNotNull(defaultFileEntryTypeId)){
+			if (Validator.isNotNull(defaultFileEntryTypeId)) {
 				dlFolder.setDefaultFileEntryTypeId(defaultFileEntryTypeId);
-			}
 
-			if (!dlFolder.getOverrideFileEntryTypes()){
 				dlFolder.setOverrideFileEntryTypes(true);
-			}
 
-			DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
+				DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
+			}
 
 			DLFileEntryTypeLocalServiceUtil.updateFolderFileEntryTypes(
-				dlFolder, fileEntryTypeIds,	defaultFileEntryTypeId,
+				dlFolder, fileEntryTypeIds, defaultFileEntryTypeId,
 				serviceContext);
 		}
 	}
