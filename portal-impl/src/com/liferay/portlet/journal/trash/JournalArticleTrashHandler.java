@@ -47,7 +47,7 @@ public class JournalArticleTrashHandler extends BaseTrashHandler {
 
 			if (checkPermission) {
 				JournalArticleServiceUtil.deleteArticle(
-					article.getGroupId(), article.getArticleId(), null);
+					article.getGroupId(), article.getArticleId(), null, null);
 			}
 			else {
 				JournalArticleLocalServiceUtil.deleteArticle(
