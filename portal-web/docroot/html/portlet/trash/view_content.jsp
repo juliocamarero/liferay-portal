@@ -212,50 +212,6 @@
 			<%= trashRenderer.getSummary(locale) %>
 		</c:otherwise>
 	</c:choose>
-
-	<c:if test="<%= trashRenderer instanceof AssetRenderer %>">
-
-		<%
-		AssetRenderer assetRenderer = (AssetRenderer)trashRenderer;
-		%>
-
-		<c:if test="<%= !assetRenderer.getAssetRendererFactoryClassName().equals(DLFileEntryAssetRendererFactory.CLASS_NAME) %>">
-			<div class="asset-ratings">
-				<liferay-ui:ratings
-					className="<%= className %>"
-					classPK="<%= classPK %>"
-				/>
-			</div>
-
-			<%
-			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, classPK);
-			%>
-
-			<div class="asset-related-assets">
-				<liferay-ui:asset-links
-					assetEntryId="<%= assetEntry.getEntryId() %>"
-				/>
-			</div>
-
-			<c:if test="<%= Validator.isNotNull(assetRenderer.getDiscussionPath()) %>">
-				<portlet:actionURL var="discussionURL">
-					<portlet:param name="struts_action" value="/trash/edit_discussion" />
-				</portlet:actionURL>
-
-				<div class="asset-discussion">
-					<liferay-ui:discussion
-						className="<%= className %>"
-						classPK="<%= classPK %>"
-						formAction="<%= discussionURL %>"
-						formName='<%= "fm" + classPK %>'
-						redirect="<%= currentURL %>"
-						subject="<%= trashRenderer.getTitle(locale) %>"
-						userId="<%= assetEntry.getUserId() %>"
-					/>
-				</div>
-			</c:if>
-		</c:if>
-	</c:if>
 </div>
 
 <c:if test="<%= Validator.isNull(trashRenderer.renderActions(renderRequest, renderResponse)) %>">
@@ -283,24 +239,26 @@
 					}
 				);
 
-				<portlet:actionURL var="deleteEntryURL">
-					<portlet:param name="struts_action" value="/trash/edit_entry" />
-					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
-					<portlet:param name="redirect" value="<%= redirect %>" />
-					<portlet:param name="trashEntryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
-				</portlet:actionURL>
+				<c:if test="<%= trashHandler.isDeletable() %>">
+					<portlet:actionURL var="deleteEntryURL">
+						<portlet:param name="struts_action" value="/trash/edit_entry" />
+						<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+						<portlet:param name="redirect" value="<%= redirect %>" />
+						<portlet:param name="trashEntryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
+					</portlet:actionURL>
 
-				entryToolbarChildren.push(
-					{
-						handler: function(event) {
-							if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
-								Liferay.fire('<portlet:namespace />checkEntry', {trashEntryId: <%= entry.getEntryId() %>, uri: '<%= deleteEntryURL.toString() %>'});
-							}
-						},
-						icon: 'delete',
-						label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>'
-					}
-				);
+					entryToolbarChildren.push(
+						{
+							handler: function(event) {
+								if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
+									submitForm(document.hrefFm, '<%= deleteEntryURL.toString() %>');
+								}
+							},
+							icon: 'delete',
+							label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>'
+						}
+					);
+				</c:if>
 			</c:when>
 			<c:otherwise>
 				<c:if test="<%= trashHandler.isMovable() %>">
@@ -323,26 +281,27 @@
 					);
 				</c:if>
 
-				<portlet:actionURL var="deleteEntryURL">
-					<portlet:param name="struts_action" value="/trash/edit_entry" />
-					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
-					<portlet:param name="redirect" value="<%= redirect %>" />
-					<portlet:param name="className" value="<%= trashRenderer.getClassName() %>" />
-					<portlet:param name="classPK" value="<%= String.valueOf(trashRenderer.getClassPK()) %>" />
-				</portlet:actionURL>
+				<c:if test="<%= trashHandler.isDeletable() %>">
+					<portlet:actionURL var="deleteEntryURL">
+						<portlet:param name="struts_action" value="/trash/edit_entry" />
+						<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+						<portlet:param name="redirect" value="<%= redirect %>" />
+						<portlet:param name="className" value="<%= trashRenderer.getClassName() %>" />
+						<portlet:param name="classPK" value="<%= String.valueOf(trashRenderer.getClassPK()) %>" />
+					</portlet:actionURL>
 
-				entryToolbarChildren.push(
-					{
-						handler: function(event) {
-							if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
-								location.href = '<%= deleteEntryURL %>';
-							}
-						},
-						icon: 'delete',
-						label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>'
-					}
-				);
-
+					entryToolbarChildren.push(
+						{
+							handler: function(event) {
+								if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
+									submitForm(document.hrefFm, '<%= deleteEntryURL.toString() %>');
+								}
+							},
+							icon: 'delete',
+							label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>'
+						}
+					);
+				</c:if>
 			</c:otherwise>
 		</c:choose>
 
