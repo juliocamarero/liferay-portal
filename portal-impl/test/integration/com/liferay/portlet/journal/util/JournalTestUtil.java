@@ -18,8 +18,8 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.PortalUtil;
@@ -45,15 +45,6 @@ import java.util.Map;
  * @author Marcellus Tavares
  */
 public class JournalTestUtil {
-
-	public static JournalArticle addArticle(
-			long groupId, String name, String content)
-		throws Exception {
-
-		return addArticle(
-			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, name,
-			content);
-	}
 
 	public static JournalArticle addArticle(
 			long groupId, long folderId, String name, String content)
@@ -91,6 +82,15 @@ public class JournalTestUtil {
 			"general", null, null, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true,
 			0, 0, 0, 0, 0, true, false, false, null, null, null, null,
 			serviceContext);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, String name, String content)
+		throws Exception {
+
+		return addArticle(
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, name,
+			content);
 	}
 
 	public static JournalArticle addArticle(
