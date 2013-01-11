@@ -111,7 +111,7 @@ public class PasswordPolicyServiceImpl extends PasswordPolicyServiceBaseImpl {
 			lockout, maxFailure, lockoutDuration, resetFailureCount,
 			resetTicketMaxAge);
 	}
-	
+
 	public PasswordPolicy updatePasswordPolicy(
 			long passwordPolicyId, String name, String description,
 			boolean changeable, boolean changeRequired, long minAge,

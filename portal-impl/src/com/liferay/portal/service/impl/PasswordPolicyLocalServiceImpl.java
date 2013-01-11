@@ -331,7 +331,7 @@ public class PasswordPolicyLocalServiceImpl
 			long lockoutDuration, long resetFailureCount,
 			long resetTicketMaxAge)
 		throws PortalException, SystemException {
-		
+
 		return updatePasswordPolicy(
 			passwordPolicyId, name, description, changeable, changeRequired,
 			minAge, checkSyntax, allowDictionaryWords, minAlphanumeric,
@@ -340,14 +340,14 @@ public class PasswordPolicyLocalServiceImpl
 			lockout, maxFailure, lockoutDuration, resetFailureCount,
 			resetTicketMaxAge);
 	}
-	
+
 	public PasswordPolicy updatePasswordPolicy(
 			long passwordPolicyId, String name, String description,
 			boolean changeable, boolean changeRequired, long minAge,
 			boolean checkSyntax, boolean allowDictionaryWords,
 			int minAlphanumeric, int minLength, int minLowerCase,
 			int minNumbers, int minSymbols, int minUpperCase, String regex,
-			boolean history, int historyCount, boolean expireable, long maxAge, 
+			boolean history, int historyCount, boolean expireable, long maxAge,
 			long warningTime, int graceLimit, boolean lockout, int maxFailure,
 			long lockoutDuration, long resetFailureCount,
 			long resetTicketMaxAge)
