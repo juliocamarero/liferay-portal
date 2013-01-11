@@ -834,12 +834,12 @@ public class Validator {
 	}
 
 	/**
-	 * Returns <code>true</code> if the string is a valid IPv4 or IPv6
-	 * IP address.
+	 * Returns <code>true</code> if the string is a valid IPv4 or IPv6 IP
+	 * address.
 	 *
 	 * @param  ipAddress the string to check
-	 * @return <code>true</code> if the string is an IPv4 or IPv6 IP address;
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if the string is a valid IPv4 or IPv6 IP
+	 *         address; <code>false</code> otherwise
 	 */
 	public static boolean isIPAddress(String ipAddress) {
 		if (isIPv4Address(ipAddress) || isIPv6Address(ipAddress)) {
@@ -853,7 +853,7 @@ public class Validator {
 	 * Returns <code>true</code> if the string is a valid IPv4 IP address.
 	 *
 	 * @param  ipAddress the string to check
-	 * @return <code>true</code> if the string is an IPv4 IP address;
+	 * @return <code>true</code> if the string is a valid IPv4 IP address;
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean isIPv4Address(String ipAddress) {
@@ -866,7 +866,7 @@ public class Validator {
 	 * Returns <code>true</code> if the string is a valid IPv6 IP address.
 	 *
 	 * @param  ipAddress the string to check
-	 * @return <code>true</code> if the string is an IPv6 IP address;
+	 * @return <code>true</code> if the string is a valid IPv6 IP address;
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean isIPv6Address(String ipAddress) {
