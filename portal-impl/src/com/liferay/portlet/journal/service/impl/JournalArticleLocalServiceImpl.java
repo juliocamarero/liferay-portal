@@ -1892,7 +1892,7 @@ public class JournalArticleLocalServiceImpl
 			int end, OrderByComparator obc)
 		throws SystemException {
 
-		return journalArticleFinder.findByC_G_F_C_A_V_T_D_C_T_S_T_D_S_R(
+		return journalArticleFinder.findByC_G_F_C_notS_A_V_T_D_C_T_S_T_D_S_R(
 			companyId, groupId, folderIds, classNameId, articleId, version,
 			title, description, content, type, structureId, templateId,
 			displayDateGT, displayDateLT, status, reviewDate, andOperator,
@@ -1908,7 +1908,7 @@ public class JournalArticleLocalServiceImpl
 			boolean andOperator, int start, int end, OrderByComparator obc)
 		throws SystemException {
 
-		return journalArticleFinder.findByC_G_F_C_A_V_T_D_C_T_S_T_D_S_R(
+		return journalArticleFinder.findByC_G_F_C_notS_A_V_T_D_C_T_S_T_D_S_R(
 			companyId, groupId, folderIds, classNameId, articleId, version,
 			title, description, content, type, structureIds, templateIds,
 			displayDateGT, displayDateLT, status, reviewDate, andOperator,
@@ -2037,7 +2037,7 @@ public class JournalArticleLocalServiceImpl
 			int status, Date reviewDate, boolean andOperator)
 		throws SystemException {
 
-		return journalArticleFinder.countByC_G_F_C_A_V_T_D_C_T_S_T_D_S_R(
+		return journalArticleFinder.countByC_G_F_C_notS_A_V_T_D_C_T_S_T_D_S_R(
 			companyId, groupId, folderIds, classNameId, articleId, version,
 			title, description, content, type, structureId, templateId,
 			displayDateGT, displayDateLT, status, reviewDate, andOperator);
@@ -2052,7 +2052,7 @@ public class JournalArticleLocalServiceImpl
 			boolean andOperator)
 		throws SystemException {
 
-		return journalArticleFinder.countByC_G_F_C_A_V_T_D_C_T_S_T_D_S_R(
+		return journalArticleFinder.countByC_G_F_C_notS_A_V_T_D_C_T_S_T_D_S_R(
 			companyId, groupId, folderIds, classNameId, articleId, version,
 			title, description, content, type, structureIds, templateIds,
 			displayDateGT, displayDateLT, status, reviewDate, andOperator);
