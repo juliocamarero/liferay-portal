@@ -34,6 +34,8 @@ serverURL.setParameter("struts_action", "/admin/view");
 serverURL.setParameter("tabs1", tabs1);
 serverURL.setParameter("tabs2", tabs2);
 serverURL.setParameter("tabs3", tabs3);
+
+String keywords = ParamUtil.getString(request, "keywords");
 %>
 
 <liferay-ui:message key="uptime" />:
@@ -95,11 +97,6 @@ serverURL.setParameter("tabs3", tabs3);
 						</aui:button-row>
 					</c:when>
 					<c:otherwise>
-
-						<%
-						String keywords = ParamUtil.getString(request, "keywords");
-						%>
-
 						<span class="aui-search-bar">
 							<aui:input inlineField="<%= true %>" label="" name="keywords" title="search-categories" type="text" value="<%= keywords %>" />
 
@@ -223,10 +220,6 @@ serverURL.setParameter("tabs3", tabs3);
 					portletURL="<%= serverURL %>"
 				/>
 
-				<%
-				String keywords = ParamUtil.getString(request, "keywords");
-				%>
-
 				<span class="aui-search-bar">
 					<aui:input inlineField="<%= true %>" label="" name="keywords" title="search-properties" type="text" value="<%= keywords %>" />
 
@@ -236,16 +229,16 @@ serverURL.setParameter("tabs3", tabs3);
 				<br /><br />
 
 				<%
-				Properties props;
 				String emptyResultsMessage;
+				Properties properties;
 
 				if (tabs3.equals("portal-properties")) {
-					props = PropsUtil.getProperties();
 					emptyResultsMessage = "no-portal-properties-were-found-that-matched-the-keywords";
+					properties = PropsUtil.getProperties();
 				}
 				else {
-					props = System.getProperties();
 					emptyResultsMessage = "no-system-properties-were-found-that-matched-the-keywords";
+					properties = System.getProperties();
 				}
 
 				List<String> headerNames = new ArrayList<String>();
@@ -257,13 +250,9 @@ serverURL.setParameter("tabs3", tabs3);
 
 				Map portalProps = new TreeMap();
 
-				Enumeration propsKeys = props.keys();
-
-				while( propsKeys.hasMoreElements()) {
-					Object nextProp = propsKeys.nextElement();
-
-					String propKey = (nextProp instanceof String) ? (String) nextProp : (nextProp != null) ? nextProp.toString() : StringPool.BLANK;
-					String propValue = props.getProperty(propKey, StringPool.BLANK);
+				for (Object key : properties.keySet()) {
+					String propKey = (String)key;
+					String propValue = properties.getProperty(propKey, StringPool.BLANK);
 
 					if (Validator.isNull(keywords) || propKey.contains(keywords) || propValue.contains(keywords)) {
 						portalProps.put(propKey, propValue);
@@ -303,7 +292,6 @@ serverURL.setParameter("tabs3", tabs3);
 				%>
 
 				<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
-
 			</c:when>
 			<c:when test='<%= tabs2.equals("captcha") %>'>
 				<liferay-ui:error key="reCaptchaPrivateKey" message="the-recaptcha-private-key-is-not-valid" />
