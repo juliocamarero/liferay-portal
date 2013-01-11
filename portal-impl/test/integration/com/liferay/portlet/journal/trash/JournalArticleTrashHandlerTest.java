@@ -35,12 +35,12 @@ import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.trash.BaseTrashHandlerTestCase;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import com.liferay.portlet.trash.util.TrashUtil;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 
