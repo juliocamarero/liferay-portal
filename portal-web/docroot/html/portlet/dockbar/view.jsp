@@ -37,14 +37,16 @@ for (String portletId : PropsValues.DOCKBAR_ADD_PORTLETS) {
 
 boolean hasLayoutCustomizePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE);
 boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.UPDATE);
-boolean hasLayoutAddPagePermission = GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) && !group.isLayoutPrototype();
 
-if (hasLayoutAddPagePermission && layout != null && layout.getParentLayoutId() > 0) {
-    Layout parentLayout =  LayoutLocalServiceUtil.getLayout(layout.getGroupId(), layout.isPrivateLayout(), layout.getParentLayoutId());
-    hasLayoutAddPagePermission = LayoutPermissionUtil.contains(permissionChecker, parentLayout, ActionKeys.UPDATE);
+Layout parentLayout = null;
+
+if (layout != null) {
+	long parentLayoutId = layout.getParentLayoutId();
+
+	if (parentLayoutId != 0) {
+		parentLayout = LayoutLocalServiceUtil.getLayout(parentLayoutId);
+	}
 }
-
-boolean hasAddPermission = hasLayoutAddPagePermission && !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission));
 %>
 
 <div class="dockbar" data-namespace="<portlet:namespace />" id="dockbar">
@@ -53,7 +55,7 @@ boolean hasAddPermission = hasLayoutAddPagePermission && !group.isControlPanel()
 			<a href="javascript:;"><img alt='<liferay-ui:message key="pin-the-dockbar" />' src="<%= HtmlUtil.escape(themeDisplay.getPathThemeImages()) %>/spacer.png" /></a>
 		</li>
 
-        <c:if test="<%= hasAddPermission %>">
+		<c:if test="<%= !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && ((parentLayout == null) || (parentLayout != null && LayoutPermissionUtil.contains(permissionChecker, parentLayout, ActionKeys.UPDATE))) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
 			<li class="add-content has-submenu" id="<portlet:namespace />addContent">
 				<a class="menu-button" href="javascript:;">
 					<span>
