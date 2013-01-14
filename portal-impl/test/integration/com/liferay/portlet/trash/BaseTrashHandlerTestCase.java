@@ -277,7 +277,7 @@ public abstract class BaseTrashHandlerTestCase {
 	protected int searchBaseModelsCount(Class<?> clazz, long groupId)
 		throws Exception {
 
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
+		Thread.sleep(2000 * TestPropsValues.JUNIT_DELAY_FACTOR);
 
 		Indexer indexer = IndexerRegistryUtil.getIndexer(clazz);
 
@@ -294,7 +294,7 @@ public abstract class BaseTrashHandlerTestCase {
 			String keywords, ServiceContext serviceContext)
 		throws Exception {
 
-		Thread.sleep(1000 * TestPropsValues.JUNIT_DELAY_FACTOR);
+		Thread.sleep(2000 * TestPropsValues.JUNIT_DELAY_FACTOR);
 
 		Hits results = TrashEntryLocalServiceUtil.search(
 			serviceContext.getCompanyId(), serviceContext.getScopeGroupId(),
