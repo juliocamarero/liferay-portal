@@ -294,7 +294,7 @@ if ((row == null) && (portletName.equals(PortletKeys.DOCUMENT_LIBRARY_DISPLAY) |
 				</c:otherwise>
 			</c:choose>
 
-			<c:if test="<%= DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.SUBSCRIBE) %>">
+			<c:if test="<%= DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.SUBSCRIBE) && ((folder == null) || folder.isSupportsSubscribing()) %>">
 				<c:choose>
 					<c:when test="<%= (folderSubscriptionClassPKs != null) && (folderSubscriptionClassPKs.contains(folderId) || ((folderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) && folderSubscriptionClassPKs.contains(scopeGroupId))) %>">
 						<portlet:actionURL var="unsubscribeURL">
