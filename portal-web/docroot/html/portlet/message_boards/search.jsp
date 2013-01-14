@@ -87,7 +87,7 @@ String keywords = ParamUtil.getString(request, "keywords");
 		%>
 
 		<liferay-ui:search-container-results
-			results="<%= ListUtil.fromArray(resultsRows.getDocs()) %>"
+			results="<%= MBUtil.getEntries(resultsRows) %>"
 			total="<%= resultsRows.getLength() %>"
 		/>
 
@@ -97,18 +97,9 @@ String keywords = ParamUtil.getString(request, "keywords");
 		>
 
 			<%
-			long categoryId = GetterUtil.getLong(document.get("categoryId"));
+			long categoryId = GetterUtil.getLong(document.get(Field.CATEGORY_ID));
 
-			MBCategory category = null;
-
-			try {
-				category = MBCategoryLocalServiceUtil.getCategory(categoryId);
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Message boards search index is stale and contains category " + categoryId);
-				}
-			}
+			MBCategory category = MBCategoryLocalServiceUtil.getCategory(categoryId);
 
 			PortletURL categoryUrl = renderResponse.createRenderURL();
 
@@ -119,65 +110,20 @@ String keywords = ParamUtil.getString(request, "keywords");
 			// Thread and message
 
 			long curThreadId = GetterUtil.getLong(document.get("threadId"));
-			long messageId = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
 
-			MBThread thread = null;
+			MBThread thread = MBThreadLocalServiceUtil.getThread(curThreadId);
 
-			try {
-				thread = MBThreadLocalServiceUtil.getThread(curThreadId);
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Message boards search index is stale and contains thread " + curThreadId);
-				}
-			}
-
-			MBMessage message = null;
-
-			try {
-				message = MBMessageLocalServiceUtil.getMessage(messageId);
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Message boards search index is stale and contains message " + messageId);
-				}
-			}
-
-			PortletURL rowURL = renderResponse.createRenderURL();
-
-			rowURL.setParameter("struts_action", "/message_boards/view_message");
-			rowURL.setParameter("redirect", currentURL);
-			rowURL.setParameter("messageId", String.valueOf(messageId));
+			String classNameId = document.get(Field.ENTRY_CLASS_NAME);
 			%>
 
-			<liferay-ui:search-container-column-text
-				name="#"
-				value="<%= (index + 1) + StringPool.PERIOD %>"
-			/>
-
-			<liferay-ui:search-container-column-text
-				href="<%= categoryUrl %>"
-				name="category"
-				value="<%= HtmlUtil.escape(category.getName()) %>"
-			/>
-
-			<liferay-ui:search-container-column-text
-				href="<%= rowURL %>"
-				name="message"
-				value="<%= HtmlUtil.escape(message.getSubject()) %>"
-			/>
-
-			<liferay-ui:search-container-column-text
-				href="<%= rowURL %>"
-				name="thread-posts"
-				value="<%= String.valueOf(thread.getMessageCount()) %>"
-			/>
-
-			<liferay-ui:search-container-column-text
-				href="<%= rowURL %>"
-				name="thread-views"
-				value="<%= String.valueOf(thread.getViewCount()) %>"
-			/>
+			<c:choose>
+				<c:when test="<%= classNameId.equals(DLFileEntry.class.getName()) %>">
+					<%@ include file="/html/portlet/message_boards/search_columns_file_entry.jspf" %>
+				</c:when>
+				<c:when test="<%= classNameId.equals(MBMessage.class.getName()) %>">
+					<%@ include file="/html/portlet/message_boards/search_columns_message.jspf" %>
+				</c:when>
+			</c:choose>
 
 		</liferay-ui:search-container-row>
 

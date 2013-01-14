@@ -18,7 +18,12 @@ import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.util.DiffHtmlUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -40,6 +45,7 @@ import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletURLUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.wiki.PageContentException;
 import com.liferay.portlet.wiki.WikiFormatException;
 import com.liferay.portlet.wiki.engines.WikiEngine;
@@ -47,6 +53,7 @@ import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.WikiPageDisplay;
 import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
+import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.permission.WikiNodePermission;
 import com.liferay.portlet.wiki.util.comparator.PageCreateDateComparator;
 import com.liferay.portlet.wiki.util.comparator.PageTitleComparator;
@@ -285,6 +292,41 @@ public class WikiUtil {
 				PropsUtil.get(
 					PropsKeys.WIKI_EMAIL_PAGE_UPDATED_SUBJECT_PREFIX));
 		}
+	}
+
+	public static List<Document> getEntries(Hits hits) {
+		List<Document> entries = new ArrayList<Document>();
+
+		for (Document document : hits.getDocs()) {
+			String entryClassName = GetterUtil.getString(
+				document.get(Field.ENTRY_CLASS_NAME));
+			long entryClassPK = GetterUtil.getLong(
+				document.get(Field.ENTRY_CLASS_PK));
+
+			long nodeId = GetterUtil.getLong(document.get(Field.NODE_ID));
+
+			try {
+				WikiNodeLocalServiceUtil.getNode(nodeId);
+
+				if (entryClassName.equals(DLFileEntry.class.getName())) {
+					WikiPageAttachmentsUtil.getPage(entryClassPK);
+				}
+				else if (entryClassName.equals(WikiPage.class.getName())) {
+					WikiPageLocalServiceUtil.getPage(entryClassPK);
+				}
+
+				entries.add(document);
+			}
+			catch (Exception e) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Wiki search index is stale and contains node " +
+							nodeId);
+				}
+			}
+		}
+
+		return entries;
 	}
 
 	public static WikiNode getFirstNode(PortletRequest portletRequest)
@@ -654,6 +696,8 @@ public class WikiUtil {
 
 		return _getEngine(format).validate(nodeId, content);
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(WikiUtil.class);
 
 	private static WikiUtil _instance = new WikiUtil();
 
