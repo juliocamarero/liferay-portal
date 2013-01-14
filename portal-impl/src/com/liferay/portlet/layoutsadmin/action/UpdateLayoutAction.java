@@ -34,6 +34,7 @@ import com.liferay.portal.service.LayoutPrototypeServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.struts.JSONAction;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -82,23 +83,33 @@ public class UpdateLayoutAction extends JSONAction {
 			layout = LayoutLocalServiceUtil.getLayout(
 				groupId, privateLayout, layoutId);
 		}
-		else if (parentLayoutId > 0) {
-			layout = LayoutLocalServiceUtil.getLayout(
-				groupId, privateLayout, parentLayoutId);
-		}
-
-		if ((layout != null) &&
-			!LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.UPDATE)) {
-
-			return null;
-		}
 
 		String cmd = ParamUtil.getString(request, Constants.CMD);
 
 		JSONObject jsonObj = JSONFactoryUtil.createJSONObject();
 
 		if (cmd.equals("add")) {
+			if (parentLayoutId > 0) {
+				layout = LayoutLocalServiceUtil.getLayout(
+					groupId, privateLayout, parentLayoutId);
+
+				if (!LayoutPermissionUtil.contains(
+					permissionChecker, layout, ActionKeys.ADD_LAYOUT)) {
+
+					return null;
+				}
+			}
+			else {
+				if (!GroupPermissionUtil.contains(
+						permissionChecker, themeDisplay.getScopeGroupId(),
+						ActionKeys.ADD_LAYOUT) &&
+					!themeDisplay.getScopeGroup().isLayoutPrototype()) {
+
+					return null;
+				}
+			}
+
+
 			String[] array = addPage(themeDisplay, request, response);
 
 			jsonObj.put("deletable", Boolean.valueOf(array[2]));
@@ -107,18 +118,48 @@ public class UpdateLayoutAction extends JSONAction {
 			jsonObj.put("url", array[1]);
 		}
 		else if (cmd.equals("delete")) {
+			if (!LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.DELETE)) {
+
+				return null;
+			}
+
 			SitesUtil.deleteLayout(request, response);
 		}
 		else if (cmd.equals("display_order")) {
+			if (!LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.UPDATE)) {
+
+				return null;
+			}
+
 			updateDisplayOrder(request);
 		}
 		else if (cmd.equals("name")) {
+			if (!LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.UPDATE)) {
+
+				return null;
+			}
+
 			updateName(request);
 		}
 		else if (cmd.equals("parent_layout_id")) {
+			if (!LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.UPDATE)) {
+
+				return null;
+			}
+
 			updateParentLayoutId(request);
 		}
 		else if (cmd.equals("priority")) {
+			if (!LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.UPDATE)) {
+
+				return null;
+			}
+
 			updatePriority(request);
 		}
 
