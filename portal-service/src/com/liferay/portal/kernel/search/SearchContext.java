@@ -298,6 +298,10 @@ public class SearchContext implements Serializable {
 		_userId = userId;
 	}
 
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
 	private boolean _andSearch;
 	private long[] _assetCategoryIds;
 	private String[] _assetTagNames;
@@ -324,5 +328,6 @@ public class SearchContext implements Serializable {
 	private int _start = QueryUtil.ALL_POS;
 	private TimeZone _timeZone;
 	private long _userId;
+	private String _userName;
 
 }

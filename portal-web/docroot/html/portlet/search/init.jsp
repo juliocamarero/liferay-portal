@@ -77,6 +77,7 @@ boolean displayAssetTypeFacet = GetterUtil.getBoolean(portletPreferences.getValu
 boolean displayAssetTagsFacet = GetterUtil.getBoolean(portletPreferences.getValue("displayAssetTagsFacet", null), true);
 boolean displayAssetCategoriesFacet = GetterUtil.getBoolean(portletPreferences.getValue("displayAssetCategoriesFacet", null), true);
 boolean displayModifiedRangeFacet = GetterUtil.getBoolean(portletPreferences.getValue("displayModifiedRangeFacet", null), true);
+boolean displayUsersFacet = GetterUtil.getBoolean(portletPreferences.getValue("displayUsersFacet", null), true);
 
 boolean displayResultsInDocumentForm = GetterUtil.getBoolean(portletPreferences.getValue("displayResultsInDocumentForm", null));
 

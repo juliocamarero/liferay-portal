@@ -79,6 +79,12 @@ public class SearchContextFactory {
 		searchContext.setAssetCategoryIds(assetCategoryIds);
 		searchContext.setAssetTagNames(assetTagNames);
 
+		// User Name
+
+		String userName = ParamUtil.getString(request, "userName");
+
+		searchContext.setUserName(userName);
+
 		// Keywords
 
 		String keywords = ParamUtil.getString(request, "keywords");

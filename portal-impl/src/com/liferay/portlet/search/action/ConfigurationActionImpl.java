@@ -63,6 +63,8 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			getParameter(actionRequest, "displayAssetTypeFacet"));
 		boolean displayModifiedRangeFacet = GetterUtil.getBoolean(
 			getParameter(actionRequest, "displayModifiedRangeFacet"));
+		boolean displayUsersFacet = GetterUtil.getBoolean(
+			getParameter(actionRequest, "displayUsersFacet"));
 
 		String searchConfiguration = ContentUtil.get(
 			PropsValues.SEARCH_FACET_CONFIGURATION);
@@ -92,7 +94,8 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 					fieldName.equals("assetCategoryTitles")) ||
 				(displayAssetTagsFacet && fieldName.equals("assetTagNames")) ||
 				(displayAssetTypeFacet && fieldName.equals("entryClassName")) ||
-				(displayModifiedRangeFacet && fieldName.equals("modified"))) {
+				(displayModifiedRangeFacet && fieldName.equals("modified")) ||
+				(displayUsersFacet && fieldName.equals("userName"))) {
 
 				newFacetsJSONArray.put(oldFacetJSONObject);
 			}

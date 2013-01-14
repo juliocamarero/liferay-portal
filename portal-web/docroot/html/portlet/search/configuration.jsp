@@ -39,6 +39,8 @@
 			<aui:input name="preferences--displayAssetCategoriesFacet--" type="checkbox" value="<%= displayAssetCategoriesFacet %>" />
 
 			<aui:input name="preferences--displayModifiedRangeFacet--" type="checkbox" value="<%= displayModifiedRangeFacet %>" />
+
+			<aui:input name="preferences--displayUsersFacet--" type="checkbox" value="<%= displayUsersFacet %>" />
 		</div>
 
 		<div class="advanced-configuration <%= (!advancedConfiguration ? "aui-helper-hidden" : "") %>" id="<portlet:namespace />advancedConfiguration">

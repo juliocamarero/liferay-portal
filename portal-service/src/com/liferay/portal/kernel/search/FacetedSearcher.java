@@ -162,6 +162,7 @@ public class FacetedSearcher extends BaseIndexer {
 
 			searchQuery.addExactTerm(Field.ASSET_TAG_NAMES, keywords);
 			searchQuery.addTerms(Field.KEYWORDS, keywords);
+			searchQuery.addExactTerm(Field.USER_NAME, keywords);
 		}
 
 		for (String entryClassName : searchContext.getEntryClassNames()) {

@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.MultiValueFacet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
+import com.liferay.portal.kernel.search.facet.SimpleFacet;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
@@ -196,6 +197,7 @@ public abstract class BaseIndexer implements Indexer {
 			addSearchAssetTagNames(contextQuery, searchContext);
 			addSearchEntryClassNames(contextQuery, searchContext);
 			addSearchGroupId(contextQuery, searchContext);
+			addSearchUserId(contextQuery, searchContext);
 
 			BooleanQuery fullQuery = createFullQuery(
 				contextQuery, searchContext);
@@ -779,6 +781,18 @@ public abstract class BaseIndexer implements Indexer {
 		}
 	}
 
+	protected void addSearchUserId(
+			BooleanQuery contextQuery, SearchContext searchContext)
+		throws Exception {
+
+		SimpleFacet facet = new SimpleFacet(searchContext);
+
+		facet.setFieldName(Field.USER_ID);
+		facet.setStatic(true);
+
+		searchContext.addFacet(facet);
+	}
+
 	protected void addStagingGroupKeyword(Document document, long groupId)
 		throws Exception {
 
@@ -1157,6 +1171,9 @@ public abstract class BaseIndexer implements Indexer {
 			document.addKeyword(Field.CLASS_PK, attachedModel.getClassPK());
 		}
 
+		long userId = 0;
+		String userName = StringPool.BLANK;
+
 		if (baseModel instanceof AuditedModel) {
 			AuditedModel auditedModel = (AuditedModel)baseModel;
 
@@ -1164,12 +1181,11 @@ public abstract class BaseIndexer implements Indexer {
 			document.addDate(Field.CREATE_DATE, auditedModel.getCreateDate());
 			document.addDate(
 				Field.MODIFIED_DATE, auditedModel.getModifiedDate());
-			document.addKeyword(Field.USER_ID, auditedModel.getUserId());
 
-			String userName = PortalUtil.getUserName(
-				auditedModel.getUserId(), auditedModel.getUserName());
+			userId = auditedModel.getUserId();
 
-			document.addKeyword(Field.USER_NAME, userName, true);
+			userName = PortalUtil.getUserName(
+				userId, auditedModel.getUserName());
 		}
 
 		GroupedModel groupedModel = null;
@@ -1181,6 +1197,16 @@ public abstract class BaseIndexer implements Indexer {
 				Field.GROUP_ID, getParentGroupId(groupedModel.getGroupId()));
 			document.addKeyword(
 				Field.SCOPE_GROUP_ID, groupedModel.getGroupId());
+
+			userId = groupedModel.getUserId();
+
+			userName = PortalUtil.getUserName(
+				userId, groupedModel.getUserName());
+		}
+
+		if (userId != 0) {
+			document.addKeyword(Field.USER_ID, userId);
+			document.addKeyword(Field.USER_NAME, userName);
 		}
 
 		if (workflowedBaseModel instanceof WorkflowedModel) {
