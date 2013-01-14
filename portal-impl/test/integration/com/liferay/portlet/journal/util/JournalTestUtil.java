@@ -97,6 +97,14 @@ public class JournalTestUtil {
 			String content, String structureId, String templateId)
 		throws Exception {
 
+		return addArticle(
+			TestPropsValues.getGroupId(), content, structureId, templateId);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, String content, String structureId, String templateId)
+		throws Exception {
+
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
 		titleMap.put(Locale.US, "Test Article");
@@ -108,18 +116,28 @@ public class JournalTestUtil {
 		serviceContext.setScopeGroupId(TestPropsValues.getGroupId());
 
 		return JournalArticleLocalServiceUtil.addArticle(
-			TestPropsValues.getUserId(), TestPropsValues.getGroupId(), 0, 0, 0,
-			StringPool.BLANK, true, 0, titleMap, null, content, "general",
-			structureId, templateId, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0,
-			true, 0, 0, 0, 0, 0, true, false, false, null, null, null, null,
-			serviceContext);
+			TestPropsValues.getUserId(), groupId, 0, 0, 0, StringPool.BLANK,
+			true, 0, titleMap, null, content, "general", structureId,
+			templateId, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true, 0, 0, 0, 0,
+			0, true, false, false, null, null, null, null, serviceContext);
 	}
 
 	public static DDMStructure addDDMStructure() throws Exception {
-		return addDDMStructure(getSampleStructureXSD());
+		return addDDMStructure(
+			TestPropsValues.getGroupId(), getSampleStructureXSD());
+	}
+
+	public static DDMStructure addDDMStructure(long groupId) throws Exception {
+		return addDDMStructure(groupId, getSampleStructureXSD());
 	}
 
 	public static DDMStructure addDDMStructure(String xsd) throws Exception {
+		return addDDMStructure(TestPropsValues.getGroupId(), xsd);
+	}
+
+	public static DDMStructure addDDMStructure(long groupId, String xsd)
+		throws Exception {
+
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 
 		nameMap.put(Locale.US, "Test Structure");
@@ -130,7 +148,7 @@ public class JournalTestUtil {
 		serviceContext.setAddGuestPermissions(true);
 
 		return DDMStructureLocalServiceUtil.addStructure(
-			TestPropsValues.getUserId(), TestPropsValues.getGroupId(),
+			TestPropsValues.getUserId(), groupId,
 			PortalUtil.getClassNameId(JournalArticle.class.getName()), nameMap,
 			null, xsd, serviceContext);
 	}
@@ -143,8 +161,24 @@ public class JournalTestUtil {
 			JournalTemplateConstants.LANG_TYPE_VM);
 	}
 
+	public static DDMTemplate addDDMTemplate(long groupId, long structureId)
+		throws Exception {
+
+		return addDDMTemplate(
+			groupId, structureId, getSampleTemplateXSL(),
+			JournalTemplateConstants.LANG_TYPE_VM);
+	}
+
 	public static DDMTemplate addDDMTemplate(
 			long structureId, String xsl, String lang)
+		throws Exception {
+
+		return addDDMTemplate(
+			TestPropsValues.getGroupId(), structureId, xsl, lang);
+	}
+
+	public static DDMTemplate addDDMTemplate(
+			long groupId, long structureId, String xsl, String lang)
 		throws Exception {
 
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
@@ -157,7 +191,7 @@ public class JournalTestUtil {
 		serviceContext.setAddGuestPermissions(true);
 
 		return DDMTemplateLocalServiceUtil.addTemplate(
-			TestPropsValues.getUserId(), TestPropsValues.getGroupId(),
+			TestPropsValues.getUserId(), groupId,
 			PortalUtil.getClassNameId(DDMStructure.class.getName()),
 			structureId, nameMap, null,
 			DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY, null, lang, xsl,
