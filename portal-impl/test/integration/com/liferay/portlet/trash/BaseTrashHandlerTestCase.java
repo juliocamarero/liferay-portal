@@ -566,11 +566,11 @@ public abstract class BaseTrashHandlerTestCase {
 		}
 		else if (isBaseModelMoveableFromTrash()) {
 			if (delete) {
-				TrashHandler trashHandler =
+				TrashHandler parentTrashHandler =
 					TrashHandlerRegistryUtil.getTrashHandler(
 						getParentBaseModelClassName());
 
-				trashHandler.deleteTrashEntry(
+				parentTrashHandler.deleteTrashEntry(
 					(Long)parentBaseModel.getPrimaryKeyObj());
 
 				Assert.assertEquals(
@@ -578,6 +578,17 @@ public abstract class BaseTrashHandlerTestCase {
 					getNotInTrashBaseModelsCount(parentBaseModel));
 				Assert.assertEquals(
 					initialTrashEntriesCount + 1,
+					getTrashEntriesCount(group.getGroupId()));
+
+				TrashHandler trashHandler =
+					TrashHandlerRegistryUtil.getTrashHandler(
+						getBaseModelClassName());
+
+				trashHandler.deleteTrashEntry(
+					(Long)baseModel.getPrimaryKeyObj());
+
+				Assert.assertEquals(
+					initialTrashEntriesCount,
 					getTrashEntriesCount(group.getGroupId()));
 			}
 			else {
