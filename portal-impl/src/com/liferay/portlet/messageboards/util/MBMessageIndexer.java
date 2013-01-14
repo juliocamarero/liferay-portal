@@ -43,6 +43,7 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.persistence.GroupActionableDynamicQuery;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.messageboards.NoSuchDiscussionException;
 import com.liferay.portlet.messageboards.asset.MBMessageAssetRendererFactory;
 import com.liferay.portlet.messageboards.model.MBCategory;
@@ -78,6 +79,32 @@ public class MBMessageIndexer extends BaseIndexer {
 	public MBMessageIndexer() {
 		setFilterSearch(true);
 		setPermissionAware(true);
+	}
+
+	@Override
+	public void addRelatedEntityFields(Document document, Object obj)
+		throws Exception {
+
+		DLFileEntry dlFileEntry = (DLFileEntry)obj;
+
+		MBMessage message = MBMessageAttachmentsUtil.getMessage(
+			dlFileEntry.getFileEntryId());
+
+		document.addKeyword(Field.CATEGORY_ID, message.getCategoryId());
+		document.addKeyword("threadId", message.getThreadId());
+
+		try {
+			MBDiscussionLocalServiceUtil.getThreadDiscussion(
+				message.getThreadId());
+
+			document.addKeyword("discussion", true);
+		}
+		catch (NoSuchDiscussionException nsde) {
+			document.addKeyword("discussion", false);
+		}
+
+		document.addKeyword(
+			Field.ATTACHMENT_CLASS_NAME, MBMessage.class.getName());
 	}
 
 	public String[] getClassNames() {

@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.wiki.asset.WikiPageAssetRendererFactory;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
@@ -69,6 +70,19 @@ public class WikiPageIndexer extends BaseIndexer {
 	public WikiPageIndexer() {
 		setFilterSearch(true);
 		setPermissionAware(true);
+	}
+
+	@Override
+	public void addRelatedEntityFields(Document doc, Object obj)
+		throws Exception {
+
+		DLFileEntry dlFileEntry = (DLFileEntry)obj;
+
+		WikiPage page = WikiPageAttachmentsUtil.getPage(
+			dlFileEntry.getFileEntryId());
+
+		doc.addKeyword(Field.NODE_ID, page.getNodeId());
+		doc.addKeyword(Field.ATTACHMENT_CLASS_NAME, WikiPage.class.getName());
 	}
 
 	public String[] getClassNames() {
