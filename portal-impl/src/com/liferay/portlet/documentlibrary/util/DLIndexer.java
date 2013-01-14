@@ -141,6 +141,8 @@ public class DLIndexer extends BaseIndexer {
 		String attachmentClassName = (String)searchContext.getAttribute(
 			Field.ATTACHMENT_CLASS_NAME );
 
+		boolean isInHiddenFolder = false;
+
 		if (Validator.isNotNull(attachmentClassName)) {
 			BooleanQuery facetQuery = BooleanQueryFactoryUtil.create(
 				searchContext);
@@ -161,7 +163,11 @@ public class DLIndexer extends BaseIndexer {
 			}
 			catch (Exception e) {
 			}
+
+			isInHiddenFolder = true;
 		}
+
+		contextQuery.addRequiredTerm("isInHiddenFolder", isInHiddenFolder);
 
 		long[] folderIds = searchContext.getFolderIds();
 
