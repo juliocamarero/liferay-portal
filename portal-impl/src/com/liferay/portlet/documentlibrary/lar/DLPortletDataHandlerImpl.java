@@ -1738,13 +1738,10 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 		if (!fileEntryTypeIds.isEmpty()) {
 			DLFolder dlFolder = (DLFolder)folder.getModel();
 
-			if (Validator.isNotNull(defaultFileEntryTypeId)) {
-				dlFolder.setDefaultFileEntryTypeId(defaultFileEntryTypeId);
+			dlFolder.setDefaultFileEntryTypeId(defaultFileEntryTypeId);
+			dlFolder.setOverrideFileEntryTypes(true);
 
-				dlFolder.setOverrideFileEntryTypes(true);
-
-				DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
-			}
+			DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
 
 			DLFileEntryTypeLocalServiceUtil.updateFolderFileEntryTypes(
 				dlFolder, fileEntryTypeIds, defaultFileEntryTypeId,
