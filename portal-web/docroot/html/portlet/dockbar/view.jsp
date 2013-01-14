@@ -44,7 +44,7 @@ if (layout != null) {
 	long parentLayoutId = layout.getParentLayoutId();
 
 	if (parentLayoutId != 0) {
-		parentLayout = LayoutLocalServiceUtil.getLayout(parentLayoutId);
+		parentLayout = LayoutLocalServiceUtil.getLayout(layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
 	}
 }
 %>
