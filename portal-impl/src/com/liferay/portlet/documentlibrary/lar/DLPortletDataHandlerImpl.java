@@ -1712,11 +1712,6 @@ public class DLPortletDataHandlerImpl extends BasePortletDataHandler {
 					fileEntryTypeUuid, companyGroup.getGroupId());
 			}
 
-			if (dlFileEntryType == null) {
-				dlFileEntryType = DLFileEntryTypeUtil.fetchByUUID_G(
-					fileEntryTypeUuid, 0);
-			}
-
 			if ((dlFileEntryType == null) &&
 				fileEntryTypeUuid.equals("@basic_document@")) {
 
