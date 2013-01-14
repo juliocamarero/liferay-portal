@@ -291,6 +291,7 @@ public class DDMStructureLocalServiceImpl
 
 	public DDMStructure fetchStructure(String uuid, long groupId)
 		throws SystemException {
+
 		return ddmStructurePersistence.fetchByUUID_G(uuid, groupId);
 	}
 

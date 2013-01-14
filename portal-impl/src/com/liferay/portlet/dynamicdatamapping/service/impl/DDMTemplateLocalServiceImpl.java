@@ -286,6 +286,7 @@ public class DDMTemplateLocalServiceImpl
 
 	public DDMTemplate fetchTemplate(String uuid, long groupId)
 		throws SystemException {
+
 		return ddmTemplatePersistence.fetchByUUID_G(uuid, groupId);
 	}
 
