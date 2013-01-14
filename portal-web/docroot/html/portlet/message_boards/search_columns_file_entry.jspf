@@ -1,0 +1,81 @@
+<%--
+/**
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<%
+long fileEntryId = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
+String title = document.get("title");
+
+MBMessage message = MBMessageAttachmentsUtil.getMessage(fileEntryId);
+
+FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(fileEntryId);
+%>
+
+<portlet:actionURL var="rowURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+	<portlet:param name="struts_action" value="/message_boards/get_message_attachment" />
+	<portlet:param name="messageId" value="<%= String.valueOf(message.getMessageId()) %>" />
+	<portlet:param name="attachment" value="<%= fileEntry.getTitle() %>" />
+</portlet:actionURL>
+
+<portlet:renderURL var="messageURL">
+	<portlet:param name="struts_action" value="/message_boards/view_message" />
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+	<portlet:param name="messageId" value="<%= String.valueOf(message.getMessageId()) %>" />
+</portlet:renderURL>
+
+<liferay-ui:search-container-column-text
+	name="message"
+>
+	<liferay-ui:icon
+		image='<%= "../file_system/small/" + DLUtil.getFileIcon(fileEntry.getExtension()) %>'
+		label="<%= true %>"
+		message="<%= title %>"
+		url="<%= rowURL %>"
+	/>
+
+	<liferay-util:buffer var="rootEntryIcon">
+		<liferay-ui:icon
+			image="conversation"
+			label="<%= true %>"
+			message="<%= HtmlUtil.escape(message.getSubject()) %>"
+			url="<%= messageURL %>"
+		/>
+	</liferay-util:buffer>
+
+	<span class="search-root-entry">(<liferay-ui:message arguments="<%= rootEntryIcon %>" key="found-in-message-x" />)</span>
+</liferay-ui:search-container-column-text>
+
+<liferay-ui:search-container-column-text
+	name="type"
+	value='<%= LanguageUtil.get(locale, "attachment") %>'
+/>
+
+<liferay-ui:search-container-column-text
+	href="<%= categoryUrl %>"
+	name="category"
+	value="<%= HtmlUtil.escape(category.getName()) %>"
+/>
+
+<liferay-ui:search-container-column-text
+	href="<%= rowURL %>"
+	name="thread-posts"
+	value="<%= StringPool.BLANK %>"
+/>
+
+<liferay-ui:search-container-column-text
+	href="<%= rowURL %>"
+	name="thread-views"
+	value="<%= StringPool.BLANK %>"
+/>

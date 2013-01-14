@@ -88,39 +88,19 @@ portletURL.setParameter("keywords", keywords);
 			long curNodeId = GetterUtil.getLong(document.get("nodeId"));
 			String title = document.get("title");
 
-			WikiNode curNode = null;
+			WikiNode curNode = WikiNodeLocalServiceUtil.getNode(curNodeId);
 
-			try {
-				curNode = WikiNodeLocalServiceUtil.getNode(curNodeId);
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Wiki search index is stale and contains node " + curNodeId);
-				}
-			}
+			String classNameId = document.get(Field.ENTRY_CLASS_NAME);
 			%>
 
-			<liferay-ui:search-container-column-text
-				name="#"
-				value="<%= (index + 1) + StringPool.PERIOD %>"
-			/>
-
-			<portlet:actionURL var="rowURL">
-				<portlet:param name="struts_action" value="/wiki/view" />
-				<portlet:param name="nodeName" value="<%= node.getName() %>" />
-				<portlet:param name="title" value="<%= title %>" />
-			</portlet:actionURL>
-
-			<liferay-ui:search-container-column-text
-				href="<%= rowURL %>"
-				name="wiki"
-				value='<%= (curNode != null) ? curNode.getName() : ""  %>'
-			/>
-
-			<liferay-ui:search-container-column-text
-				name="title"
-				value="<%= title %>"
-			/>
+			<c:choose>
+				<c:when test="<%= classNameId.equals(DLFileEntry.class.getName()) %>">
+					<%@ include file="/html/portlet/wiki/search_columns_file_entry.jspf" %>
+				</c:when>
+				<c:when test="<%= classNameId.equals(WikiPage.class.getName()) %>">
+					<%@ include file="/html/portlet/wiki/search_columns_page.jspf" %>
+				</c:when>
+			</c:choose>
 		</liferay-ui:search-container-row>
 
 		<span class="aui-search-bar">
