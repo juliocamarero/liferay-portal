@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -87,6 +88,43 @@ public class WikiPageIndexer extends BaseIndexer {
 
 	public String[] getClassNames() {
 		return CLASS_NAMES;
+	}
+
+	@Override
+	public BooleanQuery getFullQuery(SearchContext searchContext)
+		throws SearchException {
+
+		try {
+			searchContext.setSearchEngineId(getSearchEngineId());
+
+			searchContext.setEntryClassNames(
+				new String[] {
+					getClassName(searchContext), DLFileEntry.class.getName()});
+
+			searchContext.setAttribute(
+				Field.ATTACHMENT_CLASS_NAME, WikiPage.class.getName());
+
+			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			addSearchAssetCategoryIds(contextQuery, searchContext);
+			addSearchAssetTagNames(contextQuery, searchContext);
+			addSearchEntryClassNames(contextQuery, searchContext);
+			addSearchGroupId(contextQuery, searchContext);
+
+			BooleanQuery fullQuery = createFullQuery(
+				contextQuery, searchContext);
+
+			fullQuery.setQueryConfig(searchContext.getQueryConfig());
+
+			return fullQuery;
+		}
+		catch (SearchException se) {
+			throw se;
+		}
+		catch (Exception e) {
+			throw new SearchException(e);
+		}
 	}
 
 	public String getPortletId() {

@@ -138,6 +138,31 @@ public class DLIndexer extends BaseIndexer {
 			contextQuery.addRequiredTerm(Field.STATUS, status);
 		}
 
+		String attachmentClassName = (String)searchContext.getAttribute(
+			Field.ATTACHMENT_CLASS_NAME );
+
+		if (Validator.isNotNull(attachmentClassName)) {
+			BooleanQuery facetQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			facetQuery.addExactTerm(
+				Field.ATTACHMENT_CLASS_NAME, attachmentClassName);
+
+			contextQuery.add(facetQuery, BooleanClauseOccur.MUST);
+
+			try {
+				Indexer attachmentIndexer = IndexerRegistryUtil.getIndexer(
+					attachmentClassName);
+
+				if (attachmentIndexer != null) {
+					attachmentIndexer.postProcessContextQuery(
+						contextQuery, searchContext);
+				}
+			}
+			catch (Exception e) {
+			}
+		}
+
 		long[] folderIds = searchContext.getFolderIds();
 
 		if ((folderIds != null) && (folderIds.length > 0)) {
@@ -343,6 +368,8 @@ public class DLIndexer extends BaseIndexer {
 			document.addKeyword(
 				"fileEntryTypeId", dlFileEntry.getFileEntryTypeId());
 			document.addKeyword("path", dlFileEntry.getTitle());
+			document.addKeyword(
+				"isInHiddenFolder", dlFileEntry.isInHiddenFolder());
 
 			ExpandoBridge expandoBridge =
 				ExpandoBridgeFactoryUtil.getExpandoBridge(
