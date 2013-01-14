@@ -132,6 +132,8 @@ public abstract class BaseIndexer implements Indexer {
 		try {
 			Document document = doGetDocument(obj);
 
+			postProcessRelatedEntities(document, obj);
+
 			for (IndexerPostProcessor indexerPostProcessor :
 					_indexerPostProcessors) {
 
@@ -1330,6 +1332,10 @@ public abstract class BaseIndexer implements Indexer {
 
 	protected void postProcessFullQuery(
 			BooleanQuery fullQuery, SearchContext searchContext)
+		throws Exception {
+	}
+
+	protected void postProcessRelatedEntities(Document document, Object obj)
 		throws Exception {
 	}
 
