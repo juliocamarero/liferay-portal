@@ -39,6 +39,7 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -97,13 +98,19 @@ public abstract class BaseTrashHandlerTestCase {
 	@Test
 	@Transactional
 	public void testTrashParentAndDeleteParent() throws Exception {
-		trashParentBaseModel(true);
+		trashParentBaseModel(true, false);
+	}
+
+	@Test
+	@Transactional
+	public void testTrashParentAndDeleteTrashEntries() throws Exception {
+		trashParentBaseModel(false, true);
 	}
 
 	@Test
 	@Transactional
 	public void testTrashParentAndRestoreModel() throws Exception {
-		trashParentBaseModel(false);
+		trashParentBaseModel(false, false);
 	}
 
 	@Test
@@ -510,7 +517,10 @@ public abstract class BaseTrashHandlerTestCase {
 		Assert.assertTrue(isBaseModelTrashName(duplicateBaseModel));
 	}
 
-	protected void trashParentBaseModel(boolean delete) throws Exception {
+	protected void trashParentBaseModel(
+			boolean delete, boolean deleteTrashEntries)
+		throws Exception {
+
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
 		serviceContext.setScopeGroupId(group.getGroupId());
@@ -549,7 +559,12 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertTrue(isInTrashContainer(baseModel));
 
-		if (isBaseModelMoveableFromTrash()) {
+		if (deleteTrashEntries) {
+			TrashEntryServiceUtil.deleteEntries(group.getGroupId());
+
+			Assert.assertEquals(0, getTrashEntriesCount(group.getGroupId()));
+		}
+		else if (isBaseModelMoveableFromTrash()) {
 			if (delete) {
 				TrashHandler trashHandler =
 					TrashHandlerRegistryUtil.getTrashHandler(
