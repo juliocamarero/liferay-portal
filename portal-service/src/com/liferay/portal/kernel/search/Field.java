@@ -38,6 +38,8 @@ public class Field implements Serializable {
 
 	public static final String ASSET_TAG_NAMES = "assetTagNames";
 
+	public static final String ATTACHMENT_CLASS_NAME = "attachmentClassName";
+
 	public static final String CATEGORY_ID = "categoryId";
 
 	public static final String CLASS_NAME_ID = "classNameId";

@@ -99,6 +99,10 @@ public abstract class BaseIndexer implements Indexer {
 	public static final int INDEX_FILTER_SEARCH_LIMIT = GetterUtil.getInteger(
 		PropsUtil.get(PropsKeys.INDEX_FILTER_SEARCH_LIMIT));
 
+	public void addRelatedEntityFields(Document document, Object obj)
+		throws Exception {
+	}
+
 	public void delete(long companyId, String uid) throws SearchException {
 		try {
 			SearchEngineUtil.deleteDocument(
@@ -127,6 +131,8 @@ public abstract class BaseIndexer implements Indexer {
 	public Document getDocument(Object obj) throws SearchException {
 		try {
 			Document document = doGetDocument(obj);
+
+			postProcessRelatedEntities(document, obj);
 
 			for (IndexerPostProcessor indexerPostProcessor :
 					_indexerPostProcessors) {
@@ -1326,6 +1332,10 @@ public abstract class BaseIndexer implements Indexer {
 
 	protected void postProcessFullQuery(
 			BooleanQuery fullQuery, SearchContext searchContext)
+		throws Exception {
+	}
+
+	protected void postProcessRelatedEntities(Document document, Object obj)
 		throws Exception {
 	}
 

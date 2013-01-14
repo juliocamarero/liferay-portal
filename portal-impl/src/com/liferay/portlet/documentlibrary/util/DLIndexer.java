@@ -31,6 +31,8 @@ import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.SearchException;
@@ -42,9 +44,11 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Repository;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.RepositoryLocalServiceUtil;
 import com.liferay.portal.service.persistence.GroupActionableDynamicQuery;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PrefsPropsUtil;
@@ -133,6 +137,37 @@ public class DLIndexer extends BaseIndexer {
 		if (status != WorkflowConstants.STATUS_ANY) {
 			contextQuery.addRequiredTerm(Field.STATUS, status);
 		}
+
+		String attachmentClassName = (String)searchContext.getAttribute(
+			Field.ATTACHMENT_CLASS_NAME );
+
+		boolean isInHiddenFolder = false;
+
+		if (Validator.isNotNull(attachmentClassName)) {
+			BooleanQuery facetQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			facetQuery.addExactTerm(
+				Field.ATTACHMENT_CLASS_NAME, attachmentClassName);
+
+			contextQuery.add(facetQuery, BooleanClauseOccur.MUST);
+
+			try {
+				Indexer attachmentIndexer = IndexerRegistryUtil.getIndexer(
+					attachmentClassName);
+
+				if (attachmentIndexer != null) {
+					attachmentIndexer.postProcessContextQuery(
+						contextQuery, searchContext);
+				}
+			}
+			catch (Exception e) {
+			}
+
+			isInHiddenFolder = true;
+		}
+
+		contextQuery.addRequiredTerm("isInHiddenFolder", isInHiddenFolder);
 
 		long[] folderIds = searchContext.getFolderIds();
 
@@ -457,6 +492,32 @@ public class DLIndexer extends BaseIndexer {
 	@Override
 	protected String getPortletId(SearchContext searchContext) {
 		return PORTLET_ID;
+	}
+
+	@Override
+	protected void postProcessRelatedEntities(Document document, Object obj)
+		throws Exception {
+
+		DLFileEntry dlFileEntry = (DLFileEntry)obj;
+
+		if (!dlFileEntry.isInHiddenFolder()) {
+			return;
+		}
+
+		try {
+			Repository repository =
+				RepositoryLocalServiceUtil.getRepository(
+					dlFileEntry.getRepositoryId());
+
+			Indexer indexer = IndexerRegistryUtil.getIndexerByPortletId(
+				repository.getPortletId());
+
+			if (indexer != null) {
+				indexer.addRelatedEntityFields(document, obj);
+			}
+		}
+		catch (Exception e) {
+		}
 	}
 
 	protected void reindexFileEntries(

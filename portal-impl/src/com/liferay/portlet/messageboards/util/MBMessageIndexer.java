@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -43,6 +44,7 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.persistence.GroupActionableDynamicQuery;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.messageboards.NoSuchDiscussionException;
 import com.liferay.portlet.messageboards.asset.MBMessageAssetRendererFactory;
 import com.liferay.portlet.messageboards.model.MBCategory;
@@ -80,8 +82,71 @@ public class MBMessageIndexer extends BaseIndexer {
 		setPermissionAware(true);
 	}
 
+	@Override
+	public void addRelatedEntityFields(Document document, Object obj)
+		throws Exception {
+
+		DLFileEntry dlFileEntry = (DLFileEntry)obj;
+
+		MBMessage message = MBMessageAttachmentsUtil.getMessage(
+			dlFileEntry.getFileEntryId());
+
+		document.addKeyword(Field.CATEGORY_ID, message.getCategoryId());
+		document.addKeyword("threadId", message.getThreadId());
+
+		try {
+			MBDiscussionLocalServiceUtil.getThreadDiscussion(
+				message.getThreadId());
+
+			document.addKeyword("discussion", true);
+		}
+		catch (NoSuchDiscussionException nsde) {
+			document.addKeyword("discussion", false);
+		}
+
+		document.addKeyword(
+			Field.ATTACHMENT_CLASS_NAME, MBMessage.class.getName());
+	}
+
 	public String[] getClassNames() {
 		return CLASS_NAMES;
+	}
+
+	@Override
+	public BooleanQuery getFullQuery(SearchContext searchContext)
+		throws SearchException {
+
+		try {
+			searchContext.setSearchEngineId(getSearchEngineId());
+
+			searchContext.setEntryClassNames(
+				new String[] {
+					getClassName(searchContext), DLFileEntry.class.getName()});
+
+			searchContext.setAttribute(
+				Field.ATTACHMENT_CLASS_NAME, MBMessage.class.getName());
+
+			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			addSearchAssetCategoryIds(contextQuery, searchContext);
+			addSearchAssetTagNames(contextQuery, searchContext);
+			addSearchEntryClassNames(contextQuery, searchContext);
+			addSearchGroupId(contextQuery, searchContext);
+
+			BooleanQuery fullQuery = createFullQuery(
+				contextQuery, searchContext);
+
+			fullQuery.setQueryConfig(searchContext.getQueryConfig());
+
+			return fullQuery;
+		}
+		catch (SearchException se) {
+			throw se;
+		}
+		catch (Exception e) {
+			throw new SearchException(e);
+		}
 	}
 
 	public String getPortletId() {
