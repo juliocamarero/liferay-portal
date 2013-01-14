@@ -48,6 +48,18 @@ if (!ArrayUtil.contains(displayViews, displayStyle)) {
 	displayStyle = displayViews[0];
 }
 
+Set<Long> folderSubscriptionClassPKs = null;
+
+if (themeDisplay.isSignedIn()) {
+	List<Subscription> categorySubscriptions = SubscriptionLocalServiceUtil.getUserSubscriptions(user.getUserId(), Folder.class.getName());
+
+	folderSubscriptionClassPKs = new HashSet<Long>(categorySubscriptions.size());
+
+	for (Subscription subscription : categorySubscriptions) {
+		folderSubscriptionClassPKs.add(subscription.getClassPK());
+	}
+}
+
 int entryStart = ParamUtil.getInteger(request, "entryStart");
 int entryEnd = ParamUtil.getInteger(request, "entryEnd", entriesPerPage);
 
@@ -71,6 +83,8 @@ request.setAttribute("view.jsp-folder", folder);
 request.setAttribute("view.jsp-folderId", String.valueOf(folderId));
 
 request.setAttribute("view.jsp-repositoryId", String.valueOf(repositoryId));
+
+request.setAttribute("view.jsp-folderSubscriptionClassPKs", folderSubscriptionClassPKs);
 %>
 
 <portlet:actionURL var="undoTrashURL">

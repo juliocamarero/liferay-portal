@@ -38,6 +38,18 @@ if (folder != null) {
 	repositoryId = folder.getRepositoryId();
 }
 
+Set<Long> folderSubscriptionClassPKs = null;
+
+if (themeDisplay.isSignedIn()) {
+	List<Subscription> categorySubscriptions = SubscriptionLocalServiceUtil.getUserSubscriptions(user.getUserId(), Folder.class.getName());
+
+	folderSubscriptionClassPKs = new HashSet<Long>(categorySubscriptions.size());
+
+	for (Subscription subscription : categorySubscriptions) {
+		folderSubscriptionClassPKs.add(subscription.getClassPK());
+	}
+}
+
 int status = WorkflowConstants.STATUS_APPROVED;
 
 if (permissionChecker.isCompanyAdmin() || permissionChecker.isGroupAdmin(scopeGroupId)) {
@@ -45,6 +57,8 @@ if (permissionChecker.isCompanyAdmin() || permissionChecker.isGroupAdmin(scopeGr
 }
 
 long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayTemplateDDMTemplateId(themeDisplay, displayTemplate);
+
+request.setAttribute("view.jsp-folderSubscriptionClassPKs", folderSubscriptionClassPKs);
 %>
 
 <c:choose>
