@@ -28,6 +28,7 @@ import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.trash.DuplicateEntryException;
 import com.liferay.portlet.trash.TrashEntryConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.wiki.NoSuchPageResourceException;
 import com.liferay.portlet.wiki.asset.WikiPageAssetRenderer;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
@@ -241,8 +242,13 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 			PermissionChecker permissionChecker, long classPK, String actionId)
 		throws PortalException, SystemException {
 
-		return WikiPagePermission.contains(
-			permissionChecker, classPK, actionId);
+		try {
+			return WikiPagePermission.contains(
+				permissionChecker, classPK, actionId);
+		}
+		catch (NoSuchPageResourceException nspre) {
+			return false;
+		}
 	}
 
 }
