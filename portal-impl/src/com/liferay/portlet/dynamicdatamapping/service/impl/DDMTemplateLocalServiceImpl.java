@@ -293,7 +293,7 @@ public class DDMTemplateLocalServiceImpl
 		DDMTemplate template = ddmTemplatePersistence.fetchByG_T(
 			groupId, templateKey);
 
-		if (!includeGlobalTemplates) {
+		if (!includeGlobalTemplates || (template != null)) {
 			return template;
 		}
 
