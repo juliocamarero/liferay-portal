@@ -1645,7 +1645,7 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 		for (DDMStructure ddmStructure : ddmStructures) {
 			if (portletDataContext.isWithinDateRange(
-				ddmStructure.getModifiedDate())) {
+					ddmStructure.getModifiedDate())) {
 
 				String structurePath = getDDMStructurePath(
 					portletDataContext, ddmStructure.getUuid());
@@ -1671,7 +1671,7 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 		for (DDMTemplate ddmTemplate : ddmTemplates) {
 			if (portletDataContext.isWithinDateRange(
-				ddmTemplate.getModifiedDate())) {
+					ddmTemplate.getModifiedDate())) {
 
 				String templatePath = getDDMTemplatePath(
 					portletDataContext, ddmTemplate);
@@ -1717,7 +1717,7 @@ public class JournalPortletDataHandlerImpl extends BasePortletDataHandler {
 
 			for (JournalArticle article : articles) {
 				if (portletDataContext.getBooleanParameter(
-					_NAMESPACE, "version-history") ||
+						_NAMESPACE, "version-history") ||
 					JournalArticleLocalServiceUtil.isLatestVersion(
 						article.getGroupId(), article.getArticleId(),
 						article.getVersion(),

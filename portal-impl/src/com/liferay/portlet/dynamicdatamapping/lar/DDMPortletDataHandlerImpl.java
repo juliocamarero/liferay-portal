@@ -80,11 +80,11 @@ import javax.portlet.PortletPreferences;
 public class DDMPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	public static String exportReferencedContent(
-		PortletDataContext portletDataContext,
-		Element dlFileEntryTypesElement, Element dlFoldersElement,
-		Element dlFileEntriesElement, Element dlFileRanksElement,
-		Element dlRepositoriesElement, Element dlRepositoryEntriesElement,
-		Element entityElement, String content)
+			PortletDataContext portletDataContext,
+			Element dlFileEntryTypesElement, Element dlFoldersElement,
+			Element dlFileEntriesElement, Element dlFileRanksElement,
+			Element dlRepositoriesElement, Element dlRepositoryEntriesElement,
+			Element entityElement, String content)
 		throws Exception {
 
 		content = exportDLFileEntries(
@@ -186,7 +186,7 @@ public class DDMPortletDataHandlerImpl extends BasePortletDataHandler {
 		}
 
 		if (portletDataContext.getBooleanParameter(
-			_NAMESPACE, "embedded-assets")) {
+				_NAMESPACE, "embedded-assets")) {
 
 			String content = exportReferencedContent(
 				portletDataContext, dlFileEntryTypesElement, dlFoldersElement,
@@ -874,7 +874,7 @@ public class DDMPortletDataHandlerImpl extends BasePortletDataHandler {
 	}
 
 	protected static String exportLinksToLayout(
-		PortletDataContext portletDataContext, String content)
+			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
 		List<String> oldLinksToLayout = new ArrayList<String>();
@@ -1110,11 +1110,11 @@ public class DDMPortletDataHandlerImpl extends BasePortletDataHandler {
 
 	private static final String _NAMESPACE = "ddm";
 
-	private static Pattern _exportLinksToLayoutPattern = Pattern.compile(
-		"\\[([0-9]+)@(public|private\\-[a-z]*)\\]");
-
 	private static Log _log = LogFactoryUtil.getLog(
 		DDMPortletDataHandlerImpl.class);
+
+	private static Pattern _exportLinksToLayoutPattern = Pattern.compile(
+		"\\[([0-9]+)@(public|private\\-[a-z]*)\\]");
 
 	private static PortletDataHandlerBoolean _structures =
 		new PortletDataHandlerBoolean(_NAMESPACE, "structures", true, true);
