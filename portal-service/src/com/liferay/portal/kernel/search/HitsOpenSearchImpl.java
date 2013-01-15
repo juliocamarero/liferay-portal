@@ -196,10 +196,13 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 
 				double score = results.score(i);
 
+				long ownerUserId = GetterUtil.getLong(
+					result.get(Field.USER_ID));
+
 				addSearchResult(
 					root, resultGroupId, resultScopeGroupId, entryClassName,
 					entryClassPK, title, url, modifiedDate, content, tags,
-					ratings, score, format);
+					ratings, score, format, ownerUserId);
 			}
 
 			if (_log.isDebugEnabled()) {

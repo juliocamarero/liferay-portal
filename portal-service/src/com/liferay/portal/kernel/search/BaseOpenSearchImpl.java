@@ -101,35 +101,36 @@ public abstract class BaseOpenSearchImpl implements OpenSearch {
 	protected void addSearchResult(
 		Element root, long groupId, long scopeGroupId, String entryClassName,
 		long entryClassPK, String title, String link, Date updated,
-		String summary, double score, String format) {
+		String summary, double score, String format, long userId) {
 
 		addSearchResult(
 			root, groupId, scopeGroupId, entryClassName, entryClassPK, title,
-			link, updated, summary, new String[0], 0, score, format);
+			link, updated, summary, new String[0], 0, score, format, userId);
 	}
 
 	protected void addSearchResult(
 		Element root, long groupId, long scopeGroupId, String entryClassName,
 		long entryClassPK, String title, String link, Date updated,
 		String summary, String[] tags, double ratings, double score,
-		String format) {
+		String format, long userId) {
 
 		if (format.equals("rss")) {
 			addSearchResultRSS(
 				root, groupId, scopeGroupId, entryClassName, entryClassPK,
-				title, link, updated, summary, tags, ratings, score);
+				title, link, updated, summary, tags, ratings, score, userId);
 		}
 		else {
 			addSearchResultAtom(
 				root, groupId, scopeGroupId, entryClassName, entryClassPK,
-				title, link, updated, summary, tags, ratings, score);
+				title, link, updated, summary, tags, ratings, score, userId);
 		}
 	}
 
 	protected void addSearchResultAtom(
 		Element root, long groupId, long scopeGroupId, String entryClassName,
 		long entryClassPK, String title, String link, Date updated,
-		String summary, String[] tags, double ratings, double score) {
+		String summary, String[] tags, double ratings, double score,
+		long userId) {
 
 		// entry
 
@@ -202,12 +203,18 @@ public abstract class BaseOpenSearchImpl implements OpenSearch {
 
 		OpenSearchUtil.addElement(
 			entry, "score", OpenSearchUtil.RELEVANCE_NAMESPACE, score);
+
+		// userId
+
+		OpenSearchUtil.addElement(
+			entry, "userId", OpenSearchUtil.LIFERAY_NAMESPACE, userId);
 	}
 
 	protected void addSearchResultRSS(
 		Element root, long groupId, long scopeGroupId, String entryClassName,
 		long entryClassPK, String title, String link, Date updated,
-		String summary, String[] tags, double ratings, double score) {
+		String summary, String[] tags, double ratings, double score,
+		long userId) {
 
 		// item
 
@@ -265,6 +272,11 @@ public abstract class BaseOpenSearchImpl implements OpenSearch {
 
 		OpenSearchUtil.addElement(
 			item, "score", OpenSearchUtil.RELEVANCE_NAMESPACE, score);
+
+		// userId
+
+		OpenSearchUtil.addElement(
+			item, "userId", OpenSearchUtil.LIFERAY_NAMESPACE, userId);
 	}
 
 	/**

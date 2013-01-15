@@ -290,6 +290,12 @@ for (int i = 0; i < portlets.size(); i++) {
 
 				// Add result row
 
+				// User Name
+
+				String userName = element.elementText(OpenSearchUtil.getQName("userName", OpenSearchUtil.LIFERAY_NAMESPACE));
+
+				row.addText(userName);
+
 				resultRows.add(row);
 			}
 			catch (Exception e) {
@@ -317,7 +323,7 @@ for (int i = 0; i < portlets.size(); i++) {
 
 		// When the total is <= to the delta, we know the result is accurate
 		// since we've filtered the entire result set. Otherwise, we simply
-		// indicate that there are possibly many more. (à la Google)
+		// indicate that there are possibly many more. (ï¿½ la Google)
 
 		if (filterSearch && (openSearchSearchContainer.getTotal() > openSearchSearchContainer.getDelta())) {
 			sb.append(StringPool.SPACE);

@@ -152,11 +152,14 @@ public class PortalOpenSearchImpl extends BaseOpenSearchImpl {
 
 				double score = results.score(i);
 
+				long ownerUserId = GetterUtil.getLong(
+					result.get(Field.USER_ID));
+
 				addSearchResult(
 					root, resultGroupId, resultScopeGroupId, entryClassName,
 					entryClassPK,
 					portletTitle + " " + CharPool.RAQUO + " " + title, url,
-					modifiedDate, content, score, format);
+					modifiedDate, content, score, format, ownerUserId);
 			}
 
 			if (_log.isDebugEnabled()) {
