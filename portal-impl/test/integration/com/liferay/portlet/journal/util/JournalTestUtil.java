@@ -94,14 +94,6 @@ public class JournalTestUtil {
 	}
 
 	public static JournalArticle addArticle(
-			String content, String structureId, String templateId)
-		throws Exception {
-
-		return addArticle(
-			TestPropsValues.getGroupId(), content, structureId, templateId);
-	}
-
-	public static JournalArticle addArticle(
 			long groupId, String content, String structureId, String templateId)
 		throws Exception {
 
@@ -122,6 +114,14 @@ public class JournalTestUtil {
 			0, true, false, false, null, null, null, null, serviceContext);
 	}
 
+	public static JournalArticle addArticle(
+			String content, String structureId, String templateId)
+		throws Exception {
+
+		return addArticle(
+			TestPropsValues.getGroupId(), content, structureId, templateId);
+	}
+
 	public static DDMStructure addDDMStructure() throws Exception {
 		return addDDMStructure(
 			TestPropsValues.getGroupId(), getSampleStructureXSD());
@@ -129,10 +129,6 @@ public class JournalTestUtil {
 
 	public static DDMStructure addDDMStructure(long groupId) throws Exception {
 		return addDDMStructure(groupId, getSampleStructureXSD());
-	}
-
-	public static DDMStructure addDDMStructure(String xsd) throws Exception {
-		return addDDMStructure(TestPropsValues.getGroupId(), xsd);
 	}
 
 	public static DDMStructure addDDMStructure(long groupId, String xsd)
@@ -153,6 +149,10 @@ public class JournalTestUtil {
 			null, xsd, serviceContext);
 	}
 
+	public static DDMStructure addDDMStructure(String xsd) throws Exception {
+		return addDDMStructure(TestPropsValues.getGroupId(), xsd);
+	}
+
 	public static DDMTemplate addDDMTemplate(long structureId)
 		throws Exception {
 
@@ -167,14 +167,6 @@ public class JournalTestUtil {
 		return addDDMTemplate(
 			groupId, structureId, getSampleTemplateXSL(),
 			JournalTemplateConstants.LANG_TYPE_VM);
-	}
-
-	public static DDMTemplate addDDMTemplate(
-			long structureId, String xsl, String lang)
-		throws Exception {
-
-		return addDDMTemplate(
-			TestPropsValues.getGroupId(), structureId, xsl, lang);
 	}
 
 	public static DDMTemplate addDDMTemplate(
@@ -196,6 +188,14 @@ public class JournalTestUtil {
 			structureId, nameMap, null,
 			DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY, null, lang, xsl,
 			serviceContext);
+	}
+
+	public static DDMTemplate addDDMTemplate(
+			long structureId, String xsl, String lang)
+		throws Exception {
+
+		return addDDMTemplate(
+			TestPropsValues.getGroupId(), structureId, xsl, lang);
 	}
 
 	public static void addDynamicContent(
