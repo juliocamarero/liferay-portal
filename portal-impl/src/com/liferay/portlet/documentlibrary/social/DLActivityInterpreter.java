@@ -15,13 +15,15 @@
 package com.liferay.portlet.documentlibrary.social;
 
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
+import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
@@ -71,10 +73,8 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		String link =
 			themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
-				"/document_library/get_file?groupId=" +
-					fileEntry.getRepositoryId() + "&folderId=" +
-						fileEntry.getFolderId() + "&title=" +
-							HttpUtil.encodeURL(fileEntry.getTitle());
+				"/document_library/find_file_entry?fileEntryId=" +
+				fileEntry.getFileEntryId();
 
 		// Title
 
@@ -110,13 +110,17 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		StringBundler sb = new StringBundler(3);
 
-		String fileEntryLink =
-			themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
-				"/document_library/find_file_entry?fileEntryId=" +
-					fileEntry.getFileEntryId();
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByType(
+				"document");
 
-		sb.append(wrapLink(fileEntryLink, "view-document", themeDisplay));
-		sb.append(StringPool.SPACE);
+		AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
+			fileEntry.getFileEntryId());
+
+		String fileEntryLink = assetRenderer.getURLDownload(themeDisplay);
+
+		sb.append(wrapLink(fileEntryLink, "download-file", themeDisplay));
+		sb.append(StringPool.DOUBLE_SPACE);
 
 		String folderLink =
 			themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
