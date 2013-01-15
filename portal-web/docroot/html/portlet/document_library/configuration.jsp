@@ -26,6 +26,32 @@ if (portletResource.equals(PortletKeys.DOCUMENT_LIBRARY)) {
 }
 
 String redirect = ParamUtil.getString(request, "redirect");
+
+String emailFromName = ParamUtil.getString(request, "emailFromName", DLUtil.getEmailFromName(preferences, company.getCompanyId()));
+String emailFromAddress = ParamUtil.getString(request, "emailFromAddress", DLUtil.getEmailFromAddress(preferences, company.getCompanyId()));
+
+String emailParam = StringPool.BLANK;
+String defaultEmailSubject = StringPool.BLANK;
+String defaultEmailBody = StringPool.BLANK;
+
+if (tabs2.equals("document-added-email")) {
+	emailParam = "emailFileEntryAdded";
+	defaultEmailSubject = ContentUtil.get(PropsUtil.get(PropsKeys.DL_EMAIL_FILE_ENTRY_ADDED_SUBJECT));
+	defaultEmailBody = ContentUtil.get(PropsUtil.get(PropsKeys.DL_EMAIL_FILE_ENTRY_ADDED_BODY));
+}
+else if (tabs2.equals("document-updated-email")) {
+	emailParam = "emailFileEntryUpdated";
+	defaultEmailSubject = ContentUtil.get(PropsUtil.get(PropsKeys.DL_EMAIL_FILE_ENTRY_UPDATED_SUBJECT));
+	defaultEmailBody = ContentUtil.get(PropsUtil.get(PropsKeys.DL_EMAIL_FILE_ENTRY_UPDATED_BODY));
+}
+
+String currentLanguageId = LanguageUtil.getLanguageId(request);
+
+String emailSubject = PrefsParamUtil.getString(preferences, request, emailParam + "Subject_" + currentLanguageId, defaultEmailSubject);
+String emailBody = PrefsParamUtil.getString(preferences, request, emailParam + "Body_" + currentLanguageId, defaultEmailBody);
+
+String editorParam = emailParam + "Body_" + currentLanguageId;
+String editorContent = emailBody;
 %>
 
 <liferay-portlet:renderURL portletConfiguration="true" var="portletURL">
@@ -187,14 +213,218 @@ String redirect = ParamUtil.getString(request, "redirect");
 				</liferay-ui:panel>
 			</liferay-ui:panel-container>
 		</c:when>
-	</c:choose>
+		<c:when test='<%= tabs2.equals("email-from") %>'>
+			<aui:fieldset>
+				<aui:input cssClass="lfr-input-text-container" label="name" name="preferences--emailFromName--" value="<%= emailFromName %>" />
 
+				<aui:input cssClass="lfr-input-text-container" label="address" name="preferences--emailFromAddress--" value="<%= emailFromAddress %>" />
+			</aui:fieldset>
+
+			<div class="definition-of-terms">
+				<h4><liferay-ui:message key="definition-of-terms" /></h4>
+
+				<dl>
+					<dt>
+						[$COMPANY_ID$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-company-id-associated-with-the-document" />
+					</dd>
+					<dt>
+						[$COMPANY_MX$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-company-mx-associated-with-the-document" />
+					</dd>
+					<dt>
+						[$COMPANY_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-company-name-associated-with-the-document" />
+					</dd>
+					<dt>
+						[$DOCUMENT_STATUS_BY_USER_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-user-who-updated-the-document" />
+					</dd>
+					<dt>
+						[$DOCUMENT_USER_ADDRESS$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-email-address-of-the-user-who-added-the-document" />
+					</dd>
+					<dt>
+						[$DOCUMENT_USER_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-user-who-added-the-document" />
+					</dd>
+					<dt>
+						[$PORTLET_NAME$]
+					</dt>
+					<dd>
+						<%= PortalUtil.getPortletTitle(renderResponse) %>
+					</dd>
+					<dt>
+						[$SITE_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-site-name-associated-with-the-document" />
+					</dd>
+				</dl>
+			</div>
+		</c:when>
+		<c:when test='<%= tabs2.startsWith("document-") %>'>
+			<aui:fieldset>
+				<c:choose>
+					<c:when test='<%= tabs2.equals("document-added-email") %>'>
+						<aui:input label="enabled" name="preferences--emailFileEntryAddedEnabled--" type="checkbox" value="<%= DLUtil.getEmailFileEntryAddedEnabled(preferences) %>" />
+					</c:when>
+					<c:when test='<%= tabs2.equals("document-updated-email") %>'>
+						<aui:input label="enabled" name="preferences--emailFileEntryUpdatedEnabled--" type="checkbox" value="<%= DLUtil.getEmailFileEntryUpdatedEnabled(preferences) %>" />
+					</c:when>
+				</c:choose>
+
+				<aui:select label="language" name="languageId" onChange='<%= renderResponse.getNamespace() + "updateLanguage(this);" %>'>
+
+					<%
+					Locale[] locales = LanguageUtil.getAvailableLocales();
+
+					for (int i = 0; i < locales.length; i++) {
+						String style = StringPool.BLANK;
+
+						if (Validator.isNotNull(preferences.getValue(emailParam + "Subject_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK)) ||
+							Validator.isNotNull(preferences.getValue(emailParam + "Body_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK))) {
+
+							style = "font-weight: bold;";
+						}
+					%>
+
+					<aui:option label="<%= locales[i].getDisplayName(locale) %>" selected="<%= currentLanguageId.equals(LocaleUtil.toLanguageId(locales[i])) %>" style="<%= style %>" value="<%= LocaleUtil.toLanguageId(locales[i]) %>" />
+
+					<%
+					}
+					%>
+
+				</aui:select>
+
+				<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= "preferences--" + emailParam + "Subject_" + currentLanguageId + "--" %>' value="<%= emailSubject %>" />
+
+				<aui:field-wrapper label="body">
+					<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" />
+
+					<aui:input name='<%= "preferences--" + editorParam + "--" %>' type="hidden" />
+				</aui:field-wrapper>
+			</aui:fieldset>
+
+			<div class="definition-of-terms">
+				<h4><liferay-ui:message key="definition-of-terms" /></h4>
+
+				<dl>
+					<dt>
+						[$COMPANY_ID$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-company-id-associated-with-the-document" />
+					</dd>
+					<dt>
+						[$COMPANY_MX$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-company-mx-associated-with-the-document" />
+					</dd>
+					<dt>
+						[$COMPANY_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-company-name-associated-with-the-document" />
+					</dd>
+					<dt>
+						[$DOCUMENT_TITLE$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-document-title" />
+					</dd>
+					<dt>
+						[$DOCUMENT_USER_ADDRESS$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-email-address-of-the-user-who-added-the-document" />
+					</dd>
+					<dt>
+						[$DOCUMENT_USER_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-user-who-added-the-document" />
+					</dd>
+					<dt>
+						[$FOLDER_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-folder-in-which-the-document-has-been-added" />
+					</dd>
+					<dt>
+						[$FROM_ADDRESS$]
+					</dt>
+					<dd>
+						<%= HtmlUtil.escape(emailFromAddress) %>
+					</dd>
+					<dt>
+						[$FROM_NAME$]
+					</dt>
+					<dd>
+						<%= HtmlUtil.escape(emailFromName) %>
+					</dd>
+					<dt>
+						[$PORTAL_URL$]
+					</dt>
+					<dd>
+						<%= company.getVirtualHostname() %>
+					</dd>
+					<dt>
+						[$PORTLET_NAME$]
+					</dt>
+					<dd>
+						<%= PortalUtil.getPortletTitle(renderResponse) %>
+					</dd>
+					<dt>
+						[$SITE_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-site-name-associated-with-the-document" />
+					</dd>
+					<dt>
+						[$TO_ADDRESS$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-address-of-the-email-recipient" />
+					</dd>
+					<dt>
+						[$TO_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-name-of-the-email-recipient" />
+					</dd>
+				</dl>
+			</div>
+		</c:when>
+	</c:choose>
 	<aui:button-row>
 		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>
 
 <aui:script>
+	function <portlet:namespace />initEditor() {
+		return "<%= UnicodeFormatter.toString(editorContent) %>";
+	}
+
+	function <portlet:namespace />updateLanguage() {
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '';
+		submitForm(document.<portlet:namespace />fm);
+	}
+
 	function <portlet:namespace />openFolderSelector() {
 		var folderWindow = window.open('<liferay-portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>" portletName="<%= portletResource %>"><portlet:param name="struts_action" value='<%= strutsAction + "/select_folder" %>' /></liferay-portlet:renderURL>', 'folder', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=830');
 
@@ -216,13 +446,22 @@ String redirect = ParamUtil.getString(request, "redirect");
 		window,
 		'<portlet:namespace />saveConfiguration',
 		function() {
-			<c:if test='<%= tabs2.equals("display-settings") %>'>
-				document.<portlet:namespace />fm.<portlet:namespace />displayViews.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />currentDisplayViews);
-				document.<portlet:namespace />fm.<portlet:namespace />entryColumns.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />currentEntryColumns);
-			</c:if>
+			<c:choose>
+				<c:when test='<%= tabs2.startsWith("document-") %>'>
+					document.<portlet:namespace />fm.<portlet:namespace /><%= editorParam %>.value = window.<portlet:namespace />editor.getHTML();
+				</c:when>
+				<c:when test='<%= tabs2.equals("display-settings") %>'>
+					document.<portlet:namespace />fm.<portlet:namespace />displayViews.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />currentDisplayViews);
+					document.<portlet:namespace />fm.<portlet:namespace />entryColumns.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />currentEntryColumns);
+				</c:when>
+			</c:choose>
 
 			submitForm(document.<portlet:namespace />fm);
 		},
 		['liferay-util-list-fields']
 	);
 </aui:script>
+
+<%!
+public static final String EDITOR_WYSIWYG_IMPL_KEY = "editor.wysiwyg.portal-web.docroot.html.portlet.document_library.configuration.jsp";
+%>
