@@ -31,17 +31,14 @@ import com.liferay.portal.model.LayoutRevision;
 import com.liferay.portal.model.LayoutSetBranch;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.VirtualLayout;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetBranchLocalServiceUtil;
-import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SessionClicks;
 import com.liferay.portlet.sites.util.SitesUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,22 +81,9 @@ public class LayoutsTreeUtil {
 		if (selPlid != 0) {
 			Layout selLayout = LayoutLocalServiceUtil.getLayout(selPlid);
 
-			layoutAncestors = selLayout.getAncestors();
+			layoutAncestors = LayoutServiceUtil.getAncestorLayouts(selPlid);
 
 			layoutAncestors.add(selLayout);
-
-			List<Layout> filteredLayoutAncestors = new ArrayList<Layout>();
-
-			for (Layout layout : layouts) {
-				if (LayoutPermissionUtil.contains(
-					themeDisplay.getPermissionChecker(), layout.getPlid(),
-					ActionKeys.VIEW)) {
-
-					filteredLayoutAncestors.add(layout);
-				}
-			}
-
-			layoutAncestors = filteredLayoutAncestors;
 		}
 
 		int start = 0;

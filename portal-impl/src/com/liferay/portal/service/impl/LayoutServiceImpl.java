@@ -413,6 +413,16 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			plid, groupId, portletId, parameterMap, startDate, endDate);
 	}
 
+	public List<Layout> getAncestorLayouts(long plid)
+		throws PortalException, SystemException {
+
+		Layout layout = layoutLocalService.getLayout(plid);
+
+		List<Layout> ancestors = layout.getAncestors();
+
+		return filterLayouts(ancestors);
+	}
+
 	/**
 	 * Returns the primary key of the default layout for the group.
 	 *
