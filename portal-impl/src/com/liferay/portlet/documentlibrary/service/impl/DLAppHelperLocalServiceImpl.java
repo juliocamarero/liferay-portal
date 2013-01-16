@@ -1371,7 +1371,8 @@ public class DLAppHelperLocalServiceImpl
 				defaultPreferences);
 		}
 
-		if (serviceContext.isCommandAdd() &&
+		if ((serviceContext.isCommandAdd() ||
+				serviceContext.getCommand().equals(Constants.ADD_MULTIPLE)) &&
 			DLUtil.getEmailFileEntryAddedEnabled(preferences)) {
 		}
 		else if (serviceContext.isCommandUpdate() &&
