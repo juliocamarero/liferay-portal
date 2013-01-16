@@ -43,7 +43,7 @@ else {
 		/>
 	</c:if>
 
-	<c:if test="<%= DLPermission.contains(permissionChecker, scopeGroupId, ActionKeys.SUBSCRIBE) %>">
+	<c:if test="<%= DLPermission.contains(permissionChecker, scopeGroupId, ActionKeys.SUBSCRIBE) && (row == null) %>">
 
 		<%
 		Set<Long> fileEntryTypeSubscriptionClassPKs = (Set<Long>)request.getAttribute("file_entry_type_action.jsp-fileEntryTypeSubscriptionClassPKs");
