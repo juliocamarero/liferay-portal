@@ -56,7 +56,6 @@ import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.model.DLSyncConstants;
-import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.base.DLAppHelperLocalServiceBaseImpl;
 import com.liferay.portlet.documentlibrary.social.DLActivityKeys;
 import com.liferay.portlet.documentlibrary.util.DLAppHelperThreadLocal;
@@ -1372,7 +1371,8 @@ public class DLAppHelperLocalServiceImpl
 				defaultPreferences);
 		}
 
-		if (serviceContext.isCommandAdd() &&
+		if ((serviceContext.isCommandAdd() ||
+				serviceContext.getCommand().equals(Constants.ADD_MULTIPLE)) &&
 			DLUtil.getEmailFileEntryAddedEnabled(preferences)) {
 		}
 		else if (serviceContext.isCommandUpdate() &&
@@ -1411,7 +1411,7 @@ public class DLAppHelperLocalServiceImpl
 			long folderId = fileEntry.getFolderId();
 
 			if (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-				folder = DLAppLocalServiceUtil.getFolder(folderId);
+				folder = dlAppLocalService.getFolder(folderId);
 			}
 		}
 		catch (Exception e) {
