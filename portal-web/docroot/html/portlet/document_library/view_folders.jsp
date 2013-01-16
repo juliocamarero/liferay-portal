@@ -216,6 +216,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 						%>
 
 						<liferay-ui:app-view-navigation-entry
+							actionJsp="/html/portlet/document_library/file_entry_type_action.jsp"
 							cssClassName="folder file-entry-type"
 							dataView="<%= dataView %>"
 							entryTitle='<%= LanguageUtil.get(pageContext, "basic-document") %>'
