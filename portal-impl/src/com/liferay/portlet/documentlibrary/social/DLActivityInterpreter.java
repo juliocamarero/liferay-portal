@@ -40,6 +40,21 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 		return _CLASS_NAMES;
 	}
 
+	protected String _getFolderLink(
+		ThemeDisplay themeDisplay, FileEntry fileEntry) {
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(themeDisplay.getPortalURL());
+		sb.append(themeDisplay.getPathMain());
+		sb.append("/document_library/find_folder?groupId=");
+		sb.append(fileEntry.getRepositoryId());
+		sb.append("&folderId=");
+		sb.append(fileEntry.getFolderId());
+
+		return sb.toString();
+	}
+
 	@Override
 	protected SocialActivityFeedEntry doInterpret(
 			SocialActivity activity, ThemeDisplay themeDisplay)
@@ -71,10 +86,14 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		// Link
 
-		String link =
-			themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
-				"/document_library/find_file_entry?fileEntryId=" +
-				fileEntry.getFileEntryId();
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(themeDisplay.getPortalURL());
+		sb.append(themeDisplay.getPathMain());
+		sb.append("/document_library/find_file_entry?fileEntryId=");
+		sb.append(fileEntry.getFileEntryId());
+
+		String link =sb.toString();
 
 		// Title
 
@@ -108,11 +127,11 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		// Body
 
-		StringBundler sb = new StringBundler(3);
+		sb = new StringBundler(3);
 
 		AssetRendererFactory assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByType(
-				"document");
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				DLFileEntry.class.getName());
 
 		AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
 			fileEntry.getFileEntryId());
@@ -120,15 +139,12 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 		String fileEntryLink = assetRenderer.getURLDownload(themeDisplay);
 
 		sb.append(wrapLink(fileEntryLink, "download-file", themeDisplay));
-		sb.append(StringPool.DOUBLE_SPACE);
+		sb.append(StringPool.SPACE);
 
-		String folderLink =
-			themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
-				"/document_library/find_folder?groupId=" +
-					fileEntry.getRepositoryId() + "&folderId=" +
-						fileEntry.getFolderId();
-
-		sb.append(wrapLink(folderLink, "go-to-folder", themeDisplay));
+		sb.append(
+			wrapLink(
+				_getFolderLink(themeDisplay, fileEntry), "go-to-folder",
+				themeDisplay));
 
 		String body = sb.toString();
 
