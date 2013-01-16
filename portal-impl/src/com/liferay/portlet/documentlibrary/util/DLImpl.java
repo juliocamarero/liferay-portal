@@ -24,6 +24,9 @@ import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
@@ -51,6 +54,7 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
@@ -63,7 +67,10 @@ import com.liferay.portlet.documentlibrary.util.comparator.RepositoryModelModifi
 import com.liferay.portlet.documentlibrary.util.comparator.RepositoryModelNameComparator;
 import com.liferay.portlet.documentlibrary.util.comparator.RepositoryModelReadCountComparator;
 import com.liferay.portlet.documentlibrary.util.comparator.RepositoryModelSizeComparator;
+import com.liferay.portlet.messageboards.model.MBMessage;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -446,6 +453,43 @@ public class DLImpl implements DL {
 
 		return PortalUtil.getEmailFromName(
 			preferences, companyId, PropsValues.DL_EMAIL_FROM_NAME);
+	}
+
+	public List<Object> getEntries(Hits hits) {
+		List<Object> entries = new ArrayList<Object>();
+
+		for (Document document : hits.getDocs()) {
+			String entryClassName = GetterUtil.getString(
+				document.get(Field.ENTRY_CLASS_NAME));
+			long entryClassPK = GetterUtil.getLong(
+				document.get(Field.ENTRY_CLASS_PK));
+
+			try {
+				Object obj = null;
+
+				if (entryClassName.equals(MBMessage.class.getName())) {
+					long classPK = GetterUtil.getLong(
+						document.get(Field.CLASS_PK));
+
+					DLAppLocalServiceUtil.getFileEntry(classPK);
+
+					obj = MBMessageLocalServiceUtil.getMessage(entryClassPK);
+				}
+				else if (entryClassName.equals(DLFileEntry.class.getName())) {
+					obj = DLAppLocalServiceUtil.getFileEntry(entryClassPK);
+				}
+
+				entries.add(obj);
+			}
+			catch (Exception e) {
+				if (_log.isWarnEnabled()) {
+					_log.warn("Documents and Media search index is stale and " +
+						"contains file entry {" + entryClassPK + "}");
+				}
+			}
+		}
+
+		return entries;
 	}
 
 	public String getFileEntryImage(
