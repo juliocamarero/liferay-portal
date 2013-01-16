@@ -14,12 +14,17 @@
 
 package com.liferay.taglib.ui;
 
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Brian Wing Shun Chan
@@ -97,8 +102,30 @@ public class AssetTagsSelectorTag extends IncludeTag {
 			"liferay-ui:asset-tags-selector:curTags", _curTags);
 		request.setAttribute(
 			"liferay-ui:asset-tags-selector:focus", String.valueOf(_focus));
+
+		if (_groupIds == null) {
+			ThemeDisplay themeDisplay = (ThemeDisplay)pageContext.getAttribute(
+				"themeDisplay");
+
+			List<Long> groupIds = new ArrayList<Long>();
+
+			Group group = themeDisplay.getScopeGroup();
+
+			groupIds.add(group.getParentGroupId());
+
+			if (group.getParentGroupId() != themeDisplay.getCompanyGroupId()) {
+				groupIds.add(themeDisplay.getCompanyGroupId());
+			}
+
+			Long[] groupIdsArray = (Long[])groupIds.toArray();
+
+			_groupIds = ArrayUtil.toArray(groupIdsArray);
+		}
+
 		request.setAttribute(
 			"liferay-ui:asset-tags-selector:groupIds", _groupIds);
+
+
 		request.setAttribute(
 			"liferay-ui:asset-tags-selector:hiddenInput", _hiddenInput);
 		request.setAttribute("liferay-ui:asset-tags-selector:id", id);
