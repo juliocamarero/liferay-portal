@@ -32,11 +32,15 @@
 		</div>
 
 		<div class="basic-configuration <%= (advancedConfiguration ? "aui-helper-hidden" : "") %>" id="<portlet:namespace />basicConfiguration">
+			<aui:input name="preferences--displaySiteFacet--" type="checkbox" value="<%= displaySiteFacet %>" />
+
 			<aui:input name="preferences--displayAssetTypeFacet--" type="checkbox" value="<%= displayAssetTypeFacet %>" />
 
 			<aui:input name="preferences--displayAssetTagsFacet--" type="checkbox" value="<%= displayAssetTagsFacet %>" />
 
 			<aui:input name="preferences--displayAssetCategoriesFacet--" type="checkbox" value="<%= displayAssetCategoriesFacet %>" />
+
+			<aui:input name="preferences--displayUserFacet--" type="checkbox" value="<%= displayUserFacet %>" />
 
 			<aui:input name="preferences--displayModifiedRangeFacet--" type="checkbox" value="<%= displayModifiedRangeFacet %>" />
 		</div>
