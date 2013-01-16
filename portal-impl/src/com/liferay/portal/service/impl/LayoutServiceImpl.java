@@ -413,6 +413,16 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			plid, groupId, portletId, parameterMap, startDate, endDate);
 	}
 
+	/**
+	 * Returns a list with all the ancestors of the of the layout matching the
+	 * primary key
+	 *
+	 * @param  plid the primary key of the layout
+	 *
+	 * @return the list of ancestor layouts
+	 * @throws PortalException if a matching layout could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
 	public List<Layout> getAncestorLayouts(long plid)
 		throws PortalException, SystemException {
 
