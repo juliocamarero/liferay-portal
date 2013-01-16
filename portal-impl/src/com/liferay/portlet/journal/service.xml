@@ -206,7 +206,11 @@
 		<reference package-path="com.liferay.portlet.expando" entity="ExpandoValue" />
 		<reference package-path="com.liferay.portlet.messageboards" entity="MBMessage" />
 		<reference package-path="com.liferay.portlet.ratings" entity="RatingsStats" />
+		<reference package-path="com.liferay.portlet.social" entity="SocialActivity" />
+		<reference package-path="com.liferay.portlet.social" entity="SocialActivityCounter" />
 		<reference package-path="com.liferay.portlet.trash" entity="TrashEntry" />
+        <reference package-path="com.liferay.portlet.social" entity="SocialActivity" />
+        <reference package-path="com.liferay.portlet.social" entity="SocialActivityCounter" />
 	</entity>
 	<entity name="JournalArticleImage" local-service="true" remote-service="false">
 
