@@ -70,6 +70,7 @@ import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -1350,7 +1351,7 @@ public class DLAppHelperLocalServiceImpl
 
 	protected void notifySubscribers(
 			FileVersion fileVersion, ServiceContext serviceContext)
-		throws SystemException {
+		throws PortalException, SystemException {
 
 		if (!fileVersion.isApproved()) {
 			return;
@@ -1445,8 +1446,20 @@ public class DLAppHelperLocalServiceImpl
 		subscriptionSender.setUserId(fileVersion.getUserId());
 
 		subscriptionSender.addPersistedSubscribers(
-			Folder.class.getName(),
-			(folder != null) ? folder.getFolderId() : fileVersion.getGroupId());
+			Folder.class.getName(), fileVersion.getGroupId());
+
+		List<Long> folderIds = new ArrayList<Long>();
+
+		if (folder != null) {
+			folderIds.add(folder.getFolderId());
+
+			folderIds.addAll(folder.getAncestorFolderIds());
+		}
+
+		for (long folderId : folderIds) {
+			subscriptionSender.addPersistedSubscribers(
+				Folder.class.getName(), folderId);
+		}
 
 		subscriptionSender.flushNotificationsAsync();
 	}
