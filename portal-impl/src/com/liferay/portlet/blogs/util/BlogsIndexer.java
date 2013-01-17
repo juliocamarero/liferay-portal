@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -77,6 +76,8 @@ public class BlogsIndexer extends BaseIndexer {
 				getClassName(searchContext), MBMessage.class.getName()});
 
 		searchContext.setAttribute("discussion", true);
+		searchContext.setAttribute(
+			"relatedClassName", BlogsEntry.class.getName());
 
 		return super.getFullQuery(searchContext);
 	}
