@@ -363,6 +363,7 @@ public class MBMessageIndexer extends BaseIndexer {
 
 		reindexCategories(companyId);
 		reindexRoot(companyId);
+		reindexDiscussions(companyId);
 	}
 
 	@Override
@@ -403,6 +404,30 @@ public class MBMessageIndexer extends BaseIndexer {
 
 				reindexMessages(
 					companyId, category.getGroupId(), category.getCategoryId());
+			}
+
+		};
+
+		actionableDynamicQuery.setCompanyId(companyId);
+
+		actionableDynamicQuery.performActions();
+	}
+
+	protected void reindexDiscussions(final long companyId)
+		throws PortalException, SystemException {
+
+		ActionableDynamicQuery actionableDynamicQuery =
+			new GroupActionableDynamicQuery() {
+
+			@Override
+			protected void performAction(Object object)
+				throws PortalException, SystemException {
+
+				Group group = (Group)object;
+
+				reindexMessages(
+					companyId, group.getGroupId(),
+					MBCategoryConstants.DISCUSSION_CATEGORY_ID);
 			}
 
 		};
