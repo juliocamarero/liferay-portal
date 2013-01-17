@@ -55,6 +55,8 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			ActionResponse actionResponse)
 		throws Exception {
 
+		boolean displaySiteFacet = GetterUtil.getBoolean(
+			getParameter(actionRequest, "displaySiteFacet"));
 		boolean displayAssetCategoriesFacet = GetterUtil.getBoolean(
 			getParameter(actionRequest, "displayAssetCategoriesFacet"));
 		boolean displayAssetTagsFacet = GetterUtil.getBoolean(
@@ -90,7 +92,8 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 
 			String fieldName = oldFacetJSONObject.getString("fieldName");
 
-			if ((displayAssetCategoriesFacet &&
+			if ((displaySiteFacet && fieldName.equals("groupId")) ||
+				(displayAssetCategoriesFacet &&
 					fieldName.equals("assetCategoryTitles")) ||
 				(displayAssetTagsFacet && fieldName.equals("assetTagNames")) ||
 				(displayAssetTypeFacet && fieldName.equals("entryClassName")) ||
