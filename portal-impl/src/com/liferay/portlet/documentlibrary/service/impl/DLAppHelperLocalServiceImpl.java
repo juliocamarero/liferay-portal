@@ -50,11 +50,14 @@ import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.model.DLSyncConstants;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.base.DLAppHelperLocalServiceBaseImpl;
 import com.liferay.portlet.documentlibrary.social.DLActivityKeys;
 import com.liferay.portlet.documentlibrary.util.DLAppHelperThreadLocal;
@@ -1426,11 +1429,20 @@ public class DLAppHelperLocalServiceImpl
 
 		SubscriptionSender subscriptionSender = new SubscriptionSender();
 
+		DLFileEntry dlFileEntry =
+			DLFileEntryLocalServiceUtil.getDLFileEntry(
+			fileVersion.getFileEntryId());
+
+		DLFileEntryType fileEntryType =
+			DLFileEntryTypeLocalServiceUtil.getDLFileEntryType(
+			dlFileEntry.getFileEntryTypeId());
+
 		subscriptionSender.setCompanyId(fileVersion.getCompanyId());
 		subscriptionSender.setContextAttributes(
 			"[$DOCUMENT_STATUS_BY_USER_NAME$]",
 			fileVersion.getStatusByUserName(), "[$DOCUMENT_TITLE$]",
-			fileVersion.getTitle(), "[$FOLDER_NAME$]", folderName);
+			fileVersion.getTitle(), "[$DOCUMENT_TYPE$]",
+			fileEntryType.getName(), "[$FOLDER_NAME$]", folderName);
 		subscriptionSender.setContextUserPrefix("DOCUMENT");
 		subscriptionSender.setFrom(fromAddress, fromName);
 		subscriptionSender.setHtmlFormat(true);
@@ -1444,8 +1456,13 @@ public class DLAppHelperLocalServiceImpl
 		subscriptionSender.setServiceContext(serviceContext);
 		subscriptionSender.setUserId(fileVersion.getUserId());
 
-		subscriptionSender.addPersistedSubscribers(
-			Folder.class.getName(), fileVersion.getGroupId());
+		String[] classNames =
+			{Folder.class.getName(), DLFileEntryType.class.getName()};
+
+		for (int i = 0; i < classNames.length; i++) {
+			subscriptionSender.addPersistedSubscribers(
+				classNames[i], fileVersion.getGroupId());
+		}
 
 		List<Long> folderIds = new ArrayList<Long>();
 
@@ -1458,6 +1475,12 @@ public class DLAppHelperLocalServiceImpl
 		for (long folderId : folderIds) {
 			subscriptionSender.addPersistedSubscribers(
 				Folder.class.getName(), folderId);
+		}
+
+		if (fileEntryType.getFileEntryTypeId() != 0) {
+			subscriptionSender.addPersistedSubscribers(
+				DLFileEntryType.class.getName(),
+				fileEntryType.getFileEntryTypeId());
 		}
 
 		subscriptionSender.flushNotificationsAsync();
