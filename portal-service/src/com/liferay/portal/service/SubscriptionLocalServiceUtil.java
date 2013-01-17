@@ -300,6 +300,29 @@ public class SubscriptionLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.model.Subscription> getSubscriptions(
+		long companyId, long userId, java.lang.String className, long[] classPKs)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getSubscriptions(companyId, userId, className, classPKs);
+	}
+
+	public static int getSubscriptionsCount(long companyId, long userId,
+		java.lang.String className, long[] classPKs)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getSubscriptionsCount(companyId, userId, className, classPKs);
+	}
+
+	public static int getSubscriptionsCount(long companyId, long userId,
+		java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getSubscriptionsCount(companyId, userId, className, classPK);
+	}
+
+	public static java.util.List<com.liferay.portal.model.Subscription> getSubscriptions(
 		long companyId, java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getSubscriptions(companyId, className, classPK);
