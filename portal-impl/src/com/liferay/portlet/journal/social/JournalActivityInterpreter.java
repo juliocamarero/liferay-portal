@@ -84,7 +84,7 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 				article.getGroupId(), article.getArticleId());
 
 		if (Validator.isNotNull(lastestArticle.getLayoutUuid()) &&
-			!article.isInTrash())  {
+			!article.isInTrash()) {
 
 			Group group = themeDisplay.getScopeGroup();
 
@@ -123,7 +123,7 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 			};
 		}
 		else {
-			titleArguments = new Object[]{
+			titleArguments = new Object[] {
 				StringPool.BLANK, creatorUserName, eventTitle
 			};
 		}
@@ -137,9 +137,8 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		if (articleVersion > 1) {
 			body = LanguageUtil.format(
-				themeDisplay.getLocale(),"created-new-journal-version",
-					articleVersion );
-
+				themeDisplay.getLocale(),"created-new-version",
+				articleVersion );
 		}
 
 		return new SocialActivityFeedEntry(link, title, body);

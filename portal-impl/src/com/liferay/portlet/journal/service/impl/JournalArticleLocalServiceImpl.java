@@ -2706,11 +2706,11 @@ public class JournalArticleLocalServiceImpl
 					article.getGroupId(), article.getArticleId(),
 					article.getUrlTitle());
 
+				// Asset
+
 				if ((oldStatus != WorkflowConstants.STATUS_APPROVED) &&
 					(article.getVersion() !=
 						JournalArticleConstants.VERSION_DEFAULT)) {
-
-					// Asset
 
 					AssetEntry draftAssetEntry = null;
 
