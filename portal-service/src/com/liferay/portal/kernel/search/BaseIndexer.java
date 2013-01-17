@@ -72,6 +72,7 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portlet.expando.util.ExpandoBridgeIndexerUtil;
+import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 
@@ -190,9 +191,17 @@ public abstract class BaseIndexer implements Indexer {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
-			String[] entryClassNames = searchContext.getEntryClassNames();
+			if (searchContext.isIncludeDiscussions()) {
+				searchContext.setEntryClassNames(
+					new String[] {
+						getClassName(searchContext),
+						MBMessage.class.getName()});
 
-			if (entryClassNames.length == 0) {
+				searchContext.setAttribute("discussion", true);
+				searchContext.setAttribute(
+					"relatedClassName", getClassName(searchContext));
+			}
+			else {
 				searchContext.setEntryClassNames(
 					new String[] {getClassName(searchContext)});
 			}

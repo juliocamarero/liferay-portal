@@ -120,21 +120,6 @@ public class DLIndexer extends BaseIndexer {
 		return CLASS_NAMES;
 	}
 
-	@Override
-	public BooleanQuery getFullQuery(SearchContext searchContext)
-		throws SearchException {
-
-		searchContext.setEntryClassNames(
-			new String[] {
-				getClassName(searchContext), MBMessage.class.getName()});
-
-		searchContext.setAttribute("discussion", true);
-		searchContext.setAttribute(
-			"relatedClassName", DLFileEntry.class.getName());
-
-		return super.getFullQuery(searchContext);
-	}
-
 	public String getPortletId() {
 		return PORTLET_ID;
 	}

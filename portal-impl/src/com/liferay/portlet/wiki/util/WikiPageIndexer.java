@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
-import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -86,21 +85,6 @@ public class WikiPageIndexer extends BaseIndexer {
 
 	public String[] getClassNames() {
 		return CLASS_NAMES;
-	}
-
-	@Override
-	public BooleanQuery getFullQuery(SearchContext searchContext)
-		throws SearchException {
-
-		searchContext.setEntryClassNames(
-			new String[] {
-				getClassName(searchContext), MBMessage.class.getName()});
-
-		searchContext.setAttribute("discussion", true);
-		searchContext.setAttribute(
-			"relatedClassName", WikiPage.class.getName());
-
-		return super.getFullQuery(searchContext);
 	}
 
 	public String getPortletId() {
