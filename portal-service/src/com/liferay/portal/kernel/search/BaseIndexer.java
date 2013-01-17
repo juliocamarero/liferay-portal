@@ -190,8 +190,12 @@ public abstract class BaseIndexer implements Indexer {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
-			searchContext.setEntryClassNames(
-				new String[] {getClassName(searchContext)});
+			String[] entryClassNames = searchContext.getEntryClassNames();
+
+			if (entryClassNames.length == 0) {
+				searchContext.setEntryClassNames(
+					new String[] {getClassName(searchContext)});
+			}
 
 			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
 				searchContext);

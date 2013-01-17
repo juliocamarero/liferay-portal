@@ -124,38 +124,15 @@ public class DLIndexer extends BaseIndexer {
 	public BooleanQuery getFullQuery(SearchContext searchContext)
 		throws SearchException {
 
-		try {
-			searchContext.setSearchEngineId(getSearchEngineId());
+		searchContext.setEntryClassNames(
+			new String[] {
+				getClassName(searchContext), MBMessage.class.getName()});
 
-			searchContext.setEntryClassNames(
-				new String[] {
-					getClassName(searchContext), MBMessage.class.getName()});
+		searchContext.setAttribute("discussion", true);
+		searchContext.setAttribute(
+			"relatedClassName", DLFileEntry.class.getName());
 
-			searchContext.setAttribute("discussion", true);
-			searchContext.setAttribute(
-				"relatedClassName", DLFileEntry.class.getName());
-
-			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
-
-			addSearchAssetCategoryIds(contextQuery, searchContext);
-			addSearchAssetTagNames(contextQuery, searchContext);
-			addSearchEntryClassNames(contextQuery, searchContext);
-			addSearchGroupId(contextQuery, searchContext);
-
-			BooleanQuery fullQuery = createFullQuery(
-				contextQuery, searchContext);
-
-			fullQuery.setQueryConfig(searchContext.getQueryConfig());
-
-			return fullQuery;
-		}
-		catch (SearchException se) {
-			throw se;
-		}
-		catch (Exception e) {
-			throw new SearchException(e);
-		}
+		return super.getFullQuery(searchContext);
 	}
 
 	public String getPortletId() {
