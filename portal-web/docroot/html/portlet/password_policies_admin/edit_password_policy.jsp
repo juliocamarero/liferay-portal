@@ -30,7 +30,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 <liferay-util:include page="/html/portlet/password_policies_admin/toolbar.jsp">
 	<liferay-util:param name="toolbarItem" value='<%= (passwordPolicy == null) ? "add" : "view-all" %>' />
 </liferay-util:include>
-
+<h1>HOLA</h1>
 <liferay-ui:header
 	backURL="<%= backURL %>"
 	localizeTitle="<%= (passwordPolicy == null) %>"
@@ -101,7 +101,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 
 				<aui:input helpMessage="syntax-checking-enabled-help" label="syntax-checking-enabled" name="checkSyntax" />
 
-				<div id="<portlet:namespace />syntaxSettings">
+				<div class="password-policy-options" id="<portlet:namespace />syntaxSettings">
 					<aui:input helpMessage="allow-dictionary-words-help" name="allowDictionaryWords" />
 
 					<aui:input helpMessage="minimum-alpha-numeric-help" label="minimum-alpha-numeric" name="minAlphanumeric" />
@@ -130,7 +130,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 
 				<aui:input helpMessage="history-enabled-help" label="history-enabled" name="history" />
 
-				<div id="<portlet:namespace />historySettings">
+				<div class="password-policy-options" id="<portlet:namespace />historySettings">
 					<aui:select helpMessage="history-count-help" name="historyCount">
 
 						<%
@@ -153,7 +153,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 
 				<aui:input helpMessage="expiration-enabled-help" label="expiration-enabled" name="expireable" />
 
-				<div id="<portlet:namespace />expirationSettings">
+				<div class="password-policy-options" id="<portlet:namespace />expirationSettings">
 					<aui:select helpMessage="maximum-age-help" label="maximum-age" name="maxAge">
 
 						<%
@@ -192,7 +192,7 @@ boolean defaultPolicy = BeanParamUtil.getBoolean(passwordPolicy, request, "defau
 			<aui:fieldset>
 				<aui:input helpMessage="lockout-enabled-help" label="lockout-enabled" name="lockout" />
 
-				<div id="<portlet:namespace />lockoutSettings">
+				<div class="password-policy-options" id="<portlet:namespace />lockoutSettings">
 					<aui:input helpMessage="maximum-failure-help" label="maximum-failure" name="maxFailure" />
 
 					<aui:select helpMessage="reset-failure-count-help" name="resetFailureCount">
