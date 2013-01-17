@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.lar;
 
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -200,8 +202,7 @@ public class JournalExportImportTest {
 		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
 
 		parameterMap.put(
-			"_journal_commentsCheckbox",
-			new String[]{Boolean.TRUE.toString()});
+			"_journal_commentsCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put("etag", new String[]{"0"});
 		parameterMap.put(
 			"_journal_web-content", new String[]{Boolean.TRUE.toString()});
@@ -256,15 +257,13 @@ public class JournalExportImportTest {
 			"_journal_tagsCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put("tabs1", new String[]{"export_import"});
 		parameterMap.put("tabs2", new String[]{"export"});
-		parameterMap.put(
-			"PERMISSIONS", new String[]{Boolean.FALSE.toString()});
+		parameterMap.put("PERMISSIONS", new String[]{Boolean.FALSE.toString()});
 		parameterMap.put("portletResource", new String[]{PortletKeys.JOURNAL});
 		parameterMap.put(
 			"_journal_web-contentCheckbox",
 			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"permissinsAssignedToRoles",
-			new String[]{Boolean.TRUE.toString()});
+			"permissinsAssignedToRoles", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put("CATEGORIES", new String[]{Boolean.FALSE.toString()});
 		parameterMap.put(
@@ -281,8 +280,7 @@ public class JournalExportImportTest {
 		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
 
 		parameterMap.put(
-			"_journal_commentsCheckbox",
-			new String[]{Boolean.TRUE.toString()});
+			"_journal_commentsCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"PERMISSIONSCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
@@ -290,8 +288,11 @@ public class JournalExportImportTest {
 		parameterMap.put(
 			"_journal_tags", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"DELETE_PORTLET_DATA", new String[]{Boolean.FALSE.toString()});
-		parameterMap.put("USER_ID_STRATEGY", new String[]{"CURRENT_USER_ID"});
+			PortletDataHandlerKeys.DELETE_PORTLET_DATA,
+			new String[]{Boolean.FALSE.toString()});
+		parameterMap.put(
+			PortletDataHandlerKeys.USER_ID_STRATEGY,
+			new String[]{UserIdStrategy.CURRENT_USER_ID});
 		parameterMap.put(
 			"_journal_ratingsCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
@@ -311,7 +312,8 @@ public class JournalExportImportTest {
 			"_journal_images", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put("doAsGroupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put(
-			"DATA_STRATEGY", new String[]{"DATA_STRATEGY_MIRROR"});
+			PortletDataHandlerKeys.DATA_STRATEGY,
+			new String[]{PortletDataHandlerKeys.DATA_STRATEGY_MIRROR});
 		parameterMap.put(
 			"_journal_tagsCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
@@ -330,10 +332,8 @@ public class JournalExportImportTest {
 		parameterMap.put(
 			"PORTLET_METADATA_ALL", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"permissinsAssignedToRoles",
-			new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"PORTLET_DATA", new String[]{Boolean.TRUE.toString()});
+			"permissinsAssignedToRoles", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("PORTLET_DATA", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put("cmd", new String[]{"import"});
 		parameterMap.put("plid", new String[]{String.valueOf(plid)});
