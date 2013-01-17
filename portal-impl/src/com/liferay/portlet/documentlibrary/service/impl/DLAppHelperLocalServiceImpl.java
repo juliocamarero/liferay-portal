@@ -51,12 +51,12 @@ import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.model.DLSyncConstants;
-import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.base.DLAppHelperLocalServiceBaseImpl;
 import com.liferay.portlet.documentlibrary.social.DLActivityKeys;
@@ -1405,19 +1405,14 @@ public class DLAppHelperLocalServiceImpl
 				preferences);
 		}
 
+		FileEntry fileEntry = fileVersion.getFileEntry();
+
+		long folderId = fileEntry.getFolderId();
+
 		Folder folder = null;
 
-		try {
-			FileEntry fileEntry = fileVersion.getFileEntry();
-
-			long folderId = fileEntry.getFolderId();
-
-			if (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-				folder = dlAppLocalService.getFolder(folderId);
-			}
-		}
-		catch (Exception e) {
-			return;
+		if (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			folder = dlAppLocalService.getFolder(folderId);
 		}
 
 		String folderName = LanguageUtil.get(
@@ -1429,9 +1424,7 @@ public class DLAppHelperLocalServiceImpl
 
 		SubscriptionSender subscriptionSender = new SubscriptionSender();
 
-		DLFileEntry dlFileEntry =
-			DLFileEntryLocalServiceUtil.getDLFileEntry(
-			fileVersion.getFileEntryId());
+		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
 
 		DLFileEntryType fileEntryType =
 			DLFileEntryTypeLocalServiceUtil.getDLFileEntryType(
@@ -1456,13 +1449,8 @@ public class DLAppHelperLocalServiceImpl
 		subscriptionSender.setServiceContext(serviceContext);
 		subscriptionSender.setUserId(fileVersion.getUserId());
 
-		String[] classNames =
-			{Folder.class.getName(), DLFileEntryType.class.getName()};
-
-		for (int i = 0; i < classNames.length; i++) {
-			subscriptionSender.addPersistedSubscribers(
-				classNames[i], fileVersion.getGroupId());
-		}
+		subscriptionSender.addPersistedSubscribers(
+			Folder.class.getName(), fileVersion.getGroupId());
 
 		List<Long> folderIds = new ArrayList<Long>();
 
@@ -1472,15 +1460,21 @@ public class DLAppHelperLocalServiceImpl
 			folderIds.addAll(folder.getAncestorFolderIds());
 		}
 
-		for (long folderId : folderIds) {
+		for (long curFolderId : folderIds) {
 			subscriptionSender.addPersistedSubscribers(
-				Folder.class.getName(), folderId);
+				Folder.class.getName(), curFolderId);
 		}
 
-		if (fileEntryType.getFileEntryTypeId() != 0) {
+		if (fileEntryType.getFileEntryTypeId() !=
+				DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT) {
+
 			subscriptionSender.addPersistedSubscribers(
 				DLFileEntryType.class.getName(),
 				fileEntryType.getFileEntryTypeId());
+		}
+		else {
+			subscriptionSender.addPersistedSubscribers(
+				DLFileEntryType.class.getName(), fileVersion.getGroupId());
 		}
 
 		subscriptionSender.flushNotificationsAsync();
