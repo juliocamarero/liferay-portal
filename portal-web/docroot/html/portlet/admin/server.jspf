@@ -229,8 +229,8 @@ String keywords = ParamUtil.getString(request, "keywords");
 				<br /><br />
 
 				<%
-				String emptyResultsMessage;
-				Properties properties;
+				String emptyResultsMessage = null;
+				Properties properties = null;
 
 				if (tabs3.equals("portal-properties")) {
 					emptyResultsMessage = "no-portal-properties-were-found-that-matched-the-keywords";
@@ -248,18 +248,18 @@ String keywords = ParamUtil.getString(request, "keywords");
 
 				SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, serverURL, headerNames, emptyResultsMessage);
 
-				Map portalProps = new TreeMap();
+				Map<String, String> portalProperties = new TreeMap<String, String>();
 
 				for (Object key : properties.keySet()) {
 					String propKey = (String)key;
 					String propValue = properties.getProperty(propKey, StringPool.BLANK);
 
 					if (Validator.isNull(keywords) || propKey.contains(keywords) || propValue.contains(keywords)) {
-						portalProps.put(propKey, propValue);
+						portalProperties.put(propKey, propValue);
 					}
 				}
 
-				List results = ListUtil.fromCollection(portalProps.entrySet());
+				List results = ListUtil.fromCollection(portalProperties.entrySet());
 
 				searchContainer.setTotal(results.size());
 
