@@ -69,344 +69,283 @@ public class JournalExportImportTest {
 
 	@Test
 	public void testExportImportBasicJournalContent() throws Exception {
-
-		// Add site and layout
-
-		Layout layoutFrom = addGroupAndLayout();
-
-		// Add a basic content
-
-		JournalArticle exportedJournalArticle = JournalTestUtil.addArticle(
-			layoutFrom.getGroupId(), "Test Article", "My test content");
-
-		String exportedResourceUuid =
-			exportedJournalArticle.getArticleResourceUuid();
-
-		// Export content
-
-		Map<String, String[]> parameterMap = getExportParameterMap(layoutFrom);
-
-		String portletId = PortletKeys.JOURNAL;
-
-		_larFile = LayoutLocalServiceUtil.exportPortletInfoAsFile(
-			layoutFrom.getPlid(), layoutFrom.getGroupId(), portletId,
-			parameterMap, null, null);
-
-		// Remove the first site and all its data
-
-		GroupLocalServiceUtil.deleteGroup(layoutFrom.getGroupId());
-
-		// Add another site and layout
-
-		Layout layoutTo = addGroupAndLayout();
-
-		// Import the contents from the original site
-
-		PortletImporter portletImporter = new PortletImporter();
-
-		parameterMap = getImportParameterMap(layoutTo);
-
-		portletImporter.importPortletInfo(
-			TestPropsValues.getUserId(), layoutTo.getPlid(),
-			layoutTo.getGroupId(), portletId, parameterMap, _larFile);
-
-		// Verify there's a new article in the new site
-
-		int articlesCount = JournalArticleLocalServiceUtil.getArticlesCount(
-			layoutTo.getGroupId());
-
-		Assert.assertTrue(articlesCount > 0);
-
-		// Verify the same article exists in the new site
-
-		JournalArticleResource importedJournalArticleResource =
-			JournalArticleResourceLocalServiceUtil.fetchArticleResource(
-				exportedResourceUuid, layoutTo.getGroupId());
-
-		Assert.assertNotNull(importedJournalArticleResource);
+		exportImportJournalArticle(false);
 	}
 
 	@Test
 	public void testExportImportStructuredJournalContent() throws Exception {
+		exportImportJournalArticle(true);
+	}
 
-		// Add site and layout
+	protected void exportImportJournalArticle(boolean structuredContent)
+		throws Exception {
 
-		Layout layoutFrom = addGroupAndLayout();
+		// Add a site and a layout
 
-		long plid = layoutFrom.getPlid();
+		Group group = ServiceTestUtil.addGroup();
 
-		// Add a structure
+		Layout layout = ServiceTestUtil.addLayout(
+			group.getGroupId(), ServiceTestUtil.randomString());
 
-		DDMStructure exportedDDMStructure = JournalTestUtil.addDDMStructure(
-			layoutFrom.getGroupId());
+		// Add a Journal Article and DDM Structure and Template
 
-		// Add a template
+		JournalArticle article = null;
+		DDMStructure ddmStructure = null;
+		DDMTemplate ddmTemplate = null;
 
-		DDMTemplate exportedDDMTemplate = JournalTestUtil.addDDMTemplate(
-			layoutFrom.getGroupId(), exportedDDMStructure.getStructureId());
+		if (structuredContent) {
+			ddmStructure = JournalTestUtil.addDDMStructure(group.getGroupId());
 
-		// Add a content
+			ddmTemplate = JournalTestUtil.addDDMTemplate(
+				group.getGroupId(), ddmStructure.getStructureId());
 
-		String content = JournalTestUtil.getSampleStructuredContent();
+			String content = JournalTestUtil.getSampleStructuredContent();
 
-		JournalArticle exportedJournalArticle = JournalTestUtil.addArticle(
-			layoutFrom.getGroupId(), content,
-			exportedDDMStructure.getStructureKey(),
-			exportedDDMTemplate.getTemplateKey());
+			article = JournalTestUtil.addArticle(
+				group.getGroupId(), content, ddmStructure.getStructureKey(),
+				ddmTemplate.getTemplateKey());
+		}
+		else {
+			article = JournalTestUtil.addArticle(
+				group.getGroupId(), ServiceTestUtil.randomString(),
+				ServiceTestUtil.randomString());
+		}
 
-		String exportedResourceUuid =
-			exportedJournalArticle.getArticleResourceUuid();
+		String exportedResourceUuid = article.getArticleResourceUuid();
 
-		// Export content
+		// Export Portlet Content
 
-		Map<String, String[]> parameterMap = getExportParameterMap(layoutFrom);
-
-		String portletId = PortletKeys.JOURNAL;
+		Map<String, String[]> parameterMap = getExportParameterMap(
+			group.getGroupId(), layout.getPlid());
 
 		_larFile = LayoutLocalServiceUtil.exportPortletInfoAsFile(
-			layoutFrom.getPlid(), layoutFrom.getGroupId(), portletId,
+			layout.getPlid(), group.getGroupId(), PortletKeys.JOURNAL,
 			parameterMap, null, null);
 
-		// Remove the first site and all its data
+		// Remove the site
 
-		GroupLocalServiceUtil.deleteGroup(layoutFrom.getGroupId());
+		GroupLocalServiceUtil.deleteGroup(group.getGroupId());
 
 		// Add another site and layout
 
-		Layout layoutTo = addGroupAndLayout();
+		group = ServiceTestUtil.addGroup();
 
-		// Import the contents from the original site
+		layout = ServiceTestUtil.addLayout(
+			group.getGroupId(), ServiceTestUtil.randomString());
+
+		int initialArticlesCount =
+			JournalArticleLocalServiceUtil.getArticlesCount(group.getGroupId());
+
+		// Import Portlet Content
 
 		PortletImporter portletImporter = new PortletImporter();
 
-		parameterMap = getImportParameterMap(layoutTo);
+		parameterMap = getImportParameterMap(
+			group.getGroupId(), layout.getPlid());
 
 		portletImporter.importPortletInfo(
-			TestPropsValues.getUserId(), layoutTo.getPlid(),
-			layoutTo.getGroupId(), portletId, parameterMap, _larFile);
+			TestPropsValues.getUserId(), layout.getPlid(), group.getGroupId(),
+			PortletKeys.JOURNAL, parameterMap, _larFile);
 
-		// Verify there's a new article in the new site
+		// Verify there is just one new article in the new site
 
 		int articlesCount = JournalArticleLocalServiceUtil.getArticlesCount(
-			layoutTo.getGroupId());
+			group.getGroupId());
 
-		Assert.assertTrue(articlesCount > 0);
+		Assert.assertEquals(initialArticlesCount + 1, articlesCount);
 
 		// Verify the same article exists in the new site
 
 		JournalArticleResource importedJournalArticleResource =
 			JournalArticleResourceLocalServiceUtil.fetchArticleResource(
-				exportedResourceUuid, layoutTo.getGroupId());
+				exportedResourceUuid, group.getGroupId());
 
 		Assert.assertNotNull(importedJournalArticleResource);
 
-		JournalArticle importedJournalArticle =
-			JournalArticleLocalServiceUtil.getArticle(
-				layoutTo.getGroupId(),
-				importedJournalArticleResource.getArticleId());
+		if (structuredContent) {
 
-		Assert.assertNotNull(importedJournalArticle);
+			// Verify the structure and template exist in the new site
 
-		// Verify the structure exists in the new site
+			DDMStructure importedDDMStructure =
+				DDMStructureLocalServiceUtil.fetchStructure(
+					ddmStructure.getUuid(), group.getGroupId());
 
-		DDMStructure importedDDMStructure =
-			DDMStructureLocalServiceUtil.fetchStructure(
-				exportedDDMStructure.getUuid(), layoutTo.getGroupId());
+			Assert.assertNotNull(importedDDMStructure);
 
-		Assert.assertNotNull(importedDDMStructure);
+			DDMTemplate importedDDMTemplate =
+				DDMTemplateLocalServiceUtil.fetchTemplate(
+					ddmTemplate.getUuid(), group.getGroupId());
 
-		// Verify the template exists in the new site
+			Assert.assertNotNull(importedDDMTemplate);
 
-		DDMTemplate importedDDMTemplate =
-			DDMTemplateLocalServiceUtil.fetchTemplate(
-				exportedDDMTemplate.getUuid(), layoutTo.getGroupId());
+			// Check Relationships
 
-		Assert.assertNotNull(importedDDMTemplate);
+			Assert.assertEquals(
+				article.getStructureId(),
+				importedDDMStructure.getStructureKey());
 
-		// Check structure - template relationship
+			Assert.assertEquals(
+				article.getTemplateId(), importedDDMTemplate.getTemplateKey());
 
-		Assert.assertEquals(
-			importedDDMTemplate.getClassPK(),
-			importedDDMStructure.getStructureId());
-
-		// Check article - structure relationship
-
-		Assert.assertEquals(
-			importedJournalArticle.getStructureId(),
-			importedDDMStructure.getStructureKey());
-
-		// Check article - template relationship
-
-		Assert.assertEquals(
-			importedJournalArticle.getTemplateId(),
-			importedDDMTemplate.getTemplateKey());
+			Assert.assertEquals(
+				importedDDMTemplate.getClassPK(),
+				importedDDMStructure.getStructureId());
+		}
 	}
 
-	protected Layout addGroupAndLayout() throws Exception {
-		Group group = ServiceTestUtil.addGroup();
-
-		return ServiceTestUtil.addLayout(group.getGroupId(), "Site  layout");
-	}
-
-	protected Map<String, String[]> getExportParameterMap(Layout layout)
+	protected Map<String, String[]> getExportParameterMap(
+		long groupId, long plid)
 		throws Exception {
 
 		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
 
 		parameterMap.put(
 			"_journal_commentsCheckbox",
-			new String[] {Boolean.TRUE.toString()});
-		parameterMap.put("etag", new String[] {"0"});
+			new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("etag", new String[]{"0"});
 		parameterMap.put(
 			"_journal_web-content", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_embedded-assets", new String[] {Boolean.TRUE.toString()});
+			"_journal_embedded-assets", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"PORTLET_DATA_15Checkbox", new String[] {Boolean.TRUE.toString()});
+			"PORTLET_DATA_15Checkbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_embedded-assetsCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_images", new String[] {Boolean.TRUE.toString()});
+			"_journal_images", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"PORTLET_DATA_15", new String[] {Boolean.TRUE.toString()});
+			"PORTLET_DATA_15", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_categories", new String[] {Boolean.TRUE.toString()});
+			"_journal_categories", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_ratings", new String[] {Boolean.TRUE.toString()});
+			"_journal_ratings", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"PORTLET_METADATA_ALL", new String[] {Boolean.TRUE.toString()});
-		parameterMap.put("strip", new String[] {"0"});
-		parameterMap.put("cmd", new String[] {"export"});
-		parameterMap.put(
-			"plid", new String[] {String.valueOf(layout.getPlid())});
+			"PORTLET_METADATA_ALL", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("strip", new String[]{"0"});
+		parameterMap.put("cmd", new String[]{"export"});
+		parameterMap.put("plid", new String[]{String.valueOf(plid)});
 		parameterMap.put(
 			"struts_action",
-			new String[] {"/portlet_configuration/export_import"});
-		parameterMap.put("range", new String[] {"fromLastPublishDate"});
+			new String[]{"/portlet_configuration/export_import"});
+		parameterMap.put("range", new String[]{"fromLastPublishDate"});
 		parameterMap.put(
-			"_journal_tags", new String[] {Boolean.TRUE.toString()});
+			"_journal_tags", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_ratingsCheckbox", new String[] {Boolean.TRUE.toString()});
+			"_journal_ratingsCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"permissinsAssignedToRolesCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_version-historyCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_version-history", new String[] {Boolean.TRUE.toString()});
+			"_journal_version-history", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_ddmStructures-ddmTemplates-and-feeds",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_categoriesCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_imagesCheckbox", new String[] {Boolean.TRUE.toString()});
+			"_journal_imagesCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_comments", new String[] {Boolean.TRUE.toString()});
+			"_journal_comments", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("doAsGroupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put(
-			"doAsGroupId",
-			new String[]{String.valueOf(layout.getGroup().getGroupId())});
+			"_journal_tagsCheckbox", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("tabs1", new String[]{"export_import"});
+		parameterMap.put("tabs2", new String[]{"export"});
 		parameterMap.put(
-			"_journal_tagsCheckbox", new String[] {Boolean.TRUE.toString()});
-		parameterMap.put("tabs1", new String[] {"export_import"});
-		parameterMap.put("tabs2", new String[] {"export"});
-		parameterMap.put(
-			"PERMISSIONS", new String[] {Boolean.FALSE.toString()});
-		parameterMap.put("portletResource", new String[] {PortletKeys.JOURNAL});
+			"PERMISSIONS", new String[]{Boolean.FALSE.toString()});
+		parameterMap.put("portletResource", new String[]{PortletKeys.JOURNAL});
 		parameterMap.put(
 			"_journal_web-contentCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"permissinsAssignedToRoles",
-			new String[] {Boolean.TRUE.toString()});
-		parameterMap.put(
-			"groupId",
-			new String[]{String.valueOf(layout.getGroup().getGroupId())});
-		parameterMap.put("CATEGORIES", new String[] {Boolean.FALSE.toString()});
+			new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
+		parameterMap.put("CATEGORIES", new String[]{Boolean.FALSE.toString()});
 		parameterMap.put(
 			"PORTLET_DATA_CONTROL_DEFAULT",
-			new String[] {Boolean.FALSE.toString()});
+			new String[]{Boolean.FALSE.toString()});
 
 		return parameterMap;
 	}
 
-	protected Map<String, String[]> getImportParameterMap(Layout layout)
+	protected Map<String, String[]> getImportParameterMap(
+		long groupId, long plid)
 		throws Exception {
 
 		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
 
 		parameterMap.put(
 			"_journal_commentsCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"PERMISSIONSCheckbox", new String[] {Boolean.TRUE.toString()});
+			"PERMISSIONSCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_web-content", new String[] {Boolean.TRUE.toString()});
+			"_journal_web-content", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_tags", new String[] {Boolean.TRUE.toString()});
+			"_journal_tags", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"DELETE_PORTLET_DATA", new String[] {Boolean.FALSE.toString()});
-		parameterMap.put("USER_ID_STRATEGY", new String[] {"CURRENT_USER_ID"});
+			"DELETE_PORTLET_DATA", new String[]{Boolean.FALSE.toString()});
+		parameterMap.put("USER_ID_STRATEGY", new String[]{"CURRENT_USER_ID"});
 		parameterMap.put(
-			"_journal_ratingsCheckbox", new String[] {Boolean.TRUE.toString()});
+			"_journal_ratingsCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"permissinsAssignedToRolesCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_ddmStructures-ddmTemplates-and-feeds",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_categoriesCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_imagesCheckbox", new String[] {Boolean.TRUE.toString()});
+			"_journal_imagesCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_comments", new String[] {Boolean.TRUE.toString()});
+			"_journal_comments", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_images", new String[] {Boolean.TRUE.toString()});
+			"_journal_images", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("doAsGroupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put(
-			"doAsGroupId", new String[] {String.valueOf(layout.getGroupId())});
+			"DATA_STRATEGY", new String[]{"DATA_STRATEGY_MIRROR"});
 		parameterMap.put(
-			"DATA_STRATEGY", new String[] {"DATA_STRATEGY_MIRROR"});
+			"_journal_tagsCheckbox", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_tagsCheckbox", new String[] {Boolean.TRUE.toString()});
+			"PORTLET_DATACheckbox", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("tabs1", new String[]{"export_import"});
+		parameterMap.put("PERMISSIONS", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"PORTLET_DATACheckbox", new String[] {Boolean.TRUE.toString()});
-		parameterMap.put("tabs1", new String[] {"export_import"});
-		parameterMap.put("PERMISSIONS", new String[] {Boolean.TRUE.toString()});
+			"_journal_categories", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("tabs2", new String[]{"import"});
+		parameterMap.put("portletResource", new String[]{PortletKeys.JOURNAL});
 		parameterMap.put(
-			"_journal_categories", new String[] {Boolean.TRUE.toString()});
-		parameterMap.put("tabs2", new String[] {"import"});
-		parameterMap.put("portletResource", new String[] {PortletKeys.JOURNAL});
-		parameterMap.put(
-			"_journal_ratings", new String[] {Boolean.TRUE.toString()});
+			"_journal_ratings", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_web-contentCheckbox",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"PORTLET_METADATA_ALL", new String[] {Boolean.TRUE.toString()});
+			"PORTLET_METADATA_ALL", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"permissinsAssignedToRoles",
-			new String[] {Boolean.TRUE.toString()});
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"PORTLET_DATA", new String[] {Boolean.TRUE.toString()});
-		parameterMap.put(
-			"groupId", new String[] {String.valueOf(layout.getGroupId())});
-			parameterMap.put("cmd", new String[] {"import"});
-		parameterMap.put(
-			"plid", new String[] {String.valueOf(layout.getPlid())});
-		parameterMap.put("CATEGORIES", new String[] {Boolean.TRUE.toString()});
+			"PORTLET_DATA", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
+		parameterMap.put("cmd", new String[]{"import"});
+		parameterMap.put("plid", new String[]{String.valueOf(plid)});
+		parameterMap.put("CATEGORIES", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"struts_action",
-			new String[] {"/portlet_configuration/export_import"});
+			new String[]{"/portlet_configuration/export_import"});
 		parameterMap.put(
 			"PORTLET_DATA_CONTROL_DEFAULT",
-			new String[] {Boolean.FALSE.toString()});
+			new String[]{Boolean.FALSE.toString()});
 		parameterMap.put(
-			"CATEGORIESCheckbox", new String[] {Boolean.TRUE.toString()});
+			"CATEGORIESCheckbox", new String[]{Boolean.TRUE.toString()});
 
 		return parameterMap;
 	}
