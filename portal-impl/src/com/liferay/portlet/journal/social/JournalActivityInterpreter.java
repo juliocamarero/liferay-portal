@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.social;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -23,6 +24,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.service.permission.JournalPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
@@ -45,12 +47,23 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 		PermissionChecker permissionChecker =
 			themeDisplay.getPermissionChecker();
 
+		int activityType = activity.getType();
+
 		JournalArticle article =
 			JournalArticleLocalServiceUtil.getJournalArticle(
 				activity.getClassPK());
 
-		if (!JournalPermission.contains(
-				permissionChecker, activity.getGroupId(), ActionKeys.VIEW)) {
+		if ((activityType == JournalActivityKeys.ADD_JOURNAL_ARTICLE) &&
+			!JournalPermission.contains(
+				permissionChecker, activity.getGroupId(),
+				ActionKeys.ADD_ARTICLE)) {
+
+			return null;
+		}
+		else if ((activityType == JournalActivityKeys.UPDATE_JOURNAL_ARTICLE) &&
+			!JournalArticlePermission.contains(
+				permissionChecker, article, ActionKeys.UPDATE)) {
+
 			return null;
 		}
 
@@ -63,21 +76,25 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 		String creatorUserName = getUserName(
 			activity.getUserId(), themeDisplay);
 
-		int activityType = activity.getType();
-
 		// Link
+
+		String link = null;
 
 		JournalArticle lastestArticle =
 			JournalArticleLocalServiceUtil.getLatestArticle(
 				article.getGroupId(), article.getArticleId());
 
-		String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(
+		if (Validator.isNotNull(lastestArticle.getLayoutUuid()) &&
+			!article.isInTrash()) {
+
+			String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(
 				themeDisplay.getScopeGroup(), false, themeDisplay);
 
-		String link =
+			link =
 				groupFriendlyURL.concat(
 					JournalArticleConstants.CANONICAL_URL_SEPARATOR).concat(
 						lastestArticle.getUrlTitle());
+		}
 
 		// Title
 
@@ -103,15 +120,34 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 		String eventTitle = getValue(
 			activity.getExtraData(), "title", article.getTitle());
 
-		Object[] titleArguments = new Object[] {
+		Object[] titleArguments = null;
+
+		if (Validator.isNotNull(link)) {
+			titleArguments = new Object[] {
 				groupName, creatorUserName, wrapLink(link, eventTitle)
 			};
+		}
+		else {
+			titleArguments = new Object[] {
+				groupName, creatorUserName, eventTitle,
+			};
+		}
 
 		String title = themeDisplay.translate(titlePattern, titleArguments);
 
 		// Body
 
-		return new SocialActivityFeedEntry(link, title, StringPool.BLANK);
+		String body = StringPool.BLANK;
+
+		double articleVersion = article.getVersion();
+
+		if (articleVersion > 1) {
+			body = LanguageUtil.format(
+				themeDisplay.getLocale(),"created-new-journal-version",
+				articleVersion);
+		}
+
+		return new SocialActivityFeedEntry(link, title, body);
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {
