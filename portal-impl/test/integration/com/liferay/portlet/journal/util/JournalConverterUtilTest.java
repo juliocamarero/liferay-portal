@@ -49,6 +49,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -64,7 +65,8 @@ import org.junit.runner.RunWith;
 @Transactional
 public class JournalConverterUtilTest {
 
-	public JournalConverterUtilTest() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		String xsd = readText("dynamic-data-mapping-structure.xml");
 
 		_ddmStructure = new DDMStructureImpl();
