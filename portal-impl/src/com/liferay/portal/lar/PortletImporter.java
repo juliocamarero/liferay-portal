@@ -134,8 +134,8 @@ import org.apache.commons.lang.time.StopWatch;
 public class PortletImporter {
 
 	public void importPortletInfo(
-		long userId, long plid, long groupId, String portletId,
-		Map<String, String[]> parameterMap, File file)
+			long userId, long plid, long groupId, String portletId,
+			Map<String, String[]> parameterMap, File file)
 		throws Exception {
 
 		try {
@@ -154,7 +154,7 @@ public class PortletImporter {
 	}
 
 	protected void deletePortletData(
-		PortletDataContext portletDataContext, String portletId, long plid)
+			PortletDataContext portletDataContext, String portletId, long plid)
 		throws Exception {
 
 		long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
@@ -179,8 +179,8 @@ public class PortletImporter {
 	}
 
 	protected String deletePortletData(
-		PortletDataContext portletDataContext, String portletId,
-		PortletPreferences portletPreferences)
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
@@ -236,8 +236,8 @@ public class PortletImporter {
 	}
 
 	protected void doImportPortletInfo(
-		long userId, long plid, long groupId, String portletId,
-		Map<String, String[]> parameterMap, File file)
+			long userId, long plid, long groupId, String portletId,
+			Map<String, String[]> parameterMap, File file)
 		throws Exception {
 
 		boolean deletePortletData = MapUtil.getBoolean(
@@ -328,7 +328,7 @@ public class PortletImporter {
 		String rootPortletId = headerElement.attributeValue("root-portlet-id");
 
 		if (!PortletConstants.getRootPortletId(portletId).equals(
-			rootPortletId)) {
+				rootPortletId)) {
 
 			throw new PortletIdException("Invalid portlet id " + rootPortletId);
 		}
@@ -353,7 +353,7 @@ public class PortletImporter {
 
 			for (Locale sourceAvailableLocale : sourceAvailableLocales) {
 				if (!ArrayUtil.contains(
-					targetAvailableLocales, sourceAvailableLocale)) {
+						targetAvailableLocales, sourceAvailableLocale)) {
 
 					LocaleException le = new LocaleException(
 						"Locale " + sourceAvailableLocale + " is not " +
@@ -491,8 +491,8 @@ public class PortletImporter {
 	 *String, long, long, String, int)
 	 */
 	protected String getAssetCategoryName(
-		String uuid, long groupId, long parentCategoryId, String name,
-		long vocabularyId, int count)
+			String uuid, long groupId, long parentCategoryId, String name,
+			long vocabularyId, int count)
 		throws Exception {
 
 		AssetCategory assetCategory = null;
@@ -551,7 +551,7 @@ public class PortletImporter {
 	 *String, long, long, String, int)
 	 */
 	protected String getAssetVocabularyName(
-		String uuid, long groupId, String name, int count)
+			String uuid, long groupId, String name, int count)
 		throws Exception {
 
 		AssetVocabulary assetVocabulary = AssetVocabularyUtil.fetchByG_N(
@@ -599,11 +599,11 @@ public class PortletImporter {
 	}
 
 	protected void importAssetCategory(
-		PortletDataContext portletDataContext,
-		Map<Long, Long> assetVocabularyPKs,
-		Map<Long, Long> assetCategoryPKs,
-		Map<String, String> assetCategoryUuids,
-		Element assetCategoryElement, AssetCategory assetCategory)
+			PortletDataContext portletDataContext,
+			Map<Long, Long> assetVocabularyPKs,
+			Map<Long, Long> assetCategoryPKs,
+			Map<String, String> assetCategoryUuids,
+			Element assetCategoryElement, AssetCategory assetCategory)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(assetCategory.getUserUuid());
@@ -696,8 +696,8 @@ public class PortletImporter {
 
 				if (global) {
 					if (AssetPermission.contains(
-						PermissionThreadLocal.getPermissionChecker(),
-						groupId, ActionKeys.ADD_CATEGORY)) {
+							PermissionThreadLocal.getPermissionChecker(),
+							groupId, ActionKeys.ADD_CATEGORY)) {
 
 						serviceContext.setScopeGroupId(groupId);
 					}
@@ -735,9 +735,9 @@ public class PortletImporter {
 						PermissionThreadLocal.getPermissionChecker();
 
 					if (permissionChecker.hasPermission(
-						groupId, AssetCategory.class.getName(),
-						existingAssetCategory.getCategoryId(),
-						ActionKeys.UPDATE)) {
+							groupId, AssetCategory.class.getName(),
+							existingAssetCategory.getCategoryId(),
+							ActionKeys.UPDATE)) {
 
 						serviceContext.setScopeGroupId(groupId);
 					}
@@ -788,8 +788,8 @@ public class PortletImporter {
 	}
 
 	protected void importAssetTag(
-		PortletDataContext portletDataContext, Map<Long, Long> assetTagPKs,
-		Element assetTagElement, AssetTag assetTag)
+			PortletDataContext portletDataContext, Map<Long, Long> assetTagPKs,
+			Element assetTagElement, AssetTag assetTag)
 		throws PortalException, SystemException {
 
 		long userId = portletDataContext.getUserId(assetTag.getUserUuid());
@@ -862,9 +862,9 @@ public class PortletImporter {
 	}
 
 	protected void importAssetVocabulary(
-		PortletDataContext portletDataContext,
-		Map<Long, Long> assetVocabularyPKs, Element assetVocabularyElement,
-		AssetVocabulary assetVocabulary)
+			PortletDataContext portletDataContext,
+			Map<Long, Long> assetVocabularyPKs, Element assetVocabularyElement,
+			AssetVocabulary assetVocabulary)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(
@@ -903,8 +903,8 @@ public class PortletImporter {
 
 			if (global) {
 				if (AssetPermission.contains(
-					PermissionThreadLocal.getPermissionChecker(), groupId,
-					ActionKeys.ADD_VOCABULARY)) {
+						PermissionThreadLocal.getPermissionChecker(), groupId,
+						ActionKeys.ADD_VOCABULARY)) {
 
 					serviceContext.setScopeGroupId(groupId);
 				}
@@ -940,9 +940,9 @@ public class PortletImporter {
 					PermissionThreadLocal.getPermissionChecker();
 
 				if (permissionChecker.hasPermission(
-					groupId, AssetVocabulary.class.getName(),
-					existingAssetVocabulary.getVocabularyId(),
-					ActionKeys.UPDATE)) {
+						groupId, AssetVocabulary.class.getName(),
+						existingAssetVocabulary.getVocabularyId(),
+						ActionKeys.UPDATE)) {
 
 					serviceContext.setScopeGroupId(groupId);
 				}
@@ -984,8 +984,8 @@ public class PortletImporter {
 	}
 
 	protected void importPortletData(
-		PortletDataContext portletDataContext, String portletId, long plid,
-		Element portletDataElement)
+			PortletDataContext portletDataContext, String portletId, long plid,
+			Element portletDataElement)
 		throws Exception {
 
 		long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
@@ -1011,8 +1011,8 @@ public class PortletImporter {
 	}
 
 	protected String importPortletData(
-		PortletDataContext portletDataContext, String portletId,
-		PortletPreferences portletPreferences, Element portletDataElement)
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences, Element portletDataElement)
 		throws Exception {
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
@@ -1071,11 +1071,11 @@ public class PortletImporter {
 	}
 
 	protected void importPortletPreferences(
-		PortletDataContext portletDataContext, long companyId, long groupId,
-		Layout layout, String portletId, Element parentElement,
-		boolean importPortletSetup, boolean importPortletArchivedSetups,
-		boolean importPortletUserPreferences, boolean preserveScopeLayoutId,
-		boolean importPortletData)
+			PortletDataContext portletDataContext, long companyId, long groupId,
+			Layout layout, String portletId, Element parentElement,
+			boolean importPortletSetup, boolean importPortletArchivedSetups,
+			boolean importPortletUserPreferences, boolean preserveScopeLayoutId,
+			boolean importPortletData)
 		throws Exception {
 
 		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
@@ -1720,8 +1720,8 @@ public class PortletImporter {
 	}
 
 	protected String updateAssetCategoriesNavigationPortletPreferences(
-		PortletDataContext portletDataContext, long companyId, long ownerId,
-		int ownerType, long plid, String portletId, String xml)
+			PortletDataContext portletDataContext, long companyId, long ownerId,
+			int ownerType, long plid, String portletId, String xml)
 		throws Exception {
 
 		Company company = CompanyLocalServiceUtil.getCompanyById(companyId);
@@ -1748,7 +1748,7 @@ public class PortletImporter {
 	}
 
 	protected void updateAssetPublisherClassNameIds(
-		javax.portlet.PortletPreferences jxPreferences, String key)
+			javax.portlet.PortletPreferences jxPreferences, String key)
 		throws Exception {
 
 		String[] oldValues = jxPreferences.getValues(key, null);
@@ -1788,9 +1788,9 @@ public class PortletImporter {
 	}
 
 	protected String updateAssetPublisherPortletPreferences(
-		PortletDataContext portletDataContext, long companyId, long ownerId,
-		int ownerType, long plid, String portletId, String xml,
-		Layout layout)
+			PortletDataContext portletDataContext, long companyId, long ownerId,
+			int ownerType, long plid, String portletId, String xml,
+			Layout layout)
 		throws Exception {
 
 		Company company = CompanyLocalServiceUtil.getCompanyById(companyId);
@@ -1810,7 +1810,7 @@ public class PortletImporter {
 				jxPreferences.getValue(name, null));
 
 			if (name.equals(
-				"anyClassTypeJournalArticleAssetRendererFactory") ||
+					"anyClassTypeJournalArticleAssetRendererFactory") ||
 				name.equals(
 					"classTypeIdsJournalArticleAssetRendererFactory") ||
 				name.equals("classTypeIds")) {
@@ -1844,8 +1844,8 @@ public class PortletImporter {
 	}
 
 	protected void updateAssetPublisherScopeIds(
-		javax.portlet.PortletPreferences jxPreferences, String key,
-		long groupId, long plid)
+			javax.portlet.PortletPreferences jxPreferences, String key,
+			long groupId, long plid)
 		throws Exception {
 
 		String[] oldValues = jxPreferences.getValues(key, null);
@@ -1877,8 +1877,8 @@ public class PortletImporter {
 	}
 
 	protected void updatePortletPreferences(
-		PortletDataContext portletDataContext, long ownerId, int ownerType,
-		long plid, String portletId, String xml, boolean importData)
+			PortletDataContext portletDataContext, long ownerId, int ownerType,
+			long plid, String portletId, String xml, boolean importData)
 		throws Exception {
 
 		if (importData) {
@@ -1953,9 +1953,9 @@ public class PortletImporter {
 	}
 
 	protected void updatePreferencesClassPKs(
-		PortletDataContext portletDataContext,
-		javax.portlet.PortletPreferences jxPreferences, String key,
-		Class<?> clazz, long companyGroupId)
+			PortletDataContext portletDataContext,
+			javax.portlet.PortletPreferences jxPreferences, String key,
+			Class<?> clazz, long companyGroupId)
 		throws Exception {
 
 		String[] oldValues = jxPreferences.getValues(key, null);

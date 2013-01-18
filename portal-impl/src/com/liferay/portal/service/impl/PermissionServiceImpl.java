@@ -119,8 +119,8 @@ public class PermissionServiceImpl extends PermissionServiceBaseImpl {
 	}
 
 	protected void checkPermission(
-		PermissionChecker permissionChecker, long groupId, String name,
-		String primKey)
+			PermissionChecker permissionChecker, long groupId, String name,
+			String primKey)
 		throws PortalException, SystemException {
 
 		if (name.equals(BlogsEntry.class.getName())) {
@@ -259,12 +259,14 @@ public class PermissionServiceImpl extends PermissionServiceBaseImpl {
 						name, GetterUtil.getLong(primKey));
 
 				if (permissionedModel instanceof GroupedModel) {
-					GroupedModel groupedModel = (GroupedModel) permissionedModel;
+					GroupedModel groupedModel =
+						(GroupedModel) permissionedModel;
 
 					ownerId = groupedModel.getUserId();
 				}
 				else if (permissionedModel instanceof AuditedModel) {
-					AuditedModel auditedModel = (AuditedModel) permissionedModel;
+					AuditedModel auditedModel =
+						(AuditedModel) permissionedModel;
 
 					ownerId = auditedModel.getUserId();
 				}
@@ -280,8 +282,8 @@ public class PermissionServiceImpl extends PermissionServiceBaseImpl {
 			}
 
 			if (permissionChecker.hasOwnerPermission(
-				permissionChecker.getCompanyId(), name, primKey, ownerId,
-				ActionKeys.PERMISSIONS)) {
+					permissionChecker.getCompanyId(), name, primKey, ownerId,
+					ActionKeys.PERMISSIONS)) {
 
 				return;
 			}

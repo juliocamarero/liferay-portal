@@ -95,7 +95,7 @@ public class JournalIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessContextQuery(
-		BooleanQuery contextQuery, SearchContext searchContext)
+			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
 
 		Long classNameId = (Long) searchContext.getAttribute(
@@ -160,7 +160,7 @@ public class JournalIndexer extends BaseIndexer {
 
 	@Override
 	public void postProcessSearchQuery(
-		BooleanQuery searchQuery, SearchContext searchContext)
+			BooleanQuery searchQuery, SearchContext searchContext)
 		throws Exception {
 
 		addSearchTerm(searchQuery, searchContext, Field.CLASS_PK, false);
@@ -176,7 +176,8 @@ public class JournalIndexer extends BaseIndexer {
 		addSearchTerm(searchQuery, searchContext, "articleId", false);
 
 		LinkedHashMap<String, Object> params =
-			(LinkedHashMap<String, Object>) searchContext.getAttribute("params");
+			(LinkedHashMap<String, Object>) searchContext.getAttribute(
+				"params");
 
 		if (params != null) {
 			String expandoAttributes = (String) params.get("expandoAttributes");
@@ -189,8 +190,8 @@ public class JournalIndexer extends BaseIndexer {
 
 	@Override
 	protected void addSearchLocalizedTerm(
-		BooleanQuery searchQuery, SearchContext searchContext, String field,
-		boolean like)
+			BooleanQuery searchQuery, SearchContext searchContext, String field,
+			boolean like)
 		throws Exception {
 
 		if (Validator.isNull(field)) {
@@ -494,7 +495,8 @@ public class JournalIndexer extends BaseIndexer {
 					Junction approvedArticlesJunction =
 						RestrictionsFactoryUtil.conjunction();
 
-					Property statusProperty = PropertyFactoryUtil.forName("status");
+					Property statusProperty = PropertyFactoryUtil.forName(
+						"status");
 
 					approvedArticlesJunction.add(
 						statusProperty.eq(WorkflowConstants.STATUS_APPROVED));
