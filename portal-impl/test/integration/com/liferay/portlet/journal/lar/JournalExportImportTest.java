@@ -41,16 +41,14 @@ import com.liferay.portlet.journal.model.JournalArticleResource;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
-
-import java.io.File;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Juan Fernández
@@ -266,7 +264,8 @@ public class JournalExportImportTest {
 		parameterMap.put("doAsGroupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put(
-			"permissionsAssignedToRoles", new String[]{Boolean.TRUE.toString()});
+			"permissionsAssignedToRoles",
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put("plid", new String[]{String.valueOf(plid)});
 		parameterMap.put("portletResource", new String[]{PortletKeys.JOURNAL});
 
