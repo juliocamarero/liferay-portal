@@ -78,8 +78,8 @@ import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 
+import javax.portlet.PortletURL;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -88,8 +88,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import javax.portlet.PortletURL;
 
 /**
  * @author Brian Wing Shun Chan
@@ -207,14 +205,14 @@ public abstract class BaseIndexer implements Indexer {
 				searchContext.setAttribute("discussion", true);
 			}
 
+			searchContext.setEntryClassNames(classNames);
+
 			if (searchContext.isIncludeDiscussions() ||
 				searchContext.isIncludeAttachments()) {
 
 				searchContext.setAttribute(
 					"relatedEntryClassName", getClassName(searchContext));
 			}
-
-			searchContext.setEntryClassNames(classNames);
 
 			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
 				searchContext);
