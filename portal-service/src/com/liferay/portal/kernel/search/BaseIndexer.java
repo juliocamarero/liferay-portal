@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.search.facet.ScopeFacet;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -66,6 +67,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.util.DDMIndexerUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -191,20 +193,28 @@ public abstract class BaseIndexer implements Indexer {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
+			String[] classNames = new String[]{getClassName(searchContext)};
+
+			if (searchContext.isIncludeAttachments()) {
+				classNames = ArrayUtil.append(
+					classNames, DLFileEntry.class.getName());
+			}
+
 			if (searchContext.isIncludeDiscussions()) {
-				searchContext.setEntryClassNames(
-					new String[] {
-						getClassName(searchContext), MBMessage.class.getName()
-					});
+				classNames = ArrayUtil.append(
+					classNames, MBMessage.class.getName());
 
 				searchContext.setAttribute("discussion", true);
+			}
+
+			if (searchContext.isIncludeDiscussions() ||
+				searchContext.isIncludeAttachments()) {
+
 				searchContext.setAttribute(
 					"relatedEntryClassName", getClassName(searchContext));
 			}
-			else {
-				searchContext.setEntryClassNames(
-					new String[] {getClassName(searchContext)});
-			}
+
+			searchContext.setEntryClassNames(classNames);
 
 			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
 				searchContext);
