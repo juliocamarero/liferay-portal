@@ -18,7 +18,9 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.lar.PortletImporter;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -196,156 +198,122 @@ public class JournalExportImportTest {
 	}
 
 	protected Map<String, String[]> getExportParameterMap(
-		long groupId, long plid)
+			long groupId, long plid)
 		throws Exception {
 
 		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
 
+		parameterMap.put(Constants.CMD, new String[]{Constants.EXPORT});
+		parameterMap.put("doAsGroupId", new String[]{String.valueOf(groupId)});
+		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put(
-			"_journal_commentsCheckbox", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("etag", new String[]{"0"});
-		parameterMap.put(
-			"_journal_web-content", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_embedded-assets", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"PORTLET_DATA_15Checkbox", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_embedded-assetsCheckbox",
+			"permissionsAssignedToRoles",
 			new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_images", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"PORTLET_DATA_15", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("plid", new String[]{String.valueOf(plid)});
+		parameterMap.put("portletResource", new String[]{PortletKeys.JOURNAL});
+		parameterMap.put("range", new String[]{"fromLastPublishDate"});
+
+		// Journal Options
+
 		parameterMap.put(
 			"_journal_categories", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_ratings", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"PORTLET_METADATA_ALL", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("strip", new String[]{"0"});
-		parameterMap.put("cmd", new String[]{"export"});
-		parameterMap.put("plid", new String[]{String.valueOf(plid)});
-		parameterMap.put(
-			"struts_action",
-			new String[]{"/portlet_configuration/export_import"});
-		parameterMap.put("range", new String[]{"fromLastPublishDate"});
-		parameterMap.put(
-			"_journal_tags", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_ratingsCheckbox", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"permissinsAssignedToRolesCheckbox",
-			new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_version-historyCheckbox",
-			new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_version-history", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_ddmStructures-ddmTemplates-and-feeds",
 			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_categoriesCheckbox",
-			new String[]{Boolean.TRUE.toString()});
+			"_journal_embedded-assets", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_imagesCheckbox", new String[]{Boolean.TRUE.toString()});
+			"_journal_version-history", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put(
+			"_journal_images", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put(
+			"_journal_web-content", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put(
+			"_journal_ratings", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put(
+			"_journal_tags", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_comments", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("doAsGroupId", new String[]{String.valueOf(groupId)});
+
+		// General Options
+
 		parameterMap.put(
-			"_journal_tagsCheckbox", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("tabs1", new String[]{"export_import"});
-		parameterMap.put("tabs2", new String[]{"export"});
-		parameterMap.put("PERMISSIONS", new String[]{Boolean.FALSE.toString()});
-		parameterMap.put("portletResource", new String[]{PortletKeys.JOURNAL});
-		parameterMap.put(
-			"_journal_web-contentCheckbox",
+			PortletDataHandlerKeys.CATEGORIES,
 			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"permissinsAssignedToRoles", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
-		parameterMap.put("CATEGORIES", new String[]{Boolean.FALSE.toString()});
+			PortletDataHandlerKeys.PERMISSIONS,
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"PORTLET_DATA_CONTROL_DEFAULT",
+			PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT,
 			new String[]{Boolean.FALSE.toString()});
+		parameterMap.put(
+			PortletDataHandlerKeys.PORTLET_METADATA_ALL,
+			new String[]{Boolean.TRUE.toString()});
+		parameterMap.put(
+			PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE +
+				PortletKeys.JOURNAL, new String[]{Boolean.TRUE.toString()});
 
 		return parameterMap;
 	}
 
 	protected Map<String, String[]> getImportParameterMap(
-		long groupId, long plid)
+			long groupId, long plid)
 		throws Exception {
 
 		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
 
+		parameterMap.put(Constants.CMD, new String[]{Constants.IMPORT});
+		parameterMap.put("doAsGroupId", new String[]{String.valueOf(groupId)});
+		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
 		parameterMap.put(
-			"_journal_commentsCheckbox", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"PERMISSIONSCheckbox", new String[]{Boolean.TRUE.toString()});
+			"permissionsAssignedToRoles", new String[]{Boolean.TRUE.toString()});
+		parameterMap.put("plid", new String[]{String.valueOf(plid)});
+		parameterMap.put("portletResource", new String[]{PortletKeys.JOURNAL});
+
+		// Journal Options
+
 		parameterMap.put(
 			"_journal_web-content", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_tags", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			PortletDataHandlerKeys.DELETE_PORTLET_DATA,
-			new String[]{Boolean.FALSE.toString()});
-		parameterMap.put(
-			PortletDataHandlerKeys.USER_ID_STRATEGY,
-			new String[]{UserIdStrategy.CURRENT_USER_ID});
-		parameterMap.put(
-			"_journal_ratingsCheckbox", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"permissinsAssignedToRolesCheckbox",
-			new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
 			"_journal_ddmStructures-ddmTemplates-and-feeds",
 			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
-			"_journal_categoriesCheckbox",
-			new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_imagesCheckbox", new String[]{Boolean.TRUE.toString()});
+			"_journal_categories", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_comments", new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			"_journal_images", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("doAsGroupId", new String[]{String.valueOf(groupId)});
+		parameterMap.put(
+			"_journal_ratings", new String[]{Boolean.TRUE.toString()});
+
+		// General Options
+
+		parameterMap.put(
+			PortletDataHandlerKeys.CATEGORIES,
+			new String[]{Boolean.TRUE.toString()});
 		parameterMap.put(
 			PortletDataHandlerKeys.DATA_STRATEGY,
 			new String[]{PortletDataHandlerKeys.DATA_STRATEGY_MIRROR});
 		parameterMap.put(
-			"_journal_tagsCheckbox", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"PORTLET_DATACheckbox", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("tabs1", new String[]{"export_import"});
-		parameterMap.put("PERMISSIONS", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_categories", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("tabs2", new String[]{"import"});
-		parameterMap.put("portletResource", new String[]{PortletKeys.JOURNAL});
-		parameterMap.put(
-			"_journal_ratings", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"_journal_web-contentCheckbox",
-			new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"PORTLET_METADATA_ALL", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"permissinsAssignedToRoles", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("PORTLET_DATA", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put("groupId", new String[]{String.valueOf(groupId)});
-		parameterMap.put("cmd", new String[]{"import"});
-		parameterMap.put("plid", new String[]{String.valueOf(plid)});
-		parameterMap.put("CATEGORIES", new String[]{Boolean.TRUE.toString()});
-		parameterMap.put(
-			"struts_action",
-			new String[]{"/portlet_configuration/export_import"});
-		parameterMap.put(
-			"PORTLET_DATA_CONTROL_DEFAULT",
+			PortletDataHandlerKeys.DELETE_PORTLET_DATA,
 			new String[]{Boolean.FALSE.toString()});
 		parameterMap.put(
-			"CATEGORIESCheckbox", new String[]{Boolean.TRUE.toString()});
+			PortletDataHandlerKeys.PERMISSIONS,
+			new String[]{Boolean.TRUE.toString()});
+		parameterMap.put(
+			PortletDataHandlerKeys.PORTLET_DATA,
+			new String[]{Boolean.TRUE.toString()});
+		parameterMap.put(
+			PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT,
+			new String[]{Boolean.FALSE.toString()});
+		parameterMap.put(
+			PortletDataHandlerKeys.PORTLET_METADATA_ALL,
+			new String[]{Boolean.TRUE.toString()});
+		parameterMap.put(
+			PortletDataHandlerKeys.USER_ID_STRATEGY,
+			new String[]{UserIdStrategy.CURRENT_USER_ID});
 
 		return parameterMap;
 	}
