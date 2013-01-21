@@ -51,23 +51,31 @@ public class BookmarksEntryDataHandlerImpl
 			Element... elements)
 		throws Exception {
 
-		if (!portletDataContext.isWithinDateRange(entry.getModifiedDate())) {
-			return;
+		Element foldersElement = elements[0];
+		Element entriesElement = elements[1];
+
+		// Parent folder
+
+		if (entry.getFolderId() !=
+				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+
+			StagedModelDataHandler<BookmarksFolder> bookmarksFolderDataHandler =
+				(StagedModelDataHandler<BookmarksFolder>)
+					StagedModelDataHandlerRegistryUtil.
+						getStagedModelDataHandler(
+							BookmarksFolder.class.getName());
+
+			bookmarksFolderDataHandler.exportModelData(
+				entry.getFolder(), portletDataContext, foldersElement);
 		}
 
-		if (foldersElement != null) {
-			exportParentFolder(
-				portletDataContext, foldersElement, entry.getFolderId());
-		}
+		// This entry
 
-		String path = getEntryPath(portletDataContext, entry);
+		Element entryElement = entriesElement.addElement("entry");
 
-		if (portletDataContext.isPathNotProcessed(path)) {
-			Element entryElement = entriesElement.addElement("entry");
-
-			portletDataContext.addClassedModel(
-				entryElement, path, entry, NAMESPACE);
-		}
+		portletDataContext.addClassedModel(
+			entryElement, StagedModelPathUtil.getPath(entry), entry,
+			BookmarksPortletDataHandlerImpl.NAMESPACE);
 	}
 
 	@Override
@@ -88,19 +96,28 @@ public class BookmarksEntryDataHandlerImpl
 		if ((folderId != BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) &&
 			(folderId == entry.getFolderId())) {
 
-			String path = getImportFolderPath(portletDataContext, folderId);
+			String parentFolderPath = StagedModelPathUtil.getPath(
+				portletDataContext, BookmarksFolder.class.getName(), folderId);
 
-			BookmarksFolder folder =
-				(BookmarksFolder)portletDataContext.getZipEntryAsObject(path);
+			BookmarksFolder parentFolder =
+				(BookmarksFolder)portletDataContext.getZipEntryAsObject(
+					parentFolderPath);
 
-			importFolder(portletDataContext, path, folder);
+			StagedModelDataHandler<BookmarksFolder> bookmarksFolderDataHandler =
+				(StagedModelDataHandler<BookmarksFolder>)
+					StagedModelDataHandlerRegistryUtil.
+						getStagedModelDataHandler(
+							BookmarksFolder.class.getName());
+
+			bookmarksFolderDataHandler.importModelData(
+				parentFolder, parentFolderPath, portletDataContext);
 
 			folderId = MapUtil.getLong(
 				folderIds, entry.getFolderId(), entry.getFolderId());
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			entryElement, entry, NAMESPACE);
+			path, entry, BookmarksPortletDataHandlerImpl.NAMESPACE);
 
 		BookmarksEntry importedEntry = null;
 
@@ -131,7 +148,8 @@ public class BookmarksEntryDataHandlerImpl
 				serviceContext);
 		}
 
-		portletDataContext.importClassedModel(entry, importedEntry, NAMESPACE);
+		portletDataContext.importClassedModel(
+			entry, importedEntry, BookmarksPortletDataHandlerImpl.NAMESPACE);
 	}
 
 }
