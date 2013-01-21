@@ -138,6 +138,11 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		String body = StringPool.BLANK;
 
+		if (article.getVersion() > 1) {
+			body = themeDisplay.translate(
+				"created-new-version-x", article.getVersion());
+		}
+
 		return new SocialActivityFeedEntry(link, title, body);
 	}
 
