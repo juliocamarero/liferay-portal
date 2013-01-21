@@ -29,6 +29,8 @@ String selectScope = (String)request.getAttribute("configuration.jsp-selectScope
 	refresh="<%= false %>"
 >
 	<liferay-ui:section>
+		<liferay-util:include page="/html/portlet/asset_publisher/asset_selection_type.jsp" />
+
 		<liferay-ui:panel-container extended="<%= true %>" id="assetPublisherDynamicSelectionAssetSelectionPanelContainer" persistState="<%= true %>">
 			<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="assetPublisherSourcePanel" persistState="<%= true %>" title="source">
 				<aui:fieldset cssClass='<%= rootPortletId.equals(PortletKeys.RELATED_ASSETS) ? "aui-helper-hidden" : "" %>' label="scope">

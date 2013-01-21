@@ -29,6 +29,8 @@ String selectScope = (String)request.getAttribute("configuration.jsp-selectScope
 	refresh="<%= false %>"
 >
 	<liferay-ui:section>
+		<liferay-util:include page="/html/portlet/asset_publisher/asset_selection_type.jsp" />
+
 		<aui:fieldset label="scope">
 			<%= selectScope %>
 		</aui:fieldset>
