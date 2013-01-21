@@ -195,46 +195,6 @@ public class BookmarksPortletDataHandlerImpl extends BasePortletDataHandler {
 		return null;
 	}
 
-	protected String getEntryPath(
-		PortletDataContext portletDataContext, BookmarksEntry entry) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(portletDataContext.getPortletPath(PortletKeys.BOOKMARKS));
-		sb.append("/entries/");
-		sb.append(entry.getEntryId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected String getFolderPath(
-		PortletDataContext portletDataContext, BookmarksFolder folder) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(portletDataContext.getPortletPath(PortletKeys.BOOKMARKS));
-		sb.append("/folders/");
-		sb.append(folder.getFolderId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected String getImportFolderPath(
-		PortletDataContext portletDataContext, long folderId) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getSourcePortletPath(PortletKeys.BOOKMARKS));
-		sb.append("/folders/");
-		sb.append(folderId);
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
 	private static final boolean _ALWAYS_EXPORTABLE = true;
 
 	private static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
