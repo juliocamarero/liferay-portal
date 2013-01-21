@@ -204,7 +204,7 @@ public class PortletImporter {
 				_log.debug(
 					"Do not delete portlet data for " + portletId +
 						" because the portlet does not have a " +
-						"PortletDataHandler");
+							"PortletDataHandler");
 			}
 
 			return null;
@@ -221,7 +221,7 @@ public class PortletImporter {
 
 		try {
 			portletPreferencesImpl =
-				(PortletPreferencesImpl) portletDataHandler.deleteData(
+				(PortletPreferencesImpl)portletDataHandler.deleteData(
 					portletDataContext, portletId, portletPreferencesImpl);
 		}
 		finally {
