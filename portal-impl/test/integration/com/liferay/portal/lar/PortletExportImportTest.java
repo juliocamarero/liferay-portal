@@ -40,6 +40,7 @@ import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
+import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.util.HashMap;
@@ -86,7 +87,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 
 		updateLayoutTemplateId(_layoutSetPrototypeLayout, "1_column");
 
-		_layoutSetPrototypeJournalArticle = addJournalArticle(
+		_layoutSetPrototypeJournalArticle = JournalTestUtil.addArticle(
 			_layoutSetPrototypeGroup.getGroupId(), 0, "Test Article",
 			"Test Content");
 
@@ -207,7 +208,7 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 
 		Group companyGroup = company.getGroup();
 
-		JournalArticle globalScopeJournalArticle = addJournalArticle(
+		JournalArticle globalScopeJournalArticle = JournalTestUtil.addArticle(
 			companyGroup.getGroupId(), 0, "Global Article", "Global Content");
 
 		layoutSetprototypeJxPreferences.setValue(
@@ -241,32 +242,6 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		Assert.assertEquals(
 			"company",
 			jxPreferences.getValue("lfrScopeType", StringPool.BLANK));
-	}
-
-	protected JournalArticle addJournalArticle(
-			long groupId, long folderId, String name, String content)
-		throws Exception {
-
-		Map<Locale, String> titleMap = new HashMap<Locale, String>();
-
-		Locale locale = LocaleUtil.getDefault();
-
-		String localeId = locale.toString();
-
-		titleMap.put(locale, name);
-
-		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
-
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
-
-		String xmlContent = getArticleContent(content, localeId);
-
-		return JournalArticleLocalServiceUtil.addArticle(
-			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
-			StringPool.BLANK, true, 1, titleMap, descriptionMap, xmlContent,
-			"general", null, null, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true,
-			0, 0, 0, 0, 0, true, false, false, null, null, null, null,
-			serviceContext);
 	}
 
 	protected String addJournalContentPortletToLayout(
