@@ -32,7 +32,6 @@ import com.liferay.portal.model.LayoutSetBranch;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.VirtualLayout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetBranchLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PropsValues;
@@ -72,7 +71,7 @@ public class LayoutsTreeUtil {
 
 		List<Layout> layoutAncestors = null;
 
-		List<Layout> layouts = LayoutServiceUtil.getLayouts(
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
 			groupId, privateLayout, parentLayoutId, incomplete,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
@@ -81,7 +80,7 @@ public class LayoutsTreeUtil {
 		if (selPlid != 0) {
 			Layout selLayout = LayoutLocalServiceUtil.getLayout(selPlid);
 
-			layoutAncestors = LayoutServiceUtil.getAncestorLayouts(selPlid);
+			layoutAncestors = selLayout.getAncestors();
 
 			layoutAncestors.add(selLayout);
 		}
