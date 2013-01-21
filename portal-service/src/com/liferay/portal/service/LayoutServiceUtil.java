@@ -368,13 +368,6 @@ public class LayoutServiceUtil {
 			parameterMap, startDate, endDate);
 	}
 
-	public static java.util.List<com.liferay.portal.model.Layout> getAncestorLayouts(
-		long plid)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getAncestorLayouts(plid);
-	}
-
 	/**
 	* Returns the primary key of the default layout for the group.
 	*
@@ -458,24 +451,16 @@ public class LayoutServiceUtil {
 
 	public static java.util.List<com.liferay.portal.model.Layout> getLayouts(
 		long groupId, boolean privateLayout)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getLayouts(groupId, privateLayout);
 	}
 
 	public static java.util.List<com.liferay.portal.model.Layout> getLayouts(
 		long groupId, boolean privateLayout, long parentLayoutId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getLayouts(groupId, privateLayout, parentLayoutId);
-	}
-
-	public static java.util.List<com.liferay.portal.model.Layout> getLayouts(
-		long groupId, boolean privateLayout, long parentLayoutId,
-		boolean incomplete, int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getLayouts(groupId, privateLayout, parentLayoutId,
-			incomplete, start, end);
+		return getService().getLayouts(groupId, privateLayout, parentLayoutId);
 	}
 
 	/**
