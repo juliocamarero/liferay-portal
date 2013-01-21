@@ -280,7 +280,7 @@ public class JournalIndexer extends BaseIndexer {
 		if (Validator.isNotNull(article.getStructureId())) {
 			try {
 				ddmStructure = DDMStructureLocalServiceUtil.getStructure(
-					article.getGroupId(), article.getStructureId());
+					article.getGroupId(), article.getStructureId(), true);
 
 				Fields ddmFields = JournalConverterUtil.getDDMFields(
 					ddmStructure, article.getContent());
