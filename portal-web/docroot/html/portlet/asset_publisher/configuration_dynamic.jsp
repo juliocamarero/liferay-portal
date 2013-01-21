@@ -386,6 +386,8 @@ String selectScope = (String)request.getAttribute("configuration.jsp-selectScope
 				nameEnabled="<%= true %>"
 			/>
 		</c:if>
+
+		<liferay-util:include page="/html/portlet/asset_publisher/email_subscription_settings.jsp" />
 	</liferay-ui:section>
 </liferay-ui:tabs>
 
