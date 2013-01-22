@@ -98,7 +98,7 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 </c:if>
 
 <div class="subscribe-action">
-	<c:if test="<%= AssetPublisherPermission.contains(permissionChecker, scopeGroupId, ActionKeys.SUBSCRIBE) %>">
+	<c:if test="<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), ActionKeys.SUBSCRIBE) %>">
 
 		<%
 		boolean subscribed = AssetPublisherUtil.isSubscribed(themeDisplay.getCompanyId(), user.getUserId(), themeDisplay.getPlid(), portletDisplay.getId());
