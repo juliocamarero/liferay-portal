@@ -130,7 +130,7 @@
 		<icon>/html/icons/journal.png</icon>
 		<struts-path>journal</struts-path>
 		<configuration-action-class>com.liferay.portlet.journal.action.ConfigurationActionImpl</configuration-action-class>
-		<indexer-class>com.liferay.portlet.journal.util.JournalIndexer</indexer-class>
+		<indexer-class>com.liferay.portlet.journal.util.JournalArticleIndexer</indexer-class>
 		<open-search-class>com.liferay.portlet.journal.util.JournalOpenSearchImpl</open-search-class>
 		<scheduler-entry>
 			<scheduler-event-listener-class>com.liferay.portlet.journal.messaging.CheckArticleMessageListener</scheduler-event-listener-class>
