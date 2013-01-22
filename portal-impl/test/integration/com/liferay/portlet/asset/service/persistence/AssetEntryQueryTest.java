@@ -391,14 +391,14 @@ public class AssetEntryQueryTest {
 
 		threadLocalCache.removeAll();
 
+		Group group = ServiceTestUtil.addGroup();
+
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
 		if (assetCategoryIds != null) {
 			assetEntryQuery = buildAssetEntryQueryWithAssetCategoryIds(
 				assetEntryQuery, assetCategoryIds, any, not);
 		}
-
-		Group group = ServiceTestUtil.addGroup();
 
 		long[] assetTagIds = null;
 
