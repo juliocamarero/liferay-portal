@@ -306,7 +306,7 @@ public class AssetEntryQueryTest {
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
 		if (assetCategoryIds != null) {
-			assetEntryQuery = buildAssetEntryQueryWithAssetCategoryIds(
+			assetEntryQuery = _buildAssetEntryQueryWithAssetCategoryIds(
 				assetEntryQuery, assetCategoryIds, any, not);
 		}
 
@@ -316,51 +316,11 @@ public class AssetEntryQueryTest {
 			assetTagIds = AssetTagLocalServiceUtil.getTagIds(
 				groupId, assetTagNames);
 
-			assetEntryQuery = buildAssetEntryQueryWithAssetTagIds(
+			assetEntryQuery = _buildAssetEntryQueryWithAssetTagIds(
 				assetEntryQuery, assetTagIds, any, not);
 		}
 
 		assetEntryQuery.setGroupIds(new long[] {groupId});
-
-		return assetEntryQuery;
-	}
-
-	protected AssetEntryQuery buildAssetEntryQueryWithAssetCategoryIds(
-		AssetEntryQuery assetEntryQuery, long[] assetCategoryIds, boolean any,
-		boolean not) {
-
-		if (any && not) {
-			assetEntryQuery.setNotAnyCategoryIds(assetCategoryIds);
-		}
-		else if (!any && not) {
-			assetEntryQuery.setNotAllCategoryIds(assetCategoryIds);
-		}
-		else if (any && !not) {
-			assetEntryQuery.setAnyCategoryIds(assetCategoryIds);
-		}
-		else {
-			assetEntryQuery.setAllCategoryIds(assetCategoryIds);
-		}
-
-		return assetEntryQuery;
-	}
-
-	protected AssetEntryQuery buildAssetEntryQueryWithAssetTagIds(
-			AssetEntryQuery assetEntryQuery, long[] assetTagIds, boolean any,
-		boolean not) {
-
-		if (any && not) {
-			assetEntryQuery.setNotAnyTagIds(assetTagIds);
-		}
-		else if (!any && not) {
-			assetEntryQuery.setNotAllTagIds(assetTagIds);
-		}
-		else if (any && !not) {
-			assetEntryQuery.setAnyTagIds(assetTagIds);
-		}
-		else {
-			assetEntryQuery.setAllTagIds(assetTagIds);
-		}
 
 		return assetEntryQuery;
 	}
@@ -452,6 +412,46 @@ public class AssetEntryQueryTest {
 			"Modularity with OSGI", null,
 			new String[] {"liferay", "architecture", "modularity", "osgi"}, any,
 			not, expectedResults);
+	}
+
+	private AssetEntryQuery _buildAssetEntryQueryWithAssetCategoryIds(
+		AssetEntryQuery assetEntryQuery, long[] assetCategoryIds, boolean any,
+		boolean not) {
+
+		if (any && not) {
+			assetEntryQuery.setNotAnyCategoryIds(assetCategoryIds);
+		}
+		else if (!any && not) {
+			assetEntryQuery.setNotAllCategoryIds(assetCategoryIds);
+		}
+		else if (any && !not) {
+			assetEntryQuery.setAnyCategoryIds(assetCategoryIds);
+		}
+		else {
+			assetEntryQuery.setAllCategoryIds(assetCategoryIds);
+		}
+
+		return assetEntryQuery;
+	}
+
+	private AssetEntryQuery _buildAssetEntryQueryWithAssetTagIds(
+		AssetEntryQuery assetEntryQuery, long[] assetTagIds, boolean any,
+		boolean not) {
+
+		if (any && not) {
+			assetEntryQuery.setNotAnyTagIds(assetTagIds);
+		}
+		else if (!any && not) {
+			assetEntryQuery.setNotAllTagIds(assetTagIds);
+		}
+		else if (any && !not) {
+			assetEntryQuery.setAnyTagIds(assetTagIds);
+		}
+		else {
+			assetEntryQuery.setAllTagIds(assetTagIds);
+		}
+
+		return assetEntryQuery;
 	}
 
 	private long[] _assetCategoryIds1;
