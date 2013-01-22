@@ -17,6 +17,8 @@ package com.liferay.portlet.asset.service.persistence;
 import com.liferay.portal.kernel.cache.Lifecycle;
 import com.liferay.portal.kernel.cache.ThreadLocalCache;
 import com.liferay.portal.kernel.cache.ThreadLocalCacheManager;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.StringPool;
@@ -294,6 +296,33 @@ public class AssetEntryQueryTest {
 	@Test
 	public void testNotAnyAssetTags4() throws Exception {
 		testAssetTags(new String[] {"modularity", "osgi"}, true, true, 1);
+	}
+
+	protected AssetEntryQuery buildAssetEntryQuery(
+			long groupId, long[] assetCategoryIds, String[] assetTagNames,
+			boolean any, boolean not)
+		throws PortalException, SystemException {
+
+		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
+
+		if (assetCategoryIds != null) {
+			assetEntryQuery = buildAssetEntryQueryWithAssetCategoryIds(
+				assetEntryQuery, assetCategoryIds, any, not);
+		}
+
+		if (assetTagNames != null) {
+			long[] assetTagIds = null;
+
+			assetTagIds = AssetTagLocalServiceUtil.getTagIds(
+				groupId, assetTagNames);
+
+			assetEntryQuery = buildAssetEntryQueryWithAssetTagIds(
+				assetEntryQuery, assetTagIds, any, not);
+		}
+
+		assetEntryQuery.setGroupIds(new long[] {groupId});
+
+		return assetEntryQuery;
 	}
 
 	protected AssetEntryQuery buildAssetEntryQueryWithAssetCategoryIds(
