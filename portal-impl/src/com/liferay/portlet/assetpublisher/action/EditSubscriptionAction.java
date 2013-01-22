@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.assetpublisher.action;
 
+import com.liferay.portal.kernel.portlet.LiferayPortletConfig;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -21,7 +22,6 @@ import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.struts.PortletAction;
-import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.WebKeys;
@@ -49,10 +49,10 @@ public class EditSubscriptionAction extends PortletAction {
 
 		try {
 			if (cmd.equals(Constants.SUBSCRIBE)) {
-				subscribe(actionRequest);
+				subscribe((LiferayPortletConfig)portletConfig, actionRequest);
 			}
 			else if (cmd.equals(Constants.UNSUBSCRIBE)) {
-				unsubscribe(actionRequest);
+				unsubscribe((LiferayPortletConfig)portletConfig, actionRequest);
 			}
 
 			sendRedirect(actionRequest, actionResponse);
@@ -69,17 +69,19 @@ public class EditSubscriptionAction extends PortletAction {
 		}
 	}
 
-	private void subscribe(ActionRequest actionRequest) throws Exception {
+	private void subscribe(
+			LiferayPortletConfig liferayPortletConfig,
+			ActionRequest actionRequest)
+		throws Exception {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesLocalServiceUtil.getPortletPreferences(
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, themeDisplay.getPlid(),
-				portletDisplay.getId());
+				liferayPortletConfig.getPortletId());
 
 		AssetPublisherUtil.subscribe(
 			themeDisplay.getUserId(), themeDisplay.getScopeGroupId(),
@@ -87,17 +89,19 @@ public class EditSubscriptionAction extends PortletAction {
 			themeDisplay.getPermissionChecker());
 	}
 
-	private void unsubscribe(ActionRequest actionRequest) throws Exception {
+	private void unsubscribe(
+			LiferayPortletConfig liferayPortletConfig,
+			ActionRequest actionRequest)
+		throws Exception {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesLocalServiceUtil.getPortletPreferences(
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, themeDisplay.getPlid(),
-				portletDisplay.getId());
+				liferayPortletConfig.getPortletId());
 
 		AssetPublisherUtil.unsubscribe(
 			themeDisplay.getUserId(), themeDisplay.getScopeGroupId(),
