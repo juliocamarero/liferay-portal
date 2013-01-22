@@ -641,6 +641,16 @@ public class DDMStructureLocalServiceUtil {
 		return getService().updateStructureXsd(structureId, xsd);
 	}
 
+	public static void updateXSDFieldMetadataEntryValue(long structureId,
+		java.lang.String fieldName, java.lang.String metadataEntryName,
+		java.lang.String metadataEntryValue, java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.updateXSDFieldMetadataEntryValue(structureId, fieldName,
+			metadataEntryName, metadataEntryValue, locale);
+	}
+
 	public static DDMStructureLocalService getService() {
 		if (_service == null) {
 			_service = (DDMStructureLocalService)PortalBeanLocatorUtil.locate(DDMStructureLocalService.class.getName());
