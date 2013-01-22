@@ -172,8 +172,6 @@ public abstract class BaseSearchTestCase {
 			Class<?> clazz, long groupId, SearchContext searchContext)
 		throws Exception {
 
-		Thread.sleep(2000 * TestPropsValues.JUNIT_DELAY_FACTOR);
-
 		Indexer indexer = IndexerRegistryUtil.getIndexer(clazz);
 
 		searchContext.setGroupIds(new long[]{groupId});
