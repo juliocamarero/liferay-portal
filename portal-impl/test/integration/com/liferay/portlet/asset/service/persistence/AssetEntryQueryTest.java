@@ -393,24 +393,8 @@ public class AssetEntryQueryTest {
 
 		Group group = ServiceTestUtil.addGroup();
 
-		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
-
-		if (assetCategoryIds != null) {
-			assetEntryQuery = buildAssetEntryQueryWithAssetCategoryIds(
-				assetEntryQuery, assetCategoryIds, any, not);
-		}
-
-		long[] assetTagIds = null;
-
-		if (assetTagNames != null) {
-			assetTagIds = AssetTagLocalServiceUtil.getTagIds(
-				group.getGroupId(), assetTagNames);
-
-			assetEntryQuery = buildAssetEntryQueryWithAssetTagIds(
-				assetEntryQuery, assetTagIds, any, not);
-		}
-
-		assetEntryQuery.setGroupIds(new long[] {group.getGroupId()});
+		AssetEntryQuery assetEntryQuery = buildAssetEntryQuery(
+			group.getGroupId(), assetCategoryIds, assetTagNames, any, not);
 
 		int initialEntries = AssetEntryServiceUtil.getEntriesCount(
 			assetEntryQuery);
@@ -448,22 +432,8 @@ public class AssetEntryQueryTest {
 
 		threadLocalCache.removeAll();
 
-		assetEntryQuery = new AssetEntryQuery();
-
-		if (assetCategoryIds != null) {
-			assetEntryQuery = buildAssetEntryQueryWithAssetCategoryIds(
-				assetEntryQuery, assetCategoryIds, any, not);
-		}
-
-		if (assetTagNames != null) {
-			assetTagIds = AssetTagLocalServiceUtil.getTagIds(
-				group.getGroupId(), assetTagNames);
-
-			assetEntryQuery = buildAssetEntryQueryWithAssetTagIds(
-				assetEntryQuery, assetTagIds, any, not);
-		}
-
-		assetEntryQuery.setGroupIds(new long[] {group.getGroupId()});
+		assetEntryQuery = buildAssetEntryQuery(
+			group.getGroupId(), assetCategoryIds, assetTagNames, any, not);
 
 		int allTagsEntries = AssetEntryServiceUtil.getEntriesCount(
 			assetEntryQuery);
