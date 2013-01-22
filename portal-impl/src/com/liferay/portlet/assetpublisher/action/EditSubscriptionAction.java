@@ -77,15 +77,17 @@ public class EditSubscriptionAction extends PortletAction {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String portletId = liferayPortletConfig.getPortletId();
+
 		PortletPreferences portletPreferences =
 			PortletPreferencesLocalServiceUtil.getPortletPreferences(
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, themeDisplay.getPlid(),
-				liferayPortletConfig.getPortletId());
+				portletId);
 
 		AssetPublisherUtil.subscribe(
 			themeDisplay.getUserId(), themeDisplay.getScopeGroupId(),
-			portletPreferences.getPortletPreferencesId(),
+			portletPreferences.getPortletPreferencesId(), portletId,
 			themeDisplay.getPermissionChecker());
 	}
 
@@ -97,15 +99,17 @@ public class EditSubscriptionAction extends PortletAction {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String portletId = liferayPortletConfig.getPortletId();
+
 		PortletPreferences portletPreferences =
 			PortletPreferencesLocalServiceUtil.getPortletPreferences(
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, themeDisplay.getPlid(),
-				liferayPortletConfig.getPortletId());
+				portletId);
 
 		AssetPublisherUtil.unsubscribe(
-			themeDisplay.getUserId(), themeDisplay.getScopeGroupId(),
-			portletPreferences.getPortletPreferencesId(),
+			themeDisplay.getUserId(),
+			portletPreferences.getPortletPreferencesId(), portletId,
 			themeDisplay.getPermissionChecker());
 	}
 

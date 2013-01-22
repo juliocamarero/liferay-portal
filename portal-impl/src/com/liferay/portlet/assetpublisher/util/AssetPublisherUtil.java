@@ -40,6 +40,7 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.service.SubscriptionLocalServiceUtil;
+import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -53,7 +54,6 @@ import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
-import com.liferay.portlet.assetpublisher.service.permission.AssetPublisherPermission;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.IOException;
@@ -597,11 +597,11 @@ public class AssetPublisherUtil {
 
 	public static void subscribe(
 			long userId, long groupId, long portletPreferencesId,
-			PermissionChecker permissionChecker)
+			String portletId, PermissionChecker permissionChecker)
 		throws PortalException, SystemException {
 
-		AssetPublisherPermission.check(
-			permissionChecker, groupId, ActionKeys.SUBSCRIBE);
+		PortletPermissionUtil.check(
+			permissionChecker, portletId, ActionKeys.SUBSCRIBE);
 
 		SubscriptionLocalServiceUtil.addSubscription(
 			userId, groupId,
@@ -610,12 +610,12 @@ public class AssetPublisherUtil {
 	}
 
 	public static void unsubscribe(
-			long userId, long groupId, long portletPreferencesId,
+			long userId, long portletPreferencesId, String portletId,
 			PermissionChecker permissionChecker)
 		throws PortalException, SystemException {
 
-		AssetPublisherPermission.check(
-			permissionChecker, groupId, ActionKeys.SUBSCRIBE);
+		PortletPermissionUtil.check(
+			permissionChecker, portletId, ActionKeys.SUBSCRIBE);
 
 		SubscriptionLocalServiceUtil.deleteSubscription(
 			userId, com.liferay.portal.model.PortletPreferences.class.getName(),
