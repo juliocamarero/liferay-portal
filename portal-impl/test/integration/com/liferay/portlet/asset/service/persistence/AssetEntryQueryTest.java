@@ -434,6 +434,8 @@ public class AssetEntryQueryTest {
 				assetEntryQuery, assetTagIds, any, not);
 		}
 
+		assetEntryQuery.setGroupIds(new long[] {group.getGroupId()});
+
 		int allTagsEntries = AssetEntryServiceUtil.getEntriesCount(
 			assetEntryQuery);
 
