@@ -701,6 +701,7 @@ AUI.add(
 							mainPath: themeDisplay.getPathMain(),
 							name: pageTitle,
 							p_auth: Liferay.authToken,
+							parentLayoutId: themeDisplay.getParentLayoutId(),
 							privateLayout: themeDisplay.isPrivateLayout()
 						};
 

@@ -88,78 +88,41 @@ public class UpdateLayoutAction extends JSONAction {
 
 		JSONObject jsonObj = JSONFactoryUtil.createJSONObject();
 
+		boolean hasDeletePermission = layout != null && LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.DELETE);
+
+		boolean hasUpdatePermission = layout != null && LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.DELETE);
+
 		if (cmd.equals("add")) {
-			if (parentLayoutId > 0) {
-				layout = LayoutLocalServiceUtil.getLayout(
-					groupId, privateLayout, parentLayoutId);
 
-				if (!LayoutPermissionUtil.contains(
-					permissionChecker, layout, ActionKeys.ADD_LAYOUT)) {
-
-					return null;
-				}
-			}
-			else {
-				if (!GroupPermissionUtil.contains(
+			boolean addLayoutPermission = addLayoutPermission = GroupPermissionUtil.contains(
 						permissionChecker, themeDisplay.getScopeGroupId(),
 						ActionKeys.ADD_LAYOUT) &&
-					!themeDisplay.getScopeGroup().isLayoutPrototype()) {
+						!themeDisplay.getScopeGroup().isLayoutPrototype();
 
-					return null;
-				}
+			if (addLayoutPermission) {
+				String[] array = addPage(themeDisplay, request, response);
+
+				jsonObj.put("deletable", Boolean.valueOf(array[2]));
+				jsonObj.put("layoutId", array[0]);
+				jsonObj.put("updateable", Boolean.valueOf(array[3]));
+				jsonObj.put("url", array[1]);
 			}
-
-
-			String[] array = addPage(themeDisplay, request, response);
-
-			jsonObj.put("deletable", Boolean.valueOf(array[2]));
-			jsonObj.put("layoutId", array[0]);
-			jsonObj.put("updateable", Boolean.valueOf(array[3]));
-			jsonObj.put("url", array[1]);
 		}
-		else if (cmd.equals("delete")) {
-			if (!LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.DELETE)) {
-
-				return null;
-			}
-
+		else if (cmd.equals("delete") && hasDeletePermission) {
 			SitesUtil.deleteLayout(request, response);
 		}
-		else if (cmd.equals("display_order")) {
-			if (!LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.UPDATE)) {
-
-				return null;
-			}
-
+		else if (cmd.equals("display_order") && hasUpdatePermission) {
 			updateDisplayOrder(request);
 		}
-		else if (cmd.equals("name")) {
-			if (!LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.UPDATE)) {
-
-				return null;
-			}
-
+		else if (cmd.equals("name") && hasUpdatePermission) {
 			updateName(request);
 		}
-		else if (cmd.equals("parent_layout_id")) {
-			if (!LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.UPDATE)) {
-
-				return null;
-			}
-
+		else if (cmd.equals("parent_layout_id") && hasUpdatePermission) {
 			updateParentLayoutId(request);
 		}
-		else if (cmd.equals("priority")) {
-			if (!LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.UPDATE)) {
-
-				return null;
-			}
-
+		else if (cmd.equals("priority") && hasUpdatePermission) {
 			updatePriority(request);
 		}
 
