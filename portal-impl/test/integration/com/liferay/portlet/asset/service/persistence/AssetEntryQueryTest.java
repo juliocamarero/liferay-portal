@@ -17,6 +17,8 @@ package com.liferay.portlet.asset.service.persistence;
 import com.liferay.portal.kernel.cache.Lifecycle;
 import com.liferay.portal.kernel.cache.ThreadLocalCache;
 import com.liferay.portal.kernel.cache.ThreadLocalCacheManager;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.StringPool;
@@ -296,6 +298,33 @@ public class AssetEntryQueryTest {
 		testAssetTags(new String[] {"modularity", "osgi"}, true, true, 1);
 	}
 
+	protected AssetEntryQuery buildAssetEntryQuery(
+			long groupId, long[] assetCategoryIds, String[] assetTagNames,
+			boolean any, boolean not)
+		throws PortalException, SystemException {
+
+		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
+
+		if (assetCategoryIds != null) {
+			assetEntryQuery = buildAssetEntryQueryWithAssetCategoryIds(
+				assetEntryQuery, assetCategoryIds, any, not);
+		}
+
+		if (assetTagNames != null) {
+			long[] assetTagIds = null;
+
+			assetTagIds = AssetTagLocalServiceUtil.getTagIds(
+				groupId, assetTagNames);
+
+			assetEntryQuery = buildAssetEntryQueryWithAssetTagIds(
+				assetEntryQuery, assetTagIds, any, not);
+		}
+
+		assetEntryQuery.setGroupIds(new long[] {groupId});
+
+		return assetEntryQuery;
+	}
+
 	protected AssetEntryQuery buildAssetEntryQueryWithAssetCategoryIds(
 		AssetEntryQuery assetEntryQuery, long[] assetCategoryIds, boolean any,
 		boolean not) {
@@ -362,26 +391,10 @@ public class AssetEntryQueryTest {
 
 		threadLocalCache.removeAll();
 
-		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
-
-		if (assetCategoryIds != null) {
-			assetEntryQuery = buildAssetEntryQueryWithAssetCategoryIds(
-				assetEntryQuery, assetCategoryIds, any, not);
-		}
-
 		Group group = ServiceTestUtil.addGroup();
 
-		long[] assetTagIds = null;
-
-		if (assetTagNames != null) {
-			assetTagIds = AssetTagLocalServiceUtil.getTagIds(
-				group.getGroupId(), assetTagNames);
-
-			assetEntryQuery = buildAssetEntryQueryWithAssetTagIds(
-				assetEntryQuery, assetTagIds, any, not);
-		}
-
-		assetEntryQuery.setGroupIds(new long[] {group.getGroupId()});
+		AssetEntryQuery assetEntryQuery = buildAssetEntryQuery(
+			group.getGroupId(), assetCategoryIds, assetTagNames, any, not);
 
 		int initialEntries = AssetEntryServiceUtil.getEntriesCount(
 			assetEntryQuery);
@@ -419,22 +432,8 @@ public class AssetEntryQueryTest {
 
 		threadLocalCache.removeAll();
 
-		assetEntryQuery = new AssetEntryQuery();
-
-		if (assetCategoryIds != null) {
-			assetEntryQuery = buildAssetEntryQueryWithAssetCategoryIds(
-				assetEntryQuery, assetCategoryIds, any, not);
-		}
-
-		if (assetTagNames != null) {
-			assetTagIds = AssetTagLocalServiceUtil.getTagIds(
-				group.getGroupId(), assetTagNames);
-
-			assetEntryQuery = buildAssetEntryQueryWithAssetTagIds(
-				assetEntryQuery, assetTagIds, any, not);
-		}
-
-		assetEntryQuery.setGroupIds(new long[] {group.getGroupId()});
+		assetEntryQuery = buildAssetEntryQuery(
+			group.getGroupId(), assetCategoryIds, assetTagNames, any, not);
 
 		int allTagsEntries = AssetEntryServiceUtil.getEntriesCount(
 			assetEntryQuery);
