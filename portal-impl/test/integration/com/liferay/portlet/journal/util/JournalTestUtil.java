@@ -147,19 +147,34 @@ public class JournalTestUtil {
 
 	public static DDMStructure addDDMStructure() throws Exception {
 		return addDDMStructure(
-			TestPropsValues.getGroupId(), getSampleStructureXSD());
+			TestPropsValues.getGroupId(), getSampleStructureXSD(), Locale.US);
+	}
+
+	public static DDMStructure addDDMStructure(Locale defaultLocale)
+		throws Exception {
+
+		return addDDMStructure(
+			TestPropsValues.getGroupId(), getSampleStructureXSD(),
+			defaultLocale);
 	}
 
 	public static DDMStructure addDDMStructure(long groupId) throws Exception {
-		return addDDMStructure(groupId, getSampleStructureXSD());
+		return addDDMStructure(groupId, getSampleStructureXSD(), Locale.US);
 	}
 
-	public static DDMStructure addDDMStructure(long groupId, String xsd)
+	public static DDMStructure addDDMStructure(
+		long groupId, Locale defaultLocale) throws Exception {
+
+		return addDDMStructure(groupId, getSampleStructureXSD(), Locale.US);
+	}
+
+	public static DDMStructure addDDMStructure(
+			long groupId, String xsd, Locale defaultLocale)
 		throws Exception {
 
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 
-		nameMap.put(Locale.US, "Test Structure");
+		nameMap.put(defaultLocale, "Test Structure");
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -173,7 +188,14 @@ public class JournalTestUtil {
 	}
 
 	public static DDMStructure addDDMStructure(String xsd) throws Exception {
-		return addDDMStructure(TestPropsValues.getGroupId(), xsd);
+		return addDDMStructure(TestPropsValues.getGroupId(), xsd, Locale.US);
+	}
+
+	public static DDMStructure addDDMStructure(
+		String xsd, Locale defaultLocale) throws Exception {
+
+		return addDDMStructure(
+			TestPropsValues.getGroupId(), xsd, defaultLocale);
 	}
 
 	public static DDMTemplate addDDMTemplate(long structureId)
