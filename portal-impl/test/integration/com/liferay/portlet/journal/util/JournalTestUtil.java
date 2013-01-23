@@ -60,28 +60,14 @@ public class JournalTestUtil {
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
-		StringBundler sb = new StringBundler(3 + 6 * _locales.length);
-
-		sb.append("<?xml version=\"1.0\"?><root available-locales=");
-		sb.append("\"en_US,es_ES,de_DE\" default-locale=\"en_US\">");
-
-		for (Locale locale : _locales) {
-			sb.append("<static-content language-id=\"");
-			sb.append(LocaleUtil.toLanguageId(locale));
-			sb.append("\"><![CDATA[<p>");
-			sb.append(content);
-			sb.append(LocaleUtil.toLanguageId(locale));
-			sb.append("</p>]]></static-content>");
-		}
-
-		sb.append("</root>");
+		String localizedContent = generateLocalizedContent(content, Locale.US);
 
 		return JournalArticleLocalServiceUtil.addArticle(
 			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
-			StringPool.BLANK, true, 1, titleMap, descriptionMap, sb.toString(),
-			"general", null, null, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true,
-			0, 0, 0, 0, 0, true, false, false, null, null, null, null,
-			serviceContext);
+			StringPool.BLANK, true, 1, titleMap, descriptionMap,
+			localizedContent, "general", null, null, null, 1, 1, 1965, 0, 0, 0,
+			0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, false, false, null, null,
+			null, null, serviceContext);
 	}
 
 	public static JournalArticle addArticle(
