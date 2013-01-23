@@ -231,9 +231,9 @@ public class JournalTestUtilTest {
 	}
 
 	@Test
-	public void testGenerateLocalizedContent() {
+	public void testCreateLocalizedContent() {
 		Assert.assertNotNull(
-			JournalTestUtil.generateLocalizedContent(
+			JournalTestUtil.createLocalizedContent(
 				"This is a content", Locale.US));
 	}
 
@@ -270,7 +270,7 @@ public class JournalTestUtilTest {
 		JournalArticle journalArticle = JournalTestUtil.addArticle(
 			_group.getGroupId(), "Test Article", content);
 
-		String updatedContent = JournalTestUtil.generateLocalizedContent(
+		String updatedContent = JournalTestUtil.createLocalizedContent(
 			"This is an updated test article", Locale.US);
 
 		Assert.assertNotNull(

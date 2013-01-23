@@ -68,7 +68,7 @@ public class JournalTestUtil {
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
-		String localizedContent = generateLocalizedContent(
+		String localizedContent = createLocalizedContent(
 			content, defaultLocale);
 
 		return JournalArticleLocalServiceUtil.addArticle(
@@ -336,7 +336,7 @@ public class JournalTestUtil {
 		return document;
 	}
 
-	public static String generateLocalizedContent(
+	public static String createLocalizedContent(
 		String content, Locale defaultLocale) {
 
 		StringBundler availableLocales =
