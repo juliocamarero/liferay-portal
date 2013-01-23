@@ -110,6 +110,7 @@ else if ((searchType == DLSearchConstants.SINGLE) && !ajaxRequest) {
 			</span>
 
 			<c:if test="<%= folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID %>">
+
 				<%
 				String taglibOnClick = "Liferay.fire('" + liferayPortletResponse.getNamespace() + "changeSearchFolder', {searchEverywhere: " + (folder != null) + "});";
 				%>
