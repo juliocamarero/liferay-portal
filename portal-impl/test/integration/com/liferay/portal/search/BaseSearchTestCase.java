@@ -152,17 +152,19 @@ public abstract class BaseSearchTestCase {
 
 		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
 
+		int expectedSearchCount = searchBaseModelsCount(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
 		Assert.assertEquals(
-			initialBaseModelsSearchCount + 1,
-			searchBaseModelsCount(
-				getBaseModelClass(), group.getGroupId(), searchContext));
+			initialBaseModelsSearchCount + 1, expectedSearchCount);
 
 		addAttachment(baseModel);
 
+		expectedSearchCount = searchBaseModelsCount(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
 		Assert.assertEquals(
-			initialBaseModelsSearchCount + 2,
-			searchBaseModelsCount(
-				getBaseModelClass(), group.getGroupId(), searchContext));
+			initialBaseModelsSearchCount + 2, expectedSearchCount);
 	}
 
 	protected int searchBaseModelsCount(
@@ -195,17 +197,19 @@ public abstract class BaseSearchTestCase {
 
 		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
 
+		int expectedSearchCount = searchBaseModelsCount(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
 		Assert.assertEquals(
-			initialBaseModelsSearchCount + 1,
-			searchBaseModelsCount(
-				getBaseModelClass(), group.getGroupId(), searchContext));
+			initialBaseModelsSearchCount + 1, expectedSearchCount);
 
 		addComment(baseModel, getSearchKeywords(), serviceContext);
 
+		expectedSearchCount = searchBaseModelsCount(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
 		Assert.assertEquals(
-			initialBaseModelsSearchCount + 2,
-			searchBaseModelsCount(
-				getBaseModelClass(), group.getGroupId(), searchContext));
+			initialBaseModelsSearchCount + 2, expectedSearchCount);
 	}
 
 	protected BaseModel<?> baseModel;
