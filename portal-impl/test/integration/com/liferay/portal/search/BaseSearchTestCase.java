@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.model.BaseModel;
@@ -62,6 +63,12 @@ public abstract class BaseSearchTestCase {
 	}
 
 	@Test
+	public void testSearchByKeywords() throws Exception {
+		searchByKeywords();
+	}
+
+	@Test
+	@Transactional
 	public void testSearchComments() throws Exception {
 		searchComments();
 	}
@@ -176,6 +183,29 @@ public abstract class BaseSearchTestCase {
 		Hits results = indexer.search(searchContext);
 
 		return results.getLength();
+	}
+
+	protected void searchByKeywords() throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		serviceContext.setScopeGroupId(group.getGroupId());
+
+		SearchContext searchContext = ServiceTestUtil.getSearchContext();
+
+		searchContext.setKeywords(getSearchKeywords());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		int initialBaseModelsSearchCount = searchBaseModelsCount(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
+		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchBaseModelsCount(
+				getBaseModelClass(), group.getGroupId(), searchContext));
 	}
 
 	protected void searchComments() throws Exception {
