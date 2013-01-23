@@ -203,7 +203,16 @@ public class JournalTestUtil {
 
 		return addDDMTemplate(
 			structureId, getSampleTemplateXSL(),
-			JournalTemplateConstants.LANG_TYPE_VM);
+			JournalTemplateConstants.LANG_TYPE_VM, Locale.US);
+	}
+
+	public static DDMTemplate addDDMTemplate(
+			long structureId, Locale defaultLocale)
+		throws Exception {
+
+		return addDDMTemplate(
+			structureId, getSampleTemplateXSL(),
+			JournalTemplateConstants.LANG_TYPE_VM, defaultLocale);
 	}
 
 	public static DDMTemplate addDDMTemplate(long groupId, long structureId)
@@ -211,16 +220,26 @@ public class JournalTestUtil {
 
 		return addDDMTemplate(
 			groupId, structureId, getSampleTemplateXSL(),
-			JournalTemplateConstants.LANG_TYPE_VM);
+			JournalTemplateConstants.LANG_TYPE_VM, Locale.US);
 	}
 
 	public static DDMTemplate addDDMTemplate(
-			long groupId, long structureId, String xsl, String lang)
+			long groupId, long structureId, Locale defaultLocale)
+		throws Exception {
+
+		return addDDMTemplate(
+			groupId, structureId, getSampleTemplateXSL(),
+			JournalTemplateConstants.LANG_TYPE_VM, defaultLocale);
+	}
+
+	public static DDMTemplate addDDMTemplate(
+			long groupId, long structureId, String xsl, String lang,
+			Locale defaultLocale)
 		throws Exception {
 
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 
-		nameMap.put(Locale.US, "Test Template");
+		nameMap.put(defaultLocale, "Test Template");
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -240,7 +259,17 @@ public class JournalTestUtil {
 		throws Exception {
 
 		return addDDMTemplate(
-			TestPropsValues.getGroupId(), structureId, xsl, lang);
+			TestPropsValues.getGroupId(), structureId, xsl, lang, Locale.US);
+	}
+
+
+	public static DDMTemplate addDDMTemplate(
+			long structureId, String xsl, String lang, Locale defaultLocale)
+		throws Exception {
+
+		return addDDMTemplate(
+			TestPropsValues.getGroupId(), structureId, xsl, lang,
+			defaultLocale);
 	}
 
 	public static void addDynamicContent(
