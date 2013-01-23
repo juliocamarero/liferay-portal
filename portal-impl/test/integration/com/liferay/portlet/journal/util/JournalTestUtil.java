@@ -44,6 +44,7 @@ import java.util.Map;
 /**
  * @author Juan Fernández
  * @author Marcellus Tavares
+ * @author Manuel de la Peña
  */
 public class JournalTestUtil {
 
@@ -81,7 +82,7 @@ public class JournalTestUtil {
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
 		for (Locale locale : _locales) {
-			titleMap.put(locale, title.concat(LocaleUtil.toLanguageId(locale)));
+			titleMap.put(locale, title);
 		}
 
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
@@ -400,15 +401,9 @@ public class JournalTestUtil {
 			LocaleUtil.toLanguageId(defaultLocale));
 
 		for (Locale locale : _locales) {
-			StringBundler sb = new StringBundler(3);
-
-			sb.append(content);
-			sb.append(" - ");
-			sb.append(LocaleUtil.toLanguageId(locale));
-
 			addLanguageIdElement(
 				document.getRootElement(), LocaleUtil.toLanguageId(locale),
-				sb.toString());
+				content);
 		}
 
 		return document.asXML();
@@ -447,7 +442,7 @@ public class JournalTestUtil {
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
 		for (Locale locale : _locales) {
-			titleMap.put(locale, title.concat(LocaleUtil.toLanguageId(locale)));
+			titleMap.put(locale, title);
 		}
 
 		return JournalArticleLocalServiceUtil.updateArticle(
