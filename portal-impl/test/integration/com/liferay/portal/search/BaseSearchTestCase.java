@@ -66,8 +66,8 @@ public abstract class BaseSearchTestCase {
 		searchComments();
 	}
 
-	protected void addAttachment(ClassedModel classedModel) throws Exception {
-	}
+	protected abstract void addAttachment(ClassedModel classedModel)
+		throws Exception;
 
 	protected BaseModel<?> addBaseModel(
 			BaseModel<?> parentBaseModel, boolean approved,
