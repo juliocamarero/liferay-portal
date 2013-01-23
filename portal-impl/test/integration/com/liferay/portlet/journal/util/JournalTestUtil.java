@@ -105,7 +105,7 @@ public class JournalTestUtil {
 			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
 			StringPool.BLANK, true, 1, titleMap, descriptionMap,
 			localizedContent, "general", null, null, null, 1, 1, 1965, 0, 0, 0,
-			0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, false, false, null, null,
+			0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, true, false, null, null,
 			null, null, serviceContext);
 	}
 
@@ -187,7 +187,7 @@ public class JournalTestUtil {
 			TestPropsValues.getUserId(), groupId, 0, 0, 0, StringPool.BLANK,
 			true, 0, titleMap, null, xml, "general", structureId,
 			templateId, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true, 0, 0, 0, 0,
-			0, true, false, false, null, null, null, null, serviceContext);
+			0, true, true, false, null, null, null, null, serviceContext);
 	}
 
 	public static DDMStructure addDDMStructure() throws Exception {
