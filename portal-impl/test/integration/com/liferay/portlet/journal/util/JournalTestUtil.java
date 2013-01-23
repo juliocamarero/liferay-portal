@@ -312,6 +312,16 @@ public class JournalTestUtil {
 			"This is a test folder.", serviceContext);
 	}
 
+	public static void addLanguageIdElement(
+		Element element, String languageId, String value) {
+
+		Element staticContent = element.addElement("static-content");
+
+		staticContent.addAttribute("language-id", languageId);
+
+		staticContent.setText(value);
+	}
+
 	public static Document createDocument(
 		String availableLocales, String defaultLocale) {
 
@@ -329,8 +339,6 @@ public class JournalTestUtil {
 	public static String generateLocalizedContent(
 		String content, Locale defaultLocale) {
 
-		StringBundler sb = new StringBundler(8 + 6 * _locales.length);
-
 		StringBuilder availableLocales = new StringBuilder();
 
 		for (int i = 0; i < _locales.length; i++) {
@@ -343,26 +351,23 @@ public class JournalTestUtil {
 			}
 		}
 
-		sb.append("<?xml version=\"1.0\"?><root available-locales=");
-		sb.append("\"");
-		sb.append(availableLocales.toString());
-		sb.append("\" ");
-		sb.append("default-locale=\"");
-		sb.append(LocaleUtil.toLanguageId(defaultLocale));
-		sb.append("\">");
+		Document document = createDocument(
+			availableLocales.toString(),
+			LocaleUtil.toLanguageId(defaultLocale));
 
 		for (Locale locale : _locales) {
-			sb.append("<static-content language-id=\"");
-			sb.append(LocaleUtil.toLanguageId(locale));
-			sb.append("\"><![CDATA[<p>");
+			StringBuilder sb = new StringBuilder(3);
+
 			sb.append(content);
+			sb.append(" - ");
 			sb.append(LocaleUtil.toLanguageId(locale));
-			sb.append("</p>]]></static-content>");
+
+			addLanguageIdElement(
+				document.getRootElement(), LocaleUtil.toLanguageId(locale),
+				sb.toString());
 		}
 
-		sb.append("</root>");
-
-		return sb.toString();
+		return document.asXML();
 	}
 
 	public static String getSampleStructuredContent() {
