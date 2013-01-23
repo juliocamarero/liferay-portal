@@ -31,7 +31,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 
 		String path = StagedModelPathUtil.getPath(stagedModel);
 
-		if (!portletDataContext.isPathNotProcessed(path)) {
+		if (portletDataContext.isPathProcessed(path)) {
 			return;
 		}
 
@@ -61,7 +61,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			T stagedModel, String path, PortletDataContext portletDataContext)
 		throws PortletDataException {
 
-		if (!portletDataContext.isPathNotProcessed(path)) {
+		if (portletDataContext.isPathProcessed(path)) {
 			return;
 		}
 
