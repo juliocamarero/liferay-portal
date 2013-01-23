@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.model.BaseModel;
@@ -58,15 +57,18 @@ public abstract class BaseSearchTestCase {
 	}
 
 	@Test
-	@Transactional
 	public void testSearchAttachments() throws Exception {
 		searchAttachments();
 	}
 
 	@Test
-	@Transactional
 	public void testSearchComments() throws Exception {
 		searchComments();
+	}
+
+	@Test
+	public void testSearchFolders() throws Exception {
+		searchFolders();
 	}
 
 	protected void addAttachment(ClassedModel classedModel) throws Exception {
@@ -115,6 +117,11 @@ public abstract class BaseSearchTestCase {
 			serviceContext.getScopeGroupId(), getBaseModelClassName(),
 			getBaseModelClassPK(classedModel), message.getThreadId(),
 			message.getMessageId(), message.getSubject(), body, serviceContext);
+	}
+
+	protected void addFolder(
+			ClassedModel classedModel, ServiceContext serviceContext)
+		throws Exception {
 	}
 
 	protected abstract Class<?> getBaseModelClass();
@@ -204,6 +211,36 @@ public abstract class BaseSearchTestCase {
 				getBaseModelClass(), group.getGroupId(), searchContext));
 
 		addComment(baseModel, getSearchKeywords(), serviceContext);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 2,
+			searchBaseModelsCount(
+				getBaseModelClass(), group.getGroupId(), searchContext));
+	}
+
+	protected void searchFolders() throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		serviceContext.setScopeGroupId(group.getGroupId());
+
+		SearchContext searchContext = ServiceTestUtil.getSearchContext();
+
+		searchContext.setIncludeFolders(true);
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		int initialBaseModelsSearchCount = searchBaseModelsCount(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
+		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchBaseModelsCount(
+				getBaseModelClass(), group.getGroupId(), searchContext));
+
+		addFolder(baseModel, serviceContext);
 
 		Assert.assertEquals(
 			initialBaseModelsSearchCount + 2,
