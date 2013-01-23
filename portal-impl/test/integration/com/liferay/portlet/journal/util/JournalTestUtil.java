@@ -98,15 +98,15 @@ public class JournalTestUtil {
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
-			long groupId, String content, String structureId, String templateId)
+			long groupId, String xml, String structureId, String templateId)
 		throws Exception {
 
 		return addArticleWithXMLContent(
-			groupId, content, structureId, templateId, Locale.US);
+			groupId, xml, structureId, templateId, Locale.US);
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
-			long groupId, String content, String structureId, String templateId,
+			long groupId, String xml, String structureId, String templateId,
 			Locale defaultLocale)
 		throws Exception {
 
@@ -122,27 +122,27 @@ public class JournalTestUtil {
 
 		return JournalArticleLocalServiceUtil.addArticle(
 			TestPropsValues.getUserId(), groupId, 0, 0, 0, StringPool.BLANK,
-			true, 0, titleMap, null, content, "general", structureId,
+			true, 0, titleMap, null, xml, "general", structureId,
 			templateId, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true, 0, 0, 0, 0,
 			0, true, false, false, null, null, null, null, serviceContext);
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
-			String content, String structureId, String templateId)
+			String xml, String structureId, String templateId)
 		throws Exception {
 
 		return addArticleWithXMLContent(
-			TestPropsValues.getGroupId(), content, structureId, templateId,
+			TestPropsValues.getGroupId(), xml, structureId, templateId,
 			Locale.US);
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
-			String content, String structureId, String templateId,
+			String xml, String structureId, String templateId,
 			Locale defaultLocale)
 		throws Exception {
 
 		return addArticleWithXMLContent(
-			TestPropsValues.getGroupId(), content, structureId, templateId,
+			TestPropsValues.getGroupId(), xml, structureId, templateId,
 			defaultLocale);
 	}
 
