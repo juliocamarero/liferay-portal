@@ -50,6 +50,14 @@ public class JournalTestUtil {
 			long groupId, long folderId, String name, String content)
 		throws Exception {
 
+		return addArticle(groupId, folderId, name, content, Locale.US);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, long folderId, String name, String content,
+			Locale defaultLocale)
+		throws Exception {
+
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
 		for (Locale locale : _locales) {
@@ -60,7 +68,8 @@ public class JournalTestUtil {
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
-		String localizedContent = generateLocalizedContent(content, Locale.US);
+		String localizedContent = generateLocalizedContent(
+			content, defaultLocale);
 
 		return JournalArticleLocalServiceUtil.addArticle(
 			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
@@ -76,16 +85,33 @@ public class JournalTestUtil {
 
 		return addArticle(
 			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, name,
-			content);
+			content, Locale.US);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, String name, String content, Locale defaultLocale)
+		throws Exception {
+
+		return addArticle(
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, name,
+			content, defaultLocale);
 	}
 
 	public static JournalArticle addArticle(
 			long groupId, String content, String structureId, String templateId)
 		throws Exception {
 
+		return addArticle(groupId, content, structureId, templateId, Locale.US);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, String content, String structureId, String templateId,
+			Locale defaultLocale)
+		throws Exception {
+
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
-		titleMap.put(Locale.US, "Test Article");
+		titleMap.put(defaultLocale, "Test Article");
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -105,7 +131,18 @@ public class JournalTestUtil {
 		throws Exception {
 
 		return addArticle(
-			TestPropsValues.getGroupId(), content, structureId, templateId);
+			TestPropsValues.getGroupId(), content, structureId, templateId,
+			Locale.US);
+	}
+
+	public static JournalArticle addArticle(
+			String content, String structureId, String templateId,
+			Locale defaultLocale)
+		throws Exception {
+
+		return addArticle(
+			TestPropsValues.getGroupId(), content, structureId, templateId,
+			defaultLocale);
 	}
 
 	public static DDMStructure addDDMStructure() throws Exception {
