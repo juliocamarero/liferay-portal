@@ -339,14 +339,15 @@ public class JournalTestUtil {
 	public static String generateLocalizedContent(
 		String content, Locale defaultLocale) {
 
-		StringBuilder availableLocales = new StringBuilder();
+		StringBundler availableLocales =
+			new StringBundler((2 * _locales.length) - 1);
 
 		for (int i = 0; i < _locales.length; i++) {
 			Locale locale = _locales[i];
 
 			availableLocales.append(LocaleUtil.toLanguageId(locale));
 
-			if (i != (_locales.length - 1)) {
+			if (i < (_locales.length - 1)) {
 				availableLocales.append(StringPool.COMMA);
 			}
 		}
@@ -356,7 +357,7 @@ public class JournalTestUtil {
 			LocaleUtil.toLanguageId(defaultLocale));
 
 		for (Locale locale : _locales) {
-			StringBuilder sb = new StringBuilder(3);
+			StringBundler sb = new StringBundler(3);
 
 			sb.append(content);
 			sb.append(" - ");
