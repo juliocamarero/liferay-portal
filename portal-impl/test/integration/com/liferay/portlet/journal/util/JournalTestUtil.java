@@ -251,6 +251,45 @@ public class JournalTestUtil {
 		return document;
 	}
 
+	public static String generateLocalizedContent(
+		String content, Locale defaultLocale) {
+
+		StringBundler sb = new StringBundler(8 + 6 * _locales.length);
+
+		StringBuilder availableLocales = new StringBuilder();
+
+		for (int i = 0; i < _locales.length; i++) {
+			Locale locale = _locales[i];
+
+			availableLocales.append(LocaleUtil.toLanguageId(locale));
+
+			if (i != (_locales.length - 1)) {
+				availableLocales.append(StringPool.COMMA);
+			}
+		}
+
+		sb.append("<?xml version=\"1.0\"?><root available-locales=");
+		sb.append("\"");
+		sb.append(availableLocales.toString());
+		sb.append("\" ");
+		sb.append("default-locale=\"");
+		sb.append(LocaleUtil.toLanguageId(defaultLocale));
+		sb.append("\">");
+
+		for (Locale locale : _locales) {
+			sb.append("<static-content language-id=\"");
+			sb.append(LocaleUtil.toLanguageId(locale));
+			sb.append("\"><![CDATA[<p>");
+			sb.append(content);
+			sb.append(LocaleUtil.toLanguageId(locale));
+			sb.append("</p>]]></static-content>");
+		}
+
+		sb.append("</root>");
+
+		return sb.toString();
+	}
+
 	public static String getSampleStructuredContent() {
 		Document document = createDocument("en_US", "en_US");
 
