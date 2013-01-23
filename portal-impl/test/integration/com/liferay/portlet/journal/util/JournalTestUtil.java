@@ -17,6 +17,7 @@ package com.liferay.portlet.journal.util;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -47,44 +48,55 @@ import java.util.Map;
 public class JournalTestUtil {
 
 	public static JournalArticle addArticle(
-			long groupId, String name, String content)
+			long groupId, String title, String content)
 		throws Exception {
 
 		return addArticle(
-			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, name,
-			content, Locale.US);
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
+			content, Locale.US, false, false);
 	}
 
 	public static JournalArticle addArticle(
-			long groupId, String name, String content, Locale defaultLocale)
+			long groupId, String title, String content, Locale defaultLocale)
 		throws Exception {
 
 		return addArticle(
-			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, name,
-			content, defaultLocale);
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
+			content, defaultLocale, false, false);
 	}
 
 	public static JournalArticle addArticle(
-			long groupId, long folderId, String name, String content)
+			long groupId, long folderId, String title, String content)
 		throws Exception {
 
-		return addArticle(groupId, folderId, name, content, Locale.US);
+		return addArticle(
+			groupId, folderId, title, content, Locale.US, false, false);
 	}
 
 	public static JournalArticle addArticle(
-			long groupId, long folderId, String name, String content,
-			Locale defaultLocale)
+			long groupId, long folderId, String title, String content,
+			Locale defaultLocale, boolean workflowEnabled, boolean approved)
 		throws Exception {
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
 		for (Locale locale : _locales) {
-			titleMap.put(locale, name.concat(LocaleUtil.toLanguageId(locale)));
+			titleMap.put(locale, title.concat(LocaleUtil.toLanguageId(locale)));
 		}
 
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		if (workflowEnabled) {
+			serviceContext.setWorkflowAction(
+				WorkflowConstants.ACTION_SAVE_DRAFT);
+
+			if (approved) {
+				serviceContext.setWorkflowAction(
+					WorkflowConstants.ACTION_PUBLISH);
+			}
+		}
 
 		String localizedContent = createLocalizedContent(
 			content, defaultLocale);
@@ -95,6 +107,38 @@ public class JournalTestUtil {
 			localizedContent, "general", null, null, null, 1, 1, 1965, 0, 0, 0,
 			0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, false, false, null, null,
 			null, null, serviceContext);
+	}
+
+	public static JournalArticle addArticleWithWorkflow(boolean approved)
+		throws Exception {
+
+		return addArticleWithWorkflow("title", "content", approved);
+	}
+
+	public static JournalArticle addArticleWithWorkflow(
+			String title, boolean approved)
+		throws Exception {
+
+		return addArticleWithWorkflow(title, "content", approved);
+	}
+
+	public static JournalArticle addArticleWithWorkflow(
+			String title, String content, boolean approved)
+		throws Exception {
+
+		return addArticle(
+			TestPropsValues.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title, content,
+			Locale.US, true, approved);
+	}
+
+	public static JournalArticle addArticleWithWorkflow(
+			long groupId, String title, String content, boolean approved)
+		throws Exception {
+
+		return addArticle(
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
+			content, Locale.US, true, approved);
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
