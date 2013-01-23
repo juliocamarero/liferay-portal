@@ -109,7 +109,7 @@ public class JournalTestUtilTest {
 		String xml = document.asXML();
 
 		Assert.assertNotNull(
-			JournalTestUtil.addArticle(
+			JournalTestUtil.addArticleWithXMLContent(
 				xml, ddmStructure.getStructureKey(),
 				ddmTemplate.getTemplateKey()));
 	}

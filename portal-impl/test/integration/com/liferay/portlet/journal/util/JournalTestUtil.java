@@ -97,14 +97,15 @@ public class JournalTestUtil {
 			content, defaultLocale);
 	}
 
-	public static JournalArticle addArticle(
+	public static JournalArticle addArticleWithXMLContent(
 			long groupId, String content, String structureId, String templateId)
 		throws Exception {
 
-		return addArticle(groupId, content, structureId, templateId, Locale.US);
+		return addArticleWithXMLContent(
+			groupId, content, structureId, templateId, Locale.US);
 	}
 
-	public static JournalArticle addArticle(
+	public static JournalArticle addArticleWithXMLContent(
 			long groupId, String content, String structureId, String templateId,
 			Locale defaultLocale)
 		throws Exception {
@@ -126,21 +127,21 @@ public class JournalTestUtil {
 			0, true, false, false, null, null, null, null, serviceContext);
 	}
 
-	public static JournalArticle addArticle(
+	public static JournalArticle addArticleWithXMLContent(
 			String content, String structureId, String templateId)
 		throws Exception {
 
-		return addArticle(
+		return addArticleWithXMLContent(
 			TestPropsValues.getGroupId(), content, structureId, templateId,
 			Locale.US);
 	}
 
-	public static JournalArticle addArticle(
+	public static JournalArticle addArticleWithXMLContent(
 			String content, String structureId, String templateId,
 			Locale defaultLocale)
 		throws Exception {
 
-		return addArticle(
+		return addArticleWithXMLContent(
 			TestPropsValues.getGroupId(), content, structureId, templateId,
 			defaultLocale);
 	}
