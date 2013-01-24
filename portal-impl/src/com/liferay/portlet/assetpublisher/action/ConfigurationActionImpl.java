@@ -333,11 +333,10 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			ActionRequest actionRequest, PortletPreferences preferences)
 		throws Exception {
 
-		String defaultScope = getParameter(actionRequest, "defaultScope");
-		String[] scopeIds = StringUtil.split(
-			getParameter(actionRequest, "scopeIds"));
+		String scopeId = getParameter(actionRequest, "scopeId");
+		String[] scopeIds = new String[]{scopeId};
 
-		preferences.setValue("defaultScope", defaultScope);
+		preferences.setValue("defaultScope", StringPool.TRUE);
 		preferences.setValues("scopeIds", scopeIds);
 	}
 
