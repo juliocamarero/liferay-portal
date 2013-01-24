@@ -121,7 +121,8 @@ public class JournalTestUtilTest {
 
 	@Test
 	public void testAddDDMStructureWithLocale() throws Exception {
-		Assert.assertNotNull(JournalTestUtil.addDDMStructure(Locale.US));
+		Assert.assertNotNull(
+			JournalTestUtil.addDDMStructure(LocaleUtil.getDefault()));
 	}
 
 	@Test
@@ -153,7 +154,8 @@ public class JournalTestUtilTest {
 	public void testAddDDMStructureWithXSDAndLocale() throws Exception {
 		Assert.assertNotNull(
 			JournalTestUtil.addDDMStructure(
-				JournalTestUtil.getSampleStructureXSD(), Locale.US));
+				JournalTestUtil.getSampleStructureXSD(),
+				LocaleUtil.getDefault()));
 	}
 
 	@Test
@@ -234,7 +236,7 @@ public class JournalTestUtilTest {
 	public void testCreateLocalizedContent() {
 		Assert.assertNotNull(
 			JournalTestUtil.createLocalizedContent(
-				"This is a content", Locale.US));
+				"This is a content", LocaleUtil.getDefault()));
 	}
 
 	@Test
@@ -271,7 +273,7 @@ public class JournalTestUtilTest {
 			_group.getGroupId(), "Test Article", content);
 
 		String updatedContent = JournalTestUtil.createLocalizedContent(
-			"This is an updated test article", Locale.US);
+			"This is an updated test article", LocaleUtil.getDefault());
 
 		Assert.assertNotNull(
 			JournalTestUtil.updateArticle(

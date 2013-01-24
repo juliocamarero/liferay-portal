@@ -55,7 +55,7 @@ public class JournalTestUtil {
 
 		return addArticle(
 			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
-			content, Locale.US, false, false);
+			content, LocaleUtil.getDefault(), false, false);
 	}
 
 	public static JournalArticle addArticle(
@@ -72,7 +72,8 @@ public class JournalTestUtil {
 		throws Exception {
 
 		return addArticle(
-			groupId, folderId, title, content, Locale.US, false, false);
+			groupId, folderId, title, content, LocaleUtil.getDefault(), false,
+			false);
 	}
 
 	public static JournalArticle addArticle(
@@ -130,7 +131,7 @@ public class JournalTestUtil {
 
 		return addArticle(
 			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, "title",
-			"content", Locale.US, true, approved);
+			"content", LocaleUtil.getDefault(), true, approved);
 	}
 
 	public static JournalArticle addArticleWithWorkflow(
@@ -147,7 +148,7 @@ public class JournalTestUtil {
 		return addArticle(
 			TestPropsValues.getGroupId(),
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title, content,
-			Locale.US, true, approved);
+			LocaleUtil.getDefault(), true, approved);
 	}
 
 	public static JournalArticle addArticleWithWorkflow(
@@ -156,7 +157,7 @@ public class JournalTestUtil {
 
 		return addArticle(
 			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
-			content, Locale.US, true, approved);
+			content, LocaleUtil.getDefault(), true, approved);
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
@@ -165,7 +166,7 @@ public class JournalTestUtil {
 
 		return addArticleWithXMLContent(
 			TestPropsValues.getGroupId(), xml, structureId, templateId,
-			Locale.US);
+			LocaleUtil.getDefault());
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
@@ -183,7 +184,7 @@ public class JournalTestUtil {
 		throws Exception {
 
 		return addArticleWithXMLContent(
-			groupId, xml, structureId, templateId, Locale.US);
+			groupId, xml, structureId, templateId, LocaleUtil.getDefault());
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
@@ -210,7 +211,8 @@ public class JournalTestUtil {
 
 	public static DDMStructure addDDMStructure() throws Exception {
 		return addDDMStructure(
-			TestPropsValues.getGroupId(), getSampleStructureXSD(), Locale.US);
+			TestPropsValues.getGroupId(), getSampleStructureXSD(),
+			LocaleUtil.getDefault());
 	}
 
 	public static DDMStructure addDDMStructure(Locale defaultLocale)
@@ -222,13 +224,15 @@ public class JournalTestUtil {
 	}
 
 	public static DDMStructure addDDMStructure(long groupId) throws Exception {
-		return addDDMStructure(groupId, getSampleStructureXSD(), Locale.US);
+		return addDDMStructure(groupId, getSampleStructureXSD(),
+			LocaleUtil.getDefault());
 	}
 
 	public static DDMStructure addDDMStructure(
 		long groupId, Locale defaultLocale) throws Exception {
 
-		return addDDMStructure(groupId, getSampleStructureXSD(), Locale.US);
+		return addDDMStructure(
+			groupId, getSampleStructureXSD(), LocaleUtil.getDefault());
 	}
 
 	public static DDMStructure addDDMStructure(
@@ -251,7 +255,8 @@ public class JournalTestUtil {
 	}
 
 	public static DDMStructure addDDMStructure(String xsd) throws Exception {
-		return addDDMStructure(TestPropsValues.getGroupId(), xsd, Locale.US);
+		return addDDMStructure(
+			TestPropsValues.getGroupId(), xsd, LocaleUtil.getDefault());
 	}
 
 	public static DDMStructure addDDMStructure(
@@ -266,7 +271,7 @@ public class JournalTestUtil {
 
 		return addDDMTemplate(
 			structureId, getSampleTemplateXSL(),
-			JournalTemplateConstants.LANG_TYPE_VM, Locale.US);
+			JournalTemplateConstants.LANG_TYPE_VM, LocaleUtil.getDefault());
 	}
 
 	public static DDMTemplate addDDMTemplate(
@@ -283,7 +288,7 @@ public class JournalTestUtil {
 
 		return addDDMTemplate(
 			groupId, structureId, getSampleTemplateXSL(),
-			JournalTemplateConstants.LANG_TYPE_VM, Locale.US);
+			JournalTemplateConstants.LANG_TYPE_VM, LocaleUtil.getDefault());
 	}
 
 	public static DDMTemplate addDDMTemplate(
@@ -300,7 +305,8 @@ public class JournalTestUtil {
 		throws Exception {
 
 		return addDDMTemplate(
-			TestPropsValues.getGroupId(), structureId, xsl, lang, Locale.US);
+			TestPropsValues.getGroupId(), structureId, xsl, lang,
+			LocaleUtil.getDefault());
 	}
 
 	public static DDMTemplate addDDMTemplate(
