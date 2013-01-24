@@ -969,6 +969,19 @@ public class JournalArticleLocalServiceWrapper
 
 	public com.liferay.portal.kernel.search.Hits search(long companyId,
 		long groupId, java.util.List<java.lang.Long> folderIds,
+		long classNameId, java.lang.String structureId,
+		java.lang.String templateId, java.lang.String keywords,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean isIncludeAttachments, int start, int end,
+		com.liferay.portal.kernel.search.Sort sort)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _journalArticleLocalService.search(companyId, groupId,
+			folderIds, classNameId, structureId, templateId, keywords, params,
+			isIncludeAttachments, start, end, sort);
+	}
+
+	public com.liferay.portal.kernel.search.Hits search(long companyId,
+		long groupId, java.util.List<java.lang.Long> folderIds,
 		long classNameId, java.lang.String articleId, java.lang.String title,
 		java.lang.String description, java.lang.String content,
 		java.lang.String type, java.lang.String status,
@@ -981,6 +994,22 @@ public class JournalArticleLocalServiceWrapper
 			folderIds, classNameId, articleId, title, description, content,
 			type, status, structureId, templateId, params, andSearch, start,
 			end, sort);
+	}
+
+	public com.liferay.portal.kernel.search.Hits search(long companyId,
+		long groupId, java.util.List<java.lang.Long> folderIds,
+		long classNameId, java.lang.String articleId, java.lang.String title,
+		java.lang.String description, java.lang.String content,
+		java.lang.String type, java.lang.String status,
+		java.lang.String structureId, java.lang.String templateId,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean includeAttachments, boolean andSearch, int start, int end,
+		com.liferay.portal.kernel.search.Sort sort)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _journalArticleLocalService.search(companyId, groupId,
+			folderIds, classNameId, articleId, title, description, content,
+			type, status, structureId, templateId, params, includeAttachments,
+			andSearch, start, end, sort);
 	}
 
 	public int searchCount(long companyId, long groupId,
