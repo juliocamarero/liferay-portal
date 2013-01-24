@@ -193,7 +193,7 @@ else if ((searchType == DLSearchConstants.SINGLE) && !ajaxRequest) {
 
 				request.setAttribute("view.jsp-total", String.valueOf(total));
 
-				List<SearchResult> searchResults = DLUtil.getSearchResults(hits);
+				List<SearchResult> searchResults = SearchResultUtil.getSearchResults(hits);
 
 				for (int i = 0; i < searchResults.size(); i++) {
 					SearchResult searchResult = searchResults.get(i);
