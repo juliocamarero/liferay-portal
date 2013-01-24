@@ -60,7 +60,7 @@ SearchContext searchContext = SearchContextFactory.getInstance(request);
 
 			Document document = results.doc(0);
 
-			String folderName = document.getField(Field.TITLE).getValue();
+			Field title = document.getField(Field.TITLE);
 		%>
 
 			<c:if test="<%= folderId == curFolderId %>">
@@ -69,7 +69,7 @@ SearchContext searchContext = SearchContextFactory.getInstance(request);
 						{
 							clearFields: '<%= UnicodeFormatter.toString(renderResponse.getNamespace() + facet.getFieldName()) %>',
 							fieldValues: '<%= curFolderId %>',
-							text: '<%= UnicodeFormatter.toString(folderName) %>'
+							text: '<%= UnicodeFormatter.toString(title.getValue()) %>'
 						}
 					);
 				</aui:script>
@@ -82,7 +82,7 @@ SearchContext searchContext = SearchContextFactory.getInstance(request);
 			%>
 
 			<li class="facet-value <%= (folderId == curFolderId) ? "current-term" : StringPool.BLANK %>">
-				<a data-value="<%= curFolderId %>" href="javascript:;"><%= HtmlUtil.escape(folderName) %></a><c:if test="<%= showAssetCount %>"> <span class="frequency">(<%= termCollector.getFrequency() %>)</span></c:if>
+				<a data-value="<%= curFolderId %>" href="javascript:;"><%= HtmlUtil.escape(title.getValue()) %></a><c:if test="<%= showAssetCount %>"> <span class="frequency">(<%= termCollector.getFrequency() %>)</span></c:if>
 			</li>
 
 		<%
