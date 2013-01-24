@@ -1934,7 +1934,7 @@ public class JournalArticleLocalServiceImpl
 			long companyId, long groupId, List<Long> folderIds,
 			long classNameId, String structureId, String templateId,
 			String keywords, LinkedHashMap<String, Object> params,
-			boolean isIncludeAttachments, int start, int end, Sort sort)
+			boolean includeDiscussions, int start, int end, Sort sort)
 		throws SystemException {
 
 		String articleId = null;
@@ -1962,7 +1962,7 @@ public class JournalArticleLocalServiceImpl
 		return search(
 			companyId, groupId, folderIds, classNameId, articleId, title,
 			description, content, null, status, structureId, templateId, params,
-			isIncludeAttachments, andOperator, start, end, sort);
+			includeDiscussions, andOperator, start, end, sort);
 	}
 
 	public Hits search(
@@ -1982,7 +1982,7 @@ public class JournalArticleLocalServiceImpl
 			long classNameId, String articleId, String title,
 			String description, String content, String type, String status,
 			String structureId, String templateId,
-			LinkedHashMap<String, Object> params, boolean includeAttachments,
+			LinkedHashMap<String, Object> params, boolean includeDiscussions,
 			boolean andSearch, int start, int end, Sort sort)
 		throws SystemException {
 
@@ -2011,7 +2011,7 @@ public class JournalArticleLocalServiceImpl
 			searchContext.setEnd(end);
 			searchContext.setFolderIds(folderIds);
 			searchContext.setGroupIds(new long[] {groupId});
-			searchContext.setIncludeDiscussions(includeAttachments);
+			searchContext.setIncludeDiscussions(includeDiscussions);
 
 			if (params != null) {
 				String keywords = (String)params.remove("keywords");
