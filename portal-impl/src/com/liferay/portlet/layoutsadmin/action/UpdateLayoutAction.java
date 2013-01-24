@@ -34,6 +34,7 @@ import com.liferay.portal.service.LayoutPrototypeServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.struts.JSONAction;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -82,43 +83,46 @@ public class UpdateLayoutAction extends JSONAction {
 			layout = LayoutLocalServiceUtil.getLayout(
 				groupId, privateLayout, layoutId);
 		}
-		else if (parentLayoutId > 0) {
-			layout = LayoutLocalServiceUtil.getLayout(
-				groupId, privateLayout, parentLayoutId);
-		}
-
-		if ((layout != null) &&
-			!LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.UPDATE)) {
-
-			return null;
-		}
 
 		String cmd = ParamUtil.getString(request, Constants.CMD);
 
 		JSONObject jsonObj = JSONFactoryUtil.createJSONObject();
 
-		if (cmd.equals("add")) {
-			String[] array = addPage(themeDisplay, request, response);
+		boolean hasDeletePermission = layout != null && LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.DELETE);
 
-			jsonObj.put("deletable", Boolean.valueOf(array[2]));
-			jsonObj.put("layoutId", array[0]);
-			jsonObj.put("updateable", Boolean.valueOf(array[3]));
-			jsonObj.put("url", array[1]);
+		boolean hasUpdatePermission = layout != null && LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.DELETE);
+
+		if (cmd.equals("add")) {
+
+			boolean addLayoutPermission = addLayoutPermission = GroupPermissionUtil.contains(
+						permissionChecker, themeDisplay.getScopeGroupId(),
+						ActionKeys.ADD_LAYOUT) &&
+						!themeDisplay.getScopeGroup().isLayoutPrototype();
+
+			if (addLayoutPermission) {
+				String[] array = addPage(themeDisplay, request, response);
+
+				jsonObj.put("deletable", Boolean.valueOf(array[2]));
+				jsonObj.put("layoutId", array[0]);
+				jsonObj.put("updateable", Boolean.valueOf(array[3]));
+				jsonObj.put("url", array[1]);
+			}
 		}
-		else if (cmd.equals("delete")) {
+		else if (cmd.equals("delete") && hasDeletePermission) {
 			SitesUtil.deleteLayout(request, response);
 		}
-		else if (cmd.equals("display_order")) {
+		else if (cmd.equals("display_order") && hasUpdatePermission) {
 			updateDisplayOrder(request);
 		}
-		else if (cmd.equals("name")) {
+		else if (cmd.equals("name") && hasUpdatePermission) {
 			updateName(request);
 		}
-		else if (cmd.equals("parent_layout_id")) {
+		else if (cmd.equals("parent_layout_id") && hasUpdatePermission) {
 			updateParentLayoutId(request);
 		}
-		else if (cmd.equals("priority")) {
+		else if (cmd.equals("priority") && hasUpdatePermission) {
 			updatePriority(request);
 		}
 
