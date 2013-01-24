@@ -195,50 +195,91 @@ boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, ArticleDisp
 				<c:choose>
 					<c:when test="<%= PropsValues.JOURNAL_ARTICLES_SEARCH_WITH_INDEX %>">
 						<%@ include file="/html/portlet/journal/article_search_results_index.jspf" %>
+
+						<%
+						request.setAttribute("view.jsp-total", String.valueOf(total));
+
+						for (int i = 0; i < results.size(); i++) {
+							Object result = results.get(i);
+						%>
+
+							<%@ include file="/html/portlet/journal/cast_result.jspf" %>
+
+							<c:choose>
+								<c:when test="<%= JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.VIEW) %>">
+
+									<%
+									PortletURL tempRowURL = liferayPortletResponse.createRenderURL();
+
+									tempRowURL.setParameter("struts_action", "/journal/edit_article");
+									tempRowURL.setParameter("redirect", currentURL);
+									tempRowURL.setParameter("groupId", String.valueOf(curArticle.getGroupId()));
+									tempRowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
+									tempRowURL.setParameter("articleId", curArticle.getArticleId());
+
+									request.setAttribute("view_entries.jsp-article", curArticle);
+									request.setAttribute("view_entries.jsp-tempRowURL", tempRowURL);
+									%>
+
+									<liferay-util:include page="/html/portlet/journal/view_article_descriptive.jsp" />
+								</c:when>
+
+								<c:otherwise>
+									<div style="float: left; margin: 100px 10px 0px;">
+										<img alt="<liferay-ui:message key="image" />" border="no" src="<%= themeDisplay.getPathThemeImages() %>/application/forbidden_action.png" />
+									</div>
+								</c:otherwise>
+							</c:choose>
+
+						<%
+						}
+						%>
+
 					</c:when>
 					<c:otherwise>
 						<%@ include file="/html/portlet/journal/article_search_results_database.jspf" %>
+
+						<%
+						request.setAttribute("view.jsp-total", String.valueOf(total));
+
+						for (int i = 0; i < results.size(); i++) {
+							Object result = results.get(i);
+						%>
+
+							<%@ include file="/html/portlet/journal/cast_result.jspf" %>
+
+							<c:choose>
+								<c:when test="<%= JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.VIEW) %>">
+
+									<%
+									PortletURL tempRowURL = liferayPortletResponse.createRenderURL();
+
+									tempRowURL.setParameter("struts_action", "/journal/edit_article");
+									tempRowURL.setParameter("redirect", currentURL);
+									tempRowURL.setParameter("groupId", String.valueOf(curArticle.getGroupId()));
+									tempRowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
+									tempRowURL.setParameter("articleId", curArticle.getArticleId());
+
+									request.setAttribute("view_entries.jsp-article", curArticle);
+									request.setAttribute("view_entries.jsp-tempRowURL", tempRowURL);
+									%>
+
+									<liferay-util:include page="/html/portlet/journal/view_article_descriptive.jsp" />
+								</c:when>
+
+								<c:otherwise>
+									<div style="float: left; margin: 100px 10px 0px;">
+										<img alt="<liferay-ui:message key="image" />" border="no" src="<%= themeDisplay.getPathThemeImages() %>/application/forbidden_action.png" />
+									</div>
+								</c:otherwise>
+							</c:choose>
+
+						<%
+						}
+						%>
+
 					</c:otherwise>
 				</c:choose>
-
-				<%
-				request.setAttribute("view.jsp-total", String.valueOf(total));
-
-				for (int i = 0; i < results.size(); i++) {
-					Object result = results.get(i);
-				%>
-
-					<%@ include file="/html/portlet/journal/cast_result.jspf" %>
-
-					<c:choose>
-						<c:when test="<%= JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.VIEW) %>">
-
-							<%
-							PortletURL tempRowURL = liferayPortletResponse.createRenderURL();
-
-							tempRowURL.setParameter("struts_action", "/journal/edit_article");
-							tempRowURL.setParameter("redirect", currentURL);
-							tempRowURL.setParameter("groupId", String.valueOf(curArticle.getGroupId()));
-							tempRowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
-							tempRowURL.setParameter("articleId", curArticle.getArticleId());
-
-							request.setAttribute("view_entries.jsp-article", curArticle);
-							request.setAttribute("view_entries.jsp-tempRowURL", tempRowURL);
-							%>
-
-							<liferay-util:include page="/html/portlet/journal/view_article_descriptive.jsp" />
-						</c:when>
-
-						<c:otherwise>
-							<div style="float: left; margin: 100px 10px 0px;">
-								<img alt="<liferay-ui:message key="image" />" border="no" src="<%= themeDisplay.getPathThemeImages() %>/application/forbidden_action.png" />
-							</div>
-						</c:otherwise>
-					</c:choose>
-
-				<%
-				}
-				%>
 
 				<c:if test="<%= results.isEmpty() %>">
 					<div class="portlet-msg-info">
