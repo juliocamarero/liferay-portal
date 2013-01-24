@@ -31,6 +31,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateConstants;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.model.JournalTemplateConstants;
@@ -87,6 +88,10 @@ public class JournalTestUtil {
 
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
 
+		for (Locale locale : _locales) {
+			descriptionMap.put(locale, title);
+		}
+
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
 		if (workflowEnabled) {
@@ -102,18 +107,30 @@ public class JournalTestUtil {
 		String localizedContent = createLocalizedContent(
 			content, defaultLocale);
 
+		boolean indexable = true;
+
 		return JournalArticleLocalServiceUtil.addArticle(
-			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
-			StringPool.BLANK, true, 1, titleMap, descriptionMap,
-			localizedContent, "general", null, null, null, 1, 1, 1965, 0, 0, 0,
-			0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, true, false, null, null,
-			null, null, serviceContext);
+			TestPropsValues.getUserId(), groupId, folderId,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, 0, StringPool.BLANK,
+			true, JournalArticleConstants.VERSION_DEFAULT, titleMap,
+			descriptionMap, localizedContent, "general", null, null, null, 1, 1,
+			1965, 0, 0, 0, 0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, indexable,
+			false, null, null, null, null, serviceContext);
 	}
 
 	public static JournalArticle addArticleWithWorkflow(boolean approved)
 		throws Exception {
 
 		return addArticleWithWorkflow("title", "content", approved);
+	}
+
+	public static JournalArticle addArticleWithWorkflow(
+			long groupId, boolean approved)
+		throws Exception {
+
+		return addArticle(
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, "title",
+			"content", Locale.US, true, approved);
 	}
 
 	public static JournalArticle addArticleWithWorkflow(

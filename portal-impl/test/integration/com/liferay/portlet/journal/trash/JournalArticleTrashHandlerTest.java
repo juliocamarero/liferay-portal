@@ -75,7 +75,9 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
-		return JournalTestUtil.addArticleWithWorkflow(approved);
+		return JournalTestUtil.addArticleWithWorkflow(
+			serviceContext.getScopeGroupId(), getSearchKeywords(),
+			getSearchKeywords(), approved);
 	}
 
 	@Override
