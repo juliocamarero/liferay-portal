@@ -310,6 +310,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		group.setSite(site);
 		group.setActive(active);
 
+		String treePath = group.buildTreePath();
+
+		group.setTreePath(treePath);
+
 		if ((serviceContext != null) && (classNameId == groupClassNameId) &&
 			!user.isDefaultUser()) {
 
@@ -2985,6 +2989,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		group.setType(type);
 		group.setFriendlyURL(friendlyURL);
 		group.setActive(active);
+
+		String treePath = group.buildTreePath();
+
+		group.setTreePath(treePath);
 
 		if ((serviceContext != null) && group.isSite()) {
 			group.setExpandoBridgeAttributes(serviceContext);
