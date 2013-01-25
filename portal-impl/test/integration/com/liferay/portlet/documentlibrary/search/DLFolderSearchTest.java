@@ -12,27 +12,29 @@
  * details.
  */
 
-package com.liferay.portlet.journal.search;
+package com.liferay.portlet.documentlibrary.search;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BaseModel;
-import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.search.BaseSearchTestCase;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
-import com.liferay.portlet.journal.asset.JournalArticleAssetRenderer;
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.journal.util.JournalTestUtil;
+import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
+import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
- * @author Juan Fernández
+ * @author Eudaldo Alonso
  */
 @ExecutionTestListeners(
 	listeners = {
@@ -41,10 +43,15 @@ import org.junit.runner.RunWith;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
-public class JournalArticleSearchTest extends BaseSearchTestCase {
+public class DLFolderSearchTest extends BaseSearchTestCase {
 
 	@Override
 	public void testSearchAttachments() throws Exception {
+		Assert.assertTrue("This test does not apply", true);
+	}
+
+	@Override
+	public void testSearchComments() throws Exception {
 		Assert.assertTrue("This test does not apply", true);
 	}
 
@@ -54,22 +61,19 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
-		String title = getSearchKeywords();
-		String content = getSearchKeywords();
+		DLFolder parentDLFolder = (DLFolder)parentBaseModel;
 
-		return JournalTestUtil.addArticleWithWorkflow(
-			serviceContext.getScopeGroupId(), title, content, approved);
+		DLFolder dlFolder = DLFolderLocalServiceUtil.addFolder(
+			TestPropsValues.getUserId(), parentDLFolder.getGroupId(),
+			parentDLFolder.getGroupId(), false, parentDLFolder.getFolderId(),
+			getSearchKeywords(), getSearchKeywords(), false, serviceContext);
+
+		return dlFolder;
 	}
 
 	@Override
 	protected Class<?> getBaseModelClass() {
-		return JournalArticle.class;
-	}
-
-	@Override
-	protected Long getBaseModelClassPK(ClassedModel classedModel) {
-		return JournalArticleAssetRenderer.getClassPK(
-			(JournalArticle)classedModel);
+		return DLFolder.class;
 	}
 
 	@Override
@@ -77,12 +81,18 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 			Group group, ServiceContext serviceContext)
 		throws Exception {
 
-		return JournalTestUtil.addFolder(group.getGroupId(), "Test Folder");
+		return DLFolderLocalServiceUtil.addFolder(
+			TestPropsValues.getUserId(), group.getGroupId(), group.getGroupId(),
+			false, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			ServiceTestUtil.randomString(_FOLDER_NAME_MAX_LENGTH),
+			StringPool.BLANK, false, serviceContext);
 	}
 
 	@Override
 	protected String getSearchKeywords() {
 		return "Title";
 	}
+
+	private static final int _FOLDER_NAME_MAX_LENGTH = 100;
 
 }
