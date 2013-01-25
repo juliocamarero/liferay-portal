@@ -302,6 +302,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		group.setClassNameId(classNameId);
 		group.setClassPK(classPK);
 		group.setParentGroupId(parentGroupId);
+		group.setTreePath(group.buildTreePath());
 		group.setLiveGroupId(liveGroupId);
 		group.setName(name);
 		group.setDescription(description);
@@ -2966,6 +2967,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			group.getClassPK(), friendlyURL);
 
 		group.setParentGroupId(parentGroupId);
+		group.setTreePath(group.buildTreePath());
 		group.setName(name);
 		group.setDescription(description);
 		group.setType(type);
