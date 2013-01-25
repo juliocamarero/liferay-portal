@@ -335,7 +335,7 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 
 		String scopeId = getParameter(actionRequest, "scopeId");
 
-		preferences.setValue("defaultScope", StringPool.TRUE);
+		preferences.setValue("defaultScope", Boolean.TRUE.toString());
 		preferences.setValues("scopeIds", new String[] {scopeId});
 	}
 

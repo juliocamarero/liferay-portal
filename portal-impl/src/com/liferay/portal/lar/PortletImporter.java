@@ -1830,7 +1830,7 @@ public class PortletImporter {
 					companyGroup.getGroupId(), layout.getPlid());
 			}
 			else if (name.startsWith("queryName") &&
-				value.equalsIgnoreCase("assetCategories")) {
+					 value.equalsIgnoreCase("assetCategories")) {
 
 				String index = name.substring(9, name.length());
 
@@ -1879,7 +1879,7 @@ public class PortletImporter {
 
 				newScopeIds[i] =
 					AssetPublisherUtil.SCOPE_ID_LAYOUT_PREFIX +
-					newLayout.getLayoutId();
+						newLayout.getLayoutId();
 			}
 			else {
 				newScopeIds[i] = StringUtil.replace(
