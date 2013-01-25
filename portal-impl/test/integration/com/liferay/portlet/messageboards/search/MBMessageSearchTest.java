@@ -79,14 +79,13 @@ public class MBMessageSearchTest extends BaseSearchTestCase {
 
 		MBMessageLocalServiceUtil.updateMessage(
 			TestPropsValues.getUserId(), message.getMessageId(),
-			getSearchKeywords(), getSearchKeywords(),
-			_getInputStreamOVPs(), existingFiles, 0, false,
-			serviceContext);
+			getSearchKeywords(), getSearchKeywords(), _getInputStreamOVPs(),
+			existingFiles, 0, false, serviceContext);
 	}
 
 	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
-			BaseModel<?> parentBaseModel, boolean approved,
+			BaseModel<?> parentBaseModel, boolean approved, String keywords,
 			ServiceContext serviceContext)
 		throws Exception {
 
@@ -94,8 +93,7 @@ public class MBMessageSearchTest extends BaseSearchTestCase {
 
 		MBMessage message = MBMessageLocalServiceUtil.addMessage(
 			TestPropsValues.getUserId(), ServiceTestUtil.randomString(),
-			category.getCategoryId(), getSearchKeywords(), getSearchKeywords(),
-			serviceContext);
+			category.getCategoryId(), keywords, keywords, serviceContext);
 
 		if (!approved) {
 			message = MBMessageLocalServiceUtil.updateStatus(
@@ -128,7 +126,6 @@ public class MBMessageSearchTest extends BaseSearchTestCase {
 	}
 
 	private List<ObjectValuePair<String, InputStream>> _getInputStreamOVPs() {
-
 		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
 			new ArrayList<ObjectValuePair<String, InputStream>>(1);
 

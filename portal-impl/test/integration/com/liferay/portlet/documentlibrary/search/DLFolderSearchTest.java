@@ -57,7 +57,7 @@ public class DLFolderSearchTest extends BaseSearchTestCase {
 
 	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
-			BaseModel<?> parentBaseModel, boolean approved,
+			BaseModel<?> parentBaseModel, boolean approved, String keywords,
 			ServiceContext serviceContext)
 		throws Exception {
 
@@ -66,7 +66,7 @@ public class DLFolderSearchTest extends BaseSearchTestCase {
 		DLFolder dlFolder = DLFolderLocalServiceUtil.addFolder(
 			TestPropsValues.getUserId(), parentDLFolder.getGroupId(),
 			parentDLFolder.getGroupId(), false, parentDLFolder.getFolderId(),
-			getSearchKeywords(), getSearchKeywords(), false, serviceContext);
+			keywords, keywords, false, serviceContext);
 
 		return dlFolder;
 	}

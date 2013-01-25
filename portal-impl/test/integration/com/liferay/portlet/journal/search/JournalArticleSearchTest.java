@@ -50,15 +50,12 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 
 	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
-			BaseModel<?> parentBaseModel, boolean approved,
+			BaseModel<?> parentBaseModel, boolean approved, String keywords,
 			ServiceContext serviceContext)
 		throws Exception {
 
-		String title = getSearchKeywords();
-		String content = getSearchKeywords();
-
 		return JournalTestUtil.addArticleWithWorkflow(
-			serviceContext.getScopeGroupId(), title, content, approved);
+			serviceContext.getScopeGroupId(), keywords, keywords, approved);
 	}
 
 	@Override

@@ -73,7 +73,7 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 
 	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
-			BaseModel<?> parentBaseModel, boolean approved,
+			BaseModel<?> parentBaseModel, boolean approved, String keywords,
 			ServiceContext serviceContext)
 		throws Exception {
 
@@ -83,9 +83,8 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 
 		WikiPage page = WikiPageLocalServiceUtil.addPage(
 			TestPropsValues.getUserId(),
-			(Long)parentBaseModel.getPrimaryKeyObj(), getSearchKeywords(),
-			getSearchKeywords(), ServiceTestUtil.randomString(), true,
-			serviceContext);
+			(Long)parentBaseModel.getPrimaryKeyObj(), keywords, keywords,
+			ServiceTestUtil.randomString(), true, serviceContext);
 
 		page = WikiPageLocalServiceUtil.updateStatus(
 			TestPropsValues.getUserId(), page.getResourcePrimKey(),
