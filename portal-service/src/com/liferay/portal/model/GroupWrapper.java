@@ -56,6 +56,7 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 		attributes.put("friendlyURL", getFriendlyURL());
 		attributes.put("site", getSite());
 		attributes.put("active", getActive());
+		attributes.put("treePath", getTreePath());
 
 		return attributes;
 	}
@@ -143,6 +144,12 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 
 		if (active != null) {
 			setActive(active);
+		}
+
+		String treePath = (String)attributes.get("treePath");
+
+		if (treePath != null) {
+			setTreePath(treePath);
 		}
 	}
 
@@ -467,6 +474,24 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 		_group.setActive(active);
 	}
 
+	/**
+	* Returns the tree path of this group.
+	*
+	* @return the tree path of this group
+	*/
+	public java.lang.String getTreePath() {
+		return _group.getTreePath();
+	}
+
+	/**
+	* Sets the tree path of this group.
+	*
+	* @param treePath the tree path of this group
+	*/
+	public void setTreePath(java.lang.String treePath) {
+		_group.setTreePath(treePath);
+	}
+
 	public boolean isNew() {
 		return _group.isNew();
 	}
@@ -750,6 +775,12 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	public void setTypeSettingsProperties(
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties) {
 		_group.setTypeSettingsProperties(typeSettingsProperties);
+	}
+
+	public java.lang.String buildTreePath()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _group.buildTreePath();
 	}
 
 	/**
