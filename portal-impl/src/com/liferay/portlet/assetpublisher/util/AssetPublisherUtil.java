@@ -461,10 +461,14 @@ public class AssetPublisherUtil {
 
 		long[] groupIds = new long[scopeIds.length];
 
-		for (int i = 0; i < scopeIds.length; i++) {
+		int i = 0;
+
+		for (String scopeId : scopeIds) {
 			try {
 				groupIds[i] = _getGroupId(
-					scopeIds[i], scopeGroupId, layout.isPrivateLayout());
+					scopeId, scopeGroupId, layout.isPrivateLayout());
+
+				i++;
 			}
 			catch (Exception e) {
 				continue;
