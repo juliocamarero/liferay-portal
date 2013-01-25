@@ -622,6 +622,22 @@ public class DLAppHelperLocalServiceImpl
 			workflowContext, new ServiceContext());
 
 		if (!DLAppHelperThreadLocal.isEnabled()) {
+
+			// Social for wiki attachments
+
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+			extraDataJSONObject.put("fileEntryId",
+					dlFileEntry.getFileEntryId());
+			extraDataJSONObject.put("title", TrashUtil.getOriginalTitle(
+					dlFileEntry.getTitle()));
+
+			socialActivityLocalService.addActivity(
+				userId, fileEntry.getGroupId(), dlFileEntry.getClassName(),
+				dlFileEntry.getClassPK(),
+				SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+				extraDataJSONObject.toString(), 0);
+
 			return;
 		}
 

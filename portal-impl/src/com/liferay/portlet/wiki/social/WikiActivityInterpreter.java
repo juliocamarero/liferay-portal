@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -59,6 +60,14 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 			groupName = getGroupName(activity.getGroupId(), themeDisplay);
 		}
 
+		boolean isWikiPortlet = false;
+
+		if (Validator.equals(
+				themeDisplay.getPortletDisplay().getId(), PortletKeys.WIKI)) {
+
+			isWikiPortlet = true;
+		}
+
 		String creatorUserName = getUserName(
 			activity.getUserId(), themeDisplay);
 
@@ -89,7 +98,10 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 			}
 		}
 		else if (activityType == WikiActivityKeys.ADD_PAGE) {
-			if (Validator.isNull(groupName)) {
+			if (isWikiPortlet) {
+				titlePattern = "activity-wiki-add-the-page";
+			}
+			else if (Validator.isNull(groupName)) {
 				titlePattern = "activity-wiki-add-page";
 			}
 			else {
@@ -97,14 +109,55 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 			}
 		}
 		else if (activityType == WikiActivityKeys.UPDATE_PAGE) {
-			if (Validator.isNull(groupName)) {
+			if (isWikiPortlet) {
+				titlePattern = "activity-wiki-update-the-page-to-version";
+			}
+			else if (Validator.isNull(groupName)) {
 				titlePattern = "activity-wiki-update-page";
 			}
 			else {
 				titlePattern = "activity-wiki-update-page-in";
 			}
 		}
+		else if (activityType == SocialActivityConstants.TYPE_ADD_ATTACHMENT) {
+			if (isWikiPortlet) {
+				titlePattern = "activity-wiki-add-the-attachment";
+			}
+			else if (Validator.isNull(groupName)) {
+				titlePattern = "activity-wiki-add-attachment-page";
+			}
+			else {
+				titlePattern = "activity-wiki-add-attachment-page-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (isWikiPortlet) {
+				titlePattern = "activity-wiki-move-to-trash-the-attachment";
+			}
+			else if (Validator.isNull(groupName)) {
+				titlePattern = "activity-wiki-move-to-trash-attachment-page";
+			}
+			else {
+				titlePattern = "activity-wiki-move-to-trash-attachment-page-in";
+			}
+		}
+		else if (
+			activityType == SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
 
+			if (isWikiPortlet) {
+				titlePattern =
+					"activity-wiki-restore-from-trash-the-attachment";
+			}
+			else if (Validator.isNull(groupName)) {
+				titlePattern =
+					"activity-wiki-restore-from-trash-attachment-page";
+			}
+			else {
+				titlePattern =
+					"activity-wiki-restore-from-trash-attachment-page-in";
+			}
+		}
+		
 		String pageTitle = wrapLink(
 			link, HtmlUtil.escape(pageResource.getTitle()));
 
