@@ -1493,6 +1493,8 @@ public interface PropsKeys {
 
 	public static final String MAIL_SESSION_MAIL_TRANSPORT_PROTOCOL = "mail.session.mail.transport.protocol";
 
+	public static final String MEMBERSHIP_POLICY = "membership.policy";
+
 	public static final String MEMORY_CLUSTER_SCHEDULER_LOCK_CACHE_ENABLED = "memory.cluster.scheduler.lock.cache.enabled";
 
 	public static final String MESSAGE_BOARDS_ALLOW_ANONYMOUS_POSTING = "message.boards.anonymous.posting.enabled";
