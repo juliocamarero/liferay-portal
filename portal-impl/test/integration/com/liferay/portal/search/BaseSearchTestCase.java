@@ -63,6 +63,11 @@ public abstract class BaseSearchTestCase {
 	}
 
 	@Test
+	public void testSearchBaseModel() throws Exception {
+		searchBaseModel();
+	}
+
+	@Test
 	public void testSearchByKeywords() throws Exception {
 		searchByKeywords();
 	}
@@ -168,6 +173,27 @@ public abstract class BaseSearchTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsSearchCount + 2,
+			searchBaseModelsCount(
+				getBaseModelClass(), group.getGroupId(), searchContext));
+	}
+
+	protected void searchBaseModel() throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		serviceContext.setScopeGroupId(group.getGroupId());
+
+		SearchContext searchContext = ServiceTestUtil.getSearchContext();
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		int initialBaseModelsSearchCount = searchBaseModelsCount(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
+		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
 			searchBaseModelsCount(
 				getBaseModelClass(), group.getGroupId(), searchContext));
 	}
