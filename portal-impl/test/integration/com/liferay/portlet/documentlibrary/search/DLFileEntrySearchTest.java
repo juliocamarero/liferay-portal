@@ -12,14 +12,17 @@
  * details.
  */
 
-package com.liferay.portlet.wiki.search;
+package com.liferay.portlet.documentlibrary.search;
 
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.BaseModel;
-import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.portal.search.BaseSearchTestCase;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -28,13 +31,15 @@ import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
-import com.liferay.portlet.wiki.asset.WikiPageAssetRenderer;
-import com.liferay.portlet.wiki.model.WikiPage;
-import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
-import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
+import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 
 import java.io.File;
 
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
@@ -47,28 +52,11 @@ import org.junit.runner.RunWith;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
-public class WikiPageSearchTest extends BaseSearchTestCase {
+public class DLFileEntrySearchTest extends BaseSearchTestCase {
 
 	@Override
-	protected void addAttachment(ClassedModel classedModel) throws Exception {
-		WikiPage page = (WikiPage)classedModel;
-
-		String fileName = ServiceTestUtil.randomString() + ".txt";
-
-		Class<?> clazz = getClass();
-
-		byte[] bytes = FileUtil.getBytes(
-			clazz.getResourceAsStream("dependencies/OSX_Test.docx"));
-
-		File file = null;
-
-		if ((bytes != null) && (bytes.length > 0)) {
-			file = FileUtil.createTempFile(bytes);
-		}
-
-		WikiPageLocalServiceUtil.addPageAttachment(
-			TestPropsValues.getUserId(), page.getNodeId(), page.getTitle(),
-			fileName, file);
+	public void testSearchAttachments() throws Exception {
+		Assert.assertTrue("This test does not apply", true);
 	}
 
 	@Override
@@ -77,31 +65,34 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
+		DLFolder dlFolder = (DLFolder)parentBaseModel;
+
+		String content = "Content: Enterprise. Open Source.";
+
+		File file = FileUtil.createTempFile(content.getBytes());
+
 		serviceContext = (ServiceContext)serviceContext.clone();
 
 		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
 
-		WikiPage page = WikiPageLocalServiceUtil.addPage(
-			TestPropsValues.getUserId(),
-			(Long)parentBaseModel.getPrimaryKeyObj(), getSearchKeywords(),
-			getSearchKeywords(), ServiceTestUtil.randomString(), true,
+		if (approved) {
+			serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
+		}
+
+		FileEntry fileEntry = DLAppServiceUtil.addFileEntry(
+			dlFolder.getRepositoryId(), dlFolder.getFolderId(),
+			ServiceTestUtil.randomString() + ".txt", ContentTypes.TEXT_PLAIN,
+			getSearchKeywords(), getSearchKeywords(), StringPool.BLANK, file,
 			serviceContext);
 
-		page = WikiPageLocalServiceUtil.updateStatus(
-			TestPropsValues.getUserId(), page.getResourcePrimKey(),
-			WorkflowConstants.STATUS_APPROVED, serviceContext);
+		LiferayFileEntry liferayFileEntry = (LiferayFileEntry)fileEntry;
 
-		return page;
+		return liferayFileEntry.getDLFileEntry();
 	}
 
 	@Override
 	protected Class<?> getBaseModelClass() {
-		return WikiPage.class;
-	}
-
-	@Override
-	protected Long getBaseModelClassPK(ClassedModel classedModel) {
-		return WikiPageAssetRenderer.getClassPK((WikiPage)classedModel);
+		return DLFileEntry.class;
 	}
 
 	@Override
@@ -109,13 +100,11 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 			Group group, ServiceContext serviceContext)
 		throws Exception {
 
-		serviceContext = (ServiceContext)serviceContext.clone();
-
-		serviceContext.setWorkflowAction(WorkflowConstants.STATUS_APPROVED);
-
-		return WikiNodeLocalServiceUtil.addNode(
-			TestPropsValues.getUserId(), getSearchKeywords(),
-			getSearchKeywords(), serviceContext);
+		return DLFolderLocalServiceUtil.addFolder(
+			TestPropsValues.getUserId(), group.getGroupId(), group.getGroupId(),
+			false, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			ServiceTestUtil.randomString(_FOLDER_NAME_MAX_LENGTH),
+			StringPool.BLANK, false, serviceContext);
 	}
 
 	@Override
@@ -123,6 +112,6 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 		return "Title";
 	}
 
-	private static final int _NODE_NAME_MAX_LENGTH = 75;
+	private static final int _FOLDER_NAME_MAX_LENGTH = 100;
 
 }

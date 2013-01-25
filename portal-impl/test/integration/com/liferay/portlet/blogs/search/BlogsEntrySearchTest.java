@@ -12,27 +12,27 @@
  * details.
  */
 
-package com.liferay.portlet.journal.search;
+package com.liferay.portlet.blogs.search;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.BaseModel;
-import com.liferay.portal.model.ClassedModel;
-import com.liferay.portal.model.Group;
 import com.liferay.portal.search.BaseSearchTestCase;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
-import com.liferay.portlet.journal.asset.JournalArticleAssetRenderer;
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.journal.util.JournalTestUtil;
+import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.blogs.model.BlogsEntry;
+import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
+import com.liferay.portlet.blogs.util.BlogsTestUtil;
 
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
- * @author Juan Fernández
+ * @author Eudaldo Alonso
  */
 @ExecutionTestListeners(
 	listeners = {
@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
-public class JournalArticleSearchTest extends BaseSearchTestCase {
+public class BlogsEntrySearchTest extends BaseSearchTestCase {
 
 	@Override
 	public void testSearchAttachments() throws Exception {
@@ -54,30 +54,22 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
-		String title = getSearchKeywords();
-		String content = getSearchKeywords();
+		BlogsEntry entry = BlogsTestUtil.addBlogsEntry(
+			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(),
+			getSearchKeywords(), approved);
 
-		return JournalTestUtil.addArticleWithWorkflow(
-			serviceContext.getScopeGroupId(), title, content, approved);
+		if (approved) {
+			entry = BlogsEntryLocalServiceUtil.updateStatus(
+				TestPropsValues.getUserId(), entry.getEntryId(),
+				WorkflowConstants.STATUS_APPROVED, serviceContext);
+		}
+
+		return entry;
 	}
 
 	@Override
 	protected Class<?> getBaseModelClass() {
-		return JournalArticle.class;
-	}
-
-	@Override
-	protected Long getBaseModelClassPK(ClassedModel classedModel) {
-		return JournalArticleAssetRenderer.getClassPK(
-			(JournalArticle)classedModel);
-	}
-
-	@Override
-	protected BaseModel<?> getParentBaseModel(
-			Group group, ServiceContext serviceContext)
-		throws Exception {
-
-		return JournalTestUtil.addFolder(group.getGroupId(), "Test Folder");
+		return BlogsEntry.class;
 	}
 
 	@Override
