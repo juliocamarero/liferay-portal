@@ -134,6 +134,8 @@ public class GroupPersistenceTest {
 
 		newGroup.setActive(ServiceTestUtil.randomBoolean());
 
+		newGroup.setTreePath(ServiceTestUtil.randomString());
+
 		_persistence.update(newGroup);
 
 		Group existingGroup = _persistence.findByPrimaryKey(newGroup.getPrimaryKey());
@@ -160,6 +162,7 @@ public class GroupPersistenceTest {
 			newGroup.getFriendlyURL());
 		Assert.assertEquals(existingGroup.getSite(), newGroup.getSite());
 		Assert.assertEquals(existingGroup.getActive(), newGroup.getActive());
+		Assert.assertEquals(existingGroup.getTreePath(), newGroup.getTreePath());
 	}
 
 	@Test
@@ -354,6 +357,8 @@ public class GroupPersistenceTest {
 		group.setSite(ServiceTestUtil.randomBoolean());
 
 		group.setActive(ServiceTestUtil.randomBoolean());
+
+		group.setTreePath(ServiceTestUtil.randomString());
 
 		_persistence.update(group);
 

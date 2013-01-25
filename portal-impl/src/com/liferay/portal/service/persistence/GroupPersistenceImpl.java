@@ -4878,6 +4878,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		groupImpl.setFriendlyURL(group.getFriendlyURL());
 		groupImpl.setSite(group.isSite());
 		groupImpl.setActive(group.isActive());
+		groupImpl.setTreePath(group.getTreePath());
 
 		return groupImpl;
 	}
