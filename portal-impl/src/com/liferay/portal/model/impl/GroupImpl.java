@@ -95,8 +95,7 @@ public class GroupImpl extends GroupBaseImpl {
 	public String buildTreePath() throws PortalException, SystemException {
 		StringBundler sb = new StringBundler();
 
-		buildTreePath(sb, _liveGroup);
-		buildTreePath(sb, _stagingGroup);
+		buildTreePath(sb, this);
 
 		return sb.toString();
 	}
