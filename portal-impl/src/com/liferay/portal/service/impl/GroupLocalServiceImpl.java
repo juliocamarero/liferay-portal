@@ -1650,6 +1650,20 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		return groupPersistence.findByC_N(companyId, name);
 	}
 
+	public void rebuildTree(long companyId)
+			throws PortalException, SystemException {
+
+		List<Group> groups = groupPersistence.findByCompanyId(companyId);
+
+		for (Group group : groups) {
+			String treePath = group.buildTreePath();
+
+			group.setTreePath(treePath);
+
+			groupPersistence.update(group);
+		}
+	}
+
 	/**
 	 * Returns an ordered range of all the company's groups, optionally
 	 * including the user's inherited organization groups and user groups.
