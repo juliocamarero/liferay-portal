@@ -32,6 +32,7 @@ import com.liferay.portlet.wiki.asset.WikiPageAssetRenderer;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
+import com.liferay.portlet.wiki.util.WikiTestUtil;
 
 import java.io.File;
 
@@ -77,20 +78,9 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
-		serviceContext = (ServiceContext)serviceContext.clone();
-
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
-
-		WikiPage page = WikiPageLocalServiceUtil.addPage(
-			TestPropsValues.getUserId(),
-			(Long)parentBaseModel.getPrimaryKeyObj(), keywords, keywords,
-			ServiceTestUtil.randomString(), true, serviceContext);
-
-		page = WikiPageLocalServiceUtil.updateStatus(
-			TestPropsValues.getUserId(), page.getResourcePrimKey(),
-			WorkflowConstants.STATUS_APPROVED, serviceContext);
-
-		return page;
+		return WikiTestUtil.addWikiPage(
+			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(),
+			(Long)parentBaseModel.getPrimaryKeyObj(), keywords, approved);
 	}
 
 	@Override
@@ -121,7 +111,5 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 	protected String getSearchKeywords() {
 		return "Title";
 	}
-
-	private static final int _NODE_NAME_MAX_LENGTH = 75;
 
 }
