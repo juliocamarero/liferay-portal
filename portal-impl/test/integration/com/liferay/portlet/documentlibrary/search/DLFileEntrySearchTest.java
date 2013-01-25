@@ -61,7 +61,7 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 
 	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
-			BaseModel<?> parentBaseModel, boolean approved,
+			BaseModel<?> parentBaseModel, boolean approved, String keywords,
 			ServiceContext serviceContext)
 		throws Exception {
 
@@ -82,8 +82,7 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 		FileEntry fileEntry = DLAppServiceUtil.addFileEntry(
 			dlFolder.getRepositoryId(), dlFolder.getFolderId(),
 			ServiceTestUtil.randomString() + ".txt", ContentTypes.TEXT_PLAIN,
-			getSearchKeywords(), getSearchKeywords(), StringPool.BLANK, file,
-			serviceContext);
+			keywords, keywords, StringPool.BLANK, file, serviceContext);
 
 		LiferayFileEntry liferayFileEntry = (LiferayFileEntry)fileEntry;
 

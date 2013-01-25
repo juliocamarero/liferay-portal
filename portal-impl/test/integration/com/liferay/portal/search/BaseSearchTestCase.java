@@ -82,7 +82,7 @@ public abstract class BaseSearchTestCase {
 	}
 
 	protected BaseModel<?> addBaseModel(
-			BaseModel<?> parentBaseModel, boolean approved,
+			BaseModel<?> parentBaseModel, boolean approved, String keywords,
 			ServiceContext serviceContext)
 		throws Exception {
 
@@ -92,7 +92,7 @@ public abstract class BaseSearchTestCase {
 			WorkflowThreadLocal.setEnabled(true);
 
 			BaseModel<?> baseModel = addBaseModelWithWorkflow(
-				parentBaseModel, approved, serviceContext);
+				parentBaseModel, approved, keywords, serviceContext);
 
 			return baseModel;
 		}
@@ -102,7 +102,7 @@ public abstract class BaseSearchTestCase {
 	}
 
 	protected abstract BaseModel<?> addBaseModelWithWorkflow(
-			BaseModel<?> parentBaseModel, boolean approved,
+			BaseModel<?> parentBaseModel, boolean approved, String keywords,
 			ServiceContext serviceContext)
 		throws Exception;
 
@@ -162,7 +162,9 @@ public abstract class BaseSearchTestCase {
 		int initialBaseModelsSearchCount = searchBaseModelsCount(
 			getBaseModelClass(), group.getGroupId(), searchContext);
 
-		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+		baseModel = addBaseModel(
+			parentBaseModel, true, ServiceTestUtil.randomString(),
+			serviceContext);
 
 		Assert.assertEquals(
 			initialBaseModelsSearchCount + 1,
@@ -184,13 +186,15 @@ public abstract class BaseSearchTestCase {
 
 		SearchContext searchContext = ServiceTestUtil.getSearchContext();
 
-		BaseModel<?> parentBaseModel = getParentBaseModel(
-			group, serviceContext);
-
 		int initialBaseModelsSearchCount = searchBaseModelsCount(
 			getBaseModelClass(), group.getGroupId(), searchContext);
 
-		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		baseModel = addBaseModel(
+			parentBaseModel, true, ServiceTestUtil.randomString(),
+			serviceContext);
 
 		Assert.assertEquals(
 			initialBaseModelsSearchCount + 1,
@@ -220,13 +224,14 @@ public abstract class BaseSearchTestCase {
 
 		searchContext.setKeywords(getSearchKeywords());
 
-		BaseModel<?> parentBaseModel = getParentBaseModel(
-			group, serviceContext);
-
 		int initialBaseModelsSearchCount = searchBaseModelsCount(
 			getBaseModelClass(), group.getGroupId(), searchContext);
 
-		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+					group, serviceContext);
+
+		baseModel = addBaseModel(
+			parentBaseModel, true, getSearchKeywords(), serviceContext);
 
 		Assert.assertEquals(
 			initialBaseModelsSearchCount + 1,
@@ -249,7 +254,9 @@ public abstract class BaseSearchTestCase {
 		int initialBaseModelsSearchCount = searchBaseModelsCount(
 			getBaseModelClass(), group.getGroupId(), searchContext);
 
-		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+		baseModel = addBaseModel(
+			parentBaseModel, true, ServiceTestUtil.randomString(),
+			serviceContext);
 
 		Assert.assertEquals(
 			initialBaseModelsSearchCount + 1,

@@ -50,13 +50,13 @@ public class BlogsEntrySearchTest extends BaseSearchTestCase {
 
 	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
-			BaseModel<?> parentBaseModel, boolean approved,
+			BaseModel<?> parentBaseModel, boolean approved, String keywords,
 			ServiceContext serviceContext)
 		throws Exception {
 
 		BlogsEntry entry = BlogsTestUtil.addBlogsEntry(
 			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(),
-			getSearchKeywords(), approved);
+			keywords, approved);
 
 		if (approved) {
 			entry = BlogsEntryLocalServiceUtil.updateStatus(
