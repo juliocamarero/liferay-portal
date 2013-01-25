@@ -361,6 +361,12 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 	protected abstract String getPortletId();
 
+	protected abstract String getRepositoryClassName();
+
+	protected long getRepositoryClassNameId() {
+		return PortalUtil.getClassNameId(getRepositoryClassName());
+	}
+
 	protected long getRepositoryId(
 			long groupId, long companyId, long userId, String userName,
 			Timestamp createDate, long classNameId, String portletId)
@@ -415,8 +421,8 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 		Timestamp createDate = new Timestamp(System.currentTimeMillis());
 
 		long repositoryId = getRepositoryId(
-			groupId, companyId, userId, userName, createDate, getClassNameId(),
-			getPortletId());
+			groupId, companyId, userId, userName, createDate,
+			getRepositoryClassNameId(), getPortletId());
 		long containerModelFolderId = getContainerModelFolderId(
 			groupId, companyId, resourcePrimKey, containerModelId, userId,
 			userName, createDate);
