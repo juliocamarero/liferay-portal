@@ -16,7 +16,6 @@ package com.liferay.portal.upgrade.v6_2_0;
 
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.upgrade.v6_2_0.BaseUpgradeAttachments;
-import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.wiki.model.WikiPage;
@@ -34,11 +33,6 @@ public class UpgradeWikiAttachments extends BaseUpgradeAttachments {
 	@Override
 	protected String getClassName() {
 		return WikiPage.class.getName();
-	}
-
-	@Override
-	protected String getRepositoryClassName() {
-		return LiferayRepository.class.getName();
 	}
 
 	@Override
