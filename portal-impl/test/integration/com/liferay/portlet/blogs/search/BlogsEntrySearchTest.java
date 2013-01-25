@@ -54,17 +54,9 @@ public class BlogsEntrySearchTest extends BaseSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
-		BlogsEntry entry = BlogsTestUtil.addBlogsEntry(
+		return BlogsTestUtil.addBlogsEntry(
 			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(),
 			keywords, approved);
-
-		if (approved) {
-			entry = BlogsEntryLocalServiceUtil.updateStatus(
-				TestPropsValues.getUserId(), entry.getEntryId(),
-				WorkflowConstants.STATUS_APPROVED, serviceContext);
-		}
-
-		return entry;
 	}
 
 	@Override
