@@ -290,6 +290,26 @@ public class GroupLocalServiceUtil {
 	}
 
 	/**
+	* Rebuilds the group tree.
+	*
+	* <p>
+	* Only call this method if the tree has become stale through operations
+	* other than normal CRUD. Under normal circumstances the tree is
+	* automatically rebuilt whenever necessary.
+	* </p>
+	*
+	* @param companyId the primary key of the group's company
+	* @throws PortalException if an group with the primary key could not be
+	found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void rebuildTree(long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().rebuildTree(companyId);
+	}
+
+	/**
 	* Adds the group using the default live group.
 	*
 	* @param userId the primary key of the group's creator/owner

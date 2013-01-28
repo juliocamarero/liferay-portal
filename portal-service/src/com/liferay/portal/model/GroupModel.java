@@ -294,6 +294,21 @@ public interface GroupModel extends AttachedModel, BaseModel<Group> {
 	 */
 	public void setActive(boolean active);
 
+	/**
+	 * Returns the tree path of this group.
+	 *
+	 * @return the tree path of this group
+	 */
+	@AutoEscape
+	public String getTreePath();
+
+	/**
+	 * Sets the tree path of this group.
+	 *
+	 * @param treePath the tree path of this group
+	 */
+	public void setTreePath(String treePath);
+
 	public boolean isNew();
 
 	public void setNew(boolean n);

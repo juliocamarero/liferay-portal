@@ -310,6 +310,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		group.setSite(site);
 		group.setActive(active);
 
+		String treePath = group.buildTreePath();
+
+		group.setTreePath(treePath);
+
 		if ((serviceContext != null) && (classNameId == groupClassNameId) &&
 			!user.isDefaultUser()) {
 
@@ -1651,6 +1655,34 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
+	 * Rebuilds the group tree.
+	 *
+	 * <p>
+	 * Only call this method if the tree has become stale through operations
+	 * other than normal CRUD. Under normal circumstances the tree is
+	 * automatically rebuilt whenever necessary.
+	 * </p>
+	 *
+	 * @param  companyId the primary key of the group's company
+	 * @throws PortalException if an group with the primary key could not be
+	 *         found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void rebuildTree(long companyId)
+			throws PortalException, SystemException {
+
+		List<Group> groups = groupPersistence.findByCompanyId(companyId);
+
+		for (Group group : groups) {
+			String treePath = group.buildTreePath();
+
+			group.setTreePath(treePath);
+
+			groupPersistence.update(group);
+		}
+	}
+
+	/**
 	 * Returns an ordered range of all the company's groups, optionally
 	 * including the user's inherited organization groups and user groups.
 	 * System and staged groups are not included.
@@ -2957,6 +2989,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		group.setType(type);
 		group.setFriendlyURL(friendlyURL);
 		group.setActive(active);
+
+		String treePath = group.buildTreePath();
+
+		group.setTreePath(treePath);
 
 		if ((serviceContext != null) && group.isSite()) {
 			group.setExpandoBridgeAttributes(serviceContext);

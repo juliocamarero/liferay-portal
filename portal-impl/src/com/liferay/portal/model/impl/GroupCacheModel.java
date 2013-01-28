@@ -34,7 +34,7 @@ import java.io.ObjectOutput;
 public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(29);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("{groupId=");
 		sb.append(groupId);
@@ -64,6 +64,8 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 		sb.append(site);
 		sb.append(", active=");
 		sb.append(active);
+		sb.append(", treePath=");
+		sb.append(treePath);
 		sb.append("}");
 
 		return sb.toString();
@@ -113,6 +115,13 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 		groupImpl.setSite(site);
 		groupImpl.setActive(active);
 
+		if (treePath == null) {
+			groupImpl.setTreePath(StringPool.BLANK);
+		}
+		else {
+			groupImpl.setTreePath(treePath);
+		}
+
 		groupImpl.resetOriginalValues();
 
 		return groupImpl;
@@ -133,6 +142,7 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 		friendlyURL = objectInput.readUTF();
 		site = objectInput.readBoolean();
 		active = objectInput.readBoolean();
+		treePath = objectInput.readUTF();
 	}
 
 	public void writeExternal(ObjectOutput objectOutput)
@@ -177,6 +187,13 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 
 		objectOutput.writeBoolean(site);
 		objectOutput.writeBoolean(active);
+
+		if (treePath == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(treePath);
+		}
 	}
 
 	public long groupId;
@@ -193,4 +210,5 @@ public class GroupCacheModel implements CacheModel<Group>, Externalizable {
 	public String friendlyURL;
 	public boolean site;
 	public boolean active;
+	public String treePath;
 }

@@ -251,6 +251,7 @@
 			<basic name="active">
 				<column name="ACTIVE_" />
 			</basic>
+			<basic name="treePath" />
 			<transient name="className" />
 			<transient name="creatorUserUuid" />
 			<transient name="modelAttributes" />

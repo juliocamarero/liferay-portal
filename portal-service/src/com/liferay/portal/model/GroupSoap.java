@@ -44,6 +44,7 @@ public class GroupSoap implements Serializable {
 		soapModel.setFriendlyURL(model.getFriendlyURL());
 		soapModel.setSite(model.getSite());
 		soapModel.setActive(model.getActive());
+		soapModel.setTreePath(model.getTreePath());
 
 		return soapModel;
 	}
@@ -216,6 +217,14 @@ public class GroupSoap implements Serializable {
 		_active = active;
 	}
 
+	public String getTreePath() {
+		return _treePath;
+	}
+
+	public void setTreePath(String treePath) {
+		_treePath = treePath;
+	}
+
 	private long _groupId;
 	private long _companyId;
 	private long _creatorUserId;
@@ -230,4 +239,5 @@ public class GroupSoap implements Serializable {
 	private String _friendlyURL;
 	private boolean _site;
 	private boolean _active;
+	private String _treePath;
 }

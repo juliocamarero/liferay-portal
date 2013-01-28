@@ -766,7 +766,8 @@ create table Group_ (
 	typeSettings STRING null,
 	friendlyURL VARCHAR(100) null,
 	site BOOLEAN,
-	active_ BOOLEAN
+	active_ BOOLEAN,
+	treePath VARCHAR(75) null
 );
 
 create table Groups_Orgs (
