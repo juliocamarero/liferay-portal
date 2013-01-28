@@ -2204,7 +2204,7 @@
 			<forward name="portlet.wiki.view_tagged_pages" path="portlet.wiki.view_tagged_pages" />
 			<forward name="portlet.wiki.view_page" path="portlet.wiki.view_page_details" />
 		</action>
-
+		
 		<action path="/wiki/view_page_history" type="com.liferay.portlet.wiki.action.ViewPageAction">
 			<forward name="portlet.wiki.error" path="portlet.wiki.error" />
 			<forward name="portlet.wiki.view_categorized_pages" path="portlet.wiki.view_categorized_pages" />
@@ -2221,6 +2221,12 @@
 			<forward name="portlet.wiki.error" path="portlet.wiki.error" />
 			<forward name="portlet.wiki.view_categorized_pages" path="portlet.wiki.view_categorized_pages" />
 			<forward name="portlet.wiki.view_page" path="portlet.wiki.view_page_outgoing_links" />
+		</action>
+		
+		<action path="/wiki/view_page_versions" type="com.liferay.portlet.wiki.action.ViewPageAction">
+			<forward name="portlet.wiki.error" path="portlet.wiki.error" />
+			<forward name="portlet.wiki.view_categorized_pages" path="portlet.wiki.view_categorized_pages" />
+			<forward name="portlet.wiki.view_page" path="portlet.wiki.view_page_versions" />
 		</action>
 
 		<action path="/wiki/view_recent_changes" type="com.liferay.portlet.wiki.action.ViewNodeAction">

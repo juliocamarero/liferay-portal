@@ -44,6 +44,10 @@ viewPageDetailsURL.setParameter("redirect", viewPageURL.toString());
 viewPageDetailsURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 viewPageDetailsURL.setParameter("title", wikiPage.getTitle());
 
+PortletURL viewPageVersionsURL = PortletURLUtil.clone(viewPageDetailsURL, renderResponse);
+
+viewPageVersionsURL.setParameter("struts_action", "/wiki/view_page_versions");
+
 PortletURL viewPageHistoryURL = PortletURLUtil.clone(viewPageDetailsURL, renderResponse);
 
 viewPageHistoryURL.setParameter("struts_action", "/wiki/view_page_history");
@@ -59,6 +63,7 @@ viewPageOutgoingLinksURL.setParameter("struts_action", "/wiki/view_page_outgoing
 PortletURL attachmentsURL = PortletURLUtil.clone(viewPageDetailsURL, renderResponse);
 
 attachmentsURL.setParameter("struts_action", "/wiki/view_page_attachments");
+
 %>
 
 <%@ include file="/html/portlet/wiki/page_name.jspf" %>
@@ -66,23 +71,25 @@ attachmentsURL.setParameter("struts_action", "/wiki/view_page_attachments");
 <c:choose>
 	<c:when test="<%= WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.UPDATE) %>">
 		<liferay-ui:tabs
-			names="content,details,history,incoming-links,outgoing-links,attachments"
+			names="content,details,versions,history,incoming-links,outgoing-links,attachments"
 			url0="<%= editPageURL.toString() %>"
 			url1="<%= viewPageDetailsURL.toString() %>"
-			url2="<%= viewPageHistoryURL.toString() %>"
-			url3="<%= viewPageIncomingLinksURL.toString() %>"
-			url4="<%= viewPageOutgoingLinksURL.toString() %>"
-			url5="<%= attachmentsURL.toString() %>"
+			url2="<%= viewPageVersionsURL.toString() %>"
+			url3="<%= viewPageHistoryURL.toString() %>"
+			url4="<%= viewPageIncomingLinksURL.toString() %>"
+			url5="<%= viewPageOutgoingLinksURL.toString() %>"
+			url6="<%= attachmentsURL.toString() %>"
 		/>
 	</c:when>
 	<c:otherwise>
 		<liferay-ui:tabs
-			names="details,history,incoming-links,outgoing-links,attachments"
+			names="details,versions,history,incoming-links,outgoing-links"
 			url0="<%= viewPageDetailsURL.toString() %>"
-			url1="<%= viewPageHistoryURL.toString() %>"
-			url2="<%= viewPageIncomingLinksURL.toString() %>"
-			url3="<%= viewPageOutgoingLinksURL.toString() %>"
-			url4="<%= attachmentsURL.toString() %>"
+			url1="<%= viewPageVersionsURL.toString() %>"
+			url2="<%= viewPageHistoryURL.toString() %>"
+			url3="<%= viewPageIncomingLinksURL.toString() %>"
+			url4="<%= viewPageOutgoingLinksURL.toString() %>"
+			url5="<%= attachmentsURL.toString() %>"
 		/>
 	</c:otherwise>
 </c:choose>
