@@ -186,11 +186,11 @@ public abstract class BaseSearchTestCase {
 
 		SearchContext searchContext = ServiceTestUtil.getSearchContext();
 
-		int initialBaseModelsSearchCount = searchBaseModelsCount(
-			getBaseModelClass(), group.getGroupId(), searchContext);
-
 		BaseModel<?> parentBaseModel = getParentBaseModel(
 			group, serviceContext);
+
+		int initialBaseModelsSearchCount = searchBaseModelsCount(
+			getBaseModelClass(), group.getGroupId(), searchContext);
 
 		baseModel = addBaseModel(
 			parentBaseModel, true, ServiceTestUtil.randomString(),
