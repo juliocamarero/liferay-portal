@@ -17,24 +17,20 @@ package com.liferay.portlet.messageboards.search;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.ObjectValuePair;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.search.BaseSearchTestCase;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.messageboards.model.MBCategory;
-import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.portlet.messageboards.service.MBCategoryServiceUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import com.liferay.portlet.messageboards.util.MBTestUtil;
 
 import java.io.InputStream;
 
@@ -91,17 +87,8 @@ public class MBMessageSearchTest extends BaseSearchTestCase {
 
 		MBCategory category = (MBCategory)parentBaseModel;
 
-		MBMessage message = MBMessageLocalServiceUtil.addMessage(
-			TestPropsValues.getUserId(), ServiceTestUtil.randomString(),
-			category.getCategoryId(), keywords, keywords, serviceContext);
-
-		if (!approved) {
-			message = MBMessageLocalServiceUtil.updateStatus(
-				message.getStatusByUserId(), message.getMessageId(),
-				WorkflowConstants.STATUS_DRAFT, serviceContext);
-		}
-
-		return message;
+		return MBTestUtil.addMBMessage(
+			category.getCategoryId(), keywords, approved, serviceContext);
 	}
 
 	@Override
@@ -114,10 +101,7 @@ public class MBMessageSearchTest extends BaseSearchTestCase {
 			Group group, ServiceContext serviceContext)
 		throws Exception {
 
-		return MBCategoryServiceUtil.addCategory(
-			TestPropsValues.getUserId(),
-			MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
-			ServiceTestUtil.randomString(), StringPool.BLANK, serviceContext);
+		return MBTestUtil.addMBCategory(serviceContext);
 	}
 
 	@Override
