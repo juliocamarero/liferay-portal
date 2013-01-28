@@ -17,7 +17,9 @@ package com.liferay.portal.service.impl;
 import com.liferay.portal.NoSuchUserGroupRoleException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
@@ -117,6 +119,7 @@ public class UserGroupRoleLocalServiceImpl
 		PermissionCacheUtil.clearCache();
 	}
 
+
 	public void deleteUserGroupRoles(long[] userIds, long groupId, long roleId)
 		throws SystemException {
 
@@ -153,6 +156,52 @@ public class UserGroupRoleLocalServiceImpl
 		throws SystemException {
 
 		userGroupRolePersistence.removeByUserId(userId);
+
+		PermissionCacheUtil.clearCache();
+	}
+
+	public void deleteUserOrganizationRoles(long[] userIds, long groupId)
+		throws SystemException {
+
+		List<Role> organizationRoles = roleLocalService.getRoles(
+			RoleConstants.TYPE_ORGANIZATION, StringPool.BLANK);
+
+		for (long userId : userIds) {
+			for (Role organizationRole : organizationRoles) {
+
+				UserGroupRolePK pk = new UserGroupRolePK(
+					userId, groupId, organizationRole.getRoleId());
+
+				try {
+					userGroupRolePersistence.remove(pk);
+				}
+				catch (NoSuchUserGroupRoleException nsugre) {
+				}
+			}
+		}
+
+		PermissionCacheUtil.clearCache();
+	}
+
+	public void deleteUserSiteRoles(long[] userIds, long groupId)
+		throws SystemException {
+
+		List<Role> siteRoles = roleLocalService.getRoles(
+			RoleConstants.TYPE_SITE, StringPool.BLANK);
+
+		for (long userId : userIds) {
+			for (Role siteRole : siteRoles) {
+
+				UserGroupRolePK pk = new UserGroupRolePK(
+					userId, groupId, siteRole.getRoleId());
+
+				try {
+					userGroupRolePersistence.remove(pk);
+				}
+				catch (NoSuchUserGroupRoleException nsugre) {
+				}
+			}
+		}
 
 		PermissionCacheUtil.clearCache();
 	}
