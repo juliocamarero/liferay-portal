@@ -301,12 +301,9 @@ boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, ArticleDisp
 								<c:when test="<%= curFolder != null %>">
 
 									<%
-									int foldersCount = JournalFolderServiceUtil.getFoldersCount(scopeGroupId, curFolder.getFolderId());
-									int articlesCount = JournalArticleServiceUtil.getArticlesCount(scopeGroupId, curFolder.getFolderId());
-
 									String folderImage = "folder_empty";
 
-									if ((foldersCount + articlesCount) > 0) {
+									if (JournalFolderServiceUtil.getFoldersAndArticlesCount(scopeGroupId, curFolder.getFolderId()) > 0) {
 										folderImage = "folder_full_document";
 									}
 
