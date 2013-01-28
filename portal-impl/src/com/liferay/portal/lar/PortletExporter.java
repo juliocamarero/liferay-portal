@@ -1533,7 +1533,7 @@ public class PortletExporter {
 					jxPreferences, name, DDMStructure.class.getName());
 			}
 			else if (name.equals("anyAssetType") ||
-					name.equals("classNameIds")) {
+					 name.equals("classNameIds")) {
 
 				updateAssetPublisherClassNameIds(jxPreferences, name);
 			}
@@ -1541,7 +1541,7 @@ public class PortletExporter {
 				updateAssetPublisherGlobalScopeId(jxPreferences, name, plid);
 			}
 			else if (name.startsWith("queryName") &&
-					value.equalsIgnoreCase("assetCategories")) {
+					 value.equalsIgnoreCase("assetCategories")) {
 
 				String index = name.substring(9);
 

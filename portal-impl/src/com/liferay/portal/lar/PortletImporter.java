@@ -1820,7 +1820,7 @@ public class PortletImporter {
 					companyGroup.getGroupId());
 			}
 			else if (name.equals("anyAssetType") ||
-					name.equals("classNameIds")) {
+					 name.equals("classNameIds")) {
 
 				updateAssetPublisherClassNameIds(jxPreferences, name);
 			}
@@ -1830,7 +1830,7 @@ public class PortletImporter {
 					companyGroup.getGroupId(), layout.getPlid());
 			}
 			else if (name.startsWith("queryName") &&
-				value.equalsIgnoreCase("assetCategories")) {
+					 value.equalsIgnoreCase("assetCategories")) {
 
 				String index = name.substring(9, name.length());
 
