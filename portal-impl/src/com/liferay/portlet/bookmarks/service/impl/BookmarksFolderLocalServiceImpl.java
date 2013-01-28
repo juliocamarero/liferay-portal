@@ -571,6 +571,12 @@ public class BookmarksFolderLocalServiceImpl
 					BookmarksEntry.class);
 
 				indexer.reindex(entry);
+
+				if (entry.getStatus() != WorkflowConstants.STATUS_PENDING) {
+					entry.setStatus(WorkflowConstants.STATUS_DRAFT);
+				}
+
+				bookmarksEntryPersistence.update(entry);
 			}
 			else if (object instanceof BookmarksFolder) {
 				BookmarksFolder folder = (BookmarksFolder)object;
