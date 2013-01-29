@@ -16,15 +16,18 @@ package com.liferay.portlet.wiki.trash;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.trash.BaseTrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletURLFactoryUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.trash.DuplicateEntryException;
 import com.liferay.portlet.trash.TrashEntryConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -207,6 +210,23 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
 
 		return page.isInTrashContainer();
+	}
+	
+	@Override
+	public void restoreRelatedTrashEntry(long classPK)
+			throws PortalException, SystemException {
+		
+		FileEntry fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
+			classPK);
+		
+		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
+		
+		WikiPage page = WikiPageLocalServiceUtil.getPage(
+			dlFileEntry.getClassPK());
+		
+		WikiPageServiceUtil.restorePageAttachmentFromTrash(
+			page.getNodeId(), page.getTitle(), fileEntry.getTitle());
+		
 	}
 
 	public void restoreTrashEntries(long[] classPKs)
