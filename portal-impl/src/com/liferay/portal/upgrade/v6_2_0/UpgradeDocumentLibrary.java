@@ -20,9 +20,11 @@ import com.liferay.portal.kernel.upgrade.util.UpgradeColumn;
 import com.liferay.portal.kernel.upgrade.util.UpgradeTable;
 import com.liferay.portal.kernel.upgrade.util.UpgradeTableFactoryUtil;
 import com.liferay.portal.upgrade.v6_2_0.util.DLSyncTable;
+import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 
 /**
  * @author Dennis Ju
+ * @author Alexander Chow
  */
 public class UpgradeDocumentLibrary extends UpgradeProcess {
 
@@ -41,6 +43,16 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		upgradeTable.setIndexesSQL(DLSyncTable.TABLE_SQL_ADD_INDEXES);
 
 		upgradeTable.updateTable();
+
+		updateTempFiles();
+	}
+
+	protected void updateTempFiles() {
+		try {
+			DLStoreUtil.deleteDirectory(0, 0, "liferay_temp/");
+		}
+		catch (Exception e) {
+		}
 	}
 
 }
