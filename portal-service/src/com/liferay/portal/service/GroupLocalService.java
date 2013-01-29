@@ -314,6 +314,10 @@ public interface GroupLocalService extends BaseLocalService,
 	public void addUserGroups(long userId, long[] groupIds)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public void checkSiteMembershipPolicy(com.liferay.portal.model.User user)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Adds a company group if it does not exist. This method is typically used
 	* when a virtual host is added.

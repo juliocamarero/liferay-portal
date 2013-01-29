@@ -352,6 +352,13 @@ public class GroupLocalServiceUtil {
 		getService().addUserGroups(userId, groupIds);
 	}
 
+	public static void checkSiteMembershipPolicy(
+		com.liferay.portal.model.User user)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().checkSiteMembershipPolicy(user);
+	}
+
 	/**
 	* Adds a company group if it does not exist. This method is typically used
 	* when a virtual host is added.
