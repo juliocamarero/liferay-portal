@@ -392,6 +392,11 @@ public abstract class BaseTrashHandler implements TrashHandler {
 
 		throw new SystemException();
 	}
+	
+	public void restoreRelatedTrashEntry(long classPK)
+			throws PortalException, SystemException {
+		
+	}
 
 	public void restoreTrashEntry(long classPK)
 		throws PortalException, SystemException {
