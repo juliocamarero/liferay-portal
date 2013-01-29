@@ -75,7 +75,7 @@ public class UserGroupRoleLocalServiceImpl
 		PermissionCacheUtil.clearCache();
 	}
 
-	public void checkRolesMembershipPolicy(User user)
+	public void checkMembershipPolicy(User user)
 		throws PortalException, SystemException {
 
 		MembershipPolicy membershipPolicy =

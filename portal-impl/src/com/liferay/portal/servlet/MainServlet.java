@@ -549,9 +549,9 @@ public class MainServlet extends ActionServlet {
 	protected void checkMembershipPolicy(User user)
 		throws PortalException, SystemException {
 
-		GroupLocalServiceUtil.checkSiteMembershipPolicy(user);
+		GroupLocalServiceUtil.checkMembershipPolicy(user);
 
-		UserGroupRoleLocalServiceUtil.checkRolesMembershipPolicy(user);
+		UserGroupRoleLocalServiceUtil.checkMembershipPolicy(user);
 	}
 
 	protected void checkPortletRequestProcessor(HttpServletRequest request)

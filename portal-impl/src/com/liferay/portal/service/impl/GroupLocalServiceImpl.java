@@ -469,7 +469,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		}
 	}
 
-	public void checkSiteMembershipPolicy(User user)
+	public void checkMembershipPolicy(User user)
 		throws PortalException, SystemException {
 
 		MembershipPolicy membershipPolicy =
