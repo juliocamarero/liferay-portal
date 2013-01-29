@@ -342,6 +342,12 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 		_groupLocalService.addUserGroups(userId, groupIds);
 	}
 
+	public void checkSiteMembershipPolicy(com.liferay.portal.model.User user)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_groupLocalService.checkSiteMembershipPolicy(user);
+	}
+
 	/**
 	* Adds a company group if it does not exist. This method is typically used
 	* when a virtual host is added.
