@@ -275,7 +275,7 @@
 
 		<action path="/asset_publisher/export_wiki_page" type="com.liferay.portlet.wiki.action.ExportPageAction" />
 
-		<action path="/asset_publisher/get_file" type="com.liferay.portlet.documentlibrary.action.GetFileAction" />
+		<action path="/asset_publisher/find_file_entry" type="com.liferay.portlet.documentlibrary.action.FindFileEntryAction" />
 
 		<action path="/asset_publisher/rss" type="com.liferay.portlet.assetpublisher.action.RSSAction" />
 
@@ -507,8 +507,6 @@
 		<action path="/document_library/find_file_entry" type="com.liferay.portlet.documentlibrary.action.FindFileEntryAction" />
 
 		<action path="/document_library/find_folder" type="com.liferay.portlet.documentlibrary.action.FindFolderAction" />
-
-		<action path="/document_library/get_file" type="com.liferay.portlet.documentlibrary.action.GetFileAction" />
 
 		<action path="/document_library/move_entry" type="com.liferay.portlet.documentlibrary.action.EditEntryAction">
 			<forward name="portlet.document_library.edit_entry" path="portlet.document_library.move_entries" />
@@ -1628,7 +1626,7 @@
 
 		<!-- Recent Documents -->
 
-		<action path="/recent_documents/get_file" type="com.liferay.portlet.documentlibrary.action.GetFileAction" />
+		<action path="/recent_documents/find_file_entry" type="com.liferay.portlet.documentlibrary.action.FindFileEntryAction" />
 
 		<action path="/recent_documents/view" forward="portlet.recent_documents.view" />
 

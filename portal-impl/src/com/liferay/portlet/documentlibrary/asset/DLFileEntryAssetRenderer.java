@@ -162,12 +162,10 @@ public class DLFileEntryAssetRenderer
 
 		PortletURL portletURL = liferayPortletResponse.createActionURL();
 
-		portletURL.setParameter("struts_action", "/asset_publisher/get_file");
 		portletURL.setParameter(
-			"groupId", String.valueOf(_fileEntry.getRepositoryId()));
+			"struts_action", "/asset_publisher/find_file_entry");
 		portletURL.setParameter(
-			"folderId", String.valueOf(_fileEntry.getFolderId()));
-		portletURL.setParameter("title", String.valueOf(_fileEntry.getTitle()));
+			"fileEntryId", String.valueOf(_fileEntry.getFileEntryId()));
 
 		return portletURL;
 	}
