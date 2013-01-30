@@ -594,6 +594,12 @@ public class AssetPublisherUtil {
 
 			for (int i = 0; i < scopeIds.length; i++) {
 				try {
+					if (scopeIds[i].startsWith(SCOPE_ID_LAYOUT_PREFIX)) {
+						lazyUpdateScopeIds(
+							portletPreferences, scopeIds, scopeGroupId,
+							layout.isPrivateLayout());
+					}
+
 					groupIds[i] = getGroupIdFromScopeId(
 						scopeIds[i], scopeGroupId, layout.isPrivateLayout());
 				}
@@ -610,6 +616,12 @@ public class AssetPublisherUtil {
 		}
 
 		try {
+			if (defaultScopeId.startsWith(SCOPE_ID_LAYOUT_PREFIX)) {
+				lazyUpdateDefaultScopeId(
+					portletPreferences, defaultScopeId, scopeGroupId,
+					layout.isPrivateLayout());
+			}
+
 			long groupId = getGroupIdFromScopeId(
 				defaultScopeId, scopeGroupId, layout.isPrivateLayout());
 
@@ -785,6 +797,57 @@ public class AssetPublisherUtil {
 			permissionChecker.getUserId(),
 			com.liferay.portal.model.PortletPreferences.class.getName(),
 			_getPortletPreferencesId(plid, portletId));
+	}
+
+	protected static void lazyUpdateDefaultScopeId(
+			PortletPreferences portletPreferences, String defaultScope,
+			long scopeGroupId, boolean privateLayout)
+		throws Exception {
+
+		portletPreferences.setValue(
+			"defaultScope",
+			replaceLayoutPrefix(defaultScope, scopeGroupId, privateLayout));
+
+		portletPreferences.store();
+	}
+
+	protected static void lazyUpdateScopeIds(
+			PortletPreferences portletPreferences, String[] scopeIds,
+			long scopeGroupId, boolean privateLayout)
+		throws Exception {
+
+		String[] newScopeIds = new String[scopeIds.length];
+
+		for (int i = 0; i < scopeIds.length; i++) {
+			String scopeId = scopeIds[i];
+
+			if (scopeId.startsWith(SCOPE_ID_LAYOUT_PREFIX)) {
+				newScopeIds[i] = replaceLayoutPrefix(
+					scopeId, scopeGroupId, privateLayout);
+			}
+			else {
+				newScopeIds[i] = scopeId;
+			}
+		}
+
+		portletPreferences.setValues("scopeIds", newScopeIds);
+
+		portletPreferences.store();
+	}
+
+	protected static String replaceLayoutPrefix(
+			String scopeId, long scopeGroupId, boolean privateLayout)
+		throws Exception {
+
+		String scopeIdSuffix = scopeId.substring(
+			SCOPE_ID_LAYOUT_PREFIX.length());
+
+		long scopeIdLayoutId = GetterUtil.getLong(scopeIdSuffix);
+
+		Layout scopeIdLayout = LayoutLocalServiceUtil.getLayout(
+			scopeGroupId, privateLayout, scopeIdLayoutId);
+
+		return SCOPE_ID_LAYOUT_UUID_PREFIX + scopeIdLayout.getUuid();
 	}
 
 	private static String _getAssetEntryXml(
