@@ -417,6 +417,10 @@
 		<column name="parentFolderId" type="long" />
 		<column name="name" type="String" />
 		<column name="description" type="String" />
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
 
 		<!-- Order -->
 
