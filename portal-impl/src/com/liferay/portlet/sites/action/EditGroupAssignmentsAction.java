@@ -93,11 +93,13 @@ public class EditGroupAssignmentsAction extends PortletAction {
 			}
 		}
 		catch (Exception e) {
-			if (e instanceof MembershipException ||
-				e instanceof NoSuchGroupException ||
-				e instanceof PrincipalException) {
-
+			if (e instanceof MembershipException) {
 				SessionErrors.add(actionRequest, e.getClass(), e);
+			}
+			else if (e instanceof NoSuchGroupException ||
+					 e instanceof PrincipalException) {
+
+				SessionErrors.add(actionRequest, e.getClass());
 
 				setForward(actionRequest, "portlet.sites_admin.error");
 			}

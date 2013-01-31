@@ -22,6 +22,21 @@ User selUser = (User)request.getAttribute("user.selUser");
 List<Group> groups = (List<Group>)request.getAttribute("user.groups");
 %>
 
+<liferay-ui:error-marker key="errorSection" value="sites" />
+
+<liferay-ui:error exception="<%= MembershipException.class %>">
+
+	<%
+	MembershipException me = (MembershipException)errorException;
+
+	Group group = me.getGroup();
+
+	List<User> errorUsers = me.getErrorUsers();
+	%>
+
+	<liferay-ui:message arguments="<%= new Object[] {errorUsers.get(0).getFullName(), group.getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-join-x" />
+</liferay-ui:error>
+
 <liferay-util:buffer var="removeGroupIcon">
 	<liferay-ui:icon
 		image="unlink"
