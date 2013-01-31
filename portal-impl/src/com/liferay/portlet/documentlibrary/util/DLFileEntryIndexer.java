@@ -447,7 +447,8 @@ public class DLFileEntryIndexer extends BaseIndexer {
 
 		String fileEntryId = document.get(Field.ENTRY_CLASS_PK);
 
-		portletURL.setParameter("struts_action", "/document_library/get_file");
+		portletURL.setParameter(
+			"struts_action", "/document_library/find_file_entry");
 		portletURL.setParameter("fileEntryId", fileEntryId);
 
 		Summary summary = createSummary(document, Field.TITLE, Field.CONTENT);

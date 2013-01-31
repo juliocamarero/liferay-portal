@@ -40,7 +40,7 @@ List fileRanks = DLAppLocalServiceUtil.getFileRanks(scopeGroupId, user.getUserId
 
 				rowURL.setWindowState(LiferayWindowState.EXCLUSIVE);
 
-				rowURL.setParameter("struts_action", "/recent_documents/get_file");
+				rowURL.setParameter("struts_action", "/recent_documents/find_file_entry");
 				rowURL.setParameter("fileEntryId", String.valueOf(fileRank.getFileEntryId()));
 		%>
 
