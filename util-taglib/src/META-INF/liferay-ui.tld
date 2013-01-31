@@ -264,6 +264,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>extraData</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>fileEntries</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

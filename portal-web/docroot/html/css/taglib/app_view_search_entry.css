@@ -9,6 +9,11 @@
 		margin-bottom: 0;
 	}
 
+	.entry-data, .entry-folder {
+		color: #999;
+		display: block;
+	}
+
 	.entry-discussion, .entry-attachment {
 		border-top: 1px solid #CCC;
 		display: block;
@@ -38,10 +43,6 @@
 		&:hover {
 			background-color: #D3E8F1;
 		}
-	}
-
-	.entry-folder {
-		color: #999;
 	}
 
 	.entry-link .entry-thumbnail-image {
