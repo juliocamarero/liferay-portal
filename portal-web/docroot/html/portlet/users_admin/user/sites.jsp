@@ -24,14 +24,14 @@ List<Group> groups = (List<Group>)request.getAttribute("user.groups");
 
 <liferay-ui:error-marker key="errorSection" value="sites" />
 
-<liferay-ui:error exception="<%= MembershipException.class %>">
+<liferay-ui:error exception="<%= GroupMembershipException.class %>">
 
 	<%
-	MembershipException me = (MembershipException)errorException;
+	GroupMembershipException gme = (GroupMembershipException)errorException;
 
-	Group group = me.getGroup();
+	Group group = gme.getGroup();
 
-	List<User> errorUsers = me.getErrorUsers();
+	List<User> errorUsers = gme.getErrorUsers();
 	%>
 
 	<liferay-ui:message arguments="<%= new Object[] {errorUsers.get(0).getFullName(), group.getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-join-x" />

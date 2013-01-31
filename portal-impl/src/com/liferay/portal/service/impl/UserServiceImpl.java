@@ -14,7 +14,7 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.portal.MembershipException;
+import com.liferay.portal.GroupMembershipException;
 import com.liferay.portal.RequiredUserException;
 import com.liferay.portal.ReservedUserEmailAddressException;
 import com.liferay.portal.UserEmailAddressException;
@@ -145,8 +145,9 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 		}
 
 		if (!errorUsers.isEmpty()) {
-			throw new MembershipException(
-				MembershipException.MEMBERSHIP_NOT_ALLOWED, group, errorUsers);
+			throw new GroupMembershipException(
+				GroupMembershipException.MEMBERSHIP_NOT_ALLOWED, group,
+				errorUsers);
 		}
 
 		userLocalService.addGroupUsers(groupId, userIds);
@@ -1104,8 +1105,9 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 		}
 
 		if (!errorUsers.isEmpty()) {
-			throw new MembershipException(
-				MembershipException.MEMBERSHIP_MANDATORY, group, errorUsers);
+			throw new GroupMembershipException(
+				GroupMembershipException.MEMBERSHIP_MANDATORY, group,
+				errorUsers);
 		}
 
 		userLocalService.unsetGroupUsers(groupId, userIds, serviceContext);
@@ -1845,8 +1847,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 					permissionChecker, group, ActionKeys.ASSIGN_MEMBERS);
 
 				if (!membershipPolicy.isMembershipAllowed(group, user)) {
-					throw new MembershipException(
-						MembershipException.MEMBERSHIP_NOT_ALLOWED, group,
+					throw new GroupMembershipException(
+						GroupMembershipException.MEMBERSHIP_NOT_ALLOWED, group,
 						ListUtil.toList(new User[]{user}));
 				}
 			}

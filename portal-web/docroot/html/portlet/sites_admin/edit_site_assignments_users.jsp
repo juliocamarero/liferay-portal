@@ -53,10 +53,10 @@ UserSearch userSearch = new UserSearch(renderRequest, viewUsersURL);
 userSearch.setEmptyResultsMessage(emptyResultsMessage);
 %>
 
-<liferay-ui:error exception="<%= MembershipException.class %>">
+<liferay-ui:error exception="<%= GroupMembershipException.class %>">
 
 	<%
-	MembershipException me = (MembershipException)errorException;
+	GroupMembershipException me = (GroupMembershipException)errorException;
 
 	Group errorGroup = me.getGroup();
 
@@ -65,20 +65,20 @@ userSearch.setEmptyResultsMessage(emptyResultsMessage);
 
 	<c:choose>
 		<c:when test="<%= errorUsers.size() == 1 %>">
-			<c:if test="<%= me.getType() == MembershipException.MEMBERSHIP_MANDATORY %>">
+			<c:if test="<%= me.getType() == GroupMembershipException.MEMBERSHIP_MANDATORY %>">
 				<liferay-ui:message arguments="<%= new Object[] {errorUsers.get(0).getFullName(), errorGroup.getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-leave-x" />
 			</c:if>
 
-			<c:if test="<%= me.getType() == MembershipException.MEMBERSHIP_NOT_ALLOWED %>">
+			<c:if test="<%= me.getType() == GroupMembershipException.MEMBERSHIP_NOT_ALLOWED %>">
 				<liferay-ui:message arguments="<%= new Object[] {errorUsers.get(0).getFullName(), errorGroup.getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-join-x" />
 			</c:if>
 		</c:when>
 		<c:otherwise>
-			<c:if test="<%= me.getType() == MembershipException.MEMBERSHIP_MANDATORY %>">
+			<c:if test="<%= me.getType() == GroupMembershipException.MEMBERSHIP_MANDATORY %>">
 				<liferay-ui:message arguments='<%= new Object[] {errorGroup.getDescriptiveName(locale), ListUtil.toString(errorUsers, "fullName", StringPool.COMMA_AND_SPACE)} %>' key="the-following-users-are-not-allowed-to-leave-site-x-x" />
 			</c:if>
 
-			<c:if test="<%= me.getType() == MembershipException.MEMBERSHIP_NOT_ALLOWED %>">
+			<c:if test="<%= me.getType() == GroupMembershipException.MEMBERSHIP_NOT_ALLOWED %>">
 				<liferay-ui:message arguments='<%= new Object[] {errorGroup.getDescriptiveName(locale), ListUtil.toString(errorUsers, "fullName", StringPool.COMMA_AND_SPACE)} %>' key="the-following-users-are-not-allowed-to-join-site-x-x" />
 			</c:if>
 		</c:otherwise>

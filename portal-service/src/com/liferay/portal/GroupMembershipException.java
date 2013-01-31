@@ -23,13 +23,15 @@ import java.util.List;
 /**
  * @author Eduardo Garcia
  */
-public class MembershipException extends PortalException {
+public class GroupMembershipException extends PortalException {
 
 	public static final int MEMBERSHIP_MANDATORY = 1;
 
 	public static final int MEMBERSHIP_NOT_ALLOWED = 2;
 
-	public MembershipException(int type, Group group, List<User> errorUsers) {
+	public GroupMembershipException(
+		int type, Group group, List<User> errorUsers) {
+
 		_errorUsers = errorUsers;
 		_group = group;
 		_type = type;
