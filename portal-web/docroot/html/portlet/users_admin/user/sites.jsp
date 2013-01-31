@@ -29,12 +29,19 @@ List<Group> groups = (List<Group>)request.getAttribute("user.groups");
 	<%
 	GroupMembershipException gme = (GroupMembershipException)errorException;
 
-	Group group = gme.getGroup();
+	List<Group> errorGroups = gme.getGroups();
 
-	List<User> errorUsers = gme.getErrorUsers();
+	List<User> users = gme.getUsers();
 	%>
 
-	<liferay-ui:message arguments="<%= new Object[] {errorUsers.get(0).getFullName(), group.getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-join-x" />
+	<c:choose>
+		<c:when test="<%= errorGroups.size() == 1 %>">
+			<liferay-ui:message arguments="<%= new Object[] {users.get(0).getFullName(), errorGroups.get(0).getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-join-x" />
+		</c:when>
+		<c:otherwise>
+			<liferay-ui:message arguments="<%= new Object[] {users.get(0).getFullName(), ListUtil.toString(errorGroups, SitesUtil.GROUP_DESCRIPTIVE_NAME, StringPool.COMMA_AND_SPACE)} %>" key="x-is-not-allowed-to-join-the-following-sites-x" />
+		</c:otherwise>
+	</c:choose>
 </liferay-ui:error>
 
 <liferay-util:buffer var="removeGroupIcon">

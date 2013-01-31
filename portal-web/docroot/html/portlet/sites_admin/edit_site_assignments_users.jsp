@@ -56,30 +56,30 @@ userSearch.setEmptyResultsMessage(emptyResultsMessage);
 <liferay-ui:error exception="<%= GroupMembershipException.class %>">
 
 	<%
-	GroupMembershipException me = (GroupMembershipException)errorException;
+	GroupMembershipException gme = (GroupMembershipException)errorException;
 
-	Group errorGroup = me.getGroup();
+	List<Group> groups = gme.getGroups();
 
-	List<User> errorUsers = me.getErrorUsers();
+	List<User> users = gme.getUsers();
 	%>
 
 	<c:choose>
-		<c:when test="<%= errorUsers.size() == 1 %>">
-			<c:if test="<%= me.getType() == GroupMembershipException.MEMBERSHIP_MANDATORY %>">
-				<liferay-ui:message arguments="<%= new Object[] {errorUsers.get(0).getFullName(), errorGroup.getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-leave-x" />
+		<c:when test="<%= users.size() == 1 %>">
+			<c:if test="<%= gme.getType() == GroupMembershipException.MEMBERSHIP_MANDATORY %>">
+				<liferay-ui:message arguments="<%= new Object[] {users.get(0).getFullName(), groups.get(0).getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-leave-x" />
 			</c:if>
 
-			<c:if test="<%= me.getType() == GroupMembershipException.MEMBERSHIP_NOT_ALLOWED %>">
-				<liferay-ui:message arguments="<%= new Object[] {errorUsers.get(0).getFullName(), errorGroup.getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-join-x" />
+			<c:if test="<%= gme.getType() == GroupMembershipException.MEMBERSHIP_NOT_ALLOWED %>">
+				<liferay-ui:message arguments="<%= new Object[] {users.get(0).getFullName(), groups.get(0).getDescriptiveName(locale)} %>" key="x-is-not-allowed-to-join-x" />
 			</c:if>
 		</c:when>
 		<c:otherwise>
-			<c:if test="<%= me.getType() == GroupMembershipException.MEMBERSHIP_MANDATORY %>">
-				<liferay-ui:message arguments='<%= new Object[] {errorGroup.getDescriptiveName(locale), ListUtil.toString(errorUsers, "fullName", StringPool.COMMA_AND_SPACE)} %>' key="the-following-users-are-not-allowed-to-leave-site-x-x" />
+			<c:if test="<%= gme.getType() == GroupMembershipException.MEMBERSHIP_MANDATORY %>">
+				<liferay-ui:message arguments='<%= new Object[] {groups.get(0).getDescriptiveName(locale), ListUtil.toString(users, "fullName", StringPool.COMMA_AND_SPACE)} %>' key="the-following-users-are-not-allowed-to-leave-site-x-x" />
 			</c:if>
 
-			<c:if test="<%= me.getType() == GroupMembershipException.MEMBERSHIP_NOT_ALLOWED %>">
-				<liferay-ui:message arguments='<%= new Object[] {errorGroup.getDescriptiveName(locale), ListUtil.toString(errorUsers, "fullName", StringPool.COMMA_AND_SPACE)} %>' key="the-following-users-are-not-allowed-to-join-site-x-x" />
+			<c:if test="<%= gme.getType() == GroupMembershipException.MEMBERSHIP_NOT_ALLOWED %>">
+				<liferay-ui:message arguments='<%= new Object[] {groups.get(0).getDescriptiveName(locale), ListUtil.toString(users, "fullName", StringPool.COMMA_AND_SPACE)} %>' key="the-following-users-are-not-allowed-to-join-site-x-x" />
 			</c:if>
 		</c:otherwise>
 	</c:choose>

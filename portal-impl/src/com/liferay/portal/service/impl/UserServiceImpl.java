@@ -129,7 +129,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		// Membership policy
 
-		List<User> errorUsers = new ArrayList<User>();
+		List<User> users = new ArrayList<User>();
 
 		MembershipPolicy membershipPolicy =
 			MembershipPolicyFactory.getInstance();
@@ -140,14 +140,17 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			User user = userPersistence.findByPrimaryKey(userId);
 
 			if (!membershipPolicy.isMembershipAllowed(group, user)) {
-				errorUsers.add(user);
+				users.add(user);
 			}
 		}
 
-		if (!errorUsers.isEmpty()) {
+		if (!users.isEmpty()) {
+			List<Group> groups = new ArrayList<Group>();
+
+			groups.add(group);
+
 			throw new GroupMembershipException(
-				GroupMembershipException.MEMBERSHIP_NOT_ALLOWED, group,
-				errorUsers);
+				GroupMembershipException.MEMBERSHIP_NOT_ALLOWED, groups, users);
 		}
 
 		userLocalService.addGroupUsers(groupId, userIds);
@@ -1084,7 +1087,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		// Membership policy
 
-		List<User> errorUsers = new ArrayList<User>();
+		List<User> users = new ArrayList<User>();
 
 		MembershipPolicy membershipPolicy =
 			MembershipPolicyFactory.getInstance();
@@ -1100,14 +1103,17 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			if (Validator.isNotNull(mandatoryGroups) &&
 				mandatoryGroups.contains(group)) {
 
-				errorUsers.add(user);
+				users.add(user);
 			}
 		}
 
-		if (!errorUsers.isEmpty()) {
+		if (!users.isEmpty()) {
+			List<Group> groups = new ArrayList<Group>();
+
+			groups.add(group);
+
 			throw new GroupMembershipException(
-				GroupMembershipException.MEMBERSHIP_MANDATORY, group,
-				errorUsers);
+				GroupMembershipException.MEMBERSHIP_MANDATORY, groups, users);
 		}
 
 		userLocalService.unsetGroupUsers(groupId, userIds, serviceContext);
@@ -1837,6 +1843,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 		// Check that the administrator has the permission to add a new group
 		// and that the group membership is allowed
 
+		List<Group> groups = new ArrayList<Group>();
+
 		for (long groupId : groupIds) {
 			if ((oldGroupIds == null) ||
 				!ArrayUtil.contains(oldGroupIds, groupId)) {
@@ -1847,11 +1855,15 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 					permissionChecker, group, ActionKeys.ASSIGN_MEMBERS);
 
 				if (!membershipPolicy.isMembershipAllowed(group, user)) {
-					throw new GroupMembershipException(
-						GroupMembershipException.MEMBERSHIP_NOT_ALLOWED, group,
-						ListUtil.toList(new User[]{user}));
+					groups.add(group);
 				}
 			}
+		}
+
+		if (!groups.isEmpty()) {
+			throw new GroupMembershipException(
+				GroupMembershipException.MEMBERSHIP_NOT_ALLOWED, groups,
+				ListUtil.toList(new User[] {user}));
 		}
 
 		return groupIds;

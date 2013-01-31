@@ -30,27 +30,27 @@ public class GroupMembershipException extends PortalException {
 	public static final int MEMBERSHIP_NOT_ALLOWED = 2;
 
 	public GroupMembershipException(
-		int type, Group group, List<User> errorUsers) {
+		int type, List<Group> groups, List<User> users) {
 
-		_errorUsers = errorUsers;
-		_group = group;
+		_users = users;
+		_groups = groups;
 		_type = type;
 	}
 
-	public List<User> getErrorUsers() {
-		return _errorUsers;
-	}
-
-	public Group getGroup() {
-		return _group;
+	public List<Group> getGroups() {
+		return _groups;
 	}
 
 	public int getType() {
 		return _type;
 	}
 
-	private List<User> _errorUsers;
-	private Group _group;
+	public List<User> getUsers() {
+		return _users;
+	}
+
+	private List<Group> _groups;
 	private int _type;
+	private List<User> _users;
 
 }
