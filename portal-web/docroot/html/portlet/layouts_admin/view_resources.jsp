@@ -22,6 +22,9 @@
 boolean viewTree = ParamUtil.getBoolean(request, "viewTree");
 boolean viewLayout = ParamUtil.getBoolean(request, "viewLayout");
 
+boolean hasLayoutUpdatePermission = (selPlid > 0) && LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.UPDATE);
+boolean hasGroupUpdatePermission = (liveGroupId > 0) && GroupPermissionUtil.contains(permissionChecker, liveGroupId, ActionKeys.UPDATE);
+
 SitesUtil.addPortletBreadcrumbEntries(group, pagesName, redirectURL, request, renderResponse);
 %>
 
@@ -37,10 +40,14 @@ SitesUtil.addPortletBreadcrumbEntries(group, pagesName, redirectURL, request, re
 	<div id="<portlet:namespace />viewLayout">
 		<c:choose>
 			<c:when test="<%= selPlid > 0 %>">
-				<liferay-util:include page="/html/portlet/layouts_admin/edit_layout.jsp" />
+				<c:if test="<%= hasLayoutUpdatePermission %>">
+					<liferay-util:include page="/html/portlet/layouts_admin/edit_layout.jsp" />
+				</c:if>
 			</c:when>
 			<c:otherwise>
-				<liferay-util:include page="/html/portlet/layouts_admin/edit_layout_set.jsp" />
+				<c:if test="<%= hasGroupUpdatePermission %>">
+					<liferay-util:include page="/html/portlet/layouts_admin/edit_layout_set.jsp" />
+				</c:if>
 			</c:otherwise>
 		</c:choose>
 	</div>

@@ -395,6 +395,13 @@ public class EditLayoutsAction extends PortletAction {
 			layout = LayoutLocalServiceUtil.getLayout(selPlid);
 		}
 
+		boolean hasUpdateLayoutPermission = false;
+
+		if (layout != null) {
+			hasUpdateLayoutPermission = LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.UPDATE);
+		}
+
 		if (cmd.equals(Constants.ADD)) {
 			long parentPlid = ParamUtil.getLong(portletRequest, "parentPlid");
 
@@ -464,24 +471,17 @@ public class EditLayoutsAction extends PortletAction {
 				return;
 			}
 		}
-
-		boolean hasUpdateLayoutPermission = false;
-
-		if (layout != null) {
-			hasUpdateLayoutPermission = LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.UPDATE);
-		}
-
-		boolean hasPermission = true;
-
-		if (cmd.equals("publish_to_live")) {
+		else if (cmd.equals("publish_to_live")) {
 			if (group.isSite()) {
 				boolean publishToLive = GroupPermissionUtil.contains(
 					permissionChecker, group.getGroupId(),
 					ActionKeys.PUBLISH_STAGING);
 
 				if (!hasUpdateLayoutPermission && !publishToLive) {
-					hasPermission = false;
+					throw new PrincipalException();
+				}
+				else {
+					return;
 				}
 			}
 			else if (group.isOrganization()) {
@@ -490,23 +490,49 @@ public class EditLayoutsAction extends PortletAction {
 					ActionKeys.PUBLISH_STAGING);
 
 				if (!hasUpdateLayoutPermission && !publishToLive) {
-					hasPermission = false;
+					throw new PrincipalException();
+				}
+				else {
+					return;
 				}
 			}
 		}
 
+		// Unknown CMD, most probably view
+
+		if (selPlid > 0) {
+
+			// manage layout
+
+			if (!hasUpdateLayoutPermission) {
+				throw new PrincipalException();
+			}
+			else {
+				return;
+			}
+		}
+
+		// manage group
+
 		if (group.isCompany()) {
 			if (!permissionChecker.isCompanyAdmin()) {
-				hasPermission = false;
+				throw new PrincipalException();
+			}
+			else {
+				return;
 			}
 		}
 		else if (group.isLayoutPrototype()) {
 			LayoutPrototypePermissionUtil.check(
 				permissionChecker, group.getClassPK(), ActionKeys.UPDATE);
+
+			return;
 		}
 		else if (group.isLayoutSetPrototype()) {
 			LayoutSetPrototypePermissionUtil.check(
 				permissionChecker, group.getClassPK(), ActionKeys.UPDATE);
+
+			return;
 		}
 		else if (group.isUser()) {
 			long groupUserId = group.getClassPK();
@@ -518,11 +544,11 @@ public class EditLayoutsAction extends PortletAction {
 			UserPermissionUtil.check(
 				permissionChecker, groupUserId, organizationIds,
 				ActionKeys.UPDATE);
+
+			return;
 		}
 
-		if (!hasPermission) {
-			throw new PrincipalException();
-		}
+		GroupPermissionUtil.check(permissionChecker, group, ActionKeys.UPDATE);
 	}
 
 	protected void deleteLayoutRevision(ActionRequest actionRequest)
