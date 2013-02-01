@@ -70,6 +70,7 @@ import com.liferay.util.ContentUtil;
 import java.io.IOException;
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -197,8 +198,12 @@ public class AssetPublisherUtil {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			AssetEntry.class.getName(), portletRequest);
 
+		List<AssetEntry> assetEntries = new ArrayList<AssetEntry>();
+
+		assetEntries.add(assetEntry);
+
 		AssetPublisherUtil.notifySubscribers(
-			plid, portletId, assetEntry, serviceContext);
+			plid, portletId, assetEntries, serviceContext);
 	}
 
 	public static void addUserAttributes(
@@ -246,14 +251,12 @@ public class AssetPublisherUtil {
 	}
 
 	public static List<AssetEntry> getAssetEntries(
-			PortletRequest portletRequest, PortletPreferences preferences)
+			PortletPreferences preferences, Layout layout, long scopeGroupId,
+			boolean checkPermission)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		AssetEntryQuery assetEntryQuery = AssetPublisherUtil.getAssetEntryQuery(
-			preferences, new long[]{themeDisplay.getScopeGroupId()});
+			preferences, new long[] {scopeGroupId});
 
 		boolean anyAssetType = GetterUtil.getBoolean(
 			preferences.getValue("anyAssetType", null), true);
@@ -289,8 +292,7 @@ public class AssetPublisherUtil {
 		assetEntryQuery.setExcludeZeroViewCount(excludeZeroViewCount);
 
 		long[] groupIds = AssetPublisherUtil.getGroupIds(
-			preferences, themeDisplay.getScopeGroupId(),
-			themeDisplay.getLayout());
+			preferences, scopeGroupId, layout);
 
 		assetEntryQuery.setGroupIds(groupIds);
 
@@ -298,7 +300,7 @@ public class AssetPublisherUtil {
 			preferences.getValue("showOnlyLayoutAssets", null));
 
 		if (showOnlyLayoutAssets) {
-			assetEntryQuery.setLayout(themeDisplay.getLayout());
+			assetEntryQuery.setLayout(layout);
 		}
 
 		String orderByColumn1 = GetterUtil.getString(
@@ -323,7 +325,17 @@ public class AssetPublisherUtil {
 
 		assetEntryQuery.setStart(0);
 
-		return AssetEntryServiceUtil.getEntries(assetEntryQuery);
+		List<AssetEntry> assetEntries = null;
+
+		if (checkPermission) {
+			assetEntries = AssetEntryServiceUtil.getEntries(assetEntryQuery);
+		}
+		else {
+			assetEntries = AssetEntryLocalServiceUtil.getEntries(
+				assetEntryQuery);
+		}
+
+		return assetEntries;
 	}
 
 	public static AssetEntryQuery getAssetEntryQuery(
@@ -781,16 +793,20 @@ public class AssetPublisherUtil {
 	}
 
 	public static void notifySubscribers(
-			long plid, String portletId, AssetEntry assetEntry,
+			long plid, String portletId, List<AssetEntry> assetEntries,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		PortletPreferences preferences =
 			ServiceContextUtil.getPortletPreferences(serviceContext);
 
-		if (!getEmailAssetEntryAddedEnabled(preferences)) {
+		if (!getEmailAssetEntryAddedEnabled(preferences) ||
+			assetEntries.isEmpty()) {
+
 			return;
 		}
+
+		AssetEntry assetEntry = assetEntries.get(0);
 
 		String fromName = getEmailFromName(
 			preferences, assetEntry.getCompanyId());
@@ -806,7 +822,9 @@ public class AssetPublisherUtil {
 
 		subscriptionSender.setCompanyId(assetEntry.getCompanyId());
 		subscriptionSender.setContextAttributes(
-			"[$ASSET_ENTRIES$]", assetEntry.getTitle(Locale.getDefault()));
+			"[$ASSET_ENTRIES$]",
+			ListUtil.toString(
+				assetEntries, "title", StringPool.COMMA_AND_SPACE));
 		subscriptionSender.setContextUserPrefix("ASSET_PUBLISHER");
 		subscriptionSender.setFrom(fromAddress, fromName);
 		subscriptionSender.setHtmlFormat(true);
@@ -815,9 +833,6 @@ public class AssetPublisherUtil {
 		subscriptionSender.setMailId("asset_entry", assetEntry.getEntryId());
 		subscriptionSender.setPortletId(PortletKeys.ASSET_PUBLISHER);
 		subscriptionSender.setReplyToAddress(fromAddress);
-		subscriptionSender.setScopeGroupId(assetEntry.getGroupId());
-		subscriptionSender.setServiceContext(serviceContext);
-		subscriptionSender.setUserId(assetEntry.getUserId());
 
 		subscriptionSender.addPersistedSubscribers(
 			com.liferay.portal.model.PortletPreferences.class.getName(),
