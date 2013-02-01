@@ -1319,7 +1319,13 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	protected long getParentGroupId(long groupId) {
-		long parentGroupId = groupId;
+		return getSiteGroupId(groupId);
+	}
+
+	protected abstract String getPortletId(SearchContext searchContext);
+
+	protected long getSiteGroupId(long groupId) {
+		long siteGroupId = groupId;
 
 		try {
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
@@ -1333,8 +1339,6 @@ public abstract class BaseIndexer implements Indexer {
 
 		return parentGroupId;
 	}
-
-	protected abstract String getPortletId(SearchContext searchContext);
 
 	protected Locale getSnippetLocale(Document document, Locale locale) {
 		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
