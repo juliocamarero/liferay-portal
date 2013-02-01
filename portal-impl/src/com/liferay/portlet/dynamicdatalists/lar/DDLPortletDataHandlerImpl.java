@@ -43,7 +43,7 @@ public class DDLPortletDataHandlerImpl
 
 	public static final String NAMESPACE = "ddl";
 
-	public DDLPortletDataHandler() {
+	public DDLPortletDataHandlerImpl() {
 		setAlwaysExportable(true);
 		setDataLocalized(true);
 	}

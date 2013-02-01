@@ -35,7 +35,7 @@ import javax.portlet.PortletPreferences;
 /**
  * @author Michael C. Han
  */
-public class DDLDisplayPortletDataHandler extends DDLPortletDataHandler {
+public class DDLDisplayPortletDataHandler extends DDLPortletDataHandlerImpl {
 
 	public DDLDisplayPortletDataHandler() {
 		setDataPortletPreferences(
