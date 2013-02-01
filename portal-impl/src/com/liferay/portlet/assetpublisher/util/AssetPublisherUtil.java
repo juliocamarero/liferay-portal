@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -37,6 +38,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -196,12 +198,15 @@ public class AssetPublisherUtil {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			AssetEntry.class.getName(), portletRequest);
 
+		PortletPreferences preferences =
+			ServiceContextUtil.getPortletPreferences(serviceContext);
+
 		List<AssetEntry> assetEntries = new ArrayList<AssetEntry>();
 
 		assetEntries.add(assetEntry);
 
 		AssetPublisherUtil.notifySubscribers(
-			plid, portletId, assetEntries, serviceContext);
+			plid, portletId, assetEntries, preferences);
 	}
 
 	public static void addUserAttributes(
@@ -246,6 +251,76 @@ public class AssetPublisherUtil {
 		}
 
 		assetEntryQuery.setAllCategoryIds(allCategoryIdsList.getArray());
+	}
+
+	public static void checkAssetEntries() throws Exception {
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(PortletKeys.ASSET_PUBLISHER);
+		sb.append(PortletConstants.INSTANCE_SEPARATOR);
+		sb.append(StringPool.PERCENT);
+
+		List<com.liferay.portal.model.PortletPreferences> preferencesList =
+			PortletPreferencesLocalServiceUtil.
+				getPortletPreferencesByLikePortletId(sb.toString());
+
+		for (com.liferay.portal.model.PortletPreferences curPreferences :
+				preferencesList) {
+
+			Layout layout = LayoutLocalServiceUtil.getLayout(
+				curPreferences.getPlid());
+
+			PortletPreferences preferences =
+				PortletPreferencesFactoryUtil.fromXML(
+					layout.getCompanyId(), curPreferences.getOwnerId(),
+					curPreferences.getOwnerType(), curPreferences.getPlid(),
+					curPreferences.getPortletId(),
+					curPreferences.getPreferences());
+
+			if (!getEmailAssetEntryAddedEnabled(preferences)) {
+				continue;
+			}
+
+			List<AssetEntry> assetEntries = AssetPublisherUtil.getAssetEntries(
+				preferences, layout, layout.getGroupId(), false);
+
+			if (assetEntries.isEmpty()) {
+				continue;
+			}
+
+			long[] lastNotifiedAssetEntryIds = GetterUtil.getLongValues(
+				preferences.getValues("last-notified-asset-entry-ids", null));
+
+			List<AssetEntry> newAssetEntries = new ArrayList<AssetEntry>();
+
+			for (int i = 0; i < assetEntries.size(); i++) {
+				AssetEntry assetEntry = assetEntries.get(i);
+
+				long assetEntryId = assetEntry.getEntryId();
+
+				if (!ArrayUtil.contains(
+						lastNotifiedAssetEntryIds, assetEntryId)) {
+
+					newAssetEntries.add(assetEntry);
+				}
+			}
+
+			notifySubscribers(
+				curPreferences.getPlid(), curPreferences.getPortletId(),
+				newAssetEntries, preferences);
+
+			try {
+				preferences.setValues(
+					"last-notified-asset-entry-ids",
+					StringUtil.split(
+						ListUtil.toString(
+							assetEntries, AssetEntry.ENTRY_ID_ACCESSOR)));
+
+				preferences.store();
+			}
+			catch (Exception e) {
+			}
+		}
 	}
 
 	public static List<AssetEntry> getAssetEntries(
@@ -771,11 +846,8 @@ public class AssetPublisherUtil {
 
 	public static void notifySubscribers(
 			long plid, String portletId, List<AssetEntry> assetEntries,
-			ServiceContext serviceContext)
+			PortletPreferences preferences)
 		throws PortalException, SystemException {
-
-		PortletPreferences preferences =
-			ServiceContextUtil.getPortletPreferences(serviceContext);
 
 		if (!getEmailAssetEntryAddedEnabled(preferences) ||
 			assetEntries.isEmpty()) {
