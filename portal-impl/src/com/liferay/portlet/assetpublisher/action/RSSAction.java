@@ -141,7 +141,12 @@ public class RSSAction extends com.liferay.portal.struts.RSSAction {
 			PortletRequest portletRequest, PortletPreferences preferences)
 		throws Exception {
 
-		return AssetPublisherUtil.getAssetEntries(portletRequest, preferences);
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return AssetPublisherUtil.getAssetEntries(
+			preferences, themeDisplay.getLayout(),
+			themeDisplay.getScopeGroupId(), true);
 	}
 
 	protected String getAssetPublisherURL(PortletRequest portletRequest)
