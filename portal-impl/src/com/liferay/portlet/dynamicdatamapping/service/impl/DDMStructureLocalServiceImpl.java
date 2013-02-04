@@ -925,6 +925,23 @@ public class DDMStructureLocalServiceImpl
 	}
 
 	/**
+	 * Returns all the structures matching the group, name and description
+	 *
+	 * @param groupId the primary key of the group
+	 * @param  name the structure's name
+	 * @param  description the structure's description
+	 * @return the matching structures, or <code>null</code> if a matching
+	 *         structure could not be found
+	 * @throws SystemException
+	 */
+	public List<DDMStructure> getStructures(
+			long groupId, String name, String description)
+		throws SystemException {
+
+		return ddmStructurePersistence.findByG_N_D(groupId, name, description);
+	}
+
+	/**
 	 * Returns all the structures belonging to the groups.
 	 *
 	 * @param  groupIds the primary keys of the groups
