@@ -56,9 +56,9 @@ public class DDMStructureServiceImpl extends DDMStructureServiceBaseImpl {
 	 *         creation date, modification date, guest permissions, and group
 	 *         permissions for the structure.
 	 * @return the structure
-	 * @throws PortalException if a user with the primary key could not be found, if the
-	 *         user did not have permission to add the structure, if the
-	 *         XSD was not well-formed, or if a portal exception occurred
+	 * @throws PortalException if a user with the primary key could not be
+	 *         found, if the user did not have permission to add the structure,
+	 *         if the XSD was not well-formed, or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
 	public DDMStructure addStructure(
@@ -149,9 +149,9 @@ public class DDMStructureServiceImpl extends DDMStructureServiceBaseImpl {
 	 *         the UUID, creation date, modification date, guest permissions,
 	 *         and group permissions for the structure.
 	 * @return the structure
-	 * @throws PortalException if a user with the primary key could not be found, if the
-	 *         user did not have permission to add the structure, if the
-	 *         XSD was not well-formed, or if a portal exception occurred
+	 * @throws PortalException if a user with the primary key could not be
+	 *         found, if the user did not have permission to add the structure,
+	 *         if the XSD was not well-formed, or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
 	public DDMStructure addStructure(
