@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.bookmarks.util;
 
+import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
@@ -28,24 +30,11 @@ import com.liferay.portlet.bookmarks.service.BookmarksFolderServiceUtil;
 public class BookmarksTestUtil {
 
 	public static BookmarksEntry addEntry() throws Exception {
-		BookmarksFolder folder = addFolder();
-
-		String name = "Test Entry";
-		String url = "http://www.liferay.com";
-		String description = "This is a test entry.";
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		serviceContext.setAddGroupPermissions(true);
-		serviceContext.setAddGuestPermissions(true);
-
-		return BookmarksEntryServiceUtil.addEntry(
-			folder.getGroupId(), folder.getFolderId(), name, url, description,
-			serviceContext);
+		return addEntry(TestPropsValues.getGroupId());
 	}
 
 	public static BookmarksEntry addEntry(long groupId) throws Exception {
-		BookmarksFolder folder = addFolder();
+		BookmarksFolder folder = addFolder(groupId);
 
 		String name = "Test Entry";
 		String url = "http://www.liferay.com";
@@ -86,6 +75,34 @@ public class BookmarksTestUtil {
 
 		return BookmarksFolderServiceUtil.addFolder(
 			parentFolderId, name, description, serviceContext);
+	}
+
+	public static SearchContext createSearchContext(
+		long companyId, long groupId, long folderId, String keywords) {
+
+		return createSearchContext(
+			companyId, groupId, folderId, keywords, false, false);
+	}
+
+	public static SearchContext createSearchContext(
+		long companyId, long groupId, long folderId, String keywords,
+		boolean highlight, boolean score) {
+
+		SearchContext searchContext = new SearchContext();
+
+		searchContext.setCompanyId(companyId);
+		searchContext.setFolderIds(new long[] {folderId});
+		searchContext.setGroupIds(new long[] {groupId});
+		searchContext.setKeywords(keywords);
+
+		QueryConfig queryConfig = new QueryConfig();
+
+		queryConfig.setHighlightEnabled(highlight);
+		queryConfig.setScoreEnabled(score);
+
+		searchContext.setQueryConfig(queryConfig);
+
+		return searchContext;
 	}
 
 }
