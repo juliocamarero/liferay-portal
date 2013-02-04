@@ -64,8 +64,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The Dynamic Data Mapping (DDM) Structure local service is responsible for accessing, creating,
- * modifying, and deleting structures.
+ * The Dynamic Data Mapping (DDM) Structure local service is responsible for
+ * accessing, creating, modifying, and deleting structures.
  *
  * <p>
  * DDM structures (structures) are used in Liferay to store structured content
@@ -114,8 +114,9 @@ public class DDMStructureLocalServiceImpl
 	 *         creation date, modification date, guest permissions, and group
 	 *         permissions for the structure.
 	 * @return the structure
-	 * @throws PortalException if a user with the primary key could not be found, if the
-	 *         XSD was not well-formed, or if a portal exception occurred
+	 * @throws PortalException if a user with the primary key could not be
+	 *         found, if the XSD was not well-formed, or if a portal exception
+	 *         occurred
 	 * @throws SystemException if a system exception occurred
 	 */
 	public DDMStructure addStructure(
@@ -203,8 +204,9 @@ public class DDMStructureLocalServiceImpl
 	 *         creation date, modification date, guest permissions, and group
 	 *         permissions for the structure.
 	 * @return the structure
-	 * @throws PortalException if a user with the primary key could not be found, if the XSD
-	 *         was not well-formed, or if a portal exception occurred
+	 * @throws PortalException if a user with the primary key could not be
+	 *         found, if the XSD was not well-formed, or if a portal exception
+	 *         occurred
 	 * @throws SystemException if a system exception occurred
 	 */
 	public DDMStructure addStructure(
@@ -244,8 +246,9 @@ public class DDMStructureLocalServiceImpl
 	 *         creation date, modification date, guest permissions and group
 	 *         permissions for the structure.
 	 * @return the structure
-	 * @throws PortalException if a user with the primary key could not be found, if the
-	 *         XSD was not well-formed, or if a portal exception occurred
+	 * @throws PortalException if a user with the primary key could not be
+	 *         found, if the XSD was not well-formed, or if a portal exception
+	 *         occurred
 	 * @throws SystemException if a system exception occurred
 	 */
 	public DDMStructure addStructure(
@@ -344,7 +347,7 @@ public class DDMStructureLocalServiceImpl
 	}
 
 	public DDMStructure copyStructure(
-		long userId, long structureId, ServiceContext serviceContext)
+			long userId, long structureId, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		DDMStructure structure = ddmStructurePersistence.findByPrimaryKey(
@@ -1239,7 +1242,7 @@ public class DDMStructureLocalServiceImpl
 		long classNameId = PortalUtil.getClassNameId(DDMStructure.class);
 
 		List<DDMTemplate> templates = ddmTemplateLocalService.getTemplates(
-			classNameId, structure.getStructureId(),
+			structure.getGroupId(), classNameId, structure.getStructureId(),
 			DDMTemplateConstants.TEMPLATE_TYPE_FORM);
 
 		for (DDMTemplate template : templates) {
