@@ -598,6 +598,68 @@ public class DDMStructureLocalServiceImpl
 			structure);
 	}
 
+	public DDMStructure updateStructureXsd(long structureId, String xsd)
+		throws PortalException, SystemException {
+
+		DDMStructure structure = ddmStructurePersistence.findByPrimaryKey(
+			structureId);
+
+		return doUpdateStructure(
+			structure.getParentStructureId(), structure.getNameMap(),
+			structure.getDescriptionMap(), xsd, structure);
+	}
+
+	public void updateXSDFieldMetadataEntryValue(
+			long structureId, String fieldName, String metadataEntryName,
+			String metadataEntryValue, Locale locale)
+		throws SystemException, PortalException {
+
+		DDMStructure ddmStructure = fetchDDMStructure(structureId);
+
+		if (ddmStructure == null) {
+			return;
+		}
+
+		String xsd = ddmStructure.getXsd();
+
+		try {
+			Document document = SAXReaderUtil.read(xsd);
+
+			Element rootElement = document.getRootElement();
+
+			List<Element> dynamicElementElements = rootElement.elements(
+				"dynamic-element");
+
+			for (Element dynamicElementElement : dynamicElementElements) {
+				String name = dynamicElementElement.attributeValue(
+					"name", StringPool.BLANK);
+
+				if (name.equals(fieldName)) {
+					List<Element> metadataElements =
+						dynamicElementElement.elements("meta-data");
+
+					for (Element metadataElement : metadataElements) {
+						for (Element metadataEntryElement :
+							metadataElement.elements()) {
+
+							String attributeName =
+								metadataEntryElement.attributeValue("name");
+
+							if (attributeName.equals(metadataEntryName)) {
+								metadataEntryElement.setText(
+									metadataEntryValue);
+							}
+						}
+					}
+				}
+			}
+
+			updateStructureXsd(structureId, document.asXML());
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
+	}
+
 	protected void appendNewStructureRequiredFields(
 		DDMStructure structure, Document templateDocument) {
 
@@ -643,8 +705,31 @@ public class DDMStructureLocalServiceImpl
 	protected DDMStructure doUpdateStructure(
 			long parentStructureId, Map<Locale, String> nameMap,
 			Map<Locale, String> descriptionMap, String xsd,
+			DDMStructure structure)
+		throws PortalException, SystemException {
+
+		return doUpdateStructure(
+			parentStructureId, nameMap, descriptionMap, xsd, new Date(),
+			structure);
+	}
+
+	protected DDMStructure doUpdateStructure(
+			long parentStructureId, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap, String xsd,
 			ServiceContext serviceContext, DDMStructure structure)
 		throws PortalException, SystemException {
+
+		return doUpdateStructure(
+			parentStructureId, nameMap, descriptionMap,  xsd,
+			serviceContext.getModifiedDate(null), structure);
+	}
+
+	protected DDMStructure doUpdateStructure(
+			long parentStructureId, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap, String xsd,
+			Date modifiedDate, DDMStructure structure)
+		throws PortalException, SystemException {
+
 
 		try {
 			xsd = DDMXMLUtil.formatXML(xsd);
@@ -655,7 +740,7 @@ public class DDMStructureLocalServiceImpl
 
 		validate(nameMap, xsd);
 
-		structure.setModifiedDate(serviceContext.getModifiedDate(null));
+		structure.setModifiedDate(modifiedDate);
 		structure.setParentStructureId(parentStructureId);
 		structure.setNameMap(nameMap);
 		structure.setDescriptionMap(descriptionMap);
