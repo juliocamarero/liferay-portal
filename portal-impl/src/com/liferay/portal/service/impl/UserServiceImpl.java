@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.model.Address;
@@ -1101,9 +1100,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			Set<Group> mandatoryGroups = membershipPolicy.getMandatoryGroups(
 				user);
 
-			if (Validator.isNotNull(mandatoryGroups) &&
-				mandatoryGroups.contains(group)) {
-
+			if (mandatoryGroups.contains(group)) {
 				if (membershipPolicyException == null) {
 					membershipPolicyException = new MembershipPolicyException(
 						MembershipPolicyException.GROUP_MEMBERSHIP_REQUIRED);

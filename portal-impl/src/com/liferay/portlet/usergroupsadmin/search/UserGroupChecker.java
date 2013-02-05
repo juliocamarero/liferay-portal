@@ -73,8 +73,8 @@ public class UserGroupChecker extends RowChecker {
 		Set<Group> mandatoryGroups = membershipPolicy.getMandatoryGroups(user);
 
 		if ((isChecked(user) && mandatoryGroups.contains(_group)) ||
-				(!isChecked(user) &&
-					!membershipPolicy.isMembershipAllowed(_group, user))) {
+			(!isChecked(user) &&
+				!membershipPolicy.isMembershipAllowed(_group, user))) {
 
 			return true;
 		}

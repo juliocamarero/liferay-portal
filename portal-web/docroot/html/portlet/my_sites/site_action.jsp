@@ -28,7 +28,7 @@ MembershipPolicy membershipPolicy = MembershipPolicyFactory.getInstance();
 Set<Group> mandatoryGroups = membershipPolicy.getMandatoryGroups(user);
 %>
 
-<liferay-ui:icon-menu showWhenSingleIcon='<%= tabs1.equals("my-sites") %>'>
+<liferay-ui:icon-menu>
 	<c:choose>
 		<c:when test='<%= tabs1.equals("my-sites") %>'>
 			<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
