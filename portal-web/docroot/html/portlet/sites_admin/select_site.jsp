@@ -119,7 +119,7 @@ portletURL.setParameter("userId", String.valueOf(userId));
 		>
 
 			<%
-			User selUser = UserServiceUtil.getUserById(userId);
+			User selUser = UserLocalServiceUtil.getUser(userId);
 
 			MembershipPolicy membershipPolicy = MembershipPolicyFactory.getInstance();
 
