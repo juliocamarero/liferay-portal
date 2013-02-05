@@ -170,8 +170,11 @@
 				getScopeGroupIdOrLiveGroupId: function() {
 					return "<%= themeDisplay.getScopeGroupIdOrLiveGroupId() %>";
 				},
+				getSiteGroupId: function() {
+					return "<%= themeDisplay.getSiteGroupId() %>";
+				},
 				getParentGroupId: function() {
-					return "<%= themeDisplay.getParentGroupId() %>";
+					return "<%= themeDisplay.getSiteGroupId() %>";
 				},
 				isImpersonated: function() {
 					return <%= themeDisplay.isImpersonated() %>;
