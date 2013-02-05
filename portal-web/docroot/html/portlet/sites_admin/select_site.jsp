@@ -20,7 +20,7 @@
 boolean includeCompany = ParamUtil.getBoolean(request, "includeCompany");
 boolean includeUserPersonalSite = ParamUtil.getBoolean(request, "includeUserPersonalSite");
 String target = ParamUtil.getString(request, "target");
-long refererUserId = ParamUtil.getLong(request, "refererUserId");
+long userId = ParamUtil.getLong(request, "userId");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
@@ -28,7 +28,7 @@ portletURL.setParameter("struts_action", "/sites_admin/select_site");
 portletURL.setParameter("includeCompany", String.valueOf(includeCompany));
 portletURL.setParameter("includeUserPersonalSite", String.valueOf(includeUserPersonalSite));
 portletURL.setParameter("target", target);
-portletURL.setParameter("refererUserId", String.valueOf(refererUserId));
+portletURL.setParameter("userId", String.valueOf(userId));
 %>
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
@@ -119,13 +119,13 @@ portletURL.setParameter("refererUserId", String.valueOf(refererUserId));
 		>
 
 			<%
-			User refererUser = UserServiceUtil.getUserById(refererUserId);
+			User selUser = UserServiceUtil.getUserById(userId);
 
 			MembershipPolicy membershipPolicy = MembershipPolicyFactory.getInstance();
 
 			String rowHREF = null;
 
-			if (membershipPolicy.isMembershipAllowed(group, refererUser)) {
+			if (membershipPolicy.isMembershipAllowed(group, selUser)) {
 				StringBundler sb = new StringBundler(9);
 
 				sb.append("javascript:opener.");
