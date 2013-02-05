@@ -210,7 +210,8 @@ if (step == 1) {
 
 					sb.append("javascript:opener.");
 					sb.append(renderResponse.getNamespace());
-					sb.append(target + "('");
+					sb.append(target);
+					sb.append("('");
 					sb.append(role.getRoleId());
 					sb.append("', '");
 					sb.append(UnicodeFormatter.toString(role.getTitle(locale)));
