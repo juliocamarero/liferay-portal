@@ -31,6 +31,7 @@ Boolean supportsFilterByGroup = (Boolean)objArray[5];
 		<portlet:param name="includeCompany" value="<%= Boolean.TRUE.toString() %>" />
 		<portlet:param name="includeUserPersonalSite" value="<%= Boolean.TRUE.toString() %>" />
 		<portlet:param name="target" value="<%= target %>" />
+		<portlet:param name="callback" value="selectGroup" />
 	</portlet:renderURL>
 
 	<%
