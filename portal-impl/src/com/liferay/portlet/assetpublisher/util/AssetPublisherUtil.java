@@ -208,15 +208,13 @@ public class AssetPublisherUtil {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			AssetEntry.class.getName(), portletRequest);
 
-		PortletPreferences preferences =
-			ServiceContextUtil.getPortletPreferences(serviceContext);
-
 		List<AssetEntry> assetEntries = new ArrayList<AssetEntry>();
 
 		assetEntries.add(assetEntry);
 
 		AssetPublisherUtil.notifySubscribers(
-			plid, portletId, assetEntries, preferences);
+			plid, portletId, assetEntries,
+			ServiceContextUtil.getPortletPreferences(serviceContext));
 	}
 
 	public static void addUserAttributes(
@@ -306,10 +304,8 @@ public class AssetPublisherUtil {
 			for (int i = 0; i < assetEntries.size(); i++) {
 				AssetEntry assetEntry = assetEntries.get(i);
 
-				long assetEntryId = assetEntry.getEntryId();
-
 				if (!ArrayUtil.contains(
-						lastNotifiedAssetEntryIds, assetEntryId)) {
+					lastNotifiedAssetEntryIds, assetEntry.getEntryId())) {
 
 					newAssetEntries.add(assetEntry);
 				}
