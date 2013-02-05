@@ -92,6 +92,11 @@ if (Validator.isNotNull(viewUsersRedirect)) {
 	if (portletName.equals(PortletKeys.FRIENDS_DIRECTORY)) {
 		userParams.put("socialRelationType", new Long[] {themeDisplay.getUserId(), new Long(SocialRelationConstants.TYPE_BI_FRIEND)});
 	}
+
+	if (Validator.equals(themeDisplay.getPortletDisplay().getId(), PortletKeys.SITE_MEMBERS_DIRECTORY) && organizationId == 0 && userGroupId == 0) {
+		userParams.put("inherit", true);
+		userParams.put("usersGroups", new Long(themeDisplay.getScopeGroupId()));
+	}
 	%>
 
 	<liferay-ui:search-container-results>
