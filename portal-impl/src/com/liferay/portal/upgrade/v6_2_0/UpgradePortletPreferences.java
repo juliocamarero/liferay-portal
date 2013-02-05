@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.upgrade.BaseUpgradePortletPreferences;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portlet.bookmarks.model.BookmarksEntry;
+import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 
@@ -41,23 +43,32 @@ public class UpgradePortletPreferences extends BaseUpgradePortletPreferences {
 
 		JSONArray valuesJSONArray = dataJSONObject.getJSONArray("values");
 
+		boolean hasBookmarksEntry = false;
 		boolean hasDLFileEntry = false;
 
 		for (int i = 0; i < valuesJSONArray.length(); i++) {
 			String value = valuesJSONArray.getString(i);
 
+			if (value.equals(BookmarksEntry.class.getName())) {
+				hasBookmarksEntry = true;
+			}
+
 			if (value.equals(DLFileEntryConstants.getClassName())) {
 				hasDLFileEntry = true;
-
-				break;
 			}
 		}
 
-		if (!hasDLFileEntry) {
+		if (!hasBookmarksEntry && !hasDLFileEntry) {
 			return null;
 		}
 
-		valuesJSONArray.put(DLFolderConstants.getClassName());
+		if (hasBookmarksEntry) {
+			valuesJSONArray.put(BookmarksFolder.class.getName());
+		}
+
+		if (hasDLFileEntry) {
+			valuesJSONArray.put(DLFolderConstants.getClassName());
+		}
 
 		dataJSONObject.put("values", valuesJSONArray);
 
