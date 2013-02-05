@@ -34,14 +34,14 @@ PortletURL portletURL = (PortletURL)request.getAttribute("view.jsp-portletURL");
 
 	LinkedHashMap<String, Object> userGroupParams = new LinkedHashMap<String, Object>();
 
-	if (Validator.equals(themeDisplay.getPortletDisplay().getId(), PortletKeys.SITE_MEMBERS_DIRECTORY)) {
+	if (portletName.equals(PortletKeys.SITE_MEMBERS_DIRECTORY)) {
 		userGroupParams.put("userGroupsGroups", new Long(themeDisplay.getScopeGroupId()));
 	}
 	%>
 
 	<liferay-ui:search-container-results>
 		<c:choose>
-			<c:when test="<%= Validator.equals(themeDisplay.getPortletDisplay().getId(), PortletKeys.DIRECTORY) && PropsValues.USER_GROUPS_INDEXER_ENABLED && PropsValues.USER_GROUPS_SEARCH_WITH_INDEX %>">
+			<c:when test="<%= portletName.equals(PortletKeys.DIRECTORY) && PropsValues.USER_GROUPS_INDEXER_ENABLED && PropsValues.USER_GROUPS_SEARCH_WITH_INDEX %>">
 				<%@ include file="/html/portlet/user_groups_admin/user_group_search_results_index.jspf" %>
 			</c:when>
 			<c:otherwise>
