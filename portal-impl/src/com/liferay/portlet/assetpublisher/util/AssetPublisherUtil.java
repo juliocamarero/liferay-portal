@@ -97,6 +97,8 @@ import javax.servlet.http.HttpSession;
  */
 public class AssetPublisherUtil {
 
+	public static final String SCOPE_ID_CHILD_GROUP_PREFIX = "ChildGroup_";
+
 	public static final String SCOPE_ID_GROUP_PREFIX = "Group_";
 
 	public static final String SCOPE_ID_LAYOUT_PREFIX = "Layout_";
@@ -664,7 +666,13 @@ public class AssetPublisherUtil {
 			String scopeId, long siteGroupId, boolean privateLayout)
 		throws PortalException, SystemException {
 
-		if (scopeId.startsWith(SCOPE_ID_GROUP_PREFIX)) {
+		if (scopeId.startsWith(SCOPE_ID_CHILD_GROUP_PREFIX)) {
+			String scopeIdSuffix = scopeId.substring(
+				SCOPE_ID_CHILD_GROUP_PREFIX.length());
+
+			return GetterUtil.getLong(scopeIdSuffix);
+		}
+		else if (scopeId.startsWith(SCOPE_ID_GROUP_PREFIX)) {
 			String scopeIdSuffix = scopeId.substring(
 				SCOPE_ID_GROUP_PREFIX.length());
 
@@ -795,6 +803,9 @@ public class AssetPublisherUtil {
 
 			if (scopeGroup.hasAncestor(group.getGroupId())) {
 				key = SCOPE_ID_PARENT_GROUP_PREFIX + group.getGroupId();
+			}
+			else if (group.hasAncestor(scopeGroup.getGroupId())) {
+				key = SCOPE_ID_CHILD_GROUP_PREFIX + group.getGroupId();
 			}
 			else {
 				key = SCOPE_ID_GROUP_PREFIX + group.getGroupId();

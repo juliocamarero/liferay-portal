@@ -32,6 +32,7 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -190,6 +191,15 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			scopeId, themeDisplay.getSiteGroupId(), layout.isPrivateLayout());
 
 		if (scopeId.startsWith(
+				AssetPublisherUtil.SCOPE_ID_CHILD_GROUP_PREFIX)) {
+
+			Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+			if (!group.hasAncestor(themeDisplay.getScopeGroupId())) {
+				throw new PrincipalException();
+			}
+		}
+		else if (scopeId.startsWith(
 				AssetPublisherUtil.SCOPE_ID_PARENT_GROUP_PREFIX)) {
 
 			Group siteGroup = themeDisplay.getSiteGroup();
