@@ -17,12 +17,12 @@ package com.liferay.portlet.journal.asset;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
 import com.liferay.portlet.journal.model.JournalFolder;
-import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderServiceUtil;
 
 import java.util.Locale;
@@ -56,21 +56,16 @@ public class JournalFolderAssetRenderer extends BaseAssetRenderer {
 
 	@Override
 	public String getIconPath(ThemeDisplay themeDisplay) {
-		int foldersCount = 0;
-		int articlesCount = 0;
-
 		try {
-			foldersCount = JournalFolderServiceUtil.getFoldersCount(
-				_folder.getGroupId(), _folder.getFolderId());
-			articlesCount = JournalArticleServiceUtil.getArticlesCount(
-				_folder.getGroupId(), _folder.getFolderId());
+			if (JournalFolderServiceUtil.getFoldersAndArticlesCount(
+					_folder.getGroupId(), _folder.getFolderId(),
+					WorkflowConstants.STATUS_APPROVED) > 0) {
+
+				return themeDisplay.getPathThemeImages() +
+					"/common/folder_full_document.png";
+			}
 		}
 		catch (Exception e) {
-		}
-
-		if ((foldersCount + articlesCount) > 0) {
-			return themeDisplay.getPathThemeImages() +
-				"/common/folder_full_document.png";
 		}
 
 		return themeDisplay.getPathThemeImages() + "/common/folder_empty.png";

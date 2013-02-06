@@ -67,23 +67,16 @@ public class DLFolderAssetRenderer
 
 	@Override
 	public String getIconPath(ThemeDisplay themeDisplay) {
-		int foldersCount = 0;
-		int fileEntriesAndFileShortcutsCount = 0;
-
 		try {
-			foldersCount = DLAppServiceUtil.getFoldersCount(
-				_folder.getRepositoryId(), _folder.getFolderId());
-			fileEntriesAndFileShortcutsCount =
-				DLAppServiceUtil.getFileEntriesAndFileShortcutsCount(
+			if (DLAppServiceUtil.getFoldersAndFileEntriesAndFileShortcutsCount(
 					_folder.getRepositoryId(), _folder.getFolderId(),
-					WorkflowConstants.STATUS_APPROVED);
+					WorkflowConstants.STATUS_APPROVED, true) > 0) {
+
+				return themeDisplay.getPathThemeImages() +
+					"/common/folder_full_document.png";
+			}
 		}
 		catch (Exception e) {
-		}
-
-		if ((foldersCount + fileEntriesAndFileShortcutsCount) > 0) {
-			return themeDisplay.getPathThemeImages() +
-				"/common/folder_full_document.png";
 		}
 
 		return themeDisplay.getPathThemeImages() + "/common/folder_empty.png";

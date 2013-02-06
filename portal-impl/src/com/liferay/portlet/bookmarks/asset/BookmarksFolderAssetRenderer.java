@@ -18,13 +18,13 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
-import com.liferay.portlet.bookmarks.service.BookmarksEntryServiceUtil;
 import com.liferay.portlet.bookmarks.service.BookmarksFolderServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -67,21 +67,16 @@ public class BookmarksFolderAssetRenderer
 
 	@Override
 	public String getIconPath(ThemeDisplay themeDisplay) {
-		int foldersCount = 0;
-		int entriesCount = 0;
-
 		try {
-			foldersCount = BookmarksFolderServiceUtil.getFoldersCount(
-				_folder.getGroupId(), _folder.getFolderId());
-			entriesCount = BookmarksEntryServiceUtil.getEntriesCount(
-				_folder.getGroupId(), _folder.getFolderId());
+			if (BookmarksFolderServiceUtil.getFoldersAndEntriesCount(
+					_folder.getGroupId(), _folder.getFolderId(),
+					WorkflowConstants.STATUS_APPROVED) > 0) {
+
+				return themeDisplay.getPathThemeImages() +
+					"/common/folder_full_document.png";
+			}
 		}
 		catch (Exception e) {
-		}
-
-		if ((foldersCount + entriesCount) > 0) {
-			return themeDisplay.getPathThemeImages() +
-				"/common/folder_full_document.png";
 		}
 
 		return themeDisplay.getPathThemeImages() + "/common/folder_empty.png";
