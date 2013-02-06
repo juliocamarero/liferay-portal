@@ -14,29 +14,27 @@
 
 package com.liferay.portlet.dynamicdatalists.lar;
 
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
 import com.liferay.portlet.dynamicdatalists.service.DDLRecordSetLocalServiceUtil;
-import com.liferay.portlet.dynamicdatalists.service.persistence.DDLRecordSetUtil;
+import com.liferay.portlet.dynamicdatalists.service.persistence.DDLRecordSetActionableDynamicQuery;
 import com.liferay.portlet.dynamicdatamapping.lar.DDMPortletDataHandler;
-import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
-import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
 /**
  * @author Michael C. Han
+ * @author Mate Thurzo
  */
 public class DDLPortletDataHandler extends BasePortletDataHandler {
 
@@ -45,116 +43,6 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 	public DDLPortletDataHandler() {
 		setAlwaysExportable(true);
 		setDataLocalized(true);
-	}
-
-	public void exportRecordSet(
-			PortletDataContext portletDataContext, Element recordSetsElement,
-			DDLRecordSet recordSet)
-		throws Exception {
-
-		String path = getRecordSetPath(portletDataContext, recordSet);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		Element recordSetElement = recordSetsElement.addElement("record-set");
-
-		portletDataContext.addClassedModel(
-			recordSetElement, path, recordSet, NAMESPACE);
-
-		Element ddmStructuresElement = recordSetElement.addElement(
-			"ddm-structures");
-
-		DDMStructure ddmStructure = recordSet.getDDMStructure();
-
-		DDMPortletDataHandler.exportStructure(
-			portletDataContext, ddmStructuresElement, ddmStructure);
-
-		Element ddmTemplatesElement = recordSetElement.addElement(
-			"ddm-templates");
-
-		List<DDMTemplate> ddmTemplates = ddmStructure.getTemplates();
-
-		for (DDMTemplate ddmTemplate : ddmTemplates) {
-			DDMPortletDataHandler.exportTemplate(
-				portletDataContext, ddmTemplatesElement, ddmTemplate);
-		}
-	}
-
-	public void importRecordSet(
-			PortletDataContext portletDataContext, Element recordSetElement)
-		throws Exception {
-
-		Element ddmStructuresElement = recordSetElement.element(
-			"ddm-structures");
-
-		if (ddmStructuresElement != null) {
-			importDDMStructures(portletDataContext, ddmStructuresElement);
-		}
-
-		Element ddmTemplatesElement = recordSetElement.element("ddm-templates");
-
-		if (ddmTemplatesElement != null) {
-			importDDMTemplates(portletDataContext, ddmTemplatesElement);
-		}
-
-		String path = recordSetElement.attributeValue("path");
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		DDLRecordSet recordSet =
-			(DDLRecordSet)portletDataContext.getZipEntryAsObject(path);
-
-		long userId = portletDataContext.getUserId(recordSet.getUserUuid());
-
-		Map<Long, Long> structureIds =
-			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
-				DDMStructure.class);
-
-		long structureId = MapUtil.getLong(
-			structureIds, recordSet.getDDMStructureId(),
-			recordSet.getDDMStructureId());
-
-		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			recordSetElement, recordSet, NAMESPACE);
-
-		DDLRecordSet importedRecordSet = null;
-
-		if (portletDataContext.isDataStrategyMirror()) {
-			DDLRecordSet existingRecordSet = DDLRecordSetUtil.fetchByUUID_G(
-				recordSet.getUuid(), portletDataContext.getScopeGroupId());
-
-			if (existingRecordSet == null) {
-				serviceContext.setUuid(recordSet.getUuid());
-
-				importedRecordSet = DDLRecordSetLocalServiceUtil.addRecordSet(
-					userId, portletDataContext.getScopeGroupId(), structureId,
-					recordSet.getRecordSetKey(), recordSet.getNameMap(),
-					recordSet.getDescriptionMap(),
-					recordSet.getMinDisplayRows(), recordSet.getScope(),
-					serviceContext);
-			}
-			else {
-				importedRecordSet =
-					DDLRecordSetLocalServiceUtil.updateRecordSet(
-						existingRecordSet.getRecordSetId(), structureId,
-						recordSet.getNameMap(), recordSet.getDescriptionMap(),
-						recordSet.getMinDisplayRows(), serviceContext);
-			}
-		}
-		else {
-			importedRecordSet = DDLRecordSetLocalServiceUtil.addRecordSet(
-				userId, portletDataContext.getScopeGroupId(), structureId,
-				recordSet.getRecordSetKey(), recordSet.getNameMap(),
-				recordSet.getDescriptionMap(), recordSet.getMinDisplayRows(),
-				recordSet.getScope(), serviceContext);
-		}
-
-		portletDataContext.importClassedModel(
-			recordSet, importedRecordSet, NAMESPACE);
 	}
 
 	@Override
@@ -175,7 +63,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 	@Override
 	protected String doExportData(
-			PortletDataContext portletDataContext, String portletId,
+			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
@@ -187,20 +75,40 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = document.addElement("ddl-data");
 
-		Element recordSetsElement = rootElement.addElement("record-sets");
+		final Element recordSetsElement = rootElement.addElement("record-sets");
+		final Element ddmStructuresElement = rootElement.addElement(
+			"ddm-structures");
+		final Element ddmTemplatesElement = rootElement.addElement(
+			"ddm-templates");
 
-		List<DDLRecordSet> recordSets =
-			DDLRecordSetLocalServiceUtil.getRecordSets(
-				portletDataContext.getScopeGroupId());
+		ActionableDynamicQuery recordSetsActionableDynamicQuery =
+			new DDLRecordSetActionableDynamicQuery() {
 
-		for (DDLRecordSet recordSet : recordSets) {
-			if (portletDataContext.isWithinDateRange(
-					recordSet.getModifiedDate())) {
-
-				exportRecordSet(
-					portletDataContext, recordSetsElement, recordSet);
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
 			}
-		}
+
+			@Override
+			protected void performAction(Object object) throws PortalException {
+				DDLRecordSet recordSet = (DDLRecordSet)object;
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext,
+					new Element[] {
+						recordSetsElement, ddmStructuresElement,
+						ddmTemplatesElement
+					},
+					recordSet);
+			}
+
+		};
+
+		recordSetsActionableDynamicQuery.setGroupId(
+			portletDataContext.getScopeGroupId());
+
+		recordSetsActionableDynamicQuery.performActions();
 
 		return document.formattedString();
 	}
@@ -220,30 +128,31 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = document.getRootElement();
 
+		// DDM Structures
+
+		Element ddmStructuresElement = rootElement.element("ddm-structures");
+
+		importDDMStructures(portletDataContext, ddmStructuresElement);
+
+		// DDM Templates
+
+		Element ddmTemplatesElement = rootElement.element("ddm-templates");
+
+		importDDMTemplates(portletDataContext, ddmTemplatesElement);
+
+		// DDL Record Sets
+
 		Element recordSetsElement = rootElement.element("record-sets");
 
 		List<Element> recordSetElements = recordSetsElement.elements(
 			"record-set");
 
 		for (Element recordSetElement : recordSetElements) {
-			importRecordSet(portletDataContext, recordSetElement);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, recordSetElement);
 		}
 
 		return portletPreferences;
-	}
-
-	protected String getRecordSetPath(
-		PortletDataContext portletDataContext, DDLRecordSet recordSet) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DYNAMIC_DATA_LISTS));
-		sb.append("/record-sets/");
-		sb.append(recordSet.getRecordSetId());
-		sb.append(".xml");
-
-		return sb.toString();
 	}
 
 	protected void importDDMStructures(

@@ -15,6 +15,7 @@
 package com.liferay.portlet.dynamicdatalists.lar;
 
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -34,6 +35,7 @@ import javax.portlet.PortletPreferences;
 
 /**
  * @author Michael C. Han
+ * @author Mate Thurzo
  */
 public class DDLDisplayPortletDataHandler extends DDLPortletDataHandler {
 
@@ -84,13 +86,19 @@ public class DDLDisplayPortletDataHandler extends DDLPortletDataHandler {
 
 		Document document = SAXReaderUtil.createDocument();
 
-		Element rootElement = document.addElement("record-set-data");
+		Element recordSetDataElement = document.addElement("record-set-data");
+		Element ddmStructuresElement = document.addElement("ddm-structures");
+		Element ddmTemplatesElement = document.addElement("ddm-templates");
 
 		DDLRecordSet recordSet = DDLRecordSetLocalServiceUtil.getRecordSet(
 			recordSetId);
 
-		_ddlPortletDataHandler.exportRecordSet(
-			portletDataContext, rootElement, recordSet);
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext,
+			new Element[] {
+				recordSetDataElement, ddmStructuresElement, ddmTemplatesElement
+			},
+			recordSet);
 
 		return document.formattedString();
 	}
@@ -114,12 +122,24 @@ public class DDLDisplayPortletDataHandler extends DDLPortletDataHandler {
 
 		Element rootElement = document.getRootElement();
 
+		// DDM Structures
+
+		Element ddmStructuresElement = rootElement.element("ddm-structures");
+
+		importDDMStructures(portletDataContext, ddmStructuresElement);
+
+		// DDM Templates
+
+		Element ddmTemplatesElement = rootElement.element("ddm-templates");
+
+		importDDMTemplates(portletDataContext, ddmTemplatesElement);
+
+		// DDL Record Sets
+
 		Element recordSetElement = rootElement.element("record-set");
 
-		if (recordSetElement != null) {
-			_ddlPortletDataHandler.importRecordSet(
-				portletDataContext, recordSetElement);
-		}
+		StagedModelDataHandlerUtil.importStagedModel(
+			portletDataContext, recordSetElement);
 
 		long importedRecordSetId = GetterUtil.getLong(
 			portletPreferences.getValue("recordSetId", null));
@@ -157,8 +177,5 @@ public class DDLDisplayPortletDataHandler extends DDLPortletDataHandler {
 
 	private static Log _log = LogFactoryUtil.getLog(
 		DDLDisplayPortletDataHandler.class);
-
-	private DDLPortletDataHandler _ddlPortletDataHandler =
-		new DDLPortletDataHandler();
 
 }
