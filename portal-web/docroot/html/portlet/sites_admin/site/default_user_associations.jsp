@@ -208,7 +208,7 @@ for (long defaultTeamId : defaultTeamIds) {
 	}
 
 	function <portlet:namespace />openSiteRoleSelector() {
-		var url = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/sites_admin/select_site_role" /><portlet:param name="step" value="2" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /></portlet:renderURL>';
+		var url = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/sites_admin/select_site_role" /><portlet:param name="step" value="2" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /><portlet:param name="callback" value="selectRole" /></portlet:renderURL>';
 
 		var roleWindow = window.open(url, 'role', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680');
 
@@ -216,7 +216,7 @@ for (long defaultTeamId : defaultTeamIds) {
 	}
 
 	function <portlet:namespace />openTeamSelector() {
-		var url = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/sites_admin/select_team" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /></portlet:renderURL>';
+		var url = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/sites_admin/select_team" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /><portlet:param name="callback" value="selectTeam" /></portlet:renderURL>';
 
 		var teamWindow = window.open(url, 'role', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680');
 

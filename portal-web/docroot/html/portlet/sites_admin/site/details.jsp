@@ -450,7 +450,7 @@ if (parentGroup != null) {
 	}
 
 	function <portlet:namespace />openGroupSelector() {
-		var url = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_site" /></portlet:renderURL>';
+		var url = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_site" /><portlet:param name="callback" value="selectGroup" /></portlet:renderURL>';
 
 		var groupWindow = window.open(url, 'group', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680');
 
