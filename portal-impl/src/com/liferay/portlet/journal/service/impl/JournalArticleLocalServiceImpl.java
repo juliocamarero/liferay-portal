@@ -355,7 +355,7 @@ public class JournalArticleLocalServiceImpl
 		// Update Structure Default Values
 
 		if (PortalUtil.getClassNameId(DDMStructure.class) == classNameId) {
-			updateStructureDefaultValues(classPK, content);
+			updateStructureDefaultValues(classPK, content, serviceContext);
 		}
 
 		return article;
@@ -2448,7 +2448,8 @@ public class JournalArticleLocalServiceImpl
 
 		if (PortalUtil.getClassNameId(DDMStructure.class) ==
 				article.getClassNameId()) {
-			updateStructureDefaultValues(article.getClassPK(), content);
+			updateStructureDefaultValues(
+				article.getClassPK(), content, serviceContext);
 		}
 
 		return article;
@@ -3846,7 +3847,7 @@ public class JournalArticleLocalServiceImpl
 	}
 
 	protected void updateStructureDefaultValues(
-			long ddmStructureId, String content)
+			long ddmStructureId, String content, ServiceContext serviceContext)
 		throws SystemException, PortalException {
 
 		try {
@@ -3871,7 +3872,8 @@ public class JournalArticleLocalServiceImpl
 
 					ddmStructureLocalService.updateXSDFieldMetadata(
 						ddmStructureId, fieldName,
-						FieldConstants.PREDEFINED_VALUE, defaultValue, locale);
+						FieldConstants.PREDEFINED_VALUE, defaultValue, locale,
+						serviceContext);
 				}
 			}
 		}
