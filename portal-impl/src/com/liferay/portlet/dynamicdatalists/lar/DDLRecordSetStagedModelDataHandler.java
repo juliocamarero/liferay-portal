@@ -16,6 +16,7 @@ package com.liferay.portlet.dynamicdatalists.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
@@ -43,30 +44,24 @@ public class DDLRecordSetStagedModelDataHandler
 	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, Element[] elements,
-			DDLRecordSet stagedModel)
+			DDLRecordSet recordSet)
 		throws Exception {
 
-		String path = getRecordSetPath(portletDataContext, recordSet);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
+		Element recordSetsElement = elements[0];
+		Element ddmStructuresElement = elements[1];
+		Element ddmTemplatesElement = elements[2];
 
 		Element recordSetElement = recordSetsElement.addElement("record-set");
 
-		portletDataContext.addClassedModel(
-			recordSetElement, path, recordSet, NAMESPACE);
+		String path = StagedModelPathUtil.getPath(recordSet);
 
-		Element ddmStructuresElement = recordSetElement.addElement(
-			"ddm-structures");
+		portletDataContext.addClassedModel(
+			recordSetElement, path, recordSet, DDLPortletDataHandler.NAMESPACE);
 
 		DDMStructure ddmStructure = recordSet.getDDMStructure();
 
 		DDMPortletDataHandler.exportStructure(
 			portletDataContext, ddmStructuresElement, ddmStructure);
-
-		Element ddmTemplatesElement = recordSetElement.addElement(
-			"ddm-templates");
 
 		List<DDMTemplate> ddmTemplates = ddmStructure.getTemplates();
 
@@ -82,25 +77,6 @@ public class DDLRecordSetStagedModelDataHandler
 			DDLRecordSet stagedModel)
 		throws Exception {
 
-		Element ddmStructuresElement = recordSetElement.element(
-			"ddm-structures");
-
-		if (ddmStructuresElement != null) {
-			importDDMStructures(portletDataContext, ddmStructuresElement);
-		}
-
-		Element ddmTemplatesElement = recordSetElement.element("ddm-templates");
-
-		if (ddmTemplatesElement != null) {
-			importDDMTemplates(portletDataContext, ddmTemplatesElement);
-		}
-
-		String path = recordSetElement.attributeValue("path");
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
 		DDLRecordSet recordSet =
 			(DDLRecordSet)portletDataContext.getZipEntryAsObject(path);
 
@@ -115,7 +91,7 @@ public class DDLRecordSetStagedModelDataHandler
 			recordSet.getDDMStructureId());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			recordSetElement, recordSet, NAMESPACE);
+			path, recordSet, DDLPortletDataHandler.NAMESPACE);
 
 		DDLRecordSet importedRecordSet = null;
 
@@ -150,7 +126,7 @@ public class DDLRecordSetStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			recordSet, importedRecordSet, NAMESPACE);
+			recordSet, importedRecordSet, DDLPortletDataHandler.NAMESPACE);
 	}
 
 }
