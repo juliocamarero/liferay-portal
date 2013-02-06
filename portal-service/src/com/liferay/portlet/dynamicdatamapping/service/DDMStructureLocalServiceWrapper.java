@@ -1179,6 +1179,22 @@ public class DDMStructureLocalServiceWrapper implements DDMStructureLocalService
 			serviceContext);
 	}
 
+	public com.liferay.portlet.dynamicdatamapping.model.DDMStructure updateXSD(
+		long structureId, java.lang.String xsd)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _ddmStructureLocalService.updateXSD(structureId, xsd);
+	}
+
+	public void updateXSDFieldMetadata(long structureId,
+		java.lang.String fieldName, java.lang.String metadataEntryName,
+		java.lang.String metadataEntryValue, java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_ddmStructureLocalService.updateXSDFieldMetadata(structureId,
+			fieldName, metadataEntryName, metadataEntryValue, locale);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */
