@@ -20,6 +20,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.RoleServiceBaseImpl;
 import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portal.service.permission.RolePermissionUtil;
@@ -69,7 +70,7 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 
 		return roleLocalService.addRole(
 			user.getUserId(), className, classPK, name, titleMap,
-			descriptionMap, type, subType);
+			descriptionMap, type, subType, null);
 	}
 
 	/**
@@ -87,14 +88,46 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 	 *             the class name or the role name were invalid, or if the role
 	 *             is a duplicate
 	 * @throws     SystemException if a system exception occurred
-	 * @deprecated {@link #addRole(String, long, String, Map, Map, int, String)}
+	 * @deprecated {@link #addRole(String, long, String, Map, Map, int, String,
+	 *             ServiceContext)}
 	 */
 	public Role addRole(
 			String name, Map<Locale, String> titleMap,
 			Map<Locale, String> descriptionMap, int type)
 		throws PortalException, SystemException {
 
-		return addRole(null, 0, name, titleMap, descriptionMap, type, null);
+		return addRole(
+			null, 0, name, titleMap, descriptionMap, type, null, null);
+	}
+
+	/**
+	 * Adds a role. The user is reindexed after role is added.
+	 *
+	 * @param  name the role's name
+	 * @param  titleMap the role's localized titles (optionally
+	 *         <code>null</code>)
+	 * @param  descriptionMap the role's localized descriptions (optionally
+	 *         <code>null</code>)
+	 * @param  type the role's type (optionally <code>0</code>)
+	 * @param  serviceContext the user's service context (optionally
+	 *         <code>null</code>). Can set the universally unique identifier
+	 *         (with the <code>uuid</code> attribute), asset category IDs, asset
+	 *         tag names, and expando bridge attributes for the user.
+	 * @return the role
+	 * @throws PortalException if a user with the primary key could not be
+	 *         found, if the user did not have permission to add roles, if the
+	 *         class name or the role name were invalid, or if the role is a
+	 *         duplicate
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Role addRole(
+			String className, long classPK, String name,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			int type, String subType, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return addRole(className, classPK, name, titleMap,
+			descriptionMap, type, subType, serviceContext);
 	}
 
 	/**
@@ -355,6 +388,10 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 	 * @param  descriptionMap the new localized descriptions (optionally
 	 *         <code>null</code>) to replace those existing for the role
 	 * @param  subtype the role's new subtype (optionally <code>null</code>)
+	 * @param  serviceContext the user's service context (optionally
+	 *         <code>null</code>). Can set the universally unique identifier
+	 *         (with the <code>uuid</code> attribute), asset category IDs, asset
+	 *         tag names, and expando bridge attributes for the user.
 	 * @return the role with the primary key
 	 * @throws PortalException if the user did not have permission to update the
 	 *         role, if a role with the primary could not be found, or if the
@@ -363,14 +400,15 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 	 */
 	public Role updateRole(
 			long roleId, String name, Map<Locale, String> titleMap,
-			Map<Locale, String> descriptionMap, String subtype)
+			Map<Locale, String> descriptionMap, String subtype,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		RolePermissionUtil.check(
 			getPermissionChecker(), roleId, ActionKeys.UPDATE);
 
 		return roleLocalService.updateRole(
-			roleId, name, titleMap, descriptionMap, subtype);
+			roleId, name, titleMap, descriptionMap, subtype, serviceContext);
 	}
 
 	protected void checkUserRolesPermission(long userId, long[] roleIds)
