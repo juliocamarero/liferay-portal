@@ -2448,6 +2448,7 @@ public class JournalArticleLocalServiceImpl
 
 		if (PortalUtil.getClassNameId(DDMStructure.class) ==
 				article.getClassNameId()) {
+
 			updateStructureDefaultValues(
 				article.getClassPK(), content, serviceContext);
 		}
@@ -3848,7 +3849,7 @@ public class JournalArticleLocalServiceImpl
 
 	protected void updateStructureDefaultValues(
 			long ddmStructureId, String content, ServiceContext serviceContext)
-		throws SystemException, PortalException {
+		throws PortalException, SystemException {
 
 		try {
 			Document document = SAXReaderUtil.read(content);

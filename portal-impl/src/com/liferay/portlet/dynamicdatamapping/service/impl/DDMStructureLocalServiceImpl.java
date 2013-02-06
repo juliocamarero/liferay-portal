@@ -1189,7 +1189,7 @@ public class DDMStructureLocalServiceImpl
 			long structureId, String fieldName, String metadataEntryName,
 			String metadataEntryValue, Locale locale,
 			ServiceContext serviceContext)
-		throws SystemException, PortalException {
+		throws PortalException, SystemException {
 
 		DDMStructure ddmStructure = fetchDDMStructure(structureId);
 
@@ -1215,8 +1215,8 @@ public class DDMStructureLocalServiceImpl
 					continue;
 				}
 
-				List<Element> metadataElements =
-					dynamicElementElement.elements("meta-data");
+				List<Element> metadataElements = dynamicElementElement.elements(
+					"meta-data");
 
 				for (Element metadataElement : metadataElements) {
 					for (Element metadataEntryElement :
@@ -1226,8 +1226,7 @@ public class DDMStructureLocalServiceImpl
 							metadataEntryElement.attributeValue("name");
 
 						if (attributeName.equals(metadataEntryName)) {
-							metadataEntryElement.setText(
-								metadataEntryValue);
+							metadataEntryElement.setText(metadataEntryValue);
 						}
 					}
 				}
