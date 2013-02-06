@@ -199,9 +199,13 @@ String editorParam = emailParam + "Body_" + currentLanguageId;
 					String parentSiteBrowserURLString = HttpUtil.addParameter(parentSiteBrowserURL.toString(), "doAsGroupId", scopeGroupId);
 
 					String parentSiteBrowserTaglibURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id: '" + liferayPortletResponse.getNamespace() + "selectGroup', title: '" + LanguageUtil.get(pageContext, "select-parent-site") + "', uri:'" + HtmlUtil.escapeURL(parentSiteBrowserURLString.toString()) + "'});";
+
+					Group siteGroup = themeDisplay.getSiteGroup();
 					%>
 
-					<liferay-ui:icon cssClass="highlited" image="add" message='<%= LanguageUtil.get(pageContext, "parent-site") + StringPool.TRIPLE_PERIOD %>' url="<%= parentSiteBrowserTaglibURL %>" />
+					<c:if test="<%= !siteGroup.isRoot() %>">
+						<liferay-ui:icon cssClass="highlited" image="add" message='<%= LanguageUtil.get(pageContext, "parent-site") + StringPool.TRIPLE_PERIOD %>' url="<%= parentSiteBrowserTaglibURL %>" />
+					</c:if>
 
 					<%
 					PortletURL childrenSiteBrowserURL = PortletURLFactoryUtil.create(request, PortletKeys.SITE_BROWSER, PortalUtil.getControlPanelPlid(company.getCompanyId()), PortletRequest.RENDER_PHASE);
@@ -219,7 +223,9 @@ String editorParam = emailParam + "Body_" + currentLanguageId;
 					String childrenSiteBrowserTaglibURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id: '" + liferayPortletResponse.getNamespace() + "selectGroup', title: '" + LanguageUtil.get(pageContext, "select-child-site") + "', uri:'" + HtmlUtil.escapeURL(childrenSiteBrowserURLString.toString()) + "'});";
 					%>
 
-					<liferay-ui:icon cssClass="highlited" image="add" message='<%= LanguageUtil.get(pageContext, "child-site") + StringPool.TRIPLE_PERIOD %>' url="<%= childrenSiteBrowserTaglibURL %>" />
+					<c:if test="<%= GroupLocalServiceUtil.getGroupsCount(company.getCompanyId(), layout.getGroupId(), Boolean.TRUE) > 0 %>">
+						<liferay-ui:icon cssClass="highlited" image="add" message='<%= LanguageUtil.get(pageContext, "child-site") + StringPool.TRIPLE_PERIOD %>' url="<%= childrenSiteBrowserTaglibURL %>" />
+					</c:if>
 
 					<%
 					PortletURL siteBrowserURL = PortletURLFactoryUtil.create(request, PortletKeys.SITE_BROWSER, PortalUtil.getControlPanelPlid(company.getCompanyId()), PortletRequest.RENDER_PHASE);

@@ -1086,6 +1086,16 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		return groups;
 	}
 
+	public int getGroupsCount(long companyId, long parentGroupId, boolean site)
+		throws SystemException {
+
+		if (parentGroupId == GroupConstants.ANY_PARENT_GROUP_ID) {
+			return groupPersistence.countByC_S(companyId, site);
+		}
+
+		return groupPersistence.countByC_P_S(companyId, parentGroupId, site);
+	}
+
 	/**
 	 * Returns the group associated with the layout.
 	 *
