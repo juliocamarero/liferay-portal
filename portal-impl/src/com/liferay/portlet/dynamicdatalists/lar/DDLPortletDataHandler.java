@@ -14,15 +14,18 @@
 
 package com.liferay.portlet.dynamicdatalists.lar;
 
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
 import com.liferay.portlet.dynamicdatalists.service.DDLRecordSetLocalServiceUtil;
+import com.liferay.portlet.dynamicdatalists.service.persistence.DDLRecordSetActionableDynamicQuery;
 import com.liferay.portlet.dynamicdatamapping.lar.DDMPortletDataHandler;
 
 import java.util.List;
@@ -31,6 +34,7 @@ import javax.portlet.PortletPreferences;
 
 /**
  * @author Michael C. Han
+ * @author Mate Thurzo
  */
 public class DDLPortletDataHandler extends BasePortletDataHandler {
 
@@ -59,7 +63,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 	@Override
 	protected String doExportData(
-			PortletDataContext portletDataContext, String portletId,
+			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
@@ -71,20 +75,40 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = document.addElement("ddl-data");
 
-		Element recordSetsElement = rootElement.addElement("record-sets");
+		final Element recordSetsElement = rootElement.addElement("record-sets");
+		final Element ddmStructuresElement = rootElement.addElement(
+			"ddm-structures");
+		final Element ddmTemplatesElement = rootElement.addElement(
+			"ddm-templates");
 
-		List<DDLRecordSet> recordSets =
-			DDLRecordSetLocalServiceUtil.getRecordSets(
-				portletDataContext.getScopeGroupId());
+		ActionableDynamicQuery recordSetsActionableDynamicQuery =
+			new DDLRecordSetActionableDynamicQuery() {
 
-		for (DDLRecordSet recordSet : recordSets) {
-			if (portletDataContext.isWithinDateRange(
-					recordSet.getModifiedDate())) {
-
-				exportRecordSet(
-					portletDataContext, recordSetsElement, recordSet);
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
 			}
-		}
+
+			@Override
+			protected void performAction(Object object) throws PortalException {
+				DDLRecordSet recordSet = (DDLRecordSet)object;
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext,
+					new Element[] {
+						recordSetsElement, ddmStructuresElement,
+						ddmTemplatesElement
+					},
+					recordSet);
+			}
+
+		};
+
+		recordSetsActionableDynamicQuery.setGroupId(
+			portletDataContext.getScopeGroupId());
+
+		recordSetsActionableDynamicQuery.performActions();
 
 		return document.formattedString();
 	}
@@ -104,13 +128,28 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = document.getRootElement();
 
+		// DDM Structures
+
+		Element ddmStructuresElement = rootElement.element("ddm-structures");
+
+		importDDMStructures(portletDataContext, ddmStructuresElement);
+
+		// DDM Templates
+
+		Element ddmTemplatesElement = rootElement.element("ddm-templates");
+
+		importDDMTemplates(portletDataContext, ddmTemplatesElement);
+
+		// DDL Record Sets
+
 		Element recordSetsElement = rootElement.element("record-sets");
 
 		List<Element> recordSetElements = recordSetsElement.elements(
 			"record-set");
 
 		for (Element recordSetElement : recordSetElements) {
-			importRecordSet(portletDataContext, recordSetElement);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, recordSetElement);
 		}
 
 		return portletPreferences;
