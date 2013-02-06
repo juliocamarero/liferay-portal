@@ -471,6 +471,8 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 	public static final String WIKI_NODE_ID = "WIKI_NODE_ID";
 
 	public static final String WIKI_PAGE = "WIKI_PAGE";
+	
+	public static final String WIKI_PAGE_SOURCE_VERSION = "WIKI_PAGE_SOURCE_VERSION";
 
 	public static final String WIKI_TREE_WALKER_DEPTH = "WIKI_TREE_WALKER_DEPTH";
 
