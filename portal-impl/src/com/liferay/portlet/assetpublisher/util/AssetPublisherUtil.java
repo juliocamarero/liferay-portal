@@ -661,7 +661,7 @@ public class AssetPublisherUtil {
 	}
 
 	public static long getGroupIdFromScopeId(
-			String scopeId, long scopeGroupId, boolean privateLayout)
+			String scopeId, long siteGroupId, boolean privateLayout)
 		throws PortalException, SystemException {
 
 		if (scopeId.startsWith(SCOPE_ID_GROUP_PREFIX)) {
@@ -669,7 +669,7 @@ public class AssetPublisherUtil {
 				SCOPE_ID_GROUP_PREFIX.length());
 
 			if (scopeIdSuffix.equals(GroupConstants.DEFAULT)) {
-				return scopeGroupId;
+				return siteGroupId;
 			}
 
 			return GetterUtil.getLong(scopeIdSuffix);
@@ -680,7 +680,7 @@ public class AssetPublisherUtil {
 
 			Layout scopeIdLayout =
 				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-					layoutUuid, scopeGroupId, privateLayout);
+					layoutUuid, siteGroupId, privateLayout);
 
 			Group scopeIdGroup = scopeIdLayout.getScopeGroup();
 
@@ -696,7 +696,7 @@ public class AssetPublisherUtil {
 			long scopeIdLayoutId = GetterUtil.getLong(scopeIdSuffix);
 
 			Layout scopeIdLayout = LayoutLocalServiceUtil.getLayout(
-				scopeGroupId, privateLayout, scopeIdLayoutId);
+				siteGroupId, privateLayout, scopeIdLayoutId);
 
 			Group scopeIdGroup = scopeIdLayout.getScopeGroup();
 
@@ -707,7 +707,7 @@ public class AssetPublisherUtil {
 				SCOPE_ID_PARENT_GROUP_PREFIX.length());
 
 			if (scopeIdSuffix.equals(GroupConstants.DEFAULT)) {
-				return scopeGroupId;
+				return siteGroupId;
 			}
 
 			return GetterUtil.getLong(scopeIdSuffix);
