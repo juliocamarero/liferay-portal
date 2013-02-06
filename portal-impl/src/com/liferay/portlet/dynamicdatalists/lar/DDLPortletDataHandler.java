@@ -155,20 +155,6 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 		return portletPreferences;
 	}
 
-	protected String getRecordSetPath(
-		PortletDataContext portletDataContext, DDLRecordSet recordSet) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DYNAMIC_DATA_LISTS));
-		sb.append("/record-sets/");
-		sb.append(recordSet.getRecordSetId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
 	protected void importDDMStructures(
 			PortletDataContext portletDataContext,
 			Element ddmStructureReferencesElement)
