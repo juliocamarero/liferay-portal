@@ -1189,6 +1189,23 @@ public class DDMStructureLocalServiceUtil {
 			nameMap, descriptionMap, xsd, serviceContext);
 	}
 
+	public static com.liferay.portlet.dynamicdatamapping.model.DDMStructure updateXSD(
+		long structureId, java.lang.String xsd)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().updateXSD(structureId, xsd);
+	}
+
+	public static void updateXSDFieldMetadata(long structureId,
+		java.lang.String fieldName, java.lang.String metadataEntryName,
+		java.lang.String metadataEntryValue, java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.updateXSDFieldMetadata(structureId, fieldName, metadataEntryName,
+			metadataEntryValue, locale);
+	}
+
 	public static DDMStructureLocalService getService() {
 		if (_service == null) {
 			_service = (DDMStructureLocalService)PortalBeanLocatorUtil.locate(DDMStructureLocalService.class.getName());
