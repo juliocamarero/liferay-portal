@@ -180,6 +180,7 @@ import com.liferay.portlet.journal.NoSuchFeedException;
 import com.liferay.portlet.journal.asset.JournalArticleAssetRendererFactory;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
+import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.login.util.LoginUtil;
 import com.liferay.portlet.messageboards.action.EditDiscussionAction;
@@ -4611,6 +4612,8 @@ public class PortalImpl implements Portal {
 				"DLFILEENTRY$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.DOCUMENTLIBRARY.MODEL." +
 				"DLFOLDER$]",
+			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.JOURNAL.MODEL." +
+					"JOURNALFOLDER$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.MESSAGEBOARDS.MODEL." +
 				"MBMESSAGE$]",
 			"[$CLASS_NAME_ID_COM.LIFERAY.PORTLET.MESSAGEBOARDS.MODEL." +
@@ -4642,9 +4645,10 @@ public class PortalImpl implements Portal {
 			getClassNameId(BookmarksEntry.class),
 			getClassNameId(BookmarksFolder.class),
 			getClassNameId(CalEvent.class), getClassNameId(DLFileEntry.class),
-			getClassNameId(DLFolder.class), getClassNameId(MBMessage.class),
-			getClassNameId(MBThread.class), getClassNameId(WikiPage.class),
-			ResourceConstants.SCOPE_COMPANY, ResourceConstants.SCOPE_GROUP,
+			getClassNameId(DLFolder.class), getClassNameId(JournalFolder.class),
+			getClassNameId(MBMessage.class), getClassNameId(MBThread.class),
+			getClassNameId(WikiPage.class), ResourceConstants.SCOPE_COMPANY,
+			ResourceConstants.SCOPE_GROUP,
 			ResourceConstants.SCOPE_GROUP_TEMPLATE,
 			ResourceConstants.SCOPE_INDIVIDUAL,
 			SocialRelationConstants.TYPE_BI_COWORKER,

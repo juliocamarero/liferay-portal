@@ -192,8 +192,8 @@ public class JournalFolderServiceImpl extends JournalFolderServiceBaseImpl {
 			getPermissionChecker(), folder, ActionKeys.UPDATE);
 
 		return journalFolderLocalService.updateFolder(
-			folderId, parentFolderId, name, description, mergeWithParentFolder,
-			serviceContext);
+			getUserId(), folderId, parentFolderId, name, description,
+			mergeWithParentFolder, serviceContext);
 	}
 
 }
