@@ -3869,14 +3869,14 @@ public class JournalArticleLocalServiceImpl
 						"language-id");
 					Locale locale = LanguageUtil.getLocale(languageId);
 
-					ddmStructureLocalService.updateXSDFieldMetadataEntryValue(
+					ddmStructureLocalService.updateXSDFieldMetadata(
 						ddmStructureId, fieldName,
 						FieldConstants.PREDEFINED_VALUE, defaultValue, locale);
 				}
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			_log.error(e, e);
 		}
 	}
 

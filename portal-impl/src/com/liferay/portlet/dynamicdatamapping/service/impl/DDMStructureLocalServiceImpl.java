@@ -1173,7 +1173,7 @@ public class DDMStructureLocalServiceImpl
 			structure);
 	}
 
-	public DDMStructure updateStructureXsd(long structureId, String xsd)
+	public DDMStructure updateXSD(long structureId, String xsd)
 		throws PortalException, SystemException {
 
 		DDMStructure structure = ddmStructurePersistence.findByPrimaryKey(
@@ -1184,7 +1184,7 @@ public class DDMStructureLocalServiceImpl
 			structure.getDescriptionMap(), xsd, structure);
 	}
 
-	public void updateXSDFieldMetadataEntryValue(
+	public void updateXSDFieldMetadata(
 			long structureId, String fieldName, String metadataEntryName,
 			String metadataEntryValue, Locale locale)
 		throws SystemException, PortalException {
@@ -1229,9 +1229,12 @@ public class DDMStructureLocalServiceImpl
 				}
 			}
 
-			updateStructureXsd(structureId, document.asXML());
-		} catch (DocumentException e) {
-			e.printStackTrace();
+			updateXSD(structureId, document.asXML());
+		}
+		catch (DocumentException de) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(de, de);
+			}
 		}
 	}
 
