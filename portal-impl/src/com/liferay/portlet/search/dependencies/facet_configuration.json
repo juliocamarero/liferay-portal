@@ -27,6 +27,7 @@
 					'com.liferay.portlet.documentlibrary.model.DLFileEntry',
 					'com.liferay.portlet.documentlibrary.model.DLFolder',
 					'com.liferay.portlet.journal.model.JournalArticle',
+					'com.liferay.portlet.journal.model.JournalFolder',
 					'com.liferay.portlet.messageboards.model.MBMessage',
 					'com.liferay.portlet.wiki.model.WikiPage'
 				]
