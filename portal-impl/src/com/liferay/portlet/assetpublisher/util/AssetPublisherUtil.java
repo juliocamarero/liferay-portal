@@ -706,10 +706,6 @@ public class AssetPublisherUtil {
 			String scopeIdSuffix = scopeId.substring(
 				SCOPE_ID_PARENT_GROUP_PREFIX.length());
 
-			if (scopeIdSuffix.equals(GroupConstants.DEFAULT)) {
-				return siteGroupId;
-			}
-
 			return GetterUtil.getLong(scopeIdSuffix);
 		}
 		else {
