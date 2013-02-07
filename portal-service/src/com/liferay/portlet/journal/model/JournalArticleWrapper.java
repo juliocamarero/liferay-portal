@@ -1399,6 +1399,14 @@ public class JournalArticleWrapper implements JournalArticle,
 		return _journalArticle.getSmallImageType();
 	}
 
+	public com.liferay.portlet.journal.model.JournalFolder getTrashContainer() {
+		return _journalArticle.getTrashContainer();
+	}
+
+	public boolean isInTrashContainer() {
+		return _journalArticle.isInTrashContainer();
+	}
+
 	public boolean isTemplateDriven() {
 		return _journalArticle.isTemplateDriven();
 	}
