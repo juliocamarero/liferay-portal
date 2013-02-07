@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -17,7 +17,7 @@ package com.liferay.portlet.sites.search;
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.MembershipPolicyUtil;
@@ -28,26 +28,27 @@ import java.util.Set;
 import javax.portlet.RenderResponse;
 
 /**
- * @author Jorge Ferrer
+ * @author Roberto Díaz
  */
-public class UserGroupRoleRoleChecker extends RowChecker {
+public class OrganizationRoleUserChecker extends RowChecker {
 
-	public UserGroupRoleRoleChecker(
-		RenderResponse renderResponse, User user, Group group) {
+	public OrganizationRoleUserChecker(
+		RenderResponse renderResponse, Organization organization, Role role) {
 
 		super(renderResponse);
 
-		_user = user;
-		_group = group;
+		_organization = organization;
+		_role = role;
 	}
 
 	@Override
 	public boolean isChecked(Object obj) {
-		Role role = (Role)obj;
+		User user = (User)obj;
 
 		try {
 			return UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-				_user.getUserId(), _group.getGroupId(), role.getRoleId());
+				user.getUserId(), _organization.getGroupId(),
+				_role.getRoleId());
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -58,25 +59,24 @@ public class UserGroupRoleRoleChecker extends RowChecker {
 
 	@Override
 	public boolean isDisabled(Object obj) {
-		Role role = (Role)obj;
+		User user = (User)obj;
 
 		Set<Role> mandatoryRoles = MembershipPolicyUtil.getMandatoryRoles(
-			_group, _user);
+			_organization, user);
 
-		if ((isChecked(role) && mandatoryRoles.contains(role)) ||
-			(!isChecked(role) &&
-				!MembershipPolicyUtil.isMembershipAllowed(
-					_group, role, _user))) {
+		if ((!MembershipPolicyUtil.isMembershipAllowed(
+				_organization, _role, user) && !isChecked(user)) ||
+			(mandatoryRoles.contains(_role) && isChecked(user))) {
 			return true;
 		}
 
-		return false;
+		return super.isDisabled(obj);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
-		UserGroupRoleRoleChecker.class);
+		OrganizationRoleUserChecker.class);
 
-	private Group _group;
-	private User _user;
+	private Organization _organization;
+	private Role _role;
 
 }
