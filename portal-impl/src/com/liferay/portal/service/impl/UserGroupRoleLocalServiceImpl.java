@@ -62,6 +62,7 @@ public class UserGroupRoleLocalServiceImpl
 
 	public void addUserGroupRoles(long[] userIds, long groupId, long roleId)
 		throws SystemException {
+
 		for (long userId : userIds) {
 			UserGroupRolePK userGroupRolePK = new UserGroupRolePK(
 				userId, groupId, roleId);
@@ -109,9 +110,8 @@ public class UserGroupRoleLocalServiceImpl
 				}
 			}
 
-			List<Role> userGroupRoles =
-				roleLocalService.getUserGroupRoles(
-					user.getUserId(), group.getGroupId());
+			List<Role> userGroupRoles = roleLocalService.getUserGroupRoles(
+				user.getUserId(), group.getGroupId());
 
 			for (Role role : userGroupRoles) {
 				if (!MembershipPolicyUtil.isMembershipAllowed(

@@ -49,7 +49,7 @@ public class MembershipPolicyAction extends Action {
 		}
 	}
 
-	protected void checkMembershipPolicy(User user) 
+	protected void checkMembershipPolicy(User user)
 		throws PortalException, SystemException {
 
 		if (MembershipPolicyUtil.isApplicableUser(user)) {
@@ -57,11 +57,11 @@ public class MembershipPolicyAction extends Action {
 
 			OrganizationLocalServiceUtil.checkMembershipPolicy(user);
 
+			UserGroupLocalServiceUtil.checkMembershipPolicy(user);
+
 			RoleLocalServiceUtil.checkMembershipPolicy(user);
 
 			UserGroupRoleLocalServiceUtil.checkMembershipPolicy(user);
-
-			UserGroupLocalServiceUtil.checkMembershipPolicy(user);
 		}
 	}
 

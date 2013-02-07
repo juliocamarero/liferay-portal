@@ -41,7 +41,7 @@ public class UserGroupRoleServiceImpl extends UserGroupRoleServiceBaseImpl {
 
 		// Membership policy
 
-		checkAddGroupRoles(new long[]{userId}, groupId, roleIds);
+		checkAddGroupRoles(new long[] {userId}, groupId, roleIds);
 
 		userGroupRoleLocalService.addUserGroupRoles(userId, groupId, roleIds);
 	}
@@ -54,7 +54,7 @@ public class UserGroupRoleServiceImpl extends UserGroupRoleServiceBaseImpl {
 
 		// Membership policy
 
-		checkAddGroupRoles(userIds, groupId, new long[]{roleId});
+		checkAddGroupRoles(userIds, groupId, new long[] {roleId});
 
 		userGroupRoleLocalService.addUserGroupRoles(userIds, groupId, roleId);
 	}
@@ -69,7 +69,7 @@ public class UserGroupRoleServiceImpl extends UserGroupRoleServiceBaseImpl {
 
 		// Membership policy
 
-		checkDeleteGroupRoles(new long[]{userId}, groupId, roleIds);
+		checkDeleteGroupRoles(new long[] {userId}, groupId, roleIds);
 
 		userGroupRoleLocalService.deleteUserGroupRoles(
 			userId, groupId, roleIds);
@@ -83,7 +83,7 @@ public class UserGroupRoleServiceImpl extends UserGroupRoleServiceBaseImpl {
 
 		// Membership policy
 
-		checkDeleteGroupRoles(userIds, groupId, new long[]{roleId});
+		checkDeleteGroupRoles(userIds, groupId, new long[] {roleId});
 
 		userGroupRoleLocalService.deleteUserGroupRoles(
 			userIds, groupId, roleId);
@@ -105,6 +105,7 @@ public class UserGroupRoleServiceImpl extends UserGroupRoleServiceBaseImpl {
 
 				if (!MembershipPolicyUtil.isMembershipAllowed(
 						role, user, group)) {
+
 					if (membershipPolicyException == null) {
 						membershipPolicyException =
 							new MembershipPolicyException(

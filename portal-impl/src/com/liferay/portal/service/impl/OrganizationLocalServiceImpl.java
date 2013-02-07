@@ -266,12 +266,10 @@ public class OrganizationLocalServiceImpl
 			organizationLocalService.getUserOrganizations(user.getUserId());
 
 		for (Organization organization : organizations) {
-			long organizationId = organization.getOrganizationId();
-			long userId = user.getUserId();
-
 			if (!MembershipPolicyUtil.isMembershipAllowed(organization, user)) {
 				userLocalService.unsetOrganizationUsers(
-					organizationId, new long[] {userId});
+					organization.getOrganizationId(),
+					new long[] {user.getUserId()});
 			}
 		}
 
@@ -279,12 +277,12 @@ public class OrganizationLocalServiceImpl
 			MembershipPolicyUtil.getMandatoryOrganizations(user);
 
 		for (Organization organization : mandatoryOrganizations) {
-			long organizationId = organization.getOrganizationId();
-			long userId = user.getUserId();
+			if (!hasUserOrganization(
+					user.getUserId(), organization.getOrganizationId())) {
 
-			if (!hasUserOrganization(userId, organizationId)) {
 				userLocalService.addOrganizationUsers(
-					organizationId, new long[]{userId} );
+					organization.getOrganizationId(),
+					new long[] {user.getUserId()});
 			}
 		}
 	}
