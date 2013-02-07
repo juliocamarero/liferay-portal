@@ -208,4 +208,16 @@ public class ActionUtil {
 		getPage(request);
 	}
 
+	public static void getSourceVersion(PortletRequest portletRequest)
+		throws Exception {
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			portletRequest);
+
+		String sourceVersion = ParamUtil.getString(
+			portletRequest, "sourceVersion");
+
+		request.setAttribute(WebKeys.WIKI_PAGE_SOURCE_VERSION, sourceVersion);
+	}
+
 }
