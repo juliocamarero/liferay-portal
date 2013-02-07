@@ -40,6 +40,10 @@ userGroupRoles.addAll(siteRoles);
 	/>
 </liferay-util:buffer>
 
+<liferay-ui:error-marker key="errorSection" value="roles" />
+
+<liferay-ui:membership-policy-error />
+
 <aui:input name="groupRolesRoleIds" type="hidden" value="<%= ListUtil.toString(userGroupRoles, UserGroupRole.ROLE_ID_ACCESSOR) %>" />
 <aui:input name="groupRolesGroupIds" type="hidden" value="<%= ListUtil.toString(userGroupRoles, UserGroupRole.GROUP_ID_ACCESSOR) %>" />
 
