@@ -816,10 +816,19 @@ public class JournalArticleLocalServiceImpl
 	public void deleteArticles(long groupId, long folderId)
 		throws PortalException, SystemException {
 
+		deleteArticles(groupId, folderId, true);
+	}
+
+	public void deleteArticles(
+			long groupId, long folderId, boolean includeTrashedEntries)
+		throws PortalException, SystemException {
+
 		for (JournalArticle article :
 				journalArticlePersistence.findByG_F(groupId, folderId)) {
 
-			deleteArticle(article, null, null);
+			if (includeTrashedEntries || !article.isInTrash()) {
+				deleteArticle(article, null, null);
+			}
 		}
 	}
 
@@ -1710,6 +1719,17 @@ public class JournalArticleLocalServiceImpl
 
 			journalArticlePersistence.update(article);
 		}
+	}
+
+	public JournalArticle moveArticleFromTrash(
+			long userId, long groupId, JournalArticle article, long newFolderId)
+		throws PortalException, SystemException {
+
+		restoreArticleFromTrash(userId, article);
+
+		moveArticle(groupId, article.getArticleId(), newFolderId);
+
+		return article;
 	}
 
 	public JournalArticle moveArticleToTrash(
