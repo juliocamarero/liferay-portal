@@ -119,21 +119,21 @@ Map<Long,Integer> attachmentLastActivityMap = new HashMap<Long,Integer>();
 								<liferay-ui:icon
 									image="clip"
 									label="<%= true %>"
-									message='<%= LanguageUtil.format(pageContext, "activity-wiki-add-attachment", new Object[] {activityUser.getFullName(), attachmentTitleLink}) %>'
+									message='<%= LanguageUtil.format(pageContext, "activity-wiki-add-the-attachment", new Object[] {activityUser.getFullName(), attachmentTitleLink}) %>'
 								/>
 							</c:when>
 							<c:when test="<%= activity.getType() == SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH %>">
 								<liferay-ui:icon
 									image="delete_attachment"
 									label="<%= true %>"
-									message='<%= LanguageUtil.format(pageContext, "activity-wiki-delete-attachment", new Object[] {activityUser.getFullName(), attachmentTitleLink}) %>'
+									message='<%= LanguageUtil.format(pageContext, "activity-wiki-delete-the-attachment", new Object[] {activityUser.getFullName(), attachmentTitleLink}) %>'
 								/>
 							</c:when>
 							<c:when test="<%= activity.getType() == SocialActivityConstants.TYPE_RESTORE_ATTACHMENT_FROM_TRASH %>">
 								<liferay-ui:icon
 									image="undo"
 									label="<%= true %>"
-									message='<%= LanguageUtil.format(pageContext, "activity-wiki-restore-attachment", new Object[] {activityUser.getFullName(), attachmentTitleLink}) %>'
+									message='<%= LanguageUtil.format(pageContext, "activity-wiki-restore-the-attachment", new Object[] {activityUser.getFullName(), attachmentTitleLink}) %>'
 								/>
 							</c:when>
 						</c:choose>
@@ -163,7 +163,7 @@ Map<Long,Integer> attachmentLastActivityMap = new HashMap<Long,Integer>();
 								<liferay-ui:icon
 									image="add_article"
 									label="<%= true %>"
-									message='<%= LanguageUtil.format(pageContext, "activity-wiki-add-page", new Object[] {activityUser.getFullName(), pageTitleLink}) %>'
+									message='<%= LanguageUtil.format(pageContext, "activity-wiki-add-the-page", new Object[] {activityUser.getFullName(), pageTitleLink}) %>'
 								/>
 							</c:when >
 							<c:when test="<%= activity.getType() == WikiActivityKeys.UPDATE_PAGE %>">
@@ -174,7 +174,7 @@ Map<Long,Integer> attachmentLastActivityMap = new HashMap<Long,Integer>();
 								<liferay-ui:icon
 									image="edit"
 									label="<%= true %>"
-									message='<%= LanguageUtil.format(pageContext, "activity-wiki-update-page", new Object[] {activityUser.getFullName(), pageTitleLink}) %>'
+									message='<%= LanguageUtil.format(pageContext, "activity-wiki-update-the-page-to-version", new Object[] {activityUser.getFullName(), pageTitleLink}) %>'
 								/>
 
 								<c:if test="<%= Validator.isNotNull(activityWikiPage.getSummary()) %>">
