@@ -1234,8 +1234,10 @@ public class DDMStructureLocalServiceImpl
 
 			updateXSD(structureId, document.asXML(), serviceContext);
 		}
-		catch (DocumentException e) {
-			e.printStackTrace();
+		catch (DocumentException de) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(de, de);
+			}
 		}
 	}
 
