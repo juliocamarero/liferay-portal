@@ -581,8 +581,7 @@ public abstract class BaseTrashHandlerTestCase {
 					TrashHandlerRegistryUtil.getTrashHandler(
 						getBaseModelClassName());
 
-				trashHandler.deleteTrashEntry(
-					(Long)baseModel.getPrimaryKeyObj());
+				trashHandler.deleteTrashEntry(getTrashEntryClassPK(baseModel));
 
 				Assert.assertEquals(
 					initialTrashEntriesCount,
