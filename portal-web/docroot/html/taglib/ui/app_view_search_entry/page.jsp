@@ -23,6 +23,7 @@ String containerName = (String)request.getAttribute("liferay-ui:app-view-search-
 String containerType = GetterUtil.getString(request.getAttribute("liferay-ui:app-view-search-entry:containerType"), LanguageUtil.get(locale, "folder"));
 String cssClass = (String)request.getAttribute("liferay-ui:app-view-search-entry:cssClass");
 String description = (String)request.getAttribute("liferay-ui:app-view-search-entry:description");
+Map<String, Object> extraData = (Map<String, Object>)request.getAttribute("liferay-ui:app-view-search-entry:extraData");
 List<FileEntry> fileEntries = (List<FileEntry>)request.getAttribute("liferay-ui:app-view-search-entry:fileEntries");
 boolean locked = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:locked"));
 List<MBMessage> mbMessages = (List<MBMessage>)request.getAttribute("liferay-ui:app-view-search-entry:mbMessages");
@@ -72,6 +73,18 @@ String url = (String)request.getAttribute("liferay-ui:app-view-search-entry:url"
 				/>
 			</span>
 		</c:if>
+
+		<%
+		for (Map.Entry<String, Object> entry : extraData.entrySet()) {
+		%>
+
+			<span class="entry-data <%= entry.getKey() %>">
+				<%= LanguageUtil.get(locale, entry.getKey()) %> <%= String.valueOf(entry.getValue()) %>
+			</span>
+
+		<%
+		}
+		%>
 
 		<span class="entry-description">
 			<%= StringUtil.highlight(HtmlUtil.escape(description), queryTerms) %>

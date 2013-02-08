@@ -281,6 +281,18 @@ boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, ArticleDisp
 								<c:when test="<%= (article != null) && JournalArticlePermission.contains(permissionChecker, article, ActionKeys.VIEW) %>">
 
 									<%
+									Map<String, Object> extraData = new HashMap<String, Object>();
+
+									extraData.put("version", article.getVersion());
+
+									// Version
+
+									double latestVersion = JournalArticleLocalServiceUtil.getLatestVersion(article.getGroupId(), article.getArticleId());
+
+									if (article.getVersion() != latestVersion) {
+										extraData.put("version", LanguageUtil.format(locale, "x-latest-version-x", new String[]{String.valueOf(article.getVersion()), String.valueOf(latestVersion)}));
+									}
+
 									PortletURL rowURL = liferayPortletResponse.createRenderURL();
 
 									rowURL.setParameter("struts_action", "/journal/edit_article");
@@ -297,6 +309,7 @@ boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, ArticleDisp
 										containerName="<%= JournalUtil.getAbsolutePath(liferayPortletRequest, article.getFolderId()) %>"
 										cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 										description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : article.getDescription(locale) %>"
+										extraData="<%= extraData %>"
 										mbMessages="<%= searchResult.getMBMessages() %>"
 										queryTerms="<%= hits.getQueryTerms() %>"
 										rowCheckerId="<%= String.valueOf(article.getArticleId()) %>"
@@ -380,6 +393,18 @@ boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, ArticleDisp
 								<c:when test="<%= (curArticle != null) && JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.VIEW) %>">
 
 									<%
+									Map<String, Object> extraData = new HashMap<String, Object>();
+
+									extraData.put("version", curArticle.getVersion());
+
+									// Version
+
+									double latestVersion = JournalArticleLocalServiceUtil.getLatestVersion(curArticle.getGroupId(), curArticle.getArticleId());
+
+									if (curArticle.getVersion() != latestVersion) {
+										extraData.put("version", LanguageUtil.format(locale, "x-latest-version-x", new String[]{String.valueOf(curArticle.getVersion()), String.valueOf(latestVersion)}));
+									}
+
 									PortletURL rowURL = liferayPortletResponse.createRenderURL();
 
 									rowURL.setParameter("struts_action", "/journal/edit_article");
@@ -396,6 +421,7 @@ boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, ArticleDisp
 										containerName="<%= JournalUtil.getAbsolutePath(liferayPortletRequest, curArticle.getFolderId()) %>"
 										cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 										description="<%= curArticle.getDescription(locale) %>"
+										extraData="<%= extraData %>"
 										queryTerms="<%= queryTerms %>"
 										rowCheckerId="<%= String.valueOf(curArticle.getArticleId()) %>"
 										rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"

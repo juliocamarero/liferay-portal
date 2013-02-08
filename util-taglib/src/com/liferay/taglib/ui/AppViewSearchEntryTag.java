@@ -20,6 +20,7 @@ import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.taglib.util.IncludeTag;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,6 +56,10 @@ public class AppViewSearchEntryTag extends IncludeTag {
 
 	public void setDescription(String description) {
 		_description = HtmlUtil.unescape(description);
+	}
+
+	public void setExtraData(Map<String, Object> extraData) {
+		_extraData = extraData;
 	}
 
 	public void setFileEntries(List<FileEntry> fileEntries) {
@@ -109,6 +114,7 @@ public class AppViewSearchEntryTag extends IncludeTag {
 		_containerType = null;
 		_cssClass = null;
 		_description = null;
+		_extraData = null;
 		_fileEntries = null;
 		_locked = false;
 		_mbMessages = null;
@@ -147,6 +153,8 @@ public class AppViewSearchEntryTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:app-view-search-entry:description", _description);
 		request.setAttribute(
+			"liferay-ui:app-view-search-entry:extraData", _extraData);
+		request.setAttribute(
 			"liferay-ui:app-view-search-entry:fileEntries", _fileEntries);
 		request.setAttribute(
 			"liferay-ui:app-view-search-entry:locked", _locked);
@@ -179,6 +187,7 @@ public class AppViewSearchEntryTag extends IncludeTag {
 	private String _containerType;
 	private String _cssClass;
 	private String _description;
+	private Map<String, Object> _extraData;
 	private List<FileEntry> _fileEntries;
 	private boolean _locked;
 	private List<MBMessage> _mbMessages;
