@@ -17,11 +17,17 @@ package com.liferay.portlet.dynamicdatamapping.model.impl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.service.ImageLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PropsValues;
 
 import java.util.Locale;
 
@@ -62,6 +68,39 @@ public class DDMTemplateImpl extends DDMTemplateBaseImpl {
 		}
 
 		return _smallImageType;
+	}
+
+	public String getWebDavURL(ThemeDisplay themeDisplay, String webDavToken) {
+		StringBundler webDavURL = new StringBundler(11);
+
+		boolean secure = false;
+
+		if (themeDisplay.isSecure() ||
+			PropsValues.WEBDAV_SERVLET_HTTPS_REQUIRED) {
+
+			secure = true;
+		}
+
+		String portalURL = PortalUtil.getPortalURL(
+			themeDisplay.getServerName(), themeDisplay.getServerPort(), secure);
+
+		webDavURL.append(portalURL);
+		webDavURL.append(themeDisplay.getPathContext());
+		webDavURL.append(StringPool.SLASH);
+		webDavURL.append("webdav");
+
+		Group group = themeDisplay.getScopeGroup();
+
+		webDavURL.append(group.getFriendlyURL());
+		webDavURL.append(StringPool.SLASH);
+		webDavURL.append(webDavToken);
+		webDavURL.append(StringPool.SLASH);
+		webDavURL.append("Templates");
+		webDavURL.append(StringPool.SLASH);
+
+		webDavURL.append(getTemplateId());
+
+		return webDavURL.toString();
 	}
 
 	public void setSmallImageType(String smallImageType) {
