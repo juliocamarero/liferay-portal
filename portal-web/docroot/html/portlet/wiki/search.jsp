@@ -62,7 +62,6 @@ portletURL.setParameter("keywords", keywords);
 	</span>
 
 	<liferay-ui:search-container
-		emptyResultsMessage='<%= LanguageUtil.format(pageContext, "no-pages-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>") %>'
 		iteratorURL="<%= portletURL %>"
 	>
 
@@ -138,7 +137,16 @@ portletURL.setParameter("keywords", keywords);
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" type="more" />
+		<c:choose>
+			<c:when test="<%= hits.getLength() <= 0 %>">
+				<div class="portlet-msg-info">
+					<%= LanguageUtil.format(pageContext, "no-pages-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>") %>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" type="more" />
+			</c:otherwise>
+		</c:choose>
 	</liferay-ui:search-container>
 
 	<c:if test="<%= createNewPage %>">
