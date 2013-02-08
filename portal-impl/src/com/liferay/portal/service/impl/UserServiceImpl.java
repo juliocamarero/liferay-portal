@@ -1969,13 +1969,15 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		PermissionChecker permissionChecker = getPermissionChecker();
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = null;
 
 		if (userId != CompanyConstants.SYSTEM) {
 
 			// Add back any mandatory organizations or organizations that the
 			// administrator does not have the rights to remove and check that
 			// he has the permission to add a new organization
+
+			user = userPersistence.findByPrimaryKey(userId);
 
 			Set<Organization> mandatoryOrganizations =
 				MembershipPolicyUtil.getMandatoryOrganizations(user);
