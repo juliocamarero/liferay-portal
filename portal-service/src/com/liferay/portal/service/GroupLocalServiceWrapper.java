@@ -359,16 +359,6 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 		_groupLocalService.checkCompanyGroup(companyId);
 	}
 
-	/**
-	* Removes the user from any forbidden groups and adds the user to all
-	* mandatory groups, if the user does not belong to them.
-	*
-	* @param user the user
-	* @throws PortalException if the user cannot be added or removed from any
-	groups.
-	* @throws SystemException if a system exception occurred
-	* @see com.liferay.portal.events.MembershipPolicyAction
-	*/
 	public void checkMembershipPolicy(com.liferay.portal.model.User user)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		_groupLocalService.checkMembershipPolicy(user);
@@ -520,7 +510,7 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 	}
 
 	/**
-	* Returns all the sites that are children of the parent group.
+	* Returns all the groups that are direct children of the parent group.
 	*
 	* @param companyId the primary key of the company
 	* @param parentGroupId the primary key of the parent group
@@ -550,6 +540,16 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 		return _groupLocalService.getGroups(groupIds);
 	}
 
+	/**
+	* Returns the number of groups that are direct children of the parent
+	* group.
+	*
+	* @param companyId the primary key of the company
+	* @param parentGroupId the primary key of the parent group
+	* @param site whether the group is to be associated with a main site
+	* @return the number of matching groups
+	* @throws SystemException if a system exception occurred
+	*/
 	public int getGroupsCount(long companyId, long parentGroupId, boolean site)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _groupLocalService.getGroupsCount(companyId, parentGroupId, site);
@@ -633,6 +633,24 @@ public class GroupLocalServiceWrapper implements GroupLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _groupLocalService.getLayoutsGroups(companyId, parentGroupId,
 			site, start, end);
+	}
+
+	public java.util.List<com.liferay.portal.model.Group> getLayoutScopes(
+		long companyId, long parentGroupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _groupLocalService.getLayoutScopes(companyId, parentGroupId,
+			start, end);
+	}
+
+	public java.util.List<com.liferay.portal.model.Group> getLayoutScopes(
+		long companyId, long parentGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _groupLocalService.getLayoutScopes(companyId, parentGroupId);
+	}
+
+	public int getLayoutScopesCount(long companyId, long parentGroupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _groupLocalService.getLayoutScopesCount(companyId, parentGroupId);
 	}
 
 	/**
