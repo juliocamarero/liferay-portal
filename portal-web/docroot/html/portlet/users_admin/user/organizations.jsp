@@ -30,6 +30,10 @@ List<Organization> organizations = (List<Organization>)request.getAttribute("use
 	/>
 </liferay-util:buffer>
 
+<liferay-ui:error-marker key="errorSection" value="sites" />
+
+<liferay-ui:membership-policy-error />
+
 <h3><liferay-ui:message key="organizations" /></h3>
 
 <liferay-ui:search-container
