@@ -50,7 +50,6 @@ String keywords = ParamUtil.getString(request, "keywords");
 	%>
 
 	<liferay-ui:search-container
-		emptyResultsMessage='<%= LanguageUtil.format(pageContext, "no-entries-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>") %>'
 		iteratorURL="<%= portletURL %>"
 	>
 
@@ -76,8 +75,8 @@ String keywords = ParamUtil.getString(request, "keywords");
 
 		PortletURL hitURL = renderResponse.createRenderURL();
 
-		portletURL.setParameter("struts_action", "/blogs/view_entry");
-		portletURL.setParameter("redirect", currentURL);
+		hitURL.setParameter("struts_action", "/blogs/view_entry");
+		hitURL.setParameter("redirect", currentURL);
 		%>
 
 		<liferay-ui:search-container-results
@@ -115,7 +114,16 @@ String keywords = ParamUtil.getString(request, "keywords");
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" type="more" />
+		<c:choose>
+			<c:when test="<%= hits.getLength() <= 0 %>">
+				<div class="portlet-msg-info">
+					<%= LanguageUtil.format(pageContext, "no-entries-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>") %>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" type="more" />
+			</c:otherwise>
+		</c:choose>
 	</liferay-ui:search-container>
 </aui:form>
 
