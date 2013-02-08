@@ -1893,13 +1893,15 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		PermissionChecker permissionChecker = getPermissionChecker();
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = null;
 
 		if (userId != CompanyConstants.SYSTEM) {
 
 			// Add back any mandatory groups or groups that the administrator
 			// does not have the rights to remove and check that he has the
 			// permission to add a new group
+
+			user = userPersistence.findByPrimaryKey(userId);
 
 			Set<Group> mandatoryGroups =
 				MembershipPolicyUtil.getMandatoryGroups(user);
@@ -2052,13 +2054,15 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		PermissionChecker permissionChecker = getPermissionChecker();
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = null;
 
 		if (userId != CompanyConstants.SYSTEM) {
 
 			// Add back any mandatory roles or roles that the administrator
 			// does not have the rights to remove and check that he has the
 			// permission to add a new role
+
+			user = userPersistence.findByPrimaryKey(userId);
 
 			Set<Role> mandatoryRoles = MembershipPolicyUtil.getMandatoryRoles(
 				user);
@@ -2303,12 +2307,14 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		PermissionChecker permissionChecker = getPermissionChecker();
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = null;
 
 		if (userId != CompanyConstants.SYSTEM) {
 
 			// Add back any user groups that the administrator does not have the
 			// rights to remove or that have a mandatory membership
+
+			user = userPersistence.findByPrimaryKey(userId);
 
 			Set<UserGroup> mandatoryUserGroups =
 				MembershipPolicyUtil.getMandatoryUserGroups(user);
