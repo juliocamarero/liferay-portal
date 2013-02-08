@@ -198,7 +198,7 @@ String editorParam = emailParam + "Body_" + currentLanguageId;
 
 					String layoutScopesBrowserURLString = HttpUtil.addParameter(layoutScopesBrowserURL.toString(), "doAsGroupId", scopeGroupId);
 
-					String taglibLayoutSiteBrowserURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id: '" + liferayPortletResponse.getNamespace() + "selectGroup', title: '" + LanguageUtil.get(pageContext, "select-layout-scopes") + "', uri:'" + HtmlUtil.escapeURL(layoutScopesBrowserURLString) + "'});";
+					String taglibLayoutScopesBrowserURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id: '" + liferayPortletResponse.getNamespace() + "selectGroup', title: '" + LanguageUtil.get(pageContext, "select-pages") + "', uri:'" + HtmlUtil.escapeURL(layoutScopesBrowserURLString) + "'});";
 
 					boolean hasScopeLayout = false;
 
@@ -215,8 +215,8 @@ String editorParam = emailParam + "Body_" + currentLanguageId;
 						<liferay-ui:icon
 							cssClass="highlited"
 							image="add"
-							message='<%= LanguageUtil.get(pageContext, "layout-scopes") + StringPool.TRIPLE_PERIOD %>'
-							url="<%= taglibLayoutSiteBrowserURL %>"
+							message='<%= LanguageUtil.get(pageContext, "layouts") + StringPool.TRIPLE_PERIOD %>'
+							url="<%= taglibLayoutScopesBrowserURL %>"
 						/>
 					</c:if>
 
