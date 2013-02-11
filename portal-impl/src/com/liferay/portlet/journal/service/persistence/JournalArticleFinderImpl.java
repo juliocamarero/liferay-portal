@@ -456,7 +456,8 @@ public class JournalArticleFinderImpl
 
 			SQLQuery q = session.createSQLQuery(sql);
 
-			q.addEntity("JournalArticle", JournalArticleImpl.class);
+			q.addEntity(
+				JournalArticleImpl.TABLE_NAME, JournalArticleImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -531,7 +532,8 @@ public class JournalArticleFinderImpl
 
 			SQLQuery q = session.createSQLQuery(sql);
 
-			q.addEntity("JournalArticle", JournalArticleImpl.class);
+			q.addEntity(
+				JournalArticleImpl.TABLE_NAME, JournalArticleImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -563,7 +565,8 @@ public class JournalArticleFinderImpl
 
 			SQLQuery q = session.createSQLQuery(sql);
 
-			q.addEntity("JournalArticle", JournalArticleImpl.class);
+			q.addEntity(
+				JournalArticleImpl.TABLE_NAME, JournalArticleImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -685,8 +688,6 @@ public class JournalArticleFinderImpl
 		try {
 			session = openSession();
 
-			String table = "JournalArticle";
-
 			String sql = CustomSQLUtil.get(COUNT_BY_G_F, queryDefinition);
 
 			if (inlineSQLHelper) {
@@ -696,7 +697,8 @@ public class JournalArticleFinderImpl
 			}
 
 			sql = StringUtil.replace(
-				sql, "[$FOLDER_ID$]", getFolderIds(folderIds, table));
+				sql, "[$FOLDER_ID$]",
+				getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME));
 
 			SQLQuery q = session.createSQLQuery(sql);
 
@@ -881,7 +883,7 @@ public class JournalArticleFinderImpl
 			else {
 				sql = StringUtil.replace(
 					sql, "[$FOLDER_ID$]",
-					getFolderIds(folderIds, "JournalArticle"));
+					getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME));
 			}
 
 			sql = CustomSQLUtil.replaceKeywords(
@@ -1036,7 +1038,8 @@ public class JournalArticleFinderImpl
 
 			SQLQuery q = session.createSQLQuery(sql);
 
-			q.addEntity("JournalArticle", JournalArticleImpl.class);
+			q.addEntity(
+				JournalArticleImpl.TABLE_NAME, JournalArticleImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1080,7 +1083,8 @@ public class JournalArticleFinderImpl
 
 			SQLQuery q = session.createSQLQuery(sql);
 
-			q.addEntity("JournalArticle", JournalArticleImpl.class);
+			q.addEntity(
+				JournalArticleImpl.TABLE_NAME, JournalArticleImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1141,7 +1145,7 @@ public class JournalArticleFinderImpl
 			else {
 				sql = StringUtil.replace(
 					sql, "[$FOLDER_ID$]",
-					getFolderIds(folderIds, "JournalArticle"));
+					getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME));
 			}
 
 			sql = CustomSQLUtil.replaceKeywords(
@@ -1198,7 +1202,8 @@ public class JournalArticleFinderImpl
 
 			SQLQuery q = session.createSQLQuery(sql);
 
-			q.addEntity("JournalArticle", JournalArticleImpl.class);
+			q.addEntity(
+				JournalArticleImpl.TABLE_NAME, JournalArticleImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1257,7 +1262,7 @@ public class JournalArticleFinderImpl
 		}
 	}
 
-	protected String getFolderIds(List<Long> folderIds, String table) {
+	protected String getFolderIds(List<Long> folderIds, String tableName) {
 		if (folderIds.isEmpty()) {
 			return StringPool.BLANK;
 		}
@@ -1265,7 +1270,7 @@ public class JournalArticleFinderImpl
 		StringBundler sb = new StringBundler(folderIds.size() * 2 - 1);
 
 		for (int i = 0; i < folderIds.size(); i++) {
-			sb.append(table);
+			sb.append(tableName);
 			sb.append(".folderId = ? ");
 
 			if ((i + 1) != folderIds.size()) {
