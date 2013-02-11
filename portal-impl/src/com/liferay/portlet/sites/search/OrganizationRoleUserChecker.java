@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -12,48 +12,43 @@
  * details.
  */
 
-package com.liferay.portlet.usergroupsadmin.search;
+package com.liferay.portlet.sites.search;
 
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Organization;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.MembershipPolicyUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 
 import java.util.Set;
 
 import javax.portlet.RenderResponse;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Roberto Díaz
  */
-public class UserGroupChecker extends RowChecker {
+public class OrganizationRoleUserChecker extends RowChecker {
 
-	public UserGroupChecker(RenderResponse renderResponse, Group group) {
+	public OrganizationRoleUserChecker(
+		RenderResponse renderResponse, Organization organization, Role role) {
+
 		super(renderResponse);
 
-		_group = group;
+		_organization = organization;
+		_role = role;
 	}
 
 	@Override
 	public boolean isChecked(Object obj) {
-		User user = null;
-
-		if (obj instanceof User) {
-			user = (User)obj;
-		}
-		else if (obj instanceof Object[]) {
-			user = (User)((Object[])obj)[0];
-		}
-		else {
-			throw new IllegalArgumentException(obj + " is not a User");
-		}
+		User user = (User)obj;
 
 		try {
-			return UserLocalServiceUtil.hasGroupUser(
-				_group.getGroupId(), user.getUserId());
+			return UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				user.getUserId(), _organization.getGroupId(),
+				_role.getRoleId());
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -66,22 +61,22 @@ public class UserGroupChecker extends RowChecker {
 	public boolean isDisabled(Object obj) {
 		User user = (User)obj;
 
-		Set<Group> mandatoryGroups = MembershipPolicyUtil.getMandatoryGroups(
-			user);
+		Set<Role> mandatoryRoles = MembershipPolicyUtil.getMandatoryRoles(
+			_organization, user);
 
-		if ((isChecked(user) && mandatoryGroups.contains(_group)) ||
-			(!isChecked(user) &&
-				!MembershipPolicyUtil.isMembershipAllowed(_group, user))) {
-
+		if ((!MembershipPolicyUtil.isMembershipAllowed(
+				_organization, _role, user) && !isChecked(user)) ||
+			(mandatoryRoles.contains(_role) && isChecked(user))) {
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return super.isDisabled(obj);
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(UserGroupChecker.class);
+	private static Log _log = LogFactoryUtil.getLog(
+		OrganizationRoleUserChecker.class);
 
-	private Group _group;
+	private Organization _organization;
+	private Role _role;
 
 }
