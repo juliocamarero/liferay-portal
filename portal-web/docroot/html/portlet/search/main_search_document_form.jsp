@@ -42,18 +42,20 @@ if (assetRendererFactory != null) {
 String[] queryTerms = (String[])request.getAttribute("search.jsp-queryTerms");
 
 PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL");
+
+String modelName = ResourceActionsUtil.getModelResource(locale, entryClassName);
 %>
 
 <span class="asset-entry">
 	<span class="asset-entry-type">
-		<%= ResourceActionsUtil.getModelResource(locale, entryClassName) %>
+		<%= modelName %>
 	</span>
 
 	<span class="toggle-details">[+]</span>
 
 	<span class="asset-entry-title">
 		<c:if test="<%= assetRenderer != null %>">
-			<img alt="" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
+			<img alt="<%= modelName %> Icon" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
 		</c:if>
 
 		<%
