@@ -485,6 +485,14 @@ public class SocialActivityLocalServiceImpl
 			mirrorActivityId, classNameId, classPK, start, end);
 	}
 
+    public List<SocialActivity> getActivities(
+			long classNameId, long classPK, int type, int start, int end)
+        throws SystemException {
+
+        return socialActivityPersistence.findByC_C_T(
+			classNameId, classPK, type, start, end);
+    }
+
 	/**
 	 * Returns a range of all the activities done on the asset identified by the
 	 * class name and the class primary key that are mirrors of the activity
@@ -517,6 +525,17 @@ public class SocialActivityLocalServiceImpl
 
 		return getActivities(
 			mirrorActivityId, classNameId, classPK, start, end);
+	}
+
+	public List<SocialActivity> getActivities(
+			String className, long classPK, int type, int start, int end)
+		throws SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		return getActivities(
+		classNameId, classPK, type, start, end);
+
 	}
 
 	/**
@@ -579,6 +598,14 @@ public class SocialActivityLocalServiceImpl
 			mirrorActivityId, classNameId, classPK);
 	}
 
+    public int getActivitiesCount(
+            long classNameId, long classPK, int type)
+		throws SystemException {
+
+        return socialActivityPersistence.countByC_C_T(
+			classNameId, classPK, type);
+    }
+
 	/**
 	 * Returns the number of activities done on the asset identified by the
 	 * class name and class primary key that are mirrors of the activity
@@ -597,6 +624,15 @@ public class SocialActivityLocalServiceImpl
 		long classNameId = PortalUtil.getClassNameId(className);
 
 		return getActivitiesCount(mirrorActivityId, classNameId, classPK);
+	}
+
+	public int getActivitiesCount(String className, long classPK, int type)
+			throws SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		return getActivitiesCount(classNameId, classPK, type);
+
 	}
 
 	/**
@@ -625,6 +661,25 @@ public class SocialActivityLocalServiceImpl
 
 		return socialActivityPersistence.findByPrimaryKey(activityId);
 	}
+
+	public SocialActivity getFirstActivity(
+			String className, long classPK, int type)
+		throws SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		SocialActivity activity = null;
+
+		try {
+			activity = socialActivityPersistence.findByC_C_T_First(
+			classNameId, classPK, type, null);
+		} catch (NoSuchActivityException e) {
+
+		}
+
+		return activity;
+	}
+
 
 	/**
 	 * Returns a range of all the activities done in the group.

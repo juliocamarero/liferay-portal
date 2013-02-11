@@ -466,6 +466,11 @@ public interface SocialActivityLocalService extends BaseLocalService,
 		long mirrorActivityId, long classNameId, long classPK, int start,
 		int end) throws com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.social.model.SocialActivity> getActivities(
+		long classNameId, long classPK, int type, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Returns a range of all the activities done on the asset identified by the
 	* class name and the class primary key that are mirrors of the activity
@@ -493,6 +498,11 @@ public interface SocialActivityLocalService extends BaseLocalService,
 	public java.util.List<com.liferay.portlet.social.model.SocialActivity> getActivities(
 		long mirrorActivityId, java.lang.String className, long classPK,
 		int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.social.model.SocialActivity> getActivities(
+		java.lang.String className, long classPK, int type, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
@@ -548,6 +558,10 @@ public interface SocialActivityLocalService extends BaseLocalService,
 		long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getActivitiesCount(long classNameId, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Returns the number of activities done on the asset identified by the
 	* class name and class primary key that are mirrors of the activity
@@ -563,6 +577,10 @@ public interface SocialActivityLocalService extends BaseLocalService,
 	public int getActivitiesCount(long mirrorActivityId,
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getActivitiesCount(java.lang.String className, long classPK,
+		int type) throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
 	* Returns the number of activities done on assets identified by class name.
@@ -588,6 +606,11 @@ public interface SocialActivityLocalService extends BaseLocalService,
 		long activityId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.social.model.SocialActivity getFirstActivity(
+		java.lang.String className, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
 	* Returns a range of all the activities done in the group.
