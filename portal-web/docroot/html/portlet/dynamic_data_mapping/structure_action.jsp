@@ -38,7 +38,7 @@ DDMStructure structure = (DDMStructure)row.getObject();
 	</c:if>
 
 	<c:if test="<%= refererPortletName.equals(PortletKeys.JOURNAL) && DDMStructurePermission.contains(permissionChecker, structure, ActionKeys.UPDATE) %>">
-		<liferay-portlet:renderURL var="editStructureDefaultValuesURL" portletName="<%= PortletKeys.JOURNAL %>" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:renderURL portletName="<%= PortletKeys.JOURNAL %>" var="editStructureDefaultValuesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/journal/edit_article" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="backURL" value="<%= currentURL %>" />
