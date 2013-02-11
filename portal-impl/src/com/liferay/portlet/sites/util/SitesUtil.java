@@ -755,8 +755,9 @@ public class SitesUtil {
 		return false;
 	}
 
-	public static boolean isLayoutSetMergeable(Group group, LayoutSet layoutSet)
-		throws PortalException, SystemException {
+	public static boolean isLayoutSetMergeable(
+			Group group, LayoutSet layoutSet)
+		throws SystemException, PortalException {
 
 		if (!layoutSet.isLayoutSetPrototypeLinkActive() ||
 			group.isLayoutPrototype() || group.isLayoutSetPrototype()) {
