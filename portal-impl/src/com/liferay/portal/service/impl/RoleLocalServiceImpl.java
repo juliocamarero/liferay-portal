@@ -157,9 +157,11 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	 * @param  descriptionMap the role's localized descriptions (optionally
 	 *         <code>null</code>)
 	 * @param  type the role's type (optionally <code>0</code>)
+	 * @param  subType the role's subtype (optionally <code>null</code>)
 	 * @param  serviceContext the roles's service context (optionally
 	 *         <code>null</code>). Can set expando bridge attributes for the
 	 *         role.
+	 * @return the role
 	 * @throws PortalException if the class name or the role name were invalid,
 	 *         if the role is a duplicate, or if a user with the primary key
 	 *         could not be found
@@ -407,6 +409,11 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 			throw new RequiredRoleException();
 		}
 
+		// Expando
+
+		expandoValueLocalService.deleteValues(
+			Role.class.getName(), role.getRoleId());
+
 		// Resources
 
 		List<ResourcePermission> resourcePermissions =
@@ -435,11 +442,6 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 			userGroupGroupRoleLocalService.deleteUserGroupGroupRolesByRoleId(
 				role.getRoleId());
 		}
-
-		// Expando
-
-		expandoValueLocalService.deleteValues(
-			Role.class.getName(), role.getRoleId());
 
 		// Role
 
