@@ -167,15 +167,18 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 									<aui:a href="<%= viewPageURL.toString() %>"><%= version %></aui:a>
 								</liferay-util:buffer>
 
+								<liferay-util:buffer var="updatePageMessage">
+									<%= LanguageUtil.format(pageContext, "activity-wiki-update-the-page-to-version", new Object[] {socialActivityUser.getFullName(), pageTitleLink}) %>
+									<c:if test="<%= socialActivityWikiPage.getStatus() != WorkflowConstants.STATUS_APPROVED %>">
+										<em><liferay-ui:message key="<%= WorkflowConstants.toLabel(socialActivityWikiPage.getStatus()) %>" /></em>
+									</c:if>
+								</liferay-util:buffer>
+
 								<liferay-ui:icon
 									image="edit"
 									label="<%= true %>"
-									message='<%= LanguageUtil.format(pageContext, "activity-wiki-update-the-page-to-version", new Object[] {socialActivityUser.getFullName(), pageTitleLink}) %>'
+									message="<%= updatePageMessage %>"
 								/>
-
-								<c:if test="<%= Validator.isNotNull(socialActivityWikiPage.getSummary()) %>">
-									<em class="activity-summary"><%= StringPool.QUOTE + socialActivityWikiPage.getSummary() + StringPool.QUOTE %></em>
-								</c:if>
 							</c:when>
 						</c:choose>
 					</c:when>
