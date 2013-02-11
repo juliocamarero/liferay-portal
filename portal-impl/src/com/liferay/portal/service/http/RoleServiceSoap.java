@@ -127,7 +127,8 @@ public class RoleServiceSoap {
 	the class name or the role name were invalid, or if the role
 	is a duplicate
 	* @throws SystemException if a system exception occurred
-	* @deprecated {@link #addRole(String, long, String, Map, Map, int, String)}
+	* @deprecated {@link #addRole(String, long, String, Map, Map, int, String,
+	ServiceContext)}
 	*/
 	public static com.liferay.portal.model.RoleSoap addRole(
 		java.lang.String name, java.lang.String[] titleMapLanguageIds,
@@ -143,6 +144,54 @@ public class RoleServiceSoap {
 
 			com.liferay.portal.model.Role returnValue = RoleServiceUtil.addRole(name,
 					titleMap, descriptionMap, type);
+
+			return com.liferay.portal.model.RoleSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* Adds a role. The user is reindexed after role is added.
+	*
+	* @param name the role's name
+	* @param titleMap the role's localized titles (optionally
+	<code>null</code>)
+	* @param descriptionMap the role's localized descriptions (optionally
+	<code>null</code>)
+	* @param type the role's type (optionally <code>0</code>)
+	* @param serviceContext the user's service context (optionally
+	<code>null</code>). Can set the universally unique identifier
+	(with the <code>uuid</code> attribute), asset category IDs, asset
+	tag names, and expando bridge attributes for the user.
+	* @return the role
+	* @throws PortalException if a user with the primary key could not be
+	found, if the user did not have permission to add roles, if the
+	class name or the role name were invalid, or if the role is a
+	duplicate
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.portal.model.RoleSoap addRole(
+		java.lang.String className, long classPK, java.lang.String name,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, int type,
+		java.lang.String subType,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(titleMapLanguageIds,
+					titleMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+
+			com.liferay.portal.model.Role returnValue = RoleServiceUtil.addRole(className,
+					classPK, name, titleMap, descriptionMap, type, subType,
+					serviceContext);
 
 			return com.liferay.portal.model.RoleSoap.toSoapModel(returnValue);
 		}
@@ -463,6 +512,10 @@ public class RoleServiceSoap {
 	* @param descriptionMap the new localized descriptions (optionally
 	<code>null</code>) to replace those existing for the role
 	* @param subtype the role's new subtype (optionally <code>null</code>)
+	* @param serviceContext the user's service context (optionally
+	<code>null</code>). Can set the universally unique identifier
+	(with the <code>uuid</code> attribute), asset category IDs, asset
+	tag names, and expando bridge attributes for the user.
 	* @return the role with the primary key
 	* @throws PortalException if the user did not have permission to update the
 	role, if a role with the primary could not be found, or if the
@@ -473,7 +526,8 @@ public class RoleServiceSoap {
 		java.lang.String name, java.lang.String[] titleMapLanguageIds,
 		java.lang.String[] titleMapValues,
 		java.lang.String[] descriptionMapLanguageIds,
-		java.lang.String[] descriptionMapValues, java.lang.String subtype)
+		java.lang.String[] descriptionMapValues, java.lang.String subtype,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(titleMapLanguageIds,
@@ -482,7 +536,7 @@ public class RoleServiceSoap {
 					descriptionMapValues);
 
 			com.liferay.portal.model.Role returnValue = RoleServiceUtil.updateRole(roleId,
-					name, titleMap, descriptionMap, subtype);
+					name, titleMap, descriptionMap, subtype, serviceContext);
 
 			return com.liferay.portal.model.RoleSoap.toSoapModel(returnValue);
 		}
