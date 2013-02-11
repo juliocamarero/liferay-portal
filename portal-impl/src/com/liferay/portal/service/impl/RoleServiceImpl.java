@@ -51,6 +51,9 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 	 *         <code>null</code>)
 	 * @param  type the role's type (optionally <code>0</code>)
 	 * @param  subType the role's subtype (optionally <code>null</code>)
+	 * @param  serviceContext the role's service context (optionally
+	 *         <code>null</code>). Can set the expando bridge attributes
+	 *         for the role.
 	 * @return the role
 	 * @throws PortalException if a user with the primary key could not be
 	 *         found, if the user did not have permission to add roles, if the
@@ -61,7 +64,7 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 	public Role addRole(
 			String className, long classPK, String name,
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
-			int type, String subType)
+			int type, String subType, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		PortalPermissionUtil.check(getPermissionChecker(), ActionKeys.ADD_ROLE);
@@ -70,7 +73,7 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 
 		return roleLocalService.addRole(
 			user.getUserId(), className, classPK, name, titleMap,
-			descriptionMap, type, subType, null);
+			descriptionMap, type, subType, serviceContext);
 	}
 
 	/**
@@ -98,36 +101,6 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 
 		return addRole(
 			null, 0, name, titleMap, descriptionMap, type, null, null);
-	}
-
-	/**
-	 * Adds a role. The user is reindexed after role is added.
-	 *
-	 * @param  name the role's name
-	 * @param  titleMap the role's localized titles (optionally
-	 *         <code>null</code>)
-	 * @param  descriptionMap the role's localized descriptions (optionally
-	 *         <code>null</code>)
-	 * @param  type the role's type (optionally <code>0</code>)
-	 * @param  serviceContext the user's service context (optionally
-	 *         <code>null</code>). Can set the universally unique identifier
-	 *         (with the <code>uuid</code> attribute), asset category IDs, asset
-	 *         tag names, and expando bridge attributes for the user.
-	 * @return the role
-	 * @throws PortalException if a user with the primary key could not be
-	 *         found, if the user did not have permission to add roles, if the
-	 *         class name or the role name were invalid, or if the role is a
-	 *         duplicate
-	 * @throws SystemException if a system exception occurred
-	 */
-	public Role addRole(
-			String className, long classPK, String name,
-			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
-			int type, String subType, ServiceContext serviceContext)
-		throws PortalException, SystemException {
-
-		return addRole(className, classPK, name, titleMap,
-			descriptionMap, type, subType, serviceContext);
 	}
 
 	/**
@@ -388,10 +361,9 @@ public class RoleServiceImpl extends RoleServiceBaseImpl {
 	 * @param  descriptionMap the new localized descriptions (optionally
 	 *         <code>null</code>) to replace those existing for the role
 	 * @param  subtype the role's new subtype (optionally <code>null</code>)
-	 * @param  serviceContext the user's service context (optionally
-	 *         <code>null</code>). Can set the universally unique identifier
-	 *         (with the <code>uuid</code> attribute), asset category IDs, asset
-	 *         tag names, and expando bridge attributes for the user.
+	 * @param  serviceContext the role's service context (optionally
+	 *         <code>null</code>). Can set the expando bridge attributes for the
+	 *         role.
 	 * @return the role with the primary key
 	 * @throws PortalException if the user did not have permission to update the
 	 *         role, if a role with the primary could not be found, or if the
