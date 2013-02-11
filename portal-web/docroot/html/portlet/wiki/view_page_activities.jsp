@@ -176,6 +176,9 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 								<c:if test="<%= Validator.isNotNull(socialActivityWikiPage.getSummary()) %>">
 									<em class="activity-summary"><%= StringPool.QUOTE + socialActivityWikiPage.getSummary() + StringPool.QUOTE %></em>
 								</c:if>
+								<c:if test="<%= socialActivityWikiPage.getStatus() != WorkflowConstants.STATUS_APPROVED %>">
+									<em class="activity-summary"><liferay-ui:message key="<%= WorkflowConstants.toLabel(socialActivityWikiPage.getStatus()) %>" /></em>
+								</c:if>
 							</c:when>
 						</c:choose>
 					</c:when>
