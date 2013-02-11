@@ -3304,6 +3304,10 @@
 			<name>view-action</name>
 			<value>/dynamic_data_mapping/view_template</value>
 		</init-param>
+		<init-param>
+			<name>refererWebDavToken</name>
+			<value>application_display_template</value>
+		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>

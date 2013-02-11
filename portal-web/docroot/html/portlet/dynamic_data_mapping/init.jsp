@@ -62,6 +62,7 @@ PortalPreferences portalPreferences = PortletPreferencesFactoryUtil.getPortalPre
 String chooseCallback = ParamUtil.getString(request, "chooseCallback");
 String ddmResource = ParamUtil.getString(request, "ddmResource");
 String ddmResourceActionId = ParamUtil.getString(request, "ddmResourceActionId");
+String refererWebDavToken = ParamUtil.getString(request, "refererWebDavToken");
 String saveCallback = ParamUtil.getString(request, "saveCallback");
 String scopeAvailableFields = ParamUtil.getString(request, "scopeAvailableFields");
 String scopeStorageType = ParamUtil.getString(request, "scopeStorageType");
@@ -97,6 +98,10 @@ else if (scopeTemplateType.equals(DDMTemplateConstants.TEMPLATE_TYPE_FORM)) {
 }
 
 Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
+
+if (Validator.isNull(refererWebDavToken)) {
+	refererWebDavToken = portletConfig.getInitParameter("refererWebDavToken");
+}
 %>
 
 <%@ include file="/html/portlet/dynamic_data_mapping/init-ext.jsp" %>
