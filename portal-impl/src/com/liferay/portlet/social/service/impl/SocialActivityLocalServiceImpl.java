@@ -626,6 +626,25 @@ public class SocialActivityLocalServiceImpl
 		return socialActivityPersistence.findByPrimaryKey(activityId);
 	}
 
+	public SocialActivity getFirstActivity(
+			String className, long classPK, int type)
+		throws SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		SocialActivity activity = null;
+
+		try {
+			activity = socialActivityPersistence.findByC_C_T_First(
+			classNameId, classPK, type, null);
+		} catch (NoSuchActivityException e) {
+
+		}
+
+		return activity;
+	}
+
+
 	/**
 	 * Returns a range of all the activities done in the group.
 	 *
