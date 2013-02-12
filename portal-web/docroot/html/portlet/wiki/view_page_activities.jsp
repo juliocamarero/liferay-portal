@@ -205,7 +205,7 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 					/>
 				</c:when>
 				<c:otherwise>
-					<liferay-ui:search-container-column-text />
+					<liferay-ui:search-container-column-text name="" value=""/>
 				</c:otherwise>
 			</c:choose>
 		</liferay-ui:search-container-row>
