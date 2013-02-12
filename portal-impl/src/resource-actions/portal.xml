@@ -31,7 +31,6 @@
 			<guest-defaults />
 			<guest-unsupported>
 				<action-key>CONFIGURATION</action-key>
-				<action-key>VIEW</action-key>
 			</guest-unsupported>
 		</permissions>
 	</portlet-resource>
@@ -345,7 +344,6 @@
 			<guest-defaults />
 			<guest-unsupported>
 				<action-key>CONFIGURATION</action-key>
-				<action-key>VIEW</action-key>
 			</guest-unsupported>
 		</permissions>
 	</portlet-resource>
