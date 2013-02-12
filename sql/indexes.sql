@@ -746,6 +746,7 @@ create index IX_B5F82C7A on ShoppingOrderItem (orderId);
 create index IX_F542E9BC on SocialActivity (activitySetId);
 create index IX_82E39A0C on SocialActivity (classNameId);
 create index IX_A853C757 on SocialActivity (classNameId, classPK);
+create index IX_D0E9029E on SocialActivity (classNameId, classPK, type_);
 create index IX_64B1BC66 on SocialActivity (companyId);
 create index IX_2A2468 on SocialActivity (groupId);
 create index IX_FB604DC7 on SocialActivity (groupId, userId, classNameId, classPK, type_, receiverUserId);
