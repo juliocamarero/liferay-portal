@@ -476,6 +476,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						<span class="download-document">
 							<c:if test="<%= DLFileEntryPermission.contains(permissionChecker, fileEntry, ActionKeys.VIEW) %>">
 								<liferay-ui:icon
+                                    alt="download-icon"
 									image="download"
 									label="<%= true %>"
 									message='<%= LanguageUtil.get(pageContext, "download") + " (" + TextFormatter.formatStorageSize(fileVersion.getSize(), locale) + ")" %>'
