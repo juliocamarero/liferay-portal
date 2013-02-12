@@ -116,7 +116,12 @@ String assetCategoryTitle = null;
 String assetVocabularyTitle = null;
 
 if (assetCategoryId > 0) {
-	assetEntryQuery.setAllCategoryIds(new long[] {assetCategoryId});
+
+	long[] oldAllCategoryIds = assetEntryQuery.getAllCategoryIds();
+
+	long[] newAllAssetCategoryIds = ArrayUtil.append(oldAllCategoryIds, assetCategoryId);
+
+	assetEntryQuery.setAllCategoryIds(ArrayUtil.unique(newAllAssetCategoryIds));
 
 	AssetCategory assetCategory = AssetCategoryLocalServiceUtil.getCategory(assetCategoryId);
 
