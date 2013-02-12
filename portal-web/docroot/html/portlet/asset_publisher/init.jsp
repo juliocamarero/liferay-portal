@@ -116,12 +116,11 @@ String assetCategoryTitle = null;
 String assetVocabularyTitle = null;
 
 if (assetCategoryId > 0) {
+	long[] allAssetCategoryIds = assetEntryQuery.getAllCategoryIds();
 
-	long[] oldAllCategoryIds = assetEntryQuery.getAllCategoryIds();
-
-	long[] newAllAssetCategoryIds = ArrayUtil.append(oldAllCategoryIds, assetCategoryId);
-
-	assetEntryQuery.setAllCategoryIds(ArrayUtil.unique(newAllAssetCategoryIds));
+	if (!ArrayUtil.contains(allAssetCategoryIds, assetCategoryId)) {
+		assetEntryQuery.setAllCategoryIds(ArrayUtil.append(allAssetCategoryIds, assetCategoryId));
+	}
 
 	AssetCategory assetCategory = AssetCategoryLocalServiceUtil.getCategory(assetCategoryId);
 
