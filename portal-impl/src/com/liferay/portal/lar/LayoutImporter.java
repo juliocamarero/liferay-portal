@@ -801,15 +801,24 @@ public class LayoutImporter {
 
 		GroupLocalServiceUtil.updateSite(groupId, true);
 
-		// Web content layout type
+		boolean importModeCreatedFromPrototype = layoutsImportMode.equals(
+			PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE);
+
+		// Update type settings of Web content layout type, or layout prototype
+
+		long lastMergeTime = System.currentTimeMillis();
 
 		for (Layout layout : newLayouts) {
+			boolean modifiedTypeSettingsProperties = false;
+
 			UnicodeProperties typeSettingsProperties =
 				layout.getTypeSettingsProperties();
 
 			String articleId = typeSettingsProperties.getProperty("article-id");
 
 			if (Validator.isNotNull(articleId)) {
+				modifiedTypeSettingsProperties = true;
+
 				Map<String, String> articleIds =
 					(Map<String, String>)portletDataContext.
 						getNewPrimaryKeysMap(
@@ -818,23 +827,29 @@ public class LayoutImporter {
 				typeSettingsProperties.setProperty(
 					"article-id",
 					MapUtil.getString(articleIds, articleId, articleId));
+			}
 
+			if (importModeCreatedFromPrototype) {
+				modifiedTypeSettingsProperties = true;
+				typeSettingsProperties.setProperty(
+						SitesUtil.LAST_MERGE_TIME,
+						String.valueOf(lastMergeTime));
+			}
+
+			if (modifiedTypeSettingsProperties) {
 				LayoutUtil.update(layout);
 			}
 		}
 
 		// Last merge time for layout set prototypes
 
-		if (layoutsImportMode.equals(
-				PortletDataHandlerKeys.
-					LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE)) {
+		if (importModeCreatedFromPrototype) {
 
 			UnicodeProperties settingsProperties =
 				layoutSet.getSettingsProperties();
 
 			settingsProperties.setProperty(
-				SitesUtil.LAST_MERGE_TIME,
-				String.valueOf(System.currentTimeMillis()));
+				SitesUtil.LAST_MERGE_TIME, String.valueOf(lastMergeTime));
 
 			LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
 		}
