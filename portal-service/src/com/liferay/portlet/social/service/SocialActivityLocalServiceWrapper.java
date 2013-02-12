@@ -644,6 +644,13 @@ public class SocialActivityLocalServiceWrapper
 		return _socialActivityLocalService.getActivity(activityId);
 	}
 
+	public com.liferay.portlet.social.model.SocialActivity getFirstActivity(
+		java.lang.String className, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _socialActivityLocalService.getFirstActivity(className, classPK,
+			type);
+	}
+
 	/**
 	* Returns a range of all the activities done in the group.
 	*
