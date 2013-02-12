@@ -164,6 +164,7 @@ String shortTitle = StringUtil.shorten(title, 60);
 	<c:when test='<%= displayStyle.equals("list") %>'>
 		<div class="app-view-entry app-view-entry-taglib entry-display-style display-<%= displayStyle %> <%= locked ? "locked" : StringPool.BLANK %>">
 			<liferay-ui:icon
+                alt="folder-icon"
 				cssClass='<%= showCheckbox ? "app-view-entry app-view-entry-taglib entry-display-style selectable" : "app-view-entry app-view-entry-taglib entry-display-style" %>'
 				data="<%= data %>"
 				image="<%= thumbnailSrc %>"

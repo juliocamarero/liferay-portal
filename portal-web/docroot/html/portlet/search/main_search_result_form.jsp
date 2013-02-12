@@ -119,17 +119,19 @@ viewURL = _checkViewURL(themeDisplay, viewURL, currentURL, inheritRedirect);
 String[] queryTerms = (String[])request.getAttribute("search.jsp-queryTerms");
 
 PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL");
+
+String modelName = ResourceActionsUtil.getModelResource(locale, className);
 %>
 
 <span class="asset-entry">
 	<span class="asset-entry-type">
-		<%= ResourceActionsUtil.getModelResource(themeDisplay.getLocale(), className) %>
+		<%= modelName %>
 	</span>
 
 	<span class="asset-entry-title">
 		<a href="<%= viewURL %>">
 			<c:if test="<%= assetRenderer != null %>">
-				<img alt="" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
+				<img alt="<%= modelName %> Icon" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
 			</c:if>
 
 			<%= StringUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms) %>

@@ -406,6 +406,7 @@ for (int i = 0; i < results.size(); i++) {
 						%>
 
 						<liferay-ui:icon
+                            alt="folder-icon"
 							data="<%= data %>"
 							image="<%= folderImage %>"
 							label="<%= true %>"
