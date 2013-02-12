@@ -78,13 +78,14 @@ public class UserGroupChecker extends RowChecker {
 
 			return true;
 		}
-		else{
+		else {
 			try {
 				PermissionChecker permissionChecker =
 					PermissionThreadLocal.getPermissionChecker();
 
 				if (GroupPermissionUtil.hasMembershipProtected(
-						permissionChecker, _group.getGroupId(), user.getUserId())) {
+						permissionChecker, _group.getGroupId(),
+						user.getUserId())) {
 
 					return true;
 				}
