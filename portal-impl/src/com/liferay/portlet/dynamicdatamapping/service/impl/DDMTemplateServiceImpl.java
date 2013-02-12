@@ -419,6 +419,12 @@ public class DDMTemplateServiceImpl extends DDMTemplateServiceBaseImpl {
 			groupId, classNameId, classPK, type, mode);
 	}
 
+	public List<DDMTemplate> getTemplatesByClassPK(long groupId, long classPK)
+		throws SystemException {
+
+		return ddmTemplatePersistence.filterFindByG_CPK(groupId, classPK);
+	}
+
 	/**
 	 * Returns an ordered range of all the templates matching the group, class
 	 * name ID, class PK, type, and mode, and matching the keywords in the
