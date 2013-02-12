@@ -680,6 +680,12 @@ public class DDMTemplateLocalServiceImpl
 			groupId, classNameId, classPK, type, mode);
 	}
 
+	public List<DDMTemplate> getTemplatesByClassPK(long groupId, long classPK)
+		throws SystemException {
+
+		return ddmTemplatePersistence.findByG_CPK(groupId, classPK);
+	}
+
 	/**
 	 * Returns the number of templates belonging to the group.
 	 *
