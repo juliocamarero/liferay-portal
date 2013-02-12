@@ -895,7 +895,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						location.href = '<%= DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, StringPool.BLANK) %>';
 					},
 					icon: 'download',
-					label: '<%= UnicodeLanguageUtil.get(pageContext, "download") %>',
+					label: '<%= UnicodeLanguageUtil.get(pageContext, "download") %>'
 				}
 			);
 
