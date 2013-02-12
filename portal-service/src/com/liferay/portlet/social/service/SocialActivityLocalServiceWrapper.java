@@ -511,6 +511,13 @@ public class SocialActivityLocalServiceWrapper
 			classNameId, classPK, start, end);
 	}
 
+	public java.util.List<com.liferay.portlet.social.model.SocialActivity> getActivities(
+		long classNameId, long classPK, int type, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _socialActivityLocalService.getActivities(classNameId, classPK,
+			type, start, end);
+	}
+
 	/**
 	* Returns a range of all the activities done on the asset identified by the
 	* class name and the class primary key that are mirrors of the activity
@@ -540,6 +547,13 @@ public class SocialActivityLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _socialActivityLocalService.getActivities(mirrorActivityId,
 			className, classPK, start, end);
+	}
+
+	public java.util.List<com.liferay.portlet.social.model.SocialActivity> getActivities(
+		java.lang.String className, long classPK, int type, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _socialActivityLocalService.getActivities(className, classPK,
+			type, start, end);
 	}
 
 	/**
@@ -599,6 +613,12 @@ public class SocialActivityLocalServiceWrapper
 			classNameId, classPK);
 	}
 
+	public int getActivitiesCount(long classNameId, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _socialActivityLocalService.getActivitiesCount(classNameId,
+			classPK, type);
+	}
+
 	/**
 	* Returns the number of activities done on the asset identified by the
 	* class name and class primary key that are mirrors of the activity
@@ -615,6 +635,12 @@ public class SocialActivityLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _socialActivityLocalService.getActivitiesCount(mirrorActivityId,
 			className, classPK);
+	}
+
+	public int getActivitiesCount(java.lang.String className, long classPK,
+		int type) throws com.liferay.portal.kernel.exception.SystemException {
+		return _socialActivityLocalService.getActivitiesCount(className,
+			classPK, type);
 	}
 
 	/**
@@ -642,6 +668,13 @@ public class SocialActivityLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _socialActivityLocalService.getActivity(activityId);
+	}
+
+	public com.liferay.portlet.social.model.SocialActivity getFirstActivity(
+		java.lang.String className, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _socialActivityLocalService.getFirstActivity(className, classPK,
+			type);
 	}
 
 	/**

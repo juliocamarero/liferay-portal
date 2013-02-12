@@ -520,6 +520,12 @@ public class SocialActivityLocalServiceUtil {
 			start, end);
 	}
 
+	public static java.util.List<com.liferay.portlet.social.model.SocialActivity> getActivities(
+		long classNameId, long classPK, int type, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getActivities(classNameId, classPK, type, start, end);
+	}
+
 	/**
 	* Returns a range of all the activities done on the asset identified by the
 	* class name and the class primary key that are mirrors of the activity
@@ -550,6 +556,12 @@ public class SocialActivityLocalServiceUtil {
 		return getService()
 				   .getActivities(mirrorActivityId, className, classPK, start,
 			end);
+	}
+
+	public static java.util.List<com.liferay.portlet.social.model.SocialActivity> getActivities(
+		java.lang.String className, long classPK, int type, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getActivities(className, classPK, type, start, end);
 	}
 
 	/**
@@ -609,6 +621,11 @@ public class SocialActivityLocalServiceUtil {
 				   .getActivitiesCount(mirrorActivityId, classNameId, classPK);
 	}
 
+	public static int getActivitiesCount(long classNameId, long classPK,
+		int type) throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getActivitiesCount(classNameId, classPK, type);
+	}
+
 	/**
 	* Returns the number of activities done on the asset identified by the
 	* class name and class primary key that are mirrors of the activity
@@ -625,6 +642,12 @@ public class SocialActivityLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .getActivitiesCount(mirrorActivityId, className, classPK);
+	}
+
+	public static int getActivitiesCount(java.lang.String className,
+		long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getActivitiesCount(className, classPK, type);
 	}
 
 	/**
@@ -652,6 +675,12 @@ public class SocialActivityLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getActivity(activityId);
+	}
+
+	public static com.liferay.portlet.social.model.SocialActivity getFirstActivity(
+		java.lang.String className, long classPK, int type)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getFirstActivity(className, classPK, type);
 	}
 
 	/**
