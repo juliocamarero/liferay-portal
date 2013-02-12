@@ -62,6 +62,7 @@ PortalPreferences portalPreferences = PortletPreferencesFactoryUtil.getPortalPre
 String chooseCallback = ParamUtil.getString(request, "chooseCallback");
 String ddmResource = ParamUtil.getString(request, "ddmResource");
 String ddmResourceActionId = ParamUtil.getString(request, "ddmResourceActionId");
+String refererWebDavToken = ParamUtil.getString(request, "refererWebDavToken");
 String saveCallback = ParamUtil.getString(request, "saveCallback");
 String scopeAvailableFields = ParamUtil.getString(request, "scopeAvailableFields");
 String scopeStorageType = ParamUtil.getString(request, "scopeStorageType");
