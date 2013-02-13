@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.GroupServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -30,6 +31,25 @@ public class GroupTestUtil {
 
 	public static Group addGroup() throws Exception {
 		return addGroup(ServiceTestUtil.randomString());
+	}
+
+	public static Group addGroup(long userId, Layout layout) throws Exception {
+		return addGroup(userId, GroupConstants.DEFAULT_PARENT_GROUP_ID, layout);
+	}
+
+	public static Group addGroup(long userId, long parentGroupId, Layout layout)
+		throws Exception {
+
+		Group scopeGroup = layout.getScopeGroup();
+
+		if (scopeGroup != null) {
+			return scopeGroup;
+		}
+
+		return GroupLocalServiceUtil.addGroup(
+			userId, parentGroupId, Layout.class.getName(), layout.getPlid(),
+			GroupConstants.DEFAULT_LIVE_GROUP_ID,
+			String.valueOf(layout.getPlid()), null, 0, null, false, true, null);
 	}
 
 	public static Group addGroup(long parentGroupId, String name)
