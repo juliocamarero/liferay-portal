@@ -390,9 +390,7 @@ public class AssetEntryQuery {
 	}
 
 	public void setKeywords(String keywords) {
-		_description = keywords;
 		_keywords = keywords;
-		_title = keywords;
 	}
 
 	public void setLayout(Layout layout) {
