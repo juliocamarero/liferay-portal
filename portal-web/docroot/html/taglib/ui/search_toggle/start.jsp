@@ -15,7 +15,9 @@
 --%>
 
 <%@ include file="/html/taglib/ui/search_toggle/init.jsp" %>
-
+<%
+	String searchEntries = LanguageUtil.get(pageContext, "search-entries");
+%>
 <div class="taglib-search-toggle">
 	<aui:input id="<%= id + displayTerms.ADVANCED_SEARCH %>" name="<%= displayTerms.ADVANCED_SEARCH %>" type="hidden" value='<%= clickValue.equals("basic") ? false : true %>' />
 
@@ -23,7 +25,7 @@
 		<c:choose>
 			<c:when test="<%= Validator.isNotNull(buttonLabel) %>">
 				<span class="aui-search-bar">
-					<aui:input id="<%= id + displayTerms.KEYWORDS %>" inlineField="<%= true %>" label="" name="<%= displayTerms.KEYWORDS %>" size="30" value="<%= displayTerms.getKeywords() %>" />
+					<aui:input id="<%= id + displayTerms.KEYWORDS %>" inlineField="<%= true %>" label="" name="<%= displayTerms.KEYWORDS %>" size="30" title="<%=searchEntries%>" value="<%= displayTerms.getKeywords() %>" />
 
 					<aui:button type="submit" value="<%= buttonLabel %>" />
 				</span>
