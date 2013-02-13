@@ -26,6 +26,7 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
+import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessageConstants;
@@ -75,7 +76,7 @@ public class MBMessageServiceTest {
 		boolean allowAnonymous = false;
 		boolean mailingListActive = false;
 
-		_group = ServiceTestUtil.addGroup();
+		_group = GroupTestUtil.addGroup();
 
 		for (int i = 0; i < ServiceTestUtil.THREAD_COUNT; i++) {
 			ServiceTestUtil.addUser(

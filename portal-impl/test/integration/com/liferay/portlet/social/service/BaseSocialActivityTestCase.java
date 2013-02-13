@@ -20,6 +20,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -54,7 +55,7 @@ public class BaseSocialActivityTestCase {
 
 	@Before
 	public void beforeTest() throws Exception {
-		_group = ServiceTestUtil.addGroup();
+		_group = GroupTestUtil.addGroup();
 
 		_actorUser = ServiceTestUtil.addUser("actor", _group.getGroupId());
 		_creatorUser = ServiceTestUtil.addUser("creator", _group.getGroupId());

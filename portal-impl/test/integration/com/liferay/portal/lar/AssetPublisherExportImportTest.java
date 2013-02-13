@@ -36,6 +36,7 @@ import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
+import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
@@ -69,7 +70,7 @@ public class AssetPublisherExportImportTest extends BaseExportImportTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		_group = ServiceTestUtil.addGroup();
+		_group = GroupTestUtil.addGroup();
 
 		_layout = ServiceTestUtil.addLayout(
 			_group.getGroupId(), ServiceTestUtil.randomString());
@@ -88,7 +89,7 @@ public class AssetPublisherExportImportTest extends BaseExportImportTestCase {
 	public void testChildLayoutScopeIds() throws Exception {
 		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
 
-		Group childGroup = ServiceTestUtil.addGroup(
+		Group childGroup = GroupTestUtil.addGroup(
 			_group.getGroupId(), ServiceTestUtil.randomString());
 
 		preferenceMap.put(
@@ -335,7 +336,7 @@ public class AssetPublisherExportImportTest extends BaseExportImportTestCase {
 			layout.getGroupId(), layout.isPrivateLayout(), null, parameterMap,
 			null, null);
 
-		_importedGroup = ServiceTestUtil.addGroup();
+		_importedGroup = GroupTestUtil.addGroup();
 
 		// Import site LAR
 

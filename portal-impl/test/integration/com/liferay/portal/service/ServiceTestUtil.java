@@ -35,8 +35,6 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
@@ -111,37 +109,6 @@ import java.util.Set;
 public class ServiceTestUtil {
 
 	public static final int THREAD_COUNT = 25;
-
-	public static Group addGroup() throws Exception {
-		return addGroup(randomString());
-	}
-
-	public static Group addGroup(long parentGroupId, String name)
-		throws Exception {
-
-		Group group = GroupLocalServiceUtil.fetchGroup(
-			TestPropsValues.getCompanyId(), name);
-
-		if (group != null) {
-			return group;
-		}
-
-		String description = "This is a test group.";
-		int type = GroupConstants.TYPE_SITE_OPEN;
-		String friendlyURL =
-			StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(name);
-		boolean site = true;
-		boolean active = true;
-
-		return GroupLocalServiceUtil.addGroup(
-			TestPropsValues.getUserId(), parentGroupId, null, 0,
-			GroupConstants.DEFAULT_LIVE_GROUP_ID, name, description, type,
-			friendlyURL, site, active, getServiceContext());
-	}
-
-	public static Group addGroup(String name) throws Exception {
-		return addGroup(GroupConstants.DEFAULT_PARENT_GROUP_ID, name);
-	}
 
 	public static Layout addLayout(long groupId, String name) throws Exception {
 		return addLayout(groupId, name, false);
