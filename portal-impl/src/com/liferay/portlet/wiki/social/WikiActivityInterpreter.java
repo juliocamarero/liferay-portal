@@ -104,6 +104,36 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 				titlePattern = "activity-wiki-update-page-in";
 			}
 		}
+		else if (activityType == SocialActivityConstants.TYPE_ADD_ATTACHMENT) {
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-wiki-add-attachment-page";
+			}
+			else {
+				titlePattern = "activity-wiki-add-attachment-page-in";
+			}
+		}
+		else if (
+			activityType ==
+				SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-wiki-remove-attachment-page";
+			}
+			else {
+				titlePattern = "activity-wiki-remove-attachment-page-in";
+			}
+		}
+		else if (
+			activityType ==
+				SocialActivityConstants.TYPE_RESTORE_ATTACHMENT_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-wiki-restore-attachment-page";
+			}
+			else {
+				titlePattern = "activity-wiki-restore-attachment-page-in";
+			}
+		}
 
 		String pageTitle = wrapLink(
 			link, HtmlUtil.escape(pageResource.getTitle()));
