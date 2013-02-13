@@ -166,7 +166,12 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 							</c:when >
 							<c:when test="<%= socialActivity.getType() == WikiActivityKeys.UPDATE_PAGE %>">
 								<liferay-util:buffer var="pageTitleLink">
-									<aui:a href="<%= viewPageURL.toString() %>"><%= version %></aui:a>
+									<aui:a href="<%= viewPageURL.toString() %>">
+										<%= version %>
+										<c:if test="<%= socialActivityWikiPage.isMinorEdit() %>">
+											<%= " (" + LanguageUtil.get(pageContext, "minor-edit") + ")" %>
+										</c:if>
+									</aui:a>
 								</liferay-util:buffer>
 
 								<liferay-ui:icon
@@ -176,7 +181,7 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 								/>
 
 								<c:if test="<%= socialActivityWikiPage.getStatus() != WorkflowConstants.STATUS_APPROVED %>">
-									<em><liferay-ui:message key="<%= WorkflowConstants.toLabel(socialActivityWikiPage.getStatus()) %>" /></em>
+									<span class="activity-status"><liferay-ui:message key="<%= WorkflowConstants.toLabel(socialActivityWikiPage.getStatus()) %>" /></span>
 								</c:if>
 
 								<c:if test="<%= Validator.isNotNull(socialActivityWikiPage.getSummary()) %>">

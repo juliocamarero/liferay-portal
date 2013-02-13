@@ -55,7 +55,9 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.expando.model.ExpandoBridge;
+import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.service.persistence.SocialActivityUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.DuplicatePageException;
@@ -1498,12 +1500,35 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Social
 
-		if (serviceContext.getWorkflowAction() !=
-				WorkflowConstants.ACTION_PUBLISH) {
+		if (!page.isMinorEdit() ||
+			PropsValues.WIKI_PAGE_MINOR_EDIT_ADD_SOCIAL_ACTIVITY) {
 
-			if (!page.isMinorEdit() ||
-				PropsValues.WIKI_PAGE_MINOR_EDIT_ADD_SOCIAL_ACTIVITY) {
+			boolean addSocialActivity = true;
 
+			if (oldVersion==newVersion) {
+
+				SocialActivity lastActivity =
+					socialActivityLocalService.fetchFirstActivity(
+						WikiPage.class.getName(), page.getResourcePrimKey(),
+						WikiActivityKeys.UPDATE_PAGE);
+
+				JSONObject lastActivityextraDataJSONObject =
+					JSONFactoryUtil.createJSONObject(
+						lastActivity.getExtraData());
+
+				double lastActivityVersion =
+					lastActivityextraDataJSONObject.getDouble("version");
+
+				addSocialActivity = false;
+
+				Date createDate = new Date();
+				lastActivity.setCreateDate(createDate.getTime() + 1);
+				lastActivity.setUserId(serviceContext.getUserId());
+				SocialActivityUtil.update(lastActivity);
+
+			}
+
+			if (addSocialActivity) {
 				JSONObject extraDataJSONObject =
 					JSONFactoryUtil.createJSONObject();
 
@@ -1618,14 +1643,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 			// Social
 
-			if (!page.isMinorEdit() ||
-				PropsValues.WIKI_PAGE_MINOR_EDIT_ADD_SOCIAL_ACTIVITY) {
-
-				int activity = WikiActivityKeys.ADD_PAGE;
-
-				if (page.getVersion() > WikiPageConstants.VERSION_DEFAULT) {
-					activity = WikiActivityKeys.UPDATE_PAGE;
-				}
+			if (page.getVersion() == WikiPageConstants.VERSION_DEFAULT &&
+				(!page.isMinorEdit() ||
+				PropsValues.WIKI_PAGE_MINOR_EDIT_ADD_SOCIAL_ACTIVITY)) {
 
 				JSONObject extraDataJSONObject =
 					JSONFactoryUtil.createJSONObject();
@@ -1634,8 +1654,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 				socialActivityLocalService.addActivity(
 					userId, page.getGroupId(), WikiPage.class.getName(),
-					page.getResourcePrimKey(), activity,
+					page.getResourcePrimKey(), WikiActivityKeys.ADD_PAGE,
 					extraDataJSONObject.toString(), 0);
+
 			}
 
 			// Subscriptions
