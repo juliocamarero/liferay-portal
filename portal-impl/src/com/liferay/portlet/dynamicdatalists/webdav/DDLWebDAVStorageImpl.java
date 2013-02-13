@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -12,29 +12,27 @@
  * details.
  */
 
-package com.liferay.portlet.journal.webdav;
+package com.liferay.portlet.dynamicdatalists.webdav;
 
 import com.liferay.portal.kernel.webdav.BaseWebDAVStorageImpl;
 import com.liferay.portal.kernel.webdav.Resource;
 import com.liferay.portal.kernel.webdav.WebDAVException;
 import com.liferay.portal.kernel.webdav.WebDAVRequest;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.webdav.DDMWebDavUtil;
-import com.liferay.portlet.journal.model.JournalArticle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Brian Wing Shun Chan
- * @author Raymond Augé
  * @author Juan Fernández
  */
-public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
+public class DDLWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 
 	@Override
 	public int deleteResource(WebDAVRequest webDavRequest)
@@ -42,15 +40,15 @@ public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 
 		return DDMWebDavUtil.deleteResource(
 			webDavRequest, getRootPath(), getToken(),
-			PortalUtil.getClassNameId(JournalArticle.class));
+			PortalUtil.getClassNameId(DDLRecordSet.class));
 	}
 
 	public Resource getResource(WebDAVRequest webDavRequest)
 		throws WebDAVException {
 
 		return DDMWebDavUtil.getResource(
-			webDavRequest, getRootPath(), getToken()
-			, PortalUtil.getClassNameId(JournalArticle.class));
+			webDavRequest, getRootPath(), getToken(),
+			PortalUtil.getClassNameId(DDLRecordSet.class));
 	}
 
 	public List<Resource> getResources(WebDAVRequest webDavRequest)
@@ -84,7 +82,7 @@ public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 	public int putResource(WebDAVRequest webDavRequest) throws WebDAVException {
 		return DDMWebDavUtil.putResource(
 			webDavRequest, getRootPath(), getToken(),
-			PortalUtil.getClassNameId(JournalArticle.class));
+			PortalUtil.getClassNameId(DDLRecordSet.class));
 	}
 
 	protected List<Resource> getFolders(WebDAVRequest webDavRequest)
@@ -109,10 +107,12 @@ public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 
 		List<Resource> resources = new ArrayList<Resource>();
 
+		long groupId = webDavRequest.getGroupId();
+
 		List<DDMStructure> ddmStructures =
 			DDMStructureLocalServiceUtil.getStructures(
 				webDavRequest.getGroupId(),
-				PortalUtil.getClassNameId(JournalArticle.class));
+				PortalUtil.getClassNameId(DDLRecordSet.class));
 
 		for (DDMStructure ddmStructure : ddmStructures) {
 			Resource resource = DDMWebDavUtil.toResource(
@@ -132,7 +132,7 @@ public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 		List<DDMStructure> ddmStructures =
 			DDMStructureLocalServiceUtil.getStructures(
 				webDavRequest.getGroupId(),
-				PortalUtil.getClassNameId(JournalArticle.class));
+				PortalUtil.getClassNameId(DDLRecordSet.class));
 
 		for (DDMStructure ddmStructure : ddmStructures) {
 			List<DDMTemplate> ddmTemplates =

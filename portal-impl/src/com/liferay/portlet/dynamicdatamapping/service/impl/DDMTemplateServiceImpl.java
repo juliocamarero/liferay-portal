@@ -420,6 +420,20 @@ public class DDMTemplateServiceImpl extends DDMTemplateServiceBaseImpl {
 	}
 
 	/**
+	 * Returns all the templates matching the group and class PK.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  classPK the primary key of the template's related entity
+	 * @return the matching templates
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<DDMTemplate> getTemplatesByClassPK(long groupId, long classPK)
+		throws SystemException {
+
+		return ddmTemplatePersistence.filterFindByG_CPK(groupId, classPK);
+	}
+
+	/**
 	 * Returns an ordered range of all the templates matching the group, class
 	 * name ID, class PK, type, and mode, and matching the keywords in the
 	 * template names and descriptions.

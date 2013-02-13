@@ -673,6 +673,20 @@ public class DDMTemplateLocalServiceImpl
 	}
 
 	/**
+	 * Returns all the templates matching the group and class PK.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  classPK the primary key of the template's related entity
+	 * @return the matching templates
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<DDMTemplate> getTemplatesByClassPK(long groupId, long classPK)
+		throws SystemException {
+
+		return ddmTemplatePersistence.findByG_CPK(groupId, classPK);
+	}
+
+	/**
 	 * Returns the number of templates belonging to the group.
 	 *
 	 * @param  groupId the primary key of the group

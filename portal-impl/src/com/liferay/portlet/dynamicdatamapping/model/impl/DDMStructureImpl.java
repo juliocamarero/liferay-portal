@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -36,6 +37,9 @@ import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.model.CacheField;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.dynamicdatamapping.StructureFieldException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -301,6 +305,48 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 			_localizedTransientFieldsMap.get(locale);
 
 		return fieldsMap;
+	}
+
+	/**
+	 * Returns the webdav url to access the structure
+	 *
+	 * @param themeDisplay the theme display needed to build the url. It can set
+	 *        https access, the server name, the server port, the path context
+	 *        and the scope group
+	 * @param webDavToken the webdav token for the url
+	 * @return the webdav url
+	 */
+	public String getWebDavURL(ThemeDisplay themeDisplay, String webDavToken) {
+		StringBundler webDavURL = new StringBundler(11);
+
+		boolean secure = false;
+
+		if (themeDisplay.isSecure() ||
+			PropsValues.WEBDAV_SERVLET_HTTPS_REQUIRED) {
+
+			secure = true;
+		}
+
+		String portalURL = PortalUtil.getPortalURL(
+			themeDisplay.getServerName(), themeDisplay.getServerPort(), secure);
+
+		webDavURL.append(portalURL);
+		webDavURL.append(themeDisplay.getPathContext());
+		webDavURL.append(StringPool.SLASH);
+		webDavURL.append("webdav");
+
+		Group group = themeDisplay.getScopeGroup();
+
+		webDavURL.append(group.getFriendlyURL());
+		webDavURL.append(StringPool.SLASH);
+		webDavURL.append(webDavToken);
+		webDavURL.append(StringPool.SLASH);
+		webDavURL.append("Structures");
+		webDavURL.append(StringPool.SLASH);
+
+		webDavURL.append(getStructureId());
+
+		return webDavURL.toString();
 	}
 
 	public boolean hasField(String fieldName)
