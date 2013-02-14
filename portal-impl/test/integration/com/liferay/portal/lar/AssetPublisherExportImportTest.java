@@ -35,6 +35,7 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
@@ -70,7 +71,7 @@ public class AssetPublisherExportImportTest extends BaseExportImportTestCase {
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
 
-		_layout = ServiceTestUtil.addLayout(
+		_layout = LayoutTestUtil.addLayout(
 			_group.getGroupId(), ServiceTestUtil.randomString());
 
 		// Delete and readd to ensure a different layout ID (not ID or UUID).
@@ -79,7 +80,7 @@ public class AssetPublisherExportImportTest extends BaseExportImportTestCase {
 		LayoutLocalServiceUtil.deleteLayout(
 			_layout, true, new ServiceContext());
 
-		_layout = ServiceTestUtil.addLayout(
+		_layout = LayoutTestUtil.addLayout(
 			_group.getGroupId(), ServiceTestUtil.randomString());
 	}
 
@@ -182,7 +183,7 @@ public class AssetPublisherExportImportTest extends BaseExportImportTestCase {
 		Company company = CompanyLocalServiceUtil.getCompany(
 			_layout.getCompanyId());
 
-		Layout secondLayout = ServiceTestUtil.addLayout(
+		Layout secondLayout = LayoutTestUtil.addLayout(
 			_group.getGroupId(), ServiceTestUtil.randomString());
 
 		GroupTestUtil.addGroup(TestPropsValues.getUserId(), secondLayout);
@@ -232,7 +233,7 @@ public class AssetPublisherExportImportTest extends BaseExportImportTestCase {
 
 	@Test
 	public void testSeveralLegacyLayoutScopeIds() throws Exception {
-		Layout secondLayout = ServiceTestUtil.addLayout(
+		Layout secondLayout = LayoutTestUtil.addLayout(
 			_group.getGroupId(), ServiceTestUtil.randomString());
 
 		GroupTestUtil.addGroup(TestPropsValues.getUserId(), secondLayout);

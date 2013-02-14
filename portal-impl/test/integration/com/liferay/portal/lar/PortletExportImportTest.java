@@ -36,6 +36,7 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -75,12 +76,12 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		FinderCacheUtil.clearCache();
 
 		LayoutSetPrototype layoutSetPrototype =
-			ServiceTestUtil.addLayoutSetPrototype(
+			LayoutTestUtil.addLayoutSetPrototype(
 				ServiceTestUtil.randomString());
 
 		_layoutSetPrototypeGroup = layoutSetPrototype.getGroup();
 
-		_layoutSetPrototypeLayout = ServiceTestUtil.addLayout(
+		_layoutSetPrototypeLayout = LayoutTestUtil.addLayout(
 			_layoutSetPrototypeGroup.getGroupId(),
 			ServiceTestUtil.randomString(), true);
 

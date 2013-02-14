@@ -15,7 +15,6 @@
 package com.liferay.portal.service;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
-import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.jcr.JCRFactoryUtil;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
@@ -29,15 +28,8 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.LayoutConstants;
-import com.liferay.portal.model.LayoutPrototype;
-import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -95,7 +87,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
@@ -108,77 +99,6 @@ import java.util.Set;
 public class ServiceTestUtil {
 
 	public static final int THREAD_COUNT = 25;
-
-	public static Layout addLayout(long groupId, String name) throws Exception {
-		return addLayout(groupId, name, false);
-	}
-
-	public static Layout addLayout(
-			long groupId, String name, boolean privateLayout)
-		throws Exception {
-
-		return addLayout(groupId, name, privateLayout, null, false);
-	}
-
-	public static Layout addLayout(
-			long groupId, String name, boolean privateLayout,
-			LayoutPrototype layoutPrototype, boolean linkEnabled)
-		throws Exception {
-
-		String friendlyURL =
-			StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(name);
-
-		Layout layout = null;
-
-		try {
-			layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
-				groupId, false, friendlyURL);
-
-			return layout;
-		}
-		catch (NoSuchLayoutException nsle) {
-		}
-
-		String description = "This is a test page.";
-
-		ServiceContext serviceContext = getServiceContext();
-
-		if (layoutPrototype != null) {
-			serviceContext.setAttribute(
-				"layoutPrototypeLinkEnabled", linkEnabled);
-			serviceContext.setAttribute(
-				"layoutPrototypeUuid", layoutPrototype.getUuid());
-		}
-
-		return LayoutLocalServiceUtil.addLayout(
-			TestPropsValues.getUserId(), groupId, privateLayout,
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, name, null, description,
-			LayoutConstants.TYPE_PORTLET, false, friendlyURL, serviceContext);
-	}
-
-	public static LayoutPrototype addLayoutPrototype(String name)
-		throws Exception {
-
-		HashMap<Locale, String> nameMap = new HashMap<Locale, String>();
-
-		nameMap.put(LocaleUtil.getDefault(), name);
-
-		return LayoutPrototypeLocalServiceUtil.addLayoutPrototype(
-			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
-			nameMap, null, true);
-	}
-
-	public static LayoutSetPrototype addLayoutSetPrototype(String name)
-		throws Exception {
-
-		HashMap<Locale, String> nameMap = new HashMap<Locale, String>();
-
-		nameMap.put(LocaleUtil.getDefault(), name);
-
-		return LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(
-			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
-			nameMap, null, true, true, getServiceContext());
-	}
 
 	public static void addResourcePermission(
 			Role role, String resourceName, int scope, String primKey,

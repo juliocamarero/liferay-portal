@@ -28,6 +28,7 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.UserTestUtil;
 
@@ -301,7 +302,7 @@ public class LayoutTypePortletTest {
 	protected LayoutTypePortlet getLayoutTypePortlet() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		Layout layout = ServiceTestUtil.addLayout(
+		Layout layout = LayoutTestUtil.addLayout(
 			group.getGroupId(), ServiceTestUtil.randomString(), false);
 
 		return (LayoutTypePortlet)layout.getLayoutType();

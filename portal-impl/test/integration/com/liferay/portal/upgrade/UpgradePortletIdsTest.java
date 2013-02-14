@@ -39,6 +39,7 @@ import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.upgrade.util.UpgradePortletId;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 
@@ -136,7 +137,7 @@ public class UpgradePortletIdsTest extends UpgradePortletId {
 	protected Layout addLayout() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		return ServiceTestUtil.addLayout(
+		return LayoutTestUtil.addLayout(
 			group.getGroupId(), ServiceTestUtil.randomString(), false);
 	}
 

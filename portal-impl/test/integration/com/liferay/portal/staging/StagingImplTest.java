@@ -28,6 +28,7 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.asset.model.AssetCategory;
@@ -100,8 +101,8 @@ public class StagingImplTest {
 
 		Group group = GroupTestUtil.addGroup();
 
-		ServiceTestUtil.addLayout(group.getGroupId(), "Page1");
-		ServiceTestUtil.addLayout(group.getGroupId(), "Page2");
+		LayoutTestUtil.addLayout(group.getGroupId(), "Page1");
+		LayoutTestUtil.addLayout(group.getGroupId(), "Page2");
 
 		int initialPagesCount = LayoutLocalServiceUtil.getLayoutsCount(
 			group, false);
