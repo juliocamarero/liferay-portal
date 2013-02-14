@@ -520,6 +520,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 							<label><liferay-ui:message key="url" /></label>
 
 							<liferay-ui:input-resource
+								title='<%= LanguageUtil.get(pageContext, "url") %>'
 								url="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, true) %>"
 							/>
 						</div>
@@ -539,7 +540,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 								%>
 
 								<aui:field-wrapper helpMessage="<%= webDavHelpMessage %>" label="webdav-url">
-									<liferay-ui:input-resource url="<%= webDavUrl %>" />
+									<liferay-ui:input-resource title='<%= LanguageUtil.get(pageContext, "webdav-url") %>' url="<%= webDavUrl %>" />
 								</aui:field-wrapper>
 							</div>
 						</c:if>
