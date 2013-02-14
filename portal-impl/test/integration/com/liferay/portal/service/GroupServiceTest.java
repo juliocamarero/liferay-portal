@@ -35,6 +35,7 @@ import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.UserTestUtil;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.util.BlogsTestUtil;
@@ -65,7 +66,7 @@ public class GroupServiceTest {
 	public void testAddPermissionsCustomRole() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		User user = ServiceTestUtil.addUser(null, group.getGroupId());
+		User user = UserTestUtil.addUser(null, group.getGroupId());
 
 		givePermissionToManageSubsites(user, group);
 
@@ -80,7 +81,7 @@ public class GroupServiceTest {
 
 		Group group11 = GroupTestUtil.addGroup(group1.getGroupId(), "Test 1.1");
 
-		User user = ServiceTestUtil.addUser(null, group11.getGroupId());
+		User user = UserTestUtil.addUser(null, group11.getGroupId());
 
 		givePermissionToManageSubsites(user, group11);
 
@@ -93,7 +94,7 @@ public class GroupServiceTest {
 	public void testAddPermissionsRegularUser() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		User user = ServiceTestUtil.addUser(null, group.getGroupId());
+		User user = UserTestUtil.addUser(null, group.getGroupId());
 
 		testGroup(
 			user, group, null, null, true, false, false, false, false, false,
@@ -104,7 +105,7 @@ public class GroupServiceTest {
 	public void testAddPermissionsSiteAdmin() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		User user = ServiceTestUtil.addUser(null, group.getGroupId());
+		User user = UserTestUtil.addUser(null, group.getGroupId());
 
 		giveSiteAdminRole(user, group);
 
@@ -119,7 +120,7 @@ public class GroupServiceTest {
 
 		Group group11 = GroupTestUtil.addGroup(group1.getGroupId(), "Test 1.1");
 
-		User user = ServiceTestUtil.addUser(null, group11.getGroupId());
+		User user = UserTestUtil.addUser(null, group11.getGroupId());
 
 		giveSiteAdminRole(user, group11);
 
@@ -132,7 +133,7 @@ public class GroupServiceTest {
 	public void testDeleteSite() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		User user = ServiceTestUtil.addUser(
+		User user = UserTestUtil.addUser(
 			ServiceTestUtil.randomString(), group.getGroupId());
 
 		BlogsEntry blogsEntry = BlogsTestUtil.addEntry(
@@ -188,7 +189,7 @@ public class GroupServiceTest {
 	public void testUpdatePermissionsCustomRole() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		User user = ServiceTestUtil.addUser(null, group.getGroupId());
+		User user = UserTestUtil.addUser(null, group.getGroupId());
 
 		givePermissionToManageSubsites(user, group);
 
@@ -203,7 +204,7 @@ public class GroupServiceTest {
 
 		Group group11 = GroupTestUtil.addGroup(group1.getGroupId(), "Test 1.1");
 
-		User user = ServiceTestUtil.addUser(null, group11.getGroupId());
+		User user = UserTestUtil.addUser(null, group11.getGroupId());
 
 		givePermissionToManageSubsites(user, group11);
 
@@ -216,7 +217,7 @@ public class GroupServiceTest {
 	public void testUpdatePermissionsRegularUser() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		User user = ServiceTestUtil.addUser(null, group.getGroupId());
+		User user = UserTestUtil.addUser(null, group.getGroupId());
 
 		testGroup(
 			user, group, null, null, false, true, false, false, false, false,
@@ -227,7 +228,7 @@ public class GroupServiceTest {
 	public void testUpdatePermissionsSiteAdmin() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		User user = ServiceTestUtil.addUser(null, group.getGroupId());
+		User user = UserTestUtil.addUser(null, group.getGroupId());
 
 		giveSiteAdminRole(user, group);
 
@@ -242,7 +243,7 @@ public class GroupServiceTest {
 
 		Group group11 = GroupTestUtil.addGroup(group1.getGroupId(), "Test 1.1");
 
-		User user = ServiceTestUtil.addUser(null, group11.getGroupId());
+		User user = UserTestUtil.addUser(null, group11.getGroupId());
 
 		giveSiteAdminRole(user, group11);
 

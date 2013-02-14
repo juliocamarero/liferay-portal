@@ -28,6 +28,7 @@ import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.UserTestUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
@@ -64,7 +65,7 @@ public class BlogsEntryStatusTransitionTest extends BaseBlogsEntryTestCase {
 
 		group = GroupTestUtil.addGroup();
 
-		User user = ServiceTestUtil.addUser(
+		User user = UserTestUtil.addUser(
 			ServiceTestUtil.randomString(), group.getGroupId());
 
 		entry = BlogsTestUtil.addEntry(user.getUserId(), group, false);

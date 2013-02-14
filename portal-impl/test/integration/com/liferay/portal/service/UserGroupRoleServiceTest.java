@@ -388,7 +388,7 @@ public class UserGroupRoleServiceTest {
 	}
 
 	protected User addGroupUser(Group group, String roleName) throws Exception {
-		User groupUser = ServiceTestUtil.addUser(
+		User groupUser = UserTestUtil.addUser(
 			ServiceTestUtil.randomString(), group.getGroupId());
 
 		Role role = RoleLocalServiceUtil.getRole(

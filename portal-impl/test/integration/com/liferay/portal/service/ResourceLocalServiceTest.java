@@ -25,6 +25,7 @@ import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.UserTestUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -46,7 +47,7 @@ public class ResourceLocalServiceTest {
 		_userIds = new long[ServiceTestUtil.THREAD_COUNT];
 
 		for (int i = 0; i < ServiceTestUtil.THREAD_COUNT; i++) {
-			User user = ServiceTestUtil.addUser(
+			User user = UserTestUtil.addUser(
 				"ResourceLocalServiceTest" + (i + 1), _group.getGroupId());
 
 			_userIds[i] = user.getUserId();

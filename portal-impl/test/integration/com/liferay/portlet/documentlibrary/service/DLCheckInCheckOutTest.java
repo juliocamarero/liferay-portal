@@ -36,6 +36,7 @@ import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.UserTestUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
@@ -66,9 +67,8 @@ public class DLCheckInCheckOutTest {
 			String.valueOf(GroupConstants.DEFAULT_PARENT_GROUP_ID),
 			ActionKeys.ADD_DOCUMENT);
 
-		_authorUser = ServiceTestUtil.addUser("author", _group.getGroupId());
-		_overriderUser = ServiceTestUtil.addUser(
-			"overrider", _group.getGroupId());
+		_authorUser = UserTestUtil.addUser("author", _group.getGroupId());
+		_overriderUser = UserTestUtil.addUser("overrider", _group.getGroupId());
 
 		_serviceContext = ServiceTestUtil.getServiceContext(
 			_group.getGroupId(), 0);
