@@ -24,23 +24,27 @@ AnnouncementsDelivery delivery = (AnnouncementsDelivery)row.getObject();
 
 int index = entry.getIndex();
 
+String title = "Announcement Type " + StringUtil.upperCaseFirstLetter(delivery.getType()) + " ";
 String param = "announcementsType" + delivery.getType();
 boolean defaultValue = false;
 boolean disabled = false;
 
 if (index == 1) {
 	param += "Email";
+	title += "Email";
 	defaultValue = delivery.isEmail();
 }
 else if (index == 2) {
 	param += "Sms";
+	title += "Sms";
 	defaultValue = delivery.isSms();
 }
 else if (index == 3) {
 	param += "Website";
+	title += "Website";
 	defaultValue = delivery.isWebsite();
 	disabled = true;
 }
 %>
 
-<aui:input disabled="<%= disabled %>" label="" name="<%= param %>" type="checkbox" value="<%= defaultValue %>" />
+<aui:input disabled="<%= disabled %>" label="" name="<%= param %>" title="<%= title %>" type="checkbox" value="<%= defaultValue %>" />
