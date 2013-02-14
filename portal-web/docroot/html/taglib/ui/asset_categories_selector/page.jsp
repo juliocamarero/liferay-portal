@@ -93,7 +93,7 @@ if (Validator.isNotNull(className)) {
 				</c:if>
 			</label>
 
-			<div class="lfr-tags-selector-content" id="<%= namespace + randomNamespace %>assetCategoriesSelector_<%= vocabulary.getVocabularyId() %>">
+			<div class="lfr-tags-selector-content" id="<%= namespace + randomNamespace %>assetCategoriesSelector_<%= vocabulary.getVocabularyId() %>" title='<%= LanguageUtil.get(pageContext, "select-categories") %>' >
 				<aui:input name="<%= hiddenInput + StringPool.UNDERLINE + vocabulary.getVocabularyId() %>" type="hidden" />
 			</div>
 		</span>
