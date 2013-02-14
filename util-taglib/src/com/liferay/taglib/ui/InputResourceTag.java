@@ -27,6 +27,10 @@ public class InputResourceTag extends IncludeTag {
 		_cssClass = cssClass;
 	}
 
+	public void setTitle(String title) {
+		_title = title;
+	}
+
 	public void setUrl(String url) {
 		_url = url;
 	}
@@ -34,6 +38,7 @@ public class InputResourceTag extends IncludeTag {
 	@Override
 	protected void cleanUp() {
 		_cssClass = null;
+		_title = null;
 		_url = null;
 	}
 
@@ -45,6 +50,7 @@ public class InputResourceTag extends IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute("liferay-ui:input-resource:cssClass", _cssClass);
+		request.setAttribute("liferay-ui:input-resource:title", _title);
 		request.setAttribute("liferay-ui:input-resource:url", _url);
 	}
 
@@ -52,6 +58,7 @@ public class InputResourceTag extends IncludeTag {
 		"/html/taglib/ui/input_resource/page.jsp";
 
 	private String _cssClass;
+	private String _title;
 	private String _url;
 
 }
