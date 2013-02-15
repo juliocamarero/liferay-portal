@@ -24,8 +24,10 @@ import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.comparator.UserScreenNameComparator;
+import com.liferay.portlet.social.model.SocialRelation;
 import com.liferay.portlet.social.model.SocialRelationConstants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,8 @@ public class SocialRelationLocalServiceTest {
 		FinderCacheUtil.clearCache();
 
 		_userIdsMap = new HashMap<String, long[]>();
+
+		_relationIds = new ArrayList<Long>();
 
 		for (String screenNamePrefix : _PREFIX) {
 			long[] userIds = new long[_USERS_PREFIX_COUNT];
@@ -75,6 +79,13 @@ public class SocialRelationLocalServiceTest {
 			for (int i = 1; i <= userIds.length; i++) {
 				UserLocalServiceUtil.deleteUser(userIds[i - 1]);
 			}
+		}
+
+		for (Long relationId : _relationIds) {
+			SocialRelation relation =
+				SocialRelationLocalServiceUtil.getRelation(relationId);
+
+			SocialRelationLocalServiceUtil.deleteRelation(relation);
 		}
 	}
 
@@ -309,6 +320,15 @@ public class SocialRelationLocalServiceTest {
 		Assert.assertEquals(0, users.size());
 	}
 
+	protected void addRelation(long userId1, long userId2, int relationType)
+		throws Exception {
+
+		SocialRelation relation = SocialRelationLocalServiceUtil.addRelation(
+			userId1, userId2, relationType);
+
+		_relationIds.add(relation.getRelationId());
+	}
+
 	protected void addRelationsWithBiType() throws Exception {
 		User dlc1User = UserLocalServiceUtil.getUserByScreenName(
 			TestPropsValues.getCompanyId(), "dlc1");
@@ -339,61 +359,61 @@ public class SocialRelationLocalServiceTest {
 
 		// Friend
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc2User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc3User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc4User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc5User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc6User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc7User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc8User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
 		// Friend
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc2User.getUserId(), dlc3User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc2User.getUserId(), dlc4User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc2User.getUserId(), dlc5User.getUserId(),
 			SocialRelationConstants.TYPE_BI_FRIEND);
 
 		// Coworker
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc9User.getUserId(),
 			SocialRelationConstants.TYPE_BI_COWORKER);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc2User.getUserId(), dlc9User.getUserId(),
 			SocialRelationConstants.TYPE_BI_COWORKER);
 
 		// Romantic partner
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			dlc1User.getUserId(), dlc2User.getUserId(),
 			SocialRelationConstants.TYPE_BI_ROMANTIC_PARTNER);
 	}
@@ -428,57 +448,57 @@ public class SocialRelationLocalServiceTest {
 
 		// Parent
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra1User.getUserId(), fra2User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_PARENT);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra1User.getUserId(), fra3User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_PARENT);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra1User.getUserId(), fra4User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_PARENT);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra1User.getUserId(), fra5User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_PARENT);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra1User.getUserId(), fra6User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_PARENT);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra1User.getUserId(), fra7User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_PARENT);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra1User.getUserId(), fra8User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_PARENT);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra1User.getUserId(), fra9User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_PARENT);
 
 		// Child
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra3User.getUserId(), fra1User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_CHILD);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra3User.getUserId(), fra2User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_CHILD);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra4User.getUserId(), fra1User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_CHILD);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra4User.getUserId(), fra2User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_CHILD);
 
-		SocialRelationLocalServiceUtil.addRelation(
+		addRelation(
 			fra5User.getUserId(), fra1User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_CHILD);
 	}
@@ -486,6 +506,7 @@ public class SocialRelationLocalServiceTest {
 	private static final String[] _PREFIX = new String[] {"dlc", "fra"};
 	private static final int _USERS_PREFIX_COUNT = 9;
 
+	private List<Long> _relationIds;
 	private Map<String, long[]> _userIdsMap;
 
 }
