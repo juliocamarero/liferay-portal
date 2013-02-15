@@ -801,7 +801,7 @@ public class LayoutImporter {
 
 		GroupLocalServiceUtil.updateSite(groupId, true);
 
-		// Layout type settings
+		// Last merge time must be the same for merged layouts and the layoutset
 
 		long lastMergeTime = System.currentTimeMillis();
 
