@@ -46,17 +46,6 @@ else if (type.equals("draft_pages") && type.equals("pending_pages")) {
 
 	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "draft-pages"), portletURL.toString());
 }
-else if (type.equals("history")) {
-	if (wikiPage != null) {
-		portletURL.setParameter("struts_action", "/wiki/view");
-
-		PortalUtil.addPortletBreadcrumbEntry(request, wikiPage.getTitle(), portletURL.toString());
-	}
-
-	portletURL.setParameter("struts_action", "/wiki/view_page_history");
-
-	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "history"), portletURL.toString());
-}
 else if (type.equals("incoming_links")) {
 	if (wikiPage != null) {
 		portletURL.setParameter("struts_action", "/wiki/view");
@@ -102,11 +91,11 @@ headerNames.add("revision");
 headerNames.add("user");
 headerNames.add("date");
 
-if (type.equals("history") || type.equals("recent_changes")) {
+if (type.equals("recent_changes")) {
 	headerNames.add("summary");
 }
 
-if (type.equals("all_pages") || type.equals("categorized_pages") || type.equals("draft_pages") || type.equals("history") || type.equals("orphan_pages") || type.equals("pending_pages") || type.equals("recent_changes") || type.equals("tagged_pages")) {
+if (type.equals("all_pages") || type.equals("categorized_pages") || type.equals("draft_pages") || type.equals("orphan_pages") || type.equals("pending_pages") || type.equals("recent_changes") || type.equals("tagged_pages")) {
 	headerNames.add(StringPool.BLANK);
 }
 
@@ -152,14 +141,6 @@ SearchContainer searchContainer = new SearchContainer(renderRequest, null, null,
 searchContainer.setOrderableHeaders(orderableHeaders);
 searchContainer.setOrderByCol(orderByCol);
 searchContainer.setOrderByType(orderByType);
-
-if (type.equals("history")) {
-	RowChecker rowChecker = new RowChecker(renderResponse);
-
-	rowChecker.setAllRowIds(null);
-
-	searchContainer.setRowChecker(rowChecker);
-}
 
 int total = 0;
 List<WikiPage> results = null;
@@ -214,10 +195,6 @@ else if (type.equals("orphan_pages")) {
 	total = orphans.size();
 	results = ListUtil.subList(orphans, searchContainer.getStart(), searchContainer.getEnd());
 }
-else if (type.equals("history")) {
-	total = WikiPageLocalServiceUtil.getPagesCount(wikiPage.getNodeId(), wikiPage.getTitle());
-	results = WikiPageLocalServiceUtil.getPages(wikiPage.getNodeId(), wikiPage.getTitle(), QueryUtil.ALL_POS, QueryUtil.ALL_POS, new PageVersionComparator());
-}
 else if (type.equals("incoming_links")) {
 	List<WikiPage> links = WikiPageLocalServiceUtil.getIncomingLinks(wikiPage.getNodeId(), wikiPage.getTitle());
 
@@ -262,10 +239,6 @@ for (int i = 0; i < results.size(); i++) {
 
 	rowURL.setParameter("title", HtmlUtil.unescape(curWikiPage.getTitle()));
 
-	if (type.equals("history")) {
-		rowURL.setParameter("version", String.valueOf(curWikiPage.getVersion()));
-	}
-
 	// Title
 
 	row.addText(curWikiPage.getTitle(), rowURL);
@@ -309,7 +282,7 @@ for (int i = 0; i < results.size(); i++) {
 
 	// Summary
 
-	if (type.equals("history") || type.equals("recent_changes")) {
+	if (type.equals("recent_changes")) {
 		if (Validator.isNotNull(curWikiPage.getSummary())) {
 			row.addText(curWikiPage.getSummary());
 		}
@@ -319,15 +292,6 @@ for (int i = 0; i < results.size(); i++) {
 	}
 
 	// Action
-
-	if (type.equals("history")) {
-		if (curWikiPage.isHead()) {
-			row.addText(StringPool.BLANK);
-		}
-		else {
-			row.addJSP("right", SearchEntry.DEFAULT_VALIGN, "/html/portlet/wiki/page_history_action.jsp");
-		}
-	}
 
 	if (type.equals("all_pages") || type.equals("draft_pages") || type.equals("orphan_pages") || type.equals("recent_changes") || type.equals("tagged_pages")) {
 		row.addJSP("right", SearchEntry.DEFAULT_VALIGN, "/html/portlet/wiki/page_action.jsp");
@@ -339,134 +303,9 @@ for (int i = 0; i < results.size(); i++) {
 }
 %>
 
-<c:if test='<%= type.equals("history") && (results.size() > 1) %>'>
-
-	<%
-	WikiPage latestWikiPage = (WikiPage)results.get(1);
-
-	PortletURL compareVersionsURL = renderResponse.createRenderURL();
-
-	compareVersionsURL.setParameter("struts_action", "/wiki/compare_versions");
-	%>
-
-	<aui:form action="<%= compareVersionsURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "compare();" %>'>
-		<aui:input name="backURL" type="hidden" value="<%= currentURL %>" />
-		<aui:input name="nodeId" type="hidden" value="<%= node.getNodeId() %>" />
-		<aui:input name="title" type="hidden" value="<%= wikiPage.getTitle() %>" />
-		<aui:input name="sourceVersion" type="hidden" value="<%= latestWikiPage.getVersion() %>" />
-		<aui:input name="targetVersion" type="hidden" value="<%= wikiPage.getVersion() %>" />
-		<aui:input name="type" type="hidden" value="html" />
-
-		<aui:button-row>
-			<aui:button name="submitButton" type="submit" value="compare-versions" />
-		</aui:button-row>
-	</aui:form>
-</c:if>
-
-<c:if test='<%= type.equals("all_pages") && WikiNodePermission.contains(permissionChecker, node.getNodeId(), ActionKeys.ADD_PAGE) %>'>
-	<aui:button-row>
-		<liferay-portlet:actionURL allowEmptyParam="<%= true %>" var="addPageURL">
-			<liferay-portlet:param name="struts_action" value="/wiki/edit_page" />
-			<liferay-portlet:param name="redirect" value="<%= currentURL %>" />
-			<liferay-portlet:param name="nodeId" value="<%= String.valueOf(node.getNodeId()) %>" />
-			<liferay-portlet:param name="title" value="<%= StringPool.BLANK %>" />
-			<liferay-portlet:param name="editTitle" value="1" />
-		</liferay-portlet:actionURL>
-
-		<aui:button href="<%= addPageURL %>" name="addPageButton" value="add-page" />
-	</aui:button-row>
-</c:if>
-
 <liferay-ui:categorization-filter
 	assetType="pages"
 	portletURL="<%= portletURL %>"
 />
 
-<liferay-ui:search-iterator paginate='<%= type.equals("history") ? false : true %>' searchContainer="<%= searchContainer %>" />
-
-<c:if test='<%= type.equals("history") %>'>
-	<aui:script>
-		Liferay.provide(
-			window,
-			'<portlet:namespace />compare',
-			function() {
-				var A = AUI();
-
-				var rowIds = A.all('input[name=<portlet:namespace />rowIds]:checked');
-				var sourceVersion = A.one('input[name="<portlet:namespace />sourceVersion"]');
-				var targetVersion = A.one('input[name="<portlet:namespace />targetVersion"]');
-
-				var rowIdsSize = rowIds.size();
-
-				if (rowIdsSize == 1) {
-					if (sourceVersion) {
-						sourceVersion.val(rowIds.item(0).val());
-					}
-				}
-				else if (rowIdsSize == 2) {
-					if (sourceVersion) {
-						sourceVersion.val(rowIds.item(1).val());
-					}
-
-					if (targetVersion) {
-						targetVersion.val(rowIds.item(0).val());
-					}
-				}
-
-				submitForm(document.<portlet:namespace />fm);
-			},
-			['aui-base', 'selector-css3']
-		);
-
-		Liferay.provide(
-			window,
-			'<portlet:namespace />initRowsChecked',
-			function() {
-				var A = AUI();
-
-				var rowIds = A.all('input[name=<portlet:namespace />rowIds]');
-
-				rowIds.each(
-					function(item, index, collection) {
-						if (index >= 2) {
-							item.set('checked', false);
-						}
-					}
-				);
-			},
-			['aui-base']
-		);
-
-		Liferay.provide(
-			window,
-			'<portlet:namespace />updateRowsChecked',
-			function(element) {
-				var A = AUI();
-
-				var rowsChecked = A.all('input[name=<portlet:namespace />rowIds]:checked');
-
-				if (rowsChecked.size() > 2) {
-					var index = 2;
-
-					if (rowsChecked.item(2).compareTo(element)) {
-						index = 1;
-					}
-
-					rowsChecked.item(index).set('checked', false);
-				}
-			},
-			['aui-base', 'selector-css3']
-		);
-	</aui:script>
-
-	<aui:script use="aui-base">
-		<portlet:namespace />initRowsChecked();
-
-		A.all('input[name=<portlet:namespace />rowIds]').on(
-			'click',
-			function(event) {
-				<portlet:namespace />updateRowsChecked(event.currentTarget);
-			}
-		);
-	</aui:script>
-</c:if>
+<liferay-ui:search-iterator paginate="<%= true %>" searchContainer="<%= searchContainer %>" />
