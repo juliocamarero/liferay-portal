@@ -17,11 +17,15 @@ package com.liferay.portal.service.permission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
@@ -164,6 +168,61 @@ public class GroupPermissionImpl implements GroupPermission {
 
 		return permissionChecker.hasPermission(
 			0, Group.class.getName(), 0, actionId);
+	}
+
+	public boolean hasMembershipProtected(
+			PermissionChecker permissionChecker, long groupId, long userId)
+		throws PortalException, SystemException {
+
+		if (permissionChecker.isCompanyAdmin()) {
+			return false;
+		}
+
+		Role siteOwnerRole = RoleLocalServiceUtil.getRole(
+			permissionChecker.getCompanyId(), RoleConstants.SITE_OWNER);
+		Role organizationOwnerRole = RoleLocalServiceUtil.getRole(
+			permissionChecker.getCompanyId(), RoleConstants.ORGANIZATION_OWNER);
+
+		if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				permissionChecker.getUserId(), groupId,
+				siteOwnerRole.getRoleId()) ||
+			UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				permissionChecker.getUserId(), groupId,
+				organizationOwnerRole.getRoleId())) {
+
+			return false;
+		}
+
+		Role siteAdministratorRole = RoleLocalServiceUtil.getRole(
+			permissionChecker.getCompanyId(), RoleConstants.SITE_ADMINISTRATOR);
+
+		if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				userId, groupId, siteOwnerRole.getRoleId()) ||
+			UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				userId, groupId, siteAdministratorRole.getRoleId())) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean hasRoleProtected(
+			PermissionChecker permissionChecker, long groupId, long userId,
+			Role role)
+		throws PortalException, SystemException {
+
+		String roleName = role.getName();
+
+		if ((roleName.equals(RoleConstants.SITE_ADMINISTRATOR) ||
+			 roleName.equals(RoleConstants.SITE_OWNER)) &&
+			hasMembershipProtected(
+				permissionChecker, groupId, userId)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
