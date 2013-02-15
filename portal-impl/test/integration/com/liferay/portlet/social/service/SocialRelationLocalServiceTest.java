@@ -17,19 +17,20 @@ package com.liferay.portlet.social.service;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.comparator.UserScreenNameComparator;
 import com.liferay.portlet.social.model.SocialRelationConstants;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,28 +39,43 @@ import org.junit.runner.RunWith;
 /**
  * @author Brian Wing Shun Chan
  */
-@ExecutionTestListeners(
-	listeners = {
-		EnvironmentExecutionTestListener.class,
-		TransactionalExecutionTestListener.class
-	})
+@ExecutionTestListeners(listeners = {EnvironmentExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-@Transactional
 public class SocialRelationLocalServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
 		FinderCacheUtil.clearCache();
 
-		for (String screenNamePrefix : new String[] {"dlc", "fra"}) {
-			for (int i = 1; i <= 9; i++) {
-				ServiceTestUtil.addUser(screenNamePrefix + i, false, null);
+		_userIdsMap = new HashMap<String, long[]>();
+
+		for (String screenNamePrefix : _PREFIX) {
+			long[] userIds = new long[_USERS_PREFIX_COUNT];
+
+			for (int i = 1; i <= userIds.length; i++) {
+				User user = ServiceTestUtil.addUser(
+					screenNamePrefix + i, false, null);
+
+				userIds[i - 1] = user.getUserId();
 			}
+
+			_userIdsMap.put(screenNamePrefix, userIds);
 		}
 
 		addRelationsWithBiType();
 
 		addRelationsWithUniType();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		for (String screenNamePrefix : _PREFIX) {
+			long[] userIds = _userIdsMap.get(screenNamePrefix);
+
+			for (int i = 1; i <= userIds.length; i++) {
+				UserLocalServiceUtil.deleteUser(userIds[i - 1]);
+			}
+		}
 	}
 
 	@Test
@@ -466,5 +482,10 @@ public class SocialRelationLocalServiceTest {
 			fra5User.getUserId(), fra1User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_CHILD);
 	}
+
+	private static final String[] _PREFIX = new String[] {"dlc", "fra"};
+	private static final int _USERS_PREFIX_COUNT = 9;
+
+	private Map<String, long[]> _userIdsMap;
 
 }
