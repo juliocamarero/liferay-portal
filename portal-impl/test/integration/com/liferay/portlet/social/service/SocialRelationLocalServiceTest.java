@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.social.service;
 
+import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.model.User;
@@ -41,187 +42,17 @@ public class SocialRelationLocalServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
+		FinderCacheUtil.clearCache();
+
 		for (String screenNamePrefix : new String[] {"dlc", "fra"}) {
 			for (int i = 1; i <= 9; i++) {
 				ServiceTestUtil.addUser(screenNamePrefix + i, false, null);
 			}
 		}
-	}
 
-	@Test
-	public void testAddRelationWithBiType() throws Exception {
-		User dlc1User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc1");
+		addRelationsWithBiType();
 
-		User dlc2User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc2");
-
-		User dlc3User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc3");
-
-		User dlc4User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc4");
-
-		User dlc5User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc5");
-
-		User dlc6User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc6");
-
-		User dlc7User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc7");
-
-		User dlc8User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc8");
-
-		User dlc9User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "dlc9");
-
-		// Friend
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc2User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc3User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc4User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc5User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc6User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc7User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc8User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		// Friend
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc2User.getUserId(), dlc3User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc2User.getUserId(), dlc4User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc2User.getUserId(), dlc5User.getUserId(),
-			SocialRelationConstants.TYPE_BI_FRIEND);
-
-		// Coworker
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc9User.getUserId(),
-			SocialRelationConstants.TYPE_BI_COWORKER);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc2User.getUserId(), dlc9User.getUserId(),
-			SocialRelationConstants.TYPE_BI_COWORKER);
-
-		// Romantic partner
-
-		SocialRelationLocalServiceUtil.addRelation(
-			dlc1User.getUserId(), dlc2User.getUserId(),
-			SocialRelationConstants.TYPE_BI_ROMANTIC_PARTNER);
-	}
-
-	@Test
-	public void testAddRelationWithUniType() throws Exception {
-		User fra1User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra1");
-
-		User fra2User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra2");
-
-		User fra3User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra3");
-
-		User fra4User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra4");
-
-		User fra5User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra5");
-
-		User fra6User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra6");
-
-		User fra7User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra7");
-
-		User fra8User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra8");
-
-		User fra9User = UserLocalServiceUtil.getUserByScreenName(
-			TestPropsValues.getCompanyId(), "fra9");
-
-		// Parent
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra1User.getUserId(), fra2User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_PARENT);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra1User.getUserId(), fra3User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_PARENT);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra1User.getUserId(), fra4User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_PARENT);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra1User.getUserId(), fra5User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_PARENT);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra1User.getUserId(), fra6User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_PARENT);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra1User.getUserId(), fra7User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_PARENT);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra1User.getUserId(), fra8User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_PARENT);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra1User.getUserId(), fra9User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_PARENT);
-
-		// Child
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra3User.getUserId(), fra1User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_CHILD);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra3User.getUserId(), fra2User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_CHILD);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra4User.getUserId(), fra1User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_CHILD);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra4User.getUserId(), fra2User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_CHILD);
-
-		SocialRelationLocalServiceUtil.addRelation(
-			fra5User.getUserId(), fra1User.getUserId(),
-			SocialRelationConstants.TYPE_UNI_CHILD);
+		addRelationsWithUniType();
 	}
 
 	@Test
@@ -453,6 +284,184 @@ public class SocialRelationLocalServiceTest {
 			new UserScreenNameComparator(true));
 
 		Assert.assertEquals(0, users.size());
+	}
+
+	protected void addRelationsWithBiType() throws Exception {
+		User dlc1User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc1");
+
+		User dlc2User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc2");
+
+		User dlc3User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc3");
+
+		User dlc4User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc4");
+
+		User dlc5User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc5");
+
+		User dlc6User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc6");
+
+		User dlc7User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc7");
+
+		User dlc8User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc8");
+
+		User dlc9User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "dlc9");
+
+		// Friend
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc2User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc3User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc4User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc5User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc6User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc7User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc8User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		// Friend
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc2User.getUserId(), dlc3User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc2User.getUserId(), dlc4User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc2User.getUserId(), dlc5User.getUserId(),
+			SocialRelationConstants.TYPE_BI_FRIEND);
+
+		// Coworker
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc9User.getUserId(),
+			SocialRelationConstants.TYPE_BI_COWORKER);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc2User.getUserId(), dlc9User.getUserId(),
+			SocialRelationConstants.TYPE_BI_COWORKER);
+
+		// Romantic partner
+
+		SocialRelationLocalServiceUtil.addRelation(
+			dlc1User.getUserId(), dlc2User.getUserId(),
+			SocialRelationConstants.TYPE_BI_ROMANTIC_PARTNER);
+	}
+
+	protected void addRelationsWithUniType() throws Exception {
+		User fra1User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra1");
+
+		User fra2User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra2");
+
+		User fra3User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra3");
+
+		User fra4User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra4");
+
+		User fra5User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra5");
+
+		User fra6User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra6");
+
+		User fra7User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra7");
+
+		User fra8User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra8");
+
+		User fra9User = UserLocalServiceUtil.getUserByScreenName(
+			TestPropsValues.getCompanyId(), "fra9");
+
+		// Parent
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra1User.getUserId(), fra2User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_PARENT);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra1User.getUserId(), fra3User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_PARENT);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra1User.getUserId(), fra4User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_PARENT);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra1User.getUserId(), fra5User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_PARENT);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra1User.getUserId(), fra6User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_PARENT);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra1User.getUserId(), fra7User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_PARENT);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra1User.getUserId(), fra8User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_PARENT);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra1User.getUserId(), fra9User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_PARENT);
+
+		// Child
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra3User.getUserId(), fra1User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_CHILD);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra3User.getUserId(), fra2User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_CHILD);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra4User.getUserId(), fra1User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_CHILD);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra4User.getUserId(), fra2User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_CHILD);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra5User.getUserId(), fra1User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_CHILD);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra5User.getUserId(), fra2User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_CHILD);
 	}
 
 }
