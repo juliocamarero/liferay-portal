@@ -59,10 +59,6 @@ viewPageOutgoingLinksURL.setParameter("struts_action", "/wiki/view_page_outgoing
 PortletURL viewPageAttachmentsURL = PortletURLUtil.clone(viewPageDetailsURL, renderResponse);
 
 viewPageAttachmentsURL.setParameter("struts_action", "/wiki/view_page_attachments");
-
-PortletURL viewPageActivitiesURL = PortletURLUtil.clone(viewPageDetailsURL, renderResponse);
-
-viewPageActivitiesURL.setParameter("struts_action", "/wiki/view_page_activities");
 %>
 
 <%@ include file="/html/portlet/wiki/page_name.jspf" %>
@@ -70,25 +66,23 @@ viewPageActivitiesURL.setParameter("struts_action", "/wiki/view_page_activities"
 <c:choose>
 	<c:when test="<%= WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.UPDATE) %>">
 		<liferay-ui:tabs
-			names="content,details,history,incoming-links,outgoing-links,attachments,activities"
+			names="content,details,history,incoming-links,outgoing-links,attachments"
 			url0="<%= editPageURL.toString() %>"
 			url1="<%= viewPageDetailsURL.toString() %>"
 			url2="<%= viewPageHistoryURL.toString() %>"
 			url3="<%= viewPageIncomingLinksURL.toString() %>"
 			url4="<%= viewPageOutgoingLinksURL.toString() %>"
 			url5="<%= viewPageAttachmentsURL.toString() %>"
-			url6="<%= viewPageActivitiesURL.toString() %>"
 		/>
 	</c:when>
 	<c:otherwise>
 		<liferay-ui:tabs
-			names="details,history,incoming-links,outgoing-links,attachments,activities"
+			names="details,history,incoming-links,outgoing-links,attachments"
 			url0="<%= viewPageDetailsURL.toString() %>"
 			url1="<%= viewPageHistoryURL.toString() %>"
 			url2="<%= viewPageIncomingLinksURL.toString() %>"
 			url3="<%= viewPageOutgoingLinksURL.toString() %>"
 			url4="<%= viewPageAttachmentsURL.toString() %>"
-			url5="<%= viewPageActivitiesURL.toString() %>"
 		/>
 	</c:otherwise>
 </c:choose>
