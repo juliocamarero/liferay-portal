@@ -1115,24 +1115,10 @@ public class SitesUtil {
 
 		settingsProperties.remove(LAST_MERGE_TIME);
 
-		long lastResetTime = System.currentTimeMillis();
-
-		// set last reset time at layout set level
-
 		settingsProperties.setProperty(
-			LAST_RESET_TIME, String.valueOf(lastResetTime));
+			LAST_RESET_TIME, String.valueOf(System.currentTimeMillis()));
 
 		LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
-
-		// set last reset time at layout level
-
-		UnicodeProperties typeSettingsProperties =
-			layout.getTypeSettingsProperties();
-
-		typeSettingsProperties.setProperty(
-			LAST_RESET_TIME, String.valueOf(lastResetTime));
-
-		LayoutLocalServiceUtil.updateLayout(layout);
 	}
 
 	public static void updateLayoutScopes(
