@@ -465,6 +465,10 @@ public class SocialRelationLocalServiceTest {
 		SocialRelationLocalServiceUtil.addRelation(
 			fra5User.getUserId(), fra1User.getUserId(),
 			SocialRelationConstants.TYPE_UNI_CHILD);
+
+		SocialRelationLocalServiceUtil.addRelation(
+			fra5User.getUserId(), fra2User.getUserId(),
+			SocialRelationConstants.TYPE_UNI_CHILD);
 	}
 
 }
