@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.model.Organization;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.security.permission.PermissionChecker;
 
 /**
@@ -75,6 +76,23 @@ public class OrganizationPermissionUtil {
 			OrganizationPermissionUtil.class);
 
 		return _organizationPermission;
+	}
+
+	public static boolean hasMembershipProtected(
+			PermissionChecker permissionChecker, long groupId, long userId)
+		throws PortalException, SystemException {
+
+		return getOrganizationPermission().hasMembershipProtected(
+			permissionChecker, groupId, userId);
+	}
+
+	public static boolean hasRoleProtected(
+			PermissionChecker permissionChecker, long groupId, long userId,
+			Role role)
+		throws PortalException, SystemException {
+
+		return getOrganizationPermission().hasRoleProtected(
+			permissionChecker, groupId, userId, role);
 	}
 
 	public void setOrganizationPermission(

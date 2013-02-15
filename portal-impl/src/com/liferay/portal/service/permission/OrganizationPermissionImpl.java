@@ -19,10 +19,15 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.OrganizationConstants;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 
 /**
  * @author Charles May
@@ -111,6 +116,51 @@ public class OrganizationPermissionImpl implements OrganizationPermission {
 			}
 
 			organization = parentOrganization;
+		}
+
+		return false;
+	}
+
+	public boolean hasMembershipProtected(
+			PermissionChecker permissionChecker, long groupId, long userId)
+		throws PortalException, SystemException {
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		if (permissionChecker.isOrganizationOwner(group.getOrganizationId())) {
+			return false;
+		}
+
+		Role organizationOwnerRole = RoleLocalServiceUtil.getRole(
+			permissionChecker.getCompanyId(), RoleConstants.ORGANIZATION_OWNER);
+		Role organizationAdministratorRole = RoleLocalServiceUtil.getRole(
+			permissionChecker.getCompanyId(),
+			RoleConstants.ORGANIZATION_ADMINISTRATOR);
+
+		if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				userId, groupId, organizationOwnerRole.getRoleId()) ||
+			UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				userId, groupId, organizationAdministratorRole.getRoleId())) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean hasRoleProtected(
+			PermissionChecker permissionChecker, long groupId, long userId,
+			Role role)
+		throws PortalException, SystemException {
+
+		String roleName = role.getName();
+
+		if ((roleName.equals(RoleConstants.ORGANIZATION_ADMINISTRATOR) ||
+			 roleName.equals(RoleConstants.ORGANIZATION_OWNER)) &&
+			hasMembershipProtected(
+				permissionChecker, groupId, userId)) {
+
+			return true;
 		}
 
 		return false;
