@@ -177,6 +177,52 @@ AUI.add(
 								instance.entries.add(entry);
 							}
 						);
+
+						if (!instance._entriesHandles) {
+							var entries = instance.entries;
+
+							instance._entriesHandles = [
+								entries.after(
+									'add',
+									function(event) {
+										A.fire(
+											NAME + ':categoryAdd',
+											{
+												categoryId: event.attrName,
+												target: instance.inputNode
+											}
+										);
+									},
+									instance
+								),
+								entries.after(
+									'replace',
+									function(event) {
+										A.fire(
+											NAME + ':categoryReplace',
+											{
+												categoryId: event.attrName,
+												target: instance.inputNode
+											}
+										);
+									},
+									instance
+								),
+								entries.after(
+									'remove',
+									function(event) {
+										A.fire(
+											NAME + ':categoryRemove',
+											{
+												categoryId: event.attrName,
+												target: instance.inputNode
+											}
+										);
+									},
+									instance
+								)
+							];
+						}
 					},
 
 					_afterTBLFocusedChange: EMPTY_FN,
