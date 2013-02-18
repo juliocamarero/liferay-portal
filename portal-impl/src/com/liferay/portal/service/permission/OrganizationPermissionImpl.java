@@ -131,16 +131,16 @@ public class OrganizationPermissionImpl implements OrganizationPermission {
 			return false;
 		}
 
-		Role organizationOwnerRole = RoleLocalServiceUtil.getRole(
-			permissionChecker.getCompanyId(), RoleConstants.ORGANIZATION_OWNER);
 		Role organizationAdministratorRole = RoleLocalServiceUtil.getRole(
 			permissionChecker.getCompanyId(),
 			RoleConstants.ORGANIZATION_ADMINISTRATOR);
+		Role organizationOwnerRole = RoleLocalServiceUtil.getRole(
+			permissionChecker.getCompanyId(), RoleConstants.ORGANIZATION_OWNER);
 
 		if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-				userId, groupId, organizationOwnerRole.getRoleId()) ||
+				userId, groupId, organizationAdministratorRole.getRoleId()) ||
 			UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-				userId, groupId, organizationAdministratorRole.getRoleId())) {
+				userId, groupId, organizationOwnerRole.getRoleId())) {
 
 			return true;
 		}
@@ -156,7 +156,7 @@ public class OrganizationPermissionImpl implements OrganizationPermission {
 		String roleName = role.getName();
 
 		if ((roleName.equals(RoleConstants.ORGANIZATION_ADMINISTRATOR) ||
-			 roleName.equals(RoleConstants.ORGANIZATION_OWNER)) &&
+			 	roleName.equals(RoleConstants.ORGANIZATION_OWNER)) &&
 			hasMembershipProtected(
 				permissionChecker, groupId, userId)) {
 

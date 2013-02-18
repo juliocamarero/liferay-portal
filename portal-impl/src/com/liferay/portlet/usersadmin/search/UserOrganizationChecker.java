@@ -88,6 +88,7 @@ public class UserOrganizationChecker extends RowChecker {
 			if (OrganizationPermissionUtil.hasMembershipProtected(
 					permissionChecker, _organization.getGroupId(),
 					user.getUserId())) {
+
 				return true;
 			}
 
