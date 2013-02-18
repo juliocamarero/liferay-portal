@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.model.Organization;
-import com.liferay.portal.model.Role;
 import com.liferay.portal.security.permission.PermissionChecker;
 
 /**
@@ -88,11 +87,11 @@ public class OrganizationPermissionUtil {
 
 	public static boolean hasRoleProtected(
 			PermissionChecker permissionChecker, long groupId, long userId,
-			Role role)
+			long roleId)
 		throws PortalException, SystemException {
 
 		return getOrganizationPermission().hasRoleProtected(
-			permissionChecker, groupId, userId, role);
+			permissionChecker, groupId, userId, roleId);
 	}
 
 	public void setOrganizationPermission(

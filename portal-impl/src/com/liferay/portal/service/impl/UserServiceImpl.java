@@ -2462,7 +2462,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 							oldUserGroupRole.getRoleId()) ||
 						 GroupPermissionUtil.hasRoleProtected(
 							 getPermissionChecker(),
-							 oldUserGroupRole.getGroupId(), userId, role) ||
+							 oldUserGroupRole.getGroupId(), userId,
+							 role.getRoleId()) ||
 						 mandatoryRoles.contains(role))) {
 
 						userGroupRoles.add(oldUserGroupRole);
@@ -2482,7 +2483,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 					if (!userGroupRoles.contains(oldUserGroupRole) &&
 						(OrganizationPermissionUtil.hasRoleProtected(
 							getPermissionChecker(),
-							oldUserGroupRole.getGroupId(), userId, role) ||
+							oldUserGroupRole.getGroupId(), userId,
+							role.getRoleId()) ||
 						 !UserGroupRolePermissionUtil.contains(
 							permissionChecker, oldUserGroupRole.getGroupId(),
 							oldUserGroupRole.getRoleId()) ||

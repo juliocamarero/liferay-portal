@@ -73,15 +73,21 @@ public class UserGroupRoleServiceImpl extends UserGroupRoleServiceBaseImpl {
 
 			Role role = roleLocalService.getRole(roleId);
 
-			if (GroupPermissionUtil.hasRoleProtected(
-					getPermissionChecker(), groupId, userId, role)) {
+			if (role.getType() == RoleConstants.TYPE_SITE) {
+				if (GroupPermissionUtil.hasRoleProtected(
+						getPermissionChecker(), groupId, userId,
+					role.getRoleId())) {
 
-				filteredRoles = ArrayUtil.remove(filteredRoles, roleId);
+					filteredRoles = ArrayUtil.remove(filteredRoles, roleId);
+				}
 			}
-			else if (OrganizationPermissionUtil.hasRoleProtected(
-						getPermissionChecker(), groupId, userId, role)) {
+			else if (role.getType() == RoleConstants.TYPE_ORGANIZATION) {
+				if (OrganizationPermissionUtil.hasRoleProtected(
+						getPermissionChecker(), groupId, userId,
+						role.getRoleId())) {
 
-				filteredRoles = ArrayUtil.remove(filteredRoles, roleId);
+					filteredRoles = ArrayUtil.remove(filteredRoles, roleId);
+				}
 			}
 		}
 
@@ -104,18 +110,13 @@ public class UserGroupRoleServiceImpl extends UserGroupRoleServiceBaseImpl {
 
 		Role role = roleLocalService.getRole(roleId);
 
-		if (role.getName().equals(RoleConstants.SITE_ADMINISTRATOR) ||
-			role.getName().equals(RoleConstants.SITE_OWNER)) {
-
-			userIds = UsersAdminUtil.filterUnsetGroupUserIds(
-				getPermissionChecker(), groupId, userIds);
+		if (role.getType() == RoleConstants.TYPE_SITE) {
+			userIds = UsersAdminUtil.filterDeleteSiteRoleUserIds(
+				getPermissionChecker(), groupId, role.getRoleId(), userIds);
 		}
-		else if (role.getName().equals(
-					RoleConstants.ORGANIZATION_ADMINISTRATOR) ||
-				 role.getName().equals(RoleConstants.ORGANIZATION_OWNER)) {
-
-			userIds = UsersAdminUtil.filterUnsetOrganizationUserIds(
-				getPermissionChecker(), groupId, userIds);
+		else if (role.getType() == RoleConstants.TYPE_ORGANIZATION) {
+			userIds = UsersAdminUtil.filterDeleteOrganizationRoleUserIds(
+				getPermissionChecker(), groupId, role.getRoleId(), userIds);
 		}
 
 		if (userIds.length == 0) {

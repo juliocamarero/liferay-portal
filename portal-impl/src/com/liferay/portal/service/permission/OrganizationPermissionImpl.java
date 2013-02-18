@@ -131,16 +131,16 @@ public class OrganizationPermissionImpl implements OrganizationPermission {
 			return false;
 		}
 
-		Role organizationOwnerRole = RoleLocalServiceUtil.getRole(
-			permissionChecker.getCompanyId(), RoleConstants.ORGANIZATION_OWNER);
 		Role organizationAdministratorRole = RoleLocalServiceUtil.getRole(
 			permissionChecker.getCompanyId(),
 			RoleConstants.ORGANIZATION_ADMINISTRATOR);
+		Role organizationOwnerRole = RoleLocalServiceUtil.getRole(
+			permissionChecker.getCompanyId(), RoleConstants.ORGANIZATION_OWNER);
 
 		if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-				userId, groupId, organizationOwnerRole.getRoleId()) ||
+				userId, groupId, organizationAdministratorRole.getRoleId()) ||
 			UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-				userId, groupId, organizationAdministratorRole.getRoleId())) {
+				userId, groupId, organizationOwnerRole.getRoleId())) {
 
 			return true;
 		}
@@ -150,15 +150,27 @@ public class OrganizationPermissionImpl implements OrganizationPermission {
 
 	public boolean hasRoleProtected(
 			PermissionChecker permissionChecker, long groupId, long userId,
-			Role role)
+			long roleId)
 		throws PortalException, SystemException {
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		if (permissionChecker.isOrganizationOwner(group.getOrganizationId())) {
+			return false;
+		}
+
+		Role role = RoleLocalServiceUtil.getRole(roleId);
 
 		String roleName = role.getName();
 
-		if ((roleName.equals(RoleConstants.ORGANIZATION_ADMINISTRATOR) ||
-			 roleName.equals(RoleConstants.ORGANIZATION_OWNER)) &&
-			hasMembershipProtected(
-				permissionChecker, groupId, userId)) {
+		if (!roleName.equals(RoleConstants.ORGANIZATION_ADMINISTRATOR) &&
+			!roleName.equals(RoleConstants.ORGANIZATION_OWNER)) {
+
+			return false;
+		}
+
+		if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				userId, groupId, role.getRoleId())) {
 
 			return true;
 		}
