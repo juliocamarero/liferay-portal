@@ -56,27 +56,22 @@ AUI.add(
 			A.on('formNavigator:revealSection', instance._revealSection, instance);
 			A.on('formNavigator:trackChanges', instance._trackChanges, instance);
 
-			var inputs = instance._container.all('input, select, textarea');
+			var inputs = instance._container.delegate(
+				'change',
+				function(event) {
+					A.fire('formNavigator:trackChanges', event.target);
+				},
+				'input, select, textarea',
+				instance
+			);
 
-			if (inputs) {
-				inputs.on(
-					'change',
-					function(event) {
-						A.fire('formNavigator:trackChanges', event.target);
-					}
-				);
-			}
+			var categoryChangeFn = function(event) {
+				A.fire('formNavigator:trackChanges', event.target);
+			};
 
-			var buttons = instance._container.all('button');
-
-			if (buttons) {
-				buttons.on(
-					'click',
-					function(event) {
-						A.fire('formNavigator:trackChanges', event.target);
-					}
-				);
-			}
+			A.on('categoriesselector:categoryAdd', categoryChangeFn);
+			A.on('categoriesselector:categoryRemove', categoryChangeFn);
+			A.on('categoriesselector:categoryReplace', categoryChangeFn);
 
 			Liferay.on(
 				'submitForm',
