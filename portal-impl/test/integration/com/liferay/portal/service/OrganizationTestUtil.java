@@ -29,23 +29,21 @@ public class OrganizationTestUtil {
 
 		return addOrganization(
 			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
-			"NewOrganization", OrganizationConstants.TYPE_REGULAR_ORGANIZATION,
-			false);
+			ServiceTestUtil.randomString(),
+			OrganizationConstants.TYPE_REGULAR_ORGANIZATION, false);
 	}
 
 	public static Organization addOrganization(
 			long parentOrganizationId, String name, String type, boolean site)
 		throws Exception {
 
-		User user = ServiceTestUtil.addUser("testAddOrganization", false, null);
+		User user = ServiceTestUtil.addUser(
+			ServiceTestUtil.randomString(), false, null);
 
-		Organization organization =
-			OrganizationLocalServiceUtil.addOrganization(
-				user.getUserId(), parentOrganizationId, name, type, false, 0, 0,
-				ListTypeConstants.ORGANIZATION_STATUS_DEFAULT, StringPool.BLANK,
-				site, null);
-
-		return organization;
+		return OrganizationLocalServiceUtil.addOrganization(
+			user.getUserId(), parentOrganizationId, name, type, false, 0, 0,
+			ListTypeConstants.ORGANIZATION_STATUS_DEFAULT, StringPool.BLANK,
+			site, ServiceTestUtil.getServiceContext());
 	}
 
 }

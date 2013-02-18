@@ -29,7 +29,6 @@ import java.util.Random;
 public class UserTestUtil {
 
 	public static User addGroupAdminUser(Group group) throws Exception {
-
 		return UserTestUtil.addGroupUser(
 			group, RoleConstants.SITE_ADMINISTRATOR);
 	}

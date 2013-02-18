@@ -420,32 +420,29 @@ public class UserGroupRoleServiceTest {
 	}
 
 	protected static void deleteUserGroupRoleByRoles(
-		long groupId, long roleId, User operatorUser, User updatedUser)
-	throws Exception {
+			long groupId, long roleId, User operatorUser, User updatedUser)
+		throws Exception {
 
 		PermissionChecker permissionChecker =
 			PermissionCheckerFactoryUtil.create(operatorUser);
 
 		PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
-		long[] roleIds = {roleId};
-
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			updatedUser.getUserId(), groupId, roleIds);
+			updatedUser.getUserId(), groupId, new long[] {roleId});
 	}
 
 	protected static void deleteUserGroupRoleByUsers(
-		long groupId, long roleId, User operatorUser, User updatedUser)
-	throws Exception {
+			long groupId, long roleId, User operatorUser, User updatedUser)
+		throws Exception {
 
 		PermissionChecker permissionChecker =
 			PermissionCheckerFactoryUtil.create(operatorUser);
 
 		PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
-		long[] userIds = {updatedUser.getUserId()};
-
-		UserGroupRoleServiceUtil.deleteUserGroupRoles(userIds, groupId, roleId);
+		UserGroupRoleServiceUtil.deleteUserGroupRoles(
+			new long[] {updatedUser.getUserId()}, groupId, roleId);
 	}
 
 	private static Random _random = new Random();

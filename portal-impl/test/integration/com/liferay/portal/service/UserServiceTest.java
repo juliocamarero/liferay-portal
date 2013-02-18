@@ -149,7 +149,8 @@ public class UserServiceTest {
 
 	@Test
 	public void testSiteAdminUnsetSiteAdmin() throws Exception {
-		Group site = ServiceTestUtil.addGroup(0, "site");
+		Group site = ServiceTestUtil.addGroup(
+			0, ServiceTestUtil.randomString());
 
 		User siteAdminOperator = UserTestUtil.addGroupAdminUser(site);
 		User siteAdminUpdated = UserTestUtil.addGroupAdminUser(site);
@@ -163,7 +164,8 @@ public class UserServiceTest {
 
 	@Test
 	public void testSiteAdminUnsetSiteOwner() throws Exception {
-		Group site = ServiceTestUtil.addGroup(0, "site");
+		Group site = ServiceTestUtil.addGroup(
+			0, ServiceTestUtil.randomString());
 
 		User siteAdminOperator = UserTestUtil.addGroupAdminUser(site);
 		User siteOwnerUpdated = UserTestUtil.addGroupOwnerUser(site);
@@ -177,7 +179,8 @@ public class UserServiceTest {
 
 	@Test
 	public void testSiteOwnerUnsetSiteAdmin() throws Exception {
-		Group site = ServiceTestUtil.addGroup(0, "site");
+		Group site = ServiceTestUtil.addGroup(
+			0, ServiceTestUtil.randomString());
 
 		User siteOwnerOperator = UserTestUtil.addGroupOwnerUser(site);
 		User siteAdminUpdated = UserTestUtil.addGroupAdminUser(site);
@@ -191,7 +194,8 @@ public class UserServiceTest {
 
 	@Test
 	public void testSiteOwnerUnsetSiteOwner() throws Exception {
-		Group site = ServiceTestUtil.addGroup(0, "site");
+		Group site = ServiceTestUtil.addGroup(
+			0, ServiceTestUtil.randomString());
 
 		User siteOwnerOperator = UserTestUtil.addGroupOwnerUser(site);
 		User siteOwnerUpdated = UserTestUtil.addGroupOwnerUser(site);
@@ -213,9 +217,8 @@ public class UserServiceTest {
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		long[] userIds = {updatedUser.getUserId()};
-
-		UserServiceUtil.unsetGroupUsers(groupId, userIds, serviceContext);
+		UserServiceUtil.unsetGroupUsers(
+			groupId, new long[] {updatedUser.getUserId()}, serviceContext);
 	}
 
 	protected static void unsetOrganizationUsers(
@@ -227,9 +230,8 @@ public class UserServiceTest {
 
 		PermissionThreadLocal.setPermissionChecker(permissionChecker);
 
-		long[] userIds = {updatedUser.getUserId()};
-
-		UserServiceUtil.unsetOrganizationUsers(organizationId, userIds);
+		UserServiceUtil.unsetOrganizationUsers(
+			organizationId, new long[] {updatedUser.getUserId()});
 	}
 
 	protected User addUser() throws Exception {
