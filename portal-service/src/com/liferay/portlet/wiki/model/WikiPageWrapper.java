@@ -896,12 +896,6 @@ public class WikiPageWrapper implements WikiPage, ModelWrapper<WikiPage> {
 		return _wikiPage.getAttachmentsFolderId();
 	}
 
-	public long getNodeAttachmentsFolderId()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _wikiPage.getNodeAttachmentsFolderId();
-	}
-
 	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getChildPages() {
 		return _wikiPage.getChildPages();
 	}
@@ -927,6 +921,12 @@ public class WikiPageWrapper implements WikiPage, ModelWrapper<WikiPage> {
 
 	public com.liferay.portlet.wiki.model.WikiNode getNode() {
 		return _wikiPage.getNode();
+	}
+
+	public long getNodeAttachmentsFolderId()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _wikiPage.getNodeAttachmentsFolderId();
 	}
 
 	public com.liferay.portlet.wiki.model.WikiPage getParentPage() {
