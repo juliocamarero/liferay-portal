@@ -37,24 +37,6 @@ import java.util.List;
  */
 public class DLAppUtil {
 
-	public static long[] filterFolderIds(
-			PermissionChecker permissionChecker, long groupId, long[] folderIds)
-		throws PortalException, SystemException {
-
-		List<Long> viewableFolderIds = new ArrayList<Long>(folderIds.length);
-
-		for (long folderId : folderIds) {
-			if (DLFolderPermission.contains(
-					permissionChecker, groupId, folderId, ActionKeys.VIEW)) {
-
-				viewableFolderIds.add(folderId);
-			}
-		}
-
-		return ArrayUtil.toArray(
-			viewableFolderIds.toArray(new Long[viewableFolderIds.size()]));
-	}
-
 	public static String getExtension(String title, String sourceFileName) {
 		String extension = FileUtil.getExtension(sourceFileName);
 
