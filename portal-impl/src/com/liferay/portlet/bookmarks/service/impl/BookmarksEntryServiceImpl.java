@@ -26,7 +26,6 @@ import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.base.BookmarksEntryServiceBaseImpl;
 import com.liferay.portlet.bookmarks.service.permission.BookmarksEntryPermission;
 import com.liferay.portlet.bookmarks.service.permission.BookmarksFolderPermission;
-import com.liferay.portlet.bookmarks.util.BookmarksUtil;
 import com.liferay.portlet.bookmarks.util.comparator.EntryModifiedDateComparator;
 
 import java.util.Collections;
@@ -108,7 +107,7 @@ public class BookmarksEntryServiceImpl extends BookmarksEntryServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		return getGroupEntries(
-				groupId, 0, WorkflowConstants.STATUS_APPROVED, start, end);
+			groupId, 0, WorkflowConstants.STATUS_APPROVED, start, end);
 	}
 
 	public List<BookmarksEntry> getGroupEntries(
@@ -126,9 +125,6 @@ public class BookmarksEntryServiceImpl extends BookmarksEntryServiceBaseImpl {
 
 		long[] folderIds = bookmarksFolderService.getFolderIds(
 			groupId, rootFolderId);
-
-		folderIds = BookmarksUtil.filterFolderIds(
-			getPermissionChecker(), groupId, folderIds);
 
 		if (folderIds.length == 0) {
 			return Collections.emptyList();
@@ -164,9 +160,6 @@ public class BookmarksEntryServiceImpl extends BookmarksEntryServiceBaseImpl {
 
 		long[] folderIds = bookmarksFolderService.getFolderIds(
 			groupId, rootFolderId);
-
-		folderIds = BookmarksUtil.filterFolderIds(
-			getPermissionChecker(), groupId, folderIds);
 
 		if (folderIds.length == 0) {
 			return 0;

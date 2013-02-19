@@ -320,13 +320,11 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 		DLFolderPermission.check(
 			getPermissionChecker(), groupId, folderId, ActionKeys.VIEW);
 
-		List<DLFolder> dlFolders = dlFolderPersistence.filterFindByG_P(
-			groupId, folderId);
+		List<DLFolder> dlFolders = dlFolderPersistence.filterFindByG_P_H_S(
+			groupId, folderId, false, WorkflowConstants.STATUS_APPROVED);
 
 		for (DLFolder dlFolder : dlFolders) {
-			if (dlFolder.isInHiddenFolder() || dlFolder.isInTrash() ||
-				dlFolder.isInTrashContainer()) {
-
+			if (dlFolder.isInHiddenFolder() || dlFolder.isInTrashContainer()) {
 				continue;
 			}
 

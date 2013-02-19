@@ -206,7 +206,7 @@ public class BookmarksFolderServiceImpl extends BookmarksFolderServiceBaseImpl {
 				groupId, folderId, WorkflowConstants.STATUS_APPROVED);
 
 		for (BookmarksFolder folder : folders) {
-			if (folder.isInTrash() || folder.isInTrashContainer()) {
+			if (folder.isInTrashContainer()) {
 				continue;
 			}
 
