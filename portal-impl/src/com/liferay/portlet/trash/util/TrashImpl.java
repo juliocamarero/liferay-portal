@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -36,11 +37,14 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.WorkflowedModel;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -255,6 +259,83 @@ public class TrashImpl implements Trash {
 
 	public String getTrashTitle(long trashEntryId) {
 		return getTrashTitle(trashEntryId, StringPool.SLASH);
+	}
+
+	public String getViewContentURL(
+			String className, long classPK, ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			className);
+
+		if (trashHandler.isInTrashContainer(classPK)) {
+			List<ContainerModel> parentContainers =
+				trashHandler.getParentContainerModels(classPK);
+
+			for (ContainerModel containerModel : parentContainers) {
+				if (((WorkflowedModel)containerModel).isInTrash()) {
+					BaseModel<?> baseModel = (BaseModel<?>)containerModel;
+
+					classPK = (Long)baseModel.getPrimaryKeyObj();
+
+					className = trashHandler.getContainerModelClassName();
+
+					trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+						className);
+
+					break;
+				}
+			}
+		}
+
+		TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
+
+		String urlViewContent = null;
+
+		if (trashRenderer != null) {
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				className, classPK);
+
+			String namespace = PortalUtil.getPortletNamespace(
+				PortletKeys.TRASH);
+
+			urlViewContent = PortalUtil.getControlPanelFullURL(
+				themeDisplay.getScopeGroupId(), PortletKeys.TRASH, null);
+
+			urlViewContent = HttpUtil.addParameter(
+				urlViewContent, namespace + "struts_action",
+				"/trash/view_content");
+			urlViewContent = HttpUtil.addParameter(
+				urlViewContent, namespace + "redirect",
+				themeDisplay.getURLCurrent());
+
+			if (trashEntry.getRootEntry() != null) {
+				urlViewContent = HttpUtil.addParameter(
+					urlViewContent, namespace + "className", className);
+				urlViewContent = HttpUtil.addParameter(
+					urlViewContent, namespace + "classPK",
+					String.valueOf(classPK));
+			}
+			else {
+				urlViewContent = HttpUtil.addParameter(
+					urlViewContent, namespace + "trashEntryId",
+					String.valueOf(trashEntry.getEntryId()));
+			}
+
+			urlViewContent = HttpUtil.addParameter(
+				urlViewContent, namespace + "type", trashRenderer.getType());
+			urlViewContent = HttpUtil.addParameter(
+				urlViewContent, namespace + "showActions",
+				Boolean.FALSE.toString());
+			urlViewContent = HttpUtil.addParameter(
+				urlViewContent, namespace + "showAssetMetadata",
+				Boolean.TRUE.toString());
+			urlViewContent = HttpUtil.addParameter(
+				urlViewContent, namespace + "showEditURL",
+				Boolean.FALSE.toString());
+		}
+
+		return urlViewContent;
 	}
 
 	public boolean isInTrash(String className, long classPK)
