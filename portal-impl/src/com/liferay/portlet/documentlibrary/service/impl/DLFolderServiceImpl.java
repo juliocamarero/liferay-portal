@@ -324,6 +324,12 @@ public class DLFolderServiceImpl extends DLFolderServiceBaseImpl {
 			groupId, folderId);
 
 		for (DLFolder dlFolder : dlFolders) {
+			if (dlFolder.isInHiddenFolder() || dlFolder.isInTrash() ||
+				dlFolder.isInTrashContainer()) {
+
+				continue;
+			}
+
 			folderIds.add(dlFolder.getFolderId());
 
 			getSubfolderIds(

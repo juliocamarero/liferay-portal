@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -31,6 +32,8 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -43,6 +46,7 @@ import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
 import com.liferay.portlet.bookmarks.service.BookmarksFolderLocalServiceUtil;
+import com.liferay.portlet.bookmarks.service.permission.BookmarksFolderPermission;
 import com.liferay.portlet.bookmarks.util.comparator.EntryCreateDateComparator;
 import com.liferay.portlet.bookmarks.util.comparator.EntryModifiedDateComparator;
 import com.liferay.portlet.bookmarks.util.comparator.EntryNameComparator;
@@ -156,6 +160,24 @@ public class BookmarksUtil {
 			folderId);
 
 		addPortletBreadcrumbEntries(folder, request, renderResponse);
+	}
+
+	public static long[] filterFolderIds(
+			PermissionChecker permissionChecker, long groupId, long[] folderIds)
+		throws PortalException, SystemException {
+
+		List<Long> viewableFolderIds = new ArrayList<Long>(folderIds.length);
+
+		for (long folderId : folderIds) {
+			if (BookmarksFolderPermission.contains(
+					permissionChecker, groupId, folderId, ActionKeys.VIEW)) {
+
+				viewableFolderIds.add(folderId);
+			}
+		}
+
+		return ArrayUtil.toArray(
+			viewableFolderIds.toArray(new Long[viewableFolderIds.size()]));
 	}
 
 	public static String getAbsolutePath(
