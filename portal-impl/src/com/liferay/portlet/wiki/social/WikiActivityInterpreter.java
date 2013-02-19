@@ -153,6 +153,24 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 				titlePattern = "activity-wiki-add-page-in";
 			}
 		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-wiki-move-to-trash";
+			}
+			else {
+				titlePattern = "activity-wiki-move-to-trash-in";
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-wiki-restore-from-trash";
+			}
+			else {
+				titlePattern = "activity-wiki-restore-from-trash-in";
+			}
+		}
 		else if (activityType == WikiActivityKeys.UPDATE_PAGE) {
 			if (Validator.isNull(groupName)) {
 				titlePattern = "activity-wiki-update-page";
