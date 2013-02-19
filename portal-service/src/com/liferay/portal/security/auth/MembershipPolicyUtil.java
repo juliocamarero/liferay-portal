@@ -198,18 +198,6 @@ public class MembershipPolicyUtil {
 
 	public static boolean isMembershipProtected(
 			PermissionChecker permissionChecker, Organization organization,
-			Role role, User user)
-		throws SystemException {
-
-		MembershipPolicy membershipPolicy =
-			MembershipPolicyFactoryUtil.getMembershipPolicy();
-
-		return membershipPolicy.isMembershipProtected(
-			permissionChecker, organization, role, user);
-	}
-
-	public static boolean isMembershipProtected(
-			PermissionChecker permissionChecker, Organization organization,
 			User user)
 		throws PortalException, SystemException {
 
