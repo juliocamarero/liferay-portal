@@ -42,11 +42,11 @@ import java.util.List;
 public class DDMTemplateFinderImpl
 	extends BasePersistenceImpl<DDMTemplate> implements DDMTemplateFinder {
 
-	public static final String FIND_BY_G_SC =
-		DDMTemplateFinder.class.getName() + ".findByG_SC";
-
 	public static final String COUNT_BY_C_G_C_C_N_D_T_M_L =
 		DDMTemplateFinder.class.getName() + ".countByC_G_C_C_N_D_T_M_L";
+
+	public static final String FIND_BY_G_SC =
+		DDMTemplateFinder.class.getName() + ".findByG_SC";
 
 	public static final String FIND_BY_C_G_C_C_N_D_T_M_L =
 		DDMTemplateFinder.class.getName() + ".findByC_G_C_C_N_D_T_M_L";
@@ -334,8 +334,8 @@ public class DDMTemplateFinderImpl
 			OrderByComparator orderByComparator)
 		throws SystemException {
 
-		return doFindByG_SC(groupId, structureClassNameId, start, end,
-			orderByComparator, true);
+		return doFindByG_SC(
+			groupId, structureClassNameId, start, end, orderByComparator, true);
 	}
 
 	public List<DDMTemplate> filterFindByC_G_C_C_N_D_T_M_L(
@@ -466,8 +466,9 @@ public class DDMTemplateFinderImpl
 			OrderByComparator orderByComparator)
 		throws SystemException {
 
-		return doFindByG_SC(groupId, structureClassNameId, start, end,
-			orderByComparator, false);
+		return doFindByG_SC(
+			groupId, structureClassNameId, start, end, orderByComparator,
+			false);
 	}
 
 	public List<DDMTemplate> findByC_G_C_C_N_D_T_M_L(

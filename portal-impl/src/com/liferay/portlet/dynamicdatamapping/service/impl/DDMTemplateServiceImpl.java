@@ -464,8 +464,8 @@ public class DDMTemplateServiceImpl extends DDMTemplateServiceBaseImpl {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<DDMTemplate> getTemplatesByStructureClassNameId(
-			long groupId, long structureClassNameId, int start,
-			int end, OrderByComparator orderByComparator)
+			long groupId, long structureClassNameId, int start, int end,
+			OrderByComparator orderByComparator)
 		throws SystemException {
 
 		return ddmTemplateFinder.filterFindByG_SC(
