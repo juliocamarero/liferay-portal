@@ -127,6 +127,8 @@ public class DDLWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 
 		List<Resource> resources = new ArrayList<Resource>();
 
+		// TODO: custom finder to obtain all DDL Templates
+
 		List<DDMStructure> ddmStructures =
 			DDMStructureLocalServiceUtil.getStructures(
 				webDavRequest.getGroupId(),

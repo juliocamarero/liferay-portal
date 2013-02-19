@@ -49,8 +49,8 @@ public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 		throws WebDAVException {
 
 		return DDMWebDavUtil.getResource(
-			webDavRequest, getRootPath(), getToken()
-			, PortalUtil.getClassNameId(JournalArticle.class));
+			webDavRequest, getRootPath(), getToken(),
+			PortalUtil.getClassNameId(JournalArticle.class));
 	}
 
 	public List<Resource> getResources(WebDAVRequest webDavRequest)
@@ -128,6 +128,8 @@ public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 		throws Exception {
 
 		List<Resource> resources = new ArrayList<Resource>();
+
+		// TODO: Use a custom finder
 
 		List<DDMStructure> ddmStructures =
 			DDMStructureLocalServiceUtil.getStructures(
