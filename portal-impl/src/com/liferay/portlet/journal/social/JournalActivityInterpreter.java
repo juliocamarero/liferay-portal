@@ -27,6 +27,7 @@ import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.service.permission.JournalPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
+import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityFeedEntry;
 
 /**
@@ -113,6 +114,24 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 			}
 			else {
 				titlePattern = "activity-journal-update-article-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-journal-move-to-trash";
+			}
+			else {
+				titlePattern = "activity-journal-move-to-trash-in";
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-journal-restore-from-trash";
+			}
+			else {
+				titlePattern = "activity-journal-restore-from-trash-in";
 			}
 		}
 

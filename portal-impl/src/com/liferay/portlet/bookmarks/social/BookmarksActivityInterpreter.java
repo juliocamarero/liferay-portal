@@ -24,6 +24,7 @@ import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
 import com.liferay.portlet.bookmarks.service.permission.BookmarksEntryPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
+import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityFeedEntry;
 
 /**
@@ -90,6 +91,24 @@ public class BookmarksActivityInterpreter
 			}
 			else {
 				titlePattern = "activity-bookmarks-update-entry-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-bookmarks-move-to-trash";
+			}
+			else {
+				titlePattern = "activity-bookmarks-move-to-trash-in";
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-bookmarks-restore-from-trash";
+			}
+			else {
+				titlePattern = "activity-bookmarks-restore-from-trash-in";
 			}
 		}
 

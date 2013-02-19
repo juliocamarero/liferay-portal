@@ -125,6 +125,24 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 				}
 			}
 		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-blogs-move-to-trash";
+			}
+			else {
+				titlePattern = "activity-blogs-move-to-trash-in";
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-blogs-restore-from-trash";
+			}
+			else {
+				titlePattern = "activity-blogs-restore-from-trash-in";
+			}
+		}
 		else if (activityType == BlogsActivityKeys.UPDATE_ENTRY) {
 			if (Validator.isNull(groupName)) {
 				titlePattern = "activity-blogs-update-entry";
