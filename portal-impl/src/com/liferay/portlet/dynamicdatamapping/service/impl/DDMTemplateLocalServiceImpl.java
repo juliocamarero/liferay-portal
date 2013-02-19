@@ -686,6 +686,15 @@ public class DDMTemplateLocalServiceImpl
 		return ddmTemplatePersistence.findByG_CPK(groupId, classPK);
 	}
 
+	public List<DDMTemplate> getTemplatesByStructureClassNameId(
+			long groupId, long structureClassNameId, int start, int end,
+			OrderByComparator orderByComparator)
+		throws SystemException {
+
+		return ddmTemplateFinder.findByG_SC(
+			groupId, structureClassNameId, start, end, orderByComparator);
+	}
+
 	/**
 	 * Returns the number of templates belonging to the group.
 	 *
