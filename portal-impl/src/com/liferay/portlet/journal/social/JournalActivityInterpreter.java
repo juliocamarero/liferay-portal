@@ -29,9 +29,13 @@ import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityFeedEntry;
+import com.liferay.portlet.trash.util.TrashUtil;
+
+import java.util.Locale;
 
 /**
  * @author Roberto Diaz
+ * @author Zsolt Berentey
  */
 public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 
@@ -78,6 +82,46 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		// Link
 
+		String link = getLink(article, themeDisplay);
+
+		// Title
+
+		Object[] titleArguments = null;
+
+		if (Validator.isNotNull(link)) {
+			titleArguments = new Object[] {
+				groupName, creatorUserName,
+				wrapLink(link, getTitle(article, themeDisplay.getLocale()))
+			};
+		}
+		else {
+			titleArguments = new Object[] {
+				groupName, creatorUserName,
+				getTitle(article, themeDisplay.getLocale()),
+			};
+		}
+
+		String title = themeDisplay.translate(
+			getTitlePattern(groupName, activityType), titleArguments);
+
+		// Body
+
+		String body = StringPool.BLANK;
+
+		return new SocialActivityFeedEntry(link, title, body);
+	}
+
+	protected String getLink(JournalArticle article, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (TrashUtil.isInTrash(
+				JournalArticle.class.getName(), article.getResourcePrimKey())) {
+
+			return TrashUtil.getViewContentURL(
+				JournalArticle.class.getName(), article.getResourcePrimKey(),
+				themeDisplay);
+		}
+
 		String link = null;
 
 		JournalArticle lastestArticle =
@@ -96,68 +140,57 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 						lastestArticle.getUrlTitle());
 		}
 
-		// Title
+		return link;
+	}
 
-		String titlePattern = null;
+	protected String getTitle(
+		JournalArticle article, Locale locale) throws Exception {
 
+		if (article.isInTrash()) {
+			return TrashUtil.getOriginalTitle(article.getTitle(), locale);
+		}
+		else {
+			return article.getTitle(locale);
+		}
+	}
+
+	protected String getTitlePattern(String groupName, int activityType) {
 		if (activityType == JournalActivityKeys.ADD_ARTICLE) {
 			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-journal-add-article";
+				return "activity-journal-add-article";
 			}
 			else {
-				titlePattern = "activity-journal-add-article-in";
+				return "activity-journal-add-article-in";
 			}
 		}
 		else if (activityType == JournalActivityKeys.UPDATE_ARTICLE) {
 			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-journal-update-article";
+				return "activity-journal-update-article";
 			}
 			else {
-				titlePattern = "activity-journal-update-article-in";
+				return "activity-journal-update-article-in";
 			}
 		}
 		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
 			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-journal-move-to-trash";
+				return "activity-journal-move-to-trash";
 			}
 			else {
-				titlePattern = "activity-journal-move-to-trash-in";
+				return "activity-journal-move-to-trash-in";
 			}
 		}
 		else if (activityType ==
 					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
 
 			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-journal-restore-from-trash";
+				return "activity-journal-restore-from-trash";
 			}
 			else {
-				titlePattern = "activity-journal-restore-from-trash-in";
+				return "activity-journal-restore-from-trash-in";
 			}
 		}
 
-		String articleTitle = getValue(
-			activity.getExtraData(), "title", article.getTitle());
-
-		Object[] titleArguments = null;
-
-		if (Validator.isNotNull(link)) {
-			titleArguments = new Object[] {
-				groupName, creatorUserName, wrapLink(link, articleTitle)
-			};
-		}
-		else {
-			titleArguments = new Object[] {
-				groupName, creatorUserName, articleTitle,
-			};
-		}
-
-		String title = themeDisplay.translate(titlePattern, titleArguments);
-
-		// Body
-
-		String body = StringPool.BLANK;
-
-		return new SocialActivityFeedEntry(link, title, body);
+		return null;
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {
