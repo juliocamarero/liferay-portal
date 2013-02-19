@@ -332,14 +332,9 @@ public class LayoutTypePortletImpl
 	}
 
 	public String getLayoutTemplateId() {
-		String layoutTemplateId = getTypeSettingsProperty(
-			LayoutTypePortletConstants.LAYOUT_TEMPLATE_ID);
-
-		if (Validator.isNull(layoutTemplateId)) {
-			layoutTemplateId = StringPool.BLANK;
-		}
-
-		return layoutTemplateId;
+		return GetterUtil.getString(
+			getTypeSettingsProperty(
+				LayoutTypePortletConstants.LAYOUT_TEMPLATE_ID));
 	}
 
 	public String getModeAbout() {
@@ -644,7 +639,6 @@ public class LayoutTypePortletImpl
 				propertiesModifiedDateString);
 
 			return propertiesModifiedDate.after(preferencesModifiedDate);
-
 		}
 		catch (Exception e) {
 			_log.error(e, e);
