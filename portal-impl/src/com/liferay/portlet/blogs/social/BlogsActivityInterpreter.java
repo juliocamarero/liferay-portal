@@ -15,6 +15,7 @@
 package com.liferay.portlet.blogs.social;
 
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -28,6 +29,7 @@ import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityFeedEntry;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.text.Format;
 
@@ -69,87 +71,33 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		int activityType = activity.getType();
 
-		// Link
-
 		BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(
 			activity.getClassPK());
 
-		String link =
-			themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
-				"/blogs/find_entry?entryId=" + activity.getClassPK();
+		// Link
+
+		String link = getLink(entry, themeDisplay);
 
 		// Title
 
-		String entryTitle = getValue(
-			activity.getExtraData(), "title", entry.getTitle());
+		String displayTitle;
+		String displayDate;
 
-		String displayTitle = wrapLink(link, entryTitle);
-		String displayDate = StringPool.BLANK;
+		if ((activityType == BlogsActivityKeys.ADD_ENTRY) &&
+			(entry.getStatus() == WorkflowConstants.STATUS_SCHEDULED)) {
 
-		String titlePattern = null;
+			displayTitle = getTitle(entry);
 
-		if ((activityType == BlogsActivityKeys.ADD_COMMENT) ||
-			(activityType == SocialActivityConstants.TYPE_ADD_COMMENT)) {
+			Format dateFormatDate =
+				FastDateFormatFactoryUtil.getSimpleDateFormat(
+					"MMMM d", themeDisplay.getLocale(),
+					themeDisplay.getTimeZone());
 
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-blogs-add-comment";
-			}
-			else {
-				titlePattern = "activity-blogs-add-comment-in";
-			}
+			displayDate = dateFormatDate.format(entry.getDisplayDate());
 		}
-		else if (activityType == BlogsActivityKeys.ADD_ENTRY) {
-			if (entry.getStatus() == WorkflowConstants.STATUS_SCHEDULED) {
-				displayTitle = entryTitle;
-
-				Format dateFormatDate =
-					FastDateFormatFactoryUtil.getSimpleDateFormat(
-						"MMMM d", themeDisplay.getLocale(),
-						themeDisplay.getTimeZone());
-
-				displayDate = dateFormatDate.format(entry.getDisplayDate());
-
-				if (Validator.isNull(groupName)) {
-					titlePattern = "activity-blogs-scheduled-entry";
-				}
-				else {
-					titlePattern = "activity-blogs-scheduled-entry-in";
-				}
-			}
-			else {
-				if (Validator.isNull(groupName)) {
-					titlePattern = "activity-blogs-add-entry";
-				}
-				else {
-					titlePattern = "activity-blogs-add-entry-in";
-				}
-			}
-		}
-		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-blogs-move-to-trash";
-			}
-			else {
-				titlePattern = "activity-blogs-move-to-trash-in";
-			}
-		}
-		else if (activityType ==
-					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
-
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-blogs-restore-from-trash";
-			}
-			else {
-				titlePattern = "activity-blogs-restore-from-trash-in";
-			}
-		}
-		else if (activityType == BlogsActivityKeys.UPDATE_ENTRY) {
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-blogs-update-entry";
-			}
-			else {
-				titlePattern = "activity-blogs-update-entry-in";
-			}
+		else {
+			displayTitle = wrapLink(link, getTitle(entry));
+			displayDate = StringPool.BLANK;
 		}
 
 		Object[] titleArguments = new Object[] {
@@ -157,13 +105,102 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 			displayDate
 		};
 
-		String title = themeDisplay.translate(titlePattern, titleArguments);
+		String title = themeDisplay.translate(
+			getTitlePattern(groupName, entry, activityType), titleArguments);
 
 		// Body
 
 		String body = StringPool.BLANK;
 
 		return new SocialActivityFeedEntry(link, title, body);
+	}
+
+	protected String getLink(BlogsEntry entry, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (entry.isInTrash()) {
+			return TrashUtil.getViewContentURL(
+				BlogsEntry.class.getName(), entry.getEntryId(), themeDisplay);
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(themeDisplay.getPortalURL());
+		sb.append(themeDisplay.getPathMain());
+		sb.append("/blogs/find_entry?entryId=");
+		sb.append(entry.getEntryId());
+
+		return sb.toString();
+	}
+
+	protected String getTitle(BlogsEntry entry) throws Exception {
+		if (entry.isInTrash()) {
+			return TrashUtil.getOriginalTitle(entry.getTitle());
+		}
+		else {
+			return entry.getTitle();
+		}
+	}
+
+	protected String getTitlePattern(
+		String groupName, BlogsEntry entry, int activityType) {
+
+		if ((activityType == BlogsActivityKeys.ADD_COMMENT) ||
+			(activityType == SocialActivityConstants.TYPE_ADD_COMMENT)) {
+
+			if (Validator.isNull(groupName)) {
+				return "activity-blogs-add-comment";
+			}
+			else {
+				return "activity-blogs-add-comment-in";
+			}
+		}
+		else if (activityType == BlogsActivityKeys.ADD_ENTRY) {
+			if (entry.getStatus() == WorkflowConstants.STATUS_SCHEDULED) {
+				if (Validator.isNull(groupName)) {
+					return "activity-blogs-scheduled-entry";
+				}
+				else {
+					return "activity-blogs-scheduled-entry-in";
+				}
+			}
+			else {
+				if (Validator.isNull(groupName)) {
+					return "activity-blogs-add-entry";
+				}
+				else {
+					return "activity-blogs-add-entry-in";
+				}
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (Validator.isNull(groupName)) {
+				return "activity-blogs-move-to-trash";
+			}
+			else {
+				return "activity-blogs-move-to-trash-in";
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				return "activity-blogs-restore-from-trash";
+			}
+			else {
+				return "activity-blogs-restore-from-trash-in";
+			}
+		}
+		else if (activityType == BlogsActivityKeys.UPDATE_ENTRY) {
+			if (Validator.isNull(groupName)) {
+				return "activity-blogs-update-entry";
+			}
+			else {
+				return "activity-blogs-update-entry-in";
+			}
+		}
+
+		return null;
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {
