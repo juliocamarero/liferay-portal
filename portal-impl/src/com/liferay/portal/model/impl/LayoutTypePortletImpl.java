@@ -449,14 +449,6 @@ public class LayoutTypePortletImpl
 		return false;
 	}
 
-	public boolean hasLayoutSetPrototypeLayout() {
-		if (_layoutSetPrototypeLayout != null) {
-			return true;
-		}
-
-		return false;
-	}
-
 	public boolean hasModeAboutPortletId(String portletId) {
 		return StringUtil.contains(getModeAbout(), portletId);
 	}
