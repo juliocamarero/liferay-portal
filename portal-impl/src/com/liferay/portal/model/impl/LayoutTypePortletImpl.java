@@ -332,16 +332,8 @@ public class LayoutTypePortletImpl
 	}
 
 	public String getLayoutTemplateId() {
-		String layoutTemplateId = StringPool.BLANK;
-
-		if (hasLayoutSetPrototypeLayout()) {
-			layoutTemplateId = getLayoutSetPrototypeLayoutProperty(
-				LayoutTypePortletConstants.LAYOUT_TEMPLATE_ID);
-		}
-		else {
-			layoutTemplateId = getTypeSettingsProperty(
-				LayoutTypePortletConstants.LAYOUT_TEMPLATE_ID);
-		}
+		String layoutTemplateId = getTypeSettingsProperty(
+			LayoutTypePortletConstants.LAYOUT_TEMPLATE_ID);
 
 		if (Validator.isNull(layoutTemplateId)) {
 			layoutTemplateId = StringPool.BLANK;
@@ -643,27 +635,16 @@ public class LayoutTypePortletImpl
 			Date preferencesModifiedDate = dateFormat.parse(
 				preferencesModifiedDateString);
 
-			if (hasLayoutSetPrototypeLayout()) {
-				String propertiesModifiedDateString =
-					_layoutSetPrototypeLayout.getTypeSettingsProperty(
-						_MODIFIED_DATE, _NULL_DATE);
+			Layout layout = getLayout();
 
-				Date propertiesModifiedDate = dateFormat.parse(
-					propertiesModifiedDateString);
+			String propertiesModifiedDateString =
+				layout.getTypeSettingsProperty(_MODIFIED_DATE, _NULL_DATE);
 
-				return propertiesModifiedDate.after(preferencesModifiedDate);
-			}
-			else {
-				Layout layout = getLayout();
+			Date propertiesModifiedDate = dateFormat.parse(
+				propertiesModifiedDateString);
 
-				String propertiesModifiedDateString =
-					layout.getTypeSettingsProperty(_MODIFIED_DATE, _NULL_DATE);
+			return propertiesModifiedDate.after(preferencesModifiedDate);
 
-				Date propertiesModifiedDate = dateFormat.parse(
-					propertiesModifiedDateString);
-
-				return propertiesModifiedDate.after(preferencesModifiedDate);
-			}
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -1279,25 +1260,8 @@ public class LayoutTypePortletImpl
 	}
 
 	protected String getColumnValue(String columnId) {
-		Boolean customizable = null;
-		Boolean columnDisabled = null;
-
-		if (hasLayoutSetPrototypeLayout()) {
-			customizable = isCustomizable();
-
-			if (customizable) {
-				columnDisabled = isColumnDisabled(columnId);
-
-				if (columnDisabled) {
-					return getLayoutSetPrototypeLayoutProperty(columnId);
-				}
-			}
-		}
-
-		if (hasUserPreferences() &&
-			((customizable == null) ? isCustomizable() : customizable) &&
-			((columnDisabled == null) ?
-				!isColumnDisabled(columnId) : !columnDisabled)) {
+		if (hasUserPreferences() && isCustomizable() &&
+			!isColumnDisabled(columnId)) {
 
 			return getUserPreference(columnId);
 		}
@@ -1402,10 +1366,6 @@ public class LayoutTypePortletImpl
 		throws PortalException, SystemException {
 
 		Layout layout = getLayout();
-
-		if (hasLayoutSetPrototypeLayout()) {
-			layout = _layoutSetPrototypeLayout;
-		}
 
 		String selector1 = StringPool.BLANK;
 
@@ -1516,12 +1476,7 @@ public class LayoutTypePortletImpl
 			return value;
 		}
 
-		if (hasLayoutSetPrototypeLayout()) {
-			value = getLayoutSetPrototypeLayoutProperty(key);
-		}
-		else {
-			value = getTypeSettingsProperty(key);
-		}
+		value = getTypeSettingsProperty(key);
 
 		if (Validator.isNull(value)) {
 			return value;
