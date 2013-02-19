@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.webdav;
 
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.webdav.BaseWebDAVStorageImpl;
 import com.liferay.portal.kernel.webdav.Resource;
 import com.liferay.portal.kernel.webdav.WebDAVException;
@@ -96,6 +97,7 @@ public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 			DDMWebDavUtil.toResource(
 				webDavRequest, DDMWebDavUtil.TYPE_STRUCTURES, getRootPath(),
 				true));
+
 		folders.add(
 			DDMWebDavUtil.toResource(
 				webDavRequest, DDMWebDavUtil.TYPE_TEMPLATES, getRootPath(),
@@ -129,26 +131,17 @@ public class JournalWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 
 		List<Resource> resources = new ArrayList<Resource>();
 
-		// TODO: Use a custom finder
-
-		List<DDMStructure> ddmStructures =
-			DDMStructureLocalServiceUtil.getStructures(
+		List<DDMTemplate> ddmTemplates =
+			DDMTemplateLocalServiceUtil.getTemplatesByStructureClassNameId(
 				webDavRequest.getGroupId(),
-				PortalUtil.getClassNameId(JournalArticle.class));
+				PortalUtil.getClassNameId(JournalArticle.class),
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-		for (DDMStructure ddmStructure : ddmStructures) {
-			List<DDMTemplate> ddmTemplates =
-				DDMTemplateLocalServiceUtil.getTemplates(
-					webDavRequest.getGroupId(),
-					PortalUtil.getClassNameId(DDMStructure.class),
-					ddmStructure.getStructureId());
+		for (DDMTemplate ddmTemplate : ddmTemplates) {
+			Resource resource = DDMWebDavUtil.toResource(
+				webDavRequest, ddmTemplate, getRootPath(), true);
 
-			for (DDMTemplate ddmTemplate : ddmTemplates) {
-				Resource resource = DDMWebDavUtil.toResource(
-					webDavRequest, ddmTemplate, getRootPath(), true);
-
-				resources.add(resource);
-			}
+			resources.add(resource);
 		}
 
 		return resources;
