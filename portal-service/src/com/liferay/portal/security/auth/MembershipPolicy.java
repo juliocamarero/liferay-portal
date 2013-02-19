@@ -80,11 +80,6 @@ public interface MembershipPolicy {
 
 	public boolean isMembershipProtected(
 			PermissionChecker permissionChecker, Organization organization,
-			Role role, User user)
-		throws SystemException;
-
-	public boolean isMembershipProtected(
-			PermissionChecker permissionChecker, Organization organization,
 			User user)
 		throws PortalException, SystemException;
 
