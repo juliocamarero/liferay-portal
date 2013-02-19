@@ -25,11 +25,13 @@ import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
+import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityFeedEntry;
 
 /**
  * @author Brian Wing Shun Chan
  * @author Ryan Park
+ * @author Zsolt Berentey
  */
 public class MBActivityInterpreter extends BaseSocialActivityInterpreter {
 
@@ -108,6 +110,24 @@ public class MBActivityInterpreter extends BaseSocialActivityInterpreter {
 			}
 			else {
 				titlePattern = "activity-message-boards-reply-message-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-message-boards-move-to-trash";
+			}
+			else {
+				titlePattern = "activity-message-boards-move-to-trash-in";
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-message-boards-restore-from-trash";
+			}
+			else {
+				titlePattern = "activity-message-boards-restore-from-trash-in";
 			}
 		}
 

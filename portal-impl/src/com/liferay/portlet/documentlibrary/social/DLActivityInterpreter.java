@@ -29,10 +29,13 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
+import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityFeedEntry;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 /**
  * @author Ryan Park
+ * @author Zsolt Berentey
  */
 public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
@@ -100,9 +103,34 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 				titlePattern = "activity-document-library-update-file-in";
 			}
 		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-document-library-move-to-trash";
+			}
+			else {
+				titlePattern = "activity-document-library-move-to-trash-in";
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				titlePattern = "activity-document-library-restore-from-trash";
+			}
+			else {
+				titlePattern =
+					"activity-document-library-restore-from-trash-in";
+			}
+		}
 
 		String fileTitle = getValue(
 			activity.getExtraData(), "title", fileEntry.getTitle());
+
+		if (TrashUtil.isInTrash(
+				fileEntry.getModelClassName(), fileEntry.getFileEntryId())) {
+
+			fileTitle = TrashUtil.getOriginalTitle(fileEntry.getTitle());
+		}
 
 		Object[] titleArguments = new Object[] {
 			groupName, creatorUserName, wrapLink(link, fileTitle)
