@@ -29,6 +29,8 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -60,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.portlet.PortletURL;
 
@@ -245,6 +248,13 @@ public class TrashImpl implements Trash {
 
 	public String getOriginalTitle(String title) {
 		return getOriginalTitle(title, StringPool.SLASH);
+	}
+
+	public String getOriginalTitle(String title, Locale locale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return LocalizationUtil.getLocalization(
+			getOriginalTitle(title), languageId);
 	}
 
 	public String getTrashTime(String title, String separator) {
