@@ -958,7 +958,11 @@ public class PortletURLImpl
 		String controlPanelCategory = _controlPanelCategory;
 
 		if (Validator.isNull(controlPanelCategory)) {
-			controlPanelCategory = themeDisplay.getControlPanelCategory();
+			HttpServletRequest request = PortalUtil.getOriginalServletRequest(
+				_request);
+
+			controlPanelCategory = ParamUtil.getString(
+				request, "controlPanelCategory");
 		}
 
 		if (Validator.isNotNull(controlPanelCategory)) {
