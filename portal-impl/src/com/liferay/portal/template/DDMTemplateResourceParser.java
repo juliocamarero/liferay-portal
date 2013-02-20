@@ -30,7 +30,7 @@ import com.liferay.portlet.journal.service.JournalTemplateLocalServiceUtil;
 /**
  * @author Tina Tian
  */
-public class JournalTemplateResourceParser implements TemplateResourceParser {
+public class DDMTemplateResourceParser implements TemplateResourceParser {
 
 	public TemplateResource getTemplateResource(String templateId)
 		throws TemplateException {
@@ -74,6 +74,6 @@ public class JournalTemplateResourceParser implements TemplateResourceParser {
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
-		JournalTemplateResourceParser.class);
+		DDMTemplateResourceParser.class);
 
 }
