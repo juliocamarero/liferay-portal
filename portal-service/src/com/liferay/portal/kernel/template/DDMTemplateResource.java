@@ -29,7 +29,7 @@ import java.util.Date;
 /**
  * @author Tina Tian
  */
-public class JournalTemplateResource implements TemplateResource {
+public class DDMTemplateResource implements TemplateResource {
 
 	/**
 	 * The empty constructor is required by {@link java.io.Externalizable}. Do
