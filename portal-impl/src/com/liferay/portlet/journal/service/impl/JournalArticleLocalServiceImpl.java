@@ -3166,13 +3166,13 @@ public class JournalArticleLocalServiceImpl
 			else if (elType.equals("text_area") || elType.equals("text") ||
 					 elType.equals("text_box")) {
 
-				String contentTypes = null;
+				String contentType = null;
 
 				if (elType.equals("text_area")) {
-					contentTypes = ContentTypes.TEXT_HTML;
+					contentType = ContentTypes.TEXT_HTML;
 				}
 				else {
-					contentTypes = ContentTypes.TEXT_PLAIN;
+					contentType = ContentTypes.TEXT_PLAIN;
 				}
 
 				List<Element> dynamicContentElements = element.elements(
@@ -3184,8 +3184,8 @@ public class JournalArticleLocalServiceImpl
 					if (Validator.isNotNull(dynamicContent)) {
 						dynamicContent = SanitizerUtil.sanitize(
 							user.getCompanyId(), groupId, user.getUserId(),
-							JournalArticle.class.getName(), 0,
-							contentTypes, dynamicContent);
+							JournalArticle.class.getName(), 0, contentType,
+							dynamicContent);
 
 						dynamicContentElement.clearContent();
 
