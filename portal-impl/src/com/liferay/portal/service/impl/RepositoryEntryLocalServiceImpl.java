@@ -67,8 +67,8 @@ public class RepositoryEntryLocalServiceImpl
 		RepositoryEntry repositoryEntry =
 			repositoryEntryPersistence.findByPrimaryKey(repositoryEntryId);
 
-		repositoryEntry.setMappedId(mappedId);
 		repositoryEntry.setModifiedDate(new Date());
+		repositoryEntry.setMappedId(mappedId);
 
 		repositoryEntryPersistence.update(repositoryEntry);
 
