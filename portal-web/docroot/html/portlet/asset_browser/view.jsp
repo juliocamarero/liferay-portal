@@ -17,6 +17,7 @@
 <%@ include file="/html/portlet/asset_browser/init.jsp" %>
 
 <%
+HOLA MUNDO
 long groupId = ParamUtil.getLong(request, "groupId");
 
 long refererAssetEntryId = ParamUtil.getLong(request, "refererAssetEntryId");
