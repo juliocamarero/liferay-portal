@@ -80,7 +80,7 @@ public class GroupTestUtil {
 	}
 
 	public static Group addGroup(
-		String name, long parentGroupId, ServiceContext serviceContext)
+			String name, long parentGroupId, ServiceContext serviceContext)
 		throws Exception {
 
 		Group group = GroupLocalServiceUtil.fetchGroup(
