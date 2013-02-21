@@ -17,7 +17,13 @@ package com.liferay.portlet.mobiledevicerules.lar;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.mobiledevicerules.model.MDRRule;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
+import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupLocalServiceUtil;
+import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupUtil;
+
+import java.util.List;
 
 /**
  * @author Mate Thurzo
@@ -36,7 +42,30 @@ public class MDRRuleGroupStagedModelDataHandler
 			MDRRuleGroup ruleGroup)
 		throws Exception {
 
-		return;
+		if (!portletDataContext.isWithinDateRange(
+				ruleGroup.getModifiedDate())) {
+
+			return;
+		}
+
+		String path = getRuleGroupPath(portletDataContext, ruleGroup);
+
+		if (!portletDataContext.isPathNotProcessed(path)) {
+			return;
+		}
+
+		Element ruleGroupElement = ruleGroupsElement.addElement("rule-group");
+
+		portletDataContext.addClassedModel(
+			ruleGroupElement, path, ruleGroup, NAMESPACE);
+
+		Element mdrRulesElement = ruleGroupElement.addElement("rules");
+
+		List<MDRRule> rules = ruleGroup.getRules();
+
+		for (MDRRule rule : rules) {
+			exportRule(portletDataContext, mdrRulesElement, rule);
+		}
 	}
 
 	@Override
@@ -45,7 +74,61 @@ public class MDRRuleGroupStagedModelDataHandler
 			String path, MDRRuleGroup ruleGroup)
 		throws Exception {
 
-		return;
+		long userId = portletDataContext.getUserId(ruleGroup.getUserUuid());
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			ruleGroupElement, ruleGroup, NAMESPACE);
+
+		serviceContext.setUserId(userId);
+
+		MDRRuleGroup importedRuleGroup = null;
+
+		if (portletDataContext.isDataStrategyMirror()) {
+			MDRRuleGroup existingRuleGroup = MDRRuleGroupUtil.fetchByUUID_G(
+				ruleGroup.getUuid(), portletDataContext.getScopeGroupId());
+
+			if (existingRuleGroup == null) {
+				serviceContext.setUuid(ruleGroup.getUuid());
+
+				importedRuleGroup = MDRRuleGroupLocalServiceUtil.addRuleGroup(
+					portletDataContext.getScopeGroupId(),
+					ruleGroup.getNameMap(), ruleGroup.getDescriptionMap(),
+					serviceContext);
+			}
+			else {
+				importedRuleGroup =
+					MDRRuleGroupLocalServiceUtil.updateRuleGroup(
+						existingRuleGroup.getRuleGroupId(),
+						ruleGroup.getNameMap(), ruleGroup.getDescriptionMap(),
+						serviceContext);
+			}
+		}
+		else {
+			importedRuleGroup = MDRRuleGroupLocalServiceUtil.addRuleGroup(
+				portletDataContext.getScopeGroupId(), ruleGroup.getNameMap(),
+				ruleGroup.getDescriptionMap(), serviceContext);
+		}
+
+		portletDataContext.importClassedModel(
+			ruleGroup, importedRuleGroup, NAMESPACE);
+
+		Element rulesElement = ruleGroupElement.element("rules");
+
+		List<Element> ruleElements = rulesElement.elements("rule");
+
+		for (Element ruleElement : ruleElements) {
+			String path = ruleElement.attributeValue("path");
+
+			if (!portletDataContext.isPathNotProcessed(path)) {
+				continue;
+			}
+
+			MDRRule rule = (MDRRule)portletDataContext.getZipEntryAsObject(
+				path);
+
+			importRule(
+				portletDataContext, ruleElement, importedRuleGroup, rule);
+		}
 	}
 
 }

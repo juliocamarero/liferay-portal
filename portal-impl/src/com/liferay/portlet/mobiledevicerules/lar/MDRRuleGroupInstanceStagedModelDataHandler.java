@@ -16,8 +16,23 @@ package com.liferay.portlet.mobiledevicerules.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.LayoutSetLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.mobiledevicerules.model.MDRAction;
+import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
+import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceLocalServiceUtil;
+import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupInstanceUtil;
+import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupUtil;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mate Thurzo
@@ -36,7 +51,48 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			MDRRuleGroupInstance ruleGroupInstance)
 		throws Exception {
 
-		return;
+		if (!portletDataContext.isWithinDateRange(
+				ruleGroupInstance.getModifiedDate())) {
+
+			return;
+		}
+
+		String path = getRuleGroupInstancePath(
+			portletDataContext, ruleGroupInstance);
+
+		if (!portletDataContext.isPathNotProcessed(path)) {
+			return;
+		}
+
+		Element ruleGroupInstanceElement = ruleGroupInstancesElement.addElement(
+			"rule-group-instance");
+
+		MDRRuleGroup ruleGroup = ruleGroupInstance.getRuleGroup();
+
+		String className = ruleGroupInstance.getClassName();
+
+		if (className.equals(Layout.class.getName())) {
+			Layout layout = LayoutLocalServiceUtil.getLayout(
+				ruleGroupInstance.getClassPK());
+
+			ruleGroupInstanceElement.addAttribute(
+				"layout-uuid", layout.getUuid());
+		}
+
+		String ruleGroupUuid = ruleGroup.getUuid();
+
+		ruleGroupInstanceElement.addAttribute("rule-group-uuid", ruleGroupUuid);
+
+		portletDataContext.addClassedModel(
+			ruleGroupInstanceElement, path, ruleGroupInstance, NAMESPACE);
+
+		Element actionsElement = ruleGroupInstanceElement.addElement("actions");
+
+		List<MDRAction> actions = ruleGroupInstance.getActions();
+
+		for (MDRAction action : actions) {
+			exportAction(portletDataContext, actionsElement, action);
+		}
 	}
 
 	@Override
@@ -46,7 +102,135 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			MDRRuleGroupInstance ruleGroupInstance)
 		throws Exception {
 
-		return;
+		long userId = portletDataContext.getUserId(
+			ruleGroupInstance.getUserUuid());
+
+		Map<Long, Long> ruleGroupIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				MDRRuleGroup.class);
+
+		Long ruleGroupId = ruleGroupIds.get(ruleGroupInstance.getRuleGroupId());
+
+		if (ruleGroupId == null) {
+			try {
+				String ruleGroupUuid = ruleGroupInstanceElement.attributeValue(
+					"rule-group-uuid");
+
+				MDRRuleGroup ruleGroup = MDRRuleGroupUtil.fetchByUUID_G(
+					ruleGroupUuid, portletDataContext.getScopeGroupId());
+
+				ruleGroupId = ruleGroup.getRuleGroupId();
+			}
+			catch (Exception e) {
+				if (_log.isErrorEnabled()) {
+					_log.warn(
+						"Unable to import rule group instance " +
+							ruleGroupInstance,
+						e);
+				}
+
+				return;
+			}
+		}
+
+		long classPK = 0;
+
+		String layoutUuid = ruleGroupInstanceElement.attributeValue(
+			"layout-uuid");
+
+		try {
+			if (Validator.isNotNull(layoutUuid)) {
+				Layout layout =
+					LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
+						layoutUuid, portletDataContext.getScopeGroupId(),
+						portletDataContext.isPrivateLayout());
+
+				classPK = layout.getPrimaryKey();
+			}
+			else {
+				LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+					portletDataContext.getScopeGroupId(),
+					portletDataContext.isPrivateLayout());
+
+				classPK = layoutSet.getLayoutSetId();
+			}
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				StringBundler sb = new StringBundler(5);
+
+				sb.append("Layout ");
+				sb.append(layoutUuid);
+				sb.append(" is missing for rule group instance ");
+				sb.append(ruleGroupInstance.getRuleGroupInstanceId());
+				sb.append(", skipping this rule group instance.");
+
+				_log.warn(sb.toString());
+			}
+
+			return;
+		}
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			ruleGroupInstanceElement, ruleGroupInstance, NAMESPACE);
+
+		serviceContext.setUserId(userId);
+
+		MDRRuleGroupInstance importedRuleGroupInstance = null;
+
+		if (portletDataContext.isDataStrategyMirror()) {
+			MDRRuleGroupInstance existingMDRRuleGroupInstance =
+				MDRRuleGroupInstanceUtil.fetchByUUID_G(
+					ruleGroupInstance.getUuid(),
+					portletDataContext.getScopeGroupId());
+
+			if (existingMDRRuleGroupInstance == null) {
+				serviceContext.setUuid(ruleGroupInstance.getUuid());
+
+				importedRuleGroupInstance =
+					MDRRuleGroupInstanceLocalServiceUtil.addRuleGroupInstance(
+						portletDataContext.getScopeGroupId(),
+						ruleGroupInstance.getClassName(), classPK, ruleGroupId,
+						ruleGroupInstance.getPriority(), serviceContext);
+			}
+			else {
+				importedRuleGroupInstance =
+					MDRRuleGroupInstanceLocalServiceUtil.
+						updateRuleGroupInstance(
+							existingMDRRuleGroupInstance.
+								getRuleGroupInstanceId(),
+							ruleGroupInstance.getPriority());
+			}
+		}
+		else {
+			importedRuleGroupInstance =
+				MDRRuleGroupInstanceLocalServiceUtil.addRuleGroupInstance(
+					portletDataContext.getScopeGroupId(),
+					ruleGroupInstance.getClassName(), classPK, ruleGroupId,
+					ruleGroupInstance.getPriority(), serviceContext);
+		}
+
+		portletDataContext.importClassedModel(
+			ruleGroupInstance, importedRuleGroupInstance, NAMESPACE);
+
+		Element actionsElement = ruleGroupInstanceElement.element("actions");
+
+		List<Element> actionElements = actionsElement.elements("action");
+
+		for (Element actionElement : actionElements) {
+			String path = actionElement.attributeValue("path");
+
+			if (!portletDataContext.isPathNotProcessed(path)) {
+				continue;
+			}
+
+			MDRAction action =
+				(MDRAction)portletDataContext.getZipEntryAsObject(path);
+
+			importAction(
+				portletDataContext, actionElement, importedRuleGroupInstance,
+				action);
+		}
 	}
 
 }

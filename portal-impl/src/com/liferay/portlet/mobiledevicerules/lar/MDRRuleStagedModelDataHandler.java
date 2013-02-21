@@ -17,7 +17,10 @@ package com.liferay.portlet.mobiledevicerules.lar;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.mobiledevicerules.model.MDRRule;
+import com.liferay.portlet.mobiledevicerules.service.MDRRuleLocalServiceUtil;
+import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleUtil;
 
 /**
  * @author Mate Thurzo
@@ -36,7 +39,15 @@ public class MDRRuleStagedModelDataHandler
 			MDRRule rule)
 		throws Exception {
 
-		return;
+		String path = getRulePath(portletDataContext, rule);
+
+		if (!portletDataContext.isPathNotProcessed(path)) {
+			return;
+		}
+
+		Element ruleElement = rulesElement.addElement("rule");
+
+		portletDataContext.addClassedModel(ruleElement, path, rule, NAMESPACE);
 	}
 
 	@Override
@@ -45,7 +56,42 @@ public class MDRRuleStagedModelDataHandler
 			MDRRule rule)
 		throws Exception {
 
-		return;
+		long userId = portletDataContext.getUserId(rule.getUserUuid());
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			ruleElement, rule, NAMESPACE);
+
+		serviceContext.setUserId(userId);
+
+		MDRRule importedRule = null;
+
+		if (portletDataContext.isDataStrategyMirror()) {
+			MDRRule existingRule = MDRRuleUtil.fetchByUUID_G(
+				rule.getUuid(), portletDataContext.getScopeGroupId());
+
+			if (existingRule == null) {
+				serviceContext.setUuid(rule.getUuid());
+
+				importedRule = MDRRuleLocalServiceUtil.addRule(
+					ruleGroup.getRuleGroupId(), rule.getNameMap(),
+					rule.getDescriptionMap(), rule.getType(),
+					rule.getTypeSettingsProperties(), serviceContext);
+			}
+			else {
+				importedRule = MDRRuleLocalServiceUtil.updateRule(
+					existingRule.getRuleId(), rule.getNameMap(),
+					rule.getDescriptionMap(), rule.getType(),
+					rule.getTypeSettingsProperties(), serviceContext);
+			}
+		}
+		else {
+			importedRule = MDRRuleLocalServiceUtil.addRule(
+				ruleGroup.getRuleGroupId(), rule.getNameMap(),
+				rule.getDescriptionMap(), rule.getType(),
+				rule.getTypeSettingsProperties(), serviceContext);
+		}
+
+		portletDataContext.importClassedModel(rule, importedRule, NAMESPACE);
 	}
 
 }
