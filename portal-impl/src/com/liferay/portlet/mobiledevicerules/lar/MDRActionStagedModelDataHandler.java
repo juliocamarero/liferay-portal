@@ -54,7 +54,8 @@ public class MDRActionStagedModelDataHandler
 			MDRAction action)
 		throws Exception {
 
-		Element ruleGroupInstancesElement = elements[0];
+		Element ruleGroupsElement = elements[0];
+		Element ruleGroupInstancesElement = elements[1];
 
 		// Rule Group Instance
 
@@ -63,11 +64,13 @@ public class MDRActionStagedModelDataHandler
 				action.getRuleGroupInstanceId());
 
 		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext, ruleGroupInstancesElement, ruleGroupInstance);
+			portletDataContext,
+			new Element[] {ruleGroupsElement, ruleGroupInstancesElement},
+			ruleGroupInstance);
 
 		// Action
 
-		Element actionsElement = elements[1];
+		Element actionsElement = elements[2];
 
 		Element actionElement = actionsElement.addElement("action");
 

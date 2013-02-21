@@ -139,7 +139,10 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext,
-					new Element[] {ruleGroupInstancesElement, actionsElement},
+					new Element[] {
+						ruleGroupsElement, ruleGroupInstancesElement,
+						actionsElement
+					},
 					action);
 			}
 

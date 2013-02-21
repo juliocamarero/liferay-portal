@@ -16,9 +16,11 @@ package com.liferay.portlet.mobiledevicerules.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
@@ -30,8 +32,8 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
 import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceLocalServiceUtil;
+import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupLocalServiceUtil;
 import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupInstanceUtil;
-import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupUtil;
 
 import java.util.Map;
 
@@ -52,13 +54,22 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			MDRRuleGroupInstance ruleGroupInstance)
 		throws Exception {
 
+		Element ruleGroupsElement = elements[0];
 
-		Element ruleGroupInstancesElement = elements[0];
+		// Rule group
+
+		MDRRuleGroup ruleGroup = MDRRuleGroupLocalServiceUtil.getRuleGroup(
+			ruleGroupInstance.getRuleGroupId());
+
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, ruleGroupsElement, ruleGroup);
+
+		// Rule group instance
+
+		Element ruleGroupInstancesElement = elements[1];
 
 		Element ruleGroupInstanceElement = ruleGroupInstancesElement.addElement(
 			"rule-group-instance");
-
-		MDRRuleGroup ruleGroup = ruleGroupInstance.getRuleGroup();
 
 		String className = ruleGroupInstance.getClassName();
 
@@ -69,10 +80,6 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			ruleGroupInstanceElement.addAttribute(
 				"layout-uuid", layout.getUuid());
 		}
-
-		String ruleGroupUuid = ruleGroup.getUuid();
-
-		ruleGroupInstanceElement.addAttribute("rule-group-uuid", ruleGroupUuid);
 
 		portletDataContext.addClassedModel(
 			ruleGroupInstanceElement,
@@ -90,33 +97,24 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		long userId = portletDataContext.getUserId(
 			ruleGroupInstance.getUserUuid());
 
+		String ruleGroupPath = StagedModelPathUtil.getPath(
+			portletDataContext, MDRRuleGroup.class.getName(),
+			ruleGroupInstance.getRuleGroupId());
+
+		MDRRuleGroup ruleGroup =
+			(MDRRuleGroup)portletDataContext.getZipEntryAsObject(ruleGroupPath);
+
+		StagedModelDataHandlerUtil.importStagedModel(
+			portletDataContext, ruleGroupInstanceElement, ruleGroupPath,
+			ruleGroup);
+
 		Map<Long, Long> ruleGroupIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 				MDRRuleGroup.class);
 
-		Long ruleGroupId = ruleGroupIds.get(ruleGroupInstance.getRuleGroupId());
-
-		if (ruleGroupId == null) {
-			try {
-				String ruleGroupUuid = ruleGroupInstanceElement.attributeValue(
-					"rule-group-uuid");
-
-				MDRRuleGroup ruleGroup = MDRRuleGroupUtil.fetchByUUID_G(
-					ruleGroupUuid, portletDataContext.getScopeGroupId());
-
-				ruleGroupId = ruleGroup.getRuleGroupId();
-			}
-			catch (Exception e) {
-				if (_log.isErrorEnabled()) {
-					_log.warn(
-						"Unable to import rule group instance " +
-							ruleGroupInstance,
-						e);
-				}
-
-				return;
-			}
-		}
+		Long ruleGroupId = MapUtil.getLong(
+			ruleGroupIds, ruleGroupInstance.getRuleGroupId(),
+			ruleGroupInstance.getRuleGroupId());
 
 		long classPK = 0;
 
