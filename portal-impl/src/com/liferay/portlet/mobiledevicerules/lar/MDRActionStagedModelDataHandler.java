@@ -47,10 +47,6 @@ public class MDRActionStagedModelDataHandler
 
 		String path = getActionPath(portletDataContext, action);
 
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
 		Element actionElement = actionsElement.addElement("action");
 
 		String type = action.getType();

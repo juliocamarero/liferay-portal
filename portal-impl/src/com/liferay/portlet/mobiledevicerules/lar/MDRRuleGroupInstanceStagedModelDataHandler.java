@@ -51,18 +51,8 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			MDRRuleGroupInstance ruleGroupInstance)
 		throws Exception {
 
-		if (!portletDataContext.isWithinDateRange(
-				ruleGroupInstance.getModifiedDate())) {
-
-			return;
-		}
-
 		String path = getRuleGroupInstancePath(
 			portletDataContext, ruleGroupInstance);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
 
 		Element ruleGroupInstanceElement = ruleGroupInstancesElement.addElement(
 			"rule-group-instance");
