@@ -133,6 +133,12 @@ AUI.add(
 					UI_EVENTS: {},
 					TREEVIEWS: {},
 
+					destructor: function() {
+						var instance = this;
+
+						(new A.EventHandle(instance._entriesHandles)).detach();
+					},
+
 					renderUI: function() {
 						var instance = this;
 
@@ -183,41 +189,9 @@ AUI.add(
 
 							instance._entriesHandles = [
 								entries.after(
-									'add',
+									['add', 'replace', 'remove'],
 									function(event) {
-										A.fire(
-											NAME + ':categoryAdd',
-											{
-												categoryId: event.attrName,
-												target: instance.inputNode
-											}
-										);
-									},
-									instance
-								),
-								entries.after(
-									'replace',
-									function(event) {
-										A.fire(
-											NAME + ':categoryReplace',
-											{
-												categoryId: event.attrName,
-												target: instance.inputNode
-											}
-										);
-									},
-									instance
-								),
-								entries.after(
-									'remove',
-									function(event) {
-										A.fire(
-											NAME + ':categoryRemove',
-											{
-												categoryId: event.attrName,
-												target: instance.inputNode
-											}
-										);
+										A.fire('formNavigator:trackChanges', instance.inputNode);
 									},
 									instance
 								)
