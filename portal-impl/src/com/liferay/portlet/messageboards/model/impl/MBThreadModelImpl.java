@@ -563,6 +563,26 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 		_statusDate = statusDate;
 	}
 
+	public long getContainerModelId() {
+		return getThreadId();
+	}
+
+	public void setContainerModelId(long containerModelId) {
+		_threadId = containerModelId;
+	}
+
+	public long getParentContainerModelId() {
+		return getCategoryId();
+	}
+
+	public void setParentContainerModelId(long parentContainerModelId) {
+		_categoryId = parentContainerModelId;
+	}
+
+	public String getContainerModelName() {
+		return String.valueOf(getContainerModelId());
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
