@@ -16,14 +16,12 @@ package com.liferay.portlet.mobiledevicerules.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.mobiledevicerules.model.MDRRule;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
 import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupLocalServiceUtil;
 import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupUtil;
-
-import java.util.List;
 
 /**
  * @author Mate Thurzo
@@ -42,20 +40,14 @@ public class MDRRuleGroupStagedModelDataHandler
 			MDRRuleGroup ruleGroup)
 		throws Exception {
 
-		String path = getRuleGroupPath(portletDataContext, ruleGroup);
+		String path = StagedModelPathUtil.getPath(ruleGroup);
+
+		Element ruleGroupsElement = elements[0];
 
 		Element ruleGroupElement = ruleGroupsElement.addElement("rule-group");
 
 		portletDataContext.addClassedModel(
-			ruleGroupElement, path, ruleGroup, NAMESPACE);
-
-		Element mdrRulesElement = ruleGroupElement.addElement("rules");
-
-		List<MDRRule> rules = ruleGroup.getRules();
-
-		for (MDRRule rule : rules) {
-			exportRule(portletDataContext, mdrRulesElement, rule);
-		}
+			ruleGroupElement, path, ruleGroup, MDRPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -67,7 +59,7 @@ public class MDRRuleGroupStagedModelDataHandler
 		long userId = portletDataContext.getUserId(ruleGroup.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			ruleGroupElement, ruleGroup, NAMESPACE);
+			ruleGroupElement, ruleGroup, MDRPortletDataHandler.NAMESPACE);
 
 		serviceContext.setUserId(userId);
 
@@ -100,25 +92,7 @@ public class MDRRuleGroupStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			ruleGroup, importedRuleGroup, NAMESPACE);
-
-		Element rulesElement = ruleGroupElement.element("rules");
-
-		List<Element> ruleElements = rulesElement.elements("rule");
-
-		for (Element ruleElement : ruleElements) {
-			String path = ruleElement.attributeValue("path");
-
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
-			}
-
-			MDRRule rule = (MDRRule)portletDataContext.getZipEntryAsObject(
-				path);
-
-			importRule(
-				portletDataContext, ruleElement, importedRuleGroup, rule);
-		}
+			ruleGroup, importedRuleGroup, MDRPortletDataHandler.NAMESPACE);
 	}
 
 }

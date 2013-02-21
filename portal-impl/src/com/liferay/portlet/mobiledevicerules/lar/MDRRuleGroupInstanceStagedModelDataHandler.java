@@ -16,6 +16,9 @@ package com.liferay.portlet.mobiledevicerules.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
@@ -24,14 +27,12 @@ import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.mobiledevicerules.model.MDRAction;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
 import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceLocalServiceUtil;
 import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupInstanceUtil;
 import com.liferay.portlet.mobiledevicerules.service.persistence.MDRRuleGroupUtil;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,8 +52,9 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			MDRRuleGroupInstance ruleGroupInstance)
 		throws Exception {
 
-		String path = getRuleGroupInstancePath(
-			portletDataContext, ruleGroupInstance);
+		String path = StagedModelPathUtil.getPath(ruleGroupInstance);
+
+		Element ruleGroupInstancesElement = elements[0];
 
 		Element ruleGroupInstanceElement = ruleGroupInstancesElement.addElement(
 			"rule-group-instance");
@@ -74,15 +76,8 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		ruleGroupInstanceElement.addAttribute("rule-group-uuid", ruleGroupUuid);
 
 		portletDataContext.addClassedModel(
-			ruleGroupInstanceElement, path, ruleGroupInstance, NAMESPACE);
-
-		Element actionsElement = ruleGroupInstanceElement.addElement("actions");
-
-		List<MDRAction> actions = ruleGroupInstance.getActions();
-
-		for (MDRAction action : actions) {
-			exportAction(portletDataContext, actionsElement, action);
-		}
+			ruleGroupInstanceElement, path, ruleGroupInstance,
+			MDRPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -162,7 +157,8 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			ruleGroupInstanceElement, ruleGroupInstance, NAMESPACE);
+			ruleGroupInstanceElement, ruleGroupInstance,
+			MDRPortletDataHandler.NAMESPACE);
 
 		serviceContext.setUserId(userId);
 
@@ -201,26 +197,11 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			ruleGroupInstance, importedRuleGroupInstance, NAMESPACE);
-
-		Element actionsElement = ruleGroupInstanceElement.element("actions");
-
-		List<Element> actionElements = actionsElement.elements("action");
-
-		for (Element actionElement : actionElements) {
-			String path = actionElement.attributeValue("path");
-
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
-			}
-
-			MDRAction action =
-				(MDRAction)portletDataContext.getZipEntryAsObject(path);
-
-			importAction(
-				portletDataContext, actionElement, importedRuleGroupInstance,
-				action);
-		}
+			ruleGroupInstance, importedRuleGroupInstance,
+			MDRPortletDataHandler.NAMESPACE);
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		MDRRuleGroupInstanceStagedModelDataHandler.class);
 
 }
