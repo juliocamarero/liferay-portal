@@ -97,15 +97,16 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		StagedModel stagedModel = addStagedModel(
 			_stagingGroup, dependentStagedModels);
 
-		Element[] stagedModelElements = _getStagedModelElements(
+		Element[] stagedModelsParentElements = _getStagedModelsParentElements(
 			dependentStagedModels);
 
 		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext, stagedModelElements, stagedModel);
+			portletDataContext, stagedModelsParentElements, stagedModel);
 
 		// Validate Export
 
-		validateExport(stagedModel, dependentStagedModels, stagedModelElements);
+		validateExport(
+			stagedModel, dependentStagedModels, stagedModelsParentElements);
 
 		// Import
 
@@ -122,8 +123,8 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 
 		portletDataContext.setSourceGroupId(_stagingGroup.getGroupId());
 
-		Element importElement = _getImportElement(
-			stagedModel, stagedModelElements);
+		Element importElement = _getImportedStagedModelElement(
+			stagedModel, stagedModelsParentElements);
 
 		Assert.assertNotNull(importElement);
 
@@ -183,14 +184,14 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 
 	protected void validateExport(
 			StagedModel stagedModel,
-			Map<String, List<StagedModel>> dependentStagedModels,
-			Element[] exportedElements)
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Element[] stagedModelsParentElements)
 		throws Exception {
 
-		for (Element exportedElement : exportedElements) {
-			String className = exportedElement.getName();
+		for (Element stagedModelsParentElement : stagedModelsParentElements) {
+			String className = stagedModelsParentElement.getName();
 
-			List<StagedModel> stagedModelList = dependentStagedModels.get(
+			List<StagedModel> stagedModelList = dependentStagedModelsMap.get(
 				className);
 
 			if (stagedModelList == null) {
@@ -204,14 +205,15 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 				stagedModelList.add(stagedModel);
 			}
 
-			List<Element> modelElements = exportedElement.elements();
+			List<Element> stagedModelElements =
+				stagedModelsParentElement.elements();
 
-			if (modelElements.size() != stagedModelList.size()) {
+			if (stagedModelElements.size() != stagedModelList.size()) {
 				Assert.fail();
 			}
 
-			for (Element modelElement : modelElements) {
-				String path = modelElement.attributeValue("path");
+			for (Element stagedModelElement : stagedModelElements) {
+				String path = stagedModelElement.attributeValue("path");
 
 				if (Validator.isNull(path)) {
 					Assert.fail();
@@ -250,7 +252,7 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		validateDependentImportedStagedModels(dependentStagedModelsMap, group);
 	}
 
-	private Element _getImportElement(
+	private Element _getImportedStagedModelElement(
 		StagedModel stagedModel, Element[] stagedModelElements) {
 
 		Element rootElement = new ElementImpl(
@@ -277,7 +279,7 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		return stagedModelElement;
 	}
 
-	private Element[] _getStagedModelElements(
+	private Element[] _getStagedModelsParentElements(
 		Map<String, List<StagedModel>> dependentStagedModels) {
 
 		List<Element> stagedModelElements = new ArrayList<Element>();
