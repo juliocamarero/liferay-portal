@@ -20,16 +20,9 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.UnicodeProperties;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.mobile.device.rulegroup.action.impl.SiteRedirectActionHandler;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portlet.mobiledevicerules.model.MDRAction;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
 import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceLocalServiceUtil;
@@ -174,48 +167,6 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return null;
-	}
-
-	protected void validateTargetLayoutPlid(
-		Element actionElement, MDRAction action) {
-
-		String type = action.getType();
-
-		if (!type.equals(SiteRedirectActionHandler.class.getName())) {
-			return;
-		}
-
-		String targetLayoutUuid = actionElement.attributeValue("layout-uuid");
-
-		if (Validator.isNull(targetLayoutUuid)) {
-			return;
-		}
-
-		UnicodeProperties typeSettingsProperties =
-			action.getTypeSettingsProperties();
-
-		long targetGroupId = GetterUtil.getLong(
-			typeSettingsProperties.getProperty("groupId"));
-		boolean privateLayout = GetterUtil.getBoolean(
-			actionElement.attributeValue("private-layout"));
-
-		try {
-			Layout targetLayout =
-				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-					targetLayoutUuid, targetGroupId, privateLayout);
-
-			typeSettingsProperties.setProperty(
-				"plid", String.valueOf(targetLayout.getPlid()));
-		}
-		catch (Exception e) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Unable to find target layout with uuid " +
-						targetLayoutUuid + " in group " + targetGroupId +
-							". Site redirect may not match target layout.",
-					e);
-			}
-		}
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
