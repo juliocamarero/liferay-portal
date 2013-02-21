@@ -16,19 +16,20 @@ package com.liferay.portal.template;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.template.JournalTemplateResource;
+import com.liferay.portal.kernel.template.DDMTemplateResource;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.util.CharPool;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
-import com.liferay.portlet.journal.model.JournalTemplate;
-import com.liferay.portlet.journal.service.JournalTemplateLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
+import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateServiceUtil;
 
 /**
  * @author Tina Tian
+ * @author Juan Fernández
+ *
  */
 public class DDMTemplateResourceParser implements TemplateResourceParser {
 
@@ -36,7 +37,7 @@ public class DDMTemplateResourceParser implements TemplateResourceParser {
 		throws TemplateException {
 
 		int pos = templateId.indexOf(
-			TemplateConstants.JOURNAL_SEPARATOR + StringPool.SLASH);
+			TemplateConstants.TEMPLATES_SEPARATOR + StringPool.SLASH);
 
 		if (pos == -1) {
 			return null;
@@ -44,25 +45,18 @@ public class DDMTemplateResourceParser implements TemplateResourceParser {
 
 		try {
 			int x = templateId.indexOf(CharPool.SLASH, pos);
-			int y = templateId.indexOf(CharPool.SLASH, x + 1);
-			int z = templateId.indexOf(CharPool.SLASH, y + 1);
 
-			long companyId = GetterUtil.getLong(templateId.substring(x + 1, y));
-			long groupId = GetterUtil.getLong(templateId.substring(y + 1, z));
-			String journalTemplateId = templateId.substring(z + 1);
+			long ddmTemplateId = Long.valueOf(templateId.substring(x + 1));
 
 			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Loading {companyId=" + companyId + ", groupId=" +
-						groupId + ", templateId=" + journalTemplateId + "}");
+				_log.debug("Loading ddmTemplateId=" + ddmTemplateId);
 			}
 
-			JournalTemplate journalTemplate =
-				JournalTemplateLocalServiceUtil.getTemplate(
-					groupId, journalTemplateId);
+			DDMTemplate ddmTemplate = DDMTemplateServiceUtil.getTemplate(
+				ddmTemplateId);
 
-			return new JournalTemplateResource(
-				journalTemplateId, journalTemplate);
+			return new DDMTemplateResource(
+				ddmTemplate.getTemplateKey(), ddmTemplate);
 		}
 		catch (NoSuchTemplateException nste) {
 			return null;

@@ -143,15 +143,14 @@ public class Transformer {
 			template.put("device", getDevice(themeDisplay));
 			template.put("groupId", groupId);
 			template.put(
-				"journalTemplatesPath",
-				getJournalTemplatesPath(companyId, groupId));
-			template.put(
 				"permissionChecker",
 				PermissionThreadLocal.getPermissionChecker());
 			template.put(
 				"randomNamespace",
 				PwdGenerator.getPassword(PwdGenerator.KEY3, 4) +
 					StringPool.UNDERLINE);
+			template.put(
+				"templatesPath", TemplateConstants.TEMPLATES_SEPARATOR);
 
 			load = mergeTemplate(template, unsyncStringWriter);
 		}
@@ -314,9 +313,6 @@ public class Transformer {
 				template.put("companyId", companyId);
 				template.put("device", getDevice(themeDisplay));
 				template.put("groupId", groupId);
-				template.put(
-					"journalTemplatesPath",
-					getJournalTemplatesPath(companyId, groupId));
 
 				Locale locale = LocaleUtil.fromLanguageId(languageId);
 
@@ -329,6 +325,8 @@ public class Transformer {
 					"randomNamespace",
 					PwdGenerator.getPassword(PwdGenerator.KEY3, 4) +
 						StringPool.UNDERLINE);
+				template.put(
+					"templatesPath", TemplateConstants.TEMPLATES_SEPARATOR);
 				template.put("viewMode", viewMode);
 
 				load = mergeTemplate(template, unsyncStringWriter);
@@ -415,18 +413,6 @@ public class Transformer {
 		}
 
 		return null;
-	}
-
-	protected String getJournalTemplatesPath(long companyId, long groupId) {
-		StringBundler sb = new StringBundler(5);
-
-		sb.append(TemplateConstants.JOURNAL_SEPARATOR);
-		sb.append(StringPool.SLASH);
-		sb.append(companyId);
-		sb.append(StringPool.SLASH);
-		sb.append(groupId);
-
-		return sb.toString();
 	}
 
 	protected Template getTemplate(

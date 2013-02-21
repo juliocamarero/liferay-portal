@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.test.ConsoleTestUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.template.CacheTemplateResource;
-import com.liferay.portlet.journal.model.JournalTemplate;
+import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -101,7 +101,7 @@ public class TemplateResourceExternalizationTest {
 	@Test
 	public void testConstructors() throws Exception {
 		CacheTemplateResource.class.getConstructor();
-		JournalTemplateResource.class.getConstructor();
+		DDMTemplateResource.class.getConstructor();
 		StringTemplateResource.class.getConstructor();
 		URLTemplateResource.class.getConstructor();
 	}
@@ -114,8 +114,7 @@ public class TemplateResourceExternalizationTest {
 			TemplateResource.class.isAssignableFrom(
 				CacheTemplateResource.class));
 		Assert.assertTrue(
-			TemplateResource.class.isAssignableFrom(
-				JournalTemplateResource.class));
+			TemplateResource.class.isAssignableFrom(DDMTemplateResource.class));
 		Assert.assertTrue(
 			TemplateResource.class.isAssignableFrom(
 				StringTemplateResource.class));
@@ -128,10 +127,9 @@ public class TemplateResourceExternalizationTest {
 		String templateId = "testId";
 		final long journalTemplateId = 100;
 
-		JournalTemplate journalTemplate =
-			(JournalTemplate)ProxyUtil.newProxyInstance(
-				getClass().getClassLoader(),
-				new Class<?>[] {JournalTemplate.class},
+		DDMTemplate ddmTemplate =
+			(DDMTemplate)ProxyUtil.newProxyInstance(
+				getClass().getClassLoader(), new Class<?>[] {DDMTemplate.class},
 				new InvocationHandler() {
 
 					public Object invoke(
@@ -149,8 +147,8 @@ public class TemplateResourceExternalizationTest {
 
 				});
 
-		JournalTemplateResource journalTemplateResource =
-			new JournalTemplateResource(templateId, journalTemplate);
+		DDMTemplateResource ddmTemplateResource = new DDMTemplateResource(
+			templateId, ddmTemplate);
 
 		// writeExternal
 
@@ -160,7 +158,7 @@ public class TemplateResourceExternalizationTest {
 		ObjectOutput objectOutput = new MockObjectOutput(
 			unsyncByteArrayOutputStream);
 
-		journalTemplateResource.writeExternal(objectOutput);
+		ddmTemplateResource.writeExternal(objectOutput);
 
 		objectOutput.close();
 
@@ -174,8 +172,7 @@ public class TemplateResourceExternalizationTest {
 
 		// readExternal
 
-		JournalTemplateResource newJournalTemplateResource =
-			new JournalTemplateResource();
+		DDMTemplateResource newDDMTemplateResource = new DDMTemplateResource();
 
 		MockObjectInput mockObjectInput = new MockObjectInput(
 			new DataInputStream(
@@ -185,7 +182,7 @@ public class TemplateResourceExternalizationTest {
 			ConsoleTestUtil.hijackStdErr();
 
 		try {
-			newJournalTemplateResource.readExternal(mockObjectInput);
+			newDDMTemplateResource.readExternal(mockObjectInput);
 
 			Assert.fail();
 		}
@@ -199,7 +196,7 @@ public class TemplateResourceExternalizationTest {
 			ConsoleTestUtil.restoreStdErr(hijackedUnsyncByteArrayOutputStream);
 		}
 
-		Assert.assertEquals(null, newJournalTemplateResource.getTemplateId());
+		Assert.assertEquals(null, newDDMTemplateResource.getTemplateId());
 	}
 
 	@Test
