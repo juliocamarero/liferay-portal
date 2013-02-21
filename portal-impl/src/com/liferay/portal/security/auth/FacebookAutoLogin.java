@@ -46,6 +46,10 @@ public class FacebookAutoLogin extends BaseAutoLogin {
 
 		User user = getUser(request, companyId);
 
+		if (user == null) {
+			return null;
+		}
+
 		String[] credentials = new String[3];
 
 		credentials[0] = String.valueOf(user.getUserId());
@@ -63,19 +67,25 @@ public class FacebookAutoLogin extends BaseAutoLogin {
 		String emailAddress = (String)session.getAttribute(
 			WebKeys.FACEBOOK_USER_EMAIL_ADDRESS);
 
+		User user = null;
+
 		if (Validator.isNotNull(emailAddress)) {
 			session.removeAttribute(WebKeys.FACEBOOK_USER_EMAIL_ADDRESS);
 
-			return UserLocalServiceUtil.getUserByEmailAddress(
+			user = UserLocalServiceUtil.getUserByEmailAddress(
 				companyId, emailAddress);
 		}
 		else {
 			long facebookId = GetterUtil.getLong(
 				(String)session.getAttribute(WebKeys.FACEBOOK_USER_ID));
 
-			return UserLocalServiceUtil.getUserByFacebookId(
-				companyId, facebookId);
+			if (facebookId > 0) {
+				user = UserLocalServiceUtil.getUserByFacebookId(
+					companyId, facebookId);
+			}
 		}
+
+		return user;
 	}
 
 }
