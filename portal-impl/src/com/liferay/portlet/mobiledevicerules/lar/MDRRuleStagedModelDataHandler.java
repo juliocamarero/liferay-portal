@@ -41,10 +41,6 @@ public class MDRRuleStagedModelDataHandler
 
 		String path = getRulePath(portletDataContext, rule);
 
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
 		Element ruleElement = rulesElement.addElement("rule");
 
 		portletDataContext.addClassedModel(ruleElement, path, rule, NAMESPACE);
