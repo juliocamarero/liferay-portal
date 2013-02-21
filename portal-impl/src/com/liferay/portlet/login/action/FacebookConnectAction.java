@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
@@ -182,12 +183,12 @@ public class FacebookConnectAction extends PortletAction {
 		long facebookId = jsonObject.getLong("id");
 
 		if (facebookId > 0) {
-			session.setAttribute(
-				WebKeys.FACEBOOK_USER_ID, String.valueOf(facebookId));
-
 			try {
 				user = UserLocalServiceUtil.getUserByFacebookId(
 					companyId, facebookId);
+
+				session.setAttribute(
+					WebKeys.FACEBOOK_USER_ID, String.valueOf(facebookId));
 			}
 			catch (NoSuchUserException nsue) {
 			}
@@ -196,12 +197,14 @@ public class FacebookConnectAction extends PortletAction {
 		String emailAddress = jsonObject.getString("email");
 
 		if ((user == null) && Validator.isNotNull(emailAddress)) {
-			session.setAttribute(
-				WebKeys.FACEBOOK_USER_EMAIL_ADDRESS, emailAddress);
-
 			try {
 				user = UserLocalServiceUtil.getUserByEmailAddress(
 					companyId, emailAddress);
+
+				if (user.getStatus() != WorkflowConstants.STATUS_INCOMPLETE) {
+					session.setAttribute(
+						WebKeys.FACEBOOK_USER_EMAIL_ADDRESS, emailAddress);
+				}
 			}
 			catch (NoSuchUserException nsue) {
 			}
