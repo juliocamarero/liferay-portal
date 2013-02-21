@@ -52,7 +52,6 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 			MDRRuleGroupInstance ruleGroupInstance)
 		throws Exception {
 
-		String path = StagedModelPathUtil.getPath(ruleGroupInstance);
 
 		Element ruleGroupInstancesElement = elements[0];
 
@@ -76,7 +75,8 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		ruleGroupInstanceElement.addAttribute("rule-group-uuid", ruleGroupUuid);
 
 		portletDataContext.addClassedModel(
-			ruleGroupInstanceElement, path, ruleGroupInstance,
+			ruleGroupInstanceElement,
+			StagedModelPathUtil.getPath(ruleGroupInstance), ruleGroupInstance,
 			MDRPortletDataHandler.NAMESPACE);
 	}
 

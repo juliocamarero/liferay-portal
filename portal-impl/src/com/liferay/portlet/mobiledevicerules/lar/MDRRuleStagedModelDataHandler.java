@@ -46,11 +46,9 @@ public class MDRRuleStagedModelDataHandler
 			MDRRule rule)
 		throws Exception {
 
-		String path = StagedModelPathUtil.getPath(rule);
+		// Rule group
 
 		Element ruleGroupsElement = elements[0];
-
-		// Rule group
 
 		MDRRuleGroup ruleGroup = MDRRuleGroupLocalServiceUtil.getRuleGroup(
 			rule.getRuleGroupId());
@@ -65,7 +63,8 @@ public class MDRRuleStagedModelDataHandler
 		Element ruleElement = rulesElement.addElement("rule");
 
 		portletDataContext.addClassedModel(
-			ruleElement, path, rule, MDRPortletDataHandler.NAMESPACE);
+			ruleElement, StagedModelPathUtil.getPath(rule), rule,
+			MDRPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
