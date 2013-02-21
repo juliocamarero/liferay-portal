@@ -42,6 +42,7 @@ import com.liferay.portal.xml.ElementImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -94,6 +95,10 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		Map<String, List<StagedModel>> dependentStagedModels =
 			addDependentStagedModels(_stagingGroup);
 
+		if (dependentStagedModels == null) {
+			dependentStagedModels = new HashMap<String, List<StagedModel>>();
+		}
+
 		StagedModel stagedModel = addStagedModel(
 			_stagingGroup, dependentStagedModels);
 
@@ -136,8 +141,12 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		validateImport(stagedModel, dependentStagedModels, _liveGroup);
 	}
 
-	protected abstract Map<String, List<StagedModel>> addDependentStagedModels(
-		Group group) throws Exception;
+	protected Map<String, List<StagedModel>> addDependentStagedModels(
+			Group group)
+		throws Exception {
+
+		return null;
+	}
 
 	protected abstract StagedModel addStagedModel(
 			Group group, Map<String, List<StagedModel>> relatedStagedModels)
@@ -178,9 +187,12 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 
 	protected abstract String getXMLElementName();
 
-	protected abstract void validateDependentImportedStagedModels(
+	protected void validateDependentImportedStagedModels(
 			Map<String, List<StagedModel>> dependentStagedModels, Group group)
-		throws Exception;
+		throws Exception {
+
+		return;
+	}
 
 	protected void validateExport(
 			StagedModel stagedModel,
