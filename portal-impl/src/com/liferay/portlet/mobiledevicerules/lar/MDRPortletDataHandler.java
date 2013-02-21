@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
@@ -30,9 +29,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.mobile.device.rulegroup.action.impl.SiteRedirectActionHandler;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.mobiledevicerules.model.MDRAction;
-import com.liferay.portlet.mobiledevicerules.model.MDRRule;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
 import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceLocalServiceUtil;
@@ -177,67 +174,6 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return null;
-	}
-
-	protected String getActionPath(
-		PortletDataContext portletDataContext, MDRAction action) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(
-				PortletKeys.MOBILE_DEVICE_SITE_ADMIN));
-		sb.append("/actions/");
-		sb.append(action.getActionId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected String getRuleGroupInstancePath(
-		PortletDataContext portletDataContext,
-		MDRRuleGroupInstance ruleGroupInstance) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(
-				PortletKeys.MOBILE_DEVICE_SITE_ADMIN));
-		sb.append("/rule-group-instances/");
-		sb.append(ruleGroupInstance.getRuleGroupInstanceId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected String getRuleGroupPath(
-		PortletDataContext portletDataContext, MDRRuleGroup ruleGroup) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(
-				PortletKeys.MOBILE_DEVICE_SITE_ADMIN));
-		sb.append("/rule-groups/");
-		sb.append(ruleGroup.getRuleGroupId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected String getRulePath(
-		PortletDataContext portletDataContext, MDRRule rule) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(
-				PortletKeys.MOBILE_DEVICE_SITE_ADMIN));
-		sb.append("/rules/");
-		sb.append(rule.getRuleId());
-		sb.append(".xml");
-
-		return sb.toString();
 	}
 
 	protected void validateTargetLayoutPlid(
