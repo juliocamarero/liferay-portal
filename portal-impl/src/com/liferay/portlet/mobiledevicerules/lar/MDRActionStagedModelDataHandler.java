@@ -54,8 +54,6 @@ public class MDRActionStagedModelDataHandler
 			MDRAction action)
 		throws Exception {
 
-		String path = StagedModelPathUtil.getPath(action);
-
 		Element ruleGroupInstancesElement = elements[0];
 
 		// Rule Group Instance
@@ -101,7 +99,8 @@ public class MDRActionStagedModelDataHandler
 		}
 
 		portletDataContext.addClassedModel(
-			actionElement, path, action, MDRPortletDataHandler.NAMESPACE);
+			actionElement, StagedModelPathUtil.getPath(action), action,
+			MDRPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
