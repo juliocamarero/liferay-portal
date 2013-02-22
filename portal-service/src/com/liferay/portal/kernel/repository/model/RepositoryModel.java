@@ -25,7 +25,7 @@ import com.liferay.portal.model.StagedModel;
  * @author Alexander Chow
  */
 public interface RepositoryModel<T>
-	extends StagedModel, GroupedModel, ClassedModel, Serializable {
+	extends StagedModel, ClassedModel, Serializable {
 
 	public Map<String, Serializable> getAttributes();
 
