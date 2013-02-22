@@ -20,11 +20,13 @@
 	</div>
 
 	<@aui.script use="aui-carousel">
-		new A.Carousel({
-			contentBox: '#<@liferay_portlet.namespace />myCarousel',
-			intervalTime: 2,
-			width: 700,
-			height: 250
-		}).render();
+		new A.Carousel(
+			{
+				contentBox: '#<@liferay_portlet.namespace />myCarousel',
+				height: 250,
+				intervalTime: 2,
+				width: 700
+			}
+		).render();
 	</@aui.script>
 </#if>
