@@ -9,7 +9,7 @@
 				JournalArticle
 			WHERE
 				(groupId = ?) AND
-				([$STATUS$])
+				([$STATUS$]) AND
 				[$FOLDER_ID$]
 		]]>
 	</sql>

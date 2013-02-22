@@ -691,7 +691,7 @@ public class JournalArticleFinderImpl
 
 			sql = StringUtil.replace(
 				sql, "[$FOLDER_ID$]",
-				getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME, true));
+				getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME));
 
 			SQLQuery q = session.createSQLQuery(sql);
 
@@ -876,8 +876,7 @@ public class JournalArticleFinderImpl
 			else {
 				sql = StringUtil.replace(
 					sql, "[$FOLDER_ID$]",
-					getFolderIds(
-						folderIds, JournalArticleImpl.TABLE_NAME, false));
+					getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME));
 			}
 
 			sql = CustomSQLUtil.replaceKeywords(
@@ -1139,8 +1138,7 @@ public class JournalArticleFinderImpl
 			else {
 				sql = StringUtil.replace(
 					sql, "[$FOLDER_ID$]",
-					getFolderIds(
-						folderIds, JournalArticleImpl.TABLE_NAME, false));
+					getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME));
 			}
 
 			sql = CustomSQLUtil.replaceKeywords(
@@ -1257,18 +1255,12 @@ public class JournalArticleFinderImpl
 		}
 	}
 
-	protected String getFolderIds(
-		List<Long> folderIds, String tableName, boolean prependAnd) {
-
+	protected String getFolderIds(List<Long> folderIds, String tableName) {
 		if (folderIds.isEmpty()) {
 			return StringPool.BLANK;
 		}
 
-		StringBundler sb = new StringBundler(folderIds.size() * 2 + 2);
-
-		if (prependAnd) {
-			sb.append(WHERE_AND);
-		}
+		StringBundler sb = new StringBundler(folderIds.size() * 2 + 1);
 
 		sb.append(StringPool.OPEN_PARENTHESIS);
 
