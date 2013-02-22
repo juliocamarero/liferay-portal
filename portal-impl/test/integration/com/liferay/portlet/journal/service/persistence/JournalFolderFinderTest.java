@@ -20,11 +20,11 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.spring.hibernate.LastSessionRecorderUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
+import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -53,7 +53,7 @@ public class JournalFolderFinderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		_group = ServiceTestUtil.addGroup();
+		_group = GroupTestUtil.addGroup();
 
 		_folderA = JournalTestUtil.addFolder(_group.getGroupId(), "Folder A");
 
@@ -104,19 +104,19 @@ public class JournalFolderFinderTest {
 
 		queryDefinition.setStatus(WorkflowConstants.STATUS_ANY);
 
-		List<Object> list = JournalFolderFinderUtil.findF_A_ByG_F(
+		List<Object> results = JournalFolderFinderUtil.findF_A_ByG_F(
 			_group.getGroupId(), _folderA.getFolderId(), queryDefinition);
 
-		Assert.assertEquals(3, list.size());
+		Assert.assertEquals(3, results.size());
 
-		for (Object object : list) {
-			if (object instanceof JournalFolder) {
-				JournalFolder folder = (JournalFolder)object;
+		for (Object result : results) {
+			if (result instanceof JournalFolder) {
+				JournalFolder folder = (JournalFolder)result;
 
 				Assert.assertEquals("Folder B", folder.getName());
 			}
-			else if (object instanceof JournalArticle) {
-				JournalArticle article = (JournalArticle)object;
+			else if (result instanceof JournalArticle) {
+				JournalArticle article = (JournalArticle)result;
 
 				String title = article.getTitleCurrentValue();
 
@@ -128,19 +128,19 @@ public class JournalFolderFinderTest {
 
 		queryDefinition.setStatus(WorkflowConstants.STATUS_IN_TRASH);
 
-		list = JournalFolderFinderUtil.findF_A_ByG_F(
+		results = JournalFolderFinderUtil.findF_A_ByG_F(
 			_group.getGroupId(), _folderA.getFolderId(), queryDefinition);
 
-		Assert.assertEquals(2, list.size());
+		Assert.assertEquals(2, results.size());
 
-		for (Object object : list) {
-			if (object instanceof JournalFolder) {
-				JournalFolder folder = (JournalFolder)object;
+		for (Object result : results) {
+			if (result instanceof JournalFolder) {
+				JournalFolder folder = (JournalFolder)result;
 
 				Assert.assertEquals("Folder B", folder.getName());
 			}
-			else if (object instanceof JournalArticle) {
-				JournalArticle article = (JournalArticle)object;
+			else if (result instanceof JournalArticle) {
+				JournalArticle article = (JournalArticle)result;
 
 				Assert.assertEquals(
 					"Article 2", article.getTitleCurrentValue());
@@ -149,19 +149,19 @@ public class JournalFolderFinderTest {
 
 		queryDefinition.setStatus(WorkflowConstants.STATUS_IN_TRASH, true);
 
-		list = JournalFolderFinderUtil.findF_A_ByG_F(
+		results = JournalFolderFinderUtil.findF_A_ByG_F(
 			_group.getGroupId(), _folderA.getFolderId(), queryDefinition);
 
-		Assert.assertEquals(2, list.size());
+		Assert.assertEquals(2, results.size());
 
-		for (Object object : list) {
-			if (object instanceof JournalFolder) {
-				JournalFolder folder = (JournalFolder)object;
+		for (Object result : results) {
+			if (result instanceof JournalFolder) {
+				JournalFolder folder = (JournalFolder)result;
 
 				Assert.assertEquals("Folder B", folder.getName());
 			}
-			else if (object instanceof JournalArticle) {
-				JournalArticle article = (JournalArticle)object;
+			else if (result instanceof JournalArticle) {
+				JournalArticle article = (JournalArticle)result;
 
 				Assert.assertEquals(
 					"Article 1", article.getTitleCurrentValue());
