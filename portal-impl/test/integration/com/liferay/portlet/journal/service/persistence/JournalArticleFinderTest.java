@@ -20,10 +20,10 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
+import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -60,30 +60,39 @@ public class JournalArticleFinderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		_group = ServiceTestUtil.addGroup();
+		_group = GroupTestUtil.addGroup();
 
 		_ddmStructure = JournalTestUtil.addDDMStructure(_group.getGroupId());
 
-		DDMTemplate ddmTemplate = JournalTestUtil.addDDMTemplate(
-			_group.getGroupId(), _ddmStructure.getStructureId());
+		_folder = JournalTestUtil.addFolder(_group.getGroupId(), "Folder A");
 
-		_folderA = JournalTestUtil.addFolder(_group.getGroupId(), "Folder A");
-
-		JournalTestUtil.addArticleWithXMLContent(
-			_group.getGroupId(), _folderA.getFolderId(),
-			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
-			"<title>Article 1</title>", _ddmStructure.getStructureKey(),
-			ddmTemplate.getTemplateKey());
-
-		JournalArticle article = JournalTestUtil.addArticle(
-			_group.getGroupId(), _folderA.getFolderId(), "Article 2",
+		_article = JournalTestUtil.addArticle(
+			_group.getGroupId(), _folder.getFolderId(), "Article 1",
 			StringPool.BLANK);
-
-		article.setUserId(1234);
 
 		Calendar calendar = new GregorianCalendar();
 
 		calendar.add(Calendar.DATE, -1);
+
+		_article.setDisplayDate(calendar.getTime());
+
+		DDMTemplate ddmTemplate = JournalTestUtil.addDDMTemplate(
+			_group.getGroupId(), _ddmStructure.getStructureId());
+
+		JournalFolder folder = JournalTestUtil.addFolder(
+			_group.getGroupId(), "Folder B");
+
+		JournalTestUtil.addArticleWithXMLContent(
+			_group.getGroupId(), folder.getFolderId(),
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			"<title>Article 2</title>", _ddmStructure.getStructureKey(),
+			ddmTemplate.getTemplateKey());
+
+		JournalArticle article = JournalTestUtil.addArticle(
+			_group.getGroupId(), folder.getFolderId(), "Article 3",
+			StringPool.BLANK);
+
+		article.setUserId(_USER_ID);
 
 		article.setExpirationDate(calendar.getTime());
 		article.setReviewDate(calendar.getTime());
@@ -94,23 +103,15 @@ public class JournalArticleFinderTest {
 			TestPropsValues.getUserId(), article);
 
 		JournalTestUtil.addArticleWithXMLContent(
-			_group.getGroupId(), _folderA.getFolderId(),
+			_group.getGroupId(), folder.getFolderId(),
 			PortalUtil.getClassNameId(JournalStructure.class),
-			"<title>Article 3</title>", _ddmStructure.getStructureKey(),
+			"<title>Article 4</title>", _ddmStructure.getStructureKey(),
 			ddmTemplate.getTemplateKey());
-
-		_folderB = JournalTestUtil.addFolder(_group.getGroupId(), "Folder B");
-
-		_article = JournalTestUtil.addArticle(
-			_group.getGroupId(), _folderB.getFolderId(), "Article 4",
-			StringPool.BLANK);
-
-		_article.setDisplayDate(calendar.getTime());
 
 		_folderIds.clear();
 
-		_folderIds.add(_folderA.getFolderId());
-		_folderIds.add(_folderB.getFolderId());
+		_folderIds.add(_folder.getFolderId());
+		_folderIds.add(folder.getFolderId());
 	}
 
 	@Test
@@ -252,7 +253,7 @@ public class JournalArticleFinderTest {
 		Assert.assertEquals(
 			1,
 			JournalArticleFinderUtil.countByG_U_C(
-				_group.getGroupId(), 1234,
+				_group.getGroupId(), _USER_ID,
 				JournalArticleConstants.CLASSNAME_ID_DEFAULT, queryDefinition));
 
 		queryDefinition.setStatus(WorkflowConstants.STATUS_IN_TRASH, true);
@@ -260,7 +261,7 @@ public class JournalArticleFinderTest {
 		Assert.assertEquals(
 			0,
 			JournalArticleFinderUtil.countByG_U_C(
-				_group.getGroupId(), 1234,
+				_group.getGroupId(), _USER_ID,
 				JournalArticleConstants.CLASSNAME_ID_DEFAULT, queryDefinition));
 	}
 
@@ -279,27 +280,25 @@ public class JournalArticleFinderTest {
 
 		JournalArticle article = articles.get(0);
 
-		Assert.assertEquals(1234, article.getUserId());
+		Assert.assertEquals(_USER_ID, article.getUserId());
 
 		queryDefinition.setStatus(WorkflowConstants.STATUS_IN_TRASH);
 
-		articles =
-			JournalArticleFinderUtil.findByExpirationDate(
-				JournalArticleConstants.CLASSNAME_ID_DEFAULT, new Date(),
-				queryDefinition);
+		articles = JournalArticleFinderUtil.findByExpirationDate(
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, new Date(),
+			queryDefinition);
 
 		Assert.assertEquals(1, articles.size());
 
 		article = articles.get(0);
 
-		Assert.assertEquals(1234, article.getUserId());
+		Assert.assertEquals(_USER_ID, article.getUserId());
 
 		queryDefinition.setStatus(WorkflowConstants.STATUS_IN_TRASH, true);
 
-		articles =
-			JournalArticleFinderUtil.findByExpirationDate(
-				JournalArticleConstants.CLASSNAME_ID_DEFAULT, new Date(),
-				queryDefinition);
+		articles = JournalArticleFinderUtil.findByExpirationDate(
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, new Date(),
+			queryDefinition);
 
 		Assert.assertEquals(0, articles.size());
 	}
@@ -315,7 +314,7 @@ public class JournalArticleFinderTest {
 
 		Assert.assertNotNull(article);
 
-		Assert.assertEquals(_folderB.getFolderId(), article.getFolderId());
+		Assert.assertEquals(_folder.getFolderId(), article.getFolderId());
 	}
 
 	@Test
@@ -333,13 +332,14 @@ public class JournalArticleFinderTest {
 
 		JournalArticle article = articles.get(0);
 
-		Assert.assertEquals(1234, article.getUserId());
+		Assert.assertEquals(_USER_ID, article.getUserId());
 	}
+
+	private static final long _USER_ID = 1234L;
 
 	private JournalArticle _article;
 	private DDMStructure _ddmStructure;
-	private JournalFolder _folderA;
-	private JournalFolder _folderB;
+	private JournalFolder _folder;
 	private List<Long> _folderIds = new ArrayList<Long>();
 	private Group _group;
 
