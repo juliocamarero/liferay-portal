@@ -38,17 +38,17 @@ int suffixId = ParamUtil.getInteger(request, "suffixId");
 		<portlet:param name="struts_action" value="/login/create_account" />
 	</portlet:actionURL>
 
-	<portlet:renderURL var="redirectURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-		<portlet:param name="struts_action" value="/login/login_redirect" />
-		<portlet:param name="emailAddress" value="<%= emailAddress %>" />
-		<portlet:param name="anonymousUser" value="<%= Boolean.FALSE.toString() %>" />
-	</portlet:renderURL>
-
 	<aui:form action="<%= createAccountURL %>" method="post" name="fm">
 		<aui:input name="saveLastPath" type="hidden" value="<%= false %>" />
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
 
 		<c:if test="<%= facebookId > 0 %>">
+			<portlet:renderURL var="redirectURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+				<portlet:param name="struts_action" value="/login/login_redirect" />
+				<portlet:param name="emailAddress" value="<%= emailAddress %>" />
+				<portlet:param name="anonymousUser" value="<%= Boolean.FALSE.toString() %>" />
+			</portlet:renderURL>
+
 			<aui:input name="redirect" type="hidden" value="<%= redirectURL.toString() %>" />
 		</c:if>
 
