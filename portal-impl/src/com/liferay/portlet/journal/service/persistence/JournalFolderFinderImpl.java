@@ -121,11 +121,11 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 			StringBundler sb = new StringBundler(5);
 
 			sb.append(StringPool.OPEN_PARENTHESIS);
-			sb.append(getFoldersSQL(groupId, COUNT_F_BY_G_F, inlineSQLHelper));
+			sb.append(getFoldersSQL(COUNT_F_BY_G_F, groupId, inlineSQLHelper));
 			sb.append(") UNION ALL (");
 			sb.append(
 				getArticlesSQL(
-					groupId, COUNT_A_BY_G_F, queryDefinition, inlineSQLHelper));
+					COUNT_A_BY_G_F, groupId, queryDefinition, inlineSQLHelper));
 			sb.append(StringPool.CLOSE_PARENTHESIS);
 
 			String sql = updateSQL(sb.toString(), folderId);
@@ -184,11 +184,11 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 			StringBundler sb = new StringBundler(5);
 
 			sb.append(StringPool.OPEN_PARENTHESIS);
-			sb.append(getFoldersSQL(groupId, FIND_F_BY_G_F, inlineSQLHelper));
+			sb.append(getFoldersSQL(FIND_F_BY_G_F, groupId, inlineSQLHelper));
 			sb.append(") UNION ALL (");
 			sb.append(
 				getArticlesSQL(
-					groupId, FIND_A_BY_G_F, queryDefinition, inlineSQLHelper));
+					FIND_A_BY_G_F, groupId, queryDefinition, inlineSQLHelper));
 			sb.append(StringPool.CLOSE_PARENTHESIS);
 
 			String sql = updateSQL(sb.toString(), folderId);
@@ -257,7 +257,7 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 	}
 
 	protected String getArticlesSQL(
-		long groupId, String id, QueryDefinition queryDefinition,
+		String id, long groupId, QueryDefinition queryDefinition,
 		boolean inlineSQLHelper) {
 
 		String sql = CustomSQLUtil.get(
@@ -272,7 +272,7 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 		return sql;
 	}
 
-	protected String getFolderId(String tableName, long folderId) {
+	protected String getFolderId(long folderId, String tableName) {
 		if (folderId < 0) {
 			return StringPool.BLANK;
 		}
@@ -296,7 +296,7 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 	}
 
 	protected String getFoldersSQL(
-		long groupId, String id, boolean inlineSQLHelper) {
+		String id, long groupId, boolean inlineSQLHelper) {
 
 		String sql = CustomSQLUtil.get(id);
 
@@ -316,8 +316,8 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 				"[$ARTICLE_FOLDER_ID$]", "[$FOLDER_PARENT_FOLDER_ID$]"
 			},
 			new String[] {
-				getFolderId(JournalArticleImpl.TABLE_NAME, folderId),
-				getFolderId(JournalFolderImpl.TABLE_NAME, folderId)
+				getFolderId(folderId, JournalArticleImpl.TABLE_NAME),
+				getFolderId(folderId, JournalFolderImpl.TABLE_NAME)
 			});
 
 		return sql;
