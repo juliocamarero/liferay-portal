@@ -15,6 +15,7 @@
 package com.liferay.portlet.documentlibrary.social;
 
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -25,14 +26,19 @@ import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
+import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
+import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityFeedEntry;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 /**
  * @author Ryan Park
+ * @author Zsolt Berentey
  */
 public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
@@ -45,14 +51,70 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 			SocialActivity activity, ThemeDisplay themeDisplay)
 		throws Exception {
 
+		if (activity.isClassName(DLFileEntry.class.getName())) {
+			return doInterpretFileEntry(activity, themeDisplay);
+		}
+		else if (activity.isClassName(DLFolder.class.getName())) {
+			return doInterpretFolder(activity, themeDisplay);
+		}
+
+		return null;
+	}
+
+	protected SocialActivityFeedEntry doInterpretFileEntry(
+			SocialActivity activity, ThemeDisplay themeDisplay)
+		throws Exception {
+
 		PermissionChecker permissionChecker =
 			themeDisplay.getPermissionChecker();
+
+		if (!DLFileEntryPermission.contains(
+				permissionChecker, activity.getClassPK(), ActionKeys.VIEW)) {
+
+			return null;
+		}
+
+		String groupName = StringPool.BLANK;
+
+		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
+			groupName = getGroupName(activity.getGroupId(), themeDisplay);
+		}
+
+		String creatorUserName = getUserName(
+			activity.getUserId(), themeDisplay);
 
 		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
 			activity.getClassPK());
 
-		if (!DLFileEntryPermission.contains(
-				permissionChecker, fileEntry.getFileEntryId(),
+		// Link
+
+		String link = getLink(fileEntry, themeDisplay);
+
+		// Title
+
+		Object[] titleArguments = new Object[] {
+			groupName, creatorUserName, wrapLink(link, getTitle(fileEntry))
+		};
+
+		String title = themeDisplay.translate(
+			getTitlePattern(groupName, activity), titleArguments);
+
+		// Body
+
+		String body = getBody(fileEntry, themeDisplay);
+
+		return new SocialActivityFeedEntry(link, title, body);
+	}
+
+	protected SocialActivityFeedEntry doInterpretFolder(
+			SocialActivity activity, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
+		if (!DLFolderPermission.contains(
+				permissionChecker, activity.getGroupId(), activity.getClassPK(),
 				ActionKeys.VIEW)) {
 
 			return null;
@@ -67,52 +129,36 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 		String creatorUserName = getUserName(
 			activity.getUserId(), themeDisplay);
 
-		int activityType = activity.getType();
+		Folder folder = DLAppLocalServiceUtil.getFolder(activity.getClassPK());
 
 		// Link
 
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(themeDisplay.getPathMain());
-		sb.append("/document_library/find_file_entry?fileEntryId=");
-		sb.append(fileEntry.getFileEntryId());
-
-		String link = sb.toString();
+		String link = getLink(folder, themeDisplay);
 
 		// Title
 
-		String titlePattern = null;
-
-		if (activityType == DLActivityKeys.ADD_FILE_ENTRY) {
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-document-library-add-file";
-			}
-			else {
-				titlePattern = "activity-document-library-add-file-in";
-			}
-		}
-		else if (activityType == DLActivityKeys.UPDATE_FILE_ENTRY) {
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-document-library-update-file";
-			}
-			else {
-				titlePattern = "activity-document-library-update-file-in";
-			}
-		}
-
-		String fileTitle = getValue(
-			activity.getExtraData(), "title", fileEntry.getTitle());
-
 		Object[] titleArguments = new Object[] {
-			groupName, creatorUserName, wrapLink(link, fileTitle)
+			groupName, creatorUserName, wrapLink(link, getTitle(folder))
 		};
 
-		String title = themeDisplay.translate(titlePattern, titleArguments);
+		String title = themeDisplay.translate(
+			getTitlePattern(groupName, activity), titleArguments);
 
 		// Body
 
-		sb.setIndex(0);
+		String body = StringPool.BLANK;
+
+		return new SocialActivityFeedEntry(link, title, body);
+	}
+
+	protected String getBody(FileEntry fileEntry, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (TrashUtil.isInTrash(
+				DLFileEntry.class.getName(), fileEntry.getFileEntryId())) {
+
+			return StringPool.BLANK;
+		}
 
 		AssetRendererFactory assetRendererFactory =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
@@ -123,21 +169,21 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		String fileEntryLink = assetRenderer.getURLDownload(themeDisplay);
 
+		StringBundler sb = new StringBundler(3);
+
 		sb.append(wrapLink(fileEntryLink, "download-file", themeDisplay));
 
 		sb.append(StringPool.SPACE);
 
-		String folderLink = getFolderLink(themeDisplay, fileEntry);
+		String folderLink = getFolderLink(fileEntry, themeDisplay);
 
 		sb.append(wrapLink(folderLink, "go-to-folder", themeDisplay));
 
-		String body = sb.toString();
-
-		return new SocialActivityFeedEntry(link, title, body);
+		return sb.toString();
 	}
 
 	protected String getFolderLink(
-		ThemeDisplay themeDisplay, FileEntry fileEntry) {
+		FileEntry fileEntry, ThemeDisplay themeDisplay) {
 
 		StringBundler sb = new StringBundler(6);
 
@@ -151,8 +197,138 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 		return sb.toString();
 	}
 
+	protected String getLink(FileEntry fileEntry, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (TrashUtil.isInTrash(
+				DLFileEntry.class.getName(), fileEntry.getFileEntryId())) {
+
+			return TrashUtil.getViewContentURL(
+				DLFileEntry.class.getName(), fileEntry.getFileEntryId(),
+				themeDisplay);
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(themeDisplay.getPortalURL());
+		sb.append(themeDisplay.getPathMain());
+		sb.append("/document_library/find_file_entry?fileEntryId=");
+		sb.append(fileEntry.getFileEntryId());
+
+		return sb.toString();
+	}
+
+	protected String getLink(Folder folder, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (TrashUtil.isInTrash(
+				DLFolder.class.getName(), folder.getFolderId())) {
+
+			return TrashUtil.getViewContentURL(
+				DLFolder.class.getName(), folder.getFolderId(), themeDisplay);
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(themeDisplay.getPortalURL());
+		sb.append(themeDisplay.getPathMain());
+		sb.append("/document_library/find_folder?folderId=");
+		sb.append(folder.getFolderId());
+
+		return sb.toString();
+	}
+
+	protected String getTitle(FileEntry fileEntry) throws Exception {
+		if (TrashUtil.isInTrash(
+				DLFileEntry.class.getName(), fileEntry.getFileEntryId())) {
+
+			return TrashUtil.getOriginalTitle(fileEntry.getTitle());
+		}
+		else {
+			return fileEntry.getTitle();
+		}
+	}
+
+	protected String getTitle(Folder folder) throws Exception {
+		if (TrashUtil.isInTrash(
+				DLFolder.class.getName(), folder.getFolderId())) {
+
+			return TrashUtil.getOriginalTitle(folder.getName());
+		}
+		else {
+			return folder.getName();
+		}
+	}
+
+	protected String getTitlePattern(
+		String groupName, SocialActivity activity) {
+
+		int activityType = activity.getType();
+
+		if (activityType == DLActivityKeys.ADD_FILE_ENTRY) {
+			if (Validator.isNull(groupName)) {
+				return "activity-document-library-add-file";
+			}
+			else {
+				return "activity-document-library-add-file-in";
+			}
+		}
+		else if (activityType == DLActivityKeys.UPDATE_FILE_ENTRY) {
+			if (Validator.isNull(groupName)) {
+				return "activity-document-library-update-file";
+			}
+			else {
+				return "activity-document-library-update-file-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (activity.isClassName(DLFileEntry.class.getName())) {
+				if (Validator.isNull(groupName)) {
+					return "activity-document-library-file-move-to-trash";
+				}
+				else {
+					return "activity-document-library-file-move-to-trash-in";
+				}
+			}
+			else if (activity.isClassName(DLFolder.class.getName())) {
+				if (Validator.isNull(groupName)) {
+					return "activity-document-library-folder-move-to-trash";
+				}
+				else {
+					return "activity-document-library-folder-move-to-trash-in";
+				}
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (activity.isClassName(DLFileEntry.class.getName())) {
+				if (Validator.isNull(groupName)) {
+					return "activity-document-library-file-restore-from-trash";
+				}
+				else {
+					return
+						"activity-document-library-file-restore-from-trash-in";
+				}
+			}
+			else if (activity.isClassName(DLFolder.class.getName())) {
+				if (Validator.isNull(groupName)) {
+					return
+						"activity-document-library-folder-restore-from-trash";
+				}
+				else {
+					return
+						"activity-document-library-folder-restore-from-trash-" +
+							"in";
+				}
+			}
+		}
+
+		return null;
+	}
+
 	private static final String[] _CLASS_NAMES = new String[] {
-		DLFileEntry.class.getName()
+		DLFileEntry.class.getName(), DLFolder.class.getName()
 	};
 
 }
