@@ -35,6 +35,7 @@ import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.dynamicdatamapping.StructureNameException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
+import com.liferay.portlet.dynamicdatamapping.util.DDMStructureTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 
@@ -81,7 +82,8 @@ public class JournalTestUtilTest {
 
 		String xml = document.asXML();
 
-		DDMStructure ddmStructure = JournalTestUtil.addDDMStructure();
+		DDMStructure ddmStructure = DDMStructureTestUtil.addDDMStructure(
+			JournalArticle.class.getName());
 
 		DDMTemplate ddmTemplate = JournalTestUtil.addDDMTemplate(
 			ddmStructure.getStructureId(), TemplateConstants.LANG_TYPE_VM,
@@ -114,13 +116,16 @@ public class JournalTestUtilTest {
 
 	@Test
 	public void testAddDDMStructure() throws Exception {
-		Assert.assertNotNull(JournalTestUtil.addDDMStructure());
+		Assert.assertNotNull(
+			DDMStructureTestUtil.addDDMStructure(
+				JournalArticle.class.getName()));
 	}
 
 	@Test
 	public void testAddDDMStructureWithLocale() throws Exception {
 		Assert.assertNotNull(
-			JournalTestUtil.addDDMStructure(LocaleUtil.getDefault()));
+			DDMStructureTestUtil.addDDMStructure(
+				JournalArticle.class.getName(), LocaleUtil.getDefault()));
 	}
 
 	@Test
@@ -128,7 +133,8 @@ public class JournalTestUtilTest {
 		try {
 			resetCompanyLanguages("en_US");
 
-			JournalTestUtil.addDDMStructure(Locale.CANADA);
+			DDMStructureTestUtil.addDDMStructure(
+				JournalArticle.class.getName(), Locale.CANADA);
 
 			Assert.fail();
 		}
@@ -139,21 +145,21 @@ public class JournalTestUtilTest {
 	@Test
 	public void testAddDDMStructureWithXSD() throws Exception {
 		Assert.assertNotNull(
-			JournalTestUtil.addDDMStructure(
-				JournalTestUtil.getSampleStructureXSD()));
+			DDMStructureTestUtil.addDDMStructure(
+				JournalArticle.class.getName()));
 	}
 
 	@Test
 	public void testAddDDMStructureWithXSDAndLocale() throws Exception {
 		Assert.assertNotNull(
-			JournalTestUtil.addDDMStructure(
-				JournalTestUtil.getSampleStructureXSD(),
-				LocaleUtil.getDefault()));
+			DDMStructureTestUtil.addDDMStructure(
+				JournalArticle.class.getName(), LocaleUtil.getDefault()));
 	}
 
 	@Test
 	public void testAddDDMTemplateToDDMStructure() throws Exception {
-		DDMStructure ddmStructure = JournalTestUtil.addDDMStructure();
+		DDMStructure ddmStructure = DDMStructureTestUtil.addDDMStructure(
+			JournalArticle.class.getName());
 
 		Assert.assertNotNull(
 			JournalTestUtil.addDDMTemplate(ddmStructure.getStructureId()));
@@ -163,7 +169,8 @@ public class JournalTestUtilTest {
 	public void testAddDDMTemplateToDDMStructureWithXSLAndLanguage()
 		throws Exception {
 
-		DDMStructure ddmStructure = JournalTestUtil.addDDMStructure();
+		DDMStructure ddmStructure = DDMStructureTestUtil.addDDMStructure(
+			JournalArticle.class.getName());
 
 		Assert.assertNotNull(
 			JournalTestUtil.addDDMTemplate(
@@ -231,7 +238,7 @@ public class JournalTestUtilTest {
 	public void testGetSampleStructuredContent() throws Exception {
 		String content = JournalUtil.transform(
 			null, getTokens(), Constants.VIEW, "en_US",
-			JournalTestUtil.getSampleStructuredContent(),
+			DDMStructureTestUtil.getSampleStructuredContent(),
 			JournalTestUtil.getSampleTemplateXSL(),
 			TemplateConstants.LANG_TYPE_VM);
 
@@ -240,7 +247,7 @@ public class JournalTestUtilTest {
 
 	@Test
 	public void testGetSampleStructureXSD() {
-		Assert.assertNotNull(JournalTestUtil.getSampleStructureXSD());
+		Assert.assertNotNull(DDMStructureTestUtil.getSampleStructureXSD());
 	}
 
 	@Test

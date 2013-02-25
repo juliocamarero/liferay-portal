@@ -29,7 +29,6 @@ import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateConstants;
-import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
@@ -205,63 +204,6 @@ public class JournalTestUtil {
 		return addArticleWithXMLContent(
 			TestPropsValues.getGroupId(), xml, ddmStructureKey, ddmTemplateKey,
 			defaultLocale);
-	}
-
-	public static DDMStructure addDDMStructure() throws Exception {
-		return addDDMStructure(
-			TestPropsValues.getGroupId(), getSampleStructureXSD(),
-			LocaleUtil.getDefault());
-	}
-
-	public static DDMStructure addDDMStructure(Locale defaultLocale)
-		throws Exception {
-
-		return addDDMStructure(
-			TestPropsValues.getGroupId(), getSampleStructureXSD(),
-			defaultLocale);
-	}
-
-	public static DDMStructure addDDMStructure(long groupId) throws Exception {
-		return addDDMStructure(
-			groupId, getSampleStructureXSD(), LocaleUtil.getDefault());
-	}
-
-	public static DDMStructure addDDMStructure(
-		long groupId, Locale defaultLocale) throws Exception {
-
-		return addDDMStructure(
-			groupId, getSampleStructureXSD(), LocaleUtil.getDefault());
-	}
-
-	public static DDMStructure addDDMStructure(
-			long groupId, String xsd, Locale defaultLocale)
-		throws Exception {
-
-		Map<Locale, String> nameMap = new HashMap<Locale, String>();
-
-		nameMap.put(defaultLocale, "Test Structure");
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		serviceContext.setAddGroupPermissions(true);
-		serviceContext.setAddGuestPermissions(true);
-
-		return DDMStructureLocalServiceUtil.addStructure(
-			TestPropsValues.getUserId(), groupId,
-			PortalUtil.getClassNameId(JournalArticle.class.getName()), nameMap,
-			null, xsd, serviceContext);
-	}
-
-	public static DDMStructure addDDMStructure(String xsd) throws Exception {
-		return addDDMStructure(
-			TestPropsValues.getGroupId(), xsd, LocaleUtil.getDefault());
-	}
-
-	public static DDMStructure addDDMStructure(String xsd, Locale defaultLocale)
-		throws Exception {
-
-		return addDDMStructure(
-			TestPropsValues.getGroupId(), xsd, defaultLocale);
 	}
 
 	public static DDMTemplate addDDMTemplate(long ddmStructureId)
@@ -442,17 +384,6 @@ public class JournalTestUtil {
 			document.getRootElement(), "text", "name");
 
 		addDynamicContentElement(dynamicElementElement, "en_US", "Joe Bloggs");
-
-		return document.asXML();
-	}
-
-	public static String getSampleStructureXSD() {
-		Document document = SAXReaderUtil.createDocument();
-
-		Element rootElement = document.addElement("root");
-
-		addDynamicElementElement(rootElement, "text", "name");
-		addDynamicElementElement(rootElement, "text", "link");
 
 		return document.asXML();
 	}
