@@ -98,8 +98,8 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		StagedModel stagedModel = addStagedModel(
 			_stagingGroup, dependentStagedModels);
 
-		Element[] stagedModelsParentElements = getStagedModelsParentElements(
-			dependentStagedModels);
+		Element[] stagedModelsParentElements =
+			getDependentStagedModelsParentElements(dependentStagedModels);
 
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, stagedModelsParentElements, stagedModel);
@@ -145,8 +145,31 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 	}
 
 	protected abstract StagedModel addStagedModel(
-			Group group, Map<String, List<StagedModel>> relatedStagedModels)
+			Group group, Map<String, List<StagedModel>> dependentStagedModels)
 		throws Exception;
+
+	protected Element[] getDependentStagedModelsParentElements(
+		Map<String, List<StagedModel>> dependentStagedModels) {
+
+		List<Element> stagedModelElements = new ArrayList<Element>();
+
+		for (String className : dependentStagedModels.keySet()) {
+			Element dependentStagedModelElement = new ElementImpl(
+				DocumentHelper.createElement(className));
+
+			stagedModelElements.add(dependentStagedModelElement);
+		}
+
+		if (!dependentStagedModels.containsKey(getStagedModelClassName())) {
+			Element dependentStagedModelElement = new ElementImpl(
+				DocumentHelper.createElement(getStagedModelClassName()));
+
+			stagedModelElements.add(dependentStagedModelElement);
+		}
+
+		return stagedModelElements.toArray(
+			new Element[stagedModelElements.size()]);
+	}
 
 	protected Date getEndDate() {
 		return new Date();
@@ -203,29 +226,6 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 	protected abstract StagedModel getStagedModel(String uuid, Group group);
 
 	protected abstract String getStagedModelClassName();
-
-	protected Element[] getStagedModelsParentElements(
-		Map<String, List<StagedModel>> dependentStagedModels) {
-
-		List<Element> stagedModelElements = new ArrayList<Element>();
-
-		for (String className : dependentStagedModels.keySet()) {
-			Element relatedStagedModelElement = new ElementImpl(
-				DocumentHelper.createElement(className));
-
-			stagedModelElements.add(relatedStagedModelElement);
-		}
-
-		if (!dependentStagedModels.containsKey(getStagedModelClassName())) {
-			Element relatedStagedModelElement = new ElementImpl(
-				DocumentHelper.createElement(getStagedModelClassName()));
-
-			stagedModelElements.add(relatedStagedModelElement);
-		}
-
-		return stagedModelElements.toArray(
-			new Element[stagedModelElements.size()]);
-	}
 
 	protected Date getStartDate() {
 		return new Date(System.currentTimeMillis() - Time.HOUR);
