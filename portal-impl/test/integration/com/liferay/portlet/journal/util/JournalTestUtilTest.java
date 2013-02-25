@@ -237,9 +237,11 @@ public class JournalTestUtilTest {
 
 	@Test
 	public void testGetSampleStructuredContent() throws Exception {
+		String xml = DDMStructureTestUtil.getSampleStructuredContent(
+			"name", "Joe Bloggs");
+
 		String content = JournalUtil.transform(
-			null, getTokens(), Constants.VIEW, "en_US",
-			DDMStructureTestUtil.getSampleStructuredContent(),
+			null, getTokens(), Constants.VIEW, "en_US", xml,
 			JournalTestUtil.getSampleTemplateXSL(),
 			TemplateConstants.LANG_TYPE_VM);
 
