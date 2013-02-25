@@ -56,6 +56,19 @@ public class JournalTestUtil {
 			Locale defaultLocale, boolean workflowEnabled, boolean approved)
 		throws Exception {
 
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		return addArticle(
+			groupId, folderId, title, content, defaultLocale, workflowEnabled,
+			approved, serviceContext);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, long folderId, String title, String content,
+			Locale defaultLocale, boolean workflowEnabled, boolean approved,
+			ServiceContext serviceContext)
+		throws Exception {
+
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
 		for (Locale locale : _locales) {
@@ -67,8 +80,6 @@ public class JournalTestUtil {
 		for (Locale locale : _locales) {
 			descriptionMap.put(locale, title);
 		}
-
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
 		if (workflowEnabled) {
 			serviceContext.setWorkflowAction(
@@ -106,6 +117,16 @@ public class JournalTestUtil {
 		return addArticle(
 			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
 			content, defaultLocale, false, false);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, String title, String content,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		return addArticle(
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
+			content, LocaleUtil.getDefault(), false, false, serviceContext);
 	}
 
 	public static JournalArticle addArticleWithWorkflow(boolean approved)
@@ -172,7 +193,7 @@ public class JournalTestUtil {
 
 		serviceContext.setAddGroupPermissions(true);
 		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setScopeGroupId(TestPropsValues.getGroupId());
+		serviceContext.setScopeGroupId(groupId);
 
 		return JournalArticleLocalServiceUtil.addArticle(
 			TestPropsValues.getUserId(), groupId, 0, 0, 0, StringPool.BLANK,
