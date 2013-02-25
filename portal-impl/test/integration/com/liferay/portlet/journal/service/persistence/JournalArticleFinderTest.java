@@ -28,6 +28,8 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
+import com.liferay.portlet.dynamicdatamapping.util.DDMStructureTestUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMTemplateTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalFolder;
@@ -62,7 +64,8 @@ public class JournalArticleFinderTest {
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
 
-		_ddmStructure = JournalTestUtil.addDDMStructure(_group.getGroupId());
+		_ddmStructure = DDMStructureTestUtil.addDDMStructure(
+			_group.getGroupId(), JournalArticle.class.getName());
 
 		_folder = JournalTestUtil.addFolder(_group.getGroupId(), "Folder 1");
 
