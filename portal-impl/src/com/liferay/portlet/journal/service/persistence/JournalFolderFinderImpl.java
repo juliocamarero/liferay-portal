@@ -120,7 +120,8 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 
 			sb.append(StringPool.OPEN_PARENTHESIS);
 
-			String sql = CustomSQLUtil.get(COUNT_F_BY_G_F);
+			String sql = CustomSQLUtil.get(
+				COUNT_F_BY_G_F, queryDefinition, "JournalFolder");
 
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
@@ -145,6 +146,7 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 			QueryPos qPos = QueryPos.getInstance(q);
 
 			qPos.add(groupId);
+			qPos.add(queryDefinition.getStatus());
 
 			if (folderId >= 0) {
 				qPos.add(folderId);
@@ -193,7 +195,8 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 
 			sb.append(StringPool.OPEN_PARENTHESIS);
 
-			String sql = CustomSQLUtil.get(FIND_F_BY_G_F);
+			String sql = CustomSQLUtil.get(
+				FIND_F_BY_G_F, queryDefinition, "JournalFolder");
 
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
@@ -222,6 +225,7 @@ public class JournalFolderFinderImpl extends BasePersistenceImpl<JournalFolder>
 			QueryPos qPos = QueryPos.getInstance(q);
 
 			qPos.add(groupId);
+			qPos.add(queryDefinition.getStatus());
 
 			if (folderId >= 0) {
 				qPos.add(folderId);
