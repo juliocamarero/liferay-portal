@@ -95,10 +95,6 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		Map<String, List<StagedModel>> dependentStagedModels =
 			addDependentStagedModels(_stagingGroup);
 
-		if (dependentStagedModels == null) {
-			dependentStagedModels = new HashMap<String, List<StagedModel>>();
-		}
-
 		StagedModel stagedModel = addStagedModel(
 			_stagingGroup, dependentStagedModels);
 
@@ -145,7 +141,7 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 			Group group)
 		throws Exception {
 
-		return null;
+		return new HashMap<String, List<StagedModel>>();
 	}
 
 	protected abstract StagedModel addStagedModel(
