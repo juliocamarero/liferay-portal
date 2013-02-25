@@ -25,6 +25,7 @@ import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.portlet.PortletURL;
 
@@ -102,6 +103,10 @@ public class TrashUtil {
 		return getTrash().getOriginalTitle(title);
 	}
 
+	public static String getOriginalTitle(String title, Locale locale) {
+		return getTrash().getOriginalTitle(title, locale);
+	}
+
 	public static Trash getTrash() {
 		PortalRuntimePermission.checkGetBeanProperty(TrashUtil.class);
 
@@ -114,6 +119,13 @@ public class TrashUtil {
 
 	public static String getTrashTitle(long trashEntryId) {
 		return getTrash().getTrashTitle(trashEntryId);
+	}
+
+	public static String getViewContentURL(
+			String className, long classPK, ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		return getTrash().getViewContentURL(className, classPK, themeDisplay);
 	}
 
 	public static boolean isInTrash(String className, long classPK)

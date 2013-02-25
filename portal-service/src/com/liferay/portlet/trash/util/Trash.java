@@ -24,6 +24,7 @@ import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.portlet.PortletURL;
 
@@ -61,9 +62,15 @@ public interface Trash {
 
 	public String getOriginalTitle(String title);
 
+	public String getOriginalTitle(String title, Locale locale);
+
 	public String getTrashTime(String title, String separator);
 
 	public String getTrashTitle(long trashEntryId);
+
+	public String getViewContentURL(
+			String className, long classPK, ThemeDisplay themeDisplay)
+		throws PortalException, SystemException;
 
 	public boolean isInTrash(String className, long classPK)
 		throws PortalException, SystemException;
