@@ -965,6 +965,12 @@ public class DDMStructureLocalServiceImpl
 		return ddmStructurePersistence.findByGroupId(groupIds);
 	}
 
+	public List<DDMStructure> getStructures(long[] groupIds, long classNameId)
+			throws SystemException {
+
+		return ddmStructurePersistence.findByG_C(groupIds, classNameId);
+	}
+
 	/**
 	 * Returns the number of structures belonging to the group.
 	 *
