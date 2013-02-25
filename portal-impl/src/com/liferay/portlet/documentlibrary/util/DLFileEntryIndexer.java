@@ -161,6 +161,17 @@ public class DLFileEntryIndexer extends BaseIndexer {
 		contextQuery.addRequiredTerm(
 			Field.HIDDEN, searchContext.isIncludeAttachments());
 
+		String structureField = (String)searchContext.getAttribute(
+			"structureField");
+		String structureValue = (String)searchContext.getAttribute(
+			"structureValue");
+
+		if (Validator.isNotNull(structureField) &&
+				Validator.isNotNull(structureValue)) {
+
+			contextQuery.addRequiredTerm(structureField, structureValue);
+		}
+
 		long[] folderIds = searchContext.getFolderIds();
 
 		if ((folderIds != null) && (folderIds.length > 0) &&
@@ -248,26 +259,28 @@ public class DLFileEntryIndexer extends BaseIndexer {
 			Document document, DLFileVersion dlFileVersion)
 		throws PortalException, SystemException {
 
-		List<DLFileEntryMetadata> dlFileEntryMetadatas =
-			DLFileEntryMetadataLocalServiceUtil.
-				getFileVersionFileEntryMetadatas(
-					dlFileVersion.getFileVersionId());
+		DLFileEntryType dlFileEntryType =
+			DLFileEntryTypeLocalServiceUtil.getDLFileEntryType(
+				dlFileVersion.getFileEntryTypeId());
 
-		for (DLFileEntryMetadata dlFileEntryMetadata : dlFileEntryMetadatas) {
+		List<DDMStructure> ddmStructures = dlFileEntryType.getDDMStructures();
+
+		for (DDMStructure ddmStructure : ddmStructures) {
 			Fields fields = null;
 
 			try {
+				DLFileEntryMetadata fileEntryMetadata =
+					DLFileEntryMetadataLocalServiceUtil.getFileEntryMetadata(
+						ddmStructure.getStructureId(),
+						dlFileVersion.getFileVersionId());
+
 				fields = StorageEngineUtil.getFields(
-					dlFileEntryMetadata.getDDMStorageId());
+					fileEntryMetadata.getDDMStorageId());
 			}
 			catch (Exception e) {
 			}
 
 			if (fields != null) {
-				DDMStructure ddmStructure =
-					DDMStructureLocalServiceUtil.getStructure(
-						dlFileEntryMetadata.getDDMStructureId());
-
 				DDMIndexerUtil.addAttributes(document, ddmStructure, fields);
 			}
 		}
