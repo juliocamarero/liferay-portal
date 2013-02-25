@@ -49,20 +49,20 @@ public class BookmarksFolderStagedModelDataHandlerTest
 	protected Map<String, List<StagedModel>> addDependentStagedModels(
 		Group group) throws Exception {
 
-		BookmarksFolder folder = BookmarksTestUtil.addFolder(
-			group.getGroupId(), "Test Parent Folder");
+		List<StagedModel> dependentStagedFolderModels =
+			new ArrayList<StagedModel>();
 
-		HashMap<String, List<StagedModel>> relatedStagedModels =
+		dependentStagedFolderModels.add(
+			BookmarksTestUtil.addFolder(
+				group.getGroupId(), "Test Parent Folder"));
+
+		HashMap<String, List<StagedModel>> dependentStagedModels =
 			new HashMap<String, List<StagedModel>>();
 
-		List<StagedModel> relatedFolderModels = new ArrayList<StagedModel>();
+		dependentStagedModels.put(
+			BookmarksFolder.class.getName(), dependentStagedFolderModels);
 
-		relatedFolderModels.add(folder);
-
-		relatedStagedModels.put(
-			BookmarksFolder.class.getName(), relatedFolderModels);
-
-		return relatedStagedModels;
+		return dependentStagedModels;
 	}
 
 	@Override
