@@ -109,7 +109,8 @@ public class JournalTransformerTest {
 	public void testFTLTransformation() throws Exception {
 		Map<String, String> tokens = getTokens();
 
-		String xml = DDMStructureTestUtil.getSampleStructuredContent();
+		String xml = DDMStructureTestUtil.getSampleStructuredContent(
+			"name", "Joe Bloggs");
 
 		String script = "${name.getData()} - ${viewMode}";
 
@@ -163,7 +164,8 @@ public class JournalTransformerTest {
 	public void testRegexTransformerListener() throws Exception {
 		Map<String, String> tokens = getTokens();
 
-		String xml = DDMStructureTestUtil.getSampleStructuredContent();
+		String xml = DDMStructureTestUtil.getSampleStructuredContent(
+			"name", "Joe Bloggs");
 
 		String script = "Hello $name.getData(), Welcome to beta.sample.com.";
 
@@ -230,7 +232,8 @@ public class JournalTransformerTest {
 	public void testVMTransformation() throws Exception {
 		Map<String, String> tokens = getTokens();
 
-		String xml = DDMStructureTestUtil.getSampleStructuredContent();
+		String xml = DDMStructureTestUtil.getSampleStructuredContent(
+			"name", "Joe Bloggs");
 
 		String script = "$name.getData()";
 
