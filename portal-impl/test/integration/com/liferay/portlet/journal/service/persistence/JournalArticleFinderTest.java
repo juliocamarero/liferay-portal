@@ -76,7 +76,7 @@ public class JournalArticleFinderTest {
 		JournalFolder folder = JournalTestUtil.addFolder(
 			_group.getGroupId(), "Folder 2");
 
-		DDMTemplate ddmTemplate = JournalTestUtil.addDDMTemplate(
+		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addDDMTemplate(
 			_group.getGroupId(), _ddmStructure.getStructureId());
 
 		JournalTestUtil.addArticleWithXMLContent(
