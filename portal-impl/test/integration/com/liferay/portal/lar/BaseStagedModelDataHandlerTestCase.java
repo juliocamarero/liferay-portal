@@ -98,7 +98,7 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		StagedModel stagedModel = addStagedModel(
 			_stagingGroup, dependentStagedModels);
 
-		Element[] stagedModelsParentElements = _getStagedModelsParentElements(
+		Element[] stagedModelsParentElements = getStagedModelsParentElements(
 			dependentStagedModels);
 
 		StagedModelDataHandlerUtil.exportStagedModel(
@@ -124,7 +124,7 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 
 		portletDataContext.setSourceGroupId(_stagingGroup.getGroupId());
 
-		Element importElement = _getImportedStagedModelElement(
+		Element importElement = getImportedStagedModelElement(
 			stagedModel, stagedModelsParentElements);
 
 		Assert.assertNotNull(importElement);
@@ -152,6 +152,33 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		return new Date();
 	}
 
+	protected Element getImportedStagedModelElement(
+		StagedModel stagedModel, Element[] stagedModelElements) {
+
+		Element rootElement = new ElementImpl(
+			DocumentHelper.createElement("root"));
+
+		for (Element element : stagedModelElements) {
+			rootElement.add(element);
+		}
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(getStagedModelClassName());
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(getXMLElementName());
+		sb.append("[@path='");
+		sb.append(StagedModelPathUtil.getPath(stagedModel));
+		sb.append("']");
+
+		XPath xPathSelector = SAXReaderUtil.createXPath(sb.toString());
+
+		Element stagedModelElement = (Element)xPathSelector.selectSingleNode(
+			rootElement);
+
+		return stagedModelElement;
+	}
+
 	protected Map<String, String[]> getParameterMap() {
 		Map<String, String[]> parameterMap =
 			new LinkedHashMap<String, String[]>();
@@ -176,6 +203,29 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 	protected abstract StagedModel getStagedModel(String uuid, Group group);
 
 	protected abstract String getStagedModelClassName();
+
+	protected Element[] getStagedModelsParentElements(
+		Map<String, List<StagedModel>> dependentStagedModels) {
+
+		List<Element> stagedModelElements = new ArrayList<Element>();
+
+		for (String className : dependentStagedModels.keySet()) {
+			Element relatedStagedModelElement = new ElementImpl(
+				DocumentHelper.createElement(className));
+
+			stagedModelElements.add(relatedStagedModelElement);
+		}
+
+		if (!dependentStagedModels.containsKey(getStagedModelClassName())) {
+			Element relatedStagedModelElement = new ElementImpl(
+				DocumentHelper.createElement(getStagedModelClassName()));
+
+			stagedModelElements.add(relatedStagedModelElement);
+		}
+
+		return stagedModelElements.toArray(
+			new Element[stagedModelElements.size()]);
+	}
 
 	protected Date getStartDate() {
 		return new Date(System.currentTimeMillis() - Time.HOUR);
@@ -216,15 +266,17 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 			List<Element> stagedModelElements =
 				stagedModelsParentElement.elements();
 
-			if (stagedModelElements.size() != stagedModelList.size()) {
-				Assert.fail();
-			}
+			Assert.assertEquals(
+				"The number of exported elements in the xml is not right",
+				stagedModelList.size(), stagedModelElements.size());
 
 			for (Element stagedModelElement : stagedModelElements) {
 				String path = stagedModelElement.attributeValue("path");
 
 				if (Validator.isNull(path)) {
-					Assert.fail();
+					Assert.fail(
+						"Path is not defined for an element in the exported " +
+							"xml");
 				}
 
 				Iterator<StagedModel> iterator = stagedModelList.iterator();
@@ -241,7 +293,9 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 			}
 
 			if (!stagedModelList.isEmpty()) {
-				Assert.fail();
+				Assert.fail(
+					"There is more than one element exported with the same " +
+						"path");
 			}
 		}
 	}
@@ -258,56 +312,6 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		Assert.assertNotNull(importedModel);
 
 		validateDependentImportedStagedModels(dependentStagedModelsMap, group);
-	}
-
-	private Element _getImportedStagedModelElement(
-		StagedModel stagedModel, Element[] stagedModelElements) {
-
-		Element rootElement = new ElementImpl(
-			DocumentHelper.createElement("root"));
-
-		for (Element element : stagedModelElements) {
-			rootElement.add(element);
-		}
-
-		StringBundler sb = new StringBundler(6);
-
-		sb.append(getStagedModelClassName());
-		sb.append(StringPool.FORWARD_SLASH);
-		sb.append(getXMLElementName());
-		sb.append("[@path='");
-		sb.append(StagedModelPathUtil.getPath(stagedModel));
-		sb.append("']");
-
-		XPath xPathSelector = SAXReaderUtil.createXPath(sb.toString());
-
-		Element stagedModelElement = (Element)xPathSelector.selectSingleNode(
-			rootElement);
-
-		return stagedModelElement;
-	}
-
-	private Element[] _getStagedModelsParentElements(
-		Map<String, List<StagedModel>> dependentStagedModels) {
-
-		List<Element> stagedModelElements = new ArrayList<Element>();
-
-		for (String className : dependentStagedModels.keySet()) {
-			Element relatedStagedModelElement = new ElementImpl(
-				DocumentHelper.createElement(className));
-
-			stagedModelElements.add(relatedStagedModelElement);
-		}
-
-		if (!dependentStagedModels.containsKey(getStagedModelClassName())) {
-			Element relatedStagedModelElement = new ElementImpl(
-				DocumentHelper.createElement(getStagedModelClassName()));
-
-			stagedModelElements.add(relatedStagedModelElement);
-		}
-
-		return stagedModelElements.toArray(
-			new Element[stagedModelElements.size()]);
 	}
 
 	private Group _liveGroup;
