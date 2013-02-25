@@ -36,6 +36,7 @@ import com.liferay.portlet.dynamicdatamapping.StructureNameException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.util.DDMStructureTestUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMTemplateTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 
@@ -85,7 +86,7 @@ public class JournalTestUtilTest {
 		DDMStructure ddmStructure = DDMStructureTestUtil.addDDMStructure(
 			JournalArticle.class.getName());
 
-		DDMTemplate ddmTemplate = JournalTestUtil.addDDMTemplate(
+		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addDDMTemplate(
 			ddmStructure.getStructureId(), TemplateConstants.LANG_TYPE_VM,
 			JournalTestUtil.getSampleTemplateXSL());
 
@@ -162,7 +163,7 @@ public class JournalTestUtilTest {
 			JournalArticle.class.getName());
 
 		Assert.assertNotNull(
-			JournalTestUtil.addDDMTemplate(ddmStructure.getStructureId()));
+			DDMTemplateTestUtil.addDDMTemplate(ddmStructure.getStructureId()));
 	}
 
 	@Test
@@ -173,7 +174,7 @@ public class JournalTestUtilTest {
 			JournalArticle.class.getName());
 
 		Assert.assertNotNull(
-			JournalTestUtil.addDDMTemplate(
+			DDMTemplateTestUtil.addDDMTemplate(
 				ddmStructure.getStructureId(), TemplateConstants.LANG_TYPE_VM,
 				JournalTestUtil.getSampleTemplateXSL()));
 	}

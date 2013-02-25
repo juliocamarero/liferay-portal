@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.journal.util;
 
-import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -24,12 +23,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.TestPropsValues;
-import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
-import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
-import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateConstants;
-import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalFolder;
@@ -206,81 +200,6 @@ public class JournalTestUtil {
 			defaultLocale);
 	}
 
-	public static DDMTemplate addDDMTemplate(long ddmStructureId)
-		throws Exception {
-
-		return addDDMTemplate(
-			ddmStructureId, TemplateConstants.LANG_TYPE_VM,
-			getSampleTemplateXSL(), LocaleUtil.getDefault());
-	}
-
-	public static DDMTemplate addDDMTemplate(
-			long ddmStructureId, Locale defaultLocale)
-		throws Exception {
-
-		return addDDMTemplate(
-			ddmStructureId, TemplateConstants.LANG_TYPE_VM,
-			getSampleTemplateXSL(), defaultLocale);
-	}
-
-	public static DDMTemplate addDDMTemplate(long groupId, long ddmStructureId)
-		throws Exception {
-
-		return addDDMTemplate(
-			groupId, ddmStructureId, TemplateConstants.LANG_TYPE_VM,
-			getSampleTemplateXSL(), LocaleUtil.getDefault());
-	}
-
-	public static DDMTemplate addDDMTemplate(
-			long groupId, long ddmStructureId, Locale defaultLocale)
-		throws Exception {
-
-		return addDDMTemplate(
-			groupId, ddmStructureId, TemplateConstants.LANG_TYPE_VM,
-			getSampleTemplateXSL(), defaultLocale);
-	}
-
-	public static DDMTemplate addDDMTemplate(
-			long groupId, long ddmStructureId, String language, String script,
-			Locale defaultLocale)
-		throws Exception {
-
-		Map<Locale, String> nameMap = new HashMap<Locale, String>();
-
-		nameMap.put(defaultLocale, "Test Template");
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		serviceContext.setAddGroupPermissions(true);
-		serviceContext.setAddGuestPermissions(true);
-
-		return DDMTemplateLocalServiceUtil.addTemplate(
-			TestPropsValues.getUserId(), groupId,
-			PortalUtil.getClassNameId(DDMStructure.class.getName()),
-			ddmStructureId, nameMap, null,
-			DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY, null, language, script,
-			serviceContext);
-	}
-
-	public static DDMTemplate addDDMTemplate(
-			long ddmStructureId, String language, String script)
-		throws Exception {
-
-		return addDDMTemplate(
-			TestPropsValues.getGroupId(), ddmStructureId, language, script,
-			LocaleUtil.getDefault());
-	}
-
-	public static DDMTemplate addDDMTemplate(
-			long ddmStructureId, String language, String script,
-			Locale defaultLocale)
-		throws Exception {
-
-		return addDDMTemplate(
-			TestPropsValues.getGroupId(), ddmStructureId, language, script,
-			defaultLocale);
-	}
-
 	public static void addDynamicContentElement(
 		Element dynamicElementElement, String languageId, String value) {
 
@@ -373,17 +292,6 @@ public class JournalTestUtil {
 				document.getRootElement(), LocaleUtil.toLanguageId(locale),
 				content);
 		}
-
-		return document.asXML();
-	}
-
-	public static String getSampleStructuredContent() {
-		Document document = createDocument("en_US", "en_US");
-
-		Element dynamicElementElement = addDynamicElementElement(
-			document.getRootElement(), "text", "name");
-
-		addDynamicContentElement(dynamicElementElement, "en_US", "Joe Bloggs");
 
 		return document.asXML();
 	}

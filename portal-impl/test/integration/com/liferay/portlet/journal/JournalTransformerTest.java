@@ -29,6 +29,7 @@ import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.util.DDMStructureTestUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMTemplateTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.journal.util.JournalUtil;
@@ -67,7 +68,7 @@ public class JournalTransformerTest {
 
 		String xsl = "$name.getData()";
 
-		DDMTemplate ddmTemplate = JournalTestUtil.addDDMTemplate(
+		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addDDMTemplate(
 			ddmStructure.getStructureId(), TemplateConstants.LANG_TYPE_VM, xsl);
 
 		document = JournalTestUtil.createDocument("en_US", "en_US");
