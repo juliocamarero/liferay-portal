@@ -683,6 +683,12 @@ public class DLAppHelperLocalServiceImpl
 
 		// Folder
 
+		DLFolder dlFolder = (DLFolder)folder.getModel();
+
+		dlFolder.setName(TrashUtil.getOriginalTitle(dlFolder.getName()));
+
+		dlFolderPersistence.update(dlFolder);
+
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
 			DLFolderConstants.getClassName(), folder.getFolderId());
 
