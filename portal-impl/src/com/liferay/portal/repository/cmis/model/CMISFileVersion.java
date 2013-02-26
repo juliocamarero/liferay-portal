@@ -66,7 +66,30 @@ public class CMISFileVersion extends CMISModel implements FileVersion {
 	}
 
 	public Object clone() {
-		return null;
+		CMISFileVersion fileVersion = new CMISFileVersion(
+			_cmisRepository, _uuid, _fileVersionId, _document);
+
+		fileVersion.setCompanyId(getCompanyId());
+		fileVersion.setCreateDate(getCreateDate());
+		fileVersion.setGroupId(getGroupId());
+		fileVersion.setModifiedDate(getModifiedDate());
+
+		Folder parentFolder = null;
+
+		try {
+			parentFolder = getParentFolder();
+		}
+		catch (Exception e) {
+		}
+
+		fileVersion.setParentFolder(parentFolder);
+
+		fileVersion.setPrimaryKey(getPrimaryKey());
+		fileVersion.setPrimaryKeyObj(getPrimaryKeyObj());
+		fileVersion.setUserId(getUserId());
+		fileVersion.setUserName(getUserName());
+
+		return fileVersion;
 	}
 
 	public Map<String, Serializable> getAttributes() {
