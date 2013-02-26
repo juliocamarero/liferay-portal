@@ -770,6 +770,13 @@ public class JournalFolderLocalServiceImpl
 						JournalFolder.class.getName(), folder.getFolderId());
 				}
 
+				// Index
+
+				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					JournalFolder.class);
+
+				indexer.reindex(folder);
+
 				List<Object> curFoldersAndEntries =
 					journalFolderLocalService.getFoldersAndArticles(
 						folder.getGroupId(), folder.getFolderId());
