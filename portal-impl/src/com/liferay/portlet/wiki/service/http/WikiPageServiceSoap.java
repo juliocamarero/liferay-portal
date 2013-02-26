@@ -433,16 +433,18 @@ public class WikiPageServiceSoap {
 		}
 	}
 
+	/**
+	* @deprecated {@link #getPagesRSS(long, long, String, int, String, double,
+	String, String, String, java.util.Locale, String)}
+	*/
 	public static java.lang.String getPagesRSS(long companyId, long nodeId,
 		java.lang.String title, int max, java.lang.String type, double version,
 		java.lang.String displayStyle, java.lang.String feedURL,
-		java.lang.String entryURL, java.lang.String attachmentURLPrefix,
-		String locale) throws RemoteException {
+		java.lang.String entryURL, String locale) throws RemoteException {
 		try {
 			java.lang.String returnValue = WikiPageServiceUtil.getPagesRSS(companyId,
 					nodeId, title, max, type, version, displayStyle, feedURL,
-					entryURL, attachmentURLPrefix,
-					LocaleUtil.fromLanguageId(locale));
+					entryURL, LocaleUtil.fromLanguageId(locale));
 
 			return returnValue;
 		}
@@ -453,18 +455,16 @@ public class WikiPageServiceSoap {
 		}
 	}
 
-	/**
-	* @deprecated {@link #getPagesRSS(long, long, String, int, String, double,
-	String, String, String, String, java.util.Locale)}
-	*/
 	public static java.lang.String getPagesRSS(long companyId, long nodeId,
 		java.lang.String title, int max, java.lang.String type, double version,
 		java.lang.String displayStyle, java.lang.String feedURL,
-		java.lang.String entryURL, String locale) throws RemoteException {
+		java.lang.String entryURL, String locale,
+		java.lang.String attachmentURLPrefix) throws RemoteException {
 		try {
 			java.lang.String returnValue = WikiPageServiceUtil.getPagesRSS(companyId,
 					nodeId, title, max, type, version, displayStyle, feedURL,
-					entryURL, LocaleUtil.fromLanguageId(locale));
+					entryURL, LocaleUtil.fromLanguageId(locale),
+					attachmentURLPrefix);
 
 			return returnValue;
 		}

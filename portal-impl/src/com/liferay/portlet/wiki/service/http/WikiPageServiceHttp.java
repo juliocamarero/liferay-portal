@@ -1044,7 +1044,7 @@ public class WikiPageServiceHttp {
 		long companyId, long nodeId, java.lang.String title, int max,
 		java.lang.String type, double version, java.lang.String displayStyle,
 		java.lang.String feedURL, java.lang.String entryURL,
-		java.lang.String attachmentURLPrefix, java.util.Locale locale)
+		java.util.Locale locale)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
@@ -1053,7 +1053,7 @@ public class WikiPageServiceHttp {
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					companyId, nodeId, title, max, type, version, displayStyle,
-					feedURL, entryURL, attachmentURLPrefix, locale);
+					feedURL, entryURL, locale);
 
 			Object returnObj = null;
 
@@ -1085,7 +1085,7 @@ public class WikiPageServiceHttp {
 		long companyId, long nodeId, java.lang.String title, int max,
 		java.lang.String type, double version, java.lang.String displayStyle,
 		java.lang.String feedURL, java.lang.String entryURL,
-		java.util.Locale locale)
+		java.util.Locale locale, java.lang.String attachmentURLPrefix)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
@@ -1094,7 +1094,7 @@ public class WikiPageServiceHttp {
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					companyId, nodeId, title, max, type, version, displayStyle,
-					feedURL, entryURL, locale);
+					feedURL, entryURL, locale, attachmentURLPrefix);
 
 			Object returnObj = null;
 
@@ -1690,13 +1690,13 @@ public class WikiPageServiceHttp {
 			long.class, long.class, java.lang.String.class, int.class,
 			java.lang.String.class, double.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class,
-			java.lang.String.class, java.util.Locale.class
+			java.util.Locale.class
 		};
 	private static final Class<?>[] _getPagesRSSParameterTypes29 = new Class[] {
 			long.class, long.class, java.lang.String.class, int.class,
 			java.lang.String.class, double.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class,
-			java.util.Locale.class
+			java.util.Locale.class, java.lang.String.class
 		};
 	private static final Class<?>[] _getRecentChangesParameterTypes30 = new Class[] {
 			long.class, long.class, int.class, int.class
