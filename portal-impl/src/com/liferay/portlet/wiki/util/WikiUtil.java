@@ -123,7 +123,7 @@ public class WikiUtil {
 	}
 
 	public static String escapeContent(String content) {
-		StringBundler sb = new StringBundler(content.length());
+		StringBundler sb = new StringBundler(content.length() + 2);
 
 		boolean insideTag = false;
 
@@ -131,15 +131,19 @@ public class WikiUtil {
 			if (c == CharPool.GREATER_THAN) {
 				insideTag = false;
 			}
-			 else if (c == CharPool.LESS_THAN) {
+			else if (c == CharPool.LESS_THAN) {
 				insideTag = true;
 			}
 
-			if (!insideTag && (c == CharPool.SPACE)) {
-				sb.append(StringPool.NBSP);
-			}
-			else if (!insideTag && (c == CharPool.TAB)) {
-				sb.append("&nbsp;&nbsp;&nbsp;");
+			if (!insideTag) {
+				if (c == CharPool.SPACE) {
+					sb.append(StringPool.NBSP);
+				}
+				else if (c == CharPool.TAB) {
+					sb.append(StringPool.NBSP);
+					sb.append(StringPool.NBSP);
+					sb.append(StringPool.NBSP);
+				}
 			}
 			else {
 				sb.append(c);
