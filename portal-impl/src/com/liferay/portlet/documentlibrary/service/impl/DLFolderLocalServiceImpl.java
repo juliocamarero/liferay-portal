@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -625,21 +626,10 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 					fileEntryTypeId, workflowDefinition));
 		}
 
-		Group group = groupLocalService.getGroup(
-			serviceContext.getScopeGroupId());
-
-		if (group.isLayout()) {
-			group = group.getParentGroup();
-		}
-
-		if (group.isStagingGroup()) {
-			group = group.getLiveGroup();
-		}
-
 		workflowDefinitionLinkLocalService.updateWorkflowDefinitionLinks(
 			serviceContext.getUserId(), serviceContext.getCompanyId(),
-			group.getGroupId(), DLFolder.class.getName(), folderId,
-			workflowDefinitionOVPs);
+			StagingUtil.getLiveGroupId(serviceContext.getScopeGroupId()),
+			DLFolder.class.getName(), folderId, workflowDefinitionOVPs);
 
 		return dlFolder;
 	}
