@@ -56,6 +56,8 @@ else if (type.equals("history")) {
 	portletURL.setParameter("struts_action", "/wiki/view_page_history");
 
 	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "history"), portletURL.toString());
+
+	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "revisions"), portletURL.toString());
 }
 else if (type.equals("incoming_links")) {
 	if (wikiPage != null) {
