@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
@@ -38,6 +39,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.base.JournalFolderLocalServiceBaseImpl;
+import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -392,6 +394,17 @@ public class JournalFolderLocalServiceImpl
 		folder.setName(trashTitle);
 
 		journalFolderPersistence.update(folder);
+
+		// Social
+
+		socialActivityCounterLocalService.enableActivityCounters(
+			JournalFolder.class.getName(), folder.getFolderId());
+
+		socialActivityLocalService.addActivity(
+			userId, folder.getGroupId(), JournalFolder.class.getName(),
+			folder.getFolderId(),
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
+			0);
 	}
 
 	public void restoreFolderFromTrash(long userId, long folderId)
@@ -408,6 +421,17 @@ public class JournalFolderLocalServiceImpl
 			JournalFolder.class.getName(), folderId);
 
 		updateStatus(userId, folder, trashEntry.getStatus());
+
+		// Social
+
+		socialActivityCounterLocalService.enableActivityCounters(
+			JournalFolder.class.getName(), folder.getFolderId());
+
+		socialActivityLocalService.addActivity(
+			userId, folder.getGroupId(), JournalFolder.class.getName(),
+			folder.getFolderId(),
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
+			0);
 	}
 
 	public void updateAsset(
@@ -492,6 +516,21 @@ public class JournalFolderLocalServiceImpl
 				folder.getGroupId(), folder.getFolderId());
 
 		updateDependentStatus(foldersAndEntries, status);
+
+		if (status == WorkflowConstants.STATUS_APPROVED) {
+
+			// Social
+
+			socialActivityCounterLocalService.enableActivityCounters(
+				JournalFolder.class.getName(), folder.getFolderId());
+		}
+		else if (status == WorkflowConstants.STATUS_IN_TRASH) {
+
+			// Social
+
+			socialActivityCounterLocalService.disableActivityCounters(
+				JournalFolder.class.getName(), folder.getFolderId());
+		}
 
 		// Trash
 
@@ -687,6 +726,17 @@ public class JournalFolderLocalServiceImpl
 
 				if (folder.isInTrash()) {
 					continue;
+				}
+
+				// Social
+
+				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+					socialActivityCounterLocalService.disableActivityCounters(
+						JournalFolder.class.getName(), folder.getFolderId());
+				}
+				else {
+					socialActivityCounterLocalService.enableActivityCounters(
+						JournalFolder.class.getName(), folder.getFolderId());
 				}
 
 				List<Object> curFoldersAndEntries =
