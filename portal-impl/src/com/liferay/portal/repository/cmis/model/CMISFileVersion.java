@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
@@ -62,6 +63,10 @@ public class CMISFileVersion extends CMISModel implements FileVersion {
 		_uuid = uuid;
 		_fileVersionId = fileVersionId;
 		_document = document;
+	}
+
+	public Object clone() {
+		return null;
 	}
 
 	public Map<String, Serializable> getAttributes() {

@@ -75,6 +75,10 @@ public class CMISFileEntry extends CMISModel implements FileEntry {
 		_document = document;
 	}
 
+	public Object clone() {
+		return null;
+	}
+
 	public boolean containsPermission(
 			PermissionChecker permissionChecker, String actionId)
 		throws SystemException {

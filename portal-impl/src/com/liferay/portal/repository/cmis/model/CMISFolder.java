@@ -59,6 +59,10 @@ public class CMISFolder extends CMISModel implements Folder {
 		_cmisFolder = cmisFolder;
 	}
 
+	public Object clone() {
+		return null;
+	}
+
 	public boolean containsPermission(
 			PermissionChecker permissionChecker, String actionId)
 		throws SystemException {
