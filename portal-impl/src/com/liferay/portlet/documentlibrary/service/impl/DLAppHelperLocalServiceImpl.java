@@ -984,6 +984,13 @@ public class DLAppHelperLocalServiceImpl
 						dlFolder.getFolderId());
 				}
 
+				// Index
+
+				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					DLFolder.class);
+
+				indexer.reindex(dlFolder);
+
 				QueryDefinition queryDefinition = new QueryDefinition(
 					WorkflowConstants.STATUS_ANY);
 

@@ -705,6 +705,13 @@ public class BookmarksFolderLocalServiceImpl
 						BookmarksFolder.class.getName(), folder.getFolderId());
 				}
 
+				// Index
+
+				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					BookmarksFolder.class);
+
+				indexer.reindex(folder);
+
 				List<Object> curFoldersAndEntries =
 					bookmarksFolderLocalService.getFoldersAndEntries(
 						folder.getGroupId(), folder.getFolderId());
