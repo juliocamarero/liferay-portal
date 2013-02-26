@@ -689,9 +689,6 @@ public class DLAppHelperLocalServiceImpl
 
 		dlFolderPersistence.update(dlFolder);
 
-		TrashEntry trashEntry = trashEntryLocalService.getEntry(
-			DLFolderConstants.getClassName(), folder.getFolderId());
-
 		dlFolderLocalService.updateStatus(
 			userId, folder.getFolderId(), WorkflowConstants.STATUS_APPROVED,
 			new HashMap<String, Serializable>(), new ServiceContext());
@@ -710,10 +707,6 @@ public class DLAppHelperLocalServiceImpl
 			folder.getFolderId(),
 			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
 			0);
-
-		// Trash
-
-		trashEntryLocalService.deleteEntry(trashEntry.getEntryId());
 	}
 
 	public AssetEntry updateAsset(
