@@ -956,11 +956,29 @@ public class DLAppHelperLocalServiceImpl
 				// Social
 
 				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						DLFolderConstants.getClassName(),
+						dlFolder.getFolderId(), false);
+
+					// Social
+
 					socialActivityCounterLocalService.disableActivityCounters(
 						DLFolderConstants.getClassName(),
 						dlFolder.getFolderId());
 				}
 				else {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						DLFolderConstants.getClassName(),
+						dlFolder.getFolderId(), true);
+
+					// Social
+
 					socialActivityCounterLocalService.enableActivityCounters(
 						DLFolderConstants.getClassName(),
 						dlFolder.getFolderId());
