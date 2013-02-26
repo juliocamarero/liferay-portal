@@ -313,7 +313,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 	public String getNodePagesRSS(
 			long nodeId, int max, String type, double version,
 			String displayStyle, String feedURL, String entryURL,
-			String attachmentURLPrefix )
+			String attachmentURLPrefix)
 		throws PortalException, SystemException {
 
 		WikiNodePermission.check(
@@ -325,8 +325,8 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
 		return exportToRSS(
 			node.getCompanyId(), node.getName(), node.getDescription(), type,
-			version, displayStyle, feedURL, entryURL, attachmentURLPrefix,
-			pages, false, null);
+			version, displayStyle, feedURL, entryURL, pages, false, null,
+			attachmentURLPrefix);
 	}
 
 	public List<WikiPage> getOrphans(long groupId, long nodeId)
@@ -448,7 +448,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
 	/**
 	 * @deprecated {@link #getPagesRSS(long, long, String, int, String, double,
-	 *             String, String, String, String, java.util.Locale)}
+	 *             String, String, String, java.util.Locale, String)}
 	 */
 	public String getPagesRSS(
 			long companyId, long nodeId, String title, int max, String type,
@@ -458,13 +458,13 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
 		return getPagesRSS(
 			companyId, nodeId, title, max, type, version, displayStyle, feedURL,
-			entryURL, null, locale);
+			entryURL, locale, null);
 	}
 
 	public String getPagesRSS(
 			long companyId, long nodeId, String title, int max, String type,
 			double version, String displayStyle, String feedURL,
-			String entryURL, String attachmentURLPrefix, Locale locale)
+			String entryURL, Locale locale, String attachmentURLPrefix)
 		throws PortalException, SystemException {
 
 		WikiPagePermission.check(
@@ -475,7 +475,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
 		return exportToRSS(
 			companyId, title, title, type, version, displayStyle, feedURL,
-			entryURL, attachmentURLPrefix, pages, true, locale);
+			entryURL, pages, true, locale, attachmentURLPrefix);
 	}
 
 	public List<WikiPage> getRecentChanges(
@@ -635,8 +635,8 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 	protected String exportToRSS(
 			long companyId, String name, String description, String type,
 			double version, String displayStyle, String feedURL,
-			String entryURL, String attachmentURLPrefix, List<WikiPage> pages,
-			boolean diff, Locale locale)
+			String entryURL, List<WikiPage> pages, boolean diff, Locale locale,
+			String attachmentURLPrefix)
 		throws PortalException, SystemException {
 
 		SyndFeed syndFeed = new SyndFeedImpl();
@@ -684,8 +684,8 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 					}
 					else {
 						value = getPageDiff(
-							companyId, attachmentURLPrefix, latestPage, page,
-							locale);
+							companyId, latestPage, page, locale,
+							attachmentURLPrefix);
 					}
 
 					syndContent.setValue(value);
@@ -764,8 +764,8 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 	}
 
 	protected String getPageDiff(
-			long companyId, String attachmentURLPrefix, WikiPage latestPage,
-			WikiPage page, Locale locale)
+			long companyId, WikiPage latestPage, WikiPage page, Locale locale,
+			String attachmentURLPrefix)
 		throws SystemException {
 
 		try {

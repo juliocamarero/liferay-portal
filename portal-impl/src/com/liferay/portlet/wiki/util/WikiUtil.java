@@ -159,7 +159,7 @@ public class WikiUtil {
 	}
 
 	public static String getAttachmentURLPrefix(
-			String pathMain, long plid, long nodeId, String title) {
+		String pathMain, long plid, long nodeId, String title) {
 
 		StringBundler sb = new StringBundler(8);
 
