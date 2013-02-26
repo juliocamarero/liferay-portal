@@ -135,6 +135,11 @@ public class JournalFolderLocalServiceImpl
 		journalArticleLocalService.deleteArticles(
 			folder.getGroupId(), folder.getFolderId(), includeTrashedEntries);
 
+		// Asset
+
+		assetEntryLocalService.deleteEntry(
+			JournalFolder.class.getName(), folder.getFolderId());
+
 		// Expando
 
 		expandoValueLocalService.deleteValues(
@@ -519,12 +524,24 @@ public class JournalFolderLocalServiceImpl
 
 		if (status == WorkflowConstants.STATUS_APPROVED) {
 
+			// Asset
+
+			assetEntryLocalService.updateVisible(
+				JournalFolder.class.getName(), folder.getFolderId(),
+				true);
+
 			// Social
 
 			socialActivityCounterLocalService.enableActivityCounters(
 				JournalFolder.class.getName(), folder.getFolderId());
 		}
 		else if (status == WorkflowConstants.STATUS_IN_TRASH) {
+
+			// Asset
+
+			assetEntryLocalService.updateVisible(
+				JournalFolder.class.getName(), folder.getFolderId(),
+				false);
 
 			// Social
 
@@ -728,13 +745,29 @@ public class JournalFolderLocalServiceImpl
 					continue;
 				}
 
-				// Social
-
 				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						JournalFolder.class.getName(), folder.getFolderId(),
+						false);
+
+					// Social
+
 					socialActivityCounterLocalService.disableActivityCounters(
 						JournalFolder.class.getName(), folder.getFolderId());
 				}
 				else {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						JournalFolder.class.getName(), folder.getFolderId(),
+						true);
+
+					// Social
+
 					socialActivityCounterLocalService.enableActivityCounters(
 						JournalFolder.class.getName(), folder.getFolderId());
 				}

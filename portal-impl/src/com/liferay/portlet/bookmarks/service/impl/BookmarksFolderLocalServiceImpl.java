@@ -507,7 +507,7 @@ public class BookmarksFolderLocalServiceImpl
 			// Social
 
 			socialActivityCounterLocalService.disableActivityCounters(
-					BookmarksFolder.class.getName(), folder.getFolderId());
+				BookmarksFolder.class.getName(), folder.getFolderId());
 		}
 
 		// Trash
@@ -678,13 +678,29 @@ public class BookmarksFolderLocalServiceImpl
 					continue;
 				}
 
-				// Social
-
 				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						BookmarksFolder.class.getName(), folder.getFolderId(),
+						false);
+
+					// Social
+
 					socialActivityCounterLocalService.disableActivityCounters(
 						BookmarksFolder.class.getName(), folder.getFolderId());
 				}
 				else {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						BookmarksFolder.class.getName(), folder.getFolderId(),
+						true);
+
+					// Social
+
 					socialActivityCounterLocalService.enableActivityCounters(
 						BookmarksFolder.class.getName(), folder.getFolderId());
 				}
