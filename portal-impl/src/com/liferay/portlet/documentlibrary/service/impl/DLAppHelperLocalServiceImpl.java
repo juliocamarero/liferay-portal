@@ -696,6 +696,9 @@ public class DLAppHelperLocalServiceImpl
 
 		// Social
 
+		socialActivityCounterLocalService.enableActivityCounters(
+			DLFolderConstants.class.getName(), folder.getFolderId());
+
 		socialActivityLocalService.addActivity(
 			userId, folder.getGroupId(), DLFolderConstants.getClassName(),
 			folder.getFolderId(),
@@ -948,6 +951,19 @@ public class DLAppHelperLocalServiceImpl
 
 				if (dlFolder.isInTrash()) {
 					continue;
+				}
+
+				// Social
+
+				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+					socialActivityCounterLocalService.disableActivityCounters(
+						DLFolderConstants.getClassName(),
+						dlFolder.getFolderId());
+				}
+				else {
+					socialActivityCounterLocalService.enableActivityCounters(
+						DLFolderConstants.getClassName(),
+						dlFolder.getFolderId());
 				}
 
 				QueryDefinition queryDefinition = new QueryDefinition(
@@ -1337,6 +1353,17 @@ public class DLAppHelperLocalServiceImpl
 
 			dlFileRankLocalService.enableFileRanksByFolderId(
 				folder.getFolderId());
+
+			// Social
+
+			socialActivityCounterLocalService.enableActivityCounters(
+				DLFolderConstants.class.getName(), folder.getFolderId());
+
+			socialActivityLocalService.addActivity(
+				userId, folder.getGroupId(), DLFolderConstants.class.getName(),
+				folder.getFolderId(),
+				SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+				StringPool.BLANK, 0);
 		}
 
 		return dlAppService.moveFolder(
@@ -1366,6 +1393,9 @@ public class DLAppHelperLocalServiceImpl
 		dlFileRankLocalService.disableFileRanksByFolderId(folder.getFolderId());
 
 		// Social
+
+		socialActivityCounterLocalService.disableActivityCounters(
+			DLFolderConstants.class.getName(), folder.getFolderId());
 
 		socialActivityLocalService.addActivity(
 			userId, folder.getGroupId(), DLFolderConstants.getClassName(),
