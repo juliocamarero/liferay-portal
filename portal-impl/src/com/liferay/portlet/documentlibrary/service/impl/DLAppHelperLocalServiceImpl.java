@@ -1207,16 +1207,15 @@ public class DLAppHelperLocalServiceImpl
 		if (fileVersion.isInTrash()) {
 			restoreFileEntryFromTrash(userId, fileEntry);
 
-			DLFileEntry dlFileEntry = dlFileEntryLocalService.moveFileEntry(
-				userId, fileEntry.getFileEntryId(), newFolderId,
-				serviceContext);
+			fileEntry = dlAppService.moveFileEntry(
+				fileEntry.getFileEntryId(), newFolderId, serviceContext);
 
 			if (DLAppHelperThreadLocal.isEnabled()) {
 				dlFileRankLocalService.enableFileRanks(
 					fileEntry.getFileEntryId());
 			}
 
-			return new LiferayFileEntry(dlFileEntry);
+			return fileEntry;
 		}
 		else {
 			dlFileEntryLocalService.updateStatus(
