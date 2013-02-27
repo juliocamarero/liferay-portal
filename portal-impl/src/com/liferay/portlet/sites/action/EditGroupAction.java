@@ -69,6 +69,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.AssetTagException;
+import com.liferay.portlet.sites.util.Sites;
 import com.liferay.portlet.sites.util.SitesUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -490,12 +491,11 @@ public class EditGroupAction extends PortletAction {
 			}
 			else {
 				String analyticsScript = ParamUtil.getString(
-					actionRequest, SitesUtil.ANALYTICS_PREFIX + analyticsType,
+					actionRequest, Sites.ANALYTICS_PREFIX + analyticsType,
 					typeSettingsProperties.getProperty(analyticsType));
 
 				typeSettingsProperties.setProperty(
-					SitesUtil.ANALYTICS_PREFIX + analyticsType,
-					analyticsScript);
+					Sites.ANALYTICS_PREFIX + analyticsType, analyticsScript);
 			}
 		}
 
@@ -542,7 +542,7 @@ public class EditGroupAction extends PortletAction {
 			GetterUtil.getInteger(
 				typeSettingsProperties.getProperty(
 					"contentSharingWithChildrenEnabled"),
-				SitesUtil.CONTENT_SHARING_WITH_CHILDREN_DEFAULT_VALUE));
+				Sites.CONTENT_SHARING_WITH_CHILDREN_DEFAULT_VALUE));
 
 		typeSettingsProperties.setProperty(
 			"contentSharingWithChildrenEnabled",
