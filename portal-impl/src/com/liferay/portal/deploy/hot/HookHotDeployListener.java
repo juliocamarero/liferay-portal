@@ -1475,7 +1475,7 @@ public class HookHotDeployListener
 
 			Map<String, String> languageMap = new HashMap<String, String>();
 
-			if (baseLanguageMap != null) {
+			if (baseLanguageMap != null && locale == null) {
 				languageMap.putAll(baseLanguageMap);
 			}
 
