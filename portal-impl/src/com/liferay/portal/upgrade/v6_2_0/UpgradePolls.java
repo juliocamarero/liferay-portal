@@ -56,7 +56,7 @@ public class UpgradePolls extends UpgradeProcess {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-					"select groupId from PollsQuestion where questionId = ?");
+				"select groupId from PollsQuestion where questionId = ?");
 
 			ps.setLong(1, questionId);
 
@@ -81,7 +81,7 @@ public class UpgradePolls extends UpgradeProcess {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-					"update PollsVote set groupId = ? where voteId = ?");
+				"update PollsVote set groupId = ? where voteId = ?");
 
 			ps.setLong(1, groupId);
 			ps.setLong(2, voteId);
@@ -102,7 +102,7 @@ public class UpgradePolls extends UpgradeProcess {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-					"select voteId, questionId from PollsVote");
+				"select voteId, questionId from PollsVote");
 
 			rs = ps.executeQuery();
 
