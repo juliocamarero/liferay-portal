@@ -527,8 +527,7 @@ public class JournalFolderLocalServiceImpl
 			// Asset
 
 			assetEntryLocalService.updateVisible(
-				JournalFolder.class.getName(), folder.getFolderId(),
-				true);
+				JournalFolder.class.getName(), folder.getFolderId(), true);
 
 			// Social
 
@@ -540,8 +539,7 @@ public class JournalFolderLocalServiceImpl
 			// Asset
 
 			assetEntryLocalService.updateVisible(
-				JournalFolder.class.getName(), folder.getFolderId(),
-				false);
+				JournalFolder.class.getName(), folder.getFolderId(), false);
 
 			// Social
 
