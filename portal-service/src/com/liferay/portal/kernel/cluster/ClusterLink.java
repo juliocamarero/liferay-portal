@@ -23,6 +23,9 @@ import java.util.List;
  */
 public interface ClusterLink {
 
+	public static final String CLUSTER_FORWARD_MESSAGE =
+		"CLUSTER_FORWARD_MESSAGE";
+
 	public List<Address> getLocalTransportAddresses();
 
 	public List<Address> getTransportAddresses(Priority priority);
