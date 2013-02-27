@@ -81,18 +81,6 @@ import java.util.Locale;
  */
 public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
-	public WikiPageServiceImpl() {
-		Class<?> clazz = getClass();
-
-		ClassLoader classLoader = clazz.getClassLoader();
-
-		String templateId = "com/liferay/portlet/wiki/dependencies/rss.vm";
-
-		URL url = classLoader.getResource(templateId);
-
-		_templateResource = new URLTemplateResource(templateId, url);
-	}
-
 	public WikiPage addPage(
 			long nodeId, String title, String content, String summary,
 			boolean minorEdit, ServiceContext serviceContext)
@@ -300,7 +288,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 	public String getNodePagesRSS(
 			long nodeId, int max, String type, double version,
 			String displayStyle, String feedURL, String entryURL)
-		throws PortalException, SystemException {
+		throws Exception {
 
 		WikiNodePermission.check(
 			getPermissionChecker(), nodeId, ActionKeys.VIEW);
@@ -435,7 +423,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 			long companyId, long nodeId, String title, int max, String type,
 			double version, String displayStyle, String feedURL,
 			String entryURL, Locale locale)
-		throws PortalException, SystemException {
+		throws Exception {
 
 		WikiPagePermission.check(
 			getPermissionChecker(), nodeId, title, ActionKeys.VIEW);
@@ -606,7 +594,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 			long companyId, String name, String description, String type,
 			double version, String displayStyle, String feedURL,
 			String entryURL, List<WikiPage> pages, boolean diff, Locale locale)
-		throws SystemException {
+		throws Exception {
 
 		SyndFeed syndFeed = new SyndFeedImpl();
 
@@ -652,8 +640,8 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 						value = page.getContent();
 					}
 					else {
-						value = getPageDiff(
-							companyId, latestPage, page, locale);
+						value = WikiUtil.diffHtml(
+							latestPage, page, null, null, null);
 					}
 
 					syndContent.setValue(value);
@@ -730,44 +718,5 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 			throw new SystemException(fe);
 		}
 	}
-
-	protected String getPageDiff(
-			long companyId, WikiPage latestPage, WikiPage page, Locale locale)
-		throws SystemException {
-
-		try {
-			Template template = TemplateManagerUtil.getTemplate(
-				TemplateConstants.LANG_TYPE_VM, _templateResource,
-				TemplateContextType.STANDARD);
-
-			template.put("companyId", companyId);
-			template.put("contextLine", Diff.CONTEXT_LINE);
-			template.put("diffUtil", new DiffUtil());
-			template.put("languageUtil", LanguageUtil.getLanguage());
-			template.put("locale", locale);
-
-			String sourceContent = WikiUtil.convert(
-				latestPage, null, null, null);
-			String targetContent = WikiUtil.convert(page, null, null, null);
-
-			List<DiffResult>[] diffResults = DiffUtil.diff(
-				new UnsyncStringReader(sourceContent),
-				new UnsyncStringReader(targetContent));
-
-			template.put("sourceResults", diffResults[0]);
-			template.put("targetResults", diffResults[1]);
-
-			UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
-
-			template.processTemplate(unsyncStringWriter);
-
-			return unsyncStringWriter.toString();
-		}
-		catch (Exception e) {
-			throw new SystemException(e);
-		}
-	}
-
-	private TemplateResource _templateResource;
 
 }
