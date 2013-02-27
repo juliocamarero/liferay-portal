@@ -30,7 +30,6 @@ public class UpgradePolls extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		super.doUpgrade();
 
 		// PollsVote
 
