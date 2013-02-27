@@ -668,7 +668,8 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 					String value = null;
 
 					if (latestPage == null) {
-						value = page.getContent();
+						value = WikiUtil.convert(
+							page, null, null, attachmentURLPrefix);
 					}
 					else {
 						value = WikiUtil.diffHtml(
@@ -694,7 +695,8 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 					value = StringPool.BLANK;
 				}
 				else {
-					value = page.getContent();
+					value = WikiUtil.convert(
+						page, null, null, attachmentURLPrefix);
 				}
 
 				syndContent.setValue(value);
