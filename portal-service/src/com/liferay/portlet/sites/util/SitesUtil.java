@@ -195,6 +195,10 @@ public class SitesUtil {
 		return getSites().isLayoutSetPrototypeUpdateable(layoutSet);
 	}
 
+	public static boolean isLayoutSortable(Layout layout) {
+		return getSites().isLayoutSortable(layout);
+	}
+
 	public static boolean isLayoutUpdateable(Layout layout) {
 		return getSites().isLayoutUpdateable(layout);
 	}

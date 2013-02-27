@@ -71,7 +71,8 @@ public class UpdateLayoutAction extends JSONAction {
 
 			jsonObj.put("deletable", Boolean.valueOf(array[2]));
 			jsonObj.put("layoutId", array[0]);
-			jsonObj.put("updateable", Boolean.valueOf(array[3]));
+			jsonObj.put("sortable", Boolean.valueOf(array[3]));
+			jsonObj.put("updateable", Boolean.valueOf(array[4]));
 			jsonObj.put("url", array[1]);
 		}
 		else if (cmd.equals("delete")) {
@@ -157,6 +158,7 @@ public class UpdateLayoutAction extends JSONAction {
 				themeDisplay.getDoAsUserLanguageId());
 		}
 
+		boolean sortable = SitesUtil.isLayoutSortable(layout);
 		boolean updateable = SitesUtil.isLayoutUpdateable(layout);
 		boolean deleteable =
 			updateable &&
@@ -165,7 +167,8 @@ public class UpdateLayoutAction extends JSONAction {
 
 		return new String[] {
 			String.valueOf(layout.getLayoutId()), layoutURL,
-			String.valueOf(deleteable), String.valueOf(updateable)
+			String.valueOf(deleteable), String.valueOf(sortable),
+			String.valueOf(updateable)
 		};
 	}
 
