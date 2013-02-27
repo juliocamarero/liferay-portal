@@ -57,10 +57,10 @@ public class DDMTemplateHelperImpl implements DDMTemplateHelper {
 	public String getAutocompleteJSON(HttpServletRequest request)
 		throws Exception {
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+		JSONObject jsonObject1 = JSONFactoryUtil.createJSONObject();
 
 		TemplateResource templateResource = new StringTemplateResource(
-			"0", "# Placeholder");
+			_TEMPLATE_ID, _TEMPLATE_SCRIPT);
 
 		Template template = TemplateManagerUtil.getTemplate(
 			TemplateConstants.LANG_TYPE_FTL, templateResource,
@@ -86,12 +86,13 @@ public class DDMTemplateHelperImpl implements DDMTemplateHelper {
 			}
 
 			for (Method method : objectClass.getMethods()) {
-				StringBundler sb = new StringBundler();
+				Class<?>[] parameterTypes = method.getParameterTypes();
+
+				StringBundler sb = new StringBundler(
+					4 + (parameterTypes.length * 2));
 
 				sb.append(method.getName());
 				sb.append(StringPool.OPEN_PARENTHESIS);
-
-				Class<?>[] parameterTypes = method.getParameterTypes();
 
 				for (Class parameterType : parameterTypes) {
 					sb.append(parameterType.getSimpleName());
@@ -107,10 +108,13 @@ public class DDMTemplateHelperImpl implements DDMTemplateHelper {
 				jsonObject2.put(sb.toString(), emptyJsonObject);
 			}
 
-			jsonObject.put(key, jsonObject2);
+			jsonObject1.put(key, jsonObject2);
 		}
 
-		return jsonObject.toString();
+		return jsonObject1.toString();
 	}
+
+	private static final String _TEMPLATE_ID = "0";
+	private static final String _TEMPLATE_SCRIPT = "# Placeholder";
 
 }
