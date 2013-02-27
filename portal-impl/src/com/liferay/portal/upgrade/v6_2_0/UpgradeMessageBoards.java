@@ -74,8 +74,8 @@ public class UpgradeMessageBoards extends BaseUpgradePortletPreferences {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-					"select firstName, middleName, lastName from user_ " +
-						"where userId = ?");
+				"select firstName, middleName, lastName from user_ " +
+					"where userId = ?");
 
 			ps.setLong(1, userId);
 
@@ -109,8 +109,7 @@ public class UpgradeMessageBoards extends BaseUpgradePortletPreferences {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-					"select groupId, companyId from MBThread " +
-						"where threadId = ?");
+				"select groupId, companyId from MBThread where threadId = ?");
 
 			ps.setLong(1, threadId);
 
@@ -148,7 +147,7 @@ public class UpgradeMessageBoards extends BaseUpgradePortletPreferences {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-					"select threadFlagId, userId, threadId from MBThreadFlag");
+				"select threadFlagId, userId, threadId from MBThreadFlag");
 
 			rs = ps.executeQuery();
 
@@ -182,9 +181,9 @@ public class UpgradeMessageBoards extends BaseUpgradePortletPreferences {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-					"update MBThreadFlag set groupId = ?, companyId = ?, " +
-						"userName = ?, createdDate = modifiedDate " +
-							"where threadFlagId = ?");
+				"update MBThreadFlag set groupId = ?, companyId = ?, " +
+					"userName = ?, createdDate = modifiedDate " +
+						"where threadFlagId = ?");
 
 			ps.setLong(1, groupId);
 			ps.setLong(2, companyId);
