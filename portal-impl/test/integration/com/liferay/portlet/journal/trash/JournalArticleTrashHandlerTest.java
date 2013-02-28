@@ -175,6 +175,20 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 		JournalFolderServiceUtil.moveFolderToTrash(primaryKey);
 	}
 
+	@Override
+	protected BaseModel<?> updateBaseModel(
+			long primaryKey, ServiceContext serviceContext)
+		throws Exception {
+
+		JournalArticle article = JournalArticleLocalServiceUtil.getArticle(
+			primaryKey);
+
+		String title = "Content: Enterprise. Open Source. For Life.";
+
+		return JournalTestUtil.updateArticle(
+			article, title, article.getContent());
+	}
+
 	private static final int _FOLDER_NAME_MAX_LENGTH = 100;
 
 }
