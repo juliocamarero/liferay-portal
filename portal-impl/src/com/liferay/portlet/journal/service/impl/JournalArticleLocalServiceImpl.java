@@ -1745,7 +1745,9 @@ public class JournalArticleLocalServiceImpl
 			long userId, long groupId, JournalArticle article, long newFolderId)
 		throws PortalException, SystemException {
 
-		restoreArticleFromTrash(userId, article);
+		if (article.isInTrash()) {
+			restoreArticleFromTrash(userId, article);
+		}
 
 		moveArticle(groupId, article.getArticleId(), newFolderId);
 
