@@ -28,22 +28,21 @@ else {
 	groupTypeSettings = new UnicodeProperties();
 }
 
-int companyTrashEnabled = PrefsPropsUtil.getInteger(company.getCompanyId(), PropsKeys.TRASH_ENABLED);
-int groupTrashEnabled = PropertiesParamUtil.getInteger(groupTypeSettings, request, "trashEnabled", TrashUtil.TRASH_DEFAULT_VALUE);
+int groupTrashEnabled = PropertiesParamUtil.getInteger(groupTypeSettings, request, "trashEnabled", TrashUtil.TRASH_ENABLED);
 
 int trashEntriesMaxAge = PropertiesParamUtil.getInteger(groupTypeSettings, request, "trashEntriesMaxAge", PrefsPropsUtil.getInteger(company.getCompanyId(), PropsKeys.TRASH_ENTRIES_MAX_AGE));
 %>
 
 <aui:fieldset>
-	<aui:select label="enable-recycle-bin" name="trashEnabled">
-		<aui:option label='<%= LanguageUtil.format(locale, "use-portal-settings-currently-x", (companyTrashEnabled == TrashUtil.TRASH_ENABLED_BY_DEFAULT) ? "enabled" : "disabled", true) %>' selected="<%= groupTrashEnabled == TrashUtil.TRASH_DEFAULT_VALUE %>" value="<%= TrashUtil.TRASH_DEFAULT_VALUE %>" />
-		<aui:option label="enabled" selected="<%= groupTrashEnabled == TrashUtil.TRASH_ENABLED %>" value="<%= TrashUtil.TRASH_ENABLED %>" />
-		<aui:option label="disabled" selected="<%= groupTrashEnabled == TrashUtil.TRASH_DISABLED %>" value="<%= TrashUtil.TRASH_DISABLED %>" />
-	</aui:select>
+	<aui:input checked="<%= groupTrashEnabled == TrashUtil.TRASH_ENABLED %>" class="aui-field-label" label="enabled" name='<%= "settings--" + PropsKeys.TRASH_ENABLED + "--" %>' type="radio" value="<%= TrashUtil.TRASH_ENABLED %>" />
 
-	<aui:input disabled="<%= groupTrashEnabled != TrashUtil.TRASH_ENABLED %>" label="number-of-days-that-files-will-be-kept-in-the-recycle-bin" name="trashEntriesMaxAge" type="text" value="<%= trashEntriesMaxAge %>">
-		<aui:validator name="min">1</aui:validator>
-	</aui:input>
+	<div class="recycle-bin-max-age-field">
+		<aui:input disabled="<%= groupTrashEnabled != TrashUtil.TRASH_ENABLED %>" label="number-of-days-that-files-will-be-kept-in-the-recycle-bin" name="trashEntriesMaxAge" type="text" value="<%= trashEntriesMaxAge %>">
+			<aui:validator name="min">1</aui:validator>
+		</aui:input>
+	</div>
+
+	<aui:input checked="<%= groupTrashEnabled == TrashUtil.TRASH_DISABLED %>" class="aui-field-label" label="disabled" name='<%= "settings--" + PropsKeys.TRASH_ENABLED + "--" %>' type="radio" value="<%= TrashUtil.TRASH_DISABLED %>" />
 </aui:fieldset>
 
 <aui:script>

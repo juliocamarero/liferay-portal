@@ -1,4 +1,8 @@
 .portlet-site-settings {
+	.recycle-bin-max-age-field {
+		margin-left: 20px;
+	}
+
 	.staging-section {
 		margin-left: 1.5em;
 	}

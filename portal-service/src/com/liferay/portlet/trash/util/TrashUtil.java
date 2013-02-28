@@ -35,17 +35,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class TrashUtil {
 
-	public static final String TRASH_ATTACHMENTS_DIR = ".trashed_";
-
-	public static final int TRASH_DEFAULT_VALUE = -1;
-
 	public static final int TRASH_DISABLED = 0;
 
-	public static final int TRASH_DISABLED_BY_DEFAULT = 1;
-
-	public static final int TRASH_ENABLED = 3;
-
-	public static final int TRASH_ENABLED_BY_DEFAULT = 2;
+	public static final int TRASH_ENABLED = 1;
 
 	public static final String TRASH_TIME_SEPARATOR = "_TRASH_TIME_";
 

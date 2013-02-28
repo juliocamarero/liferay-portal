@@ -18,20 +18,12 @@
 
 <%
 int trashEnabled = PrefsPropsUtil.getInteger(company.getCompanyId(), PropsKeys.TRASH_ENABLED);
-
-int trashEntriesMaxAge = PrefsPropsUtil.getInteger(company.getCompanyId(), PropsKeys.TRASH_ENTRIES_MAX_AGE);
 %>
 
 <h3><liferay-ui:message key="recycle-bin" /></h3>
 
 <aui:fieldset>
-	<aui:select label="enable-recycle-bin" name='<%= "settings--" + PropsKeys.TRASH_ENABLED + "--" %>'>
-		<aui:option label="enabled-by-default" selected="<%= trashEnabled == TrashUtil.TRASH_ENABLED_BY_DEFAULT %>" value="<%= TrashUtil.TRASH_ENABLED_BY_DEFAULT %>" />
-		<aui:option label="disabled-by-default" selected="<%= trashEnabled == TrashUtil.TRASH_DISABLED_BY_DEFAULT %>" value="<%= TrashUtil.TRASH_DISABLED_BY_DEFAULT %>" />
-		<aui:option label="disabled" selected="<%= trashEnabled == TrashUtil.TRASH_DISABLED %>" value="<%= TrashUtil.TRASH_DISABLED %>" />
-	</aui:select>
+	<aui:input checked="<%= trashEnabled == TrashUtil.TRASH_ENABLED %>" helpMessage="enable-it-by-default-while-allowing-site-administrators-to-disable-it-per-site" label="enabled" name='<%= "settings--" + PropsKeys.TRASH_ENABLED + "--" %>' type="radio" value="<%= TrashUtil.TRASH_ENABLED %>" />
 
-	<aui:input label="number-of-days-that-files-will-be-kept-in-the-recycle-bin" name='<%= "settings--" + PropsKeys.TRASH_ENTRIES_MAX_AGE + "--" %>' type="text" value="<%= trashEntriesMaxAge %>">
-		<aui:validator name="min">1</aui:validator>
-	</aui:input>
+	<aui:input checked="<%= trashEnabled == TrashUtil.TRASH_DISABLED %>" label="disabled" name='<%= "settings--" + PropsKeys.TRASH_ENABLED + "--" %>' type="radio" value="<%= TrashUtil.TRASH_DISABLED %>" />
 </aui:fieldset>

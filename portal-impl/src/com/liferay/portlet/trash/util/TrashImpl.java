@@ -295,12 +295,9 @@ public class TrashImpl implements Trash {
 
 		int groupTrashEnabled = GetterUtil.getInteger(
 			typeSettingsProperties.getProperty("trashEnabled"),
-			TrashUtil.TRASH_DEFAULT_VALUE);
+			TrashUtil.TRASH_ENABLED);
 
-		if ((groupTrashEnabled == TrashUtil.TRASH_ENABLED) ||
-			((companyTrashEnabled == TrashUtil.TRASH_ENABLED_BY_DEFAULT) &&
-			 (groupTrashEnabled == TrashUtil.TRASH_DEFAULT_VALUE))) {
-
+		if (groupTrashEnabled == TrashUtil.TRASH_ENABLED) {
 			return true;
 		}
 
