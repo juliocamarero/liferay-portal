@@ -144,15 +144,6 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
-	protected boolean isInTrashContainer(ClassedModel classedModel)
-		throws Exception {
-
-		JournalArticle article = (JournalArticle)classedModel;
-
-		return article.isInTrashContainer();
-	}
-
-	@Override
 	protected BaseModel<?> moveBaseModelFromTrash(
 			ClassedModel classedModel, Group group,
 			ServiceContext serviceContext)

@@ -157,15 +157,6 @@ public class WikiPageTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
-	protected boolean isInTrashContainer(ClassedModel classedModel)
-		throws Exception {
-
-		WikiPage page = (WikiPage)classedModel;
-
-		return page.isInTrashContainer();
-	}
-
-	@Override
 	protected void moveBaseModelToTrash(long primaryKey) throws Exception {
 		WikiPage page = WikiPageLocalServiceUtil.getPageByPageId(primaryKey);
 

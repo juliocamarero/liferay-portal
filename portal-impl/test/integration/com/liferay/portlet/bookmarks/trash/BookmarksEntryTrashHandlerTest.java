@@ -156,15 +156,6 @@ public class BookmarksEntryTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
-	protected boolean isInTrashContainer(ClassedModel classedModel)
-		throws Exception {
-
-		BookmarksEntry entry = (BookmarksEntry)baseModel;
-
-		return entry.isInTrashContainer();
-	}
-
-	@Override
 	protected BaseModel<?> moveBaseModelFromTrash(
 			ClassedModel classedModel, Group group,
 			ServiceContext serviceContext)

@@ -256,9 +256,10 @@ public abstract class BaseTrashHandlerTestCase {
 	protected boolean isInTrashContainer(ClassedModel classedModel)
 		throws Exception {
 
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			classedModel.getModelClass().getName());
 
-
-		return false;
+		return trashHandler.isInTrashContainer(getAssetClassPK(baseModel));
 	}
 
 	protected BaseModel<?> moveBaseModelFromTrash(
