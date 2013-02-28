@@ -198,7 +198,10 @@ public class FacebookConnectAction extends PortletAction {
 		portletURL.setParameter("struts_action", "/login/update_account");
 		portletURL.setParameter("saveLastPath", Boolean.FALSE.toString());
 		portletURL.setParameter("userId", String.valueOf(user.getUserId()));
+		portletURL.setParameter("emailAddress", user.getEmailAddress());
 		portletURL.setParameter("facebookId", String.valueOf(facebookId));
+		portletURL.setParameter("firstName", user.getFirstName());
+		portletURL.setParameter("lastName", user.getLastName());
 		portletURL.setParameter("redirect", redirect);
 
 		response.sendRedirect(portletURL.toString());
@@ -260,6 +263,10 @@ public class FacebookConnectAction extends PortletAction {
 			if (user.getStatus() == WorkflowConstants.STATUS_INCOMPLETE) {
 				session.setAttribute(
 					WebKeys.FACEBOOK_INCOMPLETE_USER_ID, facebookId);
+
+				user.setEmailAddress(jsonObject.getString("email"));
+				user.setFirstName(jsonObject.getString("first_name"));
+				user.setLastName(jsonObject.getString("last_name"));
 
 				return user;
 			}
