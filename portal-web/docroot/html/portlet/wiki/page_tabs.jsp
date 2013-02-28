@@ -46,7 +46,7 @@ viewPageDetailsURL.setParameter("title", wikiPage.getTitle());
 
 PortletURL viewPageHistoryURL = PortletURLUtil.clone(viewPageDetailsURL, renderResponse);
 
-viewPageHistoryURL.setParameter("struts_action", "/wiki/view_page_history");
+viewPageHistoryURL.setParameter("struts_action", "/wiki/view_page_activities");
 
 PortletURL viewPageIncomingLinksURL = PortletURLUtil.clone(viewPageDetailsURL, renderResponse);
 

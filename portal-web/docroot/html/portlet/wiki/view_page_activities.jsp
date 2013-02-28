@@ -42,10 +42,6 @@ portletURL.setParameter("redirect", currentURL);
 
 PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "history"), portletURL.toString());
 
-portletURL.setParameter("struts_action", "/wiki/view_page_activities");
-
-PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "activities"), portletURL.toString());
-
 PortletURL iteratorURL = renderResponse.createRenderURL();
 
 iteratorURL.setParameter("struts_action", "/wiki/view_page_activities");
