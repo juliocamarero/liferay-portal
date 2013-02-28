@@ -78,12 +78,17 @@ public class DLFileShortcutTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
-	public void testTrashVersionAndDelete() throws Exception {
+	public void testTrashVersionBaseModelAndDelete() throws Exception {
 		Assert.assertTrue("This test does not apply", true);
 	}
 
 	@Override
-	public void testTrashVersionAndRestore() throws Exception {
+	public void testTrashVersionBaseModelAndRestore() throws Exception {
+		Assert.assertTrue("This test does not apply", true);
+	}
+
+	@Override
+	public void testTrashVersionParentBaseModel() throws Exception {
 		Assert.assertTrue("This test does not apply", true);
 	}
 
