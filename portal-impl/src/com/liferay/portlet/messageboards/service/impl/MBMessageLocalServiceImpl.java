@@ -285,7 +285,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		if ((thread == null) ||
 			(parentMessageId == MBMessageConstants.DEFAULT_PARENT_MESSAGE_ID)) {
 
-			thread = mbThreadLocalService.addThread(categoryId, message);
+			thread = mbThreadLocalService.addThread(
+				categoryId, message, serviceContext);
 		}
 
 		if ((priority != MBThreadConstants.PRIORITY_NOT_GIVEN) &&
