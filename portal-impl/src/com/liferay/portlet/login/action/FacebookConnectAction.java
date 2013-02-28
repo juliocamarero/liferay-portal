@@ -18,6 +18,7 @@ import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.kernel.facebook.FacebookConnectUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -32,15 +33,21 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.struts.ActionConstants;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.PortletURLFactoryUtil;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.PortletConfig;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -98,7 +105,16 @@ public class FacebookConnectAction extends PortletAction {
 		if (Validator.isNotNull(token)) {
 			session.setAttribute(WebKeys.FACEBOOK_ACCESS_TOKEN, token);
 
-			setFacebookCredentials(session, themeDisplay.getCompanyId(), token);
+			User user = setFacebookCredentials(
+				session, themeDisplay.getCompanyId(), token);
+
+			if ((user != null) &&
+				(user.getStatus() == WorkflowConstants.STATUS_INCOMPLETE)) {
+
+				redirectUpdateAccount(request, response, user);
+
+				return null;
+			}
 		}
 		else {
 			return mapping.findForward(ActionConstants.COMMON_REFERER_JSP);
@@ -158,7 +174,31 @@ public class FacebookConnectAction extends PortletAction {
 		session.setAttribute(WebKeys.FACEBOOK_USER_EMAIL_ADDRESS, emailAddress);
 	}
 
-	protected void setFacebookCredentials(
+	protected void redirectUpdateAccount(
+			HttpServletRequest request, HttpServletResponse response, User user)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String redirect = ParamUtil.getString(request, "redirect");
+
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			request, PortletKeys.LOGIN, themeDisplay.getPlid(),
+			PortletRequest.RENDER_PHASE);
+
+		portletURL.setWindowState(WindowState.MAXIMIZED);
+		portletURL.setPortletMode(PortletMode.VIEW);
+
+		portletURL.setParameter("struts_action", "/login/update_account");
+		portletURL.setParameter("saveLastPath", Boolean.FALSE.toString());
+		portletURL.setParameter("userId", String.valueOf(user.getUserId()));
+		portletURL.setParameter("redirect", redirect);
+
+		response.sendRedirect(portletURL.toString());
+	}
+
+	protected User setFacebookCredentials(
 			HttpSession session, long companyId, String token)
 		throws Exception {
 
@@ -169,13 +209,13 @@ public class FacebookConnectAction extends PortletAction {
 		if ((jsonObject == null) ||
 			(jsonObject.getJSONObject("error") != null)) {
 
-			return;
+			return null;
 		}
 
 		if (FacebookConnectUtil.isVerifiedAccountRequired(companyId) &&
 			!jsonObject.getBoolean("verified")) {
 
-			return;
+			return null;
 		}
 
 		User user = null;
@@ -211,11 +251,20 @@ public class FacebookConnectAction extends PortletAction {
 		}
 
 		if (user != null) {
+			if (user.getStatus() == WorkflowConstants.STATUS_INCOMPLETE) {
+				session.setAttribute(
+					WebKeys.FACEBOOK_INCOMPLETE_USER_ID, facebookId);
+
+				return user;
+			}
+
 			updateUser(user, jsonObject);
 		}
 		else {
 			addUser(session, companyId, jsonObject);
 		}
+
+		return user;
 	}
 
 	protected void updateUser(User user, JSONObject jsonObject)

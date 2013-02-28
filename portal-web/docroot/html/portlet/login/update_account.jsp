@@ -17,20 +17,42 @@
 <%@ include file="/html/portlet/login/init.jsp" %>
 
 <%
+long userId = ParamUtil.getLong(request, "userId");
+
+User selUser = null;
+
+Contact selContact = null;
+
+if (userId > 0) {
+	selUser = UserLocalServiceUtil.getUser(userId);
+
+	selContact = selUser.getContact();
+}
+
 int birthdayDay = ParamUtil.getInteger(request, "birthdayDay");
 int birthdayMonth = ParamUtil.getInteger(request, "birthdayMonth");
 int birthdayYear = ParamUtil.getInteger(request, "birthdayYear");
-String emailAddress = ParamUtil.getString(request, "emailAddress");
-long facebookId = ParamUtil.getLong(request, "facebookId");
-String firstName = ParamUtil.getString(request, "firstName");
-String jobTitle = ParamUtil.getString(request, "jobTitle");
-String lastName = ParamUtil.getString(request, "lastName");
-boolean male = ParamUtil.getBoolean(request, "male", true);
-String middleName = ParamUtil.getString(request, "middleName");
-String openId = ParamUtil.getString(request, "openId");
-int prefixId = ParamUtil.getInteger(request, "prefixId");
-String screenName = ParamUtil.getString(request, "screenName");
-int suffixId = ParamUtil.getInteger(request, "suffixId");
+String emailAddress = BeanParamUtil.getString(selUser, request, "emailAddress");
+String firstName = BeanParamUtil.getString(selUser, request, "firstName");
+String jobTitle = BeanParamUtil.getString(selUser, request, "jobTitle");
+String lastName = BeanParamUtil.getString(selUser, request, "lastName");
+boolean male = BeanParamUtil.getBoolean(selUser, request, "male", true);
+String middleName = BeanParamUtil.getString(selUser, request, "middleName");
+String openId = BeanParamUtil.getString(selUser, request, "openId");
+int prefixId = BeanParamUtil.getInteger(selContact, request, "prefixId");
+String screenName = BeanParamUtil.getString(selUser, request, "screenName");
+int suffixId = BeanParamUtil.getInteger(selContact, request, "suffixId");
+
+Calendar birthday = CalendarFactoryUtil.getCalendar();
+
+Date date = PortalUtil.getDate(birthdayMonth, birthdayDay, birthdayYear);
+
+if (date != null) {
+	birthday.setTime(date);
+}
+else if (selUser != null) {
+	birthday.setTime(selContact.getBirthday());
+}
 %>
 
 <div class="anonymous-account">
@@ -40,11 +62,10 @@ int suffixId = ParamUtil.getInteger(request, "suffixId");
 
 	<aui:form action="<%= createAccountURL %>" method="post" name="fm">
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
-		<aui:input name="birthdayDay" type="hidden" value="<%= String.valueOf(birthdayDay) %>" />
-		<aui:input name="birthdayMonth" type="hidden" value="<%= String.valueOf(birthdayMonth) %>" />
-		<aui:input name="birthdayYear" type="hidden" value="<%= String.valueOf(birthdayYear) %>" />
+		<aui:input name="birthdayDay" type="hidden" value="<%= String.valueOf(birthday.get(Calendar.DAY_OF_MONTH)) %>" />
+		<aui:input name="birthdayMonth" type="hidden" value="<%= String.valueOf(birthday.get(Calendar.MONTH)) %>" />
+		<aui:input name="birthdayYear" type="hidden" value="<%= String.valueOf(birthday.get(Calendar.YEAR)) %>" />
 		<aui:input name="emailAddress" type="hidden" value="<%= emailAddress %>" />
-		<aui:input name="facebookId" type="hidden" value="<%= String.valueOf(facebookId) %>" />
 		<aui:input name="firstName" type="hidden" value="<%= firstName %>" />
 		<aui:input name="jobTitle" type="hidden" value="<%= jobTitle %>" />
 		<aui:input name="lastName" type="hidden" value="<%= lastName %>" />
