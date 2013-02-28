@@ -183,20 +183,4 @@ public class BookmarksEntryTrashHandlerTest extends BaseTrashHandlerTestCase {
 		BookmarksFolderServiceUtil.moveFolderToTrash(primaryKey);
 	}
 
-	@Override
-	protected BaseModel<?> updateBaseModel(
-			long primaryKey, ServiceContext serviceContext)
-		throws Exception {
-
-		BookmarksEntry entry = BookmarksEntryLocalServiceUtil.getEntry(
-			primaryKey);
-
-		String description = "Content: Enterprise. Open Source. For Life.";
-
-		return BookmarksEntryLocalServiceUtil.updateEntry(
-			entry.getUserId(), primaryKey, entry.getGroupId(),
-			entry.getFolderId(), entry.getName(), entry.getUrl(), description,
-			serviceContext);
-	}
-
 }
