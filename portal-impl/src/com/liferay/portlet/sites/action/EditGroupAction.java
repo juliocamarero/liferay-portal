@@ -513,7 +513,7 @@ public class EditGroupAction extends PortletAction {
 			actionRequest, "trashEnabled",
 			GetterUtil.getInteger(
 				typeSettingsProperties.getProperty("trashEnabled"),
-				TrashUtil.TRASH_DEFAULT_VALUE));
+				TrashUtil.TRASH_ENABLED));
 
 		typeSettingsProperties.setProperty(
 			"trashEnabled", String.valueOf(trashEnabled));
