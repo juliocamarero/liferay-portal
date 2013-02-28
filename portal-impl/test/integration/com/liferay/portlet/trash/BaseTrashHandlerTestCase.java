@@ -256,6 +256,8 @@ public abstract class BaseTrashHandlerTestCase {
 	protected boolean isInTrashContainer(ClassedModel classedModel)
 		throws Exception {
 
+
+
 		return false;
 	}
 
@@ -556,6 +558,10 @@ public abstract class BaseTrashHandlerTestCase {
 			getTrashEntriesCount(group.getGroupId()));
 
 		Assert.assertTrue(isInTrashContainer(baseModel));
+
+		if (isAssetableModel()) {
+			Assert.assertFalse(isAssetEntryVisible(baseModel));
+		}
 
 		if (deleteTrashEntries) {
 			TrashEntryServiceUtil.deleteEntries(group.getGroupId());
