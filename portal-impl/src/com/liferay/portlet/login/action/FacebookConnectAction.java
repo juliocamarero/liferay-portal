@@ -183,6 +183,11 @@ public class FacebookConnectAction extends PortletAction {
 
 		String redirect = ParamUtil.getString(request, "redirect");
 
+		HttpSession session = request.getSession();
+
+		long facebookId = GetterUtil.getLong(
+			session.getAttribute(WebKeys.FACEBOOK_INCOMPLETE_USER_ID));
+
 		PortletURL portletURL = PortletURLFactoryUtil.create(
 			request, PortletKeys.LOGIN, themeDisplay.getPlid(),
 			PortletRequest.RENDER_PHASE);
@@ -193,6 +198,7 @@ public class FacebookConnectAction extends PortletAction {
 		portletURL.setParameter("struts_action", "/login/update_account");
 		portletURL.setParameter("saveLastPath", Boolean.FALSE.toString());
 		portletURL.setParameter("userId", String.valueOf(user.getUserId()));
+		portletURL.setParameter("facebookId", String.valueOf(facebookId));
 		portletURL.setParameter("redirect", redirect);
 
 		response.sendRedirect(portletURL.toString());
