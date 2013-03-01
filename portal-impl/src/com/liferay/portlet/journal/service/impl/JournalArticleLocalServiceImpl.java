@@ -1637,7 +1637,8 @@ public class JournalArticleLocalServiceImpl
 		throws SystemException {
 
 		QueryDefinition queryDefinition = new QueryDefinition(
-			WorkflowConstants.STATUS_ANY);
+			WorkflowConstants.STATUS_IN_TRASH, true, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
 
 		List<Long> folderIds = new ArrayList<Long>();
 

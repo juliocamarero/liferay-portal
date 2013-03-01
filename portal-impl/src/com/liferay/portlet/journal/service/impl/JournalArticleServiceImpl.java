@@ -15,6 +15,7 @@
 package com.liferay.portlet.journal.service.impl;
 
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -261,7 +262,8 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 		throws SystemException {
 
 		QueryDefinition queryDefinition = new QueryDefinition(
-			WorkflowConstants.STATUS_ANY);
+			WorkflowConstants.STATUS_IN_TRASH, true, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
 
 		List<Long> folderIds = new ArrayList<Long>();
 
@@ -277,7 +279,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 		throws SystemException {
 
 		QueryDefinition queryDefinition = new QueryDefinition(
-			WorkflowConstants.STATUS_ANY, start, end, obc);
+			WorkflowConstants.STATUS_IN_TRASH, true, start, end, obc);
 
 		List<Long> folderIds = new ArrayList<Long>();
 
@@ -344,7 +346,8 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 		throws SystemException {
 
 		QueryDefinition queryDefinition = new QueryDefinition(
-			WorkflowConstants.STATUS_ANY);
+			WorkflowConstants.STATUS_IN_TRASH, true, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
 
 		List<Long> folderIds = new ArrayList<Long>();
 
