@@ -18,18 +18,20 @@
 
 <%@ page import="com.liferay.portlet.expando.model.ExpandoBridge" %>
 <%@ page import="com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil" %>
+<%@page import="com.liferay.taglib.util.CustomAttributesTagUtil"%>
 
 <%
 String className = (String)request.getAttribute("liferay-ui:custom-attribute-list:className");
 long classPK = GetterUtil.getLong((String)request.getAttribute("liferay-ui:custom-attribute-list:classPK"));
 boolean editable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:custom-attribute-list:editable"));
 boolean label = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:custom-attribute-list:label"));
+String ignore = GetterUtil.getString(request.getAttribute("liferay-ui:custom-attribute-list:ignore"));
 
 ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.getCompanyId(), className, classPK);
 
 String modelResourceName = ResourceActionsUtil.getModelResource(pageContext, className);
 
-List<String> attributeNames = Collections.list(expandoBridge.getAttributeNames());
+List<String> attributeNames = CustomAttributesTagUtil.getUnignoredAttributes(expandoBridge.getAttributeNames(), ignore);
 %>
 
 <div class="taglib-custom-attributes-list">
