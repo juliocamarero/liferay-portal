@@ -15,6 +15,7 @@
 package com.liferay.portlet.journal.service.impl;
 
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -32,6 +33,7 @@ import com.liferay.portlet.journal.service.permission.JournalPermission;
 import java.io.File;
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -259,8 +261,16 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	public List<JournalArticle> getArticles(long groupId, long folderId)
 		throws SystemException {
 
-		return journalArticlePersistence.filterFindByG_F_NotST(
-			groupId, folderId, WorkflowConstants.STATUS_IN_TRASH);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			WorkflowConstants.STATUS_IN_TRASH, true, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+
+		List<Long> folderIds = new ArrayList<Long>();
+
+		folderIds.add(folderId);
+
+		return journalArticleFinder.filterFindByG_F(
+			groupId, folderIds, queryDefinition);
 	}
 
 	public List<JournalArticle> getArticles(
@@ -268,9 +278,15 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			OrderByComparator obc)
 		throws SystemException {
 
-		return journalArticlePersistence.filterFindByG_F_NotST(
-			groupId, folderId, WorkflowConstants.STATUS_IN_TRASH, start, end,
-			obc);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			WorkflowConstants.STATUS_IN_TRASH, true, start, end, obc);
+
+		List<Long> folderIds = new ArrayList<Long>();
+
+		folderIds.add(folderId);
+
+		return journalArticleFinder.filterFindByG_F(
+			groupId, folderIds, queryDefinition);
 	}
 
 	public List<JournalArticle> getArticlesByArticleId(
@@ -329,8 +345,16 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	public int getArticlesCount(long groupId, long folderId)
 		throws SystemException {
 
-		return journalArticlePersistence.filterCountByG_F_NotST(
-			groupId, folderId, WorkflowConstants.STATUS_IN_TRASH);
+		QueryDefinition queryDefinition = new QueryDefinition(
+			WorkflowConstants.STATUS_IN_TRASH, true, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+
+		List<Long> folderIds = new ArrayList<Long>();
+
+		folderIds.add(folderId);
+
+		return journalArticleFinder.filterCountByG_F(
+			groupId, folderIds, queryDefinition);
 	}
 
 	public int getArticlesCountByArticleId(long groupId, String articleId)
