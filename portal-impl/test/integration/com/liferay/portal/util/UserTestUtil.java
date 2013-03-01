@@ -98,8 +98,17 @@ public class UserTestUtil {
 	}
 
 	public static User addUser(
-		String screenName, boolean autoScreenName, String firstName,
-		String lastName, long[] groupIds)
+			String screenName, boolean autoScreenName, long[] groupIds)
+		throws Exception {
+
+		return addUser(
+			screenName, autoScreenName, "ServiceTestSuite", "ServiceTestSuite",
+			groupIds);
+	}
+
+	public static User addUser(
+			String screenName, boolean autoScreenName, String firstName,
+			String lastName, long[] groupIds)
 		throws Exception {
 
 		User user = UserLocalServiceUtil.fetchUserByScreenName(
@@ -137,15 +146,6 @@ public class UserTestUtil {
 			lastName, prefixId, suffixId, male, birthdayMonth, birthdayDay,
 			birthdayYear, jobTitle, groupIds, organizationIds, roleIds,
 			userGroupIds, sendMail, ServiceTestUtil.getServiceContext());
-	}
-
-	public static User addUser(
-		String screenName, boolean autoScreenName, long[] groupIds)
-		throws Exception {
-
-		return addUser(
-			screenName, autoScreenName, "ServiceTestSuite", "ServiceTestSuite",
-			groupIds);
 	}
 
 	public static User addUser(String screenName, long groupId)
