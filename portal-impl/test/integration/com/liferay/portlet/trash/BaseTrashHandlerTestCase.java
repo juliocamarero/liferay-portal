@@ -804,6 +804,11 @@ public abstract class BaseTrashHandlerTestCase {
 			Assert.assertEquals(
 				initialTrashEntriesCount + 1,
 				getTrashEntriesCount(group.getGroupId()));
+			Assert.assertFalse(isInTrashContainer(baseModel));
+
+			if (isAssetableModel()) {
+				Assert.assertTrue(isAssetEntryVisible(baseModel));
+			}
 		}
 	}
 
