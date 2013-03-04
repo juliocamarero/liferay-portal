@@ -40,6 +40,10 @@ public class FileVersionProxyBean
 		_fileVersion = fileVersion;
 	}
 
+	public Object clone() {
+		return _fileVersion.clone();
+	}
+
 	public Map<String, Serializable> getAttributes() {
 		return _fileVersion.getAttributes();
 	}

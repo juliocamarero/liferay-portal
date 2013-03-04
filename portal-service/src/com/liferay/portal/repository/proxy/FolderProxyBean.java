@@ -38,6 +38,10 @@ public class FolderProxyBean
 		_folder = folder;
 	}
 
+	public Object clone() {
+		return _folder.clone();
+	}
+
 	public boolean containsPermission(
 			PermissionChecker permissionChecker, String actionId)
 		throws PortalException, SystemException {
