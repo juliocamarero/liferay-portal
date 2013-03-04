@@ -200,5 +200,4 @@ public class DDMStructureTestUtil {
 		return document;
 	}
 
-
 }
