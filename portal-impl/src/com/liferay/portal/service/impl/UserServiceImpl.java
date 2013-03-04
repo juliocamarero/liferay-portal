@@ -1776,6 +1776,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 				ArrayUtil.toLongArray(removeOrganizationIds));
 		}
 
+		roleIds = UsersAdminUtil.addRequiredRoles(userId, roleIds);
+
 		long[] oldRoleIds = user.getRoleIds();
 
 		List<Long> addRoleIds = new ArrayList<Long>();
