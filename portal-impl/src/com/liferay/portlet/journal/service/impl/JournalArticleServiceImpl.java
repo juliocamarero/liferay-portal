@@ -488,7 +488,8 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	}
 
 	public JournalArticle moveArticleFromTrash(
-			long groupId, long resourcePrimKey, long newFolderId)
+			long groupId, long resourcePrimKey, long newFolderId,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		JournalArticle article = getLatestArticle(resourcePrimKey);
@@ -497,11 +498,12 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			getPermissionChecker(), article, ActionKeys.UPDATE);
 
 		return journalArticleLocalService.moveArticleFromTrash(
-			getUserId(), groupId, article, newFolderId);
+			getUserId(), groupId, article, newFolderId, serviceContext);
 	}
 
 	public JournalArticle moveArticleFromTrash(
-			long groupId, String articleId, long newFolderId)
+			long groupId, String articleId, long newFolderId,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		JournalArticle article = getLatestArticle(
@@ -511,7 +513,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			getPermissionChecker(), groupId, articleId, ActionKeys.UPDATE);
 
 		return journalArticleLocalService.moveArticleFromTrash(
-			getUserId(), groupId, article, newFolderId);
+			getUserId(), groupId, article, newFolderId, serviceContext);
 	}
 
 	public JournalArticle moveArticleToTrash(long groupId, String articleId)
