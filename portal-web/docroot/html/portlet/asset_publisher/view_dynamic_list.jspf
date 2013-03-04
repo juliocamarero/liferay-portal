@@ -130,6 +130,8 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 	}
 	else {
 		for (long classNameId : classNameIds) {
+			long[] oldGroupClassNameIds = assetEntryQuery.getClassNameIds();
+
 			long[] groupClassNameIds = {classNameId};
 
 			assetEntryQuery.setClassNameIds(groupClassNameIds);
@@ -185,6 +187,7 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 					}
 				}
 
+				assetEntryQuery.setClassNameIds(oldGroupClassNameIds);
 				assetEntryQuery.setEnd(QueryUtil.ALL_POS);
 				assetEntryQuery.setStart(QueryUtil.ALL_POS);
 			}

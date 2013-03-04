@@ -181,7 +181,7 @@ boolean excludeZeroViewCount = GetterUtil.getBoolean(preferences.getValue("exclu
 int delta = GetterUtil.getInteger(preferences.getValue("delta", null), SearchContainer.DEFAULT_DELTA);
 
 if (portletName.equals(PortletKeys.RECENT_CONTENT)) {
-	delta = PrefsPropsUtil.getInteger(PropsKeys.RECENT_CONTENT_MAX_ITEMS_TO_DISPLAY, PropsValues.RECENT_CONTENT_MAX_ITEMS_TO_DISPLAY);
+	delta = PropsValues.RECENT_CONTENT_MAX_DISPLAY_ITEMS;
 }
 
 String paginationType = GetterUtil.getString(preferences.getValue("paginationType", "none"));
