@@ -18,6 +18,10 @@
 
 <%@ page import="com.liferay.portlet.sites.util.SitesUtil" %>
 
+<%
+boolean hasAddLayoutPermission = GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT);
+%>
+
 <aui:script position="inline">
 	Liferay.Util.addInputFocus();
 
@@ -76,7 +80,7 @@ if (layout != null) {
 }
 %>
 
-<c:if test="<%= !themeDisplay.isStatePopUp() && !group.isControlPanel() && (layout != null) && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) || LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.UPDATE) || (layoutTypePortlet.isCustomizable() && LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE))) %>">
+<c:if test="<%= !themeDisplay.isStatePopUp() && !group.isControlPanel() && (layout != null) && (!group.hasStagingGroup() || group.isStagingGroup()) && (hasAddLayoutPermission || LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.UPDATE) || (layoutTypePortlet.isCustomizable() && LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE))) %>">
 	<c:if test="<%= layout.isTypePortlet() %>">
 		<aui:script>
 			Liferay.Data.layoutConfig = {
@@ -116,10 +120,12 @@ if (layout != null) {
 			function() {
 				new Liferay.Navigation(
 					{
-						hasAddLayoutPermission: <%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) %>,
+						hasAddLayoutPermission: <%= hasAddLayoutPermission %>,
 						layoutIds: [
 
 							<%
+							boolean hasManageLayoutsPermission = GroupPermissionUtil.contains(themeDisplay.getPermissionChecker(), layout.getGroup(), ActionKeys.MANAGE_LAYOUTS);
+
 							for (int i = 0; (layouts != null) && (i < layouts.size()); i++) {
 								Layout curLayout = (Layout)layouts.get(i);
 
@@ -130,7 +136,7 @@ if (layout != null) {
 								{
 									deletable: <%= deleteable %>,
 									id: <%= curLayout.getLayoutId() %>,
-									updateable: <%= updateable %>
+									updateable: <%= hasManageLayoutsPermission && updateable %>
 								},
 
 							<%
