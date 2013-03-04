@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.messageboards.trash;
 
+import com.liferay.ibm.icu.util.Calendar;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -107,6 +108,14 @@ public class MBThreadTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
+	protected int getMineBaseModelsCount(long groupId, long userId)
+		throws Exception {
+
+		return MBThreadServiceUtil.getGroupThreadsCount(
+			groupId, userId, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
 	protected int getNotInTrashBaseModelsCount(BaseModel<?> parentBaseModel)
 		throws Exception {
 
@@ -130,6 +139,16 @@ public class MBThreadTrashHandlerTest extends BaseTrashHandlerTestCase {
 	@Override
 	protected Class<?> getParentBaseModelClass() {
 		return MBCategory.class;
+	}
+
+	@Override
+	protected int getRecentBaseModelsCount(long groupId) throws Exception {
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.add(Calendar.HOUR, -1);
+
+		return MBThreadServiceUtil.getGroupThreadsCount(
+			groupId, 0, calendar.getTime(), WorkflowConstants.STATUS_APPROVED);
 	}
 
 	@Override
