@@ -187,8 +187,10 @@ public class FacebookConnectAction extends PortletAction {
 				user = UserLocalServiceUtil.getUserByFacebookId(
 					companyId, facebookId);
 
-				session.setAttribute(
-					WebKeys.FACEBOOK_USER_ID, String.valueOf(facebookId));
+				if (user.getStatus() != WorkflowConstants.STATUS_INCOMPLETE) {
+					session.setAttribute(
+						WebKeys.FACEBOOK_USER_ID, String.valueOf(facebookId));
+				}
 			}
 			catch (NoSuchUserException nsue) {
 			}
