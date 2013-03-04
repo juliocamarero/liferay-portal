@@ -239,24 +239,25 @@ public class JournalArticleFinderTest {
 
 		Assert.assertEquals(
 			2,
-			JournalArticleFinderUtil.countByG_U_C(
+			JournalArticleFinderUtil.countByG_U_F_C(
 				_group.getGroupId(), TestPropsValues.getUserId(),
+				new ArrayList<Long>(),
 				JournalArticleConstants.CLASSNAME_ID_DEFAULT, queryDefinition));
 
 		queryDefinition.setStatus(WorkflowConstants.STATUS_IN_TRASH);
 
 		Assert.assertEquals(
 			1,
-			JournalArticleFinderUtil.countByG_U_C(
-				_group.getGroupId(), _USER_ID,
+			JournalArticleFinderUtil.countByG_U_F_C(
+				_group.getGroupId(), _USER_ID, new ArrayList<Long>(),
 				JournalArticleConstants.CLASSNAME_ID_DEFAULT, queryDefinition));
 
 		queryDefinition.setStatus(WorkflowConstants.STATUS_IN_TRASH, true);
 
 		Assert.assertEquals(
 			0,
-			JournalArticleFinderUtil.countByG_U_C(
-				_group.getGroupId(), _USER_ID,
+			JournalArticleFinderUtil.countByG_U_F_C(
+				_group.getGroupId(), _USER_ID, new ArrayList<Long>(),
 				JournalArticleConstants.CLASSNAME_ID_DEFAULT, queryDefinition));
 	}
 
