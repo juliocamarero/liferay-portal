@@ -17,8 +17,8 @@ package com.liferay.portlet.login.action;
 import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.kernel.facebook.FacebookConnectUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -47,7 +47,6 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.WindowState;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -125,7 +124,7 @@ public class FacebookConnectAction extends PortletAction {
 		return null;
 	}
 
-	protected void addUser(
+	protected User addUser(
 			HttpSession session, long companyId, JSONObject jsonObject)
 		throws Exception {
 
@@ -164,14 +163,18 @@ public class FacebookConnectAction extends PortletAction {
 			birthdayMonth, birthdayDay, birthdayYear, jobTitle, groupIds,
 			organizationIds, roleIds, userGroupIds, sendEmail, serviceContext);
 
-		UserLocalServiceUtil.updateLastLogin(
+		user = UserLocalServiceUtil.updateLastLogin(
 			user.getUserId(), user.getLoginIP());
 
-		UserLocalServiceUtil.updatePasswordReset(user.getUserId(), false);
+		user = UserLocalServiceUtil.updatePasswordReset(
+			user.getUserId(), false);
 
-		UserLocalServiceUtil.updateEmailAddressVerified(user.getUserId(), true);
+		user = UserLocalServiceUtil.updateEmailAddressVerified(
+			user.getUserId(), true);
 
 		session.setAttribute(WebKeys.FACEBOOK_USER_EMAIL_ADDRESS, emailAddress);
+
+		return user;
 	}
 
 	protected void redirectUpdateAccount(
@@ -181,28 +184,31 @@ public class FacebookConnectAction extends PortletAction {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		String redirect = ParamUtil.getString(request, "redirect");
+		PortletURL redirectURL = PortletURLFactoryUtil.create(
+			request, PortletKeys.LOGIN, themeDisplay.getPlid(),
+			PortletRequest.RENDER_PHASE);
 
-		HttpSession session = request.getSession();
+		redirectURL.setWindowState(LiferayWindowState.POP_UP);
+		redirectURL.setPortletMode(PortletMode.VIEW);
 
-		long facebookId = GetterUtil.getLong(
-			session.getAttribute(WebKeys.FACEBOOK_INCOMPLETE_USER_ID));
+		redirectURL.setParameter("struts_action", "/login/login_redirect");
+		redirectURL.setParameter("emailAddress", user.getEmailAddress());
+		redirectURL.setParameter("anonymousUser", Boolean.FALSE.toString());
 
 		PortletURL portletURL = PortletURLFactoryUtil.create(
 			request, PortletKeys.LOGIN, themeDisplay.getPlid(),
 			PortletRequest.RENDER_PHASE);
 
-		portletURL.setWindowState(WindowState.MAXIMIZED);
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
 		portletURL.setPortletMode(PortletMode.VIEW);
 
 		portletURL.setParameter("struts_action", "/login/update_account");
 		portletURL.setParameter("saveLastPath", Boolean.FALSE.toString());
 		portletURL.setParameter("userId", String.valueOf(user.getUserId()));
 		portletURL.setParameter("emailAddress", user.getEmailAddress());
-		portletURL.setParameter("facebookId", String.valueOf(facebookId));
 		portletURL.setParameter("firstName", user.getFirstName());
 		portletURL.setParameter("lastName", user.getLastName());
-		portletURL.setParameter("redirect", redirect);
+		portletURL.setParameter("redirect", redirectURL.toString());
 
 		response.sendRedirect(portletURL.toString());
 	}
@@ -273,16 +279,16 @@ public class FacebookConnectAction extends PortletAction {
 				return user;
 			}
 
-			updateUser(user, jsonObject);
+			user = updateUser(user, jsonObject);
 		}
 		else {
-			addUser(session, companyId, jsonObject);
+			user = addUser(session, companyId, jsonObject);
 		}
 
 		return user;
 	}
 
-	protected void updateUser(User user, JSONObject jsonObject)
+	protected User updateUser(User user, JSONObject jsonObject)
 		throws Exception {
 
 		long facebookId = jsonObject.getLong("id");
@@ -296,7 +302,7 @@ public class FacebookConnectAction extends PortletAction {
 			firstName.equals(user.getFirstName()) &&
 			lastName.equals(user.getLastName()) && (male == user.isMale())) {
 
-			return;
+			return user;
 		}
 
 		Contact contact = user.getContact();
@@ -324,7 +330,7 @@ public class FacebookConnectAction extends PortletAction {
 
 		UserLocalServiceUtil.updateEmailAddressVerified(user.getUserId(), true);
 
-		UserLocalServiceUtil.updateUser(
+		return UserLocalServiceUtil.updateUser(
 			user.getUserId(), StringPool.BLANK, StringPool.BLANK,
 			StringPool.BLANK, false, user.getReminderQueryQuestion(),
 			user.getReminderQueryAnswer(), user.getScreenName(), emailAddress,

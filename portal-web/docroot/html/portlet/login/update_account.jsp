@@ -17,6 +17,7 @@
 <%@ include file="/html/portlet/login/init.jsp" %>
 
 <%
+String redirect = ParamUtil.getString(request, "redirect");
 long userId = ParamUtil.getLong(request, "userId");
 
 User selUser = null;
@@ -36,7 +37,6 @@ if (userId > 0) {
 int birthdayDay = ParamUtil.getInteger(request, "birthdayDay");
 int birthdayMonth = ParamUtil.getInteger(request, "birthdayMonth");
 int birthdayYear = ParamUtil.getInteger(request, "birthdayYear");
-long facebookId = ParamUtil.getLong(request, "facebookId");
 String emailAddress = BeanParamUtil.getString(selUser, request, "emailAddress");
 String firstName = BeanParamUtil.getString(selUser, request, "firstName");
 String jobTitle = BeanParamUtil.getString(selUser, request, "jobTitle");
@@ -69,14 +69,8 @@ else if (selUser != null) {
 		<aui:input name="saveLastPath" type="hidden" value="<%= false %>" />
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
 
-		<c:if test="<%= facebookId > 0 %>">
-			<portlet:renderURL var="redirectURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-				<portlet:param name="struts_action" value="/login/login_redirect" />
-				<portlet:param name="emailAddress" value="<%= emailAddress %>" />
-				<portlet:param name="anonymousUser" value="<%= Boolean.FALSE.toString() %>" />
-			</portlet:renderURL>
-
-			<aui:input name="redirect" type="hidden" value="<%= redirectURL.toString() %>" />
+		<c:if test="<%= Validator.isNotNull(redirect) %>">
+			<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		</c:if>
 
 		<aui:input name="birthdayDay" type="hidden" value="<%= String.valueOf(birthday.get(Calendar.DAY_OF_MONTH)) %>" />
