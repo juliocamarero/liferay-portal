@@ -26,6 +26,10 @@ Contact selContact = null;
 if (userId > 0) {
 	selUser = UserLocalServiceUtil.getUser(userId);
 
+	if (selUser.getStatus() != WorkflowConstants.STATUS_INCOMPLETE) {
+		throw new PrincipalException();
+	}
+
 	selContact = selUser.getContact();
 }
 
