@@ -58,6 +58,7 @@ import com.liferay.portlet.documentlibrary.NoSuchFileException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFileVersion;
@@ -959,7 +960,10 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		for (int i = 0; i < dlFileEntryTypes.size(); i++) {
 			DLFileEntryType dlFileEntryType = dlFileEntryTypes.get(i);
 
-			if (dlFileEntryType.getFileEntryTypeId() == 0) {
+			if (dlFileEntryType.getFileEntryTypeId() ==
+					DLFileEntryTypeConstants.
+						FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT) {
+
 				fileEntryTypeUuids[i] = "@basic_document@";
 			}
 			else {
