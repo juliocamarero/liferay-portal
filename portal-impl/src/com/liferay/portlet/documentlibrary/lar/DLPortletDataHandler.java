@@ -972,7 +972,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				defaultFileEntryTypeUuid = dlFileEntryType.getUuid();
 			}
 
-			if (isFileEntryTypeExportable(dlFileEntryType)) {
+			if (dlFileEntryType.isExportable()) {
 				exportFileEntryType(
 					portletDataContext, fileEntryTypesElement, dlFileEntryType);
 			}
@@ -1010,7 +1010,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		fileEntryElement.addAttribute(
 			"fileEntryTypeUuid", dlFileEntryType.getUuid());
 
-		if (!isFileEntryTypeExportable(dlFileEntryType)) {
+		if (!dlFileEntryType.isExportable()) {
 			return;
 		}
 
@@ -1786,16 +1786,6 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 	}
 
-	protected static boolean isFileEntryTypeExportable(
-		DLFileEntryType dlFileEntryType) {
-
-		if (dlFileEntryType.getFileEntryTypeId() == 0) {
-			return false;
-		}
-
-		return true;
-	}
-
 	protected static boolean isFileEntryTypeGlobal(
 			long companyId, DLFileEntryType dlFileEntryType)
 		throws PortalException, SystemException {
@@ -1870,7 +1860,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				});
 
 		for (DLFileEntryType dlFileEntryType : dlFileEntryTypes) {
-			if (!isFileEntryTypeExportable(dlFileEntryType)) {
+			if (!dlFileEntryType.isExportable()) {
 				continue;
 			}
 
