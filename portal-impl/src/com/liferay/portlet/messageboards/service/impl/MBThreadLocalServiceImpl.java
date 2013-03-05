@@ -614,6 +614,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		// Thread
 
+		thread.setModifiedDate(new Date());
+
 		thread.setCategoryId(categoryId);
 
 		mbThreadPersistence.update(thread);
@@ -744,6 +746,12 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		MBThread thread = addThread(
 			message.getCategoryId(), message, serviceContext);
 
+		// Update modified date for old thread
+
+		oldThread.setModifiedDate(serviceContext.getModifiedDate(new Date()));
+
+		mbThreadPersistence.update(oldThread);
+
 		// Update messages
 
 		if (Validator.isNotNull(subject)) {
@@ -866,6 +874,8 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 				mbMessagePersistence.update(rootMessage);
 			}
+
+			thread.setModifiedDate(now);
 
 			thread.setStatus(status);
 			thread.setStatusByUserId(user.getUserId());
