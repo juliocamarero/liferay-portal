@@ -17,6 +17,7 @@ package com.liferay.taglib.ui;
 import com.liferay.portal.kernel.servlet.taglib.TagSupport;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -28,10 +29,14 @@ import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.model.ExpandoTableConstants;
 import com.liferay.portlet.expando.service.permission.ExpandoColumnPermissionUtil;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
+import com.liferay.taglib.util.CustomAttributesTagUtil;
 
 import java.io.Serializable;
 
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -67,12 +72,12 @@ public class CustomAttributesAvailableTag extends TagSupport {
 					companyId, _className, _classPK);
 			}
 
-			Enumeration<String> enu = expandoBridge.getAttributeNames();
-
-			if (!enu.hasMoreElements()) {
+			List<String> attributes = CustomAttributesTagUtil.getUnignoredAttributes(expandoBridge.getAttributeNames(), _ignore);
+			
+			if(attributes.isEmpty()) {
 				return SKIP_BODY;
 			}
-
+			
 			if (_classPK == 0) {
 				return EVAL_BODY_INCLUDE;
 			}
@@ -80,8 +85,7 @@ public class CustomAttributesAvailableTag extends TagSupport {
 			PermissionChecker permissionChecker =
 				themeDisplay.getPermissionChecker();
 
-			while (enu.hasMoreElements()) {
-				String attributeName = enu.nextElement();
+			for (String attributeName : attributes) {
 
 				Serializable value = expandoBridge.getAttribute(attributeName);
 
@@ -134,6 +138,7 @@ public class CustomAttributesAvailableTag extends TagSupport {
 				_classPK = 0;
 				_companyId = 0;
 				_editable = false;
+				_ignore = null;
 			}
 		}
 	}
@@ -153,10 +158,14 @@ public class CustomAttributesAvailableTag extends TagSupport {
 	public void setEditable(boolean editable) {
 		_editable = editable;
 	}
+	
+	public void setIgnore(String ignore) {
+		_ignore = ignore;
+	}
 
 	private String _className;
 	private long _classPK;
 	private long _companyId;
 	private boolean _editable;
-
+	private String _ignore;
 }
