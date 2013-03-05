@@ -397,6 +397,9 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		</then>
 	</if>
 
+	<property name="project.path" location="${project.dir}" />
+	<property name="junit.cobertura.agent" value="-javaagent:${project.path}/${junit.cobertura.agent.jar}=${junit.cobertura.includes};${junit.cobertura.excludes}" />
+
 	<if>
 		<not>
 			<equals arg1="${junit.debug}" arg2="true" />
