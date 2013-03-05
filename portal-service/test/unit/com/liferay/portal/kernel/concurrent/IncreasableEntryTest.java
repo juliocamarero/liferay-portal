@@ -14,71 +14,61 @@
 
 package com.liferay.portal.kernel.concurrent;
 
-import com.liferay.portal.kernel.test.CodeCoverageAssertor;
-
-import org.junit.Assert;
-import org.junit.ClassRule;
-import org.junit.Test;
+import com.liferay.portal.kernel.test.TestCase;
 
 /**
  * @author Shuyang Zhou
  */
-public class IncreasableEntryTest {
+public class IncreasableEntryTest extends TestCase {
 
-	@ClassRule
-	public static CodeCoverageAssertor codeCoverageAssertor =
-		new CodeCoverageAssertor();
-
-	@Test
 	public void testGettingKey() {
 		IncreasableEntry<String, Integer> increasableEntry =
 			new IntegerIncreasableEntry("test", 0);
 
-		Assert.assertEquals("test", increasableEntry.getKey());
-		Assert.assertEquals("test", increasableEntry.getKey());
-		Assert.assertEquals("test", increasableEntry.getKey());
+		assertEquals("test", increasableEntry.getKey());
+		assertEquals("test", increasableEntry.getKey());
+		assertEquals("test", increasableEntry.getKey());
 	}
 
-	@Test
 	public void testIncreaseAndGet() {
 		IncreasableEntry<String, Integer> increasableEntry =
 			new IntegerIncreasableEntry("test", 0);
 
 		// Simple increase
 
-		Assert.assertTrue(increasableEntry.increase(1));
+		assertTrue(increasableEntry.increase(1));
 
 		// Simple get
 
-		Assert.assertEquals(1, (int)increasableEntry.getValue());
+		assertEquals(1, (int)increasableEntry.getValue());
 
 		increasableEntry = new IntegerIncreasableEntry("test", 0);
 
 		// Continue get
 
-		Assert.assertEquals(0, (int)increasableEntry.getValue());
-		Assert.assertEquals(0, (int)increasableEntry.getValue());
-		Assert.assertEquals(0, (int)increasableEntry.getValue());
+		assertEquals(0, (int)increasableEntry.getValue());
+		assertEquals(0, (int)increasableEntry.getValue());
+		assertEquals(0, (int)increasableEntry.getValue());
 
 		increasableEntry = new IntegerIncreasableEntry("test", 0);
 
 		// Continue increase
 
-		Assert.assertTrue(increasableEntry.increase(1));
-		Assert.assertTrue(increasableEntry.increase(2));
-		Assert.assertTrue(increasableEntry.increase(3));
+		assertTrue(increasableEntry.increase(1));
+		assertTrue(increasableEntry.increase(2));
+		assertTrue(increasableEntry.increase(3));
 
 		// Check value
 
-		Assert.assertEquals(6, (int)increasableEntry.getValue());
+		assertEquals(6, (int)increasableEntry.getValue());
 
 		// Increase after get
 
 		increasableEntry = new IntegerIncreasableEntry("test", 0);
 
-		Assert.assertEquals(0, (int)increasableEntry.getValue());
-		Assert.assertFalse(increasableEntry.increase(1));
-		Assert.assertEquals(0, (int)increasableEntry.getValue());
+		assertEquals(0, (int)increasableEntry.getValue());
+		assertFalse(increasableEntry.increase(1));
+		assertEquals(0, (int)increasableEntry.getValue());
 	}
 
 	private class IntegerIncreasableEntry

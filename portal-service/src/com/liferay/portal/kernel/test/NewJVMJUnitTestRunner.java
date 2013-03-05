@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
@@ -79,24 +78,10 @@ public class NewJVMJUnitTestRunner extends BlockJUnit4ClassRunner {
 	protected List<String> createArguments(FrameworkMethod frameworkMethod) {
 		List<String> arguments = new ArrayList<String>();
 
-		String agentLine = System.getProperty("junit.cobertura.agent");
-
-		if (!Validator.isNull(agentLine)) {
-			arguments.add(agentLine);
-			arguments.add("-Djunit.cobertura.agent=" + agentLine);
-		}
-
-		boolean junitCodeCoverage = Boolean.getBoolean("junit.code.coverage");
-
-		if (junitCodeCoverage) {
-			arguments.add("-Djunit.code.coverage=true");
-		}
-
 		boolean junitDebug = Boolean.getBoolean("junit.debug");
 
 		if (junitDebug) {
 			arguments.add(_JPDA_OPTIONS);
-			arguments.add("-Djunit.debug=true");
 		}
 
 		arguments.add("-Djava.net.preferIPv4Stack=true");

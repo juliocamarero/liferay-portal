@@ -14,25 +14,16 @@
 
 package com.liferay.portal.kernel.concurrent;
 
-import com.liferay.portal.kernel.test.CodeCoverageAssertor;
+import com.liferay.portal.kernel.test.TestCase;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Assert;
-import org.junit.ClassRule;
-import org.junit.Test;
-
 /**
  * @author Shuyang Zhou
  */
-public class CallerRunsPolicyTest {
+public class CallerRunsPolicyTest extends TestCase {
 
-	@ClassRule
-	public static CodeCoverageAssertor codeCoverageAssertor =
-		new CodeCoverageAssertor();
-
-	@Test
 	public void testCallerRunsPolicy1() {
 		MarkerThreadPoolHandler markerThreadPoolHandler =
 			new MarkerThreadPoolHandler();
@@ -48,12 +39,11 @@ public class CallerRunsPolicyTest {
 
 		threadPoolExecutor.execute(markerBlockingJob);
 
-		Assert.assertFalse(markerBlockingJob.isStarted());
-		Assert.assertFalse(markerThreadPoolHandler.isBeforeExecuteRan());
-		Assert.assertFalse(markerThreadPoolHandler.isAfterExecuteRan());
+		assertFalse(markerBlockingJob.isStarted());
+		assertFalse(markerThreadPoolHandler.isBeforeExecuteRan());
+		assertFalse(markerThreadPoolHandler.isAfterExecuteRan());
 	}
 
-	@Test
 	public void testCallerRunsPolicy2() {
 		MarkerThreadPoolHandler markerThreadPoolHandler =
 			new MarkerThreadPoolHandler();
@@ -71,16 +61,15 @@ public class CallerRunsPolicyTest {
 
 			threadPoolExecutor.execute(markerBlockingJob);
 
-			Assert.assertTrue(markerBlockingJob.isEnded());
-			Assert.assertTrue(markerThreadPoolHandler.isBeforeExecuteRan());
-			Assert.assertTrue(markerThreadPoolHandler.isAfterExecuteRan());
+			assertTrue(markerBlockingJob.isEnded());
+			assertTrue(markerThreadPoolHandler.isBeforeExecuteRan());
+			assertTrue(markerThreadPoolHandler.isAfterExecuteRan());
 		}
 		finally {
 			TestUtil.closePool(threadPoolExecutor, true);
 		}
 	}
 
-	@Test
 	public void testCallerRunsPolicy3() {
 		MarkerThreadPoolHandler markerThreadPoolHandler =
 			new MarkerThreadPoolHandler();
@@ -100,15 +89,15 @@ public class CallerRunsPolicyTest {
 			try {
 				threadPoolExecutor.execute(markerBlockingJob);
 
-				Assert.fail();
+				fail();
 			}
 			catch (RuntimeException re) {
 			}
 
-			Assert.assertTrue(markerBlockingJob.isStarted());
-			Assert.assertFalse(markerBlockingJob.isEnded());
-			Assert.assertTrue(markerThreadPoolHandler.isBeforeExecuteRan());
-			Assert.assertTrue(markerThreadPoolHandler.isAfterExecuteRan());
+			assertTrue(markerBlockingJob.isStarted());
+			assertFalse(markerBlockingJob.isEnded());
+			assertTrue(markerThreadPoolHandler.isBeforeExecuteRan());
+			assertTrue(markerThreadPoolHandler.isAfterExecuteRan());
 		}
 		finally {
 			TestUtil.closePool(threadPoolExecutor, true);
