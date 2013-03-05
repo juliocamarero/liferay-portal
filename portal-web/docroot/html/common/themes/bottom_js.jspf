@@ -16,8 +16,6 @@
 
 <%@ include file="/html/portal/layout/view/portlet_js.jspf" %>
 
-<%@ page import="com.liferay.portlet.sites.util.SitesUtil" %>
-
 <%
 boolean hasAddLayoutPermission = GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT);
 %>
