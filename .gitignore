@@ -194,8 +194,6 @@ _sass_cache_*.css
 
 /test-results
 
-/tools/cobertura-agent/classes
-
 /tools/maven/*.asc
 
 /tools/liferay-doclet

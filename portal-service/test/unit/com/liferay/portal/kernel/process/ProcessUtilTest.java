@@ -14,8 +14,8 @@
 
 package com.liferay.portal.kernel.process;
 
-import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
+import com.liferay.portal.kernel.test.TestCase;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,22 +40,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.ClassRule;
-import org.junit.Test;
-
 /**
  * @author Shuyang Zhou
  */
-public class ProcessUtilTest {
+public class ProcessUtilTest extends TestCase {
 
-	@ClassRule
-	public static CodeCoverageAssertor codeCoverageAssertor =
-		new CodeCoverageAssertor();
-
-	@After
+	@Override
 	public void tearDown() throws Exception {
+		super.tearDown();
+
 		ExecutorService executorService = _getExecutorService();
 
 		if (executorService != null) {
@@ -67,7 +60,6 @@ public class ProcessUtilTest {
 		}
 	}
 
-	@Test
 	public void testConcurrentCreateExecutorService() throws Exception {
 		final AtomicReference<ExecutorService> atomicReference =
 			new AtomicReference<ExecutorService>();
@@ -83,7 +75,7 @@ public class ProcessUtilTest {
 					atomicReference.set(executorService);
 				}
 				catch (Exception e) {
-					Assert.fail();
+					fail();
 				}
 			}
 
@@ -101,12 +93,11 @@ public class ProcessUtilTest {
 
 		thread.join();
 
-		Assert.assertSame(executorService, atomicReference.get());
+		assertSame(executorService, atomicReference.get());
 
 		_invokeGetExecutorService();
 	}
 
-	@Test
 	public void testDestroy() throws Exception {
 
 		// Clean destroy
@@ -115,25 +106,25 @@ public class ProcessUtilTest {
 
 		processUtil.destroy();
 
-		Assert.assertNull(_getExecutorService());
+		assertNull(_getExecutorService());
 
 		// Idle destroy
 
 		ExecutorService executorService = _invokeGetExecutorService();
 
-		Assert.assertNotNull(executorService);
-		Assert.assertNotNull(_getExecutorService());
+		assertNotNull(executorService);
+		assertNotNull(_getExecutorService());
 
 		processUtil.destroy();
 
-		Assert.assertNull(_getExecutorService());
+		assertNull(_getExecutorService());
 
 		// Busy destroy
 
 		executorService = _invokeGetExecutorService();
 
-		Assert.assertNotNull(executorService);
-		Assert.assertNotNull(_getExecutorService());
+		assertNotNull(executorService);
+		assertNotNull(_getExecutorService());
 
 		DummyJob dummyJob = new DummyJob();
 
@@ -146,15 +137,15 @@ public class ProcessUtilTest {
 		try {
 			future.get();
 
-			Assert.fail();
+			fail();
 		}
 		catch (ExecutionException ee) {
 			Throwable throwable = ee.getCause();
 
-			Assert.assertTrue(throwable instanceof InterruptedException);
+			assertTrue(throwable instanceof InterruptedException);
 		}
 
-		Assert.assertNull(_getExecutorService());
+		assertNull(_getExecutorService());
 
 		// Concurrent destroy
 
@@ -189,10 +180,9 @@ public class ProcessUtilTest {
 
 		processUtil.destroy();
 
-		Assert.assertNull(_getExecutorService());
+		assertNull(_getExecutorService());
 	}
 
-	@Test
 	public void testEchoLogging() throws Exception {
 		List<LogRecord> logRecords = JDKLoggerTestUtil.configureJDKLogger(
 			LoggingOutputProcessor.class.getName(), Level.INFO);
@@ -211,17 +201,16 @@ public class ProcessUtilTest {
 			messageRecords.add(logRecord.getMessage());
 		}
 
-		Assert.assertTrue(
+		assertTrue(
 			messageRecords.contains("{stdErr}" + Echo.class.getName() + "0"));
-		Assert.assertTrue(
+		assertTrue(
 			messageRecords.contains("{stdErr}" + Echo.class.getName() + "1"));
-		Assert.assertTrue(
+		assertTrue(
 			messageRecords.contains("{stdOut}" + Echo.class.getName() + "0"));
-		Assert.assertTrue(
+		assertTrue(
 			messageRecords.contains("{stdOut}" + Echo.class.getName() + "1"));
 	}
 
-	@Test
 	public void testErrorExit() throws Exception {
 		Future<?> future = ProcessUtil.execute(
 			ProcessUtil.CONSUMER_OUTPUT_PROCESSOR,
@@ -230,19 +219,18 @@ public class ProcessUtilTest {
 		try {
 			future.get();
 
-			Assert.fail();
+			fail();
 		}
 		catch (ExecutionException ee) {
 			Throwable throwable = ee.getCause();
 
-			Assert.assertEquals(ProcessException.class, throwable.getClass());
-			Assert.assertEquals(
+			assertEquals(ProcessException.class, throwable.getClass());
+			assertEquals(
 				"Subprocess terminated with exit code " + ErrorExit.EXIT_CODE,
 				throwable.getMessage());
 		}
 	}
 
-	@Test
 	public void testErrorOutputProcessor() throws Exception {
 		String[] arguments = _buildArguments(Echo.class, "1");
 
@@ -252,13 +240,13 @@ public class ProcessUtilTest {
 		try {
 			future.get();
 
-			Assert.fail();
+			fail();
 		}
 		catch (ExecutionException ee) {
 			Throwable throwable = ee.getCause();
 
-			Assert.assertEquals(ProcessException.class, throwable.getClass());
-			Assert.assertEquals(
+			assertEquals(ProcessException.class, throwable.getClass());
+			assertEquals(
 				ErrorStderrOutputProcessor.class.getName(),
 				throwable.getMessage());
 		}
@@ -269,19 +257,18 @@ public class ProcessUtilTest {
 		try {
 			future.get();
 
-			Assert.fail();
+			fail();
 		}
 		catch (ExecutionException ee) {
 			Throwable throwable = ee.getCause();
 
-			Assert.assertEquals(ProcessException.class, throwable.getClass());
-			Assert.assertEquals(
+			assertEquals(ProcessException.class, throwable.getClass());
+			assertEquals(
 				ErrorStdoutOutputProcessor.class.getName(),
 				throwable.getMessage());
 		}
 	}
 
-	@Test
 	public void testExecuteAfterShutdown() throws Exception {
 		ExecutorService executorService = _invokeGetExecutorService();
 
@@ -292,18 +279,17 @@ public class ProcessUtilTest {
 				ProcessUtil.LOGGING_OUTPUT_PROCESSOR,
 				_buildArguments(Echo.class, "2"));
 
-			Assert.fail();
+			fail();
 		}
 		catch (ProcessException pe) {
 			Throwable throwable = pe.getCause();
 
-			Assert.assertEquals(
+			assertEquals(
 				RejectedExecutionException.class, throwable.getClass());
 		}
 
 	}
 
-	@Test
 	public void testFuture() throws Exception {
 
 		// Time out on standard error processing
@@ -313,13 +299,13 @@ public class ProcessUtilTest {
 		Future<?> future = ProcessUtil.execute(
 			ProcessUtil.CONSUMER_OUTPUT_PROCESSOR, arguments);
 
-		Assert.assertFalse(future.isCancelled());
-		Assert.assertFalse(future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 
 		try {
 			future.get(1, TimeUnit.SECONDS);
 
-			Assert.fail();
+			fail();
 		}
 		catch (TimeoutException te) {
 		}
@@ -343,13 +329,13 @@ public class ProcessUtilTest {
 			},
 			arguments);
 
-		Assert.assertFalse(future.isCancelled());
-		Assert.assertFalse(future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 
 		try {
 			future.get(1, TimeUnit.SECONDS);
 
-			Assert.fail();
+			fail();
 		}
 		catch (TimeoutException te) {
 		}
@@ -365,7 +351,6 @@ public class ProcessUtilTest {
 		future.get(1, TimeUnit.SECONDS);
 	}
 
-	@Test
 	public void testInterruptPause() throws Exception {
 		final CountDownLatch countDownLatch = new CountDownLatch(1);
 		final Thread mainThread = Thread.currentThread();
@@ -384,7 +369,7 @@ public class ProcessUtilTest {
 					executorService.shutdownNow();
 				}
 				catch (Exception e) {
-					Assert.fail();
+					fail();
 				}
 			}
 
@@ -410,49 +395,48 @@ public class ProcessUtilTest {
 
 			future.get();
 
-			Assert.fail();
+			fail();
 		}
 		catch (ExecutionException ee) {
 			Throwable throwable = ee.getCause();
 
-			Assert.assertEquals(ProcessException.class, throwable.getClass());
-			Assert.assertEquals(
+			assertEquals(ProcessException.class, throwable.getClass());
+			assertEquals(
 				"Forcibly killed subprocess on interruption",
 				throwable.getMessage());
 		}
 	}
 
-	@Test
 	public void testWrongArguments() throws ProcessException {
 		try {
 			ProcessUtil.execute(null, (List<String>)null);
 
-			Assert.fail();
+			fail();
 		}
 		catch (NullPointerException npe) {
-			Assert.assertEquals("Output processor is null", npe.getMessage());
+			assertEquals("Output processor is null", npe.getMessage());
 		}
 
 		try {
 			ProcessUtil.execute(
 				ProcessUtil.CONSUMER_OUTPUT_PROCESSOR, (List<String>)null);
 
-			Assert.fail();
+			fail();
 		}
 		catch (NullPointerException npe) {
-			Assert.assertEquals("Arguments is null", npe.getMessage());
+			assertEquals("Arguments is null", npe.getMessage());
 		}
 
 		try {
 			ProcessUtil.execute(
 				ProcessUtil.CONSUMER_OUTPUT_PROCESSOR, "commandNotExist");
 
-			Assert.fail();
+			fail();
 		}
 		catch (ProcessException pe) {
 			Throwable throwable = pe.getCause();
 
-			Assert.assertEquals(IOException.class, throwable.getClass());
+			assertEquals(IOException.class, throwable.getClass());
 		}
 	}
 
