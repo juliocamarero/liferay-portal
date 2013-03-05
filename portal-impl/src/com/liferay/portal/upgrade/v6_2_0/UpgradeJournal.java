@@ -15,8 +15,10 @@
 package com.liferay.portal.upgrade.v6_2_0;
 
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
+import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.upgrade.RenameUpgradePortletPreferences;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.upgrade.v6_2_0.util.JournalFeedTable;
 import com.liferay.portal.util.PortalUtil;
@@ -199,6 +201,7 @@ public class UpgradeJournal extends RenameUpgradePortletPreferences {
 
 		updateStructures();
 		updateTemplates();
+		updateTemplateScripts();
 	}
 
 	@Override
@@ -209,6 +212,28 @@ public class UpgradeJournal extends RenameUpgradePortletPreferences {
 	@Override
 	protected Map<String, String> getPreferenceNamesMap() {
 		return _preferenceNamesMap;
+	}
+
+	protected void updateDDMTemplate(long templateId, String script)
+		throws Exception {
+
+		Connection con = null;
+		PreparedStatement ps = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement(
+				"update DDMTemplate set script = ? where templateId = " +
+					templateId);
+
+			ps.setString(1, script);
+
+			ps.executeUpdate();
+		}
+		finally {
+			DataAccess.cleanUp(con, ps);
+		}
 	}
 
 	protected void updateResourcePermission(
@@ -392,6 +417,8 @@ public class UpgradeJournal extends RenameUpgradePortletPreferences {
 				updateResourcePermission(
 					companyId, JournalTemplate.class.getName(),
 					DDMTemplate.class.getName(), id_, ddmTemplateId);
+
+				_ddmTemplateIds.put(groupId + "#" + templateId, ddmTemplateId);
 			}
 		}
 		finally {
@@ -401,7 +428,63 @@ public class UpgradeJournal extends RenameUpgradePortletPreferences {
 		runSQL("drop table JournalTemplate");
 	}
 
+	protected String updateTemplateScript(
+		long groupId, String script, String language) {
+
+		String newScript = script;
+
+		for (String key : _ddmTemplateIds.keySet()) {
+			if (key.startsWith(groupId + "#")) {
+				String oldTemplateId = StringUtil.split(key, "#")[1];
+				long newTemplateId = _ddmTemplateIds.get(key);
+
+				if (language.equals(TemplateConstants.LANG_TYPE_FTL)) {
+					newScript = newScript.replaceAll(
+						"\\$\\{journalTemplatesPath\\}/" + oldTemplateId,
+						"\\$\\{templatesPath\\}/" + newTemplateId);
+				}
+				else if (language.equals(TemplateConstants.LANG_TYPE_VM)) {
+					newScript = newScript.replaceAll(
+						"\\$journalTemplatesPath/" + oldTemplateId,
+						"\\$templatesPath/" + newTemplateId);
+				}
+			}
+		}
+
+		return newScript;
+	}
+
+	protected void updateTemplateScripts() throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement("select * from DDMTemplate");
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				long groupId = rs.getLong("groupId");
+				long templateId = rs.getLong("templateId");
+				String language = rs.getString("language");
+				String script = rs.getString("script");
+
+				String newScript = updateTemplateScript(
+					groupId, script, language);
+
+				updateDDMTemplate(templateId, newScript);
+			}
+		}
+		finally {
+			DataAccess.cleanUp(con, ps, rs);
+		}
+	}
+
 	private Map<String, Long> _ddmStructureIds = new HashMap<String, Long>();
+	private Map<String, Long> _ddmTemplateIds = new HashMap<String, Long>();
 	private Map<String, String> _preferenceNamesMap =
 		new HashMap<String, String>();
 
