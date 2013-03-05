@@ -26,4 +26,7 @@ servlet context
 
 {$themeDisplay}: the theme display
 
+The variable ${templatesPath} can be used to include another template, e.g.
+<#include "${templatesPath}/templateId" />
+
 -->
