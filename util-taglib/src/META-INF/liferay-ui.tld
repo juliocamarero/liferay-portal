@@ -709,16 +709,15 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>ignore</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>label</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<!-- don't enumerate the following, comma separated attributes -->
-		<attribute>
-			<name>ignore</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
 	</tag>
 	<tag>
 		<name>custom-attributes-available</name>
@@ -740,16 +739,15 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>ignore</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>editable</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<!-- don't enumerate the following, comma separated attributes -->
-		<attribute>
-			<name>ignore</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
 	</tag>
 	<tag>
 		<name>ddm-template-selector</name>

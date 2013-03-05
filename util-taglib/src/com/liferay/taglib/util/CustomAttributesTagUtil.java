@@ -1,33 +1,42 @@
+/**
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.taglib.util;
 
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author Olaf Kock
+ */
 public class CustomAttributesTagUtil {
-	// Note for the reviewer(s):
-	// This method&class is extracted to be testable and reusable from jsp.
-	// The interface (using Enumeration) is due to the form that Expando API
-	// returns the attributes. This is designed for a change that is as 
-	// unintrusive as possible.
-	// Feel free to remove this comment after reviewing
-	public static List<String> getUnignoredAttributes(Enumeration<String> attributes,
-			String ignore) {
-		String[] ignored = StringUtil.split(ignore);
-		List<String> ignoredList = Arrays.asList(ignored);
-		LinkedList<String>result = new LinkedList<String>();
-		
-		while(attributes.hasMoreElements()) {
-			String currentAttribute = attributes.nextElement();
-			if(ignoredList.contains(currentAttribute)) {
-				continue;
-			} else {
-				result.add(currentAttribute);
-			}
+
+	public static List<String> filterAttributes(
+		List<String> attributeNames, String ignoreAttributeNames) {
+
+		List<String> filteredAttributes = ListUtil.copy(attributeNames);
+
+		List<String> ignoredAttributeNamesList = ListUtil.toList(
+			StringUtil.split(ignoreAttributeNames));
+
+		for (String ignoreAttributeName : ignoredAttributeNamesList) {
+			filteredAttributes.remove(ignoreAttributeName);
 		}
-		return result;
+
+		return filteredAttributes;
 	}
+
 }

@@ -17,7 +17,6 @@ package com.liferay.taglib.ui;
 import com.liferay.portal.kernel.servlet.taglib.TagSupport;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -33,9 +32,7 @@ import com.liferay.taglib.util.CustomAttributesTagUtil;
 
 import java.io.Serializable;
 
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,12 +69,15 @@ public class CustomAttributesAvailableTag extends TagSupport {
 					companyId, _className, _classPK);
 			}
 
-			List<String> attributes = CustomAttributesTagUtil.getUnignoredAttributes(expandoBridge.getAttributeNames(), _ignore);
-			
-			if(attributes.isEmpty()) {
+			List<String> attributeNames =
+				CustomAttributesTagUtil.filterAttributes(
+					Collections.list(expandoBridge.getAttributeNames()),
+					_ignore);
+
+			if (attributeNames.isEmpty()) {
 				return SKIP_BODY;
 			}
-			
+
 			if (_classPK == 0) {
 				return EVAL_BODY_INCLUDE;
 			}
@@ -85,8 +85,7 @@ public class CustomAttributesAvailableTag extends TagSupport {
 			PermissionChecker permissionChecker =
 				themeDisplay.getPermissionChecker();
 
-			for (String attributeName : attributes) {
-
+			for (String attributeName : attributeNames) {
 				Serializable value = expandoBridge.getAttribute(attributeName);
 
 				if (Validator.isNull(value)) {
@@ -158,7 +157,7 @@ public class CustomAttributesAvailableTag extends TagSupport {
 	public void setEditable(boolean editable) {
 		_editable = editable;
 	}
-	
+
 	public void setIgnore(String ignore) {
 		_ignore = ignore;
 	}
@@ -168,4 +167,5 @@ public class CustomAttributesAvailableTag extends TagSupport {
 	private long _companyId;
 	private boolean _editable;
 	private String _ignore;
+
 }
