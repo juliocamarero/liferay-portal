@@ -88,7 +88,9 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		// Link
 
-		String link = getLink(fileEntry, themeDisplay);
+		String link = getLink(
+			DLFileEntry.class.getName(), fileEntry.getFileEntryId(),
+			"/document_library/find_file_entry?fileEntryId=", themeDisplay);
 
 		// Title
 
@@ -133,7 +135,9 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		// Link
 
-		String link = getLink(folder, themeDisplay);
+		String link = getLink(
+			DLFolder.class.getName(), folder.getFolderId(),
+			"/document_library/find_folder?folderId=", themeDisplay);
 
 		// Title
 
@@ -193,47 +197,6 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 		sb.append(fileEntry.getRepositoryId());
 		sb.append("&folderId=");
 		sb.append(fileEntry.getFolderId());
-
-		return sb.toString();
-	}
-
-	protected String getLink(FileEntry fileEntry, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		if (TrashUtil.isInTrash(
-				DLFileEntry.class.getName(), fileEntry.getFileEntryId())) {
-
-			return TrashUtil.getViewContentURL(
-				DLFileEntry.class.getName(), fileEntry.getFileEntryId(),
-				themeDisplay);
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(themeDisplay.getPathMain());
-		sb.append("/document_library/find_file_entry?fileEntryId=");
-		sb.append(fileEntry.getFileEntryId());
-
-		return sb.toString();
-	}
-
-	protected String getLink(Folder folder, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		if (TrashUtil.isInTrash(
-				DLFolder.class.getName(), folder.getFolderId())) {
-
-			return TrashUtil.getViewContentURL(
-				DLFolder.class.getName(), folder.getFolderId(), themeDisplay);
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(themeDisplay.getPathMain());
-		sb.append("/document_library/find_folder?folderId=");
-		sb.append(folder.getFolderId());
 
 		return sb.toString();
 	}

@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.trash.TrashHandler;
+import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -32,6 +34,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.List;
 
@@ -146,6 +149,31 @@ public abstract class BaseSocialActivityInterpreter
 		catch (Exception e) {
 			return StringPool.BLANK;
 		}
+	}
+
+	protected String getLink(
+			String className, long classPK, String path,
+			ThemeDisplay themeDisplay)
+		throws Exception {
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			className);
+
+		if (trashHandler.isInTrash(classPK) ||
+			trashHandler.isInTrashContainer(classPK)) {
+
+			return TrashUtil.getViewContentURL(
+				className, classPK, themeDisplay);
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(themeDisplay.getPortalURL());
+		sb.append(themeDisplay.getPathMain());
+		sb.append(path);
+		sb.append(classPK);
+
+		return sb.toString();
 	}
 
 	protected String getUserName(long userId, ThemeDisplay themeDisplay) {

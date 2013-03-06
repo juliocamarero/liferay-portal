@@ -15,7 +15,6 @@
 package com.liferay.portlet.blogs.social;
 
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -76,7 +75,9 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		// Link
 
-		String link = getLink(entry, themeDisplay);
+		String link = getLink(
+			BlogsEntry.class.getName(), entry.getEntryId(),
+			"/blogs/find_entry?entryId=", themeDisplay);
 
 		// Title
 
@@ -113,24 +114,6 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 		String body = StringPool.BLANK;
 
 		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected String getLink(BlogsEntry entry, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		if (entry.isInTrash()) {
-			return TrashUtil.getViewContentURL(
-				BlogsEntry.class.getName(), entry.getEntryId(), themeDisplay);
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(themeDisplay.getPathMain());
-		sb.append("/blogs/find_entry?entryId=");
-		sb.append(entry.getEntryId());
-
-		return sb.toString();
 	}
 
 	protected String getTitle(BlogsEntry entry) throws Exception {
