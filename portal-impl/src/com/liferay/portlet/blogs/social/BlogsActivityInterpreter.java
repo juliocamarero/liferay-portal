@@ -87,7 +87,7 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 		if ((activityType == BlogsActivityKeys.ADD_ENTRY) &&
 			(entry.getStatus() == WorkflowConstants.STATUS_SCHEDULED)) {
 
-			displayTitle = getTitle(entry);
+			displayTitle = entry.getTitle();
 
 			Format dateFormatDate =
 				FastDateFormatFactoryUtil.getSimpleDateFormat(
@@ -97,7 +97,7 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 			displayDate = dateFormatDate.format(entry.getDisplayDate());
 		}
 		else {
-			displayTitle = wrapLink(link, getTitle(entry));
+			displayTitle = wrapLink(link, entry.getTitle());
 			displayDate = StringPool.BLANK;
 		}
 
@@ -114,15 +114,6 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 		String body = StringPool.BLANK;
 
 		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected String getTitle(BlogsEntry entry) throws Exception {
-		if (entry.isInTrash()) {
-			return TrashUtil.getOriginalTitle(entry.getTitle());
-		}
-		else {
-			return entry.getTitle();
-		}
 	}
 
 	protected String getTitlePattern(
