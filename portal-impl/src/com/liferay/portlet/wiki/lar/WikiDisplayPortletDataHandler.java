@@ -21,9 +21,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portlet.journal.lar.JournalPortletDataHandler;
 import com.liferay.portlet.wiki.NoSuchNodeException;
 import com.liferay.portlet.wiki.model.WikiNode;
@@ -105,13 +103,15 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 		portletDataContext.addPermissions(
 			"com.liferay.portlet.wiki", portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		Element nodesElement = rootElement.addElement("nodes");
-		Element pagesElement = rootElement.addElement("pages");
+		Element nodesElement = rootElement.addElement(
+			WikiNode.class.getSimpleName());
+		Element pagesElement = rootElement.addElement(
+			WikiPage.class.getSimpleName());
 
 		WikiPortletDataHandler.exportNode(
 			portletDataContext, nodesElement, pagesElement, node);
@@ -122,20 +122,14 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
 			"com.liferay.portlet.wiki", portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		if (Validator.isNull(data)) {
-			return null;
-		}
-
-		Document document = SAXReaderUtil.read(data);
-
-		Element rootElement = document.getRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		Element nodesElement = rootElement.element("nodes");
 
@@ -189,6 +183,15 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 		}
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected boolean validateData(String data) {
+		if (Validator.isNull(data)) {
+			return false;
+		}
+
+		return super.validateData(data);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

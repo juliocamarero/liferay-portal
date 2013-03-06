@@ -642,21 +642,8 @@ public class LayoutExporter {
 
 		articleElement.addAttribute("path", path);
 
-		Element dlFileEntryTypesElement = layoutElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = layoutElement.addElement("dl-folders");
-		Element dlFilesElement = layoutElement.addElement("dl-file-entries");
-		Element dlFileRanksElement = layoutElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = layoutElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = layoutElement.addElement(
-			"dl-repository-entries");
-
 		JournalPortletDataHandler.exportArticle(
-			portletDataContext, layoutElement, layoutElement, layoutElement,
-			dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-			dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, article, false);
+			portletDataContext, layoutElement, article, false);
 	}
 
 	protected void exportLayout(

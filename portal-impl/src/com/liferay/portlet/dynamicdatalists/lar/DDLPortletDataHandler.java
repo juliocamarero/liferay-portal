@@ -20,9 +20,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
 import com.liferay.portlet.dynamicdatalists.service.DDLRecordSetLocalServiceUtil;
 import com.liferay.portlet.dynamicdatalists.service.persistence.DDLRecordSetActionableDynamicQuery;
@@ -71,9 +69,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 			"com.liferay.portlet.dynamicdatalist",
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
-
-		final Element recordSetsElement = rootElement.addElement("record-sets");
+		Element rootElement = portletDataContext.getRootElement();
 
 		ActionableDynamicQuery actionableDynamicQuery =
 			new DDLRecordSetActionableDynamicQuery() {
@@ -91,7 +87,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 					DDLRecordSet recordSet = (DDLRecordSet)object;
 
 					StagedModelDataHandlerUtil.exportStagedModel(
-						portletDataContext, recordSetsElement, recordSet);
+						portletDataContext, recordSet);
 				}
 
 		};
@@ -106,7 +102,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
@@ -114,11 +110,10 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
-
-		Element recordSetsElement = rootElement.element("record-sets");
+		Element recordSetsElement = rootElement.element(
+			DDLRecordSet.class.getSimpleName());
 
 		List<Element> recordSetElements = recordSetsElement.elements(
 			"record-set");

@@ -25,13 +25,17 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Repository;
+import com.liferay.portal.model.RepositoryEntry;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandler;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
+import com.liferay.portlet.documentlibrary.model.DLFileRank;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
@@ -168,7 +172,7 @@ public class JournalContentPortletDataHandler
 			}
 		}
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		if (article == null) {
 			portletDataContext.setScopeGroupId(previousScopeGroupId);
@@ -179,25 +183,28 @@ public class JournalContentPortletDataHandler
 		String path = JournalPortletDataHandler.getArticlePath(
 			portletDataContext, article);
 
-		Element articleElement = rootElement.addElement("article");
+		Element articlesElement = rootElement.addElement(
+			JournalArticle.class.getSimpleName());
+
+		Element articleElement = articlesElement.addElement("article");
 
 		articleElement.addAttribute("path", path);
 
 		Element dlFileEntryTypesElement = rootElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = rootElement.addElement("dl-folders");
-		Element dlFilesElement = rootElement.addElement("dl-file-entries");
-		Element dlFileRanksElement = rootElement.addElement("dl-file-ranks");
+			DLFileEntryType.class.getSimpleName());
+		Element dlFoldersElement = rootElement.addElement(
+			DLFolder.class.getSimpleName());
+		Element dlFilesElement = rootElement.addElement(
+			DLFileEntry.class.getSimpleName());
+		Element dlFileRanksElement = rootElement.addElement(
+			DLFileRank.class.getSimpleName());
 		Element dlRepositoriesElement = rootElement.addElement(
-			"dl-repositories");
+			Repository.class.getSimpleName());
 		Element dlRepositoryEntriesElement = rootElement.addElement(
-			"dl-repository-entries");
+			RepositoryEntry.class.getSimpleName());
 
 		JournalPortletDataHandler.exportArticle(
-			portletDataContext, rootElement, rootElement, rootElement,
-			dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-			dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, article, false);
+			portletDataContext, rootElement, article, false);
 
 		String defaultTemplateId = article.getTemplateId();
 		String preferenceTemplateId = portletPreferences.getValue(
@@ -213,13 +220,7 @@ public class JournalContentPortletDataHandler
 				preferenceTemplateId, true);
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext,
-				new Element[] {
-					rootElement, dlFileEntryTypesElement, dlFoldersElement,
-					dlFilesElement, dlFileRanksElement, dlRepositoriesElement,
-					dlRepositoryEntriesElement
-				},
-				ddmTemplate);
+				portletDataContext, ddmTemplate);
 		}
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
@@ -230,17 +231,13 @@ public class JournalContentPortletDataHandler
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
 			"com.liferay.portlet.journal",
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
-
-		if (Validator.isNull(data)) {
-			return null;
-		}
 
 		long previousScopeGroupId = portletDataContext.getScopeGroupId();
 
@@ -251,12 +248,13 @@ public class JournalContentPortletDataHandler
 			portletDataContext.setScopeGroupId(portletDataContext.getGroupId());
 		}
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
+		Element articlesElement = rootElement.element(
+			JournalArticle.class.getSimpleName());
 
 		JournalPortletDataHandler.importReferencedData(
-			portletDataContext, rootElement);
+			portletDataContext, articlesElement.element("article"));
 
 		Element structureElement = rootElement.element("structure");
 
@@ -274,7 +272,7 @@ public class JournalContentPortletDataHandler
 			}
 		}
 
-		Element articleElement = rootElement.element("article");
+		Element articleElement = articlesElement.element("article");
 
 		if (articleElement != null) {
 			JournalPortletDataHandler.importArticle(
@@ -329,6 +327,15 @@ public class JournalContentPortletDataHandler
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected boolean validateData(String data) {
+		if (Validator.isNull(data)) {
+			return false;
+		}
+
+		return super.validateData(data);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

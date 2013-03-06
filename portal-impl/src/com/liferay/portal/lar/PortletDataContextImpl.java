@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -42,6 +43,7 @@ import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.model.AttachedModel;
@@ -837,7 +839,28 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return ROOT_PATH_GROUPS + getSourceGroupId();
 	}
 
-	public Element getStagedModelElementInstance(String stagedModelClassName) {
+	public Element getStagedModelElement(
+		String stagedModelClassName, String stagedModelName, String path) {
+
+		if (_rootElement == null) {
+			return null;
+		}
+
+		StringBundler sb = new StringBundler();
+
+		sb.append(stagedModelClassName);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(stagedModelName);
+		sb.append("[@path='");
+		sb.append(path);
+		sb.append("']");
+
+		XPath xPath = SAXReaderUtil.createXPath(sb.toString());
+
+		return (Element)xPath.selectSingleNode(_rootElement);
+	}
+
+	public Element getStagedModelsElementInstance(String stagedModelClassName) {
 		if (_rootElement == null) {
 			return null;
 		}

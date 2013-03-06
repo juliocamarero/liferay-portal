@@ -39,12 +39,11 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.RepositoryEntry;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -56,6 +55,9 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandler;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFileRank;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.dynamicdatamapping.lar.DDMPortletDataHandler;
@@ -137,10 +139,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 	public static void exportArticle(
 			PortletDataContext portletDataContext, Element articlesElement,
-			Element ddmStructuresElement, Element ddmTemplatesElement,
-			Element dlFileEntryTypesElement, Element dlFoldersElement,
-			Element dlFileEntriesElement, Element dlFileRanksElement,
-			Element dlRepositoriesElement, Element dlRepositoryEntriesElement,
 			JournalArticle article, boolean checkDateRange)
 		throws Exception {
 
@@ -188,7 +186,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				"ddm-structure-uuid", ddmStructure.getUuid());
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, ddmStructuresElement, ddmStructure);
+				portletDataContext, ddmStructure);
 		}
 
 		if (Validator.isNotNull(article.getTemplateId())) {
@@ -201,13 +199,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				"ddm-template-uuid", ddmTemplate.getUuid());
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext,
-				new Element[] {
-					ddmTemplatesElement, dlFileEntryTypesElement,
-					dlFoldersElement, dlFileEntriesElement, dlFileRanksElement,
-					dlRepositoriesElement, dlRepositoryEntriesElement
-				},
-				ddmTemplate);
+				portletDataContext, ddmTemplate);
 		}
 
 		if (article.isSmallImage()) {
@@ -217,10 +209,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			if (Validator.isNotNull(article.getSmallImageURL())) {
 				String smallImageURL =
 					DDMPortletDataHandler.exportReferencedContent(
-						portletDataContext, dlFileEntryTypesElement,
-						dlFoldersElement, dlFileEntriesElement,
-						dlFileRanksElement, dlRepositoriesElement,
-						dlRepositoryEntriesElement, articleElement,
+						portletDataContext, articleElement,
 						article.getSmallImageURL().concat(StringPool.SPACE));
 
 				article.setSmallImageURL(smallImageURL);
@@ -281,10 +270,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				NAMESPACE, "embedded-assets")) {
 
 			String content = DDMPortletDataHandler.exportReferencedContent(
-				portletDataContext, dlFileEntryTypesElement, dlFoldersElement,
-				dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, articleElement,
-				article.getContent());
+				portletDataContext, articleElement, article.getContent());
 
 			article.setContent(content);
 		}
@@ -970,7 +956,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		Element dlRepositoriesElement = entityElement.element(
-			"dl-repositories");
+			Repository.class.getSimpleName());
 
 		List<Element> dlRepositoryElements = Collections.emptyList();
 
@@ -984,7 +970,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		Element dlRepositoryEntriesElement = entityElement.element(
-			"dl-repository-entries");
+			RepositoryEntry.class.getSimpleName());
 
 		List<Element> dlRepositoryEntryElements = Collections.emptyList();
 
@@ -998,7 +984,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, repositoryEntryElement);
 		}
 
-		Element dlFoldersElement = entityElement.element("dl-folders");
+		Element dlFoldersElement = entityElement.element(
+			DLFolder.class.getSimpleName());
 
 		List<Element> dlFolderElements = Collections.emptyList();
 
@@ -1011,7 +998,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, folderElement);
 		}
 
-		Element dlFileEntriesElement = entityElement.element("dl-file-entries");
+		Element dlFileEntriesElement = entityElement.element(
+			DLFileEntry.class.getSimpleName());
 
 		List<Element> dlFileEntryElements = Collections.emptyList();
 
@@ -1024,7 +1012,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, fileEntryElement);
 		}
 
-		Element dlFileRanksElement = entityElement.element("dl-file-ranks");
+		Element dlFileRanksElement = entityElement.element(
+			DLFileRank.class.getSimpleName());
 
 		List<Element> dlFileRankElements = Collections.emptyList();
 
@@ -1107,11 +1096,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 	protected static void exportFolder(
 			PortletDataContext portletDataContext, Element foldersElement,
-			Element articlesElement, Element ddmStructuresElement,
-			Element ddmTemplatesElement, Element dlFileEntryTypesElement,
-			Element dlFoldersElement, Element dlFileEntriesElement,
-			Element dlFileRanksElement, Element dlRepositoriesElement,
-			Element dlRepositoryEntriesElement, JournalFolder folder,
+			Element articlesElement, JournalFolder folder,
 			boolean checkDateRange)
 		throws Exception {
 
@@ -1137,11 +1122,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			folder.getGroupId(), folder.getFolderId());
 
 		for (JournalArticle article : articles) {
-			exportArticle(
-				portletDataContext, articlesElement, ddmStructuresElement,
-				ddmTemplatesElement, dlFileEntryTypesElement, dlFoldersElement,
-				dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, article, true);
+			exportArticle(portletDataContext, articlesElement, article, true);
 		}
 	}
 
@@ -1633,12 +1614,10 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			"com.liferay.portlet.journal",
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
-
-		Element ddmStructuresElement = rootElement.addElement("ddm-structures");
 
 		List<DDMStructure> ddmStructures = DDMStructureUtil.findByG_C(
 			portletDataContext.getScopeGroupId(),
@@ -1652,33 +1631,23 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 					ddmStructure.getModifiedDate())) {
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, ddmStructuresElement, ddmStructure);
+					portletDataContext, ddmStructure);
 			}
 
 			ddmTemplates.addAll(ddmStructure.getTemplates());
 		}
-
-		Element ddmTemplatesElement = rootElement.addElement("ddm-templates");
-		Element dlFileEntryTypesElement = rootElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = rootElement.addElement("dl-folders");
-		Element dlFilesElement = rootElement.addElement("dl-file-entries");
-		Element dlFileRanksElement = rootElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = rootElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = rootElement.addElement(
-			"dl-repository-entries");
 
 		for (DDMTemplate ddmTemplate : ddmTemplates) {
 			if (portletDataContext.isWithinDateRange(
 					ddmTemplate.getModifiedDate())) {
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, ddmTemplatesElement, ddmTemplate);
+					portletDataContext, ddmTemplate);
 			}
 		}
 
-		Element feedsElement = rootElement.addElement("feeds");
+		Element feedsElement = rootElement.addElement(
+			JournalFeed.class.getSimpleName());
 
 		List<JournalFeed> feeds = JournalFeedUtil.findByGroupId(
 			portletDataContext.getScopeGroupId());
@@ -1689,8 +1658,10 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			}
 		}
 
-		Element foldersElement = rootElement.addElement("folders");
-		Element articlesElement = rootElement.addElement("articles");
+		Element foldersElement = rootElement.addElement(
+			JournalFolder.class.getSimpleName());
+		Element articlesElement = rootElement.addElement(
+			JournalArticle.class.getSimpleName());
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "web-content")) {
 			List<JournalFolder> folders = JournalFolderUtil.findByGroupId(
@@ -1698,11 +1669,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 			for (JournalFolder folder : folders) {
 				exportFolder(
-					portletDataContext, foldersElement, articlesElement,
-					ddmStructuresElement, ddmTemplatesElement,
-					dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-					dlFileRanksElement, dlRepositoriesElement,
-					dlRepositoryEntriesElement, folder, true);
+					portletDataContext, foldersElement, articlesElement, folder,
+					true);
 			}
 
 			List<JournalArticle> articles = JournalArticleUtil.findByG_F(
@@ -1720,12 +1688,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 						WorkflowConstants.STATUS_APPROVED)) {
 
 					exportArticle(
-						portletDataContext, articlesElement,
-						ddmStructuresElement, ddmTemplatesElement,
-						dlFileEntryTypesElement, dlFoldersElement,
-						dlFilesElement, dlFileRanksElement,
-						dlRepositoriesElement, dlRepositoryEntriesElement,
-						article, true);
+						portletDataContext, articlesElement, article, true);
 				}
 			}
 		}
@@ -1736,7 +1699,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
@@ -1744,13 +1707,12 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
-
-		Element rootElement = document.getRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		importReferencedData(portletDataContext, rootElement);
 
-		Element ddmStructuresElement = rootElement.element("ddm-structures");
+		Element ddmStructuresElement = rootElement.element(
+			DDMStructure.class.getSimpleName());
 
 		List<Element> ddmStructureElements = ddmStructuresElement.elements(
 			"structure");
@@ -1760,7 +1722,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, ddmStructureElement);
 		}
 
-		Element ddmTemplatesElement = rootElement.element("ddm-templates");
+		Element ddmTemplatesElement = rootElement.element(
+			DDMTemplate.class.getSimpleName());
 
 		List<Element> ddmTemplateElements = ddmTemplatesElement.elements(
 			"template");
@@ -1770,7 +1733,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, ddmTemplateElement);
 		}
 
-		Element feedsElement = rootElement.element("feeds");
+		Element feedsElement = rootElement.element(
+			JournalFeed.class.getSimpleName());
 
 		List<Element> feedElements = feedsElement.elements("feed");
 
@@ -1779,7 +1743,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "web-content")) {
-			Element foldersElement = rootElement.element("folders");
+			Element foldersElement = rootElement.element(
+				JournalFolder.class.getSimpleName());
 
 			List<Element> folderElements = foldersElement.elements("folder");
 
@@ -1787,7 +1752,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				importFolder(portletDataContext, folderElement);
 			}
 
-			Element articlesElement = rootElement.element("articles");
+			Element articlesElement = rootElement.element(
+				JournalArticle.class.getSimpleName());
 
 			List<Element> articleElements = articlesElement.elements("article");
 

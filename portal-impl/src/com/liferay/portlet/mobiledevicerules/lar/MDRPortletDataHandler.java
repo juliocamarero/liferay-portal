@@ -22,9 +22,7 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portlet.mobiledevicerules.model.MDRAction;
 import com.liferay.portlet.mobiledevicerules.model.MDRRule;
 import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupLocalServiceUtil;
@@ -82,11 +80,6 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 			"com.liferay.portlet.mobiledevicerules",
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
-
-		final Element ruleGroupsElement = rootElement.addElement("rule-groups");
-		final Element rulesElement = rootElement.addElement("rules");
-
 		ActionableDynamicQuery rulesActionableDynamicQuery =
 			new MDRRuleActionableDynamicQuery() {
 
@@ -101,8 +94,7 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 				MDRRule rule = (MDRRule)object;
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext,
-					new Element[] {ruleGroupsElement, rulesElement}, rule);
+					portletDataContext, rule);
 			}
 
 		};
@@ -111,10 +103,6 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		rulesActionableDynamicQuery.performActions();
-
-		final Element ruleGroupInstancesElement = rootElement.addElement(
-			"rule-group-instances");
-		final Element actionsElement = rootElement.addElement("actions");
 
 		ActionableDynamicQuery actionsActionableDynamicQuery =
 			new MDRActionActionableDynamicQuery() {
@@ -130,12 +118,7 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 				MDRAction action = (MDRAction)object;
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext,
-					new Element[] {
-						ruleGroupsElement, ruleGroupInstancesElement,
-						actionsElement
-					},
-					action);
+					portletDataContext, action);
 			}
 
 		};
@@ -145,13 +128,13 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 
 		actionsActionableDynamicQuery.performActions();
 
-		return rootElement.formattedString();
+		return portletDataContext.getRootElement().formattedString();
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
@@ -159,11 +142,10 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
-
-		Element rulesElement = rootElement.element("rules");
+		Element rulesElement = rootElement.element(
+			MDRRule.class.getSimpleName());
 
 		List<Element> ruleElements = rulesElement.elements("rule");
 
@@ -172,7 +154,8 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, ruleElement);
 		}
 
-		Element actionsElement = rootElement.element("actions");
+		Element actionsElement = rootElement.element(
+			MDRAction.class.getSimpleName());
 
 		List<Element> actionElements = actionsElement.elements("action");
 

@@ -126,7 +126,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		long sourceGroupId = portletDataContext.getSourceGroupId();
 
 		try {
-			if (Validator.isXml(data)) {
+			if (validateData(data)) {
 				Document document = SAXReaderUtil.read(data);
 
 				Element rootElement = document.getRootElement();
@@ -142,7 +142,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 			}
 
 			return doImportData(
-				portletDataContext, portletId, portletPreferences, data);
+				portletDataContext, portletId, portletPreferences);
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -192,7 +192,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		return null;
@@ -244,6 +244,14 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 
 	protected void setPublishToLiveByDefault(boolean publishToLiveByDefault) {
 		_publishToLiveByDefault = publishToLiveByDefault;
+	}
+
+	protected boolean validateData(String data) {
+		if (Validator.isXml(data)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

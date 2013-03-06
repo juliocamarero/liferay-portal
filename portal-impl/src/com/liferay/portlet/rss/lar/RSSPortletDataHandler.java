@@ -27,9 +27,7 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandler;
@@ -190,17 +188,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 			return StringPool.BLANK;
 		}
 
-		Element rootElement = addExportRootElement();
-
-		Element dlFileEntryTypesElement = rootElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = rootElement.addElement("dl-folders");
-		Element dlFilesElement = rootElement.addElement("dl-file-entries");
-		Element dlFileRanksElement = rootElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = rootElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = rootElement.addElement(
-			"dl-repository-entries");
+		Element rootElement = portletDataContext.getRootElement();
 
 		for (JournalArticle article : articles) {
 			String path = JournalPortletDataHandler.getArticlePath(
@@ -218,10 +206,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 			articleElement.addAttribute("path", path);
 
 			JournalPortletDataHandler.exportArticle(
-				portletDataContext, rootElement, rootElement, rootElement,
-				dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-				dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, article, false);
+				portletDataContext, rootElement, article, false);
 		}
 
 		return rootElement.formattedString();
@@ -230,16 +215,10 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
-		if (Validator.isNull(data)) {
-			return null;
-		}
-
-		Document document = SAXReaderUtil.read(data);
-
-		Element rootElement = document.getRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		JournalPortletDataHandler.importReferencedData(
 			portletDataContext, rootElement);
@@ -328,6 +307,15 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected boolean validateData(String data) {
+		if (Validator.isNull(data)) {
+			return false;
+		}
+
+		return super.validateData(data);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

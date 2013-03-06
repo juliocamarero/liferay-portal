@@ -198,7 +198,10 @@ public interface PortletDataContext extends Serializable {
 
 	public String getSourceRootPath();
 
-	public Element getStagedModelElementInstance(String stagedModelClassName);
+	public Element getStagedModelElement(
+		String stagedModelClassName, String stagedModelName, String path);
+
+	public Element getStagedModelsElementInstance(String stagedModelClassName);
 
 	public Date getStartDate();
 

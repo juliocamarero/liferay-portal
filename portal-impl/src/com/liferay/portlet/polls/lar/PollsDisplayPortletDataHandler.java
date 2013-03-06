@@ -21,9 +21,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portlet.polls.NoSuchQuestionException;
 import com.liferay.portlet.polls.model.PollsChoice;
 import com.liferay.portlet.polls.model.PollsQuestion;
@@ -94,14 +92,17 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 		portletDataContext.addPermissions(
 			"com.liferay.portlet.polls", portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		Element questionsElement = rootElement.addElement("questions");
-		Element choicesElement = rootElement.addElement("choices");
-		Element votesElement = rootElement.addElement("votes");
+		Element questionsElement = rootElement.addElement(
+			PollsQuestion.class.getSimpleName());
+		Element choicesElement = rootElement.addElement(
+			PollsChoice.class.getSimpleName());
+		Element votesElement = rootElement.addElement(
+			PollsVote.class.getSimpleName());
 
 		PollsPortletDataHandler.exportQuestion(
 			portletDataContext, questionsElement, choicesElement, votesElement,
@@ -113,22 +114,17 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
 			"com.liferay.portlet.polls", portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		if (Validator.isNull(data)) {
-			return null;
-		}
+		Element rootElement = portletDataContext.getRootElement();
 
-		Document document = SAXReaderUtil.read(data);
-
-		Element rootElement = document.getRootElement();
-
-		Element questionsElement = rootElement.element("questions");
+		Element questionsElement = rootElement.element(
+			PollsQuestion.class.getSimpleName());
 
 		for (Element questionElement : questionsElement.elements("question")) {
 			String path = questionElement.attributeValue("path");
@@ -144,7 +140,8 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 				portletDataContext, questionElement, question);
 		}
 
-		Element choicesElement = rootElement.element("choices");
+		Element choicesElement = rootElement.element(
+			PollsChoice.class.getSimpleName());
 
 		for (Element choiceElement : choicesElement.elements("choice")) {
 			String path = choiceElement.attributeValue("path");
@@ -162,7 +159,8 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 		if (portletDataContext.getBooleanParameter(
 				PollsPortletDataHandler.NAMESPACE, "votes")) {
 
-			Element votesElement = rootElement.element("votes");
+			Element votesElement = rootElement.element(
+				PollsVote.class.getSimpleName());
 
 			for (Element voteElement : votesElement.elements("vote")) {
 				String path = voteElement.attributeValue("path");
@@ -193,6 +191,15 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 		}
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected boolean validateData(String data) {
+		if (Validator.isNull(data)) {
+			return false;
+		}
+
+		return super.validateData(data);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

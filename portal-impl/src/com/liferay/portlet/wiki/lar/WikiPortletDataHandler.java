@@ -27,9 +27,7 @@ import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
@@ -80,17 +78,6 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 			}
 		}
 
-		Element dlFileEntryTypesElement = pagesElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = pagesElement.addElement("dl-folders");
-		Element dlFileEntriesElement = pagesElement.addElement(
-			"dl-file-entries");
-		Element dlFileRanksElement = pagesElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = pagesElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = pagesElement.addElement(
-			"dl-repository-entries");
-
 		List<WikiPage> pages = WikiPageUtil.findByN_S(
 			node.getNodeId(), WorkflowConstants.STATUS_APPROVED,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS,
@@ -98,10 +85,7 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 
 		for (WikiPage page : pages) {
 			exportPage(
-				portletDataContext, nodesElement, pagesElement,
-				dlFileEntryTypesElement, dlFoldersElement, dlFileEntriesElement,
-				dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, page, true);
+				portletDataContext, nodesElement, pagesElement, page, true);
 		}
 	}
 
@@ -326,11 +310,7 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 
 	protected static void exportPage(
 			PortletDataContext portletDataContext, Element nodesElement,
-			Element pagesElement, Element dlFileEntryTypesElement,
-			Element dlFoldersElement, Element dlFileEntriesElement,
-			Element dlFileRanksElement, Element dlRepositoriesElement,
-			Element dlRepositoryEntriesElement, WikiPage page,
-			boolean checkDateRange)
+			Element pagesElement, WikiPage page, boolean checkDateRange)
 		throws Exception {
 
 		if (!portletDataContext.isWithinDateRange(page.getModifiedDate())) {
@@ -353,9 +333,7 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 			}
 
 			String content = DDMPortletDataHandler.exportReferencedContent(
-				portletDataContext, dlFileEntryTypesElement, dlFoldersElement,
-				dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, pageElement, page.getContent());
+				portletDataContext, pageElement, page.getContent());
 
 			page.setContent(content);
 
@@ -499,13 +477,15 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 		portletDataContext.addPermissions(
 			"com.liferay.portlet.wiki", portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		Element nodesElement = rootElement.addElement("nodes");
-		Element pagesElement = rootElement.addElement("pages");
+		Element nodesElement = rootElement.addElement(
+			WikiNode.class.getSimpleName());
+		Element pagesElement = rootElement.addElement(
+			WikiPage.class.getSimpleName());
 
 		List<WikiNode> nodes = WikiNodeUtil.findByGroupId(
 			portletDataContext.getScopeGroupId());
@@ -520,18 +500,17 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
 			"com.liferay.portlet.wiki", portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
-
-		Element nodesElement = rootElement.element("nodes");
+		Element nodesElement = rootElement.element(
+			WikiNode.class.getSimpleName());
 
 		for (Element nodeElement : nodesElement.elements("node")) {
 			String path = nodeElement.attributeValue("path");
@@ -546,7 +525,8 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 			importNode(portletDataContext, node);
 		}
 
-		Element pagesElement = rootElement.element("pages");
+		Element pagesElement = rootElement.element(
+			WikiPage.class.getSimpleName());
 
 		JournalPortletDataHandler.importReferencedData(
 			portletDataContext, pagesElement);

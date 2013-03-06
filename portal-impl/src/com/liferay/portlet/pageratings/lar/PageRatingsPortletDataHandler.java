@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.model.Layout;
 import com.liferay.portlet.ratings.service.RatingsStatsLocalServiceUtil;
 
@@ -62,11 +63,13 @@ public class PageRatingsPortletDataHandler extends BasePortletDataHandler {
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
+		Document document = portletDataContext.getRootElement().getDocument();
+
 		portletDataContext.importRatingsEntries(
-			Layout.class, GetterUtil.getLong(data),
+			Layout.class, GetterUtil.getLong(document.getStringValue()),
 			portletDataContext.getPlid());
 
 		return null;
