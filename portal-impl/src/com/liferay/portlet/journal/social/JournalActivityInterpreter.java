@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.journal.social;
 
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -28,10 +27,7 @@ import com.liferay.portlet.journal.service.permission.JournalPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
-import com.liferay.portlet.social.model.SocialActivityFeedEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
-
-import java.util.Locale;
 
 /**
  * @author Roberto Diaz
@@ -44,75 +40,12 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected SocialActivityFeedEntry doInterpret(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getLink(SocialActivity activity, ThemeDisplay themeDisplay)
 		throws Exception {
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		int activityType = activity.getType();
 
 		JournalArticle article =
 			JournalArticleLocalServiceUtil.getJournalArticle(
 				activity.getClassPK());
-
-		if ((activityType == JournalActivityKeys.ADD_ARTICLE) &&
-			!JournalPermission.contains(
-				permissionChecker, activity.getGroupId(),
-				ActionKeys.ADD_ARTICLE)) {
-
-			return null;
-		}
-		else if ((activityType == JournalActivityKeys.UPDATE_ARTICLE) &&
-				 !JournalArticlePermission.contains(
-					 permissionChecker, article, ActionKeys.UPDATE)) {
-
-			return null;
-		}
-
-		String groupName = StringPool.BLANK;
-
-		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
-			groupName = getGroupName(activity.getGroupId(), themeDisplay);
-		}
-
-		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
-
-		// Link
-
-		String link = getLink(article, themeDisplay);
-
-		// Title
-
-		Object[] titleArguments = null;
-
-		if (Validator.isNotNull(link)) {
-			titleArguments = new Object[] {
-				groupName, creatorUserName,
-				wrapLink(link, article.getTitle(themeDisplay.getLocale()))
-			};
-		}
-		else {
-			titleArguments = new Object[] {
-				groupName, creatorUserName,
-				article.getTitle(themeDisplay.getLocale()),
-			};
-		}
-
-		String title = themeDisplay.translate(
-			getTitlePattern(groupName, activityType), titleArguments);
-
-		// Body
-
-		String body = StringPool.BLANK;
-
-		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected String getLink(JournalArticle article, ThemeDisplay themeDisplay)
-		throws Exception {
 
 		if (TrashUtil.isInTrash(
 				JournalArticle.class.getName(), article.getResourcePrimKey())) {
@@ -143,7 +76,24 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 		return link;
 	}
 
-	protected String getTitlePattern(String groupName, int activityType) {
+	@Override
+	protected String getTitle(
+			SocialActivity activity, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.getJournalArticle(
+				activity.getClassPK());
+
+		return article.getTitle(themeDisplay.getLocale());
+	}
+
+	@Override
+	protected String getTitlePattern(String groupName, SocialActivity activity)
+		throws Exception {
+
+		int activityType = activity.getType();
+
 		if (activityType == JournalActivityKeys.ADD_ARTICLE) {
 			if (Validator.isNull(groupName)) {
 				return "activity-journal-add-article";
@@ -180,6 +130,34 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 		}
 
 		return null;
+	}
+
+	protected boolean hasPermissions(
+			PermissionChecker permissionChecker, SocialActivity activity,
+			String actionId, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.getJournalArticle(
+				activity.getClassPK());
+
+		int activityType = activity.getType();
+
+		if ((activityType == JournalActivityKeys.ADD_ARTICLE) &&
+			!JournalPermission.contains(
+				permissionChecker, activity.getGroupId(),
+				ActionKeys.ADD_ARTICLE)) {
+
+			return false;
+		}
+		else if ((activityType == JournalActivityKeys.UPDATE_ARTICLE) &&
+			!JournalArticlePermission.contains(
+				permissionChecker, article, ActionKeys.UPDATE)) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {

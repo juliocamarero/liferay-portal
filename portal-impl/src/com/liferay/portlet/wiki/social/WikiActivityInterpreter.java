@@ -30,7 +30,6 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
-import com.liferay.portlet.social.model.SocialActivityFeedEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.WikiPageResource;
@@ -47,75 +46,6 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	public String[] getClassNames() {
 		return _CLASS_NAMES;
-	}
-
-	@Override
-	protected SocialActivityFeedEntry doInterpret(
-			SocialActivity activity, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		if (!WikiPagePermission.contains(
-				permissionChecker, activity.getClassPK(), ActionKeys.VIEW)) {
-
-			return null;
-		}
-
-		WikiPageResource pageResource =
-			WikiPageResourceLocalServiceUtil.getPageResource(
-				activity.getClassPK());
-
-		int activityType = activity.getType();
-
-		if (activityType == WikiActivityKeys.UPDATE_PAGE) {
-			double version = GetterUtil.getDouble(
-				activity.getExtraDataProperty("version"));
-
-			WikiPage page = WikiPageLocalServiceUtil.getPage(
-				pageResource.getNodeId(), pageResource.getTitle(), version);
-
-			if (!page.isApproved() &&
-				!WikiPagePermission.contains(
-					permissionChecker, activity.getClassPK(),
-					ActionKeys.UPDATE)) {
-
-				return null;
-			}
-		}
-
-		String groupName = StringPool.BLANK;
-
-		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
-			groupName = getGroupName(activity.getGroupId(), themeDisplay);
-		}
-
-		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
-
-		// Link
-
-		String link = getLink(
-			WikiPage.class.getName(), pageResource.getResourcePrimKey(),
-			"/wiki/find_page?pageResourcePrimKey=", themeDisplay);
-
-		// Title
-
-		Object[] titleArguments = new Object[] {
-			groupName, creatorUserName,
-			wrapLink(link, HtmlUtil.escape(getTitle(pageResource))),
-			getAttachmentTitle(activity, pageResource, themeDisplay)
-		};
-
-		String title = themeDisplay.translate(
-			getTitlePattern(groupName, activityType), titleArguments);
-
-		// Body
-
-		String body = StringPool.BLANK;
-
-		return new SocialActivityFeedEntry(link, title, body);
 	}
 
 	protected String getAttachmentTitle(
@@ -178,18 +108,62 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 		return attachmentTitle;
 	}
 
-	protected String getTitle(WikiPageResource pageResource) throws Exception {
-		if (TrashUtil.isInTrash(
-				WikiPage.class.getName(), pageResource.getResourcePrimKey())) {
-
-			return TrashUtil.getOriginalTitle(pageResource.getTitle());
-		}
-		else {
-			return pageResource.getTitle();
-		}
+	@Override
+	protected String getPath(SocialActivity activity) throws Exception {
+		return "/wiki/find_page?pageResourcePrimKey=";
 	}
 
-	protected String getTitlePattern(String groupName, int activityType) {
+	protected String getTitle(
+			SocialActivity activity, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		WikiPageResource pageResource =
+			WikiPageResourceLocalServiceUtil.getPageResource(
+				activity.getClassPK());
+
+		WikiPage page = WikiPageLocalServiceUtil.getPage(
+			pageResource.getNodeId(), pageResource.getTitle());
+
+		if (!page.isInTrash()) {
+			return TrashUtil.getOriginalTitle(page.getTitle());
+		}
+
+		return page.getTitle();
+	}
+
+	@Override
+	protected Object[] getTitleArguments(
+			String groupName, SocialActivity activity, String link,
+			String title, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		WikiPageResource pageResource =
+			WikiPageResourceLocalServiceUtil.getPageResource(
+				activity.getClassPK());
+
+		String creatorUserName = getUserName(
+			activity.getUserId(), themeDisplay);
+
+		title = HtmlUtil.escape(title);
+
+		if (Validator.isNotNull(link)) {
+			title = wrapLink(link, title);
+		}
+
+		Object[] titleArguments = new Object[] {
+			groupName, creatorUserName, title,
+			getAttachmentTitle(activity, pageResource, themeDisplay)
+		};
+
+		return titleArguments;
+	}
+
+	@Override
+	protected String getTitlePattern(String groupName, SocialActivity activity)
+		throws Exception {
+
+		int activityType = activity.getType();
+
 		if ((activityType == WikiActivityKeys.ADD_COMMENT) ||
 			(activityType == SocialActivityConstants.TYPE_ADD_COMMENT)) {
 
@@ -266,6 +240,43 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 		}
 
 		return null;
+	}
+
+	@Override
+	protected boolean hasPermissions(
+			PermissionChecker permissionChecker, SocialActivity activity,
+			String actionId, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (!WikiPagePermission.contains(
+				permissionChecker, activity.getClassPK(), ActionKeys.VIEW)) {
+
+			return false;
+		}
+
+		WikiPageResource pageResource =
+			WikiPageResourceLocalServiceUtil.getPageResource(
+				activity.getClassPK());
+
+		int activityType = activity.getType();
+
+		if (activityType == WikiActivityKeys.UPDATE_PAGE) {
+			double version = GetterUtil.getDouble(
+				activity.getExtraDataProperty("version"));
+
+			WikiPage page = WikiPageLocalServiceUtil.getPage(
+				pageResource.getNodeId(), pageResource.getTitle(), version);
+
+			if (!page.isApproved() &&
+				!WikiPagePermission.contains(
+					permissionChecker, activity.getClassPK(),
+					ActionKeys.UPDATE)) {
+
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {
