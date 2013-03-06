@@ -16,7 +16,9 @@ package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.servlet.taglib.TagSupport;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -28,7 +30,6 @@ import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.model.ExpandoTableConstants;
 import com.liferay.portlet.expando.service.permission.ExpandoColumnPermissionUtil;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
-import com.liferay.taglib.util.CustomAttributesTagUtil;
 
 import java.io.Serializable;
 
@@ -69,10 +70,9 @@ public class CustomAttributesAvailableTag extends TagSupport {
 					companyId, _className, _classPK);
 			}
 
-			List<String> attributeNames =
-				CustomAttributesTagUtil.filterAttributes(
-					Collections.list(expandoBridge.getAttributeNames()),
-					_ignore);
+			List<String> attributeNames = ListUtil.remove(
+				Collections.list(expandoBridge.getAttributeNames()),
+				ListUtil.fromString(_ignore, StringPool.COMMA));
 
 			if (attributeNames.isEmpty()) {
 				return SKIP_BODY;

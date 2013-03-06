@@ -18,7 +18,6 @@
 
 <%@ page import="com.liferay.portlet.expando.model.ExpandoBridge" %>
 <%@ page import="com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil" %>
-<%@ page import="com.liferay.taglib.util.CustomAttributesTagUtil" %>
 
 <%
 String className = (String)request.getAttribute("liferay-ui:custom-attribute-list:className");
@@ -31,7 +30,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 
 String modelResourceName = ResourceActionsUtil.getModelResource(pageContext, className);
 
-List<String> attributeNames = CustomAttributesTagUtil.filterAttributes(Collections.list(expandoBridge.getAttributeNames()), ignore);
+List<String> attributeNames = ListUtil.remove(Collections.list(expandoBridge.getAttributeNames()), ListUtil.fromString(ignore, StringPool.COMMA));
 %>
 
 <div class="taglib-custom-attributes-list">
