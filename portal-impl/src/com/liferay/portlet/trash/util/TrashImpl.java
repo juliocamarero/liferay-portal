@@ -274,7 +274,9 @@ public class TrashImpl implements Trash {
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			className);
 
-		if (trashHandler.isInTrashContainer(classPK)) {
+		if (trashHandler.isInTrash(classPK) ||
+			trashHandler.isInTrashContainer(classPK)) {
+
 			ContainerModel containerModel = trashHandler.getTrashContainer(
 				classPK);
 
