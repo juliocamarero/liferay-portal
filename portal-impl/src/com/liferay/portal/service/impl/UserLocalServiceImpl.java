@@ -1252,7 +1252,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		if (Validator.isNull(digest)) {
 			_log.error(
-				"User must first login through the portal " + user.getUserId());
+				"User " + user.getUserId() +
+					" must first login through the portal");
 
 			return 0;
 		}
