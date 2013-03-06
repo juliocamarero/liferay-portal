@@ -39,7 +39,9 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Attribute;
+import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.model.AttachedModel;
@@ -646,6 +648,12 @@ public class PortletDataContextImpl implements PortletDataContext {
 		}
 	}
 
+	public void createRootElement(String dataHandlerClassName) {
+		Document document = SAXReaderUtil.createDocument();
+
+		_rootElement = document.addElement(dataHandlerClassName);
+	}
+
 	public ServiceContext createServiceContext(
 		Element element, ClassedModel classedModel, String namespace) {
 
@@ -793,6 +801,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _ratingsEntriesMap;
 	}
 
+	public Element getRootElement() {
+		return _rootElement;
+	}
+
 	public String getRootPath() {
 		return ROOT_PATH_GROUPS + getScopeGroupId();
 	}
@@ -823,6 +835,20 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	public String getSourceRootPath() {
 		return ROOT_PATH_GROUPS + getSourceGroupId();
+	}
+
+	public Element getStagedModelElementInstance(String stagedModelClassName) {
+		if (_rootElement == null) {
+			return null;
+		}
+
+		Element elementInstance = _rootElement.element(stagedModelClassName);
+
+		if (elementInstance != null) {
+			return elementInstance;
+		}
+
+		return _rootElement.addElement(stagedModelClassName);
 	}
 
 	public Date getStartDate() {
@@ -1304,6 +1330,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_privateLayout = privateLayout;
 	}
 
+	public void setRootElement(Element rootElement) {
+		_rootElement = rootElement;
+	}
+
 	public void setScopeGroupId(long scopeGroupId) {
 		_scopeGroupId = scopeGroupId;
 	}
@@ -1577,6 +1607,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 	private boolean _privateLayout;
 	private Map<String, List<RatingsEntry>> _ratingsEntriesMap =
 		new HashMap<String, List<RatingsEntry>>();
+	private Element _rootElement;
 	private long _scopeGroupId;
 	private String _scopeLayoutUuid;
 	private String _scopeType;
