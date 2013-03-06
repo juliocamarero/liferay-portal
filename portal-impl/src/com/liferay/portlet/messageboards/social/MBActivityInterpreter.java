@@ -93,7 +93,7 @@ public class MBActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		Object[] titleArguments = new Object[] {
 			groupName, creatorUserName, receiverUserName,
-			wrapLink(link, getTitle(message))
+			wrapLink(link, message.getSubject())
 		};
 
 		String title = themeDisplay.translate(
@@ -138,15 +138,6 @@ public class MBActivityInterpreter extends BaseSocialActivityInterpreter {
 		sb.append(message.getMessageId());
 
 		return sb.toString();
-	}
-
-	protected String getTitle(MBMessage message) throws Exception {
-		if (message.isInTrash()) {
-			return TrashUtil.getOriginalTitle(message.getSubject());
-		}
-		else {
-			return message.getSubject();
-		}
 	}
 
 	protected String getTitlePattern(

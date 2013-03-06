@@ -94,7 +94,7 @@ public class BookmarksActivityInterpreter
 
 		Object[] titleArguments = new Object[] {
 			groupName, creatorUserName, receiverUserName,
-			wrapLink(link, getTitle(entry))
+			wrapLink(link, entry.getName())
 		};
 
 		String title = themeDisplay.translate(
@@ -145,7 +145,7 @@ public class BookmarksActivityInterpreter
 
 		Object[] titleArguments = new Object[] {
 			groupName, creatorUserName, receiverUserName,
-			wrapLink(link, getTitle(folder))
+			wrapLink(link, folder.getName())
 		};
 
 		String title = themeDisplay.translate(
@@ -156,28 +156,6 @@ public class BookmarksActivityInterpreter
 		String body = StringPool.BLANK;
 
 		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected String getTitle(BookmarksEntry entry) throws Exception {
-		if (TrashUtil.isInTrash(
-				BookmarksEntry.class.getName(), entry.getEntryId())) {
-
-			return TrashUtil.getOriginalTitle(entry.getName());
-		}
-		else {
-			return entry.getName();
-		}
-	}
-
-	protected String getTitle(BookmarksFolder folder) throws Exception {
-		if (TrashUtil.isInTrash(
-				BookmarksFolder.class.getName(), folder.getFolderId())) {
-
-			return TrashUtil.getOriginalTitle(folder.getName());
-		}
-		else {
-			return folder.getName();
-		}
 	}
 
 	protected String getTitlePattern(
