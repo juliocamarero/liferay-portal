@@ -154,6 +154,7 @@ public class LayoutsTreeUtil {
 			jsonObject.put("plid", layout.getPlid());
 			jsonObject.put("priority", layout.getPriority());
 			jsonObject.put("privateLayout", layout.isPrivateLayout());
+			jsonObject.put("sortable", SitesUtil.isLayoutSortable(layout));
 			jsonObject.put("type", layout.getType());
 			jsonObject.put("updateable", SitesUtil.isLayoutUpdateable(layout));
 			jsonObject.put("uuid", layout.getUuid());

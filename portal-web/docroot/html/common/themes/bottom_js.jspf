@@ -123,6 +123,7 @@ if (layout != null) {
 							for (int i = 0; (layouts != null) && (i < layouts.size()); i++) {
 								Layout curLayout = (Layout)layouts.get(i);
 
+								boolean sortable = SitesUtil.isLayoutSortable(curLayout);
 								boolean updateable = SitesUtil.isLayoutUpdateable(curLayout);
 								boolean deleteable = updateable && LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), curLayout, ActionKeys.DELETE);
 							%>
@@ -130,6 +131,7 @@ if (layout != null) {
 								{
 									deletable: <%= deleteable %>,
 									id: <%= curLayout.getLayoutId() %>,
+									sortable: <%= sortable %>,
 									updateable: <%= updateable %>
 								},
 

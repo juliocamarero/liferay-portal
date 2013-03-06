@@ -852,6 +852,25 @@ public class SitesImpl implements Sites {
 		return true;
 	}
 
+	public boolean isLayoutSortable(Layout layout) {
+		try {
+			if (layout instanceof VirtualLayout) {
+				return false;
+			}
+
+			if (Validator.isNull(layout.getSourcePrototypeLayoutUuid())) {
+				return true;
+			}
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(e, e);
+			}
+		}
+
+		return false;
+	}
+
 	public boolean isLayoutUpdateable(Layout layout) {
 		try {
 			if (layout instanceof VirtualLayout) {

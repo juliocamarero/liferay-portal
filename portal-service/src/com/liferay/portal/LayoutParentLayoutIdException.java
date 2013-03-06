@@ -32,6 +32,8 @@ public class LayoutParentLayoutIdException extends PortalException {
 
 	public static final int SELF_DESCENDANT = 2;
 
+	public static final int SOURCE_PROTOTYPE_LAYOUT = 5;
+
 	public LayoutParentLayoutIdException(int type) {
 		_type = type;
 	}

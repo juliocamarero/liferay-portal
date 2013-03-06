@@ -322,6 +322,16 @@ public class LayoutLocalServiceHelper implements IdentifiableBean {
 					LayoutParentLayoutIdException.SELF_DESCENDANT);
 			}
 
+			// Layout cannot become a child of a layout which has a source
+			// prototype layout
+
+			if (Validator.isNotNull(
+					parentLayout.getSourcePrototypeLayoutUuid())) {
+
+				throw new LayoutParentLayoutIdException(
+					LayoutParentLayoutIdException.SOURCE_PROTOTYPE_LAYOUT);
+			}
+
 			// If layout is moved, the new first layout must be valid
 
 			if (layout.getParentLayoutId() ==
