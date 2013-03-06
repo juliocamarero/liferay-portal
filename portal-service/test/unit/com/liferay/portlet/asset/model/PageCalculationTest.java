@@ -14,8 +14,8 @@
 
 package com.liferay.portlet.asset.model;
 
+import org.junit.Assert;
 import org.junit.Test;
-import org.testng.Assert;
 
 /**
  * @author Igor Spasic
@@ -24,8 +24,7 @@ public class PageCalculationTest {
 
 	@Test
 	public void testCategoryDisplayPage() {
-		AssetCategoryDisplay assetCategoryDisplay =
-			new AssetCategoryDisplay();
+		AssetCategoryDisplay assetCategoryDisplay = new AssetCategoryDisplay();
 
 		assetCategoryDisplay.setStart(0);
 		assetCategoryDisplay.setEnd(20);
@@ -80,6 +79,5 @@ public class PageCalculationTest {
 
 		Assert.assertEquals(0, assetVocabularyDisplay.getPage());
 	}
-
 
 }
