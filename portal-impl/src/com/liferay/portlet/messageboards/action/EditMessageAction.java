@@ -414,8 +414,7 @@ public class EditMessageAction extends PortletAction {
 			boolean subscribe = ParamUtil.getBoolean(
 				actionRequest, "subscribe");
 
-			if (!preview && subscribe && !message.isDraft() &&
-				MBMessagePermission.contains(
+			if (!preview && subscribe && MBMessagePermission.contains(
 					permissionChecker, message, ActionKeys.SUBSCRIBE)) {
 
 				MBMessageServiceUtil.subscribeMessage(message.getMessageId());
