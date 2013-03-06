@@ -73,6 +73,8 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		}
 
 		try {
+			portletDataContext.createRootElement(getClass().getSimpleName());
+
 			return doExportData(
 				portletDataContext, portletId, portletPreferences);
 		}
@@ -129,6 +131,8 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 
 				Element rootElement = document.getRootElement();
 
+				portletDataContext.setRootElement(rootElement);
+
 				long portletSourceGroupId = GetterUtil.getLong(
 					rootElement.attributeValue("group-id"));
 
@@ -168,14 +172,6 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 
 	public boolean isPublishToLiveByDefault() {
 		return _publishToLiveByDefault;
-	}
-
-	protected Element addExportRootElement() {
-		Document document = SAXReaderUtil.createDocument();
-
-		Class<?> clazz = getClass();
-
-		return document.addElement(clazz.getSimpleName());
 	}
 
 	protected PortletPreferences doDeleteData(
