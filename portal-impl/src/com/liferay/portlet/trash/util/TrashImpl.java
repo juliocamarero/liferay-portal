@@ -289,7 +289,7 @@ public class TrashImpl implements Trash {
 
 		TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
 
-		String urlViewContent = null;
+		String viewContentURL = null;
 
 		if (trashRenderer != null) {
 			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
@@ -298,43 +298,43 @@ public class TrashImpl implements Trash {
 			String namespace = PortalUtil.getPortletNamespace(
 				PortletKeys.TRASH);
 
-			urlViewContent = PortalUtil.getControlPanelFullURL(
+			viewContentURL = PortalUtil.getControlPanelFullURL(
 				themeDisplay.getScopeGroupId(), PortletKeys.TRASH, null);
 
-			urlViewContent = HttpUtil.addParameter(
-				urlViewContent, namespace + "struts_action",
+			viewContentURL = HttpUtil.addParameter(
+				viewContentURL, namespace + "struts_action",
 				"/trash/view_content");
-			urlViewContent = HttpUtil.addParameter(
-				urlViewContent, namespace + "redirect",
+			viewContentURL = HttpUtil.addParameter(
+				viewContentURL, namespace + "redirect",
 				themeDisplay.getURLCurrent());
 
 			if (trashEntry.getRootEntry() != null) {
-				urlViewContent = HttpUtil.addParameter(
-					urlViewContent, namespace + "className", className);
-				urlViewContent = HttpUtil.addParameter(
-					urlViewContent, namespace + "classPK",
+				viewContentURL = HttpUtil.addParameter(
+					viewContentURL, namespace + "className", className);
+				viewContentURL = HttpUtil.addParameter(
+					viewContentURL, namespace + "classPK",
 					String.valueOf(classPK));
 			}
 			else {
-				urlViewContent = HttpUtil.addParameter(
-					urlViewContent, namespace + "trashEntryId",
+				viewContentURL = HttpUtil.addParameter(
+					viewContentURL, namespace + "trashEntryId",
 					String.valueOf(trashEntry.getEntryId()));
 			}
 
-			urlViewContent = HttpUtil.addParameter(
-				urlViewContent, namespace + "type", trashRenderer.getType());
-			urlViewContent = HttpUtil.addParameter(
-				urlViewContent, namespace + "showActions",
+			viewContentURL = HttpUtil.addParameter(
+				viewContentURL, namespace + "type", trashRenderer.getType());
+			viewContentURL = HttpUtil.addParameter(
+				viewContentURL, namespace + "showActions",
 				Boolean.FALSE.toString());
-			urlViewContent = HttpUtil.addParameter(
-				urlViewContent, namespace + "showAssetMetadata",
+			viewContentURL = HttpUtil.addParameter(
+				viewContentURL, namespace + "showAssetMetadata",
 				Boolean.TRUE.toString());
-			urlViewContent = HttpUtil.addParameter(
-				urlViewContent, namespace + "showEditURL",
+			viewContentURL = HttpUtil.addParameter(
+				viewContentURL, namespace + "showEditURL",
 				Boolean.FALSE.toString());
 		}
 
-		return urlViewContent;
+		return viewContentURL;
 	}
 
 	public boolean isInTrash(String className, long classPK)
