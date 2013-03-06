@@ -96,6 +96,15 @@ public class BookmarksFolderTrashHandler extends BookmarksBaseTrashHandler {
 	}
 
 	@Override
+	public ContainerModel getTrashContainer(long classPK)
+		throws PortalException, SystemException {
+
+		BookmarksFolder folder = getBookmarksFolder(classPK);
+
+		return folder.getTrashContainer();
+	}
+
+	@Override
 	public TrashRenderer getTrashRenderer(long classPK)
 		throws PortalException, SystemException {
 
@@ -114,7 +123,20 @@ public class BookmarksFolderTrashHandler extends BookmarksBaseTrashHandler {
 
 		BookmarksFolder folder = getBookmarksFolder(classPK);
 
-		return folder.isInTrash();
+		if (folder.isInTrash() || folder.isInTrashContainer()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isInTrashContainer(long classPK)
+		throws PortalException, SystemException {
+
+		BookmarksFolder folder = getBookmarksFolder(classPK);
+
+		return folder.isInTrashContainer();
 	}
 
 	@Override

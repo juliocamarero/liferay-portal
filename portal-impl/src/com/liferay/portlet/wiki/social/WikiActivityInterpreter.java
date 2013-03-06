@@ -15,10 +15,9 @@
 package com.liferay.portlet.wiki.social;
 
 import com.liferay.portal.NoSuchModelException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -32,6 +31,7 @@ import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.social.model.SocialActivityFeedEntry;
+import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.WikiPageResource;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
@@ -41,6 +41,7 @@ import com.liferay.portlet.wiki.service.permission.WikiPagePermission;
 /**
  * @author Samuel Kong
  * @author Ryan Park
+ * @author Zsolt Berentey
  */
 public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 
@@ -68,11 +69,9 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		int activityType = activity.getType();
 
-		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject(
-			activity.getExtraData());
-
 		if (activityType == WikiActivityKeys.UPDATE_PAGE) {
-			double version = extraDataJSONObject.getDouble("version");
+			double version = GetterUtil.getDouble(
+				activity.getExtraDataProperty("version"));
 
 			WikiPage page = WikiPageLocalServiceUtil.getPage(
 				pageResource.getNodeId(), pageResource.getTitle(), version);
@@ -97,87 +96,50 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		// Link
 
-		String link =
-			themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
-				"/wiki/find_page?pageResourcePrimKey=" + activity.getClassPK();
+		String link = getLink(pageResource, themeDisplay);
 
 		// Title
 
-		String titlePattern = null;
+		Object[] titleArguments = new Object[] {
+			groupName, creatorUserName,
+			wrapLink(link, HtmlUtil.escape(getTitle(pageResource))),
+			getAttachmentTitle(activity, pageResource, themeDisplay)
+		};
 
-		if (activityType == SocialActivityConstants.TYPE_ADD_ATTACHMENT) {
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-wiki-add-attachment";
-			}
-			else {
-				titlePattern = "activity-wiki-add-attachment-in";
-			}
-		}
-		else if (
-			activityType ==
-				SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) {
+		String title = themeDisplay.translate(
+			getTitlePattern(groupName, activityType), titleArguments);
 
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-wiki-remove-attachment";
-			}
-			else {
-				titlePattern = "activity-wiki-remove-attachment-in";
-			}
-		}
-		else if (
-			activityType ==
-				SocialActivityConstants.TYPE_RESTORE_ATTACHMENT_FROM_TRASH) {
+		// Body
 
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-wiki-restore-attachment";
-			}
-			else {
-				titlePattern = "activity-wiki-restore-attachment-in";
-			}
-		}
-		else if ((activityType == SocialActivityConstants.TYPE_ADD_COMMENT) ||
-				 (activityType == WikiActivityKeys.ADD_COMMENT)) {
+		String body = StringPool.BLANK;
 
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-wiki-add-comment";
-			}
-			else {
-				titlePattern = "activity-wiki-add-comment-in";
-			}
-		}
-		else if (activityType == WikiActivityKeys.ADD_PAGE) {
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-wiki-add-page";
-			}
-			else {
-				titlePattern = "activity-wiki-add-page-in";
-			}
-		}
-		else if (activityType == WikiActivityKeys.UPDATE_PAGE) {
-			if (Validator.isNull(groupName)) {
-				titlePattern = "activity-wiki-update-page";
-			}
-			else {
-				titlePattern = "activity-wiki-update-page-in";
-			}
-		}
+		return new SocialActivityFeedEntry(link, title, body);
+	}
 
-		String pageTitle = wrapLink(
-			link, HtmlUtil.escape(pageResource.getTitle()));
+	protected String getAttachmentTitle(
+			SocialActivity activity, WikiPageResource pageResource,
+			ThemeDisplay themeDisplay)
+		throws Exception {
 
-		String attachmentTitle = null;
+		String attachmentTitle = StringPool.BLANK;
+
+		int activityType = activity.getType();
 
 		if ((activityType == SocialActivityConstants.TYPE_ADD_ATTACHMENT) ||
-			 (activityType ==
-				 SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) ||
-			 (activityType ==
+			(activityType ==
+				SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) ||
+			(activityType ==
 				SocialActivityConstants.TYPE_RESTORE_ATTACHMENT_FROM_TRASH)) {
 
 			FileEntry fileEntry = null;
 
 			try {
+				long fileEntryId =
+					GetterUtil.getLong(
+						activity.getExtraDataProperty("fileEntryId"));
+
 				fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
-					extraDataJSONObject.getLong("fileEntryId"));
+					fileEntryId);
 			}
 			catch (NoSuchModelException nsme) {
 			}
@@ -188,7 +150,7 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 				fileVersion = fileEntry.getFileVersion();
 			}
 
-			String fileEntryTitle = extraDataJSONObject.getString("title");
+			String fileEntryTitle = activity.getExtraDataProperty("title");
 
 			if ((fileVersion != null) && !fileVersion.isInTrash()) {
 				StringBundler sb = new StringBundler(9);
@@ -211,17 +173,119 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 			}
 		}
 
-		Object[] titleArguments = new Object[] {
-			groupName, creatorUserName, pageTitle, attachmentTitle
-		};
+		return attachmentTitle;
+	}
 
-		String title = themeDisplay.translate(titlePattern, titleArguments);
+	protected String getLink(
+			WikiPageResource pageResource, ThemeDisplay themeDisplay)
+		throws Exception {
 
-		// Body
+		if (TrashUtil.isInTrash(
+				WikiPage.class.getName(), pageResource.getResourcePrimKey())) {
 
-		String body = StringPool.BLANK;
+			return TrashUtil.getViewContentURL(
+				WikiPage.class.getName(), pageResource.getResourcePrimKey(),
+				themeDisplay);
+		}
 
-		return new SocialActivityFeedEntry(link, title, body);
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(themeDisplay.getPortalURL());
+		sb.append(themeDisplay.getPathMain());
+		sb.append("/wiki/find_page?pageResourcePrimKey=");
+		sb.append(pageResource.getResourcePrimKey());
+
+		return sb.toString();
+	}
+
+	protected String getTitle(WikiPageResource pageResource) throws Exception {
+		if (TrashUtil.isInTrash(
+				WikiPage.class.getName(), pageResource.getResourcePrimKey())) {
+
+			return TrashUtil.getOriginalTitle(pageResource.getTitle());
+		}
+		else {
+			return pageResource.getTitle();
+		}
+	}
+
+	protected String getTitlePattern(String groupName, int activityType) {
+		if ((activityType == WikiActivityKeys.ADD_COMMENT) ||
+			(activityType == SocialActivityConstants.TYPE_ADD_COMMENT)) {
+
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-add-comment";
+			}
+			else {
+				return "activity-wiki-add-comment-in";
+			}
+		}
+		else if (activityType == WikiActivityKeys.ADD_PAGE) {
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-add-page";
+			}
+			else {
+				return "activity-wiki-add-page-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_ADD_ATTACHMENT) {
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-add-attachment";
+			}
+			else {
+				return "activity-wiki-add-attachment-in";
+			}
+		}
+		else if (
+			activityType ==
+				SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-remove-attachment";
+			}
+			else {
+				return "activity-wiki-remove-attachment-in";
+			}
+		}
+		else if (
+			activityType ==
+				SocialActivityConstants.TYPE_RESTORE_ATTACHMENT_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-restore-attachment";
+			}
+			else {
+				return "activity-wiki-restore-attachment-in";
+			}
+		}
+		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-move-to-trash";
+			}
+			else {
+				return "activity-wiki-move-to-trash-in";
+			}
+		}
+		else if (activityType ==
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-restore-from-trash";
+			}
+			else {
+				return "activity-wiki-restore-from-trash-in";
+			}
+		}
+		else if (activityType == WikiActivityKeys.UPDATE_PAGE) {
+			if (Validator.isNull(groupName)) {
+				return "activity-wiki-update-page";
+			}
+			else {
+				return "activity-wiki-update-page-in";
+			}
+		}
+
+		return null;
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {
