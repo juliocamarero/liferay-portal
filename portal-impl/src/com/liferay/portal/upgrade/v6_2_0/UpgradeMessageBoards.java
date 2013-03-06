@@ -44,7 +44,6 @@ public class UpgradeMessageBoards extends BaseUpgradePortletPreferences {
 		super.doUpgrade();
 
 		updateThreads();
-
 		updateThreadFlags();
 	}
 
