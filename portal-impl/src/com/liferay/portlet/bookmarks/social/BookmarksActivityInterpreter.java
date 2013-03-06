@@ -16,7 +16,6 @@ package com.liferay.portlet.bookmarks.social;
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
@@ -28,8 +27,6 @@ import com.liferay.portlet.bookmarks.service.permission.BookmarksFolderPermissio
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
-import com.liferay.portlet.social.model.SocialActivityFeedEntry;
-import com.liferay.portlet.trash.util.TrashUtil;
 
 /**
  * @author Juan Fernández
@@ -43,123 +40,41 @@ public class BookmarksActivityInterpreter
 	}
 
 	@Override
-	protected SocialActivityFeedEntry doInterpret(
+	protected String getPath(SocialActivity activity) throws Exception {
+		if (activity.isClassName(BookmarksEntry.class.getName())) {
+			return "/bookmarks/find_entry?entryId=";
+		}
+		else if (activity.isClassName(BookmarksFolder.class.getName())) {
+			return "/bookmarks/find_folder?folderId=";
+		}
+
+		return StringPool.BLANK;
+	}
+
+	@Override
+	protected String getTitle(
 			SocialActivity activity, ThemeDisplay themeDisplay)
 		throws Exception {
 
 		if (activity.isClassName(BookmarksEntry.class.getName())) {
-			return doInterpretBookmarksEntry(activity, themeDisplay);
+			BookmarksEntry entry = BookmarksEntryLocalServiceUtil.getEntry(
+				activity.getClassPK());
+
+			return entry.getName();
 		}
 		else if (activity.isClassName(BookmarksFolder.class.getName())) {
-			return doInterpretBookmarksFolder(activity, themeDisplay);
+			BookmarksFolder folder = BookmarksFolderLocalServiceUtil.getFolder(
+				activity.getClassPK());
+
+			return folder.getName();
 		}
 
-		return null;
+		return StringPool.BLANK;
 	}
 
-	protected SocialActivityFeedEntry doInterpretBookmarksEntry(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+	@Override
+	protected String getTitlePattern(String groupName, SocialActivity activity)
 		throws Exception {
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		if (!BookmarksEntryPermission.contains(
-				permissionChecker, activity.getClassPK(), ActionKeys.VIEW)) {
-
-			return null;
-		}
-
-		String groupName = StringPool.BLANK;
-
-		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
-			groupName = getGroupName(activity.getGroupId(), themeDisplay);
-		}
-
-		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
-		String receiverUserName = getUserName(
-			activity.getReceiverUserId(), themeDisplay);
-
-		BookmarksEntry entry = BookmarksEntryLocalServiceUtil.getEntry(
-			activity.getClassPK());
-
-		// Link
-
-		String link = getLink(
-			BookmarksEntry.class.getName(), entry.getEntryId(),
-			"/bookmarks/find_entry?entryId=", themeDisplay);
-
-		// Title
-
-		Object[] titleArguments = new Object[] {
-			groupName, creatorUserName, receiverUserName,
-			wrapLink(link, entry.getName())
-		};
-
-		String title = themeDisplay.translate(
-			getTitlePattern(groupName, activity), titleArguments);
-
-		// Body
-
-		String body = StringPool.BLANK;
-
-		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected SocialActivityFeedEntry doInterpretBookmarksFolder(
-			SocialActivity activity, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		if (!BookmarksFolderPermission.contains(
-				permissionChecker, activity.getGroupId(), activity.getClassPK(),
-				ActionKeys.VIEW)) {
-
-			return null;
-		}
-
-		String groupName = StringPool.BLANK;
-
-		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
-			groupName = getGroupName(activity.getGroupId(), themeDisplay);
-		}
-
-		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
-		String receiverUserName = getUserName(
-			activity.getReceiverUserId(), themeDisplay);
-
-		BookmarksFolder folder = BookmarksFolderLocalServiceUtil.getFolder(
-			activity.getClassPK());
-
-		// Link
-
-		String link = getLink(
-			BookmarksFolder.class.getName(), folder.getFolderId(),
-			"/bookmarks/find_folder?folderId=", themeDisplay);
-
-		// Title
-
-		Object[] titleArguments = new Object[] {
-			groupName, creatorUserName, receiverUserName,
-			wrapLink(link, folder.getName())
-		};
-
-		String title = themeDisplay.translate(
-			getTitlePattern(groupName, activity), titleArguments);
-
-		// Body
-
-		String body = StringPool.BLANK;
-
-		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected String getTitlePattern(
-		String groupName, SocialActivity activity) {
 
 		int activityType = activity.getType();
 
@@ -219,6 +134,25 @@ public class BookmarksActivityInterpreter
 		}
 
 		return null;
+	}
+
+	@Override
+	protected boolean hasPermissions(
+			PermissionChecker permissionChecker, SocialActivity activity,
+			String actionId, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (activity.isClassName(BookmarksEntry.class.getName())) {
+			return BookmarksEntryPermission.contains(
+				permissionChecker, activity.getClassPK(), actionId);
+		}
+		else if (activity.isClassName(BookmarksFolder.class.getName())) {
+			return BookmarksFolderPermission.contains(
+				permissionChecker, activity.getGroupId(), activity.getClassPK(),
+				actionId);
+		}
+
+		return false;
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {

@@ -19,13 +19,13 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
@@ -33,7 +33,6 @@ import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
-import com.liferay.portlet.social.model.SocialActivityFeedEntry;
 import com.liferay.portlet.trash.util.TrashUtil;
 
 /**
@@ -47,116 +46,15 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected SocialActivityFeedEntry doInterpret(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getBody(SocialActivity activity, ThemeDisplay themeDisplay)
 		throws Exception {
 
-		if (activity.isClassName(DLFileEntry.class.getName())) {
-			return doInterpretFileEntry(activity, themeDisplay);
+		if (!activity.isClassName(DLFileEntry.class.getName())) {
+			return StringPool.BLANK;
 		}
-		else if (activity.isClassName(DLFolder.class.getName())) {
-			return doInterpretFolder(activity, themeDisplay);
-		}
-
-		return null;
-	}
-
-	protected SocialActivityFeedEntry doInterpretFileEntry(
-			SocialActivity activity, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		if (!DLFileEntryPermission.contains(
-				permissionChecker, activity.getClassPK(), ActionKeys.VIEW)) {
-
-			return null;
-		}
-
-		String groupName = StringPool.BLANK;
-
-		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
-			groupName = getGroupName(activity.getGroupId(), themeDisplay);
-		}
-
-		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
 
 		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
 			activity.getClassPK());
-
-		// Link
-
-		String link = getLink(
-			DLFileEntry.class.getName(), fileEntry.getFileEntryId(),
-			"/document_library/find_file_entry?fileEntryId=", themeDisplay);
-
-		// Title
-
-		Object[] titleArguments = new Object[] {
-			groupName, creatorUserName, wrapLink(link, getTitle(fileEntry))
-		};
-
-		String title = themeDisplay.translate(
-			getTitlePattern(groupName, activity), titleArguments);
-
-		// Body
-
-		String body = getBody(fileEntry, themeDisplay);
-
-		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected SocialActivityFeedEntry doInterpretFolder(
-			SocialActivity activity, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		if (!DLFolderPermission.contains(
-				permissionChecker, activity.getGroupId(), activity.getClassPK(),
-				ActionKeys.VIEW)) {
-
-			return null;
-		}
-
-		String groupName = StringPool.BLANK;
-
-		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
-			groupName = getGroupName(activity.getGroupId(), themeDisplay);
-		}
-
-		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
-
-		Folder folder = DLAppLocalServiceUtil.getFolder(activity.getClassPK());
-
-		// Link
-
-		String link = getLink(
-			DLFolder.class.getName(), folder.getFolderId(),
-			"/document_library/find_folder?folderId=", themeDisplay);
-
-		// Title
-
-		Object[] titleArguments = new Object[] {
-			groupName, creatorUserName, wrapLink(link, getTitle(folder))
-		};
-
-		String title = themeDisplay.translate(
-			getTitlePattern(groupName, activity), titleArguments);
-
-		// Body
-
-		String body = StringPool.BLANK;
-
-		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected String getBody(FileEntry fileEntry, ThemeDisplay themeDisplay)
-		throws Exception {
 
 		if (TrashUtil.isInTrash(
 				DLFileEntry.class.getName(), fileEntry.getFileEntryId())) {
@@ -201,30 +99,60 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 		return sb.toString();
 	}
 
-	protected String getTitle(FileEntry fileEntry) throws Exception {
-		if (TrashUtil.isInTrash(
-				DLFileEntry.class.getName(), fileEntry.getFileEntryId())) {
-
-			return TrashUtil.getOriginalTitle(fileEntry.getTitle());
+	@Override
+	protected String getPath(SocialActivity activity) throws Exception {
+		if (activity.isClassName(DLFileEntry.class.getName())) {
+			return "/document_library/find_file_entry?fileEntryId=";
 		}
-		else {
+		else if (activity.isClassName(DLFolder.class.getName())) {
+			return "/document_library/find_folder?folderId=";
+		}
+
+		return StringPool.BLANK;
+	}
+
+	@Override
+	protected String getTitle(
+			SocialActivity activity, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (activity.isClassName(DLFileEntry.class.getName())) {
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
+				activity.getClassPK());
+
+			if (fileEntry.getModel() instanceof DLFileEntry) {
+				DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
+
+				DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
+
+				if (dlFileVersion.isInTrash()) {
+					return TrashUtil.getOriginalTitle(fileEntry.getTitle());
+				}
+			}
+
 			return fileEntry.getTitle();
 		}
-	}
+		else if (activity.isClassName(DLFolder.class.getName())) {
+			Folder folder = DLAppLocalServiceUtil.getFolder(
+				activity.getClassPK());
 
-	protected String getTitle(Folder folder) throws Exception {
-		if (TrashUtil.isInTrash(
-				DLFolder.class.getName(), folder.getFolderId())) {
+			if (folder.getModel() instanceof DLFolder) {
+				DLFolder dlFolder = (DLFolder)folder.getModel();
 
-			return TrashUtil.getOriginalTitle(folder.getName());
-		}
-		else {
+				if (dlFolder.isInTrash()) {
+					return TrashUtil.getOriginalTitle(folder.getName());
+				}
+			}
+
 			return folder.getName();
 		}
+
+		return StringPool.BLANK;
 	}
 
-	protected String getTitlePattern(
-		String groupName, SocialActivity activity) {
+	@Override
+	protected String getTitlePattern(String groupName, SocialActivity activity)
+		throws Exception {
 
 		int activityType = activity.getType();
 
@@ -288,6 +216,25 @@ public class DLActivityInterpreter extends BaseSocialActivityInterpreter {
 		}
 
 		return null;
+	}
+
+	@Override
+	protected boolean hasPermissions(
+			PermissionChecker permissionChecker, SocialActivity activity,
+			String actionId, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		if (activity.isClassName(DLFileEntry.class.getName())) {
+			return DLFileEntryPermission.contains(
+				permissionChecker, activity.getClassPK(), actionId);
+		}
+		else if (activity.isClassName(DLFolder.class.getName())) {
+			return DLFolderPermission.contains(
+				permissionChecker, activity.getGroupId(), activity.getClassPK(),
+				actionId);
+		}
+
+		return false;
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {

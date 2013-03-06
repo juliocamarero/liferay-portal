@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.blogs.model.BlogsEntry;
@@ -27,8 +26,6 @@ import com.liferay.portlet.blogs.service.permission.BlogsEntryPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
-import com.liferay.portlet.social.model.SocialActivityFeedEntry;
-import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.text.Format;
 
@@ -44,47 +41,28 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected SocialActivityFeedEntry doInterpret(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getPath(SocialActivity activity) throws Exception {
+		return "/blogs/find_entry?entryId=";
+	}
+
+	@Override
+	protected Object[] getTitleArguments(
+			String groupName, SocialActivity activity, String link,
+			String title, ThemeDisplay themeDisplay)
 		throws Exception {
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		if (!BlogsEntryPermission.contains(
-				permissionChecker, activity.getClassPK(), ActionKeys.VIEW)) {
-
-			return null;
-		}
-
-		String groupName = StringPool.BLANK;
-
-		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
-			groupName = getGroupName(activity.getGroupId(), themeDisplay);
-		}
 
 		String creatorUserName = getUserName(
 			activity.getUserId(), themeDisplay);
 		String receiverUserName = getUserName(
 			activity.getReceiverUserId(), themeDisplay);
 
-		int activityType = activity.getType();
-
 		BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(
 			activity.getClassPK());
 
-		// Link
+		String displayTitle = wrapLink(link, entry.getTitle());
+		String displayDate = StringPool.BLANK;
 
-		String link = getLink(
-			BlogsEntry.class.getName(), entry.getEntryId(),
-			"/blogs/find_entry?entryId=", themeDisplay);
-
-		// Title
-
-		String displayTitle;
-		String displayDate;
-
-		if ((activityType == BlogsActivityKeys.ADD_ENTRY) &&
+		if ((activity.getType() == BlogsActivityKeys.ADD_ENTRY) &&
 			(entry.getStatus() == WorkflowConstants.STATUS_SCHEDULED)) {
 
 			displayTitle = entry.getTitle();
@@ -96,28 +74,23 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 
 			displayDate = dateFormatDate.format(entry.getDisplayDate());
 		}
-		else {
-			displayTitle = wrapLink(link, entry.getTitle());
-			displayDate = StringPool.BLANK;
-		}
 
 		Object[] titleArguments = new Object[] {
 			groupName, creatorUserName, receiverUserName, displayTitle,
 			displayDate
 		};
 
-		String title = themeDisplay.translate(
-			getTitlePattern(groupName, entry, activityType), titleArguments);
-
-		// Body
-
-		String body = StringPool.BLANK;
-
-		return new SocialActivityFeedEntry(link, title, body);
+		return titleArguments;
 	}
 
-	protected String getTitlePattern(
-		String groupName, BlogsEntry entry, int activityType) {
+	@Override
+	protected String getTitlePattern(String groupName, SocialActivity activity)
+		throws Exception {
+
+		BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(
+			activity.getClassPK());
+
+		int activityType = activity.getType();
 
 		if ((activityType == BlogsActivityKeys.ADD_COMMENT) ||
 			(activityType == SocialActivityConstants.TYPE_ADD_COMMENT)) {
@@ -175,6 +148,16 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 		}
 
 		return null;
+	}
+
+	@Override
+	protected boolean hasPermissions(
+			PermissionChecker permissionChecker, SocialActivity activity,
+			String actionId, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		return BlogsEntryPermission.contains(
+			permissionChecker, activity.getClassPK(), actionId);
 	}
 
 	private static final String[] _CLASS_NAMES = new String[] {
