@@ -58,6 +58,11 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	public void testSearchExpireAllVersions() throws Exception {
+		Assert.assertTrue("This test does not apply", true);
+	}
+
+	@Override
 	public void testSearchWithinDDMStructure() throws Exception {
 		Assert.assertTrue("This test does not apply", true);
 	}
@@ -93,8 +98,21 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 		throws Exception {
 
 		return WikiTestUtil.addPage(
-			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(),
-			(Long)parentBaseModel.getPrimaryKeyObj(), keywords, approved);
+			TestPropsValues.getUserId(),
+			(Long)parentBaseModel.getPrimaryKeyObj(),
+			ServiceTestUtil.randomString(), keywords, approved, serviceContext);
+	}
+
+	@Override
+	protected void expireBaseModelVersions(
+			BaseModel<?> baseModel, boolean expireAll,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		WikiPage page = (WikiPage)baseModel;
+
+		WikiPageLocalServiceUtil.deletePage(
+			page.getNodeId(), page.getTitle(), page.getVersion());
 	}
 
 	@Override
@@ -125,5 +143,18 @@ public class WikiPageSearchTest extends BaseSearchTestCase {
 	protected String getSearchKeywords() {
 		return "Title";
 	}
+
+	@Override
+	protected BaseModel<?> updateBaseModel(
+			BaseModel<?> baseModel, String keywords,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		WikiPage page = (WikiPage)baseModel;
+
+		return WikiTestUtil.updatePage(
+			page, TestPropsValues.getUserId(), keywords, serviceContext);
+	}
+
 
 }
