@@ -28,10 +28,12 @@ import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.model.ExpandoTableConstants;
 import com.liferay.portlet.expando.service.permission.ExpandoColumnPermissionUtil;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
+import com.liferay.taglib.util.CustomAttributesTagUtil;
 
 import java.io.Serializable;
 
-import java.util.Enumeration;
+import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -67,9 +69,12 @@ public class CustomAttributesAvailableTag extends TagSupport {
 					companyId, _className, _classPK);
 			}
 
-			Enumeration<String> enu = expandoBridge.getAttributeNames();
+			List<String> attributeNames =
+				CustomAttributesTagUtil.filterAttributes(
+					Collections.list(expandoBridge.getAttributeNames()),
+					_ignore);
 
-			if (!enu.hasMoreElements()) {
+			if (attributeNames.isEmpty()) {
 				return SKIP_BODY;
 			}
 
@@ -80,9 +85,7 @@ public class CustomAttributesAvailableTag extends TagSupport {
 			PermissionChecker permissionChecker =
 				themeDisplay.getPermissionChecker();
 
-			while (enu.hasMoreElements()) {
-				String attributeName = enu.nextElement();
-
+			for (String attributeName : attributeNames) {
 				Serializable value = expandoBridge.getAttribute(attributeName);
 
 				if (Validator.isNull(value)) {
@@ -134,6 +137,7 @@ public class CustomAttributesAvailableTag extends TagSupport {
 				_classPK = 0;
 				_companyId = 0;
 				_editable = false;
+				_ignore = null;
 			}
 		}
 	}
@@ -154,9 +158,14 @@ public class CustomAttributesAvailableTag extends TagSupport {
 		_editable = editable;
 	}
 
+	public void setIgnore(String ignore) {
+		_ignore = ignore;
+	}
+
 	private String _className;
 	private long _classPK;
 	private long _companyId;
 	private boolean _editable;
+	private String _ignore;
 
 }
