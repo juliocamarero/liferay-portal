@@ -96,7 +96,9 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 
 		// Link
 
-		String link = getLink(pageResource, themeDisplay);
+		String link = getLink(
+			WikiPage.class.getName(), pageResource.getResourcePrimKey(),
+			"/wiki/find_page?pageResourcePrimKey=", themeDisplay);
 
 		// Title
 
@@ -174,28 +176,6 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 		}
 
 		return attachmentTitle;
-	}
-
-	protected String getLink(
-			WikiPageResource pageResource, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		if (TrashUtil.isInTrash(
-				WikiPage.class.getName(), pageResource.getResourcePrimKey())) {
-
-			return TrashUtil.getViewContentURL(
-				WikiPage.class.getName(), pageResource.getResourcePrimKey(),
-				themeDisplay);
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(themeDisplay.getPathMain());
-		sb.append("/wiki/find_page?pageResourcePrimKey=");
-		sb.append(pageResource.getResourcePrimKey());
-
-		return sb.toString();
 	}
 
 	protected String getTitle(WikiPageResource pageResource) throws Exception {

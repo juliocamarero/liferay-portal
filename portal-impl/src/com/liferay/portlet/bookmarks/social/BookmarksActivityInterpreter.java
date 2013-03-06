@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.bookmarks.social;
 
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -87,7 +86,9 @@ public class BookmarksActivityInterpreter
 
 		// Link
 
-		String link = getLink(entry, themeDisplay);
+		String link = getLink(
+			BookmarksEntry.class.getName(), entry.getEntryId(),
+			"/bookmarks/find_entry?entryId=", themeDisplay);
 
 		// Title
 
@@ -136,7 +137,9 @@ public class BookmarksActivityInterpreter
 
 		// Link
 
-		String link = getLink(folder, themeDisplay);
+		String link = getLink(
+			BookmarksFolder.class.getName(), folder.getFolderId(),
+			"/bookmarks/find_folder?folderId=", themeDisplay);
 
 		// Title
 
@@ -153,48 +156,6 @@ public class BookmarksActivityInterpreter
 		String body = StringPool.BLANK;
 
 		return new SocialActivityFeedEntry(link, title, body);
-	}
-
-	protected String getLink(BookmarksEntry entry, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		if (TrashUtil.isInTrash(
-				BookmarksEntry.class.getName(), entry.getEntryId())) {
-
-			return TrashUtil.getViewContentURL(
-				BookmarksEntry.class.getName(), entry.getEntryId(),
-				themeDisplay);
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(themeDisplay.getPathMain());
-		sb.append("/bookmarks/find_entry?entryId=");
-		sb.append(entry.getEntryId());
-
-		return sb.toString();
-	}
-
-	protected String getLink(BookmarksFolder folder, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		if (TrashUtil.isInTrash(
-				BookmarksFolder.class.getName(), folder.getFolderId())) {
-
-			return TrashUtil.getViewContentURL(
-				BookmarksFolder.class.getName(), folder.getFolderId(),
-				themeDisplay);
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(themeDisplay.getPathMain());
-		sb.append("/bookmarks/find_folder?folderId=");
-		sb.append(folder.getFolderId());
-
-		return sb.toString();
 	}
 
 	protected String getTitle(BookmarksEntry entry) throws Exception {
