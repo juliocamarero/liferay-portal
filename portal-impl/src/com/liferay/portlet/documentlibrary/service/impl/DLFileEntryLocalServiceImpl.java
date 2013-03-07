@@ -797,8 +797,9 @@ public class DLFileEntryLocalServiceImpl
 		}
 	}
 
-	@Indexable(type = IndexableType.DELETE)
-	public void deleteFileVersion(long userId, long fileEntryId, String version)
+	@Indexable(type = IndexableType.REINDEX)
+	public DLFileEntry deleteFileVersion(
+			long userId, long fileEntryId, String version)
 		throws PortalException, SystemException {
 
 		if (Validator.isNull(version) ||
@@ -864,6 +865,8 @@ public class DLFileEntryLocalServiceImpl
 					dlFileEntry.setSize(dlLatestFileVersion.getSize());
 
 					dlFileEntryPersistence.update(dlFileEntry);
+
+					return dlFileEntry;
 				}
 				catch (NoSuchFileVersionException nsfve) {
 				}
@@ -881,6 +884,8 @@ public class DLFileEntryLocalServiceImpl
 		finally {
 			unlockFileEntry(fileEntryId);
 		}
+
+		return null;
 	}
 
 	public DLFileEntry fetchFileEntry(long groupId, long folderId, String title)
