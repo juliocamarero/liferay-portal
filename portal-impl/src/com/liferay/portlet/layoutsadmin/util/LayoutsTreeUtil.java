@@ -164,7 +164,6 @@ public class LayoutsTreeUtil {
 			jsonObject.put(
 				"updateable", hasManageLayoutsPermission &&
 					SitesUtil.isLayoutUpdateable(layout));
-
 			jsonObject.put("uuid", layout.getUuid());
 
 			LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
