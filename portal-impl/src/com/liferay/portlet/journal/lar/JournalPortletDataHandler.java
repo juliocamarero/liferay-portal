@@ -955,7 +955,9 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext, Element entityElement)
 		throws Exception {
 
-		Element dlRepositoriesElement = entityElement.element(
+		Element rootElement = portletDataContext.getRootElement();
+
+		Element dlRepositoriesElement = rootElement.element(
 			Repository.class.getSimpleName());
 
 		List<Element> dlRepositoryElements = Collections.emptyList();
@@ -969,7 +971,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, repositoryElement);
 		}
 
-		Element dlRepositoryEntriesElement = entityElement.element(
+		Element dlRepositoryEntriesElement = rootElement.element(
 			RepositoryEntry.class.getSimpleName());
 
 		List<Element> dlRepositoryEntryElements = Collections.emptyList();
@@ -984,7 +986,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, repositoryEntryElement);
 		}
 
-		Element dlFoldersElement = entityElement.element(
+		Element dlFoldersElement = rootElement.element(
 			DLFolder.class.getSimpleName());
 
 		List<Element> dlFolderElements = Collections.emptyList();
@@ -998,7 +1000,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, folderElement);
 		}
 
-		Element dlFileEntriesElement = entityElement.element(
+		Element dlFileEntriesElement = rootElement.element(
 			DLFileEntry.class.getSimpleName());
 
 		List<Element> dlFileEntryElements = Collections.emptyList();
@@ -1012,7 +1014,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, fileEntryElement);
 		}
 
-		Element dlFileRanksElement = entityElement.element(
+		Element dlFileRanksElement = rootElement.element(
 			DLFileRank.class.getSimpleName());
 
 		List<Element> dlFileRankElements = Collections.emptyList();

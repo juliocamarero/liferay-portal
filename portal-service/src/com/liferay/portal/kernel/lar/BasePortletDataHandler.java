@@ -75,8 +75,11 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		try {
 			portletDataContext.createRootElement(getClass().getSimpleName());
 
-			return doExportData(
-				portletDataContext, portletId, portletPreferences);
+			Element rootElement = portletDataContext.getRootElement();
+
+			doExportData(portletDataContext, portletId, portletPreferences);
+
+			return rootElement.getDocument().formattedString();
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -126,19 +129,21 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		long sourceGroupId = portletDataContext.getSourceGroupId();
 
 		try {
-			if (validateData(data)) {
-				Document document = SAXReaderUtil.read(data);
+			if (!validateData(data)) {
+				return null;
+			}
 
-				Element rootElement = document.getRootElement();
+			Document document = SAXReaderUtil.read(data);
 
-				portletDataContext.setRootElement(rootElement);
+			Element rootElement = document.getRootElement();
 
-				long portletSourceGroupId = GetterUtil.getLong(
-					rootElement.attributeValue("group-id"));
+			portletDataContext.setRootElement(rootElement);
 
-				if (portletSourceGroupId != 0) {
-					portletDataContext.setSourceGroupId(portletSourceGroupId);
-				}
+			long portletSourceGroupId = GetterUtil.getLong(
+				rootElement.attributeValue("group-id"));
+
+			if (portletSourceGroupId != 0) {
+				portletDataContext.setSourceGroupId(portletSourceGroupId);
 			}
 
 			return doImportData(
@@ -182,12 +187,12 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return portletPreferences;
 	}
 
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		return null;
+		return;
 	}
 
 	protected PortletPreferences doImportData(
