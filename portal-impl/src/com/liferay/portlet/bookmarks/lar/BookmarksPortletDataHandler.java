@@ -84,7 +84,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -140,8 +140,6 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		entryActionableDynamicQuery.performActions();
-
-		return portletDataContext.getRootElement().formattedString();
 	}
 
 	@Override

@@ -108,7 +108,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -130,7 +130,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 						portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		long footerArticleGroupId = GetterUtil.getLong(footerArticleValues[0]);
@@ -143,7 +143,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 						portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		List<JournalArticle> articles = new ArrayList<JournalArticle>(2);
@@ -185,7 +185,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		if ((footerArticle == null) && (headerArticle == null)) {
-			return StringPool.BLANK;
+			return;
 		}
 
 		Element rootElement = portletDataContext.getRootElement();
@@ -208,8 +208,6 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 			JournalPortletDataHandler.exportArticle(
 				portletDataContext, rootElement, article, false);
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override

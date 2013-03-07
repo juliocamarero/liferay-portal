@@ -469,7 +469,7 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -493,8 +493,6 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 		for (WikiNode node : nodes) {
 			exportNode(portletDataContext, nodesElement, pagesElement, node);
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override

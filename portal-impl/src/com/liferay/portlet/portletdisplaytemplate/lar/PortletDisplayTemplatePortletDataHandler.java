@@ -45,14 +45,12 @@ public class PortletDisplayTemplatePortletDataHandler
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
 		exportPortletDisplayTemplates(portletDataContext);
-
-		return portletDataContext.getRootElement().formattedString();
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class PageCommentsPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -71,8 +71,6 @@ public class PageCommentsPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.addComments(
 				Layout.class, portletDataContext.getPlid());
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override

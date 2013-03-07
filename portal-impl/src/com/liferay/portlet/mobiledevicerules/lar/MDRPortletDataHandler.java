@@ -71,7 +71,7 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -127,8 +127,6 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		actionsActionableDynamicQuery.performActions();
-
-		return portletDataContext.getRootElement().formattedString();
 	}
 
 	@Override

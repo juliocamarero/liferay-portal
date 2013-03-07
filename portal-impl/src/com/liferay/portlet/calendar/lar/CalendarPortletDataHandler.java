@@ -84,7 +84,7 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -107,8 +107,6 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 		for (CalEvent event : events) {
 			exportEvent(portletDataContext, eventsElement, event);
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override

@@ -61,7 +61,7 @@ public class DDLDisplayPortletDataHandler extends DDLPortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -78,7 +78,7 @@ public class DDLDisplayPortletDataHandler extends DDLPortletDataHandler {
 				_log.debug("No record set found for " + portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		Element rootElement = portletDataContext.getRootElement();
@@ -88,8 +88,6 @@ public class DDLDisplayPortletDataHandler extends DDLPortletDataHandler {
 
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, recordSet);
-
-		return rootElement.formattedString();
 	}
 
 	@Override

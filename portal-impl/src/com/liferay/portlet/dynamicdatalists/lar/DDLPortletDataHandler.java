@@ -60,7 +60,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -95,8 +95,6 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 		actionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
 
 		actionableDynamicQuery.performActions();
-
-		return rootElement.formattedString();
 	}
 
 	@Override

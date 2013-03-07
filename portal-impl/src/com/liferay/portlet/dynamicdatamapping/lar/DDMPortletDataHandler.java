@@ -623,7 +623,7 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -688,8 +688,6 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		templateActionableDynamicQuery.performActions();
-
-		return rootElement.formattedString();
 	}
 
 	@Override

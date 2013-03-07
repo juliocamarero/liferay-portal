@@ -95,7 +95,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -117,8 +117,6 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		for (BlogsEntry entry : entries) {
 			exportEntry(portletDataContext, entriesElement, entry);
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override

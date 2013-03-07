@@ -334,7 +334,7 @@ public class PollsPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -362,8 +362,6 @@ public class PollsPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, questionsElement, choicesElement,
 				votesElement, question);
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override

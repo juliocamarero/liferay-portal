@@ -68,7 +68,7 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -137,8 +137,6 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 				fileEntriesElement, fileShortcutsElement, fileRanksElement,
 				repositoriesElement, repositoryEntriesElement, folder, true);
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override

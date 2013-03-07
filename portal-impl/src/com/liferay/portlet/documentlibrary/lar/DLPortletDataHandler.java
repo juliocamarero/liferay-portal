@@ -1850,7 +1850,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -1939,8 +1939,6 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 					repositoryEntriesElement, fileShortcut);
 			}
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override

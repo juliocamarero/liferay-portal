@@ -59,7 +59,7 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -73,7 +73,7 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 					"No node id found in preferences of portlet " + portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		String title = portletPreferences.getValue("title", null);
@@ -84,7 +84,7 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 					"No title found in preferences of portlet " + portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		WikiNode node = null;
@@ -97,7 +97,7 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 				_log.warn(nsne, nsne);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		portletDataContext.addPermissions(
@@ -115,8 +115,6 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 
 		WikiPortletDataHandler.exportNode(
 			portletDataContext, nodesElement, pagesElement, node);
-
-		return rootElement.formattedString();
 	}
 
 	@Override

@@ -114,7 +114,7 @@ public class JournalContentPortletDataHandler
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -132,7 +132,7 @@ public class JournalContentPortletDataHandler
 						portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		long articleGroupId = GetterUtil.getLong(
@@ -144,7 +144,7 @@ public class JournalContentPortletDataHandler
 					"No group id found in preferences of portlet " + portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		long previousScopeGroupId = portletDataContext.getScopeGroupId();
@@ -177,7 +177,7 @@ public class JournalContentPortletDataHandler
 		if (article == null) {
 			portletDataContext.setScopeGroupId(previousScopeGroupId);
 
-			return rootElement.formattedString();
+			return;
 		}
 
 		String path = JournalPortletDataHandler.getArticlePath(
@@ -224,8 +224,6 @@ public class JournalContentPortletDataHandler
 		}
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
-
-		return rootElement.formattedString();
 	}
 
 	@Override

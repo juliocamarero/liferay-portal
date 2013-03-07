@@ -58,7 +58,7 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -73,7 +73,7 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 						portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		PollsQuestion question = null;
@@ -86,7 +86,7 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 				_log.warn(nsqe, nsqe);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		portletDataContext.addPermissions(
@@ -107,8 +107,6 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 		PollsPortletDataHandler.exportQuestion(
 			portletDataContext, questionsElement, choicesElement, votesElement,
 			question);
-
-		return rootElement.formattedString();
 	}
 
 	@Override

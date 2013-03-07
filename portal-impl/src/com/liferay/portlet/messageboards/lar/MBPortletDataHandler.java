@@ -119,7 +119,7 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -169,8 +169,6 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 				exportBan(portletDataContext, userBansElement, ban);
 			}
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override
