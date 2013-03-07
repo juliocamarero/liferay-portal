@@ -31,9 +31,11 @@ import com.liferay.portal.model.LayoutRevision;
 import com.liferay.portal.model.LayoutSetBranch;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.VirtualLayout;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetBranchLocalServiceUtil;
+import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SessionClicks;
@@ -107,6 +109,10 @@ public class LayoutsTreeUtil {
 			end = Math.max(start, Math.min(end, layouts.size()));
 		}
 
+		boolean hasManageLayoutsPermission = GroupPermissionUtil.contains(
+			themeDisplay.getPermissionChecker(), groupId,
+			ActionKeys.MANAGE_LAYOUTS);
+
 		for (Layout layout : layouts.subList(start, end)) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -155,7 +161,10 @@ public class LayoutsTreeUtil {
 			jsonObject.put("priority", layout.getPriority());
 			jsonObject.put("privateLayout", layout.isPrivateLayout());
 			jsonObject.put("type", layout.getType());
-			jsonObject.put("updateable", SitesUtil.isLayoutUpdateable(layout));
+			jsonObject.put(
+				"updateable", hasManageLayoutsPermission &&
+					SitesUtil.isLayoutUpdateable(layout));
+
 			jsonObject.put("uuid", layout.getUuid());
 
 			LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
