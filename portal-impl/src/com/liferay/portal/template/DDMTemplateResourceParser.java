@@ -81,10 +81,8 @@ public class DDMTemplateResourceParser implements TemplateResourceParser {
 				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 					companyId);
 
-				long companyGroupId = companyGroup.getGroupId();
-
 				ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
-					companyGroupId, classNameId, ddmTemplateKey);
+					companyGroup.getGroupId(), classNameId, ddmTemplateKey);
 
 				if (ddmTemplate == null) {
 
@@ -98,7 +96,7 @@ public class DDMTemplateResourceParser implements TemplateResourceParser {
 
 				if (ddmTemplate == null) {
 					ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
-						companyGroupId, classNameId, ddmTemplateKey);
+						companyGroup.getGroupId(), classNameId, ddmTemplateKey);
 				}
 			}
 
