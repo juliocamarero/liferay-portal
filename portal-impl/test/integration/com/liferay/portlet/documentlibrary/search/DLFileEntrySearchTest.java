@@ -65,16 +65,6 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
-	public void testSearchExpireAllVersions() throws Exception {
-		Assert.assertTrue("This test does not apply", true);
-	}
-
-	@Override
-	public void testSearchStatus() throws Exception {
-		Assert.assertTrue("This test does not apply", true);
-	}
-
-	@Override
 	protected BaseModel<?> addBaseModelWithDDMStructure(
 			BaseModel<?> parentBaseModel, String keywords,
 			ServiceContext serviceContext)
@@ -137,8 +127,13 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 
 		DLFileEntry dlFileEntry = (DLFileEntry)baseModel;
 
-		DLAppServiceUtil.deleteFileVersion(
-			dlFileEntry.getFileEntryId(), dlFileEntry.getVersion());
+		if (expireAll) {
+			DLAppServiceUtil.deleteFileEntry(dlFileEntry.getFileEntryId());
+		}
+		else {
+			DLAppServiceUtil.deleteFileVersion(
+				dlFileEntry.getFileEntryId(), dlFileEntry.getVersion());
+		}
 	}
 
 	@Override
@@ -170,6 +165,11 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	protected boolean isExpirableAllVersions() {
+		return true;
+	}
+
+	@Override
 	protected BaseModel<?> updateBaseModel(
 			BaseModel<?> baseModel, String keywords,
 			ServiceContext serviceContext)
@@ -179,7 +179,7 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 
 		FileEntry fileEntry = DLAppTestUtil.updateFileEntry(
 			serviceContext.getScopeGroupId(), dlFileEntry.getFileEntryId(),
-			null, keywords);
+			null, dlFileEntry.getMimeType(), keywords, true, serviceContext);
 
 		return (DLFileEntry)fileEntry.getModel();
 	}
