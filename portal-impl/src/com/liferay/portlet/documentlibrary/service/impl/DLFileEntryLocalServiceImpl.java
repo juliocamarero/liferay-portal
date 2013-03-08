@@ -812,6 +812,9 @@ public class DLFileEntryLocalServiceImpl
 			lockFileEntry(userId, fileEntryId);
 		}
 
+		DLFileEntry dlFileEntry = null;
+		boolean isLatestVersion = false;
+
 		try {
 			DLFileVersion dlFileVersion = dlFileVersionPersistence.findByF_V(
 				fileEntryId, version);
@@ -836,10 +839,11 @@ public class DLFileEntryLocalServiceImpl
 				DLFileVersion.class.getName(),
 				dlFileVersion.getFileVersionId());
 
-			DLFileEntry dlFileEntry = dlFileEntryPersistence.findByPrimaryKey(
-				fileEntryId);
+			dlFileEntry = dlFileEntryPersistence.findByPrimaryKey(fileEntryId);
 
-			if (version.equals(dlFileEntry.getVersion())) {
+			isLatestVersion = version.equals(dlFileEntry.getVersion());
+
+			if (isLatestVersion) {
 				try {
 					DLFileVersion dlLatestFileVersion =
 						dlFileVersionLocalService.getLatestFileVersion(
@@ -864,9 +868,7 @@ public class DLFileEntryLocalServiceImpl
 					dlFileEntry.setVersion(dlLatestFileVersion.getVersion());
 					dlFileEntry.setSize(dlLatestFileVersion.getSize());
 
-					dlFileEntryPersistence.update(dlFileEntry);
-
-					return dlFileEntry;
+					dlFileEntry = dlFileEntryPersistence.update(dlFileEntry);
 				}
 				catch (NoSuchFileVersionException nsfve) {
 				}
@@ -883,6 +885,10 @@ public class DLFileEntryLocalServiceImpl
 		}
 		finally {
 			unlockFileEntry(fileEntryId);
+		}
+
+		if (isLatestVersion) {
+			return dlFileEntry;
 		}
 
 		return null;
