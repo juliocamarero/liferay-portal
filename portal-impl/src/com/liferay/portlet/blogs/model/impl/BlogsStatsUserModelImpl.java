@@ -71,8 +71,8 @@ public class BlogsStatsUserModelImpl extends BaseModelImpl<BlogsStatsUser>
 		};
 	public static final String TABLE_SQL_CREATE = "create table BlogsStatsUser (statsUserId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,entryCount INTEGER,lastPostDate DATE null,ratingsTotalEntries INTEGER,ratingsTotalScore DOUBLE,ratingsAverageScore DOUBLE)";
 	public static final String TABLE_SQL_DROP = "drop table BlogsStatsUser";
-	public static final String ORDER_BY_JPQL = " ORDER BY blogsStatsUser.entryCount DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY BlogsStatsUser.entryCount DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY blogsStatsUser.entryCount DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY BlogsStatsUser.entryCount DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

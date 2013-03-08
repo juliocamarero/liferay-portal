@@ -67,5 +67,5 @@ if (orderByComparator != null) {
 	}
 }
 else {
-	query.append(${entity.name}ModelImpl.ORDER_BY_JPQL);
+	query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_ALIAS);
 }

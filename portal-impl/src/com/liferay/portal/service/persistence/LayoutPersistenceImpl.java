@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -210,7 +209,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -220,7 +219,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -482,12 +483,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -570,7 +573,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -595,9 +601,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "layout.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "layout.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(layout.uuid IS NULL OR layout.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "layout.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "layout.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(layout.uuid_ IS NULL OR layout.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G_P = new FinderPath(LayoutModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutModelImpl.FINDER_CACHE_ENABLED, LayoutImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G_P",
@@ -732,7 +738,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -849,7 +857,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -878,9 +889,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_P_UUID_1 = "layout.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_P_UUID_2 = "layout.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_P_UUID_3 = "(layout.uuid IS NULL OR layout.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_P_UUID_1 = "layout.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_P_UUID_2 = "layout.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_P_UUID_3 = "(layout.uuid_ IS NULL OR layout.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_P_GROUPID_2 = "layout.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_P_PRIVATELAYOUT_2 = "layout.privateLayout = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(LayoutModelImpl.ENTITY_CACHE_ENABLED,
@@ -1024,7 +1035,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1034,7 +1045,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1314,12 +1327,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1410,7 +1425,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1437,9 +1455,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "layout.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "layout.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(layout.uuid IS NULL OR layout.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "layout.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "layout.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(layout.uuid_ IS NULL OR layout.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "layout.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(LayoutModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutModelImpl.FINDER_CACHE_ENABLED, LayoutImpl.class,
@@ -1557,7 +1575,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1567,7 +1585,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1816,12 +1836,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1934,10 +1956,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutModelImpl.ORDER_BY_SQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2112,10 +2134,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutModelImpl.ORDER_BY_SQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2199,7 +2221,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2390,7 +2415,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2400,7 +2425,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2649,12 +2676,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2723,7 +2752,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2842,7 +2874,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2936,7 +2970,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3100,7 +3137,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3110,7 +3147,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3377,12 +3416,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3467,7 +3508,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3641,7 +3685,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3651,7 +3695,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3920,12 +3966,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4011,7 +4059,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4171,7 +4222,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4181,7 +4232,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4449,12 +4502,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4576,10 +4631,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutModelImpl.ORDER_BY_SQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4760,10 +4815,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutModelImpl.ORDER_BY_SQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4855,7 +4910,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5057,7 +5115,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5159,7 +5219,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5332,7 +5395,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5342,7 +5405,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5628,12 +5693,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5763,10 +5830,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutModelImpl.ORDER_BY_SQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5954,10 +6021,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutModelImpl.ORDER_BY_SQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6057,7 +6124,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6280,7 +6350,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6397,7 +6469,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6586,7 +6661,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6596,7 +6671,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6895,12 +6972,14 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			}
 		}
 		else {
-			query.append(LayoutModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7043,10 +7122,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutModelImpl.ORDER_BY_SQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7246,10 +7325,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutModelImpl.ORDER_BY_SQL);
+				query.append(LayoutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7361,7 +7440,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7465,9 +7547,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 	private static final String _FINDER_COLUMN_G_P_T_GROUPID_2 = "layout.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_P_T_PRIVATELAYOUT_2 = "layout.privateLayout = ? AND ";
-	private static final String _FINDER_COLUMN_G_P_T_TYPE_1 = "layout.type IS NULL";
-	private static final String _FINDER_COLUMN_G_P_T_TYPE_2 = "layout.type = ?";
-	private static final String _FINDER_COLUMN_G_P_T_TYPE_3 = "(layout.type IS NULL OR layout.type = '')";
+	private static final String _FINDER_COLUMN_G_P_T_TYPE_1 = "layout.type_ IS NULL";
+	private static final String _FINDER_COLUMN_G_P_T_TYPE_2 = "layout.type_ = ?";
+	private static final String _FINDER_COLUMN_G_P_T_TYPE_3 = "(layout.type_ IS NULL OR layout.type_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_P_SPLU = new FinderPath(LayoutModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutModelImpl.FINDER_CACHE_ENABLED, LayoutImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByG_P_SPLU",
@@ -7608,7 +7690,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7737,7 +7821,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8645,7 +8732,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 				sql = _SQL_SELECT_LAYOUT;
 
 				if (pagination) {
-					sql = sql.concat(LayoutModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(LayoutModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -8654,7 +8741,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutImpl.class);
 
 				if (!pagination) {
 					list = (List<Layout>)QueryUtil.list(q, getDialect(), start,
@@ -8713,7 +8802,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_LAYOUT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_LAYOUT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -8766,10 +8858,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_LAYOUT = "SELECT layout FROM Layout layout";
-	private static final String _SQL_SELECT_LAYOUT_WHERE = "SELECT layout FROM Layout layout WHERE ";
-	private static final String _SQL_COUNT_LAYOUT = "SELECT COUNT(layout) FROM Layout layout";
-	private static final String _SQL_COUNT_LAYOUT_WHERE = "SELECT COUNT(layout) FROM Layout layout WHERE ";
+	private static final String _SQL_SELECT_LAYOUT = "SELECT {layout.*} FROM Layout layout";
+	private static final String _SQL_SELECT_LAYOUT_WHERE = "SELECT {layout.*} FROM Layout layout WHERE ";
+	private static final String _SQL_COUNT_LAYOUT = "SELECT COUNT(*) AS COUNT_VALUE FROM Layout layout";
+	private static final String _SQL_COUNT_LAYOUT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Layout layout WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "layout.plid";
 	private static final String _FILTER_SQL_SELECT_LAYOUT_WHERE = "SELECT DISTINCT {layout.*} FROM Layout layout WHERE ";
 	private static final String _FILTER_SQL_SELECT_LAYOUT_NO_INLINE_DISTINCT_WHERE_1 =
@@ -8779,6 +8871,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	private static final String _FILTER_SQL_COUNT_LAYOUT_WHERE = "SELECT COUNT(DISTINCT layout.plid) AS COUNT_VALUE FROM Layout layout WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "layout";
 	private static final String _FILTER_ENTITY_TABLE = "Layout";
+	private static final String _ENTITY_ALIAS = "layout";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "layout.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "Layout.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Layout exists with the primary key ";

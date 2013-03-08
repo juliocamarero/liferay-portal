@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -197,7 +197,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 			else
 			 if (pagination) {
-				query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+				query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -207,7 +207,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -457,12 +459,14 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 		}
 		else {
-			query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+			query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -531,7 +535,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -670,7 +677,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 			else
 			 if (pagination) {
-				query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+				query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -680,7 +687,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -929,12 +938,14 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 		}
 		else {
-			query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+			query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1003,7 +1014,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1154,7 +1168,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 			else
 			 if (pagination) {
-				query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+				query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1164,7 +1178,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1432,12 +1448,14 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 		}
 		else {
-			query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+			query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1514,7 +1532,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1680,7 +1701,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 			else
 			 if (pagination) {
-				query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+				query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1690,7 +1711,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1975,12 +1998,14 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 		}
 		else {
-			query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+			query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2063,7 +2088,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2245,7 +2273,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 			else
 			 if (pagination) {
-				query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+				query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2255,7 +2283,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2556,12 +2586,14 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			}
 		}
 		else {
-			query.append(WebsiteModelImpl.ORDER_BY_JPQL);
+			query.append(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2652,7 +2684,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2684,7 +2719,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	private static final String _FINDER_COLUMN_C_C_C_P_COMPANYID_2 = "website.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_C_P_CLASSNAMEID_2 = "website.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_C_P_CLASSPK_2 = "website.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_C_P_PRIMARY_2 = "website.primary = ?";
+	private static final String _FINDER_COLUMN_C_C_C_P_PRIMARY_2 = "website.primary_ = ?";
 
 	/**
 	 * Caches the website in the entity cache if it is enabled.
@@ -3211,7 +3246,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 				sql = _SQL_SELECT_WEBSITE;
 
 				if (pagination) {
-					sql = sql.concat(WebsiteModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(WebsiteModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3220,7 +3255,9 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WebsiteImpl.class);
 
 				if (!pagination) {
 					list = (List<Website>)QueryUtil.list(q, getDialect(),
@@ -3279,7 +3316,10 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_WEBSITE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_WEBSITE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3332,10 +3372,11 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_WEBSITE = "SELECT website FROM Website website";
-	private static final String _SQL_SELECT_WEBSITE_WHERE = "SELECT website FROM Website website WHERE ";
-	private static final String _SQL_COUNT_WEBSITE = "SELECT COUNT(website) FROM Website website";
-	private static final String _SQL_COUNT_WEBSITE_WHERE = "SELECT COUNT(website) FROM Website website WHERE ";
+	private static final String _SQL_SELECT_WEBSITE = "SELECT {website.*} FROM Website website";
+	private static final String _SQL_SELECT_WEBSITE_WHERE = "SELECT {website.*} FROM Website website WHERE ";
+	private static final String _SQL_COUNT_WEBSITE = "SELECT COUNT(*) AS COUNT_VALUE FROM Website website";
+	private static final String _SQL_COUNT_WEBSITE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Website website WHERE ";
+	private static final String _ENTITY_ALIAS = "website";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "website.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Website exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Website exists with the key {";

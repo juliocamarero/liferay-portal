@@ -86,8 +86,8 @@ public class PollsQuestionModelImpl extends BaseModelImpl<PollsQuestion>
 		};
 	public static final String TABLE_SQL_CREATE = "create table PollsQuestion (uuid_ VARCHAR(75) null,questionId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title STRING null,description STRING null,expirationDate DATE null,lastVoteDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table PollsQuestion";
-	public static final String ORDER_BY_JPQL = " ORDER BY pollsQuestion.createDate DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY PollsQuestion.createDate DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY pollsQuestion.createDate DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY PollsQuestion.createDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

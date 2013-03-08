@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -200,7 +200,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			}
 			else
 			 if (pagination) {
-				query.append(JournalArticleImageModelImpl.ORDER_BY_JPQL);
+				query.append(JournalArticleImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -210,7 +210,9 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleImageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -463,12 +465,14 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			}
 		}
 		else {
-			query.append(JournalArticleImageModelImpl.ORDER_BY_JPQL);
+			query.append(JournalArticleImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalArticleImageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -537,7 +541,10 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -681,7 +688,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			}
 			else
 			 if (pagination) {
-				query.append(JournalArticleImageModelImpl.ORDER_BY_JPQL);
+				query.append(JournalArticleImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -691,7 +698,9 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleImageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -945,12 +954,14 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			}
 		}
 		else {
-			query.append(JournalArticleImageModelImpl.ORDER_BY_JPQL);
+			query.append(JournalArticleImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalArticleImageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1019,7 +1030,10 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1200,7 +1214,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			}
 			else
 			 if (pagination) {
-				query.append(JournalArticleImageModelImpl.ORDER_BY_JPQL);
+				query.append(JournalArticleImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1210,7 +1224,9 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleImageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1511,12 +1527,14 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			}
 		}
 		else {
-			query.append(JournalArticleImageModelImpl.ORDER_BY_JPQL);
+			query.append(JournalArticleImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalArticleImageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1613,7 +1631,10 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1859,7 +1880,9 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleImageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2049,7 +2072,10 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2681,7 +2707,7 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 				sql = _SQL_SELECT_JOURNALARTICLEIMAGE;
 
 				if (pagination) {
-					sql = sql.concat(JournalArticleImageModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(JournalArticleImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2690,7 +2716,9 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleImageImpl.class);
 
 				if (!pagination) {
 					list = (List<JournalArticleImage>)QueryUtil.list(q,
@@ -2749,7 +2777,10 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_JOURNALARTICLEIMAGE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_JOURNALARTICLEIMAGE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2802,10 +2833,11 @@ public class JournalArticleImagePersistenceImpl extends BasePersistenceImpl<Jour
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_JOURNALARTICLEIMAGE = "SELECT journalArticleImage FROM JournalArticleImage journalArticleImage";
-	private static final String _SQL_SELECT_JOURNALARTICLEIMAGE_WHERE = "SELECT journalArticleImage FROM JournalArticleImage journalArticleImage WHERE ";
-	private static final String _SQL_COUNT_JOURNALARTICLEIMAGE = "SELECT COUNT(journalArticleImage) FROM JournalArticleImage journalArticleImage";
-	private static final String _SQL_COUNT_JOURNALARTICLEIMAGE_WHERE = "SELECT COUNT(journalArticleImage) FROM JournalArticleImage journalArticleImage WHERE ";
+	private static final String _SQL_SELECT_JOURNALARTICLEIMAGE = "SELECT {journalArticleImage.*} FROM JournalArticleImage journalArticleImage";
+	private static final String _SQL_SELECT_JOURNALARTICLEIMAGE_WHERE = "SELECT {journalArticleImage.*} FROM JournalArticleImage journalArticleImage WHERE ";
+	private static final String _SQL_COUNT_JOURNALARTICLEIMAGE = "SELECT COUNT(*) AS COUNT_VALUE FROM JournalArticleImage journalArticleImage";
+	private static final String _SQL_COUNT_JOURNALARTICLEIMAGE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM JournalArticleImage journalArticleImage WHERE ";
+	private static final String _ENTITY_ALIAS = "journalArticleImage";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "journalArticleImage.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No JournalArticleImage exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No JournalArticleImage exists with the key {";

@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -216,7 +215,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 			else
 			 if (pagination) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -226,7 +225,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -492,12 +493,14 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 		}
 		else {
-			query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -623,10 +626,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -816,10 +819,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -917,7 +920,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1004,9 +1010,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "announcementsEntry.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "announcementsEntry.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(announcementsEntry.uuid IS NULL OR announcementsEntry.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "announcementsEntry.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "announcementsEntry.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(announcementsEntry.uuid_ IS NULL OR announcementsEntry.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
 			AnnouncementsEntryModelImpl.FINDER_CACHE_ENABLED,
 			AnnouncementsEntryImpl.class,
@@ -1151,7 +1157,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 			else
 			 if (pagination) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1161,7 +1167,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1443,12 +1451,14 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 		}
 		else {
-			query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1583,10 +1593,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1783,10 +1793,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1892,7 +1902,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1987,9 +2000,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "announcementsEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "announcementsEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(announcementsEntry.uuid IS NULL OR announcementsEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "announcementsEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "announcementsEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(announcementsEntry.uuid_ IS NULL OR announcementsEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "announcementsEntry.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_USERID = new FinderPath(AnnouncementsEntryModelImpl.ENTITY_CACHE_ENABLED,
 			AnnouncementsEntryModelImpl.FINDER_CACHE_ENABLED,
@@ -2110,7 +2123,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 			else
 			 if (pagination) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2120,7 +2133,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2373,12 +2388,14 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 		}
 		else {
-			query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2491,10 +2508,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2670,10 +2687,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2757,7 +2774,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2960,7 +2980,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 			else
 			 if (pagination) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2970,7 +2990,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3238,12 +3260,14 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 		}
 		else {
-			query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3364,10 +3388,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3549,10 +3573,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3644,7 +3668,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3870,7 +3897,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 			else
 			 if (pagination) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3880,7 +3907,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4166,12 +4195,14 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			}
 		}
 		else {
-			query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4301,10 +4332,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4494,10 +4525,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AnnouncementsEntryModelImpl.ORDER_BY_SQL);
+				query.append(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4595,7 +4626,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5231,7 +5265,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 				sql = _SQL_SELECT_ANNOUNCEMENTSENTRY;
 
 				if (pagination) {
-					sql = sql.concat(AnnouncementsEntryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(AnnouncementsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -5240,7 +5274,9 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsEntryImpl.class);
 
 				if (!pagination) {
 					list = (List<AnnouncementsEntry>)QueryUtil.list(q,
@@ -5299,7 +5335,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ANNOUNCEMENTSENTRY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ANNOUNCEMENTSENTRY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -5352,10 +5391,10 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_ANNOUNCEMENTSENTRY = "SELECT announcementsEntry FROM AnnouncementsEntry announcementsEntry";
-	private static final String _SQL_SELECT_ANNOUNCEMENTSENTRY_WHERE = "SELECT announcementsEntry FROM AnnouncementsEntry announcementsEntry WHERE ";
-	private static final String _SQL_COUNT_ANNOUNCEMENTSENTRY = "SELECT COUNT(announcementsEntry) FROM AnnouncementsEntry announcementsEntry";
-	private static final String _SQL_COUNT_ANNOUNCEMENTSENTRY_WHERE = "SELECT COUNT(announcementsEntry) FROM AnnouncementsEntry announcementsEntry WHERE ";
+	private static final String _SQL_SELECT_ANNOUNCEMENTSENTRY = "SELECT {announcementsEntry.*} FROM AnnouncementsEntry announcementsEntry";
+	private static final String _SQL_SELECT_ANNOUNCEMENTSENTRY_WHERE = "SELECT {announcementsEntry.*} FROM AnnouncementsEntry announcementsEntry WHERE ";
+	private static final String _SQL_COUNT_ANNOUNCEMENTSENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM AnnouncementsEntry announcementsEntry";
+	private static final String _SQL_COUNT_ANNOUNCEMENTSENTRY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM AnnouncementsEntry announcementsEntry WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "announcementsEntry.entryId";
 	private static final String _FILTER_SQL_SELECT_ANNOUNCEMENTSENTRY_WHERE = "SELECT DISTINCT {announcementsEntry.*} FROM AnnouncementsEntry announcementsEntry WHERE ";
 	private static final String _FILTER_SQL_SELECT_ANNOUNCEMENTSENTRY_NO_INLINE_DISTINCT_WHERE_1 =
@@ -5365,6 +5404,7 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 	private static final String _FILTER_SQL_COUNT_ANNOUNCEMENTSENTRY_WHERE = "SELECT COUNT(DISTINCT announcementsEntry.entryId) AS COUNT_VALUE FROM AnnouncementsEntry announcementsEntry WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "announcementsEntry";
 	private static final String _FILTER_ENTITY_TABLE = "AnnouncementsEntry";
+	private static final String _ENTITY_ALIAS = "announcementsEntry";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "announcementsEntry.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "AnnouncementsEntry.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No AnnouncementsEntry exists with the primary key ";

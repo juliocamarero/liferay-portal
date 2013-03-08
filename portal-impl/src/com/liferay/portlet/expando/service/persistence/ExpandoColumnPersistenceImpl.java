@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -203,7 +202,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			}
 			else
 			 if (pagination) {
-				query.append(ExpandoColumnModelImpl.ORDER_BY_JPQL);
+				query.append(ExpandoColumnModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -213,7 +212,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ExpandoColumnImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -466,12 +467,14 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			}
 		}
 		else {
-			query.append(ExpandoColumnModelImpl.ORDER_BY_JPQL);
+			query.append(ExpandoColumnModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ExpandoColumnImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -584,10 +587,10 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(ExpandoColumnModelImpl.ORDER_BY_JPQL);
+				query.append(ExpandoColumnModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(ExpandoColumnModelImpl.ORDER_BY_SQL);
+				query.append(ExpandoColumnModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -764,10 +767,10 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(ExpandoColumnModelImpl.ORDER_BY_JPQL);
+				query.append(ExpandoColumnModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(ExpandoColumnModelImpl.ORDER_BY_SQL);
+				query.append(ExpandoColumnModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -851,7 +854,10 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1106,7 +1112,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			}
 			else
 			 if (pagination) {
-				query.append(ExpandoColumnModelImpl.ORDER_BY_JPQL);
+				query.append(ExpandoColumnModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1116,7 +1122,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ExpandoColumnImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1264,7 +1272,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ExpandoColumnImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1373,7 +1383,10 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1467,7 +1480,10 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2192,7 +2208,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 				sql = _SQL_SELECT_EXPANDOCOLUMN;
 
 				if (pagination) {
-					sql = sql.concat(ExpandoColumnModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ExpandoColumnModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2201,7 +2217,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ExpandoColumnImpl.class);
 
 				if (!pagination) {
 					list = (List<ExpandoColumn>)QueryUtil.list(q, getDialect(),
@@ -2260,7 +2278,10 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_EXPANDOCOLUMN);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_EXPANDOCOLUMN);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2313,10 +2334,10 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_EXPANDOCOLUMN = "SELECT expandoColumn FROM ExpandoColumn expandoColumn";
-	private static final String _SQL_SELECT_EXPANDOCOLUMN_WHERE = "SELECT expandoColumn FROM ExpandoColumn expandoColumn WHERE ";
-	private static final String _SQL_COUNT_EXPANDOCOLUMN = "SELECT COUNT(expandoColumn) FROM ExpandoColumn expandoColumn";
-	private static final String _SQL_COUNT_EXPANDOCOLUMN_WHERE = "SELECT COUNT(expandoColumn) FROM ExpandoColumn expandoColumn WHERE ";
+	private static final String _SQL_SELECT_EXPANDOCOLUMN = "SELECT {expandoColumn.*} FROM ExpandoColumn expandoColumn";
+	private static final String _SQL_SELECT_EXPANDOCOLUMN_WHERE = "SELECT {expandoColumn.*} FROM ExpandoColumn expandoColumn WHERE ";
+	private static final String _SQL_COUNT_EXPANDOCOLUMN = "SELECT COUNT(*) AS COUNT_VALUE FROM ExpandoColumn expandoColumn";
+	private static final String _SQL_COUNT_EXPANDOCOLUMN_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ExpandoColumn expandoColumn WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "expandoColumn.columnId";
 	private static final String _FILTER_SQL_SELECT_EXPANDOCOLUMN_WHERE = "SELECT DISTINCT {expandoColumn.*} FROM ExpandoColumn expandoColumn WHERE ";
 	private static final String _FILTER_SQL_SELECT_EXPANDOCOLUMN_NO_INLINE_DISTINCT_WHERE_1 =
@@ -2326,6 +2347,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 	private static final String _FILTER_SQL_COUNT_EXPANDOCOLUMN_WHERE = "SELECT COUNT(DISTINCT expandoColumn.columnId) AS COUNT_VALUE FROM ExpandoColumn expandoColumn WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "expandoColumn";
 	private static final String _FILTER_ENTITY_TABLE = "ExpandoColumn";
+	private static final String _ENTITY_ALIAS = "expandoColumn";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "expandoColumn.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "ExpandoColumn.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ExpandoColumn exists with the primary key ";

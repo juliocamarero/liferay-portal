@@ -88,8 +88,8 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 		};
 	public static final String TABLE_SQL_CREATE = "create table BookmarksEntry (uuid_ VARCHAR(75) null,entryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,resourceBlockId LONG,folderId LONG,name VARCHAR(255) null,url STRING null,description STRING null,visits INTEGER,priority INTEGER,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table BookmarksEntry";
-	public static final String ORDER_BY_JPQL = " ORDER BY bookmarksEntry.folderId ASC, bookmarksEntry.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY BookmarksEntry.folderId ASC, BookmarksEntry.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY bookmarksEntry.folderId ASC, bookmarksEntry.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY BookmarksEntry.folderId ASC, BookmarksEntry.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

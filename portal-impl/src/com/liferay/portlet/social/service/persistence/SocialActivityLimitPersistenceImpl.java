@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -200,7 +200,7 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			}
 			else
 			 if (pagination) {
-				query.append(SocialActivityLimitModelImpl.ORDER_BY_JPQL);
+				query.append(SocialActivityLimitModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -210,7 +210,9 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivityLimitImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -463,12 +465,14 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			}
 		}
 		else {
-			query.append(SocialActivityLimitModelImpl.ORDER_BY_JPQL);
+			query.append(SocialActivityLimitModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialActivityLimitImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -537,7 +541,10 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -690,7 +697,7 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			}
 			else
 			 if (pagination) {
-				query.append(SocialActivityLimitModelImpl.ORDER_BY_JPQL);
+				query.append(SocialActivityLimitModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -700,7 +707,9 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivityLimitImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -968,12 +977,14 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			}
 		}
 		else {
-			query.append(SocialActivityLimitModelImpl.ORDER_BY_JPQL);
+			query.append(SocialActivityLimitModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialActivityLimitImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1050,7 +1061,10 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1254,7 +1268,9 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivityLimitImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1400,7 +1416,10 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2003,7 +2022,7 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 				sql = _SQL_SELECT_SOCIALACTIVITYLIMIT;
 
 				if (pagination) {
-					sql = sql.concat(SocialActivityLimitModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(SocialActivityLimitModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2012,7 +2031,9 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivityLimitImpl.class);
 
 				if (!pagination) {
 					list = (List<SocialActivityLimit>)QueryUtil.list(q,
@@ -2071,7 +2092,10 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SOCIALACTIVITYLIMIT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SOCIALACTIVITYLIMIT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2124,10 +2148,11 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SOCIALACTIVITYLIMIT = "SELECT socialActivityLimit FROM SocialActivityLimit socialActivityLimit";
-	private static final String _SQL_SELECT_SOCIALACTIVITYLIMIT_WHERE = "SELECT socialActivityLimit FROM SocialActivityLimit socialActivityLimit WHERE ";
-	private static final String _SQL_COUNT_SOCIALACTIVITYLIMIT = "SELECT COUNT(socialActivityLimit) FROM SocialActivityLimit socialActivityLimit";
-	private static final String _SQL_COUNT_SOCIALACTIVITYLIMIT_WHERE = "SELECT COUNT(socialActivityLimit) FROM SocialActivityLimit socialActivityLimit WHERE ";
+	private static final String _SQL_SELECT_SOCIALACTIVITYLIMIT = "SELECT {socialActivityLimit.*} FROM SocialActivityLimit socialActivityLimit";
+	private static final String _SQL_SELECT_SOCIALACTIVITYLIMIT_WHERE = "SELECT {socialActivityLimit.*} FROM SocialActivityLimit socialActivityLimit WHERE ";
+	private static final String _SQL_COUNT_SOCIALACTIVITYLIMIT = "SELECT COUNT(*) AS COUNT_VALUE FROM SocialActivityLimit socialActivityLimit";
+	private static final String _SQL_COUNT_SOCIALACTIVITYLIMIT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM SocialActivityLimit socialActivityLimit WHERE ";
+	private static final String _ENTITY_ALIAS = "socialActivityLimit";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "socialActivityLimit.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SocialActivityLimit exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SocialActivityLimit exists with the key {";

@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -212,7 +212,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +222,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -487,12 +489,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -575,7 +579,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -600,9 +607,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "socialRelation.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "socialRelation.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(socialRelation.uuid IS NULL OR socialRelation.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "socialRelation.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "socialRelation.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(socialRelation.uuid_ IS NULL OR socialRelation.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRelationModelImpl.FINDER_CACHE_ENABLED,
 			SocialRelationImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -745,7 +752,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -755,7 +762,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1037,12 +1046,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1133,7 +1144,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1160,9 +1174,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "socialRelation.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "socialRelation.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(socialRelation.uuid IS NULL OR socialRelation.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "socialRelation.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "socialRelation.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(socialRelation.uuid_ IS NULL OR socialRelation.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "socialRelation.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPANYID =
 		new FinderPath(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
@@ -1283,7 +1297,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1293,7 +1307,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1546,12 +1562,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1620,7 +1638,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1761,7 +1782,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1771,7 +1792,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2024,12 +2047,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2098,7 +2123,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2239,7 +2267,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2249,7 +2277,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2502,12 +2532,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2576,7 +2608,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2715,7 +2750,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2725,7 +2760,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2976,12 +3013,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3050,7 +3089,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3073,7 +3115,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_TYPE_TYPE_2 = "socialRelation.type = ?";
+	private static final String _FINDER_COLUMN_TYPE_TYPE_2 = "socialRelation.type_ = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_T = new FinderPath(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRelationModelImpl.FINDER_CACHE_ENABLED,
 			SocialRelationImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -3202,7 +3244,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3212,7 +3254,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3480,12 +3524,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3560,7 +3606,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3586,7 +3635,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 	}
 
 	private static final String _FINDER_COLUMN_C_T_COMPANYID_2 = "socialRelation.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_T_TYPE_2 = "socialRelation.type = ?";
+	private static final String _FINDER_COLUMN_C_T_TYPE_2 = "socialRelation.type_ = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_U1_U2 = new FinderPath(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRelationModelImpl.FINDER_CACHE_ENABLED,
 			SocialRelationImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -3716,7 +3765,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3726,7 +3775,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3994,12 +4045,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4076,7 +4129,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4231,7 +4287,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4241,7 +4297,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4509,12 +4567,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4589,7 +4649,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4615,7 +4678,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 	}
 
 	private static final String _FINDER_COLUMN_U1_T_USERID1_2 = "socialRelation.userId1 = ? AND ";
-	private static final String _FINDER_COLUMN_U1_T_TYPE_2 = "socialRelation.type = ?";
+	private static final String _FINDER_COLUMN_U1_T_TYPE_2 = "socialRelation.type_ = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_U2_T = new FinderPath(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRelationModelImpl.FINDER_CACHE_ENABLED,
 			SocialRelationImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -4744,7 +4807,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4754,7 +4817,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5022,12 +5087,14 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			}
 		}
 		else {
-			query.append(SocialRelationModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5102,7 +5169,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5128,7 +5198,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 	}
 
 	private static final String _FINDER_COLUMN_U2_T_USERID2_2 = "socialRelation.userId2 = ? AND ";
-	private static final String _FINDER_COLUMN_U2_T_TYPE_2 = "socialRelation.type = ?";
+	private static final String _FINDER_COLUMN_U2_T_TYPE_2 = "socialRelation.type_ = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_U1_U2_T = new FinderPath(SocialRelationModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRelationModelImpl.FINDER_CACHE_ENABLED,
 			SocialRelationImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -5251,7 +5321,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5353,7 +5425,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5382,7 +5457,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 	private static final String _FINDER_COLUMN_U1_U2_T_USERID1_2 = "socialRelation.userId1 = ? AND ";
 	private static final String _FINDER_COLUMN_U1_U2_T_USERID2_2 = "socialRelation.userId2 = ? AND ";
-	private static final String _FINDER_COLUMN_U1_U2_T_TYPE_2 = "socialRelation.type = ?";
+	private static final String _FINDER_COLUMN_U1_U2_T_TYPE_2 = "socialRelation.type_ = ?";
 
 	/**
 	 * Caches the social relation in the entity cache if it is enabled.
@@ -6078,7 +6153,7 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 				sql = _SQL_SELECT_SOCIALRELATION;
 
 				if (pagination) {
-					sql = sql.concat(SocialRelationModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(SocialRelationModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -6087,7 +6162,9 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRelationImpl.class);
 
 				if (!pagination) {
 					list = (List<SocialRelation>)QueryUtil.list(q,
@@ -6146,7 +6223,10 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SOCIALRELATION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SOCIALRELATION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -6199,10 +6279,11 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SOCIALRELATION = "SELECT socialRelation FROM SocialRelation socialRelation";
-	private static final String _SQL_SELECT_SOCIALRELATION_WHERE = "SELECT socialRelation FROM SocialRelation socialRelation WHERE ";
-	private static final String _SQL_COUNT_SOCIALRELATION = "SELECT COUNT(socialRelation) FROM SocialRelation socialRelation";
-	private static final String _SQL_COUNT_SOCIALRELATION_WHERE = "SELECT COUNT(socialRelation) FROM SocialRelation socialRelation WHERE ";
+	private static final String _SQL_SELECT_SOCIALRELATION = "SELECT {socialRelation.*} FROM SocialRelation socialRelation";
+	private static final String _SQL_SELECT_SOCIALRELATION_WHERE = "SELECT {socialRelation.*} FROM SocialRelation socialRelation WHERE ";
+	private static final String _SQL_COUNT_SOCIALRELATION = "SELECT COUNT(*) AS COUNT_VALUE FROM SocialRelation socialRelation";
+	private static final String _SQL_COUNT_SOCIALRELATION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM SocialRelation socialRelation WHERE ";
+	private static final String _ENTITY_ALIAS = "socialRelation";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "socialRelation.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SocialRelation exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SocialRelation exists with the key {";

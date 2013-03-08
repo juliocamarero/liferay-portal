@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -206,7 +206,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			}
 			else
 			 if (pagination) {
-				query.append(ListTypeModelImpl.ORDER_BY_JPQL);
+				query.append(ListTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -216,7 +216,9 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ListTypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -480,12 +482,14 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			}
 		}
 		else {
-			query.append(ListTypeModelImpl.ORDER_BY_JPQL);
+			query.append(ListTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ListTypeImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -568,7 +572,10 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -593,9 +600,9 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_TYPE_TYPE_1 = "listType.type IS NULL";
-	private static final String _FINDER_COLUMN_TYPE_TYPE_2 = "listType.type = ?";
-	private static final String _FINDER_COLUMN_TYPE_TYPE_3 = "(listType.type IS NULL OR listType.type = '')";
+	private static final String _FINDER_COLUMN_TYPE_TYPE_1 = "listType.type_ IS NULL";
+	private static final String _FINDER_COLUMN_TYPE_TYPE_2 = "listType.type_ = ?";
+	private static final String _FINDER_COLUMN_TYPE_TYPE_3 = "(listType.type_ IS NULL OR listType.type_ = '')";
 
 	/**
 	 * Caches the list type in the entity cache if it is enabled.
@@ -1025,7 +1032,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 				sql = _SQL_SELECT_LISTTYPE;
 
 				if (pagination) {
-					sql = sql.concat(ListTypeModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ListTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1034,7 +1041,9 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ListTypeImpl.class);
 
 				if (!pagination) {
 					list = (List<ListType>)QueryUtil.list(q, getDialect(),
@@ -1093,7 +1102,10 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_LISTTYPE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_LISTTYPE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1146,10 +1158,11 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_LISTTYPE = "SELECT listType FROM ListType listType";
-	private static final String _SQL_SELECT_LISTTYPE_WHERE = "SELECT listType FROM ListType listType WHERE ";
-	private static final String _SQL_COUNT_LISTTYPE = "SELECT COUNT(listType) FROM ListType listType";
-	private static final String _SQL_COUNT_LISTTYPE_WHERE = "SELECT COUNT(listType) FROM ListType listType WHERE ";
+	private static final String _SQL_SELECT_LISTTYPE = "SELECT {listType.*} FROM ListType listType";
+	private static final String _SQL_SELECT_LISTTYPE_WHERE = "SELECT {listType.*} FROM ListType listType WHERE ";
+	private static final String _SQL_COUNT_LISTTYPE = "SELECT COUNT(*) AS COUNT_VALUE FROM ListType listType";
+	private static final String _SQL_COUNT_LISTTYPE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ListType listType WHERE ";
+	private static final String _ENTITY_ALIAS = "listType";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "listType.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ListType exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No ListType exists with the key {";

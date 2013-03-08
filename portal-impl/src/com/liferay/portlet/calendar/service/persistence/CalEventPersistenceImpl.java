@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -217,7 +216,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -227,7 +226,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -491,12 +492,14 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 		}
 		else {
-			query.append(CalEventModelImpl.ORDER_BY_JPQL);
+			query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -579,7 +582,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -604,9 +610,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "calEvent.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "calEvent.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(calEvent.uuid IS NULL OR calEvent.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "calEvent.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "calEvent.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(calEvent.uuid_ IS NULL OR calEvent.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(CalEventModelImpl.ENTITY_CACHE_ENABLED,
 			CalEventModelImpl.FINDER_CACHE_ENABLED, CalEventImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -724,7 +730,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -834,7 +842,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -861,9 +872,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "calEvent.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "calEvent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(calEvent.uuid IS NULL OR calEvent.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "calEvent.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "calEvent.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(calEvent.uuid_ IS NULL OR calEvent.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "calEvent.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(CalEventModelImpl.ENTITY_CACHE_ENABLED,
 			CalEventModelImpl.FINDER_CACHE_ENABLED, CalEventImpl.class,
@@ -1006,7 +1017,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1016,7 +1027,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1298,12 +1311,14 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 		}
 		else {
-			query.append(CalEventModelImpl.ORDER_BY_JPQL);
+			query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1394,7 +1409,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1421,9 +1439,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "calEvent.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "calEvent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(calEvent.uuid IS NULL OR calEvent.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "calEvent.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "calEvent.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(calEvent.uuid_ IS NULL OR calEvent.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "calEvent.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPANYID =
 		new FinderPath(CalEventModelImpl.ENTITY_CACHE_ENABLED,
@@ -1544,7 +1562,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1554,7 +1572,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1804,12 +1824,14 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 		}
 		else {
-			query.append(CalEventModelImpl.ORDER_BY_JPQL);
+			query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1878,7 +1900,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2018,7 +2043,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2028,7 +2053,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2278,12 +2305,14 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 		}
 		else {
-			query.append(CalEventModelImpl.ORDER_BY_JPQL);
+			query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2396,10 +2425,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2574,10 +2603,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2661,7 +2690,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2837,7 +2869,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2847,7 +2879,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3098,12 +3132,14 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 		}
 		else {
-			query.append(CalEventModelImpl.ORDER_BY_JPQL);
+			query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3172,7 +3208,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3340,7 +3379,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3350,7 +3389,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3629,12 +3670,14 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 		}
 		else {
-			query.append(CalEventModelImpl.ORDER_BY_JPQL);
+			query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3768,10 +3811,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3966,10 +4009,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4135,10 +4178,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4317,7 +4360,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4327,7 +4370,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4428,7 +4473,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4522,7 +4570,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4714,9 +4765,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 	private static final String _FINDER_COLUMN_G_T_GROUPID_2 = "calEvent.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_T_GROUPID_5 = "(" +
 		removeConjunction(_FINDER_COLUMN_G_T_GROUPID_2) + ")";
-	private static final String _FINDER_COLUMN_G_T_TYPE_1 = "calEvent.type IS NULL";
-	private static final String _FINDER_COLUMN_G_T_TYPE_2 = "calEvent.type = ?";
-	private static final String _FINDER_COLUMN_G_T_TYPE_3 = "(calEvent.type IS NULL OR calEvent.type = '')";
+	private static final String _FINDER_COLUMN_G_T_TYPE_1 = "calEvent.type_ IS NULL";
+	private static final String _FINDER_COLUMN_G_T_TYPE_2 = "calEvent.type_ = ?";
+	private static final String _FINDER_COLUMN_G_T_TYPE_3 = "(calEvent.type_ IS NULL OR calEvent.type_ = '')";
 	private static final String _FINDER_COLUMN_G_T_TYPE_4 = "(" +
 		removeConjunction(_FINDER_COLUMN_G_T_TYPE_1) + ")";
 	private static final String _FINDER_COLUMN_G_T_TYPE_5 = "(" +
@@ -4851,7 +4902,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4861,7 +4912,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5129,12 +5182,14 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 		}
 		else {
-			query.append(CalEventModelImpl.ORDER_BY_JPQL);
+			query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5255,10 +5310,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5439,10 +5494,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5534,7 +5589,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5777,7 +5835,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5787,7 +5845,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6086,12 +6146,14 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 		}
 		else {
-			query.append(CalEventModelImpl.ORDER_BY_JPQL);
+			query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6234,10 +6296,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6437,10 +6499,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6620,10 +6682,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(CalEventModelImpl.ORDER_BY_SQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6820,7 +6882,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			}
 			else
 			 if (pagination) {
-				query.append(CalEventModelImpl.ORDER_BY_JPQL);
+				query.append(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6830,7 +6892,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6938,7 +7002,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7045,7 +7112,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7255,9 +7325,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 	private static final String _FINDER_COLUMN_G_T_R_GROUPID_2 = "calEvent.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_T_R_GROUPID_5 = "(" +
 		removeConjunction(_FINDER_COLUMN_G_T_R_GROUPID_2) + ")";
-	private static final String _FINDER_COLUMN_G_T_R_TYPE_1 = "calEvent.type IS NULL AND ";
-	private static final String _FINDER_COLUMN_G_T_R_TYPE_2 = "calEvent.type = ? AND ";
-	private static final String _FINDER_COLUMN_G_T_R_TYPE_3 = "(calEvent.type IS NULL OR calEvent.type = '') AND ";
+	private static final String _FINDER_COLUMN_G_T_R_TYPE_1 = "calEvent.type_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_G_T_R_TYPE_2 = "calEvent.type_ = ? AND ";
+	private static final String _FINDER_COLUMN_G_T_R_TYPE_3 = "(calEvent.type_ IS NULL OR calEvent.type_ = '') AND ";
 	private static final String _FINDER_COLUMN_G_T_R_TYPE_4 = "(" +
 		removeConjunction(_FINDER_COLUMN_G_T_R_TYPE_1) + ")";
 	private static final String _FINDER_COLUMN_G_T_R_TYPE_5 = "(" +
@@ -7938,7 +8008,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 				sql = _SQL_SELECT_CALEVENT;
 
 				if (pagination) {
-					sql = sql.concat(CalEventModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(CalEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -7947,7 +8017,9 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CalEventImpl.class);
 
 				if (!pagination) {
 					list = (List<CalEvent>)QueryUtil.list(q, getDialect(),
@@ -8006,7 +8078,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_CALEVENT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_CALEVENT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -8059,10 +8134,10 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_CALEVENT = "SELECT calEvent FROM CalEvent calEvent";
-	private static final String _SQL_SELECT_CALEVENT_WHERE = "SELECT calEvent FROM CalEvent calEvent WHERE ";
-	private static final String _SQL_COUNT_CALEVENT = "SELECT COUNT(calEvent) FROM CalEvent calEvent";
-	private static final String _SQL_COUNT_CALEVENT_WHERE = "SELECT COUNT(calEvent) FROM CalEvent calEvent WHERE ";
+	private static final String _SQL_SELECT_CALEVENT = "SELECT {calEvent.*} FROM CalEvent calEvent";
+	private static final String _SQL_SELECT_CALEVENT_WHERE = "SELECT {calEvent.*} FROM CalEvent calEvent WHERE ";
+	private static final String _SQL_COUNT_CALEVENT = "SELECT COUNT(*) AS COUNT_VALUE FROM CalEvent calEvent";
+	private static final String _SQL_COUNT_CALEVENT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM CalEvent calEvent WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "calEvent.eventId";
 	private static final String _FILTER_SQL_SELECT_CALEVENT_WHERE = "SELECT DISTINCT {calEvent.*} FROM CalEvent calEvent WHERE ";
 	private static final String _FILTER_SQL_SELECT_CALEVENT_NO_INLINE_DISTINCT_WHERE_1 =
@@ -8072,6 +8147,7 @@ public class CalEventPersistenceImpl extends BasePersistenceImpl<CalEvent>
 	private static final String _FILTER_SQL_COUNT_CALEVENT_WHERE = "SELECT COUNT(DISTINCT calEvent.eventId) AS COUNT_VALUE FROM CalEvent calEvent WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "calEvent";
 	private static final String _FILTER_ENTITY_TABLE = "CalEvent";
+	private static final String _ENTITY_ALIAS = "calEvent";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "calEvent.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "CalEvent.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No CalEvent exists with the primary key ";

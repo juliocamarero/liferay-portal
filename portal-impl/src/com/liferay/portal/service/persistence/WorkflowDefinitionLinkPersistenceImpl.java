@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -203,7 +203,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			}
 			else
 			 if (pagination) {
-				query.append(WorkflowDefinitionLinkModelImpl.ORDER_BY_JPQL);
+				query.append(WorkflowDefinitionLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -213,7 +213,9 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WorkflowDefinitionLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -467,12 +469,14 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			}
 		}
 		else {
-			query.append(WorkflowDefinitionLinkModelImpl.ORDER_BY_JPQL);
+			query.append(WorkflowDefinitionLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WorkflowDefinitionLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -541,7 +545,10 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -728,7 +735,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			}
 			else
 			 if (pagination) {
-				query.append(WorkflowDefinitionLinkModelImpl.ORDER_BY_JPQL);
+				query.append(WorkflowDefinitionLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -738,7 +745,9 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WorkflowDefinitionLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1049,12 +1058,14 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			}
 		}
 		else {
-			query.append(WorkflowDefinitionLinkModelImpl.ORDER_BY_JPQL);
+			query.append(WorkflowDefinitionLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WorkflowDefinitionLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1154,7 +1165,10 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1338,7 +1352,9 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WorkflowDefinitionLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1465,7 +1481,10 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2066,7 +2085,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 				sql = _SQL_SELECT_WORKFLOWDEFINITIONLINK;
 
 				if (pagination) {
-					sql = sql.concat(WorkflowDefinitionLinkModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(WorkflowDefinitionLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2075,7 +2094,9 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WorkflowDefinitionLinkImpl.class);
 
 				if (!pagination) {
 					list = (List<WorkflowDefinitionLink>)QueryUtil.list(q,
@@ -2134,7 +2155,10 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_WORKFLOWDEFINITIONLINK);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_WORKFLOWDEFINITIONLINK);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2187,10 +2211,11 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_WORKFLOWDEFINITIONLINK = "SELECT workflowDefinitionLink FROM WorkflowDefinitionLink workflowDefinitionLink";
-	private static final String _SQL_SELECT_WORKFLOWDEFINITIONLINK_WHERE = "SELECT workflowDefinitionLink FROM WorkflowDefinitionLink workflowDefinitionLink WHERE ";
-	private static final String _SQL_COUNT_WORKFLOWDEFINITIONLINK = "SELECT COUNT(workflowDefinitionLink) FROM WorkflowDefinitionLink workflowDefinitionLink";
-	private static final String _SQL_COUNT_WORKFLOWDEFINITIONLINK_WHERE = "SELECT COUNT(workflowDefinitionLink) FROM WorkflowDefinitionLink workflowDefinitionLink WHERE ";
+	private static final String _SQL_SELECT_WORKFLOWDEFINITIONLINK = "SELECT {workflowDefinitionLink.*} FROM WorkflowDefinitionLink workflowDefinitionLink";
+	private static final String _SQL_SELECT_WORKFLOWDEFINITIONLINK_WHERE = "SELECT {workflowDefinitionLink.*} FROM WorkflowDefinitionLink workflowDefinitionLink WHERE ";
+	private static final String _SQL_COUNT_WORKFLOWDEFINITIONLINK = "SELECT COUNT(*) AS COUNT_VALUE FROM WorkflowDefinitionLink workflowDefinitionLink";
+	private static final String _SQL_COUNT_WORKFLOWDEFINITIONLINK_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM WorkflowDefinitionLink workflowDefinitionLink WHERE ";
+	private static final String _ENTITY_ALIAS = "workflowDefinitionLink";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "workflowDefinitionLink.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No WorkflowDefinitionLink exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No WorkflowDefinitionLink exists with the key {";

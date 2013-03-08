@@ -19,8 +19,8 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -488,7 +488,7 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 				query = new StringBundler(2 +
 						(orderByComparator.getOrderByFields().length * 3));
 
-				query.append(_SQL_SELECT_ACCOUNT);
+				query.append(_SQL_SELECT_ACCOUNT_);
 
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
@@ -496,10 +496,10 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_ACCOUNT;
+				sql = _SQL_SELECT_ACCOUNT_;
 
 				if (pagination) {
-					sql = sql.concat(AccountModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(AccountModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -508,7 +508,9 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AccountImpl.class);
 
 				if (!pagination) {
 					list = (List<Account>)QueryUtil.list(q, getDialect(),
@@ -567,7 +569,10 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ACCOUNT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ACCOUNT_);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -620,9 +625,10 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_ACCOUNT = "SELECT account FROM Account account";
-	private static final String _SQL_COUNT_ACCOUNT = "SELECT COUNT(account) FROM Account account";
-	private static final String _ORDER_BY_ENTITY_ALIAS = "account.";
+	private static final String _SQL_SELECT_ACCOUNT_ = "SELECT {account_.*} FROM Account_ account_";
+	private static final String _SQL_COUNT_ACCOUNT_ = "SELECT COUNT(*) AS COUNT_VALUE FROM Account_ account_";
+	private static final String _ENTITY_ALIAS = "account_";
+	private static final String _ORDER_BY_ENTITY_ALIAS = "account_.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Account exists with the primary key ";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = com.liferay.portal.util.PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE;
 	private static Log _log = LogFactoryUtil.getLog(AccountPersistenceImpl.class);

@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -197,7 +197,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			}
 			else
 			 if (pagination) {
-				query.append(PortletModelImpl.ORDER_BY_JPQL);
+				query.append(PortletModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -207,7 +207,9 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PortletImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -457,12 +459,14 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			}
 		}
 		else {
-			query.append(PortletModelImpl.ORDER_BY_JPQL);
+			query.append(PortletModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PortletImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -531,7 +535,10 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -672,7 +679,9 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PortletImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -782,7 +791,10 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1307,7 +1319,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 				sql = _SQL_SELECT_PORTLET;
 
 				if (pagination) {
-					sql = sql.concat(PortletModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(PortletModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1316,7 +1328,9 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PortletImpl.class);
 
 				if (!pagination) {
 					list = (List<Portlet>)QueryUtil.list(q, getDialect(),
@@ -1375,7 +1389,10 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_PORTLET);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_PORTLET);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1428,10 +1445,11 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_PORTLET = "SELECT portlet FROM Portlet portlet";
-	private static final String _SQL_SELECT_PORTLET_WHERE = "SELECT portlet FROM Portlet portlet WHERE ";
-	private static final String _SQL_COUNT_PORTLET = "SELECT COUNT(portlet) FROM Portlet portlet";
-	private static final String _SQL_COUNT_PORTLET_WHERE = "SELECT COUNT(portlet) FROM Portlet portlet WHERE ";
+	private static final String _SQL_SELECT_PORTLET = "SELECT {portlet.*} FROM Portlet portlet";
+	private static final String _SQL_SELECT_PORTLET_WHERE = "SELECT {portlet.*} FROM Portlet portlet WHERE ";
+	private static final String _SQL_COUNT_PORTLET = "SELECT COUNT(*) AS COUNT_VALUE FROM Portlet portlet";
+	private static final String _SQL_COUNT_PORTLET_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Portlet portlet WHERE ";
+	private static final String _ENTITY_ALIAS = "portlet";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "portlet.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Portlet exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Portlet exists with the key {";

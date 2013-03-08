@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -198,7 +197,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 				query = new StringBundler(3);
 			}
 
-			query.append(_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_SQL_SELECT_ORGANIZATION__WHERE);
 
 			query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -208,7 +207,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			}
 			else
 			 if (pagination) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -218,7 +217,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrganizationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -411,7 +412,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_ORGANIZATION_WHERE);
+		query.append(_SQL_SELECT_ORGANIZATION__WHERE);
 
 		query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -471,12 +472,14 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			}
 		}
 		else {
-			query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+			query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, OrganizationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -565,16 +568,16 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 
 		if (getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__WHERE);
 		}
 		else {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_1);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_1);
 		}
 
 		query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_2);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -589,10 +592,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(OrganizationModelImpl.ORDER_BY_SQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -688,16 +691,16 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 
 		if (getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__WHERE);
 		}
 		else {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_1);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_1);
 		}
 
 		query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_2);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -769,10 +772,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(OrganizationModelImpl.ORDER_BY_SQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -845,7 +848,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_ORGANIZATION_WHERE);
+			query.append(_SQL_COUNT_ORGANIZATION__WHERE);
 
 			query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -856,7 +859,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -893,7 +899,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		StringBundler query = new StringBundler(2);
 
-		query.append(_FILTER_SQL_COUNT_ORGANIZATION_WHERE);
+		query.append(_FILTER_SQL_COUNT_ORGANIZATION__WHERE);
 
 		query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
 
@@ -927,7 +933,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 	}
 
-	private static final String _FINDER_COLUMN_COMPANYID_COMPANYID_2 = "organization.companyId = ?";
+	private static final String _FINDER_COLUMN_COMPANYID_COMPANYID_2 = "organization_.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_LOCATIONS =
 		new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
 			OrganizationModelImpl.FINDER_CACHE_ENABLED, OrganizationImpl.class,
@@ -1036,7 +1042,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 				query = new StringBundler(3);
 			}
 
-			query.append(_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_SQL_SELECT_ORGANIZATION__WHERE);
 
 			query.append(_FINDER_COLUMN_LOCATIONS_COMPANYID_2);
 
@@ -1046,7 +1052,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			}
 			else
 			 if (pagination) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1056,7 +1062,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrganizationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1249,7 +1257,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_ORGANIZATION_WHERE);
+		query.append(_SQL_SELECT_ORGANIZATION__WHERE);
 
 		query.append(_FINDER_COLUMN_LOCATIONS_COMPANYID_2);
 
@@ -1309,12 +1317,14 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			}
 		}
 		else {
-			query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+			query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, OrganizationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1403,16 +1413,16 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 
 		if (getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__WHERE);
 		}
 		else {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_1);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_1);
 		}
 
 		query.append(_FINDER_COLUMN_LOCATIONS_COMPANYID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_2);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -1427,10 +1437,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(OrganizationModelImpl.ORDER_BY_SQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1526,16 +1536,16 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 
 		if (getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__WHERE);
 		}
 		else {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_1);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_1);
 		}
 
 		query.append(_FINDER_COLUMN_LOCATIONS_COMPANYID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_2);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -1607,10 +1617,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(OrganizationModelImpl.ORDER_BY_SQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1683,7 +1693,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_ORGANIZATION_WHERE);
+			query.append(_SQL_COUNT_ORGANIZATION__WHERE);
 
 			query.append(_FINDER_COLUMN_LOCATIONS_COMPANYID_2);
 
@@ -1694,7 +1704,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1731,7 +1744,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		StringBundler query = new StringBundler(2);
 
-		query.append(_FILTER_SQL_COUNT_ORGANIZATION_WHERE);
+		query.append(_FILTER_SQL_COUNT_ORGANIZATION__WHERE);
 
 		query.append(_FINDER_COLUMN_LOCATIONS_COMPANYID_2);
 
@@ -1765,7 +1778,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 	}
 
-	private static final String _FINDER_COLUMN_LOCATIONS_COMPANYID_2 = "organization.companyId = ? AND organization.parentOrganizationId != 0";
+	private static final String _FINDER_COLUMN_LOCATIONS_COMPANYID_2 = "organization_.companyId = ? AND organization_.parentOrganizationId != 0";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_P = new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
 			OrganizationModelImpl.FINDER_CACHE_ENABLED, OrganizationImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_P",
@@ -1883,7 +1896,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 				query = new StringBundler(4);
 			}
 
-			query.append(_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_SQL_SELECT_ORGANIZATION__WHERE);
 
 			query.append(_FINDER_COLUMN_C_P_COMPANYID_2);
 
@@ -1895,7 +1908,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			}
 			else
 			 if (pagination) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1905,7 +1918,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrganizationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2114,7 +2129,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			query = new StringBundler(3);
 		}
 
-		query.append(_SQL_SELECT_ORGANIZATION_WHERE);
+		query.append(_SQL_SELECT_ORGANIZATION__WHERE);
 
 		query.append(_FINDER_COLUMN_C_P_COMPANYID_2);
 
@@ -2176,12 +2191,14 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			}
 		}
 		else {
-			query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+			query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, OrganizationImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2278,10 +2295,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 
 		if (getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__WHERE);
 		}
 		else {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_1);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_1);
 		}
 
 		query.append(_FINDER_COLUMN_C_P_COMPANYID_2);
@@ -2289,7 +2306,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		query.append(_FINDER_COLUMN_C_P_PARENTORGANIZATIONID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_2);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -2304,10 +2321,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(OrganizationModelImpl.ORDER_BY_SQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2407,10 +2424,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 
 		if (getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__WHERE);
 		}
 		else {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_1);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_1);
 		}
 
 		query.append(_FINDER_COLUMN_C_P_COMPANYID_2);
@@ -2418,7 +2435,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		query.append(_FINDER_COLUMN_C_P_PARENTORGANIZATIONID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
-			query.append(_FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_2);
+			query.append(_FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_2);
 		}
 
 		if (orderByComparator != null) {
@@ -2490,10 +2507,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(OrganizationModelImpl.ORDER_BY_JPQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(OrganizationModelImpl.ORDER_BY_SQL);
+				query.append(OrganizationModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2572,7 +2589,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_ORGANIZATION_WHERE);
+			query.append(_SQL_COUNT_ORGANIZATION__WHERE);
 
 			query.append(_FINDER_COLUMN_C_P_COMPANYID_2);
 
@@ -2585,7 +2602,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2626,7 +2646,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		StringBundler query = new StringBundler(3);
 
-		query.append(_FILTER_SQL_COUNT_ORGANIZATION_WHERE);
+		query.append(_FILTER_SQL_COUNT_ORGANIZATION__WHERE);
 
 		query.append(_FINDER_COLUMN_C_P_COMPANYID_2);
 
@@ -2664,8 +2684,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 	}
 
-	private static final String _FINDER_COLUMN_C_P_COMPANYID_2 = "organization.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_P_PARENTORGANIZATIONID_2 = "organization.parentOrganizationId = ?";
+	private static final String _FINDER_COLUMN_C_P_COMPANYID_2 = "organization_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_P_PARENTORGANIZATIONID_2 = "organization_.parentOrganizationId = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_N = new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
 			OrganizationModelImpl.FINDER_CACHE_ENABLED, OrganizationImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_N",
@@ -2758,7 +2778,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		if (result == null) {
 			StringBundler query = new StringBundler(4);
 
-			query.append(_SQL_SELECT_ORGANIZATION_WHERE);
+			query.append(_SQL_SELECT_ORGANIZATION__WHERE);
 
 			query.append(_FINDER_COLUMN_C_N_COMPANYID_2);
 
@@ -2783,7 +2803,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrganizationImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2868,7 +2890,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		if (count == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_COUNT_ORGANIZATION_WHERE);
+			query.append(_SQL_COUNT_ORGANIZATION__WHERE);
 
 			query.append(_FINDER_COLUMN_C_N_COMPANYID_2);
 
@@ -2893,7 +2915,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2920,10 +2945,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_N_COMPANYID_2 = "organization.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_NAME_1 = "organization.name IS NULL";
-	private static final String _FINDER_COLUMN_C_N_NAME_2 = "organization.name = ?";
-	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(organization.name IS NULL OR organization.name = '')";
+	private static final String _FINDER_COLUMN_C_N_COMPANYID_2 = "organization_.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_N_NAME_1 = "organization_.name IS NULL";
+	private static final String _FINDER_COLUMN_C_N_NAME_2 = "organization_.name = ?";
+	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(organization_.name IS NULL OR organization_.name = '')";
 
 	/**
 	 * Caches the organization in the entity cache if it is enabled.
@@ -3480,7 +3505,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 				query = new StringBundler(2 +
 						(orderByComparator.getOrderByFields().length * 3));
 
-				query.append(_SQL_SELECT_ORGANIZATION);
+				query.append(_SQL_SELECT_ORGANIZATION_);
 
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
@@ -3488,10 +3513,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_ORGANIZATION;
+				sql = _SQL_SELECT_ORGANIZATION_;
 
 				if (pagination) {
-					sql = sql.concat(OrganizationModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(OrganizationModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3500,7 +3525,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrganizationImpl.class);
 
 				if (!pagination) {
 					list = (List<Organization>)QueryUtil.list(q, getDialect(),
@@ -3559,7 +3586,10 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ORGANIZATION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ORGANIZATION_);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3670,7 +3700,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 					sql = _SQL_GETGROUPS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portal.model.impl.GroupModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portal.model.impl.GroupModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -4158,7 +4188,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 					sql = _SQL_GETUSERS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portal.model.impl.UserModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portal.model.impl.UserModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -4928,26 +4958,27 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_ORGANIZATION = "SELECT organization FROM Organization organization";
-	private static final String _SQL_SELECT_ORGANIZATION_WHERE = "SELECT organization FROM Organization organization WHERE ";
-	private static final String _SQL_COUNT_ORGANIZATION = "SELECT COUNT(organization) FROM Organization organization";
-	private static final String _SQL_COUNT_ORGANIZATION_WHERE = "SELECT COUNT(organization) FROM Organization organization WHERE ";
+	private static final String _SQL_SELECT_ORGANIZATION_ = "SELECT {organization_.*} FROM Organization_ organization_";
+	private static final String _SQL_SELECT_ORGANIZATION__WHERE = "SELECT {organization_.*} FROM Organization_ organization_ WHERE ";
+	private static final String _SQL_COUNT_ORGANIZATION_ = "SELECT COUNT(*) AS COUNT_VALUE FROM Organization_ organization_";
+	private static final String _SQL_COUNT_ORGANIZATION__WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Organization_ organization_ WHERE ";
 	private static final String _SQL_GETGROUPS = "SELECT {Group_.*} FROM Group_ INNER JOIN Groups_Orgs ON (Groups_Orgs.groupId = Group_.groupId) WHERE (Groups_Orgs.organizationId = ?)";
 	private static final String _SQL_GETGROUPSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM Groups_Orgs WHERE organizationId = ?";
 	private static final String _SQL_CONTAINSGROUP = "SELECT COUNT(*) AS COUNT_VALUE FROM Groups_Orgs WHERE organizationId = ? AND groupId = ?";
 	private static final String _SQL_GETUSERS = "SELECT {User_.*} FROM User_ INNER JOIN Users_Orgs ON (Users_Orgs.userId = User_.userId) WHERE (Users_Orgs.organizationId = ?)";
 	private static final String _SQL_GETUSERSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_Orgs WHERE organizationId = ?";
 	private static final String _SQL_CONTAINSUSER = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_Orgs WHERE organizationId = ? AND userId = ?";
-	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "organization.organizationId";
-	private static final String _FILTER_SQL_SELECT_ORGANIZATION_WHERE = "SELECT DISTINCT {organization.*} FROM Organization_ organization WHERE ";
-	private static final String _FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_1 =
-		"SELECT {Organization_.*} FROM (SELECT DISTINCT organization.organizationId FROM Organization_ organization WHERE ";
-	private static final String _FILTER_SQL_SELECT_ORGANIZATION_NO_INLINE_DISTINCT_WHERE_2 =
+	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "organization_.organizationId";
+	private static final String _FILTER_SQL_SELECT_ORGANIZATION__WHERE = "SELECT DISTINCT {organization_.*} FROM Organization_ organization_ WHERE ";
+	private static final String _FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_1 =
+		"SELECT {Organization_.*} FROM (SELECT DISTINCT organization_.organizationId FROM Organization_ organization_ WHERE ";
+	private static final String _FILTER_SQL_SELECT_ORGANIZATION__NO_INLINE_DISTINCT_WHERE_2 =
 		") TEMP_TABLE INNER JOIN Organization_ ON TEMP_TABLE.organizationId = Organization_.organizationId";
-	private static final String _FILTER_SQL_COUNT_ORGANIZATION_WHERE = "SELECT COUNT(DISTINCT organization.organizationId) AS COUNT_VALUE FROM Organization_ organization WHERE ";
-	private static final String _FILTER_ENTITY_ALIAS = "organization";
+	private static final String _FILTER_SQL_COUNT_ORGANIZATION__WHERE = "SELECT COUNT(DISTINCT organization_.organizationId) AS COUNT_VALUE FROM Organization_ organization_ WHERE ";
+	private static final String _FILTER_ENTITY_ALIAS = "organization_";
 	private static final String _FILTER_ENTITY_TABLE = "Organization_";
-	private static final String _ORDER_BY_ENTITY_ALIAS = "organization.";
+	private static final String _ENTITY_ALIAS = "organization_";
+	private static final String _ORDER_BY_ENTITY_ALIAS = "organization_.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "Organization_.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Organization exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Organization exists with the key {";

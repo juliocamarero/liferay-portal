@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -199,7 +199,7 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 			}
 			else
 			 if (pagination) {
-				query.append(ShoppingItemPriceModelImpl.ORDER_BY_JPQL);
+				query.append(ShoppingItemPriceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -209,7 +209,9 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ShoppingItemPriceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -462,12 +464,14 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 			}
 		}
 		else {
-			query.append(ShoppingItemPriceModelImpl.ORDER_BY_JPQL);
+			query.append(ShoppingItemPriceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ShoppingItemPriceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -536,7 +540,10 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1008,7 +1015,7 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 				sql = _SQL_SELECT_SHOPPINGITEMPRICE;
 
 				if (pagination) {
-					sql = sql.concat(ShoppingItemPriceModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ShoppingItemPriceModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1017,7 +1024,9 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ShoppingItemPriceImpl.class);
 
 				if (!pagination) {
 					list = (List<ShoppingItemPrice>)QueryUtil.list(q,
@@ -1076,7 +1085,10 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SHOPPINGITEMPRICE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SHOPPINGITEMPRICE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1129,10 +1141,11 @@ public class ShoppingItemPricePersistenceImpl extends BasePersistenceImpl<Shoppi
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SHOPPINGITEMPRICE = "SELECT shoppingItemPrice FROM ShoppingItemPrice shoppingItemPrice";
-	private static final String _SQL_SELECT_SHOPPINGITEMPRICE_WHERE = "SELECT shoppingItemPrice FROM ShoppingItemPrice shoppingItemPrice WHERE ";
-	private static final String _SQL_COUNT_SHOPPINGITEMPRICE = "SELECT COUNT(shoppingItemPrice) FROM ShoppingItemPrice shoppingItemPrice";
-	private static final String _SQL_COUNT_SHOPPINGITEMPRICE_WHERE = "SELECT COUNT(shoppingItemPrice) FROM ShoppingItemPrice shoppingItemPrice WHERE ";
+	private static final String _SQL_SELECT_SHOPPINGITEMPRICE = "SELECT {shoppingItemPrice.*} FROM ShoppingItemPrice shoppingItemPrice";
+	private static final String _SQL_SELECT_SHOPPINGITEMPRICE_WHERE = "SELECT {shoppingItemPrice.*} FROM ShoppingItemPrice shoppingItemPrice WHERE ";
+	private static final String _SQL_COUNT_SHOPPINGITEMPRICE = "SELECT COUNT(*) AS COUNT_VALUE FROM ShoppingItemPrice shoppingItemPrice";
+	private static final String _SQL_COUNT_SHOPPINGITEMPRICE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ShoppingItemPrice shoppingItemPrice WHERE ";
+	private static final String _ENTITY_ALIAS = "shoppingItemPrice";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "shoppingItemPrice.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ShoppingItemPrice exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No ShoppingItemPrice exists with the key {";

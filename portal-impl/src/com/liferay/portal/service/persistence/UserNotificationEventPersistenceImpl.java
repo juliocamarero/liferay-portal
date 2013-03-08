@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -212,7 +212,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			}
 			else
 			 if (pagination) {
-				query.append(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+				query.append(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +222,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -490,12 +492,14 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			}
 		}
 		else {
-			query.append(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+			query.append(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -578,7 +582,10 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -603,9 +610,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "userNotificationEvent.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "userNotificationEvent.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "userNotificationEvent.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "userNotificationEvent.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(userNotificationEvent.uuid_ IS NULL OR userNotificationEvent.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
 			UserNotificationEventModelImpl.FINDER_CACHE_ENABLED,
 			UserNotificationEventImpl.class,
@@ -749,7 +756,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			}
 			else
 			 if (pagination) {
-				query.append(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+				query.append(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -759,7 +766,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1044,12 +1053,14 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			}
 		}
 		else {
-			query.append(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+			query.append(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1140,7 +1151,10 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1167,9 +1181,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "userNotificationEvent.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "userNotificationEvent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(userNotificationEvent.uuid IS NULL OR userNotificationEvent.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "userNotificationEvent.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "userNotificationEvent.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(userNotificationEvent.uuid_ IS NULL OR userNotificationEvent.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "userNotificationEvent.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_USERID = new FinderPath(UserNotificationEventModelImpl.ENTITY_CACHE_ENABLED,
 			UserNotificationEventModelImpl.FINDER_CACHE_ENABLED,
@@ -1289,7 +1303,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			}
 			else
 			 if (pagination) {
-				query.append(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+				query.append(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1299,7 +1313,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1553,12 +1569,14 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			}
 		}
 		else {
-			query.append(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+			query.append(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1627,7 +1645,10 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1781,7 +1802,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			}
 			else
 			 if (pagination) {
-				query.append(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+				query.append(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1791,7 +1812,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2061,12 +2084,14 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			}
 		}
 		else {
-			query.append(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+			query.append(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2143,7 +2168,10 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2688,7 +2716,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 				sql = _SQL_SELECT_USERNOTIFICATIONEVENT;
 
 				if (pagination) {
-					sql = sql.concat(UserNotificationEventModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(UserNotificationEventModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2697,7 +2725,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserNotificationEventImpl.class);
 
 				if (!pagination) {
 					list = (List<UserNotificationEvent>)QueryUtil.list(q,
@@ -2756,7 +2786,10 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_USERNOTIFICATIONEVENT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_USERNOTIFICATIONEVENT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2809,10 +2842,11 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_USERNOTIFICATIONEVENT = "SELECT userNotificationEvent FROM UserNotificationEvent userNotificationEvent";
-	private static final String _SQL_SELECT_USERNOTIFICATIONEVENT_WHERE = "SELECT userNotificationEvent FROM UserNotificationEvent userNotificationEvent WHERE ";
-	private static final String _SQL_COUNT_USERNOTIFICATIONEVENT = "SELECT COUNT(userNotificationEvent) FROM UserNotificationEvent userNotificationEvent";
-	private static final String _SQL_COUNT_USERNOTIFICATIONEVENT_WHERE = "SELECT COUNT(userNotificationEvent) FROM UserNotificationEvent userNotificationEvent WHERE ";
+	private static final String _SQL_SELECT_USERNOTIFICATIONEVENT = "SELECT {userNotificationEvent.*} FROM UserNotificationEvent userNotificationEvent";
+	private static final String _SQL_SELECT_USERNOTIFICATIONEVENT_WHERE = "SELECT {userNotificationEvent.*} FROM UserNotificationEvent userNotificationEvent WHERE ";
+	private static final String _SQL_COUNT_USERNOTIFICATIONEVENT = "SELECT COUNT(*) AS COUNT_VALUE FROM UserNotificationEvent userNotificationEvent";
+	private static final String _SQL_COUNT_USERNOTIFICATIONEVENT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM UserNotificationEvent userNotificationEvent WHERE ";
+	private static final String _ENTITY_ALIAS = "userNotificationEvent";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userNotificationEvent.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No UserNotificationEvent exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No UserNotificationEvent exists with the key {";

@@ -69,8 +69,8 @@ public class ShoppingItemPriceModelImpl extends BaseModelImpl<ShoppingItemPrice>
 		};
 	public static final String TABLE_SQL_CREATE = "create table ShoppingItemPrice (itemPriceId LONG not null primary key,itemId LONG,minQuantity INTEGER,maxQuantity INTEGER,price DOUBLE,discount DOUBLE,taxable BOOLEAN,shipping DOUBLE,useShippingFormula BOOLEAN,status INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table ShoppingItemPrice";
-	public static final String ORDER_BY_JPQL = " ORDER BY shoppingItemPrice.itemId ASC, shoppingItemPrice.itemPriceId ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY ShoppingItemPrice.itemId ASC, ShoppingItemPrice.itemPriceId ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY shoppingItemPrice.itemId ASC, shoppingItemPrice.itemPriceId ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY ShoppingItemPrice.itemId ASC, ShoppingItemPrice.itemPriceId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

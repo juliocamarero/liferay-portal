@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -214,7 +213,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -224,7 +223,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -489,12 +490,14 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 		}
 		else {
-			query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -577,7 +580,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -602,9 +608,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileShortcut.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileShortcut.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileShortcut.uuid IS NULL OR dlFileShortcut.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileShortcut.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileShortcut.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileShortcut.uuid_ IS NULL OR dlFileShortcut.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileShortcutModelImpl.FINDER_CACHE_ENABLED,
 			DLFileShortcutImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -723,7 +729,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -833,7 +841,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -860,9 +871,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileShortcut.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileShortcut.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileShortcut.uuid IS NULL OR dlFileShortcut.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileShortcut.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileShortcut.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileShortcut.uuid_ IS NULL OR dlFileShortcut.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "dlFileShortcut.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileShortcutModelImpl.FINDER_CACHE_ENABLED,
@@ -1006,7 +1017,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1016,7 +1027,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1298,12 +1311,14 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 		}
 		else {
-			query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1394,7 +1409,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1421,9 +1439,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileShortcut.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileShortcut.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileShortcut.uuid IS NULL OR dlFileShortcut.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileShortcut.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileShortcut.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileShortcut.uuid_ IS NULL OR dlFileShortcut.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "dlFileShortcut.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_TOFILEENTRYID =
 		new FinderPath(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
@@ -1549,7 +1567,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1559,7 +1577,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1813,12 +1833,14 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 		}
 		else {
-			query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1889,7 +1911,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2042,7 +2067,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2052,7 +2077,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2320,12 +2347,14 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 		}
 		else {
-			query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2446,10 +2475,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_SQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2631,10 +2660,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_SQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2726,7 +2755,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2950,7 +2982,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2960,7 +2992,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3246,12 +3280,14 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 		}
 		else {
-			query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3380,10 +3416,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_SQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3571,10 +3607,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_SQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3672,7 +3708,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3760,7 +3799,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 
 	private static final String _FINDER_COLUMN_G_F_A_GROUPID_2 = "dlFileShortcut.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_F_A_FOLDERID_2 = "dlFileShortcut.folderId = ? AND ";
-	private static final String _FINDER_COLUMN_G_F_A_ACTIVE_2 = "dlFileShortcut.active = ?";
+	private static final String _FINDER_COLUMN_G_F_A_ACTIVE_2 = "dlFileShortcut.active_ = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_F_A_S = new FinderPath(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileShortcutModelImpl.FINDER_CACHE_ENABLED,
 			DLFileShortcutImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -3913,7 +3952,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3923,7 +3962,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4225,12 +4266,14 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			}
 		}
 		else {
-			query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4368,10 +4411,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_SQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4565,10 +4608,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileShortcutModelImpl.ORDER_BY_SQL);
+				query.append(DLFileShortcutModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4672,7 +4715,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4767,7 +4813,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 
 	private static final String _FINDER_COLUMN_G_F_A_S_GROUPID_2 = "dlFileShortcut.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_F_A_S_FOLDERID_2 = "dlFileShortcut.folderId = ? AND ";
-	private static final String _FINDER_COLUMN_G_F_A_S_ACTIVE_2 = "dlFileShortcut.active = ? AND ";
+	private static final String _FINDER_COLUMN_G_F_A_S_ACTIVE_2 = "dlFileShortcut.active_ = ? AND ";
 	private static final String _FINDER_COLUMN_G_F_A_S_STATUS_2 = "dlFileShortcut.status = ?";
 
 	/**
@@ -5401,7 +5447,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 				sql = _SQL_SELECT_DLFILESHORTCUT;
 
 				if (pagination) {
-					sql = sql.concat(DLFileShortcutModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DLFileShortcutModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -5410,7 +5456,9 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileShortcutImpl.class);
 
 				if (!pagination) {
 					list = (List<DLFileShortcut>)QueryUtil.list(q,
@@ -5469,7 +5517,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DLFILESHORTCUT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DLFILESHORTCUT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -5522,10 +5573,10 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DLFILESHORTCUT = "SELECT dlFileShortcut FROM DLFileShortcut dlFileShortcut";
-	private static final String _SQL_SELECT_DLFILESHORTCUT_WHERE = "SELECT dlFileShortcut FROM DLFileShortcut dlFileShortcut WHERE ";
-	private static final String _SQL_COUNT_DLFILESHORTCUT = "SELECT COUNT(dlFileShortcut) FROM DLFileShortcut dlFileShortcut";
-	private static final String _SQL_COUNT_DLFILESHORTCUT_WHERE = "SELECT COUNT(dlFileShortcut) FROM DLFileShortcut dlFileShortcut WHERE ";
+	private static final String _SQL_SELECT_DLFILESHORTCUT = "SELECT {dlFileShortcut.*} FROM DLFileShortcut dlFileShortcut";
+	private static final String _SQL_SELECT_DLFILESHORTCUT_WHERE = "SELECT {dlFileShortcut.*} FROM DLFileShortcut dlFileShortcut WHERE ";
+	private static final String _SQL_COUNT_DLFILESHORTCUT = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileShortcut dlFileShortcut";
+	private static final String _SQL_COUNT_DLFILESHORTCUT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileShortcut dlFileShortcut WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "dlFileShortcut.fileShortcutId";
 	private static final String _FILTER_SQL_SELECT_DLFILESHORTCUT_WHERE = "SELECT DISTINCT {dlFileShortcut.*} FROM DLFileShortcut dlFileShortcut WHERE ";
 	private static final String _FILTER_SQL_SELECT_DLFILESHORTCUT_NO_INLINE_DISTINCT_WHERE_1 =
@@ -5535,6 +5586,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 	private static final String _FILTER_SQL_COUNT_DLFILESHORTCUT_WHERE = "SELECT COUNT(DISTINCT dlFileShortcut.fileShortcutId) AS COUNT_VALUE FROM DLFileShortcut dlFileShortcut WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "dlFileShortcut";
 	private static final String _FILTER_ENTITY_TABLE = "DLFileShortcut";
+	private static final String _ENTITY_ALIAS = "dlFileShortcut";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "dlFileShortcut.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "DLFileShortcut.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DLFileShortcut exists with the primary key ";

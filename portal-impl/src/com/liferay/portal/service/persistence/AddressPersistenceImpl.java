@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -197,7 +197,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 			else
 			 if (pagination) {
-				query.append(AddressModelImpl.ORDER_BY_JPQL);
+				query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -207,7 +207,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -457,12 +459,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 		}
 		else {
-			query.append(AddressModelImpl.ORDER_BY_JPQL);
+			query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -531,7 +535,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -670,7 +677,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 			else
 			 if (pagination) {
-				query.append(AddressModelImpl.ORDER_BY_JPQL);
+				query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -680,7 +687,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -929,12 +938,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 		}
 		else {
-			query.append(AddressModelImpl.ORDER_BY_JPQL);
+			query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1003,7 +1014,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1154,7 +1168,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 			else
 			 if (pagination) {
-				query.append(AddressModelImpl.ORDER_BY_JPQL);
+				query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1164,7 +1178,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1432,12 +1448,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 		}
 		else {
-			query.append(AddressModelImpl.ORDER_BY_JPQL);
+			query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1514,7 +1532,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1680,7 +1701,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 			else
 			 if (pagination) {
-				query.append(AddressModelImpl.ORDER_BY_JPQL);
+				query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1690,7 +1711,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1975,12 +1998,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 		}
 		else {
-			query.append(AddressModelImpl.ORDER_BY_JPQL);
+			query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2063,7 +2088,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2245,7 +2273,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 			else
 			 if (pagination) {
-				query.append(AddressModelImpl.ORDER_BY_JPQL);
+				query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2255,7 +2283,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2556,12 +2586,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 		}
 		else {
-			query.append(AddressModelImpl.ORDER_BY_JPQL);
+			query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2652,7 +2684,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2837,7 +2872,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 			else
 			 if (pagination) {
-				query.append(AddressModelImpl.ORDER_BY_JPQL);
+				query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2847,7 +2882,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3148,12 +3185,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			}
 		}
 		else {
-			query.append(AddressModelImpl.ORDER_BY_JPQL);
+			query.append(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3244,7 +3283,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3276,7 +3318,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	private static final String _FINDER_COLUMN_C_C_C_P_COMPANYID_2 = "address.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_C_P_CLASSNAMEID_2 = "address.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_C_P_CLASSPK_2 = "address.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_C_P_PRIMARY_2 = "address.primary = ?";
+	private static final String _FINDER_COLUMN_C_C_C_P_PRIMARY_2 = "address.primary_ = ?";
 
 	/**
 	 * Caches the address in the entity cache if it is enabled.
@@ -3835,7 +3877,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 				sql = _SQL_SELECT_ADDRESS;
 
 				if (pagination) {
-					sql = sql.concat(AddressModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(AddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3844,7 +3886,9 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AddressImpl.class);
 
 				if (!pagination) {
 					list = (List<Address>)QueryUtil.list(q, getDialect(),
@@ -3903,7 +3947,10 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ADDRESS);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ADDRESS);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3956,10 +4003,11 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_ADDRESS = "SELECT address FROM Address address";
-	private static final String _SQL_SELECT_ADDRESS_WHERE = "SELECT address FROM Address address WHERE ";
-	private static final String _SQL_COUNT_ADDRESS = "SELECT COUNT(address) FROM Address address";
-	private static final String _SQL_COUNT_ADDRESS_WHERE = "SELECT COUNT(address) FROM Address address WHERE ";
+	private static final String _SQL_SELECT_ADDRESS = "SELECT {address.*} FROM Address address";
+	private static final String _SQL_SELECT_ADDRESS_WHERE = "SELECT {address.*} FROM Address address WHERE ";
+	private static final String _SQL_COUNT_ADDRESS = "SELECT COUNT(*) AS COUNT_VALUE FROM Address address";
+	private static final String _SQL_COUNT_ADDRESS_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Address address WHERE ";
+	private static final String _ENTITY_ALIAS = "address";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "address.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Address exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Address exists with the key {";

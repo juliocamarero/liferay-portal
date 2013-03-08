@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -217,7 +216,7 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			}
 			else
 			 if (pagination) {
-				query.append(SCProductVersionModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -227,7 +226,9 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -482,12 +483,14 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			}
 		}
 		else {
-			query.append(SCProductVersionModelImpl.ORDER_BY_JPQL);
+			query.append(SCProductVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SCProductVersionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -558,7 +561,10 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -691,7 +697,9 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -802,7 +810,10 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1357,7 +1368,7 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 				sql = _SQL_SELECT_SCPRODUCTVERSION;
 
 				if (pagination) {
-					sql = sql.concat(SCProductVersionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(SCProductVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1366,7 +1377,9 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductVersionImpl.class);
 
 				if (!pagination) {
 					list = (List<SCProductVersion>)QueryUtil.list(q,
@@ -1425,7 +1438,10 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SCPRODUCTVERSION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SCPRODUCTVERSION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1538,7 +1554,7 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 					sql = _SQL_GETSCFRAMEWORKVERSIONS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.softwarecatalog.model.impl.SCFrameworkVersionModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.softwarecatalog.model.impl.SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -2172,13 +2188,14 @@ public class SCProductVersionPersistenceImpl extends BasePersistenceImpl<SCProdu
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_SCPRODUCTVERSION = "SELECT scProductVersion FROM SCProductVersion scProductVersion";
-	private static final String _SQL_SELECT_SCPRODUCTVERSION_WHERE = "SELECT scProductVersion FROM SCProductVersion scProductVersion WHERE ";
-	private static final String _SQL_COUNT_SCPRODUCTVERSION = "SELECT COUNT(scProductVersion) FROM SCProductVersion scProductVersion";
-	private static final String _SQL_COUNT_SCPRODUCTVERSION_WHERE = "SELECT COUNT(scProductVersion) FROM SCProductVersion scProductVersion WHERE ";
+	private static final String _SQL_SELECT_SCPRODUCTVERSION = "SELECT {scProductVersion.*} FROM SCProductVersion scProductVersion";
+	private static final String _SQL_SELECT_SCPRODUCTVERSION_WHERE = "SELECT {scProductVersion.*} FROM SCProductVersion scProductVersion WHERE ";
+	private static final String _SQL_COUNT_SCPRODUCTVERSION = "SELECT COUNT(*) AS COUNT_VALUE FROM SCProductVersion scProductVersion";
+	private static final String _SQL_COUNT_SCPRODUCTVERSION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM SCProductVersion scProductVersion WHERE ";
 	private static final String _SQL_GETSCFRAMEWORKVERSIONS = "SELECT {SCFrameworkVersion.*} FROM SCFrameworkVersion INNER JOIN SCFrameworkVersi_SCProductVers ON (SCFrameworkVersi_SCProductVers.frameworkVersionId = SCFrameworkVersion.frameworkVersionId) WHERE (SCFrameworkVersi_SCProductVers.productVersionId = ?)";
 	private static final String _SQL_GETSCFRAMEWORKVERSIONSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM SCFrameworkVersi_SCProductVers WHERE productVersionId = ?";
 	private static final String _SQL_CONTAINSSCFRAMEWORKVERSION = "SELECT COUNT(*) AS COUNT_VALUE FROM SCFrameworkVersi_SCProductVers WHERE productVersionId = ? AND frameworkVersionId = ?";
+	private static final String _ENTITY_ALIAS = "scProductVersion";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "scProductVersion.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SCProductVersion exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SCProductVersion exists with the key {";

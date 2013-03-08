@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -205,7 +204,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			}
 			else
 			 if (pagination) {
-				query.append(TeamModelImpl.ORDER_BY_JPQL);
+				query.append(TeamModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -215,7 +214,9 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TeamImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -464,12 +465,14 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			}
 		}
 		else {
-			query.append(TeamModelImpl.ORDER_BY_JPQL);
+			query.append(TeamModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, TeamImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -582,10 +585,10 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(TeamModelImpl.ORDER_BY_JPQL);
+				query.append(TeamModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(TeamModelImpl.ORDER_BY_SQL);
+				query.append(TeamModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -759,10 +762,10 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(TeamModelImpl.ORDER_BY_JPQL);
+				query.append(TeamModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(TeamModelImpl.ORDER_BY_SQL);
+				query.append(TeamModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -846,7 +849,10 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1034,7 +1040,9 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TeamImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1143,7 +1151,10 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1677,7 +1688,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 				sql = _SQL_SELECT_TEAM;
 
 				if (pagination) {
-					sql = sql.concat(TeamModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(TeamModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1686,7 +1697,9 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TeamImpl.class);
 
 				if (!pagination) {
 					list = (List<Team>)QueryUtil.list(q, getDialect(), start,
@@ -1745,7 +1758,10 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_TEAM);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_TEAM);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1856,7 +1872,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 					sql = _SQL_GETUSERS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portal.model.impl.UserModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portal.model.impl.UserModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -2341,7 +2357,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 					sql = _SQL_GETUSERGROUPS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portal.model.impl.UserGroupModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portal.model.impl.UserGroupModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -3128,10 +3144,10 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_TEAM = "SELECT team FROM Team team";
-	private static final String _SQL_SELECT_TEAM_WHERE = "SELECT team FROM Team team WHERE ";
-	private static final String _SQL_COUNT_TEAM = "SELECT COUNT(team) FROM Team team";
-	private static final String _SQL_COUNT_TEAM_WHERE = "SELECT COUNT(team) FROM Team team WHERE ";
+	private static final String _SQL_SELECT_TEAM = "SELECT {team.*} FROM Team team";
+	private static final String _SQL_SELECT_TEAM_WHERE = "SELECT {team.*} FROM Team team WHERE ";
+	private static final String _SQL_COUNT_TEAM = "SELECT COUNT(*) AS COUNT_VALUE FROM Team team";
+	private static final String _SQL_COUNT_TEAM_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Team team WHERE ";
 	private static final String _SQL_GETUSERS = "SELECT {User_.*} FROM User_ INNER JOIN Users_Teams ON (Users_Teams.userId = User_.userId) WHERE (Users_Teams.teamId = ?)";
 	private static final String _SQL_GETUSERSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_Teams WHERE teamId = ?";
 	private static final String _SQL_CONTAINSUSER = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_Teams WHERE teamId = ? AND userId = ?";
@@ -3147,6 +3163,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	private static final String _FILTER_SQL_COUNT_TEAM_WHERE = "SELECT COUNT(DISTINCT team.teamId) AS COUNT_VALUE FROM Team team WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "team";
 	private static final String _FILTER_ENTITY_TABLE = "Team";
+	private static final String _ENTITY_ALIAS = "team";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "team.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "Team.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Team exists with the primary key ";

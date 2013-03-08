@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -216,7 +215,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -226,7 +225,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -490,12 +491,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -578,7 +581,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -603,9 +609,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbMessage.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbMessage.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbMessage.uuid IS NULL OR mbMessage.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbMessage.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbMessage.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbMessage.uuid_ IS NULL OR mbMessage.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(MBMessageModelImpl.ENTITY_CACHE_ENABLED,
 			MBMessageModelImpl.FINDER_CACHE_ENABLED, MBMessageImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -723,7 +729,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -833,7 +841,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -860,9 +871,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbMessage.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbMessage.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbMessage.uuid IS NULL OR mbMessage.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbMessage.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbMessage.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbMessage.uuid_ IS NULL OR mbMessage.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "mbMessage.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(MBMessageModelImpl.ENTITY_CACHE_ENABLED,
 			MBMessageModelImpl.FINDER_CACHE_ENABLED, MBMessageImpl.class,
@@ -1004,7 +1015,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1014,7 +1025,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1296,12 +1309,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1392,7 +1407,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1419,9 +1437,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbMessage.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbMessage.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbMessage.uuid IS NULL OR mbMessage.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbMessage.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbMessage.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbMessage.uuid_ IS NULL OR mbMessage.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "mbMessage.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(MBMessageModelImpl.ENTITY_CACHE_ENABLED,
 			MBMessageModelImpl.FINDER_CACHE_ENABLED, MBMessageImpl.class,
@@ -1539,7 +1557,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1549,7 +1567,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1799,12 +1819,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1917,10 +1939,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2096,10 +2118,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2183,7 +2205,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2373,7 +2398,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2383,7 +2408,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2635,12 +2662,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2709,7 +2738,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2850,7 +2882,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2860,7 +2892,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3110,12 +3144,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3184,7 +3220,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3326,7 +3365,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3336,7 +3375,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3589,12 +3630,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3663,7 +3706,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3802,7 +3848,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3812,7 +3858,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4062,12 +4110,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4136,7 +4186,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4287,7 +4340,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4297,7 +4350,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4564,12 +4619,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4690,10 +4747,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4874,10 +4931,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4968,7 +5025,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5176,7 +5236,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5186,7 +5246,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5454,12 +5516,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5580,10 +5644,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5764,10 +5828,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5859,7 +5923,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6067,7 +6134,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6077,7 +6144,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6344,12 +6413,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6469,10 +6540,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6653,10 +6724,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6746,7 +6817,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6954,7 +7028,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6964,7 +7038,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7232,12 +7308,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7313,7 +7391,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7471,7 +7552,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7481,7 +7562,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7749,12 +7832,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7915,7 +8000,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7925,7 +8010,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8015,7 +8102,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8099,7 +8189,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8261,7 +8354,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -8271,7 +8364,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8539,12 +8634,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -8621,7 +8718,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8776,7 +8876,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -8786,7 +8886,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9054,12 +9156,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -9136,7 +9240,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9290,7 +9397,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -9300,7 +9407,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9568,12 +9677,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -9650,7 +9761,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9804,7 +9918,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -9814,7 +9928,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10082,12 +10198,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -10163,7 +10281,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10317,7 +10438,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -10327,7 +10448,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10595,12 +10718,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -10676,7 +10801,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10845,7 +10973,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -10855,7 +10983,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11138,12 +11268,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -11272,10 +11404,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -11462,10 +11594,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -11563,7 +11695,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11791,7 +11926,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -11801,7 +11936,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -12086,12 +12223,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -12220,10 +12359,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -12410,10 +12549,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -12511,7 +12650,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -12742,7 +12884,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -12752,7 +12894,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -13037,12 +13181,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -13171,10 +13317,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -13361,10 +13507,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -13462,7 +13608,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -13690,7 +13839,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -13700,7 +13849,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -13985,12 +14136,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -14073,7 +14226,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -14252,7 +14408,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -14262,7 +14418,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -14547,12 +14705,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -14729,7 +14889,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -14739,7 +14899,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -14835,7 +14997,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -14930,7 +15095,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15112,7 +15280,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -15122,7 +15290,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15408,12 +15578,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -15496,7 +15668,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15678,7 +15853,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -15688,7 +15863,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15989,12 +16166,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -16132,10 +16311,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -16329,10 +16508,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -16436,7 +16615,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -16685,7 +16867,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -16695,7 +16877,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -16996,12 +17180,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -17139,10 +17325,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -17336,10 +17522,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBMessageModelImpl.ORDER_BY_SQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -17443,7 +17629,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -17691,7 +17880,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 			else
 			 if (pagination) {
-				query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+				query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -17701,7 +17890,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -18002,12 +18193,14 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			}
 		}
 		else {
-			query.append(MBMessageModelImpl.ORDER_BY_JPQL);
+			query.append(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -18096,7 +18289,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -19214,7 +19410,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 				sql = _SQL_SELECT_MBMESSAGE;
 
 				if (pagination) {
-					sql = sql.concat(MBMessageModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(MBMessageModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -19223,7 +19419,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMessageImpl.class);
 
 				if (!pagination) {
 					list = (List<MBMessage>)QueryUtil.list(q, getDialect(),
@@ -19282,7 +19480,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_MBMESSAGE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_MBMESSAGE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -19335,10 +19536,10 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_MBMESSAGE = "SELECT mbMessage FROM MBMessage mbMessage";
-	private static final String _SQL_SELECT_MBMESSAGE_WHERE = "SELECT mbMessage FROM MBMessage mbMessage WHERE ";
-	private static final String _SQL_COUNT_MBMESSAGE = "SELECT COUNT(mbMessage) FROM MBMessage mbMessage";
-	private static final String _SQL_COUNT_MBMESSAGE_WHERE = "SELECT COUNT(mbMessage) FROM MBMessage mbMessage WHERE ";
+	private static final String _SQL_SELECT_MBMESSAGE = "SELECT {mbMessage.*} FROM MBMessage mbMessage";
+	private static final String _SQL_SELECT_MBMESSAGE_WHERE = "SELECT {mbMessage.*} FROM MBMessage mbMessage WHERE ";
+	private static final String _SQL_COUNT_MBMESSAGE = "SELECT COUNT(*) AS COUNT_VALUE FROM MBMessage mbMessage";
+	private static final String _SQL_COUNT_MBMESSAGE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM MBMessage mbMessage WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "mbMessage.rootMessageId";
 	private static final String _FILTER_SQL_SELECT_MBMESSAGE_WHERE = "SELECT DISTINCT {mbMessage.*} FROM MBMessage mbMessage WHERE ";
 	private static final String _FILTER_SQL_SELECT_MBMESSAGE_NO_INLINE_DISTINCT_WHERE_1 =
@@ -19348,6 +19549,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 	private static final String _FILTER_SQL_COUNT_MBMESSAGE_WHERE = "SELECT COUNT(DISTINCT mbMessage.messageId) AS COUNT_VALUE FROM MBMessage mbMessage WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "mbMessage";
 	private static final String _FILTER_ENTITY_TABLE = "MBMessage";
+	private static final String _ENTITY_ALIAS = "mbMessage";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "mbMessage.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "MBMessage.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No MBMessage exists with the primary key ";

@@ -92,8 +92,8 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 		};
 	public static final String TABLE_SQL_CREATE = "create table WikiPage (uuid_ VARCHAR(75) null,pageId LONG not null primary key,resourcePrimKey LONG,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,nodeId LONG,title VARCHAR(255) null,version DOUBLE,minorEdit BOOLEAN,content TEXT null,summary STRING null,format VARCHAR(75) null,head BOOLEAN,parentTitle VARCHAR(255) null,redirectTitle VARCHAR(255) null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table WikiPage";
-	public static final String ORDER_BY_JPQL = " ORDER BY wikiPage.nodeId ASC, wikiPage.title ASC, wikiPage.version DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY WikiPage.nodeId ASC, WikiPage.title ASC, WikiPage.version DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY wikiPage.nodeId ASC, wikiPage.title ASC, wikiPage.version DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY WikiPage.nodeId ASC, WikiPage.title ASC, WikiPage.version DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

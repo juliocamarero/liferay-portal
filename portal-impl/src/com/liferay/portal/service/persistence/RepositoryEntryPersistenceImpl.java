@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -211,7 +211,7 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			}
 			else
 			 if (pagination) {
-				query.append(RepositoryEntryModelImpl.ORDER_BY_JPQL);
+				query.append(RepositoryEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -221,7 +221,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -487,12 +489,14 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			}
 		}
 		else {
-			query.append(RepositoryEntryModelImpl.ORDER_BY_JPQL);
+			query.append(RepositoryEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -575,7 +579,10 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -600,9 +607,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "repositoryEntry.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "repositoryEntry.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(repositoryEntry.uuid IS NULL OR repositoryEntry.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "repositoryEntry.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "repositoryEntry.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(repositoryEntry.uuid_ IS NULL OR repositoryEntry.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(RepositoryEntryModelImpl.ENTITY_CACHE_ENABLED,
 			RepositoryEntryModelImpl.FINDER_CACHE_ENABLED,
 			RepositoryEntryImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -721,7 +728,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -831,7 +840,10 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -858,9 +870,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "repositoryEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "repositoryEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(repositoryEntry.uuid IS NULL OR repositoryEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "repositoryEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "repositoryEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(repositoryEntry.uuid_ IS NULL OR repositoryEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "repositoryEntry.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(RepositoryEntryModelImpl.ENTITY_CACHE_ENABLED,
 			RepositoryEntryModelImpl.FINDER_CACHE_ENABLED,
@@ -1004,7 +1016,7 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			}
 			else
 			 if (pagination) {
-				query.append(RepositoryEntryModelImpl.ORDER_BY_JPQL);
+				query.append(RepositoryEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1014,7 +1026,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1296,12 +1310,14 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			}
 		}
 		else {
-			query.append(RepositoryEntryModelImpl.ORDER_BY_JPQL);
+			query.append(RepositoryEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1392,7 +1408,10 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1419,9 +1438,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "repositoryEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "repositoryEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(repositoryEntry.uuid IS NULL OR repositoryEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "repositoryEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "repositoryEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(repositoryEntry.uuid_ IS NULL OR repositoryEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "repositoryEntry.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_REPOSITORYID =
 		new FinderPath(RepositoryEntryModelImpl.ENTITY_CACHE_ENABLED,
@@ -1547,7 +1566,7 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			}
 			else
 			 if (pagination) {
-				query.append(RepositoryEntryModelImpl.ORDER_BY_JPQL);
+				query.append(RepositoryEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1557,7 +1576,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1811,12 +1832,14 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			}
 		}
 		else {
-			query.append(RepositoryEntryModelImpl.ORDER_BY_JPQL);
+			query.append(RepositoryEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1886,7 +1909,10 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2027,7 +2053,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2137,7 +2165,10 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2773,7 +2804,7 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 				sql = _SQL_SELECT_REPOSITORYENTRY;
 
 				if (pagination) {
-					sql = sql.concat(RepositoryEntryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(RepositoryEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2782,7 +2813,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RepositoryEntryImpl.class);
 
 				if (!pagination) {
 					list = (List<RepositoryEntry>)QueryUtil.list(q,
@@ -2841,7 +2874,10 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_REPOSITORYENTRY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_REPOSITORYENTRY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2894,10 +2930,11 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_REPOSITORYENTRY = "SELECT repositoryEntry FROM RepositoryEntry repositoryEntry";
-	private static final String _SQL_SELECT_REPOSITORYENTRY_WHERE = "SELECT repositoryEntry FROM RepositoryEntry repositoryEntry WHERE ";
-	private static final String _SQL_COUNT_REPOSITORYENTRY = "SELECT COUNT(repositoryEntry) FROM RepositoryEntry repositoryEntry";
-	private static final String _SQL_COUNT_REPOSITORYENTRY_WHERE = "SELECT COUNT(repositoryEntry) FROM RepositoryEntry repositoryEntry WHERE ";
+	private static final String _SQL_SELECT_REPOSITORYENTRY = "SELECT {repositoryEntry.*} FROM RepositoryEntry repositoryEntry";
+	private static final String _SQL_SELECT_REPOSITORYENTRY_WHERE = "SELECT {repositoryEntry.*} FROM RepositoryEntry repositoryEntry WHERE ";
+	private static final String _SQL_COUNT_REPOSITORYENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM RepositoryEntry repositoryEntry";
+	private static final String _SQL_COUNT_REPOSITORYENTRY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM RepositoryEntry repositoryEntry WHERE ";
+	private static final String _ENTITY_ALIAS = "repositoryEntry";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "repositoryEntry.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No RepositoryEntry exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No RepositoryEntry exists with the key {";

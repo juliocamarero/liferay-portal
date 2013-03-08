@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -214,7 +213,7 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 			else
 			 if (pagination) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -224,7 +223,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -492,12 +493,14 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 		}
 		else {
-			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -580,7 +583,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -605,9 +611,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mdrRuleGroupInstance.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mdrRuleGroupInstance.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mdrRuleGroupInstance.uuid IS NULL OR mdrRuleGroupInstance.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mdrRuleGroupInstance.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mdrRuleGroupInstance.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mdrRuleGroupInstance.uuid_ IS NULL OR mdrRuleGroupInstance.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(MDRRuleGroupInstanceModelImpl.ENTITY_CACHE_ENABLED,
 			MDRRuleGroupInstanceModelImpl.FINDER_CACHE_ENABLED,
 			MDRRuleGroupInstanceImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -726,7 +732,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -836,7 +844,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -863,9 +874,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mdrRuleGroupInstance.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mdrRuleGroupInstance.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mdrRuleGroupInstance.uuid IS NULL OR mdrRuleGroupInstance.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mdrRuleGroupInstance.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mdrRuleGroupInstance.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mdrRuleGroupInstance.uuid_ IS NULL OR mdrRuleGroupInstance.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "mdrRuleGroupInstance.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(MDRRuleGroupInstanceModelImpl.ENTITY_CACHE_ENABLED,
 			MDRRuleGroupInstanceModelImpl.FINDER_CACHE_ENABLED,
@@ -1009,7 +1020,7 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 			else
 			 if (pagination) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1019,7 +1030,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1303,12 +1316,14 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 		}
 		else {
-			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1399,7 +1414,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1426,9 +1444,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mdrRuleGroupInstance.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mdrRuleGroupInstance.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mdrRuleGroupInstance.uuid IS NULL OR mdrRuleGroupInstance.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mdrRuleGroupInstance.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mdrRuleGroupInstance.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mdrRuleGroupInstance.uuid_ IS NULL OR mdrRuleGroupInstance.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "mdrRuleGroupInstance.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(MDRRuleGroupInstanceModelImpl.ENTITY_CACHE_ENABLED,
 			MDRRuleGroupInstanceModelImpl.FINDER_CACHE_ENABLED,
@@ -1547,7 +1565,7 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 			else
 			 if (pagination) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1557,7 +1575,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1811,12 +1831,14 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 		}
 		else {
-			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1930,10 +1952,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_SQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2111,10 +2133,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_SQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2198,7 +2220,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2390,7 +2415,7 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 			else
 			 if (pagination) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2400,7 +2425,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2654,12 +2681,14 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 		}
 		else {
-			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2728,7 +2757,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2881,7 +2913,7 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 			else
 			 if (pagination) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2891,7 +2923,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3161,12 +3195,14 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 		}
 		else {
-			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3243,7 +3279,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3411,7 +3450,7 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 			else
 			 if (pagination) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3421,7 +3460,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3708,12 +3749,14 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			}
 		}
 		else {
-			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+			query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3843,10 +3886,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_SQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4037,10 +4080,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_SQL);
+				query.append(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4138,7 +4181,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4349,7 +4395,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4453,7 +4501,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5168,7 +5219,7 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 				sql = _SQL_SELECT_MDRRULEGROUPINSTANCE;
 
 				if (pagination) {
-					sql = sql.concat(MDRRuleGroupInstanceModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(MDRRuleGroupInstanceModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -5177,7 +5228,9 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MDRRuleGroupInstanceImpl.class);
 
 				if (!pagination) {
 					list = (List<MDRRuleGroupInstance>)QueryUtil.list(q,
@@ -5236,7 +5289,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_MDRRULEGROUPINSTANCE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_MDRRULEGROUPINSTANCE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -5289,10 +5345,10 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_MDRRULEGROUPINSTANCE = "SELECT mdrRuleGroupInstance FROM MDRRuleGroupInstance mdrRuleGroupInstance";
-	private static final String _SQL_SELECT_MDRRULEGROUPINSTANCE_WHERE = "SELECT mdrRuleGroupInstance FROM MDRRuleGroupInstance mdrRuleGroupInstance WHERE ";
-	private static final String _SQL_COUNT_MDRRULEGROUPINSTANCE = "SELECT COUNT(mdrRuleGroupInstance) FROM MDRRuleGroupInstance mdrRuleGroupInstance";
-	private static final String _SQL_COUNT_MDRRULEGROUPINSTANCE_WHERE = "SELECT COUNT(mdrRuleGroupInstance) FROM MDRRuleGroupInstance mdrRuleGroupInstance WHERE ";
+	private static final String _SQL_SELECT_MDRRULEGROUPINSTANCE = "SELECT {mdrRuleGroupInstance.*} FROM MDRRuleGroupInstance mdrRuleGroupInstance";
+	private static final String _SQL_SELECT_MDRRULEGROUPINSTANCE_WHERE = "SELECT {mdrRuleGroupInstance.*} FROM MDRRuleGroupInstance mdrRuleGroupInstance WHERE ";
+	private static final String _SQL_COUNT_MDRRULEGROUPINSTANCE = "SELECT COUNT(*) AS COUNT_VALUE FROM MDRRuleGroupInstance mdrRuleGroupInstance";
+	private static final String _SQL_COUNT_MDRRULEGROUPINSTANCE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM MDRRuleGroupInstance mdrRuleGroupInstance WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "mdrRuleGroupInstance.ruleGroupInstanceId";
 	private static final String _FILTER_SQL_SELECT_MDRRULEGROUPINSTANCE_WHERE = "SELECT DISTINCT {mdrRuleGroupInstance.*} FROM MDRRuleGroupInstance mdrRuleGroupInstance WHERE ";
 	private static final String _FILTER_SQL_SELECT_MDRRULEGROUPINSTANCE_NO_INLINE_DISTINCT_WHERE_1 =
@@ -5302,6 +5358,7 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 	private static final String _FILTER_SQL_COUNT_MDRRULEGROUPINSTANCE_WHERE = "SELECT COUNT(DISTINCT mdrRuleGroupInstance.ruleGroupInstanceId) AS COUNT_VALUE FROM MDRRuleGroupInstance mdrRuleGroupInstance WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "mdrRuleGroupInstance";
 	private static final String _FILTER_ENTITY_TABLE = "MDRRuleGroupInstance";
+	private static final String _ENTITY_ALIAS = "mdrRuleGroupInstance";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "mdrRuleGroupInstance.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "MDRRuleGroupInstance.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No MDRRuleGroupInstance exists with the primary key ";

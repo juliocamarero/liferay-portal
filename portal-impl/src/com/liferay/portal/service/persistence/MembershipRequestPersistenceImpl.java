@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -199,7 +199,7 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			}
 			else
 			 if (pagination) {
-				query.append(MembershipRequestModelImpl.ORDER_BY_JPQL);
+				query.append(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -209,7 +209,9 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -463,12 +465,14 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			}
 		}
 		else {
-			query.append(MembershipRequestModelImpl.ORDER_BY_JPQL);
+			query.append(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -537,7 +541,10 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -679,7 +686,7 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			}
 			else
 			 if (pagination) {
-				query.append(MembershipRequestModelImpl.ORDER_BY_JPQL);
+				query.append(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -689,7 +696,9 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -943,12 +952,14 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			}
 		}
 		else {
-			query.append(MembershipRequestModelImpl.ORDER_BY_JPQL);
+			query.append(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1017,7 +1028,10 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1171,7 +1185,7 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			}
 			else
 			 if (pagination) {
-				query.append(MembershipRequestModelImpl.ORDER_BY_JPQL);
+				query.append(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1181,7 +1195,9 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1449,12 +1465,14 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			}
 		}
 		else {
-			query.append(MembershipRequestModelImpl.ORDER_BY_JPQL);
+			query.append(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1530,7 +1548,10 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1701,7 +1722,7 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			}
 			else
 			 if (pagination) {
-				query.append(MembershipRequestModelImpl.ORDER_BY_JPQL);
+				query.append(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1711,7 +1732,9 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1997,12 +2020,14 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			}
 		}
 		else {
-			query.append(MembershipRequestModelImpl.ORDER_BY_JPQL);
+			query.append(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2085,7 +2110,10 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2624,7 +2652,7 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 				sql = _SQL_SELECT_MEMBERSHIPREQUEST;
 
 				if (pagination) {
-					sql = sql.concat(MembershipRequestModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(MembershipRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2633,7 +2661,9 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MembershipRequestImpl.class);
 
 				if (!pagination) {
 					list = (List<MembershipRequest>)QueryUtil.list(q,
@@ -2692,7 +2722,10 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_MEMBERSHIPREQUEST);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_MEMBERSHIPREQUEST);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2745,10 +2778,11 @@ public class MembershipRequestPersistenceImpl extends BasePersistenceImpl<Member
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_MEMBERSHIPREQUEST = "SELECT membershipRequest FROM MembershipRequest membershipRequest";
-	private static final String _SQL_SELECT_MEMBERSHIPREQUEST_WHERE = "SELECT membershipRequest FROM MembershipRequest membershipRequest WHERE ";
-	private static final String _SQL_COUNT_MEMBERSHIPREQUEST = "SELECT COUNT(membershipRequest) FROM MembershipRequest membershipRequest";
-	private static final String _SQL_COUNT_MEMBERSHIPREQUEST_WHERE = "SELECT COUNT(membershipRequest) FROM MembershipRequest membershipRequest WHERE ";
+	private static final String _SQL_SELECT_MEMBERSHIPREQUEST = "SELECT {membershipRequest.*} FROM MembershipRequest membershipRequest";
+	private static final String _SQL_SELECT_MEMBERSHIPREQUEST_WHERE = "SELECT {membershipRequest.*} FROM MembershipRequest membershipRequest WHERE ";
+	private static final String _SQL_COUNT_MEMBERSHIPREQUEST = "SELECT COUNT(*) AS COUNT_VALUE FROM MembershipRequest membershipRequest";
+	private static final String _SQL_COUNT_MEMBERSHIPREQUEST_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM MembershipRequest membershipRequest WHERE ";
+	private static final String _ENTITY_ALIAS = "membershipRequest";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "membershipRequest.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No MembershipRequest exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No MembershipRequest exists with the key {";

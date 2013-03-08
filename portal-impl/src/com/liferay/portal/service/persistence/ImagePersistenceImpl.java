@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -179,7 +179,7 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 			}
 			else
 			 if (pagination) {
-				query.append(ImageModelImpl.ORDER_BY_JPQL);
+				query.append(ImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -189,7 +189,9 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ImageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -437,12 +439,14 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 			}
 		}
 		else {
-			query.append(ImageModelImpl.ORDER_BY_JPQL);
+			query.append(ImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ImageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -511,7 +515,10 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -534,7 +541,7 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_LTSIZE_SIZE_2 = "image.size < ?";
+	private static final String _FINDER_COLUMN_LTSIZE_SIZE_2 = "image.size_ < ?";
 
 	/**
 	 * Caches the image in the entity cache if it is enabled.
@@ -946,7 +953,7 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 				sql = _SQL_SELECT_IMAGE;
 
 				if (pagination) {
-					sql = sql.concat(ImageModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ImageModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -955,7 +962,9 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ImageImpl.class);
 
 				if (!pagination) {
 					list = (List<Image>)QueryUtil.list(q, getDialect(), start,
@@ -1014,7 +1023,10 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_IMAGE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_IMAGE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1067,10 +1079,11 @@ public class ImagePersistenceImpl extends BasePersistenceImpl<Image>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_IMAGE = "SELECT image FROM Image image";
-	private static final String _SQL_SELECT_IMAGE_WHERE = "SELECT image FROM Image image WHERE ";
-	private static final String _SQL_COUNT_IMAGE = "SELECT COUNT(image) FROM Image image";
-	private static final String _SQL_COUNT_IMAGE_WHERE = "SELECT COUNT(image) FROM Image image WHERE ";
+	private static final String _SQL_SELECT_IMAGE = "SELECT {image.*} FROM Image image";
+	private static final String _SQL_SELECT_IMAGE_WHERE = "SELECT {image.*} FROM Image image WHERE ";
+	private static final String _SQL_COUNT_IMAGE = "SELECT COUNT(*) AS COUNT_VALUE FROM Image image";
+	private static final String _SQL_COUNT_IMAGE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Image image WHERE ";
+	private static final String _ENTITY_ALIAS = "image";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "image.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Image exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Image exists with the key {";

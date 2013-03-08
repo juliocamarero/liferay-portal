@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -202,7 +202,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureLinkModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -212,7 +212,9 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -466,12 +468,14 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			}
 		}
 		else {
-			query.append(DDMStructureLinkModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -540,7 +544,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -659,7 +666,9 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -746,7 +755,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -890,7 +902,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStructureLinkModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStructureLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -900,7 +912,9 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1154,12 +1168,14 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			}
 		}
 		else {
-			query.append(DDMStructureLinkModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStructureLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStructureLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1228,7 +1244,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1766,7 +1785,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 				sql = _SQL_SELECT_DDMSTRUCTURELINK;
 
 				if (pagination) {
-					sql = sql.concat(DDMStructureLinkModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DDMStructureLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1775,7 +1794,9 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStructureLinkImpl.class);
 
 				if (!pagination) {
 					list = (List<DDMStructureLink>)QueryUtil.list(q,
@@ -1834,7 +1855,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DDMSTRUCTURELINK);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DDMSTRUCTURELINK);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1887,10 +1911,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DDMSTRUCTURELINK = "SELECT ddmStructureLink FROM DDMStructureLink ddmStructureLink";
-	private static final String _SQL_SELECT_DDMSTRUCTURELINK_WHERE = "SELECT ddmStructureLink FROM DDMStructureLink ddmStructureLink WHERE ";
-	private static final String _SQL_COUNT_DDMSTRUCTURELINK = "SELECT COUNT(ddmStructureLink) FROM DDMStructureLink ddmStructureLink";
-	private static final String _SQL_COUNT_DDMSTRUCTURELINK_WHERE = "SELECT COUNT(ddmStructureLink) FROM DDMStructureLink ddmStructureLink WHERE ";
+	private static final String _SQL_SELECT_DDMSTRUCTURELINK = "SELECT {ddmStructureLink.*} FROM DDMStructureLink ddmStructureLink";
+	private static final String _SQL_SELECT_DDMSTRUCTURELINK_WHERE = "SELECT {ddmStructureLink.*} FROM DDMStructureLink ddmStructureLink WHERE ";
+	private static final String _SQL_COUNT_DDMSTRUCTURELINK = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMStructureLink ddmStructureLink";
+	private static final String _SQL_COUNT_DDMSTRUCTURELINK_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMStructureLink ddmStructureLink WHERE ";
+	private static final String _ENTITY_ALIAS = "ddmStructureLink";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ddmStructureLink.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DDMStructureLink exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DDMStructureLink exists with the key {";

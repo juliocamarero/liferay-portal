@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -197,7 +197,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			}
 			else
 			 if (pagination) {
-				query.append(UserTrackerModelImpl.ORDER_BY_JPQL);
+				query.append(UserTrackerModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -207,7 +207,9 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserTrackerImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -460,12 +462,14 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			}
 		}
 		else {
-			query.append(UserTrackerModelImpl.ORDER_BY_JPQL);
+			query.append(UserTrackerModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserTrackerImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -534,7 +538,10 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -673,7 +680,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			}
 			else
 			 if (pagination) {
-				query.append(UserTrackerModelImpl.ORDER_BY_JPQL);
+				query.append(UserTrackerModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -683,7 +690,9 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserTrackerImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -933,12 +942,14 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			}
 		}
 		else {
-			query.append(UserTrackerModelImpl.ORDER_BY_JPQL);
+			query.append(UserTrackerModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserTrackerImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1007,7 +1018,10 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1160,7 +1174,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			}
 			else
 			 if (pagination) {
-				query.append(UserTrackerModelImpl.ORDER_BY_JPQL);
+				query.append(UserTrackerModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1170,7 +1184,9 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserTrackerImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1437,12 +1453,14 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			}
 		}
 		else {
-			query.append(UserTrackerModelImpl.ORDER_BY_JPQL);
+			query.append(UserTrackerModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserTrackerImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1525,7 +1543,10 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2032,7 +2053,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 				sql = _SQL_SELECT_USERTRACKER;
 
 				if (pagination) {
-					sql = sql.concat(UserTrackerModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(UserTrackerModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2041,7 +2062,9 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserTrackerImpl.class);
 
 				if (!pagination) {
 					list = (List<UserTracker>)QueryUtil.list(q, getDialect(),
@@ -2100,7 +2123,10 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_USERTRACKER);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_USERTRACKER);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2153,10 +2179,11 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_USERTRACKER = "SELECT userTracker FROM UserTracker userTracker";
-	private static final String _SQL_SELECT_USERTRACKER_WHERE = "SELECT userTracker FROM UserTracker userTracker WHERE ";
-	private static final String _SQL_COUNT_USERTRACKER = "SELECT COUNT(userTracker) FROM UserTracker userTracker";
-	private static final String _SQL_COUNT_USERTRACKER_WHERE = "SELECT COUNT(userTracker) FROM UserTracker userTracker WHERE ";
+	private static final String _SQL_SELECT_USERTRACKER = "SELECT {userTracker.*} FROM UserTracker userTracker";
+	private static final String _SQL_SELECT_USERTRACKER_WHERE = "SELECT {userTracker.*} FROM UserTracker userTracker WHERE ";
+	private static final String _SQL_COUNT_USERTRACKER = "SELECT COUNT(*) AS COUNT_VALUE FROM UserTracker userTracker";
+	private static final String _SQL_COUNT_USERTRACKER_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM UserTracker userTracker WHERE ";
+	private static final String _ENTITY_ALIAS = "userTracker";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userTracker.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No UserTracker exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No UserTracker exists with the key {";

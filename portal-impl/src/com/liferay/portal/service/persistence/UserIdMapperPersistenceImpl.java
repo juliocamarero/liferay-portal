@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -195,7 +195,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			}
 			else
 			 if (pagination) {
-				query.append(UserIdMapperModelImpl.ORDER_BY_JPQL);
+				query.append(UserIdMapperModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -205,7 +205,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserIdMapperImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -456,12 +458,14 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			}
 		}
 		else {
-			query.append(UserIdMapperModelImpl.ORDER_BY_JPQL);
+			query.append(UserIdMapperModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserIdMapperImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -530,7 +534,10 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -671,7 +678,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserIdMapperImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -780,7 +789,10 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -808,9 +820,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	}
 
 	private static final String _FINDER_COLUMN_U_T_USERID_2 = "userIdMapper.userId = ? AND ";
-	private static final String _FINDER_COLUMN_U_T_TYPE_1 = "userIdMapper.type IS NULL";
-	private static final String _FINDER_COLUMN_U_T_TYPE_2 = "userIdMapper.type = ?";
-	private static final String _FINDER_COLUMN_U_T_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = '')";
+	private static final String _FINDER_COLUMN_U_T_TYPE_1 = "userIdMapper.type_ IS NULL";
+	private static final String _FINDER_COLUMN_U_T_TYPE_2 = "userIdMapper.type_ = ?";
+	private static final String _FINDER_COLUMN_U_T_TYPE_3 = "(userIdMapper.type_ IS NULL OR userIdMapper.type_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_T_E = new FinderPath(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
 			UserIdMapperModelImpl.FINDER_CACHE_ENABLED, UserIdMapperImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByT_E",
@@ -941,7 +953,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserIdMapperImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1067,7 +1081,10 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1096,9 +1113,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_T_E_TYPE_1 = "userIdMapper.type IS NULL AND ";
-	private static final String _FINDER_COLUMN_T_E_TYPE_2 = "userIdMapper.type = ? AND ";
-	private static final String _FINDER_COLUMN_T_E_TYPE_3 = "(userIdMapper.type IS NULL OR userIdMapper.type = '') AND ";
+	private static final String _FINDER_COLUMN_T_E_TYPE_1 = "userIdMapper.type_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_T_E_TYPE_2 = "userIdMapper.type_ = ? AND ";
+	private static final String _FINDER_COLUMN_T_E_TYPE_3 = "(userIdMapper.type_ IS NULL OR userIdMapper.type_ = '') AND ";
 	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_1 = "userIdMapper.externalUserId IS NULL";
 	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_2 = "userIdMapper.externalUserId = ?";
 	private static final String _FINDER_COLUMN_T_E_EXTERNALUSERID_3 = "(userIdMapper.externalUserId IS NULL OR userIdMapper.externalUserId = '')";
@@ -1645,7 +1662,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 				sql = _SQL_SELECT_USERIDMAPPER;
 
 				if (pagination) {
-					sql = sql.concat(UserIdMapperModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(UserIdMapperModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1654,7 +1671,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserIdMapperImpl.class);
 
 				if (!pagination) {
 					list = (List<UserIdMapper>)QueryUtil.list(q, getDialect(),
@@ -1713,7 +1732,10 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_USERIDMAPPER);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_USERIDMAPPER);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1766,10 +1788,11 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_USERIDMAPPER = "SELECT userIdMapper FROM UserIdMapper userIdMapper";
-	private static final String _SQL_SELECT_USERIDMAPPER_WHERE = "SELECT userIdMapper FROM UserIdMapper userIdMapper WHERE ";
-	private static final String _SQL_COUNT_USERIDMAPPER = "SELECT COUNT(userIdMapper) FROM UserIdMapper userIdMapper";
-	private static final String _SQL_COUNT_USERIDMAPPER_WHERE = "SELECT COUNT(userIdMapper) FROM UserIdMapper userIdMapper WHERE ";
+	private static final String _SQL_SELECT_USERIDMAPPER = "SELECT {userIdMapper.*} FROM UserIdMapper userIdMapper";
+	private static final String _SQL_SELECT_USERIDMAPPER_WHERE = "SELECT {userIdMapper.*} FROM UserIdMapper userIdMapper WHERE ";
+	private static final String _SQL_COUNT_USERIDMAPPER = "SELECT COUNT(*) AS COUNT_VALUE FROM UserIdMapper userIdMapper";
+	private static final String _SQL_COUNT_USERIDMAPPER_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM UserIdMapper userIdMapper WHERE ";
+	private static final String _ENTITY_ALIAS = "userIdMapper";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userIdMapper.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No UserIdMapper exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No UserIdMapper exists with the key {";

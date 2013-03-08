@@ -74,8 +74,8 @@ public class DLFileRankModelImpl extends BaseModelImpl<DLFileRank>
 		};
 	public static final String TABLE_SQL_CREATE = "create table DLFileRank (uuid_ VARCHAR(75) null,fileRankId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,fileEntryId LONG,active_ BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table DLFileRank";
-	public static final String ORDER_BY_JPQL = " ORDER BY dlFileRank.createDate DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY DLFileRank.createDate DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY dlFileRank.createDate DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY DLFileRank.createDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

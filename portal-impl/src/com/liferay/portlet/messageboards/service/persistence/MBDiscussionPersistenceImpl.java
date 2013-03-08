@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -197,7 +197,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			}
 			else
 			 if (pagination) {
-				query.append(MBDiscussionModelImpl.ORDER_BY_JPQL);
+				query.append(MBDiscussionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -207,7 +207,9 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBDiscussionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -460,12 +462,14 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			}
 		}
 		else {
-			query.append(MBDiscussionModelImpl.ORDER_BY_JPQL);
+			query.append(MBDiscussionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBDiscussionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -534,7 +538,10 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -653,7 +660,9 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBDiscussionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -740,7 +749,10 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -869,7 +881,9 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBDiscussionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -964,7 +978,10 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1525,7 +1542,7 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 				sql = _SQL_SELECT_MBDISCUSSION;
 
 				if (pagination) {
-					sql = sql.concat(MBDiscussionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(MBDiscussionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1534,7 +1551,9 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBDiscussionImpl.class);
 
 				if (!pagination) {
 					list = (List<MBDiscussion>)QueryUtil.list(q, getDialect(),
@@ -1593,7 +1612,10 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_MBDISCUSSION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_MBDISCUSSION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1646,10 +1668,11 @@ public class MBDiscussionPersistenceImpl extends BasePersistenceImpl<MBDiscussio
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_MBDISCUSSION = "SELECT mbDiscussion FROM MBDiscussion mbDiscussion";
-	private static final String _SQL_SELECT_MBDISCUSSION_WHERE = "SELECT mbDiscussion FROM MBDiscussion mbDiscussion WHERE ";
-	private static final String _SQL_COUNT_MBDISCUSSION = "SELECT COUNT(mbDiscussion) FROM MBDiscussion mbDiscussion";
-	private static final String _SQL_COUNT_MBDISCUSSION_WHERE = "SELECT COUNT(mbDiscussion) FROM MBDiscussion mbDiscussion WHERE ";
+	private static final String _SQL_SELECT_MBDISCUSSION = "SELECT {mbDiscussion.*} FROM MBDiscussion mbDiscussion";
+	private static final String _SQL_SELECT_MBDISCUSSION_WHERE = "SELECT {mbDiscussion.*} FROM MBDiscussion mbDiscussion WHERE ";
+	private static final String _SQL_COUNT_MBDISCUSSION = "SELECT COUNT(*) AS COUNT_VALUE FROM MBDiscussion mbDiscussion";
+	private static final String _SQL_COUNT_MBDISCUSSION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM MBDiscussion mbDiscussion WHERE ";
+	private static final String _ENTITY_ALIAS = "mbDiscussion";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "mbDiscussion.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No MBDiscussion exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No MBDiscussion exists with the key {";

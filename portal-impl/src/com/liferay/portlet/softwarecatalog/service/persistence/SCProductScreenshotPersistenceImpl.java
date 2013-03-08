@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -207,7 +207,7 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			}
 			else
 			 if (pagination) {
-				query.append(SCProductScreenshotModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductScreenshotModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -217,7 +217,9 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductScreenshotImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -474,12 +476,14 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			}
 		}
 		else {
-			query.append(SCProductScreenshotModelImpl.ORDER_BY_JPQL);
+			query.append(SCProductScreenshotModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SCProductScreenshotImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -550,7 +554,10 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -669,7 +676,9 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductScreenshotImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -763,7 +772,10 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -882,7 +894,9 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductScreenshotImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -976,7 +990,10 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1107,7 +1124,9 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductScreenshotImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1210,7 +1229,10 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1831,7 +1853,7 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 				sql = _SQL_SELECT_SCPRODUCTSCREENSHOT;
 
 				if (pagination) {
-					sql = sql.concat(SCProductScreenshotModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(SCProductScreenshotModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1840,7 +1862,9 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductScreenshotImpl.class);
 
 				if (!pagination) {
 					list = (List<SCProductScreenshot>)QueryUtil.list(q,
@@ -1899,7 +1923,10 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SCPRODUCTSCREENSHOT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SCPRODUCTSCREENSHOT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1952,10 +1979,11 @@ public class SCProductScreenshotPersistenceImpl extends BasePersistenceImpl<SCPr
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SCPRODUCTSCREENSHOT = "SELECT scProductScreenshot FROM SCProductScreenshot scProductScreenshot";
-	private static final String _SQL_SELECT_SCPRODUCTSCREENSHOT_WHERE = "SELECT scProductScreenshot FROM SCProductScreenshot scProductScreenshot WHERE ";
-	private static final String _SQL_COUNT_SCPRODUCTSCREENSHOT = "SELECT COUNT(scProductScreenshot) FROM SCProductScreenshot scProductScreenshot";
-	private static final String _SQL_COUNT_SCPRODUCTSCREENSHOT_WHERE = "SELECT COUNT(scProductScreenshot) FROM SCProductScreenshot scProductScreenshot WHERE ";
+	private static final String _SQL_SELECT_SCPRODUCTSCREENSHOT = "SELECT {scProductScreenshot.*} FROM SCProductScreenshot scProductScreenshot";
+	private static final String _SQL_SELECT_SCPRODUCTSCREENSHOT_WHERE = "SELECT {scProductScreenshot.*} FROM SCProductScreenshot scProductScreenshot WHERE ";
+	private static final String _SQL_COUNT_SCPRODUCTSCREENSHOT = "SELECT COUNT(*) AS COUNT_VALUE FROM SCProductScreenshot scProductScreenshot";
+	private static final String _SQL_COUNT_SCPRODUCTSCREENSHOT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM SCProductScreenshot scProductScreenshot WHERE ";
+	private static final String _ENTITY_ALIAS = "scProductScreenshot";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "scProductScreenshot.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SCProductScreenshot exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SCProductScreenshot exists with the key {";

@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -186,7 +186,9 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ShardImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -295,7 +297,10 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -428,7 +433,9 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ShardImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -530,7 +537,10 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1051,7 +1061,7 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 				sql = _SQL_SELECT_SHARD;
 
 				if (pagination) {
-					sql = sql.concat(ShardModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ShardModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1060,7 +1070,9 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ShardImpl.class);
 
 				if (!pagination) {
 					list = (List<Shard>)QueryUtil.list(q, getDialect(), start,
@@ -1119,7 +1131,10 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SHARD);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SHARD);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1172,10 +1187,11 @@ public class ShardPersistenceImpl extends BasePersistenceImpl<Shard>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SHARD = "SELECT shard FROM Shard shard";
-	private static final String _SQL_SELECT_SHARD_WHERE = "SELECT shard FROM Shard shard WHERE ";
-	private static final String _SQL_COUNT_SHARD = "SELECT COUNT(shard) FROM Shard shard";
-	private static final String _SQL_COUNT_SHARD_WHERE = "SELECT COUNT(shard) FROM Shard shard WHERE ";
+	private static final String _SQL_SELECT_SHARD = "SELECT {shard.*} FROM Shard shard";
+	private static final String _SQL_SELECT_SHARD_WHERE = "SELECT {shard.*} FROM Shard shard WHERE ";
+	private static final String _SQL_COUNT_SHARD = "SELECT COUNT(*) AS COUNT_VALUE FROM Shard shard";
+	private static final String _SQL_COUNT_SHARD_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Shard shard WHERE ";
+	private static final String _ENTITY_ALIAS = "shard";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "shard.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Shard exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Shard exists with the key {";

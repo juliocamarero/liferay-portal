@@ -71,8 +71,8 @@ public class TicketModelImpl extends BaseModelImpl<Ticket>
 		};
 	public static final String TABLE_SQL_CREATE = "create table Ticket (ticketId LONG not null primary key,companyId LONG,createDate DATE null,classNameId LONG,classPK LONG,key_ VARCHAR(75) null,type_ INTEGER,extraInfo TEXT null,expirationDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table Ticket";
-	public static final String ORDER_BY_JPQL = " ORDER BY ticket.ticketId ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY Ticket.ticketId ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY ticket.ticketId ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY Ticket.ticketId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

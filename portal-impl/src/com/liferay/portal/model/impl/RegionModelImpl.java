@@ -69,8 +69,8 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 		};
 	public static final String TABLE_SQL_CREATE = "create table Region (regionId LONG not null primary key,countryId LONG,regionCode VARCHAR(75) null,name VARCHAR(75) null,active_ BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Region";
-	public static final String ORDER_BY_JPQL = " ORDER BY region.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY Region.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY region.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY Region.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -216,7 +215,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 			else
 			 if (pagination) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -226,7 +225,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -492,12 +493,14 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 		}
 		else {
-			query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+			query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -580,7 +583,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -605,9 +611,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "journalStructure.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "journalStructure.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalStructure.uuid IS NULL OR journalStructure.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "journalStructure.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "journalStructure.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalStructure.uuid_ IS NULL OR journalStructure.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(JournalStructureModelImpl.ENTITY_CACHE_ENABLED,
 			JournalStructureModelImpl.FINDER_CACHE_ENABLED,
 			JournalStructureImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -726,7 +732,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -836,7 +844,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -863,9 +874,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "journalStructure.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "journalStructure.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalStructure.uuid IS NULL OR journalStructure.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "journalStructure.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "journalStructure.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalStructure.uuid_ IS NULL OR journalStructure.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "journalStructure.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(JournalStructureModelImpl.ENTITY_CACHE_ENABLED,
 			JournalStructureModelImpl.FINDER_CACHE_ENABLED,
@@ -1010,7 +1021,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 			else
 			 if (pagination) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1020,7 +1031,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1302,12 +1315,14 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 		}
 		else {
-			query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+			query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1398,7 +1413,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1425,9 +1443,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "journalStructure.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "journalStructure.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(journalStructure.uuid IS NULL OR journalStructure.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "journalStructure.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "journalStructure.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(journalStructure.uuid_ IS NULL OR journalStructure.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "journalStructure.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(JournalStructureModelImpl.ENTITY_CACHE_ENABLED,
 			JournalStructureModelImpl.FINDER_CACHE_ENABLED,
@@ -1551,7 +1569,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 			else
 			 if (pagination) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1561,7 +1579,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1814,12 +1834,14 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 		}
 		else {
-			query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+			query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1932,10 +1954,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalStructureModelImpl.ORDER_BY_SQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2111,10 +2133,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalStructureModelImpl.ORDER_BY_SQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2255,10 +2277,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalStructureModelImpl.ORDER_BY_SQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2414,7 +2436,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 			else
 			 if (pagination) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2424,7 +2446,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2506,7 +2530,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2576,7 +2603,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2857,7 +2887,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 			else
 			 if (pagination) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2867,7 +2897,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3134,12 +3166,14 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 		}
 		else {
-			query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+			query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3223,7 +3257,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3389,7 +3426,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 			else
 			 if (pagination) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3399,7 +3436,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3670,12 +3709,14 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 		}
 		else {
-			query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+			query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3760,7 +3801,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3909,7 +3953,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4020,7 +4066,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4194,7 +4243,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 			else
 			 if (pagination) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4204,7 +4253,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4489,12 +4540,14 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			}
 		}
 		else {
-			query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+			query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4630,10 +4683,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalStructureModelImpl.ORDER_BY_SQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4831,10 +4884,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalStructureModelImpl.ORDER_BY_JPQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalStructureModelImpl.ORDER_BY_SQL);
+				query.append(JournalStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4940,7 +4993,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5708,7 +5764,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 				sql = _SQL_SELECT_JOURNALSTRUCTURE;
 
 				if (pagination) {
-					sql = sql.concat(JournalStructureModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(JournalStructureModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -5717,7 +5773,9 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalStructureImpl.class);
 
 				if (!pagination) {
 					list = (List<JournalStructure>)QueryUtil.list(q,
@@ -5776,7 +5834,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_JOURNALSTRUCTURE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_JOURNALSTRUCTURE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -5829,10 +5890,10 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_JOURNALSTRUCTURE = "SELECT journalStructure FROM JournalStructure journalStructure";
-	private static final String _SQL_SELECT_JOURNALSTRUCTURE_WHERE = "SELECT journalStructure FROM JournalStructure journalStructure WHERE ";
-	private static final String _SQL_COUNT_JOURNALSTRUCTURE = "SELECT COUNT(journalStructure) FROM JournalStructure journalStructure";
-	private static final String _SQL_COUNT_JOURNALSTRUCTURE_WHERE = "SELECT COUNT(journalStructure) FROM JournalStructure journalStructure WHERE ";
+	private static final String _SQL_SELECT_JOURNALSTRUCTURE = "SELECT {journalStructure.*} FROM JournalStructure journalStructure";
+	private static final String _SQL_SELECT_JOURNALSTRUCTURE_WHERE = "SELECT {journalStructure.*} FROM JournalStructure journalStructure WHERE ";
+	private static final String _SQL_COUNT_JOURNALSTRUCTURE = "SELECT COUNT(*) AS COUNT_VALUE FROM JournalStructure journalStructure";
+	private static final String _SQL_COUNT_JOURNALSTRUCTURE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM JournalStructure journalStructure WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "journalStructure.id_";
 	private static final String _FILTER_SQL_SELECT_JOURNALSTRUCTURE_WHERE = "SELECT DISTINCT {journalStructure.*} FROM JournalStructure journalStructure WHERE ";
 	private static final String _FILTER_SQL_SELECT_JOURNALSTRUCTURE_NO_INLINE_DISTINCT_WHERE_1 =
@@ -5842,6 +5903,7 @@ public class JournalStructurePersistenceImpl extends BasePersistenceImpl<Journal
 	private static final String _FILTER_SQL_COUNT_JOURNALSTRUCTURE_WHERE = "SELECT COUNT(DISTINCT journalStructure.id_) AS COUNT_VALUE FROM JournalStructure journalStructure WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "journalStructure";
 	private static final String _FILTER_ENTITY_TABLE = "JournalStructure";
+	private static final String _ENTITY_ALIAS = "journalStructure";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "journalStructure.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "JournalStructure.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No JournalStructure exists with the primary key ";

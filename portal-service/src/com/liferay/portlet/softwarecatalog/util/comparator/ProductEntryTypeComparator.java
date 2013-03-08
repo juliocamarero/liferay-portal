@@ -26,7 +26,7 @@ public class ProductEntryTypeComparator extends OrderByComparator {
 
 	public static final String ORDER_BY_DESC = "SCProductEntry.type_ DESC";
 
-	public static final String[] ORDER_BY_FIELDS = {"type"};
+	public static final String[] ORDER_BY_FIELDS = {"type_"};
 
 	public ProductEntryTypeComparator() {
 		this(false);

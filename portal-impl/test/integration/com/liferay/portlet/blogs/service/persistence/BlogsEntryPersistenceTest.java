@@ -19,11 +19,14 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.IntegerWrapper;
+import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -232,6 +235,23 @@ public class BlogsEntryPersistenceTest {
 		}
 		catch (NoSuchEntryException nsee) {
 		}
+	}
+
+	@Test
+	public void testFindAllOrderBy() throws Exception {
+		OrderByComparator obc = OrderByComparatorFactoryUtil.create("BlogsEntry",
+				"uuid_", true, "entryId", true, "groupId", true, "companyId",
+				true, "userId", true, "userName", true, "createDate", true,
+				"modifiedDate", true, "title", true, "urlTitle", true,
+				"description", true, "content", true, "displayDate", true,
+				"allowPingbacks", true, "allowTrackbacks", true, "trackbacks",
+				true, "smallImage", true, "smallImageId", true,
+				"smallImageURL", true, "status", true, "statusByUserId", true,
+				"statusByUserName", true, "statusDate", true);
+
+		_persistence.findAll(QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
+
+		Assert.assertTrue(true);
 	}
 
 	@Test

@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -212,7 +211,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			}
 			else
 			 if (pagination) {
-				query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +221,9 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -475,12 +476,14 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			}
 		}
 		else {
-			query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+			query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SCProductEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -593,10 +596,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(SCProductEntryModelImpl.ORDER_BY_SQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -773,10 +776,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(SCProductEntryModelImpl.ORDER_BY_SQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -860,7 +863,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1053,7 +1059,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			}
 			else
 			 if (pagination) {
-				query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1063,7 +1069,9 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1316,12 +1324,14 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			}
 		}
 		else {
-			query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+			query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SCProductEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1390,7 +1400,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1544,7 +1557,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			}
 			else
 			 if (pagination) {
-				query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1554,7 +1567,9 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1822,12 +1837,14 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			}
 		}
 		else {
-			query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+			query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SCProductEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1948,10 +1965,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(SCProductEntryModelImpl.ORDER_BY_SQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2133,10 +2150,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(SCProductEntryModelImpl.ORDER_BY_JPQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(SCProductEntryModelImpl.ORDER_BY_SQL);
+				query.append(SCProductEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2227,7 +2244,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2439,7 +2459,9 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2573,7 +2595,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3176,7 +3201,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 				sql = _SQL_SELECT_SCPRODUCTENTRY;
 
 				if (pagination) {
-					sql = sql.concat(SCProductEntryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(SCProductEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3185,7 +3210,9 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCProductEntryImpl.class);
 
 				if (!pagination) {
 					list = (List<SCProductEntry>)QueryUtil.list(q,
@@ -3244,7 +3271,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SCPRODUCTENTRY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SCPRODUCTENTRY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3357,7 +3387,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 					sql = _SQL_GETSCLICENSES;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.softwarecatalog.model.impl.SCLicenseModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.softwarecatalog.model.impl.SCLicenseModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -3980,10 +4010,10 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_SCPRODUCTENTRY = "SELECT scProductEntry FROM SCProductEntry scProductEntry";
-	private static final String _SQL_SELECT_SCPRODUCTENTRY_WHERE = "SELECT scProductEntry FROM SCProductEntry scProductEntry WHERE ";
-	private static final String _SQL_COUNT_SCPRODUCTENTRY = "SELECT COUNT(scProductEntry) FROM SCProductEntry scProductEntry";
-	private static final String _SQL_COUNT_SCPRODUCTENTRY_WHERE = "SELECT COUNT(scProductEntry) FROM SCProductEntry scProductEntry WHERE ";
+	private static final String _SQL_SELECT_SCPRODUCTENTRY = "SELECT {scProductEntry.*} FROM SCProductEntry scProductEntry";
+	private static final String _SQL_SELECT_SCPRODUCTENTRY_WHERE = "SELECT {scProductEntry.*} FROM SCProductEntry scProductEntry WHERE ";
+	private static final String _SQL_COUNT_SCPRODUCTENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM SCProductEntry scProductEntry";
+	private static final String _SQL_COUNT_SCPRODUCTENTRY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM SCProductEntry scProductEntry WHERE ";
 	private static final String _SQL_GETSCLICENSES = "SELECT {SCLicense.*} FROM SCLicense INNER JOIN SCLicenses_SCProductEntries ON (SCLicenses_SCProductEntries.licenseId = SCLicense.licenseId) WHERE (SCLicenses_SCProductEntries.productEntryId = ?)";
 	private static final String _SQL_GETSCLICENSESSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM SCLicenses_SCProductEntries WHERE productEntryId = ?";
 	private static final String _SQL_CONTAINSSCLICENSE = "SELECT COUNT(*) AS COUNT_VALUE FROM SCLicenses_SCProductEntries WHERE productEntryId = ? AND licenseId = ?";
@@ -3996,6 +4026,7 @@ public class SCProductEntryPersistenceImpl extends BasePersistenceImpl<SCProduct
 	private static final String _FILTER_SQL_COUNT_SCPRODUCTENTRY_WHERE = "SELECT COUNT(DISTINCT scProductEntry.productEntryId) AS COUNT_VALUE FROM SCProductEntry scProductEntry WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "scProductEntry";
 	private static final String _FILTER_ENTITY_TABLE = "SCProductEntry";
+	private static final String _ENTITY_ALIAS = "scProductEntry";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "scProductEntry.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "SCProductEntry.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SCProductEntry exists with the primary key ";

@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -205,7 +205,7 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 			}
 			else
 			 if (pagination) {
-				query.append(UserTrackerPathModelImpl.ORDER_BY_JPQL);
+				query.append(UserTrackerPathModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -215,7 +215,9 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserTrackerPathImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -469,12 +471,14 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 			}
 		}
 		else {
-			query.append(UserTrackerPathModelImpl.ORDER_BY_JPQL);
+			query.append(UserTrackerPathModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserTrackerPathImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -545,7 +549,10 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1012,7 +1019,7 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 				sql = _SQL_SELECT_USERTRACKERPATH;
 
 				if (pagination) {
-					sql = sql.concat(UserTrackerPathModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(UserTrackerPathModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1021,7 +1028,9 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserTrackerPathImpl.class);
 
 				if (!pagination) {
 					list = (List<UserTrackerPath>)QueryUtil.list(q,
@@ -1080,7 +1089,10 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_USERTRACKERPATH);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_USERTRACKERPATH);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1133,10 +1145,11 @@ public class UserTrackerPathPersistenceImpl extends BasePersistenceImpl<UserTrac
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_USERTRACKERPATH = "SELECT userTrackerPath FROM UserTrackerPath userTrackerPath";
-	private static final String _SQL_SELECT_USERTRACKERPATH_WHERE = "SELECT userTrackerPath FROM UserTrackerPath userTrackerPath WHERE ";
-	private static final String _SQL_COUNT_USERTRACKERPATH = "SELECT COUNT(userTrackerPath) FROM UserTrackerPath userTrackerPath";
-	private static final String _SQL_COUNT_USERTRACKERPATH_WHERE = "SELECT COUNT(userTrackerPath) FROM UserTrackerPath userTrackerPath WHERE ";
+	private static final String _SQL_SELECT_USERTRACKERPATH = "SELECT {userTrackerPath.*} FROM UserTrackerPath userTrackerPath";
+	private static final String _SQL_SELECT_USERTRACKERPATH_WHERE = "SELECT {userTrackerPath.*} FROM UserTrackerPath userTrackerPath WHERE ";
+	private static final String _SQL_COUNT_USERTRACKERPATH = "SELECT COUNT(*) AS COUNT_VALUE FROM UserTrackerPath userTrackerPath";
+	private static final String _SQL_COUNT_USERTRACKERPATH_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM UserTrackerPath userTrackerPath WHERE ";
+	private static final String _ENTITY_ALIAS = "userTrackerPath";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userTrackerPath.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No UserTrackerPath exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No UserTrackerPath exists with the key {";

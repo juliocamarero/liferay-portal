@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -199,7 +199,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			}
 			else
 			 if (pagination) {
-				query.append(ResourceTypePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourceTypePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -209,7 +209,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourceTypePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -463,12 +465,14 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			}
 		}
 		else {
-			query.append(ResourceTypePermissionModelImpl.ORDER_BY_JPQL);
+			query.append(ResourceTypePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ResourceTypePermissionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -537,7 +541,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -716,7 +723,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			}
 			else
 			 if (pagination) {
-				query.append(ResourceTypePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourceTypePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -726,7 +733,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourceTypePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1027,12 +1036,14 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			}
 		}
 		else {
-			query.append(ResourceTypePermissionModelImpl.ORDER_BY_JPQL);
+			query.append(ResourceTypePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ResourceTypePermissionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1130,7 +1141,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1311,7 +1325,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourceTypePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1437,7 +1453,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2024,7 +2043,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 				sql = _SQL_SELECT_RESOURCETYPEPERMISSION;
 
 				if (pagination) {
-					sql = sql.concat(ResourceTypePermissionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ResourceTypePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2033,7 +2052,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourceTypePermissionImpl.class);
 
 				if (!pagination) {
 					list = (List<ResourceTypePermission>)QueryUtil.list(q,
@@ -2092,7 +2113,10 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_RESOURCETYPEPERMISSION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_RESOURCETYPEPERMISSION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2145,10 +2169,11 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION = "SELECT resourceTypePermission FROM ResourceTypePermission resourceTypePermission";
-	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION_WHERE = "SELECT resourceTypePermission FROM ResourceTypePermission resourceTypePermission WHERE ";
-	private static final String _SQL_COUNT_RESOURCETYPEPERMISSION = "SELECT COUNT(resourceTypePermission) FROM ResourceTypePermission resourceTypePermission";
-	private static final String _SQL_COUNT_RESOURCETYPEPERMISSION_WHERE = "SELECT COUNT(resourceTypePermission) FROM ResourceTypePermission resourceTypePermission WHERE ";
+	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION = "SELECT {resourceTypePermission.*} FROM ResourceTypePermission resourceTypePermission";
+	private static final String _SQL_SELECT_RESOURCETYPEPERMISSION_WHERE = "SELECT {resourceTypePermission.*} FROM ResourceTypePermission resourceTypePermission WHERE ";
+	private static final String _SQL_COUNT_RESOURCETYPEPERMISSION = "SELECT COUNT(*) AS COUNT_VALUE FROM ResourceTypePermission resourceTypePermission";
+	private static final String _SQL_COUNT_RESOURCETYPEPERMISSION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ResourceTypePermission resourceTypePermission WHERE ";
+	private static final String _ENTITY_ALIAS = "resourceTypePermission";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "resourceTypePermission.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ResourceTypePermission exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No ResourceTypePermission exists with the key {";

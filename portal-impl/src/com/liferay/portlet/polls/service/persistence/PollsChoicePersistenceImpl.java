@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -209,7 +209,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			}
 			else
 			 if (pagination) {
-				query.append(PollsChoiceModelImpl.ORDER_BY_JPQL);
+				query.append(PollsChoiceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -219,7 +219,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsChoiceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -483,12 +485,14 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			}
 		}
 		else {
-			query.append(PollsChoiceModelImpl.ORDER_BY_JPQL);
+			query.append(PollsChoiceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PollsChoiceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -571,7 +575,10 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -596,9 +603,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "pollsChoice.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "pollsChoice.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(pollsChoice.uuid IS NULL OR pollsChoice.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "pollsChoice.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "pollsChoice.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(pollsChoice.uuid_ IS NULL OR pollsChoice.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_QUESTIONID =
 		new FinderPath(PollsChoiceModelImpl.ENTITY_CACHE_ENABLED,
 			PollsChoiceModelImpl.FINDER_CACHE_ENABLED, PollsChoiceImpl.class,
@@ -717,7 +724,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			}
 			else
 			 if (pagination) {
-				query.append(PollsChoiceModelImpl.ORDER_BY_JPQL);
+				query.append(PollsChoiceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -727,7 +734,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsChoiceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -980,12 +989,14 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			}
 		}
 		else {
-			query.append(PollsChoiceModelImpl.ORDER_BY_JPQL);
+			query.append(PollsChoiceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PollsChoiceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1054,7 +1065,10 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1195,7 +1209,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsChoiceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1305,7 +1321,10 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1864,7 +1883,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 				sql = _SQL_SELECT_POLLSCHOICE;
 
 				if (pagination) {
-					sql = sql.concat(PollsChoiceModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(PollsChoiceModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1873,7 +1892,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsChoiceImpl.class);
 
 				if (!pagination) {
 					list = (List<PollsChoice>)QueryUtil.list(q, getDialect(),
@@ -1932,7 +1953,10 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_POLLSCHOICE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_POLLSCHOICE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1985,10 +2009,11 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_POLLSCHOICE = "SELECT pollsChoice FROM PollsChoice pollsChoice";
-	private static final String _SQL_SELECT_POLLSCHOICE_WHERE = "SELECT pollsChoice FROM PollsChoice pollsChoice WHERE ";
-	private static final String _SQL_COUNT_POLLSCHOICE = "SELECT COUNT(pollsChoice) FROM PollsChoice pollsChoice";
-	private static final String _SQL_COUNT_POLLSCHOICE_WHERE = "SELECT COUNT(pollsChoice) FROM PollsChoice pollsChoice WHERE ";
+	private static final String _SQL_SELECT_POLLSCHOICE = "SELECT {pollsChoice.*} FROM PollsChoice pollsChoice";
+	private static final String _SQL_SELECT_POLLSCHOICE_WHERE = "SELECT {pollsChoice.*} FROM PollsChoice pollsChoice WHERE ";
+	private static final String _SQL_COUNT_POLLSCHOICE = "SELECT COUNT(*) AS COUNT_VALUE FROM PollsChoice pollsChoice";
+	private static final String _SQL_COUNT_POLLSCHOICE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM PollsChoice pollsChoice WHERE ";
+	private static final String _ENTITY_ALIAS = "pollsChoice";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "pollsChoice.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No PollsChoice exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No PollsChoice exists with the key {";

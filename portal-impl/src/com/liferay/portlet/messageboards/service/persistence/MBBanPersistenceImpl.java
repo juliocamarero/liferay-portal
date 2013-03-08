@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -207,7 +207,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 			else
 			 if (pagination) {
-				query.append(MBBanModelImpl.ORDER_BY_JPQL);
+				query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -217,7 +217,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -479,12 +481,14 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 		}
 		else {
-			query.append(MBBanModelImpl.ORDER_BY_JPQL);
+			query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -567,7 +571,10 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -592,9 +599,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbBan.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbBan.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbBan.uuid IS NULL OR mbBan.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbBan.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbBan.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbBan.uuid_ IS NULL OR mbBan.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 			MBBanModelImpl.FINDER_CACHE_ENABLED, MBBanImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -712,7 +719,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -822,7 +831,10 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -849,9 +861,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbBan.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbBan.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbBan.uuid IS NULL OR mbBan.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbBan.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbBan.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbBan.uuid_ IS NULL OR mbBan.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "mbBan.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 			MBBanModelImpl.FINDER_CACHE_ENABLED, MBBanImpl.class,
@@ -992,7 +1004,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 			else
 			 if (pagination) {
-				query.append(MBBanModelImpl.ORDER_BY_JPQL);
+				query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1002,7 +1014,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1281,12 +1295,14 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 		}
 		else {
-			query.append(MBBanModelImpl.ORDER_BY_JPQL);
+			query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1377,7 +1393,10 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1404,9 +1423,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbBan.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbBan.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbBan.uuid IS NULL OR mbBan.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbBan.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbBan.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbBan.uuid_ IS NULL OR mbBan.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "mbBan.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 			MBBanModelImpl.FINDER_CACHE_ENABLED, MBBanImpl.class,
@@ -1522,7 +1541,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 			else
 			 if (pagination) {
-				query.append(MBBanModelImpl.ORDER_BY_JPQL);
+				query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1532,7 +1551,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1781,12 +1802,14 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 		}
 		else {
-			query.append(MBBanModelImpl.ORDER_BY_JPQL);
+			query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1855,7 +1878,10 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1993,7 +2019,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 			else
 			 if (pagination) {
-				query.append(MBBanModelImpl.ORDER_BY_JPQL);
+				query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2003,7 +2029,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2252,12 +2280,14 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 		}
 		else {
-			query.append(MBBanModelImpl.ORDER_BY_JPQL);
+			query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2326,7 +2356,10 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2467,7 +2500,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 			else
 			 if (pagination) {
-				query.append(MBBanModelImpl.ORDER_BY_JPQL);
+				query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2477,7 +2510,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2726,12 +2761,14 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			}
 		}
 		else {
-			query.append(MBBanModelImpl.ORDER_BY_JPQL);
+			query.append(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2800,7 +2837,10 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2929,7 +2969,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3024,7 +3066,10 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3651,7 +3696,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 				sql = _SQL_SELECT_MBBAN;
 
 				if (pagination) {
-					sql = sql.concat(MBBanModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(MBBanModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3660,7 +3705,9 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBBanImpl.class);
 
 				if (!pagination) {
 					list = (List<MBBan>)QueryUtil.list(q, getDialect(), start,
@@ -3719,7 +3766,10 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_MBBAN);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_MBBAN);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3772,10 +3822,11 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_MBBAN = "SELECT mbBan FROM MBBan mbBan";
-	private static final String _SQL_SELECT_MBBAN_WHERE = "SELECT mbBan FROM MBBan mbBan WHERE ";
-	private static final String _SQL_COUNT_MBBAN = "SELECT COUNT(mbBan) FROM MBBan mbBan";
-	private static final String _SQL_COUNT_MBBAN_WHERE = "SELECT COUNT(mbBan) FROM MBBan mbBan WHERE ";
+	private static final String _SQL_SELECT_MBBAN = "SELECT {mbBan.*} FROM MBBan mbBan";
+	private static final String _SQL_SELECT_MBBAN_WHERE = "SELECT {mbBan.*} FROM MBBan mbBan WHERE ";
+	private static final String _SQL_COUNT_MBBAN = "SELECT COUNT(*) AS COUNT_VALUE FROM MBBan mbBan";
+	private static final String _SQL_COUNT_MBBAN_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM MBBan mbBan WHERE ";
+	private static final String _ENTITY_ALIAS = "mbBan";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "mbBan.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No MBBan exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No MBBan exists with the key {";

@@ -66,8 +66,8 @@ public class SCProductScreenshotModelImpl extends BaseModelImpl<SCProductScreens
 		};
 	public static final String TABLE_SQL_CREATE = "create table SCProductScreenshot (productScreenshotId LONG not null primary key,companyId LONG,groupId LONG,productEntryId LONG,thumbnailId LONG,fullImageId LONG,priority INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table SCProductScreenshot";
-	public static final String ORDER_BY_JPQL = " ORDER BY scProductScreenshot.productEntryId ASC, scProductScreenshot.priority ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY SCProductScreenshot.productEntryId ASC, SCProductScreenshot.priority ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY scProductScreenshot.productEntryId ASC, scProductScreenshot.priority ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY SCProductScreenshot.productEntryId ASC, SCProductScreenshot.priority ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

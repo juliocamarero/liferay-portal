@@ -85,8 +85,8 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 		};
 	public static final String TABLE_SQL_CREATE = "create table AssetVocabulary (uuid_ VARCHAR(75) null,vocabularyId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,title STRING null,description STRING null,settings_ STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table AssetVocabulary";
-	public static final String ORDER_BY_JPQL = " ORDER BY assetVocabulary.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY AssetVocabulary.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY assetVocabulary.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY AssetVocabulary.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

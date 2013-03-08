@@ -80,8 +80,8 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		};
 	public static final String TABLE_SQL_CREATE = "create table TrashEntry (entryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,classNameId LONG,classPK LONG,typeSettings TEXT null,status INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table TrashEntry";
-	public static final String ORDER_BY_JPQL = " ORDER BY trashEntry.createDate DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY TrashEntry.createDate DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY trashEntry.createDate DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY TrashEntry.createDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

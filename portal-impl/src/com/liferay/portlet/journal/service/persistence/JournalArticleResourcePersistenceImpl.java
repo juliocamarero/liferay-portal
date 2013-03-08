@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -212,7 +212,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			}
 			else
 			 if (pagination) {
-				query.append(JournalArticleResourceModelImpl.ORDER_BY_JPQL);
+				query.append(JournalArticleResourceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +222,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleResourceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -489,12 +491,14 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			}
 		}
 		else {
-			query.append(JournalArticleResourceModelImpl.ORDER_BY_JPQL);
+			query.append(JournalArticleResourceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalArticleResourceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -577,7 +581,10 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -602,9 +609,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "journalArticleResource.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "journalArticleResource.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalArticleResource.uuid IS NULL OR journalArticleResource.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "journalArticleResource.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "journalArticleResource.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalArticleResource.uuid_ IS NULL OR journalArticleResource.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
 			JournalArticleResourceModelImpl.FINDER_CACHE_ENABLED,
 			JournalArticleResourceImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -724,7 +731,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleResourceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -835,7 +844,10 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -862,9 +874,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "journalArticleResource.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "journalArticleResource.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalArticleResource.uuid IS NULL OR journalArticleResource.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "journalArticleResource.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "journalArticleResource.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalArticleResource.uuid_ IS NULL OR journalArticleResource.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "journalArticleResource.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
 			JournalArticleResourceModelImpl.FINDER_CACHE_ENABLED,
@@ -983,7 +995,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			}
 			else
 			 if (pagination) {
-				query.append(JournalArticleResourceModelImpl.ORDER_BY_JPQL);
+				query.append(JournalArticleResourceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -993,7 +1005,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleResourceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1246,12 +1260,14 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			}
 		}
 		else {
-			query.append(JournalArticleResourceModelImpl.ORDER_BY_JPQL);
+			query.append(JournalArticleResourceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalArticleResourceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1320,7 +1336,10 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1464,7 +1483,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleResourceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1576,7 +1597,10 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2196,7 +2220,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 				sql = _SQL_SELECT_JOURNALARTICLERESOURCE;
 
 				if (pagination) {
-					sql = sql.concat(JournalArticleResourceModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(JournalArticleResourceModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2205,7 +2229,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalArticleResourceImpl.class);
 
 				if (!pagination) {
 					list = (List<JournalArticleResource>)QueryUtil.list(q,
@@ -2264,7 +2290,10 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_JOURNALARTICLERESOURCE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_JOURNALARTICLERESOURCE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2317,10 +2346,11 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_JOURNALARTICLERESOURCE = "SELECT journalArticleResource FROM JournalArticleResource journalArticleResource";
-	private static final String _SQL_SELECT_JOURNALARTICLERESOURCE_WHERE = "SELECT journalArticleResource FROM JournalArticleResource journalArticleResource WHERE ";
-	private static final String _SQL_COUNT_JOURNALARTICLERESOURCE = "SELECT COUNT(journalArticleResource) FROM JournalArticleResource journalArticleResource";
-	private static final String _SQL_COUNT_JOURNALARTICLERESOURCE_WHERE = "SELECT COUNT(journalArticleResource) FROM JournalArticleResource journalArticleResource WHERE ";
+	private static final String _SQL_SELECT_JOURNALARTICLERESOURCE = "SELECT {journalArticleResource.*} FROM JournalArticleResource journalArticleResource";
+	private static final String _SQL_SELECT_JOURNALARTICLERESOURCE_WHERE = "SELECT {journalArticleResource.*} FROM JournalArticleResource journalArticleResource WHERE ";
+	private static final String _SQL_COUNT_JOURNALARTICLERESOURCE = "SELECT COUNT(*) AS COUNT_VALUE FROM JournalArticleResource journalArticleResource";
+	private static final String _SQL_COUNT_JOURNALARTICLERESOURCE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM JournalArticleResource journalArticleResource WHERE ";
+	private static final String _ENTITY_ALIAS = "journalArticleResource";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "journalArticleResource.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No JournalArticleResource exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No JournalArticleResource exists with the key {";

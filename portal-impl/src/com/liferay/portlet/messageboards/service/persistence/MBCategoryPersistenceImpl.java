@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -212,7 +211,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +221,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -486,12 +487,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 		}
 		else {
-			query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -574,7 +577,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -599,9 +605,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbCategory.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbCategory.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbCategory.uuid IS NULL OR mbCategory.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbCategory.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbCategory.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbCategory.uuid_ IS NULL OR mbCategory.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
 			MBCategoryModelImpl.FINDER_CACHE_ENABLED, MBCategoryImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -719,7 +725,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -829,7 +837,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -856,9 +867,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbCategory.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbCategory.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbCategory.uuid IS NULL OR mbCategory.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbCategory.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbCategory.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbCategory.uuid_ IS NULL OR mbCategory.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "mbCategory.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
 			MBCategoryModelImpl.FINDER_CACHE_ENABLED, MBCategoryImpl.class,
@@ -1002,7 +1013,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1012,7 +1023,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1294,12 +1307,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 		}
 		else {
-			query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1390,7 +1405,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1417,9 +1435,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbCategory.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbCategory.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbCategory.uuid IS NULL OR mbCategory.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbCategory.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbCategory.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbCategory.uuid_ IS NULL OR mbCategory.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "mbCategory.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
 			MBCategoryModelImpl.FINDER_CACHE_ENABLED, MBCategoryImpl.class,
@@ -1538,7 +1556,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1548,7 +1566,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1798,12 +1818,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 		}
 		else {
-			query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1916,10 +1938,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2095,10 +2117,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2182,7 +2204,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2373,7 +2398,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2383,7 +2408,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2636,12 +2663,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 		}
 		else {
-			query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2710,7 +2739,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2866,7 +2898,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2876,7 +2908,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3144,12 +3178,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 		}
 		else {
-			query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3271,10 +3307,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3455,10 +3491,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3613,10 +3649,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3790,7 +3826,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3800,7 +3836,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3890,7 +3928,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3974,7 +4015,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4273,7 +4317,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4283,7 +4327,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4551,12 +4597,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 		}
 		else {
-			query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4677,10 +4725,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4861,10 +4909,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4954,7 +5002,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5163,7 +5214,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5173,7 +5224,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5441,12 +5494,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 		}
 		else {
-			query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5522,7 +5577,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5698,7 +5756,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5708,7 +5766,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5993,12 +6053,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 		}
 		else {
-			query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6129,10 +6191,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6319,10 +6381,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6492,10 +6554,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(MBCategoryModelImpl.ORDER_BY_SQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6683,7 +6745,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			}
 			else
 			 if (pagination) {
-				query.append(MBCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6693,7 +6755,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6789,7 +6853,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6884,7 +6951,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7742,7 +7812,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 				sql = _SQL_SELECT_MBCATEGORY;
 
 				if (pagination) {
-					sql = sql.concat(MBCategoryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(MBCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -7751,7 +7821,9 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBCategoryImpl.class);
 
 				if (!pagination) {
 					list = (List<MBCategory>)QueryUtil.list(q, getDialect(),
@@ -7810,7 +7882,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_MBCATEGORY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_MBCATEGORY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -7863,10 +7938,10 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_MBCATEGORY = "SELECT mbCategory FROM MBCategory mbCategory";
-	private static final String _SQL_SELECT_MBCATEGORY_WHERE = "SELECT mbCategory FROM MBCategory mbCategory WHERE ";
-	private static final String _SQL_COUNT_MBCATEGORY = "SELECT COUNT(mbCategory) FROM MBCategory mbCategory";
-	private static final String _SQL_COUNT_MBCATEGORY_WHERE = "SELECT COUNT(mbCategory) FROM MBCategory mbCategory WHERE ";
+	private static final String _SQL_SELECT_MBCATEGORY = "SELECT {mbCategory.*} FROM MBCategory mbCategory";
+	private static final String _SQL_SELECT_MBCATEGORY_WHERE = "SELECT {mbCategory.*} FROM MBCategory mbCategory WHERE ";
+	private static final String _SQL_COUNT_MBCATEGORY = "SELECT COUNT(*) AS COUNT_VALUE FROM MBCategory mbCategory";
+	private static final String _SQL_COUNT_MBCATEGORY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM MBCategory mbCategory WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "mbCategory.categoryId";
 	private static final String _FILTER_SQL_SELECT_MBCATEGORY_WHERE = "SELECT DISTINCT {mbCategory.*} FROM MBCategory mbCategory WHERE ";
 	private static final String _FILTER_SQL_SELECT_MBCATEGORY_NO_INLINE_DISTINCT_WHERE_1 =
@@ -7876,6 +7951,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 	private static final String _FILTER_SQL_COUNT_MBCATEGORY_WHERE = "SELECT COUNT(DISTINCT mbCategory.categoryId) AS COUNT_VALUE FROM MBCategory mbCategory WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "mbCategory";
 	private static final String _FILTER_ENTITY_TABLE = "MBCategory";
+	private static final String _ENTITY_ALIAS = "mbCategory";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "mbCategory.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "MBCategory.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No MBCategory exists with the primary key ";

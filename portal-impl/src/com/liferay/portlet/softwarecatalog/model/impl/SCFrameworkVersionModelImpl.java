@@ -79,8 +79,8 @@ public class SCFrameworkVersionModelImpl extends BaseModelImpl<SCFrameworkVersio
 		};
 	public static final String TABLE_SQL_CREATE = "create table SCFrameworkVersion (frameworkVersionId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,url STRING null,active_ BOOLEAN,priority INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table SCFrameworkVersion";
-	public static final String ORDER_BY_JPQL = " ORDER BY scFrameworkVersion.name DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY SCFrameworkVersion.name DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY scFrameworkVersion.name DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY SCFrameworkVersion.name DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

@@ -67,8 +67,8 @@ public class PasswordTrackerModelImpl extends BaseModelImpl<PasswordTracker>
 		};
 	public static final String TABLE_SQL_CREATE = "create table PasswordTracker (passwordTrackerId LONG not null primary key,userId LONG,createDate DATE null,password_ VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table PasswordTracker";
-	public static final String ORDER_BY_JPQL = " ORDER BY passwordTracker.userId DESC, passwordTracker.createDate DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY PasswordTracker.userId DESC, PasswordTracker.createDate DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY passwordTracker.userId DESC, passwordTracker.createDate DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY PasswordTracker.userId DESC, PasswordTracker.createDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

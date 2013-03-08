@@ -27,7 +27,7 @@ public class RoleTypeComparator extends OrderByComparator {
 	public static final String ORDER_BY_DESC =
 		"Role_.type_ DESC, Role_.name DESC";
 
-	public static final String[] ORDER_BY_FIELDS = {"type", "name"};
+	public static final String[] ORDER_BY_FIELDS = {"type_", "name"};
 
 	public RoleTypeComparator() {
 		this(false);

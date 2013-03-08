@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -211,7 +211,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -221,7 +221,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -485,12 +487,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -573,7 +577,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -598,9 +605,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "socialRequest.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "socialRequest.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "socialRequest.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "socialRequest.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(socialRequest.uuid_ IS NULL OR socialRequest.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRequestModelImpl.FINDER_CACHE_ENABLED,
 			SocialRequestImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -718,7 +725,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -828,7 +837,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -855,9 +867,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "socialRequest.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "socialRequest.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "socialRequest.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "socialRequest.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(socialRequest.uuid_ IS NULL OR socialRequest.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "socialRequest.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
 			SocialRequestModelImpl.FINDER_CACHE_ENABLED,
@@ -1001,7 +1013,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1011,7 +1023,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1293,12 +1307,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1389,7 +1405,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1416,9 +1435,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "socialRequest.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "socialRequest.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(socialRequest.uuid IS NULL OR socialRequest.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "socialRequest.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "socialRequest.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(socialRequest.uuid_ IS NULL OR socialRequest.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "socialRequest.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPANYID =
 		new FinderPath(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
@@ -1538,7 +1557,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1548,7 +1567,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1801,12 +1822,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1875,7 +1898,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2015,7 +2041,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2025,7 +2051,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2277,12 +2305,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2351,7 +2381,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2498,7 +2531,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2508,7 +2541,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2761,12 +2796,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2837,7 +2874,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2989,7 +3029,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2999,7 +3039,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3267,12 +3309,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3347,7 +3391,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3503,7 +3550,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3513,7 +3560,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3781,12 +3830,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3863,7 +3914,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4038,7 +4092,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4158,7 +4214,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4192,7 +4251,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	private static final String _FINDER_COLUMN_U_C_C_T_R_USERID_2 = "socialRequest.userId = ? AND ";
 	private static final String _FINDER_COLUMN_U_C_C_T_R_CLASSNAMEID_2 = "socialRequest.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_U_C_C_T_R_CLASSPK_2 = "socialRequest.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_U_C_C_T_R_TYPE_2 = "socialRequest.type = ? AND ";
+	private static final String _FINDER_COLUMN_U_C_C_T_R_TYPE_2 = "socialRequest.type_ = ? AND ";
 	private static final String _FINDER_COLUMN_U_C_C_T_R_RECEIVERUSERID_2 = "socialRequest.receiverUserId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_U_C_C_T_S =
 		new FinderPath(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
@@ -4355,7 +4414,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4365,7 +4424,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4684,12 +4745,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4787,7 +4850,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4821,7 +4887,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	private static final String _FINDER_COLUMN_U_C_C_T_S_USERID_2 = "socialRequest.userId = ? AND ";
 	private static final String _FINDER_COLUMN_U_C_C_T_S_CLASSNAMEID_2 = "socialRequest.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_U_C_C_T_S_CLASSPK_2 = "socialRequest.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_U_C_C_T_S_TYPE_2 = "socialRequest.type = ? AND ";
+	private static final String _FINDER_COLUMN_U_C_C_T_S_TYPE_2 = "socialRequest.type_ = ? AND ";
 	private static final String _FINDER_COLUMN_U_C_C_T_S_STATUS_2 = "socialRequest.status = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_C_T_R_S =
 		new FinderPath(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
@@ -4989,7 +5055,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 			else
 			 if (pagination) {
-				query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+				query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4999,7 +5065,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5321,12 +5389,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			}
 		}
 		else {
-			query.append(SocialRequestModelImpl.ORDER_BY_JPQL);
+			query.append(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5424,7 +5494,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5457,7 +5530,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 	private static final String _FINDER_COLUMN_C_C_T_R_S_CLASSNAMEID_2 = "socialRequest.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_T_R_S_CLASSPK_2 = "socialRequest.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_T_R_S_TYPE_2 = "socialRequest.type = ? AND ";
+	private static final String _FINDER_COLUMN_C_C_T_R_S_TYPE_2 = "socialRequest.type_ = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_T_R_S_RECEIVERUSERID_2 = "socialRequest.receiverUserId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_T_R_S_STATUS_2 = "socialRequest.status = ?";
 
@@ -6211,7 +6284,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				sql = _SQL_SELECT_SOCIALREQUEST;
 
 				if (pagination) {
-					sql = sql.concat(SocialRequestModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(SocialRequestModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -6220,7 +6293,9 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialRequestImpl.class);
 
 				if (!pagination) {
 					list = (List<SocialRequest>)QueryUtil.list(q, getDialect(),
@@ -6279,7 +6354,10 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SOCIALREQUEST);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SOCIALREQUEST);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -6332,10 +6410,11 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SOCIALREQUEST = "SELECT socialRequest FROM SocialRequest socialRequest";
-	private static final String _SQL_SELECT_SOCIALREQUEST_WHERE = "SELECT socialRequest FROM SocialRequest socialRequest WHERE ";
-	private static final String _SQL_COUNT_SOCIALREQUEST = "SELECT COUNT(socialRequest) FROM SocialRequest socialRequest";
-	private static final String _SQL_COUNT_SOCIALREQUEST_WHERE = "SELECT COUNT(socialRequest) FROM SocialRequest socialRequest WHERE ";
+	private static final String _SQL_SELECT_SOCIALREQUEST = "SELECT {socialRequest.*} FROM SocialRequest socialRequest";
+	private static final String _SQL_SELECT_SOCIALREQUEST_WHERE = "SELECT {socialRequest.*} FROM SocialRequest socialRequest WHERE ";
+	private static final String _SQL_COUNT_SOCIALREQUEST = "SELECT COUNT(*) AS COUNT_VALUE FROM SocialRequest socialRequest";
+	private static final String _SQL_COUNT_SOCIALREQUEST_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM SocialRequest socialRequest WHERE ";
+	private static final String _ENTITY_ALIAS = "socialRequest";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "socialRequest.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SocialRequest exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SocialRequest exists with the key {";

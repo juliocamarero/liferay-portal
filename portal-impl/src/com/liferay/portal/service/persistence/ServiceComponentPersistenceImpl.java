@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -220,7 +220,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			}
 			else
 			 if (pagination) {
-				query.append(ServiceComponentModelImpl.ORDER_BY_JPQL);
+				query.append(ServiceComponentModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -230,7 +230,9 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ServiceComponentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -499,12 +501,14 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			}
 		}
 		else {
-			query.append(ServiceComponentModelImpl.ORDER_BY_JPQL);
+			query.append(ServiceComponentModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ServiceComponentImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -589,7 +593,10 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -738,7 +745,9 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ServiceComponentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -851,7 +860,10 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1395,7 +1407,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 				sql = _SQL_SELECT_SERVICECOMPONENT;
 
 				if (pagination) {
-					sql = sql.concat(ServiceComponentModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ServiceComponentModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1404,7 +1416,9 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ServiceComponentImpl.class);
 
 				if (!pagination) {
 					list = (List<ServiceComponent>)QueryUtil.list(q,
@@ -1463,7 +1477,10 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SERVICECOMPONENT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SERVICECOMPONENT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1516,10 +1533,11 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SERVICECOMPONENT = "SELECT serviceComponent FROM ServiceComponent serviceComponent";
-	private static final String _SQL_SELECT_SERVICECOMPONENT_WHERE = "SELECT serviceComponent FROM ServiceComponent serviceComponent WHERE ";
-	private static final String _SQL_COUNT_SERVICECOMPONENT = "SELECT COUNT(serviceComponent) FROM ServiceComponent serviceComponent";
-	private static final String _SQL_COUNT_SERVICECOMPONENT_WHERE = "SELECT COUNT(serviceComponent) FROM ServiceComponent serviceComponent WHERE ";
+	private static final String _SQL_SELECT_SERVICECOMPONENT = "SELECT {serviceComponent.*} FROM ServiceComponent serviceComponent";
+	private static final String _SQL_SELECT_SERVICECOMPONENT_WHERE = "SELECT {serviceComponent.*} FROM ServiceComponent serviceComponent WHERE ";
+	private static final String _SQL_COUNT_SERVICECOMPONENT = "SELECT COUNT(*) AS COUNT_VALUE FROM ServiceComponent serviceComponent";
+	private static final String _SQL_COUNT_SERVICECOMPONENT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ServiceComponent serviceComponent WHERE ";
+	private static final String _ENTITY_ALIAS = "serviceComponent";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "serviceComponent.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ServiceComponent exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No ServiceComponent exists with the key {";

@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -212,7 +212,7 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStorageLinkModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStorageLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +222,9 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStorageLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -487,12 +489,14 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			}
 		}
 		else {
-			query.append(DDMStorageLinkModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStorageLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStorageLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -575,7 +579,10 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -600,9 +607,9 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmStorageLink.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmStorageLink.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmStorageLink.uuid IS NULL OR ddmStorageLink.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmStorageLink.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmStorageLink.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmStorageLink.uuid_ IS NULL OR ddmStorageLink.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_CLASSPK = new FinderPath(DDMStorageLinkModelImpl.ENTITY_CACHE_ENABLED,
 			DDMStorageLinkModelImpl.FINDER_CACHE_ENABLED,
 			DDMStorageLinkImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -698,7 +705,9 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStorageLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -785,7 +794,10 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -928,7 +940,7 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			}
 			else
 			 if (pagination) {
-				query.append(DDMStorageLinkModelImpl.ORDER_BY_JPQL);
+				query.append(DDMStorageLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -938,7 +950,9 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStorageLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1191,12 +1205,14 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			}
 		}
 		else {
-			query.append(DDMStorageLinkModelImpl.ORDER_BY_JPQL);
+			query.append(DDMStorageLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMStorageLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1265,7 +1281,10 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1810,7 +1829,7 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 				sql = _SQL_SELECT_DDMSTORAGELINK;
 
 				if (pagination) {
-					sql = sql.concat(DDMStorageLinkModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DDMStorageLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1819,7 +1838,9 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMStorageLinkImpl.class);
 
 				if (!pagination) {
 					list = (List<DDMStorageLink>)QueryUtil.list(q,
@@ -1878,7 +1899,10 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DDMSTORAGELINK);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DDMSTORAGELINK);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1931,10 +1955,11 @@ public class DDMStorageLinkPersistenceImpl extends BasePersistenceImpl<DDMStorag
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DDMSTORAGELINK = "SELECT ddmStorageLink FROM DDMStorageLink ddmStorageLink";
-	private static final String _SQL_SELECT_DDMSTORAGELINK_WHERE = "SELECT ddmStorageLink FROM DDMStorageLink ddmStorageLink WHERE ";
-	private static final String _SQL_COUNT_DDMSTORAGELINK = "SELECT COUNT(ddmStorageLink) FROM DDMStorageLink ddmStorageLink";
-	private static final String _SQL_COUNT_DDMSTORAGELINK_WHERE = "SELECT COUNT(ddmStorageLink) FROM DDMStorageLink ddmStorageLink WHERE ";
+	private static final String _SQL_SELECT_DDMSTORAGELINK = "SELECT {ddmStorageLink.*} FROM DDMStorageLink ddmStorageLink";
+	private static final String _SQL_SELECT_DDMSTORAGELINK_WHERE = "SELECT {ddmStorageLink.*} FROM DDMStorageLink ddmStorageLink WHERE ";
+	private static final String _SQL_COUNT_DDMSTORAGELINK = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMStorageLink ddmStorageLink";
+	private static final String _SQL_COUNT_DDMSTORAGELINK_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMStorageLink ddmStorageLink WHERE ";
+	private static final String _ENTITY_ALIAS = "ddmStorageLink";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ddmStorageLink.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DDMStorageLink exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DDMStorageLink exists with the key {";

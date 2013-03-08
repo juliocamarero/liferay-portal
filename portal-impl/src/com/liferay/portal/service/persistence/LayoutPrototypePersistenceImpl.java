@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -213,7 +212,7 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -223,7 +222,9 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -489,12 +490,14 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			}
 		}
 		else {
-			query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -620,10 +623,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_SQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -814,10 +817,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_SQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -915,7 +918,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1002,9 +1008,9 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "layoutPrototype.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "layoutPrototype.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(layoutPrototype.uuid IS NULL OR layoutPrototype.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "layoutPrototype.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "layoutPrototype.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(layoutPrototype.uuid_ IS NULL OR layoutPrototype.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(LayoutPrototypeModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutPrototypeModelImpl.FINDER_CACHE_ENABLED,
 			LayoutPrototypeImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -1147,7 +1153,7 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1157,7 +1163,9 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1439,12 +1447,14 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			}
 		}
 		else {
-			query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1579,10 +1589,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_SQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1779,10 +1789,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_SQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1888,7 +1898,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1983,9 +1996,9 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "layoutPrototype.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "layoutPrototype.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(layoutPrototype.uuid IS NULL OR layoutPrototype.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "layoutPrototype.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "layoutPrototype.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(layoutPrototype.uuid_ IS NULL OR layoutPrototype.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "layoutPrototype.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPANYID =
 		new FinderPath(LayoutPrototypeModelImpl.ENTITY_CACHE_ENABLED,
@@ -2106,7 +2119,7 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2116,7 +2129,9 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2370,12 +2385,14 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			}
 		}
 		else {
-			query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2489,10 +2506,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_SQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2670,10 +2687,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_SQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2757,7 +2774,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2958,7 +2978,7 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2968,7 +2988,9 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3236,12 +3258,14 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			}
 		}
 		else {
-			query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3362,10 +3386,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_SQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3548,10 +3572,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutPrototypeModelImpl.ORDER_BY_SQL);
+				query.append(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3643,7 +3667,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3723,7 +3750,7 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 	}
 
 	private static final String _FINDER_COLUMN_C_A_COMPANYID_2 = "layoutPrototype.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_A_ACTIVE_2 = "layoutPrototype.active = ?";
+	private static final String _FINDER_COLUMN_C_A_ACTIVE_2 = "layoutPrototype.active_ = ?";
 
 	/**
 	 * Caches the layout prototype in the entity cache if it is enabled.
@@ -4239,7 +4266,7 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 				sql = _SQL_SELECT_LAYOUTPROTOTYPE;
 
 				if (pagination) {
-					sql = sql.concat(LayoutPrototypeModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(LayoutPrototypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -4248,7 +4275,9 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutPrototypeImpl.class);
 
 				if (!pagination) {
 					list = (List<LayoutPrototype>)QueryUtil.list(q,
@@ -4307,7 +4336,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_LAYOUTPROTOTYPE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_LAYOUTPROTOTYPE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -4360,10 +4392,10 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_LAYOUTPROTOTYPE = "SELECT layoutPrototype FROM LayoutPrototype layoutPrototype";
-	private static final String _SQL_SELECT_LAYOUTPROTOTYPE_WHERE = "SELECT layoutPrototype FROM LayoutPrototype layoutPrototype WHERE ";
-	private static final String _SQL_COUNT_LAYOUTPROTOTYPE = "SELECT COUNT(layoutPrototype) FROM LayoutPrototype layoutPrototype";
-	private static final String _SQL_COUNT_LAYOUTPROTOTYPE_WHERE = "SELECT COUNT(layoutPrototype) FROM LayoutPrototype layoutPrototype WHERE ";
+	private static final String _SQL_SELECT_LAYOUTPROTOTYPE = "SELECT {layoutPrototype.*} FROM LayoutPrototype layoutPrototype";
+	private static final String _SQL_SELECT_LAYOUTPROTOTYPE_WHERE = "SELECT {layoutPrototype.*} FROM LayoutPrototype layoutPrototype WHERE ";
+	private static final String _SQL_COUNT_LAYOUTPROTOTYPE = "SELECT COUNT(*) AS COUNT_VALUE FROM LayoutPrototype layoutPrototype";
+	private static final String _SQL_COUNT_LAYOUTPROTOTYPE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM LayoutPrototype layoutPrototype WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "layoutPrototype.layoutPrototypeId";
 	private static final String _FILTER_SQL_SELECT_LAYOUTPROTOTYPE_WHERE = "SELECT DISTINCT {layoutPrototype.*} FROM LayoutPrototype layoutPrototype WHERE ";
 	private static final String _FILTER_SQL_SELECT_LAYOUTPROTOTYPE_NO_INLINE_DISTINCT_WHERE_1 =
@@ -4373,6 +4405,7 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 	private static final String _FILTER_SQL_COUNT_LAYOUTPROTOTYPE_WHERE = "SELECT COUNT(DISTINCT layoutPrototype.layoutPrototypeId) AS COUNT_VALUE FROM LayoutPrototype layoutPrototype WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "layoutPrototype";
 	private static final String _FILTER_ENTITY_TABLE = "LayoutPrototype";
+	private static final String _ENTITY_ALIAS = "layoutPrototype";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "layoutPrototype.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "LayoutPrototype.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No LayoutPrototype exists with the primary key ";

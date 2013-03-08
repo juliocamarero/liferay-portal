@@ -81,8 +81,8 @@ public class SocialRequestModelImpl extends BaseModelImpl<SocialRequest>
 		};
 	public static final String TABLE_SQL_CREATE = "create table SocialRequest (uuid_ VARCHAR(75) null,requestId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate LONG,modifiedDate LONG,classNameId LONG,classPK LONG,type_ INTEGER,extraData STRING null,receiverUserId LONG,status INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table SocialRequest";
-	public static final String ORDER_BY_JPQL = " ORDER BY socialRequest.requestId DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY SocialRequest.requestId DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY socialRequest.requestId DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY SocialRequest.requestId DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

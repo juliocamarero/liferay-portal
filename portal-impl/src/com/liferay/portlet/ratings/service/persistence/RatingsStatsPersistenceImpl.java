@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -185,7 +185,9 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RatingsStatsImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -280,7 +282,10 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -787,7 +792,7 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 				sql = _SQL_SELECT_RATINGSSTATS;
 
 				if (pagination) {
-					sql = sql.concat(RatingsStatsModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(RatingsStatsModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -796,7 +801,9 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RatingsStatsImpl.class);
 
 				if (!pagination) {
 					list = (List<RatingsStats>)QueryUtil.list(q, getDialect(),
@@ -855,7 +862,10 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_RATINGSSTATS);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_RATINGSSTATS);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -908,10 +918,11 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_RATINGSSTATS = "SELECT ratingsStats FROM RatingsStats ratingsStats";
-	private static final String _SQL_SELECT_RATINGSSTATS_WHERE = "SELECT ratingsStats FROM RatingsStats ratingsStats WHERE ";
-	private static final String _SQL_COUNT_RATINGSSTATS = "SELECT COUNT(ratingsStats) FROM RatingsStats ratingsStats";
-	private static final String _SQL_COUNT_RATINGSSTATS_WHERE = "SELECT COUNT(ratingsStats) FROM RatingsStats ratingsStats WHERE ";
+	private static final String _SQL_SELECT_RATINGSSTATS = "SELECT {ratingsStats.*} FROM RatingsStats ratingsStats";
+	private static final String _SQL_SELECT_RATINGSSTATS_WHERE = "SELECT {ratingsStats.*} FROM RatingsStats ratingsStats WHERE ";
+	private static final String _SQL_COUNT_RATINGSSTATS = "SELECT COUNT(*) AS COUNT_VALUE FROM RatingsStats ratingsStats";
+	private static final String _SQL_COUNT_RATINGSSTATS_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM RatingsStats ratingsStats WHERE ";
+	private static final String _ENTITY_ALIAS = "ratingsStats";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ratingsStats.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No RatingsStats exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No RatingsStats exists with the key {";

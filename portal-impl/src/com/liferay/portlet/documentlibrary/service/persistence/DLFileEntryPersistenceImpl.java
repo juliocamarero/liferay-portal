@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -212,7 +211,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +221,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -486,12 +487,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -574,7 +577,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -599,9 +605,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileEntry.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileEntry.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileEntry.uuid IS NULL OR dlFileEntry.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileEntry.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileEntry.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileEntry.uuid_ IS NULL OR dlFileEntry.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DLFileEntryModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileEntryModelImpl.FINDER_CACHE_ENABLED, DLFileEntryImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -719,7 +725,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -829,7 +837,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -856,9 +867,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileEntry.uuid IS NULL OR dlFileEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileEntry.uuid_ IS NULL OR dlFileEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "dlFileEntry.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DLFileEntryModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileEntryModelImpl.FINDER_CACHE_ENABLED, DLFileEntryImpl.class,
@@ -1002,7 +1013,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1012,7 +1023,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1294,12 +1307,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1390,7 +1405,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1417,9 +1435,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileEntry.uuid IS NULL OR dlFileEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileEntry.uuid_ IS NULL OR dlFileEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "dlFileEntry.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DLFileEntryModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileEntryModelImpl.FINDER_CACHE_ENABLED, DLFileEntryImpl.class,
@@ -1538,7 +1556,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1548,7 +1566,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1799,12 +1819,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1917,10 +1939,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2096,10 +2118,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2183,7 +2205,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2374,7 +2399,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2384,7 +2409,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2637,12 +2664,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2711,7 +2740,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2865,7 +2897,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2875,7 +2907,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3142,12 +3176,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3230,7 +3266,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3396,7 +3435,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3406,7 +3445,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3688,12 +3729,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3783,7 +3826,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3942,7 +3988,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3952,7 +3998,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4220,12 +4268,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4346,10 +4396,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4530,10 +4580,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4624,7 +4674,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4836,7 +4889,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4846,7 +4899,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5114,12 +5169,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5240,10 +5297,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5424,10 +5481,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5581,10 +5638,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5755,7 +5812,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5765,7 +5822,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5855,7 +5914,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5937,7 +5999,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6253,7 +6318,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6263,7 +6328,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6549,12 +6616,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6683,10 +6752,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6873,10 +6942,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7044,10 +7113,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7234,7 +7303,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7244,7 +7313,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7340,7 +7411,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7435,7 +7509,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7760,7 +7837,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7877,7 +7956,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8044,7 +8126,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8161,7 +8245,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8340,7 +8427,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -8350,7 +8437,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8637,12 +8726,14 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 		}
 		else {
-			query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -8772,10 +8863,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -8963,10 +9054,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -9135,10 +9226,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -9325,7 +9416,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -9335,7 +9426,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9431,7 +9524,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9526,7 +9622,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10532,7 +10631,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 				sql = _SQL_SELECT_DLFILEENTRY;
 
 				if (pagination) {
-					sql = sql.concat(DLFileEntryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DLFileEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -10541,7 +10640,9 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryImpl.class);
 
 				if (!pagination) {
 					list = (List<DLFileEntry>)QueryUtil.list(q, getDialect(),
@@ -10600,7 +10701,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DLFILEENTRY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DLFILEENTRY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -10653,10 +10757,10 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DLFILEENTRY = "SELECT dlFileEntry FROM DLFileEntry dlFileEntry";
-	private static final String _SQL_SELECT_DLFILEENTRY_WHERE = "SELECT dlFileEntry FROM DLFileEntry dlFileEntry WHERE ";
-	private static final String _SQL_COUNT_DLFILEENTRY = "SELECT COUNT(dlFileEntry) FROM DLFileEntry dlFileEntry";
-	private static final String _SQL_COUNT_DLFILEENTRY_WHERE = "SELECT COUNT(dlFileEntry) FROM DLFileEntry dlFileEntry WHERE ";
+	private static final String _SQL_SELECT_DLFILEENTRY = "SELECT {dlFileEntry.*} FROM DLFileEntry dlFileEntry";
+	private static final String _SQL_SELECT_DLFILEENTRY_WHERE = "SELECT {dlFileEntry.*} FROM DLFileEntry dlFileEntry WHERE ";
+	private static final String _SQL_COUNT_DLFILEENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntry dlFileEntry";
+	private static final String _SQL_COUNT_DLFILEENTRY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntry dlFileEntry WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "dlFileEntry.fileEntryId";
 	private static final String _FILTER_SQL_SELECT_DLFILEENTRY_WHERE = "SELECT DISTINCT {dlFileEntry.*} FROM DLFileEntry dlFileEntry WHERE ";
 	private static final String _FILTER_SQL_SELECT_DLFILEENTRY_NO_INLINE_DISTINCT_WHERE_1 =
@@ -10666,6 +10770,7 @@ public class DLFileEntryPersistenceImpl extends BasePersistenceImpl<DLFileEntry>
 	private static final String _FILTER_SQL_COUNT_DLFILEENTRY_WHERE = "SELECT COUNT(DISTINCT dlFileEntry.fileEntryId) AS COUNT_VALUE FROM DLFileEntry dlFileEntry WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "dlFileEntry";
 	private static final String _FILTER_ENTITY_TABLE = "DLFileEntry";
+	private static final String _ENTITY_ALIAS = "dlFileEntry";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "dlFileEntry.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "DLFileEntry.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DLFileEntry exists with the primary key ";

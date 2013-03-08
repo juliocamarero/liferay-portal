@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -212,7 +212,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageResourceModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageResourceModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +222,9 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageResourceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -488,12 +490,14 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			}
 		}
 		else {
-			query.append(WikiPageResourceModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageResourceModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageResourceImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -576,7 +580,10 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -601,9 +608,9 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "wikiPageResource.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "wikiPageResource.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(wikiPageResource.uuid IS NULL OR wikiPageResource.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "wikiPageResource.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "wikiPageResource.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(wikiPageResource.uuid_ IS NULL OR wikiPageResource.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_N_T = new FinderPath(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageResourceModelImpl.FINDER_CACHE_ENABLED,
 			WikiPageResourceImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByN_T",
@@ -721,7 +728,9 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageResourceImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -830,7 +839,10 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1376,7 +1388,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 				sql = _SQL_SELECT_WIKIPAGERESOURCE;
 
 				if (pagination) {
-					sql = sql.concat(WikiPageResourceModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(WikiPageResourceModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1385,7 +1397,9 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageResourceImpl.class);
 
 				if (!pagination) {
 					list = (List<WikiPageResource>)QueryUtil.list(q,
@@ -1444,7 +1458,10 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_WIKIPAGERESOURCE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_WIKIPAGERESOURCE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1497,10 +1514,11 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_WIKIPAGERESOURCE = "SELECT wikiPageResource FROM WikiPageResource wikiPageResource";
-	private static final String _SQL_SELECT_WIKIPAGERESOURCE_WHERE = "SELECT wikiPageResource FROM WikiPageResource wikiPageResource WHERE ";
-	private static final String _SQL_COUNT_WIKIPAGERESOURCE = "SELECT COUNT(wikiPageResource) FROM WikiPageResource wikiPageResource";
-	private static final String _SQL_COUNT_WIKIPAGERESOURCE_WHERE = "SELECT COUNT(wikiPageResource) FROM WikiPageResource wikiPageResource WHERE ";
+	private static final String _SQL_SELECT_WIKIPAGERESOURCE = "SELECT {wikiPageResource.*} FROM WikiPageResource wikiPageResource";
+	private static final String _SQL_SELECT_WIKIPAGERESOURCE_WHERE = "SELECT {wikiPageResource.*} FROM WikiPageResource wikiPageResource WHERE ";
+	private static final String _SQL_COUNT_WIKIPAGERESOURCE = "SELECT COUNT(*) AS COUNT_VALUE FROM WikiPageResource wikiPageResource";
+	private static final String _SQL_COUNT_WIKIPAGERESOURCE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM WikiPageResource wikiPageResource WHERE ";
+	private static final String _ENTITY_ALIAS = "wikiPageResource";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "wikiPageResource.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No WikiPageResource exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No WikiPageResource exists with the key {";

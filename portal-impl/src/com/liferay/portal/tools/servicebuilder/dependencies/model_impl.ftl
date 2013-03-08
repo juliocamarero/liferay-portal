@@ -111,45 +111,41 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		<#assign orderList = entity.getPKList()>
 	</#if>
 
-	<#assign orderByJPQL = "">
+	<#assign orderByEntityAlias = "">
 
 	<#list orderList as order>
-		<#if entity.hasCompoundPK() && order.isPrimary()>
-			<#assign orderByJPQL = orderByJPQL + entity.alias + ".id." + order.name>
-		<#else>
-			<#assign orderByJPQL = orderByJPQL + entity.alias + "." + order.name>
-		</#if>
+		<#assign orderByEntityAlias = orderByEntityAlias + entity.alias + "." + order.DBName>
 
 		<#if order.isOrderByAscending()>
-			<#assign orderByJPQL = orderByJPQL + " ASC">
+			<#assign orderByEntityAlias = orderByEntityAlias + " ASC">
 		<#else>
-			<#assign orderByJPQL = orderByJPQL + " DESC">
+			<#assign orderByEntityAlias = orderByEntityAlias + " DESC">
 		</#if>
 
 		<#if order_has_next>
-			<#assign orderByJPQL = orderByJPQL + ", ">
+			<#assign orderByEntityAlias = orderByEntityAlias + ", ">
 		</#if>
 	</#list>
 
-	public static final String ORDER_BY_JPQL = " ORDER BY ${orderByJPQL}";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY ${orderByEntityAlias}";
 
-	<#assign orderBySQL = "">
+	<#assign orderByEntityTable = "">
 
 	<#list orderList as order>
-		<#assign orderBySQL = orderBySQL + entity.table + "." + order.DBName>
+		<#assign orderByEntityTable = orderByEntityTable + entity.table + "." + order.DBName>
 
 		<#if order.isOrderByAscending()>
-			<#assign orderBySQL = orderBySQL + " ASC">
+			<#assign orderByEntityTable = orderByEntityTable + " ASC">
 		<#else>
-			<#assign orderBySQL = orderBySQL + " DESC">
+			<#assign orderByEntityTable = orderByEntityTable + " DESC">
 		</#if>
 
 		<#if order_has_next>
-			<#assign orderBySQL = orderBySQL + ", ">
+			<#assign orderByEntityTable = orderByEntityTable + ", ">
 		</#if>
 	</#list>
 
-	public static final String ORDER_BY_SQL = " ORDER BY ${orderBySQL}";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY ${orderByEntityTable}";
 
 	public static final String DATA_SOURCE = "${entity.dataSource}";
 

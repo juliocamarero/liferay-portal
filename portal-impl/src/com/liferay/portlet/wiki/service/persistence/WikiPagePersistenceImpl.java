@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -217,7 +216,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -227,7 +226,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -491,12 +492,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -579,7 +582,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -604,9 +610,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "wikiPage.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "wikiPage.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "wikiPage.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "wikiPage.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(wikiPage.uuid_ IS NULL OR wikiPage.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -724,7 +730,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -834,7 +842,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -861,9 +872,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "wikiPage.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "wikiPage.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "wikiPage.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "wikiPage.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(wikiPage.uuid_ IS NULL OR wikiPage.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "wikiPage.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
@@ -1007,7 +1018,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1017,7 +1028,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1299,12 +1312,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1395,7 +1410,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1422,9 +1440,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "wikiPage.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "wikiPage.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(wikiPage.uuid IS NULL OR wikiPage.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "wikiPage.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "wikiPage.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(wikiPage.uuid_ IS NULL OR wikiPage.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "wikiPage.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_NODEID = new FinderPath(WikiPageModelImpl.ENTITY_CACHE_ENABLED,
 			WikiPageModelImpl.FINDER_CACHE_ENABLED, WikiPageImpl.class,
@@ -1542,7 +1560,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1552,7 +1570,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1802,12 +1822,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1876,7 +1898,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2029,7 +2054,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2039,7 +2064,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2303,12 +2330,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2391,7 +2420,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2548,7 +2580,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2558,7 +2590,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2826,12 +2860,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2908,7 +2944,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3074,7 +3113,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3084,7 +3123,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3363,12 +3404,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3458,7 +3501,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3617,7 +3663,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3627,7 +3673,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3892,12 +3940,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3973,7 +4023,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4140,7 +4193,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4150,7 +4203,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4432,12 +4487,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4528,7 +4585,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4701,7 +4761,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4711,7 +4771,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4993,12 +5055,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5089,7 +5153,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5248,7 +5315,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5258,7 +5325,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5523,12 +5592,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5603,7 +5674,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5751,7 +5825,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5853,7 +5929,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6026,7 +6105,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6036,7 +6115,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6322,12 +6403,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6410,7 +6493,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6583,7 +6669,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6593,7 +6679,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6879,12 +6967,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6967,7 +7057,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7140,7 +7233,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7150,7 +7243,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7433,12 +7528,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7567,10 +7664,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7756,10 +7853,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7857,7 +7954,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8089,7 +8189,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -8099,7 +8199,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8382,12 +8484,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -8516,10 +8620,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -8705,10 +8809,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -8806,7 +8910,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9038,7 +9145,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -9048,7 +9155,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9331,12 +9440,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -9419,7 +9530,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9582,7 +9696,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9699,7 +9815,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9887,7 +10006,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -9897,7 +10016,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10194,12 +10315,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -10296,7 +10419,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10484,7 +10610,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -10494,7 +10620,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10791,12 +10919,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -10893,7 +11023,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11082,7 +11215,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -11092,7 +11225,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11391,12 +11526,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -11493,7 +11630,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11670,7 +11810,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -11680,7 +11820,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11963,12 +12105,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -12051,7 +12195,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -12232,7 +12379,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -12242,7 +12389,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -12543,12 +12692,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -12685,10 +12836,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -12880,10 +13031,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -12987,7 +13138,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -13247,7 +13401,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -13257,7 +13411,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -13572,12 +13728,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -13729,10 +13887,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -13938,10 +14096,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -14059,7 +14217,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -14325,7 +14486,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -14335,7 +14496,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -14636,12 +14799,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -14778,10 +14943,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -14973,10 +15138,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -15080,7 +15245,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15341,7 +15509,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -15351,7 +15519,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15666,12 +15836,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -15774,7 +15946,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15987,7 +16162,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 			else
 			 if (pagination) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -15997,7 +16172,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -16330,12 +16507,14 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			}
 		}
 		else {
-			query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+			query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -16494,10 +16673,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -16711,10 +16890,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(WikiPageModelImpl.ORDER_BY_JPQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(WikiPageModelImpl.ORDER_BY_SQL);
+				query.append(WikiPageModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -16840,7 +17019,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -18116,7 +18298,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 				sql = _SQL_SELECT_WIKIPAGE;
 
 				if (pagination) {
-					sql = sql.concat(WikiPageModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(WikiPageModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -18125,7 +18307,9 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, WikiPageImpl.class);
 
 				if (!pagination) {
 					list = (List<WikiPage>)QueryUtil.list(q, getDialect(),
@@ -18184,7 +18368,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_WIKIPAGE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_WIKIPAGE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -18237,10 +18424,10 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_WIKIPAGE = "SELECT wikiPage FROM WikiPage wikiPage";
-	private static final String _SQL_SELECT_WIKIPAGE_WHERE = "SELECT wikiPage FROM WikiPage wikiPage WHERE ";
-	private static final String _SQL_COUNT_WIKIPAGE = "SELECT COUNT(wikiPage) FROM WikiPage wikiPage";
-	private static final String _SQL_COUNT_WIKIPAGE_WHERE = "SELECT COUNT(wikiPage) FROM WikiPage wikiPage WHERE ";
+	private static final String _SQL_SELECT_WIKIPAGE = "SELECT {wikiPage.*} FROM WikiPage wikiPage";
+	private static final String _SQL_SELECT_WIKIPAGE_WHERE = "SELECT {wikiPage.*} FROM WikiPage wikiPage WHERE ";
+	private static final String _SQL_COUNT_WIKIPAGE = "SELECT COUNT(*) AS COUNT_VALUE FROM WikiPage wikiPage";
+	private static final String _SQL_COUNT_WIKIPAGE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM WikiPage wikiPage WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "wikiPage.resourcePrimKey";
 	private static final String _FILTER_SQL_SELECT_WIKIPAGE_WHERE = "SELECT DISTINCT {wikiPage.*} FROM WikiPage wikiPage WHERE ";
 	private static final String _FILTER_SQL_SELECT_WIKIPAGE_NO_INLINE_DISTINCT_WHERE_1 =
@@ -18250,6 +18437,7 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 	private static final String _FILTER_SQL_COUNT_WIKIPAGE_WHERE = "SELECT COUNT(DISTINCT wikiPage.pageId) AS COUNT_VALUE FROM WikiPage wikiPage WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "wikiPage";
 	private static final String _FILTER_ENTITY_TABLE = "WikiPage";
+	private static final String _ENTITY_ALIAS = "wikiPage";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "wikiPage.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "WikiPage.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No WikiPage exists with the primary key ";

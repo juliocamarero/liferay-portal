@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -198,7 +198,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			}
 			else
 			 if (pagination) {
-				query.append(RegionModelImpl.ORDER_BY_JPQL);
+				query.append(RegionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -208,7 +208,9 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RegionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -457,12 +459,14 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			}
 		}
 		else {
-			query.append(RegionModelImpl.ORDER_BY_JPQL);
+			query.append(RegionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, RegionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -531,7 +535,10 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -670,7 +677,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			}
 			else
 			 if (pagination) {
-				query.append(RegionModelImpl.ORDER_BY_JPQL);
+				query.append(RegionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -680,7 +687,9 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RegionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -929,12 +938,14 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			}
 		}
 		else {
-			query.append(RegionModelImpl.ORDER_BY_JPQL);
+			query.append(RegionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, RegionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1003,7 +1014,10 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1026,7 +1040,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_ACTIVE_ACTIVE_2 = "region.active = ?";
+	private static final String _FINDER_COLUMN_ACTIVE_ACTIVE_2 = "region.active_ = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_R = new FinderPath(RegionModelImpl.ENTITY_CACHE_ENABLED,
 			RegionModelImpl.FINDER_CACHE_ENABLED, RegionImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_R",
@@ -1144,7 +1158,9 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RegionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1254,7 +1270,10 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1412,7 +1431,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			}
 			else
 			 if (pagination) {
-				query.append(RegionModelImpl.ORDER_BY_JPQL);
+				query.append(RegionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1422,7 +1441,9 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RegionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1687,12 +1708,14 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			}
 		}
 		else {
-			query.append(RegionModelImpl.ORDER_BY_JPQL);
+			query.append(RegionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, RegionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1769,7 +1792,10 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1795,7 +1821,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	}
 
 	private static final String _FINDER_COLUMN_C_A_COUNTRYID_2 = "region.countryId = ? AND ";
-	private static final String _FINDER_COLUMN_C_A_ACTIVE_2 = "region.active = ?";
+	private static final String _FINDER_COLUMN_C_A_ACTIVE_2 = "region.active_ = ?";
 
 	/**
 	 * Caches the region in the entity cache if it is enabled.
@@ -2325,7 +2351,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 				sql = _SQL_SELECT_REGION;
 
 				if (pagination) {
-					sql = sql.concat(RegionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(RegionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2334,7 +2360,9 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, RegionImpl.class);
 
 				if (!pagination) {
 					list = (List<Region>)QueryUtil.list(q, getDialect(), start,
@@ -2393,7 +2421,10 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_REGION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_REGION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2446,10 +2477,11 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_REGION = "SELECT region FROM Region region";
-	private static final String _SQL_SELECT_REGION_WHERE = "SELECT region FROM Region region WHERE ";
-	private static final String _SQL_COUNT_REGION = "SELECT COUNT(region) FROM Region region";
-	private static final String _SQL_COUNT_REGION_WHERE = "SELECT COUNT(region) FROM Region region WHERE ";
+	private static final String _SQL_SELECT_REGION = "SELECT {region.*} FROM Region region";
+	private static final String _SQL_SELECT_REGION_WHERE = "SELECT {region.*} FROM Region region WHERE ";
+	private static final String _SQL_COUNT_REGION = "SELECT COUNT(*) AS COUNT_VALUE FROM Region region";
+	private static final String _SQL_COUNT_REGION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Region region WHERE ";
+	private static final String _ENTITY_ALIAS = "region";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "region.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Region exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Region exists with the key {";

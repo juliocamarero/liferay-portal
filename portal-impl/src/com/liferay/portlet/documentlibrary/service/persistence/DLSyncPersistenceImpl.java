@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -174,7 +174,9 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLSyncImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -261,7 +263,10 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -407,7 +412,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			}
 			else
 			 if (pagination) {
-				query.append(DLSyncModelImpl.ORDER_BY_JPQL);
+				query.append(DLSyncModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -417,7 +422,9 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLSyncImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -703,12 +710,14 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			}
 		}
 		else {
-			query.append(DLSyncModelImpl.ORDER_BY_JPQL);
+			query.append(DLSyncModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLSyncImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -791,7 +800,10 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1291,7 +1303,7 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 				sql = _SQL_SELECT_DLSYNC;
 
 				if (pagination) {
-					sql = sql.concat(DLSyncModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DLSyncModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1300,7 +1312,9 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLSyncImpl.class);
 
 				if (!pagination) {
 					list = (List<DLSync>)QueryUtil.list(q, getDialect(), start,
@@ -1359,7 +1373,10 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DLSYNC);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DLSYNC);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1412,10 +1429,11 @@ public class DLSyncPersistenceImpl extends BasePersistenceImpl<DLSync>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DLSYNC = "SELECT dlSync FROM DLSync dlSync";
-	private static final String _SQL_SELECT_DLSYNC_WHERE = "SELECT dlSync FROM DLSync dlSync WHERE ";
-	private static final String _SQL_COUNT_DLSYNC = "SELECT COUNT(dlSync) FROM DLSync dlSync";
-	private static final String _SQL_COUNT_DLSYNC_WHERE = "SELECT COUNT(dlSync) FROM DLSync dlSync WHERE ";
+	private static final String _SQL_SELECT_DLSYNC = "SELECT {dlSync.*} FROM DLSync dlSync";
+	private static final String _SQL_SELECT_DLSYNC_WHERE = "SELECT {dlSync.*} FROM DLSync dlSync WHERE ";
+	private static final String _SQL_COUNT_DLSYNC = "SELECT COUNT(*) AS COUNT_VALUE FROM DLSync dlSync";
+	private static final String _SQL_COUNT_DLSYNC_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLSync dlSync WHERE ";
+	private static final String _ENTITY_ALIAS = "dlSync";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "dlSync.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DLSync exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DLSync exists with the key {";

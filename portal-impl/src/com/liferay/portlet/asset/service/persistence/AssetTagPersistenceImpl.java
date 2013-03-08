@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -206,7 +205,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			}
 			else
 			 if (pagination) {
-				query.append(AssetTagModelImpl.ORDER_BY_JPQL);
+				query.append(AssetTagModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -216,7 +215,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetTagImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -466,12 +467,14 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			}
 		}
 		else {
-			query.append(AssetTagModelImpl.ORDER_BY_JPQL);
+			query.append(AssetTagModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetTagImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -584,10 +587,10 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetTagModelImpl.ORDER_BY_JPQL);
+				query.append(AssetTagModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetTagModelImpl.ORDER_BY_SQL);
+				query.append(AssetTagModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -762,10 +765,10 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetTagModelImpl.ORDER_BY_JPQL);
+				query.append(AssetTagModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetTagModelImpl.ORDER_BY_SQL);
+				query.append(AssetTagModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -849,7 +852,10 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1038,7 +1044,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetTagImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1154,7 +1162,10 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1690,7 +1701,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 				sql = _SQL_SELECT_ASSETTAG;
 
 				if (pagination) {
-					sql = sql.concat(AssetTagModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(AssetTagModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1699,7 +1710,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetTagImpl.class);
 
 				if (!pagination) {
 					list = (List<AssetTag>)QueryUtil.list(q, getDialect(),
@@ -1758,7 +1771,10 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ASSETTAG);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ASSETTAG);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1871,7 +1887,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 					sql = _SQL_GETASSETENTRIES;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.asset.model.impl.AssetEntryModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.asset.model.impl.AssetEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -2491,10 +2507,10 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_ASSETTAG = "SELECT assetTag FROM AssetTag assetTag";
-	private static final String _SQL_SELECT_ASSETTAG_WHERE = "SELECT assetTag FROM AssetTag assetTag WHERE ";
-	private static final String _SQL_COUNT_ASSETTAG = "SELECT COUNT(assetTag) FROM AssetTag assetTag";
-	private static final String _SQL_COUNT_ASSETTAG_WHERE = "SELECT COUNT(assetTag) FROM AssetTag assetTag WHERE ";
+	private static final String _SQL_SELECT_ASSETTAG = "SELECT {assetTag.*} FROM AssetTag assetTag";
+	private static final String _SQL_SELECT_ASSETTAG_WHERE = "SELECT {assetTag.*} FROM AssetTag assetTag WHERE ";
+	private static final String _SQL_COUNT_ASSETTAG = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetTag assetTag";
+	private static final String _SQL_COUNT_ASSETTAG_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetTag assetTag WHERE ";
 	private static final String _SQL_GETASSETENTRIES = "SELECT {AssetEntry.*} FROM AssetEntry INNER JOIN AssetEntries_AssetTags ON (AssetEntries_AssetTags.entryId = AssetEntry.entryId) WHERE (AssetEntries_AssetTags.tagId = ?)";
 	private static final String _SQL_GETASSETENTRIESSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetEntries_AssetTags WHERE tagId = ?";
 	private static final String _SQL_CONTAINSASSETENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetEntries_AssetTags WHERE tagId = ? AND entryId = ?";
@@ -2507,6 +2523,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	private static final String _FILTER_SQL_COUNT_ASSETTAG_WHERE = "SELECT COUNT(DISTINCT assetTag.tagId) AS COUNT_VALUE FROM AssetTag assetTag WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "assetTag";
 	private static final String _FILTER_ENTITY_TABLE = "AssetTag";
+	private static final String _ENTITY_ALIAS = "assetTag";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "assetTag.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "AssetTag.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No AssetTag exists with the primary key ";

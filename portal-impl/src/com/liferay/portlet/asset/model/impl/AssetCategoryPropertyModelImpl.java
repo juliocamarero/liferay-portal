@@ -77,8 +77,8 @@ public class AssetCategoryPropertyModelImpl extends BaseModelImpl<AssetCategoryP
 		};
 	public static final String TABLE_SQL_CREATE = "create table AssetCategoryProperty (categoryPropertyId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,categoryId LONG,key_ VARCHAR(75) null,value VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table AssetCategoryProperty";
-	public static final String ORDER_BY_JPQL = " ORDER BY assetCategoryProperty.key ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY AssetCategoryProperty.key_ ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY assetCategoryProperty.key_ ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY AssetCategoryProperty.key_ ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

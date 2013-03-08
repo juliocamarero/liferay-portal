@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -203,7 +202,7 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			}
 			else
 			 if (pagination) {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -213,7 +212,9 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ShoppingCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -466,12 +467,14 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			}
 		}
 		else {
-			query.append(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ShoppingCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -584,10 +587,10 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_SQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -764,10 +767,10 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_SQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -851,7 +854,10 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1053,7 +1059,7 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			}
 			else
 			 if (pagination) {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1063,7 +1069,9 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ShoppingCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1333,12 +1341,14 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			}
 		}
 		else {
-			query.append(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ShoppingCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1460,10 +1470,10 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_SQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1645,10 +1655,10 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(ShoppingCategoryModelImpl.ORDER_BY_SQL);
+				query.append(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1740,7 +1750,10 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2290,7 +2303,7 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 				sql = _SQL_SELECT_SHOPPINGCATEGORY;
 
 				if (pagination) {
-					sql = sql.concat(ShoppingCategoryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ShoppingCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2299,7 +2312,9 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ShoppingCategoryImpl.class);
 
 				if (!pagination) {
 					list = (List<ShoppingCategory>)QueryUtil.list(q,
@@ -2358,7 +2373,10 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SHOPPINGCATEGORY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SHOPPINGCATEGORY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2411,10 +2429,10 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SHOPPINGCATEGORY = "SELECT shoppingCategory FROM ShoppingCategory shoppingCategory";
-	private static final String _SQL_SELECT_SHOPPINGCATEGORY_WHERE = "SELECT shoppingCategory FROM ShoppingCategory shoppingCategory WHERE ";
-	private static final String _SQL_COUNT_SHOPPINGCATEGORY = "SELECT COUNT(shoppingCategory) FROM ShoppingCategory shoppingCategory";
-	private static final String _SQL_COUNT_SHOPPINGCATEGORY_WHERE = "SELECT COUNT(shoppingCategory) FROM ShoppingCategory shoppingCategory WHERE ";
+	private static final String _SQL_SELECT_SHOPPINGCATEGORY = "SELECT {shoppingCategory.*} FROM ShoppingCategory shoppingCategory";
+	private static final String _SQL_SELECT_SHOPPINGCATEGORY_WHERE = "SELECT {shoppingCategory.*} FROM ShoppingCategory shoppingCategory WHERE ";
+	private static final String _SQL_COUNT_SHOPPINGCATEGORY = "SELECT COUNT(*) AS COUNT_VALUE FROM ShoppingCategory shoppingCategory";
+	private static final String _SQL_COUNT_SHOPPINGCATEGORY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ShoppingCategory shoppingCategory WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "shoppingCategory.categoryId";
 	private static final String _FILTER_SQL_SELECT_SHOPPINGCATEGORY_WHERE = "SELECT DISTINCT {shoppingCategory.*} FROM ShoppingCategory shoppingCategory WHERE ";
 	private static final String _FILTER_SQL_SELECT_SHOPPINGCATEGORY_NO_INLINE_DISTINCT_WHERE_1 =
@@ -2424,6 +2442,7 @@ public class ShoppingCategoryPersistenceImpl extends BasePersistenceImpl<Shoppin
 	private static final String _FILTER_SQL_COUNT_SHOPPINGCATEGORY_WHERE = "SELECT COUNT(DISTINCT shoppingCategory.categoryId) AS COUNT_VALUE FROM ShoppingCategory shoppingCategory WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "shoppingCategory";
 	private static final String _FILTER_ENTITY_TABLE = "ShoppingCategory";
+	private static final String _ENTITY_ALIAS = "shoppingCategory";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "shoppingCategory.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "ShoppingCategory.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ShoppingCategory exists with the primary key ";

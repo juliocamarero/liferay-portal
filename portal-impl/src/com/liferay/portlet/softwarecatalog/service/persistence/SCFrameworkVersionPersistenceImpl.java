@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -210,7 +209,7 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			}
 			else
 			 if (pagination) {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -220,7 +219,9 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCFrameworkVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -474,12 +475,14 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			}
 		}
 		else {
-			query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+			query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SCFrameworkVersionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -593,10 +596,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_SQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -774,10 +777,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_SQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -861,7 +864,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1053,7 +1059,7 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			}
 			else
 			 if (pagination) {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1063,7 +1069,9 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCFrameworkVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1317,12 +1325,14 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			}
 		}
 		else {
-			query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+			query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SCFrameworkVersionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1391,7 +1401,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1545,7 +1558,7 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			}
 			else
 			 if (pagination) {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1555,7 +1568,9 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCFrameworkVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1823,12 +1838,14 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			}
 		}
 		else {
-			query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+			query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SCFrameworkVersionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1949,10 +1966,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_SQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2135,10 +2152,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(SCFrameworkVersionModelImpl.ORDER_BY_SQL);
+				query.append(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2230,7 +2247,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2310,7 +2330,7 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 	}
 
 	private static final String _FINDER_COLUMN_G_A_GROUPID_2 = "scFrameworkVersion.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_A_ACTIVE_2 = "scFrameworkVersion.active = ?";
+	private static final String _FINDER_COLUMN_G_A_ACTIVE_2 = "scFrameworkVersion.active_ = ?";
 
 	/**
 	 * Caches the s c framework version in the entity cache if it is enabled.
@@ -2810,7 +2830,7 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 				sql = _SQL_SELECT_SCFRAMEWORKVERSION;
 
 				if (pagination) {
-					sql = sql.concat(SCFrameworkVersionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(SCFrameworkVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2819,7 +2839,9 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SCFrameworkVersionImpl.class);
 
 				if (!pagination) {
 					list = (List<SCFrameworkVersion>)QueryUtil.list(q,
@@ -2878,7 +2900,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SCFRAMEWORKVERSION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SCFRAMEWORKVERSION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2991,7 +3016,7 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 					sql = _SQL_GETSCPRODUCTVERSIONS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.softwarecatalog.model.impl.SCProductVersionModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.softwarecatalog.model.impl.SCProductVersionModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -3625,10 +3650,10 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_SCFRAMEWORKVERSION = "SELECT scFrameworkVersion FROM SCFrameworkVersion scFrameworkVersion";
-	private static final String _SQL_SELECT_SCFRAMEWORKVERSION_WHERE = "SELECT scFrameworkVersion FROM SCFrameworkVersion scFrameworkVersion WHERE ";
-	private static final String _SQL_COUNT_SCFRAMEWORKVERSION = "SELECT COUNT(scFrameworkVersion) FROM SCFrameworkVersion scFrameworkVersion";
-	private static final String _SQL_COUNT_SCFRAMEWORKVERSION_WHERE = "SELECT COUNT(scFrameworkVersion) FROM SCFrameworkVersion scFrameworkVersion WHERE ";
+	private static final String _SQL_SELECT_SCFRAMEWORKVERSION = "SELECT {scFrameworkVersion.*} FROM SCFrameworkVersion scFrameworkVersion";
+	private static final String _SQL_SELECT_SCFRAMEWORKVERSION_WHERE = "SELECT {scFrameworkVersion.*} FROM SCFrameworkVersion scFrameworkVersion WHERE ";
+	private static final String _SQL_COUNT_SCFRAMEWORKVERSION = "SELECT COUNT(*) AS COUNT_VALUE FROM SCFrameworkVersion scFrameworkVersion";
+	private static final String _SQL_COUNT_SCFRAMEWORKVERSION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM SCFrameworkVersion scFrameworkVersion WHERE ";
 	private static final String _SQL_GETSCPRODUCTVERSIONS = "SELECT {SCProductVersion.*} FROM SCProductVersion INNER JOIN SCFrameworkVersi_SCProductVers ON (SCFrameworkVersi_SCProductVers.productVersionId = SCProductVersion.productVersionId) WHERE (SCFrameworkVersi_SCProductVers.frameworkVersionId = ?)";
 	private static final String _SQL_GETSCPRODUCTVERSIONSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM SCFrameworkVersi_SCProductVers WHERE frameworkVersionId = ?";
 	private static final String _SQL_CONTAINSSCPRODUCTVERSION = "SELECT COUNT(*) AS COUNT_VALUE FROM SCFrameworkVersi_SCProductVers WHERE frameworkVersionId = ? AND productVersionId = ?";
@@ -3641,6 +3666,7 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 	private static final String _FILTER_SQL_COUNT_SCFRAMEWORKVERSION_WHERE = "SELECT COUNT(DISTINCT scFrameworkVersion.frameworkVersionId) AS COUNT_VALUE FROM SCFrameworkVersion scFrameworkVersion WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "scFrameworkVersion";
 	private static final String _FILTER_ENTITY_TABLE = "SCFrameworkVersion";
+	private static final String _ENTITY_ALIAS = "scFrameworkVersion";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "scFrameworkVersion.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "SCFrameworkVersion.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SCFrameworkVersion exists with the primary key ";

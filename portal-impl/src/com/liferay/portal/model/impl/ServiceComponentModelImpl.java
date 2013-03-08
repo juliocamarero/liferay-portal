@@ -64,8 +64,8 @@ public class ServiceComponentModelImpl extends BaseModelImpl<ServiceComponent>
 		};
 	public static final String TABLE_SQL_CREATE = "create table ServiceComponent (serviceComponentId LONG not null primary key,buildNamespace VARCHAR(75) null,buildNumber LONG,buildDate LONG,data_ TEXT null)";
 	public static final String TABLE_SQL_DROP = "drop table ServiceComponent";
-	public static final String ORDER_BY_JPQL = " ORDER BY serviceComponent.buildNamespace DESC, serviceComponent.buildNumber DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY ServiceComponent.buildNamespace DESC, ServiceComponent.buildNumber DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY serviceComponent.buildNamespace DESC, serviceComponent.buildNumber DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY ServiceComponent.buildNamespace DESC, ServiceComponent.buildNumber DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

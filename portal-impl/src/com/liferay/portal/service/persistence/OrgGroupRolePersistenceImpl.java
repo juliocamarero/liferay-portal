@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -194,7 +194,7 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			}
 			else
 			 if (pagination) {
-				query.append(OrgGroupRoleModelImpl.ORDER_BY_JPQL);
+				query.append(OrgGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -204,7 +204,9 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrgGroupRoleImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -457,12 +459,14 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			}
 		}
 		else {
-			query.append(OrgGroupRoleModelImpl.ORDER_BY_JPQL);
+			query.append(OrgGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, OrgGroupRoleImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -531,7 +535,10 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -554,7 +561,7 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "orgGroupRole.id.groupId = ?";
+	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "orgGroupRole.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_ROLEID = new FinderPath(OrgGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
 			OrgGroupRoleModelImpl.FINDER_CACHE_ENABLED, OrgGroupRoleImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByRoleId",
@@ -670,7 +677,7 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			}
 			else
 			 if (pagination) {
-				query.append(OrgGroupRoleModelImpl.ORDER_BY_JPQL);
+				query.append(OrgGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -680,7 +687,9 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrgGroupRoleImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -932,12 +941,14 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			}
 		}
 		else {
-			query.append(OrgGroupRoleModelImpl.ORDER_BY_JPQL);
+			query.append(OrgGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, OrgGroupRoleImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1006,7 +1017,10 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1029,7 +1043,7 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_ROLEID_ROLEID_2 = "orgGroupRole.id.roleId = ?";
+	private static final String _FINDER_COLUMN_ROLEID_ROLEID_2 = "orgGroupRole.roleId = ?";
 
 	/**
 	 * Caches the org group role in the entity cache if it is enabled.
@@ -1483,7 +1497,7 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 				sql = _SQL_SELECT_ORGGROUPROLE;
 
 				if (pagination) {
-					sql = sql.concat(OrgGroupRoleModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(OrgGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1492,7 +1506,9 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrgGroupRoleImpl.class);
 
 				if (!pagination) {
 					list = (List<OrgGroupRole>)QueryUtil.list(q, getDialect(),
@@ -1551,7 +1567,10 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ORGGROUPROLE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ORGGROUPROLE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1604,10 +1623,11 @@ public class OrgGroupRolePersistenceImpl extends BasePersistenceImpl<OrgGroupRol
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_ORGGROUPROLE = "SELECT orgGroupRole FROM OrgGroupRole orgGroupRole";
-	private static final String _SQL_SELECT_ORGGROUPROLE_WHERE = "SELECT orgGroupRole FROM OrgGroupRole orgGroupRole WHERE ";
-	private static final String _SQL_COUNT_ORGGROUPROLE = "SELECT COUNT(orgGroupRole) FROM OrgGroupRole orgGroupRole";
-	private static final String _SQL_COUNT_ORGGROUPROLE_WHERE = "SELECT COUNT(orgGroupRole) FROM OrgGroupRole orgGroupRole WHERE ";
+	private static final String _SQL_SELECT_ORGGROUPROLE = "SELECT {orgGroupRole.*} FROM OrgGroupRole orgGroupRole";
+	private static final String _SQL_SELECT_ORGGROUPROLE_WHERE = "SELECT {orgGroupRole.*} FROM OrgGroupRole orgGroupRole WHERE ";
+	private static final String _SQL_COUNT_ORGGROUPROLE = "SELECT COUNT(*) AS COUNT_VALUE FROM OrgGroupRole orgGroupRole";
+	private static final String _SQL_COUNT_ORGGROUPROLE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM OrgGroupRole orgGroupRole WHERE ";
+	private static final String _ENTITY_ALIAS = "orgGroupRole";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "orgGroupRole.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No OrgGroupRole exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No OrgGroupRole exists with the key {";

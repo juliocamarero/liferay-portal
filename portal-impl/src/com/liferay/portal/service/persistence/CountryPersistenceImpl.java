@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -186,7 +186,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CountryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -288,7 +290,10 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -422,7 +427,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CountryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -523,7 +530,10 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -657,7 +667,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CountryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -758,7 +770,10 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -901,7 +916,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			}
 			else
 			 if (pagination) {
-				query.append(CountryModelImpl.ORDER_BY_JPQL);
+				query.append(CountryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -911,7 +926,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CountryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1160,12 +1177,14 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			}
 		}
 		else {
-			query.append(CountryModelImpl.ORDER_BY_JPQL);
+			query.append(CountryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CountryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1234,7 +1253,10 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1257,7 +1279,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_ACTIVE_ACTIVE_2 = "country.active = ?";
+	private static final String _FINDER_COLUMN_ACTIVE_ACTIVE_2 = "country.active_ = ?";
 
 	/**
 	 * Caches the country in the entity cache if it is enabled.
@@ -1805,7 +1827,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 				sql = _SQL_SELECT_COUNTRY;
 
 				if (pagination) {
-					sql = sql.concat(CountryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(CountryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1814,7 +1836,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CountryImpl.class);
 
 				if (!pagination) {
 					list = (List<Country>)QueryUtil.list(q, getDialect(),
@@ -1873,7 +1897,10 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_COUNTRY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_COUNTRY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1926,10 +1953,11 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_COUNTRY = "SELECT country FROM Country country";
-	private static final String _SQL_SELECT_COUNTRY_WHERE = "SELECT country FROM Country country WHERE ";
-	private static final String _SQL_COUNT_COUNTRY = "SELECT COUNT(country) FROM Country country";
-	private static final String _SQL_COUNT_COUNTRY_WHERE = "SELECT COUNT(country) FROM Country country WHERE ";
+	private static final String _SQL_SELECT_COUNTRY = "SELECT {country.*} FROM Country country";
+	private static final String _SQL_SELECT_COUNTRY_WHERE = "SELECT {country.*} FROM Country country WHERE ";
+	private static final String _SQL_COUNT_COUNTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM Country country";
+	private static final String _SQL_COUNT_COUNTRY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Country country WHERE ";
+	private static final String _ENTITY_ALIAS = "country";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "country.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Country exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Country exists with the key {";

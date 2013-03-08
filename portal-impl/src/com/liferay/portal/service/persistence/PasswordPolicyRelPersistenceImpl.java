@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -205,7 +205,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			}
 			else
 			 if (pagination) {
-				query.append(PasswordPolicyRelModelImpl.ORDER_BY_JPQL);
+				query.append(PasswordPolicyRelModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -215,7 +215,9 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PasswordPolicyRelImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -473,12 +475,14 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			}
 		}
 		else {
-			query.append(PasswordPolicyRelModelImpl.ORDER_BY_JPQL);
+			query.append(PasswordPolicyRelModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PasswordPolicyRelImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -549,7 +553,10 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -680,7 +687,9 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PasswordPolicyRelImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -775,7 +784,10 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1314,7 +1326,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 				sql = _SQL_SELECT_PASSWORDPOLICYREL;
 
 				if (pagination) {
-					sql = sql.concat(PasswordPolicyRelModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(PasswordPolicyRelModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1323,7 +1335,9 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PasswordPolicyRelImpl.class);
 
 				if (!pagination) {
 					list = (List<PasswordPolicyRel>)QueryUtil.list(q,
@@ -1382,7 +1396,10 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_PASSWORDPOLICYREL);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_PASSWORDPOLICYREL);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1435,10 +1452,11 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_PASSWORDPOLICYREL = "SELECT passwordPolicyRel FROM PasswordPolicyRel passwordPolicyRel";
-	private static final String _SQL_SELECT_PASSWORDPOLICYREL_WHERE = "SELECT passwordPolicyRel FROM PasswordPolicyRel passwordPolicyRel WHERE ";
-	private static final String _SQL_COUNT_PASSWORDPOLICYREL = "SELECT COUNT(passwordPolicyRel) FROM PasswordPolicyRel passwordPolicyRel";
-	private static final String _SQL_COUNT_PASSWORDPOLICYREL_WHERE = "SELECT COUNT(passwordPolicyRel) FROM PasswordPolicyRel passwordPolicyRel WHERE ";
+	private static final String _SQL_SELECT_PASSWORDPOLICYREL = "SELECT {passwordPolicyRel.*} FROM PasswordPolicyRel passwordPolicyRel";
+	private static final String _SQL_SELECT_PASSWORDPOLICYREL_WHERE = "SELECT {passwordPolicyRel.*} FROM PasswordPolicyRel passwordPolicyRel WHERE ";
+	private static final String _SQL_COUNT_PASSWORDPOLICYREL = "SELECT COUNT(*) AS COUNT_VALUE FROM PasswordPolicyRel passwordPolicyRel";
+	private static final String _SQL_COUNT_PASSWORDPOLICYREL_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM PasswordPolicyRel passwordPolicyRel WHERE ";
+	private static final String _ENTITY_ALIAS = "passwordPolicyRel";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "passwordPolicyRel.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No PasswordPolicyRel exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No PasswordPolicyRel exists with the key {";

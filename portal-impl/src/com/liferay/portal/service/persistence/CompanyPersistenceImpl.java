@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -186,7 +186,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CompanyImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -288,7 +290,10 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -422,7 +427,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CompanyImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -530,7 +537,10 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -652,7 +662,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CompanyImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -746,7 +758,10 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -884,7 +899,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			}
 			else
 			 if (pagination) {
-				query.append(CompanyModelImpl.ORDER_BY_JPQL);
+				query.append(CompanyModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -894,7 +909,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CompanyImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1143,12 +1160,14 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			}
 		}
 		else {
-			query.append(CompanyModelImpl.ORDER_BY_JPQL);
+			query.append(CompanyModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, CompanyImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1217,7 +1236,10 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1791,7 +1813,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 				sql = _SQL_SELECT_COMPANY;
 
 				if (pagination) {
-					sql = sql.concat(CompanyModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(CompanyModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1800,7 +1822,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CompanyImpl.class);
 
 				if (!pagination) {
 					list = (List<Company>)QueryUtil.list(q, getDialect(),
@@ -1859,7 +1883,10 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_COMPANY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_COMPANY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1912,10 +1939,11 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_COMPANY = "SELECT company FROM Company company";
-	private static final String _SQL_SELECT_COMPANY_WHERE = "SELECT company FROM Company company WHERE ";
-	private static final String _SQL_COUNT_COMPANY = "SELECT COUNT(company) FROM Company company";
-	private static final String _SQL_COUNT_COMPANY_WHERE = "SELECT COUNT(company) FROM Company company WHERE ";
+	private static final String _SQL_SELECT_COMPANY = "SELECT {company.*} FROM Company company";
+	private static final String _SQL_SELECT_COMPANY_WHERE = "SELECT {company.*} FROM Company company WHERE ";
+	private static final String _SQL_COUNT_COMPANY = "SELECT COUNT(*) AS COUNT_VALUE FROM Company company";
+	private static final String _SQL_COUNT_COMPANY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Company company WHERE ";
+	private static final String _ENTITY_ALIAS = "company";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "company.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Company exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Company exists with the key {";

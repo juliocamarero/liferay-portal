@@ -87,8 +87,8 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 		};
 	public static final String TABLE_SQL_CREATE = "create table Address (addressId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,street1 VARCHAR(75) null,street2 VARCHAR(75) null,street3 VARCHAR(75) null,city VARCHAR(75) null,zip VARCHAR(75) null,regionId LONG,countryId LONG,typeId INTEGER,mailing BOOLEAN,primary_ BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Address";
-	public static final String ORDER_BY_JPQL = " ORDER BY address.createDate ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY Address.createDate ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY address.createDate ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY Address.createDate ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

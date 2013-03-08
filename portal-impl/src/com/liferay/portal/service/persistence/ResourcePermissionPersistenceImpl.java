@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -203,7 +203,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 			else
 			 if (pagination) {
-				query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -213,7 +213,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -467,12 +469,14 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 		}
 		else {
-			query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+			query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -615,7 +619,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 			else
 			 if (pagination) {
-				query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -625,7 +629,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -707,7 +713,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -777,7 +786,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -924,7 +936,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 			else
 			 if (pagination) {
-				query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -934,7 +946,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1188,12 +1202,14 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 		}
 		else {
-			query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+			query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1262,7 +1278,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1413,7 +1432,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 			else
 			 if (pagination) {
-				query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1423,7 +1442,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1708,12 +1729,14 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 		}
 		else {
-			query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+			query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1804,7 +1827,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1990,7 +2016,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 			else
 			 if (pagination) {
-				query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2000,7 +2026,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2300,12 +2328,14 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 		}
 		else {
-			query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+			query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2402,7 +2432,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2613,7 +2646,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 			else
 			 if (pagination) {
-				query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2623,7 +2656,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2953,12 +2988,14 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 		}
 		else {
-			query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+			query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3075,7 +3112,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3377,7 +3417,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			}
 			else
 			 if (pagination) {
-				query.append(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+				query.append(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3387,7 +3427,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3589,7 +3631,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3739,7 +3783,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3876,7 +3923,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4560,7 +4610,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 				sql = _SQL_SELECT_RESOURCEPERMISSION;
 
 				if (pagination) {
-					sql = sql.concat(ResourcePermissionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ResourcePermissionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -4569,7 +4619,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ResourcePermissionImpl.class);
 
 				if (!pagination) {
 					list = (List<ResourcePermission>)QueryUtil.list(q,
@@ -4628,7 +4680,10 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_RESOURCEPERMISSION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_RESOURCEPERMISSION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -4681,10 +4736,11 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_RESOURCEPERMISSION = "SELECT resourcePermission FROM ResourcePermission resourcePermission";
-	private static final String _SQL_SELECT_RESOURCEPERMISSION_WHERE = "SELECT resourcePermission FROM ResourcePermission resourcePermission WHERE ";
-	private static final String _SQL_COUNT_RESOURCEPERMISSION = "SELECT COUNT(resourcePermission) FROM ResourcePermission resourcePermission";
-	private static final String _SQL_COUNT_RESOURCEPERMISSION_WHERE = "SELECT COUNT(resourcePermission) FROM ResourcePermission resourcePermission WHERE ";
+	private static final String _SQL_SELECT_RESOURCEPERMISSION = "SELECT {resourcePermission.*} FROM ResourcePermission resourcePermission";
+	private static final String _SQL_SELECT_RESOURCEPERMISSION_WHERE = "SELECT {resourcePermission.*} FROM ResourcePermission resourcePermission WHERE ";
+	private static final String _SQL_COUNT_RESOURCEPERMISSION = "SELECT COUNT(*) AS COUNT_VALUE FROM ResourcePermission resourcePermission";
+	private static final String _SQL_COUNT_RESOURCEPERMISSION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ResourcePermission resourcePermission WHERE ";
+	private static final String _ENTITY_ALIAS = "resourcePermission";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "resourcePermission.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ResourcePermission exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No ResourcePermission exists with the key {";

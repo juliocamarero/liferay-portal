@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -212,7 +212,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -222,7 +222,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -475,12 +477,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -551,7 +555,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -706,7 +713,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -716,7 +723,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -981,12 +990,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1069,7 +1080,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1094,9 +1108,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "bookmarksEntry.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "bookmarksEntry.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(bookmarksEntry.uuid IS NULL OR bookmarksEntry.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "bookmarksEntry.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "bookmarksEntry.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(bookmarksEntry.uuid_ IS NULL OR bookmarksEntry.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
 			BookmarksEntryModelImpl.FINDER_CACHE_ENABLED,
 			BookmarksEntryImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -1215,7 +1229,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1325,7 +1341,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1352,9 +1371,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "bookmarksEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "bookmarksEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(bookmarksEntry.uuid IS NULL OR bookmarksEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "bookmarksEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "bookmarksEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(bookmarksEntry.uuid_ IS NULL OR bookmarksEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "bookmarksEntry.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
 			BookmarksEntryModelImpl.FINDER_CACHE_ENABLED,
@@ -1500,7 +1519,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1510,7 +1529,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1792,12 +1813,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1888,7 +1911,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1915,9 +1941,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "bookmarksEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "bookmarksEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(bookmarksEntry.uuid IS NULL OR bookmarksEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "bookmarksEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "bookmarksEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(bookmarksEntry.uuid_ IS NULL OR bookmarksEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "bookmarksEntry.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_F = new FinderPath(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
 			BookmarksEntryModelImpl.FINDER_CACHE_ENABLED,
@@ -2053,7 +2079,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2063,7 +2089,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2331,12 +2359,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2441,7 +2471,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				orderByComparator);
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -2454,7 +2484,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2594,7 +2626,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -2602,10 +2634,12 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN,
 				_FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN, groupId);
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2725,7 +2759,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				orderByComparator);
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -2738,7 +2772,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2891,7 +2927,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2901,7 +2937,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2991,7 +3029,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3073,7 +3114,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3134,7 +3178,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3212,7 +3259,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3370,7 +3420,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3380,7 +3430,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3648,12 +3700,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3758,7 +3812,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				orderByComparator);
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -3771,7 +3825,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3911,7 +3967,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -3919,10 +3975,12 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN,
 				_FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN, groupId);
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3994,7 +4052,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4051,7 +4112,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4218,7 +4282,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4228,7 +4292,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4513,12 +4579,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4631,7 +4699,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				orderByComparator);
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -4644,7 +4712,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4790,7 +4860,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -4798,10 +4868,12 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN,
 				_FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN, groupId);
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4881,7 +4953,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4943,7 +5018,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5119,7 +5197,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5129,7 +5207,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5414,12 +5494,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5532,7 +5614,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				orderByComparator);
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -5545,7 +5627,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5691,7 +5775,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -5699,10 +5783,12 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN,
 				_FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN, groupId);
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5837,7 +5923,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				orderByComparator);
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -5850,7 +5936,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6019,7 +6107,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6029,7 +6117,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6125,7 +6215,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6220,7 +6313,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6286,7 +6382,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6375,7 +6474,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6568,7 +6670,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6578,7 +6680,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6880,12 +6984,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7007,7 +7113,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				orderByComparator);
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -7020,7 +7126,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7172,7 +7280,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -7180,10 +7288,12 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN,
 				_FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN, groupId);
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
+
+		q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7332,7 +7442,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				orderByComparator);
 		}
 		else {
-			query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
@@ -7345,7 +7455,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7530,7 +7642,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			}
 			else
 			 if (pagination) {
-				query.append(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7540,7 +7652,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7642,7 +7756,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7748,7 +7865,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7819,7 +7939,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7919,7 +8042,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		try {
 			session = openSession();
 
-			Query q = session.createQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8636,7 +8762,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				sql = _SQL_SELECT_BOOKMARKSENTRY;
 
 				if (pagination) {
-					sql = sql.concat(BookmarksEntryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(BookmarksEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -8645,7 +8771,9 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BookmarksEntryImpl.class);
 
 				if (!pagination) {
 					list = (List<BookmarksEntry>)QueryUtil.list(q,
@@ -8704,7 +8832,10 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_BOOKMARKSENTRY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_BOOKMARKSENTRY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -8757,12 +8888,13 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_BOOKMARKSENTRY = "SELECT bookmarksEntry FROM BookmarksEntry bookmarksEntry";
-	private static final String _SQL_SELECT_BOOKMARKSENTRY_WHERE = "SELECT bookmarksEntry FROM BookmarksEntry bookmarksEntry WHERE ";
-	private static final String _SQL_COUNT_BOOKMARKSENTRY = "SELECT COUNT(bookmarksEntry) FROM BookmarksEntry bookmarksEntry";
-	private static final String _SQL_COUNT_BOOKMARKSENTRY_WHERE = "SELECT COUNT(bookmarksEntry) FROM BookmarksEntry bookmarksEntry WHERE ";
+	private static final String _SQL_SELECT_BOOKMARKSENTRY = "SELECT {bookmarksEntry.*} FROM BookmarksEntry bookmarksEntry";
+	private static final String _SQL_SELECT_BOOKMARKSENTRY_WHERE = "SELECT {bookmarksEntry.*} FROM BookmarksEntry bookmarksEntry WHERE ";
+	private static final String _SQL_COUNT_BOOKMARKSENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM BookmarksEntry bookmarksEntry";
+	private static final String _SQL_COUNT_BOOKMARKSENTRY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM BookmarksEntry bookmarksEntry WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "bookmarksEntry.entryId";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN = "bookmarksEntry.userId";
+	private static final String _ENTITY_ALIAS = "bookmarksEntry";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "bookmarksEntry.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No BookmarksEntry exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No BookmarksEntry exists with the key {";

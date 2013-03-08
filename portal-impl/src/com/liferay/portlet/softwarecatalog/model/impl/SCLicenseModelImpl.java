@@ -71,8 +71,8 @@ public class SCLicenseModelImpl extends BaseModelImpl<SCLicense>
 		};
 	public static final String TABLE_SQL_CREATE = "create table SCLicense (licenseId LONG not null primary key,name VARCHAR(75) null,url STRING null,openSource BOOLEAN,active_ BOOLEAN,recommended BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table SCLicense";
-	public static final String ORDER_BY_JPQL = " ORDER BY scLicense.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY SCLicense.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY scLicense.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY SCLicense.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

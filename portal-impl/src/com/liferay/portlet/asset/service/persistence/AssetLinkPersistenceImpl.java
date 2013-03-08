@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -194,7 +194,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 			else
 			 if (pagination) {
-				query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+				query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -204,7 +204,9 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -454,12 +456,14 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 		}
 		else {
-			query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+			query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -528,7 +532,10 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -666,7 +673,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 			else
 			 if (pagination) {
-				query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+				query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -676,7 +683,9 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -926,12 +935,14 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 		}
 		else {
-			query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+			query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1000,7 +1011,10 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1151,7 +1165,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 			else
 			 if (pagination) {
-				query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+				query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1161,7 +1175,9 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1429,12 +1445,14 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 		}
 		else {
-			query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+			query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1511,7 +1529,10 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1665,7 +1686,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 			else
 			 if (pagination) {
-				query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+				query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1675,7 +1696,9 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1942,12 +1965,14 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 		}
 		else {
-			query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+			query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2022,7 +2047,10 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2048,7 +2076,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	}
 
 	private static final String _FINDER_COLUMN_E1_T_ENTRYID1_2 = "assetLink.entryId1 = ? AND ";
-	private static final String _FINDER_COLUMN_E1_T_TYPE_2 = "assetLink.type = ?";
+	private static final String _FINDER_COLUMN_E1_T_TYPE_2 = "assetLink.type_ = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_E2_T = new FinderPath(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
 			AssetLinkModelImpl.FINDER_CACHE_ENABLED, AssetLinkImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByE2_T",
@@ -2176,7 +2204,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 			else
 			 if (pagination) {
-				query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+				query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2186,7 +2214,9 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2453,12 +2483,14 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			}
 		}
 		else {
-			query.append(AssetLinkModelImpl.ORDER_BY_JPQL);
+			query.append(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2533,7 +2565,10 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2559,7 +2594,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	}
 
 	private static final String _FINDER_COLUMN_E2_T_ENTRYID2_2 = "assetLink.entryId2 = ? AND ";
-	private static final String _FINDER_COLUMN_E2_T_TYPE_2 = "assetLink.type = ?";
+	private static final String _FINDER_COLUMN_E2_T_TYPE_2 = "assetLink.type_ = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_E_E_T = new FinderPath(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
 			AssetLinkModelImpl.FINDER_CACHE_ENABLED, AssetLinkImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByE_E_T",
@@ -2681,7 +2716,9 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2783,7 +2820,10 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2812,7 +2852,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 
 	private static final String _FINDER_COLUMN_E_E_T_ENTRYID1_2 = "assetLink.entryId1 = ? AND ";
 	private static final String _FINDER_COLUMN_E_E_T_ENTRYID2_2 = "assetLink.entryId2 = ? AND ";
-	private static final String _FINDER_COLUMN_E_E_T_TYPE_2 = "assetLink.type = ?";
+	private static final String _FINDER_COLUMN_E_E_T_TYPE_2 = "assetLink.type_ = ?";
 
 	/**
 	 * Caches the asset link in the entity cache if it is enabled.
@@ -3401,7 +3441,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 				sql = _SQL_SELECT_ASSETLINK;
 
 				if (pagination) {
-					sql = sql.concat(AssetLinkModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(AssetLinkModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3410,7 +3450,9 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetLinkImpl.class);
 
 				if (!pagination) {
 					list = (List<AssetLink>)QueryUtil.list(q, getDialect(),
@@ -3469,7 +3511,10 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ASSETLINK);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ASSETLINK);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3522,10 +3567,11 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_ASSETLINK = "SELECT assetLink FROM AssetLink assetLink";
-	private static final String _SQL_SELECT_ASSETLINK_WHERE = "SELECT assetLink FROM AssetLink assetLink WHERE ";
-	private static final String _SQL_COUNT_ASSETLINK = "SELECT COUNT(assetLink) FROM AssetLink assetLink";
-	private static final String _SQL_COUNT_ASSETLINK_WHERE = "SELECT COUNT(assetLink) FROM AssetLink assetLink WHERE ";
+	private static final String _SQL_SELECT_ASSETLINK = "SELECT {assetLink.*} FROM AssetLink assetLink";
+	private static final String _SQL_SELECT_ASSETLINK_WHERE = "SELECT {assetLink.*} FROM AssetLink assetLink WHERE ";
+	private static final String _SQL_COUNT_ASSETLINK = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetLink assetLink";
+	private static final String _SQL_COUNT_ASSETLINK_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetLink assetLink WHERE ";
+	private static final String _ENTITY_ALIAS = "assetLink";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "assetLink.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No AssetLink exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No AssetLink exists with the key {";

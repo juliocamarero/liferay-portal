@@ -80,8 +80,8 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 		};
 	public static final String TABLE_SQL_CREATE = "create table Phone (phoneId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,number_ VARCHAR(75) null,extension VARCHAR(75) null,typeId INTEGER,primary_ BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Phone";
-	public static final String ORDER_BY_JPQL = " ORDER BY phone.createDate ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY Phone.createDate ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY phone.createDate ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY Phone.createDate ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

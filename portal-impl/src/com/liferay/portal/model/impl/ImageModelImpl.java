@@ -70,8 +70,8 @@ public class ImageModelImpl extends BaseModelImpl<Image> implements ImageModel {
 		};
 	public static final String TABLE_SQL_CREATE = "create table Image (imageId LONG not null primary key,modifiedDate DATE null,type_ VARCHAR(75) null,height INTEGER,width INTEGER,size_ INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table Image";
-	public static final String ORDER_BY_JPQL = " ORDER BY image.imageId ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY Image.imageId ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY image.imageId ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY Image.imageId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

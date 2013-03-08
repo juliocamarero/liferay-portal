@@ -78,8 +78,8 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 		};
 	public static final String TABLE_SQL_CREATE = "create table MembershipRequest (membershipRequestId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,comments STRING null,replyComments STRING null,replyDate DATE null,replierUserId LONG,statusId INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table MembershipRequest";
-	public static final String ORDER_BY_JPQL = " ORDER BY membershipRequest.createDate DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY MembershipRequest.createDate DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY membershipRequest.createDate DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY MembershipRequest.createDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

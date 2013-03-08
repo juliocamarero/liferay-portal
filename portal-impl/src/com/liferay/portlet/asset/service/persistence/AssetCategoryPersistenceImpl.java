@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -223,7 +222,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -233,7 +232,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -497,12 +498,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -585,7 +588,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -610,9 +616,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "assetCategory.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "assetCategory.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(assetCategory.uuid IS NULL OR assetCategory.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "assetCategory.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "assetCategory.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(assetCategory.uuid_ IS NULL OR assetCategory.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
 			AssetCategoryModelImpl.FINDER_CACHE_ENABLED,
 			AssetCategoryImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -730,7 +736,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -840,7 +848,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -867,9 +878,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "assetCategory.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "assetCategory.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(assetCategory.uuid IS NULL OR assetCategory.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "assetCategory.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "assetCategory.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(assetCategory.uuid_ IS NULL OR assetCategory.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "assetCategory.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
 			AssetCategoryModelImpl.FINDER_CACHE_ENABLED,
@@ -1014,7 +1025,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1024,7 +1035,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1306,12 +1319,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1402,7 +1417,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1429,9 +1447,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "assetCategory.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "assetCategory.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(assetCategory.uuid IS NULL OR assetCategory.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "assetCategory.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "assetCategory.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(assetCategory.uuid_ IS NULL OR assetCategory.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "assetCategory.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
 			AssetCategoryModelImpl.FINDER_CACHE_ENABLED,
@@ -1550,7 +1568,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1560,7 +1578,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1813,12 +1833,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1931,10 +1953,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2111,10 +2133,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2198,7 +2220,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2394,7 +2419,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2404,7 +2429,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2657,12 +2684,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2733,7 +2762,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2881,7 +2913,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2891,7 +2923,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3144,12 +3178,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3219,7 +3255,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3377,7 +3416,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3387,7 +3426,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3655,12 +3696,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3782,10 +3825,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3967,10 +4010,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4125,10 +4168,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4301,7 +4344,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4311,7 +4354,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4401,7 +4446,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4485,7 +4533,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4797,7 +4848,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4807,7 +4858,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5089,12 +5142,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5185,7 +5240,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5346,7 +5404,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5356,7 +5414,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5627,12 +5687,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5709,7 +5771,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5877,7 +5942,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5887,7 +5952,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6169,12 +6236,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6265,7 +6334,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6438,7 +6510,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6448,7 +6520,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6734,12 +6808,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6870,10 +6946,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7063,10 +7139,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7167,7 +7243,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7394,7 +7473,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7404,7 +7483,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7704,12 +7785,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7853,10 +7936,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -8058,10 +8141,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -8240,10 +8323,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -8442,7 +8525,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -8452,7 +8535,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8562,7 +8647,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8667,7 +8755,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9025,7 +9116,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9143,7 +9236,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9345,7 +9441,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 			else
 			 if (pagination) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -9355,7 +9451,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9675,12 +9773,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			}
 		}
 		else {
-			query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -9833,10 +9933,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -10046,10 +10146,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+				query.append(AssetCategoryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -10170,7 +10270,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11087,7 +11190,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 				sql = _SQL_SELECT_ASSETCATEGORY;
 
 				if (pagination) {
-					sql = sql.concat(AssetCategoryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(AssetCategoryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -11096,7 +11199,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AssetCategoryImpl.class);
 
 				if (!pagination) {
 					list = (List<AssetCategory>)QueryUtil.list(q, getDialect(),
@@ -11155,7 +11260,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ASSETCATEGORY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ASSETCATEGORY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -11268,7 +11376,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 					sql = _SQL_GETASSETENTRIES;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.asset.model.impl.AssetEntryModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.asset.model.impl.AssetEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -12272,10 +12380,10 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_ASSETCATEGORY = "SELECT assetCategory FROM AssetCategory assetCategory";
-	private static final String _SQL_SELECT_ASSETCATEGORY_WHERE = "SELECT assetCategory FROM AssetCategory assetCategory WHERE ";
-	private static final String _SQL_COUNT_ASSETCATEGORY = "SELECT COUNT(assetCategory) FROM AssetCategory assetCategory";
-	private static final String _SQL_COUNT_ASSETCATEGORY_WHERE = "SELECT COUNT(assetCategory) FROM AssetCategory assetCategory WHERE ";
+	private static final String _SQL_SELECT_ASSETCATEGORY = "SELECT {assetCategory.*} FROM AssetCategory assetCategory";
+	private static final String _SQL_SELECT_ASSETCATEGORY_WHERE = "SELECT {assetCategory.*} FROM AssetCategory assetCategory WHERE ";
+	private static final String _SQL_COUNT_ASSETCATEGORY = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetCategory assetCategory";
+	private static final String _SQL_COUNT_ASSETCATEGORY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetCategory assetCategory WHERE ";
 	private static final String _SQL_GETASSETENTRIES = "SELECT {AssetEntry.*} FROM AssetEntry INNER JOIN AssetEntries_AssetCategories ON (AssetEntries_AssetCategories.entryId = AssetEntry.entryId) WHERE (AssetEntries_AssetCategories.categoryId = ?)";
 	private static final String _SQL_GETASSETENTRIESSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetEntries_AssetCategories WHERE categoryId = ?";
 	private static final String _SQL_CONTAINSASSETENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM AssetEntries_AssetCategories WHERE categoryId = ? AND entryId = ?";
@@ -12288,6 +12396,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	private static final String _FILTER_SQL_COUNT_ASSETCATEGORY_WHERE = "SELECT COUNT(DISTINCT assetCategory.categoryId) AS COUNT_VALUE FROM AssetCategory assetCategory WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "assetCategory";
 	private static final String _FILTER_ENTITY_TABLE = "AssetCategory";
+	private static final String _ENTITY_ALIAS = "assetCategory";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "assetCategory.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "AssetCategory.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No AssetCategory exists with the primary key ";

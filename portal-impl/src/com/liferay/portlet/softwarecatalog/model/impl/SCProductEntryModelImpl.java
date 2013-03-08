@@ -85,8 +85,8 @@ public class SCProductEntryModelImpl extends BaseModelImpl<SCProductEntry>
 		};
 	public static final String TABLE_SQL_CREATE = "create table SCProductEntry (productEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,type_ VARCHAR(75) null,tags VARCHAR(255) null,shortDescription STRING null,longDescription STRING null,pageURL STRING null,author VARCHAR(75) null,repoGroupId VARCHAR(75) null,repoArtifactId VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table SCProductEntry";
-	public static final String ORDER_BY_JPQL = " ORDER BY scProductEntry.modifiedDate DESC, scProductEntry.name DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY SCProductEntry.modifiedDate DESC, SCProductEntry.name DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY scProductEntry.modifiedDate DESC, scProductEntry.name DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY SCProductEntry.modifiedDate DESC, SCProductEntry.name DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

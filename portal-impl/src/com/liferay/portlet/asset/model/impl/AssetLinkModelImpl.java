@@ -72,8 +72,8 @@ public class AssetLinkModelImpl extends BaseModelImpl<AssetLink>
 		};
 	public static final String TABLE_SQL_CREATE = "create table AssetLink (linkId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,entryId1 LONG,entryId2 LONG,type_ INTEGER,weight INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table AssetLink";
-	public static final String ORDER_BY_JPQL = " ORDER BY assetLink.weight ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY AssetLink.weight ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY assetLink.weight ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY AssetLink.weight ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

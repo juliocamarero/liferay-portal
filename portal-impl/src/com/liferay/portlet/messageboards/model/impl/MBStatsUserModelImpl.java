@@ -67,8 +67,8 @@ public class MBStatsUserModelImpl extends BaseModelImpl<MBStatsUser>
 		};
 	public static final String TABLE_SQL_CREATE = "create table MBStatsUser (statsUserId LONG not null primary key,groupId LONG,userId LONG,messageCount INTEGER,lastPostDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table MBStatsUser";
-	public static final String ORDER_BY_JPQL = " ORDER BY mbStatsUser.messageCount DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY MBStatsUser.messageCount DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY mbStatsUser.messageCount DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY MBStatsUser.messageCount DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

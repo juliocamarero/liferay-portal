@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -200,7 +200,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			}
 			else
 			 if (pagination) {
-				query.append(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+				query.append(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -210,7 +210,9 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -464,12 +466,14 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			}
 		}
 		else {
-			query.append(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+			query.append(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -538,7 +542,10 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -691,7 +698,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			}
 			else
 			 if (pagination) {
-				query.append(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+				query.append(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -701,7 +708,9 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -972,12 +981,14 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			}
 		}
 		else {
-			query.append(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+			query.append(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1054,7 +1065,10 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1210,7 +1224,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			}
 			else
 			 if (pagination) {
-				query.append(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+				query.append(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1220,7 +1234,9 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1491,12 +1507,14 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			}
 		}
 		else {
-			query.append(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+			query.append(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1573,7 +1591,10 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1744,7 +1765,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			}
 			else
 			 if (pagination) {
-				query.append(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+				query.append(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1754,7 +1775,9 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2041,12 +2064,14 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			}
 		}
 		else {
-			query.append(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+			query.append(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2130,7 +2155,10 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2309,7 +2337,9 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2444,7 +2474,10 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3071,7 +3104,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 				sql = _SQL_SELECT_SOCIALACTIVITYSETTING;
 
 				if (pagination) {
-					sql = sql.concat(SocialActivitySettingModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(SocialActivitySettingModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3080,7 +3113,9 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, SocialActivitySettingImpl.class);
 
 				if (!pagination) {
 					list = (List<SocialActivitySetting>)QueryUtil.list(q,
@@ -3139,7 +3174,10 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_SOCIALACTIVITYSETTING);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_SOCIALACTIVITYSETTING);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3192,10 +3230,11 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_SOCIALACTIVITYSETTING = "SELECT socialActivitySetting FROM SocialActivitySetting socialActivitySetting";
-	private static final String _SQL_SELECT_SOCIALACTIVITYSETTING_WHERE = "SELECT socialActivitySetting FROM SocialActivitySetting socialActivitySetting WHERE ";
-	private static final String _SQL_COUNT_SOCIALACTIVITYSETTING = "SELECT COUNT(socialActivitySetting) FROM SocialActivitySetting socialActivitySetting";
-	private static final String _SQL_COUNT_SOCIALACTIVITYSETTING_WHERE = "SELECT COUNT(socialActivitySetting) FROM SocialActivitySetting socialActivitySetting WHERE ";
+	private static final String _SQL_SELECT_SOCIALACTIVITYSETTING = "SELECT {socialActivitySetting.*} FROM SocialActivitySetting socialActivitySetting";
+	private static final String _SQL_SELECT_SOCIALACTIVITYSETTING_WHERE = "SELECT {socialActivitySetting.*} FROM SocialActivitySetting socialActivitySetting WHERE ";
+	private static final String _SQL_COUNT_SOCIALACTIVITYSETTING = "SELECT COUNT(*) AS COUNT_VALUE FROM SocialActivitySetting socialActivitySetting";
+	private static final String _SQL_COUNT_SOCIALACTIVITYSETTING_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM SocialActivitySetting socialActivitySetting WHERE ";
+	private static final String _ENTITY_ALIAS = "socialActivitySetting";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "socialActivitySetting.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SocialActivitySetting exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SocialActivitySetting exists with the key {";

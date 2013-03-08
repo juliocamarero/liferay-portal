@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -175,7 +175,9 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BrowserTrackerImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -262,7 +264,10 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -755,7 +760,7 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 				sql = _SQL_SELECT_BROWSERTRACKER;
 
 				if (pagination) {
-					sql = sql.concat(BrowserTrackerModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(BrowserTrackerModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -764,7 +769,9 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BrowserTrackerImpl.class);
 
 				if (!pagination) {
 					list = (List<BrowserTracker>)QueryUtil.list(q,
@@ -823,7 +830,10 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_BROWSERTRACKER);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_BROWSERTRACKER);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -876,10 +886,11 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_BROWSERTRACKER = "SELECT browserTracker FROM BrowserTracker browserTracker";
-	private static final String _SQL_SELECT_BROWSERTRACKER_WHERE = "SELECT browserTracker FROM BrowserTracker browserTracker WHERE ";
-	private static final String _SQL_COUNT_BROWSERTRACKER = "SELECT COUNT(browserTracker) FROM BrowserTracker browserTracker";
-	private static final String _SQL_COUNT_BROWSERTRACKER_WHERE = "SELECT COUNT(browserTracker) FROM BrowserTracker browserTracker WHERE ";
+	private static final String _SQL_SELECT_BROWSERTRACKER = "SELECT {browserTracker.*} FROM BrowserTracker browserTracker";
+	private static final String _SQL_SELECT_BROWSERTRACKER_WHERE = "SELECT {browserTracker.*} FROM BrowserTracker browserTracker WHERE ";
+	private static final String _SQL_COUNT_BROWSERTRACKER = "SELECT COUNT(*) AS COUNT_VALUE FROM BrowserTracker browserTracker";
+	private static final String _SQL_COUNT_BROWSERTRACKER_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM BrowserTracker browserTracker WHERE ";
+	private static final String _ENTITY_ALIAS = "browserTracker";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "browserTracker.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No BrowserTracker exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No BrowserTracker exists with the key {";

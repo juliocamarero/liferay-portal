@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -209,7 +208,7 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			}
 			else
 			 if (pagination) {
-				query.append(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+				query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -219,7 +218,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -483,12 +484,14 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			}
 		}
 		else {
-			query.append(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+			query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -571,7 +574,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -596,9 +602,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddlRecordSet.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddlRecordSet.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddlRecordSet.uuid IS NULL OR ddlRecordSet.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddlRecordSet.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddlRecordSet.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddlRecordSet.uuid_ IS NULL OR ddlRecordSet.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DDLRecordSetModelImpl.ENTITY_CACHE_ENABLED,
 			DDLRecordSetModelImpl.FINDER_CACHE_ENABLED, DDLRecordSetImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -716,7 +722,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -826,7 +834,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -853,9 +864,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddlRecordSet.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddlRecordSet.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddlRecordSet.uuid IS NULL OR ddlRecordSet.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddlRecordSet.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddlRecordSet.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddlRecordSet.uuid_ IS NULL OR ddlRecordSet.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "ddlRecordSet.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DDLRecordSetModelImpl.ENTITY_CACHE_ENABLED,
 			DDLRecordSetModelImpl.FINDER_CACHE_ENABLED, DDLRecordSetImpl.class,
@@ -997,7 +1008,7 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			}
 			else
 			 if (pagination) {
-				query.append(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+				query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1007,7 +1018,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1289,12 +1302,14 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			}
 		}
 		else {
-			query.append(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+			query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1385,7 +1400,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1412,9 +1430,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddlRecordSet.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddlRecordSet.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddlRecordSet.uuid IS NULL OR ddlRecordSet.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddlRecordSet.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddlRecordSet.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddlRecordSet.uuid_ IS NULL OR ddlRecordSet.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "ddlRecordSet.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DDLRecordSetModelImpl.ENTITY_CACHE_ENABLED,
 			DDLRecordSetModelImpl.FINDER_CACHE_ENABLED, DDLRecordSetImpl.class,
@@ -1531,7 +1549,7 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			}
 			else
 			 if (pagination) {
-				query.append(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+				query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1541,7 +1559,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1793,12 +1813,14 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			}
 		}
 		else {
-			query.append(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+			query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1911,10 +1933,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+				query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDLRecordSetModelImpl.ORDER_BY_SQL);
+				query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2091,10 +2113,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+				query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDLRecordSetModelImpl.ORDER_BY_SQL);
+				query.append(DDLRecordSetModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2178,7 +2200,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2368,7 +2393,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2478,7 +2505,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3110,7 +3140,7 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 				sql = _SQL_SELECT_DDLRECORDSET;
 
 				if (pagination) {
-					sql = sql.concat(DDLRecordSetModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DDLRecordSetModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3119,7 +3149,9 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordSetImpl.class);
 
 				if (!pagination) {
 					list = (List<DDLRecordSet>)QueryUtil.list(q, getDialect(),
@@ -3178,7 +3210,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DDLRECORDSET);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DDLRECORDSET);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3231,10 +3266,10 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DDLRECORDSET = "SELECT ddlRecordSet FROM DDLRecordSet ddlRecordSet";
-	private static final String _SQL_SELECT_DDLRECORDSET_WHERE = "SELECT ddlRecordSet FROM DDLRecordSet ddlRecordSet WHERE ";
-	private static final String _SQL_COUNT_DDLRECORDSET = "SELECT COUNT(ddlRecordSet) FROM DDLRecordSet ddlRecordSet";
-	private static final String _SQL_COUNT_DDLRECORDSET_WHERE = "SELECT COUNT(ddlRecordSet) FROM DDLRecordSet ddlRecordSet WHERE ";
+	private static final String _SQL_SELECT_DDLRECORDSET = "SELECT {ddlRecordSet.*} FROM DDLRecordSet ddlRecordSet";
+	private static final String _SQL_SELECT_DDLRECORDSET_WHERE = "SELECT {ddlRecordSet.*} FROM DDLRecordSet ddlRecordSet WHERE ";
+	private static final String _SQL_COUNT_DDLRECORDSET = "SELECT COUNT(*) AS COUNT_VALUE FROM DDLRecordSet ddlRecordSet";
+	private static final String _SQL_COUNT_DDLRECORDSET_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDLRecordSet ddlRecordSet WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "ddlRecordSet.recordSetId";
 	private static final String _FILTER_SQL_SELECT_DDLRECORDSET_WHERE = "SELECT DISTINCT {ddlRecordSet.*} FROM DDLRecordSet ddlRecordSet WHERE ";
 	private static final String _FILTER_SQL_SELECT_DDLRECORDSET_NO_INLINE_DISTINCT_WHERE_1 =
@@ -3244,6 +3279,7 @@ public class DDLRecordSetPersistenceImpl extends BasePersistenceImpl<DDLRecordSe
 	private static final String _FILTER_SQL_COUNT_DDLRECORDSET_WHERE = "SELECT COUNT(DISTINCT ddlRecordSet.recordSetId) AS COUNT_VALUE FROM DDLRecordSet ddlRecordSet WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "ddlRecordSet";
 	private static final String _FILTER_ENTITY_TABLE = "DDLRecordSet";
+	private static final String _ENTITY_ALIAS = "ddlRecordSet";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ddlRecordSet.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "DDLRecordSet.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DDLRecordSet exists with the primary key ";

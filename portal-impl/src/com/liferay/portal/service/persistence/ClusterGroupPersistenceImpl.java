@@ -19,8 +19,8 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -493,7 +493,7 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 				sql = _SQL_SELECT_CLUSTERGROUP;
 
 				if (pagination) {
-					sql = sql.concat(ClusterGroupModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ClusterGroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -502,7 +502,9 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ClusterGroupImpl.class);
 
 				if (!pagination) {
 					list = (List<ClusterGroup>)QueryUtil.list(q, getDialect(),
@@ -561,7 +563,10 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_CLUSTERGROUP);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_CLUSTERGROUP);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -614,8 +619,9 @@ public class ClusterGroupPersistenceImpl extends BasePersistenceImpl<ClusterGrou
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_CLUSTERGROUP = "SELECT clusterGroup FROM ClusterGroup clusterGroup";
-	private static final String _SQL_COUNT_CLUSTERGROUP = "SELECT COUNT(clusterGroup) FROM ClusterGroup clusterGroup";
+	private static final String _SQL_SELECT_CLUSTERGROUP = "SELECT {clusterGroup.*} FROM ClusterGroup clusterGroup";
+	private static final String _SQL_COUNT_CLUSTERGROUP = "SELECT COUNT(*) AS COUNT_VALUE FROM ClusterGroup clusterGroup";
+	private static final String _ENTITY_ALIAS = "clusterGroup";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "clusterGroup.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ClusterGroup exists with the primary key ";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = com.liferay.portal.util.PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE;

@@ -75,8 +75,8 @@ public class PollsChoiceModelImpl extends BaseModelImpl<PollsChoice>
 		};
 	public static final String TABLE_SQL_CREATE = "create table PollsChoice (uuid_ VARCHAR(75) null,choiceId LONG not null primary key,questionId LONG,name VARCHAR(75) null,description STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table PollsChoice";
-	public static final String ORDER_BY_JPQL = " ORDER BY pollsChoice.questionId ASC, pollsChoice.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY PollsChoice.questionId ASC, PollsChoice.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY pollsChoice.questionId ASC, pollsChoice.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY PollsChoice.questionId ASC, PollsChoice.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

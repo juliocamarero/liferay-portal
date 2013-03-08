@@ -72,8 +72,8 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 		};
 	public static final String TABLE_SQL_CREATE = "create table Country (countryId LONG not null primary key,name VARCHAR(75) null,a2 VARCHAR(75) null,a3 VARCHAR(75) null,number_ VARCHAR(75) null,idd_ VARCHAR(75) null,zipRequired BOOLEAN,active_ BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Country";
-	public static final String ORDER_BY_JPQL = " ORDER BY country.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY Country.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY country.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY Country.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

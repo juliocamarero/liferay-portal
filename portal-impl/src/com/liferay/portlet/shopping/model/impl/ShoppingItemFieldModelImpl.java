@@ -65,8 +65,8 @@ public class ShoppingItemFieldModelImpl extends BaseModelImpl<ShoppingItemField>
 		};
 	public static final String TABLE_SQL_CREATE = "create table ShoppingItemField (itemFieldId LONG not null primary key,itemId LONG,name VARCHAR(75) null,values_ STRING null,description STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table ShoppingItemField";
-	public static final String ORDER_BY_JPQL = " ORDER BY shoppingItemField.itemId ASC, shoppingItemField.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY ShoppingItemField.itemId ASC, ShoppingItemField.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY shoppingItemField.itemId ASC, shoppingItemField.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY ShoppingItemField.itemId ASC, ShoppingItemField.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

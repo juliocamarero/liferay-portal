@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -207,7 +206,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 			else
 			 if (pagination) {
-				query.append(GroupModelImpl.ORDER_BY_JPQL);
+				query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -217,7 +216,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -466,12 +467,14 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 		}
 		else {
-			query.append(GroupModelImpl.ORDER_BY_JPQL);
+			query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -540,7 +543,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -658,7 +664,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -752,7 +760,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -903,7 +914,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 			else
 			 if (pagination) {
-				query.append(GroupModelImpl.ORDER_BY_JPQL);
+				query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -913,7 +924,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1181,12 +1194,14 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 		}
 		else {
-			query.append(GroupModelImpl.ORDER_BY_JPQL);
+			query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1263,7 +1278,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1407,7 +1425,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1517,7 +1537,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1665,7 +1688,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1775,7 +1800,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1933,7 +1961,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 			else
 			 if (pagination) {
-				query.append(GroupModelImpl.ORDER_BY_JPQL);
+				query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1943,7 +1971,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2208,12 +2238,14 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 		}
 		else {
-			query.append(GroupModelImpl.ORDER_BY_JPQL);
+			query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2290,7 +2322,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2443,7 +2478,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 			else
 			 if (pagination) {
-				query.append(GroupModelImpl.ORDER_BY_JPQL);
+				query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2453,7 +2488,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2718,12 +2755,14 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 		}
 		else {
-			query.append(GroupModelImpl.ORDER_BY_JPQL);
+			query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2798,7 +2837,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2823,8 +2865,8 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_T_A_TYPE_2 = "group_.type = ? AND ";
-	private static final String _FINDER_COLUMN_T_A_ACTIVE_2 = "group_.active = ?";
+	private static final String _FINDER_COLUMN_T_A_TYPE_2 = "group_.type_ = ? AND ";
+	private static final String _FINDER_COLUMN_T_A_ACTIVE_2 = "group_.active_ = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_C_C = new FinderPath(GroupModelImpl.ENTITY_CACHE_ENABLED,
 			GroupModelImpl.FINDER_CACHE_ENABLED, GroupImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_C_C",
@@ -2944,7 +2986,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3046,7 +3090,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3216,7 +3263,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 			else
 			 if (pagination) {
-				query.append(GroupModelImpl.ORDER_BY_JPQL);
+				query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3226,7 +3273,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3512,12 +3561,14 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 		}
 		else {
-			query.append(GroupModelImpl.ORDER_BY_JPQL);
+			query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3600,7 +3651,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3772,7 +3826,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 			else
 			 if (pagination) {
-				query.append(GroupModelImpl.ORDER_BY_JPQL);
+				query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3782,7 +3836,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4067,12 +4123,14 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			}
 		}
 		else {
-			query.append(GroupModelImpl.ORDER_BY_JPQL);
+			query.append(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4155,7 +4213,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4318,7 +4379,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4435,7 +4498,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4616,7 +4682,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4743,7 +4811,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5634,7 +5705,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				sql = _SQL_SELECT_GROUP_;
 
 				if (pagination) {
-					sql = sql.concat(GroupModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(GroupModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -5643,7 +5714,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, GroupImpl.class);
 
 				if (!pagination) {
 					list = (List<Group>)QueryUtil.list(q, getDialect(), start,
@@ -5702,7 +5775,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_GROUP_);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_GROUP_);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -5814,7 +5890,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					sql = _SQL_GETORGANIZATIONS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portal.model.impl.OrganizationModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portal.model.impl.OrganizationModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -6312,7 +6388,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					sql = _SQL_GETROLES;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portal.model.impl.RoleModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portal.model.impl.RoleModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -6798,7 +6874,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					sql = _SQL_GETUSERGROUPS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portal.model.impl.UserGroupModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portal.model.impl.UserGroupModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -7294,7 +7370,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					sql = _SQL_GETUSERS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portal.model.impl.UserModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portal.model.impl.UserModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -8417,10 +8493,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_GROUP_ = "SELECT group_ FROM Group group_";
-	private static final String _SQL_SELECT_GROUP__WHERE = "SELECT group_ FROM Group group_ WHERE ";
-	private static final String _SQL_COUNT_GROUP_ = "SELECT COUNT(group_) FROM Group group_";
-	private static final String _SQL_COUNT_GROUP__WHERE = "SELECT COUNT(group_) FROM Group group_ WHERE ";
+	private static final String _SQL_SELECT_GROUP_ = "SELECT {group_.*} FROM Group_ group_";
+	private static final String _SQL_SELECT_GROUP__WHERE = "SELECT {group_.*} FROM Group_ group_ WHERE ";
+	private static final String _SQL_COUNT_GROUP_ = "SELECT COUNT(*) AS COUNT_VALUE FROM Group_ group_";
+	private static final String _SQL_COUNT_GROUP__WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Group_ group_ WHERE ";
 	private static final String _SQL_GETORGANIZATIONS = "SELECT {Organization_.*} FROM Organization_ INNER JOIN Groups_Orgs ON (Groups_Orgs.organizationId = Organization_.organizationId) WHERE (Groups_Orgs.groupId = ?)";
 	private static final String _SQL_GETORGANIZATIONSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM Groups_Orgs WHERE groupId = ?";
 	private static final String _SQL_CONTAINSORGANIZATION = "SELECT COUNT(*) AS COUNT_VALUE FROM Groups_Orgs WHERE groupId = ? AND organizationId = ?";
@@ -8433,6 +8509,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	private static final String _SQL_GETUSERS = "SELECT {User_.*} FROM User_ INNER JOIN Users_Groups ON (Users_Groups.userId = User_.userId) WHERE (Users_Groups.groupId = ?)";
 	private static final String _SQL_GETUSERSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_Groups WHERE groupId = ?";
 	private static final String _SQL_CONTAINSUSER = "SELECT COUNT(*) AS COUNT_VALUE FROM Users_Groups WHERE groupId = ? AND userId = ?";
+	private static final String _ENTITY_ALIAS = "group_";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "group_.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Group exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Group exists with the key {";

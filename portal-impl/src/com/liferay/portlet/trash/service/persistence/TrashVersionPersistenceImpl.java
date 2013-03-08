@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -195,7 +195,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			}
 			else
 			 if (pagination) {
-				query.append(TrashVersionModelImpl.ORDER_BY_JPQL);
+				query.append(TrashVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -205,7 +205,9 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TrashVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -457,12 +459,14 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			}
 		}
 		else {
-			query.append(TrashVersionModelImpl.ORDER_BY_JPQL);
+			query.append(TrashVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, TrashVersionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -531,7 +535,10 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -682,7 +689,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			}
 			else
 			 if (pagination) {
-				query.append(TrashVersionModelImpl.ORDER_BY_JPQL);
+				query.append(TrashVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -692,7 +699,9 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TrashVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -960,12 +969,14 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			}
 		}
 		else {
-			query.append(TrashVersionModelImpl.ORDER_BY_JPQL);
+			query.append(TrashVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, TrashVersionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1042,7 +1053,10 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1528,7 +1542,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 				sql = _SQL_SELECT_TRASHVERSION;
 
 				if (pagination) {
-					sql = sql.concat(TrashVersionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(TrashVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1537,7 +1551,9 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TrashVersionImpl.class);
 
 				if (!pagination) {
 					list = (List<TrashVersion>)QueryUtil.list(q, getDialect(),
@@ -1596,7 +1612,10 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_TRASHVERSION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_TRASHVERSION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1649,10 +1668,11 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_TRASHVERSION = "SELECT trashVersion FROM TrashVersion trashVersion";
-	private static final String _SQL_SELECT_TRASHVERSION_WHERE = "SELECT trashVersion FROM TrashVersion trashVersion WHERE ";
-	private static final String _SQL_COUNT_TRASHVERSION = "SELECT COUNT(trashVersion) FROM TrashVersion trashVersion";
-	private static final String _SQL_COUNT_TRASHVERSION_WHERE = "SELECT COUNT(trashVersion) FROM TrashVersion trashVersion WHERE ";
+	private static final String _SQL_SELECT_TRASHVERSION = "SELECT {trashVersion.*} FROM TrashVersion trashVersion";
+	private static final String _SQL_SELECT_TRASHVERSION_WHERE = "SELECT {trashVersion.*} FROM TrashVersion trashVersion WHERE ";
+	private static final String _SQL_COUNT_TRASHVERSION = "SELECT COUNT(*) AS COUNT_VALUE FROM TrashVersion trashVersion";
+	private static final String _SQL_COUNT_TRASHVERSION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM TrashVersion trashVersion WHERE ";
+	private static final String _ENTITY_ALIAS = "trashVersion";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "trashVersion.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No TrashVersion exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No TrashVersion exists with the key {";

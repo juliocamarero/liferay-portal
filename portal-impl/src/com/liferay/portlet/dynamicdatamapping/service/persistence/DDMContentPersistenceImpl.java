@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -207,7 +207,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMContentModelImpl.ORDER_BY_JPQL);
+				query.append(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -217,7 +217,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -481,12 +483,14 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			}
 		}
 		else {
-			query.append(DDMContentModelImpl.ORDER_BY_JPQL);
+			query.append(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -569,7 +573,10 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -594,9 +601,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmContent.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmContent.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmContent.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmContent.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmContent.uuid_ IS NULL OR ddmContent.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
 			DDMContentModelImpl.FINDER_CACHE_ENABLED, DDMContentImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -714,7 +721,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -824,7 +833,10 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -851,9 +863,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmContent.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmContent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmContent.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmContent.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmContent.uuid_ IS NULL OR ddmContent.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "ddmContent.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
 			DDMContentModelImpl.FINDER_CACHE_ENABLED, DDMContentImpl.class,
@@ -995,7 +1007,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMContentModelImpl.ORDER_BY_JPQL);
+				query.append(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1005,7 +1017,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1287,12 +1301,14 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			}
 		}
 		else {
-			query.append(DDMContentModelImpl.ORDER_BY_JPQL);
+			query.append(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1383,7 +1399,10 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1410,9 +1429,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmContent.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmContent.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmContent.uuid IS NULL OR ddmContent.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmContent.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmContent.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmContent.uuid_ IS NULL OR ddmContent.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "ddmContent.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DDMContentModelImpl.ENTITY_CACHE_ENABLED,
 			DDMContentModelImpl.FINDER_CACHE_ENABLED, DDMContentImpl.class,
@@ -1529,7 +1548,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMContentModelImpl.ORDER_BY_JPQL);
+				query.append(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1539,7 +1558,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1789,12 +1810,14 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			}
 		}
 		else {
-			query.append(DDMContentModelImpl.ORDER_BY_JPQL);
+			query.append(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1863,7 +1886,10 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2004,7 +2030,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMContentModelImpl.ORDER_BY_JPQL);
+				query.append(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2014,7 +2040,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2267,12 +2295,14 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			}
 		}
 		else {
-			query.append(DDMContentModelImpl.ORDER_BY_JPQL);
+			query.append(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2341,7 +2371,10 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2937,7 +2970,7 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 				sql = _SQL_SELECT_DDMCONTENT;
 
 				if (pagination) {
-					sql = sql.concat(DDMContentModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DDMContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2946,7 +2979,9 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMContentImpl.class);
 
 				if (!pagination) {
 					list = (List<DDMContent>)QueryUtil.list(q, getDialect(),
@@ -3005,7 +3040,10 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DDMCONTENT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DDMCONTENT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3058,10 +3096,11 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DDMCONTENT = "SELECT ddmContent FROM DDMContent ddmContent";
-	private static final String _SQL_SELECT_DDMCONTENT_WHERE = "SELECT ddmContent FROM DDMContent ddmContent WHERE ";
-	private static final String _SQL_COUNT_DDMCONTENT = "SELECT COUNT(ddmContent) FROM DDMContent ddmContent";
-	private static final String _SQL_COUNT_DDMCONTENT_WHERE = "SELECT COUNT(ddmContent) FROM DDMContent ddmContent WHERE ";
+	private static final String _SQL_SELECT_DDMCONTENT = "SELECT {ddmContent.*} FROM DDMContent ddmContent";
+	private static final String _SQL_SELECT_DDMCONTENT_WHERE = "SELECT {ddmContent.*} FROM DDMContent ddmContent WHERE ";
+	private static final String _SQL_COUNT_DDMCONTENT = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMContent ddmContent";
+	private static final String _SQL_COUNT_DDMCONTENT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMContent ddmContent WHERE ";
+	private static final String _ENTITY_ALIAS = "ddmContent";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ddmContent.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DDMContent exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DDMContent exists with the key {";

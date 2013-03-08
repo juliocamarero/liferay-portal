@@ -66,8 +66,8 @@ public class AssetTagStatsModelImpl extends BaseModelImpl<AssetTagStats>
 		};
 	public static final String TABLE_SQL_CREATE = "create table AssetTagStats (tagStatsId LONG not null primary key,tagId LONG,classNameId LONG,assetCount INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table AssetTagStats";
-	public static final String ORDER_BY_JPQL = " ORDER BY assetTagStats.assetCount DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY AssetTagStats.assetCount DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY assetTagStats.assetCount DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY AssetTagStats.assetCount DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

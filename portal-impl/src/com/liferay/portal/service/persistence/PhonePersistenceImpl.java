@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -197,7 +197,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 			else
 			 if (pagination) {
-				query.append(PhoneModelImpl.ORDER_BY_JPQL);
+				query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -207,7 +207,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -456,12 +458,14 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 		}
 		else {
-			query.append(PhoneModelImpl.ORDER_BY_JPQL);
+			query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -530,7 +534,10 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -669,7 +676,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 			else
 			 if (pagination) {
-				query.append(PhoneModelImpl.ORDER_BY_JPQL);
+				query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -679,7 +686,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -928,12 +937,14 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 		}
 		else {
-			query.append(PhoneModelImpl.ORDER_BY_JPQL);
+			query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1002,7 +1013,10 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1153,7 +1167,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 			else
 			 if (pagination) {
-				query.append(PhoneModelImpl.ORDER_BY_JPQL);
+				query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1163,7 +1177,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1429,12 +1445,14 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 		}
 		else {
-			query.append(PhoneModelImpl.ORDER_BY_JPQL);
+			query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1511,7 +1529,10 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1677,7 +1698,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 			else
 			 if (pagination) {
-				query.append(PhoneModelImpl.ORDER_BY_JPQL);
+				query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1687,7 +1708,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1972,12 +1995,14 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 		}
 		else {
-			query.append(PhoneModelImpl.ORDER_BY_JPQL);
+			query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2060,7 +2085,10 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2242,7 +2270,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 			else
 			 if (pagination) {
-				query.append(PhoneModelImpl.ORDER_BY_JPQL);
+				query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2252,7 +2280,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2553,12 +2583,14 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			}
 		}
 		else {
-			query.append(PhoneModelImpl.ORDER_BY_JPQL);
+			query.append(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2649,7 +2681,10 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2681,7 +2716,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 	private static final String _FINDER_COLUMN_C_C_C_P_COMPANYID_2 = "phone.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_C_P_CLASSNAMEID_2 = "phone.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_C_P_CLASSPK_2 = "phone.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_C_P_PRIMARY_2 = "phone.primary = ?";
+	private static final String _FINDER_COLUMN_C_C_C_P_PRIMARY_2 = "phone.primary_ = ?";
 
 	/**
 	 * Caches the phone in the entity cache if it is enabled.
@@ -3205,7 +3240,7 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 				sql = _SQL_SELECT_PHONE;
 
 				if (pagination) {
-					sql = sql.concat(PhoneModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(PhoneModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3214,7 +3249,9 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PhoneImpl.class);
 
 				if (!pagination) {
 					list = (List<Phone>)QueryUtil.list(q, getDialect(), start,
@@ -3273,7 +3310,10 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_PHONE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_PHONE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3326,10 +3366,11 @@ public class PhonePersistenceImpl extends BasePersistenceImpl<Phone>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_PHONE = "SELECT phone FROM Phone phone";
-	private static final String _SQL_SELECT_PHONE_WHERE = "SELECT phone FROM Phone phone WHERE ";
-	private static final String _SQL_COUNT_PHONE = "SELECT COUNT(phone) FROM Phone phone";
-	private static final String _SQL_COUNT_PHONE_WHERE = "SELECT COUNT(phone) FROM Phone phone WHERE ";
+	private static final String _SQL_SELECT_PHONE = "SELECT {phone.*} FROM Phone phone";
+	private static final String _SQL_SELECT_PHONE_WHERE = "SELECT {phone.*} FROM Phone phone WHERE ";
+	private static final String _SQL_COUNT_PHONE = "SELECT COUNT(*) AS COUNT_VALUE FROM Phone phone";
+	private static final String _SQL_COUNT_PHONE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Phone phone WHERE ";
+	private static final String _ENTITY_ALIAS = "phone";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "phone.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Phone exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Phone exists with the key {";

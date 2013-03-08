@@ -63,8 +63,8 @@ public class ResourceActionModelImpl extends BaseModelImpl<ResourceAction>
 		};
 	public static final String TABLE_SQL_CREATE = "create table ResourceAction (resourceActionId LONG not null primary key,name VARCHAR(255) null,actionId VARCHAR(75) null,bitwiseValue LONG)";
 	public static final String TABLE_SQL_DROP = "drop table ResourceAction";
-	public static final String ORDER_BY_JPQL = " ORDER BY resourceAction.name ASC, resourceAction.bitwiseValue ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY ResourceAction.name ASC, ResourceAction.bitwiseValue ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY resourceAction.name ASC, resourceAction.bitwiseValue ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY ResourceAction.name ASC, ResourceAction.bitwiseValue ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

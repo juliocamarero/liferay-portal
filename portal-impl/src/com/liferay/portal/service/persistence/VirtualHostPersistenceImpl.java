@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -187,7 +187,9 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, VirtualHostImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -289,7 +291,10 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -422,7 +427,9 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, VirtualHostImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -517,7 +524,10 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1055,7 +1065,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 				sql = _SQL_SELECT_VIRTUALHOST;
 
 				if (pagination) {
-					sql = sql.concat(VirtualHostModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(VirtualHostModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1064,7 +1074,9 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, VirtualHostImpl.class);
 
 				if (!pagination) {
 					list = (List<VirtualHost>)QueryUtil.list(q, getDialect(),
@@ -1123,7 +1135,10 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_VIRTUALHOST);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_VIRTUALHOST);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1176,10 +1191,11 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_VIRTUALHOST = "SELECT virtualHost FROM VirtualHost virtualHost";
-	private static final String _SQL_SELECT_VIRTUALHOST_WHERE = "SELECT virtualHost FROM VirtualHost virtualHost WHERE ";
-	private static final String _SQL_COUNT_VIRTUALHOST = "SELECT COUNT(virtualHost) FROM VirtualHost virtualHost";
-	private static final String _SQL_COUNT_VIRTUALHOST_WHERE = "SELECT COUNT(virtualHost) FROM VirtualHost virtualHost WHERE ";
+	private static final String _SQL_SELECT_VIRTUALHOST = "SELECT {virtualHost.*} FROM VirtualHost virtualHost";
+	private static final String _SQL_SELECT_VIRTUALHOST_WHERE = "SELECT {virtualHost.*} FROM VirtualHost virtualHost WHERE ";
+	private static final String _SQL_COUNT_VIRTUALHOST = "SELECT COUNT(*) AS COUNT_VALUE FROM VirtualHost virtualHost";
+	private static final String _SQL_COUNT_VIRTUALHOST_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM VirtualHost virtualHost WHERE ";
+	private static final String _ENTITY_ALIAS = "virtualHost";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "virtualHost.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No VirtualHost exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No VirtualHost exists with the key {";

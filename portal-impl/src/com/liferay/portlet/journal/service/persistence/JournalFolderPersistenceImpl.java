@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -215,7 +214,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 			else
 			 if (pagination) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -225,7 +224,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -489,12 +490,14 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 		}
 		else {
-			query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+			query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -577,7 +580,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -602,9 +608,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "journalFolder.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "journalFolder.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "journalFolder.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "journalFolder.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(journalFolder.uuid_ IS NULL OR journalFolder.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
 			JournalFolderModelImpl.FINDER_CACHE_ENABLED,
 			JournalFolderImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -722,7 +728,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -832,7 +840,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -859,9 +870,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "journalFolder.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "journalFolder.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "journalFolder.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "journalFolder.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(journalFolder.uuid_ IS NULL OR journalFolder.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "journalFolder.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
 			JournalFolderModelImpl.FINDER_CACHE_ENABLED,
@@ -1007,7 +1018,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 			else
 			 if (pagination) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1017,7 +1028,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1299,12 +1312,14 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 		}
 		else {
-			query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+			query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1395,7 +1410,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1422,9 +1440,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "journalFolder.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "journalFolder.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(journalFolder.uuid IS NULL OR journalFolder.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "journalFolder.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "journalFolder.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(journalFolder.uuid_ IS NULL OR journalFolder.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "journalFolder.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(JournalFolderModelImpl.ENTITY_CACHE_ENABLED,
 			JournalFolderModelImpl.FINDER_CACHE_ENABLED,
@@ -1544,7 +1562,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 			else
 			 if (pagination) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1554,7 +1572,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1807,12 +1827,14 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 		}
 		else {
-			query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+			query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1925,10 +1947,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalFolderModelImpl.ORDER_BY_SQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2105,10 +2127,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalFolderModelImpl.ORDER_BY_SQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2192,7 +2214,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2384,7 +2409,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 			else
 			 if (pagination) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2394,7 +2419,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2647,12 +2674,14 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 		}
 		else {
-			query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+			query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2721,7 +2750,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2875,7 +2907,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 			else
 			 if (pagination) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2885,7 +2917,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3153,12 +3187,14 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 		}
 		else {
-			query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+			query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3280,10 +3316,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalFolderModelImpl.ORDER_BY_SQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3465,10 +3501,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalFolderModelImpl.ORDER_BY_SQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3560,7 +3596,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3758,7 +3797,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3874,7 +3915,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4038,7 +4082,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4155,7 +4201,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4333,7 +4382,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 			else
 			 if (pagination) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4343,7 +4392,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4628,12 +4679,14 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			}
 		}
 		else {
-			query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+			query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4764,10 +4817,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalFolderModelImpl.ORDER_BY_SQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4955,10 +5008,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(JournalFolderModelImpl.ORDER_BY_JPQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(JournalFolderModelImpl.ORDER_BY_SQL);
+				query.append(JournalFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5056,7 +5109,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5858,7 +5914,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 				sql = _SQL_SELECT_JOURNALFOLDER;
 
 				if (pagination) {
-					sql = sql.concat(JournalFolderModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(JournalFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -5867,7 +5923,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, JournalFolderImpl.class);
 
 				if (!pagination) {
 					list = (List<JournalFolder>)QueryUtil.list(q, getDialect(),
@@ -5926,7 +5984,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_JOURNALFOLDER);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_JOURNALFOLDER);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -5979,10 +6040,10 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_JOURNALFOLDER = "SELECT journalFolder FROM JournalFolder journalFolder";
-	private static final String _SQL_SELECT_JOURNALFOLDER_WHERE = "SELECT journalFolder FROM JournalFolder journalFolder WHERE ";
-	private static final String _SQL_COUNT_JOURNALFOLDER = "SELECT COUNT(journalFolder) FROM JournalFolder journalFolder";
-	private static final String _SQL_COUNT_JOURNALFOLDER_WHERE = "SELECT COUNT(journalFolder) FROM JournalFolder journalFolder WHERE ";
+	private static final String _SQL_SELECT_JOURNALFOLDER = "SELECT {journalFolder.*} FROM JournalFolder journalFolder";
+	private static final String _SQL_SELECT_JOURNALFOLDER_WHERE = "SELECT {journalFolder.*} FROM JournalFolder journalFolder WHERE ";
+	private static final String _SQL_COUNT_JOURNALFOLDER = "SELECT COUNT(*) AS COUNT_VALUE FROM JournalFolder journalFolder";
+	private static final String _SQL_COUNT_JOURNALFOLDER_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM JournalFolder journalFolder WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "journalFolder.folderId";
 	private static final String _FILTER_SQL_SELECT_JOURNALFOLDER_WHERE = "SELECT DISTINCT {journalFolder.*} FROM JournalFolder journalFolder WHERE ";
 	private static final String _FILTER_SQL_SELECT_JOURNALFOLDER_NO_INLINE_DISTINCT_WHERE_1 =
@@ -5992,6 +6053,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	private static final String _FILTER_SQL_COUNT_JOURNALFOLDER_WHERE = "SELECT COUNT(DISTINCT journalFolder.folderId) AS COUNT_VALUE FROM JournalFolder journalFolder WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "journalFolder";
 	private static final String _FILTER_ENTITY_TABLE = "JournalFolder";
+	private static final String _ENTITY_ALIAS = "journalFolder";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "journalFolder.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "JournalFolder.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No JournalFolder exists with the primary key ";

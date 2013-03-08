@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -186,7 +186,9 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TicketImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -295,7 +297,10 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -320,9 +325,9 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_KEY_KEY_1 = "ticket.key IS NULL";
-	private static final String _FINDER_COLUMN_KEY_KEY_2 = "ticket.key = ?";
-	private static final String _FINDER_COLUMN_KEY_KEY_3 = "(ticket.key IS NULL OR ticket.key = '')";
+	private static final String _FINDER_COLUMN_KEY_KEY_1 = "ticket.key_ IS NULL";
+	private static final String _FINDER_COLUMN_KEY_KEY_2 = "ticket.key_ = ?";
+	private static final String _FINDER_COLUMN_KEY_KEY_3 = "(ticket.key_ IS NULL OR ticket.key_ = '')";
 
 	/**
 	 * Caches the ticket in the entity cache if it is enabled.
@@ -787,7 +792,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 				sql = _SQL_SELECT_TICKET;
 
 				if (pagination) {
-					sql = sql.concat(TicketModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(TicketModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -796,7 +801,9 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TicketImpl.class);
 
 				if (!pagination) {
 					list = (List<Ticket>)QueryUtil.list(q, getDialect(), start,
@@ -855,7 +862,10 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_TICKET);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_TICKET);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -908,10 +918,11 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_TICKET = "SELECT ticket FROM Ticket ticket";
-	private static final String _SQL_SELECT_TICKET_WHERE = "SELECT ticket FROM Ticket ticket WHERE ";
-	private static final String _SQL_COUNT_TICKET = "SELECT COUNT(ticket) FROM Ticket ticket";
-	private static final String _SQL_COUNT_TICKET_WHERE = "SELECT COUNT(ticket) FROM Ticket ticket WHERE ";
+	private static final String _SQL_SELECT_TICKET = "SELECT {ticket.*} FROM Ticket ticket";
+	private static final String _SQL_SELECT_TICKET_WHERE = "SELECT {ticket.*} FROM Ticket ticket WHERE ";
+	private static final String _SQL_COUNT_TICKET = "SELECT COUNT(*) AS COUNT_VALUE FROM Ticket ticket";
+	private static final String _SQL_COUNT_TICKET_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM Ticket ticket WHERE ";
+	private static final String _ENTITY_ALIAS = "ticket";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ticket.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Ticket exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Ticket exists with the key {";

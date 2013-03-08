@@ -72,8 +72,8 @@ public class ExpandoValueModelImpl extends BaseModelImpl<ExpandoValue>
 		};
 	public static final String TABLE_SQL_CREATE = "create table ExpandoValue (valueId LONG not null primary key,companyId LONG,tableId LONG,columnId LONG,rowId_ LONG,classNameId LONG,classPK LONG,data_ STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table ExpandoValue";
-	public static final String ORDER_BY_JPQL = " ORDER BY expandoValue.tableId ASC, expandoValue.rowId ASC, expandoValue.columnId ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY ExpandoValue.tableId ASC, ExpandoValue.rowId_ ASC, ExpandoValue.columnId ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY expandoValue.tableId ASC, expandoValue.rowId_ ASC, expandoValue.columnId ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY ExpandoValue.tableId ASC, ExpandoValue.rowId_ ASC, ExpandoValue.columnId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

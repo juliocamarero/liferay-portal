@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -200,7 +200,7 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			}
 			else
 			 if (pagination) {
-				query.append(AnnouncementsDeliveryModelImpl.ORDER_BY_JPQL);
+				query.append(AnnouncementsDeliveryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -210,7 +210,9 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsDeliveryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -463,12 +465,14 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			}
 		}
 		else {
-			query.append(AnnouncementsDeliveryModelImpl.ORDER_BY_JPQL);
+			query.append(AnnouncementsDeliveryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, AnnouncementsDeliveryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -537,7 +541,10 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -679,7 +686,9 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsDeliveryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -788,7 +797,10 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -816,9 +828,9 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 	}
 
 	private static final String _FINDER_COLUMN_U_T_USERID_2 = "announcementsDelivery.userId = ? AND ";
-	private static final String _FINDER_COLUMN_U_T_TYPE_1 = "announcementsDelivery.type IS NULL";
-	private static final String _FINDER_COLUMN_U_T_TYPE_2 = "announcementsDelivery.type = ?";
-	private static final String _FINDER_COLUMN_U_T_TYPE_3 = "(announcementsDelivery.type IS NULL OR announcementsDelivery.type = '')";
+	private static final String _FINDER_COLUMN_U_T_TYPE_1 = "announcementsDelivery.type_ IS NULL";
+	private static final String _FINDER_COLUMN_U_T_TYPE_2 = "announcementsDelivery.type_ = ?";
+	private static final String _FINDER_COLUMN_U_T_TYPE_3 = "(announcementsDelivery.type_ IS NULL OR announcementsDelivery.type_ = '')";
 
 	/**
 	 * Caches the announcements delivery in the entity cache if it is enabled.
@@ -1334,7 +1346,7 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 				sql = _SQL_SELECT_ANNOUNCEMENTSDELIVERY;
 
 				if (pagination) {
-					sql = sql.concat(AnnouncementsDeliveryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(AnnouncementsDeliveryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1343,7 +1355,9 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, AnnouncementsDeliveryImpl.class);
 
 				if (!pagination) {
 					list = (List<AnnouncementsDelivery>)QueryUtil.list(q,
@@ -1402,7 +1416,10 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ANNOUNCEMENTSDELIVERY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ANNOUNCEMENTSDELIVERY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1455,10 +1472,11 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_ANNOUNCEMENTSDELIVERY = "SELECT announcementsDelivery FROM AnnouncementsDelivery announcementsDelivery";
-	private static final String _SQL_SELECT_ANNOUNCEMENTSDELIVERY_WHERE = "SELECT announcementsDelivery FROM AnnouncementsDelivery announcementsDelivery WHERE ";
-	private static final String _SQL_COUNT_ANNOUNCEMENTSDELIVERY = "SELECT COUNT(announcementsDelivery) FROM AnnouncementsDelivery announcementsDelivery";
-	private static final String _SQL_COUNT_ANNOUNCEMENTSDELIVERY_WHERE = "SELECT COUNT(announcementsDelivery) FROM AnnouncementsDelivery announcementsDelivery WHERE ";
+	private static final String _SQL_SELECT_ANNOUNCEMENTSDELIVERY = "SELECT {announcementsDelivery.*} FROM AnnouncementsDelivery announcementsDelivery";
+	private static final String _SQL_SELECT_ANNOUNCEMENTSDELIVERY_WHERE = "SELECT {announcementsDelivery.*} FROM AnnouncementsDelivery announcementsDelivery WHERE ";
+	private static final String _SQL_COUNT_ANNOUNCEMENTSDELIVERY = "SELECT COUNT(*) AS COUNT_VALUE FROM AnnouncementsDelivery announcementsDelivery";
+	private static final String _SQL_COUNT_ANNOUNCEMENTSDELIVERY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM AnnouncementsDelivery announcementsDelivery WHERE ";
+	private static final String _ENTITY_ALIAS = "announcementsDelivery";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "announcementsDelivery.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No AnnouncementsDelivery exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No AnnouncementsDelivery exists with the key {";

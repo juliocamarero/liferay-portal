@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -201,7 +201,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 			else
 			 if (pagination) {
-				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -211,7 +211,9 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -465,12 +467,14 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 		}
 		else {
-			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -539,7 +543,10 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -562,7 +569,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_USERGROUPID_USERGROUPID_2 = "userGroupGroupRole.id.userGroupId = ?";
+	private static final String _FINDER_COLUMN_USERGROUPID_USERGROUPID_2 = "userGroupGroupRole.userGroupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(UserGroupGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
 			UserGroupGroupRoleModelImpl.FINDER_CACHE_ENABLED,
 			UserGroupGroupRoleImpl.class,
@@ -680,7 +687,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 			else
 			 if (pagination) {
-				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -690,7 +697,9 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -944,12 +953,14 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 		}
 		else {
-			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1018,7 +1029,10 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1041,7 +1055,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "userGroupGroupRole.id.groupId = ?";
+	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "userGroupGroupRole.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_ROLEID = new FinderPath(UserGroupGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
 			UserGroupGroupRoleModelImpl.FINDER_CACHE_ENABLED,
 			UserGroupGroupRoleImpl.class,
@@ -1159,7 +1173,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 			else
 			 if (pagination) {
-				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1169,7 +1183,9 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1423,12 +1439,14 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 		}
 		else {
-			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1497,7 +1515,10 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1520,7 +1541,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_ROLEID_ROLEID_2 = "userGroupGroupRole.id.roleId = ?";
+	private static final String _FINDER_COLUMN_ROLEID_ROLEID_2 = "userGroupGroupRole.roleId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_U_G = new FinderPath(UserGroupGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
 			UserGroupGroupRoleModelImpl.FINDER_CACHE_ENABLED,
 			UserGroupGroupRoleImpl.class,
@@ -1650,7 +1671,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 			else
 			 if (pagination) {
-				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1660,7 +1681,9 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1929,12 +1952,14 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 		}
 		else {
-			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2011,7 +2036,10 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2036,8 +2064,8 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_U_G_USERGROUPID_2 = "userGroupGroupRole.id.userGroupId = ? AND ";
-	private static final String _FINDER_COLUMN_U_G_GROUPID_2 = "userGroupGroupRole.id.groupId = ?";
+	private static final String _FINDER_COLUMN_U_G_USERGROUPID_2 = "userGroupGroupRole.userGroupId = ? AND ";
+	private static final String _FINDER_COLUMN_U_G_GROUPID_2 = "userGroupGroupRole.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_R = new FinderPath(UserGroupGroupRoleModelImpl.ENTITY_CACHE_ENABLED,
 			UserGroupGroupRoleModelImpl.FINDER_CACHE_ENABLED,
 			UserGroupGroupRoleImpl.class,
@@ -2167,7 +2195,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 			else
 			 if (pagination) {
-				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+				query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2177,7 +2205,9 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2446,12 +2476,14 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			}
 		}
 		else {
-			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+			query.append(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2527,7 +2559,10 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2552,8 +2587,8 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_G_R_GROUPID_2 = "userGroupGroupRole.id.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_R_ROLEID_2 = "userGroupGroupRole.id.roleId = ?";
+	private static final String _FINDER_COLUMN_G_R_GROUPID_2 = "userGroupGroupRole.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_R_ROLEID_2 = "userGroupGroupRole.roleId = ?";
 
 	/**
 	 * Caches the user group group role in the entity cache if it is enabled.
@@ -3074,7 +3109,7 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 				sql = _SQL_SELECT_USERGROUPGROUPROLE;
 
 				if (pagination) {
-					sql = sql.concat(UserGroupGroupRoleModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(UserGroupGroupRoleModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3083,7 +3118,9 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, UserGroupGroupRoleImpl.class);
 
 				if (!pagination) {
 					list = (List<UserGroupGroupRole>)QueryUtil.list(q,
@@ -3142,7 +3179,10 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_USERGROUPGROUPROLE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_USERGROUPGROUPROLE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3195,10 +3235,11 @@ public class UserGroupGroupRolePersistenceImpl extends BasePersistenceImpl<UserG
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_USERGROUPGROUPROLE = "SELECT userGroupGroupRole FROM UserGroupGroupRole userGroupGroupRole";
-	private static final String _SQL_SELECT_USERGROUPGROUPROLE_WHERE = "SELECT userGroupGroupRole FROM UserGroupGroupRole userGroupGroupRole WHERE ";
-	private static final String _SQL_COUNT_USERGROUPGROUPROLE = "SELECT COUNT(userGroupGroupRole) FROM UserGroupGroupRole userGroupGroupRole";
-	private static final String _SQL_COUNT_USERGROUPGROUPROLE_WHERE = "SELECT COUNT(userGroupGroupRole) FROM UserGroupGroupRole userGroupGroupRole WHERE ";
+	private static final String _SQL_SELECT_USERGROUPGROUPROLE = "SELECT {userGroupGroupRole.*} FROM UserGroupGroupRole userGroupGroupRole";
+	private static final String _SQL_SELECT_USERGROUPGROUPROLE_WHERE = "SELECT {userGroupGroupRole.*} FROM UserGroupGroupRole userGroupGroupRole WHERE ";
+	private static final String _SQL_COUNT_USERGROUPGROUPROLE = "SELECT COUNT(*) AS COUNT_VALUE FROM UserGroupGroupRole userGroupGroupRole";
+	private static final String _SQL_COUNT_USERGROUPGROUPROLE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM UserGroupGroupRole userGroupGroupRole WHERE ";
+	private static final String _ENTITY_ALIAS = "userGroupGroupRole";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userGroupGroupRole.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No UserGroupGroupRole exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No UserGroupGroupRole exists with the key {";

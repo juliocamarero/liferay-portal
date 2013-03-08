@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -224,7 +223,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -234,7 +233,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -500,12 +501,14 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			}
 		}
 		else {
-			query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -588,7 +591,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -613,9 +619,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileEntryType.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileEntryType.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileEntryType.uuid IS NULL OR dlFileEntryType.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileEntryType.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileEntryType.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileEntryType.uuid_ IS NULL OR dlFileEntryType.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DLFileEntryTypeModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileEntryTypeModelImpl.FINDER_CACHE_ENABLED,
 			DLFileEntryTypeImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -734,7 +740,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -844,7 +852,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -871,9 +882,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileEntryType.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileEntryType.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileEntryType.uuid IS NULL OR dlFileEntryType.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileEntryType.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileEntryType.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileEntryType.uuid_ IS NULL OR dlFileEntryType.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "dlFileEntryType.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DLFileEntryTypeModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileEntryTypeModelImpl.FINDER_CACHE_ENABLED,
@@ -1017,7 +1028,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1027,7 +1038,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1309,12 +1322,14 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			}
 		}
 		else {
-			query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1405,7 +1420,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1432,9 +1450,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileEntryType.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileEntryType.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileEntryType.uuid IS NULL OR dlFileEntryType.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileEntryType.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileEntryType.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileEntryType.uuid_ IS NULL OR dlFileEntryType.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "dlFileEntryType.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DLFileEntryTypeModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileEntryTypeModelImpl.FINDER_CACHE_ENABLED,
@@ -1557,7 +1575,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1567,7 +1585,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1820,12 +1840,14 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			}
 		}
 		else {
-			query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1938,10 +1960,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2118,10 +2140,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2262,10 +2284,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_SQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2421,7 +2443,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2431,7 +2453,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2513,7 +2537,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2583,7 +2610,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2848,7 +2878,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2957,7 +2989,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3607,7 +3642,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 				sql = _SQL_SELECT_DLFILEENTRYTYPE;
 
 				if (pagination) {
-					sql = sql.concat(DLFileEntryTypeModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3616,7 +3651,9 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileEntryTypeImpl.class);
 
 				if (!pagination) {
 					list = (List<DLFileEntryType>)QueryUtil.list(q,
@@ -3675,7 +3712,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DLFILEENTRYTYPE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DLFILEENTRYTYPE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3788,7 +3828,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 					sql = _SQL_GETDLFOLDERS;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.documentlibrary.model.impl.DLFolderModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.documentlibrary.model.impl.DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -4288,7 +4328,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 					sql = _SQL_GETDDMSTRUCTURES;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.dynamicdatamapping.model.impl.DDMStructureModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.dynamicdatamapping.model.impl.DDMStructureModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -5090,10 +5130,10 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_DLFILEENTRYTYPE = "SELECT dlFileEntryType FROM DLFileEntryType dlFileEntryType";
-	private static final String _SQL_SELECT_DLFILEENTRYTYPE_WHERE = "SELECT dlFileEntryType FROM DLFileEntryType dlFileEntryType WHERE ";
-	private static final String _SQL_COUNT_DLFILEENTRYTYPE = "SELECT COUNT(dlFileEntryType) FROM DLFileEntryType dlFileEntryType";
-	private static final String _SQL_COUNT_DLFILEENTRYTYPE_WHERE = "SELECT COUNT(dlFileEntryType) FROM DLFileEntryType dlFileEntryType WHERE ";
+	private static final String _SQL_SELECT_DLFILEENTRYTYPE = "SELECT {dlFileEntryType.*} FROM DLFileEntryType dlFileEntryType";
+	private static final String _SQL_SELECT_DLFILEENTRYTYPE_WHERE = "SELECT {dlFileEntryType.*} FROM DLFileEntryType dlFileEntryType WHERE ";
+	private static final String _SQL_COUNT_DLFILEENTRYTYPE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntryType dlFileEntryType";
+	private static final String _SQL_COUNT_DLFILEENTRYTYPE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntryType dlFileEntryType WHERE ";
 	private static final String _SQL_GETDLFOLDERS = "SELECT {DLFolder.*} FROM DLFolder INNER JOIN DLFileEntryTypes_DLFolders ON (DLFileEntryTypes_DLFolders.folderId = DLFolder.folderId) WHERE (DLFileEntryTypes_DLFolders.fileEntryTypeId = ?)";
 	private static final String _SQL_GETDLFOLDERSSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntryTypes_DLFolders WHERE fileEntryTypeId = ?";
 	private static final String _SQL_CONTAINSDLFOLDER = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntryTypes_DLFolders WHERE fileEntryTypeId = ? AND folderId = ?";
@@ -5109,6 +5149,7 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 	private static final String _FILTER_SQL_COUNT_DLFILEENTRYTYPE_WHERE = "SELECT COUNT(DISTINCT dlFileEntryType.fileEntryTypeId) AS COUNT_VALUE FROM DLFileEntryType dlFileEntryType WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "dlFileEntryType";
 	private static final String _FILTER_ENTITY_TABLE = "DLFileEntryType";
+	private static final String _ENTITY_ALIAS = "dlFileEntryType";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "dlFileEntryType.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "DLFileEntryType.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DLFileEntryType exists with the primary key ";

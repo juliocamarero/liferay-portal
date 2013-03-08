@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -211,7 +211,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			}
 			else
 			 if (pagination) {
-				query.append(MBMailingListModelImpl.ORDER_BY_JPQL);
+				query.append(MBMailingListModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -221,7 +221,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -485,12 +487,14 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			}
 		}
 		else {
-			query.append(MBMailingListModelImpl.ORDER_BY_JPQL);
+			query.append(MBMailingListModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -573,7 +577,10 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -598,9 +605,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbMailingList.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbMailingList.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "mbMailingList.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "mbMailingList.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(mbMailingList.uuid_ IS NULL OR mbMailingList.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
 			MBMailingListModelImpl.FINDER_CACHE_ENABLED,
 			MBMailingListImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -718,7 +725,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -828,7 +837,10 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -855,9 +867,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbMailingList.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbMailingList.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "mbMailingList.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "mbMailingList.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(mbMailingList.uuid_ IS NULL OR mbMailingList.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "mbMailingList.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
 			MBMailingListModelImpl.FINDER_CACHE_ENABLED,
@@ -1001,7 +1013,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			}
 			else
 			 if (pagination) {
-				query.append(MBMailingListModelImpl.ORDER_BY_JPQL);
+				query.append(MBMailingListModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1011,7 +1023,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1293,12 +1307,14 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			}
 		}
 		else {
-			query.append(MBMailingListModelImpl.ORDER_BY_JPQL);
+			query.append(MBMailingListModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1389,7 +1405,10 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1416,9 +1435,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbMailingList.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbMailingList.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbMailingList.uuid IS NULL OR mbMailingList.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "mbMailingList.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "mbMailingList.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(mbMailingList.uuid_ IS NULL OR mbMailingList.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "mbMailingList.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_ACTIVE = new FinderPath(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
 			MBMailingListModelImpl.FINDER_CACHE_ENABLED,
@@ -1536,7 +1555,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			}
 			else
 			 if (pagination) {
-				query.append(MBMailingListModelImpl.ORDER_BY_JPQL);
+				query.append(MBMailingListModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1546,7 +1565,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1798,12 +1819,14 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			}
 		}
 		else {
-			query.append(MBMailingListModelImpl.ORDER_BY_JPQL);
+			query.append(MBMailingListModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1872,7 +1895,10 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1895,7 +1921,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_ACTIVE_ACTIVE_2 = "mbMailingList.active = ?";
+	private static final String _FINDER_COLUMN_ACTIVE_ACTIVE_2 = "mbMailingList.active_ = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_C = new FinderPath(MBMailingListModelImpl.ENTITY_CACHE_ENABLED,
 			MBMailingListModelImpl.FINDER_CACHE_ENABLED,
 			MBMailingListImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByG_C",
@@ -2001,7 +2027,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2096,7 +2124,10 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2738,7 +2769,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 				sql = _SQL_SELECT_MBMAILINGLIST;
 
 				if (pagination) {
-					sql = sql.concat(MBMailingListModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(MBMailingListModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2747,7 +2778,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, MBMailingListImpl.class);
 
 				if (!pagination) {
 					list = (List<MBMailingList>)QueryUtil.list(q, getDialect(),
@@ -2806,7 +2839,10 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_MBMAILINGLIST);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_MBMAILINGLIST);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2859,10 +2895,11 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_MBMAILINGLIST = "SELECT mbMailingList FROM MBMailingList mbMailingList";
-	private static final String _SQL_SELECT_MBMAILINGLIST_WHERE = "SELECT mbMailingList FROM MBMailingList mbMailingList WHERE ";
-	private static final String _SQL_COUNT_MBMAILINGLIST = "SELECT COUNT(mbMailingList) FROM MBMailingList mbMailingList";
-	private static final String _SQL_COUNT_MBMAILINGLIST_WHERE = "SELECT COUNT(mbMailingList) FROM MBMailingList mbMailingList WHERE ";
+	private static final String _SQL_SELECT_MBMAILINGLIST = "SELECT {mbMailingList.*} FROM MBMailingList mbMailingList";
+	private static final String _SQL_SELECT_MBMAILINGLIST_WHERE = "SELECT {mbMailingList.*} FROM MBMailingList mbMailingList WHERE ";
+	private static final String _SQL_COUNT_MBMAILINGLIST = "SELECT COUNT(*) AS COUNT_VALUE FROM MBMailingList mbMailingList";
+	private static final String _SQL_COUNT_MBMAILINGLIST_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM MBMailingList mbMailingList WHERE ";
+	private static final String _ENTITY_ALIAS = "mbMailingList";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "mbMailingList.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No MBMailingList exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No MBMailingList exists with the key {";

@@ -234,7 +234,9 @@ that may or may not be enforced with a unique index at the database level. Case
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -509,7 +511,9 @@ that may or may not be enforced with a unique index at the database level. Case
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -634,26 +638,6 @@ that may or may not be enforced with a unique index at the database level. Case
 				<#include "persistence_impl_find_by_query.ftl">
 
 				String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, _FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
-
-				Session session = null;
-
-				try {
-					session = openSession();
-
-					Query q = session.createQuery(sql);
-
-					QueryPos qPos = QueryPos.getInstance(q);
-
-					<#include "persistence_impl_finder_qpos.ftl">
-
-					return (List<${entity.name}>)QueryUtil.list(q, getDialect(), start, end);
-				}
-				catch (Exception e) {
-					throw processException(e);
-				}
-				finally {
-					closeSession(session);
-				}
 			<#else>
 				StringBundler query = null;
 
@@ -687,42 +671,46 @@ that may or may not be enforced with a unique index at the database level. Case
 				}
 				else {
 					if (getDB().isSupportsInlineDistinct()) {
-						query.append(${entity.name}ModelImpl.ORDER_BY_JPQL);
+						query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_ALIAS);
 					}
 					else {
-						query.append(${entity.name}ModelImpl.ORDER_BY_SQL);
+						query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
 				String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
+			</#if>
 
-				Session session = null;
+			Session session = null;
 
-				try {
-					session = openSession();
+			try {
+				session = openSession();
 
-					SQLQuery q = session.createSQLQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
 
+				<#if entity.isPermissionedModel()>
+					q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
+				<#else>
 					if (getDB().isSupportsInlineDistinct()) {
 						q.addEntity(_FILTER_ENTITY_ALIAS, ${entity.name}Impl.class);
 					}
 					else {
 						q.addEntity(_FILTER_ENTITY_TABLE, ${entity.name}Impl.class);
 					}
+				</#if>
 
-					QueryPos qPos = QueryPos.getInstance(q);
+				QueryPos qPos = QueryPos.getInstance(q);
 
-					<#include "persistence_impl_finder_qpos.ftl">
+				<#include "persistence_impl_finder_qpos.ftl">
 
-					return (List<${entity.name}>)QueryUtil.list(q, getDialect(), start, end);
-				}
-				catch (Exception e) {
-					throw processException(e);
-				}
-				finally {
-					closeSession(session);
-				}
-			</#if>
+				return (List<${entity.name}>)QueryUtil.list(q, getDialect(), start, end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
 		}
 
 		/**
@@ -808,32 +796,6 @@ that may or may not be enforced with a unique index at the database level. Case
 				<#include "persistence_impl_get_by_prev_and_next_query.ftl">
 
 				String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, _FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
-
-				Query q = session.createQuery(sql);
-
-				q.setFirstResult(0);
-				q.setMaxResults(2);
-
-				QueryPos qPos = QueryPos.getInstance(q);
-
-				<#include "persistence_impl_finder_qpos.ftl">
-
-				if (orderByComparator != null) {
-					Object[] values = orderByComparator.getOrderByConditionValues(${entity.varName});
-
-					for (Object value : values) {
-						qPos.add(value);
-					}
-				}
-
-				List<${entity.name}> list = q.list();
-
-				if (list.size() == 2) {
-					return list.get(1);
-				}
-				else {
-					return null;
-				}
 			<#else>
 				StringBundler query = null;
 
@@ -926,48 +888,52 @@ that may or may not be enforced with a unique index at the database level. Case
 				}
 				else {
 					if (getDB().isSupportsInlineDistinct()) {
-						query.append(${entity.name}ModelImpl.ORDER_BY_JPQL);
+						query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_ALIAS);
 					}
 					else {
-						query.append(${entity.name}ModelImpl.ORDER_BY_SQL);
+						query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
 				String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN<#if finder.hasColumn("groupId")>, groupId</#if>);
+			</#if>
 
-				SQLQuery q = session.createSQLQuery(sql);
+			SQLQuery q = session.createSQLQuery(sql);
 
-				q.setFirstResult(0);
-				q.setMaxResults(2);
+			q.setFirstResult(0);
+			q.setMaxResults(2);
 
+			<#if entity.isPermissionedModel()>
+				q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
+			<#else>
 				if (getDB().isSupportsInlineDistinct()) {
 					q.addEntity(_FILTER_ENTITY_ALIAS, ${entity.name}Impl.class);
 				}
 				else {
 					q.addEntity(_FILTER_ENTITY_TABLE, ${entity.name}Impl.class);
 				}
-
-				QueryPos qPos = QueryPos.getInstance(q);
-
-				<#include "persistence_impl_finder_qpos.ftl">
-
-				if (orderByComparator != null) {
-					Object[] values = orderByComparator.getOrderByConditionValues(${entity.varName});
-
-					for (Object value : values) {
-						qPos.add(value);
-					}
-				}
-
-				List<${entity.name}> list = q.list();
-
-				if (list.size() == 2) {
-					return list.get(1);
-				}
-				else {
-					return null;
-				}
 			</#if>
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			<#include "persistence_impl_finder_qpos.ftl">
+
+			if (orderByComparator != null) {
+				Object[] values = orderByComparator.getOrderByConditionValues(${entity.varName});
+
+				for (Object value : values) {
+					qPos.add(value);
+				}
+			}
+
+			List<${entity.name}> list = q.list();
+
+			if (list.size() == 2) {
+				return list.get(1);
+			}
+			else {
+				return null;
+			}
 		}
 
 		<#if finder.hasArrayableOperator()>
@@ -1112,34 +1078,6 @@ that may or may not be enforced with a unique index at the database level. Case
 					<#include "persistence_impl_find_by_arrayable_query.ftl">
 
 					String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, _FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN
-
-					<#if finder.hasColumn("groupId")>,
-						<#if finder.getColumn("groupId").hasArrayableOperator()>
-							groupIds
-						<#else>
-							groupId
-						</#if>
-					</#if>);
-
-					Session session = null;
-
-					try {
-						session = openSession();
-
-						Query q = session.createQuery(sql);
-
-						QueryPos qPos = QueryPos.getInstance(q);
-
-						<#include "persistence_impl_finder_arrayable_qpos.ftl">
-
-						return (List<${entity.name}>)QueryUtil.list(q, getDialect(), start, end);
-					}
-					catch (Exception e) {
-						throw processException(e);
-					}
-					finally {
-						closeSession(session);
-					}
 				<#else>
 					StringBundler query = new StringBundler();
 
@@ -1166,50 +1104,54 @@ that may or may not be enforced with a unique index at the database level. Case
 					}
 					else {
 						if (getDB().isSupportsInlineDistinct()) {
-							query.append(${entity.name}ModelImpl.ORDER_BY_JPQL);
+							query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_ALIAS);
 						}
 						else {
-							query.append(${entity.name}ModelImpl.ORDER_BY_SQL);
+							query.append(${entity.name}ModelImpl.ORDER_BY_ENTITY_TABLE);
 						}
 					}
 
 					String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(), ${entity.name}.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN
+				</#if>
 
-					<#if finder.hasColumn("groupId")>,
-						<#if finder.getColumn("groupId").hasArrayableOperator()>
-							groupIds
-						<#else>
-							groupId
-						</#if>
-					</#if>);
+				<#if finder.hasColumn("groupId")>,
+					<#if finder.getColumn("groupId").hasArrayableOperator()>
+						groupIds
+					<#else>
+						groupId
+					</#if>
+				</#if>);
 
-					Session session = null;
+				Session session = null;
 
-					try {
-						session = openSession();
+				try {
+					session = openSession();
 
-						SQLQuery q = session.createSQLQuery(sql);
+					SQLQuery q = session.createSQLQuery(sql);
 
+					<#if entity.isPermissionedModel()>
+						q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
+					<#else>
 						if (getDB().isSupportsInlineDistinct()) {
 							q.addEntity(_FILTER_ENTITY_ALIAS, ${entity.name}Impl.class);
 						}
 						else {
 							q.addEntity(_FILTER_ENTITY_TABLE, ${entity.name}Impl.class);
 						}
+					</#if>
 
-						QueryPos qPos = QueryPos.getInstance(q);
+					QueryPos qPos = QueryPos.getInstance(q);
 
-						<#include "persistence_impl_finder_arrayable_qpos.ftl">
+					<#include "persistence_impl_finder_arrayable_qpos.ftl">
 
-						return (List<${entity.name}>)QueryUtil.list(q, getDialect(), start, end);
-					}
-					catch (Exception e) {
-						throw processException(e);
-					}
-					finally {
-						closeSession(session);
-					}
-				</#if>
+					return (List<${entity.name}>)QueryUtil.list(q, getDialect(), start, end);
+				}
+				catch (Exception e) {
+					throw processException(e);
+				}
+				finally {
+					closeSession(session);
+				}
 			}
 		</#if>
 	</#if>
@@ -1480,7 +1422,9 @@ that may or may not be enforced with a unique index at the database level. Case
 				try {
 					session = openSession();
 
-					Query q = session.createQuery(sql);
+					SQLQuery q = session.createSQLQuery(sql);
+
+					q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 					QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1679,7 +1623,9 @@ that may or may not be enforced with a unique index at the database level. Case
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ${entity.name}Impl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 

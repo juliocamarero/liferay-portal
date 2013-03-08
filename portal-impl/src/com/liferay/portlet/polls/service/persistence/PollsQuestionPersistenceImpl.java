@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -214,7 +213,7 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			}
 			else
 			 if (pagination) {
-				query.append(PollsQuestionModelImpl.ORDER_BY_JPQL);
+				query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -224,7 +223,9 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsQuestionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -488,12 +489,14 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			}
 		}
 		else {
-			query.append(PollsQuestionModelImpl.ORDER_BY_JPQL);
+			query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PollsQuestionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -576,7 +579,10 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -601,9 +607,9 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "pollsQuestion.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "pollsQuestion.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(pollsQuestion.uuid IS NULL OR pollsQuestion.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "pollsQuestion.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "pollsQuestion.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(pollsQuestion.uuid_ IS NULL OR pollsQuestion.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(PollsQuestionModelImpl.ENTITY_CACHE_ENABLED,
 			PollsQuestionModelImpl.FINDER_CACHE_ENABLED,
 			PollsQuestionImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -721,7 +727,9 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsQuestionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -831,7 +839,10 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -858,9 +869,9 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "pollsQuestion.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "pollsQuestion.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(pollsQuestion.uuid IS NULL OR pollsQuestion.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "pollsQuestion.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "pollsQuestion.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(pollsQuestion.uuid_ IS NULL OR pollsQuestion.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "pollsQuestion.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(PollsQuestionModelImpl.ENTITY_CACHE_ENABLED,
 			PollsQuestionModelImpl.FINDER_CACHE_ENABLED,
@@ -1005,7 +1016,7 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			}
 			else
 			 if (pagination) {
-				query.append(PollsQuestionModelImpl.ORDER_BY_JPQL);
+				query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1015,7 +1026,9 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsQuestionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1297,12 +1310,14 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			}
 		}
 		else {
-			query.append(PollsQuestionModelImpl.ORDER_BY_JPQL);
+			query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PollsQuestionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1393,7 +1408,10 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1420,9 +1438,9 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "pollsQuestion.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "pollsQuestion.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(pollsQuestion.uuid IS NULL OR pollsQuestion.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "pollsQuestion.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "pollsQuestion.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(pollsQuestion.uuid_ IS NULL OR pollsQuestion.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "pollsQuestion.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(PollsQuestionModelImpl.ENTITY_CACHE_ENABLED,
 			PollsQuestionModelImpl.FINDER_CACHE_ENABLED,
@@ -1541,7 +1559,7 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			}
 			else
 			 if (pagination) {
-				query.append(PollsQuestionModelImpl.ORDER_BY_JPQL);
+				query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1551,7 +1569,9 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsQuestionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1804,12 +1824,14 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			}
 		}
 		else {
-			query.append(PollsQuestionModelImpl.ORDER_BY_JPQL);
+			query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, PollsQuestionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1922,10 +1944,10 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(PollsQuestionModelImpl.ORDER_BY_JPQL);
+				query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(PollsQuestionModelImpl.ORDER_BY_SQL);
+				query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2102,10 +2124,10 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(PollsQuestionModelImpl.ORDER_BY_JPQL);
+				query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(PollsQuestionModelImpl.ORDER_BY_SQL);
+				query.append(PollsQuestionModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2189,7 +2211,10 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2817,7 +2842,7 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 				sql = _SQL_SELECT_POLLSQUESTION;
 
 				if (pagination) {
-					sql = sql.concat(PollsQuestionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(PollsQuestionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2826,7 +2851,9 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, PollsQuestionImpl.class);
 
 				if (!pagination) {
 					list = (List<PollsQuestion>)QueryUtil.list(q, getDialect(),
@@ -2885,7 +2912,10 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_POLLSQUESTION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_POLLSQUESTION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2938,10 +2968,10 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_POLLSQUESTION = "SELECT pollsQuestion FROM PollsQuestion pollsQuestion";
-	private static final String _SQL_SELECT_POLLSQUESTION_WHERE = "SELECT pollsQuestion FROM PollsQuestion pollsQuestion WHERE ";
-	private static final String _SQL_COUNT_POLLSQUESTION = "SELECT COUNT(pollsQuestion) FROM PollsQuestion pollsQuestion";
-	private static final String _SQL_COUNT_POLLSQUESTION_WHERE = "SELECT COUNT(pollsQuestion) FROM PollsQuestion pollsQuestion WHERE ";
+	private static final String _SQL_SELECT_POLLSQUESTION = "SELECT {pollsQuestion.*} FROM PollsQuestion pollsQuestion";
+	private static final String _SQL_SELECT_POLLSQUESTION_WHERE = "SELECT {pollsQuestion.*} FROM PollsQuestion pollsQuestion WHERE ";
+	private static final String _SQL_COUNT_POLLSQUESTION = "SELECT COUNT(*) AS COUNT_VALUE FROM PollsQuestion pollsQuestion";
+	private static final String _SQL_COUNT_POLLSQUESTION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM PollsQuestion pollsQuestion WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "pollsQuestion.questionId";
 	private static final String _FILTER_SQL_SELECT_POLLSQUESTION_WHERE = "SELECT DISTINCT {pollsQuestion.*} FROM PollsQuestion pollsQuestion WHERE ";
 	private static final String _FILTER_SQL_SELECT_POLLSQUESTION_NO_INLINE_DISTINCT_WHERE_1 =
@@ -2951,6 +2981,7 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 	private static final String _FILTER_SQL_COUNT_POLLSQUESTION_WHERE = "SELECT COUNT(DISTINCT pollsQuestion.questionId) AS COUNT_VALUE FROM PollsQuestion pollsQuestion WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "pollsQuestion";
 	private static final String _FILTER_ENTITY_TABLE = "PollsQuestion";
+	private static final String _ENTITY_ALIAS = "pollsQuestion";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "pollsQuestion.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "PollsQuestion.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No PollsQuestion exists with the primary key ";

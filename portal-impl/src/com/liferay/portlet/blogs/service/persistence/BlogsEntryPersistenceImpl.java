@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -218,7 +217,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -228,7 +227,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -492,12 +493,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -580,7 +583,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -605,9 +611,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "blogsEntry.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "blogsEntry.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(blogsEntry.uuid IS NULL OR blogsEntry.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "blogsEntry.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "blogsEntry.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(blogsEntry.uuid_ IS NULL OR blogsEntry.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(BlogsEntryModelImpl.ENTITY_CACHE_ENABLED,
 			BlogsEntryModelImpl.FINDER_CACHE_ENABLED, BlogsEntryImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -725,7 +731,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -835,7 +843,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -862,9 +873,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "blogsEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "blogsEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(blogsEntry.uuid IS NULL OR blogsEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "blogsEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "blogsEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(blogsEntry.uuid_ IS NULL OR blogsEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "blogsEntry.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(BlogsEntryModelImpl.ENTITY_CACHE_ENABLED,
 			BlogsEntryModelImpl.FINDER_CACHE_ENABLED, BlogsEntryImpl.class,
@@ -1008,7 +1019,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1018,7 +1029,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1300,12 +1313,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1396,7 +1411,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1423,9 +1441,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "blogsEntry.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "blogsEntry.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(blogsEntry.uuid IS NULL OR blogsEntry.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "blogsEntry.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "blogsEntry.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(blogsEntry.uuid_ IS NULL OR blogsEntry.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "blogsEntry.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(BlogsEntryModelImpl.ENTITY_CACHE_ENABLED,
 			BlogsEntryModelImpl.FINDER_CACHE_ENABLED, BlogsEntryImpl.class,
@@ -1544,7 +1562,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1554,7 +1572,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1804,12 +1824,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1922,10 +1944,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2100,10 +2122,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2187,7 +2209,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2378,7 +2403,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2388,7 +2413,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2641,12 +2668,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2715,7 +2744,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2867,7 +2899,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2877,7 +2909,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3145,12 +3179,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3227,7 +3263,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3377,7 +3416,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3387,7 +3426,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3666,12 +3707,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3759,7 +3802,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3901,7 +3947,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3911,7 +3957,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4179,12 +4227,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4261,7 +4311,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4416,7 +4469,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4426,7 +4479,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4694,12 +4749,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4775,7 +4832,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4919,7 +4979,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5029,7 +5091,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5183,7 +5248,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5193,7 +5258,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5472,12 +5539,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5610,10 +5679,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5805,10 +5874,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5911,7 +5980,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6114,7 +6186,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6124,7 +6196,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6392,12 +6466,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6518,10 +6594,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6702,10 +6778,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6797,7 +6873,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7006,7 +7085,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7016,7 +7095,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7284,12 +7365,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7410,10 +7493,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7594,10 +7677,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7687,7 +7770,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7890,7 +7976,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7900,7 +7986,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8179,12 +8267,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -8272,7 +8362,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8426,7 +8519,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -8436,7 +8529,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8722,12 +8817,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -8810,7 +8907,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8983,7 +9083,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -8993,7 +9093,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9278,12 +9380,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -9366,7 +9470,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9531,7 +9638,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -9541,7 +9648,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9838,12 +9947,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -9937,7 +10048,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10103,7 +10217,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -10113,7 +10227,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10409,12 +10525,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -10508,7 +10626,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10672,7 +10793,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -10682,7 +10803,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10978,12 +11101,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -11124,10 +11249,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -11325,10 +11450,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -11437,7 +11562,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11664,7 +11792,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -11674,7 +11802,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -11959,12 +12089,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -12093,10 +12225,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -12283,10 +12415,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -12384,7 +12516,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -12616,7 +12751,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -12626,7 +12761,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -12909,12 +13046,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -13043,10 +13182,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -13233,10 +13372,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -13334,7 +13473,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -13558,7 +13700,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -13568,7 +13710,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -13865,12 +14009,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -14012,10 +14158,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -14213,10 +14359,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -14325,7 +14471,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -14561,7 +14710,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -14571,7 +14720,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -14867,12 +15018,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -15013,10 +15166,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -15214,10 +15367,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -15326,7 +15479,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15572,7 +15728,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -15582,7 +15738,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -15896,12 +16054,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -16050,10 +16210,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -16258,10 +16418,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -16376,7 +16536,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -16630,7 +16793,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -16640,7 +16803,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -16952,12 +17117,14 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			}
 		}
 		else {
-			query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+			query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -17106,10 +17273,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -17314,10 +17481,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(BlogsEntryModelImpl.ORDER_BY_JPQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(BlogsEntryModelImpl.ORDER_BY_SQL);
+				query.append(BlogsEntryModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -17432,7 +17599,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -18307,7 +18477,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 				sql = _SQL_SELECT_BLOGSENTRY;
 
 				if (pagination) {
-					sql = sql.concat(BlogsEntryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(BlogsEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -18316,7 +18486,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, BlogsEntryImpl.class);
 
 				if (!pagination) {
 					list = (List<BlogsEntry>)QueryUtil.list(q, getDialect(),
@@ -18375,7 +18547,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_BLOGSENTRY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_BLOGSENTRY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -18428,10 +18603,10 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_BLOGSENTRY = "SELECT blogsEntry FROM BlogsEntry blogsEntry";
-	private static final String _SQL_SELECT_BLOGSENTRY_WHERE = "SELECT blogsEntry FROM BlogsEntry blogsEntry WHERE ";
-	private static final String _SQL_COUNT_BLOGSENTRY = "SELECT COUNT(blogsEntry) FROM BlogsEntry blogsEntry";
-	private static final String _SQL_COUNT_BLOGSENTRY_WHERE = "SELECT COUNT(blogsEntry) FROM BlogsEntry blogsEntry WHERE ";
+	private static final String _SQL_SELECT_BLOGSENTRY = "SELECT {blogsEntry.*} FROM BlogsEntry blogsEntry";
+	private static final String _SQL_SELECT_BLOGSENTRY_WHERE = "SELECT {blogsEntry.*} FROM BlogsEntry blogsEntry WHERE ";
+	private static final String _SQL_COUNT_BLOGSENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM BlogsEntry blogsEntry";
+	private static final String _SQL_COUNT_BLOGSENTRY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM BlogsEntry blogsEntry WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "blogsEntry.entryId";
 	private static final String _FILTER_SQL_SELECT_BLOGSENTRY_WHERE = "SELECT DISTINCT {blogsEntry.*} FROM BlogsEntry blogsEntry WHERE ";
 	private static final String _FILTER_SQL_SELECT_BLOGSENTRY_NO_INLINE_DISTINCT_WHERE_1 =
@@ -18441,6 +18616,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 	private static final String _FILTER_SQL_COUNT_BLOGSENTRY_WHERE = "SELECT COUNT(DISTINCT blogsEntry.entryId) AS COUNT_VALUE FROM BlogsEntry blogsEntry WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "blogsEntry";
 	private static final String _FILTER_ENTITY_TABLE = "BlogsEntry";
+	private static final String _ENTITY_ALIAS = "blogsEntry";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "blogsEntry.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "BlogsEntry.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No BlogsEntry exists with the primary key ";

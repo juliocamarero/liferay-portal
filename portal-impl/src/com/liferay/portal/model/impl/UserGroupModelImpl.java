@@ -70,8 +70,8 @@ public class UserGroupModelImpl extends BaseModelImpl<UserGroup>
 		};
 	public static final String TABLE_SQL_CREATE = "create table UserGroup (userGroupId LONG not null primary key,companyId LONG,parentUserGroupId LONG,name VARCHAR(75) null,description STRING null,addedByLDAPImport BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table UserGroup";
-	public static final String ORDER_BY_JPQL = " ORDER BY userGroup.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY UserGroup.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY userGroup.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY UserGroup.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

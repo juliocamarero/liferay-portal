@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -219,7 +218,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -229,7 +228,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -493,12 +494,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -581,7 +584,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -606,9 +612,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFolder.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFolder.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFolder.uuid IS NULL OR dlFolder.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFolder.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFolder.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFolder.uuid_ IS NULL OR dlFolder.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
 			DLFolderModelImpl.FINDER_CACHE_ENABLED, DLFolderImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -726,7 +732,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -836,7 +844,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -863,9 +874,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFolder.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFolder.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFolder.uuid IS NULL OR dlFolder.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFolder.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFolder.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFolder.uuid_ IS NULL OR dlFolder.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "dlFolder.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
 			DLFolderModelImpl.FINDER_CACHE_ENABLED, DLFolderImpl.class,
@@ -1008,7 +1019,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1018,7 +1029,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1300,12 +1313,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1396,7 +1411,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1423,9 +1441,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFolder.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFolder.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFolder.uuid IS NULL OR dlFolder.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFolder.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFolder.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFolder.uuid_ IS NULL OR dlFolder.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "dlFolder.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
 			DLFolderModelImpl.FINDER_CACHE_ENABLED, DLFolderImpl.class,
@@ -1543,7 +1561,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1553,7 +1571,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1803,12 +1823,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1921,10 +1943,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2100,10 +2122,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2187,7 +2209,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2378,7 +2403,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2388,7 +2413,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2638,12 +2665,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2712,7 +2741,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2831,7 +2863,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2925,7 +2959,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3077,7 +3114,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3087,7 +3124,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3355,12 +3394,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3482,10 +3523,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3666,10 +3707,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -3761,7 +3802,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3981,7 +4025,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3991,7 +4035,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4273,12 +4319,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4369,7 +4417,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4533,7 +4584,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4650,7 +4703,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4838,7 +4894,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4848,7 +4904,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5150,12 +5208,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5293,10 +5353,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5491,10 +5551,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5601,7 +5661,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5697,7 +5760,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	private static final String _FINDER_COLUMN_G_M_P_H_GROUPID_2 = "dlFolder.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_M_P_H_MOUNTPOINT_2 = "dlFolder.mountPoint = ? AND ";
 	private static final String _FINDER_COLUMN_G_M_P_H_PARENTFOLDERID_2 = "dlFolder.parentFolderId = ? AND ";
-	private static final String _FINDER_COLUMN_G_M_P_H_HIDDEN_2 = "dlFolder.hidden = ?";
+	private static final String _FINDER_COLUMN_G_M_P_H_HIDDEN_2 = "dlFolder.hidden_ = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_P_H_S = new FinderPath(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
 			DLFolderModelImpl.FINDER_CACHE_ENABLED, DLFolderImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_P_H_S",
@@ -5850,7 +5913,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5860,7 +5923,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6161,12 +6226,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6305,10 +6372,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6502,10 +6569,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6611,7 +6678,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6706,7 +6776,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 	private static final String _FINDER_COLUMN_G_P_H_S_GROUPID_2 = "dlFolder.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_P_H_S_PARENTFOLDERID_2 = "dlFolder.parentFolderId = ? AND ";
-	private static final String _FINDER_COLUMN_G_P_H_S_HIDDEN_2 = "dlFolder.hidden = ? AND ";
+	private static final String _FINDER_COLUMN_G_P_H_S_HIDDEN_2 = "dlFolder.hidden_ = ? AND ";
 	private static final String _FINDER_COLUMN_G_P_H_S_STATUS_2 = "dlFolder.status = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_M_P_H_S =
 		new FinderPath(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
@@ -6874,7 +6944,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6884,7 +6954,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7207,12 +7279,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			}
 		}
 		else {
-			query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+			query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7359,10 +7433,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7562,10 +7636,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DLFolderModelImpl.ORDER_BY_JPQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DLFolderModelImpl.ORDER_BY_SQL);
+				query.append(DLFolderModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -7680,7 +7754,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7785,7 +7862,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	private static final String _FINDER_COLUMN_G_M_P_H_S_GROUPID_2 = "dlFolder.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_M_P_H_S_MOUNTPOINT_2 = "dlFolder.mountPoint = ? AND ";
 	private static final String _FINDER_COLUMN_G_M_P_H_S_PARENTFOLDERID_2 = "dlFolder.parentFolderId = ? AND ";
-	private static final String _FINDER_COLUMN_G_M_P_H_S_HIDDEN_2 = "dlFolder.hidden = ? AND ";
+	private static final String _FINDER_COLUMN_G_M_P_H_S_HIDDEN_2 = "dlFolder.hidden_ = ? AND ";
 	private static final String _FINDER_COLUMN_G_M_P_H_S_STATUS_2 = "dlFolder.status = ?";
 
 	/**
@@ -8572,7 +8649,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 				sql = _SQL_SELECT_DLFOLDER;
 
 				if (pagination) {
-					sql = sql.concat(DLFolderModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DLFolderModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -8581,7 +8658,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFolderImpl.class);
 
 				if (!pagination) {
 					list = (List<DLFolder>)QueryUtil.list(q, getDialect(),
@@ -8640,7 +8719,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DLFOLDER);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DLFOLDER);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -8753,7 +8835,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 					sql = _SQL_GETDLFILEENTRYTYPES;
 
 					if (pagination) {
-						sql = sql.concat(com.liferay.portlet.documentlibrary.model.impl.DLFileEntryTypeModelImpl.ORDER_BY_SQL);
+						sql = sql.concat(com.liferay.portlet.documentlibrary.model.impl.DLFileEntryTypeModelImpl.ORDER_BY_ENTITY_TABLE);
 					}
 				}
 
@@ -9381,10 +9463,10 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		private SqlUpdate _sqlUpdate;
 	}
 
-	private static final String _SQL_SELECT_DLFOLDER = "SELECT dlFolder FROM DLFolder dlFolder";
-	private static final String _SQL_SELECT_DLFOLDER_WHERE = "SELECT dlFolder FROM DLFolder dlFolder WHERE ";
-	private static final String _SQL_COUNT_DLFOLDER = "SELECT COUNT(dlFolder) FROM DLFolder dlFolder";
-	private static final String _SQL_COUNT_DLFOLDER_WHERE = "SELECT COUNT(dlFolder) FROM DLFolder dlFolder WHERE ";
+	private static final String _SQL_SELECT_DLFOLDER = "SELECT {dlFolder.*} FROM DLFolder dlFolder";
+	private static final String _SQL_SELECT_DLFOLDER_WHERE = "SELECT {dlFolder.*} FROM DLFolder dlFolder WHERE ";
+	private static final String _SQL_COUNT_DLFOLDER = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFolder dlFolder";
+	private static final String _SQL_COUNT_DLFOLDER_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFolder dlFolder WHERE ";
 	private static final String _SQL_GETDLFILEENTRYTYPES = "SELECT {DLFileEntryType.*} FROM DLFileEntryType INNER JOIN DLFileEntryTypes_DLFolders ON (DLFileEntryTypes_DLFolders.fileEntryTypeId = DLFileEntryType.fileEntryTypeId) WHERE (DLFileEntryTypes_DLFolders.folderId = ?)";
 	private static final String _SQL_GETDLFILEENTRYTYPESSIZE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntryTypes_DLFolders WHERE folderId = ?";
 	private static final String _SQL_CONTAINSDLFILEENTRYTYPE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileEntryTypes_DLFolders WHERE folderId = ? AND fileEntryTypeId = ?";
@@ -9397,6 +9479,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	private static final String _FILTER_SQL_COUNT_DLFOLDER_WHERE = "SELECT COUNT(DISTINCT dlFolder.folderId) AS COUNT_VALUE FROM DLFolder dlFolder WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "dlFolder";
 	private static final String _FILTER_ENTITY_TABLE = "DLFolder";
+	private static final String _ENTITY_ALIAS = "dlFolder";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "dlFolder.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "DLFolder.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DLFolder exists with the primary key ";

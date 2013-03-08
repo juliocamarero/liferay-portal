@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -201,7 +201,7 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			}
 			else
 			 if (pagination) {
-				query.append(DDLRecordVersionModelImpl.ORDER_BY_JPQL);
+				query.append(DDLRecordVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -211,7 +211,9 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -464,12 +466,14 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			}
 		}
 		else {
-			query.append(DDLRecordVersionModelImpl.ORDER_BY_JPQL);
+			query.append(DDLRecordVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDLRecordVersionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -538,7 +542,10 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -679,7 +686,9 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -789,7 +798,10 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -949,7 +961,7 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			}
 			else
 			 if (pagination) {
-				query.append(DDLRecordVersionModelImpl.ORDER_BY_JPQL);
+				query.append(DDLRecordVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -959,7 +971,9 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordVersionImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1227,12 +1241,14 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			}
 		}
 		else {
-			query.append(DDLRecordVersionModelImpl.ORDER_BY_JPQL);
+			query.append(DDLRecordVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDLRecordVersionImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1308,7 +1324,10 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1873,7 +1892,7 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 				sql = _SQL_SELECT_DDLRECORDVERSION;
 
 				if (pagination) {
-					sql = sql.concat(DDLRecordVersionModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DDLRecordVersionModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1882,7 +1901,9 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDLRecordVersionImpl.class);
 
 				if (!pagination) {
 					list = (List<DDLRecordVersion>)QueryUtil.list(q,
@@ -1941,7 +1962,10 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DDLRECORDVERSION);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DDLRECORDVERSION);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1994,10 +2018,11 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DDLRECORDVERSION = "SELECT ddlRecordVersion FROM DDLRecordVersion ddlRecordVersion";
-	private static final String _SQL_SELECT_DDLRECORDVERSION_WHERE = "SELECT ddlRecordVersion FROM DDLRecordVersion ddlRecordVersion WHERE ";
-	private static final String _SQL_COUNT_DDLRECORDVERSION = "SELECT COUNT(ddlRecordVersion) FROM DDLRecordVersion ddlRecordVersion";
-	private static final String _SQL_COUNT_DDLRECORDVERSION_WHERE = "SELECT COUNT(ddlRecordVersion) FROM DDLRecordVersion ddlRecordVersion WHERE ";
+	private static final String _SQL_SELECT_DDLRECORDVERSION = "SELECT {ddlRecordVersion.*} FROM DDLRecordVersion ddlRecordVersion";
+	private static final String _SQL_SELECT_DDLRECORDVERSION_WHERE = "SELECT {ddlRecordVersion.*} FROM DDLRecordVersion ddlRecordVersion WHERE ";
+	private static final String _SQL_COUNT_DDLRECORDVERSION = "SELECT COUNT(*) AS COUNT_VALUE FROM DDLRecordVersion ddlRecordVersion";
+	private static final String _SQL_COUNT_DDLRECORDVERSION_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDLRecordVersion ddlRecordVersion WHERE ";
+	private static final String _ENTITY_ALIAS = "ddlRecordVersion";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ddlRecordVersion.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DDLRecordVersion exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DDLRecordVersion exists with the key {";

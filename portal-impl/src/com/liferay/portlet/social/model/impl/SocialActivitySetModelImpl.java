@@ -73,8 +73,8 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 		};
 	public static final String TABLE_SQL_CREATE = "create table SocialActivitySet (activitySetId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate LONG,modifiedDate LONG,classNameId LONG,classPK LONG,type_ INTEGER,activityCount INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table SocialActivitySet";
-	public static final String ORDER_BY_JPQL = " ORDER BY socialActivitySet.modifiedDate DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY SocialActivitySet.modifiedDate DESC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY socialActivitySet.modifiedDate DESC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY SocialActivitySet.modifiedDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

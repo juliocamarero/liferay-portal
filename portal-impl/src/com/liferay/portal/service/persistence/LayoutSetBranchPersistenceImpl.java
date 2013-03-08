@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -202,7 +201,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -212,7 +211,9 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutSetBranchImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -465,12 +466,14 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			}
 		}
 		else {
-			query.append(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutSetBranchImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -583,10 +586,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_SQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -764,10 +767,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_SQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -851,7 +854,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1053,7 +1059,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			}
 			else
 			 if (pagination) {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1063,7 +1069,9 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutSetBranchImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1332,12 +1340,14 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			}
 		}
 		else {
-			query.append(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+			query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, LayoutSetBranchImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1459,10 +1469,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_SQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1645,10 +1655,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(LayoutSetBranchModelImpl.ORDER_BY_SQL);
+				query.append(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -1740,7 +1750,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1956,7 +1969,9 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutSetBranchImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2074,7 +2089,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2656,7 +2674,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 				sql = _SQL_SELECT_LAYOUTSETBRANCH;
 
 				if (pagination) {
-					sql = sql.concat(LayoutSetBranchModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(LayoutSetBranchModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2665,7 +2683,9 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, LayoutSetBranchImpl.class);
 
 				if (!pagination) {
 					list = (List<LayoutSetBranch>)QueryUtil.list(q,
@@ -2724,7 +2744,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_LAYOUTSETBRANCH);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_LAYOUTSETBRANCH);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2777,10 +2800,10 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_LAYOUTSETBRANCH = "SELECT layoutSetBranch FROM LayoutSetBranch layoutSetBranch";
-	private static final String _SQL_SELECT_LAYOUTSETBRANCH_WHERE = "SELECT layoutSetBranch FROM LayoutSetBranch layoutSetBranch WHERE ";
-	private static final String _SQL_COUNT_LAYOUTSETBRANCH = "SELECT COUNT(layoutSetBranch) FROM LayoutSetBranch layoutSetBranch";
-	private static final String _SQL_COUNT_LAYOUTSETBRANCH_WHERE = "SELECT COUNT(layoutSetBranch) FROM LayoutSetBranch layoutSetBranch WHERE ";
+	private static final String _SQL_SELECT_LAYOUTSETBRANCH = "SELECT {layoutSetBranch.*} FROM LayoutSetBranch layoutSetBranch";
+	private static final String _SQL_SELECT_LAYOUTSETBRANCH_WHERE = "SELECT {layoutSetBranch.*} FROM LayoutSetBranch layoutSetBranch WHERE ";
+	private static final String _SQL_COUNT_LAYOUTSETBRANCH = "SELECT COUNT(*) AS COUNT_VALUE FROM LayoutSetBranch layoutSetBranch";
+	private static final String _SQL_COUNT_LAYOUTSETBRANCH_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM LayoutSetBranch layoutSetBranch WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "layoutSetBranch.layoutSetBranchId";
 	private static final String _FILTER_SQL_SELECT_LAYOUTSETBRANCH_WHERE = "SELECT DISTINCT {layoutSetBranch.*} FROM LayoutSetBranch layoutSetBranch WHERE ";
 	private static final String _FILTER_SQL_SELECT_LAYOUTSETBRANCH_NO_INLINE_DISTINCT_WHERE_1 =
@@ -2790,6 +2813,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	private static final String _FILTER_SQL_COUNT_LAYOUTSETBRANCH_WHERE = "SELECT COUNT(DISTINCT layoutSetBranch.layoutSetBranchId) AS COUNT_VALUE FROM LayoutSetBranch layoutSetBranch WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "layoutSetBranch";
 	private static final String _FILTER_ENTITY_TABLE = "LayoutSetBranch";
+	private static final String _ENTITY_ALIAS = "layoutSetBranch";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "layoutSetBranch.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "LayoutSetBranch.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No LayoutSetBranch exists with the primary key ";

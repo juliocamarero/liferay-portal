@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -208,7 +208,7 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -218,7 +218,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -482,12 +484,14 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 		}
 		else {
-			query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -570,7 +574,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -595,9 +602,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileRank.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileRank.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileRank.uuid IS NULL OR dlFileRank.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "dlFileRank.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "dlFileRank.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(dlFileRank.uuid_ IS NULL OR dlFileRank.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DLFileRankModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileRankModelImpl.FINDER_CACHE_ENABLED, DLFileRankImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -715,7 +722,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -825,7 +834,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -852,9 +864,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileRank.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileRank.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileRank.uuid IS NULL OR dlFileRank.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "dlFileRank.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "dlFileRank.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(dlFileRank.uuid_ IS NULL OR dlFileRank.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "dlFileRank.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DLFileRankModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileRankModelImpl.FINDER_CACHE_ENABLED, DLFileRankImpl.class,
@@ -997,7 +1009,7 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1007,7 +1019,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1289,12 +1303,14 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 		}
 		else {
-			query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1385,7 +1401,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1412,9 +1431,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileRank.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileRank.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileRank.uuid IS NULL OR dlFileRank.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "dlFileRank.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "dlFileRank.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(dlFileRank.uuid_ IS NULL OR dlFileRank.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "dlFileRank.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_USERID = new FinderPath(DLFileRankModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileRankModelImpl.FINDER_CACHE_ENABLED, DLFileRankImpl.class,
@@ -1531,7 +1550,7 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1541,7 +1560,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1791,12 +1812,14 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 		}
 		else {
-			query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1865,7 +1888,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2007,7 +2033,7 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2017,7 +2043,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2270,12 +2298,14 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 		}
 		else {
-			query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2344,7 +2374,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2495,7 +2528,7 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2505,7 +2538,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2773,12 +2808,14 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 		}
 		else {
-			query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2854,7 +2891,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3023,7 +3063,7 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 			else
 			 if (pagination) {
-				query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+				query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3033,7 +3073,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3318,12 +3360,14 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			}
 		}
 		else {
-			query.append(DLFileRankModelImpl.ORDER_BY_JPQL);
+			query.append(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3406,7 +3450,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3435,7 +3482,7 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 
 	private static final String _FINDER_COLUMN_G_U_A_GROUPID_2 = "dlFileRank.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_U_A_USERID_2 = "dlFileRank.userId = ? AND ";
-	private static final String _FINDER_COLUMN_G_U_A_ACTIVE_2 = "dlFileRank.active = ?";
+	private static final String _FINDER_COLUMN_G_U_A_ACTIVE_2 = "dlFileRank.active_ = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_U_F = new FinderPath(DLFileRankModelImpl.ENTITY_CACHE_ENABLED,
 			DLFileRankModelImpl.FINDER_CACHE_ENABLED, DLFileRankImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_U_F",
@@ -3555,7 +3602,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3657,7 +3706,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4351,7 +4403,7 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 				sql = _SQL_SELECT_DLFILERANK;
 
 				if (pagination) {
-					sql = sql.concat(DLFileRankModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DLFileRankModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -4360,7 +4412,9 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLFileRankImpl.class);
 
 				if (!pagination) {
 					list = (List<DLFileRank>)QueryUtil.list(q, getDialect(),
@@ -4419,7 +4473,10 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DLFILERANK);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DLFILERANK);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -4472,10 +4529,11 @@ public class DLFileRankPersistenceImpl extends BasePersistenceImpl<DLFileRank>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DLFILERANK = "SELECT dlFileRank FROM DLFileRank dlFileRank";
-	private static final String _SQL_SELECT_DLFILERANK_WHERE = "SELECT dlFileRank FROM DLFileRank dlFileRank WHERE ";
-	private static final String _SQL_COUNT_DLFILERANK = "SELECT COUNT(dlFileRank) FROM DLFileRank dlFileRank";
-	private static final String _SQL_COUNT_DLFILERANK_WHERE = "SELECT COUNT(dlFileRank) FROM DLFileRank dlFileRank WHERE ";
+	private static final String _SQL_SELECT_DLFILERANK = "SELECT {dlFileRank.*} FROM DLFileRank dlFileRank";
+	private static final String _SQL_SELECT_DLFILERANK_WHERE = "SELECT {dlFileRank.*} FROM DLFileRank dlFileRank WHERE ";
+	private static final String _SQL_COUNT_DLFILERANK = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileRank dlFileRank";
+	private static final String _SQL_COUNT_DLFILERANK_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLFileRank dlFileRank WHERE ";
+	private static final String _ENTITY_ALIAS = "dlFileRank";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "dlFileRank.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DLFileRank exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DLFileRank exists with the key {";

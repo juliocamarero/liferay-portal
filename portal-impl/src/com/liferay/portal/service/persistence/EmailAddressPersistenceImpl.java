@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -197,7 +197,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 			else
 			 if (pagination) {
-				query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+				query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -207,7 +207,9 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -460,12 +462,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 		}
 		else {
-			query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+			query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -534,7 +538,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -674,7 +681,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 			else
 			 if (pagination) {
-				query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+				query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -684,7 +691,9 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -935,12 +944,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 		}
 		else {
-			query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+			query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1009,7 +1020,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1161,7 +1175,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 			else
 			 if (pagination) {
-				query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+				query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1171,7 +1185,9 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1439,12 +1455,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 		}
 		else {
-			query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+			query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1521,7 +1539,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1687,7 +1708,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 			else
 			 if (pagination) {
-				query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+				query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1697,7 +1718,9 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1983,12 +2006,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 		}
 		else {
-			query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+			query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2071,7 +2096,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2253,7 +2281,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 			else
 			 if (pagination) {
-				query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+				query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2263,7 +2291,9 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2567,12 +2597,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			}
 		}
 		else {
-			query.append(EmailAddressModelImpl.ORDER_BY_JPQL);
+			query.append(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2663,7 +2695,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2695,7 +2730,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	private static final String _FINDER_COLUMN_C_C_C_P_COMPANYID_2 = "emailAddress.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_C_P_CLASSNAMEID_2 = "emailAddress.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_C_P_CLASSPK_2 = "emailAddress.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_C_P_PRIMARY_2 = "emailAddress.primary = ?";
+	private static final String _FINDER_COLUMN_C_C_C_P_PRIMARY_2 = "emailAddress.primary_ = ?";
 
 	/**
 	 * Caches the email address in the entity cache if it is enabled.
@@ -3228,7 +3263,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 				sql = _SQL_SELECT_EMAILADDRESS;
 
 				if (pagination) {
-					sql = sql.concat(EmailAddressModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(EmailAddressModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -3237,7 +3272,9 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, EmailAddressImpl.class);
 
 				if (!pagination) {
 					list = (List<EmailAddress>)QueryUtil.list(q, getDialect(),
@@ -3296,7 +3333,10 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_EMAILADDRESS);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_EMAILADDRESS);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -3349,10 +3389,11 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_EMAILADDRESS = "SELECT emailAddress FROM EmailAddress emailAddress";
-	private static final String _SQL_SELECT_EMAILADDRESS_WHERE = "SELECT emailAddress FROM EmailAddress emailAddress WHERE ";
-	private static final String _SQL_COUNT_EMAILADDRESS = "SELECT COUNT(emailAddress) FROM EmailAddress emailAddress";
-	private static final String _SQL_COUNT_EMAILADDRESS_WHERE = "SELECT COUNT(emailAddress) FROM EmailAddress emailAddress WHERE ";
+	private static final String _SQL_SELECT_EMAILADDRESS = "SELECT {emailAddress.*} FROM EmailAddress emailAddress";
+	private static final String _SQL_SELECT_EMAILADDRESS_WHERE = "SELECT {emailAddress.*} FROM EmailAddress emailAddress WHERE ";
+	private static final String _SQL_COUNT_EMAILADDRESS = "SELECT COUNT(*) AS COUNT_VALUE FROM EmailAddress emailAddress";
+	private static final String _SQL_COUNT_EMAILADDRESS_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM EmailAddress emailAddress WHERE ";
+	private static final String _ENTITY_ALIAS = "emailAddress";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "emailAddress.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No EmailAddress exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No EmailAddress exists with the key {";

@@ -75,8 +75,8 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 		};
 	public static final String TABLE_SQL_CREATE = "create table Organization_ (organizationId LONG not null primary key,companyId LONG,parentOrganizationId LONG,treePath STRING null,name VARCHAR(100) null,type_ VARCHAR(75) null,recursable BOOLEAN,regionId LONG,countryId LONG,statusId INTEGER,comments STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table Organization_";
-	public static final String ORDER_BY_JPQL = " ORDER BY organization.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY Organization_.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY organization_.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY Organization_.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

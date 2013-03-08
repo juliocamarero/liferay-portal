@@ -88,8 +88,8 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 		};
 	public static final String TABLE_SQL_CREATE = "create table AssetCategory (uuid_ VARCHAR(75) null,categoryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,parentCategoryId LONG,leftCategoryId LONG,rightCategoryId LONG,name VARCHAR(75) null,title STRING null,description STRING null,vocabularyId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table AssetCategory";
-	public static final String ORDER_BY_JPQL = " ORDER BY assetCategory.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY AssetCategory.name ASC";
+	public static final String ORDER_BY_ENTITY_ALIAS = " ORDER BY assetCategory.name ASC";
+	public static final String ORDER_BY_ENTITY_TABLE = " ORDER BY AssetCategory.name ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";

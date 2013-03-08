@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -209,7 +209,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			}
 			else
 			 if (pagination) {
-				query.append(DLContentModelImpl.ORDER_BY_JPQL);
+				query.append(DLContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -219,7 +219,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -487,12 +489,14 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			}
 		}
 		else {
-			query.append(DLContentModelImpl.ORDER_BY_JPQL);
+			query.append(DLContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLContentImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -569,7 +573,10 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -750,7 +757,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			}
 			else
 			 if (pagination) {
-				query.append(DLContentModelImpl.ORDER_BY_JPQL);
+				query.append(DLContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -760,7 +767,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1059,12 +1068,14 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			}
 		}
 		else {
-			query.append(DLContentModelImpl.ORDER_BY_JPQL);
+			query.append(DLContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLContentImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1161,7 +1172,10 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1192,9 +1206,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 	private static final String _FINDER_COLUMN_C_R_P_COMPANYID_2 = "dlContent.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_R_P_REPOSITORYID_2 = "dlContent.repositoryId = ? AND ";
-	private static final String _FINDER_COLUMN_C_R_P_PATH_1 = "dlContent.path IS NULL";
-	private static final String _FINDER_COLUMN_C_R_P_PATH_2 = "dlContent.path = ?";
-	private static final String _FINDER_COLUMN_C_R_P_PATH_3 = "(dlContent.path IS NULL OR dlContent.path = '')";
+	private static final String _FINDER_COLUMN_C_R_P_PATH_1 = "dlContent.path_ IS NULL";
+	private static final String _FINDER_COLUMN_C_R_P_PATH_2 = "dlContent.path_ = ?";
+	private static final String _FINDER_COLUMN_C_R_P_PATH_3 = "(dlContent.path_ IS NULL OR dlContent.path_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_R_LIKEP =
 		new FinderPath(DLContentModelImpl.ENTITY_CACHE_ENABLED,
 			DLContentModelImpl.FINDER_CACHE_ENABLED, DLContentImpl.class,
@@ -1332,7 +1346,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			}
 			else
 			 if (pagination) {
-				query.append(DLContentModelImpl.ORDER_BY_JPQL);
+				query.append(DLContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1342,7 +1356,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1642,12 +1658,14 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			}
 		}
 		else {
-			query.append(DLContentModelImpl.ORDER_BY_JPQL);
+			query.append(DLContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DLContentImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1744,7 +1762,10 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1775,9 +1796,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 	private static final String _FINDER_COLUMN_C_R_LIKEP_COMPANYID_2 = "dlContent.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_R_LIKEP_REPOSITORYID_2 = "dlContent.repositoryId = ? AND ";
-	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_1 = "dlContent.path LIKE NULL";
-	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_2 = "dlContent.path LIKE ?";
-	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_3 = "(dlContent.path IS NULL OR dlContent.path LIKE '')";
+	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_1 = "dlContent.path_ LIKE NULL";
+	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_2 = "dlContent.path_ LIKE ?";
+	private static final String _FINDER_COLUMN_C_R_LIKEP_PATH_3 = "(dlContent.path_ IS NULL OR dlContent.path_ LIKE '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_R_P_V = new FinderPath(DLContentModelImpl.ENTITY_CACHE_ENABLED,
 			DLContentModelImpl.FINDER_CACHE_ENABLED, DLContentImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByC_R_P_V",
@@ -1938,7 +1959,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLContentImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2081,7 +2104,10 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2116,9 +2142,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 	private static final String _FINDER_COLUMN_C_R_P_V_COMPANYID_2 = "dlContent.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_R_P_V_REPOSITORYID_2 = "dlContent.repositoryId = ? AND ";
-	private static final String _FINDER_COLUMN_C_R_P_V_PATH_1 = "dlContent.path IS NULL AND ";
-	private static final String _FINDER_COLUMN_C_R_P_V_PATH_2 = "dlContent.path = ? AND ";
-	private static final String _FINDER_COLUMN_C_R_P_V_PATH_3 = "(dlContent.path IS NULL OR dlContent.path = '') AND ";
+	private static final String _FINDER_COLUMN_C_R_P_V_PATH_1 = "dlContent.path_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_C_R_P_V_PATH_2 = "dlContent.path_ = ? AND ";
+	private static final String _FINDER_COLUMN_C_R_P_V_PATH_3 = "(dlContent.path_ IS NULL OR dlContent.path_ = '') AND ";
 	private static final String _FINDER_COLUMN_C_R_P_V_VERSION_1 = "dlContent.version IS NULL";
 	private static final String _FINDER_COLUMN_C_R_P_V_VERSION_2 = "dlContent.version = ?";
 	private static final String _FINDER_COLUMN_C_R_P_V_VERSION_3 = "(dlContent.version IS NULL OR dlContent.version = '')";
@@ -2664,7 +2690,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 				sql = _SQL_SELECT_DLCONTENT;
 
 				if (pagination) {
-					sql = sql.concat(DLContentModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DLContentModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2673,7 +2699,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DLContentImpl.class);
 
 				if (!pagination) {
 					list = (List<DLContent>)QueryUtil.list(q, getDialect(),
@@ -2732,7 +2760,10 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DLCONTENT);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DLCONTENT);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2785,10 +2816,11 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DLCONTENT = "SELECT dlContent FROM DLContent dlContent";
-	private static final String _SQL_SELECT_DLCONTENT_WHERE = "SELECT dlContent FROM DLContent dlContent WHERE ";
-	private static final String _SQL_COUNT_DLCONTENT = "SELECT COUNT(dlContent) FROM DLContent dlContent";
-	private static final String _SQL_COUNT_DLCONTENT_WHERE = "SELECT COUNT(dlContent) FROM DLContent dlContent WHERE ";
+	private static final String _SQL_SELECT_DLCONTENT = "SELECT {dlContent.*} FROM DLContent dlContent";
+	private static final String _SQL_SELECT_DLCONTENT_WHERE = "SELECT {dlContent.*} FROM DLContent dlContent WHERE ";
+	private static final String _SQL_COUNT_DLCONTENT = "SELECT COUNT(*) AS COUNT_VALUE FROM DLContent dlContent";
+	private static final String _SQL_COUNT_DLCONTENT_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DLContent dlContent WHERE ";
+	private static final String _ENTITY_ALIAS = "dlContent";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "dlContent.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DLContent exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DLContent exists with the key {";

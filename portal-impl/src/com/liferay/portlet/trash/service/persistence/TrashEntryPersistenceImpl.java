@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -199,7 +199,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
+				query.append(TrashEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -209,7 +209,9 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TrashEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -459,12 +461,14 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			}
 		}
 		else {
-			query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
+			query.append(TrashEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, TrashEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -533,7 +537,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -675,7 +682,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
+				query.append(TrashEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -685,7 +692,9 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TrashEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -938,12 +947,14 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			}
 		}
 		else {
-			query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
+			query.append(TrashEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, TrashEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1012,7 +1023,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1158,7 +1172,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			}
 			else
 			 if (pagination) {
-				query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
+				query.append(TrashEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1168,7 +1182,9 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TrashEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1447,12 +1463,14 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			}
 		}
 		else {
-			query.append(TrashEntryModelImpl.ORDER_BY_JPQL);
+			query.append(TrashEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, TrashEntryImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1540,7 +1558,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1675,7 +1696,9 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TrashEntryImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1770,7 +1793,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2318,7 +2344,7 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 				sql = _SQL_SELECT_TRASHENTRY;
 
 				if (pagination) {
-					sql = sql.concat(TrashEntryModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(TrashEntryModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -2327,7 +2353,9 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, TrashEntryImpl.class);
 
 				if (!pagination) {
 					list = (List<TrashEntry>)QueryUtil.list(q, getDialect(),
@@ -2386,7 +2414,10 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_TRASHENTRY);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_TRASHENTRY);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -2439,10 +2470,11 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_TRASHENTRY = "SELECT trashEntry FROM TrashEntry trashEntry";
-	private static final String _SQL_SELECT_TRASHENTRY_WHERE = "SELECT trashEntry FROM TrashEntry trashEntry WHERE ";
-	private static final String _SQL_COUNT_TRASHENTRY = "SELECT COUNT(trashEntry) FROM TrashEntry trashEntry";
-	private static final String _SQL_COUNT_TRASHENTRY_WHERE = "SELECT COUNT(trashEntry) FROM TrashEntry trashEntry WHERE ";
+	private static final String _SQL_SELECT_TRASHENTRY = "SELECT {trashEntry.*} FROM TrashEntry trashEntry";
+	private static final String _SQL_SELECT_TRASHENTRY_WHERE = "SELECT {trashEntry.*} FROM TrashEntry trashEntry WHERE ";
+	private static final String _SQL_COUNT_TRASHENTRY = "SELECT COUNT(*) AS COUNT_VALUE FROM TrashEntry trashEntry";
+	private static final String _SQL_COUNT_TRASHENTRY_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM TrashEntry trashEntry WHERE ";
+	private static final String _ENTITY_ALIAS = "trashEntry";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "trashEntry.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No TrashEntry exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No TrashEntry exists with the key {";

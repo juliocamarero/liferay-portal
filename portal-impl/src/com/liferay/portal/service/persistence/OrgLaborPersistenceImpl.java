@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -201,7 +201,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			}
 			else
 			 if (pagination) {
-				query.append(OrgLaborModelImpl.ORDER_BY_JPQL);
+				query.append(OrgLaborModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -211,7 +211,9 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrgLaborImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -464,12 +466,14 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			}
 		}
 		else {
-			query.append(OrgLaborModelImpl.ORDER_BY_JPQL);
+			query.append(OrgLaborModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, OrgLaborImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -540,7 +544,10 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1012,7 +1019,7 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 				sql = _SQL_SELECT_ORGLABOR;
 
 				if (pagination) {
-					sql = sql.concat(OrgLaborModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(OrgLaborModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -1021,7 +1028,9 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, OrgLaborImpl.class);
 
 				if (!pagination) {
 					list = (List<OrgLabor>)QueryUtil.list(q, getDialect(),
@@ -1080,7 +1089,10 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_ORGLABOR);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_ORGLABOR);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -1133,10 +1145,11 @@ public class OrgLaborPersistenceImpl extends BasePersistenceImpl<OrgLabor>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_ORGLABOR = "SELECT orgLabor FROM OrgLabor orgLabor";
-	private static final String _SQL_SELECT_ORGLABOR_WHERE = "SELECT orgLabor FROM OrgLabor orgLabor WHERE ";
-	private static final String _SQL_COUNT_ORGLABOR = "SELECT COUNT(orgLabor) FROM OrgLabor orgLabor";
-	private static final String _SQL_COUNT_ORGLABOR_WHERE = "SELECT COUNT(orgLabor) FROM OrgLabor orgLabor WHERE ";
+	private static final String _SQL_SELECT_ORGLABOR = "SELECT {orgLabor.*} FROM OrgLabor orgLabor";
+	private static final String _SQL_SELECT_ORGLABOR_WHERE = "SELECT {orgLabor.*} FROM OrgLabor orgLabor WHERE ";
+	private static final String _SQL_COUNT_ORGLABOR = "SELECT COUNT(*) AS COUNT_VALUE FROM OrgLabor orgLabor";
+	private static final String _SQL_COUNT_ORGLABOR_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM OrgLabor orgLabor WHERE ";
+	private static final String _ENTITY_ALIAS = "orgLabor";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "orgLabor.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No OrgLabor exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No OrgLabor exists with the key {";

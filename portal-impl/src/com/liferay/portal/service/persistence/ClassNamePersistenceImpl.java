@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -163,7 +163,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		if (result == null) {
 			StringBundler query = new StringBundler(3);
 
-			query.append(_SQL_SELECT_CLASSNAME_WHERE);
+			query.append(_SQL_SELECT_CLASSNAME__WHERE);
 
 			boolean bindValue = false;
 
@@ -186,7 +186,9 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ClassNameImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -265,7 +267,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		if (count == null) {
 			StringBundler query = new StringBundler(2);
 
-			query.append(_SQL_COUNT_CLASSNAME_WHERE);
+			query.append(_SQL_COUNT_CLASSNAME__WHERE);
 
 			boolean bindValue = false;
 
@@ -288,7 +290,10 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -313,9 +318,9 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_VALUE_VALUE_1 = "className.value IS NULL";
-	private static final String _FINDER_COLUMN_VALUE_VALUE_2 = "className.value = ?";
-	private static final String _FINDER_COLUMN_VALUE_VALUE_3 = "(className.value IS NULL OR className.value = '')";
+	private static final String _FINDER_COLUMN_VALUE_VALUE_1 = "className_.value IS NULL";
+	private static final String _FINDER_COLUMN_VALUE_VALUE_2 = "className_.value = ?";
+	private static final String _FINDER_COLUMN_VALUE_VALUE_3 = "(className_.value IS NULL OR className_.value = '')";
 
 	/**
 	 * Caches the class name in the entity cache if it is enabled.
@@ -769,7 +774,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 				query = new StringBundler(2 +
 						(orderByComparator.getOrderByFields().length * 3));
 
-				query.append(_SQL_SELECT_CLASSNAME);
+				query.append(_SQL_SELECT_CLASSNAME_);
 
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
@@ -777,10 +782,10 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_CLASSNAME;
+				sql = _SQL_SELECT_CLASSNAME_;
 
 				if (pagination) {
-					sql = sql.concat(ClassNameModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(ClassNameModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -789,7 +794,9 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, ClassNameImpl.class);
 
 				if (!pagination) {
 					list = (List<ClassName>)QueryUtil.list(q, getDialect(),
@@ -848,7 +855,10 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_CLASSNAME);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_CLASSNAME_);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -901,11 +911,12 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_CLASSNAME = "SELECT className FROM ClassName className";
-	private static final String _SQL_SELECT_CLASSNAME_WHERE = "SELECT className FROM ClassName className WHERE ";
-	private static final String _SQL_COUNT_CLASSNAME = "SELECT COUNT(className) FROM ClassName className";
-	private static final String _SQL_COUNT_CLASSNAME_WHERE = "SELECT COUNT(className) FROM ClassName className WHERE ";
-	private static final String _ORDER_BY_ENTITY_ALIAS = "className.";
+	private static final String _SQL_SELECT_CLASSNAME_ = "SELECT {className_.*} FROM ClassName_ className_";
+	private static final String _SQL_SELECT_CLASSNAME__WHERE = "SELECT {className_.*} FROM ClassName_ className_ WHERE ";
+	private static final String _SQL_COUNT_CLASSNAME_ = "SELECT COUNT(*) AS COUNT_VALUE FROM ClassName_ className_";
+	private static final String _SQL_COUNT_CLASSNAME__WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM ClassName_ className_ WHERE ";
+	private static final String _ENTITY_ALIAS = "className_";
+	private static final String _ORDER_BY_ENTITY_ALIAS = "className_.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ClassName exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No ClassName exists with the key {";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = com.liferay.portal.util.PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE;

@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -209,7 +208,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -219,7 +218,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -483,12 +484,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -571,7 +574,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -596,9 +602,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmTemplate.uuid IS NULL";
-	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmTemplate.uuid = ?";
-	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmTemplate.uuid IS NULL OR ddmTemplate.uuid = '')";
+	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmTemplate.uuid_ IS NULL";
+	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmTemplate.uuid_ = ?";
+	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmTemplate.uuid_ IS NULL OR ddmTemplate.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
 			DDMTemplateModelImpl.FINDER_CACHE_ENABLED, DDMTemplateImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByUUID_G",
@@ -716,7 +722,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -826,7 +834,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -853,9 +864,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmTemplate.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmTemplate.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmTemplate.uuid IS NULL OR ddmTemplate.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmTemplate.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmTemplate.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmTemplate.uuid_ IS NULL OR ddmTemplate.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "ddmTemplate.groupId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
 			DDMTemplateModelImpl.FINDER_CACHE_ENABLED, DDMTemplateImpl.class,
@@ -997,7 +1008,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1007,7 +1018,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1289,12 +1302,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1385,7 +1400,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1412,9 +1430,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmTemplate.uuid IS NULL AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmTemplate.uuid = ? AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmTemplate.uuid IS NULL OR ddmTemplate.uuid = '') AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmTemplate.uuid_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmTemplate.uuid_ = ? AND ";
+	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmTemplate.uuid_ IS NULL OR ddmTemplate.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "ddmTemplate.companyId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GROUPID = new FinderPath(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
 			DDMTemplateModelImpl.FINDER_CACHE_ENABLED, DDMTemplateImpl.class,
@@ -1531,7 +1549,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -1541,7 +1559,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -1792,12 +1812,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -1910,10 +1932,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2089,10 +2111,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -2176,7 +2198,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2363,7 +2388,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2373,7 +2398,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2624,12 +2651,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -2698,7 +2727,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -2851,7 +2883,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -2861,7 +2893,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3128,12 +3162,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3217,7 +3253,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3370,7 +3409,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3380,7 +3419,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3644,12 +3685,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -3732,7 +3775,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -3757,9 +3803,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_TYPE_TYPE_1 = "ddmTemplate.type IS NULL";
-	private static final String _FINDER_COLUMN_TYPE_TYPE_2 = "ddmTemplate.type = ?";
-	private static final String _FINDER_COLUMN_TYPE_TYPE_3 = "(ddmTemplate.type IS NULL OR ddmTemplate.type = '')";
+	private static final String _FINDER_COLUMN_TYPE_TYPE_1 = "ddmTemplate.type_ IS NULL";
+	private static final String _FINDER_COLUMN_TYPE_TYPE_2 = "ddmTemplate.type_ = ?";
+	private static final String _FINDER_COLUMN_TYPE_TYPE_3 = "(ddmTemplate.type_ IS NULL OR ddmTemplate.type_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_LANGUAGE = new FinderPath(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
 			DDMTemplateModelImpl.FINDER_CACHE_ENABLED, DDMTemplateImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByLanguage",
@@ -3888,7 +3934,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -3898,7 +3944,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4165,12 +4213,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4253,7 +4303,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4408,7 +4461,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -4418,7 +4471,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -4686,12 +4741,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -4812,10 +4869,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -4996,10 +5053,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5091,7 +5148,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5298,7 +5358,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -5308,7 +5368,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -5576,12 +5638,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -5702,10 +5766,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5886,10 +5950,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -5981,7 +6045,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6200,7 +6267,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -6210,7 +6277,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -6495,12 +6564,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -6629,10 +6700,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6819,10 +6890,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -6920,7 +6991,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7143,7 +7217,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7260,7 +7336,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7447,7 +7526,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -7457,7 +7536,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7757,12 +7838,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -7859,7 +7942,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -7890,9 +7976,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 	private static final String _FINDER_COLUMN_C_C_T_CLASSNAMEID_2 = "ddmTemplate.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_T_CLASSPK_2 = "ddmTemplate.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_T_TYPE_1 = "ddmTemplate.type IS NULL";
-	private static final String _FINDER_COLUMN_C_C_T_TYPE_2 = "ddmTemplate.type = ?";
-	private static final String _FINDER_COLUMN_C_C_T_TYPE_3 = "(ddmTemplate.type IS NULL OR ddmTemplate.type = '')";
+	private static final String _FINDER_COLUMN_C_C_T_TYPE_1 = "ddmTemplate.type_ IS NULL";
+	private static final String _FINDER_COLUMN_C_C_T_TYPE_2 = "ddmTemplate.type_ = ?";
+	private static final String _FINDER_COLUMN_C_C_T_TYPE_3 = "(ddmTemplate.type_ IS NULL OR ddmTemplate.type_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C_C_T = new FinderPath(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
 			DDMTemplateModelImpl.FINDER_CACHE_ENABLED, DDMTemplateImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_C_C_T",
@@ -8056,7 +8142,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -8066,7 +8152,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8381,12 +8469,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -8538,10 +8628,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -8748,10 +8838,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -8869,7 +8959,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -8981,9 +9074,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	private static final String _FINDER_COLUMN_G_C_C_T_GROUPID_2 = "ddmTemplate.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_T_CLASSNAMEID_2 = "ddmTemplate.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_T_CLASSPK_2 = "ddmTemplate.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_C_T_TYPE_1 = "ddmTemplate.type IS NULL";
-	private static final String _FINDER_COLUMN_G_C_C_T_TYPE_2 = "ddmTemplate.type = ?";
-	private static final String _FINDER_COLUMN_G_C_C_T_TYPE_3 = "(ddmTemplate.type IS NULL OR ddmTemplate.type = '')";
+	private static final String _FINDER_COLUMN_G_C_C_T_TYPE_1 = "ddmTemplate.type_ IS NULL";
+	private static final String _FINDER_COLUMN_G_C_C_T_TYPE_2 = "ddmTemplate.type_ = ?";
+	private static final String _FINDER_COLUMN_G_C_C_T_TYPE_3 = "(ddmTemplate.type_ IS NULL OR ddmTemplate.type_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C_C_T_M =
 		new FinderPath(DDMTemplateModelImpl.ENTITY_CACHE_ENABLED,
 			DDMTemplateModelImpl.FINDER_CACHE_ENABLED, DDMTemplateImpl.class,
@@ -9167,7 +9260,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 			else
 			 if (pagination) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 
 			String sql = query.toString();
@@ -9177,7 +9270,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -9526,12 +9621,14 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			}
 		}
 		else {
-			query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+			query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 		}
 
 		String sql = query.toString();
 
-		Query q = session.createQuery(sql);
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 		q.setFirstResult(0);
 		q.setMaxResults(2);
@@ -9705,10 +9802,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -9936,10 +10033,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		}
 		else {
 			if (getDB().isSupportsInlineDistinct()) {
-				query.append(DDMTemplateModelImpl.ORDER_BY_JPQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 			}
 			else {
-				query.append(DDMTemplateModelImpl.ORDER_BY_SQL);
+				query.append(DDMTemplateModelImpl.ORDER_BY_ENTITY_TABLE);
 			}
 		}
 
@@ -10079,7 +10176,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
@@ -10214,12 +10314,12 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	private static final String _FINDER_COLUMN_G_C_C_T_M_GROUPID_2 = "ddmTemplate.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_T_M_CLASSNAMEID_2 = "ddmTemplate.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_T_M_CLASSPK_2 = "ddmTemplate.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_C_T_M_TYPE_1 = "ddmTemplate.type IS NULL AND ";
-	private static final String _FINDER_COLUMN_G_C_C_T_M_TYPE_2 = "ddmTemplate.type = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_C_T_M_TYPE_3 = "(ddmTemplate.type IS NULL OR ddmTemplate.type = '') AND ";
-	private static final String _FINDER_COLUMN_G_C_C_T_M_MODE_1 = "ddmTemplate.mode IS NULL";
-	private static final String _FINDER_COLUMN_G_C_C_T_M_MODE_2 = "ddmTemplate.mode = ?";
-	private static final String _FINDER_COLUMN_G_C_C_T_M_MODE_3 = "(ddmTemplate.mode IS NULL OR ddmTemplate.mode = '')";
+	private static final String _FINDER_COLUMN_G_C_C_T_M_TYPE_1 = "ddmTemplate.type_ IS NULL AND ";
+	private static final String _FINDER_COLUMN_G_C_C_T_M_TYPE_2 = "ddmTemplate.type_ = ? AND ";
+	private static final String _FINDER_COLUMN_G_C_C_T_M_TYPE_3 = "(ddmTemplate.type_ IS NULL OR ddmTemplate.type_ = '') AND ";
+	private static final String _FINDER_COLUMN_G_C_C_T_M_MODE_1 = "ddmTemplate.mode_ IS NULL";
+	private static final String _FINDER_COLUMN_G_C_C_T_M_MODE_2 = "ddmTemplate.mode_ = ?";
+	private static final String _FINDER_COLUMN_G_C_C_T_M_MODE_3 = "(ddmTemplate.mode_ IS NULL OR ddmTemplate.mode_ = '')";
 
 	/**
 	 * Caches the d d m template in the entity cache if it is enabled.
@@ -11044,7 +11144,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 				sql = _SQL_SELECT_DDMTEMPLATE;
 
 				if (pagination) {
-					sql = sql.concat(DDMTemplateModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(DDMTemplateModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -11053,7 +11153,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, DDMTemplateImpl.class);
 
 				if (!pagination) {
 					list = (List<DDMTemplate>)QueryUtil.list(q, getDialect(),
@@ -11112,7 +11214,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_DDMTEMPLATE);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_DDMTEMPLATE);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -11165,10 +11270,10 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_DDMTEMPLATE = "SELECT ddmTemplate FROM DDMTemplate ddmTemplate";
-	private static final String _SQL_SELECT_DDMTEMPLATE_WHERE = "SELECT ddmTemplate FROM DDMTemplate ddmTemplate WHERE ";
-	private static final String _SQL_COUNT_DDMTEMPLATE = "SELECT COUNT(ddmTemplate) FROM DDMTemplate ddmTemplate";
-	private static final String _SQL_COUNT_DDMTEMPLATE_WHERE = "SELECT COUNT(ddmTemplate) FROM DDMTemplate ddmTemplate WHERE ";
+	private static final String _SQL_SELECT_DDMTEMPLATE = "SELECT {ddmTemplate.*} FROM DDMTemplate ddmTemplate";
+	private static final String _SQL_SELECT_DDMTEMPLATE_WHERE = "SELECT {ddmTemplate.*} FROM DDMTemplate ddmTemplate WHERE ";
+	private static final String _SQL_COUNT_DDMTEMPLATE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMTemplate ddmTemplate";
+	private static final String _SQL_COUNT_DDMTEMPLATE_WHERE = "SELECT COUNT(*) AS COUNT_VALUE FROM DDMTemplate ddmTemplate WHERE ";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "ddmTemplate.templateId";
 	private static final String _FILTER_SQL_SELECT_DDMTEMPLATE_WHERE = "SELECT DISTINCT {ddmTemplate.*} FROM DDMTemplate ddmTemplate WHERE ";
 	private static final String _FILTER_SQL_SELECT_DDMTEMPLATE_NO_INLINE_DISTINCT_WHERE_1 =
@@ -11178,6 +11283,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	private static final String _FILTER_SQL_COUNT_DDMTEMPLATE_WHERE = "SELECT COUNT(DISTINCT ddmTemplate.templateId) AS COUNT_VALUE FROM DDMTemplate ddmTemplate WHERE ";
 	private static final String _FILTER_ENTITY_ALIAS = "ddmTemplate";
 	private static final String _FILTER_ENTITY_TABLE = "DDMTemplate";
+	private static final String _ENTITY_ALIAS = "ddmTemplate";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "ddmTemplate.";
 	private static final String _ORDER_BY_ENTITY_TABLE = "DDMTemplate.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DDMTemplate exists with the primary key ";

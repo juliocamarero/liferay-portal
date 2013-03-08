@@ -23,8 +23,8 @@ import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -486,7 +486,7 @@ public class CounterPersistenceImpl extends BasePersistenceImpl<Counter>
 				sql = _SQL_SELECT_COUNTER;
 
 				if (pagination) {
-					sql = sql.concat(CounterModelImpl.ORDER_BY_JPQL);
+					sql = sql.concat(CounterModelImpl.ORDER_BY_ENTITY_ALIAS);
 				}
 			}
 
@@ -495,7 +495,9 @@ public class CounterPersistenceImpl extends BasePersistenceImpl<Counter>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(sql);
+				SQLQuery q = session.createSQLQuery(sql);
+
+				q.addEntity(_ENTITY_ALIAS, CounterImpl.class);
 
 				if (!pagination) {
 					list = (List<Counter>)QueryUtil.list(q, getDialect(),
@@ -554,7 +556,10 @@ public class CounterPersistenceImpl extends BasePersistenceImpl<Counter>
 			try {
 				session = openSession();
 
-				Query q = session.createQuery(_SQL_COUNT_COUNTER);
+				SQLQuery q = session.createSQLQuery(_SQL_COUNT_COUNTER);
+
+				q.addScalar(COUNT_COLUMN_NAME,
+					com.liferay.portal.kernel.dao.orm.Type.LONG);
 
 				count = (Long)q.uniqueResult();
 
@@ -607,8 +612,9 @@ public class CounterPersistenceImpl extends BasePersistenceImpl<Counter>
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
-	private static final String _SQL_SELECT_COUNTER = "SELECT counter FROM Counter counter";
-	private static final String _SQL_COUNT_COUNTER = "SELECT COUNT(counter) FROM Counter counter";
+	private static final String _SQL_SELECT_COUNTER = "SELECT {counter.*} FROM Counter counter";
+	private static final String _SQL_COUNT_COUNTER = "SELECT COUNT(*) AS COUNT_VALUE FROM Counter counter";
+	private static final String _ENTITY_ALIAS = "counter";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "counter.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Counter exists with the primary key ";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = com.liferay.portal.util.PropsValues.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE;
