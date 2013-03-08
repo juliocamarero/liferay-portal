@@ -409,7 +409,8 @@ public abstract class BaseSearchTestCase {
 				initialBaseModelsCount,
 				searchBaseModelsCount(
 					getBaseModelClass(), group.getGroupId(), searchContext));
-		} else {
+		}
+		else {
 			Assert.assertEquals(
 				initialBaseModelsCount + 1,
 				searchBaseModelsCount(
