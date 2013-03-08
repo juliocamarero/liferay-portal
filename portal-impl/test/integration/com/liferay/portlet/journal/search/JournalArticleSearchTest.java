@@ -101,7 +101,8 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 			JournalArticleLocalServiceUtil.expireArticle(
 				article.getUserId(), article.getGroupId(),
 				article.getArticleId(), article.getUrlTitle(), serviceContext);
-		} else {
+		}
+		else {
 			JournalArticleLocalServiceUtil.expireArticle(
 				article.getUserId(), article.getGroupId(),
 				article.getArticleId(), article.getVersion(),
