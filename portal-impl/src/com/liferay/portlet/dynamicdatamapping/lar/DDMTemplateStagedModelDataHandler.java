@@ -89,26 +89,12 @@ public class DDMTemplateStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			DDMTemplate template)
+			PortletDataContext portletDataContext, DDMTemplate template)
 		throws Exception {
 
-		Element templatesElement = elements[0];
-		Element dlFileEntryTypesElement = null;
-		Element dlFoldersElement = null;
-		Element dlFileEntriesElement = null;
-		Element dlFileRanksElement = null;
-		Element dlRepositoriesElement = null;
-		Element dlRepositoryEntriesElement = null;
-
-		if (elements.length > 1) {
-			dlFileEntryTypesElement = elements[1];
-			dlFoldersElement = elements[2];
-			dlFileEntriesElement = elements[3];
-			dlFileRanksElement = elements[4];
-			dlRepositoriesElement = elements[5];
-			dlRepositoryEntriesElement = elements[6];
-		}
+		Element templatesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DDMTemplate.class.getSimpleName());
 
 		Element templateElement = templatesElement.addElement("template");
 
@@ -119,10 +105,7 @@ public class DDMTemplateStagedModelDataHandler
 			if (Validator.isNotNull(template.getSmallImageURL())) {
 				String smallImageURL =
 					DDMPortletDataHandler.exportReferencedContent(
-						portletDataContext, dlFileEntryTypesElement,
-						dlFoldersElement, dlFileEntriesElement,
-						dlFileRanksElement, dlRepositoriesElement,
-						dlRepositoryEntriesElement, templateElement,
+						portletDataContext, templateElement,
 						template.getSmallImageURL().concat(StringPool.SPACE));
 
 				template.setSmallImageURL(smallImageURL);
@@ -147,10 +130,7 @@ public class DDMTemplateStagedModelDataHandler
 				DDMPortletDataHandler.NAMESPACE, "embedded-assets")) {
 
 			String content = DDMPortletDataHandler.exportReferencedContent(
-				portletDataContext, dlFileEntryTypesElement, dlFoldersElement,
-				dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, templateElement,
-				template.getScript());
+				portletDataContext, templateElement, template.getScript());
 
 			template.setScript(content);
 		}

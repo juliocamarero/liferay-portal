@@ -33,9 +33,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
@@ -73,17 +71,12 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "ddm";
 
 	public static String exportReferencedContent(
-			PortletDataContext portletDataContext,
-			Element dlFileEntryTypesElement, Element dlFoldersElement,
-			Element dlFileEntriesElement, Element dlFileRanksElement,
-			Element dlRepositoriesElement, Element dlRepositoryEntriesElement,
-			Element entityElement, String content)
+			PortletDataContext portletDataContext, Element entityElement,
+			String content)
 		throws Exception {
 
 		content = exportDLFileEntries(
-			portletDataContext, dlFileEntryTypesElement, dlFoldersElement,
-			dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, entityElement, content, false);
+			portletDataContext, entityElement, content, false);
 		content = exportLayoutFriendlyURLs(portletDataContext, content);
 		content = exportLinksToLayout(portletDataContext, content);
 
@@ -106,11 +99,8 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	protected static String exportDLFileEntries(
-			PortletDataContext portletDataContext,
-			Element dlFileEntryTypesElement, Element dlFoldersElement,
-			Element dlFileEntriesElement, Element dlFileRanksElement,
-			Element dlRepositoriesElement, Element dlRepositoryEntriesElement,
-			Element entityElement, String content, boolean checkDateRange)
+			PortletDataContext portletDataContext, Element entityElement,
+			String content, boolean checkDateRange)
 		throws Exception {
 
 		Group group = GroupLocalServiceUtil.getGroup(
@@ -331,10 +321,7 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 				beginPos = currentLocation;
 
 				DLPortletDataHandler.exportFileEntry(
-					portletDataContext, dlFileEntryTypesElement,
-					dlFoldersElement, dlFileEntriesElement, dlFileRanksElement,
-					dlRepositoriesElement, dlRepositoryEntriesElement,
-					fileEntry, checkDateRange);
+					portletDataContext, fileEntry, checkDateRange);
 
 				Element dlReferenceElement = entityElement.addElement(
 					"dl-reference");
@@ -636,7 +623,7 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -645,12 +632,10 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 			"com.liferay.portlet.dynamicdatamapping",
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
-
-		final Element structuresElement = rootElement.addElement("structures");
 
 		ActionableDynamicQuery structureActionableDynamicQuery =
 			new DDMStructureActionableDynamicQuery() {
@@ -668,7 +653,7 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 					DDMStructure structure = (DDMStructure)object;
 
 					StagedModelDataHandlerUtil.exportStagedModel(
-						portletDataContext, structuresElement, structure);
+						portletDataContext, structure);
 				}
 
 		};
@@ -677,8 +662,6 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		structureActionableDynamicQuery.performActions();
-
-		final Element templatesElement = rootElement.addElement("templates");
 
 		ActionableDynamicQuery templateActionableDynamicQuery =
 			new DDMTemplateActionableDynamicQuery() {
@@ -696,7 +679,7 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 					DDMTemplate template = (DDMTemplate)object;
 
 					StagedModelDataHandlerUtil.exportStagedModel(
-						portletDataContext, templatesElement, template);
+						portletDataContext, template);
 				}
 
 		};
@@ -705,14 +688,12 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		templateActionableDynamicQuery.performActions();
-
-		return rootElement.formattedString();
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
@@ -720,11 +701,10 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
-
-		Element structuresElement = rootElement.element("structures");
+		Element structuresElement = rootElement.element(
+			DDMStructure.class.getSimpleName());
 
 		List<Element> structureElements = structuresElement.elements(
 			"structure");
@@ -735,7 +715,8 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "templates")) {
-			Element templatesElement = rootElement.element("templates");
+			Element templatesElement = rootElement.element(
+				DDMTemplate.class.getSimpleName());
 
 			List<Element> templateElements = templatesElement.elements(
 				"template");

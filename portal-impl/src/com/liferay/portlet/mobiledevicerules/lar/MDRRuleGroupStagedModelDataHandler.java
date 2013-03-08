@@ -36,11 +36,12 @@ public class MDRRuleGroupStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			MDRRuleGroup ruleGroup)
+			PortletDataContext portletDataContext, MDRRuleGroup ruleGroup)
 		throws Exception {
 
-		Element ruleGroupsElement = elements[0];
+		Element ruleGroupsElement =
+			portletDataContext.getStagedModelsElementInstance(
+				MDRRuleGroup.class.getSimpleName());
 
 		Element ruleGroupElement = ruleGroupsElement.addElement("rule-group");
 

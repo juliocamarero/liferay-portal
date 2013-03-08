@@ -29,9 +29,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.UserUtil;
@@ -121,7 +119,7 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -130,15 +128,19 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 			"com.liferay.portlet.messageboards",
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		Element categoriesElement = rootElement.addElement("categories");
-		Element messagesElement = rootElement.addElement("messages");
-		Element threadFlagsElement = rootElement.addElement("thread-flags");
-		Element userBansElement = rootElement.addElement("user-bans");
+		Element categoriesElement = rootElement.addElement(
+			MBCategory.class.getSimpleName());
+		Element messagesElement = rootElement.addElement(
+			MBMessage.class.getSimpleName());
+		Element threadFlagsElement = rootElement.addElement(
+			MBThreadFlag.class.getSimpleName());
+		Element userBansElement = rootElement.addElement(
+			MBBan.class.getSimpleName());
 
 		List<MBCategory> categories = MBCategoryUtil.findByGroupId(
 			portletDataContext.getScopeGroupId());
@@ -167,14 +169,12 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 				exportBan(portletDataContext, userBansElement, ban);
 			}
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
@@ -182,11 +182,10 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
-
-		Element categoriesElement = rootElement.element("categories");
+		Element categoriesElement = rootElement.element(
+			MBCategory.class.getSimpleName());
 
 		for (Element categoryElement : categoriesElement.elements("category")) {
 			String path = categoryElement.attributeValue("path");
@@ -201,7 +200,8 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 			importCategory(portletDataContext, path, category);
 		}
 
-		Element messagesElement = rootElement.element("messages");
+		Element messagesElement = rootElement.element(
+			MBMessage.class.getSimpleName());
 
 		for (Element messageElement : messagesElement.elements("message")) {
 			String path = messageElement.attributeValue("path");
@@ -217,7 +217,8 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "thread-flags")) {
-			Element threadFlagsElement = rootElement.element("thread-flags");
+			Element threadFlagsElement = rootElement.element(
+				MBThreadFlag.class.getSimpleName());
 
 			for (Element threadFlagElement :
 					threadFlagsElement.elements("thread-flag")) {
@@ -237,7 +238,8 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "user-bans")) {
-			Element userBansElement = rootElement.element("user-bans");
+			Element userBansElement = rootElement.element(
+				MBBan.class.getSimpleName());
 
 			for (Element userBanElement :
 					userBansElement.elements("user-ban")) {

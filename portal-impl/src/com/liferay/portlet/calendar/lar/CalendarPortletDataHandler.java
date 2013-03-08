@@ -24,9 +24,7 @@ import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -86,7 +84,7 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -95,25 +93,26 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 			"com.liferay.portlet.calendar",
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
+
+		Element eventsElement = rootElement.addElement(
+			CalEvent.class.getSimpleName());
 
 		List<CalEvent> events = CalEventUtil.findByGroupId(
 			portletDataContext.getScopeGroupId());
 
 		for (CalEvent event : events) {
-			exportEvent(portletDataContext, rootElement, event);
+			exportEvent(portletDataContext, eventsElement, event);
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
@@ -121,11 +120,12 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
+		Element eventsElement = rootElement.element(
+			CalEvent.class.getSimpleName());
 
-		for (Element eventElement : rootElement.elements("event")) {
+		for (Element eventElement : eventsElement.elements("event")) {
 			String path = eventElement.attributeValue("path");
 
 			if (!portletDataContext.isPathNotProcessed(path)) {
@@ -142,7 +142,7 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	protected void exportEvent(
-			PortletDataContext portletDataContext, Element rootElement,
+			PortletDataContext portletDataContext, Element eventsElement,
 			CalEvent event)
 		throws PortalException, SystemException {
 
@@ -156,7 +156,7 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 			return;
 		}
 
-		Element eventElement = rootElement.addElement("event");
+		Element eventElement = eventsElement.addElement("event");
 
 		portletDataContext.addClassedModel(
 			eventElement, path, event, NAMESPACE);

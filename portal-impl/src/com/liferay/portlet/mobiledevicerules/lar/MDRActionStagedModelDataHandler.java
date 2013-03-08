@@ -30,6 +30,7 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.mobiledevicerules.model.MDRAction;
+import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup;
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
 import com.liferay.portlet.mobiledevicerules.service.MDRActionLocalServiceUtil;
 import com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceLocalServiceUtil;
@@ -50,23 +51,26 @@ public class MDRActionStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			MDRAction action)
+			PortletDataContext portletDataContext, MDRAction action)
 		throws Exception {
 
-		Element ruleGroupsElement = elements[0];
-		Element ruleGroupInstancesElement = elements[1];
+		Element ruleGroupsElement =
+			portletDataContext.getStagedModelsElementInstance(
+				MDRRuleGroup.class.getSimpleName());
+		Element ruleGroupInstancesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				MDRRuleGroupInstance.class.getSimpleName());
 
 		MDRRuleGroupInstance ruleGroupInstance =
 			MDRRuleGroupInstanceLocalServiceUtil.getRuleGroupInstance(
 				action.getRuleGroupInstanceId());
 
 		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext,
-			new Element[] {ruleGroupsElement, ruleGroupInstancesElement},
-			ruleGroupInstance);
+			portletDataContext, ruleGroupInstance);
 
-		Element actionsElement = elements[2];
+		Element actionsElement =
+			portletDataContext.getStagedModelsElementInstance(
+				MDRAction.class.getSimpleName());
 
 		Element actionElement = actionsElement.addElement("action");
 
@@ -113,8 +117,13 @@ public class MDRActionStagedModelDataHandler
 			(MDRRuleGroupInstance)portletDataContext.getZipEntryAsObject(
 				ruleGroupInstancePath);
 
+		Element ruleGroupInstanceElement =
+			portletDataContext.getStagedModelElement(
+				MDRRuleGroupInstance.class.getSimpleName(),
+				"rule-group-instance", ruleGroupInstancePath);
+
 		StagedModelDataHandlerUtil.importStagedModel(
-			portletDataContext, element, ruleGroupInstancePath,
+			portletDataContext, ruleGroupInstanceElement, ruleGroupInstancePath,
 			ruleGroupInstance);
 
 		Map<Long, Long> ruleGroupInstanceIds =

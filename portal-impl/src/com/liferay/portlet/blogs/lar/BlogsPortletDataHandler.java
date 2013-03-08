@@ -25,9 +25,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.ImageUtil;
@@ -97,7 +95,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -105,52 +103,36 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		portletDataContext.addPermissions(
 			"com.liferay.portlet.blogs", portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		Element entriesElement = rootElement.addElement("entries");
-
-		Element dlFileEntryTypesElement = entriesElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = entriesElement.addElement("dl-folders");
-		Element dlFileEntriesElement = entriesElement.addElement(
-			"dl-file-entries");
-		Element dlFileRanksElement = entriesElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = entriesElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = entriesElement.addElement(
-			"dl-repository-entries");
+		Element entriesElement = rootElement.addElement(
+			BlogsEntry.class.getSimpleName());
 
 		List<BlogsEntry> entries = BlogsEntryUtil.findByGroupId(
 			portletDataContext.getScopeGroupId());
 
 		for (BlogsEntry entry : entries) {
-			exportEntry(
-				portletDataContext, entriesElement, dlFileEntryTypesElement,
-				dlFoldersElement, dlFileEntriesElement, dlFileRanksElement,
-				dlRepositoriesElement, dlRepositoryEntriesElement, entry);
+			exportEntry(portletDataContext, entriesElement, entry);
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
 			"com.liferay.portlet.blogs", portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
-
-		Element entriesElement = rootElement.element("entries");
+		Element entriesElement = rootElement.element(
+			BlogsEntry.class.getSimpleName());
 
 		if (entriesElement != null) {
 			JournalPortletDataHandler.importReferencedData(
@@ -182,9 +164,6 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 
 	protected void exportEntry(
 			PortletDataContext portletDataContext, Element entriesElement,
-			Element dlFileEntryTypesElement, Element dlFoldersElement,
-			Element dlFileEntriesElement, Element dlFileRanksElement,
-			Element dlRepositoriesElement, Element dlRepositoryEntriesElement,
 			BlogsEntry entry)
 		throws Exception {
 
@@ -215,9 +194,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		String content = DDMPortletDataHandler.exportReferencedContent(
-			portletDataContext, dlFileEntryTypesElement, dlFoldersElement,
-			dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, entryElement, entry.getContent());
+			portletDataContext, entryElement, entry.getContent());
 
 		entry.setContent(content);
 
@@ -232,10 +209,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 			if (Validator.isNotNull(entry.getSmallImageURL())) {
 				String smallImageURL =
 					DDMPortletDataHandler.exportReferencedContent(
-						portletDataContext, dlFileEntryTypesElement,
-						dlFoldersElement, dlFileEntriesElement,
-						dlFileRanksElement, dlRepositoriesElement,
-						dlRepositoryEntriesElement, entryElement,
+						portletDataContext, entryElement,
 						entry.getSmallImageURL().concat(StringPool.SPACE));
 
 				entry.setSmallImageURL(smallImageURL);

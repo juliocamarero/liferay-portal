@@ -73,8 +73,13 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		}
 
 		try {
-			return doExportData(
-				portletDataContext, portletId, portletPreferences);
+			portletDataContext.createRootElement(getClass().getSimpleName());
+
+			Element rootElement = portletDataContext.getRootElement();
+
+			doExportData(portletDataContext, portletId, portletPreferences);
+
+			return rootElement.getDocument().formattedString();
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -124,21 +129,25 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		long sourceGroupId = portletDataContext.getSourceGroupId();
 
 		try {
-			if (Validator.isXml(data)) {
-				Document document = SAXReaderUtil.read(data);
+			if (!validateData(data)) {
+				return null;
+			}
 
-				Element rootElement = document.getRootElement();
+			Document document = SAXReaderUtil.read(data);
 
-				long portletSourceGroupId = GetterUtil.getLong(
-					rootElement.attributeValue("group-id"));
+			Element rootElement = document.getRootElement();
 
-				if (portletSourceGroupId != 0) {
-					portletDataContext.setSourceGroupId(portletSourceGroupId);
-				}
+			portletDataContext.setRootElement(rootElement);
+
+			long portletSourceGroupId = GetterUtil.getLong(
+				rootElement.attributeValue("group-id"));
+
+			if (portletSourceGroupId != 0) {
+				portletDataContext.setSourceGroupId(portletSourceGroupId);
 			}
 
 			return doImportData(
-				portletDataContext, portletId, portletPreferences, data);
+				portletDataContext, portletId, portletPreferences);
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -170,14 +179,6 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return _publishToLiveByDefault;
 	}
 
-	protected Element addExportRootElement() {
-		Document document = SAXReaderUtil.createDocument();
-
-		Class<?> clazz = getClass();
-
-		return document.addElement(clazz.getSimpleName());
-	}
-
 	protected PortletPreferences doDeleteData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
@@ -186,17 +187,17 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return portletPreferences;
 	}
 
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		return null;
+		return;
 	}
 
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		return null;
@@ -248,6 +249,14 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 
 	protected void setPublishToLiveByDefault(boolean publishToLiveByDefault) {
 		_publishToLiveByDefault = publishToLiveByDefault;
+	}
+
+	protected boolean validateData(String data) {
+		if (Validator.isXml(data)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

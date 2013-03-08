@@ -22,9 +22,7 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
@@ -86,7 +84,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -94,13 +92,6 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 		portletDataContext.addPermissions(
 			"com.liferay.portlet.bookmarks",
 			portletDataContext.getScopeGroupId());
-
-		Element rootElement = addExportRootElement();
-
-		rootElement.addAttribute(
-			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
-
-		final Element foldersElement = rootElement.addElement("folders");
 
 		ActionableDynamicQuery folderActionableDynamicQuery =
 			new BookmarksFolderActionableDynamicQuery() {
@@ -116,7 +107,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 				BookmarksFolder folder = (BookmarksFolder)object;
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, foldersElement, folder);
+					portletDataContext, folder);
 			}
 
 		};
@@ -125,8 +116,6 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		folderActionableDynamicQuery.performActions();
-
-		final Element entriesElement = rootElement.addElement("entries");
 
 		ActionableDynamicQuery entryActionableDynamicQuery =
 			new BookmarksEntryActionableDynamicQuery() {
@@ -142,8 +131,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 				BookmarksEntry entry = (BookmarksEntry)object;
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext,
-					new Element[] {foldersElement, entriesElement}, entry);
+					portletDataContext, entry);
 			}
 
 		};
@@ -152,14 +140,12 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		entryActionableDynamicQuery.performActions();
-
-		return rootElement.formattedString();
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
@@ -167,18 +153,18 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
-
-		Element rootElement = document.getRootElement();
-
-		Element foldersElement = rootElement.element("folders");
+		Element foldersElement =
+			portletDataContext.getStagedModelsElementInstance(
+				BookmarksFolder.class.getSimpleName());
 
 		for (Element folderElement : foldersElement.elements("folder")) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, folderElement);
 		}
 
-		Element entriesElement = rootElement.element("entries");
+		Element entriesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				BookmarksEntry.class.getSimpleName());
 
 		for (Element entryElement : entriesElement.elements("entry")) {
 			StagedModelDataHandlerUtil.importStagedModel(

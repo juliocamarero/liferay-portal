@@ -38,7 +38,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.RepositoryEntry;
@@ -210,6 +209,36 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 
 		portletDataContext.addClassedModel(
 			fileEntryElement, path, fileEntry, NAMESPACE);
+	}
+
+	public static void exportFileEntry(
+			PortletDataContext portletDataContext, FileEntry fileEntry,
+			boolean checkDateRange)
+		throws Exception {
+
+		Element fileEntryTypesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DLFileEntryType.class.getSimpleName());
+		Element foldersElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DLFolder.class.getSimpleName());
+		Element fileEntriesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DLFileEntry.class.getSimpleName());
+		Element fileRanksElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DLFileRank.class.getSimpleName());
+		Element repositoriesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				Repository.class.getSimpleName());
+		Element repositoryEntriesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				RepositoryEntry.class.getSimpleName());
+
+		exportFileEntry(
+			portletDataContext, fileEntryTypesElement, foldersElement,
+			fileEntriesElement, fileRanksElement, repositoriesElement,
+			repositoryEntriesElement, fileEntry, checkDateRange);
 	}
 
 	public static String getFileEntryPath(
@@ -784,7 +813,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			ddmStructureUuids[i] = ddmStructure.getUuid();
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, fileEntryTypeElement, ddmStructure);
+				portletDataContext, ddmStructure);
 		}
 
 		fileEntryTypeElement.addAttribute(
@@ -1821,7 +1850,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -1830,7 +1859,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			"com.liferay.portlet.documentlibrary",
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
@@ -1844,14 +1873,19 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		Element fileEntryTypesElement = rootElement.addElement(
-			"file-entry-types");
-		Element foldersElement = rootElement.addElement("folders");
-		Element fileEntriesElement = rootElement.addElement("file-entries");
-		Element fileShortcutsElement = rootElement.addElement("file-shortcuts");
-		Element fileRanksElement = rootElement.addElement("file-ranks");
-		Element repositoriesElement = rootElement.addElement("repositories");
+			DLFileEntryType.class.getSimpleName());
+		Element foldersElement = rootElement.addElement(
+			DLFolder.class.getSimpleName());
+		Element fileEntriesElement = rootElement.addElement(
+			DLFileEntry.class.getSimpleName());
+		Element fileShortcutsElement = rootElement.addElement(
+			DLFileShortcut.class.getSimpleName());
+		Element fileRanksElement = rootElement.addElement(
+			DLFileRank.class.getSimpleName());
+		Element repositoriesElement = rootElement.addElement(
+			Repository.class.getSimpleName());
 		Element repositoryEntriesElement = rootElement.addElement(
-			"repository-entries");
+			RepositoryEntry.class.getSimpleName());
 
 		Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 			portletDataContext.getCompanyId());
@@ -1905,14 +1939,12 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 					repositoryEntriesElement, fileShortcut);
 			}
 		}
-
-		return rootElement.formattedString();
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
@@ -1920,11 +1952,10 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Document document = SAXReaderUtil.read(data);
+		Element rootElement = portletDataContext.getRootElement();
 
-		Element rootElement = document.getRootElement();
-
-		Element repositoriesElement = rootElement.element("repositories");
+		Element repositoriesElement = rootElement.element(
+			Repository.class.getSimpleName());
 
 		if (repositoriesElement != null) {
 			List<Element> repositoryElements = repositoriesElement.elements(
@@ -1936,7 +1967,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		Element repositoryEntriesElement = rootElement.element(
-			"repository-entries");
+			RepositoryEntry.class.getSimpleName());
 
 		List<Element> repositoryEntryElements =
 			repositoryEntriesElement.elements("repository-entry");
@@ -1945,7 +1976,8 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			importRepositoryEntry(portletDataContext, repositoryEntryElement);
 		}
 
-		Element fileEntryTypesElement = rootElement.element("file-entry-types");
+		Element fileEntryTypesElement = rootElement.element(
+			DLFileEntryType.class.getSimpleName());
 
 		List<Element> fileEntryTypeElements = fileEntryTypesElement.elements(
 			"file-entry-type");
@@ -1954,7 +1986,8 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			importFileEntryType(portletDataContext, fileEntryTypeElement);
 		}
 
-		Element foldersElement = rootElement.element("folders");
+		Element foldersElement = rootElement.element(
+			DLFolder.class.getSimpleName());
 
 		List<Element> folderElements = foldersElement.elements("folder");
 
@@ -1962,7 +1995,8 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			importFolder(portletDataContext, folderElement);
 		}
 
-		Element fileEntriesElement = rootElement.element("file-entries");
+		Element fileEntriesElement = rootElement.element(
+			DLFileEntry.class.getSimpleName());
 
 		List<Element> fileEntryElements = fileEntriesElement.elements(
 			"file-entry");
@@ -1972,8 +2006,11 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {
-			List<Element> fileShortcutElements = rootElement.element(
-				"file-shortcuts").elements("file-shortcut");
+			Element fileShortcutsElement = rootElement.element(
+				DLFileShortcut.class.getSimpleName());
+
+			List<Element> fileShortcutElements = fileShortcutsElement.elements(
+				"file-shortcut");
 
 			for (Element fileShortcutElement : fileShortcutElements) {
 				importFileShortcut(portletDataContext, fileShortcutElement);
@@ -1981,7 +2018,8 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "ranks")) {
-			Element fileRanksElement = rootElement.element("file-ranks");
+			Element fileRanksElement = rootElement.element(
+				DLFileRank.class.getSimpleName());
 
 			List<Element> fileRankElements = fileRanksElement.elements(
 				"file-rank");

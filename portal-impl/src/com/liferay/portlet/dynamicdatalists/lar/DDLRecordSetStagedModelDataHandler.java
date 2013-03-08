@@ -43,11 +43,12 @@ public class DDLRecordSetStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			DDLRecordSet recordSet)
+			PortletDataContext portletDataContext, DDLRecordSet recordSet)
 		throws Exception {
 
-		Element recordSetsElement = elements[0];
+		Element recordSetsElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DDLRecordSet.class.getSimpleName());
 
 		Element recordSetElement = recordSetsElement.addElement("record-set");
 
@@ -55,22 +56,16 @@ public class DDLRecordSetStagedModelDataHandler
 			recordSetElement, StagedModelPathUtil.getPath(recordSet), recordSet,
 			DDLPortletDataHandler.NAMESPACE);
 
-		Element ddmStructuresElement = recordSetElement.addElement(
-			"ddm-structures");
-
 		DDMStructure ddmStructure = recordSet.getDDMStructure();
 
 		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext, ddmStructuresElement, ddmStructure);
-
-		Element ddmTemplatesElement = recordSetElement.addElement(
-			"ddm-templates");
+			portletDataContext, ddmStructure);
 
 		List<DDMTemplate> ddmTemplates = ddmStructure.getTemplates();
 
 		for (DDMTemplate ddmTemplate : ddmTemplates) {
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, ddmTemplatesElement, ddmTemplate);
+				portletDataContext, ddmTemplate);
 		}
 	}
 
@@ -80,13 +75,17 @@ public class DDLRecordSetStagedModelDataHandler
 			DDLRecordSet recordSet)
 		throws Exception {
 
-		Element ddmStructuresElement = element.element("ddm-structures");
+		Element ddmStructuresElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DDMStructure.class.getSimpleName());
 
 		if (ddmStructuresElement != null) {
 			importDDMStructures(portletDataContext, ddmStructuresElement);
 		}
 
-		Element ddmTemplatesElement = element.element("ddm-templates");
+		Element ddmTemplatesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DDMTemplate.class.getSimpleName());
 
 		if (ddmTemplatesElement != null) {
 			importDDMTemplates(portletDataContext, ddmTemplatesElement);

@@ -45,11 +45,12 @@ public class DDMStructureStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			DDMStructure structure)
+			PortletDataContext portletDataContext, DDMStructure structure)
 		throws Exception {
 
-		Element structuresElement = elements[0];
+		Element structuresElement =
+			portletDataContext.getStagedModelsElementInstance(
+				DDMStructure.class.getSimpleName());
 
 		Element structureElement = structuresElement.addElement("structure");
 

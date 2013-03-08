@@ -25,17 +25,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	implements StagedModelDataHandler<T> {
 
 	public void exportStagedModel(
-			PortletDataContext portletDataContext, Element element,
-			T stagedModel)
-		throws PortletDataException {
-
-		exportStagedModel(
-			portletDataContext, new Element[] {element}, stagedModel);
-	}
-
-	public void exportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			T stagedModel)
+			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
 
 		String path = StagedModelPathUtil.getPath(stagedModel);
@@ -45,8 +35,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 		}
 
 		try {
-			doExportStagedModel(
-				portletDataContext, elements, (T)stagedModel.clone());
+			doExportStagedModel(portletDataContext, (T)stagedModel.clone());
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -73,8 +62,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	}
 
 	protected abstract void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			T stagedModel)
+			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
 
 	protected abstract void doImportStagedModel(

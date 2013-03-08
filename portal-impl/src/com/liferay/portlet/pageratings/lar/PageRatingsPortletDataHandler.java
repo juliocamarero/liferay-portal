@@ -18,7 +18,9 @@ import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Layout;
+import com.liferay.portlet.ratings.model.RatingsEntry;
 import com.liferay.portlet.ratings.service.RatingsStatsLocalServiceUtil;
 
 import javax.portlet.PortletPreferences;
@@ -48,7 +50,7 @@ public class PageRatingsPortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -56,17 +58,33 @@ public class PageRatingsPortletDataHandler extends BasePortletDataHandler {
 		portletDataContext.addRatingsEntries(
 			Layout.class, portletDataContext.getPlid());
 
-		return String.valueOf(portletDataContext.getPlid());
+		Element rootElement = portletDataContext.getRootElement();
+
+		Element ratingsElement = rootElement.addElement(
+			RatingsEntry.class.getSimpleName());
+
+		Element layoutRatingsElement = ratingsElement.addElement("layout");
+
+		layoutRatingsElement.addAttribute(
+			"plid", String.valueOf(portletDataContext.getPlid()));
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
+		Element rootElement = portletDataContext.getRootElement();
+
+		Element ratingsElement = rootElement.element(
+			RatingsEntry.class.getSimpleName());
+
+		Element layoutRatingsElement = ratingsElement.element("layout");
+
 		portletDataContext.importRatingsEntries(
-			Layout.class, GetterUtil.getLong(data),
+			Layout.class,
+			GetterUtil.getLong(layoutRatingsElement.attributeValue("plid")),
 			portletDataContext.getPlid());
 
 		return null;

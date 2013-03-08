@@ -43,20 +43,23 @@ public class BookmarksEntryStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			BookmarksEntry entry)
+			PortletDataContext portletDataContext, BookmarksEntry entry)
 		throws Exception {
 
-		Element foldersElement = elements[0];
+		Element foldersElement =
+			portletDataContext.getStagedModelsElementInstance(
+				BookmarksFolder.class.getSimpleName());
 
 		if (entry.getFolderId() !=
 				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, foldersElement, entry.getFolder());
+				portletDataContext, entry.getFolder());
 		}
 
-		Element entriesElement = elements[1];
+		Element entriesElement =
+			portletDataContext.getStagedModelsElementInstance(
+				BookmarksEntry.class.getSimpleName());
 
 		Element entryElement = entriesElement.addElement("entry");
 
@@ -90,8 +93,14 @@ public class BookmarksEntryStagedModelDataHandler
 				(BookmarksFolder)portletDataContext.getZipEntryAsObject(
 					parentFolderPath);
 
+			Element parentFolderElement =
+				portletDataContext.getStagedModelElement(
+					BookmarksFolder.class.getSimpleName(), "folder",
+					parentFolderPath);
+
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, element, parentFolderPath, parentFolder);
+				portletDataContext, parentFolderElement, parentFolderPath,
+				parentFolder);
 
 			folderId = MapUtil.getLong(
 				folderIds, entry.getFolderId(), entry.getFolderId());
