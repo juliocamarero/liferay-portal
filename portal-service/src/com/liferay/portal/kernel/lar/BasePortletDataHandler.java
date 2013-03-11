@@ -128,7 +128,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		long sourceGroupId = portletDataContext.getSourceGroupId();
 
 		try {
-			if (Validator.isXml(data)) {
+			if (isValidData(data)) {
 				Document document = SAXReaderUtil.read(data);
 
 				Element rootElement = document.getRootElement();
@@ -198,6 +198,14 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		throws Exception {
 
 		return null;
+	}
+
+	protected boolean isValidData(String data) {
+		if (Validator.isXml(data)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected void setAlwaysExportable(boolean alwaysExportable) {
