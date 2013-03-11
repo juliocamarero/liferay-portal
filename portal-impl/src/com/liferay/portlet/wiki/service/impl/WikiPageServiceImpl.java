@@ -223,6 +223,15 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 		wikiPageLocalService.deleteTrashPageAttachments(nodeId, title);
 	}
 
+	public void discardDraft(long nodeId, String title, double version)
+		throws PortalException, SystemException {
+
+		WikiPagePermission.check(
+			getPermissionChecker(), nodeId, title, version, ActionKeys.DELETE);
+
+		wikiPageLocalService.discardDraft(nodeId, title, version);
+	}
+
 	public List<WikiPage> getChildren(
 			long groupId, long nodeId, boolean head, String parentTitle)
 		throws PortalException, SystemException {
