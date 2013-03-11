@@ -430,7 +430,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 6.2.0
+	 * @deprecated As of 6.2.0 replaced by {@link #discardDraft(long, String,
+	 *             double)}
 	 */
 	public void deletePage(long nodeId, String title, double version)
 		throws PortalException, SystemException {
