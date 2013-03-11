@@ -435,7 +435,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	public void deletePage(long nodeId, String title, double version)
 		throws PortalException, SystemException {
 
-		wikiPagePersistence.removeByN_T_V(nodeId, title, version);
+		discardDraft(nodeId, title, version);
 	}
 
 	public void deletePage(WikiPage page)
@@ -592,6 +592,12 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		PortletFileRepositoryUtil.deletePortletFileEntries(
 			page.getGroupId(), page.getAttachmentsFolderId(),
 			WorkflowConstants.STATUS_IN_TRASH);
+	}
+
+	public void discardDraft(long nodeId, String title, double version)
+		throws PortalException, SystemException {
+
+		wikiPagePersistence.removeByN_T_V(nodeId, title, version);
 	}
 
 	public WikiPage fetchPage(long nodeId, String title, double version)
