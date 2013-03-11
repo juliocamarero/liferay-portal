@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchContextFactory;
-import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -362,6 +361,7 @@ public class AssetUtil {
 		AssetSearcher assetSearcher = (AssetSearcher)searcher;
 
 		assetSearcher.setAssetEntryQuery(assetEntryQuery);
+
 		searchContext.setClassTypeIds(assetEntryQuery.getClassTypeIds());
 		searchContext.setEnd(end);
 		searchContext.setGroupIds(assetEntryQuery.getGroupIds());
