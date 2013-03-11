@@ -187,6 +187,7 @@ public class AssetSearcher extends BaseIndexer {
 		contextQuery.add(tagIdsQuery, BooleanClauseOccur.MUST);
 	}
 
+	@Override
 	protected void addSearchAssetCategoryIds(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
@@ -197,6 +198,7 @@ public class AssetSearcher extends BaseIndexer {
 		addSearchNotAllCategories(contextQuery, searchContext);
 	}
 
+	@Override
 	protected void addSearchAssetTagNames(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
