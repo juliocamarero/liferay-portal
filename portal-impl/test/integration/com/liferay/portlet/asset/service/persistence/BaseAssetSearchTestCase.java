@@ -505,7 +505,6 @@ public abstract class BaseAssetSearchTestCase {
 
 	@Test
 	public void testClassName2() throws Exception {
-
 		long[] classNameIds =
 			AssetRendererFactoryRegistryUtil.getClassNameIds();
 
@@ -520,13 +519,23 @@ public abstract class BaseAssetSearchTestCase {
 	}
 
 	@Test
-	public void testClassTypeIds() throws Exception {
+	public void testClassTypeIds1() throws Exception {
 		AssetEntryQuery assetEntryQuery =
 			AssetEntryQueryTestUtil.createAssetEntryQuery(
 				_group.getGroupId(), new String[] {getBaseModelClassName()},
 				getClassTypeIds());
 
-		testClassTypeIds(assetEntryQuery, 2);
+		testClassTypeIds(assetEntryQuery, 1);
+	}
+
+	@Test
+	public void testClassTypeIds2() throws Exception {
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				_group.getGroupId(), new String[] {getBaseModelClassName()},
+				new long[0]);
+
+		testClassTypeIds(assetEntryQuery, 0);
 	}
 
 	@Test
@@ -930,8 +939,6 @@ public abstract class BaseAssetSearchTestCase {
 
 		int initialEntries = searchCount(assetEntryQuery, searchContext);
 
-		addBaseModelWithClassType(
-			parentBaseModel, getSearchKeywords(), serviceContext);
 		addBaseModelWithClassType(
 			parentBaseModel, getSearchKeywords(), serviceContext);
 
