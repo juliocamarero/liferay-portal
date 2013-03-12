@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,17 +16,16 @@ package com.liferay.portlet.messageboards.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
-import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.service.MBCategoryLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.persistence.MBCategoryUtil;
-import com.liferay.portlet.messageboards.service.persistence.MBMessageUtil;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,23 +45,27 @@ public class MBCategoryStagedModelDataHandler
 			MBCategory category)
 		throws Exception {
 
-		exportParentCategory(
-			portletDataContext, categoriesElement,
-			category.getParentCategoryId());
+		Element categoriesElement = elements[0];
+
+		if ((category.getCategoryId() ==
+				MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) ||
+			(category.getCategoryId() ==
+				MBCategoryConstants.DISCUSSION_CATEGORY_ID)) {
+
+			return;
+		}
+
+		if (category.getParentCategory() != null) {
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, categoriesElement,
+				category.getParentCategory());
+		}
 
 		Element categoryElement = categoriesElement.addElement("category");
 
 		portletDataContext.addClassedModel(
-			categoryElement, path, category, NAMESPACE);
-
-		List<MBMessage> messages = MBMessageUtil.findByG_C(
-			category.getGroupId(), category.getCategoryId());
-
-		for (MBMessage message : messages) {
-			exportMessage(
-				portletDataContext, categoriesElement, messagesElement,
-				threadFlagsElement, message);
-		}
+			categoryElement, StagedModelPathUtil.getPath(category), category,
+			MBPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -100,20 +103,25 @@ public class MBCategoryStagedModelDataHandler
 		boolean mailingListActive = false;
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			categoryPath, category, NAMESPACE);
+			path, category, MBPortletDataHandler.NAMESPACE);
+
+		// Parent category
 
 		if ((parentCategoryId !=
 				MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
 			(parentCategoryId != MBCategoryConstants.DISCUSSION_CATEGORY_ID) &&
 			(parentCategoryId == category.getParentCategoryId())) {
 
-			String path = getImportCategoryPath(
-				portletDataContext, parentCategoryId);
+			String parentCategoryPath = StagedModelPathUtil.getPath(
+				portletDataContext, getClassName(), parentCategoryId);
 
 			MBCategory parentCategory =
-				(MBCategory)portletDataContext.getZipEntryAsObject(path);
+				(MBCategory)portletDataContext.getZipEntryAsObject(
+					parentCategoryPath);
 
-			importCategory(portletDataContext, path, parentCategory);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, element, parentCategoryPath,
+				parentCategory);
 
 			parentCategoryId = MapUtil.getLong(
 				categoryIds, category.getParentCategoryId(),
@@ -161,7 +169,7 @@ public class MBCategoryStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			category, importedCategory, NAMESPACE);
+			category, importedCategory, MBPortletDataHandler.NAMESPACE);
 	}
 
 }
