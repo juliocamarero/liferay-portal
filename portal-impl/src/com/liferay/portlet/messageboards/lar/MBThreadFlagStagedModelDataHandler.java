@@ -47,12 +47,6 @@ public class MBThreadFlagStagedModelDataHandler
 			MBThreadFlag threadFlag)
 		throws Exception {
 
-		String path = getThreadFlagPath(portletDataContext, threadFlag);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
 		Element threadFlagElement = threadFlagsElement.addElement(
 			"thread-flag");
 
