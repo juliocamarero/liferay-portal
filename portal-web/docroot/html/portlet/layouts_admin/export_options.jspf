@@ -19,9 +19,6 @@
 		<c:when test="<%= cmd.equals(Constants.EXPORT) %>">
 			<aui:input cssClass="file-selector" label="export-the-selected-data-to-the-given-lar-file-name" name="exportFileName" size="50" value='<%= HtmlUtil.escape(StringUtil.replace(rootNodeName, " ", "_")) + "-" + Time.getShortTimestamp() + ".lar" %>' />
 		</c:when>
-		<c:when test="<%= cmd.equals(Constants.IMPORT) %>">
-			<aui:input cssClass="file-selector" label="import-a-lar-file-to-overwrite-the-selected-data" name="importFileName" size="50" type="file" />
-		</c:when>
 	</c:choose>
 
 	<liferay-ui:panel-container extended="<%= true %>" id="export-dialog-tree-panel-container" persistState="<%= true %>">
@@ -41,14 +38,6 @@
 						<liferay-util:param name="selectableTree" value="1" />
 					</liferay-util:include>
 				</c:if>
-
-				<ul class="lfr-tree lfr-component">
-					<c:if test="<%= cmd.equals(Constants.IMPORT) %>">
-						<li class="tree-item">
-							<aui:input helpMessage="delete-missing-layouts-help" label="delete-missing-layouts" name="<%= PortletDataHandlerKeys.DELETE_MISSING_LAYOUTS %>" type="checkbox" value="<%= false %>" />
-						</li>
-					</c:if>
-				</ul>
 			</liferay-ui:panel>
 		</c:if>
 
@@ -65,35 +54,6 @@
 				</li>
 				<li class="tree-item">
 					<c:choose>
-						<c:when test="<%= cmd.equals(Constants.IMPORT) && !group.isLayoutPrototype() %>">
-							<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= true %>" />
-
-							<aui:input label="data" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" value="<%= true %>" />
-
-							<ul id="<portlet:namespace />portletDataControls">
-								<li class="tree-item">
-									<aui:input helpMessage="delete-portlet-data-help" label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
-								</li>
-
-								<li class="tree-item">
-									<aui:fieldset cssClass="portlet-data-section" label="data-strategy">
-										<aui:input checked="<%= true %>" helpMessage="import-data-strategy-mirror-help" label="mirror" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR %>" />
-
-										<aui:input helpMessage="import-data-strategy-mirror-with-overwriting-help" id="mirrorWithOverwriting" label="mirror-with-overwriting" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR_OVERWRITE %>" />
-
-										<aui:input helpMessage="import-data-strategy-copy-as-new-help" id="copyAsNew" label="copy-as-new" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_COPY_AS_NEW %>" />
-									</aui:fieldset>
-								</li>
-
-								<li class="tree-item">
-									<aui:fieldset cssClass="portlet-data-section" label="user-id-strategy">
-										<aui:input checked="<%= true %>" label="if-a-user-id-does-not-exist,-then-use-my-user-id" name="<%= PortletDataHandlerKeys.USER_ID_STRATEGY %>" type="radio" value="<%= UserIdStrategy.CURRENT_USER_ID %>" />
-
-										<aui:input label="always-use-my-user-id" name="<%= PortletDataHandlerKeys.USER_ID_STRATEGY %>" type="radio" value="<%= UserIdStrategy.ALWAYS_CURRENT_USER_ID %>" />
-									</aui:fieldset>
-								</li>
-							</ul>
-						</c:when>
 						<c:when test="<%= cmd.equals(Constants.EXPORT) && !group.isLayoutPrototype() %>">
 							<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= false %>" />
 
@@ -211,9 +171,6 @@
 												try {
 													PortletDataHandlerControl[] controls = null;
 
-													if (cmd.equals(Constants.IMPORT)) {
-														controls = portletDataHandler.getImportControls();
-													}
 													else {
 														controls = portletDataHandler.getExportControls();
 													}
@@ -299,9 +256,6 @@
 												try {
 													PortletDataHandlerControl[] metadataControls = null;
 
-													if (cmd.equals(Constants.IMPORT)) {
-														metadataControls = portletDataHandler.getImportMetadataControls();
-													}
 													else {
 														metadataControls = portletDataHandler.getExportMetadataControls();
 													}
