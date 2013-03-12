@@ -155,19 +155,26 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 		Liferay.Util.openDDMPortlet(
 			{
 				availableFields: 'Liferay.FormBuilder.AVAILABLE_FIELDS.WCM_STRUCTURE',
-				chooseCallback: '<portlet:namespace />selectStructure',
 				classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
 				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey() : 0 %>,
 				ddmResource: '<%= ddmResource %>',
 				dialog: {
 					width: 820
 				},
+				eventName: '<portlet:namespace />selectStructure',
 				groupId: <%= groupId %>,
-				saveCallback: '<portlet:namespace />selectStructure',
 				storageType: '<%= PropsValues.JOURNAL_ARTICLE_STORAGE_TYPE %>',
 				structureName: 'structure',
 				structureType: 'com.liferay.portlet.journal.model.JournalArticle',
+				struts_action: '/dynamic_data_mapping/select_structure',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
+			},
+			function(event){
+				var A = AUI();
+
+				document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureKey.value = event.ddmstructurekey;
+
+				A.one('#<portlet:namespace />structure').html(event.name + ' <em>(' + event.ddmstructureid + ')</em>');
 			}
 		);
 	}
@@ -178,26 +185,9 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 		function() {
 			var A = AUI();
 
-			document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureId.value = "";
+			document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureKey.value = "";
 
 			A.one('#<portlet:namespace />structure').html('<%= UnicodeLanguageUtil.get(pageContext, "any") %>');
-		},
-		['aui-base']
-	);
-
-	Liferay.provide(
-		window,
-		'<portlet:namespace />selectStructure',
-		function(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
-			var A = AUI();
-
-			document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureKey.value = ddmStructureKey;
-
-			A.one('#<portlet:namespace />structure').html(ddmStructureId + ' <em>(' + ddmStructureName + ')</em>');
-
-			if (dialog) {
-				dialog.close();
-			}
 		},
 		['aui-base']
 	);

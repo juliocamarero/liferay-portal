@@ -351,13 +351,13 @@ if (feed != null) {
 	function <portlet:namespace />openStructureSelector() {
 		Liferay.Util.openDDMPortlet(
 			{
-				chooseCallback: '<portlet:namespace />selectStructure',
 				classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
 				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey(): 0 %>,
 				ddmResource: '<%= ddmResource %>',
 				dialog: {
 					width: 820
 				},
+				eventName: '<portlet:namespace />selectStructure',
 				groupId: <%= groupId %>,
 
 				<%
@@ -366,11 +366,21 @@ if (feed != null) {
 
 				refererWebDAVToken: '<%= portlet.getWebDAVStorageToken() %>',
 
-				saveCallback: '<portlet:namespace />selectStructure',
 				storageType: '<%= PropsValues.JOURNAL_ARTICLE_STORAGE_TYPE %>',
 				structureName: 'structure',
 				structureType: 'com.liferay.portlet.journal.model.JournalArticle',
+				struts_action: '/dynamic_data_mapping/select_structure',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
+			},
+			function(event){
+				if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-structure-will-change-the-available-templates-and-available-feed-item-content") %>') && (document.<portlet:namespace />fm.<portlet:namespace />structureId.value != event.structurekey)) {
+					document.<portlet:namespace />fm.<portlet:namespace />structureId.value = event.ddmstructurekey;
+					document.<portlet:namespace />fm.<portlet:namespace />templateId.value = "";
+					document.<portlet:namespace />fm.<portlet:namespace />rendererTemplateId.value = "";
+					document.<portlet:namespace />fm.<portlet:namespace />contentField.value = "<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>";
+
+					submitForm(document.<portlet:namespace />fm);
+				}
 			}
 		);
 	}
@@ -380,6 +390,7 @@ if (feed != null) {
 		document.<portlet:namespace />fm.<portlet:namespace />templateId.value = "";
 		document.<portlet:namespace />fm.<portlet:namespace />rendererTemplateId.value = "";
 		document.<portlet:namespace />fm.<portlet:namespace />contentField.value = "<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>";
+
 		submitForm(document.<portlet:namespace />fm);
 	}
 
@@ -395,21 +406,6 @@ if (feed != null) {
 
 	function <portlet:namespace />selectRendererTemplate(rendererTemplateId) {
 		document.<portlet:namespace />fm.<portlet:namespace />rendererTemplateId.value = rendererTemplateId;
-	}
-
-	function <portlet:namespace />selectStructure(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
-		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-structure-will-change-the-available-templates-and-available-feed-item-content") %>') && (document.<portlet:namespace />fm.<portlet:namespace />structureId.value != ddmStructureKey)) {
-			document.<portlet:namespace />fm.<portlet:namespace />structureId.value = ddmStructureKey;
-			document.<portlet:namespace />fm.<portlet:namespace />templateId.value = "";
-			document.<portlet:namespace />fm.<portlet:namespace />rendererTemplateId.value = "";
-			document.<portlet:namespace />fm.<portlet:namespace />contentField.value = "<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>";
-
-			if (dialog) {
-				dialog.close();
-			}
-
-			submitForm(document.<portlet:namespace />fm);
-		}
 	}
 
 	function <portlet:namespace />selectTemplate(structureId, templateId, dialog) {
