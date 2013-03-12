@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.messageboards.model.MBCategory;
+import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.model.MBThreadFlag;
@@ -275,6 +276,29 @@ public class MBMessageStagedModelDataHandler
 		}
 
 		return inputStreamOVPs;
+	}
+
+	protected long getCategoryId(
+			PortletDataContext portletDataContext, MBMessage message,
+			Map<Long, Long> categoryPKs, long categoryId)
+		throws Exception {
+
+		if ((categoryId != MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
+			(categoryId != MBCategoryConstants.DISCUSSION_CATEGORY_ID) &&
+			(categoryId == message.getCategoryId())) {
+
+			String path = getImportCategoryPath(portletDataContext, categoryId);
+
+			MBCategory category =
+				(MBCategory)portletDataContext.getZipEntryAsObject(path);
+
+			importCategory(portletDataContext, path, category);
+
+			categoryId = MapUtil.getLong(
+				categoryPKs, message.getCategoryId(), message.getCategoryId());
+		}
+
+		return categoryId;
 	}
 
 }

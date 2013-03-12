@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -39,7 +38,6 @@ import com.liferay.portlet.messageboards.service.persistence.MBCategoryUtil;
 import com.liferay.portlet.messageboards.service.persistence.MBMessageUtil;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
@@ -261,29 +259,6 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.addClassedModel(
 				categoryElement, path, category, NAMESPACE);
 		}
-	}
-
-	protected long getCategoryId(
-			PortletDataContext portletDataContext, MBMessage message,
-			Map<Long, Long> categoryPKs, long categoryId)
-		throws Exception {
-
-		if ((categoryId != MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
-			(categoryId != MBCategoryConstants.DISCUSSION_CATEGORY_ID) &&
-			(categoryId == message.getCategoryId())) {
-
-			String path = getImportCategoryPath(portletDataContext, categoryId);
-
-			MBCategory category =
-				(MBCategory)portletDataContext.getZipEntryAsObject(path);
-
-			importCategory(portletDataContext, path, category);
-
-			categoryId = MapUtil.getLong(
-				categoryPKs, message.getCategoryId(), message.getCategoryId());
-		}
-
-		return categoryId;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(MBPortletDataHandler.class);
