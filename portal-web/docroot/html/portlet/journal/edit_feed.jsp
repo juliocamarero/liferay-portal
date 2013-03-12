@@ -221,7 +221,7 @@ if (feed != null) {
 								}
 								%>
 
-								<aui:input checked="<%= templateChecked %>" name="templateId" type="radio" value="<%= tableIteratorObj.getTemplateKey() %>" />
+								<aui:input checked="<%= templateChecked %>" label="<%= HtmlUtil.escape(tableIteratorObj.getName(locale)) %>" name="templateId" type="radio" value="<%= tableIteratorObj.getTemplateKey() %>" />
 
 								<c:if test="<%= tableIteratorObj.isSmallImage() %>">
 									<br />
