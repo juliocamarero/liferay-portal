@@ -20,16 +20,10 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.ObjectValuePair;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.messageboards.model.MBBan;
 import com.liferay.portlet.messageboards.model.MBCategory;
@@ -44,10 +38,6 @@ import com.liferay.portlet.messageboards.service.persistence.MBBanUtil;
 import com.liferay.portlet.messageboards.service.persistence.MBCategoryUtil;
 import com.liferay.portlet.messageboards.service.persistence.MBMessageUtil;
 
-import java.io.InputStream;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -271,51 +261,6 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.addClassedModel(
 				categoryElement, path, category, NAMESPACE);
 		}
-	}
-
-	protected List<ObjectValuePair<String, InputStream>> getAttachments(
-		PortletDataContext portletDataContext, Element messageElement,
-		MBMessage message) {
-
-		boolean hasAttachmentsFileEntries = GetterUtil.getBoolean(
-			messageElement.attributeValue("hasAttachmentsFileEntries"));
-
-		if (!hasAttachmentsFileEntries &&
-			portletDataContext.getBooleanParameter(NAMESPACE, "attachments")) {
-
-			return Collections.emptyList();
-		}
-
-		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
-			new ArrayList<ObjectValuePair<String, InputStream>>();
-
-		List<Element> attachmentElements = messageElement.elements(
-			"attachment");
-
-		for (Element attachmentElement : attachmentElements) {
-			String name = attachmentElement.attributeValue("name");
-			String binPath = attachmentElement.attributeValue("bin-path");
-
-			InputStream inputStream =
-				portletDataContext.getZipEntryAsInputStream(binPath);
-
-			if (inputStream == null) {
-				continue;
-			}
-
-			ObjectValuePair<String, InputStream> inputStreamOVP =
-				new ObjectValuePair<String, InputStream>(name, inputStream);
-
-			inputStreamOVPs.add(inputStreamOVP);
-		}
-
-		if (inputStreamOVPs.isEmpty()) {
-			_log.error(
-				"Could not find attachments for message " +
-					message.getMessageId());
-		}
-
-		return inputStreamOVPs;
 	}
 
 	protected long getCategoryId(
