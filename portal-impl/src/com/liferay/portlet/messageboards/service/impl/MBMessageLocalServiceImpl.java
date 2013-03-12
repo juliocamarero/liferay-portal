@@ -2146,6 +2146,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 			if (category != null) {
 				category.setLastPostDate(modifiedDate);
+
+				mbCategoryPersistence.update(category);
 			}
 		}
 
@@ -2170,9 +2172,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				MBUtil.updateCategoryMessageCount(category);
 			}
 		}
-		else {
-			mbThreadPersistence.update(thread);
-		}
+
+		mbThreadPersistence.update(thread);
 	}
 
 	protected void validate(String subject, String body)
