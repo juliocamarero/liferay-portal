@@ -187,7 +187,7 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 	Liferay.provide(
 		window,
 		'<portlet:namespace />selectStructure',
-		function(ddmStructureId, ddmStructureName, dialog) {
+		function(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
 			var A = AUI();
 
 			document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureId.value = ddmStructureId;

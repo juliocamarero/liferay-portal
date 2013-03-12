@@ -413,7 +413,7 @@ if (feed != null) {
 		document.<portlet:namespace />fm.<portlet:namespace />rendererTemplateId.value = rendererTemplateId;
 	}
 
-	function <portlet:namespace />selectStructure(ddmStructureId, ddmStructureName, dialog) {
+	function <portlet:namespace />selectStructure(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
 		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-structure-will-change-the-available-templates-and-available-feed-item-content") %>') && (document.<portlet:namespace />fm.<portlet:namespace />ddmStructureId.value != ddmStructureId)) {
 			document.<portlet:namespace />fm.<portlet:namespace />ddmStructureId.value = ddmStructureId;
 			document.<portlet:namespace />fm.<portlet:namespace />templateId.value = "";
