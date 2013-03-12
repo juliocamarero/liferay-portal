@@ -32,7 +32,6 @@ long classPK = ParamUtil.getLong(request, "classPK");
 </liferay-portlet:renderURL>
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
-
 	<c:if test="<%= !showToolbar %>">
 		<liferay-ui:header
 			localizeTitle="<%= false %>"
@@ -91,6 +90,20 @@ long classPK = ParamUtil.getLong(request, "classPK");
 				value="<%= HtmlUtil.escape(structure.getName(locale)) %>"
 			/>
 
+			<liferay-ui:search-container-column-text
+				name="description"
+				value="<%= HtmlUtil.escape(structure.getDescription(locale)) %>"
+			/>
+
+			<liferay-ui:search-container-column-text
+				name="modified-date"
+			>
+				<%
+				Date modifiedDate = structure.getModifiedDate();
+				%>
+
+				<liferay-ui:message arguments="<%= LanguageUtil.getTimeDescription(pageContext, System.currentTimeMillis() - modifiedDate.getTime(), true) %>" key="x-ago" />
+			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:search-iterator />
