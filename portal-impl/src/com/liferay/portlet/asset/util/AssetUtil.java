@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchContextFactory;
+import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -359,6 +360,20 @@ public class AssetUtil {
 		AssetSearcher assetSearcher = (AssetSearcher)searcher;
 
 		assetSearcher.setAssetEntryQuery(assetEntryQuery);
+
+		String ddmStructureFieldValue = (String)assetEntryQuery.getAttribute(
+			"ddmStructureFieldValue");
+		String ddmStructureFieldName = (String)assetEntryQuery.getAttribute(
+			"ddmStructureFieldName");
+
+		if (Validator.isNotNull(ddmStructureFieldName) &&
+			Validator.isNotNull(ddmStructureFieldValue)) {
+
+			searchContext.setAttribute(
+				"ddmStructureFieldValue", ddmStructureFieldValue);
+			searchContext.setAttribute(
+				"ddmStructureFieldName", ddmStructureFieldName);
+		}
 
 		searchContext.setClassTypeIds(assetEntryQuery.getClassTypeIds());
 		searchContext.setEnd(end);
