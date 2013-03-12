@@ -154,19 +154,19 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 	function <portlet:namespace />openStructureSelector() {
 		Liferay.Util.openDDMPortlet(
 			{
-			chooseCallback: '<portlet:namespace />selectStructure',
-			classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
-			classPK: <%= ddmStructureId %>,
-			ddmResource: '<%= ddmResource %>',
-			dialog: {
-				width: 820
-			},
-			groupId: <%= groupId %>,
-			saveCallback: '<portlet:namespace />selectStructure',
-			storageType: '<%= PropsValues.JOURNAL_ARTICLE_STORAGE_TYPE %>',
-			structureName: 'structure',
-			structureType: 'com.liferay.portlet.journal.model.JournalArticle',
-			title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
+				chooseCallback: '<portlet:namespace />selectStructure',
+				classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
+				classPK: <%= ddmStructureId %>,
+				ddmResource: '<%= ddmResource %>',
+				dialog: {
+					width: 820
+				},
+				groupId: <%= groupId %>,
+				saveCallback: '<portlet:namespace />selectStructure',
+				storageType: '<%= PropsValues.JOURNAL_ARTICLE_STORAGE_TYPE %>',
+				structureName: 'structure',
+				structureType: 'com.liferay.portlet.journal.model.JournalArticle',
+				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
 			}
 		);
 	}

@@ -213,22 +213,22 @@ if (Validator.isNotNull(script)) {
 <aui:script>
 	function <portlet:namespace />openParentStructureSelector() {
 		Liferay.Util.openDDMPortlet(
-		{
-			availableFields: 'Liferay.FormBuilder.AVAILABLE_FIELDS.WCM_STRUCTURE',
-			classPK: <%= (structure != null) ? structure.getPrimaryKey() : 0 %>,
-			ddmResource: '<%= ddmResource %>',
-			dialog: {
-				width: 820
-			},
-			saveCallback: '<%= renderResponse.getNamespace() + "selectParentStructure" %>',
-			showGlobalScope: true,
-			showManageTemplates: false,
-			storageType: '<%= scopeStorageType %>',
-			structureName: '<%= scopeStructureName %>',
-			structureType: '<%= scopeStructureType %>',
-			struts_action: '/dynamic_data_mapping/select_structure',
-			title: '<%= scopeTitle %>'
-		}
+			{
+				availableFields: 'Liferay.FormBuilder.AVAILABLE_FIELDS.WCM_STRUCTURE',
+				classPK: <%= (structure != null) ? structure.getPrimaryKey() : 0 %>,
+				ddmResource: '<%= ddmResource %>',
+				dialog: {
+					width: 820
+				},
+				saveCallback: '<%= renderResponse.getNamespace() + "selectParentStructure" %>',
+				showGlobalScope: true,
+				showManageTemplates: false,
+				storageType: '<%= scopeStorageType %>',
+				structureName: '<%= scopeStructureName %>',
+				structureType: '<%= scopeStructureType %>',
+				struts_action: '/dynamic_data_mapping/select_structure',
+				title: '<%= scopeTitle %>'
+			}
 		);
 	}
 
