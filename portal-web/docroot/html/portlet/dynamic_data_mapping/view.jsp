@@ -100,6 +100,8 @@ portletURL.setParameter("tabs1", tabs1);
 				sb.append("']('");
 				sb.append(structure.getStructureId());
 				sb.append("', '");
+				sb.append(structure.getStructureKey());
+				sb.append("', '");
 				sb.append(HtmlUtil.escape(structure.getName(locale)));
 				sb.append("', Liferay.Util.getWindow());");
 

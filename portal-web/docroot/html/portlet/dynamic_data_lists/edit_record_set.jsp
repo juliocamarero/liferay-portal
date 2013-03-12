@@ -186,7 +186,7 @@ if (ddmStructureId > 0) {
 	Liferay.provide(
 		window,
 		'<portlet:namespace />selectDDMStructure',
-		function(ddmStructureId, ddmStructureName, dialog) {
+		function(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
 			var A = AUI();
 
 			A.one('#<portlet:namespace />ddmStructureId').val(ddmStructureId);

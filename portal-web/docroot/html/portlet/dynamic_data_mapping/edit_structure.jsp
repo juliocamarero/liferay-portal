@@ -246,7 +246,7 @@ if (Validator.isNotNull(script)) {
 	Liferay.provide(
 		window,
 		'<portlet:namespace />selectParentStructure',
-		function(ddmStructureId, ddmStructureName, dialog) {
+		function(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
 			document.<portlet:namespace />fm.<portlet:namespace />parentStructureId.value = ddmStructureId;
 
 			var nameEl = document.getElementById("<portlet:namespace />parentStructureName");
