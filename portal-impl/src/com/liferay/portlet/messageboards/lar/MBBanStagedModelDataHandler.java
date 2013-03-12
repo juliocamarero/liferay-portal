@@ -43,16 +43,6 @@ public class MBBanStagedModelDataHandler
 			MBBan ban)
 		throws Exception {
 
-		if (!portletDataContext.isWithinDateRange(ban.getModifiedDate())) {
-			return;
-		}
-
-		String path = getUserBanPath(portletDataContext, ban);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
 		Element userBanElement = userBansElement.addElement("user-ban");
 
 		ban.setBanUserUuid(ban.getBanUserUuid());

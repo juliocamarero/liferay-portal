@@ -58,22 +58,12 @@ public class MBMessageStagedModelDataHandler
 			MBMessage message)
 		throws Exception {
 
-		if (!portletDataContext.isWithinDateRange(message.getModifiedDate())) {
-			return;
-		}
-
 		if (message.getStatus() != WorkflowConstants.STATUS_APPROVED) {
 			return;
 		}
 
 		exportParentCategory(
 			portletDataContext, categoriesElement, message.getCategoryId());
-
-		String path = getMessagePath(portletDataContext, message);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
 
 		Element messageElement = messagesElement.addElement("message");
 

@@ -46,21 +46,14 @@ public class MBCategoryStagedModelDataHandler
 			MBCategory category)
 		throws Exception {
 
-		if (portletDataContext.isWithinDateRange(category.getModifiedDate())) {
-			exportParentCategory(
-				portletDataContext, categoriesElement,
-				category.getParentCategoryId());
+		exportParentCategory(
+			portletDataContext, categoriesElement,
+			category.getParentCategoryId());
 
-			String path = getCategoryPath(portletDataContext, category);
+		Element categoryElement = categoriesElement.addElement("category");
 
-			if (portletDataContext.isPathNotProcessed(path)) {
-				Element categoryElement = categoriesElement.addElement(
-					"category");
-
-				portletDataContext.addClassedModel(
-					categoryElement, path, category, NAMESPACE);
-			}
-		}
+		portletDataContext.addClassedModel(
+			categoryElement, path, category, NAMESPACE);
 
 		List<MBMessage> messages = MBMessageUtil.findByG_C(
 			category.getGroupId(), category.getCategoryId());
