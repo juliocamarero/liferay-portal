@@ -17,7 +17,14 @@ package com.liferay.portlet.messageboards.lar;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.persistence.UserUtil;
 import com.liferay.portlet.messageboards.model.MBBan;
+import com.liferay.portlet.messageboards.service.MBBanLocalServiceUtil;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Daniel Kocsis
@@ -36,7 +43,22 @@ public class MBBanStagedModelDataHandler
 			MBBan ban)
 		throws Exception {
 
-		return;
+		if (!portletDataContext.isWithinDateRange(ban.getModifiedDate())) {
+			return;
+		}
+
+		String path = getUserBanPath(portletDataContext, ban);
+
+		if (!portletDataContext.isPathNotProcessed(path)) {
+			return;
+		}
+
+		Element userBanElement = userBansElement.addElement("user-ban");
+
+		ban.setBanUserUuid(ban.getBanUserUuid());
+
+		portletDataContext.addClassedModel(
+			userBanElement, path, ban, NAMESPACE);
 	}
 
 	@Override
@@ -45,7 +67,26 @@ public class MBBanStagedModelDataHandler
 			MBBan ban)
 		throws Exception {
 
-		return;
+		long userId = portletDataContext.getUserId(ban.getUserUuid());
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			userBanElement, ban, NAMESPACE);
+
+		List<User> users = UserUtil.findByUuid_C(
+			ban.getBanUserUuid(), portletDataContext.getCompanyId());
+
+		Iterator<User> itr = users.iterator();
+
+		if (itr.hasNext()) {
+			User user = itr.next();
+
+			MBBanLocalServiceUtil.addBan(
+				userId, user.getUserId(), serviceContext);
+		}
+		else {
+			_log.error(
+				"Could not find banned user with uuid " + ban.getBanUserUuid());
+		}
 	}
 
 }
