@@ -36,6 +36,7 @@ import com.liferay.portlet.messageboards.service.persistence.MBThreadFlagUtil;
 import java.io.InputStream;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -229,6 +230,51 @@ public class MBMessageStagedModelDataHandler
 				StreamUtil.cleanUp(inputStream);
 			}
 		}
+	}
+
+	protected List<ObjectValuePair<String, InputStream>> getAttachments(
+		PortletDataContext portletDataContext, Element messageElement,
+		MBMessage message) {
+
+		boolean hasAttachmentsFileEntries = GetterUtil.getBoolean(
+			messageElement.attributeValue("hasAttachmentsFileEntries"));
+
+		if (!hasAttachmentsFileEntries &&
+			portletDataContext.getBooleanParameter(NAMESPACE, "attachments")) {
+
+			return Collections.emptyList();
+		}
+
+		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
+			new ArrayList<ObjectValuePair<String, InputStream>>();
+
+		List<Element> attachmentElements = messageElement.elements(
+			"attachment");
+
+		for (Element attachmentElement : attachmentElements) {
+			String name = attachmentElement.attributeValue("name");
+			String binPath = attachmentElement.attributeValue("bin-path");
+
+			InputStream inputStream =
+				portletDataContext.getZipEntryAsInputStream(binPath);
+
+			if (inputStream == null) {
+				continue;
+			}
+
+			ObjectValuePair<String, InputStream> inputStreamOVP =
+				new ObjectValuePair<String, InputStream>(name, inputStream);
+
+			inputStreamOVPs.add(inputStreamOVP);
+		}
+
+		if (inputStreamOVPs.isEmpty()) {
+			_log.error(
+				"Could not find attachments for message " +
+					message.getMessageId());
+		}
+
+		return inputStreamOVPs;
 	}
 
 }
