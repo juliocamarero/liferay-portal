@@ -174,7 +174,7 @@ String scopeAvailableFields = ParamUtil.getString(request, "scopeAvailableFields
 	Liferay.provide(
 		window,
 		'<portlet:namespace />selectDDMStructure',
-		function(ddmStructureId, ddmStructureName, dialog) {
+		function(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
 			var A = AUI();
 
 			var searchContainer = Liferay.SearchContainer.get('<portlet:namespace />ddmStructuresSearchContainer');

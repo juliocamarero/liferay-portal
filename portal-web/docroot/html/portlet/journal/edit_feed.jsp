@@ -367,26 +367,26 @@ if (feed != null) {
 	function <portlet:namespace />openStructureSelector() {
 		Liferay.Util.openDDMPortlet(
 			{
-			chooseCallback: '<portlet:namespace />selectStructure',
-			classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
-			classPK: <%= ddmStructureId %>,
-			ddmResource: '<%= ddmResource %>',
-			dialog: {
-				width: 820
-			},
-			groupId: <%= groupId %>,
+				chooseCallback: '<portlet:namespace />selectStructure',
+				classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
+				classPK: <%= ddmStructureId %>,
+				ddmResource: '<%= ddmResource %>',
+				dialog: {
+					width: 820
+				},
+				groupId: <%= groupId %>,
 
-			<%
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
-			%>
+				<%
+				Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
+				%>
 
-			refererWebDAVToken: '<%= portlet.getWebDAVStorageToken() %>',
+				refererWebDAVToken: '<%= portlet.getWebDAVStorageToken() %>',
 
-			saveCallback: '<portlet:namespace />selectStructure',
-			storageType: '<%= PropsValues.JOURNAL_ARTICLE_STORAGE_TYPE %>',
-			structureName: 'structure',
-			structureType: 'com.liferay.portlet.journal.model.JournalArticle',
-			title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
+				saveCallback: '<portlet:namespace />selectStructure',
+				storageType: '<%= PropsValues.JOURNAL_ARTICLE_STORAGE_TYPE %>',
+				structureName: 'structure',
+				structureType: 'com.liferay.portlet.journal.model.JournalArticle',
+				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
 			}
 		);
 	}
@@ -413,7 +413,7 @@ if (feed != null) {
 		document.<portlet:namespace />fm.<portlet:namespace />rendererTemplateId.value = rendererTemplateId;
 	}
 
-	function <portlet:namespace />selectStructure(ddmStructureId, ddmStructureName, dialog) {
+	function <portlet:namespace />selectStructure(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
 		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-structure-will-change-the-available-templates-and-available-feed-item-content") %>') && (document.<portlet:namespace />fm.<portlet:namespace />ddmStructureId.value != ddmStructureId)) {
 			document.<portlet:namespace />fm.<portlet:namespace />ddmStructureId.value = ddmStructureId;
 			document.<portlet:namespace />fm.<portlet:namespace />templateId.value = "";

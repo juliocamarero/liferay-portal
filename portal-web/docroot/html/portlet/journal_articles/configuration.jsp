@@ -30,7 +30,7 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 <aui:form action="<%= configurationActionURL %>" method="post" name="fm1">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value='<%= configurationRenderURL + StringPool.AMPERSAND + renderResponse.getNamespace() + "cur=" + cur %>' />
-	<aui:input name="preferences--ddmStructureId--" type="hidden" value="<%= ddmStructureId %>" />
+	<aui:input name="preferences--ddmStructureKey--" type="hidden" value="<%= ddmStructureKey %>" />
 
 	<liferay-ui:panel-container extended="<%= true %>" id="journalArticlesSettingsPanelContainer" persistState="<%= true %>">
 		<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="journalArticlesFilterPanel" persistState="<%= true %>" title="filter">
@@ -154,19 +154,20 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 	function <portlet:namespace />openStructureSelector() {
 		Liferay.Util.openDDMPortlet(
 			{
-			chooseCallback: '<portlet:namespace />selectStructure',
-			classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
-			classPK: <%= ddmStructureId %>,
-			ddmResource: '<%= ddmResource %>',
-			dialog: {
-				width: 820
-			},
-			groupId: <%= groupId %>,
-			saveCallback: '<portlet:namespace />selectStructure',
-			storageType: '<%= PropsValues.JOURNAL_ARTICLE_STORAGE_TYPE %>',
-			structureName: 'structure',
-			structureType: 'com.liferay.portlet.journal.model.JournalArticle',
-			title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
+				availableFields: 'Liferay.FormBuilder.AVAILABLE_FIELDS.WCM_STRUCTURE',
+				chooseCallback: '<portlet:namespace />selectStructure',
+				classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
+				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey() : 0 %>,
+				ddmResource: '<%= ddmResource %>',
+				dialog: {
+					width: 820
+				},
+				groupId: <%= groupId %>,
+				saveCallback: '<portlet:namespace />selectStructure',
+				storageType: '<%= PropsValues.JOURNAL_ARTICLE_STORAGE_TYPE %>',
+				structureName: 'structure',
+				structureType: 'com.liferay.portlet.journal.model.JournalArticle',
+				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
 			}
 		);
 	}
@@ -187,10 +188,10 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 	Liferay.provide(
 		window,
 		'<portlet:namespace />selectStructure',
-		function(ddmStructureId, ddmStructureName, dialog) {
+		function(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
 			var A = AUI();
 
-			document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureId.value = ddmStructureId;
+			document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureKey.value = ddmStructureKey;
 
 			A.one('#<portlet:namespace />structure').html(ddmStructureId + ' <em>(' + ddmStructureName + ')</em>');
 

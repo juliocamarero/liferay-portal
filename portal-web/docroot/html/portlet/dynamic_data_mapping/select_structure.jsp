@@ -70,6 +70,8 @@ long classPK = ParamUtil.getLong(request, "classPK");
 				sb.append("('");
 				sb.append(structure.getStructureId());
 				sb.append("', '");
+				sb.append(structure.getStructureKey());
+				sb.append("', '");
 				sb.append(HtmlUtil.escapeJS(structure.getName(locale)));
 				sb.append("', Liferay.Util.getWindow());");
 
