@@ -17,8 +17,8 @@
 <%@ include file="/html/portlet/roles_admin/init.jsp" %>
 
 <%
-String callback = ParamUtil.getString(request, "callback", "selectRole");
 String p_u_i_d = ParamUtil.getString(request, "p_u_i_d");
+String callback = ParamUtil.getString(request, "callback", "selectRole");
 
 User selUser = PortalUtil.getSelectedUser(request);
 
