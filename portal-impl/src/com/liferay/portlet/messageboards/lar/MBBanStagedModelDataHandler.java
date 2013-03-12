@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,6 +16,9 @@ package com.liferay.portlet.messageboards.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
@@ -43,12 +46,15 @@ public class MBBanStagedModelDataHandler
 			MBBan ban)
 		throws Exception {
 
+		Element userBansElement = elements[0];
+
 		Element userBanElement = userBansElement.addElement("user-ban");
 
 		ban.setBanUserUuid(ban.getBanUserUuid());
 
 		portletDataContext.addClassedModel(
-			userBanElement, path, ban, NAMESPACE);
+			userBanElement, StagedModelPathUtil.getPath(ban), ban,
+			MBPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -60,7 +66,7 @@ public class MBBanStagedModelDataHandler
 		long userId = portletDataContext.getUserId(ban.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			userBanElement, ban, NAMESPACE);
+			element, ban, MBPortletDataHandler.NAMESPACE);
 
 		List<User> users = UserUtil.findByUuid_C(
 			ban.getBanUserUuid(), portletDataContext.getCompanyId());
@@ -78,5 +84,8 @@ public class MBBanStagedModelDataHandler
 				"Could not find banned user with uuid " + ban.getBanUserUuid());
 		}
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		MBBanStagedModelDataHandler.class);
 
 }
