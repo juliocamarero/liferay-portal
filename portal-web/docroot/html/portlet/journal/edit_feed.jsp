@@ -30,24 +30,11 @@ String structureId = BeanParamUtil.getString(feed, request, "structureId");
 
 DDMStructure ddmStructure = null;
 
-long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
-
 String ddmStructureName = StringPool.BLANK;
 
 if (Validator.isNotNull(structureId)) {
 	try {
 		ddmStructure = DDMStructureLocalServiceUtil.getStructure(groupId, PortalUtil.getClassNameId(JournalArticle.class), structureId, true);
-
-		ddmStructureId = ddmStructure.getStructureId();
-
-		ddmStructureName = ddmStructure.getName(locale);
-	}
-	catch (NoSuchStructureException nsse) {
-	}
-}
-else if (ddmStructureId > 0) {
-	try {
-		ddmStructure = DDMStructureLocalServiceUtil.getStructure(ddmStructureId);
 
 		ddmStructureName = ddmStructure.getName(locale);
 	}
@@ -74,10 +61,8 @@ if ((ddmStructure == null) && Validator.isNotNull(templateId)) {
 	}
 
 	if (ddmTemplate != null) {
-		ddmStructureId = ddmTemplate.getClassPK();
-
 		try {
-			ddmStructure = DDMStructureLocalServiceUtil.getStructure(ddmStructureId);
+			ddmStructure = DDMStructureLocalServiceUtil.getStructure(ddmTemplate.getClassPK());
 
 			structureId = ddmStructure.getStructureKey();
 			ddmStructureName = ddmStructure.getName(locale);
@@ -128,7 +113,6 @@ if (feed != null) {
 	<aui:input name="feedId" type="hidden" value="<%= feedId %>" />
 	<aui:input name="rendererTemplateId" type="hidden" value="<%= rendererTemplateId %>" />
 	<aui:input name="contentField" type="hidden" value="<%= contentField %>" />
-	<aui:input name="ddmStructureId" type="hidden" value="<%= String.valueOf(ddmStructureId) %>" />
 
 	<liferay-ui:header
 		backURL="<%= redirect %>"
@@ -232,12 +216,12 @@ if (feed != null) {
 								<%
 								boolean templateChecked = false;
 
-								if (templateId.equals(tableIteratorObj.getTemplateId())) {
+								if (templateId.equals(tableIteratorObj.getTemplateKey())) {
 									templateChecked = true;
 								}
 								%>
 
-								<aui:input checked="<%= templateChecked %>" name="templateId" type="radio" value="<%= tableIteratorObj.getTemplateId() %>" />
+								<aui:input checked="<%= templateChecked %>" name="templateId" type="radio" value="<%= tableIteratorObj.getTemplateKey() %>" />
 
 								<c:if test="<%= tableIteratorObj.isSmallImage() %>">
 									<br />
@@ -265,7 +249,7 @@ if (feed != null) {
 							for (DDMTemplate curTemplate : ddmTemplates) {
 							%>
 
-								<aui:option data-contentField="<%= JournalFeedConstants.RENDERED_WEB_CONTENT %>" label='<%= LanguageUtil.format(pageContext, "use-template-x", HtmlUtil.escape(curTemplate.getName(locale))) %>' selected="<%= rendererTemplateId.equals(curTemplate.getTemplateId()) %>" value="<%= curTemplate.getTemplateId() %>" />
+								<aui:option data-contentField="<%= JournalFeedConstants.RENDERED_WEB_CONTENT %>" label='<%= LanguageUtil.format(pageContext, "use-template-x", HtmlUtil.escape(curTemplate.getName(locale))) %>' selected="<%= rendererTemplateId.equals(curTemplate.getTemplateKey()) %>" value="<%= curTemplate.getTemplateKey() %>" />
 
 							<%
 							}
@@ -369,7 +353,7 @@ if (feed != null) {
 			{
 				chooseCallback: '<portlet:namespace />selectStructure',
 				classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
-				classPK: <%= ddmStructureId %>,
+				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey(): 0 %>,
 				ddmResource: '<%= ddmResource %>',
 				dialog: {
 					width: 820
@@ -414,8 +398,8 @@ if (feed != null) {
 	}
 
 	function <portlet:namespace />selectStructure(ddmStructureId, ddmStructureKey, ddmStructureName, dialog) {
-		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-structure-will-change-the-available-templates-and-available-feed-item-content") %>') && (document.<portlet:namespace />fm.<portlet:namespace />ddmStructureId.value != ddmStructureId)) {
-			document.<portlet:namespace />fm.<portlet:namespace />ddmStructureId.value = ddmStructureId;
+		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-structure-will-change-the-available-templates-and-available-feed-item-content") %>') && (document.<portlet:namespace />fm.<portlet:namespace />structureId.value != ddmStructureKey)) {
+			document.<portlet:namespace />fm.<portlet:namespace />structureId.value = ddmStructureKey;
 			document.<portlet:namespace />fm.<portlet:namespace />templateId.value = "";
 			document.<portlet:namespace />fm.<portlet:namespace />rendererTemplateId.value = "";
 			document.<portlet:namespace />fm.<portlet:namespace />contentField.value = "<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>";
