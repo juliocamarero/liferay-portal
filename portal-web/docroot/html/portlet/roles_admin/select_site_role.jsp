@@ -19,17 +19,19 @@
 <%
 int step = ParamUtil.getInteger(request, "step");
 String callback = ParamUtil.getString(request, "callback", "selectRole");
+String p_u_i_d = ParamUtil.getString(request, "p_u_i_d");
 
 User selUser = PortalUtil.getSelectedUser(request);
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/roles_admin/select_site_role");
-portletURL.setParameter("callback", callback);
 
 if (selUser != null) {
 	portletURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
 }
+
+portletURL.setParameter("callback", callback);
 
 long uniqueGroupId = 0;
 
@@ -208,8 +210,7 @@ if (step == 1) {
 
 					<%
 					String rowHREF = null;
-
-					if (SiteMembershipPolicyUtil.isRoleAllowed(selUser.getUserId(), group.getGroupId(), role.getRoleId())) {
+					if (Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isRoleAllowed(selUser != null ? selUser.getUserId() : 0, group.getGroupId(), role.getRoleId())) {
 						StringBundler sb = new StringBundler(14);
 
 						sb.append("javascript:opener.");

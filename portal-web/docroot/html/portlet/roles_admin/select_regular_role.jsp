@@ -18,6 +18,7 @@
 
 <%
 String callback = ParamUtil.getString(request, "callback", "selectRole");
+String p_u_i_d = ParamUtil.getString(request, "p_u_i_d");
 
 User selUser = PortalUtil.getSelectedUser(request);
 
@@ -82,7 +83,7 @@ portletURL.setParameter("callback", callback);
 			<%
 			String rowHREF = null;
 
-			if (RoleMembershipPolicyUtil.isRoleAllowed(selUser != null ? selUser.getUserId() : 0, role.getRoleId())) {
+			if (Validator.isNull(p_u_i_d)|| RoleMembershipPolicyUtil.isRoleAllowed(selUser != null ? selUser.getUserId() : 0, role.getRoleId())) {
 				StringBundler sb = new StringBundler(8);
 
 				sb.append("javascript:opener.");
