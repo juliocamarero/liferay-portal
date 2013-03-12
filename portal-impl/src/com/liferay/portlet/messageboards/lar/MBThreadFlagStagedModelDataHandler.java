@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,16 +16,20 @@ package com.liferay.portlet.messageboards.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.model.MBThreadFlag;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadFlagLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
-import com.liferay.portlet.messageboards.service.persistence.MBMessageUtil;
 import com.liferay.portlet.messageboards.service.persistence.MBThreadUtil;
 
 import java.util.Map;
@@ -47,20 +51,43 @@ public class MBThreadFlagStagedModelDataHandler
 			MBThreadFlag threadFlag)
 		throws Exception {
 
-		Element threadFlagElement = threadFlagsElement.addElement(
-			"thread-flag");
+		Element messagesElement = elements[0];
+		Element categoriesElement = elements[1];
+		Element threadFlagsElement = elements[2];
 
 		MBThread thread = MBThreadLocalServiceUtil.getThread(
 			threadFlag.getThreadId());
 
+		// Parent thread
+
 		MBMessage rootMessage = MBMessageLocalServiceUtil.getMessage(
 			thread.getRootMessageId());
 
+		if ((rootMessage.getStatus() != WorkflowConstants.STATUS_APPROVED) ||
+			(rootMessage.getCategoryId() ==
+				MBCategoryConstants.DISCUSSION_CATEGORY_ID)) {
+
+			return;
+		}
+
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext,
+			new Element[] {
+				messagesElement, categoriesElement, threadFlagsElement
+			},
+			rootMessage);
+
+		// Thread flag
+
+		Element threadFlagElement = threadFlagsElement.addElement(
+			"thread-flag");
+
 		threadFlagElement.addAttribute(
-			"root-message-uuid", rootMessage.getUuid());
+			"root-message-id", String.valueOf(rootMessage.getMessageId()));
 
 		portletDataContext.addClassedModel(
-			threadFlagElement, path, threadFlag, NAMESPACE);
+			threadFlagElement, StagedModelPathUtil.getPath(threadFlag),
+			threadFlag, MBPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -71,34 +98,43 @@ public class MBThreadFlagStagedModelDataHandler
 
 		long userId = portletDataContext.getUserId(threadFlag.getUserUuid());
 
-		Map<Long, Long> messageIds =
+		// Parent thread
+
+		Map<Long, Long> threadIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
-				MBMessage.class);
+			MBThread.class);
 
 		long threadId = MapUtil.getLong(
-			messageIds, threadFlag.getThreadId(), threadFlag.getThreadId());
+			threadIds, threadFlag.getThreadId(), threadFlag.getThreadId());
+
+		if (threadId == threadFlag.getThreadId()) {
+			long rootMessageId = GetterUtil.getLong(
+				element.attributeValue("root-message-id"));
+
+			String rootMessagePath = StagedModelPathUtil.getPath(
+				portletDataContext, MBMessage.class.getName(), rootMessageId);
+
+			MBMessage rootMessage = (MBMessage)portletDataContext.
+				getZipEntryAsObject(rootMessagePath);
+
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, element, rootMessagePath, rootMessage);
+
+			threadId = MapUtil.getLong(
+				threadIds, threadFlag.getThreadId(), threadFlag.getThreadId());
+		}
 
 		MBThread thread = MBThreadUtil.fetchByPrimaryKey(threadId);
-
-		if (thread == null) {
-			String rootMessageUuid = threadFlagElement.attributeValue(
-				"root-message-uuid");
-
-			MBMessage rootMessage = MBMessageUtil.fetchByUUID_G(
-				rootMessageUuid, portletDataContext.getScopeGroupId());
-
-			if (rootMessage != null) {
-				thread = rootMessage.getThread();
-			}
-		}
 
 		if (thread == null) {
 			return;
 		}
 
+		// Thread flag
+
 		ServiceContext serviceContext =
 			portletDataContext.createServiceContext(
-				threadFlagElement, threadFlag, NAMESPACE);
+				element, threadFlag, MBPortletDataHandler.NAMESPACE);
 
 		MBThreadFlagLocalServiceUtil.addThreadFlag(
 			userId, thread, serviceContext);

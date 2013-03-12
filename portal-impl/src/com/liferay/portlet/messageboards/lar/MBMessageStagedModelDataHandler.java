@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,6 +16,10 @@ package com.liferay.portlet.messageboards.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -28,11 +32,9 @@ import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBThread;
-import com.liferay.portlet.messageboards.model.MBThreadFlag;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.persistence.MBMessageUtil;
-import com.liferay.portlet.messageboards.service.persistence.MBThreadFlagUtil;
 
 import java.io.InputStream;
 
@@ -45,7 +47,7 @@ import java.util.Map;
  * @author Daniel Kocsis
  */
 public class MBMessageStagedModelDataHandler
-		extends BaseStagedModelDataHandler<MBMessage> {
+	extends BaseStagedModelDataHandler<MBMessage> {
 
 	@Override
 	public String getClassName() {
@@ -58,12 +60,22 @@ public class MBMessageStagedModelDataHandler
 			MBMessage message)
 		throws Exception {
 
-		if (message.getStatus() != WorkflowConstants.STATUS_APPROVED) {
+		Element messagesElement = elements[0];
+		Element categoriesElement = elements[1];
+
+		if ((message.getStatus() != WorkflowConstants.STATUS_APPROVED) ||
+			(message.getCategoryId() ==
+				MBCategoryConstants.DISCUSSION_CATEGORY_ID)) {
+
 			return;
 		}
 
-		exportParentCategory(
-			portletDataContext, categoriesElement, message.getCategoryId());
+		// Category
+
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, categoriesElement, message.getCategory());
+
+		// Message
 
 		Element messageElement = messagesElement.addElement("message");
 
@@ -81,13 +93,15 @@ public class MBMessageStagedModelDataHandler
 			"hasAttachmentsFileEntries",
 			String.valueOf(hasAttachmentsFileEntries));
 
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "attachments") &&
+		// Attachments
+
+		if (portletDataContext.getBooleanParameter(
+				MBPortletDataHandler.NAMESPACE, "attachments") &&
 			hasAttachmentsFileEntries) {
 
 			for (FileEntry fileEntry : message.getAttachmentsFileEntries()) {
 				String name = fileEntry.getTitle();
-				String binPath = getMessageAttachementBinPath(
-					portletDataContext, message, name);
+				String binPath = StagedModelPathUtil.getPath(message, name);
 
 				Element attachmentElement = messageElement.addElement(
 					"attachment");
@@ -102,18 +116,9 @@ public class MBMessageStagedModelDataHandler
 			message.setAttachmentsFolderId(message.getAttachmentsFolderId());
 		}
 
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "thread-flags")) {
-			List<MBThreadFlag> threadFlags = MBThreadFlagUtil.findByThreadId(
-				message.getThreadId());
-
-			for (MBThreadFlag threadFlag : threadFlags) {
-				exportThreadFlag(
-					portletDataContext, threadFlagsElement, threadFlag);
-			}
-		}
-
 		portletDataContext.addClassedModel(
-			messageElement, path, message, NAMESPACE);
+			messageElement, StagedModelPathUtil.getPath(message), message,
+			MBPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -129,7 +134,7 @@ public class MBMessageStagedModelDataHandler
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 				MBCategory.class);
 
-		long categoryId = MapUtil.getLong(
+		long parentCategoryId = MapUtil.getLong(
 			categoryIds, message.getCategoryId(), message.getCategoryId());
 
 		Map<Long, Long> threadIds =
@@ -149,20 +154,25 @@ public class MBMessageStagedModelDataHandler
 		List<String> existingFiles = new ArrayList<String>();
 
 		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
-			getAttachments(portletDataContext, messageElement, message);
+			getAttachments(portletDataContext, element, message);
 
 		try {
 			ServiceContext serviceContext =
 				portletDataContext.createServiceContext(
-					messageElement, message, NAMESPACE);
+					element, message, MBPortletDataHandler.NAMESPACE);
 
 			if (message.getStatus() != WorkflowConstants.STATUS_APPROVED) {
 				serviceContext.setWorkflowAction(
 					WorkflowConstants.ACTION_SAVE_DRAFT);
 			}
 
-			categoryId = getCategoryId(
-				portletDataContext, message, categoryIds, categoryId);
+			// Category
+
+			parentCategoryId = getCategoryId(
+				portletDataContext, message, element, categoryIds,
+				parentCategoryId);
+
+			// Message & Attachment & Thread
 
 			MBMessage importedMessage = null;
 
@@ -175,7 +185,7 @@ public class MBMessageStagedModelDataHandler
 
 					importedMessage = MBMessageLocalServiceUtil.addMessage(
 						userId, userName, portletDataContext.getScopeGroupId(),
-						categoryId, threadId, parentMessageId,
+						parentCategoryId, threadId, parentMessageId,
 						message.getSubject(), message.getBody(),
 						message.getFormat(), inputStreamOVPs,
 						message.getAnonymous(), message.getPriority(),
@@ -192,8 +202,9 @@ public class MBMessageStagedModelDataHandler
 			else {
 				importedMessage = MBMessageLocalServiceUtil.addMessage(
 					userId, userName, portletDataContext.getScopeGroupId(),
-					categoryId, threadId, parentMessageId, message.getSubject(),
-					message.getBody(), message.getFormat(), inputStreamOVPs,
+					parentCategoryId, threadId, parentMessageId,
+					message.getSubject(), message.getBody(),
+					message.getFormat(), inputStreamOVPs,
 					message.getAnonymous(), message.getPriority(),
 					message.getAllowPingbacks(), serviceContext);
 			}
@@ -203,14 +214,13 @@ public class MBMessageStagedModelDataHandler
 			if (importedMessage.isRoot()) {
 				MBThreadLocalServiceUtil.updateQuestion(
 					importedMessage.getThreadId(),
-					GetterUtil.getBoolean(
-						messageElement.attributeValue("question")));
+					GetterUtil.getBoolean(element.attributeValue("question")));
 			}
 
 			threadIds.put(message.getThreadId(), importedMessage.getThreadId());
 
 			portletDataContext.importClassedModel(
-				message, importedMessage, NAMESPACE);
+				message, importedMessage, MBPortletDataHandler.NAMESPACE);
 		}
 		finally {
 			for (ObjectValuePair<String, InputStream> inputStreamOVP :
@@ -231,7 +241,8 @@ public class MBMessageStagedModelDataHandler
 			messageElement.attributeValue("hasAttachmentsFileEntries"));
 
 		if (!hasAttachmentsFileEntries &&
-			portletDataContext.getBooleanParameter(NAMESPACE, "attachments")) {
+			portletDataContext.getBooleanParameter(
+				MBPortletDataHandler.NAMESPACE, "attachments")) {
 
 			return Collections.emptyList();
 		}
@@ -270,19 +281,22 @@ public class MBMessageStagedModelDataHandler
 
 	protected long getCategoryId(
 			PortletDataContext portletDataContext, MBMessage message,
-			Map<Long, Long> categoryPKs, long categoryId)
+			Element categoryElement, Map<Long, Long> categoryPKs,
+			long categoryId)
 		throws Exception {
 
 		if ((categoryId != MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
 			(categoryId != MBCategoryConstants.DISCUSSION_CATEGORY_ID) &&
 			(categoryId == message.getCategoryId())) {
 
-			String path = getImportCategoryPath(portletDataContext, categoryId);
+			String path = StagedModelPathUtil.getPath(
+				portletDataContext, MBCategory.class.getName(), categoryId);
 
 			MBCategory category =
 				(MBCategory)portletDataContext.getZipEntryAsObject(path);
 
-			importCategory(portletDataContext, path, category);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, categoryElement, path, category);
 
 			categoryId = MapUtil.getLong(
 				categoryPKs, message.getCategoryId(), message.getCategoryId());
@@ -290,5 +304,8 @@ public class MBMessageStagedModelDataHandler
 
 		return categoryId;
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		MBMessageStagedModelDataHandler.class);
 
 }
