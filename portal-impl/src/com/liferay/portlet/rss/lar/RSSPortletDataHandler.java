@@ -236,16 +236,20 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 
 		List<Element> structureElements = rootElement.elements("structure");
 
-		for (Element structureElement : structureElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, structureElement);
+		if (structureElements != null) {
+			for (Element structureElement : structureElements) {
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, structureElement);
+			}
 		}
 
 		List<Element> templateElements = rootElement.elements("template");
 
-		for (Element templateElement : templateElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, templateElement);
+		if (templateElements != null) {
+			for (Element templateElement : templateElements) {
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, templateElement);
+			}
 		}
 
 		Map<String, String> articleIds =

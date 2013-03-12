@@ -120,33 +120,40 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 
 		Element questionsElement = rootElement.element("questions");
 
-		for (Element questionElement : questionsElement.elements("question")) {
-			String path = questionElement.attributeValue("path");
+		if (questionsElement != null) {
+			for (Element questionElement :
+					questionsElement.elements("question")) {
 
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
+				String path = questionElement.attributeValue("path");
+
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
+
+				PollsQuestion question =
+					(PollsQuestion)portletDataContext.getZipEntryAsObject(path);
+
+				PollsPortletDataHandler.importQuestion(
+					portletDataContext, questionElement, question);
 			}
-
-			PollsQuestion question =
-				(PollsQuestion)portletDataContext.getZipEntryAsObject(path);
-
-			PollsPortletDataHandler.importQuestion(
-				portletDataContext, questionElement, question);
 		}
 
 		Element choicesElement = rootElement.element("choices");
 
-		for (Element choiceElement : choicesElement.elements("choice")) {
-			String path = choiceElement.attributeValue("path");
+		if (choicesElement != null) {
+			for (Element choiceElement : choicesElement.elements("choice")) {
+				String path = choiceElement.attributeValue("path");
 
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
+
+				PollsChoice choice =
+					(PollsChoice)portletDataContext.getZipEntryAsObject(path);
+
+				PollsPortletDataHandler.importChoice(
+					portletDataContext, choice);
 			}
-
-			PollsChoice choice =
-				(PollsChoice)portletDataContext.getZipEntryAsObject(path);
-
-			PollsPortletDataHandler.importChoice(portletDataContext, choice);
 		}
 
 		if (portletDataContext.getBooleanParameter(
@@ -154,17 +161,20 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 
 			Element votesElement = rootElement.element("votes");
 
-			for (Element voteElement : votesElement.elements("vote")) {
-				String path = voteElement.attributeValue("path");
+			if (votesElement != null) {
+				for (Element voteElement : votesElement.elements("vote")) {
+					String path = voteElement.attributeValue("path");
 
-				if (!portletDataContext.isPathNotProcessed(path)) {
-					continue;
+					if (!portletDataContext.isPathNotProcessed(path)) {
+						continue;
+					}
+
+					PollsVote vote =
+						(PollsVote)portletDataContext.getZipEntryAsObject(path);
+
+					PollsPortletDataHandler.importVote(
+						portletDataContext, vote);
 				}
-
-				PollsVote vote =
-					(PollsVote)portletDataContext.getZipEntryAsObject(path);
-
-				PollsPortletDataHandler.importVote(portletDataContext, vote);
 			}
 		}
 

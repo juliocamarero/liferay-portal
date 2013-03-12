@@ -129,36 +129,40 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 
 		Element nodesElement = rootElement.element("nodes");
 
-		for (Element nodeElement : nodesElement.elements("node")) {
-			String path = nodeElement.attributeValue("path");
+		if (nodesElement != null) {
+			for (Element nodeElement : nodesElement.elements("node")) {
+				String path = nodeElement.attributeValue("path");
 
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
+
+				WikiNode node =
+					(WikiNode)portletDataContext.getZipEntryAsObject(path);
+
+				WikiPortletDataHandler.importNode(portletDataContext, node);
 			}
-
-			WikiNode node = (WikiNode)portletDataContext.getZipEntryAsObject(
-				path);
-
-			WikiPortletDataHandler.importNode(portletDataContext, node);
 		}
 
 		Element pagesElement = rootElement.element("pages");
 
-		JournalPortletDataHandler.importReferencedData(
-			portletDataContext, pagesElement);
+		if (pagesElement != null) {
+			JournalPortletDataHandler.importReferencedData(
+				portletDataContext, pagesElement);
 
-		for (Element pageElement : pagesElement.elements("page")) {
-			String path = pageElement.attributeValue("path");
+			for (Element pageElement : pagesElement.elements("page")) {
+				String path = pageElement.attributeValue("path");
 
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
+
+				WikiPage page =
+					(WikiPage)portletDataContext.getZipEntryAsObject(path);
+
+				WikiPortletDataHandler.importPage(
+					portletDataContext, pageElement, page);
 			}
-
-			WikiPage page = (WikiPage)portletDataContext.getZipEntryAsObject(
-				path);
-
-			WikiPortletDataHandler.importPage(
-				portletDataContext, pageElement, page);
 		}
 
 		Map<Long, Long> nodeIds =
