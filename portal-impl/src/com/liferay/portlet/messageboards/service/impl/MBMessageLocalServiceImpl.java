@@ -547,7 +547,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				MBCategory category = mbCategoryPersistence.findByPrimaryKey(
 					message.getCategoryId());
 
-				MBUtil.updateCategoryStatistics(category);
+				MBUtil.updateCategoryStatistics(
+					category.getCategoryId(), category.getCompanyId());
 			}
 		}
 		else {
@@ -635,7 +636,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			// Thread
 
 			if (message.isApproved()) {
-				MBUtil.updateThreadMessageCount(thread);
+				MBUtil.updateThreadMessageCount(
+					thread.getThreadId(), thread.getCompanyId());
 			}
 			else {
 				mbThreadPersistence.update(thread);
@@ -652,7 +654,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				MBCategory category = mbCategoryPersistence.findByPrimaryKey(
 					message.getCategoryId());
 
-				MBUtil.updateCategoryMessageCount(category);
+				MBUtil.updateCategoryMessageCount(
+					category.getCategoryId(), category.getCompanyId());
 			}
 		}
 
@@ -2164,20 +2167,23 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 			// Thread
 
-			MBUtil.updateThreadMessageCount(thread);
+			MBUtil.updateThreadMessageCount(
+				thread.getThreadId(), thread.getCompanyId());
 
 			// Category
 
 			if ((category != null) &&
 				(thread.getRootMessageId() == message.getMessageId())) {
 
-				MBUtil.updateCategoryStatistics(category);
+				MBUtil.updateCategoryStatistics(
+					category.getCategoryId(), category.getCompanyId());
 			}
 
 			if ((category != null) &&
 				!(thread.getRootMessageId() == message.getMessageId())) {
 
-				MBUtil.updateCategoryMessageCount(category);
+				MBUtil.updateCategoryMessageCount(
+					category.getCategoryId(), category.getCompanyId());
 			}
 		}
 
