@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchContextFactory;
+import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -360,9 +361,24 @@ public class AssetUtil {
 
 		assetSearcher.setAssetEntryQuery(assetEntryQuery);
 
+		String ddmStructureFieldValue = (String)assetEntryQuery.getAttribute(
+			"ddmStructureFieldValue");
+		String ddmStructureFieldName = (String)assetEntryQuery.getAttribute(
+			"ddmStructureFieldName");
+
+		if (Validator.isNotNull(ddmStructureFieldName) &&
+			Validator.isNotNull(ddmStructureFieldValue)) {
+
+			searchContext.setAttribute(
+				"ddmStructureFieldValue", ddmStructureFieldValue);
+			searchContext.setAttribute(
+				"ddmStructureFieldName", ddmStructureFieldName);
+		}
+
 		searchContext.setClassTypeIds(assetEntryQuery.getClassTypeIds());
 		searchContext.setEnd(end);
 		searchContext.setGroupIds(assetEntryQuery.getGroupIds());
+		searchContext.setSorts(getSorts(assetEntryQuery));
 		searchContext.setStart(start);
 
 		return assetSearcher.search(searchContext);
@@ -452,6 +468,46 @@ public class AssetUtil {
 
 			return new String(textCharArray);
 		}
+	}
+
+	protected static Sort getSort(String orderByType, String sortField) {
+		if (Validator.isNull(orderByType)) {
+			orderByType = "asc";
+		}
+
+		int sortType = Sort.STRING_TYPE;
+
+		if (sortField.equals("createDate") ||
+			sortField.equals("expirationDate") ||
+			sortField.equals("modifiedDate") ||
+			sortField.equals("publishDate")) {
+
+			sortType= Sort.LONG_TYPE;
+		}
+		else if (sortField.equals("priority") || sortField.equals("ratings")) {
+			sortType= Sort.DOUBLE_TYPE;
+		}
+		else if (sortField.equals("viewCount")) {
+			sortType= Sort.INT_TYPE;
+		}
+
+		return new Sort(
+			"asset_" + sortField, sortType,
+			!orderByType.equalsIgnoreCase("asc"));
+	}
+
+	protected static Sort[] getSorts(AssetEntryQuery assetEntryQuery)
+		throws Exception {
+
+		Sort sort1 = getSort(
+			assetEntryQuery.getOrderByType1(),
+			assetEntryQuery.getOrderByCol1());
+
+		Sort sort2 = getSort(
+			assetEntryQuery.getOrderByType2(),
+			assetEntryQuery.getOrderByCol2());
+
+		return new Sort[] {sort1, sort2};
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(AssetUtil.class);
