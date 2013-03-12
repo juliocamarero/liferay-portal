@@ -21,9 +21,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portlet.journal.lar.JournalPortletDataHandler;
 import com.liferay.portlet.wiki.NoSuchNodeException;
 import com.liferay.portlet.wiki.model.WikiNode;
@@ -61,7 +59,7 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 	}
 
 	@Override
-	protected String doExportData(
+	protected void doExportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -75,7 +73,7 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 					"No node id found in preferences of portlet " + portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		String title = portletPreferences.getValue("title", null);
@@ -86,7 +84,7 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 					"No title found in preferences of portlet " + portletId);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		WikiNode node = null;
@@ -99,13 +97,13 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 				_log.warn(nsne, nsne);
 			}
 
-			return StringPool.BLANK;
+			return;
 		}
 
 		portletDataContext.addPermissions(
 			"com.liferay.portlet.wiki", portletDataContext.getScopeGroupId());
 
-		Element rootElement = addExportRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
@@ -115,60 +113,56 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 
 		WikiPortletDataHandler.exportNode(
 			portletDataContext, nodesElement, pagesElement, node);
-
-		return rootElement.formattedString();
 	}
 
 	@Override
 	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
+			PortletPreferences portletPreferences)
 		throws Exception {
 
 		portletDataContext.importPermissions(
 			"com.liferay.portlet.wiki", portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		if (Validator.isNull(data)) {
-			return null;
-		}
-
-		Document document = SAXReaderUtil.read(data);
-
-		Element rootElement = document.getRootElement();
+		Element rootElement = portletDataContext.getRootElement();
 
 		Element nodesElement = rootElement.element("nodes");
 
-		for (Element nodeElement : nodesElement.elements("node")) {
-			String path = nodeElement.attributeValue("path");
+		if (nodesElement != null) {
+			for (Element nodeElement : nodesElement.elements("node")) {
+				String path = nodeElement.attributeValue("path");
 
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
+
+				WikiNode node =
+					(WikiNode)portletDataContext.getZipEntryAsObject(path);
+
+				WikiPortletDataHandler.importNode(portletDataContext, node);
 			}
-
-			WikiNode node = (WikiNode)portletDataContext.getZipEntryAsObject(
-				path);
-
-			WikiPortletDataHandler.importNode(portletDataContext, node);
 		}
 
 		Element pagesElement = rootElement.element("pages");
 
-		JournalPortletDataHandler.importReferencedData(
-			portletDataContext, pagesElement);
+		if (pagesElement != null) {
+			JournalPortletDataHandler.importReferencedData(
+				portletDataContext, pagesElement);
 
-		for (Element pageElement : pagesElement.elements("page")) {
-			String path = pageElement.attributeValue("path");
+			for (Element pageElement : pagesElement.elements("page")) {
+				String path = pageElement.attributeValue("path");
 
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
+
+				WikiPage page =
+					(WikiPage)portletDataContext.getZipEntryAsObject(path);
+
+				WikiPortletDataHandler.importPage(
+					portletDataContext, pageElement, page);
 			}
-
-			WikiPage page = (WikiPage)portletDataContext.getZipEntryAsObject(
-				path);
-
-			WikiPortletDataHandler.importPage(
-				portletDataContext, pageElement, page);
 		}
 
 		Map<Long, Long> nodeIds =
@@ -189,6 +183,15 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 		}
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected boolean isValidData(String data) {
+		if (Validator.isNull(data)) {
+			return false;
+		}
+
+		return super.isValidData(data);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

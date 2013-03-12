@@ -73,8 +73,12 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		}
 
 		try {
-			return doExportData(
-				portletDataContext, portletId, portletPreferences);
+			Element rootElement = portletDataContext.createRootElement(
+				getClass().getSimpleName());
+
+			doExportData(portletDataContext, portletId, portletPreferences);
+
+			return rootElement.getDocument().formattedString();
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -124,10 +128,12 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		long sourceGroupId = portletDataContext.getSourceGroupId();
 
 		try {
-			if (Validator.isXml(data)) {
+			if (isValidData(data)) {
 				Document document = SAXReaderUtil.read(data);
 
 				Element rootElement = document.getRootElement();
+
+				portletDataContext.setRootElement(rootElement);
 
 				long portletSourceGroupId = GetterUtil.getLong(
 					rootElement.attributeValue("group-id"));
@@ -138,7 +144,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 			}
 
 			return doImportData(
-				portletDataContext, portletId, portletPreferences, data);
+				portletDataContext, portletId, portletPreferences);
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -170,14 +176,6 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return _publishToLiveByDefault;
 	}
 
-	protected Element addExportRootElement() {
-		Document document = SAXReaderUtil.createDocument();
-
-		Class<?> clazz = getClass();
-
-		return document.addElement(clazz.getSimpleName());
-	}
-
 	protected PortletPreferences doDeleteData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
@@ -186,7 +184,15 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return portletPreferences;
 	}
 
-	protected String doExportData(
+	protected void doExportData(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		return;
+	}
+
+	protected PortletPreferences doImportData(
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -194,12 +200,12 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		return null;
 	}
 
-	protected PortletPreferences doImportData(
-			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
-		throws Exception {
+	protected boolean isValidData(String data) {
+		if (Validator.isXml(data)) {
+			return true;
+		}
 
-		return null;
+		return false;
 	}
 
 	protected void setAlwaysExportable(boolean alwaysExportable) {
