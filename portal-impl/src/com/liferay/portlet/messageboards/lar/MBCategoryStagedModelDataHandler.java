@@ -84,24 +84,6 @@ public class MBCategoryStagedModelDataHandler
 			categoryIds, category.getParentCategoryId(),
 			category.getParentCategoryId());
 
-		String emailAddress = null;
-		String inProtocol = null;
-		String inServerName = null;
-		int inServerPort = 0;
-		boolean inUseSSL = false;
-		String inUserName = null;
-		String inPassword = null;
-		int inReadInterval = 0;
-		String outEmailAddress = null;
-		boolean outCustom = false;
-		String outServerName = null;
-		int outServerPort = 0;
-		boolean outUseSSL = false;
-		String outUserName = null;
-		String outPassword = null;
-		boolean allowAnonymous = false;
-		boolean mailingListActive = false;
-
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			path, category, MBPortletDataHandler.NAMESPACE);
 
@@ -139,33 +121,25 @@ public class MBCategoryStagedModelDataHandler
 
 				importedCategory = MBCategoryLocalServiceUtil.addCategory(
 					userId, parentCategoryId, category.getName(),
-					category.getDescription(), category.getDisplayStyle(),
-					emailAddress, inProtocol, inServerName, inServerPort,
-					inUseSSL, inUserName, inPassword, inReadInterval,
-					outEmailAddress, outCustom, outServerName, outServerPort,
-					outUseSSL, outUserName, outPassword, allowAnonymous,
-					mailingListActive, serviceContext);
+					category.getDescription(), category.getDisplayStyle(), null,
+					null, null, 0, false, null, null, 0, null, false, null, 0,
+					false, null, null, false, false, serviceContext);
 			}
 			else {
 				importedCategory = MBCategoryLocalServiceUtil.updateCategory(
 					existingCategory.getCategoryId(), parentCategoryId,
 					category.getName(), category.getDescription(),
-					category.getDisplayStyle(), emailAddress, inProtocol,
-					inServerName, inServerPort, inUseSSL, inUserName,
-					inPassword, inReadInterval, outEmailAddress, outCustom,
-					outServerName, outServerPort, outUseSSL, outUserName,
-					outPassword, allowAnonymous, mailingListActive, false,
-					serviceContext);
+					category.getDisplayStyle(), null, null, null, 0, false,
+					null, null, 0, null, false, null, 0, false, null, null,
+					false, false, false, serviceContext);
 			}
 		}
 		else {
 			importedCategory = MBCategoryLocalServiceUtil.addCategory(
 				userId, parentCategoryId, category.getName(),
-				category.getDescription(), category.getDisplayStyle(),
-				emailAddress, inProtocol, inServerName, inServerPort, inUseSSL,
-				inUserName, inPassword, inReadInterval, outEmailAddress,
-				outCustom, outServerName, outServerPort, outUseSSL, outUserName,
-				outPassword, allowAnonymous, mailingListActive, serviceContext);
+				category.getDescription(), category.getDisplayStyle(), null,
+				null, null, 0, false, null, null, 0, null, false, null, 0,
+				false, null, null, false, false, serviceContext);
 		}
 
 		portletDataContext.importClassedModel(
