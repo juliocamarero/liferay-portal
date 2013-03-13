@@ -144,17 +144,6 @@ long folderId = BeanParamUtil.getLong(entry, request, "folderId");
 		submitForm(document.<portlet:namespace />fm);
 	}
 
-	function <portlet:namespace />selectFolder(folderId, folderName) {
-		var folderData = {
-			idString: 'folderId',
-			idValue: folderId,
-			nameString: 'folderName',
-			nameValue: folderName
-		};
-
-		Liferay.Util.selectFolder(folderData, '<portlet:renderURL><portlet:param name="struts_action" value="/bookmarks/view" /></portlet:renderURL>', '<portlet:namespace />');
-	}
-
 	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
 		Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />name);
 	</c:if>

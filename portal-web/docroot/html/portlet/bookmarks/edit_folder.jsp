@@ -120,17 +120,6 @@ boolean mergeWithParentFolderDisabled = ParamUtil.getBoolean(request, "mergeWith
 		submitForm(document.<portlet:namespace />fm);
 	}
 
-	function <portlet:namespace />selectFolder(parentFolderId, parentFolderName) {
-		var folderData = {
-			idString: 'parentFolderId',
-			idValue: parentFolderId,
-			nameString: 'parentFolderName',
-			nameValue: parentFolderName
-		};
-
-		Liferay.Util.selectFolder(folderData, '<portlet:renderURL><portlet:param name="struts_action" value="/bookmarks/view" /></portlet:renderURL>', '<portlet:namespace />');
-	}
-
 	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) || windowState.equals(LiferayWindowState.POP_UP) %>">
 		Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />name);
 	</c:if>
