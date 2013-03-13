@@ -168,9 +168,27 @@ public class MBMessageStagedModelDataHandler
 
 			// Category
 
-			parentCategoryId = getCategoryId(
-				portletDataContext, message, element, categoryIds,
-				parentCategoryId);
+			if ((parentCategoryId !=
+					MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
+				(parentCategoryId !=
+					MBCategoryConstants.DISCUSSION_CATEGORY_ID) &&
+				(parentCategoryId == message.getCategoryId())) {
+
+				String categoryPath = StagedModelPathUtil.getPath(
+					portletDataContext, MBCategory.class.getName(),
+					parentCategoryId);
+
+				MBCategory category =
+					(MBCategory)portletDataContext.getZipEntryAsObject(
+						categoryPath);
+
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, element, path, category);
+
+				parentCategoryId = MapUtil.getLong(
+					categoryIds, message.getCategoryId(),
+					message.getCategoryId());
+			}
 
 			// Message & Attachment & Thread
 
@@ -277,32 +295,6 @@ public class MBMessageStagedModelDataHandler
 		}
 
 		return inputStreamOVPs;
-	}
-
-	protected long getCategoryId(
-			PortletDataContext portletDataContext, MBMessage message,
-			Element categoryElement, Map<Long, Long> categoryPKs,
-			long categoryId)
-		throws Exception {
-
-		if ((categoryId != MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
-			(categoryId != MBCategoryConstants.DISCUSSION_CATEGORY_ID) &&
-			(categoryId == message.getCategoryId())) {
-
-			String path = StagedModelPathUtil.getPath(
-				portletDataContext, MBCategory.class.getName(), categoryId);
-
-			MBCategory category =
-				(MBCategory)portletDataContext.getZipEntryAsObject(path);
-
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, categoryElement, path, category);
-
-			categoryId = MapUtil.getLong(
-				categoryPKs, message.getCategoryId(), message.getCategoryId());
-		}
-
-		return categoryId;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
