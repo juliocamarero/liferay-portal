@@ -26,9 +26,6 @@ import com.liferay.portal.service.persistence.UserUtil;
 import com.liferay.portlet.messageboards.model.MBBan;
 import com.liferay.portlet.messageboards.service.MBBanLocalServiceUtil;
 
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * @author Daniel Kocsis
  */
@@ -68,21 +65,21 @@ public class MBBanStagedModelDataHandler
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			element, ban, MBPortletDataHandler.NAMESPACE);
 
-		List<User> users = UserUtil.findByUuid_C(
-			ban.getBanUserUuid(), portletDataContext.getCompanyId());
+		User user = UserUtil.fetchByUuid_C_First(
+			ban.getBanUserUuid(), portletDataContext.getCompanyId(), null);
 
-		Iterator<User> itr = users.iterator();
+		if (user == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Could not find banned user with uuid " +
+						ban.getBanUserUuid());
+			}
 
-		if (itr.hasNext()) {
-			User user = itr.next();
-
-			MBBanLocalServiceUtil.addBan(
-				userId, user.getUserId(), serviceContext);
+			return;
 		}
-		else {
-			_log.error(
-				"Could not find banned user with uuid " + ban.getBanUserUuid());
-		}
+
+		MBBanLocalServiceUtil.addBan(
+			userId, user.getUserId(), serviceContext);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
