@@ -15,6 +15,7 @@
 package com.liferay.portlet.journal.social;
 
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -28,6 +29,10 @@ import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.trash.util.TrashUtil;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Roberto Diaz
@@ -51,8 +56,12 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getLink(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getLink(
+			SocialActivity activity, HttpServletRequest request)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		JournalArticle article = JournalArticleLocalServiceUtil.getArticle(
 			activity.getClassPK());
@@ -60,9 +69,11 @@ public class JournalActivityInterpreter extends BaseSocialActivityInterpreter {
 		if (TrashUtil.isInTrash(
 				JournalArticle.class.getName(), article.getResourcePrimKey())) {
 
-			return TrashUtil.getViewContentURL(
+			PortletURL portletURL = TrashUtil.getViewContentURL(
 				JournalArticle.class.getName(), article.getResourcePrimKey(),
-				themeDisplay);
+				request);
+
+			return portletURL.toString();
 		}
 
 		JournalArticle lastestArticle =

@@ -17,6 +17,7 @@ package com.liferay.portlet.messageboards.social;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.messageboards.model.MBMessage;
@@ -28,6 +29,10 @@ import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.trash.util.TrashUtil;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Brian Wing Shun Chan
@@ -41,8 +46,12 @@ public class MBActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getBody(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getBody(
+			SocialActivity activity, HttpServletRequest request)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		MBMessage message = getMessage(activity);
 
@@ -73,16 +82,22 @@ public class MBActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getLink(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getLink(
+			SocialActivity activity, HttpServletRequest request)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		MBMessage message = getMessage(activity);
 
 		MBThread thread = message.getThread();
 
 		if (thread.isInTrash()) {
-			return TrashUtil.getViewContentURL(
-				MBThread.class.getName(), thread.getThreadId(), themeDisplay);
+			PortletURL portletURL = TrashUtil.getViewContentURL(
+				MBThread.class.getName(), thread.getThreadId(), request);
+
+			return portletURL.toString();
 		}
 
 		StringBundler sb = new StringBundler(4);
