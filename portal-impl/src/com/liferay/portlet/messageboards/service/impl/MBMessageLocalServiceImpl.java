@@ -540,11 +540,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				(message.getCategoryId() !=
 					MBCategoryConstants.DISCUSSION_CATEGORY_ID)) {
 
-				MBCategory category = mbCategoryPersistence.findByPrimaryKey(
-					message.getCategoryId());
-
 				MBUtil.updateCategoryStatistics(
-					category.getCategoryId(), category.getCompanyId());
+					message.getCategoryId(), message.getCompanyId());
 			}
 		}
 		else {
@@ -647,11 +644,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 					MBCategoryConstants.DISCUSSION_CATEGORY_ID) &&
 				!message.isDraft()) {
 
-				MBCategory category = mbCategoryPersistence.findByPrimaryKey(
-					message.getCategoryId());
-
 				MBUtil.updateCategoryMessageCount(
-					category.getCategoryId(), category.getCompanyId());
+					message.getCategoryId(), message.getCompanyId());
 			}
 		}
 
@@ -2150,7 +2144,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			if (category != null) {
 				category.setLastPostDate(modifiedDate);
 
-				mbCategoryPersistence.update(category);
+				category = mbCategoryPersistence.update(category);
 			}
 		}
 
