@@ -40,11 +40,14 @@ import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.List;
 
+import javax.portlet.PortletURL;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Brian Wing Shun Chan
  * @author Ryan Park
+ * @author Zsolt Berentey
  */
 public abstract class BaseSocialActivityInterpreter
 	implements SocialActivityInterpreter {
@@ -107,13 +110,6 @@ public abstract class BaseSocialActivityInterpreter
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		return doInterpret(activity, themeDisplay);
-	}
-
-	protected SocialActivityFeedEntry doInterpret(
-			SocialActivity activity, ThemeDisplay themeDisplay)
-		throws Exception {
-
 		PermissionChecker permissionChecker =
 			themeDisplay.getPermissionChecker();
 
@@ -123,16 +119,17 @@ public abstract class BaseSocialActivityInterpreter
 			return null;
 		}
 
-		String link = getLink(activity, themeDisplay);
+		String link = getLink(activity, request);
 
-		String title = getTitle(activity, themeDisplay);
+		String title = getTitle(activity, request);
 
-		String body = getBody(activity, themeDisplay);
+		String body = getBody(activity, request);
 
 		return new SocialActivityFeedEntry(link, title, body);
 	}
 
-	protected String getBody(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getBody(
+			SocialActivity activity, HttpServletRequest request)
 		throws Exception {
 
 		return StringPool.BLANK;
@@ -192,8 +189,12 @@ public abstract class BaseSocialActivityInterpreter
 		}
 	}
 
-	protected String getLink(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getLink(
+			SocialActivity activity, HttpServletRequest request)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			getClassName(activity));
@@ -203,8 +204,10 @@ public abstract class BaseSocialActivityInterpreter
 		if ((trashHandler != null) && (trashHandler.isInTrash(classPK) ||
 			trashHandler.isInTrashContainer(classPK))) {
 
-			return TrashUtil.getViewContentURL(
-				getClassName(activity), classPK, themeDisplay);
+			PortletURL portletURL = TrashUtil.getViewContentURL(
+				getClassName(activity), classPK, request);
+
+			return portletURL.toString();
 		}
 
 		StringBundler sb = new StringBundler(4);
@@ -222,8 +225,11 @@ public abstract class BaseSocialActivityInterpreter
 	}
 
 	protected String getTitle(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+			SocialActivity activity, HttpServletRequest request)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		String groupName = StringPool.BLANK;
 
@@ -231,7 +237,7 @@ public abstract class BaseSocialActivityInterpreter
 			groupName = getGroupName(activity.getGroupId(), themeDisplay);
 		}
 
-		String link = getLink(activity, themeDisplay);
+		String link = getLink(activity, request);
 
 		String entryTitle = getEntryTitle(activity, themeDisplay);
 
