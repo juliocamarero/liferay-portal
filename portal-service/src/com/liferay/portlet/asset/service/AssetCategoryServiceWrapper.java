@@ -71,10 +71,12 @@ public class AssetCategoryServiceWrapper implements AssetCategoryService,
 			serviceContext);
 	}
 
-	public void deleteCategories(long[] categoryIds)
+	public long[] deleteCategories(long[] categoryIds,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_assetCategoryService.deleteCategories(categoryIds);
+		return _assetCategoryService.deleteCategories(categoryIds,
+			serviceContext);
 	}
 
 	public void deleteCategory(long categoryId)

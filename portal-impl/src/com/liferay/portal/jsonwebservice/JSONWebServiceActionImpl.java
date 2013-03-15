@@ -31,6 +31,7 @@ import java.lang.reflect.Method;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -273,6 +274,27 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 		return newMap;
 	}
 
+	private void _injectFailOnErrorIntoServiceContext(Object parameterValue) {
+		if ((parameterValue == null) ||
+			!(parameterValue instanceof ServiceContext)) {
+
+			return;
+		}
+
+		ServiceContext serviceContext = (ServiceContext)parameterValue;
+
+		Method actionMethod = _jsonWebServiceActionConfig.getActionMethod();
+
+		Class<?> returnType = actionMethod.getReturnType();
+
+		if (returnType.isArray() ||
+			Collection.class.isAssignableFrom(returnType) ||
+			Map.class.isAssignableFrom(returnType)) {
+
+			serviceContext.setFailOnError(false);
+		}
+	}
+
 	private void _injectInnerParametersIntoValue(
 		String parameterName, Object parameterValue) {
 
@@ -362,9 +384,11 @@ public class JSONWebServiceActionImpl implements JSONWebServiceAction {
 						value, parameterType,
 						methodParameters[i].getGenericTypes());
 				}
-			}
 
-			_injectInnerParametersIntoValue(parameterName, parameterValue);
+				_injectFailOnErrorIntoServiceContext(parameterValue);
+
+				_injectInnerParametersIntoValue(parameterName, parameterValue);
+			}
 
 			parameters[i] = parameterValue;
 		}

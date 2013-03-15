@@ -479,17 +479,6 @@ public class ServiceContext implements Cloneable, Serializable {
 
 	/**
 	 * Returns the date when an entity was modified if this service context is
-	 * being passed as a parameter to a method which updates an entity.
-	 *
-	 * @return the date when an entity was modified if this service context is
-	 *         being passed as a parameter to a method which updates an entity
-	 */
-	public Date getModifiedDate() {
-		return _modifiedDate;
-	}
-
-	/**
-	 * Returns the date when an entity was modified if this service context is
 	 * being passed as a parameter to a method which modifies an entity.
 	 *
 	 * @param  defaultModifiedDate an optional default modified date to use if
@@ -506,6 +495,17 @@ public class ServiceContext implements Cloneable, Serializable {
 		else {
 			return new Date();
 		}
+	}
+
+	/**
+	 * Returns the date when an entity was modified if this service context is
+	 * being passed as a parameter to a method which updates an entity.
+	 *
+	 * @return the date when an entity was modified if this service context is
+	 *         being passed as a parameter to a method which updates an entity
+	 */
+	public Date getModifiedDate() {
+		return _modifiedDate;
 	}
 
 	/**
@@ -759,6 +759,36 @@ public class ServiceContext implements Cloneable, Serializable {
 	}
 
 	/**
+	 * <p>
+	 * Returns the value of the <i>failOnError</i> flag, which is responsible
+	 * for controlling error handling in the following use-case.
+	 * </p>
+	 *
+	 * <p>
+	 * Those Service methods - exposed as a JSON web-service - that perform an
+	 * operation on a bunch of items can be instructed through this flag not to
+	 * fail when processing encounters error on a subset of items.
+	 * </p>
+	 *
+	 * <p>
+	 * If this flag is set (<code>true</code>), processing will be halted and an
+	 * exception returned over the course of the invocation of the remote
+	 * method.
+	 * </p>
+	 *
+	 * <p>
+	 * Otherwise - if this flag is unset (<code>false</code>) - some kind of
+	 * collection should be returned to the caller to indicate which items could
+	 * not have been processed.
+	 * </p>
+	 *
+	 * @return the value of flag <i>failOnError</i>
+	 */
+	public boolean isFailOnError() {
+		return _failOnError;
+	}
+
+	/**
 	 * Returns whether the primary entity of this service context is to be
 	 * indexed/re-indexed.
 	 *
@@ -961,6 +991,19 @@ public class ServiceContext implements Cloneable, Serializable {
 		Map<String, Serializable> expandoBridgeAttributes) {
 
 		_expandoBridgeAttributes = expandoBridgeAttributes;
+	}
+
+	/**
+	 * <p>
+	 * Sets the value of the <i>failOnError</i> flag, which is responsible for
+	 * controlling error handling in the following use-case.
+	 * </p>
+	 *
+	 * @param failOnError value of the <i>failOnError</i> flag.
+	 * @see   ServiceContext#getFailOnError()
+	 */
+	public void setFailOnError(boolean failOnError) {
+		_failOnError = failOnError;
 	}
 
 	/**
@@ -1265,6 +1308,7 @@ public class ServiceContext implements Cloneable, Serializable {
 	private String _currentURL;
 	private boolean _deriveDefaultPermissions;
 	private Map<String, Serializable> _expandoBridgeAttributes;
+	private boolean _failOnError = true;
 	private Date _formDate;
 	private String[] _groupPermissions;
 	private String[] _guestPermissions;

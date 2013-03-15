@@ -138,10 +138,14 @@ public class AssetVocabularyServiceSoap {
 		}
 	}
 
-	public static void deleteVocabularies(long[] vocabularyIds)
+	public static long[] deleteVocabularies(long[] vocabularyIds,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
-			AssetVocabularyServiceUtil.deleteVocabularies(vocabularyIds);
+			long[] returnValue = AssetVocabularyServiceUtil.deleteVocabularies(vocabularyIds,
+					serviceContext);
+
+			return returnValue;
 		}
 		catch (Exception e) {
 			_log.error(e, e);

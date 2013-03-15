@@ -112,10 +112,14 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
-	public static void deleteCategories(long[] categoryIds)
+	public static long[] deleteCategories(long[] categoryIds,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
-			AssetCategoryServiceUtil.deleteCategories(categoryIds);
+			long[] returnValue = AssetCategoryServiceUtil.deleteCategories(categoryIds,
+					serviceContext);
+
+			return returnValue;
 		}
 		catch (Exception e) {
 			_log.error(e, e);
