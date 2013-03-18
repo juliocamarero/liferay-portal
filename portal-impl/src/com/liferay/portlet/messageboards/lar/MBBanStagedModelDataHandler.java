@@ -78,8 +78,7 @@ public class MBBanStagedModelDataHandler
 			return;
 		}
 
-		MBBanLocalServiceUtil.addBan(
-			userId, user.getUserId(), serviceContext);
+		MBBanLocalServiceUtil.addBan(userId, user.getUserId(), serviceContext);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
