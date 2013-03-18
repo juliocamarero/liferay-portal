@@ -98,8 +98,6 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		final Element foldersElement = rootElement.addElement("folders");
-
 		ActionableDynamicQuery folderActionableDynamicQuery =
 			new BookmarksFolderActionableDynamicQuery() {
 
@@ -114,7 +112,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 				BookmarksFolder folder = (BookmarksFolder)object;
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, foldersElement, folder);
+					portletDataContext, folder);
 			}
 
 		};
@@ -123,8 +121,6 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getScopeGroupId());
 
 		folderActionableDynamicQuery.performActions();
-
-		final Element entriesElement = rootElement.addElement("entries");
 
 		ActionableDynamicQuery entryActionableDynamicQuery =
 			new BookmarksEntryActionableDynamicQuery() {
@@ -140,8 +136,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 				BookmarksEntry entry = (BookmarksEntry)object;
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext,
-					new Element[] {foldersElement, entriesElement}, entry);
+					portletDataContext, entry);
 			}
 
 		};
@@ -165,18 +160,18 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = portletDataContext.getImportDataRootElement();
+		Element foldersElement = portletDataContext.getImportDataGroupElement(
+			BookmarksFolder.class.getSimpleName());
 
-		Element foldersElement = rootElement.element("folders");
-
-		for (Element folderElement : foldersElement.elements("folder")) {
+		for (Element folderElement : foldersElement.elements()) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, folderElement);
 		}
 
-		Element entriesElement = rootElement.element("entries");
+		Element entriesElement = portletDataContext.getImportDataGroupElement(
+			BookmarksEntry.class.getSimpleName());
 
-		for (Element entryElement : entriesElement.elements("entry")) {
+		for (Element entryElement : entriesElement.elements()) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, entryElement);
 		}

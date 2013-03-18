@@ -24,51 +24,37 @@ import com.liferay.portal.model.StagedModel;
 public class StagedModelDataHandlerUtil {
 
 	public static <T extends StagedModel> void exportStagedModel(
-			PortletDataContext portletDataContext, Element element,
-			T stagedModel)
+			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
 
 		StagedModelDataHandler<T> stagedModelDataHandler =
 			_getStagedModelDataHandler(stagedModel);
 
 		stagedModelDataHandler.exportStagedModel(
-			portletDataContext, element, stagedModel);
+			portletDataContext, stagedModel);
 	}
 
-	public static <T extends StagedModel> void exportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			T stagedModel)
-		throws PortletDataException {
-
-		StagedModelDataHandler<T> stagedModelDataHandler =
-			_getStagedModelDataHandler(stagedModel);
-
-		stagedModelDataHandler.exportStagedModel(
-			portletDataContext, elements, stagedModel);
-	}
-
-	public static void importStagedModel(
+	public static <T extends StagedModel> void importStagedModel(
 			PortletDataContext portletDataContext, Element element)
 		throws PortletDataException {
 
 		String path = element.attributeValue("path");
 
-		StagedModel stagedModel =
-			(StagedModel)portletDataContext.getZipEntryAsObject(element, path);
+		T stagedModel =
+			(T)portletDataContext.getZipEntryAsObject(element, path);
 
-		importStagedModel(portletDataContext, element, path, stagedModel);
+		importStagedModel(portletDataContext, stagedModel);
 	}
 
 	public static <T extends StagedModel> void importStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			T stagedModel)
+			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
 
 		StagedModelDataHandler<T> stagedModelDataHandler =
 			_getStagedModelDataHandler(stagedModel);
 
 		stagedModelDataHandler.importStagedModel(
-			portletDataContext, element, path, stagedModel);
+			portletDataContext, stagedModel);
 	}
 
 	private static <T extends StagedModel> StagedModelDataHandler<T>

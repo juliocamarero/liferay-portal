@@ -135,7 +135,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 	public static void exportArticle(
 			PortletDataContext portletDataContext, Element articlesElement,
-			Element ddmStructuresElement, Element ddmTemplatesElement,
 			Element dlFileEntryTypesElement, Element dlFoldersElement,
 			Element dlFileEntriesElement, Element dlFileRanksElement,
 			Element dlRepositoriesElement, Element dlRepositoryEntriesElement,
@@ -186,7 +185,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				"ddm-structure-uuid", ddmStructure.getUuid());
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, ddmStructuresElement, ddmStructure);
+				portletDataContext, ddmStructure);
 		}
 
 		if (Validator.isNotNull(article.getTemplateId())) {
@@ -199,13 +198,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				"ddm-template-uuid", ddmTemplate.getUuid());
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext,
-				new Element[] {
-					ddmTemplatesElement, dlFileEntryTypesElement,
-					dlFoldersElement, dlFileEntriesElement, dlFileRanksElement,
-					dlRepositoriesElement, dlRepositoryEntriesElement
-				},
-				ddmTemplate);
+				portletDataContext, ddmTemplate);
 		}
 
 		if (article.isSmallImage()) {
@@ -1105,8 +1098,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 	protected static void exportFolder(
 			PortletDataContext portletDataContext, Element foldersElement,
-			Element articlesElement, Element ddmStructuresElement,
-			Element ddmTemplatesElement, Element dlFileEntryTypesElement,
+			Element articlesElement, Element dlFileEntryTypesElement,
 			Element dlFoldersElement, Element dlFileEntriesElement,
 			Element dlFileRanksElement, Element dlRepositoriesElement,
 			Element dlRepositoryEntriesElement, JournalFolder folder,
@@ -1136,10 +1128,10 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 		for (JournalArticle article : articles) {
 			exportArticle(
-				portletDataContext, articlesElement, ddmStructuresElement,
-				ddmTemplatesElement, dlFileEntryTypesElement, dlFoldersElement,
-				dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, article, true);
+				portletDataContext, articlesElement, dlFileEntryTypesElement,
+				dlFoldersElement, dlFileEntriesElement, dlFileRanksElement,
+				dlRepositoriesElement, dlRepositoryEntriesElement, article,
+				true);
 		}
 	}
 
@@ -1636,8 +1628,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		Element ddmStructuresElement = rootElement.addElement("ddm-structures");
-
 		List<DDMStructure> ddmStructures = DDMStructureUtil.findByG_C(
 			portletDataContext.getScopeGroupId(),
 			PortalUtil.getClassNameId(JournalArticle.class), QueryUtil.ALL_POS,
@@ -1650,13 +1640,12 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 					ddmStructure.getModifiedDate())) {
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, ddmStructuresElement, ddmStructure);
+					portletDataContext, ddmStructure);
 			}
 
 			ddmTemplates.addAll(ddmStructure.getTemplates());
 		}
 
-		Element ddmTemplatesElement = rootElement.addElement("ddm-templates");
 		Element dlFileEntryTypesElement = rootElement.addElement(
 			"dl-file-entry-types");
 		Element dlFoldersElement = rootElement.addElement("dl-folders");
@@ -1672,7 +1661,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 					ddmTemplate.getModifiedDate())) {
 
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, ddmTemplatesElement, ddmTemplate);
+					portletDataContext, ddmTemplate);
 			}
 		}
 
@@ -1697,7 +1686,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			for (JournalFolder folder : folders) {
 				exportFolder(
 					portletDataContext, foldersElement, articlesElement,
-					ddmStructuresElement, ddmTemplatesElement,
 					dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
 					dlFileRanksElement, dlRepositoriesElement,
 					dlRepositoryEntriesElement, folder, true);
@@ -1719,7 +1707,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 					exportArticle(
 						portletDataContext, articlesElement,
-						ddmStructuresElement, ddmTemplatesElement,
 						dlFileEntryTypesElement, dlFoldersElement,
 						dlFilesElement, dlFileRanksElement,
 						dlRepositoriesElement, dlRepositoryEntriesElement,
@@ -1746,22 +1733,20 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 
 		importReferencedData(portletDataContext, rootElement);
 
-		Element ddmStructuresElement = rootElement.element("ddm-structures");
+		Element ddmStructuresElement =
+			portletDataContext.getImportDataGroupElement(
+				DDMStructure.class.getSimpleName());
 
-		List<Element> ddmStructureElements = ddmStructuresElement.elements(
-			"structure");
-
-		for (Element ddmStructureElement : ddmStructureElements) {
+		for (Element ddmStructureElement : ddmStructuresElement.elements()) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, ddmStructureElement);
 		}
 
-		Element ddmTemplatesElement = rootElement.element("ddm-templates");
+		Element ddmTemplatesElement =
+			portletDataContext.getImportDataGroupElement(
+				DDMTemplate.class.getSimpleName());
 
-		List<Element> ddmTemplateElements = ddmTemplatesElement.elements(
-			"template");
-
-		for (Element ddmTemplateElement : ddmTemplateElements) {
+		for (Element ddmTemplateElement : ddmTemplatesElement.elements()) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, ddmTemplateElement);
 		}

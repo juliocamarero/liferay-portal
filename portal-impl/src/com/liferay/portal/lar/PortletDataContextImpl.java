@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -34,12 +35,15 @@ import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.model.AttachedModel;
@@ -52,6 +56,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.ResourcedModel;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.model.Team;
 import com.liferay.portal.model.impl.LockImpl;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
@@ -653,6 +658,14 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	public ServiceContext createServiceContext(
+		StagedModel stagedModel, String namespace) {
+
+		String path = StagedModelPathUtil.getPath(stagedModel);
+
+		return createServiceContext(path, (ClassedModel)stagedModel, namespace);
+	}
+
+	public ServiceContext createServiceContext(
 		String path, ClassedModel classedModel, String namespace) {
 
 		return createServiceContext(null, path, classedModel, namespace);
@@ -737,6 +750,27 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _expandoColumnsMap;
 	}
 
+	public Element getExportDataGroupElement(String name) {
+		if (_exportDataRootElement == null) {
+			return null;
+		}
+
+		Element groupElement = _exportDataRootElement.element(name);
+
+		if (groupElement == null) {
+			groupElement = _exportDataRootElement.addElement(name);
+		}
+
+		return groupElement;
+	}
+
+	public Element getExportDataStagedModelElement(String groupElementName) {
+
+		Element groupElement = getExportDataGroupElement(groupElementName);
+
+		return groupElement.addElement("staged-model");
+	}
+
 	public Element getExportDataRootElement() {
 		return _exportDataRootElement;
 	}
@@ -745,8 +779,40 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _groupId;
 	}
 
+	public Element getImportDataGroupElement(String name) {
+		if (_importDataRootElement == null) {
+			return null;
+		}
+
+		if (Validator.isNull(name)) {
+			return _importDataRootElement.element(name);
+		}
+
+		return _importDataRootElement.element(name);
+	}
+
 	public Element getImportDataRootElement() {
 		return _importDataRootElement;
+	}
+
+	public Element getImportDataStagedModelElement(StagedModel stagedModel) {
+		Element groupElement = getImportDataGroupElement(
+			stagedModel.getClass().getSimpleName());
+
+		if (groupElement == null) {
+			return null;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("staged-model");
+		sb.append("[@path='");
+		sb.append(StagedModelPathUtil.getPath(stagedModel));
+		sb.append("']");
+
+		XPath xPath = SAXReaderUtil.createXPath(sb.toString());
+
+		return (Element)xPath.selectSingleNode(groupElement);
 	}
 
 	public String getLayoutPath(long layoutId) {

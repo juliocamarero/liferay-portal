@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Shinn Lok
  */
 public class PollsChoiceStagedModelDataHandler
-		extends BaseStagedModelDataHandler<PollsChoice> {
+	extends BaseStagedModelDataHandler<PollsChoice> {
 
 	@Override
 	public String getClassName() {
@@ -39,14 +39,18 @@ public class PollsChoiceStagedModelDataHandler
 	}
 
 	@Override
+	public String getClassSimpleName() {
+		return PollsChoice.class.getSimpleName();
+	}
+
+	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			PollsChoice choice)
+			PortletDataContext portletDataContext, PollsChoice choice)
 		throws Exception {
 
-		Element choicesElement = elements[0];
-
-		Element choiceElement = choicesElement.addElement("choice");
+		Element choiceElement =
+			portletDataContext.getExportDataGroupElement(
+				PollsChoice.class.getSimpleName());
 
 		portletDataContext.addClassedModel(
 			choiceElement, StagedModelPathUtil.getPath(choice), choice,
@@ -55,8 +59,7 @@ public class PollsChoiceStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			PollsChoice choice)
+			PortletDataContext portletDataContext, PollsChoice choice)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(choice.getUserUuid());
@@ -71,7 +74,7 @@ public class PollsChoiceStagedModelDataHandler
 		PollsChoice importedChoice = null;
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, choice, PollsPortletDataHandler.NAMESPACE);
+			choice, PollsPortletDataHandler.NAMESPACE);
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			PollsChoice existingChoice = PollsChoiceFinderUtil.fetchByUUID_G(

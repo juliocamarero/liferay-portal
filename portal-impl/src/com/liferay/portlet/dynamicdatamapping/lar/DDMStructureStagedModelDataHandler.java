@@ -44,14 +44,18 @@ public class DDMStructureStagedModelDataHandler
 	}
 
 	@Override
+	public String getClassSimpleName() {
+		return DDMStructure.class.getSimpleName();
+	}
+
+	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			DDMStructure structure)
+			PortletDataContext portletDataContext, DDMStructure structure)
 		throws Exception {
 
-		Element structuresElement = elements[0];
-
-		Element structureElement = structuresElement.addElement("structure");
+		Element structureElement =
+			portletDataContext.getExportDataStagedModelElement(
+				DDMStructure.class.getSimpleName());
 
 		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
 			structure.getCompanyId());
@@ -67,8 +71,7 @@ public class DDMStructureStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			DDMStructure structure)
+			PortletDataContext portletDataContext, DDMStructure structure)
 		throws Exception {
 
 		prepareLanguagesForImport(structure);
@@ -80,11 +83,14 @@ public class DDMStructureStagedModelDataHandler
 				DDMStructure.class);
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, structure, DDMPortletDataHandler.NAMESPACE);
+			structure, DDMPortletDataHandler.NAMESPACE);
 
 		DDMStructure importedStructure = null;
 
 		if (portletDataContext.isDataStrategyMirror()) {
+			Element element =
+				portletDataContext.getImportDataStagedModelElement(structure);
+
 			boolean preloaded = GetterUtil.getBoolean(
 				element.attributeValue("preloaded"));
 

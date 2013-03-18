@@ -45,46 +45,38 @@ public class PollsQuestionStagedModelDataHandler
 	}
 
 	@Override
+	public String getClassSimpleName() {
+		return PollsQuestion.class.getSimpleName();
+	}
+
+	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			PollsQuestion question)
+			PortletDataContext portletDataContext, PollsQuestion question)
 		throws Exception {
 
-		Element choicesElement = null;
+		List<PollsChoice> choices = PollsChoiceUtil.findByQuestionId(
+			question.getQuestionId());
 
-		if (elements.length > 1) {
-			choicesElement = elements[1];
+		for (PollsChoice choice : choices) {
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, choice);
+		}
 
-			List<PollsChoice> choices = PollsChoiceUtil.findByQuestionId(
+		if (portletDataContext.getBooleanParameter(
+				PollsPortletDataHandler.NAMESPACE, "votes")) {
+
+			List<PollsVote> votes = PollsVoteUtil.findByQuestionId(
 				question.getQuestionId());
 
-			for (PollsChoice choice : choices) {
+			for (PollsVote vote : votes) {
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, choicesElement, choice);
-			}
-
-			Element votesElement = null;
-
-			if (elements.length > 2) {
-				votesElement = elements[2];
-
-				if (portletDataContext.getBooleanParameter(
-						PollsPortletDataHandler.NAMESPACE, "votes")) {
-
-					List<PollsVote> votes = PollsVoteUtil.findByQuestionId(
-						question.getQuestionId());
-
-					for (PollsVote vote : votes) {
-						StagedModelDataHandlerUtil.exportStagedModel(
-							portletDataContext, votesElement, vote);
-					}
-				}
+					portletDataContext, vote);
 			}
 		}
 
-		Element questionsElement = elements[0];
-
-		Element questionElement = questionsElement.addElement("question");
+		Element questionElement =
+			portletDataContext.getExportDataGroupElement(
+				PollsQuestion.class.getSimpleName());
 
 		portletDataContext.addClassedModel(
 			questionElement, StagedModelPathUtil.getPath(question), question,
@@ -93,8 +85,7 @@ public class PollsQuestionStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			PollsQuestion question)
+			PortletDataContext portletDataContext, PollsQuestion question)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(question.getUserUuid());
@@ -126,7 +117,7 @@ public class PollsQuestionStagedModelDataHandler
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, question, PollsPortletDataHandler.NAMESPACE);
+			question, PollsPortletDataHandler.NAMESPACE);
 
 		PollsQuestion importedQuestion = null;
 

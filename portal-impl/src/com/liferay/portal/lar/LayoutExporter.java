@@ -653,10 +653,9 @@ public class LayoutExporter {
 			"dl-repository-entries");
 
 		JournalPortletDataHandler.exportArticle(
-			portletDataContext, layoutElement, layoutElement, layoutElement,
-			dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-			dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, article, false);
+			portletDataContext, layoutElement, dlFileEntryTypesElement,
+			dlFoldersElement, dlFilesElement, dlFileRanksElement,
+			dlRepositoriesElement, dlRepositoryEntriesElement, article, false);
 	}
 
 	protected void exportLayout(

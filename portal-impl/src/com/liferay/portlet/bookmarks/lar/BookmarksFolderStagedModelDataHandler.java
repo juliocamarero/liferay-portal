@@ -40,21 +40,24 @@ public class BookmarksFolderStagedModelDataHandler
 	}
 
 	@Override
-	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			BookmarksFolder folder)
-		throws Exception {
+	public String getClassSimpleName() {
+		return BookmarksFolder.class.getSimpleName();
+	}
 
-		Element foldersElement = elements[0];
+	@Override
+	protected void doExportStagedModel(
+			PortletDataContext portletDataContext, BookmarksFolder folder)
+		throws Exception {
 
 		if (folder.getParentFolderId() !=
 				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
-			exportStagedModel(
-				portletDataContext, foldersElement, folder.getParentFolder());
+			exportStagedModel(portletDataContext, folder.getParentFolder());
 		}
 
-		Element folderElement = foldersElement.addElement("folder");
+		Element folderElement =
+			portletDataContext.getExportDataStagedModelElement(
+				BookmarksFolder.class.getSimpleName());
 
 		portletDataContext.addClassedModel(
 			folderElement, StagedModelPathUtil.getPath(folder), folder,
@@ -63,8 +66,7 @@ public class BookmarksFolderStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			BookmarksFolder folder)
+			PortletDataContext portletDataContext, BookmarksFolder folder)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(folder.getUserUuid());
@@ -88,8 +90,7 @@ public class BookmarksFolderStagedModelDataHandler
 				(BookmarksFolder)portletDataContext.getZipEntryAsObject(
 					parentFolderPath);
 
-			importStagedModel(
-				portletDataContext, element, parentFolderPath, parentFolder);
+			importStagedModel(portletDataContext, parentFolder);
 
 			parentFolderId = MapUtil.getLong(
 				folderIds, folder.getParentFolderId(),
@@ -97,7 +98,7 @@ public class BookmarksFolderStagedModelDataHandler
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, folder, BookmarksPortletDataHandler.NAMESPACE);
+			folder, BookmarksPortletDataHandler.NAMESPACE);
 
 		BookmarksFolder importedFolder = null;
 
