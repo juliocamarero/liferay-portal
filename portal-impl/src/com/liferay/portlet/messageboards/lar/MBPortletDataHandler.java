@@ -158,7 +158,7 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext,
-					new Element[] {messagesElement, categoriesElement},
+					new Element[] {categoriesElement, messagesElement},
 					message);
 			}
 
@@ -195,7 +195,7 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 					StagedModelDataHandlerUtil.exportStagedModel(
 						portletDataContext,
 						new Element[] {
-							messagesElement, categoriesElement,
+							categoriesElement, messagesElement,
 							threadFlagsElement
 						},
 						message);

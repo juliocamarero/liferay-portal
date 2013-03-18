@@ -51,10 +51,6 @@ public class MBThreadFlagStagedModelDataHandler
 			MBThreadFlag threadFlag)
 		throws Exception {
 
-		Element messagesElement = elements[0];
-		Element categoriesElement = elements[1];
-		Element threadFlagsElement = elements[2];
-
 		MBThread thread = MBThreadLocalServiceUtil.getThread(
 			threadFlag.getThreadId());
 
@@ -70,14 +66,19 @@ public class MBThreadFlagStagedModelDataHandler
 			return;
 		}
 
+		Element categoriesElement = elements[0];
+		Element messagesElement = elements[1];
+
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext,
 			new Element[] {
-				messagesElement, categoriesElement, threadFlagsElement
+				categoriesElement, messagesElement, threadFlagsElement
 			},
 			rootMessage);
 
 		// Thread flag
+
+		Element threadFlagsElement = elements[2];
 
 		Element threadFlagElement = threadFlagsElement.addElement(
 			"thread-flag");
@@ -102,7 +103,7 @@ public class MBThreadFlagStagedModelDataHandler
 
 		Map<Long, Long> threadIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
-			MBThread.class);
+				MBThread.class);
 
 		long threadId = MapUtil.getLong(
 			threadIds, threadFlag.getThreadId(), threadFlag.getThreadId());

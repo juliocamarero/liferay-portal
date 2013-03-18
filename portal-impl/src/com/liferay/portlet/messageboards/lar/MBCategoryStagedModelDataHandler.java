@@ -45,8 +45,6 @@ public class MBCategoryStagedModelDataHandler
 			MBCategory category)
 		throws Exception {
 
-		Element categoriesElement = elements[0];
-
 		if ((category.getCategoryId() ==
 				MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) ||
 			(category.getCategoryId() ==
@@ -54,6 +52,8 @@ public class MBCategoryStagedModelDataHandler
 
 			return;
 		}
+
+		Element categoriesElement = elements[0];
 
 		if (category.getParentCategory() != null) {
 			StagedModelDataHandlerUtil.exportStagedModel(

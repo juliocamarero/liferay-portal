@@ -60,9 +60,6 @@ public class MBMessageStagedModelDataHandler
 			MBMessage message)
 		throws Exception {
 
-		Element messagesElement = elements[0];
-		Element categoriesElement = elements[1];
-
 		if ((message.getStatus() != WorkflowConstants.STATUS_APPROVED) ||
 			(message.getCategoryId() ==
 				MBCategoryConstants.DISCUSSION_CATEGORY_ID)) {
@@ -72,10 +69,14 @@ public class MBMessageStagedModelDataHandler
 
 		// Category
 
+		Element categoriesElement = elements[0];
+
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, categoriesElement, message.getCategory());
 
 		// Message
+
+		Element messagesElement = elements[1];
 
 		Element messageElement = messagesElement.addElement("message");
 
