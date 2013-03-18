@@ -71,10 +71,7 @@ public class MBThreadFlagStagedModelDataHandler
 
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext,
-			new Element[] {
-				categoriesElement, messagesElement, threadFlagsElement
-			},
-			rootMessage);
+			new Element[] {categoriesElement, messagesElement}, rootMessage);
 
 		// Thread flag
 
