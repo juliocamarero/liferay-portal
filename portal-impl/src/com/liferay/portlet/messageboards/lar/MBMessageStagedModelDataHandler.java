@@ -184,7 +184,7 @@ public class MBMessageStagedModelDataHandler
 						categoryPath);
 
 				StagedModelDataHandlerUtil.importStagedModel(
-					portletDataContext, element, path, category);
+					portletDataContext, element, categoryPath, category);
 
 				parentCategoryId = MapUtil.getLong(
 					categoryIds, message.getCategoryId(),
