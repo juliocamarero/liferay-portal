@@ -102,9 +102,6 @@ public class MBCategoryStagedModelDataHandler
 		boolean allowAnonymous = false;
 		boolean mailingListActive = false;
 
-		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, category, MBPortletDataHandler.NAMESPACE);
-
 		// Parent category
 
 		if ((parentCategoryId !=
@@ -127,6 +124,9 @@ public class MBCategoryStagedModelDataHandler
 				categoryIds, category.getParentCategoryId(),
 				category.getParentCategoryId());
 		}
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			path, category, MBPortletDataHandler.NAMESPACE);
 
 		MBCategory importedCategory = null;
 

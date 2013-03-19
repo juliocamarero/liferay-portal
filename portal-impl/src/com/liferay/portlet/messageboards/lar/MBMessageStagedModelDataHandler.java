@@ -129,6 +129,7 @@ public class MBMessageStagedModelDataHandler
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(message.getUserUuid());
+
 		String userName = message.getUserName();
 
 		Map<Long, Long> categoryIds =
@@ -151,8 +152,6 @@ public class MBMessageStagedModelDataHandler
 		long parentMessageId = MapUtil.getLong(
 			messageIds, message.getParentMessageId(),
 			message.getParentMessageId());
-
-		List<String> existingFiles = new ArrayList<String>();
 
 		List<ObjectValuePair<String, InputStream>> inputStreamOVPs =
 			getAttachments(portletDataContext, element, message);
@@ -214,8 +213,9 @@ public class MBMessageStagedModelDataHandler
 					importedMessage = MBMessageLocalServiceUtil.updateMessage(
 						userId, existingMessage.getMessageId(),
 						message.getSubject(), message.getBody(),
-						inputStreamOVPs, existingFiles, message.getPriority(),
-						message.getAllowPingbacks(), serviceContext);
+						inputStreamOVPs, new ArrayList<String>(),
+						message.getPriority(), message.getAllowPingbacks(),
+						serviceContext);
 				}
 			}
 			else {

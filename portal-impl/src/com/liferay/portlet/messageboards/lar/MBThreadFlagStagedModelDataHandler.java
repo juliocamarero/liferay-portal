@@ -94,8 +94,6 @@ public class MBThreadFlagStagedModelDataHandler
 			MBThreadFlag threadFlag)
 		throws Exception {
 
-		long userId = portletDataContext.getUserId(threadFlag.getUserUuid());
-
 		// Parent thread
 
 		Map<Long, Long> threadIds =
@@ -129,6 +127,8 @@ public class MBThreadFlagStagedModelDataHandler
 		}
 
 		// Thread flag
+
+		long userId = portletDataContext.getUserId(threadFlag.getUserUuid());
 
 		ServiceContext serviceContext =
 			portletDataContext.createServiceContext(

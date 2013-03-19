@@ -60,11 +60,6 @@ public class MBBanStagedModelDataHandler
 			MBBan ban)
 		throws Exception {
 
-		long userId = portletDataContext.getUserId(ban.getUserUuid());
-
-		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			element, ban, MBPortletDataHandler.NAMESPACE);
-
 		User user = UserUtil.fetchByUuid_C_First(
 			ban.getBanUserUuid(), portletDataContext.getCompanyId(), null);
 
@@ -77,6 +72,11 @@ public class MBBanStagedModelDataHandler
 
 			return;
 		}
+
+		long userId = portletDataContext.getUserId(ban.getUserUuid());
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			element, ban, MBPortletDataHandler.NAMESPACE);
 
 		MBBanLocalServiceUtil.addBan(userId, user.getUserId(), serviceContext);
 	}
