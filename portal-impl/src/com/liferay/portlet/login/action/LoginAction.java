@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.AuthException;
+import com.liferay.portal.setup.SetupWizardUtil;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -181,6 +182,20 @@ public class LoginAction extends PortletAction {
 
 		String login = ParamUtil.getString(actionRequest, "login");
 		String password = actionRequest.getParameter("password");
+
+		if (SetupWizardUtil.isSetupFinished()) {
+
+			if (Validator.isNull(login)) {
+				HttpSession session = request.getSession();
+
+				login = (String)session.getAttribute(WebKeys.EMAIL_ADDRESS);
+			}
+
+			if (Validator.isNull(password)) {
+				password = PropsValues.DEFAULT_ADMIN_PASSWORD;
+			}
+		}
+
 		boolean rememberMe = ParamUtil.getBoolean(actionRequest, "rememberMe");
 
 		String authType = preferences.getValue("authType", null);
