@@ -55,7 +55,7 @@ public class PollsChoiceStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
+			PortletDataContext portletDataContext, Element element,
 			PollsChoice choice)
 		throws Exception {
 
@@ -71,7 +71,7 @@ public class PollsChoiceStagedModelDataHandler
 		PollsChoice importedChoice = null;
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, choice, PollsPortletDataHandler.NAMESPACE);
+			choice, PollsPortletDataHandler.NAMESPACE);
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			PollsChoice existingChoice = PollsChoiceFinderUtil.fetchByUUID_G(
