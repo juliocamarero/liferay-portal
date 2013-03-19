@@ -67,7 +67,7 @@ public class BookmarksEntryStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
+			PortletDataContext portletDataContext, Element element,
 			BookmarksEntry entry)
 		throws Exception {
 
@@ -98,7 +98,7 @@ public class BookmarksEntryStagedModelDataHandler
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, entry, BookmarksPortletDataHandler.NAMESPACE);
+			entry, BookmarksPortletDataHandler.NAMESPACE);
 
 		BookmarksEntry importedEntry = null;
 
