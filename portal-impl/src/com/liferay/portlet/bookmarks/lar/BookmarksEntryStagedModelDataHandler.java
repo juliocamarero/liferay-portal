@@ -42,23 +42,25 @@ public class BookmarksEntryStagedModelDataHandler
 	}
 
 	@Override
-	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			BookmarksEntry entry)
-		throws Exception {
+	public String getClassSimpleName() {
+		return BookmarksEntry.class.getSimpleName();
+	}
 
-		Element foldersElement = elements[0];
+	@Override
+	protected void doExportStagedModel(
+			PortletDataContext portletDataContext, BookmarksEntry entry)
+		throws Exception {
 
 		if (entry.getFolderId() !=
 				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, foldersElement, entry.getFolder());
+				portletDataContext, entry.getFolder());
 		}
 
-		Element entriesElement = elements[1];
-
-		Element entryElement = entriesElement.addElement("entry");
+		Element entryElement =
+			portletDataContext.getExportDataStagedModelElement(
+				BookmarksEntry.class.getSimpleName());
 
 		portletDataContext.addClassedModel(
 			entryElement, StagedModelPathUtil.getPath(entry), entry,
@@ -67,8 +69,7 @@ public class BookmarksEntryStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			BookmarksEntry entry)
+			PortletDataContext portletDataContext, BookmarksEntry entry)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(entry.getUserUuid());
@@ -91,14 +92,14 @@ public class BookmarksEntryStagedModelDataHandler
 					parentFolderPath);
 
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, element, parentFolderPath, parentFolder);
+				portletDataContext, parentFolder);
 
 			folderId = MapUtil.getLong(
 				folderIds, entry.getFolderId(), entry.getFolderId());
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, entry, BookmarksPortletDataHandler.NAMESPACE);
+			entry, BookmarksPortletDataHandler.NAMESPACE);
 
 		BookmarksEntry importedEntry = null;
 

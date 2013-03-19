@@ -783,7 +783,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			ddmStructureUuids[i] = ddmStructure.getUuid();
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, fileEntryTypeElement, ddmStructure);
+				portletDataContext, ddmStructure);
 		}
 
 		fileEntryTypeElement.addAttribute(
@@ -1369,10 +1369,11 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			dlFileEntryType.getUuid(), portletDataContext.getScopeGroupId(),
 			dlFileEntryType.getName(), 2);
 
-		List<Element> structureElements = fileEntryTypeElement.elements(
-			"structure");
+		Element structuresElement =
+			portletDataContext.getImportDataGroupElement(
+				DDMStructure.class.getSimpleName());
 
-		for (Element structureElement : structureElements) {
+		for (Element structureElement : structuresElement.elements()) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, structureElement);
 		}

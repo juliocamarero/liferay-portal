@@ -41,14 +41,18 @@ public class PollsVoteStagedModelDataHandler
 	}
 
 	@Override
+	public String getClassSimpleName() {
+		return PollsVote.class.getSimpleName();
+	}
+
+	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			PollsVote vote)
+			PortletDataContext portletDataContext, PollsVote vote)
 		throws Exception {
 
-		Element votesElement = elements[0];
-
-		Element voteElement = votesElement.addElement("vote");
+		Element voteElement =
+			portletDataContext.getExportDataGroupElement(
+				PollsVote.class.getSimpleName());
 
 		portletDataContext.addClassedModel(
 			voteElement, StagedModelPathUtil.getPath(vote), vote,
@@ -57,8 +61,7 @@ public class PollsVoteStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			PollsVote vote)
+			PortletDataContext portletDataContext, PollsVote vote)
 		throws Exception {
 
 		Map<Long, Long> questionIds =
@@ -76,7 +79,7 @@ public class PollsVoteStagedModelDataHandler
 			choiceIds, vote.getChoiceId(), vote.getChoiceId());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, vote, PollsPortletDataHandler.NAMESPACE);
+			vote, PollsPortletDataHandler.NAMESPACE);
 
 		serviceContext.setCreateDate(vote.getVoteDate());
 

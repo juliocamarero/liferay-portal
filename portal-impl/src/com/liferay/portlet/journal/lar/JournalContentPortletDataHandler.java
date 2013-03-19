@@ -192,10 +192,9 @@ public class JournalContentPortletDataHandler
 			"dl-repository-entries");
 
 		JournalPortletDataHandler.exportArticle(
-			portletDataContext, rootElement, rootElement, rootElement,
-			dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-			dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, article, false);
+			portletDataContext, rootElement, dlFileEntryTypesElement,
+			dlFoldersElement, dlFilesElement, dlFileRanksElement,
+			dlRepositoriesElement, dlRepositoryEntriesElement, article, false);
 
 		String defaultTemplateId = article.getTemplateId();
 		String preferenceTemplateId = portletPreferences.getValue(
@@ -211,13 +210,7 @@ public class JournalContentPortletDataHandler
 				preferenceTemplateId, true);
 
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext,
-				new Element[] {
-					rootElement, dlFileEntryTypesElement, dlFoldersElement,
-					dlFilesElement, dlFileRanksElement, dlRepositoriesElement,
-					dlRepositoryEntriesElement
-				},
-				ddmTemplate);
+				portletDataContext, ddmTemplate);
 		}
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
@@ -250,17 +243,23 @@ public class JournalContentPortletDataHandler
 		JournalPortletDataHandler.importReferencedData(
 			portletDataContext, rootElement);
 
-		Element structureElement = rootElement.element("structure");
+		Element structuresElement =
+			portletDataContext.getImportDataGroupElement(
+				DDMStructure.class.getSimpleName());
 
-		if (structureElement != null) {
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, structureElement);
+		if (structuresElement != null) {
+			for (Element structureElement : structuresElement.elements()) {
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, structureElement);
+			}
 		}
 
-		List<Element> templateElements = rootElement.elements("template");
+		Element templatesElement =
+			portletDataContext.getImportDataGroupElement(
+				DDMTemplate.class.getSimpleName());
 
-		if (templateElements != null) {
-			for (Element templateElement : templateElements) {
+		if (templatesElement != null) {
+			for (Element templateElement : templatesElement.elements()) {
 				StagedModelDataHandlerUtil.importStagedModel(
 					portletDataContext, templateElement);
 			}

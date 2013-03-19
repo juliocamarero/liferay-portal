@@ -95,14 +95,8 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		Element questionsElement = rootElement.addElement("questions");
-		Element choicesElement = rootElement.addElement("choices");
-		Element votesElement = rootElement.addElement("votes");
-
 		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext,
-			new Element[]{questionsElement, choicesElement, votesElement},
-			question);
+			portletDataContext, question);
 
 		return getExportDataRootElementString(rootElement);
 	}

@@ -216,10 +216,10 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 			articleElement.addAttribute("path", path);
 
 			JournalPortletDataHandler.exportArticle(
-				portletDataContext, rootElement, rootElement, rootElement,
-				dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-				dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, article, false);
+				portletDataContext, rootElement, dlFileEntryTypesElement,
+				dlFoldersElement, dlFilesElement, dlFileRanksElement,
+				dlRepositoriesElement, dlRepositoryEntriesElement, article,
+				false);
 		}
 
 		return getExportDataRootElementString(rootElement);

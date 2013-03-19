@@ -31,6 +31,7 @@ import javax.portlet.PortletPreferences;
 
 /**
  * @author Juan Fernández
+ * @author Mate Thurzo
  */
 public class PortletDisplayTemplatePortletDataHandler
 	extends BasePortletDataHandler {
@@ -52,7 +53,7 @@ public class PortletDisplayTemplatePortletDataHandler
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
-		exportPortletDisplayTemplates(portletDataContext, rootElement);
+		exportPortletDisplayTemplates(portletDataContext);
 
 		return getExportDataRootElementString(rootElement);
 	}
@@ -63,11 +64,11 @@ public class PortletDisplayTemplatePortletDataHandler
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
 
-		Element rootElement = portletDataContext.getImportDataRootElement();
+		Element ddmTemplatesElement =
+			portletDataContext.getImportDataGroupElement(
+				DDMTemplate.class.getSimpleName());
 
-		List<Element> ddmTemplateElements = rootElement.elements("template");
-
-		for (Element ddmTemplateElement : ddmTemplateElements) {
+		for (Element ddmTemplateElement : ddmTemplatesElement.elements()) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, ddmTemplateElement);
 		}
@@ -76,8 +77,7 @@ public class PortletDisplayTemplatePortletDataHandler
 	}
 
 	protected void exportPortletDisplayTemplates(
-			PortletDataContext portletDataContext,
-			Element portletDisplayTemplatesElement)
+			PortletDataContext portletDataContext)
 		throws Exception {
 
 		long[] classNameIds =
@@ -90,25 +90,9 @@ public class PortletDisplayTemplatePortletDataHandler
 
 			for (DDMTemplate ddmTemplate : ddmTemplates) {
 				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, portletDisplayTemplatesElement,
-					ddmTemplate);
+					portletDataContext, ddmTemplate);
 			}
 		}
-	}
-
-	protected String getTemplatePath(
-		PortletDataContext portletDataContext, DDMTemplate template) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(
-				PortletKeys.PORTLET_DISPLAY_TEMPLATES));
-		sb.append("/templates/");
-		sb.append(template.getTemplateId());
-		sb.append(".xml");
-
-		return sb.toString();
 	}
 
 }
