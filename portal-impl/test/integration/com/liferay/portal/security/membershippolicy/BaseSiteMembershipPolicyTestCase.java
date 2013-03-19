@@ -20,17 +20,13 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.membershippolicy.util.RoleTestUtil;
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.UserTestUtil;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -46,20 +42,12 @@ import org.junit.runner.RunWith;
 @Transactional
 public abstract class BaseSiteMembershipPolicyTestCase {
 
-	public static int currentGroups(int i) {
-		return i;
-	}
-
 	public static long[] getForbiddenRoleIds() {
 		return _forbiddenRoleIds;
 	}
 
 	public static long[] getForbiddenSiteIds() {
 		return _forbiddenSiteIds;
-	}
-
-	public static Group getGroup() {
-		return _group;
 	}
 
 	public static boolean getPropagateMembershipMethodFlag() {
@@ -94,10 +82,6 @@ public abstract class BaseSiteMembershipPolicyTestCase {
 		return _verifyMethodFlag;
 	}
 
-	public static void setGroup(Group group) {
-		_group = group;
-	}
-
 	public static void setPropagateMembershipMethodFlag(
 		boolean propagateMembershipMethodFlag) {
 
@@ -117,29 +101,16 @@ public abstract class BaseSiteMembershipPolicyTestCase {
 	@Before
 	public void setUp() throws Exception {
 		FinderCacheUtil.clearCache();
-
-		setGroup(GroupTestUtil.addGroup());
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		GroupLocalServiceUtil.deleteGroup(getGroup());
-	}
-
-	protected static int addedUsers(int i) {
-		return i;
-	}
-
-	protected ServiceContext _getServiceContext() throws Exception {
-		return ServiceTestUtil.getServiceContext();
-	}
-
-	protected void addForbiddenRoles() throws Exception {
+	protected long[] addForbiddenRoles() throws Exception {
 		_forbiddenRoleIds[0] = RoleTestUtil.addGroupRole(_group.getGroupId());
 		_forbiddenRoleIds[1] = RoleTestUtil.addGroupRole(_group.getGroupId());
+
+		return _forbiddenRoleIds;
 	}
 
-	protected void addForbiddenSites() throws Exception {
+	protected long[] addForbiddenSites() throws Exception {
 		Group forbiddenSite1 = GroupTestUtil.addGroup(
 			ServiceTestUtil.randomString());
 		_forbiddenSiteIds[0] = forbiddenSite1.getGroupId();
@@ -147,14 +118,18 @@ public abstract class BaseSiteMembershipPolicyTestCase {
 		Group forbiddenSite2 = GroupTestUtil.addGroup(
 			ServiceTestUtil.randomString());
 		_forbiddenSiteIds[1] = forbiddenSite2.getGroupId();
+
+		return _forbiddenSiteIds;
 	}
 
-	protected void addRequiredRoles() throws Exception {
+	protected long[] addRequiredRoles() throws Exception {
 		_requiredRoleIds[0] = RoleTestUtil.addGroupRole(_group.getGroupId());
 		_requiredRoleIds[1] = RoleTestUtil.addGroupRole(_group.getGroupId());
+
+		return _requiredRoleIds;
 	}
 
-	protected void addRequiredSites() throws Exception {
+	protected long[] addRequiredSites() throws Exception {
 		Group requiredSite1 = GroupTestUtil.addGroup(
 			ServiceTestUtil.randomString());
 		_requiredSiteIds[0] = requiredSite1.getGroupId();
@@ -162,14 +137,18 @@ public abstract class BaseSiteMembershipPolicyTestCase {
 		Group requiredSite2 = GroupTestUtil.addGroup(
 			ServiceTestUtil.randomString());
 		_requiredSiteIds[1] = requiredSite2.getGroupId();
+
+		return _requiredSiteIds;
 	}
 
-	protected void addStandardRoles() throws Exception {
+	protected long[] addStandardRoles() throws Exception {
 		_standardRoleIds[0] = RoleTestUtil.addGroupRole(_group.getGroupId());
 		_standardRoleIds[1] = RoleTestUtil.addGroupRole(_group.getGroupId());
+
+		return _standardRoleIds;
 	}
 
-	protected void addStandardSites() throws Exception {
+	protected long[] addStandardSites() throws Exception {
 		Group standardSite1 = GroupTestUtil.addGroup(
 			ServiceTestUtil.randomString());
 		_standardSiteIds[0] = standardSite1.getGroupId();
@@ -177,9 +156,11 @@ public abstract class BaseSiteMembershipPolicyTestCase {
 		Group standardSite2 = GroupTestUtil.addGroup(
 			ServiceTestUtil.randomString());
 		_standardSiteIds[1] = standardSite2.getGroupId();
+
+		return _standardSiteIds;
 	}
 
-	protected void addUsers() throws Exception {
+	protected long[] addUsers() throws Exception {
 		User user1= UserTestUtil.addUser(
 			ServiceTestUtil.randomString(), _group.getGroupId());
 		_userIds[0] = user1.getUserId();
@@ -187,10 +168,8 @@ public abstract class BaseSiteMembershipPolicyTestCase {
 		User user2 = UserTestUtil.addUser(
 			ServiceTestUtil.randomString(), _group.getGroupId());
 		_userIds[1] = user2.getUserId();
-	}
 
-	protected User getUser() throws Exception {
-		return UserLocalServiceUtil.getUser(getUserIds()[0]);
+		return _userIds;
 	}
 
 	private static long[] _forbiddenRoleIds = new long[2];

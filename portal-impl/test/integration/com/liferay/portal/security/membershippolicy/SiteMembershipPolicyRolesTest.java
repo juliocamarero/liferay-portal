@@ -14,19 +14,23 @@
 
 package com.liferay.portal.security.membershippolicy;
 
+import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.security.membershippolicy.util.MembershipPolicyTestUtil;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserGroupRoleServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.UserGroupRolePK;
+import com.liferay.portal.util.GroupTestUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -35,85 +39,29 @@ import org.junit.Test;
 public class SiteMembershipPolicyRolesTest
 	extends BaseSiteMembershipPolicyTestCase {
 
+	@Before
+	public void setUp() throws Exception {
+		FinderCacheUtil.clearCache();
+
+		_group = GroupTestUtil.addGroup();
+	}
+
 	@Test(expected = MembershipPolicyException.class)
-	public void testExceptionThrowingWhenAddUsersToForbiddenSiteRole()
-		throws Exception {
+	public void testAssignUsersToForbiddenRole() throws Exception {
 
-		addUsers();
-		addForbiddenRoles();
-
-		Group group = getGroup();
+		long[] forbiddenRoleIds = addForbiddenRoles();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			getUserIds(), group.getGroupId(), getForbiddenRoleIds()[0]);
+			addUsers(), _group.getGroupId(), forbiddenRoleIds[0]);
 	}
 
 	@Test(expected = MembershipPolicyException.class)
-	public void testExceptionThrowingWhenAddUserToForbiddenSiteRoles()
-		throws Exception {
-
-		addUsers();
-		addForbiddenRoles();
-
-		Group group = getGroup();
-
-		UserGroupRoleServiceUtil.addUserGroupRoles(
-			getUserIds()[0], group.getGroupId(), getForbiddenRoleIds());
-
-	}
-
-	@Test(expected = MembershipPolicyException.class)
-	public void testExceptionThrowingWhenDeleteUserFromRequiredSiteRoles()
-		throws Exception {
-
-		addUsers();
-		addRequiredRoles();
-
-		Group group = getGroup();
-
-		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			getUserIds()[0], group.getGroupId(), getRequiredRoleIds());
-	}
-
-	@Test(expected = MembershipPolicyException.class)
-	public void testExceptionThrowingWhenDeleteUsersFromRequiredSiteRole()
-		throws Exception {
-
-		addUsers();
-		addRequiredRoles();
-
-		Group group = getGroup();
-
-		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			getUserIds(), group.getGroupId(), getRequiredRoleIds()[0]);
-	}
-
-	@Test
-	public void testExceptionThrowWhenDeleteUsersFromStandardSiteRole()
-		throws Exception {
-
-		addUsers();
-		addStandardRoles();
-
-		Group group = getGroup();
-
-		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			getUserIds(), group.getGroupId(), getStandardRoleIds()[0]);
-
-		Assert.assertTrue(getPropagateRolesMethodFlag());
-	}
-
-	@Test(expected = MembershipPolicyException.class)
-	public void testExceptionThrowWhenSetForbiddenSiteRoleToUser()
-		throws Exception {
-
-		addUsers();
-		addForbiddenRoles();
-
-		Group group = getGroup();
+	public void testAssignUserToForbiddenRole() throws Exception {
+		long[] userIds = addUsers();
+		long[] forbiddenRoleIds = addForbiddenRoles();
 
 		UserGroupRolePK userGroupRolePK = new UserGroupRolePK(
-			getUserIds()[0], group.getGroupId(), getForbiddenRoleIds()[0]);
+			userIds[0], _group.getGroupId(), forbiddenRoleIds[0]);
 
 		List<UserGroupRole> userGroupRoleList = new ArrayList<UserGroupRole>();
 
@@ -122,66 +70,29 @@ public class SiteMembershipPolicyRolesTest
 
 		userGroupRoleList.add(userGroupRole);
 
+		User user = UserLocalServiceUtil.getUser(userIds[0]);
+
 		MembershipPolicyTestUtil.updateUser(
-			getUser(), null, null, null, null, userGroupRoleList);
+			user, null, null, null, null, userGroupRoleList);
 	}
 
-	@Test
-	public void testPropagationLaunchWhenAddUsersToStandardSiteRole()
-		throws Exception {
+	@Test(expected = MembershipPolicyException.class)
+	public void testAssignUserToForbiddenRoles() throws Exception {
 
-		addUsers();
-		addStandardRoles();
-
-		Group group = getGroup();
+		long[] userIds = addUsers();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			getUserIds(), group.getGroupId(), getStandardRoleIds()[0]);
+			userIds[0], _group.getGroupId(), addForbiddenRoles());
 
-		Assert.assertTrue(getPropagateRolesMethodFlag());
 	}
 
 	@Test
-	public void testPropagationLaunchWhenAddUserToStandardSiteRoles()
-		throws Exception {
-
-		addUsers();
-		addStandardRoles();
-
-		Group group = getGroup();
-
-		UserGroupRoleServiceUtil.addUserGroupRoles(
-			getUserIds()[0], group.getGroupId(), getStandardRoleIds());
-
-		Assert.assertTrue(getPropagateRolesMethodFlag());
-	}
-
-	@Test
-	public void testPropagationLaunchWhenDeletingUserFromStandardSiteRoles()
-		throws Exception {
-
-		addUsers();
-		addStandardRoles();
-
-		Group group = getGroup();
-
-		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			getUserIds()[0], group.getGroupId(), getStandardRoleIds());
-
-		Assert.assertTrue(getPropagateRolesMethodFlag());
-	}
-
-	@Test
-	public void testPropagationLaunchWhenSetStandardSiteRoleToUser()
-		throws Exception {
-
-		addUsers();
-		addStandardRoles();
-
-		Group group = getGroup();
+	public void testPropagateWhenAssigningRolesToUser() throws Exception {
+		long[] userIds = addUsers();
+		long[] standardRoleIds = addStandardRoles();
 
 		UserGroupRolePK userGroupRolePK = new UserGroupRolePK(
-			getUserIds()[0], group.getGroupId(), getStandardRoleIds()[0]);
+			userIds[0], _group.getGroupId(), standardRoleIds[0]);
 
 		List<UserGroupRole> userGroupRoleList = new ArrayList<UserGroupRole>();
 
@@ -190,62 +101,111 @@ public class SiteMembershipPolicyRolesTest
 
 		userGroupRoleList.add(userGroupRole);
 
+		User user = UserLocalServiceUtil.getUser(userIds[0]);
+
 		MembershipPolicyTestUtil.updateUser(
-			getUser(), null, null, null, null, userGroupRoleList);
+			user, null, null, null, null, userGroupRoleList);
 
 		Assert.assertTrue(getPropagateRolesMethodFlag());
 	}
 
 	@Test
-	public void testPropagationLaunchWhenUnsetStandardSiteRoleFromUser()
-		throws Exception {
-
-		addUsers();
-		addStandardRoles();
-
-		Group group = getGroup();
+	public void testPropagateWhenAssigningUsersToRole() throws Exception {
+		long[] standardRoleIds = addStandardRoles();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			getUser().getUserId(), group.getGroupId(), getStandardRoleIds());
+			addUsers(), _group.getGroupId(), standardRoleIds[0]);
+
+		Assert.assertTrue(getPropagateRolesMethodFlag());
+	}
+
+	@Test
+	public void testPropagateWhenAssigningUserToRoles() throws Exception {
+		long[] userIds = addUsers();
+
+		UserGroupRoleServiceUtil.addUserGroupRoles(
+			userIds[0], _group.getGroupId(), addStandardRoles());
+
+		Assert.assertTrue(getPropagateRolesMethodFlag());
+	}
+
+	@Test
+	public void testPropagateWhenUnassigningRolesFromUser() throws Exception {
+		long[] userIds = addUsers();
+
+		User user = UserLocalServiceUtil.getUser(userIds[0]);
+
+		UserGroupRoleServiceUtil.addUserGroupRoles(
+			user.getUserId(), _group.getGroupId(), addStandardRoles());
 
 		MembershipPolicyTestUtil.updateUser(
-			getUser(), null, null, null, null,
+			user, null, null, null, null,
 			Collections.<UserGroupRole>emptyList());
 
 		Assert.assertTrue(getPropagateRolesMethodFlag());
 	}
 
 	@Test
-	public void testUserRoleCountWhenUnsetRequiredSiteRoleFromUser()
-		throws Exception {
+	public void testPropagateWhenUnassigningUserFromRoles() throws Exception {
+		long[] userIds = addUsers();
 
-		addUsers();
-		addRequiredRoles();
+		UserGroupRoleServiceUtil.deleteUserGroupRoles(
+			userIds[0], _group.getGroupId(), addStandardRoles());
 
-		Group group = getGroup();
+		Assert.assertTrue(getPropagateRolesMethodFlag());
+	}
+
+	@Test
+	public void testUnassignRequiredRolesFromUser() throws Exception {
+		long[] userIds = addUsers();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			getUserIds()[0], group.getGroupId(), getRequiredRoleIds());
+			userIds[0], _group.getGroupId(), addRequiredRoles());
 
-		User user = getUser();
+		User user = UserLocalServiceUtil.getUser(userIds[0]);
 
-		List<UserGroupRole> expectedUserGroupRoles =
+		List<UserGroupRole> initialUserGroupRoles =
 			UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId());
-
-		int expectedUserGroupRolesCount = expectedUserGroupRoles.size();
 
 		List<UserGroupRole> emptyNonAbstractList =
 			new ArrayList<UserGroupRole>();
 
 		MembershipPolicyTestUtil.updateUser(
-			getUser(), null, null, null, null, emptyNonAbstractList);
+			user, null, null, null, null, emptyNonAbstractList);
 
 		List<UserGroupRole> currentUserGroupRoles =
 			UserGroupRoleLocalServiceUtil.getUserGroupRoles(user.getUserId());
 
-		int currentUserGroupRolesCount = currentUserGroupRoles.size();
-
-		Assert.assertEquals(expectedUserGroupRoles, currentUserGroupRoles);
+		Assert.assertEquals(
+			initialUserGroupRoles.size(), currentUserGroupRoles.size());
 	}
+
+	@Test(expected = MembershipPolicyException.class)
+	public void testUnassignUserFromRequiredRoles() throws Exception {
+		long[] userIds = addUsers();
+
+		UserGroupRoleServiceUtil.deleteUserGroupRoles(
+			userIds[0], _group.getGroupId(), addRequiredRoles());
+	}
+
+	@Test(expected = MembershipPolicyException.class)
+	public void testUnassignUsersFromRequiredRole() throws Exception {
+		long[] requiredRoleIds = addRequiredRoles();
+
+		UserGroupRoleServiceUtil.deleteUserGroupRoles(
+			addUsers(), _group.getGroupId(), requiredRoleIds[0]);
+	}
+
+	@Test
+	public void testUnassignUsersFromRole() throws Exception {
+		long[] standardRoleIds = addStandardRoles();
+
+		UserGroupRoleServiceUtil.deleteUserGroupRoles(
+			addUsers(), _group.getGroupId(), standardRoleIds[0]);
+
+		Assert.assertTrue(getPropagateRolesMethodFlag());
+	}
+
+	private Group _group = null;
 
 }
