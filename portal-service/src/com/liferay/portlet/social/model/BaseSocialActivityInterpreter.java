@@ -328,26 +328,26 @@ public abstract class BaseSocialActivityInterpreter
 		return false;
 	}
 
-	protected String wrapLink(String link, String title) {
-		title = HtmlUtil.escape(title);
+	protected String wrapLink(String link, String text) {
+		text = HtmlUtil.escape(text);
 
 		if (link == null) {
-			return title;
+			return text;
 		}
 
-		return createLink(link, title);
+		return createLink(link, text);
 	}
 
 	protected String wrapLink(
 		String link, String key, ThemeDisplay themeDisplay) {
 
-		String title = themeDisplay.translate(HtmlUtil.escape(key));
+		String text = themeDisplay.translate(HtmlUtil.escape(key));
 
 		if (link == null) {
-			return title;
+			return text;
 		}
 
-		return createLink(link, title);
+		return createLink(link, text);
 	}
 
 	private String createLink(String link, String text) {
