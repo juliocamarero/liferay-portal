@@ -43,7 +43,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] forbiddenRoleIds = addForbiddenRoles();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			addUsers(), _group.getGroupId(), forbiddenRoleIds[0]);
+			addUsers(), group.getGroupId(), forbiddenRoleIds[0]);
 	}
 
 	@Test(expected = MembershipPolicyException.class)
@@ -54,7 +54,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] forbiddenRoleIds = addForbiddenRoles();
 
 		UserGroupRolePK userGroupRolePK = new UserGroupRolePK(
-			userIds[0], _group.getGroupId(), forbiddenRoleIds[0]);
+			userIds[0], group.getGroupId(), forbiddenRoleIds[0]);
 
 		UserGroupRole userGroupRole =
 			UserGroupRoleLocalServiceUtil.createUserGroupRole(userGroupRolePK);
@@ -72,7 +72,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] userIds = addUsers();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			userIds[0], _group.getGroupId(), addForbiddenRoles());
+			userIds[0], group.getGroupId(), addForbiddenRoles());
 
 	}
 
@@ -84,7 +84,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] standardRoleIds = addStandardRoles();
 
 		UserGroupRolePK userGroupRolePK = new UserGroupRolePK(
-			userIds[0], _group.getGroupId(), standardRoleIds[0]);
+			userIds[0], group.getGroupId(), standardRoleIds[0]);
 
 		UserGroupRole userGroupRole =
 			UserGroupRoleLocalServiceUtil.createUserGroupRole(userGroupRolePK);
@@ -104,7 +104,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] standardRoleIds = addStandardRoles();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			addUsers(), _group.getGroupId(), standardRoleIds[0]);
+			addUsers(), group.getGroupId(), standardRoleIds[0]);
 
 		Assert.assertTrue(isPropagateRoles());
 	}
@@ -114,7 +114,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] userIds = addUsers();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			userIds[0], _group.getGroupId(), addStandardRoles());
+			userIds[0], group.getGroupId(), addStandardRoles());
 
 		Assert.assertTrue(isPropagateRoles());
 	}
@@ -126,7 +126,7 @@ public class SiteMembershipPolicyRolesTest
 		User user = UserLocalServiceUtil.getUser(userIds[0]);
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			user.getUserId(), _group.getGroupId(), addStandardRoles());
+			user.getUserId(), group.getGroupId(), addStandardRoles());
 
 		MembershipPolicyTestUtil.updateUser(
 			user, null, null, null, null,
@@ -140,7 +140,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] userIds = addUsers();
 
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			userIds[0], _group.getGroupId(), addStandardRoles());
+			userIds[0], group.getGroupId(), addStandardRoles());
 
 		Assert.assertTrue(isPropagateRoles());
 	}
@@ -150,7 +150,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] userIds = addUsers();
 
 		UserGroupRoleServiceUtil.addUserGroupRoles(
-			userIds[0], _group.getGroupId(), addRequiredRoles());
+			userIds[0], group.getGroupId(), addRequiredRoles());
 
 		User user = UserLocalServiceUtil.getUser(userIds[0]);
 
@@ -175,7 +175,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] userIds = addUsers();
 
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			userIds[0], _group.getGroupId(), addRequiredRoles());
+			userIds[0], group.getGroupId(), addRequiredRoles());
 	}
 
 	@Test(expected = MembershipPolicyException.class)
@@ -183,7 +183,7 @@ public class SiteMembershipPolicyRolesTest
 		long[] requiredRoleIds = addRequiredRoles();
 
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			addUsers(), _group.getGroupId(), requiredRoleIds[0]);
+			addUsers(), group.getGroupId(), requiredRoleIds[0]);
 	}
 
 	@Test
@@ -191,11 +191,9 @@ public class SiteMembershipPolicyRolesTest
 		long[] standardRoleIds = addStandardRoles();
 
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
-			addUsers(), _group.getGroupId(), standardRoleIds[0]);
+			addUsers(), group.getGroupId(), standardRoleIds[0]);
 
 		Assert.assertTrue(isPropagateRoles());
 	}
-
-	private Group _group;
 
 }
