@@ -97,6 +97,8 @@ public abstract class BaseSiteMembershipPolicyTestCase {
 	@Before
 	public void setUp() throws Exception {
 		FinderCacheUtil.clearCache();
+
+		_group = GroupTestUtil.addGroup();
 	}
 
 	protected long[] addForbiddenGroups() throws Exception {
