@@ -35,12 +35,15 @@ import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.model.AttachedModel;
@@ -746,16 +749,89 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _expandoColumnsMap;
 	}
 
+	public Element getExportDataGroupElement(
+		Class<? extends StagedModel> clazz) {
+
+		return getExportDataGroupElement(clazz.getSimpleName());
+	}
+
+	public Element getExportDataGroupElement(String name) {
+		if (_exportDataRootElement == null) {
+			return null;
+		}
+
+		Element groupElement = _exportDataRootElement.element(name);
+
+		if (groupElement == null) {
+			groupElement = _exportDataRootElement.addElement(name);
+		}
+
+		return groupElement;
+	}
+
 	public Element getExportDataRootElement() {
 		return _exportDataRootElement;
+	}
+
+	public Element getExportDataStagedModelElement(StagedModel stagedModel) {
+		Element groupElement = getExportDataGroupElement(
+			stagedModel.getModelClass().getSimpleName());
+
+		return groupElement.addElement("staged-model");
 	}
 
 	public long getGroupId() {
 		return _groupId;
 	}
 
+	public Element getImportDataGroupElement(
+		Class<? extends StagedModel> clazz) {
+
+		return getImportDataGroupElement(clazz.getSimpleName());
+	}
+
+	public Element getImportDataGroupElement(String name) {
+		if (_importDataRootElement == null) {
+			return null;
+		}
+
+		if (Validator.isNull(name)) {
+			return _importDataRootElement.element(name);
+		}
+
+		return _importDataRootElement.element(name);
+	}
+
 	public Element getImportDataRootElement() {
 		return _importDataRootElement;
+	}
+
+	public Element getImportDataStagedModelElement(StagedModel stagedModel) {
+		String path = StagedModelPathUtil.getPath(stagedModel);
+
+		return getImportDataStagedModelElement(stagedModel, "path", path);
+	}
+
+	public Element getImportDataStagedModelElement(
+		StagedModel stagedModel, String attribute, String value) {
+
+		Element groupElement = getImportDataGroupElement(
+			stagedModel.getClass().getSimpleName());
+
+		if (groupElement == null) {
+			return null;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("staged-model");
+		sb.append("[@" + attribute + "='");
+		sb.append(value);
+		sb.append("']");
+
+		XPath xPath = SAXReaderUtil.createXPath(sb.toString());
+
+		return (Element)xPath.selectSingleNode(groupElement);
 	}
 
 	public String getLayoutPath(long layoutId) {
