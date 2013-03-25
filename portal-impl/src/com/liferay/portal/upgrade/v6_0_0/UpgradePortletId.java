@@ -21,7 +21,7 @@ public class UpgradePortletId
 	extends com.liferay.portal.upgrade.util.UpgradePortletId {
 
 	@Override
-	protected String[][] getPortletIdsArray() {
+	protected String[][] getRenamePortletIdsArray() {
 		return new String[][] {
 			new String[] {
 				"7", "1_WAR_biblegatewayportlet"

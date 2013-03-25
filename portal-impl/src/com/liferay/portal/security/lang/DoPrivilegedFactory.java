@@ -19,13 +19,11 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
-import com.liferay.portal.kernel.util.UniqueList;
+import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.util.ClassLoaderUtil;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-
-import java.util.List;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -51,7 +49,7 @@ public class DoPrivilegedFactory implements BeanPostProcessor {
 
 		Class<?> clazz = bean.getClass();
 
-		if (!_isDoPrivileged(clazz)) {
+		if (!_isDoPrivileged(clazz) && !_isFinderOrPersistence(beanName)) {
 			return bean;
 		}
 
@@ -70,40 +68,6 @@ public class DoPrivilegedFactory implements BeanPostProcessor {
 		return bean;
 	}
 
-	/**
-	 * @see {@link com.liferay.portal.bean.BeanLocatorImpl#getInterfaces(List,
-	 *      Class)}
-	 */
-	private static void _getInterfaces(
-		List<Class<?>> interfaceClasses, Class<?> clazz) {
-
-		for (Class<?> interfaceClass : clazz.getInterfaces()) {
-			interfaceClasses.add(interfaceClass);
-		}
-	}
-
-	/**
-	 * @see {@link
-	 *      com.liferay.portal.bean.BeanLocatorImpl#getInterfaces(Object)}
-	 */
-	private static Class<?>[] _getInterfaces(Object object) {
-		List<Class<?>> interfaceClasses = new UniqueList<Class<?>>();
-
-		Class<?> clazz = object.getClass();
-
-		_getInterfaces(interfaceClasses, clazz);
-
-		Class<?> superClass = clazz.getSuperclass();
-
-		while (superClass != null) {
-			_getInterfaces(interfaceClasses, superClass);
-
-			superClass = superClass.getSuperclass();
-		}
-
-		return interfaceClasses.toArray(new Class<?>[interfaceClasses.size()]);
-	}
-
 	private boolean _isDoPrivileged(Class<?> beanClass) {
 		DoPrivileged doPrivileged = beanClass.getAnnotation(DoPrivileged.class);
 
@@ -120,6 +84,20 @@ public class DoPrivilegedFactory implements BeanPostProcessor {
 		return false;
 	}
 
+	private boolean _isFinderOrPersistence(String beanName) {
+		if (beanName.endsWith(_BEAN_NAME_SUFFIX_FINDER) ||
+			beanName.endsWith(_BEAN_NAME_SUFFIX_PERSISTENCE)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private static final String _BEAN_NAME_SUFFIX_FINDER = "Finder";
+
+	private static final String _BEAN_NAME_SUFFIX_PERSISTENCE = "Persistence";
+
 	private static Log _log = LogFactoryUtil.getLog(DoPrivilegedFactory.class);
 
 	private static class BeanPrivilegedAction <T>
@@ -132,15 +110,21 @@ public class DoPrivilegedFactory implements BeanPostProcessor {
 		public T run() {
 			Class<?> clazz = _bean.getClass();
 
-			Package pkg = clazz.getPackage();
-
-			String packageName = pkg.getName();
-
-			if (clazz.isPrimitive() || packageName.startsWith("java.")) {
+			if (clazz.isPrimitive()) {
 				return _bean;
 			}
 
-			Class<?>[] interfaces = _getInterfaces(_bean);
+			Package pkg = clazz.getPackage();
+
+			if (pkg != null) {
+				String packageName = pkg.getName();
+
+				if (packageName.startsWith("java.")) {
+					return _bean;
+				}
+			}
+
+			Class<?>[] interfaces = ReflectionUtil.getInterfaces(_bean);
 
 			if (interfaces.length <= 0) {
 				return _bean;

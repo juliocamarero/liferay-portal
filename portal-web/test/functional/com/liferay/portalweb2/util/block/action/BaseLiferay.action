@@ -1,15 +1,58 @@
 <definition>
+	<command name="AssertChecked">
+		<default>
+			<execute function="AssertChecked#assertChecked" />
+		</default>
+	</command>
 	<command name="AssertElementNotPresent">
 		<default>
 			<execute function="AssertElementNotPresent#assertElementNotPresent" />
 		</default>
 	</command>
-	<command name="Click">
+	<command name="AssertElementPresent">
+		<default>
+			<execute function="AssertElementPresent#assertVisible" />
+		</default>
+	</command>
+	<command name="AssertNotChecked">
+		<default>
+			<execute function="AssertNotChecked#assertNotChecked" />
+		</default>
+	</command>
+	<command name="AssertTextEquals">
 		<case comparator="contains" locator="/input">
-			<execute function="Click#clickAtAndWait" />
+			<execute function="AssertTextEquals#assertValue" />
 		</case>
 		<default>
+			<execute function="AssertTextEquals#assertText" />
+		</default>
+	</command>
+	<command name="AssertTextNotEquals">
+		<case comparator="contains" locator="/input">
+			<execute function="AssertTextNotEquals#assertNotValue" />
+		</case>
+		<default>
+			<execute function="AssertTextNotEquals#assertNotText" />
+		</default>
+	</command>
+	<command name="AssertTextNotPresent">
+		<default>
+			<execute function="AssertTextNotPresent#assertTextNotPresent" />
+		</default>
+	</command>
+	<command name="AssertTextPresent">
+		<default>
+			<execute function="AssertTextPresent#assertTextPresent" />
+		</default>
+	</command>
+	<command name="Click">
+		<default>
 			<execute function="Click#clickAt" />
+		</default>
+	</command>
+	<command name="Close">
+		<default>
+			<execute function="Close#close" />
 		</default>
 	</command>
 	<command name="Confirm">
@@ -17,14 +60,68 @@
 			<execute function="Confirm#assertConfirmation" />
 		</default>
 	</command>
+	<command name="Copy">
+		<case comparator="contains" locator="/input">
+			<execute function="Copy#valueCopy" />
+		</case>
+		<default>
+			<execute function="Copy#textCopy" />
+		</default>
+	</command>
 	<command name="DragAndDrop">
 		<default>
 			<execute function="DragAndDrop#dragAndDrop" />
 		</default>
 	</command>
+	<command name="IsElementNotPresent">
+		<default>
+			<execute function="IsElementNotPresent#isElementNotPresent" />
+		</default>
+	</command>
 	<command name="IsElementPresent">
 		<default>
 			<execute function="IsElementPresent#isElementPresent" />
+		</default>
+	</command>
+	<command name="IsTextEqual">
+		<case comparator="contains" locator="/input">
+			<execute function="IsTextEqual#isValue" />
+		</case>
+		<default>
+			<execute function="IsTextEqual#isText" />
+		</default>
+	</command>
+	<command name="IsTextNotEqual">
+		<case comparator="contains" locator="/input">
+			<execute function="IsTextNotEqual#isNotValue" />
+		</case>
+		<default>
+			<execute function="IsTextNotEqual#isNotText" />
+		</default>
+	</command>
+	<command name="MouseOver">
+		<default>
+			<execute function="MouseOver#mouseOver" />
+		</default>
+	</command>
+	<command name="Open">
+		<default>
+			<execute function="Open#open" />
+		</default>
+	</command>
+	<command name="Paste">
+		<default>
+			<execute function="Paste#paste" />
+		</default>
+	</command>
+	<command name="Select">
+		<default>
+			<execute function="Select#select" />
+		</default>
+	</command>
+	<command name="SelectWindow">
+		<default>
+			<execute function="SelectWindow#selectWindow" />
 		</default>
 	</command>
 	<command name="Type">

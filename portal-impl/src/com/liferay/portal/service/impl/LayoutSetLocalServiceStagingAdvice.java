@@ -18,13 +18,13 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.ColorSchemeFactoryUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetBranch;
 import com.liferay.portal.model.LayoutSetStagingHandler;
-import com.liferay.portal.model.impl.ColorSchemeImpl;
 import com.liferay.portal.model.impl.ThemeImpl;
 import com.liferay.portal.service.LayoutSetLocalService;
 import com.liferay.portal.staging.StagingAdvicesThreadLocal;
@@ -244,7 +244,8 @@ public class LayoutSetLocalServiceStagingAdvice
 		}
 
 		if (Validator.isNull(colorSchemeId)) {
-			colorSchemeId = ColorSchemeImpl.getDefaultRegularColorSchemeId();
+			colorSchemeId =
+				ColorSchemeFactoryUtil.getDefaultRegularColorSchemeId();
 		}
 
 		if (wapTheme) {

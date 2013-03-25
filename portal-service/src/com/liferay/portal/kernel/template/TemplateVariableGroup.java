@@ -27,16 +27,15 @@ public class TemplateVariableGroup {
 	}
 
 	public TemplateVariableDefinition addCollectionVariable(
-		String collectionLabelKey, Class<?> collectionClazz,
-		String collectionName, String itemLabelKey, Class<?> itemClazz,
-		String itemName) {
+		String collectionLabel, Class<?> collectionClazz, String collectionName,
+		String itemLabel, Class<?> itemClazz, String itemName) {
 
 		TemplateVariableDefinition itemTemplateVariableDefinition =
-			new TemplateVariableDefinition(itemLabelKey, itemClazz, itemName);
+			new TemplateVariableDefinition(itemLabel, itemClazz, itemName);
 
 		TemplateVariableDefinition collectionTemplateVariableDefinition =
 			new TemplateVariableDefinition(
-				collectionLabelKey, collectionClazz, collectionName,
+				collectionLabel, collectionClazz, collectionName,
 				itemTemplateVariableDefinition);
 
 		_templateVariableDefinitions.add(collectionTemplateVariableDefinition);
@@ -44,11 +43,24 @@ public class TemplateVariableGroup {
 		return collectionTemplateVariableDefinition;
 	}
 
-	public TemplateVariableDefinition addVariable(
-		String labelKey, Class<?> clazz, String variableName) {
+	public TemplateVariableDefinition addFieldVariable(
+		String label, Class<?> clazz, String variableName, String help,
+		String dataType, boolean repeatable) {
 
 		TemplateVariableDefinition templateVariableDefinition =
-			new TemplateVariableDefinition(labelKey, clazz, variableName);
+			new TemplateVariableDefinition(
+				label, clazz, dataType, variableName, help, repeatable);
+
+		_templateVariableDefinitions.add(templateVariableDefinition);
+
+		return templateVariableDefinition;
+	}
+
+	public TemplateVariableDefinition addVariable(
+		String label, Class<?> clazz, String variableName) {
+
+		TemplateVariableDefinition templateVariableDefinition =
+			new TemplateVariableDefinition(label, clazz, variableName);
 
 		_templateVariableDefinitions.add(templateVariableDefinition);
 

@@ -16,22 +16,16 @@ package com.liferay.portlet.polls.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.polls.model.PollsChoice;
 import com.liferay.portlet.polls.model.PollsQuestion;
-import com.liferay.portlet.polls.model.PollsVote;
 import com.liferay.portlet.polls.service.PollsQuestionLocalServiceUtil;
-import com.liferay.portlet.polls.service.persistence.PollsChoiceUtil;
 import com.liferay.portlet.polls.service.persistence.PollsQuestionUtil;
-import com.liferay.portlet.polls.service.persistence.PollsVoteUtil;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Shinn Lok
@@ -46,45 +40,11 @@ public class PollsQuestionStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			PollsQuestion question)
+			PortletDataContext portletDataContext, PollsQuestion question)
 		throws Exception {
 
-		Element choicesElement = null;
-
-		if (elements.length > 1) {
-			choicesElement = elements[1];
-
-			List<PollsChoice> choices = PollsChoiceUtil.findByQuestionId(
-				question.getQuestionId());
-
-			for (PollsChoice choice : choices) {
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, choicesElement, choice);
-			}
-
-			Element votesElement = null;
-
-			if (elements.length > 2) {
-				votesElement = elements[2];
-
-				if (portletDataContext.getBooleanParameter(
-						PollsPortletDataHandler.NAMESPACE, "votes")) {
-
-					List<PollsVote> votes = PollsVoteUtil.findByQuestionId(
-						question.getQuestionId());
-
-					for (PollsVote vote : votes) {
-						StagedModelDataHandlerUtil.exportStagedModel(
-							portletDataContext, votesElement, vote);
-					}
-				}
-			}
-		}
-
-		Element questionsElement = elements[0];
-
-		Element questionElement = questionsElement.addElement("question");
+		Element questionElement =
+			portletDataContext.getExportDataStagedModelElement(question);
 
 		portletDataContext.addClassedModel(
 			questionElement, StagedModelPathUtil.getPath(question), question,
@@ -93,13 +53,10 @@ public class PollsQuestionStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			PollsQuestion question)
+			PortletDataContext portletDataContext, PollsQuestion question)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(question.getUserUuid());
-
-		Date expirationDate = question.getExpirationDate();
 
 		int expirationMonth = 0;
 		int expirationDay = 0;
@@ -107,6 +64,8 @@ public class PollsQuestionStagedModelDataHandler
 		int expirationHour = 0;
 		int expirationMinute = 0;
 		boolean neverExpire = true;
+
+		Date expirationDate = question.getExpirationDate();
 
 		if (expirationDate != null) {
 			Calendar expirationCal = CalendarFactoryUtil.getCalendar();
@@ -126,7 +85,7 @@ public class PollsQuestionStagedModelDataHandler
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, question, PollsPortletDataHandler.NAMESPACE);
+			question, PollsPortletDataHandler.NAMESPACE);
 
 		PollsQuestion importedQuestion = null;
 

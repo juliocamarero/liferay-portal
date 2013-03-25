@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.util.ColorSchemeFactoryUtil;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -61,7 +62,6 @@ import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.model.User;
-import com.liferay.portal.model.impl.ColorSchemeImpl;
 import com.liferay.portal.model.impl.VirtualLayout;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -736,7 +736,7 @@ public class ServicePreAction extends Action {
 			String themeId = PrefsPropsUtil.getString(
 				companyId, PropsKeys.CONTROL_PANEL_LAYOUT_REGULAR_THEME_ID);
 			String colorSchemeId =
-				ColorSchemeImpl.getDefaultRegularColorSchemeId();
+				ColorSchemeFactoryUtil.getDefaultRegularColorSchemeId();
 
 			theme = ThemeLocalServiceUtil.getTheme(
 				companyId, themeId, wapTheme);
@@ -791,6 +791,8 @@ public class ServicePreAction extends Action {
 		// Theme display
 
 		ThemeDisplay themeDisplay = ThemeDisplayFactory.create();
+
+		themeDisplay.setRequest(request);
 
 		// Set the CDN host, portal URL, and Facebook application ID first
 		// because other methods (setLookAndFeel) depend on them being set

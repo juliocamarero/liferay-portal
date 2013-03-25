@@ -36,13 +36,11 @@ public class MDRRuleGroupStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			MDRRuleGroup ruleGroup)
+			PortletDataContext portletDataContext, MDRRuleGroup ruleGroup)
 		throws Exception {
 
-		Element ruleGroupsElement = elements[0];
-
-		Element ruleGroupElement = ruleGroupsElement.addElement("rule-group");
+		Element ruleGroupElement =
+			portletDataContext.getExportDataStagedModelElement(ruleGroup);
 
 		portletDataContext.addClassedModel(
 			ruleGroupElement, StagedModelPathUtil.getPath(ruleGroup), ruleGroup,
@@ -51,14 +49,13 @@ public class MDRRuleGroupStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element ruleGroupElement,
-			String path, MDRRuleGroup ruleGroup)
+			PortletDataContext portletDataContext, MDRRuleGroup ruleGroup)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(ruleGroup.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			ruleGroupElement, ruleGroup, MDRPortletDataHandler.NAMESPACE);
+			ruleGroup, MDRPortletDataHandler.NAMESPACE);
 
 		serviceContext.setUserId(userId);
 

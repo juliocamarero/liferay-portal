@@ -474,9 +474,9 @@ public class PropsValues {
 
 	public static final String DEFAULT_USER_PUBLIC_LAYOUTS_LAR = PropsUtil.get(PropsKeys.DEFAULT_USER_PUBLIC_LAYOUTS_LAR);
 
-	public static final String DEFAULT_WAP_COLOR_SCHEME_ID = PropsUtil.get(PropsKeys.DEFAULT_WAP_COLOR_SCHEME_ID);
+	public static String DEFAULT_WAP_COLOR_SCHEME_ID = PropsUtil.get(PropsKeys.DEFAULT_WAP_COLOR_SCHEME_ID);
 
-	public static final String DEFAULT_WAP_THEME_ID = PropsUtil.get(PropsKeys.DEFAULT_WAP_THEME_ID);
+	public static String DEFAULT_WAP_THEME_ID = PropsUtil.get(PropsKeys.DEFAULT_WAP_THEME_ID);
 
 	public static final boolean DIRECT_SERVLET_CONTEXT_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.DIRECT_SERVLET_CONTEXT_ENABLED));
 

@@ -14,8 +14,10 @@
 
 package com.liferay.portlet.trash.action;
 
+import com.liferay.portal.TrashPermissionException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.LiferayPortletConfig;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.trash.TrashHandler;
@@ -25,7 +27,6 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
@@ -45,6 +46,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -103,16 +105,23 @@ public class EditEntryAction extends PortletAction {
 
 			sendRedirect(actionRequest, actionResponse);
 		}
-		catch (PrincipalException pe) {
-			if (pe.getMessage() != null) {
-				SessionErrors.add(actionRequest, pe.getMessage());
+		catch (Exception e) {
+			if (e instanceof TrashPermissionException) {
+				TrashPermissionException tpe = (TrashPermissionException)e;
+
+				SessionErrors.add(actionRequest, tpe.getClass(), tpe);
 			}
 			else {
-				SessionErrors.add(actionRequest, pe.getClass());
+				SessionErrors.add(actionRequest, e.getClass());
 			}
-		}
-		catch (Exception e) {
-			SessionErrors.add(actionRequest, e.getClass());
+
+			WindowState windowState = actionRequest.getWindowState();
+
+			if (windowState.equals(LiferayWindowState.EXCLUSIVE) ||
+				windowState.equals(LiferayWindowState.POP_UP)) {
+
+				sendRedirect(actionRequest, actionResponse);
+			}
 		}
 	}
 

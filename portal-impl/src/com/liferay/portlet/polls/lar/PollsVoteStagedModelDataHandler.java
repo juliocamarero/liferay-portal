@@ -16,6 +16,7 @@ package com.liferay.portlet.polls.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
@@ -31,9 +32,10 @@ import java.util.Map;
 
 /**
  * @author Shinn Lok
+ * @author Mate Thurzo
  */
 public class PollsVoteStagedModelDataHandler
-		extends BaseStagedModelDataHandler<PollsVote> {
+	extends BaseStagedModelDataHandler<PollsVote> {
 
 	@Override
 	public String getClassName() {
@@ -42,13 +44,14 @@ public class PollsVoteStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			PollsVote vote)
+			PortletDataContext portletDataContext, PollsVote vote)
 		throws Exception {
 
-		Element votesElement = elements[0];
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, vote.getChoice());
 
-		Element voteElement = votesElement.addElement("vote");
+		Element voteElement =
+			portletDataContext.getExportDataStagedModelElement(vote);
 
 		portletDataContext.addClassedModel(
 			voteElement, StagedModelPathUtil.getPath(vote), vote,
@@ -57,9 +60,18 @@ public class PollsVoteStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			PollsVote vote)
+			PortletDataContext portletDataContext, PollsVote vote)
 		throws Exception {
+
+		String choicePath = StagedModelPathUtil.getPath(
+			portletDataContext, PollsChoice.class.getName(),
+			vote.getChoiceId());
+
+		PollsChoice choice =
+			(PollsChoice)portletDataContext.getZipEntryAsObject(choicePath);
+
+		StagedModelDataHandlerUtil.importStagedModel(
+			portletDataContext, choice);
 
 		Map<Long, Long> questionIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -76,7 +88,7 @@ public class PollsVoteStagedModelDataHandler
 			choiceIds, vote.getChoiceId(), vote.getChoiceId());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, vote, PollsPortletDataHandler.NAMESPACE);
+			vote, PollsPortletDataHandler.NAMESPACE);
 
 		serviceContext.setCreateDate(vote.getVoteDate());
 

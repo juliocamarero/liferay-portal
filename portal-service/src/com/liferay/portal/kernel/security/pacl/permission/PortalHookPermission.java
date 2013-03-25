@@ -24,8 +24,7 @@ public class PortalHookPermission extends BasicPermission {
 	public static void checkPermission(
 		String name, ClassLoader portletClassLoader, Object subject) {
 
-		// Temporarily do nothing
-
+		_pacl.checkPermission(name, portletClassLoader, subject);
 	}
 
 	public PortalHookPermission(
@@ -45,7 +44,24 @@ public class PortalHookPermission extends BasicPermission {
 		return _subject;
 	}
 
+	private static PACL _pacl = new NoPACL();
+
 	private transient ClassLoader _classLoader;
 	private transient Object _subject;
+
+	private static class NoPACL implements PACL {
+
+		public void checkPermission(
+			String name, ClassLoader portletClassLoader, Object subject) {
+		}
+
+	}
+
+	public static interface PACL {
+
+		public void checkPermission(
+			String name, ClassLoader portletClassLoader, Object subject);
+
+	}
 
 }

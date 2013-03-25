@@ -209,7 +209,8 @@ public class HookHotDeployListener
 		"company.settings.form.identification",
 		"company.settings.form.miscellaneous",
 		"control.panel.entry.class.default", "convert.processes",
-		"default.landing.page.path", "dl.file.entry.drafts.enabled",
+		"default.landing.page.path", "default.regular.color.scheme.id",
+		"default.wap.color.scheme.id", "dl.file.entry.drafts.enabled",
 		"dl.file.entry.open.in.ms.office.manual.check.in.required",
 		"dl.file.entry.processors", "dl.repository.impl",
 		"dl.store.antivirus.impl", "dl.store.impl", "dockbar.add.portlets",
@@ -2687,7 +2688,8 @@ public class HookHotDeployListener
 
 	private static final String[] _PROPS_VALUES_STRING = {
 		"company.default.locale", "company.default.time.zone",
-		"default.landing.page.path",
+		"default.landing.page.path", "default.regular.color.scheme.id",
+		"default.wap.color.scheme.id",
 		"passwords.passwordpolicytoolkit.generator",
 		"passwords.passwordpolicytoolkit.static",
 		"phone.number.format.international.regexp",

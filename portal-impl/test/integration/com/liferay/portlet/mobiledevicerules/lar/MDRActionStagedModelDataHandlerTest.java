@@ -79,18 +79,13 @@ public class MDRActionStagedModelDataHandlerTest
 		throws Exception {
 
 		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
-			MDRRuleGroupInstance.class.getName());
+			MDRRuleGroupInstance.class.getSimpleName());
 
 		MDRRuleGroupInstance ruleGroupInstance =
 			(MDRRuleGroupInstance)dependentStagedModels.get(0);
 
 		return MDRTestUtil.addAction(
 			ruleGroupInstance.getRuleGroupInstanceId());
-	}
-
-	@Override
-	protected String getElementName() {
-		return "action";
 	}
 
 	@Override
@@ -105,8 +100,8 @@ public class MDRActionStagedModelDataHandlerTest
 	}
 
 	@Override
-	protected String getStagedModelClassName() {
-		return MDRAction.class.getName();
+	protected Class<? extends StagedModel> getStagedModelClass() {
+		return MDRAction.class;
 	}
 
 	@Override
@@ -116,7 +111,7 @@ public class MDRActionStagedModelDataHandlerTest
 		throws Exception {
 
 		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
-			MDRRuleGroup.class.getName());
+			MDRRuleGroup.class.getSimpleName());
 
 		Assert.assertEquals(1, dependentStagedModels.size());
 
@@ -126,7 +121,7 @@ public class MDRActionStagedModelDataHandlerTest
 			ruleGroup.getUuid(), group.getGroupId());
 
 		dependentStagedModels = dependentStagedModelsMap.get(
-			MDRRuleGroupInstance.class.getName());
+			MDRRuleGroupInstance.class.getSimpleName());
 
 		Assert.assertEquals(1, dependentStagedModels.size());
 

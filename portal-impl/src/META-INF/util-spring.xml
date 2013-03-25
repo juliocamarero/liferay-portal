@@ -259,11 +259,6 @@
 	<bean id="com.liferay.portal.kernel.portlet.PortletContainerUtil" class="com.liferay.portal.kernel.portlet.PortletContainerUtil">
 		<property name="portletContainer" ref="com.liferay.portlet.RestrictPortletContainerWrapper" />
 	</bean>
-	<bean id="com.liferay.portal.kernel.portletdisplaytemplate.PortletDisplayTemplateHandlerRegistryUtil" class="com.liferay.portal.kernel.portletdisplaytemplate.PortletDisplayTemplateHandlerRegistryUtil">
-		<property name="portletDisplayTemplateHandlerRegistry">
-			<bean class="com.liferay.portal.portletdisplaytemplate.PortletDisplayTemplateHandlerRegistryImpl" />
-		</property>
-	</bean>
 	<bean id="com.liferay.portal.kernel.sanitizer.SanitizerUtil" class="com.liferay.portal.kernel.sanitizer.SanitizerUtil">
 		<property name="sanitizer">
 			<bean class="com.liferay.portal.sanitizer.SanitizerImpl" />
@@ -324,6 +319,11 @@
 	</bean>
 	<bean id="com.liferay.portal.kernel.spring.util.SpringFactoryUtil" class="com.liferay.portal.kernel.spring.util.SpringFactoryUtil">
 		<property name="springFactory" ref="com.liferay.portal.kernel.spring.util.SpringFactory" />
+	</bean>
+	<bean id="com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil" class="com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil">
+		<property name="templateHandlerRegistry">
+			<bean class="com.liferay.portal.template.TemplateHandlerRegistryImpl" />
+		</property>
 	</bean>
 	<bean id="com.liferay.portal.kernel.template.TemplateManagerUtil" class="com.liferay.portal.kernel.template.TemplateManagerUtil">
 		<property name="templateManagers">
@@ -397,6 +397,11 @@
 	<bean id="com.liferay.portal.kernel.util.CalendarFactoryUtil" class="com.liferay.portal.kernel.util.CalendarFactoryUtil">
 		<property name="calendarFactory">
 			<bean class="com.liferay.portal.util.CalendarFactoryImpl" />
+		</property>
+	</bean>
+	<bean id="com.liferay.portal.kernel.util.ColorSchemeFactoryUtil" class="com.liferay.portal.kernel.util.ColorSchemeFactoryUtil">
+		<property name="colorSchemeFactory">
+			<bean class="com.liferay.portal.util.ColorSchemeFactoryImpl" />
 		</property>
 	</bean>
 	<bean id="com.liferay.portal.kernel.util.DateFormatFactoryUtil" class="com.liferay.portal.kernel.util.DateFormatFactoryUtil">
@@ -772,9 +777,13 @@
 			<bean class="com.liferay.portal.asset.AssetRendererFactoryRegistryImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portlet.assetpublisher.util.AssetPublisher" class="com.liferay.portlet.assetpublisher.util.AssetPublisherImpl" />
 	<bean id="com.liferay.portlet.assetpublisher.util.AssetPublisherHelper" class="com.liferay.portlet.assetpublisher.util.AssetPublisherHelperImpl" />
 	<bean id="com.liferay.portlet.assetpublisher.util.AssetPublisherHelperUtil" class="com.liferay.portlet.assetpublisher.util.AssetPublisherHelperUtil">
 		<property name="assetPublisherHelper" ref="com.liferay.portlet.assetpublisher.util.AssetPublisherHelper" />
+	</bean>
+	<bean id="com.liferay.portlet.assetpublisher.util.AssetPublisherUtil" class="com.liferay.portlet.assetpublisher.util.AssetPublisherUtil">
+		<property name="assetPublisher" ref="com.liferay.portlet.assetpublisher.util.AssetPublisher" />
 	</bean>
 	<bean id="com.liferay.portlet.documentlibrary.antivirus.AntivirusScannerUtil" class="com.liferay.portlet.documentlibrary.antivirus.AntivirusScannerUtil">
 		<property name="antivirusScanner">

@@ -71,8 +71,6 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
-		final Element recordSetsElement = rootElement.addElement("record-sets");
-
 		ActionableDynamicQuery actionableDynamicQuery =
 			new DDLRecordSetActionableDynamicQuery() {
 
@@ -89,7 +87,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 					DDLRecordSet recordSet = (DDLRecordSet)object;
 
 					StagedModelDataHandlerUtil.exportStagedModel(
-						portletDataContext, recordSetsElement, recordSet);
+						portletDataContext, recordSet);
 				}
 
 		};
@@ -114,10 +112,10 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = portletDataContext.getImportDataRootElement();
 
-		Element recordSetsElement = rootElement.element("record-sets");
+		Element recordSetsElement =
+			portletDataContext.getImportDataGroupElement(DDLRecordSet.class);
 
-		List<Element> recordSetElements = recordSetsElement.elements(
-			"record-set");
+		List<Element> recordSetElements = recordSetsElement.elements();
 
 		for (Element recordSetElement : recordSetElements) {
 			StagedModelDataHandlerUtil.importStagedModel(

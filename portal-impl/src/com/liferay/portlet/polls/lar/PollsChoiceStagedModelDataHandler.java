@@ -16,6 +16,7 @@ package com.liferay.portlet.polls.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
@@ -23,6 +24,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.polls.model.PollsChoice;
 import com.liferay.portlet.polls.model.PollsQuestion;
 import com.liferay.portlet.polls.service.PollsChoiceLocalServiceUtil;
+import com.liferay.portlet.polls.service.PollsQuestionLocalServiceUtil;
 import com.liferay.portlet.polls.service.persistence.PollsChoiceFinderUtil;
 
 import java.util.Map;
@@ -31,7 +33,7 @@ import java.util.Map;
  * @author Shinn Lok
  */
 public class PollsChoiceStagedModelDataHandler
-		extends BaseStagedModelDataHandler<PollsChoice> {
+	extends BaseStagedModelDataHandler<PollsChoice> {
 
 	@Override
 	public String getClassName() {
@@ -40,13 +42,17 @@ public class PollsChoiceStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			PollsChoice choice)
+			PortletDataContext portletDataContext, PollsChoice choice)
 		throws Exception {
 
-		Element choicesElement = elements[0];
+		PollsQuestion question = PollsQuestionLocalServiceUtil.getQuestion(
+			choice.getQuestionId());
 
-		Element choiceElement = choicesElement.addElement("choice");
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, question);
+
+		Element choiceElement =
+			portletDataContext.getExportDataStagedModelElement(choice);
 
 		portletDataContext.addClassedModel(
 			choiceElement, StagedModelPathUtil.getPath(choice), choice,
@@ -55,11 +61,20 @@ public class PollsChoiceStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			PollsChoice choice)
+			PortletDataContext portletDataContext, PollsChoice choice)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(choice.getUserUuid());
+
+		String questionPath = StagedModelPathUtil.getPath(
+			portletDataContext, PollsQuestion.class.getName(),
+			choice.getQuestionId());
+
+		PollsQuestion question =
+			(PollsQuestion)portletDataContext.getZipEntryAsObject(questionPath);
+
+		StagedModelDataHandlerUtil.importStagedModel(
+			portletDataContext, question);
 
 		Map<Long, Long> questionIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -71,7 +86,7 @@ public class PollsChoiceStagedModelDataHandler
 		PollsChoice importedChoice = null;
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			path, choice, PollsPortletDataHandler.NAMESPACE);
+			choice, PollsPortletDataHandler.NAMESPACE);
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			PollsChoice existingChoice = PollsChoiceFinderUtil.fetchByUUID_G(

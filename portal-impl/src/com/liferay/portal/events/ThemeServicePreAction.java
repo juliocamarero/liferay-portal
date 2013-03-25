@@ -19,10 +19,10 @@ import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
+import com.liferay.portal.kernel.util.ColorSchemeFactoryUtil;
 import com.liferay.portal.model.ColorScheme;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Theme;
-import com.liferay.portal.model.impl.ColorSchemeImpl;
 import com.liferay.portal.model.impl.ThemeImpl;
 import com.liferay.portal.service.ThemeLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -87,13 +87,14 @@ public class ThemeServicePreAction extends Action {
 			if (wapTheme) {
 				themeId = ThemeImpl.getDefaultWapThemeId(
 					themeDisplay.getCompanyId());
-				colorSchemeId = ColorSchemeImpl.getDefaultWapColorSchemeId();
+				colorSchemeId =
+					ColorSchemeFactoryUtil.getDefaultWapColorSchemeId();
 			}
 			else {
 				themeId = ThemeImpl.getDefaultRegularThemeId(
 					themeDisplay.getCompanyId());
 				colorSchemeId =
-					ColorSchemeImpl.getDefaultRegularColorSchemeId();
+					ColorSchemeFactoryUtil.getDefaultRegularColorSchemeId();
 			}
 
 			theme = ThemeLocalServiceUtil.getTheme(
