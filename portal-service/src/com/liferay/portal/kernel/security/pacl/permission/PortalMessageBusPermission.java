@@ -14,27 +14,19 @@
 
 package com.liferay.portal.kernel.security.pacl.permission;
 
-import com.liferay.portal.kernel.security.pacl.PACLConstants;
-
 import java.security.BasicPermission;
-import java.security.Permission;
 
 /**
  * @author Brian Wing Shun Chan
  */
 public class PortalMessageBusPermission extends BasicPermission {
 
-	public static void checkPermission(String destinationName) {
-		SecurityManager securityManager = System.getSecurityManager();
+	public static void checkListen(String destinationName) {
+		_pacl.checkListen(destinationName);
+	}
 
-		if (securityManager == null) {
-			return;
-		}
-
-		Permission permission = new PortalMessageBusPermission(
-			PACLConstants.PORTAL_MESSAGE_BUS_PERMISSION_SEND, destinationName);
-
-		securityManager.checkPermission(permission);
+	public static void checkSend(String destinationName) {
+		_pacl.checkSend(destinationName);
 	}
 
 	public PortalMessageBusPermission(String name, String destinationName) {
@@ -47,6 +39,26 @@ public class PortalMessageBusPermission extends BasicPermission {
 		return _destinationName;
 	}
 
+	private static PACL _pacl = new NoPACL();
+
 	private String _destinationName;
+
+	private static class NoPACL implements PACL {
+
+		public void checkListen(String destinationName) {
+		}
+
+		public void checkSend(String destinationName) {
+		}
+
+	}
+
+	public static interface PACL {
+
+		public void checkListen(String destinationName);
+
+		public void checkSend(String destinationName);
+
+	}
 
 }

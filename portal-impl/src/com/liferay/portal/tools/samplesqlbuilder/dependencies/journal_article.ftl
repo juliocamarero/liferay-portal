@@ -31,17 +31,17 @@
 
 	${sampleSQLBuilder.insertLayout(layout)}
 
-	<#assign preferences = "<portlet-preferences><preference><name>articleId</name><value>" + journalArticleResource.articleId + "</value></preference><preference><name>enableCommentRatings</name><value>false</value></preference><preference><name>enableComments</name><value>false</value></preference><preference><name>enablePrint</name><value>false</value></preference><preference><name>enableRatings</name><value>false</value></preference><preference><name>enableRelatedAssets</name><value>true</value></preference><preference><name>enableViewCountIncrement</name><value>false</value></preference><preference><name>extensions</name><value>NULL_VALUE</value></preference><preference><name>groupId</name><value>" + groupId + "</value></preference><preference><name>showAvailableLocales</name><value>false</value></preference><preference><name>templateId</name><value></value></preference></portlet-preferences>">
+	<#assign portletPreferencesList = dataFactory.newPortletPreferences(layout.plid, journalArticleResource)>
 
-	<#assign portletPreferences = dataFactory.newPortletPreferences(0, layout.plid, "86", preferences)>
+	<#list portletPreferencesList as portletPreferences>
+		insert into PortletPreferences values (${portletPreferences.portletPreferencesId}, ${portletPreferences.ownerId}, ${portletPreferences.ownerType}, ${portletPreferences.plid}, '${portletPreferences.portletId}', '${portletPreferences.preferences}');
 
-	insert into PortletPreferences values (${portletPreferences.portletPreferencesId}, ${portletPreferences.ownerId}, ${portletPreferences.ownerType}, ${portletPreferences.plid}, '${portletPreferences.portletId}', '${portletPreferences.preferences}');
+		<#assign primKey = dataFactory.getPortletPermissionPrimaryKey(layout.plid, portletPreferences.portletId)>
 
-	<#assign portletPreferences = dataFactory.newPortletPreferences(0, layout.plid, "56", preferences)>
+		${sampleSQLBuilder.insertResourcePermission(portletPreferences.portletId, primKey)}
+	</#list>
 
-	insert into PortletPreferences values (${portletPreferences.portletPreferencesId}, ${portletPreferences.ownerId}, ${portletPreferences.ownerType}, ${portletPreferences.plid}, '${portletPreferences.portletId}', '${portletPreferences.preferences}');
+	<#assign journalContentSearch = dataFactory.newJournalContentSearch(journalArticle, layout.plid)>
 
-	${sampleSQLBuilder.insertResourcePermission("86", layout.plid + "_LAYOUT_86")}
-
-	insert into JournalContentSearch values (${counter.get()}, ${groupId}, ${companyId}, 0, ${layout.layoutId}, '56', '${journalArticleResource.articleId}');
+	insert into JournalContentSearch values (${journalContentSearch.contentSearchId}, ${journalContentSearch.groupId}, ${journalContentSearch.companyId}, ${journalContentSearch.privateLayout?string}, ${journalContentSearch.layoutId}, '${journalContentSearch.portletId}', '${journalContentSearch.articleId}');
 </#list>

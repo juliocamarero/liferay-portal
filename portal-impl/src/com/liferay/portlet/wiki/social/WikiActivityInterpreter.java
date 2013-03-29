@@ -18,7 +18,6 @@ import com.liferay.portal.NoSuchModelException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -26,7 +25,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -50,7 +49,7 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	protected String getAttachmentTitle(
 			SocialActivity activity, WikiPageResource pageResource,
-			ThemeDisplay themeDisplay)
+			ServiceContext serviceContext)
 		throws Exception {
 
 		int activityType = activity.getType();
@@ -60,6 +59,8 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 				SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) ||
 			(activityType ==
 				SocialActivityConstants.TYPE_RESTORE_ATTACHMENT_FROM_TRASH)) {
+
+			String link = null;
 
 			FileEntry fileEntry = null;
 
@@ -84,9 +85,9 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 			if ((fileVersion != null) && !fileVersion.isInTrash()) {
 				StringBundler sb = new StringBundler(9);
 
-				sb.append(themeDisplay.getPathMain());
+				sb.append(serviceContext.getPathMain());
 				sb.append("/wiki/get_page_attachment?p_l_id=");
-				sb.append(themeDisplay.getPlid());
+				sb.append(serviceContext.getPlid());
 				sb.append("&nodeId=");
 				sb.append(pageResource.getNodeId());
 				sb.append("&title=");
@@ -94,11 +95,10 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 				sb.append("&fileName=");
 				sb.append(fileEntryTitle);
 
-				return wrapLink(sb.toString(), HtmlUtil.escape(fileEntryTitle));
+				link = sb.toString();
 			}
-			else {
-				return HtmlUtil.escape(fileEntryTitle);
-			}
+
+			return wrapLink(link, fileEntryTitle);
 		}
 
 		return StringPool.BLANK;
@@ -106,7 +106,7 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	@Override
 	protected String getEntryTitle(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		WikiPageResource pageResource =
@@ -131,7 +131,7 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected Object[] getTitleArguments(
 			String groupName, SocialActivity activity, String link,
-			String title, ThemeDisplay themeDisplay)
+			String title, ServiceContext serviceContext)
 		throws Exception {
 
 		WikiPageResource pageResource =
@@ -139,17 +139,13 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 				activity.getClassPK());
 
 		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
+			activity.getUserId(), serviceContext);
 
-		title = HtmlUtil.escape(title);
-
-		if (Validator.isNotNull(link)) {
-			title = wrapLink(link, title);
-		}
+		title = wrapLink(link, title);
 
 		return new Object[] {
 			groupName, creatorUserName, title,
-			getAttachmentTitle(activity, pageResource, themeDisplay)
+			getAttachmentTitle(activity, pageResource, serviceContext)
 		};
 	}
 
@@ -240,7 +236,7 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected boolean hasPermissions(
 			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ThemeDisplay themeDisplay)
+			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
 		if (!WikiPagePermission.contains(

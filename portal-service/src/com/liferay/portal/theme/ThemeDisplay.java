@@ -54,6 +54,8 @@ import java.util.TimeZone;
 
 import javax.portlet.PortletURL;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -387,6 +389,10 @@ public class ThemeDisplay
 
 	public long getRefererPlid() {
 		return _refererPlid;
+	}
+
+	public HttpServletRequest getRequest() {
+		return _request;
 	}
 
 	public Group getScopeGroup() {
@@ -1126,6 +1132,10 @@ public class ThemeDisplay
 		_refererPlid = refererPlid;
 	}
 
+	public void setRequest(HttpServletRequest request) {
+		_request = request;
+	}
+
 	public void setScopeGroupId(long scopeGroupId) {
 		_scopeGroupId = scopeGroupId;
 
@@ -1450,6 +1460,7 @@ public class ThemeDisplay
 	private User _realUser;
 	private long _refererGroupId;
 	private long _refererPlid;
+	private transient HttpServletRequest _request;
 	private Group _scopeGroup;
 	private long _scopeGroupId;
 	private boolean _secure;

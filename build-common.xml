@@ -720,6 +720,15 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		</if>
 
 		<if>
+			<available file="test/functional-generated" type="dir" />
+			<then>
+				<resourcecount property="test.functional-generated.count">
+					<fileset dir="test-classes/functional-generated" includes="**/${class}.class" />
+				</resourcecount>
+			</then>
+		</if>
+
+		<if>
 			<available file="test/integration" type="dir" />
 			<then>
 				<resourcecount property="test.integration.count">
@@ -747,6 +756,18 @@ Please set the environment variable ANT_OPTS to the recommended value of
 			<then>
 				<var name="test.type" value="functional" />
 			</then>
+			<elseif>
+				<and>
+					<isset property="test.functional-generated.count"/>
+					<not>
+						<equals arg1="${test.functional-generated.count}" arg2="0" />
+					</not>
+				</and>
+				<then>
+					<var name="test.dir" value="functional-generated" />
+					<var name="test.type" value="functional" />
+				</then>
+			</elseif>
 			<elseif>
 				<and>
 					<isset property="test.integration.count"/>
@@ -785,6 +806,15 @@ Please set the environment variable ANT_OPTS to the recommended value of
 
 	<target name="test-cmd">
 		<if>
+			<not>
+				<isset property="test.dir" />
+			</not>
+			<then>
+				<var name="test.dir" value="${test.type}" />
+			</then>
+		</if>
+
+		<if>
 			<available file="test/${test.type}" type="dir" />
 			<then>
 				<junit dir="${project.dir}" fork="on" forkmode="once" haltonfailure="${junit.halt.on.failure}" outputtoformatters="false" printsummary="on" showoutput="true">
@@ -806,7 +836,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 					<formatter type="brief" usefile="false" />
 					<formatter type="xml" />
 					<batchtest todir="test-results/${test.type}">
-						<fileset dir="test-classes/${test.type}" includes="**/${class}.class">
+						<fileset dir="test-classes/${test.dir}" includes="**/${class}.class">
 							<exclude name="**/DLAppServiceHttpTest.class" />
 							<exclude name="**/DLAppServiceJsonTest.class" />
 							<exclude name="**/DLAppServiceSoapTest.class" />

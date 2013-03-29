@@ -1,11 +1,23 @@
 <#assign function = functionElement.attributeValue("function")>
 
+<#if functionElement.getName() == "execute" && function?starts_with("Is")>
+	return
+</#if>
+
 <#assign x = function?last_index_of("#")>
 
 ${seleniumBuilderFileUtil.getVariableName(function?substring(0, x))}Function.${function?substring(x + 1)}(
 
 <#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
-	locator${i}, value${i}
+	locator${i},
+
+	<#if functionElement.attributeValue("value${i}")??>
+		<#assign functionValue = functionElement.attributeValue("value${i}")>
+
+		"${functionValue}"
+	<#else>
+		value${i}
+	</#if>
 
 	<#if i_has_next>
 		,
@@ -13,3 +25,7 @@ ${seleniumBuilderFileUtil.getVariableName(function?substring(0, x))}Function.${f
 </#list>
 
 )
+
+<#if functionElement.getName() == "execute">
+	;
+</#if>

@@ -38,9 +38,11 @@ public class ${seleniumBuilderContext.getActionSimpleClassName(actionName)} exte
 		<#list commandElements as commandElement>
 			<#assign commandName = commandElement.attributeValue("name")>
 
-			public ${seleniumBuilderContext.getFunctionReturnType(commandName)} ${seleniumBuilderFileUtil.getVariableName(commandName)}(
+			<#assign functionName = seleniumBuilderFileUtil.getObjectName(commandName)>
 
-			<#list 1..seleniumBuilderContext.getFunctionLocatorCount(commandName) as i>
+			public ${seleniumBuilderContext.getFunctionReturnType(functionName)} ${commandName}(
+
+			<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
 				String locator${i}, String locatorKey${i}, String value${i}
 
 				<#if i_has_next>
@@ -49,7 +51,7 @@ public class ${seleniumBuilderContext.getActionSimpleClassName(actionName)} exte
 			</#list>
 
 			) throws Exception {
-				<#list 1..seleniumBuilderContext.getFunctionLocatorCount(commandName) as i>
+				<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
 					locator${i} = getLocator(locator${i}, locatorKey${i});
 				</#list>
 
@@ -96,11 +98,7 @@ public class ${seleniumBuilderContext.getActionSimpleClassName(actionName)} exte
 						) {
 							<#assign functionElement = caseElement.element("execute")>
 
-							<#assign functionName = commandName>
-
 							<#include "function_element.ftl">
-
-							;
 						}
 
 						<#if caseElement_has_next>
@@ -114,15 +112,15 @@ public class ${seleniumBuilderContext.getActionSimpleClassName(actionName)} exte
 
 							<#assign functionElement = defaultElement.element("execute")>
 
-							<#assign functionName = commandName>
-
 							<#include "function_element.ftl">
-
-							;
 						<#else>
-							super.${seleniumBuilderFileUtil.getVariableName(commandName)}(
+							<#if commandName?starts_with("is")>
+								return
+							</#if>
 
-							<#list 1..seleniumBuilderContext.getFunctionLocatorCount(commandName) as i>
+							super.${seleniumBuilderFileUtil.getVariableName(functionName)}(
+
+							<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
 								locator${i}, locatorKey${i}, value${i}
 
 								<#if i_has_next>
@@ -138,11 +136,7 @@ public class ${seleniumBuilderContext.getActionSimpleClassName(actionName)} exte
 
 					<#assign functionElement = defaultElement.element("execute")>
 
-					<#assign functionName = commandName>
-
 					<#include "function_element.ftl">
-
-					;
 				</#if>
 			}
 		</#list>

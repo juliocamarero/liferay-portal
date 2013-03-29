@@ -18,6 +18,8 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.jcr.JCRFactoryUtil;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.sender.MessageSender;
@@ -72,6 +74,7 @@ import com.liferay.portlet.messageboards.workflow.MBDiscussionWorkflowHandler;
 import com.liferay.portlet.messageboards.workflow.MBMessageWorkflowHandler;
 import com.liferay.portlet.trash.util.TrashIndexer;
 import com.liferay.portlet.usersadmin.util.ContactIndexer;
+import com.liferay.portlet.usersadmin.util.OrganizationIndexer;
 import com.liferay.portlet.usersadmin.util.UserIndexer;
 import com.liferay.portlet.wiki.trash.WikiNodeTrashHandler;
 import com.liferay.portlet.wiki.trash.WikiPageTrashHandler;
@@ -169,18 +172,20 @@ public class ServiceTestUtil {
 		return searchContext;
 	}
 
-	public static ServiceContext getServiceContext() throws Exception {
+	public static ServiceContext getServiceContext()
+		throws PortalException, SystemException {
+
 		return getServiceContext(TestPropsValues.getGroupId());
 	}
 
 	public static ServiceContext getServiceContext(long groupId)
-		throws Exception {
+		throws PortalException, SystemException {
 
 		return getServiceContext(groupId, TestPropsValues.getUserId());
 	}
 
 	public static ServiceContext getServiceContext(long groupId, long userId)
-		throws Exception {
+		throws PortalException, SystemException {
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -249,7 +254,6 @@ public class ServiceTestUtil {
 
 		IndexerRegistryUtil.register(new BlogsIndexer());
 		IndexerRegistryUtil.register(new ContactIndexer());
-		IndexerRegistryUtil.register(new UserIndexer());
 		IndexerRegistryUtil.register(new BookmarksEntryIndexer());
 		IndexerRegistryUtil.register(new BookmarksFolderIndexer());
 		IndexerRegistryUtil.register(new DLFileEntryIndexer());
@@ -257,7 +261,9 @@ public class ServiceTestUtil {
 		IndexerRegistryUtil.register(new JournalArticleIndexer());
 		IndexerRegistryUtil.register(new JournalFolderIndexer());
 		IndexerRegistryUtil.register(new MBMessageIndexer());
+		IndexerRegistryUtil.register(new OrganizationIndexer());
 		IndexerRegistryUtil.register(new TrashIndexer());
+		IndexerRegistryUtil.register(new UserIndexer());
 		IndexerRegistryUtil.register(new WikiNodeIndexer());
 		IndexerRegistryUtil.register(new WikiPageIndexer());
 

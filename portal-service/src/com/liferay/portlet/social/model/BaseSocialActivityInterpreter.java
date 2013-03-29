@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -40,7 +39,7 @@ import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.portlet.PortletURL;
 
 /**
  * @author Brian Wing Shun Chan
@@ -91,6 +90,18 @@ public abstract class BaseSocialActivityInterpreter
 		return null;
 	}
 
+	protected String buildLink(String link, String text) {
+		StringBundler sb = new StringBundler(5);
+
+		sb.append("<a href=\"");
+		sb.append(link);
+		sb.append("\">");
+		sb.append(text);
+		sb.append("</a>");
+
+		return sb.toString();
+	}
+
 	/**
 	 * @deprecated As of 6.2.0
 	 */
@@ -102,37 +113,47 @@ public abstract class BaseSocialActivityInterpreter
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		HttpServletRequest request = serviceContext.getRequest();
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		SocialActivityFeedEntry socialActivityFeedEntry = doInterpret(
+			activity, themeDisplay);
 
-		return doInterpret(activity, themeDisplay);
-	}
+		if (socialActivityFeedEntry !=
+				_deprecatedMarkerSocialActivityFeedEntry) {
 
-	protected SocialActivityFeedEntry doInterpret(
-			SocialActivity activity, ThemeDisplay themeDisplay)
-		throws Exception {
+			return socialActivityFeedEntry;
+		}
 
 		PermissionChecker permissionChecker =
 			themeDisplay.getPermissionChecker();
 
 		if (!hasPermissions(
-				permissionChecker, activity, ActionKeys.VIEW, themeDisplay)) {
+				permissionChecker, activity, ActionKeys.VIEW, serviceContext)) {
 
 			return null;
 		}
 
-		String link = getLink(activity, themeDisplay);
+		String link = getLink(activity, serviceContext);
 
-		String title = getTitle(activity, themeDisplay);
+		String title = getTitle(activity, serviceContext);
 
-		String body = getBody(activity, themeDisplay);
+		String body = getBody(activity, serviceContext);
 
 		return new SocialActivityFeedEntry(link, title, body);
 	}
 
-	protected String getBody(SocialActivity activity, ThemeDisplay themeDisplay)
+	/**
+	 * @deprecated As of 6.2.0
+	 */
+	protected SocialActivityFeedEntry doInterpret(
+			SocialActivity activity, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		return _deprecatedMarkerSocialActivityFeedEntry;
+	}
+
+	protected String getBody(
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		return StringPool.BLANK;
@@ -147,12 +168,55 @@ public abstract class BaseSocialActivityInterpreter
 	}
 
 	protected String getEntryTitle(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		return StringPool.BLANK;
 	}
 
+	protected String getGroupName(long groupId, ServiceContext serviceContext) {
+		try {
+			if (groupId <= 0) {
+				return StringPool.BLANK;
+			}
+
+			Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+			String groupName = group.getDescriptiveName();
+
+			if (group.getGroupId() == serviceContext.getScopeGroupId()) {
+				return HtmlUtil.escape(groupName);
+			}
+
+			String groupDisplayURL =
+				serviceContext.getPortalURL() + serviceContext.getPathMain() +
+					"/my_sites/view?groupId=" + group.getGroupId();
+
+			if (group.hasPublicLayouts()) {
+				groupDisplayURL = groupDisplayURL + "&privateLayout=0";
+			}
+			else if (group.hasPrivateLayouts()) {
+				groupDisplayURL = groupDisplayURL + "&privateLayout=1";
+			}
+			else {
+				return HtmlUtil.escape(groupName);
+			}
+
+			groupName =
+				"<a class=\"group\" href=\"" + groupDisplayURL + "\">" +
+					HtmlUtil.escape(groupName) + "</a>";
+
+			return groupName;
+		}
+		catch (Exception e) {
+			return StringPool.BLANK;
+		}
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #getGroupName(long,
+	 *             ServiceContext)}
+	 */
 	protected String getGroupName(long groupId, ThemeDisplay themeDisplay) {
 		try {
 			if (groupId <= 0) {
@@ -220,7 +284,8 @@ public abstract class BaseSocialActivityInterpreter
 		return HtmlUtil.escape(defaultValue);
 	}
 
-	protected String getLink(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getLink(
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
@@ -231,14 +296,16 @@ public abstract class BaseSocialActivityInterpreter
 		if ((trashHandler != null) && (trashHandler.isInTrash(classPK) ||
 			trashHandler.isInTrashContainer(classPK))) {
 
-			return TrashUtil.getViewContentURL(
-				getClassName(activity), classPK, themeDisplay);
+			PortletURL portletURL = TrashUtil.getViewContentURL(
+				serviceContext.getRequest(), getClassName(activity), classPK);
+
+			return portletURL.toString();
 		}
 
 		StringBundler sb = new StringBundler(4);
 
-		sb.append(themeDisplay.getPortalURL());
-		sb.append(themeDisplay.getPathMain());
+		sb.append(serviceContext.getPortalURL());
+		sb.append(serviceContext.getPathMain());
 		sb.append(getPath(activity));
 		sb.append(classPK);
 
@@ -250,39 +317,35 @@ public abstract class BaseSocialActivityInterpreter
 	}
 
 	protected String getTitle(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		String groupName = StringPool.BLANK;
 
-		if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
-			groupName = getGroupName(activity.getGroupId(), themeDisplay);
+		if (activity.getGroupId() != serviceContext.getScopeGroupId()) {
+			groupName = getGroupName(activity.getGroupId(), serviceContext);
 		}
 
-		String link = getLink(activity, themeDisplay);
+		String link = getLink(activity, serviceContext);
 
-		String entryTitle = getEntryTitle(activity, themeDisplay);
+		String entryTitle = getEntryTitle(activity, serviceContext);
 
 		Object[] titleArguments = getTitleArguments(
-			groupName, activity, link, entryTitle, themeDisplay);
+			groupName, activity, link, entryTitle, serviceContext);
 
 		String titlePattern = getTitlePattern(groupName, activity);
 
-		return themeDisplay.translate(titlePattern, titleArguments);
+		return serviceContext.translate(titlePattern, titleArguments);
 	}
 
 	protected Object[] getTitleArguments(
 			String groupName, SocialActivity activity, String link,
-			String title, ThemeDisplay themeDisplay)
+			String title, ServiceContext serviceContext)
 		throws Exception {
 
-		String userName = getUserName(activity.getUserId(), themeDisplay);
+		String userName = getUserName(activity.getUserId(), serviceContext);
 
-		if (Validator.isNotNull(link)) {
-			title = wrapLink(link, title);
-		}
-
-		return new Object[] {groupName, userName, title};
+		return new Object[] {groupName, userName, wrapLink(link, title)};
 	}
 
 	protected String getTitlePattern(String groupName, SocialActivity activity)
@@ -291,6 +354,44 @@ public abstract class BaseSocialActivityInterpreter
 		return StringPool.BLANK;
 	}
 
+	protected String getUserName(long userId, ServiceContext serviceContext) {
+		try {
+			if (userId <= 0) {
+				return StringPool.BLANK;
+			}
+
+			User user = UserLocalServiceUtil.getUserById(userId);
+
+			if (user.getUserId() == serviceContext.getUserId()) {
+				return HtmlUtil.escape(user.getFirstName());
+			}
+
+			String userName = user.getFullName();
+
+			Group group = user.getGroup();
+
+			if (group.getGroupId() == serviceContext.getScopeGroupId()) {
+				return HtmlUtil.escape(userName);
+			}
+
+			String userDisplayURL = user.getDisplayURL(
+				serviceContext.getThemeDisplay());
+
+			userName =
+				"<a class=\"user\" href=\"" + userDisplayURL + "\">" +
+					HtmlUtil.escape(userName) + "</a>";
+
+			return userName;
+		}
+		catch (Exception e) {
+			return StringPool.BLANK;
+		}
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #getUserName(long,
+	 *             ServiceContext)}
+	 */
 	protected String getUserName(long userId, ThemeDisplay themeDisplay) {
 		try {
 			if (userId <= 0) {
@@ -324,33 +425,48 @@ public abstract class BaseSocialActivityInterpreter
 		}
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #getJSONValue(String, String,
+	 *             String)}
+	 */
+	protected String getValue(String json, String key, String defaultValue) {
+		return getJSONValue(json, key, defaultValue);
+	}
+
 	protected boolean hasPermissions(
 			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ThemeDisplay themeDisplay)
+			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
 		return false;
 	}
 
-	protected String wrapLink(String link, String text) {
-		StringBundler sb = new StringBundler(5);
+	protected String wrapLink(String link, String title) {
+		title = HtmlUtil.escape(title);
 
-		sb.append("<a href=\"");
-		sb.append(link);
-		sb.append("\">");
-		sb.append(text);
-		sb.append("</a>");
+		if (link == null) {
+			return title;
+		}
 
-		return sb.toString();
+		return buildLink(link, title);
 	}
 
 	protected String wrapLink(
-		String link, String key, ThemeDisplay themeDisplay) {
+		String link, String key, ServiceContext serviceContext) {
 
-		return wrapLink(link, themeDisplay.translate(key));
+		String title = serviceContext.translate(HtmlUtil.escape(key));
+
+		if (link == null) {
+			return title;
+		}
+
+		return buildLink(link, title);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
 		BaseSocialActivityInterpreter.class);
+
+	private SocialActivityFeedEntry _deprecatedMarkerSocialActivityFeedEntry =
+		new SocialActivityFeedEntry(StringPool.BLANK, StringPool.BLANK);
 
 }
