@@ -50,10 +50,6 @@ public class BlogsEntryAssetRenderer
 		_entry = entry;
 	}
 
-	public String getAssetRendererFactoryClassName() {
-		return BlogsEntryAssetRendererFactory.CLASS_NAME;
-	}
-
 	public String getClassName() {
 		return BlogsEntry.class.getName();
 	}
@@ -89,6 +85,17 @@ public class BlogsEntryAssetRenderer
 
 	public String getSummary(Locale locale) {
 		return HtmlUtil.stripHtml(_entry.getDescription());
+	}
+
+	@Override
+	public String getThumbnailPath(PortletRequest portletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return themeDisplay.getPathThemeImages() +
+			"/file_system/large/blog.png";
 	}
 
 	public String getTitle(Locale locale) {

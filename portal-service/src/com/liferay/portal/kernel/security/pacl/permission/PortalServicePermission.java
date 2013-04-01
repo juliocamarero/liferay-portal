@@ -14,12 +14,12 @@
 
 package com.liferay.portal.kernel.security.pacl.permission;
 
-import com.liferay.portal.kernel.security.pacl.PACLConstants;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.lang.reflect.Method;
 
 import java.security.BasicPermission;
-import java.security.Permission;
 
 /**
  * @author Raymond Augé
@@ -27,34 +27,13 @@ import java.security.Permission;
 public class PortalServicePermission extends BasicPermission {
 
 	public static void checkDynamicQuery(Class<?> implClass) {
-		SecurityManager securityManager = System.getSecurityManager();
-
-		if (securityManager == null) {
-			return;
-		}
-
-		Permission permission = new PortalServicePermission(
-			PACLConstants.PORTAL_SERVICE_PERMISSION_DYNAMIC_QUERY, implClass,
-			null);
-
-		securityManager.checkPermission(permission);
+		_pacl.checkDynamicQuery(implClass);
 	}
 
 	public static void checkService(
 		Object object, Method method, Object[] arguments) {
 
-		SecurityManager securityManager = System.getSecurityManager();
-
-		if (securityManager == null) {
-			return;
-		}
-
-		PortalServicePermission portalServicePermission =
-			new PortalServicePermission(
-				PACLConstants.PORTAL_SERVICE_PERMISSION_SERVICE, object, method,
-				arguments);
-
-		securityManager.checkPermission(portalServicePermission);
+		_pacl.checkService(object, method, arguments);
 	}
 
 	public PortalServicePermission(String name, Object object, Method method) {
@@ -83,8 +62,62 @@ public class PortalServicePermission extends BasicPermission {
 		return _object;
 	}
 
+	@Override
+	public String toString() {
+		StringBundler sb = new StringBundler(11);
+
+		if (_arguments != null) {
+			sb.append("{arguments=[");
+			sb.append(StringUtil.merge(_arguments, ", "));
+			sb.append("]");
+			sb.append(", class=");
+		}
+		else {
+			sb.append("{class=");
+		}
+
+		Class<?> clazz = getClass();
+
+		sb.append(clazz.getName());
+
+		if (_method != null) {
+			sb.append(", method=");
+			sb.append(_method.getName());
+		}
+
+		sb.append(", name=");
+		sb.append(getName());
+		sb.append(", object=");
+		sb.append(getObject());
+		sb.append("}");
+
+		return sb.toString();
+	}
+
+	private static PACL _pacl = new NoPACL();
+
 	private transient Object[] _arguments;
 	private transient Method _method;
 	private transient Object _object;
+
+	private static class NoPACL implements PACL {
+
+		public void checkDynamicQuery(Class<?> implClass) {
+		}
+
+		public void checkService(
+			Object object, Method method, Object[] arguments) {
+		}
+
+	}
+
+	public static interface PACL {
+
+		public void checkDynamicQuery(Class<?> implClass);
+
+		public void checkService(
+			Object object, Method method, Object[] arguments);
+
+	}
 
 }

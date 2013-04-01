@@ -46,6 +46,7 @@ import com.liferay.util.PwdGenerator;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -241,6 +242,10 @@ public class JournalConverterImpl implements JournalConverter {
 			int parentOffset)
 		throws Exception {
 
+		if (!ddmFields.contains(fieldName)) {
+			return 0;
+		}
+
 		Field fieldsDisplayField = ddmFields.get(DDMImpl.FIELDS_DISPLAY_NAME);
 
 		String[] fieldsDisplayValues = DDMUtil.getFieldsDisplayValues(
@@ -433,8 +438,16 @@ public class JournalConverterImpl implements JournalConverter {
 
 			Serializable fieldValue = ddmField.getValue(locale, count);
 
+			if (fieldValue instanceof Date) {
+				Date valueDate = (Date)fieldValue;
+
+				fieldValue = valueDate.getTime();
+			}
+
+			String valueString = String.valueOf(fieldValue);
+
 			updateDynamicContentValue(
-				dynamicContentElement, fieldType, String.valueOf(fieldValue));
+				dynamicContentElement, fieldType, valueString.trim());
 		}
 
 		ddmFieldsCounter.incrementKey(fieldName);

@@ -29,6 +29,54 @@
 	<td>//span[@class='sign-out']/a</td>
 	<td></td>
 </tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--ADD-->
+<tr>
+	<td>ADD</td>
+	<td>//li[@id='_145_addContent']/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADD_PAGE</td>
+	<td>//a[@id='addPage']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADD_PORTLET</td>
+	<td>//a[@id='_145_addApplication']</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--APPLICATION-->
+<tr>
+	<td>APPLICATION_SEARCH</td>
+	<td>//input[@id='layout_configuration_content']</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--GO_TO-->
+<tr>
+	<td>GO_TO</td>
+	<td>//li[@id='_145_mySites']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>GO_TO_CONTROL_PANEL</td>
+	<td>link=Control Panel</td>
+	<td></td>
+</tr>
 </tbody>
 </table>
 </body>

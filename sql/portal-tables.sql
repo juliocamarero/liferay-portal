@@ -160,7 +160,6 @@ create table AssetLink (
 );
 
 create table AssetTag (
-	uuid_ VARCHAR(75) null,
 	tagId LONG not null primary key,
 	groupId LONG,
 	companyId LONG,
@@ -595,9 +594,9 @@ create table DLFileEntryType (
 );
 
 create table DLFileEntryTypes_DDMStructures (
-	fileEntryTypeId LONG not null,
 	structureId LONG not null,
-	primary key (fileEntryTypeId, structureId)
+	fileEntryTypeId LONG not null,
+	primary key (structureId, fileEntryTypeId)
 );
 
 create table DLFileEntryTypes_DLFolders (
@@ -769,7 +768,7 @@ create table Group_ (
 	description STRING null,
 	type_ INTEGER,
 	typeSettings STRING null,
-	friendlyURL VARCHAR(100) null,
+	friendlyURL VARCHAR(255) null,
 	site BOOLEAN,
 	active_ BOOLEAN
 );

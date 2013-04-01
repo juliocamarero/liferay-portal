@@ -24,15 +24,19 @@ import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portlet.polls.model.PollsChoice;
 import com.liferay.portlet.polls.model.PollsQuestion;
 import com.liferay.portlet.polls.service.PollsChoiceLocalServiceUtil;
+import com.liferay.portlet.polls.service.PollsQuestionLocalServiceUtil;
 import com.liferay.portlet.polls.util.PollsTestUtil;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
  * @author Shinn Lok
+ * @author Mate Thurzo
  */
 @ExecutionTestListeners(
 	listeners = {
@@ -44,20 +48,34 @@ public class PollsChoiceStagedModelDataHandlerTest
 	extends BaseStagedModelDataHandlerTestCase {
 
 	@Override
+	protected Map<String, List<StagedModel>> addDependentStagedModelsMap(
+			Group group)
+		throws Exception {
+
+		Map<String, List<StagedModel>> dependentStagedModelsMap =
+			new HashMap<String, List<StagedModel>>();
+
+		PollsQuestion question = PollsTestUtil.addQuestion(group.getGroupId());
+
+		addDependentStagedModel(
+			dependentStagedModelsMap, PollsQuestion.class, question);
+
+		return dependentStagedModelsMap;
+	}
+
+	@Override
 	protected StagedModel addStagedModel(
 			Group group,
 			Map<String, List<StagedModel>> dependentStagedModelsMap)
 		throws Exception {
 
-		PollsQuestion question = PollsTestUtil.addQuestion(group.getGroupId());
+		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
+			PollsQuestion.class.getSimpleName());
+
+		PollsQuestion question = (PollsQuestion)dependentStagedModels.get(0);
 
 		return PollsTestUtil.addChoice(
 			group.getGroupId(), question.getQuestionId());
-	}
-
-	@Override
-	protected String getElementName() {
-		return "choice";
 	}
 
 	@Override
@@ -72,8 +90,25 @@ public class PollsChoiceStagedModelDataHandlerTest
 	}
 
 	@Override
-	protected String getStagedModelClassName() {
-		return PollsChoice.class.getName();
+	protected Class<? extends StagedModel> getStagedModelClass() {
+		return PollsChoice.class;
+	}
+
+	@Override
+	protected void validateImport(
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
+		throws Exception {
+
+		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
+			PollsQuestion.class.getSimpleName());
+
+		Assert.assertEquals(1, dependentStagedModels.size());
+
+		PollsQuestion question = (PollsQuestion)dependentStagedModels.get(0);
+
+		PollsQuestionLocalServiceUtil.getPollsQuestionByUuidAndGroupId(
+			question.getUuid(), group.getGroupId());
 	}
 
 }

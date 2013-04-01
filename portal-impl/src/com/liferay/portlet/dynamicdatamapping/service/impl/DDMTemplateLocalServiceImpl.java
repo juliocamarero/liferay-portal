@@ -31,15 +31,20 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.persistence.ImageUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
+import com.liferay.portlet.dynamicdatamapping.RequiredTemplateException;
 import com.liferay.portlet.dynamicdatamapping.TemplateDuplicateTemplateKeyException;
 import com.liferay.portlet.dynamicdatamapping.TemplateNameException;
 import com.liferay.portlet.dynamicdatamapping.TemplateScriptException;
 import com.liferay.portlet.dynamicdatamapping.TemplateSmallImageNameException;
 import com.liferay.portlet.dynamicdatamapping.TemplateSmallImageSizeException;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.base.DDMTemplateLocalServiceBaseImpl;
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -383,6 +388,38 @@ public class DDMTemplateLocalServiceImpl
 		throws PortalException, SystemException {
 
 		// Template
+
+		if (template.getClassNameId() ==
+				PortalUtil.getClassNameId(DDMStructure.class.getName())) {
+
+			DDMStructure structure = ddmStructureLocalService.fetchDDMStructure(
+				template.getClassPK());
+
+			if ((structure != null) &&
+				(structure.getClassNameId() ==
+					PortalUtil.getClassNameId(
+						JournalArticle.class.getName()))) {
+
+				Group companyGroup = groupLocalService.getCompanyGroup(
+					template.getCompanyId());
+
+				if (template.getGroupId() == companyGroup.getGroupId()) {
+					if (JournalArticleUtil.countByTemplateId(
+							template.getTemplateKey()) > 0) {
+
+						throw new RequiredTemplateException();
+					}
+				}
+				else {
+					if (JournalArticleUtil.countByG_T(
+							template.getGroupId(),
+							template.getTemplateKey()) > 0) {
+
+						throw new RequiredTemplateException();
+					}
+				}
+			}
+		}
 
 		ddmTemplatePersistence.remove(template);
 

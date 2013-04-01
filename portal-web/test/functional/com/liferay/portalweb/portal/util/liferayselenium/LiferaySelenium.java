@@ -89,6 +89,8 @@ public interface LiferaySelenium extends Selenium {
 
 	public void goBackAndWait();
 
+	public boolean isConfirmation(String pattern);
+
 	public boolean isElementNotPresent(String locator);
 
 	public boolean isNotChecked(String locator);
@@ -118,6 +120,8 @@ public interface LiferaySelenium extends Selenium {
 	public void keyPressAndWait(String locator, String keySequence);
 
 	public void keyUpAndWait(String locator, String keySequence);
+
+	public void makeVisible(String locator);
 
 	public void paste(String locator);
 

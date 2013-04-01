@@ -45,8 +45,8 @@ public class CalEventAssetRenderer extends BaseAssetRenderer {
 		_event = event;
 	}
 
-	public String getAssetRendererFactoryClassName() {
-		return CalEventAssetRendererFactory.CLASS_NAME;
+	public String getClassName() {
+		return CalEvent.class.getName();
 	}
 
 	public long getClassPK() {
@@ -69,6 +69,17 @@ public class CalEventAssetRenderer extends BaseAssetRenderer {
 
 	public String getSummary(Locale locale) {
 		return HtmlUtil.extractText(_event.getDescription());
+	}
+
+	@Override
+	public String getThumbnailPath(PortletRequest portletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return themeDisplay.getPathThemeImages() +
+			"/file_system/large/calendar.png";
 	}
 
 	public String getTitle(Locale locale) {

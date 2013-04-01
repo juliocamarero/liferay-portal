@@ -2241,12 +2241,12 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 						organizationIds, organization.getOrganizationId()) &&
 					(!OrganizationPermissionUtil.contains(
 						permissionChecker, organization.getOrganizationId(),
-						ActionKeys.ASSIGN_MEMBERS)) ||
-					OrganizationMembershipPolicyUtil.isMembershipProtected(
+						ActionKeys.ASSIGN_MEMBERS) ||
+					 OrganizationMembershipPolicyUtil.isMembershipProtected(
 						permissionChecker, userId,
 						organization.getOrganizationId()) ||
-					OrganizationMembershipPolicyUtil.isMembershipRequired(
-						userId, organization.getOrganizationId())) {
+					 OrganizationMembershipPolicyUtil.isMembershipRequired(
+						userId, organization.getOrganizationId()))) {
 
 					organizationIds = ArrayUtil.append(
 						organizationIds, organization.getOrganizationId());
@@ -2285,8 +2285,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		if (userId != CompanyConstants.SYSTEM) {
 
-			// Add back any mandatory roles or roles that the administrator
-			// does not have the rights to remove and check that he has the
+			// Add back any mandatory roles or roles that the administrator does
+			// not have the rights to remove and check that he has the
 			// permission to add a new role
 
 			List<Role> oldRoles = roleLocalService.getUserRoles(userId);
@@ -2299,9 +2299,9 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 				if (!ArrayUtil.contains(roleIds, role.getRoleId()) &&
 					(!RolePermissionUtil.contains(
 						permissionChecker, role.getRoleId(),
-						ActionKeys.ASSIGN_MEMBERS)) ||
+						ActionKeys.ASSIGN_MEMBERS) ||
 					 RoleMembershipPolicyUtil.isRoleRequired(
-						userId, role.getRoleId())) {
+						userId, role.getRoleId()))) {
 
 					roleIds = ArrayUtil.append(roleIds, role.getRoleId());
 				}
@@ -2310,8 +2310,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			}
 		}
 
-		// Check that the administrator has the permission to add a new role
-		// and that the role membership is allowed
+		// Check that the administrator has the permission to add a new role and
+		// that the role membership is allowed
 
 		for (long roleId : roleIds) {
 			if ((oldRoleIds != null) &&
@@ -2415,7 +2415,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 							organization.getOrganizationId(),
 							role.getRoleId()) ||
 						OrganizationMembershipPolicyUtil.isRoleRequired(
-							userId, group.getGroupId(), role.getRoleId())) {
+							userId, organization.getOrganizationId(),
+							role.getRoleId())) {
 
 						userGroupRoles.add(oldUserGroupRole);
 					}

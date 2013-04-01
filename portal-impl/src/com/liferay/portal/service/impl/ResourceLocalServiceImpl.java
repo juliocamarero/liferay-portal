@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.model.AuditedModel;
-import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.GroupedModel;
 import com.liferay.portal.model.PermissionedModel;
 import com.liferay.portal.model.Resource;
@@ -143,15 +142,13 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 			AuditedModel auditedModel, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		ClassedModel classedModel = (ClassedModel)auditedModel;
-
 		if (serviceContext.isAddGroupPermissions() ||
 			serviceContext.isAddGuestPermissions()) {
 
 			addResources(
 				auditedModel.getCompanyId(), getGroupId(auditedModel),
-				auditedModel.getUserId(), classedModel.getModelClassName(),
-				String.valueOf(classedModel.getPrimaryKeyObj()), false,
+				auditedModel.getUserId(), auditedModel.getModelClassName(),
+				String.valueOf(auditedModel.getPrimaryKeyObj()), false,
 				serviceContext.isAddGroupPermissions(),
 				serviceContext.isAddGuestPermissions(),
 				getPermissionedModel(auditedModel));
@@ -159,13 +156,13 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 		else {
 			if (serviceContext.isDeriveDefaultPermissions()) {
 				serviceContext.deriveDefaultPermissions(
-					getGroupId(auditedModel), classedModel.getModelClassName());
+					getGroupId(auditedModel), auditedModel.getModelClassName());
 			}
 
 			addModelResources(
 				auditedModel.getCompanyId(), getGroupId(auditedModel),
-				auditedModel.getUserId(), classedModel.getModelClassName(),
-				String.valueOf(classedModel.getPrimaryKeyObj()),
+				auditedModel.getUserId(), auditedModel.getModelClassName(),
+				String.valueOf(auditedModel.getPrimaryKeyObj()),
 				serviceContext.getGroupPermissions(),
 				serviceContext.getGuestPermissions(),
 				getPermissionedModel(auditedModel));
@@ -327,11 +324,9 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 	public void deleteResource(AuditedModel auditedModel, int scope)
 		throws PortalException, SystemException {
 
-		ClassedModel classedModel = (ClassedModel)auditedModel;
-
 		deleteResource(
-			auditedModel.getCompanyId(), classedModel.getModelClassName(),
-			scope, String.valueOf(classedModel.getPrimaryKeyObj()),
+			auditedModel.getCompanyId(), auditedModel.getModelClassName(),
+			scope, String.valueOf(auditedModel.getPrimaryKeyObj()),
 			getPermissionedModel(auditedModel));
 	}
 
@@ -455,12 +450,10 @@ public class ResourceLocalServiceImpl extends ResourceLocalServiceBaseImpl {
 			AuditedModel auditedModel, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		ClassedModel classedModel = (ClassedModel)auditedModel;
-
 		updateResources(
 			auditedModel.getCompanyId(), getGroupId(auditedModel),
-			classedModel.getModelClassName(),
-			String.valueOf(classedModel.getPrimaryKeyObj()),
+			auditedModel.getModelClassName(),
+			String.valueOf(auditedModel.getPrimaryKeyObj()),
 			serviceContext.getGroupPermissions(),
 			serviceContext.getGuestPermissions(),
 			getPermissionedModel(auditedModel));

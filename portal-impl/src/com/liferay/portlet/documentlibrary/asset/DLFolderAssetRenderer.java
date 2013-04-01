@@ -49,10 +49,6 @@ public class DLFolderAssetRenderer
 		_folder = folder;
 	}
 
-	public String getAssetRendererFactoryClassName() {
-		return DLFolderAssetRendererFactory.CLASS_NAME;
-	}
-
 	public String getClassName() {
 		return DLFolder.class.getName();
 	}
@@ -90,6 +86,29 @@ public class DLFolderAssetRenderer
 
 	public String getSummary(Locale locale) {
 		return HtmlUtil.stripHtml(_folder.getDescription());
+	}
+
+	@Override
+	public String getThumbnailPath(PortletRequest portletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		int foldersCount = DLAppServiceUtil.getFoldersCount(
+			_folder.getRepositoryId(), _folder.getFolderId());
+		int entriesCount =
+			DLAppServiceUtil.getFileEntriesAndFileShortcutsCount(
+				_folder.getRepositoryId(), _folder.getFolderId(),
+				WorkflowConstants.STATUS_APPROVED);
+
+		if ((entriesCount > 0) || (foldersCount > 0)) {
+			return themeDisplay.getPathThemeImages() +
+				"/file_system/large/folder_full_document.png";
+		}
+
+		return themeDisplay.getPathThemeImages() +
+			"/file_system/large/folder_empty.png";
 	}
 
 	public String getTitle(Locale locale) {
