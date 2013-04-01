@@ -39,6 +39,7 @@ import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.model.PasswordPolicy;
 import com.liferay.portal.model.impl.PasswordPolicyImpl;
 import com.liferay.portal.model.impl.PasswordPolicyModelImpl;
+import com.liferay.portal.service.persistence.PasswordPolicyPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;

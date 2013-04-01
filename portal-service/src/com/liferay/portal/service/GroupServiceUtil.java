@@ -157,6 +157,21 @@ public class GroupServiceUtil {
 	}
 
 	/**
+	* Checks if the group is valid for Remote Staging.
+	*
+	* @param groupId the primary key of the group
+	* @throws PortalException if the user did not have permission to delete the
+	group or its assets or resources, if a group with the primary key
+	could not be found, or if the group was a system group
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void checkRemoteStaging(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().checkRemoteStaging(groupId);
+	}
+
+	/**
 	* Deletes the group.
 	*
 	* <p>

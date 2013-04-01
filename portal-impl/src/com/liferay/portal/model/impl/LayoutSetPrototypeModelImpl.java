@@ -28,6 +28,7 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutSetPrototypeModel;
 import com.liferay.portal.model.LayoutSetPrototypeSoap;
+import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;

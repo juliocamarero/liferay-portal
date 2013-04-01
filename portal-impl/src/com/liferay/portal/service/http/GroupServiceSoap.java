@@ -196,6 +196,27 @@ public class GroupServiceSoap {
 	}
 
 	/**
+	* Checks if the group is valid for Remote Staging.
+	*
+	* @param groupId the primary key of the group
+	* @throws PortalException if the user did not have permission to delete the
+	group or its assets or resources, if a group with the primary key
+	could not be found, or if the group was a system group
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void checkRemoteStaging(long groupId)
+		throws RemoteException {
+		try {
+			GroupServiceUtil.checkRemoteStaging(groupId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
 	* Deletes the group.
 	*
 	* <p>
