@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.lar.BaseStagedModelDataHandlerTestCase;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
@@ -71,17 +72,15 @@ public class BookmarksEntryStagedModelDataHandlerTest
 		throws Exception {
 
 		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
-			BookmarksFolder.class.getName());
+			BookmarksFolder.class.getSimpleName());
 
 		BookmarksFolder folder = (BookmarksFolder)dependentStagedModels.get(0);
 
-		return BookmarksTestUtil.addEntry(
-			group.getGroupId(), folder.getFolderId(), true);
-	}
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
 
-	@Override
-	protected String getElementName() {
-		return "entry";
+		return BookmarksTestUtil.addEntry(
+			folder.getFolderId(), true, serviceContext);
 	}
 
 	@Override
@@ -96,8 +95,8 @@ public class BookmarksEntryStagedModelDataHandlerTest
 	}
 
 	@Override
-	protected String getStagedModelClassName() {
-		return BookmarksEntry.class.getName();
+	protected Class<? extends StagedModel> getStagedModelClass() {
+		return BookmarksEntry.class;
 	}
 
 	@Override
@@ -107,7 +106,7 @@ public class BookmarksEntryStagedModelDataHandlerTest
 		throws Exception {
 
 		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
-			BookmarksFolder.class.getName());
+			BookmarksFolder.class.getSimpleName());
 
 		Assert.assertEquals(1, dependentStagedModels.size());
 

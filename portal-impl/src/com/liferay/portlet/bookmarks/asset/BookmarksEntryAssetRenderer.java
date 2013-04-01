@@ -47,10 +47,6 @@ public class BookmarksEntryAssetRenderer
 		_entry = entry;
 	}
 
-	public String getAssetRendererFactoryClassName() {
-		return BookmarksEntryAssetRendererFactory.CLASS_NAME;
-	}
-
 	public String getClassName() {
 		return BookmarksEntry.class.getName();
 	}
@@ -76,6 +72,17 @@ public class BookmarksEntryAssetRenderer
 
 	public String getSummary(Locale locale) {
 		return HtmlUtil.stripHtml(_entry.getDescription());
+	}
+
+	@Override
+	public String getThumbnailPath(PortletRequest portletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return themeDisplay.getPathThemeImages() +
+			"/file_system/large/bookmark.png";
 	}
 
 	public String getTitle(Locale locale) {

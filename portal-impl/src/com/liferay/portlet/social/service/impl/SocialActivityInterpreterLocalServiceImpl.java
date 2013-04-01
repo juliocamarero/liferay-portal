@@ -18,8 +18,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
@@ -139,6 +141,26 @@ public class SocialActivityInterpreterLocalServiceImpl
 		}
 
 		return activitySetId;
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #interpret(String,
+	 *             SocialActivity, ServiceContext)}
+	 */
+	public SocialActivityFeedEntry interpret(
+		SocialActivity activity, ThemeDisplay themeDisplay) {
+
+		ServiceContext serviceContext = null;
+
+		try {
+			serviceContext = ServiceContextFactory.getInstance(
+				themeDisplay.getRequest());
+		}
+		catch (Exception e) {
+			return null;
+		}
+
+		return interpret(StringPool.BLANK, activity, serviceContext);
 	}
 
 	/**

@@ -19,13 +19,14 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portalweb.portal.BaseTestCase;
 import com.liferay.portalweb.portal.util.TestPropsValues;
 
 import java.util.Calendar;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.WrapsDriver;
 
 /**
  * @author Brian Wing Shun Chan
@@ -219,6 +220,10 @@ public abstract class BaseWebDriverImpl
 		super.waitForPageToLoad("30000");
 	}
 
+	public boolean isConfirmation(String pattern) {
+		return LiferaySeleniumHelper.isConfirmation(this, pattern);
+	}
+
 	public boolean isElementNotPresent(String locator) {
 		return LiferaySeleniumHelper.isElementNotPresent(this, locator);
 	}
@@ -294,6 +299,27 @@ public abstract class BaseWebDriverImpl
 		super.waitForPageToLoad("30000");
 	}
 
+	public void makeVisible(String locator) {
+		WebElement bodyElement = getWebElement("//body");
+
+		WrapsDriver wrapsDriver = (WrapsDriver)bodyElement;
+
+		WebDriver webDriver = wrapsDriver.getWrappedDriver();
+
+		JavascriptExecutor javascriptExecutor = (JavascriptExecutor)webDriver;
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("var element = arguments[0];");
+		sb.append("element.style.display = 'inline-block';");
+		sb.append("element.style.overflow = 'visible';");
+		sb.append("element.style.visibility = 'visible';");
+
+		WebElement webElement = getWebElement(locator);
+
+		javascriptExecutor.executeScript(sb.toString(), webElement);
+	}
+
 	public void paste(String location) {
 		super.type(location, _clipBoard);
 	}
@@ -350,11 +376,11 @@ public abstract class BaseWebDriverImpl
 
 		for (int second = 0;; second++) {
 			if (second >= timeout) {
-				BaseTestCase.fail("Timeout");
+				assertConfirmation(pattern);
 			}
 
 			try {
-				if (pattern.equals(getConfirmation())) {
+				if (isConfirmation(pattern)) {
 					break;
 				}
 			}

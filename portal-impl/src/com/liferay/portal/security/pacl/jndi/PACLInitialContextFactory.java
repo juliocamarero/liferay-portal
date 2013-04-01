@@ -17,6 +17,7 @@ package com.liferay.portal.security.pacl.jndi;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
+import com.liferay.portal.security.lang.DoPrivilegedFactory;
 import com.liferay.portal.security.pacl.PACLPolicy;
 import com.liferay.portal.security.pacl.PACLUtil;
 
@@ -117,19 +118,26 @@ public class PACLInitialContextFactory implements InitialContextFactory {
 
 		Context context = initialContextFactory.getInitialContext(environment);
 
+		context = new SchemeAwareContextWrapper(context);
+
 		PACLPolicy paclPolicy = PACLUtil.getPACLPolicy();
 
 		if (paclPolicy == null) {
 			return context;
 		}
 
+		context = DoPrivilegedFactory.wrap(context);
+		paclPolicy = DoPrivilegedFactory.wrap(paclPolicy);
+
 		return new PACLContext(context, paclPolicy);
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(
-		PACLInitialContextFactory.class.getName());
-
 	private Hashtable<?, ?> _environment;
 	private InitialContextFactoryBuilder _initialContextFactoryBuilder;
+
+	// This must not be static because of LPS-33404
+
+	private Log _log = LogFactoryUtil.getLog(
+		PACLInitialContextFactory.class.getName());
 
 }

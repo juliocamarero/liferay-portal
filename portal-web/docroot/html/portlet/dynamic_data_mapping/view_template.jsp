@@ -52,6 +52,12 @@ if (!portletName.equals(PortletKeys.PORTLET_DISPLAY_TEMPLATES)) {
 }
 %>
 
+<liferay-ui:error exception="<%= RequiredTemplateException.class %>">
+	<liferay-ui:message key="required-templates-could-not-be-deleted" />
+
+	<liferay-ui:message key="they-are-referenced-by-web-contents" />
+</liferay-ui:error>
+
 <portlet:renderURL var="viewRecordsURL">
 	<portlet:param name="struts_action" value="/dynamic_data_lists/view" />
 </portlet:renderURL>
@@ -169,9 +175,9 @@ if (!portletName.equals(PortletKeys.PORTLET_DISPLAY_TEMPLATES)) {
 				String value = null;
 
 				if (portletName.equals(PortletKeys.PORTLET_DISPLAY_TEMPLATES)) {
-					PortletDisplayTemplateHandler portletDisplayTemplateHandler = PortletDisplayTemplateHandlerRegistryUtil.getPortletDisplayTemplateHandler(template.getClassNameId());
+					TemplateHandler templateHandler = TemplateHandlerRegistryUtil.getTemplateHandler(template.getClassNameId());
 
-					value = portletDisplayTemplateHandler.getName(locale);
+					value = templateHandler.getName(locale);
 				}
 				else if (Validator.isNull(templateTypeValue)) {
 					value = LanguageUtil.get(pageContext, template.getType());

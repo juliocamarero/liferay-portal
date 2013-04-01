@@ -86,6 +86,16 @@ public class SocialActivityInterpreterLocalServiceUtil {
 	}
 
 	/**
+	* @deprecated As of 6.2.0, replaced by {@link #interpret(String,
+	SocialActivity, ServiceContext)}
+	*/
+	public static com.liferay.portlet.social.model.SocialActivityFeedEntry interpret(
+		com.liferay.portlet.social.model.SocialActivity activity,
+		com.liferay.portal.theme.ThemeDisplay themeDisplay) {
+		return getService().interpret(activity, themeDisplay);
+	}
+
+	/**
 	* Creates a human readable activity feed entry for the activity using an
 	* available compatible activity interpreter.
 	*

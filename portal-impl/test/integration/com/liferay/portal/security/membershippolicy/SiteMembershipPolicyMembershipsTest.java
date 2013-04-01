@@ -42,6 +42,7 @@ public class SiteMembershipPolicyMembershipsTest
 			null, null, addForbiddenGroups(), null);
 	}
 
+	@Test
 	public void testAddUserToRequiredGroups() throws Exception {
 		long[] requiredGroupIds = addRequiredGroups();
 
@@ -158,7 +159,7 @@ public class SiteMembershipPolicyMembershipsTest
 
 		User user = UserLocalServiceUtil.getUser(userIds[0]);
 
-		List<Group> groups =  user.getGroups();
+		List<Group> groups = user.getGroups();
 
 		Assert.assertEquals(1, groups.size());
 
@@ -169,7 +170,7 @@ public class SiteMembershipPolicyMembershipsTest
 			user, null, null, userGroupIds, null,
 			Collections.<UserGroupRole>emptyList());
 
-		groups =  user.getGroups();
+		groups = user.getGroups();
 
 		Assert.assertEquals(userGroupIds.length, groups.size());
 
@@ -180,7 +181,7 @@ public class SiteMembershipPolicyMembershipsTest
 		// We have removed the user from their personal Group, but the required
 		// Groups are kept
 
-		groups =  user.getGroups();
+		groups = user.getGroups();
 
 		Assert.assertEquals(userGroupIds.length - 1, groups.size());
 	}
@@ -195,7 +196,7 @@ public class SiteMembershipPolicyMembershipsTest
 
 		User user = UserLocalServiceUtil.getUser(userIds[0]);
 
-		List<Group> groups =  user.getGroups();
+		List<Group> groups = user.getGroups();
 
 		Assert.assertEquals(1, groups.size());
 

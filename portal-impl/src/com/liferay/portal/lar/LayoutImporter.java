@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ColorSchemeFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -76,7 +77,6 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
-import com.liferay.portal.model.impl.ColorSchemeImpl;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -550,7 +550,7 @@ public class LayoutImporter {
 			if (importThemeId != null) {
 				themeId = importThemeId;
 				colorSchemeId =
-					ColorSchemeImpl.getDefaultRegularColorSchemeId();
+					ColorSchemeFactoryUtil.getDefaultRegularColorSchemeId();
 			}
 
 			if (_log.isDebugEnabled()) {
@@ -710,10 +710,10 @@ public class LayoutImporter {
 
 			portletElement = portletDocument.getRootElement();
 
-			// The order of the import is important. You must always import
-			// the portlet preferences first, then the portlet data, then
-			// the portlet permissions. The import of the portlet data
-			// assumes that portlet preferences already exist.
+			// The order of the import is important. You must always import the
+			// portlet preferences first, then the portlet data, then the
+			// portlet permissions. The import of the portlet data assumes that
+			// portlet preferences already exist.
 
 			_portletImporter.setPortletScope(
 				portletDataContext, portletElement);

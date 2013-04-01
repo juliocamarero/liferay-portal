@@ -63,10 +63,6 @@ public class DLFileEntryAssetRenderer
 		_type = type;
 	}
 
-	public String getAssetRendererFactoryClassName() {
-		return DLFileEntryAssetRendererFactory.CLASS_NAME;
-	}
-
 	public String getClassName() {
 		return DLFileEntry.class.getName();
 	}
@@ -112,6 +108,24 @@ public class DLFileEntryAssetRenderer
 
 	public String getSummary(Locale locale) {
 		return HtmlUtil.stripHtml(_fileEntry.getDescription());
+	}
+
+	@Override
+	public String getThumbnailPath(PortletRequest portletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String thumbnailSrc = DLUtil.getThumbnailSrc(
+			_fileEntry, null, themeDisplay);
+
+		if (Validator.isNotNull(thumbnailSrc)) {
+			return thumbnailSrc;
+		}
+
+		return themeDisplay.getPathThemeImages() +
+			"/file_system/large/document.png";
 	}
 
 	public String getTitle(Locale locale) {
@@ -253,7 +267,7 @@ public class DLFileEntryAssetRenderer
 					WebKeys.DOCUMENT_LIBRARY_FILE_VERSION, _fileVersion);
 			}
 
-			return "/html/portlet/document_library/asset/file_entry" +
+			return "/html/portlet/document_library/asset/file_entry_" +
 				template + ".jsp";
 		}
 		else {

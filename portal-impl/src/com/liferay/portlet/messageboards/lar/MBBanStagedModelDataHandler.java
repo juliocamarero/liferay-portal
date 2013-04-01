@@ -39,13 +39,11 @@ public class MBBanStagedModelDataHandler
 
 	@Override
 	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, Element[] elements,
-			MBBan ban)
+			PortletDataContext portletDataContext, MBBan ban)
 		throws Exception {
 
-		Element userBansElement = elements[0];
-
-		Element userBanElement = userBansElement.addElement("user-ban");
+		Element userBanElement =
+			portletDataContext.getExportDataStagedModelElement(ban);
 
 		ban.setBanUserUuid(ban.getBanUserUuid());
 
@@ -56,8 +54,7 @@ public class MBBanStagedModelDataHandler
 
 	@Override
 	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, Element element, String path,
-			MBBan ban)
+			PortletDataContext portletDataContext, MBBan ban)
 		throws Exception {
 
 		User user = UserUtil.fetchByUuid_C_First(
@@ -76,7 +73,7 @@ public class MBBanStagedModelDataHandler
 		long userId = portletDataContext.getUserId(ban.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			element, ban, MBPortletDataHandler.NAMESPACE);
+			ban, MBPortletDataHandler.NAMESPACE);
 
 		MBBanLocalServiceUtil.addBan(userId, user.getUserId(), serviceContext);
 	}
