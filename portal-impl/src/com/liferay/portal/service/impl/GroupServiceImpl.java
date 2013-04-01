@@ -14,12 +14,14 @@
 
 package com.liferay.portal.service.impl;
 
+import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UniqueList;
 import com.liferay.portal.model.Group;
@@ -182,6 +184,26 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			getPermissionChecker(), roleId, ActionKeys.UPDATE);
 
 		groupLocalService.addRoleGroups(roleId, groupIds);
+	}
+
+	public void checkRemoteStagingGroup(long groupId)
+		throws PortalException, SystemException {
+
+		Group group = getGroup(groupId);
+
+		PermissionChecker permissionChecker = getPermissionChecker();
+
+		if (group.getCompanyId() != permissionChecker.getCompanyId()) {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append("No Group exists with the key {groupId=");
+			sb.append(groupId);
+			sb.append("} in the Company {companyId=");
+			sb.append(permissionChecker.getCompanyId());
+			sb.append("}");
+
+			throw new NoSuchGroupException(sb.toString());
+		}
 	}
 
 	/**

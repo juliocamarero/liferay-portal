@@ -252,7 +252,8 @@ public class StagingImpl implements Staging {
 		// Ping remote host and verify that the group exists
 
 		try {
-			GroupServiceHttp.getGroup(httpPrincipal, remoteGroupId);
+			GroupServiceHttp.checkRemoteStagingGroup(
+				httpPrincipal, remoteGroupId);
 		}
 		catch (NoSuchGroupException nsge) {
 			RemoteExportException ree = new RemoteExportException(
@@ -2282,7 +2283,8 @@ public class StagingImpl implements Staging {
 		// Ping remote host and verify that the group exists
 
 		try {
-			GroupServiceHttp.getGroup(httpPrincipal, remoteGroupId);
+			GroupServiceHttp.checkRemoteStagingGroup(
+				httpPrincipal, remoteGroupId);
 		}
 		catch (NoSuchGroupException nsge) {
 			RemoteExportException ree = new RemoteExportException(
