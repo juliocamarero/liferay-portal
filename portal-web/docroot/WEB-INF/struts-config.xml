@@ -464,7 +464,11 @@
 
 		<!-- Dockbar -->
 
-		<action path="/dockbar/view" forward="portlet.dockbar.view" />
+		<action path="/dockbar/view" type="com.liferay.portlet.dockbar.action.ViewAction">
+			<forward name="portlet.dockbar.view" path="portlet.dockbar.view" />
+		</action>
+
+		<action path="/dockbar/view_add_content_application" forward="portlet.dockbar.view_add_content_application" />
 
 		<!-- Document Library -->
 

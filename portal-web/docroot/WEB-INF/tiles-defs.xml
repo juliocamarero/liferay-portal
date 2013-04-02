@@ -390,7 +390,13 @@
 
 	<!-- Dockbar -->
 
+	<definition name="portlet.dockbar" extends="portlet" />
+
 	<definition name="portlet.dockbar.view" path="/portlet/dockbar/view.jsp" />
+
+	<definition name="portlet.dockbar.view_add_content_application" extends="portlet.dockbar">
+		<put name="portlet_content" value="/portlet/dockbar/view_add_content_application.jsp" />
+	</definition>
 
 	<!-- Document Library -->
 
