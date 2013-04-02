@@ -33,12 +33,58 @@ public class DLFileRankStagedModelDataHandler
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, DLFileRank fileRank)
 		throws Exception {
+
+		String path = getFileRankPath(portletDataContext, fileRank);
+
+		if (!portletDataContext.isPathNotProcessed(path)) {
+			return;
+		}
+
+		Element fileRankElement = fileRanksElement.addElement("file-rank");
+
+		FileEntry fileEntry = FileEntryUtil.fetchByPrimaryKey(
+			fileRank.getFileEntryId());
+
+		String fileEntryUuid = fileEntry.getUuid();
+
+		fileRankElement.addAttribute("file-entry-uuid", fileEntryUuid);
+
+		portletDataContext.addClassedModel(
+			fileRankElement, path, fileRank, NAMESPACE);
 	}
 
 	@Override
 	protected void doImportStagedModel(
 			PortletDataContext portletDataContext, DLFileRank fileRank)
 		throws Exception {
+
+		long userId = portletDataContext.getUserId(fileRank.getUserUuid());
+
+		long groupId = portletDataContext.getScopeGroupId();
+
+		FileEntry fileEntry = FileEntryUtil.fetchByUUID_R(
+			fileEntryUuid, groupId);
+
+		if (fileEntry == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to retrieve file " + fileEntryUuid +
+						" to import file rank");
+			}
+
+			return;
+		}
+
+		long fileEntryId = fileEntry.getFileEntryId();
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setCreateDate(fileRank.getCreateDate());
+
+		DLAppLocalServiceUtil.updateFileRank(
+			portletDataContext.getScopeGroupId(),
+			portletDataContext.getCompanyId(), userId, fileEntryId,
+			serviceContext);
 	}
 
 }
