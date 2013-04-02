@@ -137,6 +137,15 @@ public class DLFileEntryIndexer extends BaseIndexer {
 			long entryClassPK, String actionId)
 		throws Exception {
 
+		DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getDLFileEntry(
+			entryClassPK);
+
+		if (dlFileEntry.isInHiddenFolder() &&
+			actionId.equals(ActionKeys.VIEW)) {
+
+			return false;
+		}
+
 		return DLFileEntryPermission.contains(
 			permissionChecker, entryClassPK, ActionKeys.VIEW);
 	}
