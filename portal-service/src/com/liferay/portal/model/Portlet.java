@@ -15,6 +15,7 @@
 package com.liferay.portal.model;
 
 import com.liferay.portal.kernel.util.Accessor;
+import com.liferay.portal.model.PersistedModel;
 
 /**
  * The extended model interface for the Portlet service. Represents a row in the &quot;Portlet&quot; database table, with each column mapped to a property of this class.
@@ -977,12 +978,11 @@ public interface Portlet extends PortletModel, PersistedModel {
 	public java.lang.String getTemplateHandlerClass();
 
 	/**
-	* Returns the name of the template handler instance of the portlet.
+	* Returns the template handler instance of the portlet.
 	*
-	* @return the name of the template handler instance of the portlet
+	* @return the template handler instance of the portlet
 	*/
-	public com.liferay.portal.kernel.template.TemplateHandler
-		getTemplateHandlerInstance();
+	public com.liferay.portal.kernel.template.TemplateHandler getTemplateHandlerInstance();
 
 	/**
 	* Returns the timestamp of the portlet.
@@ -2115,11 +2115,11 @@ public interface Portlet extends PortletModel, PersistedModel {
 	public void setSystem(boolean system);
 
 	/**
-	 * Sets the name of the template handler class of the portlet.
-	 *
-	 * @param templateHandlerClass the name of template handler class of the
-	 * portlet
-	 */
+	* Sets the name of the template handler class of the portlet.
+	*
+	* @param templateHandlerClass the name of template handler class of the
+	portlet
+	*/
 	public void setTemplateHandlerClass(java.lang.String templateHandlerClass);
 
 	/**
