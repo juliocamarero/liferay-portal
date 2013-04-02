@@ -16,7 +16,20 @@ package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryUtil;
+
+import java.util.Map;
 
 /**
  * @author Mate Thurzo
@@ -34,23 +47,22 @@ public class DLFileRankStagedModelDataHandler
 			PortletDataContext portletDataContext, DLFileRank fileRank)
 		throws Exception {
 
-		String path = getFileRankPath(portletDataContext, fileRank);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		Element fileRankElement = fileRanksElement.addElement("file-rank");
-
-		FileEntry fileEntry = FileEntryUtil.fetchByPrimaryKey(
+		DLFileEntry fileEntry = DLFileEntryUtil.fetchByPrimaryKey(
 			fileRank.getFileEntryId());
+
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, fileEntry);
+
+		Element fileRankElement =
+			portletDataContext.getExportDataStagedModelElement(fileRank);
 
 		String fileEntryUuid = fileEntry.getUuid();
 
 		fileRankElement.addAttribute("file-entry-uuid", fileEntryUuid);
 
 		portletDataContext.addClassedModel(
-			fileRankElement, path, fileRank, NAMESPACE);
+			fileRankElement, StagedModelPathUtil.getPath(fileRank), fileRank,
+			DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -58,24 +70,37 @@ public class DLFileRankStagedModelDataHandler
 			PortletDataContext portletDataContext, DLFileRank fileRank)
 		throws Exception {
 
+		String fileEntryPath = StagedModelPathUtil.getPath(
+			portletDataContext, DLFileEntry.class.getName(),
+			fileRank.getFileEntryId());
+
+		DLFileEntry fileEntry =
+			(DLFileEntry)portletDataContext.getZipEntryAsObject(fileEntryPath);
+
+		StagedModelDataHandlerUtil.importStagedModel(
+			portletDataContext, fileEntry);
+
 		long userId = portletDataContext.getUserId(fileRank.getUserUuid());
 
 		long groupId = portletDataContext.getScopeGroupId();
 
-		FileEntry fileEntry = FileEntryUtil.fetchByUUID_R(
-			fileEntryUuid, groupId);
+		Element fileRankElement =
+			portletDataContext.getImportDataStagedModelElement(fileRank);
 
-		if (fileEntry == null) {
+		Map<Long, Long> fileEntryIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				DLFileEntry.class);
+
+		long fileEntryId = MapUtil.getLong(
+			fileEntryIds, fileRank.getFileEntryId(), fileRank.getFileEntryId());
+
+		if (DLFileEntryLocalServiceUtil.fetchDLFileEntry(fileEntryId) == null) {
 			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Unable to retrieve file " + fileEntryUuid +
-						" to import file rank");
+				_log.warn("Unable to retrieve file to import file rank");
 			}
 
 			return;
 		}
-
-		long fileEntryId = fileEntry.getFileEntryId();
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -86,5 +111,8 @@ public class DLFileRankStagedModelDataHandler
 			portletDataContext.getCompanyId(), userId, fileEntryId,
 			serviceContext);
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		DLFileRankStagedModelDataHandler.class);
 
 }

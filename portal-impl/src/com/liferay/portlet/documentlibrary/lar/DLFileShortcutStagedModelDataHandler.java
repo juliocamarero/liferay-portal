@@ -16,7 +16,24 @@ package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileShortcutUtil;
+
+import java.util.Map;
 
 /**
  * @author Mate Thurzo
@@ -34,33 +51,29 @@ public class DLFileShortcutStagedModelDataHandler
 			PortletDataContext portletDataContext, DLFileShortcut fileShortcut)
 		throws Exception {
 
-		if (!portletDataContext.isWithinDateRange(
-				fileShortcut.getModifiedDate())) {
+		if (fileShortcut.getFolderId() !=
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
-			return;
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, fileShortcut);
 		}
 
-		exportParentFolder(
-			portletDataContext, fileEntryTypesElement, foldersElement,
-			repositoriesElement, repositoryEntriesElement,
-			fileShortcut.getFolderId());
+		DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getDLFileEntry(
+			fileShortcut.getToFileEntryId());
 
-		String path = getFileShortcutPath(portletDataContext, fileShortcut);
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, fileEntry);
 
-		if (portletDataContext.isPathNotProcessed(path)) {
-			Element fileShortcutElement = fileShortcutsElement.addElement(
-				"file-shortcut");
+		String fileEntryUuid = fileEntry.getUuid();
 
-			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
-				fileShortcut.getToFileEntryId());
+		Element fileShortcutElement =
+			portletDataContext.getExportDataStagedModelElement(fileShortcut);
 
-			String fileEntryUuid = fileEntry.getUuid();
+		fileShortcutElement.addAttribute("file-entry-uuid", fileEntryUuid);
 
-			fileShortcutElement.addAttribute("file-entry-uuid", fileEntryUuid);
-
-			portletDataContext.addClassedModel(
-				fileShortcutElement, path, fileShortcut, NAMESPACE);
-		}
+		portletDataContext.addClassedModel(
+			fileShortcutElement, StagedModelPathUtil.getPath(fileShortcut),
+			fileShortcut, DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -70,12 +83,40 @@ public class DLFileShortcutStagedModelDataHandler
 
 		long userId = portletDataContext.getUserId(fileShortcut.getUserUuid());
 
+		if (fileShortcut.getFolderId() !=
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+
+			String folderPath = StagedModelPathUtil.getPath(
+				portletDataContext, DLFolder.class.getName(),
+				fileShortcut.getFolderId());
+
+			DLFolder dlFolder =
+				(DLFolder)portletDataContext.getZipEntryAsObject(folderPath);
+
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, dlFolder);
+		}
+
 		Map<Long, Long> folderIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 				DLFolder.class);
 
 		long folderId = MapUtil.getLong(
 			folderIds, fileShortcut.getFolderId(), fileShortcut.getFolderId());
+
+		String fileEntryPath = StagedModelPathUtil.getPath(
+			portletDataContext, DLFileEntry.class.getName(),
+			fileShortcut.getToFileEntryId());
+
+		DLFileEntry dlFileEntry =
+			(DLFileEntry)portletDataContext.getZipEntryAsObject(fileEntryPath);
+
+		StagedModelDataHandlerUtil.importStagedModel(
+			portletDataContext, dlFileEntry);
+
+		Map<Long, Long> fileEntryIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				DLFileEntry.class);
 
 		long groupId = portletDataContext.getScopeGroupId();
 
@@ -84,6 +125,9 @@ public class DLFileShortcutStagedModelDataHandler
 
 			groupId = folder.getRepositoryId();
 		}
+
+		Element fileShortcutElement =
+			portletDataContext.getImportDataStagedModelElement(fileShortcut);
 
 		String fileEntryUuid = fileShortcutElement.attributeValue(
 			"file-entry-uuid");
@@ -104,7 +148,7 @@ public class DLFileShortcutStagedModelDataHandler
 		long fileEntryId = fileEntry.getFileEntryId();
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			fileShortcutElement, fileShortcut, NAMESPACE);
+			fileShortcut, DLPortletDataHandler.NAMESPACE);
 
 		DLFileShortcut importedFileShortcut = null;
 
@@ -132,7 +176,10 @@ public class DLFileShortcutStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			fileShortcut, importedFileShortcut, NAMESPACE);
+			fileShortcut, importedFileShortcut, DLPortletDataHandler.NAMESPACE);
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		DLFileShortcutStagedModelDataHandler.class);
 
 }

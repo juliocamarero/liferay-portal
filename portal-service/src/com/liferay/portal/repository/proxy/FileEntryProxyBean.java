@@ -42,6 +42,10 @@ public class FileEntryProxyBean
 		_fileEntry = fileEntry;
 	}
 
+	public Object clone() {
+		return _fileEntry.clone();
+	}
+
 	public boolean containsPermission(
 			PermissionChecker permissionChecker, String actionId)
 		throws PortalException, SystemException {
