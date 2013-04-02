@@ -17,8 +17,8 @@
 <%@ include file="/html/portlet/asset_publisher/init.jsp" %>
 
 <%
-AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_add_content_application.jsp-assetEntry");
-AssetRenderer assetRenderer = (AssetRenderer)request.getAttribute("view_add_content_application.jsp-assetRenderer");
+AssetEntry assetEntry = (AssetEntry)request.getAttribute("add_panel.jsp-assetEntry");
+AssetRenderer assetRenderer = (AssetRenderer)request.getAttribute("add_panel.jsp-assetRenderer");
 
 String shortTitle = StringUtil.shorten(assetRenderer.getTitle(themeDisplay.getLocale()), 60);
 %>
