@@ -33,12 +33,138 @@ public class RepositoryStagedModelDataHandler
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, Repository repository)
 		throws Exception {
+
+		if (!portletDataContext.isWithinDateRange(
+				repository.getModifiedDate())) {
+
+			return;
+		}
+
+		String path = getRepositoryPath(portletDataContext, repository);
+
+		if (!portletDataContext.isPathNotProcessed(path)) {
+			return;
+		}
+
+		Element repositoryElement = repositoriesElement.addElement(
+			"repository");
+
+		Folder folder = DLAppLocalServiceUtil.getFolder(
+			repository.getDlFolderId());
+
+		if (folder.getModel() instanceof DLFolder) {
+			DLFolder dlFolder = (DLFolder)folder.getModel();
+
+			repositoryElement.addAttribute(
+				"hidden", String.valueOf(dlFolder.isHidden()));
+		}
+
+		portletDataContext.addClassedModel(
+			repositoryElement, path, repository, NAMESPACE);
+
+		List<RepositoryEntry> repositoryEntries =
+			RepositoryEntryUtil.findByRepositoryId(
+				repository.getRepositoryId());
+
+		for (RepositoryEntry repositoryEntry : repositoryEntries) {
+			exportRepositoryEntry(
+				portletDataContext, repositoryEntriesElement, repositoryEntry);
+		}
 	}
 
 	@Override
 	protected void doImportStagedModel(
 			PortletDataContext portletDataContext, Repository repository)
 		throws Exception {
+
+		String path = repositoryElement.attributeValue("path");
+
+		if (!portletDataContext.isPathNotProcessed(path)) {
+			return;
+		}
+
+		Repository repository =
+			(Repository)portletDataContext.getZipEntryAsObject(
+				repositoryElement, path);
+
+		long userId = portletDataContext.getUserId(repository.getUserUuid());
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			repositoryElement, repository, NAMESPACE);
+
+		long importedRepositoryId = 0;
+
+		try {
+			boolean hidden = GetterUtil.getBoolean(
+				repositoryElement.attributeValue("hidden"));
+
+			if (portletDataContext.isDataStrategyMirror()) {
+				Repository existingRepository = RepositoryUtil.fetchByUUID_G(
+					repository.getUuid(), portletDataContext.getScopeGroupId());
+
+				if (existingRepository == null) {
+					existingRepository =
+						RepositoryLocalServiceUtil.fetchRepository(
+							portletDataContext.getScopeGroupId(),
+							repository.getName());
+				}
+
+				long classNameId = 0;
+
+				if (existingRepository != null) {
+					classNameId = existingRepository.getClassNameId();
+				}
+
+				if ((existingRepository == null) ||
+					(classNameId !=
+						PortalUtil.getClassNameId(LiferayRepository.class))) {
+
+					serviceContext.setUuid(repository.getUuid());
+
+					importedRepositoryId =
+						RepositoryLocalServiceUtil.addRepository(
+							userId, portletDataContext.getScopeGroupId(),
+							repository.getClassNameId(),
+							DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+							repository.getName(), repository.getDescription(),
+							repository.getPortletId(),
+							repository.getTypeSettingsProperties(), hidden,
+							serviceContext);
+				}
+				else {
+					RepositoryLocalServiceUtil.updateRepository(
+						existingRepository.getRepositoryId(),
+						repository.getName(), repository.getDescription());
+
+					importedRepositoryId = existingRepository.getRepositoryId();
+				}
+			}
+			else {
+				importedRepositoryId = RepositoryLocalServiceUtil.addRepository(
+					userId, portletDataContext.getScopeGroupId(),
+					repository.getClassNameId(),
+					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+					repository.getName(), repository.getDescription(),
+					repository.getPortletId(),
+					repository.getTypeSettingsProperties(), hidden,
+					serviceContext);
+			}
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to connect to repository {name=" +
+						repository.getName() + ", typeSettings=" +
+						repository.getTypeSettingsProperties() + "}",
+					e);
+			}
+		}
+
+		Repository importedRepository =
+			RepositoryLocalServiceUtil.getRepository(importedRepositoryId);
+
+		portletDataContext.importClassedModel(
+			repository, importedRepository, NAMESPACE);
 	}
 
 }

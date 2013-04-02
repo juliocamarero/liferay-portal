@@ -33,12 +33,106 @@ public class DLFileShortcutStagedModelDataHandler
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, DLFileShortcut fileShortcut)
 		throws Exception {
+
+		if (!portletDataContext.isWithinDateRange(
+				fileShortcut.getModifiedDate())) {
+
+			return;
+		}
+
+		exportParentFolder(
+			portletDataContext, fileEntryTypesElement, foldersElement,
+			repositoriesElement, repositoryEntriesElement,
+			fileShortcut.getFolderId());
+
+		String path = getFileShortcutPath(portletDataContext, fileShortcut);
+
+		if (portletDataContext.isPathNotProcessed(path)) {
+			Element fileShortcutElement = fileShortcutsElement.addElement(
+				"file-shortcut");
+
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
+				fileShortcut.getToFileEntryId());
+
+			String fileEntryUuid = fileEntry.getUuid();
+
+			fileShortcutElement.addAttribute("file-entry-uuid", fileEntryUuid);
+
+			portletDataContext.addClassedModel(
+				fileShortcutElement, path, fileShortcut, NAMESPACE);
+		}
 	}
 
 	@Override
 	protected void doImportStagedModel(
 			PortletDataContext portletDataContext, DLFileShortcut fileShortcut)
 		throws Exception {
+
+		long userId = portletDataContext.getUserId(fileShortcut.getUserUuid());
+
+		Map<Long, Long> folderIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				DLFolder.class);
+
+		long folderId = MapUtil.getLong(
+			folderIds, fileShortcut.getFolderId(), fileShortcut.getFolderId());
+
+		long groupId = portletDataContext.getScopeGroupId();
+
+		if (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			Folder folder = FolderUtil.findByPrimaryKey(folderId);
+
+			groupId = folder.getRepositoryId();
+		}
+
+		String fileEntryUuid = fileShortcutElement.attributeValue(
+			"file-entry-uuid");
+
+		FileEntry fileEntry = FileEntryUtil.fetchByUUID_R(
+			fileEntryUuid, groupId);
+
+		if (fileEntry == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to fetch file entry {uuid=" + fileEntryUuid +
+						", groupId=" + groupId + "}");
+			}
+
+			return;
+		}
+
+		long fileEntryId = fileEntry.getFileEntryId();
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			fileShortcutElement, fileShortcut, NAMESPACE);
+
+		DLFileShortcut importedFileShortcut = null;
+
+		if (portletDataContext.isDataStrategyMirror()) {
+			DLFileShortcut existingFileShortcut =
+				DLFileShortcutUtil.fetchByUUID_G(
+					fileShortcut.getUuid(),
+					portletDataContext.getScopeGroupId());
+
+			if (existingFileShortcut == null) {
+				serviceContext.setUuid(fileShortcut.getUuid());
+
+				importedFileShortcut = DLAppLocalServiceUtil.addFileShortcut(
+					userId, groupId, folderId, fileEntryId, serviceContext);
+			}
+			else {
+				importedFileShortcut = DLAppLocalServiceUtil.updateFileShortcut(
+					userId, existingFileShortcut.getFileShortcutId(), folderId,
+					fileEntryId, serviceContext);
+			}
+		}
+		else {
+			importedFileShortcut = DLAppLocalServiceUtil.addFileShortcut(
+				userId, groupId, folderId, fileEntryId, serviceContext);
+		}
+
+		portletDataContext.importClassedModel(
+			fileShortcut, importedFileShortcut, NAMESPACE);
 	}
 
 }
