@@ -14,34 +14,37 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Repository;
-import com.liferay.portal.model.RepositoryEntry;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeServiceUtil;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileShortcutUtil;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryActionableDynamicQuery;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryTypeActionableDynamicQuery;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileShortcutActionableDynamicQuery;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFolderActionableDynamicQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -52,40 +55,11 @@ import javax.portlet.PortletPreferences;
  * @author Bruno Farache
  * @author Raymond Augé
  * @author Sampsa Sohlman
+ * @author Mate Thurzo
  */
 public class DLPortletDataHandler extends BasePortletDataHandler {
 
 	public static final String NAMESPACE = "document_library";
-
-	public static String getFileEntryPath(
-		PortletDataContext portletDataContext, FileEntry fileEntry) {
-
-		StringBundler sb = new StringBundler(6);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/file-entries/");
-		sb.append(fileEntry.getFileEntryId());
-		sb.append(StringPool.SLASH);
-		sb.append(fileEntry.getVersion());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	public static String getRepositoryEntryPath(
-		PortletDataContext portletDataContext, long repositoryEntryId) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/repository-entries/");
-		sb.append(repositoryEntryId);
-		sb.append(".xml");
-
-		return sb.toString();
-	}
 
 	public DLPortletDataHandler() {
 		setAlwaysExportable(true);
@@ -109,140 +83,6 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		setPublishToLiveByDefault(PropsValues.DL_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
 
-	protected static String getFileEntryBinPath(
-		PortletDataContext portletDataContext, FileEntry fileEntry) {
-
-		StringBundler sb = new StringBundler(5);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/bin/");
-		sb.append(fileEntry.getFileEntryId());
-		sb.append(StringPool.SLASH);
-		sb.append(fileEntry.getVersion());
-
-		return sb.toString();
-	}
-
-	protected static String getFileEntryFileEntryTypeStructureFieldsPath(
-		PortletDataContext portletDataContext, FileEntry fileEntry,
-		String fileEntryTypeUuid, long structureId) {
-
-		StringBundler sb = new StringBundler(4);
-
-		String fileEntryPath = getFileEntryPath(portletDataContext, fileEntry);
-
-		sb.append(StringUtil.replace(fileEntryPath, ".xml", StringPool.BLANK));
-		sb.append("/file-entry-type/");
-		sb.append(fileEntryTypeUuid);
-		sb.append("/structure-fields/");
-		sb.append(structureId);
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected static String getFileEntryTypePath(
-		PortletDataContext portletDataContext,
-		DLFileEntryType dlFileEntryType) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/entry-types/");
-		sb.append(dlFileEntryType.getFileEntryTypeId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected static String getFileRankPath(
-		PortletDataContext portletDataContext, DLFileRank fileRank) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/ranks/");
-		sb.append(fileRank.getFileRankId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected static String getFileShortcutPath(
-		PortletDataContext portletDataContext, DLFileShortcut fileShortcut) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/shortcuts/");
-		sb.append(fileShortcut.getFileShortcutId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected static String getFolderPath(
-		PortletDataContext portletDataContext, Folder folder) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/folders/");
-		sb.append(folder.getFolderId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected static String getImportFolderPath(
-		PortletDataContext portletDataContext, long folderId) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getSourcePortletPath(
-				PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/folders/");
-		sb.append(folderId);
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected static String getRepositoryEntryPath(
-		PortletDataContext portletDataContext,
-		RepositoryEntry repositoryEntry) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/repository-entries/");
-		sb.append(repositoryEntry.getRepositoryEntryId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected static String getRepositoryPath(
-		PortletDataContext portletDataContext, Repository repository) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			portletDataContext.getPortletPath(PortletKeys.DOCUMENT_LIBRARY));
-		sb.append("/repositories/");
-		sb.append(repository.getRepositoryId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
 	@Override
 	protected PortletPreferences doDeleteData(
 			PortletDataContext portletDataContext, String portletId,
@@ -262,7 +102,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 
 	@Override
 	protected String doExportData(
-			PortletDataContext portletDataContext, String portletId,
+			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
@@ -283,68 +123,121 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				"root-folder-id", String.valueOf(rootFolderId));
 		}
 
-		Element fileEntryTypesElement = rootElement.addElement(
-			"file-entry-types");
-		Element foldersElement = rootElement.addElement("folders");
-		Element fileEntriesElement = rootElement.addElement("file-entries");
-		Element fileShortcutsElement = rootElement.addElement("file-shortcuts");
-		Element fileRanksElement = rootElement.addElement("file-ranks");
-		Element repositoriesElement = rootElement.addElement("repositories");
-		Element repositoryEntriesElement = rootElement.addElement(
-			"repository-entries");
-
-		Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+		final Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 			portletDataContext.getCompanyId());
 
-		List<DLFileEntryType> dlFileEntryTypes =
-			DLFileEntryTypeServiceUtil.getFileEntryTypes(
-				new long[] {
+		ActionableDynamicQuery fileEntryTypeActionableDynamicQuery =
+			new DLFileEntryTypeActionableDynamicQuery() {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
+
+				Property property = PropertyFactoryUtil.forName("groupId");
+
+				Object[] fileEntryTypesGroups = new Object[] {
 					portletDataContext.getScopeGroupId(),
 					companyGroup.getGroupId()
-				});
+				};
 
-		for (DLFileEntryType dlFileEntryType : dlFileEntryTypes) {
-			if (!dlFileEntryType.isExportable()) {
-				continue;
+				dynamicQuery.add(
+					property.in(ListUtil.fromArray(fileEntryTypesGroups)));
 			}
 
-			exportFileEntryType(
-				portletDataContext, fileEntryTypesElement, dlFileEntryType);
-		}
+			@Override
+			protected void performAction(Object object) throws PortalException {
+				DLFileEntryType fileEntryType = (DLFileEntryType)object;
 
-		List<Folder> folders = FolderUtil.findByRepositoryId(
+				if (fileEntryType.isExportable()) {
+					StagedModelDataHandlerUtil.exportStagedModel(
+						portletDataContext, fileEntryType);
+				}
+			}
+
+		};
+
+		fileEntryTypeActionableDynamicQuery.performActions();
+
+		ActionableDynamicQuery folderActionableDynamicQuery =
+			new DLFolderActionableDynamicQuery() {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
+			}
+
+			@Override
+			protected void performAction(Object object) throws PortalException {
+				DLFolder folder = (DLFolder)object;
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, folder);
+			}
+
+		};
+
+		folderActionableDynamicQuery.setGroupId(
 			portletDataContext.getScopeGroupId());
 
-		for (Folder folder : folders) {
-			exportFolder(
-				portletDataContext, fileEntryTypesElement, foldersElement,
-				fileEntriesElement, fileShortcutsElement, fileRanksElement,
-				repositoriesElement, repositoryEntriesElement, folder, false);
-		}
+		folderActionableDynamicQuery.performActions();
 
-		List<FileEntry> fileEntries = FileEntryUtil.findByR_F(
-			portletDataContext.getScopeGroupId(),
-			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+		ActionableDynamicQuery fileEntryActionableDynamicQuery =
+			new DLFileEntryActionableDynamicQuery() {
 
-		for (FileEntry fileEntry : fileEntries) {
-			exportFileEntry(
-				portletDataContext, fileEntryTypesElement, foldersElement,
-				fileEntriesElement, fileRanksElement, repositoriesElement,
-				repositoryEntriesElement, fileEntry, true);
-		}
-
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {
-			List<DLFileShortcut> fileShortcuts = DLFileShortcutUtil.findByG_F_A(
-				portletDataContext.getScopeGroupId(),
-				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, true);
-
-			for (DLFileShortcut fileShortcut : fileShortcuts) {
-				exportFileShortcut(
-					portletDataContext, fileEntryTypesElement, foldersElement,
-					fileShortcutsElement, repositoriesElement,
-					repositoryEntriesElement, fileShortcut);
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
 			}
+
+			@Override
+			protected void performAction(Object object) throws PortalException {
+				DLFileEntry fileEntry = (DLFileEntry)object;
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, fileEntry);
+			}
+
+		};
+
+		fileEntryActionableDynamicQuery.setGroupId(
+			portletDataContext.getScopeGroupId());
+
+		fileEntryActionableDynamicQuery.performActions();
+
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {
+			return getExportDataRootElementString(rootElement);
 		}
+
+		ActionableDynamicQuery fileShortcutActionableDynamicQuery =
+			new DLFileShortcutActionableDynamicQuery() {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
+
+				Property property = PropertyFactoryUtil.forName("active");
+
+				dynamicQuery.add(property.eq(Boolean.TRUE));
+			}
+
+				@Override
+			protected void performAction(Object object) throws PortalException {
+				DLFileShortcut fileShortcut = (DLFileShortcut)object;
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, fileShortcut);
+			}
+
+		};
+
+		fileShortcutActionableDynamicQuery.setGroupId(
+			portletDataContext.getScopeGroupId());
+
+		fileShortcutActionableDynamicQuery.performActions();
 
 		return getExportDataRootElementString(rootElement);
 	}
@@ -360,74 +253,73 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = portletDataContext.getImportDataRootElement();
+		Element repositoriesElement =
+			portletDataContext.getImportDataGroupElement(Repository.class);
 
-		Element repositoriesElement = rootElement.element("repositories");
+		List<Element> repositoryElements = repositoriesElement.elements();
 
-		if (repositoriesElement != null) {
-			List<Element> repositoryElements = repositoriesElement.elements(
-				"repository");
-
-			for (Element repositoryElement : repositoryElements) {
-				importRepository(portletDataContext, repositoryElement);
-			}
+		for (Element repositoryElement : repositoryElements) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, repositoryElement);
 		}
 
-		Element repositoryEntriesElement = rootElement.element(
-			"repository-entries");
+		Element fileEntryTypesElement =
+			portletDataContext.getImportDataGroupElement(DLFileEntryType.class);
 
-		List<Element> repositoryEntryElements =
-			repositoryEntriesElement.elements("repository-entry");
-
-		for (Element repositoryEntryElement : repositoryEntryElements) {
-			importRepositoryEntry(portletDataContext, repositoryEntryElement);
-		}
-
-		Element fileEntryTypesElement = rootElement.element("file-entry-types");
-
-		List<Element> fileEntryTypeElements = fileEntryTypesElement.elements(
-			"file-entry-type");
+		List<Element> fileEntryTypeElements = fileEntryTypesElement.elements();
 
 		for (Element fileEntryTypeElement : fileEntryTypeElements) {
-			importFileEntryType(portletDataContext, fileEntryTypeElement);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, fileEntryTypeElement);
 		}
 
-		Element foldersElement = rootElement.element("folders");
+		Element foldersElement = portletDataContext.getImportDataGroupElement(
+			DLFolder.class);
 
-		List<Element> folderElements = foldersElement.elements("folder");
+		List<Element> folderElements = foldersElement.elements();
 
 		for (Element folderElement : folderElements) {
-			importFolder(portletDataContext, folderElement);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, folderElement);
 		}
 
-		Element fileEntriesElement = rootElement.element("file-entries");
+		Element fileEntriesElement =
+			portletDataContext.getImportDataGroupElement(DLFileEntry.class);
 
-		List<Element> fileEntryElements = fileEntriesElement.elements(
-			"file-entry");
+		List<Element> fileEntryElements = fileEntriesElement.elements();
 
 		for (Element fileEntryElement : fileEntryElements) {
-			importFileEntry(portletDataContext, fileEntryElement);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, fileEntryElement);
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {
-			List<Element> fileShortcutElements = rootElement.element(
-				"file-shortcuts").elements("file-shortcut");
+			Element fileShortcutsElement =
+				portletDataContext.getImportDataGroupElement(
+					DLFileShortcut.class);
+
+			List<Element> fileShortcutElements =
+				fileShortcutsElement.elements();
 
 			for (Element fileShortcutElement : fileShortcutElements) {
-				importFileShortcut(portletDataContext, fileShortcutElement);
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, fileShortcutElement);
 			}
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "ranks")) {
-			Element fileRanksElement = rootElement.element("file-ranks");
+			Element fileRanksElement =
+				portletDataContext.getImportDataGroupElement(DLFileRank.class);
 
-			List<Element> fileRankElements = fileRanksElement.elements(
-				"file-rank");
+			List<Element> fileRankElements = fileRanksElement.elements();
 
 			for (Element fileRankElement : fileRankElements) {
-				importFileRank(portletDataContext, fileRankElement);
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, fileRankElement);
 			}
 		}
+
+		Element rootElement = portletDataContext.getImportDataRootElement();
 
 		long rootFolderId = GetterUtil.getLong(
 			rootElement.attributeValue("root-folder-id"));

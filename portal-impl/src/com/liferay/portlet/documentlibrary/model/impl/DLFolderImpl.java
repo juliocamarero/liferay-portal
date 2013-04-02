@@ -88,6 +88,24 @@ public class DLFolderImpl extends DLFolderBaseImpl {
 		return ancestors;
 	}
 
+	public List<Long> getDescendantFolderIds()
+		throws PortalException, SystemException {
+
+		List<Long> descendantFolderIds = new ArrayList<Long>();
+
+		DLFolder folder = this;
+
+		List<DLFolder> descendantFolders = DLFolderLocalServiceUtil.getFolders(
+			folder.getGroupId(), folder.getFolderId());
+
+		for (DLFolder descendantFolder : descendantFolders) {
+			descendantFolderIds.addAll(
+				descendantFolder.getDescendantFolderIds());
+		}
+
+		return descendantFolderIds;
+	}
+
 	public DLFolder getParentFolder() throws PortalException, SystemException {
 		if (getParentFolderId() == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 			return null;

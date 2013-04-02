@@ -16,7 +16,30 @@ package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
+import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryTypeUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mate Thurzo
@@ -29,14 +52,120 @@ public class DLFolderStagedModelDataHandler
 		return DLFolder.class.getName();
 	}
 
-	protected static void exportFolderFileEntryTypes(
+	@Override
+	protected void doExportStagedModel(
+			PortletDataContext portletDataContext, DLFolder dlFolder)
+		throws Exception {
+
+		Folder folder = DLAppLocalServiceUtil.getFolder(dlFolder.getFolderId());
+
+		if (dlFolder.getParentFolderId() !=
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, dlFolder.getParentFolder());
+		}
+
+		Element folderElement =
+			portletDataContext.getExportDataStagedModelElement(dlFolder);
+
+		exportFolderFileEntryTypes(portletDataContext, folder, folderElement);
+
+		portletDataContext.addClassedModel(
+				folderElement, StagedModelPathUtil.getPath(dlFolder), dlFolder,
+				DLPortletDataHandler.NAMESPACE);
+	}
+
+	@Override
+	protected void doImportStagedModel(
+			PortletDataContext portletDataContext, DLFolder folder)
+		throws Exception {
+
+		long userId = portletDataContext.getUserId(folder.getUserUuid());
+
+		if (folder.getParentFolderId() !=
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+
+			String parentFolderPath = StagedModelPathUtil.getPath(
+				portletDataContext, DLFolder.class.getName(),
+				folder.getParentFolderId());
+
+			DLFolder parentFolder =
+				(DLFolder)portletDataContext.getZipEntryAsObject(
+					parentFolderPath);
+
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, parentFolder);
+		}
+
+		Map<Long, Long> folderIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				DLFolder.class);
+
+		long parentFolderId = MapUtil.getLong(
+			folderIds, folder.getParentFolderId(), folder.getParentFolderId());
+
+		ServiceContext serviceContext = portletDataContext.createServiceContext(
+			folder, DLPortletDataHandler.NAMESPACE);
+
+		Folder importedFolder = null;
+
+		if (portletDataContext.isDataStrategyMirror()) {
+			Folder existingFolder = FolderUtil.fetchByUUID_R(
+				folder.getUuid(), portletDataContext.getScopeGroupId());
+
+			if (existingFolder == null) {
+				String name = getFolderName(
+					null, portletDataContext.getScopeGroupId(), parentFolderId,
+					folder.getName(), 2);
+
+				serviceContext.setUuid(folder.getUuid());
+
+				importedFolder = DLAppLocalServiceUtil.addFolder(
+					userId, portletDataContext.getScopeGroupId(),
+					parentFolderId, name, folder.getDescription(),
+					serviceContext);
+			}
+			else {
+				String name = getFolderName(
+					folder.getUuid(), portletDataContext.getScopeGroupId(),
+					parentFolderId, folder.getName(), 2);
+
+				importedFolder = DLAppLocalServiceUtil.updateFolder(
+					existingFolder.getFolderId(), parentFolderId, name,
+					folder.getDescription(), serviceContext);
+			}
+		}
+		else {
+			String name = getFolderName(
+				null, portletDataContext.getScopeGroupId(), parentFolderId,
+				folder.getName(), 2);
+
+			importedFolder = DLAppLocalServiceUtil.addFolder(
+				userId, portletDataContext.getScopeGroupId(), parentFolderId,
+				name, folder.getDescription(), serviceContext);
+		}
+
+		folderIds.put(folder.getFolderId(), importedFolder.getFolderId());
+
+		Element folderElement =
+			portletDataContext.getImportDataStagedModelElement(folder);
+
+		importFolderFileEntryTypes(
+			portletDataContext, folderElement, importedFolder, serviceContext);
+
+		portletDataContext.importClassedModel(
+			folder, importedFolder, DLPortletDataHandler.NAMESPACE);
+	}
+
+	protected void exportFolderFileEntryTypes(
 			PortletDataContext portletDataContext, Folder folder,
-			Element fileEntryTypesElement, Element folderElement)
+			Element folderElement)
 		throws Exception {
 
 		List<DLFileEntryType> dlFileEntryTypes =
 			DLFileEntryTypeLocalServiceUtil.getFolderFileEntryTypes(
-				new long[] {portletDataContext.getScopeGroupId()},
+				new long[]{portletDataContext.getScopeGroupId()},
 				folder.getFolderId(), false);
 
 		String[] fileEntryTypeUuids = new String[dlFileEntryTypes.size()];
@@ -67,13 +196,19 @@ public class DLFolderStagedModelDataHandler
 			}
 
 			if (dlFileEntryType.isExportable()) {
-				exportFileEntryType(
-					portletDataContext, fileEntryTypesElement, dlFileEntryType);
+				Element refElement = folderElement.addElement("ref");
+
+				refElement.addAttribute(
+					"className", DLFileEntryType.class.getName());
+				refElement.addAttribute(
+					"classPk",
+					String.valueOf(dlFileEntryType.getFileEntryTypeId()));
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, dlFileEntryType);
 			}
 		}
 
-		folderElement.addAttribute(
-			"fileEntryTypeUuids", StringUtil.merge(fileEntryTypeUuids));
 		folderElement.addAttribute(
 			"defaultFileEntryTypeUuid", defaultFileEntryTypeUuid);
 	}
@@ -84,7 +219,7 @@ public class DLFolderStagedModelDataHandler
 	 * @see com.liferay.portal.lar.PortletImporter#getAssetVocabularyName(
 	 *      String, long, String, int)
 	 */
-	protected static String getFolderName(
+	protected String getFolderName(
 			String uuid, long groupId, long parentFolderId, String name,
 			int count)
 		throws Exception {
@@ -104,13 +239,10 @@ public class DLFolderStagedModelDataHandler
 		return getFolderName(uuid, groupId, parentFolderId, name, ++count);
 	}
 
-	protected static void importFolderFileEntryTypes(
+	protected void importFolderFileEntryTypes(
 			PortletDataContext portletDataContext, Element folderElement,
 			Folder folder, ServiceContext serviceContext)
 		throws Exception {
-
-		String[] fileEntryTypeUuids = StringUtil.split(
-			folderElement.attributeValue("fileEntryTypeUuids"));
 
 		List<Long> fileEntryTypeIds = new ArrayList<Long>();
 
@@ -119,7 +251,20 @@ public class DLFolderStagedModelDataHandler
 
 		long defaultFileEntryTypeId = 0;
 
-		for (String fileEntryTypeUuid : fileEntryTypeUuids) {
+		List<Element> referencedElements = folderElement.elements("ref");
+
+		for (Element referencedElement : referencedElements) {
+			String referencedPath = StagedModelPathUtil.getPath(
+				portletDataContext,
+				referencedElement.attributeValue("className"),
+				Long.valueOf(referencedElement.attributeValue("classPk")));
+
+			DLFileEntryType referencedFileEntryType =
+				(DLFileEntryType)portletDataContext.getZipEntryAsObject(
+					referencedPath);
+
+			String fileEntryTypeUuid = referencedFileEntryType.getUuid();
+
 			DLFileEntryType dlFileEntryType = DLFileEntryTypeUtil.fetchByUUID_G(
 				fileEntryTypeUuid, portletDataContext.getScopeGroupId());
 
@@ -162,168 +307,5 @@ public class DLFolderStagedModelDataHandler
 				serviceContext);
 		}
 	}
-
-	@Override
-	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, DLFolder folder)
-		throws Exception {
-
-		if (!portletDataContext.isWithinDateRange(folder.getLastPostDate())) {
-			return;
-		}
-
-		if (folder.isMountPoint()) {
-			Repository repository = RepositoryUtil.findByPrimaryKey(
-				folder.getRepositoryId());
-
-			exportRepository(
-				portletDataContext, repositoriesElement,
-				repositoryEntriesElement, repository);
-
-			return;
-		}
-		else if (!folder.isDefaultRepository()) {
-
-			// No need to export non-Liferay repository items since they would
-			// be exported as part of repository export
-
-			return;
-		}
-
-		exportParentFolder(
-			portletDataContext, fileEntryTypesElement, foldersElement,
-			repositoriesElement, repositoryEntriesElement,
-			folder.getParentFolderId());
-
-		String path = getFolderPath(portletDataContext, folder);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		Element folderElement = foldersElement.addElement("folder");
-
-		exportFolderFileEntryTypes(
-			portletDataContext, folder, fileEntryTypesElement, folderElement);
-
-		portletDataContext.addClassedModel(
-			folderElement, path, folder, NAMESPACE);
-
-		if (recurse) {
-			List<Folder> folders = FolderUtil.findByR_P(
-				folder.getRepositoryId(), folder.getFolderId());
-
-			for (Folder curFolder : folders) {
-				exportFolder(
-					portletDataContext, fileEntryTypesElement, foldersElement,
-					fileEntriesElement, fileShortcutsElement, fileRanksElement,
-					repositoriesElement, repositoryEntriesElement, curFolder,
-					recurse);
-			}
-		}
-
-		List<FileEntry> fileEntries = FileEntryUtil.findByR_F(
-			folder.getRepositoryId(), folder.getFolderId());
-
-		for (FileEntry fileEntry : fileEntries) {
-			exportFileEntry(
-				portletDataContext, fileEntryTypesElement, foldersElement,
-				fileEntriesElement, fileRanksElement, repositoriesElement,
-				repositoryEntriesElement, fileEntry, true);
-		}
-
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {
-			List<DLFileShortcut> fileShortcuts = DLFileShortcutUtil.findByG_F_A(
-				folder.getRepositoryId(), folder.getFolderId(), true);
-
-			for (DLFileShortcut fileShortcut : fileShortcuts) {
-				exportFileShortcut(
-					portletDataContext, fileEntryTypesElement, foldersElement,
-					fileShortcutsElement, repositoriesElement,
-					repositoryEntriesElement, fileShortcut);
-			}
-		}
-	}
-
-	@Override
-	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, DLFolder folder)
-		throws Exception {
-
-		long userId = portletDataContext.getUserId(folder.getUserUuid());
-
-		Map<Long, Long> folderIds =
-			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
-				DLFolder.class);
-
-		long parentFolderId = MapUtil.getLong(
-			folderIds, folder.getParentFolderId(), folder.getParentFolderId());
-
-		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			folderPath, folder, NAMESPACE);
-
-		if ((parentFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) &&
-			(parentFolderId == folder.getParentFolderId())) {
-
-			String path = getImportFolderPath(
-				portletDataContext, parentFolderId);
-
-			Folder parentFolder =
-				(Folder)portletDataContext.getZipEntryAsObject(path);
-
-			importFolder(portletDataContext, path, folderElement, parentFolder);
-
-			parentFolderId = MapUtil.getLong(
-				folderIds, folder.getParentFolderId(),
-				folder.getParentFolderId());
-		}
-
-		Folder importedFolder = null;
-
-		if (portletDataContext.isDataStrategyMirror()) {
-			Folder existingFolder = FolderUtil.fetchByUUID_R(
-				folder.getUuid(), portletDataContext.getScopeGroupId());
-
-			if (existingFolder == null) {
-				String name = getFolderName(
-					null, portletDataContext.getScopeGroupId(), parentFolderId,
-					folder.getName(), 2);
-
-				serviceContext.setUuid(folder.getUuid());
-
-				importedFolder = DLAppLocalServiceUtil.addFolder(
-					userId, portletDataContext.getScopeGroupId(),
-					parentFolderId, name, folder.getDescription(),
-					serviceContext);
-			}
-			else {
-				String name = getFolderName(
-					folder.getUuid(), portletDataContext.getScopeGroupId(),
-					parentFolderId, folder.getName(), 2);
-
-				importedFolder = DLAppLocalServiceUtil.updateFolder(
-					existingFolder.getFolderId(), parentFolderId, name,
-					folder.getDescription(), serviceContext);
-			}
-		}
-		else {
-			String name = getFolderName(
-				null, portletDataContext.getScopeGroupId(), parentFolderId,
-				folder.getName(), 2);
-
-			importedFolder = DLAppLocalServiceUtil.addFolder(
-				userId, portletDataContext.getScopeGroupId(), parentFolderId,
-				name, folder.getDescription(), serviceContext);
-		}
-
-		folderIds.put(folder.getFolderId(), importedFolder.getFolderId());
-
-		importFolderFileEntryTypes(
-			portletDataContext, folderElement, importedFolder, serviceContext);
-
-		portletDataContext.importClassedModel(
-			folder, importedFolder, NAMESPACE);
-	}
-
 
 }

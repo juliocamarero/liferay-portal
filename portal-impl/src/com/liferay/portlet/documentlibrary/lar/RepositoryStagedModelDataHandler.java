@@ -16,7 +16,27 @@ package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelPathUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Repository;
+import com.liferay.portal.model.RepositoryEntry;
+import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.repository.liferayrepository.LiferayRepository;
+import com.liferay.portal.service.RepositoryLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.persistence.RepositoryEntryUtil;
+import com.liferay.portal.service.persistence.RepositoryUtil;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+
+import java.util.List;
 
 /**
  * @author Mate Thurzo
@@ -34,20 +54,8 @@ public class RepositoryStagedModelDataHandler
 			PortletDataContext portletDataContext, Repository repository)
 		throws Exception {
 
-		if (!portletDataContext.isWithinDateRange(
-				repository.getModifiedDate())) {
-
-			return;
-		}
-
-		String path = getRepositoryPath(portletDataContext, repository);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		Element repositoryElement = repositoriesElement.addElement(
-			"repository");
+		Element repositoryElement =
+			portletDataContext.getExportDataStagedModelElement(repository);
 
 		Folder folder = DLAppLocalServiceUtil.getFolder(
 			repository.getDlFolderId());
@@ -60,15 +68,24 @@ public class RepositoryStagedModelDataHandler
 		}
 
 		portletDataContext.addClassedModel(
-			repositoryElement, path, repository, NAMESPACE);
+			repositoryElement, StagedModelPathUtil.getPath(repository),
+			repository, DLPortletDataHandler.NAMESPACE);
 
 		List<RepositoryEntry> repositoryEntries =
 			RepositoryEntryUtil.findByRepositoryId(
 				repository.getRepositoryId());
 
 		for (RepositoryEntry repositoryEntry : repositoryEntries) {
-			exportRepositoryEntry(
-				portletDataContext, repositoryEntriesElement, repositoryEntry);
+			Element refElement = repositoryElement.addElement("ref");
+
+			refElement.addAttribute(
+				"className", RepositoryEntry.class.getName());
+			refElement.addAttribute(
+				"classPk",
+				String.valueOf(repositoryEntry.getRepositoryEntryId()));
+
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, repositoryEntry);
 		}
 	}
 
@@ -77,22 +94,15 @@ public class RepositoryStagedModelDataHandler
 			PortletDataContext portletDataContext, Repository repository)
 		throws Exception {
 
-		String path = repositoryElement.attributeValue("path");
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		Repository repository =
-			(Repository)portletDataContext.getZipEntryAsObject(
-				repositoryElement, path);
-
 		long userId = portletDataContext.getUserId(repository.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			repositoryElement, repository, NAMESPACE);
+			repository, DLPortletDataHandler.NAMESPACE);
 
 		long importedRepositoryId = 0;
+
+		Element repositoryElement =
+			portletDataContext.getImportDataStagedModelElement(repository);
 
 		try {
 			boolean hidden = GetterUtil.getBoolean(
@@ -164,7 +174,28 @@ public class RepositoryStagedModelDataHandler
 			RepositoryLocalServiceUtil.getRepository(importedRepositoryId);
 
 		portletDataContext.importClassedModel(
-			repository, importedRepository, NAMESPACE);
+			repository, importedRepository, DLPortletDataHandler.NAMESPACE);
+
+		// Repository Entries
+
+		List<Element> referencedElements = repositoryElement.elements("ref");
+
+		for (Element referencedElement : referencedElements) {
+			String referencedPath = StagedModelPathUtil.getPath(
+				portletDataContext,
+				referencedElement.attributeValue("className"),
+				Long.valueOf(referencedElement.attributeValue("classPK")));
+
+			StagedModel referencedStagedModel =
+				(StagedModel)portletDataContext.getZipEntryAsObject(
+					referencedPath);
+
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, referencedStagedModel);
+		}
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		RepositoryStagedModelDataHandler.class);
 
 }
