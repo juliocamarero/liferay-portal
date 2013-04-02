@@ -27,13 +27,11 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.RepositoryEntry;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.persistence.RepositoryUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
@@ -43,9 +41,7 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeServiceUtil;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryTypeUtil;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFileShortcutUtil;
-import com.liferay.portlet.documentlibrary.util.DLProcessorThreadLocal;
 
 import java.util.List;
 import java.util.Map;
@@ -89,28 +85,6 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		sb.append(".xml");
 
 		return sb.toString();
-	}
-
-	public static void importFileEntry(
-			PortletDataContext portletDataContext, Element fileEntryElement)
-		throws Exception {
-
-		String path = fileEntryElement.attributeValue("path");
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		boolean dlProcessorEnabled = DLProcessorThreadLocal.isEnabled();
-
-		try {
-			DLProcessorThreadLocal.setEnabled(false);
-
-			importFileEntry(portletDataContext, fileEntryElement, path);
-		}
-		finally {
-			DLProcessorThreadLocal.setEnabled(dlProcessorEnabled);
-		}
 	}
 
 	public DLPortletDataHandler() {
