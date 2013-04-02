@@ -2280,7 +2280,8 @@ public class StagingImpl implements Staging {
 			url, user.getEmailAddress(), user.getPassword(),
 			user.getPasswordEncrypted());
 
-		// Ping remote host and verify that the group exists
+		// Ping remote host and verify that the group exists in the same company
+		// as the remote user
 
 		try {
 			GroupServiceHttp.checkRemoteStagingGroup(
