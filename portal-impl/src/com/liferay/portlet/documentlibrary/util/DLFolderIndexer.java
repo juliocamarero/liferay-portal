@@ -81,6 +81,10 @@ public class DLFolderIndexer extends BaseIndexer {
 
 		DLFolder dlFolder = DLFolderLocalServiceUtil.getFolder(entryClassPK);
 
+		if (dlFolder.isInHiddenFolder() && actionId.equals(ActionKeys.VIEW)) {
+			return false;
+		}
+
 		return DLFolderPermission.contains(
 			permissionChecker, dlFolder, ActionKeys.VIEW);
 	}
