@@ -16,7 +16,9 @@ package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.util.DLProcessorThreadLocal;
 
 /**
  * @author Mate Thurzo
@@ -27,6 +29,23 @@ public class DLFileEntryStagedModelDataHandler
 	@Override
 	public String getClassName() {
 		return DLFileEntry.class.getName();
+	}
+
+	@Override
+	public void importStagedModel(
+			PortletDataContext portletDataContext, DLFileEntry fileEntry)
+		throws PortletDataException {
+
+		boolean dlProcessorEnabled = DLProcessorThreadLocal.isEnabled();
+
+		try {
+			DLProcessorThreadLocal.setEnabled(false);
+
+			super.importStagedModel(portletDataContext, fileEntry);
+		}
+		finally {
+			DLProcessorThreadLocal.setEnabled(dlProcessorEnabled);
+		}
 	}
 
 	protected static void exportMetaData(
@@ -530,5 +549,6 @@ public class DLFileEntryStagedModelDataHandler
 		portletDataContext.importClassedModel(
 			fileEntry, importedFileEntry, NAMESPACE);
 	}
+
 
 }
