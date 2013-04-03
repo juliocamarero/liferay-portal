@@ -17,10 +17,7 @@ package com.liferay.portal.lar;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
-import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.LayoutServiceUtil;
-import com.liferay.portal.util.TestPropsValues;
 
 import org.powermock.api.mockito.PowerMockito;
 
@@ -28,13 +25,6 @@ import org.powermock.api.mockito.PowerMockito;
  * @author Eduardo Garcia
  */
 public class BaseExportImportTestCase extends PowerMockito {
-
-	protected String getLayoutTemplateId(Layout layout) {
-		LayoutTypePortlet layoutTypePortlet =
-			(LayoutTypePortlet)layout.getLayoutType();
-
-		return layoutTypePortlet.getLayoutTemplateId();
-	}
 
 	protected void propagateChanges(Group group) throws Exception {
 		LayoutLocalServiceUtil.getLayouts(
@@ -44,21 +34,6 @@ public class BaseExportImportTestCase extends PowerMockito {
 
 	protected Layout propagateChanges(Layout layout) throws Exception {
 		return LayoutLocalServiceUtil.getLayout(layout.getPlid());
-	}
-
-	protected Layout updateLayoutTemplateId(
-			Layout layout, String layoutTemplateId)
-		throws Exception {
-
-		LayoutTypePortlet layoutTypePortlet =
-			(LayoutTypePortlet)layout.getLayoutType();
-
-		layoutTypePortlet.setLayoutTemplateId(
-			TestPropsValues.getUserId(), layoutTemplateId);
-
-		return LayoutServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
 	}
 
 }
