@@ -27,6 +27,7 @@ import com.liferay.portal.service.persistence.CompanyUtil;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 
@@ -80,6 +81,16 @@ public abstract class BasePrototypePropagationTestCase extends PowerMockito {
 	}
 
 	@Test
+	public void testLayoutTypePropagationWithLinkDisabled() throws Exception {
+		doTestLayoutTypePropagation(false);
+	}
+
+	@Test
+	public void testLayoutTypePropagationWithLinkEnabled() throws Exception {
+		doTestLayoutTypePropagation(true);
+	}
+
+	@Test
 	public void testPortletPreferencesPropagationWithLinkDisabled()
 		throws Exception {
 
@@ -114,6 +125,63 @@ public abstract class BasePrototypePropagationTestCase extends PowerMockito {
 	}
 
 	protected abstract void doSetUp() throws Exception;
+
+	protected void doTestLayoutTypePropagation(boolean linkEnabled)
+		throws Exception {
+
+		setLinkEnabled(linkEnabled);
+
+		int initialPortletCount = LayoutTestUtil.getPortlets(_layout).size();
+
+		_prototypeLayout = LayoutTestUtil.updateLayoutTemplateId(
+			_prototypeLayout, "1_column");
+
+		LayoutTestUtil.updateLayoutColumnCustomizable(
+			_prototypeLayout, "column-1", true);
+
+		addJournalContentPortletToLayout(
+			TestPropsValues.getUserId(), _prototypeLayout,
+			_globalJournalArticle, "column-1");
+
+		if (linkEnabled) {
+			Assert.assertEquals(
+				_initialLayoutTemplateId,
+				LayoutTestUtil.getLayoutTemplateId(_layout));
+
+			Assert.assertFalse(
+				LayoutTestUtil.isLayoutColumnCustomizable(_layout, "column-1"));
+
+			Assert.assertEquals(
+				initialPortletCount,
+				LayoutTestUtil.getPortlets(_layout).size());
+		}
+
+		_layout = propagateChanges(_layout);
+
+		if (linkEnabled) {
+			Assert.assertEquals(
+				"1_column", LayoutTestUtil.getLayoutTemplateId(_layout));
+
+			Assert.assertTrue(
+				LayoutTestUtil.isLayoutColumnCustomizable(_layout, "column-1"));
+
+			Assert.assertEquals(
+				initialPortletCount + 1,
+				LayoutTestUtil.getPortlets(_layout).size());
+		}
+		else {
+			Assert.assertEquals(
+				_initialLayoutTemplateId,
+				LayoutTestUtil.getLayoutTemplateId(_layout));
+
+			Assert.assertFalse(
+				LayoutTestUtil.isLayoutColumnCustomizable(_layout, "column-1"));
+
+			Assert.assertEquals(
+				initialPortletCount,
+				LayoutTestUtil.getPortlets(_layout).size());
+		}
+	}
 
 	protected void doTestPortletPreferencesPropagation(boolean linkEnabled)
 		throws Exception {
