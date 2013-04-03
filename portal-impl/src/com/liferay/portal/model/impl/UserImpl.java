@@ -311,14 +311,14 @@ public class UserImpl extends UserBaseImpl {
 		return getContact().getMale();
 	}
 
+	public List<Group> getMySites() throws PortalException, SystemException {
+		return getMySites(null, false, QueryUtil.ALL_POS);
+	}
+
 	public List<Group> getMySites(boolean includeControlPanel, int max)
 		throws PortalException, SystemException {
 
 		return getMySites(null, includeControlPanel, max);
-	}
-
-	public List<Group> getMySites() throws PortalException, SystemException {
-		return getMySites(null, false, QueryUtil.ALL_POS);
 	}
 
 	public List<Group> getMySites(int max)
@@ -365,6 +365,10 @@ public class UserImpl extends UserBaseImpl {
 		return getMySites(classNames, false, max);
 	}
 
+	public long[] getOrganizationIds() throws PortalException, SystemException {
+		return getOrganizationIds(false);
+	}
+
 	public long[] getOrganizationIds(boolean includeAdministrative)
 		throws PortalException, SystemException {
 
@@ -382,8 +386,10 @@ public class UserImpl extends UserBaseImpl {
 		return organizationIds;
 	}
 
-	public long[] getOrganizationIds() throws PortalException, SystemException {
-		return getOrganizationIds(false);
+	public List<Organization> getOrganizations()
+		throws PortalException, SystemException {
+
+		return getOrganizations(false);
 	}
 
 	public List<Organization> getOrganizations(boolean includeAdministrative)
@@ -391,12 +397,6 @@ public class UserImpl extends UserBaseImpl {
 
 		return OrganizationLocalServiceUtil.getUserOrganizations(
 			getUserId(), includeAdministrative);
-	}
-
-	public List<Organization> getOrganizations()
-		throws PortalException, SystemException {
-
-		return getOrganizations(false);
 	}
 
 	public boolean getPasswordModified() {
@@ -547,6 +547,10 @@ public class UserImpl extends UserBaseImpl {
 			getCompanyId(), Contact.class.getName(), getContactId());
 	}
 
+	public boolean hasCompanyMx() throws PortalException, SystemException {
+		return hasCompanyMx(getEmailAddress());
+	}
+
 	public boolean hasCompanyMx(String emailAddress)
 		throws PortalException, SystemException {
 
@@ -558,10 +562,6 @@ public class UserImpl extends UserBaseImpl {
 			getCompanyId());
 
 		return company.hasCompanyMx(emailAddress);
-	}
-
-	public boolean hasCompanyMx() throws PortalException, SystemException {
-		return hasCompanyMx(getEmailAddress());
 	}
 
 	public boolean hasMySites() throws PortalException, SystemException {
