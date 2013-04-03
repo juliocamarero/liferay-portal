@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.social.model;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -22,6 +24,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -34,10 +38,13 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletURL;
 
@@ -375,8 +382,7 @@ public abstract class BaseSocialActivityInterpreter
 				return HtmlUtil.escape(userName);
 			}
 
-			String userDisplayURL = user.getDisplayURL(
-				serviceContext.getThemeDisplay());
+			String userDisplayURL = getUserDisplayURL(user, serviceContext);
 
 			userName =
 				"<a class=\"user\" href=\"" + userDisplayURL + "\">" +
@@ -462,6 +468,36 @@ public abstract class BaseSocialActivityInterpreter
 		}
 
 		return buildLink(link, title);
+	}
+
+	private String getUserDisplayURL(User user, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		String usersProfileURL = PropsUtil.get(PropsKeys.USERS_PROFILE_URL);
+
+		if (Validator.isNull(usersProfileURL)) {
+			return user.getDisplayURL(serviceContext.getThemeDisplay());
+		}
+
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(serviceContext.getPortalURL());
+		sb.append(PortalUtil.getPathContext());
+		sb.append(replaceURLVariables(user, usersProfileURL));
+
+		return sb.toString();
+	}
+
+	private String replaceURLVariables(User user, String profileURLString) {
+		Map<String, String> variables = new HashMap<String, String>();
+
+		variables.put("liferay:userId", String.valueOf(user.getUserId()));
+		variables.put(
+			"liferay:userScreenName", HtmlUtil.escapeURL(user.getScreenName()));
+
+		return StringUtil.replace(
+			profileURLString, StringPool.DOLLAR_AND_OPEN_CURLY_BRACE,
+			StringPool.CLOSE_CURLY_BRACE, variables);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
