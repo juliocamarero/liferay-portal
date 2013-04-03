@@ -18,6 +18,7 @@ import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.model.CustomizedPages;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
@@ -172,6 +173,33 @@ public class LayoutTestUtil {
 			(LayoutTypePortlet)layout.getLayoutType();
 
 		return layoutTypePortlet.getPortlets();
+	}
+
+	public static boolean isLayoutColumnCustomizable(
+		Layout layout, String columnId) {
+
+		LayoutTypePortlet layoutTypePortlet =
+			(LayoutTypePortlet)layout.getLayoutType();
+
+		return layoutTypePortlet.isColumnCustomizable(columnId);
+	}
+
+	public static Layout updateLayoutColumnCustomizable(
+			Layout layout, String columnId, boolean customizable)
+		throws Exception {
+
+		LayoutTypePortlet layoutTypePortlet =
+			(LayoutTypePortlet)layout.getLayoutType();
+
+		layoutTypePortlet.setTypeSettingsProperty(
+			CustomizedPages.namespaceColumnId(columnId),
+			String.valueOf(customizable));
+
+		layoutTypePortlet.setUpdatePermission(customizable);
+
+		return LayoutServiceUtil.updateLayout(
+			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
+			layout.getTypeSettings());
 	}
 
 	public static Layout updateLayoutTemplateId(
