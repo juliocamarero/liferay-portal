@@ -195,7 +195,8 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 
 				Layout layoutPrototypeLayout = layoutPrototype.getLayout();
 
-				updateLayoutTemplateId(layoutPrototypeLayout, "2_2_columns");
+				LayoutTestUtil.updateLayoutTemplateId(
+					layoutPrototypeLayout, "2_2_columns");
 
 				if (layoutPrototypeToLayoutSetPrototype) {
 					Layout layoutSetPrototypeLayout = LayoutTestUtil.addLayout(
@@ -222,11 +223,13 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 					layout = propagateChanges(layout);
 				}
 
-				updateLayoutTemplateId(layoutPrototypeLayout, "1_column");
+				LayoutTestUtil.updateLayoutTemplateId(
+					layoutPrototypeLayout, "1_column");
 
 				if (layoutLinkEnabled) {
 					Assert.assertEquals(
-						"2_2_columns", getLayoutTemplateId(layout));
+						"2_2_columns",
+						LayoutTestUtil.getLayoutTemplateId(layout));
 
 					layout = propagateChanges(layout);
 				}
@@ -257,11 +260,13 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 				if (useLayoutPrototype) {
 					if (layoutLinkEnabled) {
 						Assert.assertEquals(
-							"1_column", getLayoutTemplateId(layout));
+							"1_column",
+							LayoutTestUtil.getLayoutTemplateId(layout));
 					}
 					else {
 						Assert.assertEquals(
-							"2_2_columns", getLayoutTemplateId(layout));
+							"2_2_columns",
+							LayoutTestUtil.getLayoutTemplateId(layout));
 					}
 				}
 			}
@@ -297,14 +302,16 @@ public class LayoutExportImportTest extends BaseExportImportTestCase {
 
 			propagateChanges(group);
 
-			layout1 = updateLayoutTemplateId(layout1, "1_column");
+			layout1 = LayoutTestUtil.updateLayoutTemplateId(
+				layout1, "1_column");
 
 			Assert.assertTrue(
 				SitesUtil.isLayoutModifiedSinceLastMerge(layout1));
 			Assert.assertFalse(
 				SitesUtil.isLayoutModifiedSinceLastMerge(layout2));
 
-			layout2 = updateLayoutTemplateId(layout2, "1_column");
+			layout2 = LayoutTestUtil.updateLayoutTemplateId(
+				layout2, "1_column");
 
 			SitesUtil.resetPrototype(layout1);
 
