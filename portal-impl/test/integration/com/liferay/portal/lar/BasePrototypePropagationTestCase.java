@@ -24,7 +24,7 @@ import org.powermock.api.mockito.PowerMockito;
 /**
  * @author Eduardo Garcia
  */
-public class BaseExportImportTestCase extends PowerMockito {
+public class BasePrototypePropagationTestCase extends PowerMockito {
 
 	protected void propagateChanges(Group group) throws Exception {
 		LayoutLocalServiceUtil.getLayouts(
