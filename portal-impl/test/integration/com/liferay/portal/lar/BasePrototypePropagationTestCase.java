@@ -14,26 +14,187 @@
 
 package com.liferay.portal.lar;
 
+import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.service.ServiceTestUtil;
+import com.liferay.portal.service.persistence.CompanyUtil;
+import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.LayoutTestUtil;
+import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.util.JournalTestUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.portlet.PortletPreferences;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import org.powermock.api.mockito.PowerMockito;
 
 /**
  * @author Eduardo Garcia
  */
-public class BasePrototypePropagationTestCase extends PowerMockito {
+public abstract class BasePrototypePropagationTestCase extends PowerMockito {
 
-	protected void propagateChanges(Group group) throws Exception {
-		LayoutLocalServiceUtil.getLayouts(
-			group.getGroupId(), false,
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+	@Before
+	public void setUp() throws Exception {
+		FinderCacheUtil.clearCache();
+
+		ServiceContextThreadLocal.pushServiceContext(
+			ServiceTestUtil.getServiceContext());
+
+		// Group
+
+		_group = GroupTestUtil.addGroup();
+
+		// Global scope article
+
+		Company company = CompanyUtil.fetchByPrimaryKey(_group.getCompanyId());
+
+		_globalGroupId = company.getGroup().getGroupId();
+
+		_globalJournalArticle = JournalTestUtil.addArticle(
+			_globalGroupId, "Global Article", "Global Content");
+
+		// Layout prototype
+
+		_layoutPrototype = LayoutTestUtil.addLayoutPrototype(
+			ServiceTestUtil.randomString());
+
+		_layoutPrototypeLayout = _layoutPrototype.getLayout();
+
+		LayoutTestUtil.updateLayoutTemplateId(
+			_layoutPrototypeLayout, _initialLayoutTemplateId);
+
+		doSetUp();
+	}
+
+	@Test
+	public void testPortletPreferencesPropagationWithLinkDisabled()
+		throws Exception {
+
+		doTestPortletPreferencesPropagation(false);
+	}
+
+	@Test
+	public void testPortletPreferencesPropagationWithLinkEnabled()
+		throws Exception {
+
+		doTestPortletPreferencesPropagation(true);
+	}
+
+	protected String addJournalContentPortletToLayout(
+			long userId, Layout layout, JournalArticle journalArticle,
+			String columnId)
+		throws Exception {
+
+		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
+
+		parameterMap.put(
+			"articleId", new String[] {journalArticle.getArticleId()});
+		parameterMap.put(
+			"groupId",
+			new String[] {String.valueOf(journalArticle.getGroupId())});
+		parameterMap.put(
+			"showAvailableLocales", new String[] {Boolean.TRUE.toString()});
+
+		return LayoutTestUtil.addPortletToLayout(
+			userId, layout, PortletKeys.JOURNAL_CONTENT, columnId,
+			parameterMap);
+	}
+
+	protected abstract void doSetUp() throws Exception;
+
+	protected void doTestPortletPreferencesPropagation(boolean linkEnabled)
+		throws Exception {
+
+		doTestPortletPreferencesPropagation(linkEnabled, true);
+	}
+
+	protected void doTestPortletPreferencesPropagation(
+			boolean linkEnabled, boolean globalScope)
+		throws Exception {
+
+		setLinkEnabled(linkEnabled);
+
+		PortletPreferences layoutSetPrototypePortletPreferences =
+			LayoutTestUtil.getPortletPreferences(
+				_prototypeLayout, _journalContentPortletId);
+
+		layoutSetPrototypePortletPreferences.setValue(
+			"articleId", StringPool.BLANK);
+
+		layoutSetPrototypePortletPreferences.setValue(
+			"showAvailableLocales", Boolean.FALSE.toString());
+
+		if (globalScope) {
+			layoutSetPrototypePortletPreferences.setValue(
+				"groupId", String.valueOf(_globalGroupId));
+			layoutSetPrototypePortletPreferences.setValue(
+				"lfrScopeType", "company");
+		}
+
+		LayoutTestUtil.updatePortletPreferences(
+			_prototypeLayout.getPlid(), _journalContentPortletId,
+			layoutSetPrototypePortletPreferences);
+
+		PortletPreferences portletPreferences =
+			LayoutTestUtil.getPortletPreferences(
+				_layout, _journalContentPortletId);
+
+		if (linkEnabled) {
+			if (globalScope) {
+				Assert.assertEquals(
+					StringPool.BLANK,
+					portletPreferences.getValue("articleId", StringPool.BLANK));
+			}
+			else {
+
+				// Changes in preferences of local ids are not propagated
+
+				Assert.assertEquals(
+					_journalArticle.getArticleId(),
+					portletPreferences.getValue("articleId", StringPool.BLANK));
+			}
+
+			Assert.assertEquals(
+				Boolean.FALSE.toString(),
+				portletPreferences.getValue(
+					"showAvailableLocales", StringPool.BLANK));
+		}
+		else {
+			Assert.assertEquals(
+				_journalArticle.getArticleId(),
+				portletPreferences.getValue("articleId", StringPool.BLANK));
+		}
 	}
 
 	protected Layout propagateChanges(Layout layout) throws Exception {
 		return LayoutLocalServiceUtil.getLayout(layout.getPlid());
 	}
+
+	protected abstract void setLinkEnabled(boolean linkEnabled)
+		throws Exception;
+
+	protected long _globalGroupId;
+	protected JournalArticle _globalJournalArticle;
+	protected Group _group;
+	protected String _initialLayoutTemplateId = "2_2_columns";
+	protected JournalArticle _journalArticle;
+	protected String _journalContentPortletId;
+	protected Layout _layout;
+	protected LayoutPrototype _layoutPrototype;
+	protected Layout _layoutPrototypeLayout;
+	protected Layout _prototypeLayout;
 
 }

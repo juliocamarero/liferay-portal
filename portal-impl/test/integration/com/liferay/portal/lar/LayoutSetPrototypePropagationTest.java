@@ -14,12 +14,11 @@
 
 package com.liferay.portal.lar;
 
-import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.LayoutPrototype;
+import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
@@ -27,12 +26,14 @@ import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
-import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.LayoutTestUtil;
+import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -53,276 +54,280 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 public class LayoutSetPrototypePropagationTest
 	extends BasePrototypePropagationTestCase {
 
-	@Before
-	public void setUp() {
-		FinderCacheUtil.clearCache();
+	@Test
+	public void testAddGroup() throws Exception {
+		Assert.assertEquals(_initialPrototypeLayoutCount, _initialLayoutCount);
 	}
 
 	@Test
-	public void testLSPLinkDisabled() throws Exception {
-		runLayoutSetPrototype(false, false, false, false, false, false, false);
-	}
-
-	@Test
-	public void testLSPLinkDisabledWithPageAddition() throws Exception {
-		runLayoutSetPrototype(false, false, true, false, false, false, false);
-	}
-
-	@Test
-	public void testLSPLinkDisabledWithPageDeletion() throws Exception {
-		runLayoutSetPrototype(false, false, true, true, false, false, false);
-	}
-
-	@Test
-	public void testLSPLinkEnabled() throws Exception {
-		runLayoutSetPrototype(true, false, false, false, false, false, false);
-	}
-
-	@Test
-	public void testLSPLinkEnabledWithPageAddition() throws Exception {
-		runLayoutSetPrototype(true, false, true, false, false, false, false);
-	}
-
-	@Test
-	public void testLSPLinkEnabledWithPageAdditionFromLPLinkDisabled()
+	public void testLayoutPropagationWithLayoutPrototypeLinkDisabled()
 		throws Exception {
 
-		runLayoutSetPrototype(true, false, true, false, true, false, false);
+		doTestLayoutPropagationWithLayoutPrototype(false);
 	}
 
 	@Test
-	public void testLSPLinkEnabledWithPageAdditionFromLPLinkEnabled()
+	public void testLayoutPropagationWithLayoutPrototypeLinkEnabled()
 		throws Exception {
 
-		runLayoutSetPrototype(true, true, true, false, true, false, false);
+		doTestLayoutPropagationWithLayoutPrototype(true);
 	}
 
 	@Test
-	public void testLSPLinkEnabledWithPageAdditionFromLPToLSPLinkDisabled()
+	public void testLayoutPropagationWithLinkDisabled() throws Exception {
+		doTestLayoutPropagation(false);
+	}
+
+	@Test
+	public void testLayoutPropagationWithLinkEnabled() throws Exception {
+		doTestLayoutPropagation(true);
+	}
+
+	@Test
+	public void testPortletDataPropagationWithLinkDisabled() throws Exception {
+		doTestPortletDataPropagation(false);
+	}
+
+	@Test
+	public void testPortletDataPropagationWithLinkEnabled() throws Exception {
+		doTestPortletDataPropagation(true);
+	}
+
+	@Test
+	public void testPortletPreferencesPropagationWithGlobalScopeLinkDisabled()
 		throws Exception {
 
-		runLayoutSetPrototype(true, false, true, false, true, true, false);
+		doTestPortletPreferencesPropagation(false, true);
 	}
 
 	@Test
-	public void testLSPLinkEnabledWithPageAdditionFromLPToLSPLinkEnabled()
+	public void testPortletPreferencesPropagationWithGlobalScopeLinkEnabled()
 		throws Exception {
 
-		runLayoutSetPrototype(true, true, true, false, true, true, false);
+		doTestPortletPreferencesPropagation(true, true);
 	}
 
 	@Test
-	public void testLSPLinkEnabledWithPageDeletion() throws Exception {
-		runLayoutSetPrototype(true, false, true, true, false, false, false);
+	public void testReset() throws Exception {
+		SitesUtil.resetPrototype(_layout);
+		SitesUtil.resetPrototype(_layout2);
+
+		propagateChanges(_group);
+
+		_layout = LayoutTestUtil.updateLayoutTemplateId(_layout, "1_column");
+
+		Assert.assertTrue(SitesUtil.isLayoutModifiedSinceLastMerge(_layout));
+		Assert.assertFalse(SitesUtil.isLayoutModifiedSinceLastMerge(_layout2));
+
+		_layout2 = LayoutTestUtil.updateLayoutTemplateId(_layout2, "1_column");
+
+		SitesUtil.resetPrototype(_layout);
+
+		_layout = propagateChanges(_layout);
+
+		Assert.assertFalse(SitesUtil.isLayoutModifiedSinceLastMerge(_layout));
+		Assert.assertEquals(
+			_initialLayoutTemplateId,
+			LayoutTestUtil.getLayoutTemplateId(_layout));
+		Assert.assertTrue(SitesUtil.isLayoutModifiedSinceLastMerge(_layout2));
+		Assert.assertEquals(
+			"1_column", LayoutTestUtil.getLayoutTemplateId(_layout2));
 	}
 
-	@Test
-	public void testLSPLinkEnabledWithPageDeletionFromLP() throws Exception {
-		runLayoutSetPrototype(true, false, true, true, true, false, false);
-	}
+	protected void doSetUp() throws Exception {
 
-	@Test
-	public void testLSPLinkEnabledWithPageDeletionFromLPToLSP()
-		throws Exception {
+		// Layout set prototype
 
-		runLayoutSetPrototype(true, false, true, true, true, true, false);
-	}
+		_layoutSetPrototype = LayoutTestUtil.addLayoutSetPrototype(
+			ServiceTestUtil.randomString());
 
-	@Test
-	public void testLSPLinkEnabledWithReset() throws Exception {
-		runLayoutSetPrototype(true, false, false, false, false, false, true);
-	}
+		_layoutSetPrototypeGroup = _layoutSetPrototype.getGroup();
 
-	protected void runLayoutSetPrototype(
-			boolean layoutSetLinkEnabled, boolean layoutLinkEnabled,
-			boolean addPage, boolean deletePage, boolean useLayoutPrototype,
-			boolean layoutPrototypeToLayoutSetPrototype, boolean reset)
-		throws Exception {
+		_prototypeLayout = LayoutTestUtil.addLayout(
+			_layoutSetPrototypeGroup.getGroupId(),
+			ServiceTestUtil.randomString(), true);
 
-		LayoutSetPrototype layoutSetPrototype =
-			LayoutTestUtil.addLayoutSetPrototype(
-				ServiceTestUtil.randomString());
+		LayoutTestUtil.updateLayoutTemplateId(
+			_prototypeLayout, _initialLayoutTemplateId);
 
-		Group layoutSetPrototypeGroup = layoutSetPrototype.getGroup();
+		_layoutSetPrototypeJournalArticle = JournalTestUtil.addArticle(
+			_layoutSetPrototypeGroup.getGroupId(), "Test Article",
+			"Test Content");
 
-		int layoutSetPrototypeLayoutsCount =
+		_journalContentPortletId =
+			addJournalContentPortletToLayout(
+				TestPropsValues.getUserId(), _prototypeLayout,
+				_layoutSetPrototypeJournalArticle, "column-1");
+
+		_prototypeLayout2 = LayoutTestUtil.addLayout(
+			_layoutSetPrototypeGroup.getGroupId(),
+			ServiceTestUtil.randomString(), true);
+
+		LayoutTestUtil.updateLayoutTemplateId(
+				_prototypeLayout2, _initialLayoutTemplateId);
+
+		_initialPrototypeLayoutCount =
 			LayoutLocalServiceUtil.getLayoutsCount(
-				layoutSetPrototypeGroup, true);
+				_layoutSetPrototypeGroup, true);
 
-		Layout layoutSetPrototypeLayout1 = LayoutTestUtil.addLayout(
-			layoutSetPrototypeGroup.getGroupId(),
+		// Group
+
+		setLinkEnabled(true);
+
+		propagateChanges(_group);
+
+		_layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
+			_group.getGroupId(), false, _prototypeLayout.getFriendlyURL());
+
+		_layout2 = LayoutLocalServiceUtil.getFriendlyURLLayout(
+			_group.getGroupId(), false, _prototypeLayout2.getFriendlyURL());
+
+		_initialLayoutCount = getGroupLayoutCount();
+
+		_journalArticle =
+			JournalArticleLocalServiceUtil.getArticleByUrlTitle(
+				_group.getGroupId(),
+				_layoutSetPrototypeJournalArticle.getUrlTitle());
+	}
+
+	protected void doTestLayoutPropagation(boolean linkEnabled)
+		throws Exception {
+
+		setLinkEnabled(linkEnabled);
+
+		Layout layout = LayoutTestUtil.addLayout(
+			_layoutSetPrototypeGroup.getGroupId(),
 			ServiceTestUtil.randomString(), true);
-		Layout layoutSetPrototypeLayout2 = LayoutTestUtil.addLayout(
-			layoutSetPrototypeGroup.getGroupId(),
-			ServiceTestUtil.randomString(), true);
-
-		Group group = GroupTestUtil.addGroup();
-
-		SitesUtil.updateLayoutSetPrototypesLinks(
-			group, layoutSetPrototype.getLayoutSetPrototypeId(), 0,
-			layoutSetLinkEnabled, false);
-
-		propagateChanges(group);
-
-		int groupLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-			group, false);
 
 		Assert.assertEquals(
-			layoutSetPrototypeLayoutsCount + 2, groupLayoutsCount);
+			_initialPrototypeLayoutCount, getGroupLayoutCount());
 
-		Layout layout1 = LayoutLocalServiceUtil.getFriendlyURLLayout(
-			group.getGroupId(), false,
-			layoutSetPrototypeLayout1.getFriendlyURL());
-		Layout layout2 = LayoutLocalServiceUtil.getFriendlyURLLayout(
-			group.getGroupId(), false,
-			layoutSetPrototypeLayout2.getFriendlyURL());
+		propagateChanges(_group);
 
-		if (addPage) {
-			if (!useLayoutPrototype || layoutPrototypeToLayoutSetPrototype) {
-
-				// Database will store Date values without milliseconds. Wait
-				// for more than one second to ensure that later queries can
-				// correctly compare the Date values.
-
-				Thread.sleep(2000);
-			}
-
-			Layout layout = null;
-
-			if (useLayoutPrototype) {
-				LayoutPrototype layoutPrototype =
-					LayoutTestUtil.addLayoutPrototype(
-						ServiceTestUtil.randomString());
-
-				Layout layoutPrototypeLayout = layoutPrototype.getLayout();
-
-				LayoutTestUtil.updateLayoutTemplateId(
-					layoutPrototypeLayout, "2_2_columns");
-
-				if (layoutPrototypeToLayoutSetPrototype) {
-					Layout layoutSetPrototypeLayout = LayoutTestUtil.addLayout(
-						layoutSetPrototypeGroup.getGroupId(),
-						ServiceTestUtil.randomString(), true, layoutPrototype,
-						layoutLinkEnabled);
-
-					layoutSetPrototypeLayout = propagateChanges(
-						layoutSetPrototypeLayout);
-
-					propagateChanges(group);
-
-					layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
-						group.getGroupId(), false,
-						layoutSetPrototypeLayout.getFriendlyURL());
-				}
-				else {
-					layout = LayoutTestUtil.addLayout(
-						group.getGroupId(), ServiceTestUtil.randomString(),
-						false, layoutPrototype, layoutLinkEnabled);
-				}
-
-				if (layoutLinkEnabled) {
-					layout = propagateChanges(layout);
-				}
-
-				LayoutTestUtil.updateLayoutTemplateId(
-					layoutPrototypeLayout, "1_column");
-
-				if (layoutLinkEnabled) {
-					Assert.assertEquals(
-						"2_2_columns",
-						LayoutTestUtil.getLayoutTemplateId(layout));
-
-					layout = propagateChanges(layout);
-				}
-			}
-			else {
-				layout = LayoutTestUtil.addLayout(
-					layoutSetPrototypeGroup.getGroupId(),
-					ServiceTestUtil.randomString(), true);
-			}
-
-			if (!useLayoutPrototype) {
-				groupLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-					group, false);
-
-				Assert.assertEquals(
-					layoutSetPrototypeLayoutsCount + 2, groupLayoutsCount);
-			}
-
-			propagateChanges(group);
-
-			groupLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-				group, false);
-
-			if (layoutSetLinkEnabled) {
-				Assert.assertEquals(
-					layoutSetPrototypeLayoutsCount + 3, groupLayoutsCount);
-
-				if (useLayoutPrototype) {
-					if (layoutLinkEnabled) {
-						Assert.assertEquals(
-							"1_column",
-							LayoutTestUtil.getLayoutTemplateId(layout));
-					}
-					else {
-						Assert.assertEquals(
-							"2_2_columns",
-							LayoutTestUtil.getLayoutTemplateId(layout));
-					}
-				}
-			}
-
-			if (deletePage) {
-				LayoutLocalServiceUtil.deleteLayout(
-					layout, true, ServiceTestUtil.getServiceContext());
-
-				groupLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-					group, false);
-
-				if (layoutSetLinkEnabled) {
-					if (!useLayoutPrototype) {
-						Assert.assertEquals(
-							layoutSetPrototypeLayoutsCount + 3,
-							groupLayoutsCount);
-
-						propagateChanges(group);
-					}
-
-					groupLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-						group, false);
-				}
-
-				Assert.assertEquals(
-					layoutSetPrototypeLayoutsCount + 2, groupLayoutsCount);
-			}
+		if (linkEnabled) {
+			Assert.assertEquals(
+				_initialPrototypeLayoutCount + 1, getGroupLayoutCount());
+		}
+		else {
+			Assert.assertEquals(
+				_initialPrototypeLayoutCount, getGroupLayoutCount());
 		}
 
-		if (reset) {
-			SitesUtil.resetPrototype(layout1);
-			SitesUtil.resetPrototype(layout2);
+		LayoutLocalServiceUtil.deleteLayout(
+			layout, true, ServiceTestUtil.getServiceContext());
 
-			propagateChanges(group);
+		if (linkEnabled) {
+			Assert.assertEquals(
+				_initialPrototypeLayoutCount + 1, getGroupLayoutCount());
+		}
+		else {
+			Assert.assertEquals(
+				_initialPrototypeLayoutCount, getGroupLayoutCount());
+		}
 
-			layout1 = LayoutTestUtil.updateLayoutTemplateId(
-				layout1, "1_column");
+		propagateChanges(_group);
 
-			Assert.assertTrue(
-				SitesUtil.isLayoutModifiedSinceLastMerge(layout1));
-			Assert.assertFalse(
-				SitesUtil.isLayoutModifiedSinceLastMerge(layout2));
+		Assert.assertEquals(
+				_initialPrototypeLayoutCount, getGroupLayoutCount());
+	}
 
-			layout2 = LayoutTestUtil.updateLayoutTemplateId(
-				layout2, "1_column");
+	protected void doTestLayoutPropagationWithLayoutPrototype(
+			boolean layoutSetLayoutLinkEnabled)
+		throws Exception {
 
-			SitesUtil.resetPrototype(layout1);
+		Layout layoutSetPrototypeLayout = LayoutTestUtil.addLayout(
+			_layoutSetPrototypeGroup.getGroupId(),
+			ServiceTestUtil.randomString(), true, _layoutPrototype,
+			layoutSetLayoutLinkEnabled);
 
-			layout1 = propagateChanges(layout1);
+		layoutSetPrototypeLayout = propagateChanges(layoutSetPrototypeLayout);
 
-			Assert.assertFalse(
-				SitesUtil.isLayoutModifiedSinceLastMerge(layout1));
-			Assert.assertTrue(
-				SitesUtil.isLayoutModifiedSinceLastMerge(layout2));
+		propagateChanges(_group);
+
+		Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
+			_group.getGroupId(), false,
+			layoutSetPrototypeLayout.getFriendlyURL());
+
+		LayoutTestUtil.updateLayoutTemplateId(
+				_layoutPrototypeLayout, "1_column");
+
+		if (layoutSetLayoutLinkEnabled) {
+			Assert.assertEquals(
+				_initialLayoutTemplateId,
+				LayoutTestUtil.getLayoutTemplateId(layout));
+		}
+
+		layout = propagateChanges(layout);
+
+		propagateChanges(_group);
+
+		if (layoutSetLayoutLinkEnabled) {
+			Assert.assertEquals(
+				"1_column", LayoutTestUtil.getLayoutTemplateId(layout));
+		}
+		else {
+			Assert.assertEquals(
+				_initialLayoutTemplateId,
+				LayoutTestUtil.getLayoutTemplateId(layout));
 		}
 	}
+
+	protected void doTestPortletDataPropagation(boolean linkEnabled)
+		throws Exception {
+
+		setLinkEnabled(linkEnabled);
+
+		String content = _layoutSetPrototypeJournalArticle.getContent();
+
+		Assert.assertEquals(content, _journalArticle.getContent());
+
+		JournalTestUtil.updateArticle(
+			_layoutSetPrototypeJournalArticle, "New Test Title",
+			"New Test Content");
+
+		propagateChanges(_group);
+
+		// Portlet data is no longer propagated once the group has been created
+
+		Assert.assertEquals(content, _journalArticle.getContent());
+	}
+
+	@Override
+	protected void doTestPortletPreferencesPropagation(boolean linkEnabled)
+		throws Exception {
+
+		doTestPortletPreferencesPropagation(linkEnabled, false);
+	}
+
+	protected int getGroupLayoutCount() throws Exception {
+		return LayoutLocalServiceUtil.getLayoutsCount(_group, false);
+	}
+
+	protected void propagateChanges(Group group) throws Exception {
+		LayoutLocalServiceUtil.getLayouts(
+			group.getGroupId(), false,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+
+		Thread.sleep(2000);
+	}
+
+	protected void setLinkEnabled(boolean linkEnabled) throws Exception {
+		SitesUtil.updateLayoutSetPrototypesLinks(
+			_group, _layoutSetPrototype.getLayoutSetPrototypeId(), 0,
+			linkEnabled, linkEnabled);
+
+		if ((_layout != null) && (_layout2 != null)) {
+			_layout = LayoutLocalServiceUtil.getLayout(_layout.getPlid());
+			_layout2 = LayoutLocalServiceUtil.getLayout(_layout2.getPlid());
+		}
+	}
+
+	private int _initialLayoutCount;
+	private int _initialPrototypeLayoutCount;
+	private Layout _layout2;
+	private LayoutSetPrototype _layoutSetPrototype;
+	private Group _layoutSetPrototypeGroup;
+	private JournalArticle _layoutSetPrototypeJournalArticle;
+	private Layout _prototypeLayout2;
 
 }
