@@ -16,11 +16,13 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -31,6 +33,7 @@ import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
+import com.liferay.portlet.sites.util.Sites;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import org.junit.Assert;
@@ -57,6 +60,29 @@ public class LayoutSetPrototypePropagationTest
 	@Test
 	public void testAddGroup() throws Exception {
 		Assert.assertEquals(_initialPrototypeLayoutCount, _initialLayoutCount);
+	}
+
+	@Test
+	public void testIsLayoutDeleteable() throws Exception {
+		Assert.assertFalse(SitesUtil.isLayoutDeleteable(_layout));
+
+		setLinkEnabled(false);
+
+		Assert.assertTrue(SitesUtil.isLayoutDeleteable(_layout));
+	}
+
+	@Test
+	public void testIsLayoutSortable() throws Exception {
+		Assert.assertFalse(SitesUtil.isLayoutSortable(_layout));
+
+		setLinkEnabled(false);
+
+		Assert.assertTrue(SitesUtil.isLayoutSortable(_layout));
+	}
+
+	@Test
+	public void testIsLayoutUpdateable() throws Exception {
+		doTestIsLayoutUpdateable();
 	}
 
 	@Test
@@ -190,6 +216,26 @@ public class LayoutSetPrototypePropagationTest
 				_layoutSetPrototypeJournalArticle.getUrlTitle());
 	}
 
+	protected void doTestIsLayoutUpdateable() throws Exception {
+		Assert.assertTrue(SitesUtil.isLayoutUpdateable(_layout));
+		Assert.assertTrue(SitesUtil.isLayoutUpdateable(_layout2));
+
+		setLayoutUpdateable(_prototypeLayout, false);
+
+		Assert.assertFalse(SitesUtil.isLayoutUpdateable(_layout));
+		Assert.assertTrue(SitesUtil.isLayoutUpdateable(_layout2));
+
+		setLayoutsUpdateable(false);
+
+		Assert.assertFalse(SitesUtil.isLayoutUpdateable(_layout));
+		Assert.assertFalse(SitesUtil.isLayoutUpdateable(_layout2));
+
+		setLinkEnabled(false);
+
+		Assert.assertTrue(SitesUtil.isLayoutUpdateable(_layout));
+		Assert.assertTrue(SitesUtil.isLayoutUpdateable(_layout2));
+	}
+
 	protected void doTestLayoutPropagation(boolean linkEnabled)
 		throws Exception {
 
@@ -309,6 +355,33 @@ public class LayoutSetPrototypePropagationTest
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 		Thread.sleep(2000);
+	}
+
+	protected void setLayoutsUpdateable(boolean layoutsUpdateable)
+		throws Exception {
+
+		_layoutSetPrototype =
+			LayoutSetPrototypeLocalServiceUtil.updateLayoutSetPrototype(
+				_layoutSetPrototype.getLayoutSetPrototypeId(),
+				_layoutSetPrototype.getNameMap(),
+				_layoutSetPrototype.getDescription(),
+				_layoutSetPrototype.getActive(), layoutsUpdateable,
+				ServiceTestUtil.getServiceContext());
+	}
+
+	protected Layout setLayoutUpdateable(
+			Layout layout, boolean layoutUpdateable)
+		throws Exception {
+
+		UnicodeProperties typeSettingsProperties =
+			layout.getTypeSettingsProperties();
+
+		typeSettingsProperties.put(
+			Sites.LAYOUT_UPDATEABLE, String.valueOf(layoutUpdateable));
+
+		layout.setTypeSettingsProperties(typeSettingsProperties);
+
+		return LayoutLocalServiceUtil.updateLayout(layout);
 	}
 
 	protected void setLinkEnabled(boolean linkEnabled) throws Exception {
