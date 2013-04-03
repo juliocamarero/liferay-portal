@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.SetUtil;
@@ -67,6 +68,7 @@ import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.WebsiteLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.Portal;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 
@@ -183,6 +185,18 @@ public class UserImpl extends UserBaseImpl {
 			return StringPool.BLANK;
 		}
 
+		String profileFriendlyURL = getProfileFriendlyURL();
+
+		if (Validator.isNotNull(profileFriendlyURL)) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(portalURL);
+			sb.append(PortalUtil.getPathContext());
+			sb.append(profileFriendlyURL);
+
+			return sb.toString();
+		}
+
 		Group group = getGroup();
 
 		int publicLayoutsPageCount = group.getPublicLayoutsPageCount();
@@ -297,14 +311,14 @@ public class UserImpl extends UserBaseImpl {
 		return getContact().getMale();
 	}
 
-	public List<Group> getMySites() throws PortalException, SystemException {
-		return getMySites(null, false, QueryUtil.ALL_POS);
-	}
-
 	public List<Group> getMySites(boolean includeControlPanel, int max)
 		throws PortalException, SystemException {
 
 		return getMySites(null, includeControlPanel, max);
+	}
+
+	public List<Group> getMySites() throws PortalException, SystemException {
+		return getMySites(null, false, QueryUtil.ALL_POS);
 	}
 
 	public List<Group> getMySites(int max)
@@ -351,10 +365,6 @@ public class UserImpl extends UserBaseImpl {
 		return getMySites(classNames, false, max);
 	}
 
-	public long[] getOrganizationIds() throws PortalException, SystemException {
-		return getOrganizationIds(false);
-	}
-
 	public long[] getOrganizationIds(boolean includeAdministrative)
 		throws PortalException, SystemException {
 
@@ -372,10 +382,8 @@ public class UserImpl extends UserBaseImpl {
 		return organizationIds;
 	}
 
-	public List<Organization> getOrganizations()
-		throws PortalException, SystemException {
-
-		return getOrganizations(false);
+	public long[] getOrganizationIds() throws PortalException, SystemException {
+		return getOrganizationIds(false);
 	}
 
 	public List<Organization> getOrganizations(boolean includeAdministrative)
@@ -383,6 +391,12 @@ public class UserImpl extends UserBaseImpl {
 
 		return OrganizationLocalServiceUtil.getUserOrganizations(
 			getUserId(), includeAdministrative);
+	}
+
+	public List<Organization> getOrganizations()
+		throws PortalException, SystemException {
+
+		return getOrganizations(false);
 	}
 
 	public boolean getPasswordModified() {
@@ -533,10 +547,6 @@ public class UserImpl extends UserBaseImpl {
 			getCompanyId(), Contact.class.getName(), getContactId());
 	}
 
-	public boolean hasCompanyMx() throws PortalException, SystemException {
-		return hasCompanyMx(getEmailAddress());
-	}
-
 	public boolean hasCompanyMx(String emailAddress)
 		throws PortalException, SystemException {
 
@@ -548,6 +558,10 @@ public class UserImpl extends UserBaseImpl {
 			getCompanyId());
 
 		return company.hasCompanyMx(emailAddress);
+	}
+
+	public boolean hasCompanyMx() throws PortalException, SystemException {
+		return hasCompanyMx(getEmailAddress());
 	}
 
 	public boolean hasMySites() throws PortalException, SystemException {
@@ -640,6 +654,19 @@ public class UserImpl extends UserBaseImpl {
 		_timeZone = TimeZoneUtil.getTimeZone(timeZoneId);
 
 		super.setTimeZoneId(timeZoneId);
+	}
+
+	protected String getProfileFriendlyURL() {
+		if (Validator.isNull(PropsValues.USERS_PROFILE_FRIENDLY_URL)) {
+			return null;
+		}
+
+		return StringUtil.replace(
+			PropsValues.USERS_PROFILE_FRIENDLY_URL,
+			new String[] {"${liferay:userId}", "${liferay:userScreenName}"},
+			new String[] {
+				String.valueOf(getUserId()), HtmlUtil.escapeURL(getScreenName())
+			});
 	}
 
 	private Locale _locale;
