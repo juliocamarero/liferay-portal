@@ -59,7 +59,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 @PrepareForTest({PortletLocalServiceUtil.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Transactional
-public class PortletExportImportTest extends BaseExportImportTestCase {
+public class PortletExportImportTest extends BasePrototypePropagationTestCase {
 
 	@Before
 	public void setUp() throws Exception {
