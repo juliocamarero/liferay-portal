@@ -96,10 +96,10 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 		dlFolder.setParentFolderId(parentFolderId);
 		dlFolder.setName(name);
 		dlFolder.setDescription(description);
+		dlFolder.setLastPostDate(now);
 		dlFolder.setHidden(hidden);
 		dlFolder.setOverrideFileEntryTypes(false);
 		dlFolder.setExpandoBridgeAttributes(serviceContext);
-		dlFolder.setLastPostDate(now);
 
 		dlFolderPersistence.update(dlFolder);
 
