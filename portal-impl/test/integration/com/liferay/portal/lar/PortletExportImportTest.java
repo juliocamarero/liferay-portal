@@ -17,18 +17,13 @@ package com.liferay.portal.lar;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutSetPrototype;
-import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
-import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
-import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.CompanyUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -40,11 +35,10 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
-import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
+import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -87,8 +81,8 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		LayoutTestUtil.updateLayoutTemplateId(
 			_layoutSetPrototypeLayout, "1_column");
 
-		_layoutSetPrototypeJournalArticle = addJournalArticle(
-			_layoutSetPrototypeGroup.getGroupId(), 0, "Test Article",
+		_layoutSetPrototypeJournalArticle = JournalTestUtil.addArticle(
+			_layoutSetPrototypeGroup.getGroupId(), "Test Article",
 			"Test Content");
 
 		_layoutSetPrototypeJournalContentPortletId =
@@ -123,7 +117,9 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 
 		// Update site template data
 
-		updateArticle(_layoutSetPrototypeJournalArticle, "New Test Content");
+		JournalTestUtil.updateArticle(
+			_layoutSetPrototypeJournalArticle, "New Text Title",
+			"New Test Content");
 
 		// Check data after layout reset
 
@@ -209,8 +205,9 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 
 		Group companyGroup = company.getGroup();
 
-		JournalArticle globalScopeJournalArticle = addJournalArticle(
-			companyGroup.getGroupId(), 0, "Global Article", "Global Content");
+		JournalArticle globalScopeJournalArticle =
+			JournalTestUtil.addArticle(
+				companyGroup.getGroupId(), "Global Article", "Global Content");
 
 		layoutSetprototypeJxPreferences.setValue(
 			"articleId", globalScopeJournalArticle.getArticleId());
@@ -245,32 +242,6 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 			jxPreferences.getValue("lfrScopeType", StringPool.BLANK));
 	}
 
-	protected JournalArticle addJournalArticle(
-			long groupId, long folderId, String name, String content)
-		throws Exception {
-
-		Map<Locale, String> titleMap = new HashMap<Locale, String>();
-
-		Locale locale = LocaleUtil.getDefault();
-
-		String localeId = locale.toString();
-
-		titleMap.put(locale, name);
-
-		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
-
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
-
-		String xmlContent = getArticleContent(content, localeId);
-
-		return JournalArticleLocalServiceUtil.addArticle(
-			TestPropsValues.getUserId(), groupId, folderId, 0, 0,
-			StringPool.BLANK, true, 1, titleMap, descriptionMap, xmlContent,
-			"general", null, null, null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0, true,
-			0, 0, 0, 0, 0, true, false, false, null, null, null, null,
-			serviceContext);
-	}
-
 	protected String addJournalContentPortletToLayout(
 			long userId, Layout layout, JournalArticle journalArticle,
 			String columnId)
@@ -289,36 +260,6 @@ public class PortletExportImportTest extends BaseExportImportTestCase {
 		return LayoutTestUtil.addPortletToLayout(
 			userId, layout, PortletKeys.JOURNAL_CONTENT, columnId,
 			parameterMap);
-	}
-
-	protected String getArticleContent(String content, String localeId) {
-		StringBundler sb = new StringBundler();
-
-		sb.append("<?xml version=\"1.0\"?><root available-locales=");
-		sb.append("\"" + localeId + "\" ");
-		sb.append("default-locale=\"" + localeId + "\">");
-		sb.append("<static-content language-id=\"" + localeId + "\">");
-		sb.append("<![CDATA[<p>");
-		sb.append(content);
-		sb.append("</p>]]>");
-		sb.append("</static-content></root>");
-
-		return sb.toString();
-	}
-
-	protected JournalArticle updateArticle(
-			JournalArticle journalArticle, String content)
-		throws Exception {
-
-		Locale locale = LocaleUtil.getDefault();
-
-		String localeId = locale.toString();
-
-		String xmlContent = getArticleContent(content, localeId);
-
-		_layoutSetPrototypeJournalArticle.setContent(xmlContent);
-
-		return JournalArticleUtil.update(journalArticle);
 	}
 
 	private Group _group;
