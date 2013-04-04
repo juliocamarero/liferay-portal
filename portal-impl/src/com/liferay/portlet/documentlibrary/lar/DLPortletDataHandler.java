@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
@@ -26,6 +27,8 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -169,8 +172,13 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			}
 
 			@Override
-			protected void performAction(Object object) throws PortalException {
-				DLFolder folder = (DLFolder)object;
+			protected void performAction(Object object)
+				throws PortalException, SystemException {
+
+				DLFolder dlFolder = (DLFolder)object;
+
+				Folder folder = DLAppLocalServiceUtil.getFolder(
+					dlFolder.getFolderId());
 
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext, folder);
@@ -193,8 +201,14 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			}
 
 			@Override
-			protected void performAction(Object object) throws PortalException {
-				DLFileEntry fileEntry = (DLFileEntry)object;
+			protected void performAction(Object object)
+				throws PortalException, SystemException {
+
+				DLFileEntry dlFileEntry = (DLFileEntry)object;
+
+				FileEntry fileEntry =
+					DLAppLocalServiceUtil.getFileEntry(
+						dlFileEntry.getFileEntryId());
 
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext, fileEntry);
@@ -253,14 +267,24 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Element repositoriesElement =
-			portletDataContext.getImportDataGroupElement(Repository.class);
+		Element foldersElement =
+			portletDataContext.getImportDataGroupElement(Folder.class);
 
-		List<Element> repositoryElements = repositoriesElement.elements();
+		List<Element> folderElements = foldersElement.elements();
 
-		for (Element repositoryElement : repositoryElements) {
+		for (Element repositoryElement : folderElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, repositoryElement);
+		}
+
+		Element fileEntriesElement =
+			portletDataContext.getImportDataGroupElement(FileEntry.class);
+
+		List<Element> fileEntryElements = fileEntriesElement.elements();
+
+		for (Element fileEntryElement : fileEntryElements) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, fileEntryElement);
 		}
 
 		Element fileEntryTypesElement =
@@ -273,24 +297,24 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, fileEntryTypeElement);
 		}
 
-		Element foldersElement = portletDataContext.getImportDataGroupElement(
+		Element dlFoldersElement = portletDataContext.getImportDataGroupElement(
 			DLFolder.class);
 
-		List<Element> folderElements = foldersElement.elements();
+		List<Element> dlFolderElements = dlFoldersElement.elements();
 
-		for (Element folderElement : folderElements) {
+		for (Element dlFolderElement : dlFolderElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, folderElement);
+				portletDataContext, dlFolderElement);
 		}
 
-		Element fileEntriesElement =
+		Element dlFileEntriesElement =
 			portletDataContext.getImportDataGroupElement(DLFileEntry.class);
 
-		List<Element> fileEntryElements = fileEntriesElement.elements();
+		List<Element> dlFileEntryElements = dlFileEntriesElement.elements();
 
-		for (Element fileEntryElement : fileEntryElements) {
+		for (Element dlFileEntryElement : dlFileEntryElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, fileEntryElement);
+				portletDataContext, dlFileEntryElement);
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {

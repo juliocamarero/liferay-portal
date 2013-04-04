@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
@@ -67,16 +66,13 @@ public class DLFileEntryTypeStagedModelDataHandler
 		for (int i = 0; i < ddmStructures.size(); i++) {
 			DDMStructure ddmStructure = ddmStructures.get(i);
 
-			Element refElement = fileEntryTypeElement.addElement("ref");
-
-			refElement.addAttribute("className", DDMStructure.class.getName());
-			refElement.addAttribute(
-				"classPk", String.valueOf(ddmStructure.getStructureId()));
-
 			ddmStructureUuids[i] = ddmStructure.getUuid();
 
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, ddmStructure);
+
+			portletDataContext.addReferenceElement(
+				fileEntryTypeElement, ddmStructure);
 		}
 
 		portletDataContext.addClassedModel(
@@ -99,20 +95,13 @@ public class DLFileEntryTypeStagedModelDataHandler
 		Element fileEntryTypeElement =
 			portletDataContext.getImportDataStagedModelElement(fileEntryType);
 
-		List<Element> referencedElements = fileEntryTypeElement.elements("ref");
+		List<Element> referencedElements =
+			portletDataContext.getReferencedDataElements(
+				fileEntryType, DDMStructure.class);
 
 		for (Element referencedElement : referencedElements) {
-			String referencedPath = StagedModelPathUtil.getPath(
-				portletDataContext,
-				referencedElement.attributeValue("className"),
-				Long.valueOf(referencedElement.attributeValue("classPK")));
-
-			StagedModel referencedStagedModel =
-				(StagedModel)portletDataContext.getZipEntryAsObject(
-					referencedPath);
-
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, referencedStagedModel);
+				portletDataContext, referencedElement);
 		}
 
 		Map<Long, Long> ddmStructureIdsMap =

@@ -14,7 +14,12 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.model.Company;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 
 /**
  * @author Mate Thurzo
@@ -30,6 +35,18 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 		String path = StagedModelPathUtil.getPath(stagedModel);
 
 		if (portletDataContext.isPathProcessed(path)) {
+			return;
+		}
+
+		try {
+			Group globalScope = GroupLocalServiceUtil.getCompanyGroup(
+				CompanyThreadLocal.getCompanyId());
+
+			if (globalScope.getGroupId() == stagedModel.getGroupId()) {
+				return;
+			}
+		}
+		catch (Exception e) {
 			return;
 		}
 
