@@ -145,7 +145,7 @@
 			}
 		}
 
-		.image-preview {
+		.asset-image-preview {
 			margin-bottom: 5px;
 			text-align: center;
 
@@ -154,7 +154,7 @@
 			}
 		}
 
-		.metadata {
+		.asset-metadata {
 			margin-bottom: 20px;
 
 			.categories {
@@ -162,12 +162,12 @@
 			}
 		}
 
-		.summary {
+		.asset-summary {
 			font-size: 12px;
 			margin-bottom: 20px;
 		}
 
-		.title {
+		.asset-title {
 			color: #336699;
 			font-size: 14px;
 			margin-bottom: 5px;
