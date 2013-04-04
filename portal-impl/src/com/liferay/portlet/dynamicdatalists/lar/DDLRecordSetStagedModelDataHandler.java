@@ -103,7 +103,7 @@ public class DDLRecordSetStagedModelDataHandler
 		// Templates
 
 		List<Element> templateElements =
-			portletDataContext.getReferencedElements(
+			portletDataContext.getReferencedDataElements(
 				recordSet, DDMTemplate.class);
 
 		for (Element templateElement : templateElements) {

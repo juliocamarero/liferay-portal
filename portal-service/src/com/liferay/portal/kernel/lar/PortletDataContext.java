@@ -202,7 +202,7 @@ public interface PortletDataContext extends Serializable {
 
 	public Map<String, List<RatingsEntry>> getRatingsEntries();
 
-	public List<Element> getReferencedElements(
+	public List<Element> getReferencedDataElements(
 		StagedModel parentModel, Class<? extends StagedModel> clazz);
 
 	public List<Element> getReferenceElements(

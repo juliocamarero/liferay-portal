@@ -886,7 +886,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _ratingsEntriesMap;
 	}
 
-	public List<Element> getReferencedElements(
+	public List<Element> getReferencedDataElements(
 		StagedModel parentModel, Class<? extends StagedModel> clazz) {
 
 		List<Element> referencedElements = new ArrayList<Element>();
