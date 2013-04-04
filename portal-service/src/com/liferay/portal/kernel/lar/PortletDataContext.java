@@ -205,9 +205,6 @@ public interface PortletDataContext extends Serializable {
 	public List<Element> getReferencedDataElements(
 		StagedModel parentModel, Class<? extends StagedModel> clazz);
 
-	public List<Element> getReferenceElements(
-		StagedModel parentModel, Class<? extends StagedModel> clazz);
-
 	public String getRootPath();
 
 	public long getScopeGroupId();

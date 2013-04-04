@@ -910,30 +910,6 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return referencedElements;
 	}
 
-	public List<Element> getReferenceElements(
-		StagedModel parentModel, Class<? extends StagedModel> clazz) {
-
-		Element stagedModelElement = getImportDataStagedModelElement(
-			parentModel);
-
-		if (stagedModelElement == null) {
-			return null;
-		}
-
-		Element referencesElement = stagedModelElement.element("references");
-
-		if (referencesElement == null) {
-			return null;
-		}
-
-		XPath xPath = SAXReaderUtil.createXPath(
-			"ref[@class-name='"+ clazz.getName() + "']");
-
-		List<Node> nodes = xPath.selectNodes(referencesElement);
-
-		return ListUtil.fromArray(nodes.toArray(new Element[nodes.size()]));
-	}
-
 	public String getRootPath() {
 		return ROOT_PATH_GROUPS + getScopeGroupId();
 	}
@@ -1653,6 +1629,30 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	protected String getPrimaryKeyString(String className, String primaryKey) {
 		return className.concat(StringPool.POUND).concat(primaryKey);
+	}
+
+	protected List<Element> getReferenceElements(
+		StagedModel parentModel, Class<? extends StagedModel> clazz) {
+
+		Element stagedModelElement = getImportDataStagedModelElement(
+			parentModel);
+
+		if (stagedModelElement == null) {
+			return null;
+		}
+
+		Element referencesElement = stagedModelElement.element("references");
+
+		if (referencesElement == null) {
+			return null;
+		}
+
+		XPath xPath = SAXReaderUtil.createXPath(
+			"ref[@class-name='"+ clazz.getName() + "']");
+
+		List<Node> nodes = xPath.selectNodes(referencesElement);
+
+		return ListUtil.fromArray(nodes.toArray(new Element[nodes.size()]));
 	}
 
 	protected void initXStream() {
