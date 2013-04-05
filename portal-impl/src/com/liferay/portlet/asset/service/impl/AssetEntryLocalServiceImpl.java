@@ -315,6 +315,26 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		return assetEntryFinder.findEntries(entryQuery);
 	}
 
+	public AssetEntry incrementViewCounter(
+			long userId, String className, long classPK)
+		throws PortalException, SystemException {
+
+		User user = userPersistence.findByPrimaryKey(userId);
+
+		assetEntryLocalService.incrementViewCounter(
+			user.getUserId(), className, classPK, 1);
+
+		AssetEntry assetEntry = getEntry(className, classPK);
+
+		if (!user.isDefaultUser()) {
+			socialActivityLocalService.addActivity(
+				user.getUserId(), assetEntry.getGroupId(), className, classPK,
+				SocialActivityConstants.TYPE_VIEW, StringPool.BLANK, 0);
+		}
+
+		return assetEntry;
+	}
+
 	@BufferedIncrement(
 		configuration = "AssetEntry", incrementClass = NumberIncrement.class)
 	public AssetEntry incrementViewCounter(
@@ -339,26 +359,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		assetEntryPersistence.update(entry);
 
 		return entry;
-	}
-
-	public AssetEntry incrementViewCounter(
-			long userId, String className, long classPK)
-		throws PortalException, SystemException {
-
-		User user = userPersistence.findByPrimaryKey(userId);
-
-		assetEntryLocalService.incrementViewCounter(
-			user.getUserId(), className, classPK, 1);
-
-		AssetEntry assetEntry = getEntry(className, classPK);
-
-		if (!user.isDefaultUser()) {
-			socialActivityLocalService.addActivity(
-				user.getUserId(), assetEntry.getGroupId(), className, classPK,
-				SocialActivityConstants.TYPE_VIEW, StringPool.BLANK, 0);
-		}
-
-		return assetEntry;
 	}
 
 	public void reindex(List<AssetEntry> entries) throws PortalException {
