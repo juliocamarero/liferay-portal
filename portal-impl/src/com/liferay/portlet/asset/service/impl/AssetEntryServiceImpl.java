@@ -37,7 +37,6 @@ import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 import com.liferay.portlet.asset.service.permission.AssetEntryPermission;
 import com.liferay.portlet.asset.service.permission.AssetTagPermission;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
-import com.liferay.portlet.social.model.SocialActivityConstants;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,21 +126,8 @@ public class AssetEntryServiceImpl extends AssetEntryServiceBaseImpl {
 		AssetEntryPermission.check(
 			getPermissionChecker(), className, classPK, ActionKeys.VIEW);
 
-		User user = getGuestOrUser();
-
-		assetEntryLocalService.incrementViewCounter(
-			user.getUserId(), className, classPK, 1);
-
-		AssetEntry assetEntry = assetEntryLocalService.getEntry(
-			className, classPK);
-
-		if (!user.isDefaultUser()) {
-			socialActivityLocalService.addActivity(
-				user.getUserId(), assetEntry.getGroupId(), className, classPK,
-				SocialActivityConstants.TYPE_VIEW, StringPool.BLANK, 0);
-		}
-
-		return assetEntry;
+		return assetEntryLocalService.incrementViewCounter(
+			getGuestOrUserId(), className, classPK);
 	}
 
 	public AssetEntry updateEntry(
