@@ -17,7 +17,11 @@
 <%@ include file="/html/portlet/dockbar/init.jsp" %>
 
 <%
-String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
+int deltaDefault = GetterUtil.getInteger(SessionClicks.get(request, "liferay_addpanel_numitems", "10"));
+String displayStyleDefault = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_displaystyle", "descriptive"));
+String selectedTab = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_tab", "content"));
+
+String displayStyle = ParamUtil.getString(request, "displayStyle", displayStyleDefault);
 
 Group group = null;
 
@@ -33,14 +37,16 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
 		<c:if test="<%= !themeDisplay.isStateMaximized() && (layout != null) && (layout.isTypePortlet() || layout.isTypePanel()) && !layout.isLayoutPrototypeLinkActive() && !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
 			<div class="add-content-menu" id="portal_add_panel">
+				<span class="close-add-panel" id="<portlet:namespace />closePanel"><liferay-ui:message key="close" /></span>
 				<liferay-ui:tabs
 					names="content,applications"
 					refresh="<%= false %>"
+					value="<%= selectedTab %>"
 				>
 					<liferay-ui:section>
 
 						<%
-						int delta = ParamUtil.getInteger(request, "delta", 10);
+						int delta = ParamUtil.getInteger(request, "delta", deltaDefault);
 						%>
 
 						<portlet:resourceURL var="updateContentListURL">
@@ -53,15 +59,15 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 								<aui:input cssClass="add-content-search lfr-auto-focus" label="" name="searchInput" type="text" />
 
 								<span class="buttons" id="<portlet:namespace />styleButtons">
-									<span class='list button <%= displayStyle.equals("list") ? "selected" : "" %>' data-style="list">
-										<liferay-ui:message key="list" />
-									</span>
-
-									<span class='descriptive button <%= displayStyle.equals("descriptive") ? "selected" : "" %>' data-style="descriptive">
+									<span class='descriptive button <%= displayStyle.equals("descriptive") ? "selected" : "" %>' data-style="descriptive" title='<%= LanguageUtil.get(pageContext, "descriptive-view") %>'>
 										<liferay-ui:message key="descriptive" />
 									</span>
 
-									<span class='icon button last <%= displayStyle.equals("icon") ? "selected" : "" %>' data-style="icon">
+									<span class='list button <%= displayStyle.equals("list") ? "selected" : "" %>' data-style="list" title='<%= LanguageUtil.get(pageContext, "list-view") %>'>
+										<liferay-ui:message key="list" />
+									</span>
+
+									<span class='icon button last <%= displayStyle.equals("icon") ? "selected" : "" %>' data-style="icon" title='<%= LanguageUtil.get(pageContext, "icon-view") %>'>
 										<liferay-ui:message key="icon" />
 									</span>
 								</span>
@@ -112,6 +118,67 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 								</c:if>
 
 								<%
+								int portletCategoryIndex = 0;
+
+								List<Portlet> portlets = new ArrayList<Portlet>();
+
+								for (String portletId : PropsValues.DOCKBAR_ADD_PORTLETS) {
+									Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+
+									if ((portlet != null) && portlet.isInclude() && portlet.isActive() && PortletPermissionUtil.contains(permissionChecker, layout, portlet, ActionKeys.ADD_TO_PAGE)) {
+										portlets.add(portlet);
+									}
+								}
+								%>
+
+								<c:if test="<%= portlets.size() > 0 %>">
+									<div class="lfr-add-content collapsed expanded" id="<portlet:namespace />portletCategory<%= portletCategoryIndex %>">
+										<div class="lfr-title-category">
+											<h2>
+												<a href="javascript:;"><%= LanguageUtil.get(pageContext, "highlighted") %></a>
+											</h2>
+										</div>
+
+										<ul class="lfr-content-category">
+
+											<%
+											for (Portlet portlet : portlets) {
+												boolean portletInstanceable = portlet.isInstanceable();
+
+												boolean portletUsed = layoutTypePortlet.hasPortletId(portlet.getPortletId());
+
+												boolean portletLocked = !portletInstanceable && portletUsed;
+
+												if (!PortletPermissionUtil.contains(permissionChecker, layout, portlet.getPortletId(), ActionKeys.ADD_TO_PAGE)) {
+													continue;
+												}
+											%>
+
+												<li
+													class="lfr-portlet-item <c:if test="<%= portletLocked %>">lfr-portlet-used</c:if> <c:if test="<%= portletInstanceable %>">lfr-instanceable</c:if>"
+													id="<portlet:namespace />portletItem<%= portlet.getPortletId() %>"
+													instanceable="<%= portletInstanceable %>"
+													plid="<%= plid %>"
+													portletId="<%= portlet.getPortletId() %>"
+													title="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>"
+												>
+													<p><%= PortalUtil.getPortletTitle(portlet, application, locale) %> <a href="javascript:;"><liferay-ui:message key="add" /></a></p>
+												</li>
+
+											<%
+											}
+											%>
+
+										</ul>
+									</div>
+
+									<%
+									portletCategoryIndex++;
+									%>
+
+								</c:if>
+
+								<%
 								UnicodeProperties typeSettingsProperties = layout.getTypeSettingsProperties();
 
 								Set panelSelectedPortlets = SetUtil.fromArray(StringUtil.split(typeSettingsProperties.getProperty("panelSelectedPortlets")));
@@ -123,8 +190,6 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 								List<PortletCategory> categories = ListUtil.fromCollection(portletCategory.getCategories());
 
 								categories = ListUtil.sort(categories, new PortletCategoryComparator(locale));
-
-								int portletCategoryIndex = 0;
 
 								for (PortletCategory curPortletCategory : categories) {
 									if (curPortletCategory.isHidden()) {

@@ -24,12 +24,25 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 <c:choose>
 	<c:when test="<%= viewEntries %>">
 		<div id="<portlet:namespace />entries">
-			<liferay-ui:panel collapsible="<%= false %>" cssClass="lfr-component panel-page-category recent" extended="<%= true %>" id="panel-manage-recent" persistState="<%= true %>" title="recent">
+
+			<%
+			String keywords = ParamUtil.getString(request, "keywords");
+
+			String panelTitle = "recent";
+
+			if (Validator.isNotNull(keywords)) {
+				panelTitle = "search-results";
+			}
+			%>
+
+			<liferay-ui:panel collapsible="<%= false %>" cssClass="lfr-component panel-page-category recent" extended="<%= true %>" id="panel-manage-recent" persistState="<%= true %>" title="<%= panelTitle %>">
 
 				<%
-				int delta = ParamUtil.getInteger(request, "delta", 10);
-				String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
-				String keywords = ParamUtil.getString(request, "keywords");
+				int deltaDefault = GetterUtil.getInteger(SessionClicks.get(request, "liferay_addpanel_numitems", "10"));
+				int delta = ParamUtil.getInteger(request, "delta", deltaDefault);
+
+				String displayStyleDefault = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_displaystyle", "descriptive"));
+				String displayStyle = ParamUtil.getString(request, "displayStyle", displayStyleDefault);
 
 				long[] groupIds = new long[]{scopeGroupId};
 
@@ -93,17 +106,20 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 					data.put("class-name", assetEntry.getClassName());
 					data.put("class-pk", assetEntry.getClassPK());
 					data.put("portlet-id", assetRenderer.getAddToPagePortletId());
+
+					String shortTitle = StringUtil.shorten(assetRenderer.getTitle(themeDisplay.getLocale()), 60);
+					String shortSummary = StringUtil.shorten(assetRenderer.getSummary(themeDisplay.getLocale()), 120);
 				%>
 
 					<liferay-ui:app-view-entry
 						cssClass='<%= !displayStyle.equals("icon") ? "has-preview content-shortcut" : "content-shortcut" %>'
 						data="<%= data %>"
-						description="<%= assetRenderer.getSummary(locale) %>"
+						description="<%= shortSummary %>"
 						displayStyle="<%= displayStyle %>"
 						showCheckbox="<%= false %>"
 						showLinkTitle="<%= false %>"
 						thumbnailSrc='<%= displayStyle.equals("list") ? assetRenderer.getIconPath(liferayPortletRequest) : assetRenderer.getThumbnailPath(liferayPortletRequest) %>'
-						title="<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>"
+						title="<%= HtmlUtil.escape(shortTitle) %>"
 						url="javascript:;"
 					/>
 
