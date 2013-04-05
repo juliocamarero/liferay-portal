@@ -72,8 +72,8 @@ public class DLFolderStagedModelDataHandler
 		exportFolderFileEntryTypes(portletDataContext, folder, folderElement);
 
 		portletDataContext.addClassedModel(
-				folderElement, StagedModelPathUtil.getPath(dlFolder), dlFolder,
-				DLPortletDataHandler.NAMESPACE);
+			folderElement, StagedModelPathUtil.getPath(dlFolder), dlFolder,
+			DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -196,16 +196,11 @@ public class DLFolderStagedModelDataHandler
 			}
 
 			if (dlFileEntryType.isExportable()) {
-				Element refElement = folderElement.addElement("ref");
-
-				refElement.addAttribute(
-					"className", DLFileEntryType.class.getName());
-				refElement.addAttribute(
-					"classPk",
-					String.valueOf(dlFileEntryType.getFileEntryTypeId()));
-
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext, dlFileEntryType);
+
+				portletDataContext.addReferenceElement(
+					folderElement, dlFileEntryType);
 			}
 		}
 
@@ -251,13 +246,12 @@ public class DLFolderStagedModelDataHandler
 
 		long defaultFileEntryTypeId = 0;
 
-		List<Element> referencedElements = folderElement.elements("ref");
+		List<Element> referencedElements =
+			portletDataContext.getReferencedDataElements(
+				(DLFolder)folder.getModel(), DLFileEntryType.class);
 
 		for (Element referencedElement : referencedElements) {
-			String referencedPath = StagedModelPathUtil.getPath(
-				portletDataContext,
-				referencedElement.attributeValue("className"),
-				Long.valueOf(referencedElement.attributeValue("classPk")));
+			String referencedPath = referencedElement.attributeValue("path");
 
 			DLFileEntryType referencedFileEntryType =
 				(DLFileEntryType)portletDataContext.getZipEntryAsObject(

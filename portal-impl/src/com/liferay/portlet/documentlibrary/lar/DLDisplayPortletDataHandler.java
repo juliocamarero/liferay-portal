@@ -223,10 +223,6 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
 
-		//TODO validate export to be sure that it will export those objects what
-
-		// we are importing here
-
 		portletDataContext.importPermissions(
 			"com.liferay.portlet.documentlibrary",
 			portletDataContext.getSourceGroupId(),

@@ -76,16 +76,11 @@ public class RepositoryStagedModelDataHandler
 				repository.getRepositoryId());
 
 		for (RepositoryEntry repositoryEntry : repositoryEntries) {
-			Element refElement = repositoryElement.addElement("ref");
-
-			refElement.addAttribute(
-				"className", RepositoryEntry.class.getName());
-			refElement.addAttribute(
-				"classPk",
-				String.valueOf(repositoryEntry.getRepositoryEntryId()));
-
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, repositoryEntry);
+
+			portletDataContext.addReferenceElement(
+				repositoryElement, repositoryEntry);
 		}
 	}
 
@@ -178,20 +173,13 @@ public class RepositoryStagedModelDataHandler
 
 		// Repository Entries
 
-		List<Element> referencedElements = repositoryElement.elements("ref");
+		List<Element> referencedElements =
+			portletDataContext.getReferencedDataElements(
+				repository, RepositoryEntry.class);
 
 		for (Element referencedElement : referencedElements) {
-			String referencedPath = StagedModelPathUtil.getPath(
-				portletDataContext,
-				referencedElement.attributeValue("className"),
-				Long.valueOf(referencedElement.attributeValue("classPK")));
-
-			StagedModel referencedStagedModel =
-				(StagedModel)portletDataContext.getZipEntryAsObject(
-					referencedPath);
-
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, referencedStagedModel);
+				portletDataContext, referencedElement);
 		}
 	}
 

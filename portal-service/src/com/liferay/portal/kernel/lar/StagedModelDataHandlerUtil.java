@@ -20,9 +20,6 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.StagedModel;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Brian Wing Shun Chan
  */

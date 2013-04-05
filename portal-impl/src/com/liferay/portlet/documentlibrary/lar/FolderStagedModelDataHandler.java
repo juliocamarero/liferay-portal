@@ -16,6 +16,7 @@ package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.model.Repository;
@@ -27,6 +28,19 @@ import com.liferay.portal.service.persistence.RepositoryUtil;
  */
 public class FolderStagedModelDataHandler
 	extends BaseStagedModelDataHandler<Folder> {
+
+	@Override
+	public void exportStagedModel(
+			PortletDataContext portletDataContext, Folder folder)
+		throws PortletDataException {
+
+		try {
+			doExportStagedModel(portletDataContext, folder);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
+	}
 
 	@Override
 	public String getClassName() {
@@ -69,6 +83,8 @@ public class FolderStagedModelDataHandler
 	protected void doImportStagedModel(
 			PortletDataContext portletDataContext, Folder stagedModel)
 		throws Exception {
+
+		return;
 	}
 
 }
