@@ -529,6 +529,30 @@ public class ServicePreAction extends Action {
 				throw new NoSuchLayoutException(sb.toString());
 			}
 			else if (isLoginRequest(request) && !viewableGroup) {
+
+				if (Validator.isNotNull(PropsValues.AUTH_LOGIN_SITE_URL)) {
+
+					// Site login layout could be hidden and in login request
+					// must be available for redirects
+
+					try {
+						Layout siteLoginLayout =
+							LayoutLocalServiceUtil.getFriendlyURLLayout(
+								layout.getGroupId(), false,
+									PropsValues.AUTH_LOGIN_SITE_URL);
+
+						layouts = new ArrayList<Layout>();
+
+						layouts.add(siteLoginLayout);
+
+					} catch (NoSuchLayoutException nsle) {
+						if (_log.isDebugEnabled()) {
+							_log.debug("Site login layout not found: " +
+								nsle.getMessage());
+						}
+					}
+				}
+
 				layout = null;
 			}
 			else if (group.isLayoutPrototype()) {
