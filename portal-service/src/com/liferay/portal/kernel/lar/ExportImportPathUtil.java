@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.lar;
 
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.model.StagedModel;
 
@@ -26,6 +27,37 @@ import java.io.Serializable;
  * @author Daniel Kocsis
  */
 public class ExportImportPathUtil {
+
+	public static String getExpandoPath(String path) {
+		if (!Validator.isFilePath(path, false)) {
+			throw new IllegalArgumentException(
+				path + " is located outside of the lar");
+		}
+
+		int pos = path.lastIndexOf(".xml");
+
+		if (pos == -1) {
+			throw new IllegalArgumentException(
+				path + " does not end with .xml");
+		}
+
+		return path.substring(0, pos).concat("-expando").concat(
+			path.substring(pos));
+	}
+
+	public static String getLayoutPath(
+		PortletDataContext portletDataContext, long layoutId) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(getRootPath(portletDataContext));
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(_PATH_PREFIX_LAYOUT);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(layoutId);
+
+		return sb.toString();
+	}
 
 	public static String getPath(
 		PortletDataContext portletDataContext, String className, long classPK) {
@@ -66,6 +98,60 @@ public class ExportImportPathUtil {
 		}
 	}
 
+	public static String getPortletPath(
+		PortletDataContext portletDataContext, String portletId) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(getRootPath(portletDataContext));
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(_PATH_PREFIX_PORTLET);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(portletId);
+
+		return sb.toString();
+	}
+
+	public static String getRootPath(PortletDataContext portletDataContext) {
+		return _PATH_PREFIX_GROUP + StringPool.FORWARD_SLASH +
+			portletDataContext.getScopeGroupId();
+	}
+
+	public static String getSourceLayoutPath(
+		PortletDataContext portletDataContext, long layoutId) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(getSourceRootPath(portletDataContext));
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(_PATH_PREFIX_LAYOUT);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(layoutId);
+
+		return sb.toString();
+	}
+
+	public static String getSourcePortletPath(
+		PortletDataContext portletDataContext, String portletId) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(getSourceRootPath(portletDataContext));
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(_PATH_PREFIX_PORTLET);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(portletId);
+
+		return sb.toString();
+	}
+
+	public static String getSourceRootPath(
+		PortletDataContext portletDataContext) {
+
+		return _PATH_PREFIX_GROUP + StringPool.FORWARD_SLASH +
+			portletDataContext.getSourceGroupId();
+	}
+
 	protected static String getPath(
 			String pathPrefix, long pathPrimaryKey, String className,
 			Serializable primaryKeyObj,
@@ -96,5 +182,9 @@ public class ExportImportPathUtil {
 	private static final String _PATH_PREFIX_COMPANY = "company";
 
 	private static final String _PATH_PREFIX_GROUP = "group";
+
+	private static final String _PATH_PREFIX_LAYOUT = "layout";
+
+	private static final String _PATH_PREFIX_PORTLET = "portlet";
 
 }
