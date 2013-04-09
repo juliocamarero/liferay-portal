@@ -315,6 +315,10 @@ public class LiferayFolder extends LiferayModel implements Folder {
 		_dlFolder.setUserUuid(userUuid);
 	}
 
+	public void setUuid(String uuid) {
+		_dlFolder.setUuid(uuid);
+	}
+
 	public Folder toEscapedModel() {
 		if (isEscapedModel()) {
 			return this;

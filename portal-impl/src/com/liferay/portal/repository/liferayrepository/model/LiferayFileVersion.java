@@ -301,6 +301,10 @@ public class LiferayFileVersion extends LiferayModel implements FileVersion {
 		_dlFileVersion.setUserUuid(userUuid);
 	}
 
+	public void setUuid(String uuid) {
+		_dlFileVersion.setUuid(uuid);
+	}
+
 	public FileVersion toEscapedModel() {
 		if (isEscapedModel()) {
 			return this;

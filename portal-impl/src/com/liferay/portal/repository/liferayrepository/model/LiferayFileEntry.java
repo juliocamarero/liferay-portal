@@ -358,6 +358,10 @@ public class LiferayFileEntry extends LiferayModel implements FileEntry {
 		_dlFileEntry.setUserUuid(userUuid);
 	}
 
+	public void setUuid(String uuid) {
+		_dlFileEntry.setUuid(uuid);
+	}
+
 	public FileEntry toEscapedModel() {
 		if (isEscapedModel()) {
 			return this;

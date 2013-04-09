@@ -553,6 +553,9 @@ public class CMISFileEntry extends CMISModel implements FileEntry {
 	public void setUserUuid(String userUuid) {
 	}
 
+	public void setUuid(String uuid) {
+	}
+
 	public FileEntry toEscapedModel() {
 		return this;
 	}

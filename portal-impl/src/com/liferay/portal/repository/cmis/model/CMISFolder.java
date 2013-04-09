@@ -429,6 +429,9 @@ public class CMISFolder extends CMISModel implements Folder {
 	public void setUserUuid(String userUuid) {
 	}
 
+	public void setUuid(String uuid) {
+	}
+
 	public Folder toEscapedModel() {
 		return this;
 	}

@@ -354,6 +354,9 @@ public class CMISFileVersion extends CMISModel implements FileVersion {
 	public void setUserUuid(String userUuid) {
 	}
 
+	public void setUuid(String uuid) {
+	}
+
 	public FileVersion toEscapedModel() {
 		return this;
 	}

@@ -296,6 +296,10 @@ public class FileEntryProxyBean
 		_fileEntry.setUserUuid(userUuid);
 	}
 
+	public void setUuid(String uuid) {
+		_fileEntry.setUuid(uuid);
+	}
+
 	public FileEntry toEscapedModel() {
 		FileEntry fileEntry = _fileEntry.toEscapedModel();
 

@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.lar;
 
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
@@ -39,11 +40,18 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 		}
 
 		try {
-			Group globalScope = GroupLocalServiceUtil.getCompanyGroup(
-				CompanyThreadLocal.getCompanyId());
+			if (stagedModel instanceof StagedGroupedModel) {
+				StagedGroupedModel stagedGroupedModel =
+					(StagedGroupedModel)stagedModel;
 
-			if (globalScope.getGroupId() == stagedModel.getGroupId()) {
-				return;
+				Group globalScope = GroupLocalServiceUtil.getCompanyGroup(
+					CompanyThreadLocal.getCompanyId());
+
+				if (globalScope.getGroupId() ==
+						stagedGroupedModel.getGroupId()) {
+
+					return;
+				}
 			}
 		}
 		catch (Exception e) {

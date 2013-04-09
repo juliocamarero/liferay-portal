@@ -18,13 +18,14 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.model.StagedModel;
 
 /**
  * @author Alexander Chow
  */
 public interface RepositoryModel<T>
-	extends StagedModel, ClassedModel, Serializable {
+	extends StagedGroupedModel, ClassedModel, Serializable {
 
 	public Map<String, Serializable> getAttributes();
 

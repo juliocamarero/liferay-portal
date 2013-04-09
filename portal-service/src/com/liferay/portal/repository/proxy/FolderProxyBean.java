@@ -244,6 +244,10 @@ public class FolderProxyBean
 		_folder.setUserUuid(userUuid);
 	}
 
+	public void setUuid(String uuid) {
+		_folder.setUuid(uuid);
+	}
+
 	public Folder toEscapedModel() {
 		Folder folder = _folder.toEscapedModel();
 

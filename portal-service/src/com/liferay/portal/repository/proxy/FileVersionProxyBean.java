@@ -251,6 +251,10 @@ public class FileVersionProxyBean
 		_fileVersion.setUserUuid(userUuid);
 	}
 
+	public void setUuid(String uuid) {
+		_fileVersion.setUuid(uuid);
+	}
+
 	public FileVersion toEscapedModel() {
 		FileVersion fileVersion = _fileVersion.toEscapedModel();
 
