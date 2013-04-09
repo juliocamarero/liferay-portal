@@ -34,7 +34,6 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.model.Repository;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
@@ -272,9 +271,9 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 
 		List<Element> folderElements = foldersElement.elements();
 
-		for (Element repositoryElement : folderElements) {
+		for (Element folderElement : folderElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, repositoryElement);
+				portletDataContext, folderElement);
 		}
 
 		Element fileEntriesElement =

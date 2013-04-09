@@ -182,7 +182,7 @@ public class DLFileEntryStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			fileEntryElement, StagedModelPathUtil.getPath(dlFileEntry),
-			fileEntry, DLPortletDataHandler.NAMESPACE);
+			dlFileEntry, DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override

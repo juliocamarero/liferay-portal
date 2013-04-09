@@ -69,7 +69,7 @@ public class DLFolderStagedModelDataHandler
 		Element folderElement =
 			portletDataContext.getExportDataStagedModelElement(dlFolder);
 
-		exportFolderFileEntryTypes(portletDataContext, folder, folderElement);
+		exportFolderFileEntryTypes(portletDataContext, dlFolder, folderElement);
 
 		portletDataContext.addClassedModel(
 			folderElement, StagedModelPathUtil.getPath(dlFolder), dlFolder,
@@ -152,14 +152,14 @@ public class DLFolderStagedModelDataHandler
 			portletDataContext.getImportDataStagedModelElement(folder);
 
 		importFolderFileEntryTypes(
-			portletDataContext, folderElement, importedFolder, serviceContext);
+			portletDataContext, folderElement, folder, serviceContext);
 
 		portletDataContext.importClassedModel(
 			folder, importedFolder, DLPortletDataHandler.NAMESPACE);
 	}
 
 	protected void exportFolderFileEntryTypes(
-			PortletDataContext portletDataContext, Folder folder,
+			PortletDataContext portletDataContext, DLFolder folder,
 			Element folderElement)
 		throws Exception {
 
@@ -236,7 +236,7 @@ public class DLFolderStagedModelDataHandler
 
 	protected void importFolderFileEntryTypes(
 			PortletDataContext portletDataContext, Element folderElement,
-			Folder folder, ServiceContext serviceContext)
+			DLFolder folder, ServiceContext serviceContext)
 		throws Exception {
 
 		List<Long> fileEntryTypeIds = new ArrayList<Long>();
@@ -248,7 +248,7 @@ public class DLFolderStagedModelDataHandler
 
 		List<Element> referencedElements =
 			portletDataContext.getReferencedDataElements(
-				(DLFolder)folder.getModel(), DLFileEntryType.class);
+				folder, DLFileEntryType.class);
 
 		for (Element referencedElement : referencedElements) {
 			String referencedPath = referencedElement.attributeValue("path");
@@ -289,15 +289,13 @@ public class DLFolderStagedModelDataHandler
 		}
 
 		if (!fileEntryTypeIds.isEmpty()) {
-			DLFolder dlFolder = (DLFolder)folder.getModel();
+			folder.setDefaultFileEntryTypeId(defaultFileEntryTypeId);
+			folder.setOverrideFileEntryTypes(true);
 
-			dlFolder.setDefaultFileEntryTypeId(defaultFileEntryTypeId);
-			dlFolder.setOverrideFileEntryTypes(true);
-
-			DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
+			DLFolderLocalServiceUtil.updateDLFolder(folder);
 
 			DLFileEntryTypeLocalServiceUtil.updateFolderFileEntryTypes(
-				dlFolder, fileEntryTypeIds, defaultFileEntryTypeId,
+				folder, fileEntryTypeIds, defaultFileEntryTypeId,
 				serviceContext);
 		}
 	}

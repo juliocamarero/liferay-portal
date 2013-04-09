@@ -52,6 +52,19 @@ public class FolderStagedModelDataHandler
 	}
 
 	@Override
+	public void importStagedModel(
+			PortletDataContext portletDataContext, Folder folder)
+		throws PortletDataException {
+
+		try {
+			doImportStagedModel(portletDataContext, folder);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
+	}
+
+	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, Folder folder)
 		throws Exception {
@@ -111,7 +124,7 @@ public class FolderStagedModelDataHandler
 		throws Exception {
 
 		String path = StagedModelPathUtil.getPath(
-			portletDataContext, Folder.class.getName(), folder.getFolderId());
+			folder.getGroupId(), Folder.class.getName(), folder.getFolderId());
 
 		Element folderElement =
 			portletDataContext.getImportDataStagedModelElement(

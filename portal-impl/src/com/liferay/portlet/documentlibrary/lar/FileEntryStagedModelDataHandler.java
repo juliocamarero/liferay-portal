@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.StagedModel;
@@ -50,6 +49,19 @@ public class FileEntryStagedModelDataHandler
 	@Override
 	public String getClassName() {
 		return FileEntry.class.getName();
+	}
+
+	@Override
+	public void importStagedModel(
+			PortletDataContext portletDataContext, FileEntry fileEntry)
+		throws PortletDataException {
+
+		try {
+			doImportStagedModel(portletDataContext, fileEntry);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
 	}
 
 	@Override
@@ -109,8 +121,8 @@ public class FileEntryStagedModelDataHandler
 		throws Exception {
 
 		String path = StagedModelPathUtil.getPath(
-			fileEntry.getGroupId(), Folder.class.getName(),
-			fileEntry.getFolderId());
+			fileEntry.getGroupId(), FileEntry.class.getName(),
+			fileEntry.getFileEntryId());
 
 		Element fileEntryElement =
 			portletDataContext.getImportDataStagedModelElement(
