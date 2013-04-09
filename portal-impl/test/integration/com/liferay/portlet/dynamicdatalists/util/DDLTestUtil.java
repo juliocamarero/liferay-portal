@@ -41,8 +41,7 @@ public class DDLTestUtil {
 			groupId);
 
 		return addRecordSet(
-			groupId, structureId, ServiceTestUtil.randomString(),
-			LocaleUtil.getDefault(), serviceContext);
+			groupId, structureId, name, defaultLocale, serviceContext);
 	}
 
 	public static DDLRecordSet addRecordSet(
@@ -54,6 +53,7 @@ public class DDLTestUtil {
 		String recordSetKey = null;
 
 		Map<Locale, String> nameMap = new HashMap<Locale, String>();
+
 		nameMap.put(defaultLocale, name);
 
 		Map<Locale, String> descriptionMap = null;
