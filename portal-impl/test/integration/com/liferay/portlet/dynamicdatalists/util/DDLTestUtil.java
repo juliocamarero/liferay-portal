@@ -34,6 +34,9 @@ public class DDLTestUtil {
 	public static DDLRecordSet addRecordSet(long groupId, long structureId)
 		throws Exception {
 
+		String name = ServiceTestUtil.randomString();
+		Locale defaultLocale = LocaleUtil.getDefault();
+
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
 			groupId);
 
@@ -47,14 +50,19 @@ public class DDLTestUtil {
 			ServiceContext serviceContext)
 		throws Exception {
 
-		Map<Locale, String> nameMap = new HashMap<Locale, String>();
+		long userId = TestPropsValues.getUserId();
+		String recordSetKey = null;
 
+		Map<Locale, String> nameMap = new HashMap<Locale, String>();
 		nameMap.put(defaultLocale, name);
 
+		Map<Locale, String> descriptionMap = null;
+		int minDisplayRows = DDLRecordSetConstants.MIN_DISPLAY_ROWS_DEFAULT;
+		int scope = DDLRecordSetConstants.SCOPE_DYNAMIC_DATA_LISTS;
+
 		return DDLRecordSetLocalServiceUtil.addRecordSet(
-			TestPropsValues.getUserId(), groupId, structureId, null, nameMap,
-			null, DDLRecordSetConstants.MIN_DISPLAY_ROWS_DEFAULT,
-			DDLRecordSetConstants.SCOPE_DYNAMIC_DATA_LISTS, serviceContext);
+			userId, groupId, structureId, recordSetKey, nameMap, descriptionMap,
+			minDisplayRows, scope, serviceContext);
 	}
 
 }
