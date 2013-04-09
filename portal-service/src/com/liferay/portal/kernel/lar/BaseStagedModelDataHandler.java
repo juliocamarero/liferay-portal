@@ -14,12 +14,10 @@
 
 package com.liferay.portal.kernel.lar;
 
-import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
-import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 
 /**

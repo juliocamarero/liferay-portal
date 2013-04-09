@@ -266,8 +266,8 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Element foldersElement =
-			portletDataContext.getImportDataGroupElement(Folder.class);
+		Element foldersElement = portletDataContext.getImportDataGroupElement(
+			Folder.class);
 
 		List<Element> folderElements = foldersElement.elements();
 
