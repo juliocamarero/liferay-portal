@@ -117,20 +117,6 @@ public class ExportImportPathUtil {
 			portletDataContext.getScopeGroupId();
 	}
 
-	public static String getSourceLayoutPath(
-		PortletDataContext portletDataContext, long layoutId) {
-
-		StringBundler sb = new StringBundler(5);
-
-		sb.append(getSourceRootPath(portletDataContext));
-		sb.append(StringPool.FORWARD_SLASH);
-		sb.append(_PATH_PREFIX_LAYOUT);
-		sb.append(StringPool.FORWARD_SLASH);
-		sb.append(layoutId);
-
-		return sb.toString();
-	}
-
 	public static String getSourcePortletPath(
 		PortletDataContext portletDataContext, String portletId) {
 
