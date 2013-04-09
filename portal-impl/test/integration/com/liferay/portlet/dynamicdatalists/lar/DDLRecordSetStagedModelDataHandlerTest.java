@@ -133,7 +133,7 @@ public class DDLRecordSetStagedModelDataHandlerTest
 
 		for (StagedModel template : dependentStagedModels) {
 			DDMTemplateLocalServiceUtil.getDDMTemplateByUuidAndGroupId(
-				template.getUuid(), template.getGroupId());
+				template.getUuid(), group.getGroupId());
 		}
 	}
 
