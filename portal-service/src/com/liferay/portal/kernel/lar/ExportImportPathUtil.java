@@ -59,39 +59,39 @@ public class ExportImportPathUtil {
 		return sb.toString();
 	}
 
-	public static String getPath(
+	public static String getModelPath(
 		PortletDataContext portletDataContext, String className, long classPK) {
 
-		return getPath(portletDataContext, className, classPK, null);
+		return getModelPath(portletDataContext, className, classPK, null);
 	}
 
-	public static String getPath(
+	public static String getModelPath(
 		PortletDataContext portletDataContext, String className, long classPK,
 		String dependentFileName) {
 
-		return getPath(
+		return getModelPath(
 			_PATH_PREFIX_GROUP, portletDataContext.getSourceGroupId(),
 			className, classPK, dependentFileName);
 	}
 
-	public static String getPath(StagedModel stagedModel) {
-		return getPath(stagedModel, null);
+	public static String getModelPath(StagedModel stagedModel) {
+		return getModelPath(stagedModel, null);
 	}
 
-	public static String getPath(
+	public static String getModelPath(
 		StagedModel stagedModel, String dependentFileName) {
 
 		if (stagedModel instanceof StagedGroupedModel) {
 			StagedGroupedModel stagedGroupedModel =
 				(StagedGroupedModel)stagedModel;
 
-			return getPath(
+			return getModelPath(
 				_PATH_PREFIX_GROUP, stagedGroupedModel.getGroupId(),
 				stagedModel.getModelClassName(), stagedModel.getPrimaryKeyObj(),
 				dependentFileName);
 		}
 		else {
-			return getPath(
+			return getModelPath(
 				_PATH_PREFIX_COMPANY, stagedModel.getCompanyId(),
 				stagedModel.getModelClassName(), stagedModel.getPrimaryKeyObj(),
 				dependentFileName);
@@ -113,8 +113,8 @@ public class ExportImportPathUtil {
 	}
 
 	public static String getRootPath(PortletDataContext portletDataContext) {
-		return _PATH_PREFIX_GROUP + StringPool.FORWARD_SLASH +
-			portletDataContext.getScopeGroupId();
+		return getRootPath(
+			_PATH_PREFIX_GROUP, portletDataContext.getScopeGroupId());
 	}
 
 	public static String getSourcePortletPath(
@@ -134,21 +134,17 @@ public class ExportImportPathUtil {
 	public static String getSourceRootPath(
 		PortletDataContext portletDataContext) {
 
-		return _PATH_PREFIX_GROUP + StringPool.FORWARD_SLASH +
-			portletDataContext.getSourceGroupId();
+		return getRootPath(
+			_PATH_PREFIX_GROUP, portletDataContext.getSourceGroupId());
 	}
 
-	protected static String getPath(
-			String pathPrefix, long pathPrimaryKey, String className,
-			Serializable primaryKeyObj,
-		String dependentFileName) {
+	protected static String getModelPath(
+		String pathPrefix, long pathPrimaryKey, String className,
+		Serializable primaryKeyObj, String dependentFileName) {
 
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(8);
 
-		sb.append(StringPool.FORWARD_SLASH);
-		sb.append(pathPrefix);
-		sb.append(StringPool.FORWARD_SLASH);
-		sb.append(pathPrimaryKey);
+		sb.append(getRootPath(pathPrefix, pathPrimaryKey));
 		sb.append(StringPool.FORWARD_SLASH);
 		sb.append(className);
 		sb.append(StringPool.FORWARD_SLASH);
@@ -161,6 +157,19 @@ public class ExportImportPathUtil {
 			sb.append(StringPool.FORWARD_SLASH);
 			sb.append(dependentFileName);
 		}
+
+		return sb.toString();
+	}
+
+	protected static String getRootPath(
+		String pathPrefix, long pathPrimaryKey) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(pathPrefix);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(pathPrimaryKey);
 
 		return sb.toString();
 	}
