@@ -22,12 +22,12 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -684,7 +684,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 		StagedModel stagedModel, String namespace) {
 
 		return createServiceContext(
-			StagedModelPathUtil.getPath(stagedModel), stagedModel, namespace);
+			ExportImportPathUtil.getModelPath(stagedModel), stagedModel,
+			namespace);
 	}
 
 	public ServiceContext createServiceContext(
@@ -805,7 +806,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	public Element getImportDataStagedModelElement(StagedModel stagedModel) {
-		String path = StagedModelPathUtil.getPath(stagedModel);
+		String path = ExportImportPathUtil.getModelPath(stagedModel);
 
 		Class<?> clazz = stagedModel.getModelClass();
 
@@ -898,7 +899,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 			long classPK = GetterUtil.getLong(
 				referenceElement.attributeValue("class-pk"));
 
-			String path = StagedModelPathUtil.getPath(
+			String path = ExportImportPathUtil.getModelPath(
 				this, clazz.getName(), classPK);
 
 			Element referencedElement = getImportDataStagedModelElement(
