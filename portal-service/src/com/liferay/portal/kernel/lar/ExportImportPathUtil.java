@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @author Mate Thurzo
  * @author Daniel Kocsis
  */
-public class StagedModelPathUtil {
+public class ExportImportPathUtil {
 
 	public static String getPath(
 		PortletDataContext portletDataContext, String className, long classPK) {
