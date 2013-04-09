@@ -1242,7 +1242,7 @@ public class PortletImporter {
 		throws Exception {
 
 		String xml = portletDataContext.getZipEntryAsString(
-			ExportImportPathUtil.getSourceRootPath(portletDataContext)+
+			ExportImportPathUtil.getSourceRootPath(portletDataContext) +
 				"/categories-hierarchy.xml");
 
 		if (xml == null) {

@@ -1159,8 +1159,8 @@ public class LayoutExporter {
 	protected String getLayoutSetLogoPath(
 		PortletDataContext portletDataContext) {
 
-		return ExportImportPathUtil.getRootPath(
-			portletDataContext).concat("/logo/");
+		return ExportImportPathUtil.getRootPath(portletDataContext).concat(
+			"/logo/");
 	}
 
 	protected String getLayoutSetPrototype(
