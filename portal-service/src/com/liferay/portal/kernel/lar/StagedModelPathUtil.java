@@ -27,6 +27,10 @@ import java.io.Serializable;
  */
 public class StagedModelPathUtil {
 
+	public static String getPath(long groupId, String className, long classPK) {
+		return getPath(_PATH_PREFIX_GROUP, groupId, className, classPK, null);
+	}
+
 	public static String getPath(
 		PortletDataContext portletDataContext, String className, long classPK) {
 
