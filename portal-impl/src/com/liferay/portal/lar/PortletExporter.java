@@ -336,9 +336,10 @@ public class PortletExporter {
 
 		exportAssetCategories(portletDataContext, rootElement);
 
+		String rootPath = ExportImportPathUtil.getRootPath(portletDataContext);
+
 		portletDataContext.addZipEntry(
-			ExportImportPathUtil.getRootPath(portletDataContext) +
-				"/categories-hierarchy.xml",
+			rootPath.concat("/categories-hierarchy.xml"),
 			document.formattedString());
 	}
 
@@ -499,9 +500,10 @@ public class PortletExporter {
 			assetElement.addAttribute("type", assetLinkType);
 		}
 
+		String rootPath = ExportImportPathUtil.getRootPath(portletDataContext);
+
 		portletDataContext.addZipEntry(
-			ExportImportPathUtil.getRootPath(portletDataContext) + "/links.xml",
-			document.formattedString());
+			rootPath.concat("/links.xml"), document.formattedString());
 	}
 
 	protected void exportAssetTag(
@@ -662,10 +664,10 @@ public class PortletExporter {
 			}
 		}
 
+		String rootPath = ExportImportPathUtil.getRootPath(portletDataContext);
+
 		portletDataContext.addZipEntry(
-			ExportImportPathUtil.getRootPath(portletDataContext) +
-				"/comments.xml",
-			document.formattedString());
+			rootPath.concat("/comments.xml"), document.formattedString());
 	}
 
 	protected void exportExpandoTables(PortletDataContext portletDataContext)
@@ -715,10 +717,10 @@ public class PortletExporter {
 			}
 		}
 
+		String rootPath = ExportImportPathUtil.getRootPath(portletDataContext);
+
 		portletDataContext.addZipEntry(
-			ExportImportPathUtil.getRootPath(portletDataContext) +
-				"/expando-tables.xml",
-			document.formattedString());
+			rootPath.concat("/expando-tables.xml"), document.formattedString());
 	}
 
 	protected void exportLocks(PortletDataContext portletDataContext)
@@ -753,9 +755,10 @@ public class PortletExporter {
 			}
 		}
 
+		String rootPath = ExportImportPathUtil.getRootPath(portletDataContext);
+
 		portletDataContext.addZipEntry(
-			ExportImportPathUtil.getRootPath(portletDataContext) + "/locks.xml",
-			document.formattedString());
+			rootPath.concat("/locks.xml"), document.formattedString());
 	}
 
 	protected void exportPortlet(
@@ -1246,10 +1249,10 @@ public class PortletExporter {
 			}
 		}
 
+		String rootPath = ExportImportPathUtil.getRootPath(portletDataContext);
+
 		portletDataContext.addZipEntry(
-			ExportImportPathUtil.getRootPath(portletDataContext) +
-				"/ratings.xml",
-			document.formattedString());
+			rootPath.concat("/ratings.xml"), document.formattedString());
 	}
 
 	protected String getAssetCategoryPath(

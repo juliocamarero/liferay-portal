@@ -185,9 +185,11 @@ public class PermissionImporter {
 			PortletDataContext portletDataContext)
 		throws Exception {
 
+		String sourceRootPath = ExportImportPathUtil.getSourceRootPath(
+			portletDataContext);
+
 		String xml = portletDataContext.getZipEntryAsString(
-			ExportImportPathUtil.getSourceRootPath(portletDataContext) +
-				"/portlet-data-permissions.xml");
+			sourceRootPath.concat("/portlet-data-permissions.xml"));
 
 		if (xml == null) {
 			return;

@@ -253,9 +253,10 @@ public class PermissionExporter {
 			}
 		}
 
+		String rootPath = ExportImportPathUtil.getRootPath(portletDataContext);
+
 		portletDataContext.addZipEntry(
-			ExportImportPathUtil.getRootPath(portletDataContext) +
-				"/portlet-data-permissions.xml",
+			rootPath.concat("/portlet-data-permissions.xml"),
 			document.formattedString());
 	}
 
