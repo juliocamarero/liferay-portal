@@ -28,7 +28,15 @@ import java.io.Serializable;
  */
 public class ExportImportPathUtil {
 
-	public String getExpandoPath(String path) {
+	public static final String _PATH_PREFIX_COMPANY = "company";
+
+	public static final String _PATH_PREFIX_GROUP = "group";
+
+	public static final String _PATH_PREFIX_LAYOUT = "layout";
+
+	public static final String _PATH_PREFIX_PORTLET = "portlet";
+
+	public static String getExpandoPath(String path) {
 		if (!Validator.isFilePath(path, false)) {
 			throw new IllegalArgumentException(
 				path + " is located outside of the lar");
@@ -45,60 +53,120 @@ public class ExportImportPathUtil {
 			path.substring(pos));
 	}
 
-	public String getLayoutPath(long layoutId) {
-		return getRootPath() + ROOT_PATH_LAYOUTS + layoutId;
+	public static String getLayoutPath(
+		PortletDataContext portletDataContext, long layoutId) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(getRootPath(portletDataContext));
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(_PATH_PREFIX_LAYOUT);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(layoutId);
+
+		return sb.toString();
 	}
 
-	public static String getPath(
+	public static String getModelPath(
 		PortletDataContext portletDataContext, String className, long classPK) {
 
-		return getPath(portletDataContext, className, classPK, null);
+		return getModelPath(portletDataContext, className, classPK, null);
 	}
 
-	public static String getPath(
+	public static String getModelPath(
 		PortletDataContext portletDataContext, String className, long classPK,
 		String dependentFileName) {
 
-		return getPath(
+		return getModelPath(
 			_PATH_PREFIX_GROUP, portletDataContext.getSourceGroupId(),
 			className, classPK, dependentFileName);
 	}
 
-	public static String getPath(StagedModel stagedModel) {
-		return getPath(stagedModel, null);
+	public static String getModelPath(StagedModel stagedModel) {
+		return getModelPath(stagedModel, null);
 	}
 
-	public static String getPath(
+	public static String getModelPath(
 		StagedModel stagedModel, String dependentFileName) {
 
 		if (stagedModel instanceof StagedGroupedModel) {
 			StagedGroupedModel stagedGroupedModel =
 				(StagedGroupedModel)stagedModel;
 
-			return getPath(
+			return getModelPath(
 				_PATH_PREFIX_GROUP, stagedGroupedModel.getGroupId(),
 				stagedModel.getModelClassName(), stagedModel.getPrimaryKeyObj(),
 				dependentFileName);
 		}
 		else {
-			return getPath(
+			return getModelPath(
 				_PATH_PREFIX_COMPANY, stagedModel.getCompanyId(),
 				stagedModel.getModelClassName(), stagedModel.getPrimaryKeyObj(),
 				dependentFileName);
 		}
 	}
 
-	protected static String getPath(
-			String pathPrefix, long pathPrimaryKey, String className,
-			Serializable primaryKeyObj,
-		String dependentFileName) {
+	public static String getPortletPath(
+		PortletDataContext portletDataContext, String portletId) {
 
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(5);
 
+		sb.append(getRootPath(portletDataContext));
 		sb.append(StringPool.FORWARD_SLASH);
-		sb.append(pathPrefix);
+		sb.append(_PATH_PREFIX_PORTLET);
 		sb.append(StringPool.FORWARD_SLASH);
-		sb.append(pathPrimaryKey);
+		sb.append(portletId);
+
+		return sb.toString();
+	}
+
+	public static String getRootPath(PortletDataContext portletDataContext) {
+		return getRootPath(
+			_PATH_PREFIX_GROUP, portletDataContext.getScopeGroupId());
+	}
+
+	public static String getSourceLayoutPath(
+		PortletDataContext portletDataContext, long layoutId) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(getSourceRootPath(portletDataContext));
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(_PATH_PREFIX_LAYOUT);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(layoutId);
+
+		return sb.toString();
+	}
+
+	public static String getSourcePortletPath(
+		PortletDataContext portletDataContext, String portletId) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(getSourceRootPath(portletDataContext));
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(_PATH_PREFIX_PORTLET);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(portletId);
+
+		return sb.toString();
+	}
+
+	public static String getSourceRootPath(
+		PortletDataContext portletDataContext) {
+
+		return getRootPath(
+			_PATH_PREFIX_GROUP, portletDataContext.getSourceGroupId());
+	}
+
+	protected static String getModelPath(
+		String pathPrefix, long pathPrimaryKey, String className,
+		Serializable primaryKeyObj, String dependentFileName) {
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(getRootPath(pathPrefix, pathPrimaryKey));
 		sb.append(StringPool.FORWARD_SLASH);
 		sb.append(className);
 		sb.append(StringPool.FORWARD_SLASH);
@@ -115,34 +183,17 @@ public class ExportImportPathUtil {
 		return sb.toString();
 	}
 
-	public String getPortletPath(String portletId) {
-		return getRootPath() + ROOT_PATH_PORTLETS + portletId;
+	protected static String getRootPath(
+		String pathPrefix, long pathPrimaryKey) {
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(pathPrefix);
+		sb.append(StringPool.FORWARD_SLASH);
+		sb.append(pathPrimaryKey);
+
+		return sb.toString();
 	}
-
-	public String getRootPath() {
-		return ROOT_PATH_GROUPS + getScopeGroupId();
-	}
-
-	public String getSourceLayoutPath(long layoutId) {
-		return getSourceRootPath() + ROOT_PATH_LAYOUTS + layoutId;
-	}
-
-	public String getSourcePortletPath(String portletId) {
-		return getSourceRootPath() + ROOT_PATH_PORTLETS + portletId;
-	}
-
-	public String getSourceRootPath() {
-		return ROOT_PATH_GROUPS + getSourceGroupId();
-	}
-
-	public static final String ROOT_PATH_GROUPS = "/groups/";
-
-	public static final String ROOT_PATH_LAYOUTS = "/layouts/";
-
-	public static final String ROOT_PATH_PORTLETS = "/portlets/";
-
-	private static final String _PATH_PREFIX_COMPANY = "company";
-
-	private static final String _PATH_PREFIX_GROUP = "group";
 
 }
