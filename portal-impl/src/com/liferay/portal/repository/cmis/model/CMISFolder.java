@@ -136,6 +136,22 @@ public class CMISFolder extends CMISModel implements Folder {
 		}
 	}
 
+	public List<Long> getDescendantFolderIds()
+		throws PortalException, SystemException {
+
+		Folder folder = DLAppLocalServiceUtil.getMountFolder(getRepositoryId());
+
+		return folder.getDescendantFolderIds();
+	}
+
+	public List<Folder> getDescendants()
+		throws PortalException, SystemException {
+
+		Folder folder = DLAppLocalServiceUtil.getMountFolder(getRepositoryId());
+
+		return folder.getDescendants();
+	}
+
 	public long getFolderId() {
 		return _folderId;
 	}

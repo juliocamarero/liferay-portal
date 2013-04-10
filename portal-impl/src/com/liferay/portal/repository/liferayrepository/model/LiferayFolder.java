@@ -75,6 +75,18 @@ public class LiferayFolder extends LiferayModel implements Folder {
 		return _dlFolder.getCreateDate();
 	}
 
+	public List<Long> getDescendantFolderIds()
+		throws PortalException, SystemException {
+
+		return _dlFolder.getDescendantFolderIds();
+	}
+
+	public List<Folder> getDescendants()
+		throws PortalException, SystemException {
+
+		return toFolders(_dlFolder.getDescendants());
+	}
+
 	public String getDescription() {
 		return _dlFolder.getDescription();
 	}
