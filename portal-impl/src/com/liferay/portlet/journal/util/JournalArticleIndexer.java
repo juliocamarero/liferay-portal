@@ -446,7 +446,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void doReindex(String className, long classPK) throws Exception {
 		JournalArticle article =
 			JournalArticleLocalServiceUtil.getLatestArticle(
-				classPK, WorkflowConstants.STATUS_APPROVED);
+					classPK, WorkflowConstants.STATUS_APPROVED);
 
 		doReindex(article);
 	}
@@ -456,6 +456,29 @@ public class JournalArticleIndexer extends BaseIndexer {
 		long companyId = GetterUtil.getLong(ids[0]);
 
 		reindexArticles(companyId);
+	}
+
+	@Override
+	protected void doReindexStructures(List<Long> structureIds)
+		throws Exception {
+
+		String[] structureKeys = new String[structureIds.size()];
+
+		for (int i = 0; i < structureIds.size(); i++) {
+			long structureId = structureIds.get(i);
+
+			DDMStructure structure =
+				DDMStructureLocalServiceUtil.getDDMStructure(structureId);
+
+			structureKeys[i] = structure.getStructureKey();
+		}
+
+		List<JournalArticle> articles =
+			JournalArticleLocalServiceUtil.getStructureArticles(structureKeys);
+
+		for (JournalArticle article : articles) {
+			doReindex(article);
+		}
 	}
 
 	protected String extractContent(JournalArticle article, String languageId) {
