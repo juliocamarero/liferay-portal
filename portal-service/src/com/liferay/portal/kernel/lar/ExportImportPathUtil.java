@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.lar;
 
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.StagedGroupedModel;
 import com.liferay.portal.model.StagedModel;
 
@@ -26,6 +27,27 @@ import java.io.Serializable;
  * @author Daniel Kocsis
  */
 public class ExportImportPathUtil {
+
+	public String getExpandoPath(String path) {
+		if (!Validator.isFilePath(path, false)) {
+			throw new IllegalArgumentException(
+				path + " is located outside of the lar");
+		}
+
+		int pos = path.lastIndexOf(".xml");
+
+		if (pos == -1) {
+			throw new IllegalArgumentException(
+				path + " does not end with .xml");
+		}
+
+		return path.substring(0, pos).concat("-expando").concat(
+			path.substring(pos));
+	}
+
+	public String getLayoutPath(long layoutId) {
+		return getRootPath() + ROOT_PATH_LAYOUTS + layoutId;
+	}
 
 	public static String getPath(
 		PortletDataContext portletDataContext, String className, long classPK) {
@@ -92,6 +114,32 @@ public class ExportImportPathUtil {
 
 		return sb.toString();
 	}
+
+	public String getPortletPath(String portletId) {
+		return getRootPath() + ROOT_PATH_PORTLETS + portletId;
+	}
+
+	public String getRootPath() {
+		return ROOT_PATH_GROUPS + getScopeGroupId();
+	}
+
+	public String getSourceLayoutPath(long layoutId) {
+		return getSourceRootPath() + ROOT_PATH_LAYOUTS + layoutId;
+	}
+
+	public String getSourcePortletPath(String portletId) {
+		return getSourceRootPath() + ROOT_PATH_PORTLETS + portletId;
+	}
+
+	public String getSourceRootPath() {
+		return ROOT_PATH_GROUPS + getSourceGroupId();
+	}
+
+	public static final String ROOT_PATH_GROUPS = "/groups/";
+
+	public static final String ROOT_PATH_LAYOUTS = "/layouts/";
+
+	public static final String ROOT_PATH_PORTLETS = "/portlets/";
 
 	private static final String _PATH_PREFIX_COMPANY = "company";
 
