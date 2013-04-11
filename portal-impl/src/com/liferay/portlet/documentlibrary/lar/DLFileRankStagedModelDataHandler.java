@@ -15,9 +15,9 @@
 package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -61,8 +61,8 @@ public class DLFileRankStagedModelDataHandler
 		fileRankElement.addAttribute("file-entry-uuid", fileEntryUuid);
 
 		portletDataContext.addClassedModel(
-			fileRankElement, StagedModelPathUtil.getPath(fileRank), fileRank,
-			DLPortletDataHandler.NAMESPACE);
+			fileRankElement, ExportImportPathUtil.getModelPath(fileRank),
+			fileRank, DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class DLFileRankStagedModelDataHandler
 			PortletDataContext portletDataContext, DLFileRank fileRank)
 		throws Exception {
 
-		String fileEntryPath = StagedModelPathUtil.getPath(
+		String fileEntryPath = ExportImportPathUtil.getModelPath(
 			portletDataContext, DLFileEntry.class.getName(),
 			fileRank.getFileEntryId());
 

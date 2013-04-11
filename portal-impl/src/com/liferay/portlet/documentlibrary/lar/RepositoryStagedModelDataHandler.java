@@ -15,9 +15,9 @@
 package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
@@ -67,7 +67,7 @@ public class RepositoryStagedModelDataHandler
 		}
 
 		portletDataContext.addClassedModel(
-			repositoryElement, StagedModelPathUtil.getPath(repository),
+			repositoryElement, ExportImportPathUtil.getModelPath(repository),
 			repository, DLPortletDataHandler.NAMESPACE);
 
 		List<RepositoryEntry> repositoryEntries =
@@ -93,7 +93,7 @@ public class RepositoryStagedModelDataHandler
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			repository, DLPortletDataHandler.NAMESPACE);
 
-		long importedRepositoryId = 0;
+		Repository importedRepository = null;
 
 		Element repositoryElement =
 			portletDataContext.getImportDataStagedModelElement(repository);
@@ -125,7 +125,7 @@ public class RepositoryStagedModelDataHandler
 
 					serviceContext.setUuid(repository.getUuid());
 
-					importedRepositoryId =
+					importedRepository =
 						RepositoryLocalServiceUtil.addRepository(
 							userId, portletDataContext.getScopeGroupId(),
 							repository.getClassNameId(),
@@ -140,11 +140,11 @@ public class RepositoryStagedModelDataHandler
 						existingRepository.getRepositoryId(),
 						repository.getName(), repository.getDescription());
 
-					importedRepositoryId = existingRepository.getRepositoryId();
+					importedRepository = existingRepository;
 				}
 			}
 			else {
-				importedRepositoryId = RepositoryLocalServiceUtil.addRepository(
+				importedRepository = RepositoryLocalServiceUtil.addRepository(
 					userId, portletDataContext.getScopeGroupId(),
 					repository.getClassNameId(),
 					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
@@ -163,9 +163,6 @@ public class RepositoryStagedModelDataHandler
 					e);
 			}
 		}
-
-		Repository importedRepository =
-			RepositoryLocalServiceUtil.getRepository(importedRepositoryId);
 
 		portletDataContext.importClassedModel(
 			repository, importedRepository, DLPortletDataHandler.NAMESPACE);

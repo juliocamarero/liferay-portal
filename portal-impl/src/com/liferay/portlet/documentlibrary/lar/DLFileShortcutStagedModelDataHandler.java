@@ -15,9 +15,9 @@
 package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -72,8 +72,9 @@ public class DLFileShortcutStagedModelDataHandler
 		fileShortcutElement.addAttribute("file-entry-uuid", fileEntryUuid);
 
 		portletDataContext.addClassedModel(
-			fileShortcutElement, StagedModelPathUtil.getPath(fileShortcut),
-			fileShortcut, DLPortletDataHandler.NAMESPACE);
+			fileShortcutElement,
+			ExportImportPathUtil.getModelPath(fileShortcut), fileShortcut,
+			DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class DLFileShortcutStagedModelDataHandler
 		if (fileShortcut.getFolderId() !=
 				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
-			String folderPath = StagedModelPathUtil.getPath(
+			String folderPath = ExportImportPathUtil.getModelPath(
 				portletDataContext, DLFolder.class.getName(),
 				fileShortcut.getFolderId());
 
@@ -104,7 +105,7 @@ public class DLFileShortcutStagedModelDataHandler
 		long folderId = MapUtil.getLong(
 			folderIds, fileShortcut.getFolderId(), fileShortcut.getFolderId());
 
-		String fileEntryPath = StagedModelPathUtil.getPath(
+		String fileEntryPath = ExportImportPathUtil.getModelPath(
 			portletDataContext, DLFileEntry.class.getName(),
 			fileShortcut.getToFileEntryId());
 
