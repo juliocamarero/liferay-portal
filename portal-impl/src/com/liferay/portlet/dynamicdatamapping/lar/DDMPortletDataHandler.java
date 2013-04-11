@@ -18,10 +18,10 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -342,12 +342,12 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 				String path = null;
 
 				if (fileEntry.isDefaultRepository()) {
-					path = StagedModelPathUtil.getPath(
+					path = ExportImportPathUtil.getModelPath(
 						(DLFileEntry)fileEntry.getModel());
 
 				}
 				else {
-					path = StagedModelPathUtil.getPath(
+					path = ExportImportPathUtil.getModelPath(
 						(RepositoryEntry)fileEntry.getModel());
 				}
 

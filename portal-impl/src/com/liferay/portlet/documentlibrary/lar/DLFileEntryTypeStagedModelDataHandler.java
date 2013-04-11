@@ -17,9 +17,9 @@ package com.liferay.portlet.documentlibrary.lar;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -76,8 +76,9 @@ public class DLFileEntryTypeStagedModelDataHandler
 		}
 
 		portletDataContext.addClassedModel(
-			fileEntryTypeElement, StagedModelPathUtil.getPath(fileEntryType),
-			fileEntryType, DLPortletDataHandler.NAMESPACE);
+			fileEntryTypeElement,
+			ExportImportPathUtil.getModelPath(fileEntryType), fileEntryType,
+			DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override

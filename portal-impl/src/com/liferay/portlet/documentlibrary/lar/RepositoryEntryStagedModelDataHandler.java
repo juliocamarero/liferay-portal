@@ -15,8 +15,8 @@
 package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Repository;
@@ -49,7 +49,7 @@ public class RepositoryEntryStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			repositoryEntryElement,
-			StagedModelPathUtil.getPath(repositoryEntry), repositoryEntry,
+			ExportImportPathUtil.getModelPath(repositoryEntry), repositoryEntry,
 			DLPortletDataHandler.NAMESPACE);
 
 	}

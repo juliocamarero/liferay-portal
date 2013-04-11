@@ -15,10 +15,10 @@
 package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -142,7 +142,7 @@ public class DLFileEntryStagedModelDataHandler
 			}
 
 			try {
-				String binPath = StagedModelPathUtil.getPath(
+				String binPath = ExportImportPathUtil.getModelPath(
 					dlFileEntry, dlFileEntry.getVersion());
 
 				portletDataContext.addZipEntry(binPath, is);
@@ -181,7 +181,7 @@ public class DLFileEntryStagedModelDataHandler
 		exportMetaData(portletDataContext, fileEntryElement, fileEntry);
 
 		portletDataContext.addClassedModel(
-			fileEntryElement, StagedModelPathUtil.getPath(dlFileEntry),
+			fileEntryElement, ExportImportPathUtil.getModelPath(dlFileEntry),
 			dlFileEntry, DLPortletDataHandler.NAMESPACE);
 	}
 
@@ -198,7 +198,7 @@ public class DLFileEntryStagedModelDataHandler
 				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) &&
 			(dlFileEntry.getFolderId() == dlFileEntry.getFolderId())) {
 
-			String folderPath = StagedModelPathUtil.getPath(
+			String folderPath = ExportImportPathUtil.getModelPath(
 				portletDataContext, DLFolder.class.getName(),
 				dlFileEntry.getFolderId());
 
@@ -490,7 +490,7 @@ public class DLFileEntryStagedModelDataHandler
 			Element structureFields = fileEntryElement.addElement(
 				"structure-fields");
 
-			String path = StagedModelPathUtil.getPath(
+			String path = ExportImportPathUtil.getModelPath(
 				ddmStructure, String.valueOf(ddmStructure.getStructureId()));
 
 			structureFields.addAttribute("path", path);

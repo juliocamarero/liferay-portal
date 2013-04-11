@@ -15,9 +15,9 @@
 package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -72,8 +72,8 @@ public class DLFolderStagedModelDataHandler
 		exportFolderFileEntryTypes(portletDataContext, dlFolder, folderElement);
 
 		portletDataContext.addClassedModel(
-			folderElement, StagedModelPathUtil.getPath(dlFolder), dlFolder,
-			DLPortletDataHandler.NAMESPACE);
+			folderElement, ExportImportPathUtil.getModelPath(dlFolder),
+			dlFolder, DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class DLFolderStagedModelDataHandler
 		if (folder.getParentFolderId() !=
 				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
-			String parentFolderPath = StagedModelPathUtil.getPath(
+			String parentFolderPath = ExportImportPathUtil.getModelPath(
 				portletDataContext, DLFolder.class.getName(),
 				folder.getParentFolderId());
 

@@ -15,10 +15,10 @@
 package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.lar.StagedModelPathUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Repository;
@@ -75,7 +75,7 @@ public class FileEntryStagedModelDataHandler
 		Element fileEntryElement = fileEntryGroupElement.addElement(
 			"staged-model");
 
-		String fileEntryPath = StagedModelPathUtil.getPath(
+		String fileEntryPath = ExportImportPathUtil.getModelPath(
 			fileEntry.getGroupId(), FileEntry.class.getName(),
 			fileEntry.getFileEntryId());
 
@@ -120,8 +120,8 @@ public class FileEntryStagedModelDataHandler
 			PortletDataContext portletDataContext, FileEntry fileEntry)
 		throws Exception {
 
-		String path = StagedModelPathUtil.getPath(
-			fileEntry.getGroupId(), FileEntry.class.getName(),
+		String path = ExportImportPathUtil.getModelPath(
+			portletDataContext, FileEntry.class.getName(),
 			fileEntry.getFileEntryId());
 
 		Element fileEntryElement =
@@ -137,7 +137,7 @@ public class FileEntryStagedModelDataHandler
 			String className = refElement.attributeValue("class-name");
 			String classPk = refElement.attributeValue("class-pk");
 
-			String refPath = StagedModelPathUtil.getPath(
+			String refPath = ExportImportPathUtil.getModelPath(
 				portletDataContext, className, Long.valueOf(classPk));
 
 			StagedModel referencedStagedModel =
