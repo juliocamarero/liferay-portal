@@ -20,6 +20,7 @@
 Folder folder = (Folder)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FOLDER);
 
 long folderId = BeanParamUtil.getLong(folder, request, "folderId", DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+String eventName = ParamUtil.getString(request, "eventName", "selectFolder");
 
 long repositoryId = scopeGroupId;
 String folderName = LanguageUtil.get(pageContext, "home");
@@ -32,7 +33,7 @@ if (folder != null) {
 }
 %>
 
-<aui:form method="post" name="fm">
+<aui:form method="post" name="selectFolderFm">
 	<liferay-ui:header
 		title="home"
 	/>
@@ -52,10 +53,15 @@ if (folder != null) {
 		</c:if>
 
 		<%
-		String taglibSelectOnClick = "opener." + renderResponse.getNamespace() + "selectFolder('" + folderId + "','" + folderName + "','" + ((folder != null) ? folder.isSupportsMetadata() : Boolean.TRUE.toString()) + "','" + ((folder != null) ? folder.isSupportsSocial() : Boolean.TRUE.toString()) + "'); window.close();";
+		Map<String, Object> data = new HashMap<String, Object>();
+
+		data.put("folderid", folderId);
+		data.put("folderissupportsmetadata", ((folder != null) ? folder.isSupportsMetadata() : Boolean.TRUE.toString()));
+		data.put("folderissupportssocial", ((folder != null) ? folder.isSupportsSocial() : Boolean.TRUE.toString()));
+		data.put("foldername", HtmlUtil.escapeAttribute(folderName));
 		%>
 
-		<aui:button onClick="<%= taglibSelectOnClick %>" value="choose-this-folder" />
+		<aui:button cssClass="selector-button" data="<%= data %>" name="selectFolderLink" value="choose-this-folder" />
 	</aui:button-row>
 
 	<%
@@ -148,22 +154,15 @@ if (folder != null) {
 				<c:if test="<%= rowURL != null %>">
 
 					<%
-					StringBundler sb = new StringBundler(8);
+					Map<String, Object> data = new HashMap<String, Object>();
 
-					sb.append("opener.");
-					sb.append(renderResponse.getNamespace());
-					sb.append("selectFolder('");
-					sb.append(curFolder.getFolderId());
-					sb.append("', '");
-					sb.append(UnicodeFormatter.toString(curFolder.getName()));
-					sb.append("', ");
-					sb.append(curFolder.isSupportsMetadata());
-					sb.append(", ");
-					sb.append(curFolder.isSupportsSocial());
-					sb.append("); window.close();");
+					data.put("folderid", curFolder.getFolderId());
+					data.put("folderissupportsmetadata", curFolder.isSupportsMetadata());
+					data.put("folderissupportssocial", curFolder.isSupportsSocial());
+					data.put("foldername", HtmlUtil.escapeAttribute(curFolder.getName()));
 					%>
 
-					<aui:button cssClass="" onClick="<%= sb.toString() %>" value="choose" />
+					<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />
 				</c:if>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
@@ -171,3 +170,19 @@ if (folder != null) {
 		<liferay-ui:search-iterator />
 	</liferay-ui:search-container>
 </aui:form>
+
+<aui:script use="aui-base">
+	var Util = Liferay.Util;
+
+	A.one('#<portlet:namespace />selectFolderFm').delegate(
+		'click',
+		function(event) {
+			var result = Util.getAttributes(event.currentTarget, 'data-');
+
+			Util.getOpener().Liferay.fire('<portlet:namespace /><%= eventName %>', result);
+
+			Util.getWindow().close();
+		},
+		'.selector-button input'
+	);
+</aui:script>
