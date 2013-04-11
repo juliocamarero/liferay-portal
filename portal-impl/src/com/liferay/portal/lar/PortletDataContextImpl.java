@@ -52,6 +52,7 @@ import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.AuditedModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupedModel;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.ResourceConstants;
@@ -610,6 +611,22 @@ public class PortletDataContextImpl implements PortletDataContext {
 	public Element addReferenceElement(
 		Element element, ClassedModel referencedClassedModel) {
 
+		if (referencedClassedModel instanceof GroupedModel) {
+			GroupedModel groupedModel = (GroupedModel)referencedClassedModel;
+
+			try {
+				Group globalScope = GroupLocalServiceUtil.getCompanyGroup(
+					getCompanyId());
+
+				if (globalScope.getGroupId() == groupedModel.getGroupId()) {
+					return null;
+				}
+			}
+			catch (Exception e) {
+				return null;
+			}
+		}
+
 		Element referencesElement = element.element("references");
 
 		if (referencesElement == null) {
@@ -925,11 +942,18 @@ public class PortletDataContextImpl implements PortletDataContext {
 			long classPK = GetterUtil.getLong(
 				referenceElement.attributeValue("class-pk"));
 
-			String path = ExportImportPathUtil.getModelPath(
-				this, clazz.getName(), classPK);
+			StringBuilder sb = new StringBuilder(5);
 
-			Element referencedElement = getImportDataStagedModelElement(
-				clazz.getSimpleName(), "path", path);
+			sb.append("//staged-model[contains(@path, '/");
+			sb.append(clazz.getName());
+			sb.append(StringPool.FORWARD_SLASH);
+			sb.append(classPK);
+			sb.append("')]");
+
+			XPath xPath = SAXReaderUtil.createXPath(sb.toString());
+
+			Element referencedElement = (Element)xPath.selectSingleNode(
+				_importDataRootElement);
 
 			referencedElements.add(referencedElement);
 		}
@@ -1660,13 +1684,13 @@ public class PortletDataContextImpl implements PortletDataContext {
 			parentStagedModel);
 
 		if (stagedModelElement == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		Element referencesElement = stagedModelElement.element("references");
 
 		if (referencesElement == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		XPath xPath = SAXReaderUtil.createXPath(
