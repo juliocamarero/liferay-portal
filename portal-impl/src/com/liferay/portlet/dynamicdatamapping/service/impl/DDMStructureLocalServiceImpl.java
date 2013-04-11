@@ -1392,7 +1392,7 @@ public class DDMStructureLocalServiceImpl
 			List<Long> structureIds = getChildStructureIds(
 				structure.getGroupId(), structure.getStructureId());
 
-			indexer.reindexStructure(structureIds);
+			indexer.reindexStructures(structureIds);
 		}
 
 		return structure;

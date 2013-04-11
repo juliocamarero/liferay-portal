@@ -142,7 +142,10 @@ public class IndexerWrapper implements Indexer {
 		_indexer.reindex(ids);
 	}
 
-	public void reindexStructure(List<Long> structureIds) {
+	public void reindexStructures(List<Long> structureIds)
+		throws SearchException {
+
+		_indexer.reindexStructures(structureIds);
 	}
 
 	public Hits search(SearchContext searchContext) throws SearchException {

@@ -117,7 +117,7 @@ public class DummyIndexer implements Indexer {
 	public void reindex(String[] ids) {
 	}
 
-	public void reindexStructure(List<Long> structureIds) {
+	public void reindexStructures(List<Long> structureIds) {
 	}
 
 	public Hits search(SearchContext searchContext) {

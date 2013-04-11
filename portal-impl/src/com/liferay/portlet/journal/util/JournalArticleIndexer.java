@@ -446,7 +446,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void doReindex(String className, long classPK) throws Exception {
 		JournalArticle article =
 			JournalArticleLocalServiceUtil.getLatestArticle(
-					classPK, WorkflowConstants.STATUS_APPROVED);
+				classPK, WorkflowConstants.STATUS_APPROVED);
 
 		doReindex(article);
 	}

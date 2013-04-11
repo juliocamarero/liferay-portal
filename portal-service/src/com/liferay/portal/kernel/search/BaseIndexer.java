@@ -434,7 +434,7 @@ public abstract class BaseIndexer implements Indexer {
 		}
 	}
 
-	public void reindexStructure(List<Long> structureIds)
+	public void reindexStructures(List<Long> structureIds)
 		throws SearchException {
 
 		try {
