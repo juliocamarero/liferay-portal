@@ -37,9 +37,11 @@ import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryActionableDynamicQuery;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFolderActionableDynamicQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -163,15 +165,8 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, folder);
 
-		final List<Long> descendantFolderIds = folder.getDescendantFolderIds();
-
-		for (Long descendantFolderId : descendantFolderIds) {
-			Folder descendantFolder = DLAppLocalServiceUtil.getFolder(
-				descendantFolderId);
-
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, descendantFolder);
-		}
+		final List<Long> descendantFolderIds = getDescendantFolderIds(
+			portletDataContext.getScopeGroupId(), rootFolderId);
 
 		ActionableDynamicQuery fileEntryActionableDynamicQuery =
 			new DLFileEntryActionableDynamicQuery() {
@@ -317,6 +312,27 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 		}
 
 		return portletPreferences;
+	}
+
+	protected List<Long> getDescendantFolderIds(
+			long groupId, long parentFolderId)
+		throws Exception {
+
+		List<Long> descendantFolderIds = new ArrayList<Long>();
+
+		List<DLFolder> descendantFolders = DLFolderLocalServiceUtil.getFolders(
+			groupId, parentFolderId, true);
+
+		for (DLFolder descendantFolder : descendantFolders) {
+			descendantFolderIds.add(descendantFolder.getFolderId());
+
+			List<Long> descendantFolderDescendantIds = getDescendantFolderIds(
+				groupId, descendantFolder.getFolderId());
+
+			descendantFolderIds.addAll(descendantFolderDescendantIds);
+		}
+
+		return descendantFolderIds;
 	}
 
 }
