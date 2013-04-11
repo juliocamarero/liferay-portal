@@ -170,10 +170,11 @@ if (folder != null) {
 
 			<liferay-ui:search-container-column-text
 				name="locked"
-				value="<%= LanguageUtil.get(pageContext, curFile.isCheckedOut() ? \"yes\" : \"no\") %>"
+				value='<%= LanguageUtil.get(pageContext, curFile.isCheckedOut() ? "yes" : "no") %>'
 			/>
 
 			<liferay-ui:search-container-column-text>
+
 				<%
 				Map<String, Object> data = new HashMap<String, Object>();
 
@@ -183,11 +184,10 @@ if (folder != null) {
 
 				<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />
 			</liferay-ui:search-container-column-text>
-
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:search-iterator />
-	</liferay-ui:search-container>		
+	</liferay-ui:search-container>
 </aui:form>
 
 <aui:script use="aui-base">

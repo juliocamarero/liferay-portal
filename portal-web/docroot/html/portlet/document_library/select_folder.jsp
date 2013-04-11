@@ -61,7 +61,7 @@ if (folder != null) {
 		data.put("foldername", HtmlUtil.escapeAttribute(folderName));
 		%>
 
-		<aui:button cssClass="selector-button" data="<%= data %>" name="selectFolderLink" value="choose-this-folder" />
+		<aui:button cssClass="selector-button" data="<%= data %>" value="choose-this-folder" />
 	</aui:button-row>
 
 	<%
@@ -76,7 +76,7 @@ if (folder != null) {
 	>
 
 		<liferay-ui:search-container-results
-			results="<%= DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd())%>"
+			results="<%= DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd()) %>"
 			total="<%= DLAppServiceUtil.getFoldersCount(repositoryId, folderId) %>"
 		/>
 

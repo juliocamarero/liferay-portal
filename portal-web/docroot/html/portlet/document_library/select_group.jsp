@@ -70,7 +70,6 @@ String eventName = ParamUtil.getString(request, "eventName", "selectGroup");
 			if (group.isUser()) {
 				groupName = LanguageUtil.get(pageContext, "my-site");
 			}
-
 			%>
 
 			<liferay-ui:search-container-column-text
@@ -84,11 +83,12 @@ String eventName = ParamUtil.getString(request, "eventName", "selectGroup");
 			/>
 
 			<liferay-ui:search-container-column-text>
+
 				<%
 				Map<String, Object> data = new HashMap<String, Object>();
 
 				data.put("groupid", group.getGroupId());
-				data.put("groupname", HtmlUtil.escapeJS(groupName));
+				data.put("groupname", HtmlUtil.escape(groupName));
 				%>
 
 				<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />

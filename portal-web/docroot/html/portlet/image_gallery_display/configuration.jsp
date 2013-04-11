@@ -128,7 +128,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 	</aui:button-row>
 </aui:form>
 
-<liferay-portlet:renderURL var="selectFolderURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>" portletName="<%= portletResource %>">
+<liferay-portlet:renderURL portletName="<%= portletResource %>" var="selectFolderURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<portlet:param name="struts_action" value='<%= "/image_gallery_display/select_folder" %>' />
 </liferay-portlet:renderURL>
 
