@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -169,7 +170,11 @@ public abstract class BaseAssetRendererFactory implements AssetRendererFactory {
 			boolean privateField = GetterUtil.getBoolean(
 				fieldMap.get("private"));
 
-			if (Validator.isNull(indexType) || privateField) {
+			String type = fieldMap.get("type");
+
+			if (Validator.isNull(indexType) || privateField ||
+				!ArrayUtil.contains(_WHITE_LIST_INDEXED_FIELDS, type)) {
+
 				continue;
 			}
 
@@ -193,6 +198,11 @@ public abstract class BaseAssetRendererFactory implements AssetRendererFactory {
 	private static final boolean _PERMISSION = true;
 
 	private static final boolean _SELECTABLE = true;
+
+	private static final String[] _WHITE_LIST_INDEXED_FIELDS = new String[] {
+		"ddm-date", "ddm-decimal", "ddm-integer", "ddm-number", "radio",
+		"select", "text"
+	};
 
 	private String _className;
 	private String _portletId;
