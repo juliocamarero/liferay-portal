@@ -29,11 +29,11 @@ PortletPreferences companyPrefs = PrefsPropsUtil.getPreferences(company.getCompa
 
 <c:choose>
 	<c:when test="<%= companyPrefs.getMap().containsKey(property) %>">
-		 <%= StringUtil.shorten(companyPrefs.getValue(property, StringPool.BLANK), 80) %>
+		 <%= HtmlUtil.escape(StringUtil.shorten(companyPrefs.getValue(property, StringPool.BLANK), 80)) %>
 
 		 <liferay-ui:icon-help message='<%= LanguageUtil.format(pageContext, "this-property-was-stored-in-portal-preferences-using-control-panel-and-its-original-value-x-from-portal-ext-properties-was-overridden-by-this-value", HtmlUtil.escape(value)) %>' />
 	</c:when>
 	<c:otherwise>
-		 <%= StringUtil.shorten(value, 80) %>
+		 <%= HtmlUtil.escape(StringUtil.shorten(value, 80)) %>
 	</c:otherwise>
 </c:choose>
