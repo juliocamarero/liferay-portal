@@ -94,7 +94,7 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
 		long rootFolderId = GetterUtil.getLong(
-				portletPreferences.getValue("rootFolderId", null));
+			portletPreferences.getValue("rootFolderId", null));
 
 		if (rootFolderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 			ActionableDynamicQuery folderActionableDynamicQuery =
@@ -160,13 +160,20 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 
 		// Displayed folder is different from default parent folder
 
-		Folder folder = DLAppLocalServiceUtil.getFolder(rootFolderId);
-
-		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext, folder);
-
-		final List<Long> descendantFolderIds = getDescendantFolderIds(
+		List<Long> folderIds = getDescendantFolderIds(
 			portletDataContext.getScopeGroupId(), rootFolderId);
+
+		folderIds.add(rootFolderId);
+
+		for (Long folderId : folderIds) {
+			Folder folder = DLAppLocalServiceUtil.getFolder(folderId);
+
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, folder);
+		}
+
+		final List<Long> fileEntryParentFolderIds = new ArrayList<Long>(
+			folderIds);
 
 		ActionableDynamicQuery fileEntryActionableDynamicQuery =
 			new DLFileEntryActionableDynamicQuery() {
@@ -179,7 +186,7 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 				Property property = PropertyFactoryUtil.forName("folderId");
 
 				Long[] folderIds = ArrayUtil.toArray(
-					ArrayUtil.toLongArray(descendantFolderIds));
+					ArrayUtil.toLongArray(fileEntryParentFolderIds));
 
 				dynamicQuery.add(property.in(folderIds));
 			}
@@ -204,10 +211,13 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 
 		fileEntryActionableDynamicQuery.performActions();
 
+		Folder rootFolder = DLAppLocalServiceUtil.getFolder(rootFolderId);
+
 		rootElement.addAttribute(
-			"root-folder-id", String.valueOf(folder.getFolderId()));
+			"root-folder-id", String.valueOf(rootFolder.getFolderId()));
 		rootElement.addAttribute(
-			"default-repository", String.valueOf(folder.isDefaultRepository()));
+			"default-repository",
+			String.valueOf(rootFolder.isDefaultRepository()));
 
 		return getExportDataRootElementString(rootElement);
 	}

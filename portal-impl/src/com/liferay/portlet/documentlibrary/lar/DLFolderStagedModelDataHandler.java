@@ -108,6 +108,8 @@ public class DLFolderStagedModelDataHandler
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			folder, DLPortletDataHandler.NAMESPACE);
 
+		serviceContext.setUserId(userId);
+
 		Folder importedFolder = null;
 
 		if (portletDataContext.isDataStrategyMirror()) {
