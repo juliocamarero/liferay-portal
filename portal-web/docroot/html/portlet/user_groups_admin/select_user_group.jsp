@@ -17,7 +17,6 @@
 <%@ include file="/html/portlet/user_groups_admin/init.jsp" %>
 
 <%
-String target = ParamUtil.getString(request, "target");
 String eventName = ParamUtil.getString(request, "eventName", "selectUserGroup");
 
 User selUser = PortalUtil.getSelectedUser(request);
