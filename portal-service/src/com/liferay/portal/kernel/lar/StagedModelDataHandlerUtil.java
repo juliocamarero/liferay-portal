@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.StagedModel;
@@ -60,14 +62,40 @@ public class StagedModelDataHandlerUtil {
 	private static <T extends StagedModel> StagedModelDataHandler<T>
 		_getStagedModelDataHandler(T stagedModel) {
 
+		StagedModelDataHandler<T> stagedModelDataHandler = null;
+
+		stagedModelDataHandler = _checkStagedModelDataHandlerOverride(
+			stagedModel);
+
+		if (stagedModelDataHandler != null) {
+			return stagedModelDataHandler;
+		}
+
 		BaseModel<?> baseModel = (BaseModel<?>)stagedModel;
 
-		StagedModelDataHandler<T> stagedModelDataHandler =
+		stagedModelDataHandler =
 			(StagedModelDataHandler<T>)
 				StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
 					baseModel.getModelClassName());
 
 		return stagedModelDataHandler;
+	}
+
+	private static <T extends StagedModel> StagedModelDataHandler<T>
+		_checkStagedModelDataHandlerOverride(T stagedModel) {
+
+		String stagedModelDataHandlerOverride =
+			PropsUtil.get(
+				"staged.model.data.handler.override." +
+					stagedModel.getClass().getName());
+
+		if (Validator.isNull(stagedModelDataHandlerOverride)) {
+			return null;
+		}
+
+		return (StagedModelDataHandler<T>)
+			StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
+				stagedModelDataHandlerOverride);
 	}
 
 }
