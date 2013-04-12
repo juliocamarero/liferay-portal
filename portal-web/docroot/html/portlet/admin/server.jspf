@@ -289,7 +289,12 @@ serverURL.setParameter("tabs3", tabs3);
 
 					// Value
 
-					row.addText(StringUtil.shorten(value, 80));
+					if(tabs3.equals("portal-properties")) {
+						row.addJSP("/html/portlet/admin/server_portal_property.jsp");
+					}
+					else {
+						row.addText(StringUtil.shorten(value, 80));
+					}
 
 					// Add result row
 
