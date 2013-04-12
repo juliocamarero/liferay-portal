@@ -340,31 +340,37 @@ public class MDRRuleGroupLocalServiceWrapper implements MDRRuleGroupLocalService
 	}
 
 	public java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup> search(
-		long groupId, java.lang.String name, boolean andOperator, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
-		return _mdrRuleGroupLocalService.search(groupId, name, andOperator,
-			start, end);
-	}
-
-	public java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup> searchByKeywords(
-		long groupId, java.lang.String keywords, boolean andOperator,
-		int start, int end)
+		long groupId, java.lang.String name,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return _mdrRuleGroupLocalService.searchByKeywords(groupId, keywords,
+		return _mdrRuleGroupLocalService.search(groupId, name, params,
 			andOperator, start, end);
 	}
 
+	public java.util.List<com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup> searchByKeywords(
+		long groupId, java.lang.String keywords,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
+		boolean andOperator, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _mdrRuleGroupLocalService.searchByKeywords(groupId, keywords,
+			params, andOperator, start, end);
+	}
+
 	public int searchByKeywordsCount(long groupId, java.lang.String keywords,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _mdrRuleGroupLocalService.searchByKeywordsCount(groupId,
-			keywords, andOperator);
+			keywords, params, andOperator);
 	}
 
 	public int searchCount(long groupId, java.lang.String name,
+		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andOperator)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return _mdrRuleGroupLocalService.searchCount(groupId, name, andOperator);
+		return _mdrRuleGroupLocalService.searchCount(groupId, name, params,
+			andOperator);
 	}
 
 	public com.liferay.portlet.mobiledevicerules.model.MDRRuleGroup updateRuleGroup(
