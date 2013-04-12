@@ -20,9 +20,11 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.portal.service.persistence.RepositoryUtil;
 
 import java.util.List;
@@ -68,6 +70,16 @@ public class FileEntryStagedModelDataHandler
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, FileEntry fileEntry)
 		throws Exception {
+
+		FileVersion fileVersion = fileEntry.getFileVersion();
+
+		if (!fileVersion.isApproved() && !fileVersion.isInTrash()) {
+			return;
+		}
+
+		LiferayFileEntry liferayFileEntry = (LiferayFileEntry)fileEntry;
+
+		liferayFileEntry.setCachedFileVersion(fileVersion);
 
 		Element fileEntryGroupElement =
 			portletDataContext.getExportDataGroupElement(FileEntry.class);
