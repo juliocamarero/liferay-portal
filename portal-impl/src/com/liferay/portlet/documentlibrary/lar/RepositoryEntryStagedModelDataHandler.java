@@ -15,8 +15,17 @@
 package com.liferay.portlet.documentlibrary.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.RepositoryEntry;
+import com.liferay.portal.service.RepositoryEntryLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.persistence.RepositoryEntryUtil;
+
+import java.util.Map;
 
 /**
  * @author Mate Thurzo
@@ -38,18 +47,13 @@ public class RepositoryEntryStagedModelDataHandler
 			RepositoryEntry repositoryEntry)
 		throws Exception {
 
-		String path = getRepositoryEntryPath(
-			portletDataContext, repositoryEntry);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		Element repositoryEntryElement = repositoryEntriesElement.addElement(
-			"repository-entry");
+		Element repositoryEntryElement =
+			portletDataContext.getExportDataStagedModelElement(repositoryEntry);
 
 		portletDataContext.addClassedModel(
-			repositoryEntryElement, path, repositoryEntry, NAMESPACE);
+			repositoryEntryElement,
+			ExportImportPathUtil.getModelPath(repositoryEntry), repositoryEntry,
+			DLPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -57,15 +61,6 @@ public class RepositoryEntryStagedModelDataHandler
 			PortletDataContext portletDataContext,
 			RepositoryEntry repositoryEntry)
 		throws Exception {
-
-		String path = repositoryEntryElement.attributeValue("path");
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		RepositoryEntry repositoryEntry =
-			(RepositoryEntry)portletDataContext.getZipEntryAsObject(path);
 
 		long userId = portletDataContext.getUserId(
 			repositoryEntry.getUserUuid());
@@ -79,7 +74,7 @@ public class RepositoryEntryStagedModelDataHandler
 			repositoryEntry.getRepositoryId());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			repositoryEntryElement, repositoryEntry, NAMESPACE);
+			repositoryEntry, DLPortletDataHandler.NAMESPACE);
 
 		RepositoryEntry importedRepositoryEntry = null;
 
@@ -112,16 +107,9 @@ public class RepositoryEntryStagedModelDataHandler
 					repositoryEntry.getMappedId(), serviceContext);
 		}
 
-		Map<Long, Long> repositoryEntryIds =
-			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
-				RepositoryEntry.class);
-
-		repositoryEntryIds.put(
-			repositoryEntry.getRepositoryEntryId(),
-			importedRepositoryEntry.getRepositoryEntryId());
-
 		portletDataContext.importClassedModel(
-			repositoryEntry, importedRepositoryEntry, NAMESPACE);
+			repositoryEntry, importedRepositoryEntry,
+			DLPortletDataHandler.NAMESPACE);
 	}
 
 }
