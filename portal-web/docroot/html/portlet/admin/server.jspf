@@ -289,7 +289,7 @@ serverURL.setParameter("tabs3", tabs3);
 
 					// Value
 
-					if(tabs3.equals("portal-properties")) {
+					if (tabs3.equals("portal-properties")) {
 						row.addJSP("/html/portlet/admin/server_portal_property.jsp");
 					}
 					else {

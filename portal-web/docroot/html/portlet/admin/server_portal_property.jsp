@@ -29,12 +29,12 @@ PortletPreferences companyPrefs = PrefsPropsUtil.getPreferences(company.getCompa
 
 boolean isPropertyValueOverridden = false;
 
-if(globalPrefs.getMap().containsKey(property)) {
+if (globalPrefs.getMap().containsKey(property)) {
 	value = globalPrefs.getValue(property, StringPool.BLANK);
 	isPropertyValueOverridden = true;
 }
 
-if(companyPrefs.getMap().containsKey(property))	{
+if (companyPrefs.getMap().containsKey(property)) {
 	value = companyPrefs.getValue(property, StringPool.BLANK);
 	isPropertyValueOverridden = true;
 }
