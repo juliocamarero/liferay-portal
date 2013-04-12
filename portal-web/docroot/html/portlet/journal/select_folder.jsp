@@ -75,7 +75,6 @@ if (folder != null) {
 	<liferay-ui:search-container
 		iteratorURL="<%= portletURL %>"
 	>
-
 		<liferay-ui:search-container-results
 			results="<%= JournalFolderServiceUtil.getFolders(scopeGroupId, folderId, searchContainer.getStart(), searchContainer.getEnd()) %>"
 			total="<%= JournalFolderServiceUtil.getFoldersCount(scopeGroupId, folderId) %>"
@@ -87,7 +86,6 @@ if (folder != null) {
 			modelVar="curFolder"
 			rowVar="row"
 		>
-
 			<liferay-portlet:renderURL varImpl="rowURL">
 				<portlet:param name="struts_action" value="/journal/select_folder" />
 				<portlet:param name="folderId" value="<%= String.valueOf(curFolder.getFolderId()) %>" />
