@@ -1670,13 +1670,13 @@ public class PortletDataContextImpl implements PortletDataContext {
 			parentStagedModel);
 
 		if (stagedModelElement == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		Element referencesElement = stagedModelElement.element("references");
 
 		if (referencesElement == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		XPath xPath = SAXReaderUtil.createXPath(
