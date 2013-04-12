@@ -925,11 +925,21 @@ public class PortletDataContextImpl implements PortletDataContext {
 			long classPK = GetterUtil.getLong(
 				referenceElement.attributeValue("class-pk"));
 
-			String path = ExportImportPathUtil.getModelPath(
-				this, clazz.getName(), classPK);
+			StringBuilder sb = new StringBuilder(6);
 
-			Element referencedElement = getImportDataStagedModelElement(
-				clazz.getSimpleName(), "path", path);
+			sb.append("staged-model[contains(@path, '/");
+			sb.append(clazz.getName());
+			sb.append(StringPool.FORWARD_SLASH);
+			sb.append(classPK);
+			sb.append(".xml");
+			sb.append("')]");
+
+			XPath xPath = SAXReaderUtil.createXPath(sb.toString());
+
+			Element groupElement = getImportDataGroupElement(clazz);
+
+			Element referencedElement = (Element)xPath.selectSingleNode(
+				groupElement);
 
 			referencedElements.add(referencedElement);
 		}
