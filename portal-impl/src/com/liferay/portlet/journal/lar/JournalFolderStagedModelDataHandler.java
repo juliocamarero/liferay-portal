@@ -15,18 +15,17 @@
 package com.liferay.portlet.journal.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
-import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
 import com.liferay.portlet.journal.service.persistence.JournalFolderUtil;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,38 +34,35 @@ import java.util.Map;
 public class JournalFolderStagedModelDataHandler
 	extends BaseStagedModelDataHandler<JournalFolder> {
 
+	public static final String[] CLASS_NAMES = {JournalFolder.class.getName()};
+
 	@Override
-	public String getClassName() {
-		return JournalFolder.class.getName();
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
-	protected static void exportParentFolder(
-			PortletDataContext portletDataContext, Element foldersElement,
-			long folderId)
+	@Override
+	protected void doExportStagedModel(
+			PortletDataContext portletDataContext, JournalFolder folder)
 		throws Exception {
 
-		if (folderId == JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-			return;
+		if (folder.getParentFolderId() !=
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, folder.getParentFolder());
 		}
 
-		JournalFolder folder = JournalFolderUtil.findByPrimaryKey(folderId);
+		Element folderElement = portletDataContext.getExportDataElement(folder);
 
-		exportParentFolder(
-			portletDataContext, foldersElement, folder.getParentFolderId());
-
-		String path = getFolderPath(portletDataContext, folder);
-
-		if (portletDataContext.isPathNotProcessed(path)) {
-			Element folderElement = foldersElement.addElement("folder");
-
-			portletDataContext.addClassedModel(
-				folderElement, path, folder, NAMESPACE);
-		}
+		portletDataContext.addClassedModel(
+			folderElement, ExportImportPathUtil.getModelPath(folder), folder,
+			JournalPortletDataHandler.NAMESPACE);
 	}
 
-	protected static void importFolder(
-			PortletDataContext portletDataContext, String folderPath,
-			JournalFolder folder)
+	@Override
+	protected void doImportStagedModel(
+			PortletDataContext portletDataContext, JournalFolder folder)
 		throws Exception {
 
 		long userId = portletDataContext.getUserId(folder.getUserUuid());
@@ -75,28 +71,25 @@ public class JournalFolderStagedModelDataHandler
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 				JournalFolder.class);
 
-		long parentFolderId = MapUtil.getLong(
-			folderIds, folder.getParentFolderId(), folder.getParentFolderId());
+		if (folder.getParentFolderId() !=
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
-		if ((parentFolderId !=
-				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) &&
-			(parentFolderId == folder.getParentFolderId())) {
-
-			String path = getImportFolderPath(
-				portletDataContext, parentFolderId);
+			String path = ExportImportPathUtil.getModelPath(
+				portletDataContext, JournalFolder.class.getName(),
+				folder.getParentFolderId());
 
 			JournalFolder parentFolder =
 				(JournalFolder)portletDataContext.getZipEntryAsObject(path);
 
-			importFolder(portletDataContext, path, parentFolder);
-
-			parentFolderId = MapUtil.getLong(
-				folderIds, folder.getParentFolderId(),
-				folder.getParentFolderId());
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, parentFolder);
 		}
 
+		long parentFolderId = MapUtil.getLong(
+			folderIds, folder.getParentFolderId(), folder.getParentFolderId());
+
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			folderPath, folder, NAMESPACE);
+			folder, JournalPortletDataHandler.NAMESPACE);
 
 		JournalFolder importedFolder = null;
 
@@ -127,59 +120,7 @@ public class JournalFolderStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			folder, importedFolder, NAMESPACE);
-	}
-
-	@Override
-	protected void doExportStagedModel(
-			PortletDataContext portletDataContext, JournalFolder folder)
-		throws Exception {
-
-		if (checkDateRange &&
-			!portletDataContext.isWithinDateRange(folder.getModifiedDate())) {
-
-			return;
-		}
-
-		exportParentFolder(
-			portletDataContext, foldersElement, folder.getParentFolderId());
-
-		String path = getFolderPath(portletDataContext, folder);
-
-		if (portletDataContext.isPathNotProcessed(path)) {
-			Element folderElement = foldersElement.addElement("folder");
-
-			portletDataContext.addClassedModel(
-				folderElement, path, folder, NAMESPACE);
-		}
-
-		List<JournalArticle> articles = JournalArticleUtil.findByG_F(
-			folder.getGroupId(), folder.getFolderId());
-
-		for (JournalArticle article : articles) {
-			exportArticle(
-				portletDataContext, articlesElement, ddmStructuresElement,
-				ddmTemplatesElement, dlFileEntryTypesElement, dlFoldersElement,
-				dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, article, true);
-		}
-	}
-
-	@Override
-	protected void doImportStagedModel(
-			PortletDataContext portletDataContext, JournalFolder folder)
-		throws Exception {
-
-		String path = folderElement.attributeValue("path");
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		JournalFolder folder =
-			(JournalFolder)portletDataContext.getZipEntryAsObject(path);
-
-		importFolder(portletDataContext, path, folder);
+			folder, importedFolder, JournalPortletDataHandler.NAMESPACE);
 	}
 
 }
