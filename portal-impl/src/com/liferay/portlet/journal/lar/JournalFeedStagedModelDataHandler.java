@@ -15,7 +15,12 @@
 package com.liferay.portlet.journal.lar;
 
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -25,13 +30,18 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.portlet.journal.FeedTargetLayoutFriendlyUrlException;
+import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFeed;
 import com.liferay.portlet.journal.service.JournalFeedLocalServiceUtil;
 import com.liferay.portlet.journal.service.persistence.JournalFeedUtil;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,9 +50,11 @@ import java.util.Map;
 public class JournalFeedStagedModelDataHandler
 	extends BaseStagedModelDataHandler<JournalFeed> {
 
+	public static final String[] CLASS_NAMES = {JournalFeed.class.getName()};
+
 	@Override
-	public String getClassName() {
-		return JournalFeed.class.getName();
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
 	@Override
@@ -50,19 +62,71 @@ public class JournalFeedStagedModelDataHandler
 			PortletDataContext portletDataContext, JournalFeed feed)
 		throws Exception {
 
-		if (!portletDataContext.isWithinDateRange(feed.getModifiedDate())) {
-			return;
+		Element feedElement = portletDataContext.getExportDataElement(feed);
+
+		// Structure
+
+		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.fetchStructure(
+			feed.getGroupId(), PortalUtil.getClassNameId(JournalArticle.class),
+			feed.getStructureId(), true);
+
+		if (ddmStructure != null) {
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, ddmStructure);
+
+			portletDataContext.addReferenceElement(feedElement, ddmStructure);
+		}
+		else {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to find structure with key " +
+						feed.getStructureId());
+			}
 		}
 
-		String path = getFeedPath(portletDataContext, feed);
+		// Template
 
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
+		DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
+			feed.getGroupId(), PortalUtil.getClassNameId(DDMStructure.class),
+			feed.getTemplateId());
+
+		if (ddmTemplate != null) {
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, ddmTemplate);
+
+			portletDataContext.addReferenceElement(feedElement, ddmTemplate);
+		}
+		else {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to find template with key " +
+						feed.getTemplateId());
+			}
 		}
 
-		feed = (JournalFeed)feed.clone();
+		// Render template
 
-		Element feedElement = feedsElement.addElement("feed");
+		DDMTemplate renderTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
+			feed.getGroupId(), PortalUtil.getClassNameId(DDMStructure.class),
+			feed.getRendererTemplateId());
+
+		if (renderTemplate != null) {
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, renderTemplate);
+
+			Element renderTemplateElement =
+				portletDataContext.addReferenceElement(
+					feedElement, renderTemplate);
+
+			renderTemplateElement.addAttribute("renderTemplate", "true");
+		}
+		else {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to find template with key " +
+						feed.getRendererTemplateId());
+			}
+		}
 
 		Group group = GroupLocalServiceUtil.getGroup(
 			portletDataContext.getScopeGroupId());
@@ -83,22 +147,15 @@ public class JournalFeedStagedModelDataHandler
 			feed.setTargetLayoutFriendlyUrl(targetLayoutFriendlyUrl);
 		}
 
-		portletDataContext.addClassedModel(feedElement, path, feed, NAMESPACE);
+		portletDataContext.addClassedModel(
+			feedElement, ExportImportPathUtil.getModelPath(feed), feed,
+			JournalPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
 	protected void doImportStagedModel(
 			PortletDataContext portletDataContext, JournalFeed feed)
 		throws Exception {
-
-		String path = feedElement.attributeValue("path");
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		JournalFeed feed = (JournalFeed)portletDataContext.getZipEntryAsObject(
-			path);
 
 		long userId = portletDataContext.getUserId(feed.getUserUuid());
 
@@ -139,22 +196,69 @@ public class JournalFeedStagedModelDataHandler
 			autoFeedId = true;
 		}
 
-		Map<String, String> ddmStructureKeys =
-			(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
-				DDMStructure.class + ".structureKey");
+		List<Element> ddmStructureElements =
+			portletDataContext.getReferencedDataElements(
+				feed, DDMStructure.class);
 
-		String parentDDMStructureKey = MapUtil.getString(
-			ddmStructureKeys, feed.getStructureId(), feed.getStructureId());
+		String parentDDMStructureKey = StringPool.BLANK;
 
-		Map<String, String> ddmTemplateKeys =
-			(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
-				DDMTemplate.class + ".templateKey");
+		if (!ddmStructureElements.isEmpty()) {
+			Element ddmStructureElement = ddmStructureElements.get(0);
 
-		String parentDDMTemplateKey = MapUtil.getString(
-			ddmTemplateKeys, feed.getTemplateId(), feed.getTemplateId());
-		String parentRenderDDMTemplateKey = MapUtil.getString(
-			ddmTemplateKeys, feed.getRendererTemplateId(),
-			feed.getRendererTemplateId());
+			String ddmStructurePath = ddmStructureElement.attributeValue(
+				"path");
+
+			DDMStructure ddmStructure =
+				(DDMStructure)portletDataContext.getZipEntryAsObject(
+					ddmStructurePath);
+
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, ddmStructure);
+
+			Map<String, String> ddmStructureKeys =
+				(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
+					DDMStructure.class + ".ddmStructureKey");
+
+			parentDDMStructureKey = MapUtil.getString(
+				ddmStructureKeys, ddmStructure.getStructureKey(),
+				ddmStructure.getStructureKey());
+		}
+
+		List<Element> ddmTemplateElements =
+			portletDataContext.getReferencedDataElements(
+				feed, DDMTemplate.class);
+
+		String parentDDMTemplateKey = StringPool.BLANK;
+		String parentRenderDDMTemplateKey = StringPool.BLANK;
+
+		for (Element ddmTemplateElement : ddmTemplateElements) {
+			String ddmTemplatePath = ddmTemplateElement.attributeValue("path");
+
+			DDMTemplate ddmTemplate =
+				(DDMTemplate)portletDataContext.getZipEntryAsObject(
+					ddmTemplatePath);
+
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, ddmTemplate);
+
+			Map<String, String> ddmTemplateKeys =
+				(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
+					DDMTemplate.class + ".ddmTemplateKey");
+
+			boolean renderTemplate = GetterUtil.getBoolean(
+				ddmTemplateElement.attributeValue("renderTemplate"));
+
+			String ddmTemplateKey = MapUtil.getString(
+				ddmTemplateKeys, ddmTemplate.getTemplateKey(),
+				ddmTemplate.getTemplateKey());
+
+			if (renderTemplate) {
+				parentDDMTemplateKey = ddmTemplateKey;
+			}
+			else {
+				parentRenderDDMTemplateKey = ddmTemplateKey;
+			}
+		}
 
 		boolean addGroupPermissions = creationStrategy.addGroupPermissions(
 			portletDataContext, feed);
@@ -162,7 +266,7 @@ public class JournalFeedStagedModelDataHandler
 			portletDataContext, feed);
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			feedElement, feed, NAMESPACE);
+			feed, JournalPortletDataHandler.NAMESPACE);
 
 		serviceContext.setAddGroupPermissions(addGroupPermissions);
 		serviceContext.setAddGuestPermissions(addGuestPermissions);
@@ -216,7 +320,7 @@ public class JournalFeedStagedModelDataHandler
 			}
 
 			portletDataContext.importClassedModel(
-				feed, importedFeed, NAMESPACE);
+				feed, importedFeed, JournalPortletDataHandler.NAMESPACE);
 
 			if (!feedId.equals(importedFeed.getFeedId())) {
 				if (_log.isWarnEnabled()) {
@@ -247,5 +351,8 @@ public class JournalFeedStagedModelDataHandler
 			}
 		}
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		JournalFeedStagedModelDataHandler.class);
 
 }
