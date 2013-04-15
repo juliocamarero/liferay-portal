@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.lar;
 
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
@@ -180,28 +181,10 @@ public class JournalContentPortletDataHandler
 			return rootElement.formattedString();
 		}
 
-		String path = JournalPortletDataHandler.getArticlePath(
+		String path = ExportImportPathUtil.getModelPath(article);
+
+		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, article);
-
-		Element articleElement = rootElement.addElement("article");
-
-		articleElement.addAttribute("path", path);
-
-		Element dlFileEntryTypesElement = rootElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = rootElement.addElement("dl-folders");
-		Element dlFilesElement = rootElement.addElement("dl-file-entries");
-		Element dlFileRanksElement = rootElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = rootElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = rootElement.addElement(
-			"dl-repository-entries");
-
-		JournalPortletDataHandler.exportArticle(
-			portletDataContext, rootElement, rootElement, rootElement,
-			dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-			dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, article, false);
 
 		String defaultTemplateId = article.getTemplateId();
 		String preferenceTemplateId = portletPreferences.getValue(
@@ -273,7 +256,7 @@ public class JournalContentPortletDataHandler
 		Element articleElement = rootElement.element("article");
 
 		if (articleElement != null) {
-			JournalPortletDataHandler.importArticle(
+			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, articleElement);
 		}
 
