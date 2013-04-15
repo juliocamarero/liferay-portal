@@ -177,31 +177,11 @@ public class JournalContentPortletDataHandler
 		if (article == null) {
 			portletDataContext.setScopeGroupId(previousScopeGroupId);
 
-			return rootElement.formattedString();
+			return getExportDataRootElementString(rootElement);
 		}
 
-		String path = JournalPortletDataHandler.getArticlePath(
+		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, article);
-
-		Element articleElement = rootElement.addElement("article");
-
-		articleElement.addAttribute("path", path);
-
-		Element dlFileEntryTypesElement = rootElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = rootElement.addElement("dl-folders");
-		Element dlFilesElement = rootElement.addElement("dl-file-entries");
-		Element dlFileRanksElement = rootElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = rootElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = rootElement.addElement(
-			"dl-repository-entries");
-
-		JournalPortletDataHandler.exportArticle(
-			portletDataContext, rootElement, rootElement, rootElement,
-			dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-			dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, article, false);
 
 		String defaultTemplateId = article.getTemplateId();
 		String preferenceTemplateId = portletPreferences.getValue(
@@ -218,6 +198,11 @@ public class JournalContentPortletDataHandler
 
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, ddmTemplate);
+
+			Element articleElement = portletDataContext.getExportDataElement(
+				article);
+
+			portletDataContext.addReferenceElement(articleElement, ddmTemplate);
 		}
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
@@ -270,16 +255,19 @@ public class JournalContentPortletDataHandler
 				portletDataContext, ddmTemplateElement);
 		}
 
-		Element articleElement = rootElement.element("article");
+		Element articlesElement = portletDataContext.getImportDataGroupElement(
+			JournalArticle.class);
 
-		if (articleElement != null) {
-			JournalPortletDataHandler.importArticle(
-				portletDataContext, articleElement);
+		List<Element> articleElements = articlesElement.elements();
+
+		if (!articleElements.isEmpty()) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, articleElements.get(0));
 		}
 
 		String articleId = portletPreferences.getValue("articleId", null);
 
-		if (Validator.isNotNull(articleId) && (articleElement != null)) {
+		if (Validator.isNotNull(articleId) && !articleElements.isEmpty()) {
 			Map<String, String> articleIds =
 				(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
 					JournalArticle.class + ".articleId");
