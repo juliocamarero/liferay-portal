@@ -350,6 +350,9 @@ public class HtmlImpl implements Html {
 			if (isTag(_TAG_SCRIPT, text, y + 1)) {
 				y = stripTag(_TAG_SCRIPT, text, y);
 			}
+			else if (isTag(_TAG_STYLE, text, y + 1)) {
+				y = stripTag(_TAG_STYLE, text, y);
+			}
 
 			x = text.indexOf(">", y);
 
@@ -565,6 +568,8 @@ public class HtmlImpl implements Html {
 	};
 
 	private static final char[] _TAG_SCRIPT = {'s', 'c', 'r', 'i', 'p', 't'};
+
+	private static final char[] _TAG_STYLE = {'s', 't', 'y', 'l', 'e'};
 
 	// See http://www.w3.org/TR/xpath20/#lexical-structure
 
