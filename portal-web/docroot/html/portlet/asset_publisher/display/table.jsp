@@ -61,7 +61,15 @@ viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redi
 
 String viewURL = viewInContext ? assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString) : viewFullContentURL.toString();
 
-viewURL = _checkViewURL(viewURL, currentURL, themeDisplay);
+String redirectURL = currentURL;
+
+if (Validator.equals(layout.getUuid(), assetEntry.getLayoutUuid())) {
+	LiferayPortletURL redirectURLObj = liferayPortletResponse.createRenderURL(defaultAssetPublisherPortletId);
+
+	redirectURL = redirectURLObj.toString();
+}
+
+viewURL = _checkViewURL(viewURL, redirectURL);
 
 request.setAttribute("view.jsp-showIconLabel", false);
 %>

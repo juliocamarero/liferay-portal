@@ -53,12 +53,20 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 
 String viewURL = null;
 
+String redirectURL = currentURL;
+
 if (viewInContext) {
 	String viewFullContentURLString = viewFullContentURL.toString();
 
 	viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redirect", currentURL);
 
 	viewURL = assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString);
+
+	if (Validator.equals(layout.getUuid(), assetEntry.getLayoutUuid())) {
+		LiferayPortletURL redirectURLObj = liferayPortletResponse.createRenderURL(defaultAssetPublisherPortletId);
+
+		redirectURL = redirectURLObj.toString();
+	}
 }
 else {
 	viewURL = viewFullContentURL.toString();
@@ -70,7 +78,7 @@ if (Validator.isNull(viewURL)) {
 
 String viewURLMessage = viewInContext ? assetRenderer.getViewInContextMessage() : "read-more-x-about-x";
 
-viewURL = _checkViewURL(viewURL, currentURL, themeDisplay);
+viewURL = _checkViewURL(viewURL, redirectURL);
 %>
 
 <c:if test="<%= show %>">

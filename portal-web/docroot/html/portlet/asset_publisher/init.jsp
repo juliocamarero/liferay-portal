@@ -261,9 +261,9 @@ Format dateFormatDate = FastDateFormatFactoryUtil.getDate(locale, timeZone);
 <%@ include file="/html/portlet/asset_publisher/init-ext.jsp" %>
 
 <%!
-private String _checkViewURL(String viewURL, String currentURL, ThemeDisplay themeDisplay) {
-	if (Validator.isNotNull(viewURL) && viewURL.startsWith(themeDisplay.getURLPortal())) {
-		viewURL = HttpUtil.setParameter(viewURL, "redirect", currentURL);
+private String _checkViewURL(String viewURL, String redirectURL) {
+	if (Validator.isNotNull(viewURL)) {
+		viewURL = HttpUtil.setParameter(viewURL, "redirect", redirectURL);
 	}
 
 	return viewURL;
