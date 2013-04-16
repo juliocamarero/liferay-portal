@@ -17,8 +17,6 @@ package com.liferay.portlet.pagecomments.lar;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Layout;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
@@ -47,28 +45,6 @@ public class PageCommentsPortletDataHandler extends BasePortletDataHandler {
 			Layout.class.getName(), portletDataContext.getPlid());
 
 		return portletPreferences;
-	}
-
-	@Override
-	protected PortletPreferences doImportData(
-			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences, String data)
-		throws Exception {
-
-		portletDataContext.importPermissions(
-			"com.liferay.portlet.pagecomments",
-			portletDataContext.getSourceGroupId(),
-			portletDataContext.getScopeGroupId());
-
-		Element rootElement = portletDataContext.getImportDataRootElement();
-
-		long plid = GetterUtil.getLong(rootElement.attributeValue("plid"));
-
-		portletDataContext.importComments(
-			Layout.class, plid, portletDataContext.getPlid(),
-			portletDataContext.getScopeGroupId());
-
-		return null;
 	}
 
 }
