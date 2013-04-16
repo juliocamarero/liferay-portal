@@ -54,7 +54,10 @@ public class LiferayFileEntry extends LiferayModel implements FileEntry {
 		LiferayFileEntry liferayFileEntry = new LiferayFileEntry(
 			_dlFileEntry, _escapedModel);
 
-		liferayFileEntry.setCachedFileVersion(getCachedFileVersion());
+		if (getCachedFileVersion() != null) {
+			liferayFileEntry.setCachedFileVersion(getCachedFileVersion());
+		}
+
 		liferayFileEntry.setCompanyId(getCompanyId());
 		liferayFileEntry.setCreateDate(getCreateDate());
 		liferayFileEntry.setGroupId(getGroupId());
@@ -211,12 +214,12 @@ public class LiferayFileEntry extends LiferayModel implements FileEntry {
 	}
 
 	public Class<?> getModelClass() {
-		return DLFileEntry.class;
+		return LiferayFileEntry.class;
 	}
 
 	@Override
 	public String getModelClassName() {
-		return DLFileEntry.class.getName();
+		return LiferayFileEntry.class.getName();
 	}
 
 	public Date getModifiedDate() {
