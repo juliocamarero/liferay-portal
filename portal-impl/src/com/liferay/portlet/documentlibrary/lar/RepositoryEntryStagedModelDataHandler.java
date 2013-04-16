@@ -33,9 +33,12 @@ import java.util.Map;
 public class RepositoryEntryStagedModelDataHandler
 	extends BaseStagedModelDataHandler<RepositoryEntry> {
 
+	public static final String[] CLASS_NAMES =
+		{RepositoryEntry.class.getName()};
+
 	@Override
-	public String getClassName() {
-		return RepositoryEntry.class.getName();
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
 	@Override

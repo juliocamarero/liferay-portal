@@ -76,7 +76,7 @@ public class StagedModelDataHandlerRegistryImpl
 		}
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
+	private static Log _log = LogFactoryUtil.getLog(
 		StagedModelDataHandlerRegistryImpl.class);
 
 	private Map<String, StagedModelDataHandler<?>> _stagedModelDataHandlers =

@@ -43,9 +43,12 @@ import java.util.List;
 public class RepositoryStagedModelDataHandler
 	extends BaseStagedModelDataHandler<Repository> {
 
+	public static final String[] CLASS_NAMES =
+		{RepositoryEntry.class.getName()};
+
 	@Override
-	public String getClassName() {
-		return Repository.class.getName();
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
 	@Override

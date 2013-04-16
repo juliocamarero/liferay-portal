@@ -15,7 +15,6 @@
 package com.liferay.portal.kernel.lar;
 
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.StagedModel;
 

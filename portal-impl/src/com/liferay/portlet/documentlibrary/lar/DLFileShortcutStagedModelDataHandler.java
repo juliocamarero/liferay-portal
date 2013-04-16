@@ -41,9 +41,11 @@ import java.util.Map;
 public class DLFileShortcutStagedModelDataHandler
 	extends BaseStagedModelDataHandler<DLFileShortcut> {
 
+	public static final String[] CLASS_NAMES = {DLFileShortcut.class.getName()};
+
 	@Override
-	public String getClassName() {
-		return DLFileShortcut.class.getName();
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
 	@Override

@@ -45,9 +45,12 @@ import java.util.Map;
 public class DLFileEntryTypeStagedModelDataHandler
 	extends BaseStagedModelDataHandler<DLFileEntryType> {
 
+	public static final String[] CLASS_NAMES =
+		{DLFileEntryType.class.getName()};
+
 	@Override
-	public String getClassName() {
-		return DLFileEntryType.class.getName();
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
 	@Override

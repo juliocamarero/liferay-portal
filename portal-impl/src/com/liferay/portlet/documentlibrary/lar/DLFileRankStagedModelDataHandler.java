@@ -37,9 +37,11 @@ import java.util.Map;
 public class DLFileRankStagedModelDataHandler
 	extends BaseStagedModelDataHandler<DLFileRank> {
 
+	public static final String[] CLASS_NAMES = {DLFileRank.class.getName()};
+
 	@Override
-	public String getClassName() {
-		return DLFileRank.class.getName();
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
 	@Override
