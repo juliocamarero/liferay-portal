@@ -1342,6 +1342,11 @@ public class LayoutImporter {
 		portletDataContext.setPlid(importedLayout.getPlid());
 		portletDataContext.setOldPlid(layout.getPlid());
 
+		// Layout ratings
+
+		portletDataContext.importRatingsEntries(
+			Layout.class, layout.getPlid(), importedLayout.getPlid());
+
 		newLayouts.add(importedLayout);
 
 		// Layout permissions
