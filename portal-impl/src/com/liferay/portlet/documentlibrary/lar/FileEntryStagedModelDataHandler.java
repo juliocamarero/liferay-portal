@@ -223,23 +223,26 @@ public class FileEntryStagedModelDataHandler
 			portletDataContext.getImportDataStagedModelElement(
 				FileEntry.class.getSimpleName(), "path", path);
 
-		Element folderReferencesElement = fileEntryElement.element(
+		Element referencesElement = fileEntryElement.element(
 			"references");
 
-		List<Element> refElements = folderReferencesElement.elements();
+		if (referencesElement != null) {
+			List<Element> refElements = referencesElement.elements();
 
-		for (Element refElement : refElements) {
-			String className = refElement.attributeValue("class-name");
-			String classPk = refElement.attributeValue("class-pk");
+			for (Element refElement : refElements) {
+				String className = refElement.attributeValue("class-name");
+				String classPk = refElement.attributeValue("class-pk");
 
-			String refPath = ExportImportPathUtil.getModelPath(
-				portletDataContext, className, Long.valueOf(classPk));
+				String refPath = ExportImportPathUtil.getModelPath(
+					portletDataContext, className, Long.valueOf(classPk));
 
-			StagedModel referencedStagedModel =
-				(StagedModel)portletDataContext.getZipEntryAsObject(refPath);
+				StagedModel referencedStagedModel =
+					(StagedModel)portletDataContext.getZipEntryAsObject(
+						refPath);
 
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, referencedStagedModel);
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, referencedStagedModel);
+			}
 		}
 
 		long userId = portletDataContext.getUserId(fileEntry.getUserUuid());

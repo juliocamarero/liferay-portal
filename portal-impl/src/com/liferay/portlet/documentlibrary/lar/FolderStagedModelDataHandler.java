@@ -120,20 +120,23 @@ public class FolderStagedModelDataHandler
 
 		Element folderReferencesElement = folderElement.element("references");
 
-		List<Element> refElements = folderReferencesElement.elements();
+		if (folderReferencesElement != null) {
+			List<Element> refElements = folderReferencesElement.elements();
 
-		for (Element refElement : refElements) {
-			String className = refElement.attributeValue("class-name");
-			String classPk = refElement.attributeValue("class-pk");
+			for (Element refElement : refElements) {
+				String className = refElement.attributeValue("class-name");
+				String classPk = refElement.attributeValue("class-pk");
 
-			String refPath = ExportImportPathUtil.getModelPath(
-				portletDataContext, className, Long.valueOf(classPk));
+				String refPath = ExportImportPathUtil.getModelPath(
+					portletDataContext, className, Long.valueOf(classPk));
 
-			StagedModel referencedStagedModel =
-				(StagedModel)portletDataContext.getZipEntryAsObject(refPath);
+				StagedModel referencedStagedModel =
+					(StagedModel)portletDataContext.getZipEntryAsObject(
+						refPath);
 
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, referencedStagedModel);
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, referencedStagedModel);
+			}
 		}
 
 		long userId = portletDataContext.getUserId(folder.getUserUuid());
