@@ -160,8 +160,10 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 
 		// Displayed folder is different from default parent folder
 
-		List<Long> folderIds = getDescendantFolderIds(
-			portletDataContext.getScopeGroupId(), rootFolderId);
+		List<Long> folderIds = new ArrayList<Long>();
+
+		DLFolderLocalServiceUtil.getSubfolderIds(
+			folderIds, portletDataContext.getScopeGroupId(), rootFolderId);
 
 		folderIds.add(rootFolderId);
 
@@ -322,27 +324,6 @@ public class DLDisplayPortletDataHandler extends DLPortletDataHandler {
 		}
 
 		return portletPreferences;
-	}
-
-	protected List<Long> getDescendantFolderIds(
-			long groupId, long parentFolderId)
-		throws Exception {
-
-		List<Long> descendantFolderIds = new ArrayList<Long>();
-
-		List<DLFolder> descendantFolders = DLFolderLocalServiceUtil.getFolders(
-			groupId, parentFolderId, true);
-
-		for (DLFolder descendantFolder : descendantFolders) {
-			descendantFolderIds.add(descendantFolder.getFolderId());
-
-			List<Long> descendantFolderDescendantIds = getDescendantFolderIds(
-				groupId, descendantFolder.getFolderId());
-
-			descendantFolderIds.addAll(descendantFolderDescendantIds);
-		}
-
-		return descendantFolderIds;
 	}
 
 }
