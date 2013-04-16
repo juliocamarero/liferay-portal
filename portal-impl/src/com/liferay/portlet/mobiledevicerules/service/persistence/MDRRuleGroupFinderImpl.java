@@ -54,6 +54,10 @@ public class MDRRuleGroupFinderImpl extends BasePersistenceImpl<MDRRuleGroup>
 	public static final String FIND_BY_G_N =
 		MDRRuleGroupFinder.class.getName() + ".findByG_N";
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #countByKeywords(long,
+	 *             java.util.LinkedHashMap, String)}
+	 */
 	public int countByKeywords(long groupId, String keywords)
 		throws SystemException {
 
@@ -82,6 +86,10 @@ public class MDRRuleGroupFinderImpl extends BasePersistenceImpl<MDRRuleGroup>
 		return countByG_N(groupId, names, params, andOperator);
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #countByG_N(long, String,
+	 *             java.util.LinkedHashMap, boolean)}
+	 */
 	public int countByG_N(long groupId, String name, boolean andOperator)
 		throws SystemException {
 
@@ -103,6 +111,10 @@ public class MDRRuleGroupFinderImpl extends BasePersistenceImpl<MDRRuleGroup>
 		return countByG_N(groupId, names, params, andOperator);
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #countByG_N(long, String[],
+	 *             java.util.LinkedHashMap, boolean)}
+	 */
 	public int countByG_N(long groupId, String[] names, boolean andOperator)
 		throws SystemException {
 
@@ -194,6 +206,10 @@ public class MDRRuleGroupFinderImpl extends BasePersistenceImpl<MDRRuleGroup>
 		}
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #findByKeywords(long, String,
+	 *             java.util.LinkedHashMap, int, int)}
+	 */
 	public List<MDRRuleGroup> findByKeywords(
 			long groupId, String keywords, int start, int end)
 		throws SystemException {
@@ -224,6 +240,10 @@ public class MDRRuleGroupFinderImpl extends BasePersistenceImpl<MDRRuleGroup>
 		return findByG_N(groupId, names, params, andOperator, start, end);
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #findByG_N(long, String,
+	 *             java.util.LinkedHashMap, boolean)}
+	 */
 	public List<MDRRuleGroup> findByG_N(
 			long groupId, String name, boolean andOperator)
 		throws SystemException {
@@ -246,6 +266,10 @@ public class MDRRuleGroupFinderImpl extends BasePersistenceImpl<MDRRuleGroup>
 			QueryUtil.ALL_POS);
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #findByG_N(long, String,
+	 *             java.util.LinkedHashMap, boolean, int, int)}
+	 */
 	public List<MDRRuleGroup> findByG_N(
 			long groupId, String name, boolean andOperator, int start, int end)
 		throws SystemException {
@@ -268,6 +292,10 @@ public class MDRRuleGroupFinderImpl extends BasePersistenceImpl<MDRRuleGroup>
 		return findByG_N(groupId, names, params, andOperator, start, end);
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #findByG_N(long, String,
+	 *             java.util.LinkedHashMap, boolean, int, int)}
+	 */
 	public List<MDRRuleGroup> findByG_N(
 			long groupId, String[] names, boolean andOperator, int start,
 			int end)
