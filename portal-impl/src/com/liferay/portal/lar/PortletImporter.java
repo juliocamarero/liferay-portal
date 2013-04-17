@@ -1863,6 +1863,11 @@ public class PortletImporter {
 					jxPreferences, name, companyGroup.getGroupId(),
 					layout.getPlid());
 			}
+			else if (name.equals("assetVocabularyId")) {
+				updatePreferencesClassPKs(
+					portletDataContext, jxPreferences, name,
+					AssetVocabulary.class, companyGroup.getGroupId());
+			}
 		}
 
 		return PortletPreferencesFactoryUtil.toXML(jxPreferences);
