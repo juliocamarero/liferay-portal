@@ -1681,7 +1681,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		}
 
 		XPath xPath = SAXReaderUtil.createXPath(
-			"ref[@class-name='"+ clazz.getName() + "']");
+			"reference[@class-name='"+ clazz.getName() + "']");
 
 		List<Node> nodes = xPath.selectNodes(referencesElement);
 
