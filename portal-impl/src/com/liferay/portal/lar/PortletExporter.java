@@ -1532,6 +1532,10 @@ public class PortletExporter {
 			else if (name.equals("scopeIds")) {
 				updateAssetPublisherScopeIds(jxPreferences, name, plid);
 			}
+			else if (name.equals("assetVocabularyId")) {
+				updatePreferencesClassPKs(
+					jxPreferences, name, AssetVocabulary.class.getName());
+			}
 		}
 
 		return PortletPreferencesFactoryUtil.toXML(jxPreferences);
