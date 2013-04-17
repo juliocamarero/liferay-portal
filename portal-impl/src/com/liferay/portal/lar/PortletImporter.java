@@ -1849,6 +1849,11 @@ public class PortletImporter {
 
 				updateAssetPublisherClassNameIds(jxPreferences, name);
 			}
+			else if (name.equals("assetVocabularyId")) {
+				updatePreferencesClassPKs(
+					portletDataContext, jxPreferences, name,
+					AssetVocabulary.class, companyGroup.getGroupId());
+			}
 			else if (name.startsWith("queryName") &&
 					 value.equalsIgnoreCase("assetCategories")) {
 
@@ -1862,11 +1867,6 @@ public class PortletImporter {
 				updateAssetPublisherScopeIds(
 					jxPreferences, name, companyGroup.getGroupId(),
 					layout.getPlid());
-			}
-			else if (name.equals("assetVocabularyId")) {
-				updatePreferencesClassPKs(
-					portletDataContext, jxPreferences, name,
-					AssetVocabulary.class, companyGroup.getGroupId());
 			}
 		}
 
