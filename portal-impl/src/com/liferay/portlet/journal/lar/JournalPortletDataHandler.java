@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -44,9 +45,8 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
-import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -144,7 +144,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		Element dlFoldersElement = portletDataContext.getImportDataGroupElement(
-			DLFolder.class);
+			Folder.class);
 
 		List<Element> dlFolderElements = dlFoldersElement.elements();
 
@@ -154,7 +154,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		Element dlFileEntriesElement =
-			portletDataContext.getImportDataGroupElement(DLFileEntry.class);
+			portletDataContext.getImportDataGroupElement(FileEntry.class);
 
 		List<Element> dlFileEntryElements = dlFileEntriesElement.elements();
 
@@ -253,11 +253,14 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				continue;
 			}
 
-			FileEntry fileEntry =
-				DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
-					fileEntryUUID, portletDataContext.getScopeGroupId());
+			FileEntry fileEntry = null;
 
-			if (fileEntry == null) {
+			try {
+				fileEntry =
+					DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
+						fileEntryUUID, portletDataContext.getScopeGroupId());
+			}
+			catch (NoSuchFileEntryException nsfee) {
 				continue;
 			}
 
