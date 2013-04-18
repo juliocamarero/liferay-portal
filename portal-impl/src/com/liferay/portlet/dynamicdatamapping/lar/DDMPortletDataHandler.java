@@ -340,17 +340,9 @@ public class DDMPortletDataHandler extends BasePortletDataHandler {
 					"default-repository",
 					String.valueOf(fileEntry.isDefaultRepository()));
 
-				String path = null;
-
-				if (fileEntry.isDefaultRepository()) {
-					path = ExportImportPathUtil.getModelPath(
-						(DLFileEntry)fileEntry.getModel());
-
-				}
-				else {
-					path = ExportImportPathUtil.getModelPath(
-						(RepositoryEntry)fileEntry.getModel());
-				}
+				String path = ExportImportPathUtil.getModelPath(
+					fileEntry.getGroupId(), FileEntry.class.getName(),
+					fileEntry.getFileEntryId());
 
 				dlReferenceElement.addAttribute("path", path);
 
