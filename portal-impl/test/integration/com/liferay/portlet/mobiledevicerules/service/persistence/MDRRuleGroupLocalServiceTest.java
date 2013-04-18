@@ -65,15 +65,30 @@ public class MDRRuleGroupLocalServiceTest {
 
 	@Test
 	public void testSelectGlobalMDRRulesNotPresent() throws Exception {
-		testSelectableMDRRuleGroups(false);
+		testSelectableMDRRuleGroups(false, false);
+	}
+
+	@Test
+	public void testSelectGlobalMDRRulesNotPresent_deprecatedAPI()
+		throws Exception {
+
+		testSelectableMDRRuleGroups(false, true);
 	}
 
 	@Test
 	public void testSelectGlobalMDRRulesPresent() throws Exception {
-		testSelectableMDRRuleGroups(true);
+		testSelectableMDRRuleGroups(true, false);
 	}
 
-	protected void testSelectableMDRRuleGroups(boolean includeGlobalGroup)
+	@Test
+	public void testSelectGlobalMDRRulesPresent_deprecatedAPI()
+		throws Exception {
+
+		testSelectableMDRRuleGroups(true, true);
+	}
+
+	protected void testSelectableMDRRuleGroups(
+			boolean includeGlobalGroup, boolean deprecated)
 		throws Exception {
 
 		Group group = GroupTestUtil.addGroup();
@@ -81,19 +96,28 @@ public class MDRRuleGroupLocalServiceTest {
 		Layout layout = LayoutTestUtil.addLayout(
 			group.getGroupId(), ServiceTestUtil.randomString());
 
-		LinkedHashMap<String, Object> params =
-			new LinkedHashMap<String, Object>();
+		List<MDRRuleGroup> ruleGroups = null;
 
-		if (includeGlobalGroup) {
-			params.put("includeGlobalScope", true);
+		if (deprecated) {
+			ruleGroups = MDRRuleGroupLocalServiceUtil.searchByKeywords(
+				layout.getGroupId(), StringPool.BLANK, false, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS);
 		}
+		else {
+			LinkedHashMap<String, Object> params = null;
 
-		List<MDRRuleGroup> ruleGroups =
-			MDRRuleGroupLocalServiceUtil.searchByKeywords(
+			if (includeGlobalGroup) {
+				params = new LinkedHashMap<String, Object>();
+
+				params.put("includeGlobalScope", true);
+			}
+
+			ruleGroups = MDRRuleGroupLocalServiceUtil.searchByKeywords(
 				layout.getGroupId(), StringPool.BLANK, params, false,
 				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		}
 
-		if (includeGlobalGroup) {
+		if (includeGlobalGroup || deprecated) {
 			Assert.assertTrue(ruleGroups.contains(_globalRuleGroup));
 		}
 		else {
