@@ -15,6 +15,7 @@
 package com.liferay.portlet.rss.lar;
 
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
@@ -190,19 +191,8 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
-		Element dlFileEntryTypesElement = rootElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = rootElement.addElement("dl-folders");
-		Element dlFilesElement = rootElement.addElement("dl-file-entries");
-		Element dlFileRanksElement = rootElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = rootElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = rootElement.addElement(
-			"dl-repository-entries");
-
 		for (JournalArticle article : articles) {
-			String path = JournalPortletDataHandler.getArticlePath(
-				portletDataContext, article);
+			String path = ExportImportPathUtil.getModelPath(article);
 
 			Element articleElement = null;
 
@@ -215,11 +205,8 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 
 			articleElement.addAttribute("path", path);
 
-			JournalPortletDataHandler.exportArticle(
-				portletDataContext, rootElement, rootElement, rootElement,
-				dlFileEntryTypesElement, dlFoldersElement, dlFilesElement,
-				dlFileRanksElement, dlRepositoriesElement,
-				dlRepositoryEntriesElement, article, false);
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, article);
 		}
 
 		return getExportDataRootElementString(rootElement);
@@ -260,7 +247,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 		Element footerArticleElement = rootElement.element("footer-article");
 
 		if (footerArticleElement != null) {
-			JournalPortletDataHandler.importArticle(
+			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, footerArticleElement);
 		}
 
@@ -291,7 +278,7 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 		Element headerArticleElement = rootElement.element("header-article");
 
 		if (headerArticleElement != null) {
-			JournalPortletDataHandler.importArticle(
+			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, headerArticleElement);
 		}
 
