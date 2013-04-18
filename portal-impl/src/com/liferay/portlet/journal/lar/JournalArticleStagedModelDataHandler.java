@@ -23,6 +23,8 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -43,10 +45,8 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.ImageUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
-import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.dynamicdatamapping.lar.DDMPortletDataHandler;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
@@ -147,9 +147,9 @@ public class JournalArticleStagedModelDataHandler
 		Element dlFileEntryTypesElement =
 			portletDataContext.getExportDataGroupElement(DLFileEntryType.class);
 		Element dlFoldersElement = portletDataContext.getExportDataGroupElement(
-			DLFolder.class);
+			Folder.class);
 		Element dlFileEntriesElement =
-			portletDataContext.getExportDataGroupElement(DLFileEntry.class);
+			portletDataContext.getExportDataGroupElement(FileEntry.class);
 		Element dlFileRanksElement =
 			portletDataContext.getExportDataGroupElement(DLFileRank.class);
 		Element dlRepositoriesElement =
