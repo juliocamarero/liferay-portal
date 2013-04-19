@@ -55,8 +55,8 @@ public class DLFileRankStagedModelDataHandler
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, dlFileEntry);
 
-		Element fileRankElement =
-			portletDataContext.getExportDataStagedModelElement(fileRank);
+		Element fileRankElement = portletDataContext.getExportDataElement(
+			fileRank);
 
 		portletDataContext.addClassedModel(
 			fileRankElement, ExportImportPathUtil.getModelPath(fileRank),
