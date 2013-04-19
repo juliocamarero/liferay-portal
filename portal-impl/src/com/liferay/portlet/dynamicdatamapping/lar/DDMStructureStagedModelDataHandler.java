@@ -49,8 +49,8 @@ public class DDMStructureStagedModelDataHandler
 			PortletDataContext portletDataContext, DDMStructure structure)
 		throws Exception {
 
-		Element structureElement =
-			portletDataContext.getExportDataStagedModelElement(structure);
+		Element structureElement = portletDataContext.getExportDataElement(
+			structure);
 
 		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
 			structure.getCompanyId());
