@@ -121,6 +121,9 @@ public interface PortletDataContext extends Serializable {
 	public Element addReferenceElement(
 		Element element, ClassedModel referencedClassedModel);
 
+	public Element addReferenceElement(
+		Element element, ClassedModel referencedClassedModel, String binPath);
+
 	public void addZipEntry(String path, byte[] bytes) throws SystemException;
 
 	public void addZipEntry(String path, InputStream is) throws SystemException;
@@ -175,12 +178,12 @@ public interface PortletDataContext extends Serializable {
 
 	public Map<String, List<ExpandoColumn>> getExpandoColumns();
 
+	public Element getExportDataElement(ClassedModel classedModel);
+
 	public Element getExportDataGroupElement(
 		Class<? extends StagedModel> clazz);
 
 	public Element getExportDataRootElement();
-
-	public Element getExportDataStagedModelElement(StagedModel stagedModel);
 
 	public long getGroupId();
 
@@ -226,7 +229,7 @@ public interface PortletDataContext extends Serializable {
 	public Map<String, List<RatingsEntry>> getRatingsEntries();
 
 	public List<Element> getReferencedDataElements(
-		StagedModel parentStagedModel, Class<? extends StagedModel> clazz);
+		StagedModel parentStagedModel, Class<?> clazz);
 
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link

@@ -963,7 +963,7 @@ public class LayoutImporter {
 		Element articleElement = layoutElement.element("article");
 
 		if (articleElement != null) {
-			JournalPortletDataHandler.importArticle(
+			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, articleElement);
 		}
 

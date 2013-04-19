@@ -66,8 +66,8 @@ public class DLFileShortcutStagedModelDataHandler
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, dlFileEntry);
 
-		Element fileShortcutElement =
-			portletDataContext.getExportDataStagedModelElement(fileShortcut);
+		Element fileShortcutElement = portletDataContext.getExportDataElement(
+			fileShortcut);
 
 		fileShortcutElement.addAttribute(
 			"file-entry-uuid", dlFileEntry.getUuid());
