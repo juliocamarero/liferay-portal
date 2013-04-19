@@ -185,7 +185,7 @@ public class JournalContentPortletDataHandler
 
 		String defaultTemplateId = article.getTemplateId();
 		String preferenceTemplateId = portletPreferences.getValue(
-			"templateId", null);
+			"ddmTemplateKey", null);
 
 		if (Validator.isNotNull(defaultTemplateId) &&
 			Validator.isNotNull(preferenceTemplateId) &&
