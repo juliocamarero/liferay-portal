@@ -128,8 +128,8 @@ public class DDMTemplateStagedModelDataHandler
 		Element dlRepositoryEntriesElement =
 			portletDataContext.getExportDataGroupElement(RepositoryEntry.class);
 
-		Element templateElement =
-			portletDataContext.getExportDataStagedModelElement(template);
+		Element templateElement = portletDataContext.getExportDataElement(
+			template);
 
 		if (template.isSmallImage()) {
 			Image smallImage = ImageUtil.fetchByPrimaryKey(
