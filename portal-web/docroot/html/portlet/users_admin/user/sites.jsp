@@ -81,21 +81,6 @@ List<Group> groups = (List<Group>)request.getAttribute("user.groups");
 			<liferay-ui:search-container-column-text>
 				<a class="modify-link" data-rowId="<%= group.getGroupId() %>" href="javascript:;"><%= removeGroupIcon %></a>
 			</liferay-ui:search-container-column-text>
-
-			<aui:script use="liferay-search-container">
-				var searchContainer = Liferay.SearchContainer.get('<portlet:namespace />groupsSearchContainer');
-
-				searchContainer.get('contentBox').delegate(
-					'click',
-					function(event) {
-						var link = event.currentTarget;
-						var tr = link.ancestor('tr');
-
-						searchContainer.deleteRow(tr, link.getAttribute('data-rowId'));
-					},
-					'.modify-link'
-				);
-			</aui:script>
 		</c:if>
 	</liferay-ui:search-container-row>
 
@@ -150,6 +135,19 @@ List<Group> groups = (List<Group>)request.getAttribute("user.groups");
 					}
 				);
 			}
+		);
+
+		var searchContainer = Liferay.SearchContainer.get('<portlet:namespace />groupsSearchContainer');
+
+		searchContainer.get('contentBox').delegate(
+			'click',
+			function(event) {
+				var link = event.currentTarget;
+				var tr = link.ancestor('tr');
+
+				searchContainer.deleteRow(tr, link.getAttribute('data-rowId'));
+			},
+			'.modify-link'
 		);
 	</aui:script>
 </c:if>
