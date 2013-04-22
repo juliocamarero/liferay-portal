@@ -105,8 +105,8 @@ public class OrganizationIndexer extends BaseIndexer {
 			}
 		}
 
-		List<Long> excludedOrganizationIds =
-			(List<Long>)params.get("excludedOrganizationIds");
+		List<Long> excludedOrganizationIds = (List<Long>)params.get(
+			"excludedOrganizationIds");
 
 		if ((excludedOrganizationIds != null) &&
 			!excludedOrganizationIds.isEmpty()) {
