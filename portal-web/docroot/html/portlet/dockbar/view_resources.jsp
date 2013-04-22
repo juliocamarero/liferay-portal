@@ -35,6 +35,26 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 			}
 			%>
 
+			<span class="add-content-button">
+
+				<%
+				long groupId = scopeGroupId;
+
+				long[] groupIds = new long[]{scopeGroupId};
+
+				boolean defaultAssetPublisher = false;
+
+				PortletURL redirectURL = liferayPortletResponse.createLiferayPortletURL(themeDisplay.getPlid(), portletDisplay.getId(), PortletRequest.RENDER_PHASE, false);
+
+				redirectURL.setParameter("struts_action", "/dockbar/add_content_redirect");
+				redirectURL.setWindowState(LiferayWindowState.POP_UP);
+
+				Map<String, PortletURL> addPortletURLs = AssetUtil.getAddPortletURLs(liferayPortletRequest, liferayPortletResponse, AssetRendererFactoryRegistryUtil.getClassNameIds(), new long[0], new long[0], new String[0], redirectURL.toString());
+				%>
+
+				<%@ include file="/html/portlet/asset_publisher/add_asset.jspf" %>
+			</span>
+
 			<liferay-ui:panel collapsible="<%= false %>" cssClass="lfr-component panel-page-category recent" extended="<%= true %>" id="manageRecentPanel" persistState="<%= true %>" title="<%= panelTitle %>">
 
 				<%
@@ -43,8 +63,6 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 
 				String displayStyleDefault = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_displaystyle", "descriptive"));
 				String displayStyle = ParamUtil.getString(request, "displayStyle", displayStyleDefault);
-
-				long[] groupIds = new long[]{scopeGroupId};
 
 				long[] availableClassNameIds = AssetRendererFactoryRegistryUtil.getClassNameIds();
 
@@ -101,24 +119,39 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 						continue;
 					}
 
+					String title = HtmlUtil.escape(StringUtil.shorten(assetRenderer.getTitle(themeDisplay.getLocale()), 60));
+
 					Map<String, Object> data = new HashMap<String, Object>();
 
 					data.put("class-name", assetEntry.getClassName());
 					data.put("class-pk", assetEntry.getClassPK());
+					data.put("instanceable", true);
 					data.put("portlet-id", assetRenderer.getAddToPagePortletId());
+					data.put("title", title);
 				%>
 
-					<liferay-ui:app-view-entry
-						cssClass='<%= !displayStyle.equals("icon") ? "has-preview content-shortcut" : "content-shortcut" %>'
-						data="<%= data %>"
-						description="<%= StringUtil.shorten(assetRenderer.getSummary(themeDisplay.getLocale()), 120) %>"
-						displayStyle="<%= displayStyle %>"
-						showCheckbox="<%= false %>"
-						showLinkTitle="<%= false %>"
-						thumbnailSrc='<%= displayStyle.equals("list") ? assetRenderer.getIconPath(liferayPortletRequest) : assetRenderer.getThumbnailPath(liferayPortletRequest) %>'
-						title="<%= HtmlUtil.escape(StringUtil.shorten(assetRenderer.getTitle(themeDisplay.getLocale()), 60)) %>"
-						url="javascript:;"
-					/>
+					<div class="content-item display-style-<%= displayStyle %>">
+						<c:if test='<%= !displayStyle.equals("icon") %>'>
+							<span <%= AUIUtil.buildData(data) %> class="add-content-item">
+								<liferay-ui:message key="add" />
+							</span>
+						</c:if>
+
+						<%
+						data.put("draggable", Boolean.TRUE.toString());
+						%>
+
+						<liferay-ui:app-view-entry
+							cssClass='<%= !displayStyle.equals("icon") ? "has-preview content-shortcut" : "content-shortcut" %>'
+							data="<%= data %>"
+							description="<%= StringUtil.shorten(assetRenderer.getSummary(themeDisplay.getLocale()), 120) %>"
+							displayStyle="<%= displayStyle %>"
+							showCheckbox="<%= false %>"
+							showLinkTitle="<%= false %>"
+							thumbnailSrc='<%= displayStyle.equals("list") ? assetRenderer.getIconPath(liferayPortletRequest) : assetRenderer.getThumbnailPath(liferayPortletRequest) %>'
+							title="<%= title %>"
+						/>
+					</div>
 
 				<%
 				}
