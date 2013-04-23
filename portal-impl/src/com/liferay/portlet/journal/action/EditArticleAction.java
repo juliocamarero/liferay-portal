@@ -70,6 +70,7 @@ import com.liferay.portlet.journal.ArticleTypeException;
 import com.liferay.portlet.journal.ArticleVersionException;
 import com.liferay.portlet.journal.DuplicateArticleIdException;
 import com.liferay.portlet.journal.NoSuchArticleException;
+import com.liferay.portlet.journal.asset.JournalArticleAssetRenderer;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
@@ -262,6 +263,14 @@ public class EditArticleAction extends PortletAction {
 					redirect = PortalUtil.escapeRedirect(redirect);
 
 					if (Validator.isNotNull(redirect)) {
+						if (article != null) {
+							redirect =
+								AssetPublisherUtil.addRedirectInformation(
+									redirect, JournalArticle.class.getName(),
+									JournalArticleAssetRenderer.getClassPK(
+										article));
+						}
+
 						actionResponse.sendRedirect(redirect);
 					}
 				}

@@ -199,6 +199,13 @@ public class EditEntryAction extends PortletAction {
 					redirect = PortalUtil.escapeRedirect(redirect);
 
 					if (Validator.isNotNull(redirect)) {
+						if (entry != null) {
+							redirect =
+								AssetPublisherUtil.addRedirectInformation(
+									redirect, BlogsEntry.class.getName(),
+									entry.getEntryId());
+						}
+
 						actionResponse.sendRedirect(redirect);
 					}
 				}

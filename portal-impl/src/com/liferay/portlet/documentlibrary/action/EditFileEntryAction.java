@@ -218,6 +218,13 @@ public class EditFileEntryAction extends PortletAction {
 							ParamUtil.getString(actionRequest, "redirect"));
 
 						if (Validator.isNotNull(redirect)) {
+							if (fileEntry != null) {
+								redirect =
+									AssetPublisherUtil.addRedirectInformation(
+										redirect, DLFileEntry.class.getName(),
+										fileEntry.getFileEntryId());
+							}
+
 							actionResponse.sendRedirect(redirect);
 						}
 					}
