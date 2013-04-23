@@ -16,10 +16,12 @@ package com.liferay.portlet.journal.asset;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -36,6 +38,8 @@ import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
+import com.liferay.portlet.journal.model.JournalArticleDisplay;
+import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 
@@ -122,7 +126,22 @@ public class JournalArticleAssetRenderer
 	}
 
 	public String getSummary(Locale locale) {
-		return _article.getDescription(locale);
+		String summary = HtmlUtil.escape(_article.getDescription(locale));
+
+		if (Validator.isNull(summary)) {
+			try {
+				JournalArticleDisplay articleDisplay =
+					JournalArticleLocalServiceUtil.getArticleDisplay(
+						_article, null, null,
+						LanguageUtil.getLanguageId(locale), 1, null, null);
+
+				summary = HtmlUtil.stripHtml(articleDisplay.getContent());
+			}
+			catch (Exception e) {
+			}
+		}
+
+		return summary;
 	}
 
 	@Override

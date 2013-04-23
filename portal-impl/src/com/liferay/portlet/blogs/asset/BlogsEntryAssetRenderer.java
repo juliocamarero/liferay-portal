@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -90,7 +91,13 @@ public class BlogsEntryAssetRenderer
 	}
 
 	public String getSummary(Locale locale) {
-		return HtmlUtil.stripHtml(_entry.getDescription());
+		String summary = HtmlUtil.escape(_entry.getDescription());
+
+		if (Validator.isNull(summary)) {
+			summary = HtmlUtil.stripHtml(_entry.getContent());
+		}
+
+		return summary;
 	}
 
 	@Override
