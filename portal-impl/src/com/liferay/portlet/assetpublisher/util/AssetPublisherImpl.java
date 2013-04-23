@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Accessor;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -141,6 +142,15 @@ public class AssetPublisherImpl implements AssetPublisher {
 		PortletRequest portletRequest, String className, long classPK) {
 
 		_getRecentFolderIds(portletRequest).put(className, classPK);
+	}
+
+	public String addRedirectInformation(
+		String redirect, String className, long classPK) {
+
+		redirect = HttpUtil.addParameter(redirect, "className", className);
+		redirect = HttpUtil.addParameter(redirect, "classPK", classPK);
+
+		return redirect;
 	}
 
 	public void addSelection(

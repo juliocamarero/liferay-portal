@@ -55,6 +55,9 @@ public interface AssetPublisher {
 	public void addRecentFolderId(
 		PortletRequest portletRequest, String className, long classPK);
 
+	public String addRedirectInformation(
+		String redirect, String className, long classPK);
+
 	public void addSelection(
 			PortletRequest portletRequest,
 			PortletPreferences portletPreferences, String portletId)

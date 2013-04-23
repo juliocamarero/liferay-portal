@@ -54,6 +54,13 @@ public class AssetPublisherUtil {
 			portletRequest, className, classPK);
 	}
 
+	public static String addRedirectInformation(
+			String redirect, String className, long classPK) {
+
+		return getAssetPublisher().addRedirectInformation(
+			redirect, className, classPK);
+	}
+
 	public static void addSelection(
 			PortletRequest portletRequest,
 			PortletPreferences portletPreferences, String portletId)
