@@ -19,17 +19,15 @@
 <html>
 
 <head>
-
-<liferay-util:include page="/html/common/themes/top_head.jsp" />
-
+	<liferay-util:include page="/html/common/themes/top_head.jsp" />
 </head>
 
 <body>
 
 <%= request.getAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT) %>
 
-</body>
-
 <liferay-util:include page="/html/common/themes/bottom.jsp" />
+
+</body>
 
 </html>
