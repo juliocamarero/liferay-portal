@@ -65,7 +65,9 @@ public class UpgradeProcessTestUtil {
 
 		String url = jdbcProperties.getProperty(PropsKeys.JDBC_DEFAULT_URL);
 
-		url = url.replace("lportal", DATABASE_NAME);
+		String currentDatabaseName = DBFactoryUtil.getDatabaseName();
+
+		url = url.replace(currentDatabaseName, DATABASE_NAME);
 
 		jdbcProperties.put(PropsKeys.JDBC_DEFAULT_URL, url);
 
@@ -98,7 +100,6 @@ public class UpgradeProcessTestUtil {
 		sb.append("' IDENTIFIED BY '");
 		sb.append(PropsValues.JDBC_DEFAULT_PASSWORD);
 		sb.append("' WITH GRANT OPTION;");
-		
 
 		return sb.toString();
 	}
