@@ -80,10 +80,12 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
 import com.liferay.portlet.asset.NoSuchCategoryException;
+import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.NoSuchTagException;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
@@ -1372,52 +1374,77 @@ public class PortletImporter {
 
 		Element rootElement = document.getRootElement();
 
-		List<Element> assetLinkElements = rootElement.elements("asset-link");
+		List<Element> assetLinkGroupElements = rootElement.elements(
+			"asset-link-group");
 
-		for (Element assetLinkElement : assetLinkElements) {
-			String sourceUuid = GetterUtil.getString(
-				assetLinkElement.attributeValue("source-uuid"));
-			String[] assetEntryUuidArray = StringUtil.split(
-				GetterUtil.getString(
-					assetLinkElement.attributeValue("target-uuids")));
-			int assetLinkType = GetterUtil.getInteger(
-				assetLinkElement.attributeValue("type"));
+		for (Element assetLinkGroupElement : assetLinkGroupElements) {
+			List<Element> assetLinksElements = assetLinkGroupElement.elements(
+				"asset-link");
 
-			List<Long> assetEntryIds = new ArrayList<Long>();
+			String sourceUuid = assetLinkGroupElement.attributeValue(
+				"source-uuid");
 
-			for (String assetEntryUuid : assetEntryUuidArray) {
-				AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
-					portletDataContext.getScopeGroupId(), assetEntryUuid);
+			AssetEntry originAssetEntry = null;
 
-				if (assetEntry == null) {
-					assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
-						portletDataContext.getCompanyGroupId(), assetEntryUuid);
-				}
+			try {
+				originAssetEntry = AssetEntryLocalServiceUtil.getEntry(
+					portletDataContext.getScopeGroupId(), sourceUuid);
+			} catch (NoSuchEntryException nse) {
+				_log.error(
+					"Unable to find asset entry with uuid " + sourceUuid);
 
-				if (assetEntry != null) {
-					assetEntryIds.add(assetEntry.getEntryId());
-				}
-			}
-
-			if (assetEntryIds.isEmpty()) {
 				continue;
 			}
 
-			long[] assetEntryIdsArray = ArrayUtil.toArray(
-				assetEntryIds.toArray(new Long[assetEntryIds.size()]));
+			for (Element assetLinkElement : assetLinksElements) {
+				String path = assetLinkElement.attributeValue("path");
 
-			AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
-				portletDataContext.getScopeGroupId(), sourceUuid);
+				String targetUuid = assetLinkElement.attributeValue(
+					"target-uuid");
 
-			if (assetEntry == null) {
-				assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
-					portletDataContext.getCompanyGroupId(), sourceUuid);
-			}
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
 
-			if (assetEntry != null) {
-				AssetLinkLocalServiceUtil.updateLinks(
-					assetEntry.getUserId(), assetEntry.getEntryId(),
-					assetEntryIdsArray, assetLinkType);
+				AssetEntry targetAssetEntry = null;
+
+				try {
+					targetAssetEntry = AssetEntryLocalServiceUtil.getEntry(
+						portletDataContext.getScopeGroupId(), targetUuid);
+				} catch (NoSuchEntryException nse) {
+					_log.warn(
+						"Unable to find asset entry with uuid " + targetUuid);
+
+					continue;
+				}
+
+				AssetLink assetLink =
+					(AssetLink)portletDataContext.getZipEntryAsObject(path);
+
+				long userId = portletDataContext.getUserId(
+					assetLink.getUserUuid());
+
+				AssetLink existingLink = null;
+				try{
+					existingLink = AssetLinkLocalServiceUtil.getLink(
+							portletDataContext.getScopeGroupId(), sourceUuid,
+							targetUuid, assetLink.getType());
+
+				} catch (Exception e) {
+				}
+
+				if (existingLink == null) {
+					AssetLinkLocalServiceUtil.addLink(
+						userId, originAssetEntry.getEntryId(),
+						targetAssetEntry.getEntryId(), assetLink.getType(),
+						assetLink.getWeight());
+				}
+				else {
+					AssetLinkLocalServiceUtil.updateLink(
+						userId, originAssetEntry.getEntryId(),
+						targetAssetEntry.getEntryId(), assetLink.getType(),
+						assetLink.getWeight());
+				}
 			}
 		}
 	}

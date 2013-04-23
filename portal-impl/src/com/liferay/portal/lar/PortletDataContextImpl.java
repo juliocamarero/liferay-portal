@@ -115,13 +115,12 @@ import com.liferay.portlet.ratings.model.impl.RatingsEntryImpl;
 import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
 import com.liferay.portlet.wiki.model.impl.WikiNodeImpl;
 import com.liferay.portlet.wiki.model.impl.WikiPageImpl;
-
 import com.thoughtworks.xstream.XStream;
+import jodd.bean.BeanUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -130,8 +129,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import jodd.bean.BeanUtil;
 
 /**
  * <p>
@@ -293,28 +290,9 @@ public class PortletDataContextImpl implements PortletDataContext {
 		for (Map.Entry<Integer, List<AssetLink>> entry :
 				assetLinksMap.entrySet()) {
 
-			int assetLinkType = entry.getKey();
-			List<AssetLink> assetLinks = entry.getValue();
-
-			List<String> assetLinkUuids = new ArrayList<String>(
-				directAssetLinks.size());
-
-			for (AssetLink assetLink : assetLinks) {
-				try {
-					AssetEntry assetLinkEntry =
-						AssetEntryLocalServiceUtil.getEntry(
-							assetLink.getEntryId2());
-
-					assetLinkUuids.add(assetLinkEntry.getClassUuid());
-				}
-				catch (NoSuchEntryException nsee) {
-				}
-			}
-
-			_assetLinkUuidsMap.put(
-				getPrimaryKeyString(
-					assetEntry.getClassUuid(), String.valueOf(assetLinkType)),
-				assetLinkUuids.toArray(new String[assetLinkUuids.size()]));
+			_assetLinksMap.put(
+				getPrimaryKeyString(assetEntry.getClassUuid(), entry.getKey()),
+				entry.getValue());
 		}
 	}
 
@@ -845,8 +823,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _assetCategoryUuidsMap;
 	}
 
-	public Map<String, String[]> getAssetLinkUuidsMap() {
-		return _assetLinkUuidsMap;
+	public Map<String, List<AssetLink>> getAssetLinksMap() {
+		return _assetLinksMap;
 	}
 
 	public String[] getAssetTagNames(Class<?> clazz, long classPK) {
@@ -1993,8 +1971,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 		new HashMap<String, long[]>();
 	private Map<String, String[]> _assetCategoryUuidsMap =
 		new HashMap<String, String[]>();
-	private Map<String, String[]> _assetLinkUuidsMap =
-		new HashMap<String, String[]>();
+	private Map<String, List<AssetLink>> _assetLinksMap =
+		new HashMap<String, List<AssetLink>>();
 	private Map<String, String[]> _assetTagNamesMap =
 		new HashMap<String, String[]>();
 	private Map<String, List<MBMessage>> _commentsMap =

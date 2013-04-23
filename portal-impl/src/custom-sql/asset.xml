@@ -155,6 +155,27 @@
 				(AssetEntry.visible = ?)
 		]]>
 	</sql>
+    <sql id="com.liferay.portlet.asset.service.persistence.AssetLinkFinder.findByG_E1UUID_E2UUID_T">
+        <![CDATA[
+
+			SELECT
+				{AssetLink.*}
+            FROM
+                AssetLink
+            INNER JOIN
+                AssetEntry ae1 ON
+                    (AssetLink.entryId1 = ae1.entryId)
+            INNER JOIN
+                AssetEntry ae2 ON
+                    (AssetLink.entryId2 = ae2.entryId)
+            WHERE
+               (ae1.classUuid = ?)  AND
+               (ae2.classUuid = ?) AND
+               (ae1.groupId = ?) AND
+               (ae1.groupId = ae2.groupId) AND
+               (AssetLink.type_ = ?)
+		]]>
+    </sql>
 	<sql id="com.liferay.portlet.asset.service.persistence.AssetTagFinder.countByG_N">
 		<![CDATA[
 			SELECT

@@ -80,20 +80,25 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 		assetLinkPersistence.update(link);
 
 		if (AssetLinkConstants.isTypeBi(type)) {
-			long linkId2 = counterLocalService.increment();
 
-			AssetLink link2 = assetLinkPersistence.create(linkId2);
+			AssetLink inverseAssetLink = assetLinkPersistence.fetchByE_E_T(
+				entryId2, entryId1, type);
 
-			link2.setCompanyId(user.getCompanyId());
-			link2.setUserId(user.getUserId());
-			link2.setUserName(user.getFullName());
-			link2.setCreateDate(now);
-			link2.setEntryId1(entryId2);
-			link2.setEntryId2(entryId1);
-			link2.setType(type);
-			link2.setWeight(weight);
+			if (inverseAssetLink == null) {
+				long inverseLinkId = counterLocalService.increment();
 
-			assetLinkPersistence.update(link2);
+				inverseAssetLink = assetLinkPersistence.create(inverseLinkId);
+			}
+
+			inverseAssetLink.setCompanyId(user.getCompanyId());
+			inverseAssetLink.setUserId(user.getUserId());
+			inverseAssetLink.setUserName(user.getFullName());
+			inverseAssetLink.setCreateDate(now);
+			inverseAssetLink.setEntryId1(entryId2);
+			inverseAssetLink.setEntryId2(entryId1);
+			inverseAssetLink.setType(type);
+
+			assetLinkPersistence.update(inverseAssetLink);
 		}
 
 		return link;
@@ -199,6 +204,14 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 		return assetLinkFinder.findByE1_T_V(entryId, typeId, true);
 	}
 
+	public AssetLink getLink(
+			long groupId, String entry1Uuid, String entry2Uuid, int typeId)
+		throws NoSuchLinkException, SystemException {
+
+		return assetLinkFinder.findByG_E1_E2_T(
+			groupId, entry1Uuid, entry2Uuid, typeId);
+	}
+
 	/**
 	 * Returns all the asset links whose first or second entry ID is the given
 	 * entry ID.
@@ -272,6 +285,24 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 		throws SystemException {
 
 		return assetLinkPersistence.findByE2_T(entryId, typeId);
+	}
+
+	public AssetLink updateLink(
+			long userId, long entryId1, long entryId2, int typeId, int weight)
+		throws PortalException, SystemException {
+
+		AssetLink assetLink = assetLinkPersistence.fetchByE_E_T(
+				entryId1, entryId2, typeId);
+
+		if (assetLink == null) {
+			assetLink = addLink(userId, entryId1, entryId2, typeId, weight);
+		}
+		else {
+			assetLink.setWeight(weight);
+			assetLinkPersistence.update(assetLink);
+		}
+
+		return assetLink;
 	}
 
 	/**
