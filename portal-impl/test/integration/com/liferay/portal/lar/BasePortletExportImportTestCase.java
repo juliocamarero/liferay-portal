@@ -16,6 +16,7 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.RequiredGroupException;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -24,13 +25,11 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.LayoutTestUtil;
-
-import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
-
 import org.powermock.api.mockito.PowerMockito;
+
+import java.io.File;
 
 /**
  * @author Juan Fernández
@@ -57,7 +56,9 @@ public class BasePortletExportImportTestCase extends PowerMockito {
 	public void tearDown() throws Exception {
 		try {
 			GroupLocalServiceUtil.deleteGroup(group);
-			GroupLocalServiceUtil.deleteGroup(importedGroup);
+			if (Validator.isNotNull(importedGroup)) {
+				GroupLocalServiceUtil.deleteGroup(importedGroup);
+			}
 		}
 		catch (RequiredGroupException rge) {
 		}
