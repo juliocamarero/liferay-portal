@@ -14,11 +14,15 @@
 
 package com.liferay.portlet.blogs.lar;
 
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Element;
@@ -27,7 +31,7 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.service.BlogsStatsUserLocalServiceUtil;
-import com.liferay.portlet.blogs.service.persistence.BlogsEntryUtil;
+import com.liferay.portlet.blogs.service.persistence.BlogsEntryActionableDynamicQuery;
 import com.liferay.portlet.journal.lar.JournalPortletDataHandler;
 
 import java.util.List;
@@ -38,6 +42,7 @@ import javax.portlet.PortletPreferences;
  * @author Bruno Farache
  * @author Raymond Augé
  * @author Juan Fernández
+ * @author Zsolt Berentey
  */
 public class BlogsPortletDataHandler extends BasePortletDataHandler {
 
@@ -85,7 +90,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 
 	@Override
 	protected String doExportData(
-			PortletDataContext portletDataContext, String portletId,
+			final PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
@@ -97,28 +102,28 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		Element entriesElement = rootElement.addElement("entries");
+		ActionableDynamicQuery entryActionableDynamicQuery =
+			new BlogsEntryActionableDynamicQuery() {
+				
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
+			}
 
-		Element dlFileEntryTypesElement = entriesElement.addElement(
-			"dl-file-entry-types");
-		Element dlFoldersElement = entriesElement.addElement("dl-folders");
-		Element dlFileEntriesElement = entriesElement.addElement(
-			"dl-file-entries");
-		Element dlFileRanksElement = entriesElement.addElement("dl-file-ranks");
-		Element dlRepositoriesElement = entriesElement.addElement(
-			"dl-repositories");
-		Element dlRepositoryEntriesElement = entriesElement.addElement(
-			"dl-repository-entries");
+			protected void performAction(Object object) throws PortalException {
+				BlogsEntry entry = (BlogsEntry)object;
 
-		List<BlogsEntry> entries = BlogsEntryUtil.findByGroupId(
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, entry);
+			}
+
+		};
+
+		entryActionableDynamicQuery.setGroupId(
 			portletDataContext.getScopeGroupId());
 
-		for (BlogsEntry entry : entries) {
-			exportEntry(
-				portletDataContext, entriesElement, dlFileEntryTypesElement,
-				dlFoldersElement, dlFileEntriesElement, dlFileRanksElement,
-				dlRepositoriesElement, dlRepositoryEntriesElement, entry);
-		}
+		entryActionableDynamicQuery.performActions();
 
 		return getExportDataRootElementString(rootElement);
 	}
@@ -133,29 +138,19 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 			"com.liferay.portlet.blogs", portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = portletDataContext.getImportDataRootElement();
-
-		Element entriesElement = rootElement.element("entries");
+		Element entriesElement = portletDataContext.getImportDataGroupElement(
+			BlogsEntry.class);
 
 		if (entriesElement != null) {
 			JournalPortletDataHandler.importReferenceData(
 				portletDataContext, entriesElement);
 		}
-		else {
-			entriesElement = rootElement;
-		}
 
-		for (Element entryElement : entriesElement.elements("entry")) {
-			String path = entryElement.attributeValue("path");
+		List<Element> entryElements = entriesElement.elements();
 
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
-			}
-
-			BlogsEntry entry =
-				(BlogsEntry)portletDataContext.getZipEntryAsObject(path);
-
-			importEntry(portletDataContext, entryElement, entry);
+		for (Element entryElement : entryElements) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, entryElement);
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "wordpress")) {
