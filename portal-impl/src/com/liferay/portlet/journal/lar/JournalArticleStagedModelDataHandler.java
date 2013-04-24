@@ -397,8 +397,6 @@ public class JournalArticleStagedModelDataHandler
 		Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
 			portletDataContext.getCompanyId());
 
-		long companyGroupId = companyGroup.getGroupId();
-
 		// Structure
 
 		String parentDDMStructureKey = StringPool.BLANK;
@@ -427,7 +425,7 @@ public class JournalArticleStagedModelDataHandler
 
 			if (existingDDMStructure == null) {
 				existingDDMStructure = DDMStructureUtil.fetchByUUID_G(
-					ddmStructure.getUuid(), companyGroupId);
+					ddmStructure.getUuid(), companyGroup.getGroupId());
 			}
 
 			// Import if not exist
@@ -494,7 +492,7 @@ public class JournalArticleStagedModelDataHandler
 
 			if (existingDDMTemplate == null) {
 				existingDDMTemplate = DDMTemplateUtil.fetchByUUID_G(
-					ddmTemplate.getUuid(), companyGroupId);
+					ddmTemplate.getUuid(), companyGroup.getGroupId());
 			}
 
 			// Import if not exist
@@ -617,7 +615,7 @@ public class JournalArticleStagedModelDataHandler
 
 			if (articleResource == null) {
 				articleResource = JournalArticleResourceUtil.fetchByUUID_G(
-					articleResourceUuid, companyGroupId);
+					articleResourceUuid, companyGroup.getGroupId());
 			}
 
 			serviceContext.setUuid(articleResourceUuid);

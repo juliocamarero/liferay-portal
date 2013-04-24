@@ -106,19 +106,21 @@ public class JournalFeedStagedModelDataHandler
 
 		// Render template
 
-		DDMTemplate renderTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
-			feed.getGroupId(), PortalUtil.getClassNameId(DDMStructure.class),
-			feed.getRendererTemplateId());
+		DDMTemplate rendererTemplate =
+			DDMTemplateLocalServiceUtil.fetchTemplate(
+				feed.getGroupId(),
+				PortalUtil.getClassNameId(DDMStructure.class),
+				feed.getRendererTemplateId());
 
-		if (renderTemplate != null) {
+		if (rendererTemplate != null) {
 			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, renderTemplate);
+				portletDataContext, rendererTemplate);
 
-			Element renderTemplateElement =
+			Element rendererTemplateElement =
 				portletDataContext.addReferenceElement(
-					feedElement, renderTemplate);
+					feedElement, rendererTemplate);
 
-			renderTemplateElement.addAttribute("renderTemplate", "true");
+			rendererTemplateElement.addAttribute("rendererTemplate", "true");
 		}
 		else {
 			if (_log.isWarnEnabled()) {
@@ -229,7 +231,7 @@ public class JournalFeedStagedModelDataHandler
 				feed, DDMTemplate.class);
 
 		String parentDDMTemplateKey = StringPool.BLANK;
-		String parentRenderDDMTemplateKey = StringPool.BLANK;
+		String parentRendererDDMTemplateKey = StringPool.BLANK;
 
 		for (Element ddmTemplateElement : ddmTemplateElements) {
 			String ddmTemplatePath = ddmTemplateElement.attributeValue("path");
@@ -245,18 +247,18 @@ public class JournalFeedStagedModelDataHandler
 				(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
 					DDMTemplate.class + ".ddmTemplateKey");
 
-			boolean renderTemplate = GetterUtil.getBoolean(
-				ddmTemplateElement.attributeValue("renderTemplate"));
+			boolean rendererTemplate = GetterUtil.getBoolean(
+				ddmTemplateElement.attributeValue("rendererTemplate"));
 
 			String ddmTemplateKey = MapUtil.getString(
 				ddmTemplateKeys, ddmTemplate.getTemplateKey(),
 				ddmTemplate.getTemplateKey());
 
-			if (renderTemplate) {
+			if (rendererTemplate) {
 				parentDDMTemplateKey = ddmTemplateKey;
 			}
 			else {
-				parentRenderDDMTemplateKey = ddmTemplateKey;
+				parentRendererDDMTemplateKey = ddmTemplateKey;
 			}
 		}
 
@@ -285,7 +287,7 @@ public class JournalFeedStagedModelDataHandler
 						userId, portletDataContext.getScopeGroupId(), feedId,
 						autoFeedId, feed.getName(), feed.getDescription(),
 						feed.getType(), parentDDMStructureKey,
-						parentDDMTemplateKey, parentRenderDDMTemplateKey,
+						parentDDMTemplateKey, parentRendererDDMTemplateKey,
 						feed.getDelta(), feed.getOrderByCol(),
 						feed.getOrderByType(),
 						feed.getTargetLayoutFriendlyUrl(),
@@ -298,7 +300,7 @@ public class JournalFeedStagedModelDataHandler
 						existingFeed.getGroupId(), existingFeed.getFeedId(),
 						feed.getName(), feed.getDescription(), feed.getType(),
 						parentDDMStructureKey, parentDDMTemplateKey,
-						parentRenderDDMTemplateKey, feed.getDelta(),
+						parentRendererDDMTemplateKey, feed.getDelta(),
 						feed.getOrderByCol(), feed.getOrderByType(),
 						feed.getTargetLayoutFriendlyUrl(),
 						feed.getTargetPortletId(), feed.getContentField(),
@@ -311,7 +313,7 @@ public class JournalFeedStagedModelDataHandler
 					userId, portletDataContext.getScopeGroupId(), feedId,
 					autoFeedId, feed.getName(), feed.getDescription(),
 					feed.getType(), parentDDMStructureKey, parentDDMTemplateKey,
-					parentRenderDDMTemplateKey, feed.getDelta(),
+					parentRendererDDMTemplateKey, feed.getDelta(),
 					feed.getOrderByCol(), feed.getOrderByType(),
 					feed.getTargetLayoutFriendlyUrl(),
 					feed.getTargetPortletId(), feed.getContentField(),
