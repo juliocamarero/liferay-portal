@@ -57,9 +57,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
 				}));
-		setImportMetadataControls(
-			getExportMetadataControls()[0],
-			new PortletDataHandlerBoolean(NAMESPACE, "wordpress"));
+		setImportMetadataControls(getExportMetadataControls()[0]);
 		setPublishToLiveByDefault(PropsValues.BLOGS_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
 
@@ -147,10 +145,6 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		for (Element entryElement : entryElements) {
 			StagedModelDataHandlerUtil.importStagedModel(
 				portletDataContext, entryElement);
-		}
-
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "wordpress")) {
-			WordPressImporter.importData(portletDataContext);
 		}
 
 		return null;
