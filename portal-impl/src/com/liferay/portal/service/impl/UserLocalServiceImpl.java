@@ -4652,9 +4652,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		List<UserGroupRole> previousUserGroupRoles =
-			userGroupRolePersistence.findByUserId(userId);
-
 		// User
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -4819,6 +4816,12 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		groupPersistence.update(group);
 
 		// Groups and organizations
+
+		List<UserGroupRole> previousUserGroupRoles =
+			userGroupRolePersistence.findByUserId(userId);
+
+		// See LPS-33205. Adding or removing groups may add or remove
+		// userGroupRoles depending on the Site Default User Associations.
 
 		updateGroups(userId, groupIds, serviceContext, false);
 		updateOrganizations(userId, organizationIds, false);
