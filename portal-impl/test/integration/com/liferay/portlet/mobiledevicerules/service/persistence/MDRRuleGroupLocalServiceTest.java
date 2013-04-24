@@ -73,6 +73,11 @@ public class MDRRuleGroupLocalServiceTest {
 		testSelectableMDRRuleGroups(true);
 	}
 
+	@Test
+	public void testFail() {
+		Assert.fail("Failing on purpouse");
+	}
+
 	protected void testSelectableMDRRuleGroups(boolean includeGlobalGroup)
 		throws Exception {
 
