@@ -1601,6 +1601,13 @@ public class JournalArticleLocalServiceImpl
 		Map<String, String> tokens = JournalUtil.getTokens(
 			article.getGroupId(), themeDisplay, xmlRequest);
 
+		if (Validator.isNull(themeDisplay) &&
+			xmlRequest.equals("<request />")) {
+
+			tokens.put("company_id", String.valueOf(article.getCompanyId()));
+			tokens.put("group_id", String.valueOf(article.getGroupId()));
+		}
+
 		tokens.put(
 			"article_resource_pk",
 			String.valueOf(article.getResourcePrimKey()));
