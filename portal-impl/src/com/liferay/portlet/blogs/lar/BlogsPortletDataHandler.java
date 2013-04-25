@@ -135,10 +135,8 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		Element entriesElement = portletDataContext.getImportDataGroupElement(
 			BlogsEntry.class);
 
-		if (entriesElement != null) {
-			JournalPortletDataHandler.importReferenceData(
-				portletDataContext, entriesElement);
-		}
+		JournalPortletDataHandler.importReferenceData(
+			portletDataContext, entriesElement);
 
 		List<Element> entryElements = entriesElement.elements();
 
