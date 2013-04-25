@@ -125,9 +125,9 @@ public class JournalFeedStagedModelDataHandlerTest
 			1);
 
 		return JournalTestUtil.addFeed(
-			group.getGroupId(), _layout.getPlid(), "Test Feed",
-			ddmStructure.getStructureKey(), ddmTemplate.getTemplateKey(),
-			rendererTemplate.getTemplateKey());
+			group.getGroupId(), _layout.getPlid(),
+			ServiceTestUtil.randomString(), ddmStructure.getStructureKey(),
+			ddmTemplate.getTemplateKey(), rendererTemplate.getTemplateKey());
 	}
 
 	@Override
