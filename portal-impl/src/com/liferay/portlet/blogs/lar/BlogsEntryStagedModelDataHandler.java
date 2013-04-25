@@ -68,9 +68,9 @@ public class BlogsEntryStagedModelDataHandler
 			if (Validator.isNotNull(entry.getSmallImageURL())) {
 				String smallImageURL =
 					DDMPortletDataHandler.exportReferenceContent(
-							portletDataContext, null, null, null, null, null,
-							null, entryElement,
-							entry.getSmallImageURL().concat(StringPool.SPACE));
+						portletDataContext, null, null, null, null, null, null,
+						entryElement,
+						entry.getSmallImageURL().concat(StringPool.SPACE));
 
 				entry.setSmallImageURL(smallImageURL);
 			}
@@ -154,6 +154,7 @@ public class BlogsEntryStagedModelDataHandler
 						entry.getSmallImageId()).concat(
 							StringPool.PERIOD).concat(
 								entry.getSmallImageType());
+
 					smallImageInputStream =
 						portletDataContext.getZipEntryAsInputStream(
 							smallImagePath);
