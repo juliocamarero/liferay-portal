@@ -18,15 +18,11 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
-import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
@@ -104,7 +100,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 
 		ActionableDynamicQuery entryActionableDynamicQuery =
 			new BlogsEntryActionableDynamicQuery() {
-				
+
 			@Override
 			protected void addCriteria(DynamicQuery dynamicQuery) {
 				portletDataContext.addDateRangeCriteria(
@@ -158,70 +154,6 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return null;
-	}
-
-	protected void exportEntry(
-			PortletDataContext portletDataContext, Element entriesElement,
-			Element dlFileEntryTypesElement, Element dlFoldersElement,
-			Element dlFileEntriesElement, Element dlFileRanksElement,
-			Element dlRepositoriesElement, Element dlRepositoryEntriesElement,
-			BlogsEntry entry)
-		throws Exception {
-	}
-
-	protected String getEntryImagePath(
-			PortletDataContext portletDataContext, BlogsEntry entry)
-		throws Exception {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			ExportImportPathUtil.getPortletPath(
-				portletDataContext, PortletKeys.BLOGS));
-		sb.append("/entry/");
-		sb.append(entry.getUuid());
-		sb.append(StringPool.SLASH);
-
-		return sb.toString();
-	}
-
-	protected String getEntryPath(
-		PortletDataContext portletDataContext, BlogsEntry entry) {
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			ExportImportPathUtil.getPortletPath(
-				portletDataContext, PortletKeys.BLOGS));
-		sb.append("/entries/");
-		sb.append(entry.getEntryId());
-		sb.append(".xml");
-
-		return sb.toString();
-	}
-
-	protected String getEntrySmallImagePath(
-			PortletDataContext portletDataContext, BlogsEntry entry)
-		throws Exception {
-
-		StringBundler sb = new StringBundler(6);
-
-		sb.append(
-			ExportImportPathUtil.getPortletPath(
-				portletDataContext, PortletKeys.BLOGS));
-		sb.append("/entries/");
-		sb.append(entry.getUuid());
-		sb.append("/thumbnail");
-		sb.append(StringPool.PERIOD);
-		sb.append(entry.getSmallImageType());
-
-		return sb.toString();
-	}
-
-	protected void importEntry(
-			PortletDataContext portletDataContext, Element entryElement,
-			BlogsEntry entry)
-		throws Exception {
 	}
 
 }
