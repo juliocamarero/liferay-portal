@@ -162,7 +162,7 @@ public class BlogsEntryStagedModelDataHandler
 
 			ServiceContext serviceContext =
 				portletDataContext.createServiceContext(
-					entryElement, entry, BlogsPortletDataHandler.NAMESPACE);
+					entry, BlogsPortletDataHandler.NAMESPACE);
 
 			if ((status != WorkflowConstants.STATUS_APPROVED) &&
 				(status != WorkflowConstants.STATUS_IN_TRASH)) {
