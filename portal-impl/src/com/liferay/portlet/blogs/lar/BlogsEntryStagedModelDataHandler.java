@@ -14,10 +14,8 @@
 
 package com.liferay.portlet.blogs.lar;
 
-import java.io.InputStream;
-import java.util.Calendar;
-
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
+import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
@@ -34,6 +32,10 @@ import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.service.persistence.BlogsEntryUtil;
 import com.liferay.portlet.dynamicdatamapping.lar.DDMPortletDataHandler;
 import com.liferay.portlet.journal.lar.JournalPortletDataHandler;
+
+import java.io.InputStream;
+
+import java.util.Calendar;
 
 /**
  * @author Zsolt Berentey
@@ -53,42 +55,11 @@ public class BlogsEntryStagedModelDataHandler
 			PortletDataContext portletDataContext, BlogsEntry entry)
 		throws Exception {
 
-		if (!portletDataContext.isWithinDateRange(entry.getModifiedDate())) {
-			return;
-		}
-
 		if (!entry.isApproved() && !entry.isInTrash()) {
 			return;
 		}
 
-		String path = getEntryPath(portletDataContext, entry);
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		// Clone this entry to make sure changes to its content are never
-		// persisted
-
-		entry = (BlogsEntry)entry.clone();
-
-		Element entryElement = (Element)entriesElement.selectSingleNode(
-			"//page[@path='".concat(path).concat("']"));
-
-		if (entryElement == null) {
-			entryElement = entriesElement.addElement("entry");
-		}
-
-		String content = DDMPortletDataHandler.exportReferencedContent(
-			portletDataContext, dlFileEntryTypesElement, dlFoldersElement,
-			dlFileEntriesElement, dlFileRanksElement, dlRepositoriesElement,
-			dlRepositoryEntriesElement, entryElement, entry.getContent());
-
-		entry.setContent(content);
-
-		String imagePath = getEntryImagePath(portletDataContext, entry);
-
-		entryElement.addAttribute("image-path", imagePath);
+		Element entryElement = portletDataContext.getExportDataElement(entry);
 
 		if (entry.isSmallImage()) {
 			Image smallImage = ImageUtil.fetchByPrimaryKey(
@@ -96,18 +67,17 @@ public class BlogsEntryStagedModelDataHandler
 
 			if (Validator.isNotNull(entry.getSmallImageURL())) {
 				String smallImageURL =
-					DDMPortletDataHandler.exportReferencedContent(
-						portletDataContext, dlFileEntryTypesElement,
-						dlFoldersElement, dlFileEntriesElement,
-						dlFileRanksElement, dlRepositoriesElement,
-						dlRepositoryEntriesElement, entryElement,
-						entry.getSmallImageURL().concat(StringPool.SPACE));
+					DDMPortletDataHandler.exportReferenceContent(
+							portletDataContext, null, null, null, null, null,
+							null, entryElement,
+							entry.getSmallImageURL().concat(StringPool.SPACE));
 
 				entry.setSmallImageURL(smallImageURL);
 			}
 			else if (smallImage != null) {
-				String smallImagePath = getEntrySmallImagePath(
-					portletDataContext, entry);
+				String smallImagePath = ExportImportPathUtil.getModelPath(
+					entry, smallImage.getImageId() + StringPool.PERIOD +
+						smallImage.getType());
 
 				entryElement.addAttribute("small-image-path", smallImagePath);
 
@@ -118,8 +88,15 @@ public class BlogsEntryStagedModelDataHandler
 			}
 		}
 
+		String content = DDMPortletDataHandler.exportReferenceContent(
+			portletDataContext, null, null, null, null, null, null,
+			entryElement, entry.getContent());
+
+		entry.setContent(content);
+
 		portletDataContext.addClassedModel(
-			entryElement, path, entry, NAMESPACE);
+			entryElement, ExportImportPathUtil.getModelPath(entry), entry,
+			BlogsPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -129,7 +106,10 @@ public class BlogsEntryStagedModelDataHandler
 
 		long userId = portletDataContext.getUserId(entry.getUserUuid());
 
-		String content = JournalPortletDataHandler.importReferencedContent(
+		Element entryElement =
+			portletDataContext.getImportDataStagedModelElement(entry);
+
+		String content = JournalPortletDataHandler.importReferenceContent(
 			portletDataContext, entryElement, entry.getContent());
 
 		entry.setContent(content);
@@ -163,7 +143,7 @@ public class BlogsEntryStagedModelDataHandler
 
 				if (Validator.isNotNull(entry.getSmallImageURL())) {
 					String smallImageURL =
-						JournalPortletDataHandler.importReferencedContent(
+						JournalPortletDataHandler.importReferenceContent(
 							portletDataContext, entryElement,
 							entry.getSmallImageURL());
 
@@ -182,7 +162,7 @@ public class BlogsEntryStagedModelDataHandler
 
 			ServiceContext serviceContext =
 				portletDataContext.createServiceContext(
-					entryElement, entry, NAMESPACE);
+					entryElement, entry, BlogsPortletDataHandler.NAMESPACE);
 
 			if ((status != WorkflowConstants.STATUS_APPROVED) &&
 				(status != WorkflowConstants.STATUS_IN_TRASH)) {
@@ -239,7 +219,7 @@ public class BlogsEntryStagedModelDataHandler
 			}
 
 			portletDataContext.importClassedModel(
-				entry, importedEntry, NAMESPACE);
+				entry, importedEntry, BlogsPortletDataHandler.NAMESPACE);
 		}
 		finally {
 			StreamUtil.cleanUp(smallImageInputStream);
