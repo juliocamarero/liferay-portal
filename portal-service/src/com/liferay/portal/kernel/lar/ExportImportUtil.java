@@ -14,13 +14,6 @@
 
 package com.liferay.portal.kernel.lar;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -30,6 +23,8 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -37,20 +32,24 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.RepositoryEntry;
-import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Zsolt Berentey
@@ -281,7 +280,8 @@ public class ExportImportUtil {
 								DLFileEntryLocalServiceUtil.getFileEntryByName(
 									groupId, folderId, name);
 
-							fileEntry = new LiferayFileEntry(dlFileEntry);
+							fileEntry = DLAppLocalServiceUtil.getFileEntry(
+								dlFileEntry.getFileEntryId());
 						}
 					}
 					else if (map.containsKey("image_id") ||
@@ -303,7 +303,8 @@ public class ExportImportUtil {
 								fetchFileEntryByAnyImageId(imageId);
 
 						if (dlFileEntry != null) {
-							fileEntry = new LiferayFileEntry(dlFileEntry);
+							fileEntry = DLAppLocalServiceUtil.getFileEntry(
+								dlFileEntry.getFileEntryId());
 						}
 					}
 				}
@@ -319,23 +320,14 @@ public class ExportImportUtil {
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext, fileEntry);
 
-				Element dlReferenceElement = entityElement.addElement(
-					"dl-reference");
+				portletDataContext.addReferenceElement(
+					entityElement, fileEntry, FileEntry.class);
 
-				dlReferenceElement.addAttribute(
-					"default-repository",
-					String.valueOf(fileEntry.isDefaultRepository()));
-
-				
 				String path = ExportImportPathUtil.getModelPath(
 					fileEntry.getGroupId(), FileEntry.class.getName(),
 					fileEntry.getFileEntryId());
 
-				dlReferenceElement.addAttribute("path", path);
-
-				String dlReference = "[$dl-reference=" + path + "$]";
-
-				sb.replace(beginPos, endPos, dlReference);
+				sb.replace(beginPos, endPos, "[$dl-reference=" + path + "$]");
 			}
 			catch (Exception e) {
 				if (_log.isDebugEnabled()) {
@@ -371,12 +363,9 @@ public class ExportImportUtil {
 
 		StringBuilder sb = new StringBuilder(content);
 
-		String privateGroupServletMapping =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-		String privateUserServletMapping =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
-		String publicServletMapping =
-			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
+		String privateGroupServletMapping = _privateGroupServletMapping;
+		String privateUserServletMapping = _privateUserServletMapping;
+		String publicServletMapping = _publicServletMapping;
 
 		String portalContextPath = PortalUtil.getPathContext();
 
@@ -591,65 +580,33 @@ public class ExportImportUtil {
 	}
 
 	protected static String importDLReferences(
-			PortletDataContext portletDataContext, Element parentElement,
+			PortletDataContext portletDataContext, Element entityElement,
 			String content)
 		throws Exception {
 
-		List<Element> dlReferenceElements = parentElement.elements(
-			"dl-reference");
+		List<Element> referenceDataElements =
+			portletDataContext.getReferenceDataElements(
+				entityElement, FileEntry.class);
 
-		for (Element dlReferenceElement : dlReferenceElements) {
-			String dlReferencePath = dlReferenceElement.attributeValue("path");
-
-			String fileEntryUUID = null;
-			long fileEntryGroupId = 0;
-
-			try {
-				Object zipEntryObject = portletDataContext.getZipEntryAsObject(
-					dlReferencePath);
-
-				if (zipEntryObject == null) {
-					if (_log.isWarnEnabled()) {
-						_log.warn("Unable to reference " + dlReferencePath);
-					}
-
-					continue;
-				}
-
-				boolean defaultRepository = GetterUtil.getBoolean(
-					dlReferenceElement.attributeValue("default-repository"));
-
-				if (defaultRepository) {
-					FileEntry fileEntry = (FileEntry)zipEntryObject;
-
-					fileEntryUUID = fileEntry.getUuid();
-					fileEntryGroupId = fileEntry.getGroupId();
-				}
-				else {
-					RepositoryEntry repositoryEntry =
-						(RepositoryEntry)zipEntryObject;
-
-					fileEntryUUID = repositoryEntry.getUuid();
-					fileEntryGroupId = repositoryEntry.getGroupId();
-				}
-			}
-			catch (Exception e) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(e, e);
-				}
-				else if (_log.isWarnEnabled()) {
-					_log.warn(e.getMessage());
-				}
-			}
+		for (Element referenceDataElement : referenceDataElements) {
+			String fileEntryUUID = referenceDataElement.attributeValue("uuid");
 
 			if (fileEntryUUID == null) {
 				continue;
 			}
 
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, referenceDataElement);
+
+			String path = referenceDataElement.attributeValue("path");
+
 			FileEntry fileEntry = null;
 
 			try {
 				long groupId = portletDataContext.getScopeGroupId();
+
+				long fileEntryGroupId = GetterUtil.getLong(
+					referenceDataElement.attributeValue("group-id"));
 
 				if (fileEntryGroupId ==
 						portletDataContext.getSourceCompanyGroupId()) {
@@ -661,16 +618,19 @@ public class ExportImportUtil {
 					fileEntryUUID, groupId);
 			}
 			catch (NoSuchFileEntryException nsfee) {
+				if (_log.isWarnEnabled()) {
+					_log.warn("Unable to reference " + path);
+				}
+
 				continue;
 			}
-
-			String dlReference = "[$dl-reference=" + dlReferencePath + "$]";
 
 			String url = DLUtil.getPreviewURL(
 				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
 				false, false);
 
-			content = StringUtil.replace(content, dlReference, url);
+			content = StringUtil.replace(
+				content, "[$dl-reference=" + path + "$]", url);
 		}
 
 		return content;
@@ -680,12 +640,9 @@ public class ExportImportUtil {
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
-		String privateGroupServletMapping =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-		String privateUserServletMapping =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
-		String publicServletMapping =
-			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
+		String privateGroupServletMapping = _privateGroupServletMapping;
+		String privateUserServletMapping = _privateUserServletMapping;
+		String publicServletMapping = _publicServletMapping;
 
 		String portalContextPath = PortalUtil.getPathContext();
 
@@ -819,5 +776,14 @@ public class ExportImportUtil {
 	private static Pattern _importLinksToLayoutPattern = Pattern.compile(
 		"\\[([0-9]+)@(public|private\\-[a-z]*)@(\\p{XDigit}{8}\\-" +
 		"(?:\\p{XDigit}{4}\\-){3}\\p{XDigit}{12})@([^\\]]*)\\]");
+
+	private static String _privateGroupServletMapping = PropsUtil.get(
+			PropsKeys.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING);
+
+	private static String _privateUserServletMapping = PropsUtil.get(
+			PropsKeys.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING);
+
+	private static String _publicServletMapping = PropsUtil.get(
+			PropsKeys.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING);
 
 }
