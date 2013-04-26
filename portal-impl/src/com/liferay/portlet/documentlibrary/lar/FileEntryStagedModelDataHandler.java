@@ -106,11 +106,8 @@ public class FileEntryStagedModelDataHandler
 			PortletDataContext portletDataContext, FileEntry fileEntry)
 		throws Exception {
 
-		Element fileEntryGroupElement =
-			portletDataContext.getExportDataGroupElement(FileEntry.class);
-
-		Element fileEntryElement = fileEntryGroupElement.addElement(
-			"staged-model");
+		Element fileEntryElement = portletDataContext.getExportDataElement(
+			fileEntry, FileEntry.class);
 
 		String fileEntryPath = ExportImportPathUtil.getModelPath(
 			fileEntry.getGroupId(), FileEntry.class.getName(),
