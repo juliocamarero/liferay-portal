@@ -95,8 +95,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Map;
 
 import org.apache.commons.lang.time.StopWatch;
 
@@ -484,31 +484,6 @@ public class PortletExporter {
 		}
 	}
 
-	protected void exportAssetLink(
-			PortletDataContext portletDataContext, AssetLink assetLink,
-			Element parentElement)
-		throws PortalException, SystemException {
-
-		String path = getAssetLinkPath(
-			portletDataContext, assetLink.getLinkId());
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		Element assetLinkElement = parentElement.addElement("asset-link");
-
-		assetLinkElement.addAttribute("path", path);
-
-		AssetEntry targetAssetEntry =
-			AssetEntryLocalServiceUtil.fetchAssetEntry(assetLink.getEntryId2());
-
-		assetLinkElement.addAttribute(
-			"target-uuid", targetAssetEntry.getClassUuid());
-
-		portletDataContext.addZipEntry(path, assetLink);
-	}
-
 	protected void exportAssetLinks(PortletDataContext portletDataContext)
 		throws Exception {
 
@@ -532,7 +507,26 @@ public class PortletExporter {
 			assetElement.addAttribute("source-uuid", sourceAssetEntryUuid);
 
 			for (AssetLink assetLink : links) {
-				exportAssetLink(portletDataContext, assetLink, assetElement);
+				String path = getAssetLinkPath(
+					portletDataContext, assetLink.getLinkId());
+
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					return;
+				}
+
+				Element assetLinkElement = assetElement.addElement(
+					"asset-link");
+
+				assetLinkElement.addAttribute("path", path);
+
+				AssetEntry targetAssetEntry =
+					AssetEntryLocalServiceUtil.fetchAssetEntry(
+						assetLink.getEntryId2());
+
+				assetLinkElement.addAttribute(
+					"target-uuid", targetAssetEntry.getClassUuid());
+
+				portletDataContext.addZipEntry(path, assetLink);
 			}
 		}
 
