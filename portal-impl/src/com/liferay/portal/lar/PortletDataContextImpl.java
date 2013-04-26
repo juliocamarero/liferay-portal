@@ -115,12 +115,13 @@ import com.liferay.portlet.ratings.model.impl.RatingsEntryImpl;
 import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
 import com.liferay.portlet.wiki.model.impl.WikiNodeImpl;
 import com.liferay.portlet.wiki.model.impl.WikiPageImpl;
+
 import com.thoughtworks.xstream.XStream;
-import jodd.bean.BeanUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -129,6 +130,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import jodd.bean.BeanUtil;
 
 /**
  * <p>
