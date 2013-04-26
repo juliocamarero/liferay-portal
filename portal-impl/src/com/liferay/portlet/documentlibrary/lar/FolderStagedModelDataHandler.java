@@ -66,10 +66,8 @@ public class FolderStagedModelDataHandler
 			PortletDataContext portletDataContext, Folder folder)
 		throws Exception {
 
-		Element folderGroupElement =
-			portletDataContext.getExportDataGroupElement(Folder.class);
-
-		Element folderElement = folderGroupElement.addElement("staged-model");
+		Element folderElement = portletDataContext.getExportDataElement(
+			folder, Folder.class);
 
 		String folderPath = ExportImportPathUtil.getModelPath(
 			folder.getGroupId(), Folder.class.getName(), folder.getFolderId());

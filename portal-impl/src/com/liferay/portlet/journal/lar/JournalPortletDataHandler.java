@@ -312,10 +312,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
-		Element rootElement = portletDataContext.getImportDataRootElement();
-
-		importReferenceData(portletDataContext, rootElement);
-
 		Element ddmStructuresElement =
 			portletDataContext.getImportDataGroupElement(DDMStructure.class);
 
