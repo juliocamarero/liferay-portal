@@ -24,11 +24,8 @@ package com.liferay.portal.model.impl;
  * @author Brian Wing Shun Chan
  */
 public class LayoutFriendlyURLImpl extends LayoutFriendlyURLBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. All methods that expect a layout friendly u r l model instance should use the {@link com.liferay.portal.model.LayoutFriendlyURL} interface instead.
-	 */
+
 	public LayoutFriendlyURLImpl() {
 	}
+
 }
