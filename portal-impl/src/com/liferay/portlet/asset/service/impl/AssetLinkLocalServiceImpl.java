@@ -199,14 +199,6 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 		return assetLinkFinder.findByE1_T_V(entryId, typeId, true);
 	}
 
-	public AssetLink getLink(
-			long groupId, String entry1Uuid, String entry2Uuid, int typeId)
-		throws NoSuchLinkException, SystemException {
-
-		return assetLinkFinder.findByG_E1_E2_T(
-			groupId, entry1Uuid, entry2Uuid, typeId);
-	}
-
 	/**
 	 * Returns all the asset links whose first or second entry ID is the given
 	 * entry ID.
