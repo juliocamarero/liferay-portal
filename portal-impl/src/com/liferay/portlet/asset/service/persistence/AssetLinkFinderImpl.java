@@ -19,9 +19,7 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
-import com.liferay.portlet.asset.NoSuchLinkException;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.impl.AssetLinkImpl;
 import com.liferay.util.dao.orm.CustomSQLUtil;
@@ -39,9 +37,6 @@ public class AssetLinkFinderImpl
 
 	public static final String FIND_BY_E1_T_V =
 		AssetLinkFinder.class.getName() + ".findByE1_T_V";
-
-	public static final String FIND_BY_G_E1UUID_E2UUID_T =
-			AssetLinkFinder.class.getName() + ".findByG_E1UUID_E2UUID_T";
 
 	public List<AssetLink> findByE1_V(long entryId1, boolean visible)
 		throws SystemException {
@@ -103,59 +98,6 @@ public class AssetLinkFinderImpl
 		finally {
 			closeSession(session);
 		}
-	}
-
-	public AssetLink findByG_E1_E2_T(
-			long groupId, String entry1Uuid, String entry2Uuid, int type)
-		throws NoSuchLinkException, SystemException {
-
-		Session session = null;
-
-		try {
-			session = openSession();
-
-			String sql = CustomSQLUtil.get(FIND_BY_G_E1UUID_E2UUID_T);
-
-			SQLQuery q = session.createSQLQuery(sql);
-
-			q.addEntity("AssetLink", AssetLinkImpl.class);
-
-			QueryPos qPos = QueryPos.getInstance(q);
-
-			qPos.add(entry1Uuid);
-			qPos.add(entry2Uuid);
-			qPos.add(groupId);
-
-			qPos.add(type);
-
-			List<AssetLink> links = (List<AssetLink>)QueryUtil.list(
-					q, getDialect(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-
-			if (!links.isEmpty()) {
-				return links.get(0);
-			}
-		}
-		catch (Exception e) {
-			throw new SystemException(e);
-		}
-		finally {
-			closeSession(session);
-		}
-
-		StringBundler sb = new StringBundler(6);
-
-		sb.append("No AssetLink exists with the key: ");
-		sb.append("{groupId=");
-		sb.append(groupId);
-		sb.append(", entry1Uuid=");
-		sb.append(entry1Uuid);
-		sb.append(", entry2Uuid=");
-		sb.append(entry2Uuid);
-		sb.append(", type=");
-		sb.append(type);
-		sb.append("}");
-
-		throw new NoSuchLinkException(sb.toString());
 	}
 
 }
