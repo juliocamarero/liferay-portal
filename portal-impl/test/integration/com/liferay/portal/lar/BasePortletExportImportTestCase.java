@@ -25,11 +25,13 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.LayoutTestUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.powermock.api.mockito.PowerMockito;
 
 import java.io.File;
+
+import org.junit.After;
+import org.junit.Before;
+
+import org.powermock.api.mockito.PowerMockito;
 
 /**
  * @author Juan Fernández
@@ -56,6 +58,7 @@ public class BasePortletExportImportTestCase extends PowerMockito {
 	public void tearDown() throws Exception {
 		try {
 			GroupLocalServiceUtil.deleteGroup(group);
+
 			if (Validator.isNotNull(importedGroup)) {
 				GroupLocalServiceUtil.deleteGroup(importedGroup);
 			}

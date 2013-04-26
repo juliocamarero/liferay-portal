@@ -80,7 +80,6 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletPreferencesImpl;
 import com.liferay.portlet.asset.NoSuchCategoryException;
-import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.NoSuchTagException;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
@@ -1378,42 +1377,56 @@ public class PortletImporter {
 			"asset-link-group");
 
 		for (Element assetLinkGroupElement : assetLinkGroupElements) {
-			List<Element> assetLinksElements = assetLinkGroupElement.elements(
-				"asset-link");
-
 			String sourceUuid = assetLinkGroupElement.attributeValue(
 				"source-uuid");
 
-			AssetEntry originAssetEntry = null;
+			AssetEntry sourceAssetEntry = AssetEntryLocalServiceUtil.fetchEntry(
+				portletDataContext.getScopeGroupId(), sourceUuid);
 
-			try {
-				originAssetEntry = AssetEntryLocalServiceUtil.getEntry(
-					portletDataContext.getScopeGroupId(), sourceUuid);
-			} catch (NoSuchEntryException nse) {
-				_log.error(
-					"Unable to find asset entry with uuid " + sourceUuid);
+			if (sourceAssetEntry == null) {
+				sourceAssetEntry = AssetEntryLocalServiceUtil.fetchEntry(
+					portletDataContext.getCompanyGroupId(), sourceUuid);
+			}
+
+			if (sourceAssetEntry == null) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Unable to find asset entry with uuid " + sourceUuid);
+				}
 
 				continue;
 			}
 
+			List<Element> assetLinksElements = assetLinkGroupElement.elements(
+				"asset-link");
+
+			List<Long> entryIds = new ArrayList<Long>();
+
 			for (Element assetLinkElement : assetLinksElements) {
 				String path = assetLinkElement.attributeValue("path");
-
-				String targetUuid = assetLinkElement.attributeValue(
-					"target-uuid");
 
 				if (!portletDataContext.isPathNotProcessed(path)) {
 					continue;
 				}
 
-				AssetEntry targetAssetEntry = null;
+				String targetUuid = assetLinkElement.attributeValue(
+					"target-uuid");
 
-				try {
-					targetAssetEntry = AssetEntryLocalServiceUtil.getEntry(
+				AssetEntry targetAssetEntry =
+					AssetEntryLocalServiceUtil.fetchEntry(
 						portletDataContext.getScopeGroupId(), targetUuid);
-				} catch (NoSuchEntryException nse) {
-					_log.warn(
-						"Unable to find asset entry with uuid " + targetUuid);
+
+				if (targetAssetEntry == null) {
+					targetAssetEntry = AssetEntryLocalServiceUtil.fetchEntry(
+						portletDataContext.getCompanyGroupId(), targetUuid);
+				}
+
+				if (targetAssetEntry == null) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(
+							"Unable to find asset entry with uuid " +
+								targetUuid);
+					}
 
 					continue;
 				}
@@ -1424,27 +1437,10 @@ public class PortletImporter {
 				long userId = portletDataContext.getUserId(
 					assetLink.getUserUuid());
 
-				AssetLink existingLink = null;
-				try{
-					existingLink = AssetLinkLocalServiceUtil.getLink(
-							portletDataContext.getScopeGroupId(), sourceUuid,
-							targetUuid, assetLink.getType());
-
-				} catch (Exception e) {
-				}
-
-				if (existingLink == null) {
-					AssetLinkLocalServiceUtil.addLink(
-						userId, originAssetEntry.getEntryId(),
-						targetAssetEntry.getEntryId(), assetLink.getType(),
-						assetLink.getWeight());
-				}
-				else {
-					AssetLinkLocalServiceUtil.updateLink(
-						userId, originAssetEntry.getEntryId(),
-						targetAssetEntry.getEntryId(), assetLink.getType(),
-						assetLink.getWeight());
-				}
+				AssetLinkLocalServiceUtil.updateLink(
+					userId, sourceAssetEntry.getEntryId(),
+					targetAssetEntry.getEntryId(), assetLink.getType(),
+					assetLink.getWeight());
 			}
 		}
 	}
