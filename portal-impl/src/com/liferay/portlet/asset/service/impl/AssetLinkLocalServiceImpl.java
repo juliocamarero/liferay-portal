@@ -80,25 +80,20 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 		assetLinkPersistence.update(link);
 
 		if (AssetLinkConstants.isTypeBi(type)) {
+			long linkId2 = counterLocalService.increment();
 
-			AssetLink inverseAssetLink = assetLinkPersistence.fetchByE_E_T(
-				entryId2, entryId1, type);
+			AssetLink link2 = assetLinkPersistence.create(linkId2);
 
-			if (inverseAssetLink == null) {
-				long inverseLinkId = counterLocalService.increment();
+			link2.setCompanyId(user.getCompanyId());
+			link2.setUserId(user.getUserId());
+			link2.setUserName(user.getFullName());
+			link2.setCreateDate(now);
+			link2.setEntryId1(entryId2);
+			link2.setEntryId2(entryId1);
+			link2.setType(type);
+			link2.setWeight(weight);
 
-				inverseAssetLink = assetLinkPersistence.create(inverseLinkId);
-			}
-
-			inverseAssetLink.setCompanyId(user.getCompanyId());
-			inverseAssetLink.setUserId(user.getUserId());
-			inverseAssetLink.setUserName(user.getFullName());
-			inverseAssetLink.setCreateDate(now);
-			inverseAssetLink.setEntryId1(entryId2);
-			inverseAssetLink.setEntryId2(entryId1);
-			inverseAssetLink.setType(type);
-
-			assetLinkPersistence.update(inverseAssetLink);
+			assetLinkPersistence.update(link2);
 		}
 
 		return link;
