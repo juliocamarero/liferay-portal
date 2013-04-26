@@ -32,9 +32,5 @@ import com.liferay.portal.service.base.LayoutFriendlyURLLocalServiceBaseImpl;
  */
 public class LayoutFriendlyURLLocalServiceImpl
 	extends LayoutFriendlyURLLocalServiceBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this interface directly. Always use {@link com.liferay.portal.service.LayoutFriendlyURLLocalServiceUtil} to access the layout friendly u r l local service.
-	 */
+
 }
