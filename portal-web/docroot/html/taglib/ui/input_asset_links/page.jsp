@@ -65,7 +65,10 @@ assetBrowserURL.setWindowState(LiferayWindowState.POP_UP);
 
 	<%
 	for (AssetRendererFactory assetRendererFactory : AssetRendererFactoryRegistryUtil.getAssetRendererFactories()) {
-		if (assetRendererFactory.isLinkable() && assetRendererFactory.isSelectable()) {
+		
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), assetRendererFactory.getPortletId());
+		
+		if (portlet.isActive() && assetRendererFactory.isLinkable() && assetRendererFactory.isSelectable()) {
 			if (assetEntryId > 0) {
 				assetBrowserURL.setParameter("refererAssetEntryId", String.valueOf(assetEntryId));
 			}
