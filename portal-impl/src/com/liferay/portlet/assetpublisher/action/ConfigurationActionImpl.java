@@ -229,6 +229,15 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 
 			jsonObject.put("value", dateFormat.format(fieldValue));
 		}
+		else if (fieldValue instanceof Double) {
+			jsonObject.put("value", (Double)fieldValue);
+		}
+		else if (fieldValue instanceof Float) {
+			jsonObject.put("value", (Float)fieldValue);
+		}
+		else if (fieldValue instanceof Integer) {
+			jsonObject.put("value", (Integer)fieldValue);
+		}
 		else {
 			jsonObject.put("value", (String)fieldValue);
 		}
