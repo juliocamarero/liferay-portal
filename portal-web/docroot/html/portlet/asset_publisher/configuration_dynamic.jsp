@@ -170,7 +170,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 								<aui:input label="filter-by-field" name='<%= "preferences--subtypeFieldsFilterEnabled--" %>' type="checkbox" value="<%= subtypeFieldsFilterEnabled %>" />
 							</div>
 
-							<span class="asset-subtypefields-message" id="<portlet:namespace />ddmStructureFieldMessage">
+							<span class="asset-subtypefields-message" id="<portlet:namespace /><%= className %>ddmStructureFieldMessage">
 								<c:if test="<%= Validator.isNotNull(ddmStructureFieldLabel) %>">
 									<%= ddmStructureFieldLabel + ": " + ddmStructureDisplayFieldValue %>
 								</c:if>
@@ -695,7 +695,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 
 					var ddmStructureFieldValueContainer = A.one('#<portlet:namespace />ddmStructureFieldValueContainer');
 
-					var ddmStructureFieldMessage = A.one('#<portlet:namespace />ddmStructureFieldMessage');
+					var ddmStructureFieldMessage = A.one('#<portlet:namespace />' + event.className + 'ddmStructureFieldMessage');
 
 					ddmStructureFieldMessage.html(event.label + ': ' + event.displayValue);
 

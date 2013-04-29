@@ -139,6 +139,7 @@ portletURL.setParameter("classTypeId", String.valueOf(classTypeId));
 						success: function(event, id, obj) {
 							var jsonArray = this.get('responseData');
 
+							result['className'] = '<%= AssetPublisherUtil.getClassName(assetRendererFactory) %>';
 							result['displayValue'] = jsonArray.displayValue;
 							result['value'] = jsonArray.value;
 
