@@ -167,7 +167,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 							<aui:input name='<%= "preferences--classTypeIds" + className + "--" %>' type="hidden" />
 
 							<div class="asset-subtypefields-wrapper-enable aui-helper-hidden" id="<portlet:namespace />subtypeFieldsFilterEnableWrapper">
-								<aui:input label="filter-by-field" name='<%= "preferences--subtypeFieldsFilterEnabled--" %>' type="checkbox" value="<%= subtypeFieldsFilterEnabled %>" />
+								<aui:input checked="<%= subtypeFieldsFilterEnabled %>" label="filter-by-field" name='<%= "preferences--subtypeFieldsFilterEnabled" + className + "--" %>' type="checkbox" value="<%= subtypeFieldsFilterEnabled %>" />
 							</div>
 
 							<span class="asset-subtypefields-message" id="<portlet:namespace /><%= className %>ddmStructureFieldMessage">
