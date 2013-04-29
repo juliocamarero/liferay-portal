@@ -43,6 +43,7 @@ import org.junit.runner.RunWith;
 public class BlogsEntryStagedModelDataHandlerTest
 	extends BaseStagedModelDataHandlerTestCase {
 
+	@Override
 	protected StagedModel addStagedModel(
 			Group group,
 			Map<String, List<StagedModel>> dependentStagedModelsMap)
@@ -51,6 +52,7 @@ public class BlogsEntryStagedModelDataHandlerTest
 		return BlogsTestUtil.addEntry(TestPropsValues.getUserId(), group, true);
 	}
 
+	@Override
 	protected StagedModel getStagedModel(String uuid, Group group) {
 		try {
 			return BlogsEntryLocalServiceUtil.getBlogsEntryByUuidAndGroupId(
@@ -61,6 +63,7 @@ public class BlogsEntryStagedModelDataHandlerTest
 		}
 	}
 
+	@Override
 	protected Class<? extends StagedModel> getStagedModelClass() {
 		return BlogsEntry.class;
 	}
