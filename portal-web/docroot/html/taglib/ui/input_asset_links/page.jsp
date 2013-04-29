@@ -65,7 +65,9 @@ assetBrowserURL.setWindowState(LiferayWindowState.POP_UP);
 
 	<%
 	for (AssetRendererFactory assetRendererFactory : AssetRendererFactoryRegistryUtil.getAssetRendererFactories()) {
-		if (assetRendererFactory.isLinkable() && assetRendererFactory.isSelectable()) {
+		String assetRendererFactoryType = assetRendererFactory.getType();
+
+		if (assetRendererFactory.isLinkable() && assetRendererFactory.isSelectable() && !assetRendererFactoryType.equals(Constants.FOLDER)) {
 			if (assetEntryId > 0) {
 				assetBrowserURL.setParameter("refererAssetEntryId", String.valueOf(assetEntryId));
 			}
