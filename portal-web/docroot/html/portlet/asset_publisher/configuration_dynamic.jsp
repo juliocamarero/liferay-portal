@@ -223,7 +223,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 					}
 					%>
 
-					<div class="asset-subtypefield-selected <%= Validator.isNull(ddmStructureFieldName) ? "aui-helper-hidden" : StringPool.BLANK %>" id="<portlet:namespace />ddmStructureFieldValueContainer">
+					<div class="asset-subtypefield-selected <%= Validator.isNull(ddmStructureFieldName) ? "aui-helper-hidden" : StringPool.BLANK %>">
 						<aui:input name='<%= "preferences--ddmStructureFieldName--" %>' type="hidden" value="<%= ddmStructureFieldName %>" />
 
 						<aui:input name='<%= "preferences--ddmStructureFieldValue--" %>' type="hidden" value="<%= ddmStructureFieldValue %>" />
@@ -453,13 +453,10 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 
 	var assetSelector = A.one('#<portlet:namespace />anyAssetType');
 	var assetMultipleSelector = A.one('#<portlet:namespace />currentClassNameIds');
-	var ddmStructureFieldValueContainer = A.one('#<portlet:namespace />ddmStructureFieldValueContainer');
 	var ddmStructureFieldName = A.one('#<portlet:namespace />ddmStructureFieldName');
 	var orderByColumn1 = A.one('#<portlet:namespace />orderByColumn1');
 	var orderByColumn2 = A.one('#<portlet:namespace />orderByColumn2');
 	var sourcePanel = A.one('#assetPublisherSourcePanel');
-
-	var ddmStructureFieldValue = ddmStructureFieldValueContainer.one('#<portlet:namespace />ddmStructureFieldValue');
 
 	<%
 	for (AssetRendererFactory curRendererFactory : classTypesAssetRendererFactories) {
@@ -495,6 +492,8 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 					orderByColumn2Subtype.remove();
 				}
 			}
+
+			<%= className %>toggleSubclassesFields(true);
 		}
 
 		<%
@@ -585,7 +584,6 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 				if (structureOptions) {
 					subtypeFieldsWrapper.show();
 					subtypeFieldsFilterEnableWrapper.show();
-					ddmStructureFieldValueContainer.show();
 				}
 				else if (hideSubtypeFilterEnableWrapper) {
 					subtypeFieldsWrapper.hide();
@@ -604,8 +602,6 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 			'change',
 			function(event) {
 				sourcePanel.all('.asset-subtypefields').hide();
-
-				ddmStructureFieldValueContainer.hide();
 
 				<%= className %>toggleSubclassesFields(true);
 			}
@@ -635,7 +631,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 	assetSelector.on(
 		'change',
 		function(event) {
-			ddmStructureFieldValueContainer.hide();
+			var ddmStructureFieldValue = A.one('#<portlet:namespace />ddmStructureFieldValue');
 
 			ddmStructureFieldName.val('');
 			ddmStructureFieldValue.val('');
@@ -693,13 +689,9 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 
 					ddmStructureDisplayFieldvalue.val(event.displayValue);
 
-					var ddmStructureFieldValueContainer = A.one('#<portlet:namespace />ddmStructureFieldValueContainer');
-
 					var ddmStructureFieldMessage = A.one('#<portlet:namespace />' + event.className + 'ddmStructureFieldMessage');
 
 					ddmStructureFieldMessage.html(event.label + ': ' + event.displayValue);
-
-					ddmStructureFieldValueContainer.show();
 				}
 			);
 		},
