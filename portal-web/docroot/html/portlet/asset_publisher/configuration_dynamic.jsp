@@ -166,7 +166,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 
 							<aui:input name='<%= "preferences--classTypeIds" + className + "--" %>' type="hidden" />
 
-							<div class="asset-subtypefields-wrapper-enable aui-helper-hidden" id="<portlet:namespace />subtypeFieldsFilterEnableWrapper">
+							<div class="asset-subtypefields-wrapper-enable aui-helper-hidden" id="<portlet:namespace /><%= className %>subtypeFieldsFilterEnableWrapper">
 								<aui:input checked="<%= subtypeFieldsFilterEnabled %>" label="filter-by-field" name='<%= "preferences--subtypeFieldsFilterEnabled" + className + "--" %>' type="checkbox" value="<%= subtypeFieldsFilterEnabled %>" />
 							</div>
 
@@ -176,7 +176,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 								</c:if>
 							</span>
 
-							<div class="asset-subtypefields-wrapper aui-helper-hidden" id="<portlet:namespace />subtypeFieldsWrapper">
+							<div class="asset-subtypefields-wrapper aui-helper-hidden" id="<portlet:namespace /><%= className %>subtypeFieldsWrapper">
 
 								<%
 								for (long assetAvailableClassTypeId : assetAvailableClassTypeIds) {
@@ -554,10 +554,10 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 
 		var <%= className %>SubtypeSelector = A.one('#<portlet:namespace />anyClassType<%= className %>');
 
-		var subtypeFieldsWrapper = A.one('#<portlet:namespace />subtypeFieldsWrapper');
-		var subtypeFieldsFilterEnableWrapper = A.one('#<portlet:namespace />subtypeFieldsFilterEnableWrapper');
-
 		function <%= className %>toggleSubclassesFields(hideSubtypeFilterEnableWrapper) {
+			var subtypeFieldsWrapper = A.one('#<portlet:namespace /><%= className %>subtypeFieldsWrapper');
+			var subtypeFieldsFilterEnableWrapper = A.one('#<portlet:namespace /><%= className %>subtypeFieldsFilterEnableWrapper');
+
 			var selectedSubtype = <%= className %>SubtypeSelector.val();
 
 			var structureOptions = A.one('#<portlet:namespace />' + selectedSubtype + '_<%= className %>Options');
@@ -644,14 +644,14 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 		}
 	);
 
-	subtypeFieldsFilterEnableWrapper.delegate(
+	sourcePanel.delegate(
 		'click',
 		function(event) {
 			var assetSubtypeFieldsPopupNodes = A.all('.asset-subtypefields-popup .aui-button-input');
 
 			Liferay.Util.toggleDisabled(assetSubtypeFieldsPopupNodes, !event.target.attr('checked'));
 		},
-		'.aui-field-input'
+		'.asset-subtypefields-wrapper-enable .aui-field-input'
 	);
 
 	Liferay.after(
