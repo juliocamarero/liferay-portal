@@ -23,15 +23,23 @@ import java.util.List;
  * @author Marcellus Tavares
  */
 public interface AssetRendererFactoryRegistry {
-
-	public List<AssetRendererFactory> getAssetRendererFactories();
+	
+	public List<AssetRendererFactory> getActivePortletsAssetRendererFactories(
+		long companyId);
+	
+	public AssetRendererFactory getActivePortletAssetRendererFactoryByClassName(
+		long companyId, String className);
+	
+	public long[] getActivePortletsClassNameIds(long companyId);	
+	
+	public List<AssetRendererFactory> getAssetRendererFactories();	
 
 	public AssetRendererFactory getAssetRendererFactoryByClassName(
 		String className);
 
 	public AssetRendererFactory getAssetRendererFactoryByType(String type);
 
-	public long[] getClassNameIds();
+	public long[] getClassNameIds();	
 
 	public void register(AssetRendererFactory assetRendererFactory);
 
