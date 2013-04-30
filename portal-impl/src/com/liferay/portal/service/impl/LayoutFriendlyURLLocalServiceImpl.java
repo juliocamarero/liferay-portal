@@ -14,7 +14,19 @@
 
 package com.liferay.portal.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.LayoutFriendlyURL;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.LayoutFriendlyURLLocalServiceBaseImpl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * The implementation of the layout friendly u r l local service.
@@ -32,5 +44,128 @@ import com.liferay.portal.service.base.LayoutFriendlyURLLocalServiceBaseImpl;
  */
 public class LayoutFriendlyURLLocalServiceImpl
 	extends LayoutFriendlyURLLocalServiceBaseImpl {
+
+	public LayoutFriendlyURL addLayoutFriendlyURL(
+			long companyId, long groupId, long plid, boolean privateLayout,
+			String friendlyURL, Locale locale, ServiceContext serviceContext)
+		throws SystemException {
+
+		long layoutFriendlyURLId = counterLocalService.increment();
+
+		LayoutFriendlyURL layoutFriendlyURL =
+			layoutFriendlyURLPersistence.create(layoutFriendlyURLId);
+
+		layoutFriendlyURL.setUuid(serviceContext.getUuid());
+		layoutFriendlyURL.setGroupId(groupId);
+		layoutFriendlyURL.setCompanyId(companyId);
+		layoutFriendlyURL.setPlid(plid);
+		layoutFriendlyURL.setPrivateLayout(privateLayout);
+		layoutFriendlyURL.setFriendlyURL(friendlyURL);
+		layoutFriendlyURL.setLocale(LocaleUtil.toLanguageId(locale));
+
+		return layoutFriendlyURLPersistence.update(layoutFriendlyURL);
+	}
+
+	public List<LayoutFriendlyURL> addLayoutFriendlyURLs(
+			long companyId, long groupId, long plid, boolean privateLayout,
+			Map<Locale, String> friendlyURLMap, ServiceContext serviceContext)
+		throws SystemException {
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs =
+			new ArrayList<LayoutFriendlyURL>();
+
+		Locale[] locales = LanguageUtil.getAvailableLocales();
+
+		for (Locale locale : locales) {
+			String friendlyURL = friendlyURLMap.get(locale);
+
+			if (Validator.isNotNull(friendlyURL)) {
+				LayoutFriendlyURL layoutFriendlyURL = addLayoutFriendlyURL(
+					companyId, groupId, plid, privateLayout, friendlyURL,
+					locale, serviceContext);
+
+				layoutFriendlyURLs.add(layoutFriendlyURL);
+			}
+		}
+
+		return layoutFriendlyURLs;
+	}
+
+	public void deleteLayoutFriendlyURL(long plid, Locale locale)
+		throws SystemException {
+
+		LayoutFriendlyURL layoutFriendlyURL =
+			layoutFriendlyURLPersistence.fetchByP_L(
+				plid, LocaleUtil.toLanguageId(locale));
+
+		if (layoutFriendlyURL != null) {
+			layoutFriendlyURLPersistence.remove(layoutFriendlyURL);
+		}
+	}
+
+	public void deleteLayoutFriendlyURLsByPlid(long plid)
+		throws SystemException {
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs =
+			layoutFriendlyURLPersistence.findByLayout(plid);
+
+		for (LayoutFriendlyURL layoutFriendlyURL : layoutFriendlyURLs) {
+			layoutFriendlyURLPersistence.remove(layoutFriendlyURL);
+		}
+	}
+
+	public List<LayoutFriendlyURL> getLayoutFriendlyURLsByPlid(long plid)
+		throws SystemException {
+
+		return layoutFriendlyURLPersistence.findByLayout(plid);
+	}
+
+	public LayoutFriendlyURL updateLayoutFriendlyURL(
+			long companyId, long groupId, long plid, boolean privateLayout,
+			String friendlyURL, Locale locale, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		LayoutFriendlyURL layoutFriendlyURL =
+			layoutFriendlyURLPersistence.fetchByP_L(
+				plid, LocaleUtil.toLanguageId(locale));
+
+		if (layoutFriendlyURL == null) {
+			return addLayoutFriendlyURL(
+				companyId, groupId, plid, privateLayout, friendlyURL, locale,
+				serviceContext);
+		}
+
+		layoutFriendlyURL.setFriendlyURL(friendlyURL);
+
+		return layoutFriendlyURLPersistence.update(layoutFriendlyURL);
+	}
+
+	public List<LayoutFriendlyURL> updateLayoutFriendlyURLs(
+			long companyId, long groupId, long plid, boolean privateLayout,
+			Map<Locale, String> friendlyURLMap, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs =
+			new ArrayList<LayoutFriendlyURL>();
+
+		Locale[] locales = LanguageUtil.getAvailableLocales();
+
+		for (Locale locale : locales) {
+			String friendlyURL = friendlyURLMap.get(locale);
+
+			if (Validator.isNotNull(friendlyURL)) {
+				LayoutFriendlyURL layoutFriendlyURL = updateLayoutFriendlyURL(
+					companyId, groupId, plid, privateLayout, friendlyURL,
+					locale, serviceContext);
+
+				layoutFriendlyURLs.add(layoutFriendlyURL);
+			}
+			else {
+				deleteLayoutFriendlyURL(plid, locale);
+			}
+		}
+
+		return layoutFriendlyURLs;
+	}
 
 }
