@@ -250,6 +250,16 @@ public abstract class DLAppTestUtil {
 	}
 
 	public static Folder addFolder(
+			long userId, long repositoryId, ServiceContext serviceContext)
+		throws Exception {
+
+		return DLAppLocalServiceUtil.addFolder(
+			userId, repositoryId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			ServiceTestUtil.randomString(), ServiceTestUtil.randomString(50),
+			serviceContext);
+	}
+
+	public static Folder addFolder(
 			long groupId, long parentFolderId, String name)
 		throws Exception {
 
@@ -311,6 +321,16 @@ public abstract class DLAppTestUtil {
 		return updateFileEntry(
 			groupId, fileEntryId, sourceFileName, ContentTypes.TEXT_PLAIN,
 			title, majorVersion, new ServiceContext());
+	}
+
+	public static FileEntry updateFileEntry(
+			long groupId, long fileEntryId, String sourceFileName, String title,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		return updateFileEntry(
+			groupId, fileEntryId, sourceFileName, ContentTypes.TEXT_PLAIN,
+			title, false, serviceContext);
 	}
 
 	public static FileEntry updateFileEntry(

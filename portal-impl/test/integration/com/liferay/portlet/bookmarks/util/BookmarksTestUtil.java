@@ -120,6 +120,10 @@ public class BookmarksTestUtil {
 		return addFolder(TestPropsValues.getGroupId(), name);
 	}
 
+	public static void deleteEntry(long entryId) throws Exception {
+		BookmarksEntryServiceUtil.deleteEntry(entryId);
+	}
+
 	public static SearchContext getSearchContext(
 		long companyId, long groupId, long folderId, String keywords) {
 
@@ -146,6 +150,16 @@ public class BookmarksTestUtil {
 		searchContext.setQueryConfig(queryConfig);
 
 		return searchContext;
+	}
+
+	public static BookmarksEntry updateEntry(
+			BookmarksEntry entry, ServiceContext serviceContext)
+		throws Exception {
+
+		return BookmarksEntryServiceUtil.updateEntry(
+			entry.getEntryId(), serviceContext.getScopeGroupId(),
+			entry.getFolderId(), entry.getName(), entry.getUrl(),
+			entry.getDescription(), serviceContext);
 	}
 
 }
