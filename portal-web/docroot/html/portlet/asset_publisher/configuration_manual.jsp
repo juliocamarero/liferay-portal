@@ -108,9 +108,9 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 				AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getActivePortletAssetRendererFactoryByClassName(assetEntry.getCompanyId(), assetEntry.getClassName());
 
 				if (assetRendererFactory == null){
-					deleteAssetEntry = true;					
+					deleteAssetEntry = true;
 				}
-				
+
 				if (deleteAssetEntry) {
 					deletedAssets.add(assetEntryUuid);
 
@@ -120,7 +120,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 				ResultRow row = new ResultRow(doc, null, assetEntryOrder);
 
 				// Title
-								
+
 				AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(assetEntry.getClassPK());
 
 				StringBundler sb = new StringBundler(4);

@@ -418,7 +418,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			searchContext.setAttribute("status", status);
 			searchContext.setCompanyId(companyId);
 			searchContext.setEnd(end);
-			searchContext.setEntryClassNames(getClassNames(companyId, className));
+			searchContext.setEntryClassNames(
+				getClassNames(companyId, className));
 			searchContext.setGroupIds(groupIds);
 			searchContext.setKeywords(keywords);
 
@@ -492,7 +493,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			searchContext.setAttribute("status", status);
 			searchContext.setCompanyId(companyId);
 			searchContext.setEnd(end);
-			searchContext.setEntryClassNames(getClassNames(companyId, className));
+			searchContext.setEntryClassNames(
+				getClassNames(companyId, className));
 			searchContext.setGroupIds(groupIds);
 
 			QueryConfig queryConfig = new QueryConfig();
@@ -900,7 +902,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		}
 		else {
 			List<AssetRendererFactory> rendererFactories =
-				AssetRendererFactoryRegistryUtil.getActivePortletsAssetRendererFactories(companyId);
+				AssetRendererFactoryRegistryUtil.
+					getActivePortletsAssetRendererFactories(companyId);
 
 			String[] classNames = new String[rendererFactories.size()];
 

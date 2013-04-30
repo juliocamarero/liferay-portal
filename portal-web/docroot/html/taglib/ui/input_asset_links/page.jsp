@@ -46,14 +46,13 @@ else {
 			assetLink.setEntryId1(0);
 		}
 
-		assetLink.setEntryId2(assetEntry.getEntryId());		
+		assetLink.setEntryId2(assetEntry.getEntryId());
 
 		assetLinks.add(assetLink);
 	}
 }
 
 for (AssetLink assetLink : assetLinks) {
-	
 	AssetEntry assetLinkEntry = null;
 
 	if ((assetEntryId > 0) || (assetLink.getEntryId1() == assetEntryId)) {
@@ -64,9 +63,9 @@ for (AssetLink assetLink : assetLinks) {
 	}
 
 	assetLinkEntry = assetLinkEntry.toEscapedModel();
-	
+
 	AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getActivePortletAssetRendererFactoryByClassName(assetLink.getCompanyId(), assetLinkEntry.getClassName());
-	
+
 	if (assetRendererFactory !=null) {
 		assetLinksActivePortlets.add(assetLink);
 	}

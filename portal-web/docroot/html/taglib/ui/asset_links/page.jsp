@@ -54,7 +54,7 @@ if (assetEntryId > 0) {
 				if (assetRendererFactory == null) {
 					continue;
 				}
-				
+
 				AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(assetLinkEntry.getClassPK());
 
 				if (assetRenderer.hasViewPermission(permissionChecker)) {

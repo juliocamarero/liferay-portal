@@ -290,10 +290,11 @@ public class AssetPublisherImpl implements AssetPublisher {
 
 		if (!anyAssetType) {
 			long[] availableClassNameIds =
-				AssetRendererFactoryRegistryUtil.getActivePortletsClassNameIds(layout.getCompanyId());
+				AssetRendererFactoryRegistryUtil.getActivePortletsClassNameIds(
+					layout.getCompanyId());
 
-			long[] classNameIds =
-				getClassNameIds(preferences, availableClassNameIds);
+			long[] classNameIds = getClassNameIds(
+				preferences, availableClassNameIds);
 
 			assetEntryQuery.setClassNameIds(classNameIds);
 		}
