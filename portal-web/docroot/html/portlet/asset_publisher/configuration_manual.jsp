@@ -105,7 +105,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 					}
 				}
 
-				AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getActivePortletAssetRendererFactoryByClassName(assetEntry.getCompanyId(), assetEntry.getClassName());
+				AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetEntry.getClassName());
 
 				if (assetRendererFactory == null){
 					deleteAssetEntry = true;

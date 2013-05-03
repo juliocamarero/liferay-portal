@@ -57,6 +57,7 @@ public class AssetRendererFactoryRegistryImpl
 		return _getClassNameIds(companyId);
 	}
 
+	@Deprecated
 	public List<AssetRendererFactory> getAssetRendererFactories() {
 		return ListUtil.fromMapValues(_assetRenderFactoriesMapByClassName);
 	}
