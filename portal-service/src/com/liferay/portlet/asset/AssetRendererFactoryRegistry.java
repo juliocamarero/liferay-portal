@@ -24,14 +24,14 @@ import java.util.List;
  */
 public interface AssetRendererFactoryRegistry {
 
-	public List<AssetRendererFactory> getAssetRendererFactories();
+	public List<AssetRendererFactory> getAssetRendererFactories(long companyId);
 
 	public AssetRendererFactory getAssetRendererFactoryByClassName(
 		String className);
 
 	public AssetRendererFactory getAssetRendererFactoryByType(String type);
 
-	public long[] getClassNameIds();
+	public long[] getClassNameIds(long companyId);
 
 	public void register(AssetRendererFactory assetRendererFactory);
 
