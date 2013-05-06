@@ -66,6 +66,13 @@ public interface PortletDataContext extends Serializable {
 	 */
 	public static final String ROOT_PATH_PORTLETS = "/portlets/";
 
+	public static final String TYPE_CHILD = "child";
+	public static final String TYPE_DEPENDENCY = "dependency";
+	public static final String TYPE_EMBEDDED = "embedded";
+	public static final String TYPE_PARENT = "parent";
+	public static final String TYPE_STRONG_REFERENCE = "strong";
+	public static final String TYPE_WEAK_REFERENCE = "weak";
+
 	public void addAssetCategories(Class<?> clazz, long classPK)
 		throws SystemException;
 
@@ -119,17 +126,19 @@ public interface PortletDataContext extends Serializable {
 		String className, long classPK, List<RatingsEntry> ratingsEntries);
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel);
+		Element element, ClassedModel classedModel, String type);
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel, Class<?> clazz);
+		Element element, ClassedModel classedModel, String type,
+		Class<?> clazz);
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel, String binPath);
-
-	public Element addReferenceElement(
-		Element element, ClassedModel classedModel, String className,
+		Element element, ClassedModel classedModel, String type,
 		String binPath);
+
+	public Element addReferenceElement(
+		Element element, ClassedModel classedModel, String type,
+		String className, String binPath);
 
 	public void addZipEntry(String path, byte[] bytes) throws SystemException;
 
@@ -244,7 +253,13 @@ public interface PortletDataContext extends Serializable {
 		Element parentElement, Class<?> clazz);
 
 	public List<Element> getReferenceDataElements(
+		Element parentElement, Class<?> clazz, String type);
+
+	public List<Element> getReferenceDataElements(
 		StagedModel parentStagedModel, Class<?> clazz);
+
+	public List<Element> getReferenceDataElements(
+		StagedModel parentStagedModel, Class<?> clazz, String type);
 
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link
