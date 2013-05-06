@@ -25,8 +25,11 @@ import java.util.List;
  */
 public class AssetRendererFactoryRegistryUtil {
 
-	public static List<AssetRendererFactory> getAssetRendererFactories() {
-		return getAssetRendererFactoryRegistry().getAssetRendererFactories();
+	public static List<AssetRendererFactory> getAssetRendererFactories(
+		long companyId) {
+
+		return getAssetRendererFactoryRegistry().getAssetRendererFactories(
+			companyId);
 	}
 
 	public static AssetRendererFactory getAssetRendererFactoryByClassName(
@@ -52,8 +55,8 @@ public class AssetRendererFactoryRegistryUtil {
 		return _assetRendererFactoryRegistry;
 	}
 
-	public static long[] getClassNameIds() {
-		return getAssetRendererFactoryRegistry().getClassNameIds();
+	public static long[] getClassNameIds(long companyId) {
+		return getAssetRendererFactoryRegistry().getClassNameIds(companyId);
 	}
 
 	public static void register(AssetRendererFactory assetRendererFactory) {
