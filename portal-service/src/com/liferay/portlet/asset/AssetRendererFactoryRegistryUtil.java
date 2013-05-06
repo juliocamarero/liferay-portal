@@ -25,6 +25,14 @@ import java.util.List;
  */
 public class AssetRendererFactoryRegistryUtil {
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #getAssetRendererFactories(
+	 *             long)}
+	 */
+	public static List<AssetRendererFactory> getAssetRendererFactories() {
+		return getAssetRendererFactoryRegistry().getAssetRendererFactories();
+	}
+
 	public static List<AssetRendererFactory> getAssetRendererFactories(
 		long companyId) {
 
@@ -53,6 +61,14 @@ public class AssetRendererFactoryRegistryUtil {
 			AssetRendererFactoryRegistryUtil.class);
 
 		return _assetRendererFactoryRegistry;
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #getClassNameIds(
+	 *             long)}
+	 */
+	public static long[] getClassNameIds() {
+		return getAssetRendererFactoryRegistry().getClassNameIds();
 	}
 
 	public static long[] getClassNameIds(long companyId) {
