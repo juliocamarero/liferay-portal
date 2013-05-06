@@ -203,7 +203,9 @@ public class JournalContentPortletDataHandler
 			Element articleElement = portletDataContext.getExportDataElement(
 				article);
 
-			portletDataContext.addReferenceElement(articleElement, ddmTemplate);
+			portletDataContext.addReferenceElement(
+				articleElement, ddmTemplate,
+				PortletDataContext.TYPE_STRONG_REFERENCE);
 		}
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
