@@ -79,7 +79,9 @@ public class FolderStagedModelDataHandler
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, repository);
 
-			portletDataContext.addReferenceElement(folderElement, repository);
+			portletDataContext.addReferenceElement(
+				folderElement, repository,
+				PortletDataContext.TYPE_STRONG_REFERENCE);
 
 			portletDataContext.addClassedModel(
 				folderElement, folderPath, folder,
@@ -249,7 +251,8 @@ public class FolderStagedModelDataHandler
 					portletDataContext, dlFileEntryType);
 
 				portletDataContext.addReferenceElement(
-					folderElement, dlFileEntryType);
+					folderElement, dlFileEntryType,
+					PortletDataContext.TYPE_STRONG_REFERENCE);
 			}
 		}
 
