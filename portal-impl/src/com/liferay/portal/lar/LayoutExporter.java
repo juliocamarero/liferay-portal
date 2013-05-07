@@ -749,6 +749,14 @@ public class LayoutExporter {
 
 		portletDataContext.setPlid(layout.getPlid());
 
+		// Layout ratings
+
+		portletDataContext.addRatingsEntries(Layout.class, layout.getPlid());
+
+		// Layout comments
+
+		portletDataContext.addComments(Layout.class, layout.getPlid());
+
 		if (layout.isIconImage()) {
 			Image image = ImageLocalServiceUtil.getImage(
 				layout.getIconImageId());
