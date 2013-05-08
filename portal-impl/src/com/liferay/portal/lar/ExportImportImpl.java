@@ -18,8 +18,13 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ExportImport;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
+import com.liferay.portal.kernel.lar.MissingReference;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.StagedModelDataHandler;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -33,12 +38,18 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.ElementHandler;
+import com.liferay.portal.kernel.xml.ElementProcessor;
+import com.liferay.portal.kernel.zip.ZipReader;
+import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
+import com.liferay.portal.service.persistence.UserUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
@@ -48,12 +59,19 @@ import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 
+import java.io.File;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.xerces.parsers.SAXParser;
+
+import org.xml.sax.InputSource;
 
 /**
  * @author Zsolt Berentey
@@ -529,6 +547,53 @@ public class ExportImportImpl implements ExportImport {
 		return content;
 	}
 
+	public List<MissingReference> validateMissingReferences(
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
+		throws Exception {
+
+		final List<MissingReference> missingReferences =
+			new ArrayList<MissingReference>();
+
+		User user = UserUtil.findByPrimaryKey(userId);
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		String userIdStrategy = MapUtil.getString(
+			parameterMap, PortletDataHandlerKeys.USER_ID_STRATEGY);
+
+		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
+
+		PortletDataContext portletDataContext = new PortletDataContextImpl(
+			group.getCompanyId(), groupId, new HashMap<String, String[]>(),
+			new HashSet<String>(), _getUserIdStrategy(user, userIdStrategy),
+			zipReader);
+
+		SAXParser saxParser = new SAXParser();
+
+		ElementHandler elementParser = new ElementHandler(
+			new ElementProcessor() {
+
+				@Override
+				public void processElement(Element element) {
+					MissingReference missingReference =
+						validateMissingReference(element);
+
+					if (missingReference != null) {
+						missingReferences.add(missingReference);
+					}
+				}
+			}, new String[] {"missing-reference"});
+
+		saxParser.setContentHandler(elementParser);
+
+		saxParser.parse(
+			new InputSource(
+				portletDataContext.getZipEntryAsInputStream("/manifest.xml")));
+
+		return missingReferences;
+	}
+
 	protected Map<String, String[]> getDLReferenceParameters(
 		PortletDataContext portletDataContext, String content, int beginPos,
 		int endPos) {
@@ -662,6 +727,32 @@ public class ExportImportImpl implements ExportImport {
 		}
 
 		return fileEntry;
+	}
+
+	protected MissingReference validateMissingReference(Element element) {
+		String className = element.attributeValue("class-name");
+
+		StagedModelDataHandler<?> stagedModelDataHandler =
+			StagedModelDataHandlerRegistryUtil.
+				getStagedModelDataHandler(className);
+
+		if (!stagedModelDataHandler.validateReference(
+				element.getParent(), element)) {
+
+			return new MissingReference(element);
+		}
+
+		return null;
+	}
+
+	private UserIdStrategy _getUserIdStrategy(
+		User user, String userIdStrategy) {
+
+		if (UserIdStrategy.ALWAYS_CURRENT_USER_ID.equals(userIdStrategy)) {
+			return new AlwaysCurrentUserIdStrategy(user);
+		}
+
+		return new CurrentUserIdStrategy(user);
 	}
 
 	private static final char[] _DL_REFERENCE_LEGACY_STOP_CHARS = {
