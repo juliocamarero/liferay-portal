@@ -24,11 +24,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.EventListener;
+import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.Filter;
+import javax.servlet.FilterRegistration.Dynamic;
+import javax.servlet.FilterRegistration;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+import javax.servlet.SessionCookieConfig;
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.descriptor.JspConfigDescriptor;
 
 /**
  * @author Michael Young
@@ -39,12 +49,94 @@ public class LiferayServletContext implements ServletContext {
 		_servletContext = servletContext;
 	}
 
+	@Override
+	public Dynamic addFilter(String filterName, Class<? extends Filter> clazz) {
+		return _servletContext.addFilter(filterName, clazz);
+	}
+
+	@Override
+	public Dynamic addFilter(String filterName, Filter filter) {
+		return _servletContext.addFilter(filterName, filter);
+	}
+
+	@Override
+	public Dynamic addFilter(String filterName, String className) {
+		return _servletContext.addFilter(filterName, className);
+	}
+
+	@Override
+	public void addListener(Class<? extends EventListener> clazz) {
+		_servletContext.addListener(clazz);
+	}
+
+	@Override
+	public void addListener(String className) {
+		_servletContext.addListener(className);
+	}
+
+	@Override
+	public <T extends EventListener> void addListener(T eventListener) {
+		_servletContext.addListener(eventListener);
+	}
+
+	@Override
+	public ServletRegistration.Dynamic addServlet(
+		String servletName, Class<? extends Servlet> clazz) {
+
+		return _servletContext.addServlet(servletName, clazz);
+	}
+
+	@Override
+	public ServletRegistration.Dynamic addServlet(
+		String servletName, Servlet servlet) {
+
+		return _servletContext.addServlet(servletName, servlet);
+	}
+
+	@Override
+	public ServletRegistration.Dynamic addServlet(
+		String servletName, String className) {
+
+		return _servletContext.addServlet(servletName, className);
+	}
+
+	@Override
+	public <T extends Filter> T createFilter(Class<T> clazz)
+		throws ServletException {
+
+		return _servletContext.createFilter(clazz);
+	}
+
+	@Override
+	public <T extends EventListener> T createListener(Class<T> clazz)
+		throws ServletException {
+
+		return _servletContext.createListener(clazz);
+	}
+
+	@Override
+	public <T extends Servlet> T createServlet(Class<T> clazz)
+		throws ServletException {
+
+		return _servletContext.createServlet(clazz);
+	}
+
+	@Override
+	public void declareRoles(String... roleNames) {
+		_servletContext.declareRoles(roleNames);
+	}
+
 	public Object getAttribute(String name) {
 		return _servletContext.getAttribute(name);
 	}
 
 	public Enumeration<String> getAttributeNames() {
 		return _servletContext.getAttributeNames();
+	}
+
+	@Override
+	public ClassLoader getClassLoader() {
+		return _servletContext.getClassLoader();
 	}
 
 	public ServletContext getContext(String uriPath) {
@@ -62,12 +154,47 @@ public class LiferayServletContext implements ServletContext {
 		return ContextPathUtil.getContextPath(_servletContext);
 	}
 
+	@Override
+	public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
+		return _servletContext.getDefaultSessionTrackingModes();
+	}
+
+	@Override
+	public int getEffectiveMajorVersion() {
+		return _servletContext.getEffectiveMajorVersion();
+	}
+
+	@Override
+	public int getEffectiveMinorVersion() {
+		return _servletContext.getEffectiveMinorVersion();
+	}
+
+	@Override
+	public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
+		return _servletContext.getEffectiveSessionTrackingModes();
+	}
+
+	@Override
+	public FilterRegistration getFilterRegistration(String filterName) {
+		return _servletContext.getFilterRegistration(filterName);
+	}
+
+	@Override
+	public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
+		return _servletContext.getFilterRegistrations();
+	}
+
 	public String getInitParameter(String name) {
 		return _servletContext.getInitParameter(name);
 	}
 
 	public Enumeration<String> getInitParameterNames() {
 		return _servletContext.getInitParameterNames();
+	}
+
+	@Override
+	public JspConfigDescriptor getJspConfigDescriptor() {
+		return _servletContext.getJspConfigDescriptor();
 	}
 
 	public int getMajorVersion() {
@@ -138,8 +265,25 @@ public class LiferayServletContext implements ServletContext {
 		return Collections.enumeration(new ArrayList<String>());
 	}
 
+	@Override
+	public ServletRegistration getServletRegistration(String servletName) {
+		return _servletContext.getServletRegistration(servletName);
+	}
+
+	@Override
+	public Map<String, ? extends ServletRegistration>
+		getServletRegistrations() {
+
+		return _servletContext.getServletRegistrations();
+	}
+
 	public Enumeration<Servlet> getServlets() {
 		return Collections.enumeration(new ArrayList<Servlet>());
+	}
+
+	@Override
+	public SessionCookieConfig getSessionCookieConfig() {
+		return _servletContext.getSessionCookieConfig();
 	}
 
 	public void log(Exception exception, String message) {
@@ -160,6 +304,18 @@ public class LiferayServletContext implements ServletContext {
 
 	public void setAttribute(String name, Object value) {
 		_servletContext.setAttribute(name, value);
+	}
+
+	@Override
+	public boolean setInitParameter(String name, String value) {
+		return _servletContext.setInitParameter(name, value);
+	}
+
+	@Override
+	public void setSessionTrackingModes(
+		Set<SessionTrackingMode> sessionTrackingModes) {
+
+		_servletContext.setSessionTrackingModes(sessionTrackingModes);
 	}
 
 	@Override

@@ -780,7 +780,7 @@
 	</library>
 	<library>
 		<file-name>lib/development/servlet-api.jar</file-name>
-		<version>2.5</version>
+		<version>3.0.1</version>
 		<project-name>Java Servlet</project-name>
 		<project-url>http://java.sun.com/products/servlet</project-url>
 		<licenses>
