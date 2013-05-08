@@ -83,6 +83,11 @@ public class JournalArticleStagedModelDataHandler
 	}
 
 	@Override
+	public String getDisplayName(JournalArticle article) {
+		return article.getTitleCurrentValue();
+	}
+
+	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, JournalArticle article)
 		throws Exception {

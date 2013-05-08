@@ -85,6 +85,11 @@ public class FileEntryStagedModelDataHandler
 	}
 
 	@Override
+	public String getDisplayName(FileEntry fileEntry) {
+		return fileEntry.getTitle();
+	}
+
+	@Override
 	public void importStagedModel(
 			PortletDataContext portletDataContext, FileEntry fileEntry)
 		throws PortletDataException {
