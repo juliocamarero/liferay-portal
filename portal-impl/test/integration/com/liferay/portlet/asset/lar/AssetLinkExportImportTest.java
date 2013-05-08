@@ -233,7 +233,7 @@ public class AssetLinkExportImportTest extends BasePortletExportImportTestCase {
 		AssetEntry originalAssetEntry = AssetEntryLocalServiceUtil.getEntry(
 			group.getGroupId(), uuid);
 
-		List<AssetLink> assetLinks = AssetLinkLocalServiceUtil.getLinks(
+		List<AssetLink> originalAssetLinks = AssetLinkLocalServiceUtil.getLinks(
 			originalAssetEntry.getEntryId());
 
 		AssetEntry importedAssetEntry =  AssetEntryLocalServiceUtil.getEntry(
@@ -242,14 +242,15 @@ public class AssetLinkExportImportTest extends BasePortletExportImportTestCase {
 		List<AssetLink> importedAssetLinks = AssetLinkLocalServiceUtil.getLinks(
 			importedAssetEntry.getEntryId());
 
-		Assert.assertEquals(assetLinks.size(), importedAssetLinks.size());
+		Assert.assertEquals(
+			originalAssetLinks.size(), importedAssetLinks.size());
 
-		for (AssetLink assetLink : assetLinks) {
+		for (AssetLink originalLink : originalAssetLinks) {
 			AssetEntry sourceAssetEntry = AssetEntryLocalServiceUtil.getEntry(
-				assetLink.getEntryId1());
+				originalLink.getEntryId1());
 
 			AssetEntry targetAssetEntry = AssetEntryLocalServiceUtil.getEntry(
-				assetLink.getEntryId2());
+				originalLink.getEntryId2());
 
 			Iterator<AssetLink> iterator = importedAssetLinks.iterator();
 
