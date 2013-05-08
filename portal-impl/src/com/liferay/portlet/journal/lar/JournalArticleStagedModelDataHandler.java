@@ -117,7 +117,7 @@ public class JournalArticleStagedModelDataHandler
 				portletDataContext, ddmStructure);
 
 			portletDataContext.addReferenceElement(
-				articleElement, ddmStructure);
+				articleElement, ddmStructure, false);
 
 			long parentStructureId = ddmStructure.getParentStructureId();
 
@@ -142,7 +142,8 @@ public class JournalArticleStagedModelDataHandler
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, ddmTemplate);
 
-			portletDataContext.addReferenceElement(articleElement, ddmTemplate);
+			portletDataContext.addReferenceElement(
+				articleElement, ddmTemplate, false);
 		}
 
 		if (article.isSmallImage()) {
@@ -697,7 +698,7 @@ public class JournalArticleStagedModelDataHandler
 		portletDataContext.addZipEntry(articleImagePath, image.getTextObj());
 
 		portletDataContext.addReferenceElement(
-			articleElement, image, articleImagePath);
+			articleElement, image, articleImagePath, false);
 	}
 
 	protected void prepareLanguagesForImport(JournalArticle article)

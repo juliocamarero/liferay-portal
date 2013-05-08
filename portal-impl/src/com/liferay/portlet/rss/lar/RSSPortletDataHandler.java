@@ -209,7 +209,8 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, article);
 
-			portletDataContext.addReferenceElement(articleElement, article);
+			portletDataContext.addReferenceElement(
+				articleElement, article, false);
 		}
 
 		return getExportDataRootElementString(rootElement);
