@@ -119,17 +119,19 @@ public interface PortletDataContext extends Serializable {
 		String className, long classPK, List<RatingsEntry> ratingsEntries);
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel);
+		Element element, ClassedModel classedModel, boolean missing);
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel, Class<?> clazz);
+		Element element, ClassedModel classedModel, Class<?> clazz,
+		boolean missing);
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel, String binPath);
+		Element element, ClassedModel classedModel, String binPath,
+		boolean missing);
 
 	public Element addReferenceElement(
 		Element element, ClassedModel classedModel, String className,
-		String binPath);
+		String binPath, boolean missing);
 
 	public void addZipEntry(String path, byte[] bytes) throws SystemException;
 
@@ -214,6 +216,8 @@ public interface PortletDataContext extends Serializable {
 	public String getLayoutPath(long layoutId);
 
 	public Map<String, Lock> getLocks();
+
+	public Element getMissingReferencesElement();
 
 	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz);
 
@@ -358,6 +362,8 @@ public interface PortletDataContext extends Serializable {
 	public void setGroupId(long groupId);
 
 	public void setImportDataRootElement(Element importDataRootElement);
+
+	public void setMissingReferencesElement(Element missingReferencesElement);
 
 	public void setOldPlid(long oldPlid);
 
