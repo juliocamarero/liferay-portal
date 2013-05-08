@@ -146,8 +146,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	public PortletDataContextImpl(
 			long companyId, long groupId, Map<String, String[]> parameterMap,
-			Set<String> primaryKeys, Date startDate, Date endDate,
-			ZipWriter zipWriter)
+			Date startDate, Date endDate, ZipWriter zipWriter)
 		throws PortletDataException {
 
 		validateDateRange(startDate, endDate);
@@ -167,7 +166,6 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_groupId = groupId;
 		_scopeGroupId = groupId;
 		_parameterMap = parameterMap;
-		_primaryKeys = primaryKeys;
 		_dataStrategy = null;
 		_userIdStrategy = null;
 		_startDate = startDate;
@@ -178,10 +176,37 @@ public class PortletDataContextImpl implements PortletDataContext {
 		initXStream();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #PortletDataContextImpl(long,
+	 *             long, java.util.Map, java.util.Date, java.util.Date,
+	 *             com.liferay.portal.kernel.zip.ZipWriter)}
+	 */
+	public PortletDataContextImpl(
+			long companyId, long groupId, Map<String, String[]> parameterMap,
+			Set<String> primaryKeys, Date startDate, Date endDate,
+			ZipWriter zipWriter)
+		throws PortletDataException {
+
+		this(companyId, groupId, parameterMap, startDate, endDate, zipWriter);
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #PortletDataContextImpl(long,
+	 *             long, java.util.Map,
+	 *             com.liferay.portal.kernel.lar.UserIdStrategy,
+	 *             com.liferay.portal.kernel.zip.ZipReader)}
+	 */
 	public PortletDataContextImpl(
 		long companyId, long groupId, Map<String, String[]> parameterMap,
 		Set<String> primaryKeys, UserIdStrategy userIdStrategy,
 		ZipReader zipReader) {
+
+		this(companyId, groupId, parameterMap, userIdStrategy, zipReader);
+	}
+
+	public PortletDataContextImpl(
+		long companyId, long groupId, Map<String, String[]> parameterMap,
+		UserIdStrategy userIdStrategy, ZipReader zipReader) {
 
 		_companyId = companyId;
 
@@ -198,7 +223,6 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_groupId = groupId;
 		_scopeGroupId = groupId;
 		_parameterMap = parameterMap;
-		_primaryKeys = primaryKeys;
 		_dataStrategy = MapUtil.getString(
 			parameterMap, PortletDataHandlerKeys.DATA_STRATEGY,
 			PortletDataHandlerKeys.DATA_STRATEGY_MIRROR);
@@ -1993,7 +2017,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		new HashMap<String, List<KeyValuePair>>();
 	private long _plid;
 	private PortletDataContextListener _portletDataContextListener;
-	private Set<String> _primaryKeys;
+	private Set<String> _primaryKeys = new HashSet<String>();
 	private boolean _privateLayout;
 	private Map<String, List<RatingsEntry>> _ratingsEntriesMap =
 		new HashMap<String, List<RatingsEntry>>();
