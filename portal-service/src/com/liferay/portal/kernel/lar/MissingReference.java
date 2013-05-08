@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Element;
 
@@ -23,31 +24,33 @@ import com.liferay.portal.kernel.xml.Element;
 public class MissingReference {
 
 	public MissingReference(Element element) {
-		className = element.attributeValue("class-name");
-		referrerClassName = element.attributeValue("referrer");
-		name = element.attributeValue("name");
-		referrerName = element.attributeValue("referrer-name");
+		_className = element.attributeValue("class-name");
+		_displayName = GetterUtil.getString(
+			element.attributeValue("display-name"));
+		_referrerClassName = element.attributeValue("referrer-class-name");
+		_referrerDisplayName = GetterUtil.getString(
+			element.attributeValue("referrer-display-name"));
 	}
 
 	public String getClassName() {
-		return className;
+		return _className;
 	}
 
-	public String getName() {
-		return name;
+	public String getDisplayName() {
+		return _displayName;
 	}
 
 	public String getReferrerClassName() {
-		return referrerClassName;
+		return _referrerClassName;
 	}
 
-	public String getReferrerName() {
-		return referrerName;
+	public String getReferrerDisplayName() {
+		return _referrerDisplayName;
 	}
 
-	private String className;
-	private String name = StringPool.BLANK;
-	private String referrerClassName = StringPool.BLANK;
-	private String referrerName = StringPool.BLANK;
+	private String _className;
+	private String _displayName = StringPool.BLANK;
+	private String _referrerClassName = StringPool.BLANK;
+	private String _referrerDisplayName = StringPool.BLANK;
 
 }

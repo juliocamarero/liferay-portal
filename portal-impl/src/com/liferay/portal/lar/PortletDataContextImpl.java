@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -666,6 +667,22 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 			referenceElement = referencesElement.addElement(
 				"missing-reference");
+
+			referenceElement.addAttribute(
+				"referrer-display-name",
+				StagedModelDataHandlerUtil.getDisplayName(referrerStagedModel));
+
+			if (classedModel instanceof StagedModel) {
+				referenceElement.addAttribute(
+					"display-name",
+					StagedModelDataHandlerUtil.getDisplayName(
+						(StagedModel)classedModel));
+			}
+			else {
+				referenceElement.addAttribute(
+					"display-name",
+					String.valueOf(classedModel.getPrimaryKeyObj()));
+			}
 		}
 
 		referenceElement.addAttribute("class-name", className);
@@ -690,7 +707,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		if (missing) {
 			referenceElement.addAttribute(
-				"referrerClassName", referrerStagedModel.getModelClassName());
+				"referrer-class-name", referrerStagedModel.getModelClassName());
 		}
 
 		return referenceElement;

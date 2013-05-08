@@ -63,7 +63,6 @@ import java.io.File;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -566,8 +565,7 @@ public class ExportImportImpl implements ExportImport {
 
 		PortletDataContext portletDataContext = new PortletDataContextImpl(
 			group.getCompanyId(), groupId, new HashMap<String, String[]>(),
-			new HashSet<String>(), _getUserIdStrategy(user, userIdStrategy),
-			zipReader);
+			_getUserIdStrategy(user, userIdStrategy), zipReader);
 
 		SAXParser saxParser = new SAXParser();
 

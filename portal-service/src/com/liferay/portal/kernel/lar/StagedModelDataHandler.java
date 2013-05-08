@@ -30,7 +30,7 @@ public interface StagedModelDataHandler<T extends StagedModel> {
 
 	public String[] getClassNames();
 
-	public String getName(String uuid, long groupId);
+	public String getDisplayName(T StagedModel);
 
 	public void importStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)

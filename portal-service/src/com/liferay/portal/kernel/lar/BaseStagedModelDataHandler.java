@@ -46,8 +46,8 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 
 	public abstract String[] getClassNames();
 
-	public String getName(String uuid, long groupId) {
-		return uuid;
+	public String getDisplayName(T stagedModel) {
+		return stagedModel.getUuid();
 	}
 
 	public void importStagedModel(
