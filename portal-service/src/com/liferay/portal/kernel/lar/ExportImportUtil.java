@@ -17,6 +17,11 @@ package com.liferay.portal.kernel.lar;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.xml.Element;
 
+import java.io.File;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Zsolt Berentey
  */
@@ -94,6 +99,15 @@ public class ExportImportUtil {
 
 		return getExportImport().importLinksToLayouts(
 			portletDataContext, content);
+	}
+
+	public static List<MissingReference> validateMissingReferences(
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
+		throws Exception {
+
+		return getExportImport().validateMissingReferences(
+			userId, groupId, parameterMap, file);
 	}
 
 	public void setExportImport(ExportImport exportImport) {

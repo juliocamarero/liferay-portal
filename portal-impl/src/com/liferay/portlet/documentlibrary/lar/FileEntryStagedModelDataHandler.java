@@ -52,6 +52,7 @@ import com.liferay.portlet.documentlibrary.service.DLFileEntryMetadataLocalServi
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryTypeUtil;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryUtil;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFileRankUtil;
 import com.liferay.portlet.documentlibrary.util.DLProcessorRegistryUtil;
 import com.liferay.portlet.documentlibrary.util.DLProcessorThreadLocal;
@@ -505,6 +506,23 @@ public class FileEntryStagedModelDataHandler
 
 		fileEntryIds.put(
 			fileEntry.getFileEntryId(), importedFileEntry.getFileEntryId());
+	}
+
+	@Override
+	protected boolean doValidateMissingReference(String uuid, long groupId) {
+		try {
+			DLFileEntry dlFileEntry = DLFileEntryUtil.fetchByUUID_G(
+				uuid, groupId);
+
+			if (dlFileEntry == null) {
+				return false;
+			}
+		}
+		catch (Exception e) {
+			return false;
+		}
+
+		return true;
 	}
 
 	protected void exportMetaData(

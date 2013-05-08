@@ -14,11 +14,14 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.StagedModel;
 
 /**
  * @author Mate Thurzo
  * @author Daniel Kocsis
+ * @author Zsolt Berentey
  */
 public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	implements StagedModelDataHandler<T> {
@@ -43,6 +46,10 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 
 	public abstract String[] getClassNames();
 
+	public String getName(String uuid, long groupId) {
+		return uuid;
+	}
+
 	public void importStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
@@ -61,6 +68,23 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 		}
 	}
 
+	public boolean validateReference(
+		Element rootElement, Element referenceElement) {
+
+		String elementName = referenceElement.getName();
+
+		if (elementName.equals("missing-reference")) {
+			long groupId = GetterUtil.getLong(
+				referenceElement.attributeValue("group-id"));
+
+			String uuid = referenceElement.attributeValue("uuid");
+
+			return doValidateMissingReference(uuid, groupId);
+		}
+
+		return true;
+	}
+
 	protected abstract void doExportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
@@ -68,5 +92,9 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	protected abstract void doImportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
+
+	protected boolean doValidateMissingReference(String uuid, long groupId) {
+		return true;
+	}
 
 }
