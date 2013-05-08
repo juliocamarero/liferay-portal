@@ -603,7 +603,7 @@ public class ExportImportImpl implements ExportImport {
 
 		if (content.startsWith("/documents/", beginPos)) {
 			legacyURL = false;
-			stopChars = _DL_REFFERENCE_STOP_CHARS;
+			stopChars = _DL_REFERENCE_STOP_CHARS;
 		}
 
 		endPos = StringUtil.indexOfAny(content, stopChars, beginPos, endPos);
@@ -761,7 +761,7 @@ public class ExportImportImpl implements ExportImport {
 		CharPool.PIPE, CharPool.QUOTE, CharPool.SPACE
 	};
 
-	private static final char[] _DL_REFFERENCE_STOP_CHARS = {
+	private static final char[] _DL_REFERENCE_STOP_CHARS = {
 		CharPool.APOSTROPHE, CharPool.CLOSE_BRACKET, CharPool.CLOSE_CURLY_BRACE,
 		CharPool.CLOSE_PARENTHESIS, CharPool.GREATER_THAN, CharPool.LESS_THAN,
 		CharPool.PIPE, CharPool.QUESTION, CharPool.QUOTE, CharPool.SPACE
