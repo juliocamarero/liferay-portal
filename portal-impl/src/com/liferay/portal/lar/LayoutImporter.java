@@ -316,8 +316,7 @@ public class LayoutImporter {
 		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
 		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			companyId, groupId, parameterMap, new HashSet<String>(), strategy,
-			zipReader);
+			companyId, groupId, parameterMap, strategy, zipReader);
 
 		portletDataContext.setPortetDataContextListener(
 			new PortletDataContextListenerImpl(portletDataContext));
@@ -341,6 +340,12 @@ public class LayoutImporter {
 			Document document = SAXReaderUtil.read(xml);
 
 			rootElement = document.getRootElement();
+
+			Element missingReferencesElement = rootElement.element(
+				"missing-references");
+
+			portletDataContext.setMissingReferencesElement(
+				missingReferencesElement);
 		}
 		catch (Exception e) {
 			throw new LARFileException(e);
