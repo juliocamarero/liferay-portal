@@ -277,6 +277,11 @@ public class AssetLinkExportImportTest extends BasePortletExportImportTestCase {
 					continue;
 				}
 
+				Assert.assertEquals(
+					originalLink.getWeight(), importedLink.getWeight());
+				Assert.assertEquals(
+					originalLink.getType(), importedLink.getType());
+
 				iterator.remove();
 
 				break;
