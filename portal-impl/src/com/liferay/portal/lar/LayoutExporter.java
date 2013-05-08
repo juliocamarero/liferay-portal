@@ -652,7 +652,7 @@ public class LayoutExporter {
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, article);
 
-		portletDataContext.addReferenceElement(layoutElement, article);
+		portletDataContext.addReferenceElement(layoutElement, article, false);
 	}
 
 	protected void exportLayout(

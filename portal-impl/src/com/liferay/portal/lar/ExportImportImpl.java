@@ -313,7 +313,7 @@ public class ExportImportImpl implements ExportImport {
 					portletDataContext, fileEntry);
 
 				portletDataContext.addReferenceElement(
-					entityElement, fileEntry, FileEntry.class);
+					entityElement, fileEntry, FileEntry.class, true);
 
 				String path = ExportImportPathUtil.getModelPath(
 					fileEntry.getGroupId(), FileEntry.class.getName(),
