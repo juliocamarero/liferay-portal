@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
-import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -40,7 +39,6 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ColorSchemeFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -102,7 +100,6 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.sites.util.Sites;
 import com.liferay.portlet.sites.util.SitesUtil;
@@ -819,96 +816,11 @@ public class LayoutImporter {
 		zipReader.close();
 	}
 
-	protected void fixTypeSettings(Layout layout) throws Exception {
-		if (!layout.isTypeURL()) {
-			return;
-		}
-
-		UnicodeProperties typeSettings = layout.getTypeSettingsProperties();
-
-		String url = GetterUtil.getString(typeSettings.getProperty("url"));
-
-		String friendlyURLPrivateGroupPath =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-		String friendlyURLPrivateUserPath =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
-		String friendlyURLPublicPath =
-			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
-
-		if (!url.startsWith(friendlyURLPrivateGroupPath) &&
-			!url.startsWith(friendlyURLPrivateUserPath) &&
-			!url.startsWith(friendlyURLPublicPath)) {
-
-			return;
-		}
-
-		int x = url.indexOf(CharPool.SLASH, 1);
-
-		if (x == -1) {
-			return;
-		}
-
-		int y = url.indexOf(CharPool.SLASH, x + 1);
-
-		if (y == -1) {
-			return;
-		}
-
-		String friendlyURL = url.substring(x, y);
-
-		if (!friendlyURL.equals(LayoutExporter.SAME_GROUP_FRIENDLY_URL)) {
-			return;
-		}
-
-		Group group = layout.getGroup();
-
-		typeSettings.setProperty(
-			"url",
-			url.substring(0, x) + group.getFriendlyURL() + url.substring(y));
-	}
-
 	protected String getLayoutSetPrototypePath(
 		PortletDataContext portletDataContext, String layoutSetPrototypeUuid) {
 
 		return ExportImportPathUtil.getSourceRootPath(portletDataContext) +
 			"/layout-set-prototype/" + layoutSetPrototypeUuid;
-	}
-
-	protected void importJournalArticle(
-			PortletDataContext portletDataContext, Layout layout,
-			Element layoutElement)
-		throws Exception {
-
-		UnicodeProperties typeSettingsProperties =
-			layout.getTypeSettingsProperties();
-
-		String articleId = typeSettingsProperties.getProperty(
-			"article-id", StringPool.BLANK);
-
-		if (Validator.isNull(articleId)) {
-			return;
-		}
-
-		List<Element> referenceDataElements =
-			portletDataContext.getReferenceDataElements(
-				layoutElement, JournalArticle.class);
-
-		if (!referenceDataElements.isEmpty()) {
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, referenceDataElements.get(0));
-		}
-
-		Map<String, String> articleIds =
-			(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
-				JournalArticle.class + ".articleId");
-
-		articleId = MapUtil.getString(articleIds, articleId, articleId);
-
-		typeSettingsProperties.setProperty("article-id", articleId);
-
-		JournalContentSearchLocalServiceUtil.updateContentSearch(
-			portletDataContext.getScopeGroupId(), layout.isPrivateLayout(),
-			layout.getLayoutId(), StringPool.BLANK, articleId, true);
 	}
 
 	protected void importLayout(
@@ -1546,30 +1458,6 @@ public class LayoutImporter {
 		_layoutsElement = _rootElement.element("layouts");
 
 		_layoutElements = _layoutsElement.elements("layout");
-	}
-
-	protected void updateTypeSettings(Layout importedLayout, Layout layout)
-		throws PortalException, SystemException {
-
-		LayoutTypePortlet importedLayoutType =
-			(LayoutTypePortlet)importedLayout.getLayoutType();
-
-		List<String> importedPortletIds = importedLayoutType.getPortletIds();
-
-		LayoutTypePortlet layoutType =
-			(LayoutTypePortlet)layout.getLayoutType();
-
-		importedPortletIds.removeAll(layoutType.getPortletIds());
-
-		if (!importedPortletIds.isEmpty()) {
-			PortletLocalServiceUtil.deletePortlets(
-				importedLayout.getCompanyId(),
-				importedPortletIds.toArray(
-					new String[importedPortletIds.size()]),
-				importedLayout.getPlid());
-		}
-
-		importedLayout.setTypeSettings(layout.getTypeSettings());
 	}
 
 	protected void validateFile(PortletDataContext portletDataContext)

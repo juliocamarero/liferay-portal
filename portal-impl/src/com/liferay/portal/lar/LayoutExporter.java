@@ -21,12 +21,10 @@ import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
-import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.staging.LayoutStagingUtil;
-import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -39,7 +37,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -74,15 +71,11 @@ import com.liferay.portal.service.persistence.LayoutRevisionUtil;
 import com.liferay.portal.theme.ThemeLoader;
 import com.liferay.portal.theme.ThemeLoaderFactory;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetCategoryUtil;
-import com.liferay.portlet.journal.NoSuchArticleException;
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.util.ContentUtil;
 
 import java.io.File;
@@ -602,53 +595,6 @@ public class LayoutExporter {
 			document.formattedString());
 	}
 
-	protected void exportJournalArticle(
-			PortletDataContext portletDataContext, Layout layout,
-			Element layoutElement)
-		throws Exception {
-
-		UnicodeProperties typeSettingsProperties =
-			layout.getTypeSettingsProperties();
-
-		String articleId = typeSettingsProperties.getProperty(
-			"article-id", StringPool.BLANK);
-
-		long articleGroupId = layout.getGroupId();
-
-		if (Validator.isNull(articleId)) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"No article id found in typeSettings of layout " +
-						layout.getPlid());
-			}
-		}
-
-		JournalArticle article = null;
-
-		try {
-			article = JournalArticleLocalServiceUtil.getLatestArticle(
-				articleGroupId, articleId, WorkflowConstants.STATUS_APPROVED);
-		}
-		catch (NoSuchArticleException nsae) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"No approved article found with group id " +
-						articleGroupId + " and article id " + articleId);
-			}
-		}
-
-		if (article == null) {
-			return;
-		}
-
-		portletDataContext.setExportDataRootElement(layoutElement.getParent());
-
-		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext, article);
-
-		portletDataContext.addReferenceElement(layoutElement, article);
-	}
-
 	protected void exportLayout(
 			PortletDataContext portletDataContext,
 			Portlet layoutConfigurationPortlet, LayoutCache layoutCache,
@@ -998,53 +944,6 @@ public class LayoutExporter {
 					FileUtil.getBytes(file));
 			}
 		}
-	}
-
-	protected void fixTypeSettings(Layout layout) throws Exception {
-		if (!layout.isTypeURL()) {
-			return;
-		}
-
-		UnicodeProperties typeSettings = layout.getTypeSettingsProperties();
-
-		String url = GetterUtil.getString(typeSettings.getProperty("url"));
-
-		String friendlyURLPrivateGroupPath =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-		String friendlyURLPrivateUserPath =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
-		String friendlyURLPublicPath =
-			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
-
-		if (!url.startsWith(friendlyURLPrivateGroupPath) &&
-			!url.startsWith(friendlyURLPrivateUserPath) &&
-			!url.startsWith(friendlyURLPublicPath)) {
-
-			return;
-		}
-
-		int x = url.indexOf(CharPool.SLASH, 1);
-
-		if (x == -1) {
-			return;
-		}
-
-		int y = url.indexOf(CharPool.SLASH, x + 1);
-
-		if (y == -1) {
-			return;
-		}
-
-		String friendlyURL = url.substring(x, y);
-		String groupFriendlyURL = layout.getGroup().getFriendlyURL();
-
-		if (!friendlyURL.equals(groupFriendlyURL)) {
-			return;
-		}
-
-		typeSettings.setProperty(
-			"url",
-			url.substring(0, x) + SAME_GROUP_FRIENDLY_URL + url.substring(y));
 	}
 
 	protected boolean[] getExportPortletControls(
