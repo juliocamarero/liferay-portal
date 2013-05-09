@@ -66,8 +66,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.dynamicdatalist",
-			portletDataContext.getScopeGroupId());
+			RESOURCE_NAME, portletDataContext.getScopeGroupId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -104,8 +103,7 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.dynamicdatalist",
-			portletDataContext.getSourceGroupId(),
+			RESOURCE_NAME, portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
 		Element recordSetsElement =
@@ -120,5 +118,8 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 
 		return portletPreferences;
 	}
+
+	protected static final String RESOURCE_NAME =
+		"com.liferay.portlet.dynamicdatalist";
 
 }
