@@ -129,8 +129,6 @@ public class LayoutStagedModelDataHandler
 			PortletDataContext portletDataContext, Layout layout)
 		throws Exception {
 
-		_permissionExporter = new PermissionExporter();
-
 		LayoutRevision layoutRevision = null;
 
 		ServiceContext serviceContext =
@@ -296,8 +294,6 @@ public class LayoutStagedModelDataHandler
 	protected void doImportStagedModel(
 			PortletDataContext portletDataContext, Layout layout)
 		throws Exception {
-
-		_permissionImporter = new PermissionImporter();
 
 		long groupId = portletDataContext.getGroupId();
 		long userId = portletDataContext.getUserId(layout.getUserUuid());
@@ -978,7 +974,7 @@ public class LayoutStagedModelDataHandler
 	private static Log _log = LogFactoryUtil.getLog(
 		LayoutStagedModelDataHandler.class);
 
-	private PermissionExporter _permissionExporter;
-	private PermissionImporter _permissionImporter;
+	private PermissionExporter _permissionExporter = new PermissionExporter();
+	private PermissionImporter _permissionImporter = new PermissionImporter();
 
 }
