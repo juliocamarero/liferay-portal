@@ -130,7 +130,6 @@ public class LayoutStagedModelDataHandler
 		throws Exception {
 
 		_permissionExporter = new PermissionExporter();
-		_portletExporter = new PortletExporter();
 
 		LayoutRevision layoutRevision = null;
 
@@ -238,14 +237,6 @@ public class LayoutStagedModelDataHandler
 			}
 		}
 
-		Portlet layoutConfigurationPortlet =
-			PortletLocalServiceUtil.getPortletById(
-				portletDataContext.getCompanyId(), PortletKeys.DOCKBAR);
-
-		_portletExporter.exportPortletData(
-			portletDataContext, layoutConfigurationPortlet, layout, null,
-			layoutElement);
-
 		// Layout permissions
 
 		boolean exportPermissions = MapUtil.getBoolean(
@@ -307,7 +298,6 @@ public class LayoutStagedModelDataHandler
 		throws Exception {
 
 		_permissionImporter = new PermissionImporter();
-		_portletImporter = new PortletImporter();
 
 		long groupId = portletDataContext.getGroupId();
 		long userId = portletDataContext.getUserId(layout.getUserUuid());
@@ -729,9 +719,6 @@ public class LayoutStagedModelDataHandler
 				ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey,
 				guestRole.getRoleId(), new String[]{ActionKeys.VIEW});
 		}
-
-		_portletImporter.importPortletData(
-			portletDataContext, PortletKeys.DOCKBAR, null, layoutElement);
 	}
 
 	protected void exportJournalArticle(
@@ -993,7 +980,5 @@ public class LayoutStagedModelDataHandler
 
 	private PermissionExporter _permissionExporter;
 	private PermissionImporter _permissionImporter;
-	private PortletExporter _portletExporter;
-	private PortletImporter _portletImporter;
 
 }
