@@ -67,28 +67,15 @@ AUI.add(
 						var instance = this;
 
 						var region = instance.get('host').get('region');
-						var midpoint = region.top + (region.height / 2);
-						var top = 0;
-
-						var dockbar = instance._dockbar;
-						var body = instance._body;
-
-						if (dockbar) {
-							var dockbarHeight = dockbar.get('offsetHeight');
-
-							top = dockbarHeight;
-							midpoint -= dockbarHeight;
-						}
 
 						instance.get('clone').setStyles(
 							{
 								left: region.left + 'px',
-								top: top + 'px',
 								width: region.width + 'px'
 							}
 						);
 
-						instance.set('hostMidpoint', midpoint);
+						instance.set('hostMidpoint', region.top + (region.height / 2));
 					},
 
 					_onScroll: function(event) {
