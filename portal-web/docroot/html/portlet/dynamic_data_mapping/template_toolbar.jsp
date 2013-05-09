@@ -106,11 +106,16 @@ long classPK = ParamUtil.getLong(request, "classPK");
 							addPortletDisplayTemplateURL.setParameter("ddmResource", templateHandler.getResourceName());
 						%>
 
-							<aui:nav-item href="<%= addPortletDisplayTemplateURL.toString() %>" label="<%= templateHandler.getName(locale) %>" />
+							<aui:nav-item
+								href="<%= addPortletDisplayTemplateURL.toString() %>"
+								iconClass="icon-list-alt"
+								label="<%= templateHandler.getName(locale) %>"
+							/>
 
 						<%
 						}
 						%>
+
 					</aui:nav-item>
 
 					<%

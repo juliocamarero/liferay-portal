@@ -38,8 +38,6 @@ import javax.servlet.jsp.JspException;
  */
 public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 
-	public static final String DEFAULT_TOTAL_VAR = "total";
-
 	public static final String DEFAULT_VAR = "searchContainer";
 
 	@Override
@@ -127,7 +125,6 @@ public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 			}
 
 			pageContext.setAttribute(_var, _searchContainer);
-			pageContext.setAttribute(_totalVar, 0);
 
 			return EVAL_BODY_INCLUDE;
 		}
@@ -319,7 +316,6 @@ public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 	private SearchContainer<R> _searchContainer;
 	private DisplayTerms _searchTerms;
 	private int _total;
-	private String _totalVar = DEFAULT_TOTAL_VAR;
 	private String _var = DEFAULT_VAR;
 
 }
