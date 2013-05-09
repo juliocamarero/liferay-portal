@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
@@ -41,10 +42,10 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLPermission;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryActionableDynamicQuery;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryTypeActionableDynamicQuery;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileShortcutActionableDynamicQuery;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFolderActionableDynamicQuery;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryExportActionableDynamicQuery;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryTypeExportActionableDynamicQuery;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFileShortcutExportActionableDynamicQuery;
+import com.liferay.portlet.documentlibrary.service.persistence.DLFolderExportActionableDynamicQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ import javax.portlet.PortletPreferences;
  * @author Raymond Augé
  * @author Sampsa Sohlman
  * @author Mate Thurzo
+ * @author Zsolt Berentey
  */
 public class DLPortletDataHandler extends BasePortletDataHandler {
 
@@ -122,97 +124,18 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				"root-folder-id", String.valueOf(rootFolderId));
 		}
 
-		final Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
-			portletDataContext.getCompanyId());
-
 		ActionableDynamicQuery fileEntryTypeActionableDynamicQuery =
-			new DLFileEntryTypeActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-
-				Property property = PropertyFactoryUtil.forName("groupId");
-
-				dynamicQuery.add(
-					property.in(
-						new Long[] {
-							portletDataContext.getScopeGroupId(),
-							companyGroup.getGroupId()
-						}));
-			}
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				DLFileEntryType fileEntryType = (DLFileEntryType)object;
-
-				if (fileEntryType.isExportable()) {
-					StagedModelDataHandlerUtil.exportStagedModel(
-						portletDataContext, fileEntryType);
-				}
-			}
-
-		};
+			_getFileEntryTypeQuery(portletDataContext);
 
 		fileEntryTypeActionableDynamicQuery.performActions();
 
-		ActionableDynamicQuery folderActionableDynamicQuery =
-			new DLFolderActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-			}
-
-			@Override
-			protected void performAction(Object object)
-				throws PortalException, SystemException {
-
-				DLFolder dlFolder = (DLFolder)object;
-
-				Folder folder = DLAppLocalServiceUtil.getFolder(
-					dlFolder.getFolderId());
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, folder);
-			}
-
-		};
-
-		folderActionableDynamicQuery.setGroupId(
-			portletDataContext.getScopeGroupId());
+		ActionableDynamicQuery folderActionableDynamicQuery = _getFolderQuery(
+			portletDataContext);
 
 		folderActionableDynamicQuery.performActions();
 
 		ActionableDynamicQuery fileEntryActionableDynamicQuery =
-			new DLFileEntryActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-			}
-
-			@Override
-			protected void performAction(Object object)
-				throws PortalException, SystemException {
-
-				DLFileEntry dlFileEntry = (DLFileEntry)object;
-
-				FileEntry fileEntry =
-					DLAppLocalServiceUtil.getFileEntry(
-						dlFileEntry.getFileEntryId());
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, fileEntry);
-			}
-
-		};
-
-		fileEntryActionableDynamicQuery.setGroupId(
-			portletDataContext.getScopeGroupId());
+			_getFileEntryQuery(portletDataContext);
 
 		fileEntryActionableDynamicQuery.performActions();
 
@@ -221,30 +144,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		ActionableDynamicQuery fileShortcutActionableDynamicQuery =
-			new DLFileShortcutActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-
-				Property property = PropertyFactoryUtil.forName("active");
-
-				dynamicQuery.add(property.eq(Boolean.TRUE));
-			}
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				DLFileShortcut fileShortcut = (DLFileShortcut)object;
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, fileShortcut);
-			}
-
-		};
-
-		fileShortcutActionableDynamicQuery.setGroupId(
-			portletDataContext.getScopeGroupId());
+			_getFileShortcutQuery(portletDataContext);
 
 		fileShortcutActionableDynamicQuery.performActions();
 
@@ -335,6 +235,136 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected void doPrepareManifestSummary(
+			final PortletDataContext portletDataContext)
+		throws Exception {
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		ActionableDynamicQuery folderActionableDynamicQuery = _getFolderQuery(
+			portletDataContext);
+
+		long folderCount = folderActionableDynamicQuery.performCount();
+
+		manifestSummary.addModelCount(Folder.class, folderCount);
+
+		ActionableDynamicQuery fileEntryActionableDynamicQuery =
+			_getFileEntryQuery(portletDataContext);
+
+		long entryCount = fileEntryActionableDynamicQuery.performCount();
+
+		manifestSummary.addModelCount(FileEntry.class, entryCount);
+
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {
+			ActionableDynamicQuery fileShortcutActionableDynamicQuery =
+				_getFileShortcutQuery(portletDataContext);
+
+			long shortcutCount =
+				fileShortcutActionableDynamicQuery.performCount();
+
+			manifestSummary.addModelCount(DLFileShortcut.class, shortcutCount);
+		}
+	}
+
+	private ActionableDynamicQuery _getFileEntryQuery(
+			final PortletDataContext portletDataContext)
+		throws Exception {
+
+		return new DLFileEntryExportActionableDynamicQuery(portletDataContext) {
+
+			@Override
+			protected void performAction(Object object)
+				throws PortalException, SystemException {
+
+				DLFileEntry dlFileEntry = (DLFileEntry)object;
+
+				FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
+					dlFileEntry.getFileEntryId());
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, fileEntry);
+			}
+		};
+	}
+
+	private ActionableDynamicQuery _getFileEntryTypeQuery(
+			final PortletDataContext portletDataContext)
+		throws Exception {
+
+		final Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+			portletDataContext.getCompanyId());
+
+		return new DLFileEntryTypeExportActionableDynamicQuery(
+			portletDataContext) {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				super.addCriteria(dynamicQuery);
+
+				Property property = PropertyFactoryUtil.forName("groupId");
+
+				dynamicQuery.add(
+					property.in(
+						new Long[] {
+							portletDataContext.getScopeGroupId(),
+							companyGroup.getGroupId()
+						}));
+			}
+
+			@Override
+			protected void performAction(Object object) throws PortalException {
+				DLFileEntryType fileEntryType = (DLFileEntryType)object;
+
+				if (fileEntryType.isExportable()) {
+					StagedModelDataHandlerUtil.exportStagedModel(
+						portletDataContext, fileEntryType);
+				}
+			}
+		};
+	}
+
+	private ActionableDynamicQuery _getFileShortcutQuery(
+			final PortletDataContext portletDataContext)
+		throws Exception {
+
+		return new DLFileShortcutExportActionableDynamicQuery(
+			portletDataContext) {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
+
+				Property property = PropertyFactoryUtil.forName("active");
+
+				dynamicQuery.add(property.eq(Boolean.TRUE));
+			}
+		};
+	}
+
+	private ActionableDynamicQuery _getFolderQuery(
+			final PortletDataContext portletDataContext)
+		throws Exception {
+
+		return new DLFolderExportActionableDynamicQuery(portletDataContext) {
+
+			@Override
+			protected void performAction(Object object)
+				throws PortalException, SystemException {
+
+				DLFolder dlFolder = (DLFolder)object;
+
+				Folder folder = DLAppLocalServiceUtil.getFolder(
+					dlFolder.getFolderId());
+
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, folder);
+			}
+		};
 	}
 
 }
