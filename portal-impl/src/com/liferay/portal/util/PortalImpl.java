@@ -6378,7 +6378,15 @@ public class PortalImpl implements Portal {
 			else {
 				Layout curLayout = themeDisplay.getLayout();
 
-				LayoutSet curLayoutSet = curLayout.getLayoutSet();
+				LayoutSet curLayoutSet;
+
+				if (themeDisplay.getDoAsGroupId() > 0) {
+					curLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+						themeDisplay.getDoAsGroupId(), privateLayoutSet);
+				}
+				else {
+					curLayoutSet = curLayout.getLayoutSet();
+				}
 
 				if (canonicalURL ||
 					((layoutSet.getLayoutSetId() !=
