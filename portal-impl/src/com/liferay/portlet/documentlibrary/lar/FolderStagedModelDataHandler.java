@@ -62,6 +62,11 @@ public class FolderStagedModelDataHandler
 	}
 
 	@Override
+	public String getDisplayName(Folder folder) {
+		return folder.getName();
+	}
+
+	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, Folder folder)
 		throws Exception {
