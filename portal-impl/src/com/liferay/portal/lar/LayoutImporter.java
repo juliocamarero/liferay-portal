@@ -166,8 +166,7 @@ public class LayoutImporter {
 		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
 		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			layoutSet.getCompanyId(), groupId, parameterMap,
-			new HashSet<String>(), null, zipReader);
+			layoutSet.getCompanyId(), groupId, parameterMap, null, zipReader);
 
 		validateFile(portletDataContext);
 	}
