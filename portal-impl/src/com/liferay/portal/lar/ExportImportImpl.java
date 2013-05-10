@@ -14,12 +14,19 @@
 
 package com.liferay.portal.lar;
 
+import com.liferay.portal.LARFileException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ExportImport;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
+import com.liferay.portal.kernel.lar.ManifestSummary;
+import com.liferay.portal.kernel.lar.MissingReference;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.StagedModelDataHandler;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -32,12 +39,19 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.ElementHandler;
+import com.liferay.portal.kernel.xml.ElementProcessor;
+import com.liferay.portal.kernel.zip.ZipReader;
+import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -48,12 +62,19 @@ import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 
+import java.io.File;
+import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.xerces.parsers.SAXParser;
+
+import org.xml.sax.InputSource;
 
 /**
  * @author Zsolt Berentey
@@ -333,6 +354,52 @@ public class ExportImportImpl implements ExportImport {
 		return content;
 	}
 
+	public ManifestSummary getManifestSummary(
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
+		throws Exception {
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		String userIdStrategy = MapUtil.getString(
+			parameterMap, PortletDataHandlerKeys.USER_ID_STRATEGY);
+
+		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
+
+		PortletDataContext portletDataContext = new PortletDataContextImpl(
+			group.getCompanyId(), groupId, parameterMap,
+			getUserIdStrategy(userId, userIdStrategy), zipReader);
+
+		final ManifestSummary manifestSummary = new ManifestSummary();
+
+		ElementHandler elementHandler = new ElementHandler(
+			new ElementProcessor() {
+
+				@Override
+				public void processElement(Element element) {
+					String className = element.attributeValue("class-name");
+					long count = GetterUtil.getLong(element.getText());
+
+					manifestSummary.addModelCount(className, count);
+				}
+			}, new String[] {"staged-model"});
+
+		SAXParser saxParser = new SAXParser();
+
+		saxParser.setContentHandler(elementHandler);
+
+		InputStream is = portletDataContext.getZipEntryAsInputStream(
+			"/manifest.xml");
+
+		if (is == null) {
+			throw new LARFileException("manifest.xml not found in the LAR");
+		}
+
+		saxParser.parse(new InputSource(is));
+
+		return manifestSummary;
+	}
+
 	public String importContentReferences(
 			PortletDataContext portletDataContext, Element entityElement,
 			String content)
@@ -529,6 +596,68 @@ public class ExportImportImpl implements ExportImport {
 		return content;
 	}
 
+	public List<MissingReference> validateMissingReferences(
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
+		throws Exception {
+
+		final List<MissingReference> missingReferences =
+			new ArrayList<MissingReference>();
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		String userIdStrategy = MapUtil.getString(
+			parameterMap, PortletDataHandlerKeys.USER_ID_STRATEGY);
+		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
+
+		PortletDataContext portletDataContext = new PortletDataContextImpl(
+			group.getCompanyId(), groupId, new HashMap<String, String[]>(),
+			getUserIdStrategy(userId, userIdStrategy), zipReader);
+
+		SAXParser saxParser = new SAXParser();
+
+		ElementHandler elementHandler = new ElementHandler(
+			new ElementProcessor() {
+
+				@Override
+				public void processElement(Element element) {
+					MissingReference missingReference =
+						validateMissingReference(element);
+
+					if (missingReference != null) {
+						missingReferences.add(missingReference);
+					}
+				}
+
+			},
+			new String[] {"missing-reference"});
+
+		saxParser.setContentHandler(elementHandler);
+
+		saxParser.parse(
+			new InputSource(
+				portletDataContext.getZipEntryAsInputStream("/manifest.xml")));
+
+		return missingReferences;
+	}
+
+	public void writeManifestSummary(
+		Document document, ManifestSummary manifestSummary) {
+
+		Element rootElement = document.getRootElement();
+
+		Element summaryElement = rootElement.addElement("summary");
+
+		Map<String, Long> modelCountMap = manifestSummary.getModelCounters();
+
+		for (String modelClassName : modelCountMap.keySet()) {
+			Element element = summaryElement.addElement("staged-model");
+
+			element.addAttribute("class-name", modelClassName);
+
+			element.addText(String.valueOf(modelCountMap.get(modelClassName)));
+		}
+	}
+
 	protected Map<String, String[]> getDLReferenceParameters(
 		PortletDataContext portletDataContext, String content, int beginPos,
 		int endPos) {
@@ -538,7 +667,7 @@ public class ExportImportImpl implements ExportImport {
 
 		if (content.startsWith("/documents/", beginPos)) {
 			legacyURL = false;
-			stopChars = _DL_REFFERENCE_STOP_CHARS;
+			stopChars = _DL_REFERENCE_STOP_CHARS;
 		}
 
 		endPos = StringUtil.indexOfAny(content, stopChars, beginPos, endPos);
@@ -664,13 +793,42 @@ public class ExportImportImpl implements ExportImport {
 		return fileEntry;
 	}
 
+	protected UserIdStrategy getUserIdStrategy(
+			long userId, String userIdStrategy)
+		throws Exception {
+
+		User user = UserLocalServiceUtil.getUserById(userId);
+
+		if (UserIdStrategy.ALWAYS_CURRENT_USER_ID.equals(userIdStrategy)) {
+			return new AlwaysCurrentUserIdStrategy(user);
+		}
+
+		return new CurrentUserIdStrategy(user);
+	}
+
+	protected MissingReference validateMissingReference(Element element) {
+		String className = element.attributeValue("class-name");
+
+		StagedModelDataHandler<?> stagedModelDataHandler =
+			StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
+				className);
+
+		if (!stagedModelDataHandler.validateReference(
+				element.getParent(), element)) {
+
+			return new MissingReference(element);
+		}
+
+		return null;
+	}
+
 	private static final char[] _DL_REFERENCE_LEGACY_STOP_CHARS = {
 		CharPool.APOSTROPHE, CharPool.CLOSE_BRACKET, CharPool.CLOSE_CURLY_BRACE,
 		CharPool.CLOSE_PARENTHESIS, CharPool.GREATER_THAN, CharPool.LESS_THAN,
 		CharPool.PIPE, CharPool.QUOTE, CharPool.SPACE
 	};
 
-	private static final char[] _DL_REFFERENCE_STOP_CHARS = {
+	private static final char[] _DL_REFERENCE_STOP_CHARS = {
 		CharPool.APOSTROPHE, CharPool.CLOSE_BRACKET, CharPool.CLOSE_CURLY_BRACE,
 		CharPool.CLOSE_PARENTHESIS, CharPool.GREATER_THAN, CharPool.LESS_THAN,
 		CharPool.PIPE, CharPool.QUESTION, CharPool.QUOTE, CharPool.SPACE

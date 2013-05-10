@@ -55,6 +55,11 @@ public class DDMTemplateStagedModelDataHandler
 		return CLASS_NAMES;
 	}
 
+	@Override
+	public String getDisplayName(DDMTemplate template) {
+		return template.getNameCurrentValue();
+	}
+
 	protected DDMTemplate addTemplate(
 			long userId, long groupId, DDMTemplate template, long classPK,
 			File smallFile, ServiceContext serviceContext)

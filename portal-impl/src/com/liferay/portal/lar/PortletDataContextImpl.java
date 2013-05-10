@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -293,28 +294,9 @@ public class PortletDataContextImpl implements PortletDataContext {
 		for (Map.Entry<Integer, List<AssetLink>> entry :
 				assetLinksMap.entrySet()) {
 
-			int assetLinkType = entry.getKey();
-			List<AssetLink> assetLinks = entry.getValue();
-
-			List<String> assetLinkUuids = new ArrayList<String>(
-				directAssetLinks.size());
-
-			for (AssetLink assetLink : assetLinks) {
-				try {
-					AssetEntry assetLinkEntry =
-						AssetEntryLocalServiceUtil.getEntry(
-							assetLink.getEntryId2());
-
-					assetLinkUuids.add(assetLinkEntry.getClassUuid());
-				}
-				catch (NoSuchEntryException nsee) {
-				}
-			}
-
-			_assetLinkUuidsMap.put(
-				getPrimaryKeyString(
-					assetEntry.getClassUuid(), String.valueOf(assetLinkType)),
-				assetLinkUuids.toArray(new String[assetLinkUuids.size()]));
+			_assetLinksMap.put(
+				getPrimaryKeyString(assetEntry.getClassUuid(), entry.getKey()),
+				entry.getValue());
 		}
 	}
 
@@ -685,6 +667,22 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 			referenceElement = referencesElement.addElement(
 				"missing-reference");
+
+			if (classedModel instanceof StagedModel) {
+				referenceElement.addAttribute(
+					"display-name",
+					StagedModelDataHandlerUtil.getDisplayName(
+						(StagedModel)classedModel));
+			}
+			else {
+				referenceElement.addAttribute(
+					"display-name",
+					String.valueOf(classedModel.getPrimaryKeyObj()));
+			}
+
+			referenceElement.addAttribute(
+				"referrer-display-name",
+				StagedModelDataHandlerUtil.getDisplayName(referrerStagedModel));
 		}
 
 		referenceElement.addAttribute("class-name", className);
@@ -709,7 +707,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		if (missing) {
 			referenceElement.addAttribute(
-				"referrerClassName", referrerStagedModel.getModelClassName());
+				"referrer-class-name", referrerStagedModel.getModelClassName());
 		}
 
 		return referenceElement;
@@ -845,8 +843,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _assetCategoryUuidsMap;
 	}
 
-	public Map<String, String[]> getAssetLinkUuidsMap() {
-		return _assetLinkUuidsMap;
+	public Map<String, List<AssetLink>> getAssetLinksMap() {
+		return _assetLinksMap;
 	}
 
 	public String[] getAssetTagNames(Class<?> clazz, long classPK) {
@@ -1993,8 +1991,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 		new HashMap<String, long[]>();
 	private Map<String, String[]> _assetCategoryUuidsMap =
 		new HashMap<String, String[]>();
-	private Map<String, String[]> _assetLinkUuidsMap =
-		new HashMap<String, String[]>();
+	private Map<String, List<AssetLink>> _assetLinksMap =
+		new HashMap<String, List<AssetLink>>();
 	private Map<String, String[]> _assetTagNamesMap =
 		new HashMap<String, String[]>();
 	private Map<String, List<MBMessage>> _commentsMap =

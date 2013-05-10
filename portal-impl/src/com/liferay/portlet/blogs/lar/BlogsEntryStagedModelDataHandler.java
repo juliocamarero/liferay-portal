@@ -50,6 +50,11 @@ public class BlogsEntryStagedModelDataHandler
 	}
 
 	@Override
+	public String getDisplayName(BlogsEntry entry) {
+		return entry.getTitle();
+	}
+
+	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, BlogsEntry entry)
 		throws Exception {

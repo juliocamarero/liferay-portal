@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
+import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -67,11 +68,14 @@ import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetCategoryProperty;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.model.AssetTagProperty;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetCategoryPropertyLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagPropertyLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
@@ -91,6 +95,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Map;
 
 import org.apache.commons.lang.time.StopWatch;
@@ -454,6 +459,9 @@ public class PortletExporter {
 
 		exportRatingsEntries(portletDataContext, rootElement);
 
+		ExportImportUtil.writeManifestSummary(
+			document, portletDataContext.getManifestSummary());
+
 		if (_log.isInfoEnabled()) {
 			_log.info("Exporting portlet took " + stopWatch.getTime() + " ms");
 		}
@@ -624,23 +632,43 @@ public class PortletExporter {
 
 		Element rootElement = document.addElement("links");
 
-		Map<String, String[]> assetLinkUuidsMap =
-			portletDataContext.getAssetLinkUuidsMap();
+		Map<String, List<AssetLink>> assetLinksMap =
+			portletDataContext.getAssetLinksMap();
 
-		for (Map.Entry<String, String[]> entry : assetLinkUuidsMap.entrySet()) {
+		for (Entry<String, List<AssetLink>> entry : assetLinksMap.entrySet()) {
 			String[] assetLinkNameParts = StringUtil.split(
 				entry.getKey(), CharPool.POUND);
-			String[] targetAssetEntryUuids = entry.getValue();
+
+			List<AssetLink> assetLinks = entry.getValue();
 
 			String sourceAssetEntryUuid = assetLinkNameParts[0];
-			String assetLinkType = assetLinkNameParts[1];
 
-			Element assetElement = rootElement.addElement("asset-link");
+			Element assetElement = rootElement.addElement("asset-link-group");
 
 			assetElement.addAttribute("source-uuid", sourceAssetEntryUuid);
-			assetElement.addAttribute(
-				"target-uuids", StringUtil.merge(targetAssetEntryUuids));
-			assetElement.addAttribute("type", assetLinkType);
+
+			for (AssetLink assetLink : assetLinks) {
+				String path = getAssetLinkPath(
+					portletDataContext, assetLink.getLinkId());
+
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					return;
+				}
+
+				Element assetLinkElement = assetElement.addElement(
+					"asset-link");
+
+				assetLinkElement.addAttribute("path", path);
+
+				AssetEntry targetAssetEntry =
+					AssetEntryLocalServiceUtil.fetchAssetEntry(
+						assetLink.getEntryId2());
+
+				assetLinkElement.addAttribute(
+					"target-uuid", targetAssetEntry.getClassUuid());
+
+				portletDataContext.addZipEntry(path, assetLink);
+			}
 		}
 
 		portletDataContext.addZipEntry(
@@ -1274,6 +1302,19 @@ public class PortletExporter {
 		sb.append(ExportImportPathUtil.getRootPath(portletDataContext));
 		sb.append("/categories/");
 		sb.append(assetCategoryId);
+		sb.append(".xml");
+
+		return sb.toString();
+	}
+
+	protected String getAssetLinkPath(
+		PortletDataContext portletDataContext, long assetLinkId) {
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append(ExportImportPathUtil.getRootPath(portletDataContext));
+		sb.append("/links/");
+		sb.append(assetLinkId);
 		sb.append(".xml");
 
 		return sb.toString();

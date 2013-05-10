@@ -94,10 +94,10 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		ActionableDynamicQuery ationableDynamicQuery =
+		ActionableDynamicQuery actionableDynamicQuery =
 			new BlogsEntryExportActionableDynamicQuery(portletDataContext);
 
-		ationableDynamicQuery.performActions();
+		actionableDynamicQuery.performActions();
 
 		return getExportDataRootElementString(rootElement);
 	}
@@ -130,11 +130,11 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext)
 		throws Exception {
 
-		ActionableDynamicQuery entryActionableDynamicQuery =
-			new BlogsEntryExportActionableDynamicQuery(portletDataContext);
-
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
+
+		ActionableDynamicQuery entryActionableDynamicQuery =
+			new BlogsEntryExportActionableDynamicQuery(portletDataContext);
 
 		manifestSummary.addModelCount(
 			BlogsEntry.class, entryActionableDynamicQuery.performCount());

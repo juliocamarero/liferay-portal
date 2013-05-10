@@ -14,8 +14,14 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.StagedModel;
+
+import java.io.File;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Zsolt Berentey
@@ -42,6 +48,11 @@ public interface ExportImport {
 			PortletDataContext portletDataContext, String content)
 		throws Exception;
 
+	public ManifestSummary getManifestSummary(
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
+		throws Exception;
+
 	public String importContentReferences(
 			PortletDataContext portletDataContext, Element entityElement,
 			String content)
@@ -59,5 +70,13 @@ public interface ExportImport {
 	public String importLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
 		throws Exception;
+
+	public List<MissingReference> validateMissingReferences(
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
+		throws Exception;
+
+	public void writeManifestSummary(
+		Document document, ManifestSummary manifestSummary);
 
 }
