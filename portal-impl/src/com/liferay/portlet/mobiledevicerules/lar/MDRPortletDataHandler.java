@@ -77,8 +77,7 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.mobiledevicerules",
-			portletDataContext.getScopeGroupId());
+			RESOURCE_NAME, portletDataContext.getScopeGroupId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -140,8 +139,7 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.mobiledevicerules",
-			portletDataContext.getSourceGroupId(),
+			RESOURCE_NAME, portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
 		Element rulesElement = portletDataContext.getImportDataGroupElement(
@@ -166,5 +164,8 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 
 		return null;
 	}
+
+	protected static final String RESOURCE_NAME =
+		"com.liferay.portlet.mobiledevicerules";
 
 }
