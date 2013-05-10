@@ -251,12 +251,11 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(queryString)) {
 			return url;
 		}
-		else {
-			String encodedQueryString = parameterMapToString(
-				parameterMapFromString(queryString), false);
 
-			return StringUtil.replace(url, queryString, encodedQueryString);
-		}
+		String encodedQueryString = parameterMapToString(
+			parameterMapFromString(queryString), false);
+
+		return StringUtil.replace(url, queryString, encodedQueryString);
 	}
 
 	public String encodePath(String path) {
