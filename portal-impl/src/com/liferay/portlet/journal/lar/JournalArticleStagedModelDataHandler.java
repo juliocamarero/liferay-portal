@@ -83,6 +83,11 @@ public class JournalArticleStagedModelDataHandler
 	}
 
 	@Override
+	public String getDisplayName(JournalArticle article) {
+		return article.getTitleCurrentValue();
+	}
+
+	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, JournalArticle article)
 		throws Exception {
@@ -656,6 +661,23 @@ public class JournalArticleStagedModelDataHandler
 			articleIds.put(
 				article.getArticleId(), importedArticle.getArticleId());
 		}
+	}
+
+	@Override
+	protected boolean doValidateMissingReference(String uuid, long groupId) {
+		try {
+			JournalArticle journalArticle = JournalArticleUtil.fetchByUUID_G(
+				uuid, groupId);
+
+			if (journalArticle == null) {
+				return false;
+			}
+		}
+		catch (Exception e) {
+			return false;
+		}
+
+		return true;
 	}
 
 	protected void exportArticleImage(
