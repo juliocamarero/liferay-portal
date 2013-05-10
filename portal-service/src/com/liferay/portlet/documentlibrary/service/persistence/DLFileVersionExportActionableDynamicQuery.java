@@ -41,7 +41,9 @@ public class DLFileVersionExportActionableDynamicQuery
 	}
 
 	@Override
-	protected void performAction(Object object) throws PortalException {
+	@SuppressWarnings("unused")
+	protected void performAction(Object object)
+		throws PortalException, SystemException {
 		DLFileVersion stagedModel = (DLFileVersion)object;
 
 		StagedModelDataHandlerUtil.exportStagedModel(_portletDataContext,

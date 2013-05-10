@@ -41,7 +41,9 @@ public class JournalArticleExportActionableDynamicQuery
 	}
 
 	@Override
-	protected void performAction(Object object) throws PortalException {
+	@SuppressWarnings("unused")
+	protected void performAction(Object object)
+		throws PortalException, SystemException {
 		JournalArticle stagedModel = (JournalArticle)object;
 
 		StagedModelDataHandlerUtil.exportStagedModel(_portletDataContext,

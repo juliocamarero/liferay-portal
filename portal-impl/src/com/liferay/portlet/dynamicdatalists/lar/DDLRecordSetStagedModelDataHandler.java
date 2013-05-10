@@ -63,7 +63,8 @@ public class DDLRecordSetStagedModelDataHandler
 				portletDataContext, ddmTemplate);
 
 			portletDataContext.addReferenceElement(
-				recordSetElement, ddmTemplate);
+				recordSetElement, ddmTemplate,
+				PortletDataContext.TYPE_STRONG_REFERENCE);
 		}
 
 		portletDataContext.addClassedModel(

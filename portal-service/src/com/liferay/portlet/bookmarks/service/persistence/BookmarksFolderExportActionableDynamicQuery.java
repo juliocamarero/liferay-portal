@@ -41,7 +41,9 @@ public class BookmarksFolderExportActionableDynamicQuery
 	}
 
 	@Override
-	protected void performAction(Object object) throws PortalException {
+	@SuppressWarnings("unused")
+	protected void performAction(Object object)
+		throws PortalException, SystemException {
 		BookmarksFolder stagedModel = (BookmarksFolder)object;
 
 		StagedModelDataHandlerUtil.exportStagedModel(_portletDataContext,

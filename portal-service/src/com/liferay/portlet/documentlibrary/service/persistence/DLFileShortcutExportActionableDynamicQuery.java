@@ -41,7 +41,9 @@ public class DLFileShortcutExportActionableDynamicQuery
 	}
 
 	@Override
-	protected void performAction(Object object) throws PortalException {
+	@SuppressWarnings("unused")
+	protected void performAction(Object object)
+		throws PortalException, SystemException {
 		DLFileShortcut stagedModel = (DLFileShortcut)object;
 
 		StagedModelDataHandlerUtil.exportStagedModel(_portletDataContext,

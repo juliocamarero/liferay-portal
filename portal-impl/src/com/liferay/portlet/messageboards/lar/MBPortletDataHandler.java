@@ -105,8 +105,7 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.messageboards",
-			portletDataContext.getScopeGroupId());
+			RESOURCE_NAME, portletDataContext.getScopeGroupId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -229,8 +228,7 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.messageboards",
-			portletDataContext.getSourceGroupId(),
+			RESOURCE_NAME, portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
 		Element categoriesElement =
@@ -280,5 +278,8 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 
 		return null;
 	}
+
+	protected static final String RESOURCE_NAME =
+		"com.liferay.portlet.messageboards";
 
 }

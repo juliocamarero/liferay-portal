@@ -41,7 +41,9 @@ public class MDRRuleExportActionableDynamicQuery
 	}
 
 	@Override
-	protected void performAction(Object object) throws PortalException {
+	@SuppressWarnings("unused")
+	protected void performAction(Object object)
+		throws PortalException, SystemException {
 		MDRRule stagedModel = (MDRRule)object;
 
 		StagedModelDataHandlerUtil.exportStagedModel(_portletDataContext,

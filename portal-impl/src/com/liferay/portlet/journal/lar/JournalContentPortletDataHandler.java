@@ -115,8 +115,7 @@ public class JournalContentPortletDataHandler
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			"com.liferay.portlet.journal",
-			portletDataContext.getScopeGroupId());
+			RESOURCE_NAME, portletDataContext.getScopeGroupId());
 
 		String articleId = portletPreferences.getValue("articleId", null);
 
@@ -203,7 +202,9 @@ public class JournalContentPortletDataHandler
 			Element articleElement = portletDataContext.getExportDataElement(
 				article);
 
-			portletDataContext.addReferenceElement(articleElement, ddmTemplate);
+			portletDataContext.addReferenceElement(
+				articleElement, ddmTemplate,
+				PortletDataContext.TYPE_STRONG_REFERENCE);
 		}
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
@@ -218,8 +219,7 @@ public class JournalContentPortletDataHandler
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			"com.liferay.portlet.journal",
-			portletDataContext.getSourceGroupId(),
+			RESOURCE_NAME, portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
 		long previousScopeGroupId = portletDataContext.getScopeGroupId();

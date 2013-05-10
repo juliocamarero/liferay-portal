@@ -40,7 +40,9 @@ public class LayoutExportActionableDynamicQuery
 	}
 
 	@Override
-	protected void performAction(Object object) throws PortalException {
+	@SuppressWarnings("unused")
+	protected void performAction(Object object)
+		throws PortalException, SystemException {
 		Layout stagedModel = (Layout)object;
 
 		StagedModelDataHandlerUtil.exportStagedModel(_portletDataContext,
