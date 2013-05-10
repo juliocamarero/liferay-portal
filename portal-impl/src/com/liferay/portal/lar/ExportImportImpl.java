@@ -731,8 +731,8 @@ public class ExportImportImpl implements ExportImport {
 		String className = element.attributeValue("class-name");
 
 		StagedModelDataHandler<?> stagedModelDataHandler =
-			StagedModelDataHandlerRegistryUtil.
-				getStagedModelDataHandler(className);
+			StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
+				className);
 
 		if (!stagedModelDataHandler.validateReference(
 				element.getParent(), element)) {
