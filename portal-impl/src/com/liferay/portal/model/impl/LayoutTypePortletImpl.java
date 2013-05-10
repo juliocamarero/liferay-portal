@@ -1468,12 +1468,12 @@ public class LayoutTypePortletImpl
 			return value;
 		}
 
-		String[] portletIds = StringUtil.split(value);
-
 		List<String> newPortletIds = new ArrayList<String>();
 
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
+
+		String[] portletIds = StringUtil.split(value);
 
 		for (int i = 0; i < portletIds.length; i++) {
 			try {
