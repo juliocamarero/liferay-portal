@@ -44,6 +44,11 @@ public class DDLRecordSetStagedModelDataHandler
 	}
 
 	@Override
+	public String getDisplayName(DDLRecordSet recordSet) {
+		return recordSet.getNameCurrentValue();
+	}
+
+	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, DDLRecordSet recordSet)
 		throws Exception {

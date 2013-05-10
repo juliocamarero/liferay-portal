@@ -98,15 +98,15 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		ActionableDynamicQuery folderExportActionableDynamicQuery =
+		ActionableDynamicQuery folderActionableDynamicQuery =
 			new BookmarksFolderExportActionableDynamicQuery(portletDataContext);
 
-		folderExportActionableDynamicQuery.performActions();
+		folderActionableDynamicQuery.performActions();
 
-		ActionableDynamicQuery entryExportActionableDynamicQuery =
+		ActionableDynamicQuery entryActionableDynamicQuery =
 			new BookmarksEntryExportActionableDynamicQuery(portletDataContext);
 
-		entryExportActionableDynamicQuery.performActions();
+		entryActionableDynamicQuery.performActions();
 
 		return getExportDataRootElementString(rootElement);
 	}
@@ -149,15 +149,8 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext)
 		throws Exception {
 
-		ActionableDynamicQuery folderExportActionableDynamicQuery =
-			new BookmarksFolderExportActionableDynamicQuery(portletDataContext);
-
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
-
-		manifestSummary.addModelCount(
-			BookmarksFolder.class,
-			folderExportActionableDynamicQuery.performCount());
 
 		ActionableDynamicQuery entryExportActionableDynamicQuery =
 			new BookmarksEntryExportActionableDynamicQuery(portletDataContext);
@@ -165,6 +158,13 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 		manifestSummary.addModelCount(
 			BookmarksEntry.class,
 			entryExportActionableDynamicQuery.performCount());
+
+		ActionableDynamicQuery folderExportActionableDynamicQuery =
+			new BookmarksFolderExportActionableDynamicQuery(portletDataContext);
+
+		manifestSummary.addModelCount(
+			BookmarksFolder.class,
+			folderExportActionableDynamicQuery.performCount());
 	}
 
 	private static final String _RESOURCE_NAME =

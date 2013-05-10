@@ -23,6 +23,7 @@ import com.liferay.portal.LocaleException;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.NoSuchLayoutPrototypeException;
 import com.liferay.portal.NoSuchLayoutSetPrototypeException;
+import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -93,6 +94,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.service.impl.LayoutLocalServiceHelper;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.service.persistence.UserUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
@@ -1044,6 +1046,17 @@ public class LayoutImporter {
 
 			importedLayout = LayoutUtil.create(plid);
 
+			LayoutLocalServiceHelper layoutLocalServiceHelper =
+				(LayoutLocalServiceHelper) PortalBeanLocatorUtil.locate(
+					LayoutLocalServiceHelper.class.getName());
+
+			Layout ancestorLayout = previousLayouts.get(0);
+
+			int priority = layoutLocalServiceHelper.getNextPriority(
+				groupId, privateLayout, ancestorLayout.getParentLayoutId(),
+				ancestorLayout.getLayoutPrototypeUuid(), -1);
+				layout.setPriority(priority);
+
 			if (layoutsImportMode.equals(
 					PortletDataHandlerKeys.
 						LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE)) {
@@ -1060,6 +1073,7 @@ public class LayoutImporter {
 					layout.getLayoutPrototypeUuid());
 				importedLayout.setLayoutPrototypeLinkEnabled(
 					layout.isLayoutPrototypeLinkEnabled());
+				importedLayout.setPriority(layout.getPriority());
 				importedLayout.setSourcePrototypeLayoutUuid(
 					layout.getSourcePrototypeLayoutUuid());
 			}

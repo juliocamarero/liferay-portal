@@ -51,6 +51,11 @@ public class RepositoryStagedModelDataHandler
 	}
 
 	@Override
+	public String getDisplayName(Repository repository) {
+		return repository.getName();
+	}
+
+	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext, Repository repository)
 		throws Exception {
