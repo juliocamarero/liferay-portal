@@ -608,14 +608,6 @@ public class PortletDataContextImpl implements PortletDataContext {
 			}
 		}
 
-		if (classedModel instanceof StagedGroupedModel) {
-			StagedGroupedModel stagedGroupedModel =
-				(StagedGroupedModel)classedModel;
-
-			referenceElement.addAttribute(
-				"group-id", String.valueOf(stagedGroupedModel.getGroupId()));
-		}
-
 		if (Validator.isNotNull(binPath)) {
 			referenceElement.addAttribute("path", binPath);
 		}
@@ -630,14 +622,19 @@ public class PortletDataContextImpl implements PortletDataContext {
 				StagedModelDataHandlerUtil.getDisplayName(referrerStagedModel));
 		}
 
-		if (classedModel instanceof StagedGroupedModel) {
-			StagedGroupedModel stagedGroupedModel =
-				(StagedGroupedModel)classedModel;
+		if ((classedModel instanceof StagedGroupedModel) ||
+			(classedModel instanceof StagedModel)) {
 
-			referenceElement.addAttribute("uuid", stagedGroupedModel.getUuid());
-		}
-		else if (classedModel instanceof StagedModel) {
 			StagedModel stagedModel = (StagedModel)classedModel;
+
+			if (stagedModel instanceof StagedGroupedModel) {
+				StagedGroupedModel stagedGroupedModel =
+					(StagedGroupedModel)classedModel;
+
+				referenceElement.addAttribute(
+					"group-id",
+					String.valueOf(stagedGroupedModel.getGroupId()));
+			}
 
 			referenceElement.addAttribute("uuid", stagedModel.getUuid());
 		}
