@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
@@ -149,8 +150,10 @@ public class LayoutImporter {
 
 		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
-		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			layoutSet.getCompanyId(), groupId, parameterMap, null, zipReader);
+		PortletDataContext portletDataContext =
+			PortletDataContextFactoryUtil.createImportPortletDataContext(
+				layoutSet.getCompanyId(), groupId, parameterMap, null,
+				zipReader);
 
 		validateFile(portletDataContext);
 	}
@@ -315,8 +318,9 @@ public class LayoutImporter {
 
 		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
-		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			companyId, groupId, parameterMap, strategy, zipReader);
+		PortletDataContext portletDataContext =
+			PortletDataContextFactoryUtil.createImportPortletDataContext(
+				companyId, groupId, parameterMap, strategy, zipReader);
 
 		portletDataContext.setPortetDataContextListener(
 			new PortletDataContextListenerImpl(portletDataContext));

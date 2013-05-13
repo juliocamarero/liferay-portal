@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
@@ -271,8 +272,10 @@ public class LayoutExporter {
 
 		ZipWriter zipWriter = ZipWriterFactoryUtil.getZipWriter();
 
-		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			companyId, groupId, parameterMap, startDate, endDate, zipWriter);
+		PortletDataContext portletDataContext =
+			PortletDataContextFactoryUtil.createExportPortletDataContext(
+				companyId, groupId, parameterMap, startDate, endDate,
+				zipWriter);
 
 		portletDataContext.setPortetDataContextListener(
 			new PortletDataContextListenerImpl(portletDataContext));
