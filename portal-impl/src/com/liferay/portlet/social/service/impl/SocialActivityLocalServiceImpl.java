@@ -356,6 +356,10 @@ public class SocialActivityLocalServiceImpl
 		socialActivityPersistence.removeByGroupId(groupId);
 
 		socialActivityCounterPersistence.removeByGroupId(groupId);
+
+		socialActivityLimitPersistence.removeByGroupId(groupId);
+
+		socialActivitySettingPersistence.removeByGroupId(groupId);
 	}
 
 	/**
