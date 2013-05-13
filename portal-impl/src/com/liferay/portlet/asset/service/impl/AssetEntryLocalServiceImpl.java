@@ -96,10 +96,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 					tag.getTagId(), entry.getClassNameId());
 			}
 		}
-
-		// Social
-
-		socialActivityLocalService.deleteActivities(entry);
 	}
 
 	public void deleteEntry(long entryId)
