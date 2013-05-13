@@ -357,11 +357,15 @@ public interface SocialActivityLocalService extends BaseLocalService,
 	* @param assetEntry the asset from which to remove stored activities
 	* @throws PortalException if a portal exception occurred
 	* @throws SystemException if a system exception occurred
+	* @deprecated As of 6.2.0, replaced by {@link #deleteActivities(long)}. Activities should only be deleted when the group is deleted.
 	*/
 	public void deleteActivities(
 		com.liferay.portlet.asset.model.AssetEntry assetEntry)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	public void deleteActivities(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
 	* Removes stored activities for the asset identified by the class name and
@@ -370,6 +374,7 @@ public interface SocialActivityLocalService extends BaseLocalService,
 	* @param className the target asset's class name
 	* @param classPK the primary key of the target asset
 	* @throws SystemException if a system exception occurred
+	* @deprecated As of 6.2.0, replaced by {@link #deleteActivities(long)}. Activities should only be deleted when the group is deleted.
 	*/
 	public void deleteActivities(java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -381,6 +386,7 @@ public interface SocialActivityLocalService extends BaseLocalService,
 	* @param activityId the primary key of the stored activity
 	* @throws PortalException if the activity could not be found
 	* @throws SystemException if a system exception occurred
+	* @deprecated As of 6.2.0, replaced by {@link #deleteActivities(long)}. Activities should only be deleted when the group is deleted.
 	*/
 	public void deleteActivity(long activityId)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -391,6 +397,7 @@ public interface SocialActivityLocalService extends BaseLocalService,
 	*
 	* @param activity the activity to be removed
 	* @throws SystemException if a system exception occurred
+	* @deprecated As of 6.2.0, replaced by {@link #deleteActivities(long)}. Activities should only be deleted when the group is deleted.
 	*/
 	public void deleteActivity(
 		com.liferay.portlet.social.model.SocialActivity activity)
