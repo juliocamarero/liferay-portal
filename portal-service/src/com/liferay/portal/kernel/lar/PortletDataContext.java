@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.model.ClassedModel;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.ServiceContext;
@@ -242,6 +243,8 @@ public interface PortletDataContext extends Serializable {
 
 	public Element getMissingReferencesElement();
 
+	public List<Layout> getNewLayouts();
+
 	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz);
 
 	public Map<?, ?> getNewPrimaryKeysMap(String className);
@@ -264,6 +267,20 @@ public interface PortletDataContext extends Serializable {
 	public Set<String> getPrimaryKeys();
 
 	public Map<String, List<RatingsEntry>> getRatingsEntries();
+
+	public Element getReferenceDataElement(
+		Element parentElement, Class<?> clazz, long groupId, long classPk);
+
+	public Element getReferenceDataElement(
+		Element parentElement, Class<?> clazz, long groupId, String uuid);
+
+	public Element getReferenceDataElement(
+		StagedModel parentStagedModel, Class<?> clazz, long groupId,
+		long classPk);
+
+	public Element getReferenceDataElement(
+		StagedModel parentStagedModel, Class<?> clazz, long groupId,
+		String uuid);
 
 	public List<Element> getReferenceDataElements(
 		Element parentElement, Class<?> clazz);
@@ -409,6 +426,8 @@ public interface PortletDataContext extends Serializable {
 	public void setImportDataRootElement(Element importDataRootElement);
 
 	public void setMissingReferencesElement(Element missingReferencesElement);
+
+	public void setNewLayouts(List<Layout> newLayouts);
 
 	public void setOldPlid(long oldPlid);
 
