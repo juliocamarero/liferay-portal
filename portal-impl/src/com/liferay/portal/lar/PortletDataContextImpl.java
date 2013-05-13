@@ -637,6 +637,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 			}
 
 			referenceElement.addAttribute("uuid", stagedModel.getUuid());
+			referenceElement.addAttribute(
+				"class-pk", String.valueOf(stagedModel.getPrimaryKeyObj()));
 		}
 
 		return referenceElement;
@@ -930,6 +932,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _missingReferencesElement;
 	}
 
+	public List<Layout> getNewLayouts() {
+		return _newLayouts;
+	}
+
 	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz) {
 		return getNewPrimaryKeysMap(clazz.getName());
 	}
@@ -974,6 +980,58 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _ratingsEntriesMap;
 	}
 
+	public Element getReferenceDataElement(
+		Element parentElement, Class<?> clazz, long groupId, long classPk) {
+
+		List<Element> referenceElements = getReferenceElements(
+			parentElement, clazz, groupId, null, classPk, null);
+
+		List<Element> referenceDataElements = getReferenceDataElements(
+			referenceElements, clazz);
+
+		if (referenceDataElements.isEmpty()) {
+			return null;
+		}
+
+		return referenceDataElements.get(0);
+	}
+
+	public Element getReferenceDataElement(
+		Element parentElement, Class<?> clazz, long groupId, String uuid) {
+
+		List<Element> referenceElements = getReferenceElements(
+			parentElement, clazz, groupId, uuid, 0, null);
+
+		List<Element> referenceDataElements = getReferenceDataElements(
+			referenceElements, clazz);
+
+		if (referenceDataElements.isEmpty()) {
+			return null;
+		}
+
+		return referenceDataElements.get(0);
+	}
+
+	public Element getReferenceDataElement(
+		StagedModel parentStagedModel, Class<?> clazz, long groupId,
+		long classPk) {
+
+		Element parentElement = getImportDataStagedModelElement(
+			parentStagedModel);
+
+		return getReferenceDataElement(parentElement, clazz, groupId, classPk);
+	}
+
+	public Element getReferenceDataElement(
+		StagedModel parentStagedModel, Class<?> clazz, long groupId,
+		String uuid) {
+
+		Element parentElement = getImportDataStagedModelElement(
+			parentStagedModel);
+
+		return getReferenceDataElement(parentElement, clazz, groupId, uuid);
+	}
+
 	public List<Element> getReferenceDataElements(
 		Element parentElement, Class<?> clazz) {
 
@@ -984,7 +1042,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		Element parentElement, Class<?> clazz, String referenceType) {
 
 		List<Element> referenceElements = getReferenceElements(
-			parentElement, clazz, referenceType);
+			parentElement, clazz, 0, null, 0, referenceType);
 
 		return getReferenceDataElements(referenceElements, clazz);
 	}
@@ -1548,6 +1606,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_missingReferencesElement = missingReferencesElement;
 	}
 
+	public void setNewLayouts(List<Layout> newLayouts) {
+		_newLayouts = newLayouts;
+	}
+
 	public void setOldPlid(long oldPlid) {
 		_oldPlid = oldPlid;
 	}
@@ -1845,7 +1907,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	protected List<Element> getReferenceElements(
-		Element parentElement, Class<?> clazz, String referenceType) {
+		Element parentElement, Class<?> clazz, long groupId, String uuid,
+		long classPk, String referenceType) {
 
 		if (parentElement == null) {
 			return Collections.emptyList();
@@ -1861,6 +1924,21 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		sb.append("reference[@class-name='");
 		sb.append(clazz.getName());
+
+		if (groupId > 0) {
+			sb.append("' and @group-id='");
+			sb.append(groupId);
+		}
+
+		if (Validator.isNotNull(uuid)) {
+			sb.append("' and @uuid='");
+			sb.append(uuid);
+		}
+
+		if (classPk > 0) {
+			sb.append("' and @class-pk='");
+			sb.append(classPk);
+		}
 
 		if (referenceType != null) {
 			sb.append("' and @type='");
@@ -1882,7 +1960,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 		Element stagedModelElement = getImportDataStagedModelElement(
 			parentStagedModel);
 
-		return getReferenceElements(stagedModelElement, clazz, referenceType);
+		return getReferenceElements(
+			stagedModelElement, clazz, 0, null, 0, referenceType);
 	}
 
 	protected long getUserId(AuditedModel auditedModel) {
@@ -1965,6 +2044,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 	private Map<String, Lock> _locksMap = new HashMap<String, Lock>();
 	private ManifestSummary _manifestSummary = new ManifestSummary();
 	private Element _missingReferencesElement;
+	private List<Layout> _newLayouts;
 	private Map<String, Map<?, ?>> _newPrimaryKeysMaps =
 		new HashMap<String, Map<?, ?>>();
 	private Set<String> _notUniquePerLayout = new HashSet<String>();
