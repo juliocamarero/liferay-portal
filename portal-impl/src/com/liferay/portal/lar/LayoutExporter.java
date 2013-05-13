@@ -22,10 +22,12 @@ import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
@@ -47,6 +49,7 @@ import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.Theme;
@@ -64,7 +67,7 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeLoader;
 import com.liferay.portal.theme.ThemeLoaderFactory;
-import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
@@ -206,8 +209,6 @@ public class LayoutExporter {
 			parameterMap, PortletDataHandlerKeys.LOGO);
 		boolean exportLayoutSetSettings = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.LAYOUT_SET_SETTINGS);
-		//boolean publishToRemote = MapUtil.getBoolean(
-		//	parameterMap, PortletDataHandlerKeys.PUBLISH_TO_REMOTE);
 		boolean updateLastPublishDate = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.UPDATE_LAST_PUBLISH_DATE);
 
@@ -284,6 +285,8 @@ public class LayoutExporter {
 
 		Element rootElement = document.addElement("root");
 
+		portletDataContext.setExportDataRootElement(rootElement);
+
 		Element headerElement = rootElement.addElement("header");
 
 		headerElement.addAttribute(
@@ -346,7 +349,8 @@ public class LayoutExporter {
 			Image image = ImageLocalServiceUtil.getImage(layoutSet.getLogoId());
 
 			if ((image != null) && (image.getTextObj() != null)) {
-				String logoPath = getLayoutSetLogoPath(portletDataContext);
+				String logoPath = ExportImportPathUtil.getRootPath(
+					portletDataContext).concat("/logo");
 
 				headerElement.addAttribute("logo-path", logoPath);
 
@@ -363,10 +367,6 @@ public class LayoutExporter {
 		Element cssElement = headerElement.addElement("css");
 
 		cssElement.addCDATA(layoutSet.getCss());
-
-		Portlet layoutConfigurationPortlet =
-			PortletLocalServiceUtil.getPortletById(
-				portletDataContext.getCompanyId(), PortletKeys.DOCKBAR);
 
 		Map<String, Object[]> portletIds =
 			new LinkedHashMap<String, Object[]>();
@@ -420,7 +420,8 @@ public class LayoutExporter {
 		portletDataContext.setMissingReferencesElement(
 			missingReferencesElement);
 
-		Element layoutsElement = rootElement.addElement("layouts");
+		Element layoutsElement = portletDataContext.getExportDataGroupElement(
+			Layout.class);
 
 		String layoutSetPrototypeUuid = layoutSet.getLayoutSetPrototypeUuid();
 
@@ -440,8 +441,7 @@ public class LayoutExporter {
 
 		for (Layout layout : layouts) {
 			exportLayout(
-				portletDataContext, layoutConfigurationPortlet, layoutCache,
-				portlets, portletIds, exportPermissions, layout,
+				portletDataContext, portlets, portletIds, layout,
 				layoutsElement);
 		}
 
@@ -501,7 +501,7 @@ public class LayoutExporter {
 			portletDataContext.setScopeLayoutUuid(scopeLayoutUuid);
 
 			boolean[] exportPortletControls = getExportPortletControls(
-				companyId, portletId, portletDataContext, parameterMap, type);
+				companyId, portletId, parameterMap, type);
 
 			_portletExporter.exportPortlet(
 				portletDataContext, layoutCache, portletId, layout,
@@ -598,12 +598,100 @@ public class LayoutExporter {
 	}
 
 	protected void exportLayout(
-			PortletDataContext portletDataContext,
-			Portlet layoutConfigurationPortlet, LayoutCache layoutCache,
-			List<Portlet> portlets, Map<String, Object[]> portletIds,
-			boolean exportPermissions, Layout layout, Element layoutsElement)
+			PortletDataContext portletDataContext, List<Portlet> portlets,
+			Map<String, Object[]> portletIds, Layout layout,
+			Element layoutsElement)
 		throws Exception {
 
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, layout);
+
+		if (layout.isSupportsEmbeddedPortlets()) {
+
+			// Only portlet type layouts support page scoping
+
+			if (layout.isTypePortlet()) {
+				for (Portlet portlet : portlets) {
+					if (portlet.isScopeable() && layout.hasScopeGroup()) {
+						String key = PortletPermissionUtil.getPrimaryKey(
+							layout.getPlid(), portlet.getPortletId());
+
+						portletIds.put(
+							key,
+							new Object[] {
+								portlet.getPortletId(), layout.getPlid(),
+								layout.getScopeGroup().getGroupId(),
+								StringPool.BLANK, layout.getUuid()
+							});
+					}
+				}
+			}
+
+			LayoutTypePortlet layoutTypePortlet =
+				(LayoutTypePortlet)layout.getLayoutType();
+
+			// The getAllPortlets method returns all effective portlets for any
+			// layout type, including embedded portlets, or in the case of panel
+			// type layout, selected portlets
+
+			for (Portlet portlet : layoutTypePortlet.getAllPortlets()) {
+				String portletId = portlet.getPortletId();
+
+				javax.portlet.PortletPreferences jxPreferences =
+					PortletPreferencesFactoryUtil.getLayoutPortletSetup(
+						layout, portletId);
+
+				String scopeType = GetterUtil.getString(
+					jxPreferences.getValue("lfrScopeType", null));
+				String scopeLayoutUuid = GetterUtil.getString(
+					jxPreferences.getValue("lfrScopeLayoutUuid", null));
+
+				long scopeGroupId = portletDataContext.getScopeGroupId();
+
+				if (Validator.isNotNull(scopeType)) {
+					Group scopeGroup = null;
+
+					if (scopeType.equals("company")) {
+						scopeGroup = GroupLocalServiceUtil.getCompanyGroup(
+							layout.getCompanyId());
+					}
+					else if (scopeType.equals("layout")) {
+						Layout scopeLayout = null;
+
+						scopeLayout =
+							LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+								scopeLayoutUuid,
+								portletDataContext.getGroupId(),
+								portletDataContext.isPrivateLayout());
+
+						if (scopeLayout == null) {
+							continue;
+						}
+
+						scopeGroup = scopeLayout.getScopeGroup();
+					}
+					else {
+						throw new IllegalArgumentException(
+							"Scope type " + scopeType + " is invalid");
+					}
+
+					if (scopeGroup != null) {
+						scopeGroupId = scopeGroup.getGroupId();
+					}
+				}
+
+				String key = PortletPermissionUtil.getPrimaryKey(
+					layout.getPlid(), portletId);
+
+				portletIds.put(
+					key,
+					new Object[] {
+						portletId, layout.getPlid(), scopeGroupId, scopeType,
+						scopeLayoutUuid
+					}
+				);
+			}
+		}
 	}
 
 	protected void exportTheme(LayoutSet layoutSet, ZipWriter zipWriter)
@@ -709,7 +797,6 @@ public class LayoutExporter {
 
 	protected boolean[] getExportPortletControls(
 			long companyId, String portletId,
-			PortletDataContext portletDataContext,
 			Map<String, String[]> parameterMap, String type)
 		throws Exception {
 
@@ -802,13 +889,6 @@ public class LayoutExporter {
 		sb.append(image.getType());
 
 		return sb.toString();
-	}
-
-	protected String getLayoutSetLogoPath(
-		PortletDataContext portletDataContext) {
-
-		return ExportImportPathUtil.getRootPath(portletDataContext).concat(
-			"/logo/");
 	}
 
 	protected String getLayoutSetPrototype(

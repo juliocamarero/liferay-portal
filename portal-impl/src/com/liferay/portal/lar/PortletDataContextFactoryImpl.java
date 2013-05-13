@@ -23,9 +23,11 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -89,6 +91,7 @@ public class PortletDataContextFactoryImpl
 
 		portletDataContext.setGroupId(groupId);
 		portletDataContext.setScopeGroupId(groupId);
+		portletDataContext.setNewLayouts(new ArrayList<Layout>());
 		portletDataContext.setParameterMap(parameterMap);
 
 		String dataStrategy = MapUtil.getString(
