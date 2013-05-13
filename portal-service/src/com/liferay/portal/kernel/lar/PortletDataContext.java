@@ -394,6 +394,14 @@ public interface PortletDataContext extends Serializable {
 
 	public void setClassLoader(ClassLoader classLoader);
 
+	public void setCompanyGroupId(long companyGroupId);
+
+	public void setCompanyId(long companyId);
+
+	public void setDataStrategy(String dataStrategy);
+
+	public void setEndDate(Date endDate);
+
 	public void setExportDataRootElement(Element exportDataRootElement);
 
 	public void setGroupId(long groupId);
@@ -403,6 +411,8 @@ public interface PortletDataContext extends Serializable {
 	public void setMissingReferencesElement(Element missingReferencesElement);
 
 	public void setOldPlid(long oldPlid);
+
+	public void setParameterMap(Map<String, String[]> parameterMap);
 
 	public void setPlid(long plid);
 
@@ -422,6 +432,12 @@ public interface PortletDataContext extends Serializable {
 	public void setSourceGroupId(long sourceGroupId);
 
 	public void setStartDate(Date startDate);
+
+	public void setUserIdStrategy(UserIdStrategy userIdStrategy);
+
+	public void setZipReader(ZipReader zipReader);
+
+	public void setZipWriter(ZipWriter zipWriter);
 
 	public String toXML(Object object);
 
