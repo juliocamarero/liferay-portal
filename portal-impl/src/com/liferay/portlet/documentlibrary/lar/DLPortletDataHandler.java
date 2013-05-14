@@ -245,13 +245,6 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
 
-		ActionableDynamicQuery folderActionableDynamicQuery =
-			getFolderActionableDynamicQuery(portletDataContext);
-
-		long folderCount = folderActionableDynamicQuery.performCount();
-
-		manifestSummary.addModelCount(Folder.class, folderCount);
-
 		ActionableDynamicQuery fileEntryActionableDynamicQuery =
 			getFileEntryActionableDynamicQuery(portletDataContext);
 
@@ -265,6 +258,13 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		long shortcutCount = fileShortcutActionableDynamicQuery.performCount();
 
 		manifestSummary.addModelCount(DLFileShortcut.class, shortcutCount);
+
+		ActionableDynamicQuery folderActionableDynamicQuery =
+			getFolderActionableDynamicQuery(portletDataContext);
+
+		long folderCount = folderActionableDynamicQuery.performCount();
+
+		manifestSummary.addModelCount(Folder.class, folderCount);
 	}
 
 	protected ActionableDynamicQuery getFileEntryActionableDynamicQuery(
