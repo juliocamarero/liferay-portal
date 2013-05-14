@@ -125,17 +125,17 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		ActionableDynamicQuery fileEntryTypeActionableDynamicQuery =
-			_getFileEntryTypeQuery(portletDataContext);
+			getFileEntryTypeActionableDynamicQuery(portletDataContext);
 
 		fileEntryTypeActionableDynamicQuery.performActions();
 
-		ActionableDynamicQuery folderActionableDynamicQuery = _getFolderQuery(
-			portletDataContext);
+		ActionableDynamicQuery folderActionableDynamicQuery =
+			getFolderActionableDynamicQuery(portletDataContext);
 
 		folderActionableDynamicQuery.performActions();
 
 		ActionableDynamicQuery fileEntryActionableDynamicQuery =
-			_getFileEntryQuery(portletDataContext);
+			getFileEntryActionableDynamicQuery(portletDataContext);
 
 		fileEntryActionableDynamicQuery.performActions();
 
@@ -144,7 +144,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		ActionableDynamicQuery fileShortcutActionableDynamicQuery =
-			_getFileShortcutQuery(portletDataContext);
+			getFileShortcutActionableDynamicQuery(portletDataContext);
 
 		fileShortcutActionableDynamicQuery.performActions();
 
@@ -245,15 +245,15 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
 
-		ActionableDynamicQuery folderActionableDynamicQuery = _getFolderQuery(
-			portletDataContext);
+		ActionableDynamicQuery folderActionableDynamicQuery =
+			getFolderActionableDynamicQuery(portletDataContext);
 
 		long folderCount = folderActionableDynamicQuery.performCount();
 
 		manifestSummary.addModelCount(Folder.class, folderCount);
 
 		ActionableDynamicQuery fileEntryActionableDynamicQuery =
-			_getFileEntryQuery(portletDataContext);
+			getFileEntryActionableDynamicQuery(portletDataContext);
 
 		long entryCount = fileEntryActionableDynamicQuery.performCount();
 
@@ -261,7 +261,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {
 			ActionableDynamicQuery fileShortcutActionableDynamicQuery =
-				_getFileShortcutQuery(portletDataContext);
+				getFileShortcutActionableDynamicQuery(portletDataContext);
 
 			long shortcutCount =
 				fileShortcutActionableDynamicQuery.performCount();
@@ -270,7 +270,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		}
 	}
 
-	private ActionableDynamicQuery _getFileEntryQuery(
+	protected ActionableDynamicQuery getFileEntryActionableDynamicQuery(
 			final PortletDataContext portletDataContext)
 		throws Exception {
 
@@ -291,7 +291,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		};
 	}
 
-	private ActionableDynamicQuery _getFileEntryTypeQuery(
+	protected ActionableDynamicQuery getFileEntryTypeActionableDynamicQuery(
 			final PortletDataContext portletDataContext)
 		throws Exception {
 
@@ -327,7 +327,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		};
 	}
 
-	private ActionableDynamicQuery _getFileShortcutQuery(
+	protected ActionableDynamicQuery getFileShortcutActionableDynamicQuery(
 			final PortletDataContext portletDataContext)
 		throws Exception {
 
@@ -346,7 +346,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		};
 	}
 
-	private ActionableDynamicQuery _getFolderQuery(
+	protected ActionableDynamicQuery getFolderActionableDynamicQuery(
 			final PortletDataContext portletDataContext)
 		throws Exception {
 
