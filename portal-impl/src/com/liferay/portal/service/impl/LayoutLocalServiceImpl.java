@@ -1302,6 +1302,17 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		return nextLayoutId;
 	}
 
+	/**
+	 * Returns the next priority to be used for a layout.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param privateLayout  whether the layout is private to the group
+	 * @param parentLayoutId the layoutId of the parent layout
+	 * @param sourcePrototypeLayoutUuid the sourcePrototypeLayoutUuid of the
+	 * layout
+	 * @return the priority for the layout
+	 * @throws SystemException if a system exception occurred
+	 */
 	public int getNextPriority(
 			long groupId, boolean privateLayout, long parentLayoutId,
 			String sourcePrototypeLayoutUuid, int defaultPriority)
