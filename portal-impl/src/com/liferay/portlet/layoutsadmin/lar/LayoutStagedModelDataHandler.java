@@ -636,6 +636,13 @@ public class LayoutStagedModelDataHandler
 			importedLayout.setColorSchemeId(StringPool.BLANK);
 		}
 
+		if (existingLayout == null) {
+			layout.setPriority(
+				LayoutLocalServiceUtil.getNextPriority(
+					groupId, privateLayout, parentLayoutId,
+					layout.getSourcePrototypeLayoutUuid()));
+		}
+
 		importedLayout.setWapThemeId(layout.getWapThemeId());
 		importedLayout.setWapColorSchemeId(layout.getWapColorSchemeId());
 		importedLayout.setCss(layout.getCss());
