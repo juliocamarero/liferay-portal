@@ -1297,6 +1297,16 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		return nextLayoutId;
 	}
 
+	public int getNextPriority(long groupId, boolean privateLayout,
+							   long parentLayoutId,
+							   String sourcePrototypeLayoutUuid)
+		throws SystemException {
+
+		return layoutLocalServiceHelper.getNextPriority(
+			groupId, privateLayout, parentLayoutId,
+			sourcePrototypeLayoutUuid, -1);
+	}
+
 	/**
 	 * Returns all the layouts without resource permissions
 	 *
