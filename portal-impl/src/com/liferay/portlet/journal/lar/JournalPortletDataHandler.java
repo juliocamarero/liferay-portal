@@ -286,17 +286,17 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
 
-		ActionableDynamicQuery feedActionableDynamicQuery =
-			new JournalFeedExportActionableDynamicQuery(portletDataContext);
-
-		manifestSummary.addModelCount(
-			JournalFeed.class, feedActionableDynamicQuery.performCount());
-
 		ActionableDynamicQuery articleActionableDynamicQuery =
 			getArticleActionableDynamicQuery(portletDataContext);
 
 		manifestSummary.addModelCount(
 			JournalArticle.class, articleActionableDynamicQuery.performCount());
+
+		ActionableDynamicQuery feedActionableDynamicQuery =
+			new JournalFeedExportActionableDynamicQuery(portletDataContext);
+
+		manifestSummary.addModelCount(
+			JournalFeed.class, feedActionableDynamicQuery.performCount());
 
 		ActionableDynamicQuery folderActionableDynamicQuery =
 			getFolderActionableDynamicQuery(portletDataContext);
