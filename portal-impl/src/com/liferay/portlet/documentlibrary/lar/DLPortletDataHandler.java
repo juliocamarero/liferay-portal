@@ -336,8 +336,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 
 			@Override
 			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
+				super.addCriteria(dynamicQuery);
 
 				Property property = PropertyFactoryUtil.forName("active");
 
