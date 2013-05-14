@@ -259,15 +259,12 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 
 		manifestSummary.addModelCount(FileEntry.class, entryCount);
 
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "shortcuts")) {
-			ActionableDynamicQuery fileShortcutActionableDynamicQuery =
-				getFileShortcutActionableDynamicQuery(portletDataContext);
+		ActionableDynamicQuery fileShortcutActionableDynamicQuery =
+			getFileShortcutActionableDynamicQuery(portletDataContext);
 
-			long shortcutCount =
-				fileShortcutActionableDynamicQuery.performCount();
+		long shortcutCount = fileShortcutActionableDynamicQuery.performCount();
 
-			manifestSummary.addModelCount(DLFileShortcut.class, shortcutCount);
-		}
+		manifestSummary.addModelCount(DLFileShortcut.class, shortcutCount);
 	}
 
 	protected ActionableDynamicQuery getFileEntryActionableDynamicQuery(

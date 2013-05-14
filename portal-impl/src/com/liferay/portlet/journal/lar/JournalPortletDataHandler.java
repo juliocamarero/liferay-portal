@@ -292,21 +292,17 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		manifestSummary.addModelCount(
 			JournalFeed.class, feedActionableDynamicQuery.performCount());
 
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "web-content")) {
-			ActionableDynamicQuery articleActionableDynamicQuery =
-				getArticleActionableDynamicQuery(portletDataContext);
+		ActionableDynamicQuery articleActionableDynamicQuery =
+			getArticleActionableDynamicQuery(portletDataContext);
 
-			manifestSummary.addModelCount(
-				JournalArticle.class,
-				articleActionableDynamicQuery.performCount());
+		manifestSummary.addModelCount(
+			JournalArticle.class, articleActionableDynamicQuery.performCount());
 
-			ActionableDynamicQuery folderActionableDynamicQuery =
-				getFolderActionableDynamicQuery(portletDataContext);
+		ActionableDynamicQuery folderActionableDynamicQuery =
+			getFolderActionableDynamicQuery(portletDataContext);
 
-			manifestSummary.addModelCount(
-				JournalFolder.class,
-				folderActionableDynamicQuery.performCount());
-		}
+		manifestSummary.addModelCount(
+			JournalFolder.class, folderActionableDynamicQuery.performCount());
 	}
 
 	protected ActionableDynamicQuery getArticleActionableDynamicQuery(
