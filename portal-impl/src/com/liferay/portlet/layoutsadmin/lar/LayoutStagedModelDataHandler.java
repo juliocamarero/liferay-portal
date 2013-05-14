@@ -636,17 +636,20 @@ public class LayoutStagedModelDataHandler
 			importedLayout.setColorSchemeId(StringPool.BLANK);
 		}
 
-		if (existingLayout == null) {
-			layout.setPriority(
-				LayoutLocalServiceUtil.getNextPriority(
-					groupId, privateLayout, parentLayoutId,
-					layout.getSourcePrototypeLayoutUuid()));
-		}
-
 		importedLayout.setWapThemeId(layout.getWapThemeId());
 		importedLayout.setWapColorSchemeId(layout.getWapColorSchemeId());
 		importedLayout.setCss(layout.getCss());
-		importedLayout.setPriority(layout.getPriority());
+
+		if (existingLayout == null) {
+			importedLayout.setPriority(
+				LayoutLocalServiceUtil.getNextPriority(
+					groupId, privateLayout, parentLayoutId,
+					layout.getSourcePrototypeLayoutUuid(), -1));
+		}
+		else {
+			importedLayout.setPriority(layout.getPriority());
+		}
+
 		importedLayout.setLayoutPrototypeUuid(layout.getLayoutPrototypeUuid());
 		importedLayout.setLayoutPrototypeLinkEnabled(
 			layout.isLayoutPrototypeLinkEnabled());
