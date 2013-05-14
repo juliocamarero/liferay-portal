@@ -1302,14 +1302,14 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		return nextLayoutId;
 	}
 
-	public int getNextPriority(long groupId, boolean privateLayout,
-							   long parentLayoutId,
-							   String sourcePrototypeLayoutUuid)
+	public int getNextPriority(
+			long groupId, boolean privateLayout, long parentLayoutId,
+			String sourcePrototypeLayoutUuid, int defaultPriority)
 		throws SystemException {
 
 		return layoutLocalServiceHelper.getNextPriority(
-			groupId, privateLayout, parentLayoutId,
-			sourcePrototypeLayoutUuid, -1);
+			groupId, privateLayout, parentLayoutId, sourcePrototypeLayoutUuid,
+			defaultPriority);
 	}
 
 	/**
