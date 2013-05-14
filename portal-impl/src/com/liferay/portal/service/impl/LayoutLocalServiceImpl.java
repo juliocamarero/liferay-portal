@@ -1298,6 +1298,25 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	}
 
 	/**
+	 * Returns the priority to use for the layout.
+	 *
+	 * @param groupId        the primary key of the group
+	 * @param privateLayout  whether the layout is private to the group
+	 * @param parentLayoutId the layoutId of the parent layout
+	 * @return the priority for the layout
+	 * @throws SystemException       if a system exception occurred
+	 */
+	public int getNextPriority(long groupId, boolean privateLayout,
+							   long parentLayoutId,
+							   String sourcePrototypeLayoutUuid)
+		throws SystemException {
+
+		return layoutLocalServiceHelper.getNextPriority(
+			groupId, privateLayout, parentLayoutId,
+			sourcePrototypeLayoutUuid, -1);
+	}
+
+	/**
 	 * Returns all the layouts without resource permissions
 	 *
 	 * @param  roleId the primary key of the role

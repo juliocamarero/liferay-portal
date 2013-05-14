@@ -850,6 +850,20 @@ public interface LayoutLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the priority to use for the layout.
+	*
+	* @param groupId        the primary key of the group
+	* @param privateLayout  whether the layout is private to the group
+	* @param parentLayoutId the layoutId of the parent layout
+	* @return the priority for the layout
+	* @throws SystemException       if a system exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getNextPriority(long groupId, boolean privateLayout,
+		long parentLayoutId, java.lang.String sourcePrototypeLayoutUuid)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns all the layouts without resource permissions
 	*
 	* @param roleId the primary key of the role
