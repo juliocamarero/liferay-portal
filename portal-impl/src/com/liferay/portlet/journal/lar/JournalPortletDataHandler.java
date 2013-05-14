@@ -88,11 +88,14 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		setAlwaysExportable(true);
 		setDataLocalized(true);
 		setExportControls(
-			new PortletDataHandlerBoolean(NAMESPACE, "web-content"),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "web-content", true, false, null,
+				JournalArticle.class.getName()),
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "structures-and-templates", true, true),
 			new PortletDataHandlerBoolean(
-				NAMESPACE, "feeds", true, true),
+				NAMESPACE, "feeds", true, false, null,
+				JournalFeed.class.getName()),
 			new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets"),
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "version-history",
