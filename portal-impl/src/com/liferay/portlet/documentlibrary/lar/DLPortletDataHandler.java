@@ -248,23 +248,21 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 		ActionableDynamicQuery fileEntryActionableDynamicQuery =
 			getFileEntryActionableDynamicQuery(portletDataContext);
 
-		long entryCount = fileEntryActionableDynamicQuery.performCount();
-
-		manifestSummary.addModelCount(FileEntry.class, entryCount);
+		manifestSummary.addModelCount(
+			FileEntry.class, fileEntryActionableDynamicQuery.performCount());
 
 		ActionableDynamicQuery fileShortcutActionableDynamicQuery =
 			getFileShortcutActionableDynamicQuery(portletDataContext);
 
-		long shortcutCount = fileShortcutActionableDynamicQuery.performCount();
-
-		manifestSummary.addModelCount(DLFileShortcut.class, shortcutCount);
+		manifestSummary.addModelCount(
+			DLFileShortcut.class,
+			fileShortcutActionableDynamicQuery.performCount());
 
 		ActionableDynamicQuery folderActionableDynamicQuery =
 			getFolderActionableDynamicQuery(portletDataContext);
 
-		long folderCount = folderActionableDynamicQuery.performCount();
-
-		manifestSummary.addModelCount(Folder.class, folderCount);
+		manifestSummary.addModelCount(
+			Folder.class, folderActionableDynamicQuery.performCount());
 	}
 
 	protected ActionableDynamicQuery getFileEntryActionableDynamicQuery(
@@ -285,6 +283,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext, fileEntry);
 			}
+
 		};
 	}
 
@@ -321,6 +320,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 						portletDataContext, fileEntryType);
 				}
 			}
+
 		};
 	}
 
@@ -339,6 +339,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 
 				dynamicQuery.add(property.eq(Boolean.TRUE));
 			}
+
 		};
 	}
 
@@ -360,6 +361,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				StagedModelDataHandlerUtil.exportStagedModel(
 					portletDataContext, folder);
 			}
+
 		};
 	}
 
