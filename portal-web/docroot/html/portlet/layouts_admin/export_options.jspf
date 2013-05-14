@@ -14,6 +14,23 @@
  */
 --%>
 
+<%
+String range = ParamUtil.getString(request, "range", "all");
+long startDateTime = ParamUtil.getLong(request, "startDate");
+long endDateTime = ParamUtil.getLong(request, "endDate");
+
+Date startDate = null;
+Date endDate = null;
+
+if (startDate != null) {
+	startDate = new Date(startDateTime);
+}
+
+if (endDate != null) {
+	endDate = new Date(endDateTime);
+}
+%>
+
 <div class="export-dialog-tree">
 	<aui:input cssClass="file-selector" label="export-the-selected-data-to-the-given-lar-file-name" name="exportFileName" size="50" value='<%= HtmlUtil.escape(StringUtil.replace(rootNodeName, " ", "_")) + "-" + Time.getShortTimestamp() + ".lar" %>' />
 
@@ -147,11 +164,11 @@
 							<ul class="lfr-tree unstyled">
 								<li class="tree-item">
 									<aui:fieldset cssClass="portlet-data-section" label="filter-to-export-by-date">
-										<aui:input checked="<%= true %>" id="rangeAll" label="all" name="range" type="radio" value="all" />
+										<aui:input checked='<%= range.equals("all") %>' id="rangeAll" label="all" name="range" type="radio" value="all" />
 
-										<aui:input id="rangeLastPublish" label="from-last-publish-date" name="range" type="radio" value="fromLastPublishDate" />
+										<aui:input checked='<%= range.equals("fromLastPublishDate") %>' id="rangeLastPublish" label="from-last-publish-date" name="range" type="radio" value="fromLastPublishDate" />
 
-										<aui:input helpMessage="export-date-range-help" id="rangeDateRange" label="date-range" name="range" type="radio" value="dateRange" />
+										<aui:input checked='<%= range.equals("dateRange") %>' helpMessage="export-date-range-help" id="rangeDateRange" label="date-range" name="range" type="radio" value="dateRange" />
 
 										<%
 										Calendar today = CalendarFactoryUtil.getCalendar(timeZone, locale);
@@ -223,7 +240,7 @@
 											</li>
 										</ul>
 
-										<aui:input id="rangeLast" inlineField="<%= true %>" label="last" name="range" type="radio" value="last" />
+										<aui:input checked='<%= range.equals("last") %>' id="rangeLast" inlineField="<%= true %>" label="last" name="range" type="radio" value="last" />
 
 										<aui:select inlineField="<%= true %>" label="" name="last">
 											<aui:option label='<%= LanguageUtil.format(pageContext, "x-hours", "12") %>' value="12" />
@@ -246,7 +263,20 @@
 						<ul>
 							<li>
 								<div class="selected-labels" id="<portlet:namespace />selectedRange">
-									<liferay-ui:message key="all" />
+									<c:choose>
+										<c:when test='<%= range.equals("fromLastPublishDate") %>'>
+											<liferay-ui:message key="from-last-publish-date" />
+										</c:when>
+										<c:when test='<%= range.equals("dateRange") %>'>
+											<liferay-ui:message key="data-range" />
+										</c:when>
+										<c:when test='<%= range.equals("last") %>'>
+											<liferay-ui:message key="last" />
+										</c:when>
+										<c:otherwise>
+											<liferay-ui:message key="all" />
+										</c:otherwise>
+									</c:choose>
 								</div>
 
 								<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
@@ -257,6 +287,8 @@
 					<%
 					Set<String> displayedControls = new HashSet<String>();
 					Set<String> portletDataHandlerClasses = new HashSet<String>();
+
+					PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
 
 					for (Portlet portlet : portletsList) {
 						String portletDataHandlerClass = portlet.getPortletDataHandlerClass();
@@ -271,6 +303,15 @@
 						String portletTitle = PortalUtil.getPortletTitle(portlet, application, locale);
 
 						PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+
+						try {
+							portletDataHandler.prepareManifestSummary(portletDataContext);
+						}
+						catch (Exception e) {
+							System.out.println("Cannot get manifest for " + portletTitle);
+						}
+
+						ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
 					%>
 
 						<li>
@@ -281,7 +322,7 @@
 							PortletDataHandlerControl[] metadataControls = portletDataHandler.getExportMetadataControls();
 
 							if (Validator.isNotNull(exportControls) || Validator.isNotNull(metadataControls)) {
-								String selectedContent = StringPool.BLANK;
+								List<String> selectedContent = new ArrayList<String>();
 							%>
 
 								<div class="hide" id="<portlet:namespace />content_<%= portlet.getPortletId() %>">
@@ -292,9 +333,9 @@
 												<%
 												if (exportControls != null) {
 													request.setAttribute("render_controls.jsp-controls", exportControls);
+													request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
 													request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
-
-													selectedContent += ArrayUtil.toString(exportControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
+													request.setAttribute("render_controls.jsp-selectedContent", selectedContent);
 												%>
 
 													<aui:field-wrapper label="content">
@@ -322,8 +363,7 @@
 														if ((childrenControls != null) && (childrenControls.length > 0)) {
 															request.setAttribute("render_controls.jsp-controls", childrenControls);
 															request.setAttribute("render_controls.portletId", portlet.getPortletId());
-
-															selectedContent += (selectedContent.equals(StringPool.BLANK) ? "" : ",") + ArrayUtil.toString(childrenControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
+															request.setAttribute("render_controls.jsp-selectedContent", selectedContent);
 														%>
 
 														<aui:field-wrapper label="content-metadata">
@@ -347,7 +387,7 @@
 									<li>
 										<div class="selected-labels" id="<portlet:namespace />selectedContent_<%= portlet.getPortletId() %>">
 
-											<%= selectedContent %>
+											<%= StringUtil.merge(selectedContent, StringPool.COMMA_AND_SPACE) %>
 
 										</div>
 
