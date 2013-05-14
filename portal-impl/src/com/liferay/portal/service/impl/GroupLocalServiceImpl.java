@@ -3739,13 +3739,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			long groupId, long parentGroupId, int type)
 		throws PortalException, SystemException {
 
-		if (type == GroupConstants.TYPE_SITE_LIMITED_TO_PARENT_SITE_MEMBERS) {
-			Group group = groupPersistence.fetchByPrimaryKey(parentGroupId);
+		if ((type == GroupConstants.TYPE_SITE_LIMITED_TO_PARENT_SITE_MEMBERS) &&
+			(parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID)) {
 
-			if (group == null) {
-				throw new GroupParentException(
-						GroupParentException.MISSING_PARENT);
-			}
+			throw new GroupParentException(GroupParentException.MISSING_PARENT);
 		}
 
 		if (parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) {
