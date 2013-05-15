@@ -113,7 +113,7 @@ String[] tempFileEntryNames = LayoutServiceUtil.getTempFileEntryNames(groupId, I
 						%>
 
 						<aui:button-row>
-							<aui:button inputCssClass='<%= fileEntry == null ? "aui-helper-hidden" : StringPool.BLANK %>' name="continueButton" type="submit" value="continue" />
+							<aui:button cssClass='<%= fileEntry == null ? "hide" : StringPool.BLANK %>' name="continueButton" type="submit" value="continue" />
 						</aui:button-row>
 
 						<%
