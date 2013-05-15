@@ -68,6 +68,13 @@ public interface Sites {
 
 	public static final String MERGE_FAIL_COUNT = "merge-fail-count";
 
+	public static final String MERGE_FAIL_FRIENDLY_URL =
+		"merge-fail-friendly-url";
+
+	public void addMergeFailFriendlyURLLayout(
+			LayoutSet layoutSet, Layout layout)
+		throws PortalException, SystemException;
+
 	public void addPortletBreadcrumbEntries(
 			Group group, HttpServletRequest request,
 			RenderResponse renderResponse)
@@ -130,6 +137,9 @@ public interface Sites {
 	public int getMergeFailCount(LayoutSetPrototype layoutSetPrototype)
 		throws PortalException, SystemException;
 
+	public List<Layout> getMergeFailFriendlyURLLayouts(LayoutSet layoutSet)
+		throws PortalException, SystemException;
+
 	public void importLayoutSetPrototype(
 			LayoutSetPrototype layoutSetPrototype, InputStream inputStream,
 			ServiceContext serviceContext)
@@ -184,6 +194,10 @@ public interface Sites {
 	 */
 	public void mergeLayoutSetProtypeLayouts(Group group, LayoutSet layoutSet)
 		throws Exception;
+
+	public void removeMergeFailFriendlyURLLayout(
+			LayoutSet layoutSet, Layout layout)
+		throws PortalException, SystemException;
 
 	public void resetPrototype(Layout layout)
 		throws PortalException, SystemException;

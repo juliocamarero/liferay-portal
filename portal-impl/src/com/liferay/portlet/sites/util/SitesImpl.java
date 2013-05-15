@@ -32,6 +32,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -101,6 +103,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -121,6 +124,21 @@ import javax.servlet.http.HttpServletResponse;
  * @author Zsolt Berentey
  */
 public class SitesImpl implements Sites {
+
+	public void addMergeFailFriendlyURLLayout(
+			LayoutSet layoutSet, Layout layout)
+		throws PortalException, SystemException {
+
+		List<Layout> layouts = getMergeFailFriendlyURLLayouts(layoutSet);
+
+		if (layouts.contains(layout)) {
+			return;
+		}
+
+		layouts.add(layout);
+
+		updateMergeFailFriendlyURLLayouts(layoutSet, layouts);
+	}
 
 	@Override
 	public void addPortletBreadcrumbEntries(
@@ -712,6 +730,41 @@ public class SitesImpl implements Sites {
 			layoutSetPrototypeSettingsProperties.getProperty(MERGE_FAIL_COUNT));
 	}
 
+	public List<Layout> getMergeFailFriendlyURLLayouts(LayoutSet layoutSet)
+		throws PortalException, SystemException {
+
+		if (layoutSet == null) {
+			return null;
+		}
+
+		LayoutSetPrototype layoutSetPrototype =
+			LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(
+				layoutSet.getLayoutSetPrototypeId());
+
+		LayoutSet layoutSetPrototypeLayoutSet =
+			layoutSetPrototype.getLayoutSet();
+
+		UnicodeProperties layoutSetSettingsProperties =
+			layoutSet.getSettingsProperties();
+
+		String layoutUuidsString = GetterUtil.getString(
+			layoutSetSettingsProperties.getProperty(MERGE_FAIL_FRIENDLY_URL));
+
+		String[] layoutUuidsArray = StringUtil.split(
+			layoutUuidsString, StringPool.COMMA);
+
+		List<Layout> layouts = new LinkedList<Layout>();
+
+		for (String uuid : layoutUuidsArray) {
+			layouts.add(
+				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
+					uuid, layoutSetPrototypeLayoutSet.getGroupId(),
+					layoutSetPrototypeLayoutSet.isPrivateLayout()));
+		}
+
+		return layouts;
+	}
+
 	@Override
 	public void importLayoutSetPrototype(
 			LayoutSetPrototype layoutSetPrototype, InputStream inputStream,
@@ -1229,6 +1282,17 @@ public class SitesImpl implements Sites {
 		mergeLayoutSetPrototypeLayouts(group, layoutSet);
 	}
 
+	public void removeMergeFailFriendlyURLLayout(
+			LayoutSet layoutSet, Layout layout)
+		throws PortalException, SystemException {
+
+		List<Layout> layouts = getMergeFailFriendlyURLLayouts(layoutSet);
+
+		layouts.remove(layout);
+
+		updateMergeFailFriendlyURLLayouts(layoutSet, layouts);
+	}
+
 	/**
 	 * Checks the permissions necessary for resetting the layout. If sufficient,
 	 * the layout is reset by calling {@link #doResetPrototype(Layout)}.
@@ -1402,6 +1466,31 @@ public class SitesImpl implements Sites {
 		updateLayoutSetPrototypeLink(
 			group.getGroupId(), false, publicLayoutSetPrototypeId,
 			publicLayoutSetPrototypeLinkEnabled);
+	}
+
+	public void updateMergeFailFriendlyURLLayouts(
+			LayoutSet layoutSet, List<Layout> layouts)
+		throws PortalException, SystemException {
+
+		UnicodeProperties layoutSetSettingsProperties =
+			layoutSet.getSettingsProperties();
+
+		if ((layouts == null) || (layouts.size() == 0)) {
+			layoutSetSettingsProperties.remove(MERGE_FAIL_FRIENDLY_URL);
+		}
+		else {
+			List<String> uuidList = new LinkedList<String>();
+
+			for (Layout curLayout : layouts) {
+				uuidList.add(curLayout.getUuid());
+			}
+
+			layoutSetSettingsProperties.setProperty(
+				MERGE_FAIL_FRIENDLY_URL,
+				StringUtil.merge(uuidList, StringPool.COMMA));
+		}
+
+		LayoutSetUtil.updateImpl(layoutSet);
 	}
 
 	/**
