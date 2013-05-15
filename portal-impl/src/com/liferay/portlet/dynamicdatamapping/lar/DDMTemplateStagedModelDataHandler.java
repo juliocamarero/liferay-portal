@@ -125,7 +125,8 @@ public class DDMTemplateStagedModelDataHandler
 				String smallImageURL =
 					ExportImportUtil.replaceExportContentReferences(
 						portletDataContext, template, templateElement,
-						template.getSmallImageURL().concat(StringPool.SPACE));
+						template.getSmallImageURL().concat(StringPool.SPACE),
+						true);
 
 				template.setSmallImageURL(smallImageURL);
 			}
@@ -149,7 +150,7 @@ public class DDMTemplateStagedModelDataHandler
 
 			String content = ExportImportUtil.replaceExportContentReferences(
 				portletDataContext, template, templateElement,
-				template.getScript());
+				template.getScript(), true);
 
 			template.setScript(content);
 		}
@@ -195,7 +196,7 @@ public class DDMTemplateStagedModelDataHandler
 				String smallImageURL =
 					ExportImportUtil.replaceImportContentReferences(
 						portletDataContext, element,
-						template.getSmallImageURL());
+						template.getSmallImageURL(), true);
 
 				template.setSmallImageURL(smallImageURL);
 			}

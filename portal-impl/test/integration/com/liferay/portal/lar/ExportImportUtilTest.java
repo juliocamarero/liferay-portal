@@ -150,7 +150,7 @@ public class ExportImportUtilTest {
 
 		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel,
-			rootElement.element("entry"), content);
+			rootElement.element("entry"), content, true);
 
 		for (String url : urls) {
 			Assert.assertFalse(content.contains(url));
@@ -183,7 +183,7 @@ public class ExportImportUtilTest {
 
 		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel,
-			rootElement.element("entry"), content);
+			rootElement.element("entry"), content, true);
 
 		Assert.assertFalse(
 			content.contains(PortalUtil.getPathFriendlyURLPrivateGroup()));
@@ -209,7 +209,7 @@ public class ExportImportUtilTest {
 
 		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel,
-			rootElement.element("entry"), content);
+			rootElement.element("entry"), content, true);
 
 		StringBundler sb = new StringBundler(5);
 
@@ -244,9 +244,9 @@ public class ExportImportUtilTest {
 
 		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel, entryElement,
-			content);
+			content, true);
 		content = ExportImportUtil.replaceImportContentReferences(
-			_portletDataContextImport, entryElement, content);
+			_portletDataContextImport, entryElement, content, true);
 
 		Assert.assertFalse(content.contains("[$dl-reference="));
 	}
@@ -263,9 +263,9 @@ public class ExportImportUtilTest {
 
 		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel, entryElement,
-			content);
+			content, true);
 		content = ExportImportUtil.replaceImportContentReferences(
-			_portletDataContextExport, entryElement, content);
+			_portletDataContextExport, entryElement, content, true);
 
 		Assert.assertFalse(
 			content.contains("@data_handler_private_group_servlet_mapping@"));
@@ -294,12 +294,12 @@ public class ExportImportUtilTest {
 
 		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel, entryElement,
-			content);
+			content, true);
 
 		String importedContent =
 			ExportImportUtil.replaceExportContentReferences(
 				_portletDataContextExport, _referrerStagedModel, entryElement,
-				content);
+				content, true);
 
 		Assert.assertEquals(importedContent, content);
 	}

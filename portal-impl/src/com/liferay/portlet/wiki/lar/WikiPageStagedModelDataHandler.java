@@ -60,7 +60,7 @@ public class WikiPageStagedModelDataHandler
 			portletDataContext, page.getNode());
 
 		String content = ExportImportUtil.replaceExportContentReferences(
-			portletDataContext, page, pageElement, page.getContent());
+			portletDataContext, page, pageElement, page.getContent(), true);
 
 		page.setContent(content);
 
@@ -108,7 +108,7 @@ public class WikiPageStagedModelDataHandler
 			portletDataContext.getImportDataStagedModelElement(page);
 
 		String content = ExportImportUtil.replaceImportContentReferences(
-			portletDataContext, pageElement, page.getContent());
+			portletDataContext, pageElement, page.getContent(), true);
 
 		page.setContent(content);
 

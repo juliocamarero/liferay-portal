@@ -36,39 +36,43 @@ public interface ExportImport {
 	public String replaceExportContentReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
-			String content)
+			String content, boolean exportReferencedContent)
 		throws Exception;
 
 	public String replaceExportDLReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
-			String content)
+			String content, boolean exportReferencedContent)
 		throws Exception;
 
 	public String replaceExportLayoutReferences(
-			PortletDataContext portletDataContext, String content)
+			PortletDataContext portletDataContext, String content,
+			boolean exportReferencedContent)
 		throws Exception;
 
 	public String replaceExportLinksToLayouts(
-			PortletDataContext portletDataContext, String content)
+			PortletDataContext portletDataContext, String content,
+			boolean exportReferencedContent)
 		throws Exception;
 
 	public String replaceImportContentReferences(
 			PortletDataContext portletDataContext, Element entityElement,
-			String content)
+			String content, boolean importReferencedContent)
 		throws Exception;
 
 	public String replaceImportDLReferences(
 			PortletDataContext portletDataContext, Element entityElement,
-			String content)
+			String content, boolean importReferencedContent)
 		throws Exception;
 
 	public String replaceImportLayoutReferences(
-			PortletDataContext portletDataContext, String content)
+			PortletDataContext portletDataContext, String content,
+			boolean importReferencedContent)
 		throws Exception;
 
 	public String replaceImportLinksToLayouts(
-			PortletDataContext portletDataContext, String content)
+			PortletDataContext portletDataContext, String content,
+			boolean importReferencedContent)
 		throws Exception;
 
 	public List<MissingReference> validateMissingReferences(
