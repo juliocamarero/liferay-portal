@@ -196,15 +196,12 @@ public class JournalArticleStagedModelDataHandler
 
 		article.setStatusByUserUuid(article.getStatusByUserUuid());
 
-		if (portletDataContext.getBooleanParameter(
-				JournalPortletDataHandler.NAMESPACE, "embedded-assets")) {
+		String content = ExportImportUtil.replaceExportContentReferences(
+			portletDataContext, article, articleElement, article.getContent(),
+			portletDataContext.getBooleanParameter(
+				JournalPortletDataHandler.NAMESPACE, "embedded-assets"));
 
-			String content = ExportImportUtil.replaceExportContentReferences(
-				portletDataContext, article, articleElement,
-				article.getContent(), true);
-
-			article.setContent(content);
-		}
+		article.setContent(content);
 
 		portletDataContext.addClassedModel(
 			articleElement, ExportImportPathUtil.getModelPath(article), article,
