@@ -76,12 +76,14 @@ public class ExportImportUtil {
 	}
 
 	public static String replaceExportLinksToLayouts(
-			PortletDataContext portletDataContext, String content,
-			boolean exportReferencedContent)
+			PortletDataContext portletDataContext,
+			StagedModel entityStagedModel, Element entityElement,
+			String content, boolean exportReferencedContent)
 		throws Exception {
 
 		return getExportImport().replaceExportLinksToLayouts(
-			portletDataContext, content, exportReferencedContent);
+			portletDataContext, entityStagedModel, entityElement, content,
+			exportReferencedContent);
 	}
 
 	public static String replaceImportContentReferences(

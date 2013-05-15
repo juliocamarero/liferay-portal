@@ -137,7 +137,8 @@ public class ExportImportImpl implements ExportImport {
 		content = ExportImportUtil.replaceExportLayoutReferences(
 			portletDataContext, content, exportReferencedContent);
 		content = ExportImportUtil.replaceExportLinksToLayouts(
-			portletDataContext, content, exportReferencedContent);
+			portletDataContext, entityStagedModel, entityElement, content,
+			exportReferencedContent);
 
 		content = ExportImportUtil.replaceExportDLReferences(
 			portletDataContext, entityStagedModel, entityElement, content,
@@ -347,8 +348,9 @@ public class ExportImportImpl implements ExportImport {
 	}
 
 	public String replaceExportLinksToLayouts(
-			PortletDataContext portletDataContext, String content,
-			boolean exportReferencedContent)
+			PortletDataContext portletDataContext,
+			StagedModel entityStagedModel, Element entityElement,
+			String content, boolean exportReferencedContent)
 		throws Exception {
 
 		List<String> oldLinksToLayout = new ArrayList<String>();
@@ -383,6 +385,10 @@ public class ExportImportImpl implements ExportImport {
 
 				oldLinksToLayout.add(oldLinkToLayout);
 				newLinksToLayout.add(newLinkToLayout);
+
+				portletDataContext.addReferenceElement(
+					entityStagedModel, entityElement, layout, Layout.class,
+					PortletDataContext.REFERENCE_TYPE_DEPENDENCY, true);
 			}
 			catch (Exception e) {
 				if (_log.isDebugEnabled() || _log.isWarnEnabled()) {

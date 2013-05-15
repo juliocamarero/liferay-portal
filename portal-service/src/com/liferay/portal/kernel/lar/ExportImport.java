@@ -51,8 +51,9 @@ public interface ExportImport {
 		throws Exception;
 
 	public String replaceExportLinksToLayouts(
-			PortletDataContext portletDataContext, String content,
-			boolean exportReferencedContent)
+			PortletDataContext portletDataContext,
+			StagedModel entityStagedModel, Element entityElement,
+			String content, boolean exportReferencedContent)
 		throws Exception;
 
 	public String replaceImportContentReferences(
