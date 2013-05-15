@@ -261,7 +261,7 @@ public class LayoutStagedModelDataHandler
 			}
 		}
 
-		fixTypeSettings(layout);
+		fixExportTypeSettings(layout);
 
 		String layoutPath = ExportImportPathUtil.getModelPath(layout);
 
@@ -625,7 +625,7 @@ public class LayoutStagedModelDataHandler
 		StagingUtil.updateLastImportSettings(
 			layoutElement, importedLayout, portletDataContext);
 
-		fixTypeSettings(importedLayout);
+		fixImportTypeSettings(importedLayout);
 
 		importedLayout.setIconImage(false);
 
@@ -719,9 +719,9 @@ public class LayoutStagedModelDataHandler
 			PortletDataContext.REFERENCE_TYPE_EMBEDDED, false);
 	}
 
-	protected void fixTypeSettings(Layout layout) throws Exception {
+	protected Object[] extractFriendlyURLInfo(Layout layout) {
 		if (!layout.isTypeURL()) {
-			return;
+			return null;
 		}
 
 		UnicodeProperties typeSettings = layout.getTypeSettingsProperties();
@@ -739,35 +739,79 @@ public class LayoutStagedModelDataHandler
 			!url.startsWith(friendlyURLPrivateUserPath) &&
 			!url.startsWith(friendlyURLPublicPath)) {
 
-			return;
+			return null;
 		}
 
 		int x = url.indexOf(CharPool.SLASH, 1);
 
 		if (x == -1) {
-			return;
+			return null;
 		}
 
 		int y = url.indexOf(CharPool.SLASH, x + 1);
 
 		if (y == -1) {
-			return;
+			return null;
 		}
 
-		String friendlyURL = url.substring(x, y);
+		return new Object[] {url.substring(x, y), url, x, y};
+	}
+
+	protected void fixExportTypeSettings(Layout layout) throws Exception {
+		Object[] friendlyURLInfo = extractFriendlyURLInfo(layout);
+
+		if (friendlyURLInfo == null) {
+			return;
+		}
 
 		Group group = layout.getGroup();
 
 		String groupFriendlyURL = group.getFriendlyURL();
 
+		String friendlyURL = (String)friendlyURLInfo[0];
+
 		if (!friendlyURL.equals(groupFriendlyURL)) {
 			return;
 		}
+
+		UnicodeProperties typeSettings = layout.getTypeSettingsProperties();
+
+		String url = (String)friendlyURLInfo[1];
+
+		int x = (Integer)friendlyURLInfo[2];
+		int y = (Integer)friendlyURLInfo[3];
 
 		typeSettings.setProperty(
 			"url",
 			url.substring(0, x) + LayoutExporter.SAME_GROUP_FRIENDLY_URL +
 				url.substring(y));
+	}
+
+	protected void fixImportTypeSettings(Layout layout) throws Exception {
+		Object[] friendlyURLInfo = extractFriendlyURLInfo(layout);
+
+		if (friendlyURLInfo == null) {
+			return;
+		}
+
+		String friendlyURL = (String)friendlyURLInfo[0];
+
+		if (!friendlyURL.equals(LayoutExporter.SAME_GROUP_FRIENDLY_URL)) {
+			return;
+		}
+
+		Group group = layout.getGroup();
+
+		UnicodeProperties typeSettings = layout.getTypeSettingsProperties();
+
+		String url = (String)friendlyURLInfo[1];
+
+		int x = (Integer)friendlyURLInfo[2];
+		int y = (Integer)friendlyURLInfo[3];
+
+		typeSettings.setProperty(
+			"url",
+			url.substring(0, x) + group.getFriendlyURL() + url.substring(y));
 	}
 
 	protected void importJournalArticle(
