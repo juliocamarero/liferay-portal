@@ -29,6 +29,21 @@ import java.util.Map;
  */
 public class ExportImportUtil {
 
+	public static ExportImport getExportImport() {
+		PortalRuntimePermission.checkGetBeanProperty(ExportImportUtil.class);
+
+		return _exportImport;
+	}
+
+	public static ManifestSummary getManifestSummary(
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
+		throws Exception {
+
+		return getExportImport().getManifestSummary(
+			userId, groupId, parameterMap, file);
+	}
+
 	public static String replaceExportContentReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
@@ -63,21 +78,6 @@ public class ExportImportUtil {
 
 		return getExportImport().replaceExportLinksToLayouts(
 			portletDataContext, content);
-	}
-
-	public static ExportImport getExportImport() {
-		PortalRuntimePermission.checkGetBeanProperty(ExportImportUtil.class);
-
-		return _exportImport;
-	}
-
-	public static ManifestSummary getManifestSummary(
-			long userId, long groupId, Map<String, String[]> parameterMap,
-			File file)
-		throws Exception {
-
-		return getExportImport().getManifestSummary(
-			userId, groupId, parameterMap, file);
 	}
 
 	public static String replaceImportContentReferences(

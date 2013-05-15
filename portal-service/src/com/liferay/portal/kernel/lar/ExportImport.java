@@ -28,6 +28,11 @@ import java.util.Map;
  */
 public interface ExportImport {
 
+	public ManifestSummary getManifestSummary(
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
+		throws Exception;
+
 	public String replaceExportContentReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
@@ -46,11 +51,6 @@ public interface ExportImport {
 
 	public String replaceExportLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
-		throws Exception;
-
-	public ManifestSummary getManifestSummary(
-			long userId, long groupId, Map<String, String[]> parameterMap,
-			File file)
 		throws Exception;
 
 	public String replaceImportContentReferences(
