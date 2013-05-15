@@ -18,6 +18,7 @@
 
 <%
 long groupId = GetterUtil.getLong((String)request.getAttribute("edit_layout_set_prototype.jsp-groupId"));
+LayoutSet layoutSet = (LayoutSet)request.getAttribute("edit_layout_set_prototype.jsp-layoutSet");
 LayoutSetPrototype layoutSetPrototype = (LayoutSetPrototype)request.getAttribute("edit_layout_set_prototype.jsp-layoutSetPrototype");
 boolean privateLayoutSet = GetterUtil.getBoolean((String)request.getAttribute("edit_layout_set_prototype.jsp-privateLayoutSet"));
 String redirect = (String)request.getAttribute("edit_layout_set_prototype.jsp-redirect");
@@ -49,6 +50,12 @@ int mergeFailCount = SitesUtil.getMergeFailCount(layoutSetPrototype);
 		portletURL.setParameter("struts_action", "/layout_set_prototypes/edit_layout_set_prototype");
 		portletURL.setParameter(Constants.CMD, "reset_merge_fail_count");
 	}
+
+	List<Layout> mergeFailFriendlyURLLayouts = null;
+
+	if (layoutSet != null) {
+		mergeFailFriendlyURLLayouts = SitesUtil.getMergeFailFriendlyURLLayouts(layoutSet);
+	}
 	%>
 
 	<span class="alert alert-block">
@@ -57,9 +64,45 @@ int mergeFailCount = SitesUtil.getMergeFailCount(layoutSetPrototype);
 		<liferay-ui:message arguments="site-template" key='<%= merge ? "click-reset-and-propagate-to-reset-the-failure-count-and-propagate-changes-from-the-x" : "click-reset-to-reset-the-failure-count-and-reenable-propagation" %>' />
 
 		<aui:button id='<%= randomNamespace + "resetButton" %>' value='<%= merge ? "reset-and-propagate" : "reset" %>' />
+
+		<c:if test="<%= mergeFailFriendlyURLLayouts != null %>">
+			<p>
+				<liferay-ui:message key='<%= "the-changes-from-the-following-site-template-pages-could-not-be-propagated-because-of-the-friendly-url" %>' />
+				<ul>
+
+					<%
+					for (Layout curLayout : mergeFailFriendlyURLLayouts) {
+						String curLayoutName = curLayout.getName(themeDisplay.getLocale());
+					%>
+
+						<li>
+							<c:choose>
+								<c:when test="<%= LayoutPermissionUtil.contains(permissionChecker, curLayout, ActionKeys.UPDATE) %>">
+									<liferay-portlet:renderURL portletName="<%= PortletKeys.LAYOUT_SET_PROTOTYPE %>" var="editLayoutsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+										<portlet:param name="struts_action" value="/layout_set_prototypes/edit_layouts" />
+										<portlet:param name="groupId" value="<%= String.valueOf(curLayout.getGroupId()) %>" />
+										<portlet:param name="redirect" value="<%= currentURL %>" />
+										<portlet:param name="selPlid" value="<%= String.valueOf(curLayout.getPlid()) %>" />
+									</liferay-portlet:renderURL>
+
+									<a href="<%= editLayoutsURL %>"><%= curLayoutName %></a>
+								</c:when>
+								<c:otherwise>
+									<%= curLayoutName %>
+								</c:otherwise>
+							</c:choose>
+						</li>
+
+					<%
+					}
+					%>
+
+				</ul>
+			</p>
+		</c:if>
 	</span>
 
-	<aui:script use="aui-base">
+	<aui:script use="aui-base,liferay-util-window">
 		var resetButton= A.one('#<%= randomNamespace %>resetButton');
 
 		resetButton.on(
@@ -67,6 +110,25 @@ int mergeFailCount = SitesUtil.getMergeFailCount(layoutSetPrototype);
 			function(event) {
 				submitForm(document.hrefFm, '<%= portletURL.toString() %>');
 			}
+		);
+
+		A.getBody().delegate(
+			'click',
+			function(event) {
+				event.preventDefault();
+
+				var link = event.currentTarget;
+				var title = link.get('text');
+
+				Liferay.Util.openWindow(
+					{
+						id: '<portlet:namespace />' + title,
+						title: title,
+						uri: link.attr('href')
+					}
+				);
+			},
+			'.alert-block a'
 		);
 	</aui:script>
 </c:if>
