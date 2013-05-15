@@ -2401,7 +2401,8 @@ public class JournalArticleLocalServiceImpl
 
 			Date expirationDate = article.getExpirationDate();
 
-			if (article.getDisplayDate().before(now) &&
+			if (((article.getDisplayDate() == null) ||
+				 article.getDisplayDate().before(now)) &&
 				((expirationDate == null) || expirationDate.after(now))) {
 
 				return article;
