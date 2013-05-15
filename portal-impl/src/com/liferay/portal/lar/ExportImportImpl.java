@@ -219,7 +219,8 @@ public class ExportImportImpl implements ExportImport {
 
 				portletDataContext.addReferenceElement(
 					entityStagedModel, entityElement, fileEntry,
-					FileEntry.class, PortletDataContext.REFERENCE_TYPE_EMBEDDED,
+					FileEntry.class,
+					PortletDataContext.REFERENCE_TYPE_DEPENDENCY,
 					!exportReferencedContent);
 
 				String path = ExportImportPathUtil.getModelPath(
