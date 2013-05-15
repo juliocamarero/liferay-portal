@@ -148,7 +148,7 @@ public class ExportImportUtilTest {
 
 		List<String> urls = getURLs(content);
 
-		content = ExportImportUtil.exportContentReferences(
+		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel,
 			rootElement.element("entry"), content);
 
@@ -181,7 +181,7 @@ public class ExportImportUtilTest {
 		String content = replaceParameters(
 			getContent("layout_references.txt"), _fileEntry);
 
-		content = ExportImportUtil.exportContentReferences(
+		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel,
 			rootElement.element("entry"), content);
 
@@ -207,7 +207,7 @@ public class ExportImportUtilTest {
 		String content = replaceParameters(
 			getContent("layout_links.txt"), _fileEntry);
 
-		content = ExportImportUtil.exportContentReferences(
+		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel,
 			rootElement.element("entry"), content);
 
@@ -242,10 +242,10 @@ public class ExportImportUtilTest {
 		String content = replaceParameters(
 			getContent("dl_references.txt"), _fileEntry);
 
-		content = ExportImportUtil.exportContentReferences(
+		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel, entryElement,
 			content);
-		content = ExportImportUtil.importContentReferences(
+		content = ExportImportUtil.replaceImportContentReferences(
 			_portletDataContextImport, entryElement, content);
 
 		Assert.assertFalse(content.contains("[$dl-reference="));
@@ -261,10 +261,10 @@ public class ExportImportUtilTest {
 		String content = replaceParameters(
 			getContent("layout_references.txt"), _fileEntry);
 
-		content = ExportImportUtil.exportContentReferences(
+		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel, entryElement,
 			content);
-		content = ExportImportUtil.importContentReferences(
+		content = ExportImportUtil.replaceImportContentReferences(
 			_portletDataContextExport, entryElement, content);
 
 		Assert.assertFalse(
@@ -292,13 +292,14 @@ public class ExportImportUtilTest {
 		String content = replaceParameters(
 			getContent("layout_links.txt"), _fileEntry);
 
-		content = ExportImportUtil.exportContentReferences(
+		content = ExportImportUtil.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel, entryElement,
 			content);
 
-		String importedContent = ExportImportUtil.exportContentReferences(
-			_portletDataContextExport, _referrerStagedModel, entryElement,
-			content);
+		String importedContent =
+			ExportImportUtil.replaceExportContentReferences(
+				_portletDataContextExport, _referrerStagedModel, entryElement,
+				content);
 
 		Assert.assertEquals(importedContent, content);
 	}

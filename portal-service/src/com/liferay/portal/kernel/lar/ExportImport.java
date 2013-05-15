@@ -28,23 +28,23 @@ import java.util.Map;
  */
 public interface ExportImport {
 
-	public String exportContentReferences(
+	public String replaceExportContentReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
 			String content)
 		throws Exception;
 
-	public String exportDLReferences(
+	public String replaceExportDLReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
 			String content)
 		throws Exception;
 
-	public String exportLayoutReferences(
+	public String replaceExportLayoutReferences(
 			PortletDataContext portletDataContext, String content)
 		throws Exception;
 
-	public String exportLinksToLayouts(
+	public String replaceExportLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
 		throws Exception;
 
@@ -53,21 +53,21 @@ public interface ExportImport {
 			File file)
 		throws Exception;
 
-	public String importContentReferences(
+	public String replaceImportContentReferences(
 			PortletDataContext portletDataContext, Element entityElement,
 			String content)
 		throws Exception;
 
-	public String importDLReferences(
+	public String replaceImportDLReferences(
 			PortletDataContext portletDataContext, Element entityElement,
 			String content)
 		throws Exception;
 
-	public String importLayoutReferences(
+	public String replaceImportLayoutReferences(
 			PortletDataContext portletDataContext, String content)
 		throws Exception;
 
-	public String importLinksToLayouts(
+	public String replaceImportLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
 		throws Exception;
 

@@ -81,18 +81,18 @@ import org.xml.sax.InputSource;
  */
 public class ExportImportImpl implements ExportImport {
 
-	public String exportContentReferences(
+	public String replaceExportContentReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
 			String content)
 		throws Exception {
 
-		content = ExportImportUtil.exportLayoutReferences(
+		content = ExportImportUtil.replaceExportLayoutReferences(
 			portletDataContext, content);
-		content = ExportImportUtil.exportLinksToLayouts(
+		content = ExportImportUtil.replaceExportLinksToLayouts(
 			portletDataContext, content);
 
-		content = ExportImportUtil.exportDLReferences(
+		content = ExportImportUtil.replaceExportDLReferences(
 			portletDataContext, entityStagedModel, entityElement, content);
 
 		Element groupElement = entityElement.getParent();
@@ -107,7 +107,7 @@ public class ExportImportImpl implements ExportImport {
 		return content;
 	}
 
-	public String exportDLReferences(
+	public String replaceExportDLReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
 			String content)
@@ -192,7 +192,7 @@ public class ExportImportImpl implements ExportImport {
 		return sb.toString();
 	}
 
-	public String exportLayoutReferences(
+	public String replaceExportLayoutReferences(
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
@@ -295,7 +295,7 @@ public class ExportImportImpl implements ExportImport {
 		return sb.toString();
 	}
 
-	public String exportLinksToLayouts(
+	public String replaceExportLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
@@ -402,23 +402,23 @@ public class ExportImportImpl implements ExportImport {
 		return manifestSummary;
 	}
 
-	public String importContentReferences(
+	public String replaceImportContentReferences(
 			PortletDataContext portletDataContext, Element entityElement,
 			String content)
 		throws Exception {
 
-		content = ExportImportUtil.importLayoutReferences(
+		content = ExportImportUtil.replaceImportLayoutReferences(
 			portletDataContext, content);
-		content = ExportImportUtil.importLinksToLayouts(
+		content = ExportImportUtil.replaceImportLinksToLayouts(
 			portletDataContext, content);
 
-		content = ExportImportUtil.importDLReferences(
+		content = ExportImportUtil.replaceImportDLReferences(
 			portletDataContext, entityElement, content);
 
 		return content;
 	}
 
-	public String importDLReferences(
+	public String replaceImportDLReferences(
 			PortletDataContext portletDataContext, Element entityElement,
 			String content)
 		throws Exception {
@@ -475,7 +475,7 @@ public class ExportImportImpl implements ExportImport {
 		return content;
 	}
 
-	public String importLayoutReferences(
+	public String replaceImportLayoutReferences(
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
@@ -499,7 +499,7 @@ public class ExportImportImpl implements ExportImport {
 		return content;
 	}
 
-	public String importLinksToLayouts(
+	public String replaceImportLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 

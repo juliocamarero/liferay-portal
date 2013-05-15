@@ -123,7 +123,7 @@ public class DDMTemplateStagedModelDataHandler
 
 			if (Validator.isNotNull(template.getSmallImageURL())) {
 				String smallImageURL =
-					ExportImportUtil.exportContentReferences(
+					ExportImportUtil.replaceExportContentReferences(
 						portletDataContext, template, templateElement,
 						template.getSmallImageURL().concat(StringPool.SPACE));
 
@@ -147,7 +147,7 @@ public class DDMTemplateStagedModelDataHandler
 		if (portletDataContext.getBooleanParameter(
 				DDMPortletDataHandler.NAMESPACE, "embedded-assets")) {
 
-			String content = ExportImportUtil.exportContentReferences(
+			String content = ExportImportUtil.replaceExportContentReferences(
 				portletDataContext, template, templateElement,
 				template.getScript());
 
@@ -193,7 +193,7 @@ public class DDMTemplateStagedModelDataHandler
 
 			if (Validator.isNotNull(template.getSmallImageURL())) {
 				String smallImageURL =
-					ExportImportUtil.importContentReferences(
+					ExportImportUtil.replaceImportContentReferences(
 						portletDataContext, element,
 						template.getSmallImageURL());
 

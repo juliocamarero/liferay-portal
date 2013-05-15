@@ -29,39 +29,39 @@ import java.util.Map;
  */
 public class ExportImportUtil {
 
-	public static String exportContentReferences(
+	public static String replaceExportContentReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
 			String content)
 		throws Exception {
 
-		return getExportImport().exportContentReferences(
+		return getExportImport().replaceExportContentReferences(
 			portletDataContext, entityStagedModel, entityElement, content);
 	}
 
-	public static String exportDLReferences(
+	public static String replaceExportDLReferences(
 			PortletDataContext portletDataContext,
 			StagedModel entityStagedModel, Element entityElement,
 			String content)
 		throws Exception {
 
-		return getExportImport().exportDLReferences(
+		return getExportImport().replaceExportDLReferences(
 			portletDataContext, entityStagedModel, entityElement, content);
 	}
 
-	public static String exportLayoutReferences(
+	public static String replaceExportLayoutReferences(
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
-		return getExportImport().exportLayoutReferences(
+		return getExportImport().replaceExportLayoutReferences(
 			portletDataContext, content);
 	}
 
-	public static String exportLinksToLayouts(
+	public static String replaceExportLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
-		return getExportImport().exportLinksToLayouts(
+		return getExportImport().replaceExportLinksToLayouts(
 			portletDataContext, content);
 	}
 
@@ -80,37 +80,37 @@ public class ExportImportUtil {
 			userId, groupId, parameterMap, file);
 	}
 
-	public static String importContentReferences(
+	public static String replaceImportContentReferences(
 			PortletDataContext portletDataContext, Element entityElement,
 			String content)
 		throws Exception {
 
-		return getExportImport().importContentReferences(
+		return getExportImport().replaceImportContentReferences(
 			portletDataContext, entityElement, content);
 	}
 
-	public static String importDLReferences(
+	public static String replaceImportDLReferences(
 			PortletDataContext portletDataContext, Element entityElement,
 			String content)
 		throws Exception {
 
-		return getExportImport().importDLReferences(
+		return getExportImport().replaceImportDLReferences(
 			portletDataContext, entityElement, content);
 	}
 
-	public static String importLayoutReferences(
+	public static String replaceImportLayoutReferences(
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
-		return getExportImport().importLayoutReferences(
+		return getExportImport().replaceImportLayoutReferences(
 			portletDataContext, content);
 	}
 
-	public static String importLinksToLayouts(
+	public static String replaceImportLinksToLayouts(
 			PortletDataContext portletDataContext, String content)
 		throws Exception {
 
-		return getExportImport().importLinksToLayouts(
+		return getExportImport().replaceImportLinksToLayouts(
 			portletDataContext, content);
 	}
 
