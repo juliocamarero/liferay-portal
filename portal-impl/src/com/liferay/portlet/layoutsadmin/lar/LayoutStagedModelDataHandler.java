@@ -15,6 +15,7 @@
 package com.liferay.portlet.layoutsadmin.lar;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.portal.LayoutFriendlyURLException;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -254,6 +255,12 @@ public class LayoutStagedModelDataHandler
 			PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE,
 			PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE_MERGE_BY_LAYOUT_UUID);
 
+		List<Layout> previousLayouts = LayoutUtil.findByG_P(
+			groupId, privateLayout);
+
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+			groupId, privateLayout);
+
 		if (layoutsImportMode.equals(
 				PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE_ADD_AS_NEW)) {
 
@@ -268,9 +275,6 @@ public class LayoutStagedModelDataHandler
 			Locale locale = LocaleUtil.getDefault();
 
 			String localizedName = layout.getName(locale);
-
-			List<Layout> previousLayouts = LayoutUtil.findByG_P(
-				groupId, privateLayout);
 
 			for (Layout curLayout : previousLayouts) {
 				if (localizedName.equals(curLayout.getName(locale)) ||
@@ -298,6 +302,18 @@ public class LayoutStagedModelDataHandler
 				newLayoutsMap.put(oldLayoutId, existingLayout);
 
 				return;
+			}
+
+			for (Layout previousLayout : previousLayouts) {
+				if (previousLayout.getFriendlyURL().equals(friendlyURL) &&
+					((existingLayout == null) ||
+					 !previousLayout.getUuid().equals(layout.getUuid()))) {
+
+					SitesUtil.addMergeFailFriendlyURLLayout(layoutSet, layout);
+
+					throw new LayoutFriendlyURLException(
+						LayoutFriendlyURLException.DUPLICATE);
+				}
 			}
 		}
 		else {
@@ -374,9 +390,6 @@ public class LayoutStagedModelDataHandler
 			initNewLayoutPermissions(
 				portletDataContext.getCompanyId(), groupId, userId, layout,
 				importedLayout, privateLayout);
-
-			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, privateLayout);
 
 			importedLayout.setLayoutSet(layoutSet);
 		}
@@ -510,6 +523,8 @@ public class LayoutStagedModelDataHandler
 
 		portletDataContext.importClassedModel(
 			layout, importedLayout, LayoutPortletDataHandler.NAMESPACE);
+
+		SitesUtil.removeMergeFailFriendlyURLLayout(layoutSet, layout);
 	}
 
 	protected void exportJournalArticle(
