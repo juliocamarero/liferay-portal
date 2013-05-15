@@ -40,10 +40,7 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.lar.LayoutCache;
 import com.liferay.portal.lar.LayoutExporter;
-import com.liferay.portal.lar.PermissionExporter;
-import com.liferay.portal.lar.PermissionImporter;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.Layout;
@@ -56,10 +53,6 @@ import com.liferay.portal.model.LayoutStagingHandler;
 import com.liferay.portal.model.LayoutTemplate;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.LayoutTypePortletConstants;
-import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.model.Role;
-import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ImageLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
@@ -67,8 +60,6 @@ import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.LayoutTemplateLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ResourceLocalServiceUtil;
-import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
-import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.LayoutRevisionUtil;
@@ -220,14 +211,6 @@ public class LayoutStagedModelDataHandler
 
 		portletDataContext.setPlid(layout.getPlid());
 
-		// Layout ratings
-
-		portletDataContext.addRatingsEntries(Layout.class, layout.getPlid());
-
-		// Layout comments
-
-		portletDataContext.addComments(Layout.class, layout.getPlid());
-
 		if (layout.isIconImage()) {
 			Image image = ImageLocalServiceUtil.getImage(
 				layout.getIconImageId());
@@ -244,17 +227,6 @@ public class LayoutStagedModelDataHandler
 
 				portletDataContext.addZipEntry(iconPath, image.getTextObj());
 			}
-		}
-
-		boolean exportPermissions = MapUtil.getBoolean(
-			portletDataContext.getParameterMap(),
-			PortletDataHandlerKeys.PERMISSIONS);
-
-		if (exportPermissions) {
-			_permissionExporter.exportLayoutPermissions(
-				portletDataContext, new LayoutCache(),
-				portletDataContext.getCompanyId(),
-				portletDataContext.getScopeGroupId(), layout, layoutElement);
 		}
 
 		if (layout.isTypeArticle()) {
@@ -293,11 +265,9 @@ public class LayoutStagedModelDataHandler
 
 		String layoutPath = ExportImportPathUtil.getModelPath(layout);
 
-		layoutElement.addAttribute("path", layoutPath);
-
-		portletDataContext.addExpando(layoutElement, layoutPath, layout);
-
-		portletDataContext.addZipEntry(layoutPath, layout);
+		portletDataContext.addClassedModel(
+			layoutElement, ExportImportPathUtil.getModelPath(layout), layout,
+			LayoutPortletDataHandler.NAMESPACE);
 	}
 
 	@Override
@@ -682,11 +652,6 @@ public class LayoutStagedModelDataHandler
 			ImageLocalServiceUtil.deleteImage(importedLayout.getIconImageId());
 		}
 
-		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			layoutElement, importedLayout, null);
-
-		importedLayout.setExpandoBridgeAttributes(serviceContext);
-
 		LayoutUtil.update(importedLayout);
 
 		portletDataContext.setPlid(importedLayout.getPlid());
@@ -696,43 +661,8 @@ public class LayoutStagedModelDataHandler
 
 		newLayouts.add(importedLayout);
 
-		// Layout ratings
-
-		portletDataContext.importRatingsEntries(
-			Layout.class, layout.getPlid(), importedLayout.getPlid());
-
-		// Layout comments
-
-		portletDataContext.importComments(
-			Layout.class, layout.getPlid(), importedLayout.getPlid(), groupId);
-
-		boolean importPermissions = MapUtil.getBoolean(
-			portletDataContext.getParameterMap(),
-			PortletDataHandlerKeys.PERMISSIONS);
-
-		if (importPermissions) {
-			_permissionImporter.importLayoutPermissions(
-				new LayoutCache(), portletDataContext.getCompanyId(), groupId,
-				userId, importedLayout, layoutElement,
-				portletDataContext.getImportDataRootElement());
-		}
-
-		boolean importPublicLayoutPermissions = MapUtil.getBoolean(
-			portletDataContext.getParameterMap(),
-			PortletDataHandlerKeys.PUBLIC_LAYOUT_PERMISSIONS);
-
-		if (importPublicLayoutPermissions) {
-			String resourceName = Layout.class.getName();
-			String resourcePrimKey = String.valueOf(importedLayout.getPlid());
-
-			Role guestRole = RoleLocalServiceUtil.getRole(
-				importedLayout.getCompanyId(), RoleConstants.GUEST);
-
-			ResourcePermissionLocalServiceUtil.setResourcePermissions(
-				importedLayout.getCompanyId(), resourceName,
-				ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey,
-				guestRole.getRoleId(), new String[]{ActionKeys.VIEW});
-		}
+		portletDataContext.importClassedModel(
+			layout, importedLayout, LayoutPortletDataHandler.NAMESPACE);
 	}
 
 	protected void exportJournalArticle(
@@ -996,8 +926,5 @@ public class LayoutStagedModelDataHandler
 
 	private static Log _log = LogFactoryUtil.getLog(
 		LayoutStagedModelDataHandler.class);
-
-	private PermissionExporter _permissionExporter = new PermissionExporter();
-	private PermissionImporter _permissionImporter = new PermissionImporter();
 
 }
