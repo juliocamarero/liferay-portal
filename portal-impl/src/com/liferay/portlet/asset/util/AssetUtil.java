@@ -52,14 +52,12 @@ import com.liferay.portlet.asset.NoSuchTagException;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryProperty;
 import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.model.AssetTagProperty;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetCategoryPropertyLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.asset.service.AssetLinkLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagPropertyLocalServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
@@ -368,41 +366,6 @@ public class AssetUtil {
 					className, classPK);
 
 				assetEntries.add(assetEntry);
-			}
-			catch (Exception e) {
-			}
-		}
-
-		return assetEntries;
-	}
-
-	public static List<AssetEntry> getAssetEntries(
-		Hits hits, long linkedEntryId) {
-
-		List<AssetEntry> assetEntries = new ArrayList<AssetEntry>();
-
-		for (Document document : hits.getDocs()) {
-			String className = GetterUtil.getString(
-				document.get(Field.ENTRY_CLASS_NAME));
-			long classPK = GetterUtil.getLong(
-				document.get(Field.ENTRY_CLASS_PK));
-
-			try {
-				AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(
-					className, classPK);
-
-				List<AssetLink> assetLinks =
-					AssetLinkLocalServiceUtil.getDirectLinks(
-						assetEntry.getEntryId());
-
-				for (AssetLink assetLink : assetLinks) {
-					if (assetLink.getEntryId2() == linkedEntryId) {
-						assetEntries.add(assetEntry);
-
-						break;
-					}
-				}
-
 			}
 			catch (Exception e) {
 			}

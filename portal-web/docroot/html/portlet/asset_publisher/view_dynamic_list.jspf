@@ -50,19 +50,14 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 
 			int groupTotal = 0;
 
-			if (PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX) {
+			if (PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX && (assetEntryQuery.getLinkedAssetEntryId() == 0)) {
 				Hits hits = AssetUtil.search(request, assetEntryQuery, start, end);
 
 				groupTotal = hits.getLength();
 
 				total += groupTotal;
 
-				if (portletName.equals(PortletKeys.RELATED_ASSETS)) {
-					results = AssetUtil.getAssetEntries(hits, assetEntryQuery.getLinkedAssetEntryId());
-				}
-				else {
-					results = AssetUtil.getAssetEntries(hits);
-				}
+				results = AssetUtil.getAssetEntries(hits);
 			}
 			else {
 				groupTotal = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
@@ -121,19 +116,14 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 	else if (!groupByClass) {
 		assetEntryQuery.setClassNameIds(classNameIds);
 
-		if (PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX) {
+		if (PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX && (assetEntryQuery.getLinkedAssetEntryId() == 0)) {
 			Hits hits = AssetUtil.search(request, assetEntryQuery, start, end);
 
 			total = hits.getLength();
 
 			searchContainer.setTotal(total);
 
-			if (portletName.equals(PortletKeys.RELATED_ASSETS)) {
-				results = AssetUtil.getAssetEntries(hits, assetEntryQuery.getLinkedAssetEntryId());
-			}
-			else {
-				results = AssetUtil.getAssetEntries(hits);
-			}
+			results = AssetUtil.getAssetEntries(hits);
 		}
 		else {
 			total = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
@@ -176,19 +166,14 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 
 			int groupTotal = 0;
 
-			if (PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX) {
+			if (PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX && (assetEntryQuery.getLinkedAssetEntryId() == 0)) {
 				Hits hits = AssetUtil.search(request, assetEntryQuery, start, end);
 
 				groupTotal = hits.getLength();
 
 				total += groupTotal;
 
-				if (portletName.equals(PortletKeys.RELATED_ASSETS)) {
-					results = AssetUtil.getAssetEntries(hits, assetEntryQuery.getLinkedAssetEntryId());
-				}
-				else {
-					results = AssetUtil.getAssetEntries(hits);
-				}
+				results = AssetUtil.getAssetEntries(hits);
 			}
 			else {
 				groupTotal = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
