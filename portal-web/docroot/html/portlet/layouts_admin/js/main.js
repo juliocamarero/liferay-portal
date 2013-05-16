@@ -697,22 +697,7 @@ AUI.add(
 					_handleRange: function() {
 						var instance = this;
 
-						var selectedRange = STR_EMPTY;
-
-						if (instance._isChecked('rangeAllNode')) {
-							selectedRange = Liferay.Language.get('all');
-						}
-						else if (instance._isChecked('rangeLastPublishNode')) {
-							selectedRange = Liferay.Language.get('from-last-publish-date');
-						}
-						else if (instance._isChecked('rangeDateRangeNode')) {
-							selectedRange = Liferay.Language.get('date-range');
-						}
-						else if (instance._isChecked('rangeLastNode')) {
-							selectedRange = Liferay.Language.get('last');
-						}
-
-						instance._refreshSelectedLabel('selectedRange', selectedRange);
+						instance._refreshForm();
 					},
 
 					_handleRemote: function() {
@@ -761,6 +746,16 @@ AUI.add(
 						var node = instance.get(nodeName);
 
 						return (node && node.attr(STR_CHECKED));
+					},
+
+					_refreshForm: function() {
+						var instance = this;
+
+						var form = instance.get('form');
+
+						form.setAttribute('cmd', STR_EMPTY);
+
+						submitForm(form);
 					},
 
 					_refreshSelectedLabel: function(labelDivId, label) {
