@@ -151,6 +151,13 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "feeds")) {
+			ActionableDynamicQuery feedActionableDynamicQuery =
+				new JournalFeedExportActionableDynamicQuery(portletDataContext);
+
+			feedActionableDynamicQuery.performActions();
+		}
+
 		if (portletDataContext.getBooleanParameter(
 				NAMESPACE, "structures-and-templates")) {
 
@@ -199,11 +206,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			ddmStructureActionableDynamicQuery.performActions();
 		}
 
-		ActionableDynamicQuery feedActionableDynamicQuery =
-			new JournalFeedExportActionableDynamicQuery(portletDataContext);
-
-		feedActionableDynamicQuery.performActions();
-
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "web-content")) {
 			ActionableDynamicQuery folderActionableDynamicQuery =
 				getFolderActionableDynamicQuery(portletDataContext);
@@ -230,6 +232,18 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
 
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "feeds")) {
+			Element feedsElement = portletDataContext.getImportDataGroupElement(
+				JournalFeed.class);
+
+			List<Element> feedElements = feedsElement.elements();
+
+			for (Element feedElement : feedElements) {
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, feedElement);
+			}
+		}
+
 		if (portletDataContext.getBooleanParameter(
 				NAMESPACE, "structures-and-templates")) {
 
@@ -254,16 +268,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				StagedModelDataHandlerUtil.importStagedModel(
 					portletDataContext, ddmTemplateElement);
 			}
-		}
-
-		Element feedsElement = portletDataContext.getImportDataGroupElement(
-			JournalFeed.class);
-
-		List<Element> feedElements = feedsElement.elements();
-
-		for (Element feedElement : feedElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, feedElement);
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "web-content")) {
