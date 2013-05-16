@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -30,7 +29,6 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandler;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
@@ -82,13 +80,6 @@ public class JournalContentPortletDataHandler
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "selected-web-content", true, true),
 				new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets"));
-
-		DLPortletDataHandler dlPortletDataHandler = new DLPortletDataHandler();
-
-		setExportMetadataControls(
-			ArrayUtil.append(
-				getExportMetadataControls(),
-				dlPortletDataHandler.getExportMetadataControls()));
 
 		setImportControls(getExportControls()[0]);
 		setPublishToLiveByDefault(true);
