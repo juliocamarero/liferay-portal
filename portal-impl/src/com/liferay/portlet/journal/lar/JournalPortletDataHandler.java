@@ -433,14 +433,6 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 					statusProperty.ne(WorkflowConstants.STATUS_IN_TRASH));
 			}
 
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				JournalFolder folder = (JournalFolder)object;
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, folder);
-			}
-
 		};
 	}
 
