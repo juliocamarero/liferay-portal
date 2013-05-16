@@ -99,15 +99,19 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		ActionableDynamicQuery folderActionableDynamicQuery =
-			new BookmarksFolderExportActionableDynamicQuery(portletDataContext);
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "entries")) {
+			ActionableDynamicQuery folderActionableDynamicQuery =
+				new BookmarksFolderExportActionableDynamicQuery(
+					portletDataContext);
 
-		folderActionableDynamicQuery.performActions();
+			folderActionableDynamicQuery.performActions();
 
-		ActionableDynamicQuery entryActionableDynamicQuery =
-			new BookmarksEntryExportActionableDynamicQuery(portletDataContext);
+			ActionableDynamicQuery entryActionableDynamicQuery =
+				new BookmarksEntryExportActionableDynamicQuery(
+					portletDataContext);
 
-		entryActionableDynamicQuery.performActions();
+			entryActionableDynamicQuery.performActions();
+		}
 
 		return getExportDataRootElementString(rootElement);
 	}
@@ -122,6 +126,10 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			BookmarksPermission.RESOURCE_NAME,
 			portletDataContext.getSourceGroupId(),
 			portletDataContext.getScopeGroupId());
+
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "entries")) {
+			return null;
+		}
 
 		Element foldersElement = portletDataContext.getImportDataGroupElement(
 			BookmarksFolder.class);
