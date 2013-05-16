@@ -57,7 +57,12 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 
 				total += groupTotal;
 
-				results = AssetUtil.getAssetEntries(hits);
+				if (portletName.equals(PortletKeys.RELATED_ASSETS)) {
+					results = AssetUtil.getAssetEntries(hits, assetEntryQuery.getLinkedAssetEntryId());
+				}
+				else {
+					results = AssetUtil.getAssetEntries(hits);
+				}
 			}
 			else {
 				groupTotal = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
@@ -123,7 +128,12 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 
 			searchContainer.setTotal(total);
 
-			results = AssetUtil.getAssetEntries(hits);
+			if (portletName.equals(PortletKeys.RELATED_ASSETS)) {
+				results = AssetUtil.getAssetEntries(hits, assetEntryQuery.getLinkedAssetEntryId());
+			}
+			else {
+				results = AssetUtil.getAssetEntries(hits);
+			}
 		}
 		else {
 			total = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
@@ -173,7 +183,12 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 
 				total += groupTotal;
 
-				results = AssetUtil.getAssetEntries(hits);
+				if (portletName.equals(PortletKeys.RELATED_ASSETS)) {
+					results = AssetUtil.getAssetEntries(hits, assetEntryQuery.getLinkedAssetEntryId());
+				}
+				else {
+					results = AssetUtil.getAssetEntries(hits);
+				}
 			}
 			else {
 				groupTotal = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
