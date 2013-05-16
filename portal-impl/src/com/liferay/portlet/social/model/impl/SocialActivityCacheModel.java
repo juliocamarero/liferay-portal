@@ -36,7 +36,7 @@ public class SocialActivityCacheModel implements CacheModel<SocialActivity>,
 	Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{activityId=");
 		sb.append(activityId);
@@ -62,6 +62,10 @@ public class SocialActivityCacheModel implements CacheModel<SocialActivity>,
 		sb.append(extraData);
 		sb.append(", receiverUserId=");
 		sb.append(receiverUserId);
+		sb.append(", parentClassNameId=");
+		sb.append(parentClassNameId);
+		sb.append(", parentClassPK=");
+		sb.append(parentClassPK);
 		sb.append("}");
 
 		return sb.toString();
@@ -89,6 +93,8 @@ public class SocialActivityCacheModel implements CacheModel<SocialActivity>,
 		}
 
 		socialActivityImpl.setReceiverUserId(receiverUserId);
+		socialActivityImpl.setParentClassNameId(parentClassNameId);
+		socialActivityImpl.setParentClassPK(parentClassPK);
 
 		socialActivityImpl.resetOriginalValues();
 
@@ -108,6 +114,8 @@ public class SocialActivityCacheModel implements CacheModel<SocialActivity>,
 		type = objectInput.readInt();
 		extraData = objectInput.readUTF();
 		receiverUserId = objectInput.readLong();
+		parentClassNameId = objectInput.readLong();
+		parentClassPK = objectInput.readLong();
 	}
 
 	public void writeExternal(ObjectOutput objectOutput)
@@ -131,6 +139,8 @@ public class SocialActivityCacheModel implements CacheModel<SocialActivity>,
 		}
 
 		objectOutput.writeLong(receiverUserId);
+		objectOutput.writeLong(parentClassNameId);
+		objectOutput.writeLong(parentClassPK);
 	}
 
 	public long activityId;
@@ -145,4 +155,6 @@ public class SocialActivityCacheModel implements CacheModel<SocialActivity>,
 	public int type;
 	public String extraData;
 	public long receiverUserId;
+	public long parentClassNameId;
+	public long parentClassPK;
 }
