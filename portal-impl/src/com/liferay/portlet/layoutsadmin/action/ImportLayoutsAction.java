@@ -508,6 +508,8 @@ public class ImportLayoutsAction extends EditFileEntryAction {
 				groupId, privateLayout, actionRequest.getParameterMap(),
 				newFile);
 
+			deleteTempFileEntry(groupId);
+
 			addSuccessMessage(actionRequest, actionResponse);
 		}
 		finally {
