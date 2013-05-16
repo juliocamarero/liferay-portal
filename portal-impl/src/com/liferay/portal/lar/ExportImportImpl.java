@@ -387,9 +387,15 @@ public class ExportImportImpl implements ExportImport {
 				oldLinksToLayout.add(oldLinkToLayout);
 				newLinksToLayout.add(newLinkToLayout);
 
+				if (exportReferencedContent) {
+					StagedModelDataHandlerUtil.exportStagedModel(
+						portletDataContext, layout);
+				}
+
 				portletDataContext.addReferenceElement(
 					entityStagedModel, entityElement, layout, Layout.class,
-					PortletDataContext.REFERENCE_TYPE_DEPENDENCY, true);
+					PortletDataContext.REFERENCE_TYPE_DEPENDENCY,
+					!exportReferencedContent);
 			}
 			catch (Exception e) {
 				if (_log.isDebugEnabled() || _log.isWarnEnabled()) {
