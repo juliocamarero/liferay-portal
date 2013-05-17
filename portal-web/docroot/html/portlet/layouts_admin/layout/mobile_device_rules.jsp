@@ -24,7 +24,7 @@ String className = Layout.class.getName();
 long classPK = selLayout.getPlid();
 %>
 
-<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_header.jspf" %>
+<%@ include file="/html/portlet/layouts_admin/layout/mobile_device_rules_header.jspf" %>
 
 <%
 String rootNodeName = (String)request.getAttribute("edit_pages.jsp-rootNodeName");
@@ -45,9 +45,9 @@ int mdrRuleGroupInstancesCount = MDRRuleGroupInstanceServiceUtil.getRuleGroupIns
 </div>
 
 <div class="<%= (mdrRuleGroupInstancesCount > 0) ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />uniqueRuleGroupInstancesContainer">
-	<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_toolbar.jspf" %>
+	<%@ include file="/html/portlet/layouts_admin/layout/mobile_device_rules_toolbar.jspf" %>
 
-	<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_rule_group_instances.jspf" %>
+	<%@ include file="/html/portlet/layouts_admin/layout/mobile_device_rules_rule_group_instances.jspf" %>
 </div>
 
 <aui:script>

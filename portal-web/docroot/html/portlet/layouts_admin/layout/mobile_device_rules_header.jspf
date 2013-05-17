@@ -14,18 +14,19 @@
  */
 --%>
 
-<%@ include file="/html/portlet/layouts_admin/init.jsp" %>
-
 <%
-LayoutSet selLayoutSet = ((LayoutSet)request.getAttribute("edit_pages.jsp-selLayoutSet"));
+long selPlid = ((Long)request.getAttribute("edit_pages.jsp-selPlid")).longValue();
 
-long groupId = selLayoutSet.getGroupId();
-String className = LayoutSet.class.getName();
-long classPK = selLayoutSet.getLayoutSetId();
+PortletURL portletURL = liferayPortletResponse.createRenderURL();
+
+portletURL.setParameter("struts_action", "/layouts_admin/edit_layouts");
+portletURL.setParameter("selPlid", String.valueOf(selPlid));
+portletURL.setParameter("className", className);
+portletURL.setParameter("classPK", String.valueOf(classPK));
+
+String redirect = portletURL.toString();
 %>
 
-<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_header.jspf" %>
+<liferay-ui:error-marker key="errorSection" value="device" />
 
-<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_toolbar.jspf" %>
-
-<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_rule_group_instances.jspf" %>
+<h3><liferay-ui:message key="mobile-device-rules" /></h3>
