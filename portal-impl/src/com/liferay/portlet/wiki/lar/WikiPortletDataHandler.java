@@ -57,16 +57,17 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 	public WikiPortletDataHandler() {
 		setExportControls(
 			new PortletDataHandlerBoolean(NAMESPACE, "wiki-pages"),
+			new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets"));
 		setExportMetadataControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "wiki-pages", true,
 				new PortletDataHandlerControl[] {
-					new PortletDataHandlerBoolean(NAMESPACE, "attachments"),
 					new PortletDataHandlerBoolean(NAMESPACE, "categories"),
 					new PortletDataHandlerBoolean(NAMESPACE, "comments"),
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
 				}));
+		setImportControls(getExportControls());
 	}
 
 	@Override
