@@ -21,7 +21,7 @@
 MDRRule rule = (MDRRule)request.getAttribute(WebKeys.MOBILE_DEVICE_RULES_RULE);
 
 Set<String> operatingSystems = Collections.emptySet();
-int tablet = 0;
+int deviceType = 0;
 
 if (rule != null) {
 	UnicodeProperties typeSettingsProperties = rule.getTypeSettingsProperties();
@@ -30,11 +30,11 @@ if (rule != null) {
 
 	String tabletString = GetterUtil.getString(typeSettingsProperties.get("tablet"));
 
-	if (tabletString.equals(StringPool.TRUE)) {
-		tablet = 1;
+	if (tabletString.equals("tablets")) {
+		deviceType = 1;
 	}
-	else if (tabletString.equals(StringPool.FALSE)) {
-		tablet = 2;
+	else if (tabletString.equals("other-devices")) {
+		deviceType = 2;
 	}
 }
 %>
@@ -56,8 +56,8 @@ if (rule != null) {
 
 </aui:select>
 
-<aui:select name="tablet">
-	<aui:option label="any" selected="<%= tablet == 0 %>" value="" />
-	<aui:option label="<%= true %>" selected="<%= tablet == 1 %>" />
-	<aui:option label="<%= false %>" selected="<%= tablet == 2 %>" />
+<aui:select label="device-type" name="tablet">
+	<aui:option label="any" selected="<%= deviceType == 0 %>" value="" />
+	<aui:option label="tablets" selected="<%= deviceType == 1 %>" />
+	<aui:option label="other-devices" selected="<%= deviceType == 2 %>" />
 </aui:select>
