@@ -20,6 +20,7 @@
 
 	<%
 	Layout rootLayout = null;
+	boolean headerEmpty = false;
 	boolean hidden = false;
 
 	List<Layout> branchLayouts = new ArrayList<Layout>();
@@ -63,13 +64,32 @@
 			<c:when test='<%= headerType.equals("breadcrumb") %>'>
 				<liferay-ui:breadcrumb />
 			</c:when>
+			<c:otherwise>
+
+				<%
+				headerEmpty = true;
+				%>
+
+			</c:otherwise>
 		</c:choose>
 
 		<%
-		if (!hidden) {
-			StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler();
 
+		if (!hidden) {
 			_buildNavigation(rootLayout, layout, branchLayouts, themeDisplay, 1, includedLayouts, nestedChildren, sb);
+		}
+
+		if (preview && headerEmpty && (sb.length() == 0)) {
+		%>
+
+			<div class="alert alert-info">
+				<liferay-ui:message key="navigation-empty-preview" />
+			</div>
+
+		<%
+		}
+		else {
 		%>
 
 			<%= sb.toString() %>
