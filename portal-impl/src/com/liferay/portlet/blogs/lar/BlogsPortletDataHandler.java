@@ -47,6 +47,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		setAlwaysExportable(true);
 		setExportControls(
 			new PortletDataHandlerBoolean(NAMESPACE, "entries"),
+			new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets"));
 		setExportMetadataControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "blog-entries", true,
