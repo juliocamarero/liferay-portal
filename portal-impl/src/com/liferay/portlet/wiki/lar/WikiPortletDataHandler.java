@@ -177,7 +177,7 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 			WikiCacheUtil.clearCache(nodeId);
 		}
 
-		return portletPreferences;
+		return null;
 	}
 
 	@Override
