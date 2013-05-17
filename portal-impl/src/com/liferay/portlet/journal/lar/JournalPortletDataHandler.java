@@ -90,9 +90,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		setExportControls(
 			new PortletDataHandlerBoolean(NAMESPACE, "web-content"),
 			new PortletDataHandlerBoolean(
-				NAMESPACE, "structures-and-templates", true),
-			new PortletDataHandlerBoolean(
-				NAMESPACE, "feeds", true, true),
+				NAMESPACE, "structures-and-templates"),
+			new PortletDataHandlerBoolean(NAMESPACE, "feeds"),
 			new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets"),
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "version-history",
@@ -106,7 +105,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
 				}));
-		setImportControls(getExportControls()[0], getExportControls()[1]);
+		setImportControls(getExportControls());
 		setPublishToLiveByDefault(
 			PropsValues.JOURNAL_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
