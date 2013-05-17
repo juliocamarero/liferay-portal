@@ -20,7 +20,6 @@
 
 	<%
 	Layout rootLayout = null;
-	boolean headerEmpty = false;
 	boolean hidden = false;
 
 	List<Layout> branchLayouts = new ArrayList<Layout>();
@@ -49,6 +48,12 @@
 			hidden = true;
 		}
 	}
+
+	StringBundler sb = new StringBundler();
+
+	if (!hidden) {
+		_buildNavigation(rootLayout, layout, branchLayouts, themeDisplay, 1, includedLayouts, nestedChildren, sb);
+	}
 	%>
 
 	<div class="nav-menu nav-menu-style-<%= bulletStyle %>">
@@ -64,40 +69,14 @@
 			<c:when test='<%= headerType.equals("breadcrumb") %>'>
 				<liferay-ui:breadcrumb />
 			</c:when>
-			<c:otherwise>
-
-				<%
-				headerEmpty = true;
-				%>
-
-			</c:otherwise>
+			<c:when test="<%= preview && (sb.length() == 0) %>">
+				<div class="alert alert-info">
+					<liferay-ui:message key="there-are-no-pages-to-display-for-the-current-page-level" />
+				</div>
+			</c:when>
 		</c:choose>
 
-		<%
-		StringBundler sb = new StringBundler();
-
-		if (!hidden) {
-			_buildNavigation(rootLayout, layout, branchLayouts, themeDisplay, 1, includedLayouts, nestedChildren, sb);
-		}
-
-		if (preview && headerEmpty && (sb.length() == 0)) {
-		%>
-
-			<div class="alert alert-info">
-				<liferay-ui:message key="navigation-empty-preview" />
-			</div>
-
-		<%
-		}
-		else {
-		%>
-
-			<%= sb.toString() %>
-
-		<%
-		}
-		%>
-
+		<%= sb.toString() %>
 	</div>
 </c:if>
 
