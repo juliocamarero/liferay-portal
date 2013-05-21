@@ -40,6 +40,22 @@ boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 
 String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 
+Date startDate = null;
+
+long startDateTime = ParamUtil.getLong(request, "startDate");
+
+if (startDateTime > 0) {
+	startDate = new Date(startDateTime);
+}
+
+Date endDate = null;
+
+long endDateTime = ParamUtil.getLong(request, "endDate");
+
+if (endDateTime > 0) {
+	endDate = new Date(endDateTime);
+}
+
 List<Portlet> portletsList = new ArrayList<Portlet>();
 Set<String> portletIdsSet = new HashSet<String>();
 
@@ -96,13 +112,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 
 			<c:if test="<%= !group.isLayoutPrototype() %>">
 				<aui:fieldset cssClass="options-group" label="pages">
-					<div class="selected-labels" id="<portlet:namespace />selectedPages">
-						<liferay-ui:message key="all-pages" />,
-						<liferay-ui:message key="site-pages-settings" />,
-						<liferay-ui:message key="theme" />,
-						<liferay-ui:message key="theme-settings" />,
-						<liferay-ui:message key="logo" />
-					</div>
+					<div class="selected-labels" id="<portlet:namespace />selectedPages"></div>
 
 					<aui:a cssClass="modify-link" href="javascript:;" id="pagesLink" label="change" method="get" />
 
@@ -146,10 +156,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 
 						<ul class="hide" id="<portlet:namespace />showChangeGlobalConfiguration">
 							<li class="tree-item">
-								<div class="selected-labels" id="<portlet:namespace />selectedGlobalConfiguration">
-									<liferay-ui:message key="archived-setups" />,
-									<liferay-ui:message key="user-preferences" />
-								</div>
+								<div class="selected-labels" id="<portlet:namespace />selectedGlobalConfiguration"></div>
 
 								<aui:a cssClass="modify-link" href="javascript:;" id="globalConfigurationLink" label="change" method="get" />
 							</li>
@@ -320,9 +327,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 
 								<ul>
 									<li>
-										<div class="selected-labels" id="<portlet:namespace />selectedRange">
-											<liferay-ui:message key="all" />
-										</div>
+										<div class="selected-labels" id="<portlet:namespace />selectedRange"></div>
 
 										<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
 									</li>
@@ -332,6 +337,8 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 							<%
 							Set<String> displayedControls = new HashSet<String>();
 							Set<String> portletDataHandlerClasses = new HashSet<String>();
+
+							PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
 
 							for (Portlet portlet : portletsList) {
 								String portletDataHandlerClass = portlet.getPortletDataHandlerClass();
@@ -346,6 +353,10 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 								String portletTitle = PortalUtil.getPortletTitle(portlet, application, locale);
 
 								PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+
+								portletDataHandler.prepareManifestSummary(portletDataContext);
+
+								ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
 							%>
 
 								<li>
@@ -356,7 +367,6 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 									PortletDataHandlerControl[] metadataControls = portletDataHandler.getExportMetadataControls();
 
 									if (Validator.isNotNull(exportControls) || Validator.isNotNull(metadataControls)) {
-										String selectedContent = StringPool.BLANK;
 									%>
 
 										<div class="hide" id="<portlet:namespace />content_<%= portlet.getPortletId() %>">
@@ -367,9 +377,8 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 														<%
 														if (exportControls != null) {
 															request.setAttribute("render_controls.jsp-controls", exportControls);
+															request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
 															request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
-
-															selectedContent += ArrayUtil.toString(exportControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
 														%>
 
 															<aui:field-wrapper label="content">
@@ -397,8 +406,6 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 																if ((childrenControls != null) && (childrenControls.length > 0)) {
 																	request.setAttribute("render_controls.jsp-controls", childrenControls);
 																	request.setAttribute("render_controls.portletId", portlet.getPortletId());
-
-																	selectedContent += (selectedContent.equals(StringPool.BLANK) ? "" : ",") + ArrayUtil.toString(childrenControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
 																%>
 
 																<aui:field-wrapper label="content-metadata">
@@ -420,11 +427,7 @@ portletsList = ListUtil.sort(portletsList, new PortletTitleComparator(applicatio
 
 										<ul class="hide" id="<portlet:namespace />showChangeContent_<%= portlet.getPortletId() %>">
 											<li>
-												<div class="selected-labels" id="<portlet:namespace />selectedContent_<%= portlet.getPortletId() %>">
-
-													<%= selectedContent %>
-
-												</div>
+												<div class="selected-labels" id="<portlet:namespace />selectedContent_<%= portlet.getPortletId() %>"></div>
 
 												<%
 												Map<String,Object> data = new HashMap<String,Object>();

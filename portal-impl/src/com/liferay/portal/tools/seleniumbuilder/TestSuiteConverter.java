@@ -28,6 +28,7 @@ public class TestSuiteConverter extends BaseConverter {
 	public void convert(String testSuiteName) throws Exception {
 		Map<String, Object> context = getContext();
 
+		context.put("macroNameStack", new FreeMarkerStack());
 		context.put("testSuiteName", testSuiteName);
 
 		String javaContent = processTemplate("test_suite.ftl", context);

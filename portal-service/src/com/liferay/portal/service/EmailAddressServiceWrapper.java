@@ -45,6 +45,10 @@ public class EmailAddressServiceWrapper implements EmailAddressService,
 		_emailAddressService.setBeanIdentifier(beanIdentifier);
 	}
 
+	/**
+	* @deprecated As of 6.2.0, replaced by {@link #addEmailAddress( String,
+	long, String, int, boolean, ServiceContext)}
+	*/
 	public com.liferay.portal.model.EmailAddress addEmailAddress(
 		java.lang.String className, long classPK, java.lang.String address,
 		int typeId, boolean primary)
@@ -52,6 +56,16 @@ public class EmailAddressServiceWrapper implements EmailAddressService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _emailAddressService.addEmailAddress(className, classPK,
 			address, typeId, primary);
+	}
+
+	public com.liferay.portal.model.EmailAddress addEmailAddress(
+		java.lang.String className, long classPK, java.lang.String address,
+		int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _emailAddressService.addEmailAddress(className, classPK,
+			address, typeId, primary, serviceContext);
 	}
 
 	public void deleteEmailAddress(long emailAddressId)

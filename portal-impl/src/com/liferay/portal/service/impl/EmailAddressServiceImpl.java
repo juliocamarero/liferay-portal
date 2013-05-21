@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.EmailAddress;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.EmailAddressServiceBaseImpl;
 import com.liferay.portal.service.permission.CommonPermissionUtil;
 
@@ -30,6 +31,10 @@ import java.util.List;
  */
 public class EmailAddressServiceImpl extends EmailAddressServiceBaseImpl {
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #addEmailAddress( String,
+	 *             long, String, int, boolean, ServiceContext)}
+	 */
 	public EmailAddress addEmailAddress(
 			String className, long classPK, String address, int typeId,
 			boolean primary)
@@ -40,6 +45,19 @@ public class EmailAddressServiceImpl extends EmailAddressServiceBaseImpl {
 
 		return emailAddressLocalService.addEmailAddress(
 			getUserId(), className, classPK, address, typeId, primary);
+	}
+
+	public EmailAddress addEmailAddress(
+			String className, long classPK, String address, int typeId,
+			boolean primary, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		CommonPermissionUtil.check(
+			getPermissionChecker(), className, classPK, ActionKeys.UPDATE);
+
+		return emailAddressLocalService.addEmailAddress(
+			getUserId(), className, classPK, address, typeId, primary,
+			serviceContext);
 	}
 
 	public void deleteEmailAddress(long emailAddressId)

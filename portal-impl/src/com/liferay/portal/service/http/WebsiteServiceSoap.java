@@ -61,12 +61,34 @@ import java.rmi.RemoteException;
  * @generated
  */
 public class WebsiteServiceSoap {
+	/**
+	* @deprecated As of 6.2.0, replaced by {@link #addWebsite( String, long,
+	String, int, boolean, ServiceContext)}
+	*/
 	public static com.liferay.portal.model.WebsiteSoap addWebsite(
 		java.lang.String className, long classPK, java.lang.String url,
 		int typeId, boolean primary) throws RemoteException {
 		try {
 			com.liferay.portal.model.Website returnValue = WebsiteServiceUtil.addWebsite(className,
 					classPK, url, typeId, primary);
+
+			return com.liferay.portal.model.WebsiteSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.portal.model.WebsiteSoap addWebsite(
+		java.lang.String className, long classPK, java.lang.String url,
+		int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.portal.model.Website returnValue = WebsiteServiceUtil.addWebsite(className,
+					classPK, url, typeId, primary, serviceContext);
 
 			return com.liferay.portal.model.WebsiteSoap.toSoapModel(returnValue);
 		}

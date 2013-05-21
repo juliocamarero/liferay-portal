@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.AddressServiceBaseImpl;
 import com.liferay.portal.service.permission.CommonPermissionUtil;
 
@@ -30,6 +31,11 @@ import java.util.List;
  */
 public class AddressServiceImpl extends AddressServiceBaseImpl {
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #addAddress( String, long,
+	 *             String, String, String, String, String, long, long, int,
+	 *             boolean, boolean, ServiceContext)}
+	 */
 	public Address addAddress(
 			String className, long classPK, String street1, String street2,
 			String street3, String city, String zip, long regionId,
@@ -42,6 +48,21 @@ public class AddressServiceImpl extends AddressServiceBaseImpl {
 		return addressLocalService.addAddress(
 			getUserId(), className, classPK, street1, street2, street3, city,
 			zip, regionId, countryId, typeId, mailing, primary);
+	}
+
+	public Address addAddress(
+			String className, long classPK, String street1, String street2,
+			String street3, String city, String zip, long regionId,
+			long countryId, int typeId, boolean mailing, boolean primary,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		CommonPermissionUtil.check(
+			getPermissionChecker(), className, classPK, ActionKeys.UPDATE);
+
+		return addressLocalService.addAddress(
+			getUserId(), className, classPK, street1, street2, street3, city,
+			zip, regionId, countryId, typeId, mailing, primary, serviceContext);
 	}
 
 	public void deleteAddress(long addressId)

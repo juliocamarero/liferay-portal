@@ -56,6 +56,10 @@ public class PhoneServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
+	/**
+	* @deprecated As of 6.2.0, replaced by {@link #addPhone( String, long,
+	String, String, int, boolean, ServiceContext)}
+	*/
 	public static com.liferay.portal.model.Phone addPhone(
 		java.lang.String className, long classPK, java.lang.String number,
 		java.lang.String extension, int typeId, boolean primary)
@@ -64,6 +68,17 @@ public class PhoneServiceUtil {
 		return getService()
 				   .addPhone(className, classPK, number, extension, typeId,
 			primary);
+	}
+
+	public static com.liferay.portal.model.Phone addPhone(
+		java.lang.String className, long classPK, java.lang.String number,
+		java.lang.String extension, int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addPhone(className, classPK, number, extension, typeId,
+			primary, serviceContext);
 	}
 
 	public static void deletePhone(long phoneId)

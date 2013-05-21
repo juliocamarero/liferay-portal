@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.Website;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.WebsiteServiceBaseImpl;
 import com.liferay.portal.service.permission.CommonPermissionUtil;
 
@@ -29,6 +30,10 @@ import java.util.List;
  */
 public class WebsiteServiceImpl extends WebsiteServiceBaseImpl {
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #addWebsite( String, long,
+	 *             String, int, boolean, ServiceContext)}
+	 */
 	public Website addWebsite(
 			String className, long classPK, String url, int typeId,
 			boolean primary)
@@ -39,6 +44,19 @@ public class WebsiteServiceImpl extends WebsiteServiceBaseImpl {
 
 		return websiteLocalService.addWebsite(
 			getUserId(), className, classPK, url, typeId, primary);
+	}
+
+	public Website addWebsite(
+			String className, long classPK, String url, int typeId,
+			boolean primary, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		CommonPermissionUtil.check(
+			getPermissionChecker(), className, classPK, ActionKeys.UPDATE);
+
+		return websiteLocalService.addWebsite(
+			getUserId(), className, classPK, url, typeId, primary,
+			serviceContext);
 	}
 
 	public void deleteWebsite(long websiteId)

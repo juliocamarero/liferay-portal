@@ -282,6 +282,12 @@ public class LayoutPrototypeLocalServiceUtil {
 			active, serviceContext);
 	}
 
+	public static void deleteNondefaultLayoutPrototypes(long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteNondefaultLayoutPrototypes(companyId);
+	}
+
 	public static com.liferay.portal.model.LayoutPrototype fetchLayoutPrototypeByUuidAndCompanyId(
 		java.lang.String uuid, long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {

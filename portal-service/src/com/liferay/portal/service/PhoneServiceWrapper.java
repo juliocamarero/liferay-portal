@@ -45,6 +45,10 @@ public class PhoneServiceWrapper implements PhoneService,
 		_phoneService.setBeanIdentifier(beanIdentifier);
 	}
 
+	/**
+	* @deprecated As of 6.2.0, replaced by {@link #addPhone( String, long,
+	String, String, int, boolean, ServiceContext)}
+	*/
 	public com.liferay.portal.model.Phone addPhone(java.lang.String className,
 		long classPK, java.lang.String number, java.lang.String extension,
 		int typeId, boolean primary)
@@ -52,6 +56,16 @@ public class PhoneServiceWrapper implements PhoneService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _phoneService.addPhone(className, classPK, number, extension,
 			typeId, primary);
+	}
+
+	public com.liferay.portal.model.Phone addPhone(java.lang.String className,
+		long classPK, java.lang.String number, java.lang.String extension,
+		int typeId, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _phoneService.addPhone(className, classPK, number, extension,
+			typeId, primary, serviceContext);
 	}
 
 	public void deletePhone(long phoneId)

@@ -45,6 +45,11 @@ public class AddressServiceWrapper implements AddressService,
 		_addressService.setBeanIdentifier(beanIdentifier);
 	}
 
+	/**
+	* @deprecated As of 6.2.0, replaced by {@link #addAddress( String, long,
+	String, String, String, String, String, long, long, int,
+	boolean, boolean, ServiceContext)}
+	*/
 	public com.liferay.portal.model.Address addAddress(
 		java.lang.String className, long classPK, java.lang.String street1,
 		java.lang.String street2, java.lang.String street3,
@@ -54,6 +59,19 @@ public class AddressServiceWrapper implements AddressService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _addressService.addAddress(className, classPK, street1, street2,
 			street3, city, zip, regionId, countryId, typeId, mailing, primary);
+	}
+
+	public com.liferay.portal.model.Address addAddress(
+		java.lang.String className, long classPK, java.lang.String street1,
+		java.lang.String street2, java.lang.String street3,
+		java.lang.String city, java.lang.String zip, long regionId,
+		long countryId, int typeId, boolean mailing, boolean primary,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _addressService.addAddress(className, classPK, street1, street2,
+			street3, city, zip, regionId, countryId, typeId, mailing, primary,
+			serviceContext);
 	}
 
 	public void deleteAddress(long addressId)

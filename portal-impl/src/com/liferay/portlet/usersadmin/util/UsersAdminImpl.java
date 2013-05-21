@@ -61,6 +61,7 @@ import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.PhoneLocalServiceUtil;
 import com.liferay.portal.service.PhoneServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -1154,7 +1155,8 @@ public class UsersAdminImpl implements UsersAdmin {
 			if (addressId <= 0) {
 				address = AddressServiceUtil.addAddress(
 					className, classPK, street1, street2, street3, city, zip,
-					regionId, countryId, typeId, mailing, primary);
+					regionId, countryId, typeId, mailing, primary,
+					new ServiceContext());
 
 				addressId = address.getAddressId();
 			}
@@ -1191,7 +1193,8 @@ public class UsersAdminImpl implements UsersAdmin {
 
 			if (emailAddressId <= 0) {
 				emailAddress = EmailAddressServiceUtil.addEmailAddress(
-					className, classPK, address, typeId, primary);
+					className, classPK, address, typeId, primary,
+					new ServiceContext());
 
 				emailAddressId = emailAddress.getEmailAddressId();
 			}
@@ -1280,7 +1283,8 @@ public class UsersAdminImpl implements UsersAdmin {
 
 			if (phoneId <= 0) {
 				phone = PhoneServiceUtil.addPhone(
-					className, classPK, number, extension, typeId, primary);
+					className, classPK, number, extension, typeId, primary,
+					new ServiceContext());
 
 				phoneId = phone.getPhoneId();
 			}
@@ -1316,7 +1320,8 @@ public class UsersAdminImpl implements UsersAdmin {
 
 			if (websiteId <= 0) {
 				website = WebsiteServiceUtil.addWebsite(
-					className, classPK, url, typeId, primary);
+					className, classPK, url, typeId, primary,
+					new ServiceContext());
 
 				websiteId = website.getWebsiteId();
 			}

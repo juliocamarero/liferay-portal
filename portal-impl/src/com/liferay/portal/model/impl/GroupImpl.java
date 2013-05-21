@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.staging.StagingConstants;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -316,6 +317,68 @@ public class GroupImpl extends GroupBaseImpl {
 		}
 
 		return 0;
+	}
+
+	public String getScopeDescriptiveName(ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		if (getGroupId() == themeDisplay.getScopeGroupId()) {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(themeDisplay.translate("current-site"));
+			sb.append(StringPool.SPACE);
+			sb.append(StringPool.OPEN_PARENTHESIS);
+			sb.append(
+				HtmlUtil.escape(getDescriptiveName(themeDisplay.getLocale())));
+			sb.append(StringPool.CLOSE_PARENTHESIS);
+
+			return sb.toString();
+		}
+		else if (isLayout() && (getClassPK() == themeDisplay.getPlid())) {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(themeDisplay.translate("current-page"));
+			sb.append(StringPool.SPACE);
+			sb.append(StringPool.OPEN_PARENTHESIS);
+			sb.append(
+				HtmlUtil.escape(getDescriptiveName(themeDisplay.getLocale())));
+			sb.append(StringPool.CLOSE_PARENTHESIS);
+
+			return sb.toString();
+		}
+		else if (isLayoutPrototype()) {
+			return themeDisplay.translate("default");
+		}
+		else {
+			return HtmlUtil.escape(
+				getDescriptiveName(themeDisplay.getLocale()));
+		}
+	}
+
+	public String getScopeLabel(ThemeDisplay themeDisplay) {
+		String label = "site";
+
+		if (getGroupId() == themeDisplay.getScopeGroupId()) {
+			label = "current-site";
+		}
+		else if (getGroupId() == themeDisplay.getCompanyGroupId()) {
+			label = "global";
+		}
+		else if (isLayout()) {
+			label = "page";
+		}
+		else {
+			Group scopeGroup = themeDisplay.getScopeGroup();
+
+			if (scopeGroup.hasAncestor(getGroupId())) {
+				label = "parent-site";
+			}
+			else if (hasAncestor(scopeGroup.getGroupId())) {
+				label = "child-site";
+			}
+		}
+
+		return label;
 	}
 
 	public Group getStagingGroup() {
