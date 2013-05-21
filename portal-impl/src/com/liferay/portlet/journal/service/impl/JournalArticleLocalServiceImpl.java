@@ -440,26 +440,26 @@ public class JournalArticleLocalServiceImpl
 
 		// Workflow
 
-		if (!ExportImportThreadLocal.isImportInProcess()) {
-			if (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
+		if (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
+			if (!ExportImportThreadLocal.isImportInProcess()) {
 				WorkflowHandlerRegistryUtil.startWorkflowInstance(
 					user.getCompanyId(), groupId, userId,
 					JournalArticle.class.getName(), article.getId(), article,
 					serviceContext);
-
-				if (serviceContext.getWorkflowAction() !=
-						WorkflowConstants.ACTION_PUBLISH) {
-
-					// Indexer
-
-					reindex(article);
-				}
 			}
-			else {
-				updateStatus(
-					userId, article, WorkflowConstants.STATUS_APPROVED, null,
-					new HashMap<String, Serializable>(), serviceContext);
+
+			if (serviceContext.getWorkflowAction() !=
+					WorkflowConstants.ACTION_PUBLISH) {
+
+				// Indexer
+
+				reindex(article);
 			}
+		}
+		else {
+			updateStatus(
+				userId, article, WorkflowConstants.STATUS_APPROVED, null,
+				new HashMap<String, Serializable>(), serviceContext);
 		}
 
 		return getArticle(article.getPrimaryKey());
