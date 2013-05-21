@@ -441,10 +441,12 @@ public class JournalArticleLocalServiceImpl
 		// Workflow
 
 		if (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
-			WorkflowHandlerRegistryUtil.startWorkflowInstance(
-				user.getCompanyId(), groupId, userId,
-				JournalArticle.class.getName(), article.getId(), article,
-				serviceContext);
+			if (!ExportImportThreadLocal.isImportInProcess()) {
+				WorkflowHandlerRegistryUtil.startWorkflowInstance(
+					user.getCompanyId(), groupId, userId,
+					JournalArticle.class.getName(), article.getId(), article,
+					serviceContext);
+			}
 
 			if (serviceContext.getWorkflowAction() !=
 					WorkflowConstants.ACTION_PUBLISH) {
