@@ -27,12 +27,24 @@ String editorJSP = (String)renderRequest.getAttribute(WebKeys.MOBILE_DEVICE_RULE
 String type = (String)renderRequest.getAttribute(WebKeys.MOBILE_DEVICE_RULES_RULE_GROUP_ACTION_TYPE);
 
 MDRRuleGroupInstance ruleGroupInstance = (MDRRuleGroupInstance)renderRequest.getAttribute(WebKeys.MOBILE_DEVICE_RULES_RULE_GROUP_INSTANCE);
+
+MDRRuleGroup ruleGroup = ruleGroupInstance.getRuleGroup();
+
+String title = StringPool.BLANK;
+
+if (ruleGroup != null) {
+	title = LanguageUtil.format(pageContext, "new-action-for-x", ruleGroup.getName(locale), false);
+
+	if (action != null) {
+		title = action.getName(locale) + " (" + ruleGroup.getName(locale) + ")";
+	}
+}
 %>
 
 <liferay-ui:header
 	backURL="<%= redirect %>"
 	localizeTitle="<%= (action == null) %>"
-	title='<%= (action == null) ? "new-action" : action.getName(locale) %>'
+	title="<%= title %>"
 />
 
 <portlet:actionURL var="editActionURL">
