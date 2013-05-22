@@ -81,6 +81,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
 				}));
+		setImportControls(getExportControls());
 		setPublishToLiveByDefault(PropsValues.DL_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
 

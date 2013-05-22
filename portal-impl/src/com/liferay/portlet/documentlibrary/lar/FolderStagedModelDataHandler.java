@@ -93,13 +93,13 @@ public class FolderStagedModelDataHandler
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, repository);
 
-			portletDataContext.addReferenceElement(
-				folder, folderElement, repository,
-				PortletDataContext.REFERENCE_TYPE_STRONG, false);
-
 			portletDataContext.addClassedModel(
 				folderElement, folderPath, folder,
 				DLPortletDataHandler.NAMESPACE);
+
+			portletDataContext.addReferenceElement(
+				folder, folderElement, repository, Repository.class,
+				PortletDataContext.REFERENCE_TYPE_STRONG, false);
 		}
 
 		long liferayRepositoryClassNameId = PortalUtil.getClassNameId(
@@ -120,6 +120,10 @@ public class FolderStagedModelDataHandler
 
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, folder.getParentFolder());
+
+			portletDataContext.addReferenceElement(
+				folder, folderElement, folder.getParentFolder(), Folder.class,
+				PortletDataContext.REFERENCE_TYPE_PARENT, false);
 		}
 
 		exportFolderFileEntryTypes(portletDataContext, folder, folderElement);
@@ -141,36 +145,24 @@ public class FolderStagedModelDataHandler
 		Element folderElement = portletDataContext.getImportDataElement(
 			Folder.class.getSimpleName(), "path", path);
 
-		List<Element> referenceDataElements =
-			portletDataContext.getReferenceDataElements(
-				folderElement, Repository.class);
+		Element repositoryElement =
+			portletDataContext.getReferenceDataElement(
+				folderElement, Repository.class, folder.getRepositoryId());
 
-		for (Element referenceDataElement : referenceDataElements) {
-			String referencePath = referenceDataElement.attributeValue("path");
-
-			StagedModel referenceStagedModel =
-				(StagedModel)portletDataContext.getZipEntryAsObject(
-					referencePath);
-
+		if (repositoryElement != null) {
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, referenceStagedModel);
-
-			return;
+				portletDataContext, repositoryElement);
 		}
 
 		if (folder.getParentFolderId() !=
 				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
-			String parentFolderPath = ExportImportPathUtil.getModelPath(
-				portletDataContext, Folder.class.getName(),
-				folder.getParentFolderId());
-
-			Folder parentFolder =
-				(Folder)portletDataContext.getZipEntryAsObject(
-					parentFolderPath);
+			Element parentFolderElement =
+				portletDataContext.getReferenceDataElement(
+					folderElement, Folder.class, folder.getParentFolderId());
 
 			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, parentFolder);
+				portletDataContext, parentFolderElement);
 		}
 
 		Map<Long, Long> folderIds =
