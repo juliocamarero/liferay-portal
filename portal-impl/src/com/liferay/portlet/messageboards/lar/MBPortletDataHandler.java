@@ -54,9 +54,14 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 	public MBPortletDataHandler() {
 		setExportControls(
 			new PortletDataHandlerBoolean(
-				NAMESPACE, "categories-and-messages", true, true),
-			new PortletDataHandlerBoolean(NAMESPACE, "thread-flags"),
-			new PortletDataHandlerBoolean(NAMESPACE, "user-bans"));
+				NAMESPACE, "messages", true, false, null,
+				MBMessage.class.getName()),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "thread-flags", true, false, null,
+				MBThreadFlag.class.getName()),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "user-bans", true, false, null,
+				MBBan.class.getName()));
 		setExportMetadataControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "message-board-messages", true,
