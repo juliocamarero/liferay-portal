@@ -48,8 +48,12 @@ public class MDRPortletDataHandler extends BasePortletDataHandler {
 
 	public MDRPortletDataHandler() {
 		setExportControls(
-			new PortletDataHandlerBoolean(NAMESPACE, "rules", true, true),
-			new PortletDataHandlerBoolean(NAMESPACE, "actions", true, true));
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "rules", true, false, null,
+				MDRRule.class.getName()),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "actions", true, false, null,
+				MDRAction.class.getName()));
 		setImportControls(new PortletDataHandlerControl[0]);
 		setPublishToLiveByDefault(true);
 	}
