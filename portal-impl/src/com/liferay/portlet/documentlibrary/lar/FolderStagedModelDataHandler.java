@@ -84,6 +84,17 @@ public class FolderStagedModelDataHandler
 		String folderPath = ExportImportPathUtil.getModelPath(
 			folder.getGroupId(), Folder.class.getName(), folder.getFolderId());
 
+		if (folder.getParentFolderId() !=
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+
+			StagedModelDataHandlerUtil.exportStagedModel(
+				portletDataContext, folder.getParentFolder());
+
+			portletDataContext.addReferenceElement(
+				folder, folderElement, folder.getParentFolder(), Folder.class,
+				PortletDataContext.REFERENCE_TYPE_PARENT, false);
+		}
+
 		Repository repository = null;
 
 		if (folder.isMountPoint() || !folder.isDefaultRepository()) {
@@ -93,13 +104,13 @@ public class FolderStagedModelDataHandler
 			StagedModelDataHandlerUtil.exportStagedModel(
 				portletDataContext, repository);
 
-			portletDataContext.addClassedModel(
-				folderElement, folderPath, folder,
-				DLPortletDataHandler.NAMESPACE);
-
 			portletDataContext.addReferenceElement(
 				folder, folderElement, repository, Repository.class,
 				PortletDataContext.REFERENCE_TYPE_STRONG, false);
+
+			portletDataContext.addClassedModel(
+				folderElement, folderPath, folder,
+				DLPortletDataHandler.NAMESPACE);
 		}
 
 		long liferayRepositoryClassNameId = PortalUtil.getClassNameId(
@@ -113,17 +124,6 @@ public class FolderStagedModelDataHandler
 			// be exported as part of repository export
 
 			return;
-		}
-
-		if (folder.getParentFolderId() !=
-				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, folder.getParentFolder());
-
-			portletDataContext.addReferenceElement(
-				folder, folderElement, folder.getParentFolder(), Folder.class,
-				PortletDataContext.REFERENCE_TYPE_PARENT, false);
 		}
 
 		exportFolderFileEntryTypes(portletDataContext, folder, folderElement);
