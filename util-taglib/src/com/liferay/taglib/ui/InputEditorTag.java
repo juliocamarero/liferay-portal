@@ -142,7 +142,6 @@ public class InputEditorTag extends IncludeTag {
 			"liferay-ui:input-editor:inlineEdit", String.valueOf(_inlineEdit));
 		request.setAttribute(
 			"liferay-ui:input-editor:inlineEditSaveURL", _inlineEditSaveURL);
-		request.setAttribute("liferay-ui:input-editor:contentsLanguageId", _contentsLanguageId);		
 		request.setAttribute("liferay-ui:input-editor:name", _name);
 		request.setAttribute(
 			"liferay-ui:input-editor:onChangeMethod", _onChangeMethod);
