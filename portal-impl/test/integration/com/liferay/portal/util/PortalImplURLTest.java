@@ -51,7 +51,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
  */
 @ExecutionTestListeners(listeners = {EnvironmentExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-public class PortalImplActualURLTest {
+public class PortalImplURLTest {
 
 	@Test
 	public void testChildLayoutFriendlyURL() throws Exception {
