@@ -25,16 +25,18 @@
 <%@ page import="java.util.Locale" %>
 
 <%
+String contentsLanguageId = ParamUtil.getString(request, "contentsLanguageId");
 String cssPath = ParamUtil.getString(request, "cssPath");
 String cssClasses = ParamUtil.getString(request, "cssClasses");
 boolean inlineEdit = ParamUtil.getBoolean(request, "inlineEdit");
 String languageId = ParamUtil.getString(request, "languageId");
 boolean resizable = ParamUtil.getBoolean(request, "resizable");
 
-Locale locale = LocaleUtil.fromLanguageId(languageId);
-String languageDir = LanguageUtil.get(locale, "lang.dir");
+Locale contentsLocale = LocaleUtil.fromLanguageId(contentsLanguageId);
+String contentsLanguageDir = LanguageUtil.get(contentsLocale, "lang.dir");
 
 languageId = languageId.replace("iw_", "he_");
+contentsLanguageId = contentsLanguageId.replace("iw_", "he_");
 
 response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 %>
@@ -77,9 +79,9 @@ CKEDITOR.config.closeNoticeTimeout = 8000;
 
 CKEDITOR.config.contentsCss = '<%= HtmlUtil.escapeJS(cssPath) %>/main.css';
 
-CKEDITOR.config.contentsLangDirection = '<%= HtmlUtil.escapeJS(languageDir) %>';
+CKEDITOR.config.contentsLangDirection = '<%= HtmlUtil.escapeJS(contentsLanguageDir) %>';
 
-CKEDITOR.config.contentsLanguage = '<%= HtmlUtil.escapeJS(languageId) %>';
+CKEDITOR.config.contentsLanguage = '<%= HtmlUtil.escapeJS(contentsLanguageId) %>';
 
 CKEDITOR.config.entities = false;
 
