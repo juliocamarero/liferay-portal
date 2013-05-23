@@ -50,6 +50,11 @@ String configParams = marshallParams(configParamsMap);
 String fileBrowserParams = marshallParams(fileBrowserParamsMap);
 
 String contentsLanguageId = (String)request.getAttribute("liferay-ui:input-editor:contentsLanguageId");
+
+if (Validator.isNull(contentsLanguageId)) {
+	contentsLanguageId = HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale));
+}
+
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
 String cssClasses = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClasses"));
 String editorImpl = (String)request.getAttribute("liferay-ui:input-editor:editorImpl");
@@ -59,10 +64,6 @@ boolean inlineEdit = GetterUtil.getBoolean((String)request.getAttribute("liferay
 String inlineEditSaveURL = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:inlineEditSaveURL"));
 
 String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:onChangeMethod");
-
-if (Validator.isNull(contentsLanguageId)) {
-	contentsLanguageId = HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale));
-}
 
 if (Validator.isNotNull(onChangeMethod)) {
 	onChangeMethod = namespace + onChangeMethod;

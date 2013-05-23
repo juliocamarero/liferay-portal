@@ -35,6 +35,8 @@ boolean resizable = ParamUtil.getBoolean(request, "resizable");
 Locale contentsLocale = LocaleUtil.fromLanguageId(contentsLanguageId);
 String contentsLanguageDir = LanguageUtil.get(contentsLocale, "lang.dir");
 
+// LPS-35567
+
 languageId = languageId.replace("iw_", "he_");
 contentsLanguageId = contentsLanguageId.replace("iw_", "he_");
 
