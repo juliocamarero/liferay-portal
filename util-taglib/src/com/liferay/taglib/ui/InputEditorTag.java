@@ -60,6 +60,10 @@ public class InputEditorTag extends IncludeTag {
 		_inlineEditSaveURL = inlineEditSaveURL;
 	}
 
+	public void setLanguageId(String languageId) {
+		_languageId = languageId;
+	}
+
 	public void setName(String name) {
 		_name = name;
 	}
@@ -94,6 +98,7 @@ public class InputEditorTag extends IncludeTag {
 		_initMethod = "initEditor";
 		_inlineEdit = false;
 		_inlineEditSaveURL = null;
+		_languageId = null;
 		_name = "editor";
 		_onChangeMethod = null;
 		_page = null;
@@ -135,6 +140,7 @@ public class InputEditorTag extends IncludeTag {
 			"liferay-ui:input-editor:inlineEdit", String.valueOf(_inlineEdit));
 		request.setAttribute(
 			"liferay-ui:input-editor:inlineEditSaveURL", _inlineEditSaveURL);
+		request.setAttribute("liferay-ui:input-editor:languageId", _languageId);		
 		request.setAttribute("liferay-ui:input-editor:name", _name);
 		request.setAttribute(
 			"liferay-ui:input-editor:onChangeMethod", _onChangeMethod);
@@ -155,6 +161,7 @@ public class InputEditorTag extends IncludeTag {
 	private String _initMethod = "initEditor";
 	private boolean _inlineEdit;
 	private String _inlineEditSaveURL;
+	private String _languageId;
 	private String _name = "editor";
 	private String _onChangeMethod;
 	private String _page;
