@@ -32,6 +32,10 @@ public class InputEditorTag extends IncludeTag {
 		_configParams = configParams;
 	}
 
+	public void setContentsLanguageId(String contentsLanguageId) {
+		_contentsLanguageId = contentsLanguageId;
+	}
+
 	public void setCssClass(String cssClass) {
 		_cssClass = cssClass;
 	}
@@ -58,10 +62,6 @@ public class InputEditorTag extends IncludeTag {
 
 	public void setInlineEditSaveURL(String inlineEditSaveURL) {
 		_inlineEditSaveURL = inlineEditSaveURL;
-	}
-
-	public void setLanguageId(String languageId) {
-		_languageId = languageId;
 	}
 
 	public void setName(String name) {
@@ -91,6 +91,7 @@ public class InputEditorTag extends IncludeTag {
 	@Override
 	protected void cleanUp() {
 		_configParams = null;
+		_contentsLanguageId = null;
 		_cssClass = null;
 		_editorImpl = null;
 		_fileBrowserParams = null;
@@ -98,7 +99,6 @@ public class InputEditorTag extends IncludeTag {
 		_initMethod = "initEditor";
 		_inlineEdit = false;
 		_inlineEditSaveURL = null;
-		_languageId = null;
 		_name = "editor";
 		_onChangeMethod = null;
 		_page = null;
@@ -129,6 +129,8 @@ public class InputEditorTag extends IncludeTag {
 
 		request.setAttribute(
 			"liferay-ui:input-editor:configParams", _configParams);
+		request.setAttribute(
+			"liferay-ui:input-editor:contentsLanguageId", _contentsLanguageId);
 		request.setAttribute("liferay-ui:input-editor:cssClass", _cssClass);
 		request.setAttribute("liferay-ui:input-editor:cssClasses", cssClasses);
 		request.setAttribute("liferay-ui:input-editor:editorImpl", editorImpl);
@@ -140,7 +142,7 @@ public class InputEditorTag extends IncludeTag {
 			"liferay-ui:input-editor:inlineEdit", String.valueOf(_inlineEdit));
 		request.setAttribute(
 			"liferay-ui:input-editor:inlineEditSaveURL", _inlineEditSaveURL);
-		request.setAttribute("liferay-ui:input-editor:languageId", _languageId);		
+		request.setAttribute("liferay-ui:input-editor:contentsLanguageId", _contentsLanguageId);		
 		request.setAttribute("liferay-ui:input-editor:name", _name);
 		request.setAttribute(
 			"liferay-ui:input-editor:onChangeMethod", _onChangeMethod);
@@ -155,13 +157,13 @@ public class InputEditorTag extends IncludeTag {
 
 	private Map<String, String> _configParams;
 	private String _cssClass;
+	private String _contentsLanguageId;
 	private String _editorImpl;
 	private Map<String, String> _fileBrowserParams;
 	private String _height;
 	private String _initMethod = "initEditor";
 	private boolean _inlineEdit;
 	private String _inlineEditSaveURL;
-	private String _languageId;
 	private String _name = "editor";
 	private String _onChangeMethod;
 	private String _page;
