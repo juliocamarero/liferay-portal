@@ -354,6 +354,7 @@ if (endDateTime > 0) {
 
 															<%
 															if (exportControls != null) {
+																request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
 																request.setAttribute("render_controls.jsp-controls", exportControls);
 																request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
 																request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
