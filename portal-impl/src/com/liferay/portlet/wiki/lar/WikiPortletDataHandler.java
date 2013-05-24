@@ -57,7 +57,8 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 	public WikiPortletDataHandler() {
 		setExportControls(
 			new PortletDataHandlerBoolean(
-				NAMESPACE, "wikis-and-pages", true, true));
+				NAMESPACE, "wiki-pages", true, true, null,
+				WikiPage.class.getName()));
 		setExportMetadataControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "wiki-pages", true,
