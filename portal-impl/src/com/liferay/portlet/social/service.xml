@@ -28,6 +28,8 @@
 		<column name="type" type="int" />
 		<column name="extraData" type="String" />
 		<column name="receiverUserId" type="long" />
+		<column name="parentClassNameId" type="long" />
+		<column name="parentClassPK" type="long" />
 
 		<!-- Order -->
 
@@ -178,6 +180,9 @@
 
 		<!-- Finder methods -->
 
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
 		<finder name="C_C" return-type="Collection">
 			<finder-column name="classNameId" />
 			<finder-column name="classPK" />
@@ -237,6 +242,9 @@
 
 		<!-- Finder methods -->
 
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
 		<finder name="UserId" return-type="Collection">
 			<finder-column name="userId" />
 		</finder>
