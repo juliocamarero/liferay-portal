@@ -816,6 +816,7 @@ create index IX_AABC18E9 on SocialActivityAchievement (groupId, userId, firstInG
 create unique index IX_D4390CAA on SocialActivityAchievement (groupId, userId, name);
 
 create index IX_A4B9A23B on SocialActivityCounter (classNameId, classPK);
+create index IX_D6666704 on SocialActivityCounter (groupId);
 create unique index IX_1B7E3B67 on SocialActivityCounter (groupId, classNameId, classPK, name, ownerType, endPeriod);
 create unique index IX_374B35AE on SocialActivityCounter (groupId, classNameId, classPK, name, ownerType, startPeriod);
 create index IX_926CDD04 on SocialActivityCounter (groupId, classNameId, classPK, ownerType);
