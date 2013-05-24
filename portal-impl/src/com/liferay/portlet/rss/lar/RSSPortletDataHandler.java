@@ -20,11 +20,9 @@ import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
-import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -33,9 +31,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandler;
 import com.liferay.portlet.journal.NoSuchArticleException;
-import com.liferay.portlet.journal.lar.JournalPortletDataHandler;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
@@ -60,22 +56,6 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "selected-web-content", true, true),
 			new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets"));
-
-		JournalPortletDataHandler journalPortletDataHandler =
-			new JournalPortletDataHandler();
-		DLPortletDataHandler dlPortletDataHandler = new DLPortletDataHandler();
-
-		PortletDataHandlerControl[] exportMetadataControls = ArrayUtil.append(
-			journalPortletDataHandler.getExportMetadataControls(),
-			dlPortletDataHandler.getExportMetadataControls());
-
-		for (PortletDataHandlerControl portletDataHandlerControl :
-				exportMetadataControls) {
-
-			portletDataHandlerControl.setNamespace(NAMESPACE);
-		}
-
-		setExportMetadataControls(exportMetadataControls);
 
 		setImportControls(getExportControls()[0]);
 		setPublishToLiveByDefault(true);
