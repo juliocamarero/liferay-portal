@@ -196,7 +196,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (double curDefaultValue : (double[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -211,7 +211,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (double curDefaultValue : (double[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -259,7 +259,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (float curDefaultValue : (float[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br>
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br>
 
 									<%
 									}
@@ -274,7 +274,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (float curDefaultValue : (float[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br>
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br>
 
 									<%
 									}
@@ -322,7 +322,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (int curDefaultValue : (int[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue,curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue,curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -337,7 +337,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (int curDefaultValue : (int[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue,curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue,curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -385,7 +385,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (long curDefaultValue : (long[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -400,7 +400,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (long curDefaultValue : (long[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -448,7 +448,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (Number curDefaultValue : (Number[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -463,7 +463,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (Number curDefaultValue : (Number[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -512,7 +512,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (short curDefaultValue : (short[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -527,7 +527,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (short curDefaultValue : (short[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"><%= curDefaultValue %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= curDefaultValue %>"> <%= curDefaultValue %></input><br />
 
 									<%
 									}
@@ -575,7 +575,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (String curDefaultValue : (String[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= HtmlUtil.escapeAttribute(curDefaultValue) %>"><%= HtmlUtil.escape(curDefaultValue) %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="checkbox" value="<%= HtmlUtil.escapeAttribute(curDefaultValue) %>"> <%= HtmlUtil.escape(curDefaultValue) %></input><br />
 
 									<%
 									}
@@ -590,7 +590,7 @@ ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.
 									for (String curDefaultValue : (String[])defaultValue) {
 									%>
 
-										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= HtmlUtil.escapeAttribute(curDefaultValue) %>"><%= HtmlUtil.escape(curDefaultValue) %></input><br />
+										<input <%= ((curValue.length > 0) && ArrayUtil.contains(curValue, curDefaultValue)) ? "checked" : "" %> name="<portlet:namespace />ExpandoAttribute--<%= escapedName %>--" type="radio" value="<%= HtmlUtil.escapeAttribute(curDefaultValue) %>"> <%= HtmlUtil.escape(curDefaultValue) %></input><br />
 
 									<%
 									}
