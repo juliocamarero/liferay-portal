@@ -18,16 +18,13 @@ import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.LayoutTypePortletConstants;
-import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
@@ -36,7 +33,6 @@ import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.webdav.methods.Method;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 
@@ -52,11 +48,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * @author Vilmos Papp
- * @author Akos Thurzo
  */
 @ExecutionTestListeners(listeners = {EnvironmentExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-public class PortalImplURLTest {
+public class PortalImplActualURLTest {
 
 	@Test
 	public void testChildLayoutFriendlyURL() throws Exception {
@@ -101,74 +96,6 @@ public class PortalImplURLTest {
 		}
 
 		UserGroupLocalServiceUtil.deleteUserGroup(userGroup);
-	}
-
-	@Test
-	public void testGetLayoutURL() throws Exception {
-		Company company = CompanyLocalServiceUtil.getCompany(
-			TestPropsValues.getCompanyId());
-
-		String virtualHostname = "test.com";
-
-		company.setVirtualHostname(virtualHostname);
-
-		Group group = GroupTestUtil.addGroup();
-
-		long siteGroupId = PortalUtil.getSiteGroupId(group.getGroupId());
-
-		User user = TestPropsValues.getUser();
-
-		Layout layout = LayoutTestUtil.addLayout(
-			group.getGroupId(), ServiceTestUtil.randomString());
-
-		ThemeDisplay themeDisplay = new ThemeDisplay();
-
-		themeDisplay.setCompany(company);
-		themeDisplay.setI18nLanguageId(StringPool.BLANK);
-		themeDisplay.setLayout(layout);
-		themeDisplay.setLayoutSet(layout.getLayoutSet());
-		themeDisplay.setSecure(false);
-		themeDisplay.setServerName(virtualHostname);
-		themeDisplay.setServerPort(8080);
-		themeDisplay.setSiteGroupId(siteGroupId);
-		themeDisplay.setUser(user);
-		themeDisplay.setWidget(false);
-
-		String friendlyURLUsingVirtualHost = PortalUtil.getLayoutURL(
-			layout, themeDisplay, false);
-
-		themeDisplay.setServerName("localhost");
-
-		String friendlyURLUsingLocalhost = PortalUtil.getLayoutURL(
-			layout, themeDisplay, false);
-
-		Assert.assertEquals(
-			friendlyURLUsingLocalhost, friendlyURLUsingVirtualHost);
-
-		long controlPanelPlid = PortalUtil.getControlPanelPlid(
-			company.getCompanyId());
-
-		Layout controlPanelLayout = LayoutLocalServiceUtil.getLayout(
-			controlPanelPlid);
-
-		themeDisplay.setLayout(controlPanelLayout);
-		themeDisplay.setLayoutSet(controlPanelLayout.getLayoutSet());
-
-		String friendlyURLFromControlPanelUsingLocalhost =
-			PortalUtil.getLayoutURL(layout, themeDisplay, false);
-
-		themeDisplay.setServerName(virtualHostname);
-
-		String friendlyURLFromControlPanelUsingVirtualHost =
-			PortalUtil.getLayoutURL(layout, themeDisplay, false);
-
-		Assert.assertEquals(
-			friendlyURLUsingVirtualHost,
-			friendlyURLFromControlPanelUsingVirtualHost);
-
-		Assert.assertEquals(
-			friendlyURLFromControlPanelUsingLocalhost,
-			friendlyURLFromControlPanelUsingVirtualHost);
 	}
 
 	@Test
