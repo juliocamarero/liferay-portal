@@ -36,6 +36,8 @@ catch (NoSuchRecordSetException nsrse) {
 }
 
 request.setAttribute("record_set_action.jsp-selRecordSet", selRecordSet);
+
+boolean showAddListButton = DDLPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_RECORD_SET);
 %>
 
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
@@ -200,6 +202,17 @@ request.setAttribute("record_set_action.jsp-selRecordSet", selRecordSet);
 
 	<aui:button-row>
 		<aui:button type="submit" />
+
+		<c:if test="<%= showAddListButton %>">
+			<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_LISTS %>" var="addListURL">
+				<portlet:param name="struts_action" value="/dynamic_data_lists/edit_record_set" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="portletResource" value="<%= portletDisplay.getId() %>" />
+				<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+			</liferay-portlet:renderURL>
+
+			<aui:button href="<%= addListURL %>" value="add-list" />
+		</c:if>
 	</aui:button-row>
 </aui:form>
 

@@ -39,6 +39,8 @@ try {
 }
 catch (NoSuchArticleException nsae) {
 }
+
+boolean showAddArticleButton = JournalPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_ARTICLE);
 %>
 
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
@@ -287,6 +289,17 @@ catch (NoSuchArticleException nsae) {
 
 	<aui:button-row>
 		<aui:button type="submit" />
+
+		<c:if test="<%= showAddArticleButton %>">
+			<liferay-portlet:renderURL portletName="<%= PortletKeys.JOURNAL %>" var="addArticleURL">
+				<portlet:param name="struts_action" value="/journal/edit_article" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="portletResource" value="<%= portletDisplay.getId() %>" />
+				<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+			</liferay-portlet:renderURL>
+
+			<aui:button href="<%= addArticleURL %>" value="add-web-content" />
+		</c:if>
 	</aui:button-row>
 </aui:form>
 
