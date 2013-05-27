@@ -91,8 +91,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "web-content", true, false, null,
 				JournalArticle.class.getName()),
-			new PortletDataHandlerBoolean(
-				NAMESPACE, "structures-and-templates"),
+			new PortletDataHandlerBoolean(NAMESPACE, "structures"),
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "feeds", true, false, null,
 				JournalFeed.class.getName()),
@@ -160,9 +159,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			feedActionableDynamicQuery.performActions();
 		}
 
-		if (portletDataContext.getBooleanParameter(
-				NAMESPACE, "structures-and-templates")) {
-
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "structures")) {
 			List<DDMTemplate> ddmTemplates = new ArrayList<DDMTemplate>();
 
 			ActionableDynamicQuery ddmStructureActionableDynamicQuery =
@@ -224,9 +221,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			}
 		}
 
-		if (portletDataContext.getBooleanParameter(
-				NAMESPACE, "structures-and-templates")) {
-
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "structures")) {
 			Element ddmStructuresElement =
 				portletDataContext.getImportDataGroupElement(
 					DDMStructure.class);
