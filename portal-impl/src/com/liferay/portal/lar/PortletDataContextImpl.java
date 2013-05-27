@@ -1051,10 +1051,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	@Override
 	public Element getReferenceDataElement(
-		Element parentElement, Class<?> clazz, long groupId, long classPk) {
+		Element parentElement, Class<?> clazz, long classPk) {
 
 		List<Element> referenceElements = getReferenceElements(
-			parentElement, clazz, groupId, null, classPk, null);
+			parentElement, clazz, 0, null, classPk, null);
 
 		List<Element> referenceDataElements = getReferenceDataElements(
 			referenceElements, clazz);
@@ -1085,13 +1085,12 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	@Override
 	public Element getReferenceDataElement(
-		StagedModel parentStagedModel, Class<?> clazz, long groupId,
-		long classPk) {
+		StagedModel parentStagedModel, Class<?> clazz, long classPk) {
 
 		Element parentElement = getImportDataStagedModelElement(
 			parentStagedModel);
 
-		return getReferenceDataElement(parentElement, clazz, groupId, classPk);
+		return getReferenceDataElement(parentElement, clazz, classPk);
 	}
 
 	@Override

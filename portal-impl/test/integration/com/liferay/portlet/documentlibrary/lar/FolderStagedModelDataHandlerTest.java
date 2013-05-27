@@ -70,6 +70,9 @@ public class FolderStagedModelDataHandlerTest
 		Folder folder = DLAppLocalServiceUtil.getMountFolder(
 			repository.getRepositoryId());
 
+		addDependentStagedModel(
+			dependentStagedModelMap, Folder.class, folder.getParentFolder());
+
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, folder);
 

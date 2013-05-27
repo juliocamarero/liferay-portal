@@ -57,6 +57,10 @@ public class DLFileRankStagedModelDataHandler
 		Element fileRankElement = portletDataContext.getExportDataElement(
 			fileRank);
 
+		portletDataContext.addReferenceElement(
+			fileRank, fileRankElement, fileEntry, FileEntry.class,
+			PortletDataContext.REFERENCE_TYPE_EMBEDDED, false);
+
 		portletDataContext.addClassedModel(
 			fileRankElement, ExportImportPathUtil.getModelPath(fileRank),
 			fileRank, DLPortletDataHandler.NAMESPACE);
@@ -69,15 +73,11 @@ public class DLFileRankStagedModelDataHandler
 
 		long userId = portletDataContext.getUserId(fileRank.getUserUuid());
 
-		String fileEntryPath = ExportImportPathUtil.getModelPath(
-			portletDataContext, FileEntry.class.getName(),
-			fileRank.getFileEntryId());
-
-		FileEntry fileEntry = (FileEntry)portletDataContext.getZipEntryAsObject(
-			fileEntryPath);
+		Element fileEntryElement = portletDataContext.getReferenceDataElement(
+			fileRank, FileEntry.class, fileRank.getFileEntryId());
 
 		StagedModelDataHandlerUtil.importStagedModel(
-			portletDataContext, fileEntry);
+			portletDataContext, fileEntryElement);
 
 		Map<Long, Long> fileEntryIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
