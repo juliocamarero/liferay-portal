@@ -27,17 +27,23 @@ String editorJSP = (String)renderRequest.getAttribute(WebKeys.MOBILE_DEVICE_RULE
 String type = (String)renderRequest.getAttribute(WebKeys.MOBILE_DEVICE_RULES_RULE_GROUP_ACTION_TYPE);
 
 MDRRuleGroupInstance ruleGroupInstance = (MDRRuleGroupInstance)renderRequest.getAttribute(WebKeys.MOBILE_DEVICE_RULES_RULE_GROUP_INSTANCE);
+MDRRuleGroup ruleGroup = (MDRRuleGroup)renderRequest.getAttribute(WebKeys.MOBILE_DEVICE_RULES_RULE_GROUP);
 
-MDRRuleGroup ruleGroup = ruleGroupInstance.getRuleGroup();
+String title = null;
 
-String title = StringPool.BLANK;
-
-if (ruleGroup != null) {
+if (action == null) {
 	title = LanguageUtil.format(pageContext, "new-action-for-x", ruleGroup.getName(locale), false);
+}
+else {
+	StringBundler sb = new StringBundler(4);
 
-	if (action != null) {
-		title = action.getName(locale) + " (" + ruleGroup.getName(locale) + ")";
-	}
+	sb.append(action.getName(locale));
+	sb.append(StringPool.SPACE);
+	sb.append(StringPool.OPEN_PARENTHESIS);
+	sb.append(ruleGroup.getName(locale));
+	sb.append(StringPool.CLOSE_PARENTHESIS);
+
+	title = sb.toString();
 }
 %>
 
