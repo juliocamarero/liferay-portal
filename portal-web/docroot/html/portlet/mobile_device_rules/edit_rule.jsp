@@ -69,7 +69,7 @@ if (ruleGroup != null) {
 
 		<aui:input name="description" />
 
-		<aui:select changesContext="<%= true %>" name="type" onChange='<%= renderResponse.getNamespace() + "changeType();" %>' showEmptyOption="<%= true %>">
+		<aui:select changesContext="<%= true %>" name="type" showEmptyOption="<%= true %>">
 
 			<%
 			for (String ruleHandlerType : RuleGroupProcessorUtil.getRuleHandlerTypes()) {
@@ -96,13 +96,13 @@ if (ruleGroup != null) {
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
-	Liferay.provide(
-		window,
-		'<portlet:namespace />changeType',
-		function() {
-			var A = AUI();
+<aui:script use="aui-io">
+	var typeNode = A.one('#<portlet:namespace />type');
+	var typeSettings = A.one('#<portlet:namespace />typeSettings');
 
+	typeNode.on(
+		'change',
+		function(event){
 			A.io.request(
 				<portlet:resourceURL var="editorURL">
 					<portlet:param name="struts_action" value="/mobile_device_rules/edit_rule_editor" />
@@ -111,21 +111,20 @@ if (ruleGroup != null) {
 				'<%= editorURL.toString() %>',
 				{
 					data: {
-						type: document.<portlet:namespace />fm.<portlet:namespace />type.value,
-						<%= "ruleId" %>: <%= ruleId %>
+						ruleId: <%= ruleId %>
+						type: typeNode.val(),
 					},
 					on: {
-						success: function(id, obj) {
-							var typeSettings = A.one('#<portlet:namespace />typeSettings');
+						success: function(event, id, obj) {
+							var response = this.get('responseData');
 
 							if (typeSettings) {
-								typeSettings.html(this.get('responseData'));
+								typeSettings.html(response);
 							}
 						}
 					}
 				}
 			);
-		},
-		['aui-io']
+		}
 	);
 </aui:script>
