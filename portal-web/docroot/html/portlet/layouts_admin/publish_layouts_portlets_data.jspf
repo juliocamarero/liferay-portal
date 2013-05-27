@@ -210,6 +210,7 @@ List<Portlet> dataSiteLevelPortlets = LayoutExporter.getDataSiteLevelPortlets(co
 												<%
 												if (exportControls != null) {
 													if (liveGroup.isStagedPortlet(portlet.getRootPortletId())) {
+														request.setAttribute("render_controls.jsp-action", Constants.PUBLISH);
 														request.setAttribute("render_controls.jsp-controls", exportControls);
 														request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
 													%>
