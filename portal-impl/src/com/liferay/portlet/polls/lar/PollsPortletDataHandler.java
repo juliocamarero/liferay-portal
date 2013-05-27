@@ -46,8 +46,9 @@ public class PollsPortletDataHandler extends BasePortletDataHandler {
 	public PollsPortletDataHandler() {
 		setDataLocalized(true);
 		setExportControls(
-			new PortletDataHandlerBoolean(NAMESPACE, "questions", true, true),
+			new PortletDataHandlerBoolean(NAMESPACE, "questions"),
 			new PortletDataHandlerBoolean(NAMESPACE, "votes"));
+		setImportControls(getExportControls());
 	}
 
 	@Override
@@ -83,15 +84,20 @@ public class PollsPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		ActionableDynamicQuery questionActionableDynamicQuery =
-			new PollsQuestionExportActionableDynamicQuery(portletDataContext);
+		if (portletDataContext.getBooleanParameter(
+				PollsPortletDataHandler.NAMESPACE, "questions")) {
 
-		questionActionableDynamicQuery.performActions();
+			ActionableDynamicQuery questionActionableDynamicQuery =
+				new PollsQuestionExportActionableDynamicQuery(
+					portletDataContext);
 
-		ActionableDynamicQuery choiceActionableDynamicQuery =
-			new PollsChoiceExportActionableDynamicQuery(portletDataContext);
+			questionActionableDynamicQuery.performActions();
 
-		choiceActionableDynamicQuery.performActions();
+			ActionableDynamicQuery choiceActionableDynamicQuery =
+				new PollsChoiceExportActionableDynamicQuery(portletDataContext);
+
+			choiceActionableDynamicQuery.performActions();
+		}
 
 		if (portletDataContext.getBooleanParameter(
 				PollsPortletDataHandler.NAMESPACE, "votes")) {
@@ -119,21 +125,25 @@ public class PollsPortletDataHandler extends BasePortletDataHandler {
 		Element questionsElement = portletDataContext.getImportDataGroupElement(
 			PollsQuestion.class);
 
-		List<Element> questionElements = questionsElement.elements();
+		if (portletDataContext.getBooleanParameter(
+				PollsPortletDataHandler.NAMESPACE, "votes")) {
 
-		for (Element questionElement : questionElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, questionElement);
-		}
+			List<Element> questionElements = questionsElement.elements();
 
-		Element choicesElement = portletDataContext.getImportDataGroupElement(
-			PollsChoice.class);
+			for (Element questionElement : questionElements) {
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, questionElement);
+			}
 
-		List<Element> choiceElements = choicesElement.elements();
+			Element choicesElement =
+				portletDataContext.getImportDataGroupElement(PollsChoice.class);
 
-		for (Element choiceElement : choiceElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, choiceElement);
+			List<Element> choiceElements = choicesElement.elements();
+
+			for (Element choiceElement : choiceElements) {
+				StagedModelDataHandlerUtil.importStagedModel(
+					portletDataContext, choiceElement);
+			}
 		}
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "votes")) {
