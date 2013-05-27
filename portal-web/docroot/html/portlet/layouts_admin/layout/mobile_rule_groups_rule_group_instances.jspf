@@ -37,7 +37,7 @@
 			<portlet:param name="ruleGroupInstanceId" value="<%= String.valueOf(mdrRuleGroupInstance.getRuleGroupInstanceId()) %>" />
 		</liferay-portlet:renderURL>
 
-		<%@ include file="/html/portlet/layouts_admin/layout/mobile_device_rules_rule_group_instance_columns.jspf" %>
+		<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_rule_group_instance_columns.jspf" %>
 	</liferay-ui:search-container-row>
 
 	<liferay-ui:search-iterator type="more" />

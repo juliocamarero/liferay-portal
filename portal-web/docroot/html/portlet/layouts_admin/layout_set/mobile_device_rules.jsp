@@ -24,8 +24,8 @@ String className = LayoutSet.class.getName();
 long classPK = selLayoutSet.getLayoutSetId();
 %>
 
-<%@ include file="/html/portlet/layouts_admin/layout/mobile_device_rules_header.jspf" %>
+<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_header.jspf" %>
 
-<%@ include file="/html/portlet/layouts_admin/layout/mobile_device_rules_toolbar.jspf" %>
+<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_toolbar.jspf" %>
 
-<%@ include file="/html/portlet/layouts_admin/layout/mobile_device_rules_rule_group_instances.jspf" %>
+<%@ include file="/html/portlet/layouts_admin/layout/mobile_rule_groups_rule_group_instances.jspf" %>
