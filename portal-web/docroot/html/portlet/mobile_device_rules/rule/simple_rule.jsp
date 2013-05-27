@@ -1,4 +1,3 @@
-
 <%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
@@ -37,9 +36,22 @@ if (rule != null) {
 		tablet = 2;
 	}
 }
+
+String helpMessage = "os-help-message";
+
+List pluginPackages = PluginPackageUtil.getInstalledPluginPackages();
+
+for (int i = 0; i < pluginPackages.size(); i++) {
+	PluginPackage pluginPackage = (PluginPackage)pluginPackages.get(i);
+
+	if (pluginPackage.getPackageId().equals("liferay/wurfl-web")) {
+		helpMessage = StringPool.BLANK;
+		break;
+	}
+}
 %>
 
-<aui:select multiple="<%= true %>" name="os">
+<aui:select helpMessage="<%= helpMessage %>" multiple="<%= true %>" name="os">
 	<aui:option label="any-os" selected="<%= operatingSystems.isEmpty() %>" value="" />
 
 	<%
