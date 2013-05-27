@@ -36,22 +36,9 @@ if (rule != null) {
 		tablet = 2;
 	}
 }
-
-String helpMessage = "os-help-message";
-
-List pluginPackages = PluginPackageUtil.getInstalledPluginPackages();
-
-for (int i = 0; i < pluginPackages.size(); i++) {
-	PluginPackage pluginPackage = (PluginPackage)pluginPackages.get(i);
-
-	if (pluginPackage.getPackageId().equals("liferay/wurfl-web")) {
-		helpMessage = StringPool.BLANK;
-		break;
-	}
-}
 %>
 
-<aui:select helpMessage="<%= helpMessage %>" multiple="<%= true %>" name="os">
+<aui:select helpMessage='<%= PluginPackageUtil.isInstalled("liferay/wurfl-web") ? "os-help-message" : StringPool.BLANK %>' multiple="<%= true %>" name="os">
 	<aui:option label="any-os" selected="<%= operatingSystems.isEmpty() %>" value="" />
 
 	<%
