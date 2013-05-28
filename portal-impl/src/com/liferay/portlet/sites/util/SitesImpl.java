@@ -1490,6 +1490,8 @@ public class SitesImpl implements Sites {
 				StringUtil.merge(uuidList, StringPool.COMMA));
 		}
 
+		// Invoke updateImpl so that we do not trigger the listeners
+
 		LayoutSetUtil.updateImpl(layoutSet);
 	}
 

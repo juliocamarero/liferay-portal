@@ -521,13 +521,13 @@ public class LayoutStagedModelDataHandler
 
 		newLayouts.add(importedLayout);
 
+		SitesUtil.removeMergeFailFriendlyURLLayout(layoutSet, layout);
+
 		portletDataContext.setPlid(importedLayout.getPlid());
 		portletDataContext.setOldPlid(layout.getPlid());
 
 		portletDataContext.importClassedModel(
 			layout, importedLayout, LayoutPortletDataHandler.NAMESPACE);
-
-		SitesUtil.removeMergeFailFriendlyURLLayout(layoutSet, layout);
 	}
 
 	protected void exportJournalArticle(
