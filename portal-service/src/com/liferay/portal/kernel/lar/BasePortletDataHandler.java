@@ -115,22 +115,25 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 
 	@Override
 	public long getExportModelCount(ManifestSummary manifestSummary) {
-		long controlCount = -1;
+		long totalModelCount = -1;
 
 		for (PortletDataHandlerControl exportControl : getExportControls()) {
-			long currControlCount = manifestSummary.getModelCount(
+			long modelCount = manifestSummary.getModelCount(
 				exportControl.getClassName());
 
-			if (currControlCount != -1) {
-				if (controlCount == -1) {
-					controlCount = 0;
-				}
+			if (modelCount == -1) {
+				continue;
+			}
 
-				controlCount += currControlCount;
+			if (totalModelCount == -1) {
+				totalModelCount = modelCount;
+			}
+			else {
+				totalModelCount += modelCount;
 			}
 		}
 
-		return controlCount;
+		return totalModelCount;
 	}
 
 	@Override
