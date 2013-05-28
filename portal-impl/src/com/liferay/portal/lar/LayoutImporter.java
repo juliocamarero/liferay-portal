@@ -16,7 +16,6 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
-import com.liferay.portal.LayoutFriendlyURLException;
 import com.liferay.portal.LayoutImportException;
 import com.liferay.portal.LayoutPrototypeException;
 import com.liferay.portal.LocaleException;
@@ -32,7 +31,6 @@ import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.lar.MissingReference;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
-import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
@@ -560,29 +558,24 @@ public class LayoutImporter {
 			}
 		}
 
-		int friendlyURLExceptionCounter = 0;
-
 		for (Element layoutElement : _layoutElements) {
-			try {
-				importLayout(portletDataContext, newLayouts, layoutElement);
-			}
-			catch (PortletDataException pde) {
-				if (pde.getCause() instanceof LayoutFriendlyURLException) {
-					friendlyURLExceptionCounter++;
-				}
-				else {
-					throw pde;
-				}
-			}
+			importLayout(portletDataContext, newLayouts, layoutElement);
 		}
 
-		if (friendlyURLExceptionCounter != 0) {
+		LayoutSet targetLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+			portletDataContext.getScopeGroupId(), privateLayout);
+
+		List<Layout> mergeFailedLayouts =
+			SitesUtil.getMergeFailFriendlyURLLayouts(targetLayoutSet);
+
+		int mergeFailedLayoutsCount = mergeFailedLayouts.size();
+
+		if (mergeFailedLayoutsCount > 0) {
 			int mergeFailCount = SitesUtil.getMergeFailCount(
 				layoutSetPrototype);
 
 			SitesUtil.setMergeFailCount(
-				layoutSetPrototype,
-				mergeFailCount + friendlyURLExceptionCounter);
+				layoutSetPrototype, mergeFailCount + mergeFailedLayoutsCount);
 		}
 
 		Element portletsElement = _rootElement.element("portlets");
@@ -805,7 +798,7 @@ public class LayoutImporter {
 		if (layoutsImportMode.equals(
 				PortletDataHandlerKeys.
 					LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE) &&
-			(friendlyURLExceptionCounter == 0)) {
+			(mergeFailedLayoutsCount == 0)) {
 
 			UnicodeProperties settingsProperties =
 				layoutSet.getSettingsProperties();

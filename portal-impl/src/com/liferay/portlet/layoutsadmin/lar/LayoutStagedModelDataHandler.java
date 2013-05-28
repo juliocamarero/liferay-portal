@@ -15,7 +15,6 @@
 package com.liferay.portlet.layoutsadmin.lar;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
-import com.liferay.portal.LayoutFriendlyURLException;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -305,14 +304,18 @@ public class LayoutStagedModelDataHandler
 			}
 
 			for (Layout previousLayout : previousLayouts) {
-				if (previousLayout.getFriendlyURL().equals(friendlyURL) &&
+				String previousLayoutFriendlyURL =
+					previousLayout.getFriendlyURL();
+
+				String previousLayoutUuid = previousLayout.getUuid();
+
+				if (previousLayoutFriendlyURL.equals(friendlyURL) &&
 					((existingLayout == null) ||
-					 !previousLayout.getUuid().equals(layout.getUuid()))) {
+					 !previousLayoutUuid.equals(layout.getUuid()))) {
 
 					SitesUtil.addMergeFailFriendlyURLLayout(layoutSet, layout);
 
-					throw new LayoutFriendlyURLException(
-						LayoutFriendlyURLException.DUPLICATE);
+					return;
 				}
 			}
 		}
