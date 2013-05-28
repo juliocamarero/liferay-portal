@@ -35,7 +35,7 @@ if (action == null) {
 	title = LanguageUtil.format(pageContext, "new-action-for-x", ruleGroup.getName(locale), false);
 }
 else {
-	StringBundler sb = new StringBundler(4);
+	StringBundler sb = new StringBundler(5);
 
 	sb.append(action.getName(locale));
 	sb.append(StringPool.SPACE);
