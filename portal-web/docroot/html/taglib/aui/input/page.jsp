@@ -175,6 +175,7 @@
 
 		<c:choose>
 			<c:when test='<%= type.equals("textarea") %>'>
+
 				<%
 				String[] storedDimensions = StringUtil.split(SessionClicks.get(request, "liferay_resize_" + namespace + id, StringPool.BLANK));
 				%>
