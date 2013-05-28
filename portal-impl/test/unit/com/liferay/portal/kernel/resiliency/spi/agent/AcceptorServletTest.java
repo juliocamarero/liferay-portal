@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.resiliency.spi.agent;
+package com.liferay.portal.kernel.resiliency.spi.agent;
 
 import com.liferay.portal.kernel.process.ProcessExecutor;
 import com.liferay.portal.kernel.resiliency.spi.MockSPI;
