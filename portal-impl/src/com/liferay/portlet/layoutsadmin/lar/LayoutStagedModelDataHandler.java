@@ -49,6 +49,7 @@ import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutRevision;
 import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.model.LayoutSetPrototypeConstants;
 import com.liferay.portal.model.LayoutStagingHandler;
 import com.liferay.portal.model.LayoutTemplate;
 import com.liferay.portal.model.LayoutTypePortlet;
@@ -521,7 +522,11 @@ public class LayoutStagedModelDataHandler
 
 		newLayouts.add(importedLayout);
 
-		SitesUtil.removeMergeFailFriendlyURLLayout(layoutSet, layout);
+		if (layoutSet.getLayoutSetPrototypeId() !=
+				LayoutSetPrototypeConstants.DEFAULT_LAYOUT_SET_PROTOTYPE_ID) {
+
+			SitesUtil.removeMergeFailFriendlyURLLayout(layoutSet, layout);
+		}
 
 		portletDataContext.setPlid(importedLayout.getPlid());
 		portletDataContext.setOldPlid(layout.getPlid());

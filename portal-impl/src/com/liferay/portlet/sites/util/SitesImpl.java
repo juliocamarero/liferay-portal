@@ -738,8 +738,12 @@ public class SitesImpl implements Sites {
 		}
 
 		LayoutSetPrototype layoutSetPrototype =
-			LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(
+			LayoutSetPrototypeLocalServiceUtil.fetchLayoutSetPrototype(
 				layoutSet.getLayoutSetPrototypeId());
+
+		if (layoutSetPrototype == null) {
+			return Collections.emptyList();
+		}
 
 		LayoutSet layoutSetPrototypeLayoutSet =
 			layoutSetPrototype.getLayoutSet();
