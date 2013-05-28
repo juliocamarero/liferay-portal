@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.security.auth.PrincipalException;
@@ -96,27 +97,111 @@ public class ExportImportAction extends EditConfigurationAction {
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
 		try {
-			if (cmd.equals("copy_from_live")) {
-				StagingUtil.copyFromLive(actionRequest, portlet);
+			if (Validator.isNotNull(cmd)) {
+				if (cmd.equals("copy_from_live")) {
+					StagingUtil.copyFromLive(actionRequest, portlet);
 
-				sendRedirect(actionRequest, actionResponse);
+					sendRedirect(actionRequest, actionResponse);
+				} else if (cmd.equals(Constants.EXPORT)) {
+					exportData(actionRequest, actionResponse, portlet);
+
+					sendRedirect(actionRequest, actionResponse);
+				} else if (cmd.equals(Constants.IMPORT)) {
+					checkExceededSizeLimit(actionRequest);
+
+					importData(actionRequest, actionResponse, portlet);
+
+					sendRedirect(actionRequest, actionResponse);
+				} else if (cmd.equals("publish_to_live")) {
+					StagingUtil.publishToLive(actionRequest, portlet);
+
+					sendRedirect(actionRequest, actionResponse);
+				}
 			}
-			else if (cmd.equals(Constants.EXPORT)) {
-				exportData(actionRequest, actionResponse, portlet);
+			else {
+				ThemeDisplay themeDisplay =
+					(ThemeDisplay)actionRequest.getAttribute(
+						WebKeys.THEME_DISPLAY);
 
-				sendRedirect(actionRequest, actionResponse);
-			}
-			else if (cmd.equals(Constants.IMPORT)) {
-				checkExceededSizeLimit(actionRequest);
+				String range = ParamUtil.getString(actionRequest, "range");
 
-				importData(actionRequest, actionResponse, portlet);
+				long plid = ParamUtil.getLong(actionRequest, "plid");
 
-				sendRedirect(actionRequest, actionResponse);
-			}
-			else if (cmd.equals("publish_to_live")) {
-				StagingUtil.publishToLive(actionRequest, portlet);
+				Date startDate = null;
+				Date endDate = null;
 
-				sendRedirect(actionRequest, actionResponse);
+				if (range.equals("dateRange")) {
+					int startDateMonth = ParamUtil.getInteger(
+						actionRequest, "startDateMonth");
+					int startDateDay = ParamUtil.getInteger(
+						actionRequest, "startDateDay");
+					int startDateYear = ParamUtil.getInteger(
+						actionRequest, "startDateYear");
+					int startDateHour = ParamUtil.getInteger(
+						actionRequest, "startDateHour");
+					int startDateMinute = ParamUtil.getInteger(
+						actionRequest, "startDateMinute");
+					int startDateAmPm = ParamUtil.getInteger(
+						actionRequest, "startDateAmPm");
+
+					if (startDateAmPm == Calendar.PM) {
+						startDateHour += 12;
+					}
+
+					startDate = PortalUtil.getDate(
+						startDateMonth, startDateDay, startDateYear,
+						startDateHour, startDateMinute,
+						themeDisplay.getTimeZone(), PortalException.class);
+
+					int endDateMonth = ParamUtil.getInteger(
+						actionRequest, "endDateMonth");
+					int endDateDay = ParamUtil.getInteger(
+						actionRequest, "endDateDay");
+					int endDateYear = ParamUtil.getInteger(
+						actionRequest, "endDateYear");
+					int endDateHour = ParamUtil.getInteger(
+						actionRequest, "endDateHour");
+					int endDateMinute = ParamUtil.getInteger(
+						actionRequest, "endDateMinute");
+					int endDateAmPm = ParamUtil.getInteger(
+						actionRequest, "endDateAmPm");
+
+					if (endDateAmPm == Calendar.PM) {
+						endDateHour += 12;
+					}
+
+					endDate = PortalUtil.getDate(
+						endDateMonth, endDateDay, endDateYear, endDateHour,
+						endDateMinute, themeDisplay.getTimeZone(),
+						PortalException.class);
+				}
+				else if (range.equals("fromLastPublishDate")) {
+					Layout layout = LayoutLocalServiceUtil.getLayout(plid);
+
+					PortletPreferences preferences =
+						PortletPreferencesFactoryUtil.getPortletSetup(
+							layout, portlet.getPortletId(), StringPool.BLANK);
+
+					long lastPublishDate = GetterUtil.getLong(
+						preferences.getValue(
+							"last-publish-date", StringPool.BLANK));
+
+					if (lastPublishDate > 0) {
+						endDate = new Date();
+
+						startDate = new Date(lastPublishDate);
+					}
+				}
+
+				if (startDate != null) {
+					actionResponse.setRenderParameter(
+						"startDate", String.valueOf(startDate.getTime()));
+				}
+
+				if (endDate != null) {
+					actionResponse.setRenderParameter(
+						"endDate", String.valueOf(endDate.getTime()));
+				}
 			}
 		}
 		catch (Exception e) {
