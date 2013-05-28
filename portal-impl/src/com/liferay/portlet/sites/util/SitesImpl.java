@@ -45,6 +45,7 @@ import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.LayoutSetPrototypeConstants;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.Organization;
@@ -685,7 +686,8 @@ public class SitesImpl implements Sites {
 		throws PortalException, SystemException {
 
 		if ((layoutPrototype == null) ||
-			(layoutPrototype.getLayoutPrototypeId() == 0)) {
+			(layoutPrototype.getLayoutPrototypeId() ==
+				LayoutSetPrototypeConstants.DEFAULT_LAYOUT_SET_PROTOTYPE_ID)) {
 
 			return 0;
 		}
@@ -1146,7 +1148,9 @@ public class SitesImpl implements Sites {
 
 		long layoutSetPrototypeId = layoutSet.getLayoutSetPrototypeId();
 
-		if (layoutSetPrototypeId > 0) {
+		if (layoutSetPrototypeId >
+				LayoutSetPrototypeConstants.DEFAULT_LAYOUT_SET_PROTOTYPE_ID) {
+
 			Group layoutSetPrototypeGroup =
 				GroupLocalServiceUtil.getLayoutSetPrototypeGroup(
 					layout.getCompanyId(), layoutSetPrototypeId);
