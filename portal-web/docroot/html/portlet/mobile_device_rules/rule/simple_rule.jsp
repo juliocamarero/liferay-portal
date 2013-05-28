@@ -38,7 +38,7 @@ if (rule != null) {
 }
 %>
 
-<aui:select helpMessage='<%= PluginPackageUtil.isInstalled("liferay/wurfl-web") ? "os-help-message" : StringPool.BLANK %>' multiple="<%= true %>" name="os">
+<aui:select helpMessage='<%= PluginPackageUtil.isInstalled("wurfl-web") ? StringPool.BLANK : "os-help" %>' multiple="<%= true %>" name="os">
 	<aui:option label="any-os" selected="<%= operatingSystems.isEmpty() %>" value="" />
 
 	<%
