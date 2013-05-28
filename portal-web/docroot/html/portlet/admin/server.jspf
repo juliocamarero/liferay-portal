@@ -694,24 +694,6 @@ serverURL.setParameter("tabs3", tabs3);
 				}
 
 				String scriptOutput = (String)SessionMessages.get(renderRequest, "scriptOutput");
-
-				String storedWidth = StringPool.BLANK;
-				String storedHeight = StringPool.BLANK;
-				String cssStyle = StringPool.BLANK;
-
-				String storedDimensions = SessionClicks.get(request, _PORTAL_SCRIPT_WIDTH_HEIGHT_KEY, StringPool.BLANK);
-
-				if(storedDimensions.contains(StringPool.COMMA)) {
-					String[] storedDimensionsArray = StringUtil.split(storedDimensions, CharPool.COMMA);
-
-					storedWidth = storedDimensionsArray[0];
-					storedHeight = storedDimensionsArray[1];
-
-					cssStyle = new StringBundler(5)
-							.append("width: ").append(storedWidth)
-							.append("; height: ").append(storedHeight).append(StringPool.SEMICOLON)
-							.toString();
-				}
 				%>
 
 				<aui:fieldset>
@@ -729,7 +711,7 @@ serverURL.setParameter("tabs3", tabs3);
 
 					</aui:select>
 
-					<aui:input cssClass="lfr-textarea-container" id="portal-script" name="script" style="<%= cssStyle %>" type="textarea" value="<%= script %>" />
+					<aui:input cssClass="lfr-textarea-container" name="script" resizable="<%= true %>" type="textarea" value="<%= script %>" />
 				</aui:fieldset>
 
 				<c:if test="<%= Validator.isNotNull(scriptOutput) %>">
@@ -748,35 +730,6 @@ serverURL.setParameter("tabs3", tabs3);
 
 					<aui:button onClick="<%= taglibRunScript %>" value="execute" />
 				</aui:button-row>
-
-				<aui:script use="aui-base,resize-base,liferay-store">
-
-					var currentWidth = '<%= HtmlUtil.escape(storedWidth) %>';
-					var currentHeight = '<%= HtmlUtil.escape(storedHeight) %>';
-
-					var scriptTextarea = A.one('#<portlet:namespace />portal-script');
-
-					var instance = new A.Resize({
-						autoHide: true,
-						node: scriptTextarea,
-						wrap: true,
-						handles: 'r, br, b',
-						after: {
-							'resize:end': function(event){
-
-								var newWidth = scriptTextarea.getStyle('width');
-								var newHeight = scriptTextarea.getStyle('height');
-
-								if(newWidth != currentWidth || newHeight != currentHeight) {
-									currentWidth = newWidth;
-									currentHeight = newHeight;
-
-									Liferay.Store('<%= _PORTAL_SCRIPT_WIDTH_HEIGHT_KEY %>', currentWidth + ',' + currentHeight)
-								}
-							}
-						}
-					});
-				</aui:script>
 			</c:when>
 			<c:when test='<%= tabs2.equals("shutdown") %>'>
 				<liferay-ui:error key="shutdownMinutes" message="please-enter-the-number-of-minutes" />
