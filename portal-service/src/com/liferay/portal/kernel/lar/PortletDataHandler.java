@@ -98,6 +98,8 @@ public interface PortletDataHandler {
 	public PortletDataHandlerControl[] getExportMetadataControls()
 		throws PortletDataException;
 
+	public long getExportModelCount(ManifestSummary manifestSummary);
+
 	/**
 	 * Returns an array of the controls defined for this data handler. These
 	 * controls enable the developer to create fine grained controls over import
