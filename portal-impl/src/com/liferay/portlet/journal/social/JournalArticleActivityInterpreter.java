@@ -15,13 +15,16 @@
 package com.liferay.portlet.journal.social;
 
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
+import com.liferay.portlet.journal.service.permission.JournalPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -124,6 +127,40 @@ public class JournalArticleActivityInterpreter
 
 		return JournalArticlePermission.contains(
 			permissionChecker, activity.getClassPK(), actionId);
+	}
+
+	@Override
+	protected boolean hasPermissions(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
+
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
+		int activityType = activity.getType();
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.getLatestArticle(
+				activity.getClassPK());
+
+		if ((activityType == JournalActivityKeys.ADD_ARTICLE) &&
+			!JournalPermission.contains(
+				permissionChecker, activity.getGroupId(),
+				ActionKeys.ADD_ARTICLE)) {
+
+			return false;
+		}
+		else if ((activityType == JournalActivityKeys.UPDATE_ARTICLE) &&
+				 !JournalArticlePermission.contains(
+				permissionChecker, article, ActionKeys.UPDATE)) {
+
+			return false;
+		}
+
+		return hasPermissions(
+			permissionChecker, activity, ActionKeys.VIEW, serviceContext);
 	}
 
 	private static final String[] _CLASS_NAMES =
