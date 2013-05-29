@@ -149,12 +149,7 @@ public abstract class BaseSocialActivityInterpreter
 			return socialActivityFeedEntry;
 		}
 
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		if (!hasPermissions(
-				permissionChecker, activity, ActionKeys.VIEW, serviceContext)) {
-
+		if (!hasPermissions(activity, serviceContext)) {
 			return null;
 		}
 
@@ -480,6 +475,19 @@ public abstract class BaseSocialActivityInterpreter
 		throws Exception {
 
 		return false;
+	}
+
+	protected boolean hasPermissions(
+			SocialActivity activity, ServiceContext serviceContext)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
+
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
+		return hasPermissions(
+			permissionChecker, activity, ActionKeys.VIEW, serviceContext);
 	}
 
 	protected String wrapLink(String link, String title) {
