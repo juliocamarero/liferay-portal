@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
@@ -125,25 +124,7 @@ public class JournalArticleActivityInterpreter
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
-		return JournalArticlePermission.contains(
-			permissionChecker, activity.getClassPK(), actionId);
-	}
-
-	@Override
-	protected boolean hasPermissions(
-			SocialActivity activity, ServiceContext serviceContext)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
 		int activityType = activity.getType();
-
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.getLatestArticle(
-				activity.getClassPK());
 
 		if ((activityType == JournalActivityKeys.ADD_ARTICLE) &&
 			!JournalPermission.contains(
@@ -154,13 +135,13 @@ public class JournalArticleActivityInterpreter
 		}
 		else if ((activityType == JournalActivityKeys.UPDATE_ARTICLE) &&
 				 !JournalArticlePermission.contains(
-				permissionChecker, article, ActionKeys.UPDATE)) {
+				permissionChecker, activity.getClassPK(), ActionKeys.UPDATE)) {
 
 			return false;
 		}
 
-		return hasPermissions(
-			permissionChecker, activity, ActionKeys.VIEW, serviceContext);
+		return JournalArticlePermission.contains(
+			permissionChecker, activity.getClassPK(), actionId);
 	}
 
 	private static final String[] _CLASS_NAMES =
