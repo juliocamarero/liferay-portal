@@ -49,6 +49,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SitesUtil {
 
+	public static void addMergeFailFriendlyURLLayout(
+			LayoutSet layoutSet, Layout layout)
+		throws PortalException, SystemException {
+
+		getSites().addMergeFailFriendlyURLLayout(layoutSet, layout);
+	}
+
 	public static void addPortletBreadcrumbEntries(
 			Group group, HttpServletRequest request,
 			RenderResponse renderResponse)
@@ -166,6 +173,13 @@ public class SitesUtil {
 		return getSites().getMergeFailCount(layoutSetPrototype);
 	}
 
+	public static List<Layout> getMergeFailFriendlyURLLayouts(
+			LayoutSet layoutSet)
+		throws PortalException, SystemException {
+
+		return getSites().getMergeFailFriendlyURLLayouts(layoutSet);
+	}
+
 	public static Sites getSites() {
 		PortalRuntimePermission.checkGetBeanProperty(SitesUtil.class);
 
@@ -272,6 +286,13 @@ public class SitesUtil {
 		throws Exception {
 
 		getSites().mergeLayoutSetProtypeLayouts(group, layoutSet);
+	}
+
+	public static void removeMergeFailFriendlyURLLayout(
+			LayoutSet layoutSet, Layout layout)
+		throws PortalException, SystemException {
+
+		getSites().removeMergeFailFriendlyURLLayout(layoutSet, layout);
 	}
 
 	public static void resetPrototype(Layout layout)

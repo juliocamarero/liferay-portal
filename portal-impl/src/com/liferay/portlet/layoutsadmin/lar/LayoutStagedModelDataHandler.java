@@ -49,6 +49,7 @@ import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutRevision;
 import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.model.LayoutSetPrototypeConstants;
 import com.liferay.portal.model.LayoutStagingHandler;
 import com.liferay.portal.model.LayoutTemplate;
 import com.liferay.portal.model.LayoutTypePortlet;
@@ -254,6 +255,12 @@ public class LayoutStagedModelDataHandler
 			PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE,
 			PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE_MERGE_BY_LAYOUT_UUID);
 
+		List<Layout> previousLayouts = LayoutUtil.findByG_P(
+			groupId, privateLayout);
+
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+			groupId, privateLayout);
+
 		if (layoutsImportMode.equals(
 				PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE_ADD_AS_NEW)) {
 
@@ -268,9 +275,6 @@ public class LayoutStagedModelDataHandler
 			Locale locale = LocaleUtil.getDefault();
 
 			String localizedName = layout.getName(locale);
-
-			List<Layout> previousLayouts = LayoutUtil.findByG_P(
-				groupId, privateLayout);
 
 			for (Layout curLayout : previousLayouts) {
 				if (localizedName.equals(curLayout.getName(locale)) ||
@@ -298,6 +302,22 @@ public class LayoutStagedModelDataHandler
 				newLayoutsMap.put(oldLayoutId, existingLayout);
 
 				return;
+			}
+
+			for (Layout previousLayout : previousLayouts) {
+				String previousLayoutFriendlyURL =
+					previousLayout.getFriendlyURL();
+
+				String previousLayoutUuid = previousLayout.getUuid();
+
+				if (previousLayoutFriendlyURL.equals(friendlyURL) &&
+					((existingLayout == null) ||
+					 !previousLayoutUuid.equals(layout.getUuid()))) {
+
+					SitesUtil.addMergeFailFriendlyURLLayout(layoutSet, layout);
+
+					return;
+				}
 			}
 		}
 		else {
@@ -374,9 +394,6 @@ public class LayoutStagedModelDataHandler
 			initNewLayoutPermissions(
 				portletDataContext.getCompanyId(), groupId, userId, layout,
 				importedLayout, privateLayout);
-
-			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, privateLayout);
 
 			importedLayout.setLayoutSet(layoutSet);
 		}
@@ -504,6 +521,12 @@ public class LayoutStagedModelDataHandler
 		List<Layout> newLayouts = portletDataContext.getNewLayouts();
 
 		newLayouts.add(importedLayout);
+
+		if (layoutSet.getLayoutSetPrototypeId() !=
+				LayoutSetPrototypeConstants.DEFAULT_LAYOUT_SET_PROTOTYPE_ID) {
+
+			SitesUtil.removeMergeFailFriendlyURLLayout(layoutSet, layout);
+		}
 
 		portletDataContext.setPlid(importedLayout.getPlid());
 		portletDataContext.setOldPlid(layout.getPlid());

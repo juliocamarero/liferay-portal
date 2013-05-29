@@ -87,6 +87,7 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.sites.util.Sites;
+import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -518,10 +519,12 @@ public class LayoutImporter {
 
 		// Remove layouts that were deleted from the layout set prototype
 
+		LayoutSetPrototype layoutSetPrototype = null;
+
 		if (Validator.isNotNull(layoutSetPrototypeUuid) &&
 			layoutSetPrototypeLinkEnabled) {
 
-			LayoutSetPrototype layoutSetPrototype =
+			layoutSetPrototype =
 				LayoutSetPrototypeLocalServiceUtil.
 					getLayoutSetPrototypeByUuidAndCompanyId(
 						layoutSetPrototypeUuid, companyId);
@@ -557,6 +560,22 @@ public class LayoutImporter {
 
 		for (Element layoutElement : _layoutElements) {
 			importLayout(portletDataContext, newLayouts, layoutElement);
+		}
+
+		LayoutSet targetLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+			portletDataContext.getScopeGroupId(), privateLayout);
+
+		List<Layout> mergeFailedLayouts =
+			SitesUtil.getMergeFailFriendlyURLLayouts(targetLayoutSet);
+
+		int mergeFailedLayoutsCount = mergeFailedLayouts.size();
+
+		if (mergeFailedLayoutsCount > 0) {
+			int mergeFailCount = SitesUtil.getMergeFailCount(
+				layoutSetPrototype);
+
+			SitesUtil.setMergeFailCount(
+				layoutSetPrototype, mergeFailCount + mergeFailedLayoutsCount);
 		}
 
 		Element portletsElement = _rootElement.element("portlets");
@@ -778,7 +797,8 @@ public class LayoutImporter {
 
 		if (layoutsImportMode.equals(
 				PortletDataHandlerKeys.
-					LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE)) {
+					LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE) &&
+			(mergeFailedLayoutsCount == 0)) {
 
 			UnicodeProperties settingsProperties =
 				layoutSet.getSettingsProperties();

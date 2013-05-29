@@ -27,6 +27,7 @@ import com.liferay.portal.model.ColorScheme;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.LayoutSetPrototypeConstants;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.model.VirtualHost;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -64,7 +65,7 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 		String layoutSetPrototypeUuid = getLayoutSetPrototypeUuid();
 
 		if (Validator.isNull(layoutSetPrototypeUuid)) {
-			return 0;
+			return LayoutSetPrototypeConstants.DEFAULT_LAYOUT_SET_PROTOTYPE_ID;
 		}
 
 		LayoutSetPrototype layoutSetPrototype =
