@@ -65,16 +65,21 @@ if (ratingsEntry != null) {
 					<c:when test="<%= themeDisplay.isSignedIn() && !TrashUtil.isInTrash(className, classPK) %>">
 						<div class="liferay-rating-vote" id="<%= randomNamespace %>ratingStar">
 							<div id="<%= randomNamespace %>ratingStarContent">
-								<div class="rating-label-element"><liferay-ui:message key="your-rating" /></div>
+								<div class="rating-label"><liferay-ui:message key="your-rating" /></div>
 
 								<%
 								for (int i = 1; i <= numberOfStars; i++) {
+
+									String id = PortalUtil.generateRandomKey(request, "taglib_rating");
 								%>
 
-									<a class="rating-element <%= (i <= yourScore) ? "rating-element-on" : StringPool.BLANK %>" href="javascript:;"></a>
+									<a class="rating-element <%= (i <= yourScore) ? "icon-star" : "icon-star-empty" %>" href="javascript:;"></a>
 
-									<aui:input checked="<%= i == yourScore %>" label='<%= (yourScore == i) ? LanguageUtil.format(pageContext, "you-have-rated-this-x-stars-out-of-x", new Object[] {i, numberOfStars}) : LanguageUtil.format(pageContext, "rate-this-x-stars-out-of-x", new Object[] {i, numberOfStars}) %>' name="rating" type="radio" value="<%= i %>" />
+									<div class="rating-input-container">
+										<label for="<%= id %>"><%= (yourScore == i) ? LanguageUtil.format(pageContext, "you-have-rated-this-x-stars-out-of-x", new Object[] {i, numberOfStars}) : LanguageUtil.format(pageContext, "rate-this-x-stars-out-of-x", new Object[] {i, numberOfStars}) %></label>
 
+										<input checked="<%= i == yourScore %>" class="rating-input" id="<%= id %>" name="<portlet:namespace />rating" type="radio" value="<%= i %>">
+									</div>
 								<%
 								}
 								%>
@@ -86,7 +91,7 @@ if (ratingsEntry != null) {
 
 				<div class="liferay-rating-score" id="<%= randomNamespace %>ratingScore">
 					<div id="<%= randomNamespace %>ratingScoreContent">
-						<div class="rating-label-element">
+						<div class="rating-label">
 							<liferay-ui:message key="average" />
 
 							(<%= ratingsStats.getTotalEntries() %> <%= LanguageUtil.get(pageContext, (ratingsStats.getTotalEntries() == 1) ? "vote" : "votes") %>)
@@ -96,7 +101,7 @@ if (ratingsEntry != null) {
 						for (int i = 1; i <= numberOfStars; i++) {
 						%>
 
-							<img alt="<%= (i == 1) ? LanguageUtil.format(pageContext, "the-average-rating-is-x-stars-out-of-x", new Object[] {ratingsStats.getAverageScore(), numberOfStars}) : StringPool.BLANK %>" class="rating-element <%= (i <= ratingsStats.getAverageScore()) ? "rating-element-on" : StringPool.BLANK %>" src="<%= themeDisplay.getPathThemeImages() %>/spacer.png" title="<%= TrashUtil.isInTrash(className, classPK) ? LanguageUtil.get(pageContext, "ratings-are-disabled-because-this-entry-is-in-the-recycle-bin") : StringPool.BLANK %>" />
+							<a class="rating-element <%= (i <= yourScore) ? "icon-star" : "icon-star-empty" %>" href="javascript:;" title="<%= TrashUtil.isInTrash(className, classPK) ? LanguageUtil.get(pageContext, "ratings-are-disabled-because-this-entry-is-in-the-recycle-bin") : ((i == 1) ? LanguageUtil.format(pageContext, "the-average-rating-is-x-stars-out-of-x", new Object[] {ratingsStats.getAverageScore(), numberOfStars}) : StringPool.BLANK) %>"></a>
 
 						<%
 						}
@@ -110,7 +115,7 @@ if (ratingsEntry != null) {
 					<c:when test="<%= themeDisplay.isSignedIn() %>">
 						<div class="thumbrating liferay-rating-vote" id="<%= randomNamespace %>ratingThumb">
 							<div class="helper-clearfix rating-content thumbrating-content" id="<%= randomNamespace %>ratingThumbContent">
-								<div class="rating-label-element">
+								<div class="rating-label">
 									<c:choose>
 										<c:when test="<%= (ratingsStats.getAverageScore() * ratingsStats.getTotalEntries() == 0) %>">
 											0
