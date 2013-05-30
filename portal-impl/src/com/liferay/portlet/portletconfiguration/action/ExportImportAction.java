@@ -102,17 +102,20 @@ public class ExportImportAction extends EditConfigurationAction {
 					StagingUtil.copyFromLive(actionRequest, portlet);
 
 					sendRedirect(actionRequest, actionResponse);
-				} else if (cmd.equals(Constants.EXPORT)) {
+				}
+				else if (cmd.equals(Constants.EXPORT)) {
 					exportData(actionRequest, actionResponse, portlet);
 
 					sendRedirect(actionRequest, actionResponse);
-				} else if (cmd.equals(Constants.IMPORT)) {
+				}
+				else if (cmd.equals(Constants.IMPORT)) {
 					checkExceededSizeLimit(actionRequest);
 
 					importData(actionRequest, actionResponse, portlet);
 
 					sendRedirect(actionRequest, actionResponse);
-				} else if (cmd.equals("publish_to_live")) {
+				}
+				else if (cmd.equals("publish_to_live")) {
 					StagingUtil.publishToLive(actionRequest, portlet);
 
 					sendRedirect(actionRequest, actionResponse);
