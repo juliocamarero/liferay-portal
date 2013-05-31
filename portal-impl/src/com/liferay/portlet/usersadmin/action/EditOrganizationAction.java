@@ -38,10 +38,12 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.EmailAddress;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.OrgLabor;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.OrganizationConstants;
 import com.liferay.portal.model.Phone;
+import com.liferay.portal.model.UserConstants;
 import com.liferay.portal.model.Website;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -52,7 +54,9 @@ import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 import com.liferay.portlet.usersadmin.util.UsersAdminUtil;
 
@@ -62,6 +66,8 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -82,24 +88,45 @@ public class EditOrganizationAction extends PortletAction {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
+		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
 		try {
 			Organization organization = null;
 
 			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
 				organization = updateOrganization(actionRequest);
+
+				Layout layout = themeDisplay.getLayout();
+
+				if (cmd.equals(Constants.ADD) && layout.isTypeControlPanel()) {
+					PortletURL portletURL = PortletURLFactoryUtil.create(
+						actionRequest, PortletKeys.USERS_ADMIN,
+						themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);
+
+					portletURL.setParameter(
+						"struts_action", "/users_admin/view");
+					portletURL.setParameter(
+						"organizationId",
+						String.valueOf(organization.getOrganizationId()));
+					portletURL.setParameter(
+						"usersListView", UserConstants.LIST_VIEW_TREE);
+
+					redirect = portletURL.toString();
+				}
+				else {
+					redirect = HttpUtil.setParameter(
+						redirect,
+						actionResponse.getNamespace() + "organizationId",
+						organization.getOrganizationId());
+				}
 			}
 			else if (cmd.equals(Constants.DELETE)) {
 				deleteOrganizations(actionRequest);
-			}
-
-			String redirect = ParamUtil.getString(actionRequest, "redirect");
-
-			if (organization != null) {
-				redirect = HttpUtil.setParameter(
-					redirect, actionResponse.getNamespace() + "organizationId",
-					organization.getOrganizationId());
 			}
 
 			sendRedirect(actionRequest, actionResponse, redirect);
@@ -138,7 +165,7 @@ public class EditOrganizationAction extends PortletAction {
 				}
 
 				if (e instanceof RequiredOrganizationException) {
-					String redirect = PortalUtil.escapeRedirect(
+					redirect = PortalUtil.escapeRedirect(
 						ParamUtil.getString(actionRequest, "redirect"));
 
 					long organizationId = ParamUtil.getLong(
