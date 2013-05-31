@@ -245,7 +245,6 @@ if (endDateTime > 0) {
 									%>
 
 								</c:if>
-
 							</div>
 
 							<ul id="<portlet:namespace />showChangeContent">
@@ -298,15 +297,11 @@ if (endDateTime > 0) {
 			categoriesNode: '#<%= PortletDataHandlerKeys.CATEGORIES %>Checkbox',
 			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "content-to-export") %>',
 			form: document.<portlet:namespace />fm1,
-			layoutSetSettingsNode: '#<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>Checkbox',
-			logoNode: '#<%= PortletDataHandlerKeys.LOGO %>Checkbox',
 			namespace: '<portlet:namespace />',
 			rangeAllNode: '#rangeAll',
 			rangeDateRangeNode: '#rangeDateRange',
 			rangeLastNode: '#rangeLast',
 			rangeLastPublishNode: '#rangeLastPublish',
-			themeNode: '#<%= PortletDataHandlerKeys.THEME %>Checkbox',
-			themeReferenceNode: '#<%= PortletDataHandlerKeys.THEME_REFERENCE %>Checkbox',
 			userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'
 		}
 	);
