@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
@@ -282,6 +283,27 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			getArticleActionableDynamicQuery(portletDataContext);
 
 		articleActionableDynamicQuery.performCount();
+
+		List<DDMTemplate> ddmTemplates = new ArrayList<DDMTemplate>();
+
+		ActionableDynamicQuery ddmStructureActionableDynamicQuery =
+			getDDMStructureActionableDynamicQuery(
+				portletDataContext, ddmTemplates);
+
+		ddmStructureActionableDynamicQuery.performCount();
+
+		ActionableDynamicQuery ddmTemplateActionableDynamicQuery =
+			getDDMTemplateActionableDynamicQuery(portletDataContext);
+
+		long ddmTemplatesCount =
+			ddmTemplateActionableDynamicQuery.performCount() +
+			ddmTemplates.size();
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		manifestSummary.addModelCount(
+			DDMTemplate.class, JournalArticle.class, ddmTemplatesCount);
 
 		ActionableDynamicQuery feedActionableDynamicQuery =
 			new JournalFeedExportActionableDynamicQuery(portletDataContext);
