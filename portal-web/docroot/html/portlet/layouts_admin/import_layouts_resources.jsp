@@ -236,13 +236,19 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 		<aui:fieldset cssClass="options-group" label="content">
 			<ul class="lfr-tree unstyled">
 				<li class="tree-item">
-					<div class="selected-labels" id="<portlet:namespace />selectedGlobalContent"></div>
-				</li>
-
-				<aui:a cssClass="modify-link" href="javascript:;" id="globalContentLink" label="change" method="get" />
-
-				<li class="tree-item">
 					<aui:input checked="<%= true %>" helpMessage="all-content-import-help" id="allContent" label="all-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="radio" value="<%= true %>" />
+
+					<ul id="<portlet:namespace />showChangeGlobalContent">
+						<li>
+							<div class="selected-labels" id="<portlet:namespace />selectedGlobalContent"></div>
+
+							<aui:a cssClass="modify-link" href="javascript:;" id="globalContentLink" label="change" method="get" />
+						</li>
+					</ul>
+
+					<aui:script>
+						Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA %>Checkbox', '<portlet:namespace />showChangeGlobalContent');
+					</aui:script>
 
 					<div class="hide" id="<portlet:namespace />globalContent">
 						<aui:fieldset cssClass="portlet-data-section" label="all-content">
@@ -264,24 +270,9 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 						<aui:script>
 							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
 						</aui:script>
-
-						<aui:fieldset cssClass="portlet-data-section" label="update-data">
-							<aui:input checked="<%= true %>" helpMessage="import-data-strategy-mirror-help" id="mirror" label="mirror" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR %>" />
-
-							<aui:input helpMessage="import-data-strategy-mirror-with-overwriting-help" id="mirrorWithOverwriting" label="mirror-with-overwriting" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR_OVERWRITE %>" />
-
-							<aui:input helpMessage="import-data-strategy-copy-as-new-help" id="copyAsNew" label="copy-as-new" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_COPY_AS_NEW %>" />
-						</aui:fieldset>
-
-						<aui:fieldset cssClass="portlet-data-section" label="authorship-of-the-content">
-							<aui:input checked="<%= true %>" helpMessage="use-the-original-author-help" id="currentUserId" label="use-the-original-author" name="<%= PortletDataHandlerKeys.USER_ID_STRATEGY %>" type="radio" value="<%= UserIdStrategy.CURRENT_USER_ID %>" />
-
-							<aui:input helpMessage="use-the-current-user-as-author-help" id="alwaysCurrentUserId" label="use-the-current-user-as-author" name="<%= PortletDataHandlerKeys.USER_ID_STRATEGY %>" type="radio" value="<%= UserIdStrategy.ALWAYS_CURRENT_USER_ID %>" />
-						</aui:fieldset>
 					</div>
 
 					<aui:input id="chooseContent" label="choose-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="radio" value="<%= false %>" />
-
 
 					<ul class="hide" id="<portlet:namespace />selectContents">
 						<li>
@@ -420,6 +411,20 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 					</aui:script>
 				</li>
 			</ul>
+		</aui:fieldset>
+
+		<aui:fieldset cssClass="options-group" label="update-data">
+			<aui:input checked="<%= true %>" helpMessage="import-data-strategy-mirror-help" id="mirror" label="mirror" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR %>" />
+
+			<aui:input helpMessage="import-data-strategy-mirror-with-overwriting-help" id="mirrorWithOverwriting" label="mirror-with-overwriting" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR_OVERWRITE %>" />
+
+			<aui:input helpMessage="import-data-strategy-copy-as-new-help" id="copyAsNew" label="copy-as-new" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_COPY_AS_NEW %>" />
+		</aui:fieldset>
+
+		<aui:fieldset cssClass="options-group" label="authorship-of-the-content">
+			<aui:input checked="<%= true %>" helpMessage="use-the-original-author-help" id="currentUserId" label="use-the-original-author" name="<%= PortletDataHandlerKeys.USER_ID_STRATEGY %>" type="radio" value="<%= UserIdStrategy.CURRENT_USER_ID %>" />
+
+			<aui:input helpMessage="use-the-current-user-as-author-help" id="alwaysCurrentUserId" label="use-the-current-user-as-author" name="<%= PortletDataHandlerKeys.USER_ID_STRATEGY %>" type="radio" value="<%= UserIdStrategy.ALWAYS_CURRENT_USER_ID %>" />
 		</aui:fieldset>
 	</div>
 
