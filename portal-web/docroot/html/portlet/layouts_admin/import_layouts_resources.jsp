@@ -17,8 +17,6 @@
 <%@ include file="/html/portlet/layouts_admin/init.jsp" %>
 
 <%
-String redirect = ParamUtil.getString(request, "redirect");
-
 long groupId = ParamUtil.getLong(request, "groupId");
 
 Group group = null;
@@ -250,12 +248,14 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 						<aui:fieldset cssClass="portlet-data-section" label="all-content">
 							<aui:input label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
 
-							<ul id="<portlet:namespace />showDeleteContentWarning">
-								<div class="alert alert-block">
-									<liferay-ui:message key="delete-content-before-importing-warning" />
+							<ul class="unstyled" id="<portlet:namespace />showDeleteContentWarning">
+								<li>
+									<div class="alert alert-block">
+										<liferay-ui:message key="delete-content-before-importing-warning" />
 
-									<liferay-ui:message key="delete-content-before-importing-suggestion" />
-								</div>
+										<liferay-ui:message key="delete-content-before-importing-suggestion" />
+									</div>
+								</li>
 							</ul>
 
 							<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= false %>" />
@@ -284,9 +284,11 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 
 
 					<ul class="hide" id="<portlet:namespace />selectContents">
-						<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= true %>" />
+						<li>
+							<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= true %>" />
 
-						<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="hidden" value="<%= true %>" />
+							<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="hidden" value="<%= true %>" />
+						</li>
 
 						<%
 						Set<String> displayedControls = new HashSet<String>();
