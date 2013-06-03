@@ -415,6 +415,15 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 			</aui:fieldset>
 
 			<aui:button-row>
+				<portlet:renderURL var="importPagesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+					<portlet:param name="struts_action" value="/layouts_admin/import_layouts" />
+					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.VALIDATE %>" />
+					<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+					<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroup.getGroupId()) %>" />
+					<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+				</portlet:renderURL>
+
+				<aui:button href="<%= importPagesURL %>" name="back1" value="back" />
 				<aui:button cssClass="btn-primary" name="continue" value="continue" />
 			</aui:button-row>
 		</div>
