@@ -52,7 +52,6 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.ElementHandler;
 import com.liferay.portal.kernel.xml.ElementProcessor;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
 import com.liferay.portal.model.Group;
@@ -238,14 +237,29 @@ public class ExportImportImpl implements ExportImport {
 
 				@Override
 				public void processElement(Element element) {
-					String className = element.attributeValue("class-name");
-					long count = GetterUtil.getLong(element.getText());
+					String elementName = element.getName();
 
-					manifestSummary.addModelCount(className, count);
+					if (elementName.equals("header")) {
+						String exportDateString = element.attributeValue(
+							"export-date");
+
+						Date exportDate = GetterUtil.getDate(
+							exportDateString,
+							DateFormatFactoryUtil.getSimpleDateFormat(
+								Time.RFC822_FORMAT));
+
+						manifestSummary.setExportDate(exportDate);
+					}
+					else if (elementName.equals("staged-model")) {
+						String className = element.attributeValue("class-name");
+						long count = GetterUtil.getLong(element.getText());
+
+						manifestSummary.addModelCount(className, count);
+					}
 				}
 
 			},
-			new String[] {"staged-model"});
+			new String[] {"header", "staged-model"});
 
 		saxParser.setContentHandler(elementHandler);
 
@@ -259,20 +273,6 @@ public class ExportImportImpl implements ExportImport {
 		String manifestXMLContent = StringUtil.read(is);
 
 		saxParser.parse(new InputSource(new StringReader(manifestXMLContent)));
-
-		Document document = SAXReaderUtil.read(manifestXMLContent);
-
-		Element rootElement = document.getRootElement();
-
-		Element headerElement = rootElement.element("header");
-
-		String exportDateString = headerElement.attributeValue("export-date");
-
-		Date exportDate = GetterUtil.getDate(
-			exportDateString,
-			DateFormatFactoryUtil.getSimpleDateFormat(Time.RFC822_FORMAT));
-
-		manifestSummary.setExportDate(exportDate);
 
 		return manifestSummary;
 	}
@@ -610,8 +610,8 @@ public class ExportImportImpl implements ExportImport {
 		}
 
 		content = StringUtil.replace(
-			content, ArrayUtil.toStringArray(oldLinksToLayout.toArray()),
-			ArrayUtil.toStringArray(newLinksToLayout.toArray()));
+				content, ArrayUtil.toStringArray(oldLinksToLayout.toArray()),
+				ArrayUtil.toStringArray(newLinksToLayout.toArray()));
 
 		return content;
 	}
@@ -831,7 +831,7 @@ public class ExportImportImpl implements ExportImport {
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 		String userIdStrategy = MapUtil.getString(
-			parameterMap, PortletDataHandlerKeys.USER_ID_STRATEGY);
+				parameterMap, PortletDataHandlerKeys.USER_ID_STRATEGY);
 		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
 		PortletDataContext portletDataContext =
