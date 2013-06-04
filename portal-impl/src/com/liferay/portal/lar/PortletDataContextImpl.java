@@ -291,11 +291,17 @@ public class PortletDataContextImpl implements PortletDataContext {
 		boolean portletDataAll = MapUtil.getBoolean(
 			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
 
-		if (portletDataAll || getBooleanParameter(namespace, "comments")) {
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.COMMENTS)) {
+
 			addComments(clazz, classPK);
 		}
 
-		if (portletDataAll || getBooleanParameter(namespace, "ratings")) {
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.RATINGS)) {
+
 			addRatingsEntries(clazz, classPK);
 		}
 
@@ -1320,11 +1326,17 @@ public class PortletDataContextImpl implements PortletDataContext {
 		boolean portletDataAll = MapUtil.getBoolean(
 			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
 
-		if (portletDataAll || getBooleanParameter(namespace, "comments")) {
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.COMMENTS)) {
+
 			importComments(clazz, classPK, newClassPK, getScopeGroupId());
 		}
 
-		if (portletDataAll || getBooleanParameter(namespace, "ratings")) {
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.RATINGS)) {
+
 			importRatingsEntries(clazz, classPK, newClassPK);
 		}
 	}

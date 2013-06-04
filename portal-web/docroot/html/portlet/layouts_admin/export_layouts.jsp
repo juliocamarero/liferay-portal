@@ -425,6 +425,13 @@ if (endDateTime > 0) {
 								}
 								%>
 
+								<li>
+									<aui:fieldset cssClass="comment-and-ratings" label="for-each-of-the-selected-content-types-export-their">
+										<aui:input label="comments" name="<%= PortletDataHandlerKeys.COMMENTS %>" type="checkbox" value="<%= true %>" />
+
+										<aui:input label="ratings" name="<%= PortletDataHandlerKeys.RATINGS %>" type="checkbox" value="<%= true %>" />
+									</aui:fieldset>
+								</li>
 							</ul>
 						</li>
 					</ul>
