@@ -82,8 +82,6 @@
 									Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
 								</aui:script>
 
-								<aui:input data-name='<%= LanguageUtil.get(pageContext, "categories") %>' helpMessage="export-import-referenced-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= false %>" />
-
 								<c:if test="<%= importControls != null %>">
 
 									<%
