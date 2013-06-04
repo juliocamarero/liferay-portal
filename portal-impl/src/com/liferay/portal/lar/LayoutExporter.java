@@ -252,6 +252,8 @@ public class LayoutExporter {
 			parameterMap, PortletDataHandlerKeys.PERMISSIONS);
 		boolean exportPortletArchivedSetups = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS);
+		boolean exportPortletDataAll = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_DATA_ALL);
 		boolean exportPortletUserPreferences = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
 		boolean exportTheme = MapUtil.getBoolean(
@@ -266,7 +268,6 @@ public class LayoutExporter {
 			parameterMap, PortletDataHandlerKeys.UPDATE_LAST_PUBLISH_DATE);
 
 		if (_log.isDebugEnabled()) {
-			_log.debug("Export categories " + exportCategories);
 			_log.debug("Export permissions " + exportPermissions);
 			_log.debug(
 				"Export portlet archived setups " +
@@ -570,7 +571,14 @@ public class LayoutExporter {
 
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
 
-		if (exportCategories || group.isCompany()) {
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Export categories " +
+					(exportPortletDataAll || exportCategories ||
+						group.isCompany()));
+		}
+
+		if (exportPortletDataAll || exportCategories || group.isCompany()) {
 			exportAssetCategories(portletDataContext);
 		}
 
@@ -647,8 +655,6 @@ public class LayoutExporter {
 				portletDataContext, assetVocabulariesElement, categoriesElement,
 				assetCategory);
 		}
-
-		_portletExporter.exportAssetCategories(portletDataContext, rootElement);
 
 		portletDataContext.addZipEntry(
 			ExportImportPathUtil.getRootPath(portletDataContext) +
