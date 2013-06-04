@@ -614,10 +614,9 @@ public class PortletDataContextImpl implements PortletDataContext {
 			if (_missingReferences.contains(referenceKey)) {
 				_missingReferences.remove(referenceKey);
 
-				StringBundler sb = new StringBundler(6);
+				StringBundler sb = new StringBundler(5);
 
-				sb.append("//missing-reference");
-				sb.append("[@class-name='");
+				sb.append("missing-reference[@class-name='");
 				sb.append(classedModel.getModelClassName());
 				sb.append("' and @class-pk='");
 				sb.append(String.valueOf(classedModel.getPrimaryKeyObj()));
