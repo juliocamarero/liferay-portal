@@ -25,15 +25,12 @@ import com.liferay.portal.NoSuchLayoutPrototypeException;
 import com.liferay.portal.NoSuchLayoutSetPrototypeException;
 import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.lar.MissingReference;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
-import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
@@ -116,80 +113,8 @@ import org.apache.commons.lang.time.StopWatch;
  * @author Douglas Wong
  * @author Julio Camarero
  * @author Zsolt Berentey
- * @author Levente Hudák
  */
 public class LayoutImporter {
-
-	public static Tuple getPortletsFromManifest(
-			PortletDataContext portletDataContext)
-		throws PortalException, SystemException {
-
-		String xml = portletDataContext.getZipEntryAsString("/manifest.xml");
-
-		if (xml == null) {
-			throw new LARFileException("manifest.xml not found in the LAR");
-		}
-
-		Element rootElement = null;
-		Element headerElement = null;
-
-		try {
-			Document document = SAXReaderUtil.read(xml);
-
-			rootElement = document.getRootElement();
-
-			headerElement = rootElement.element("header");
-
-			portletDataContext.setImportDataRootElement(rootElement);
-		}
-		catch (Exception e) {
-			throw new LARFileException(e);
-		}
-
-		long companyId = GetterUtil.getLong(
-			headerElement.attributeValue("company-id"));
-
-		List<Portlet> dataPortlets = new ArrayList<Portlet>();
-		List<Portlet> setupPortlets = new ArrayList<Portlet>();
-
-		Element portletsElement = rootElement.element("portlets");
-
-		List<Element> portletElements = portletsElement.elements("portlet");
-
-		for (Element portletElement : portletElements) {
-			String portletId = portletElement.attributeValue("portlet-id");
-
-			boolean data = GetterUtil.getBoolean(
-				portletElement.attributeValue("portlet-data"));
-
-			boolean setup = GetterUtil.getBoolean(
-				portletElement.attributeValue("portlet-setup"));
-
-			try {
-				Portlet portlet = PortletLocalServiceUtil.getPortletById(
-					companyId, portletId);
-
-				PortletDataHandler portletDataHandler =
-					portlet.getPortletDataHandlerInstance();
-
-				if (setup && !setupPortlets.contains(portlet) &&
-					(portletDataHandler != null)) {
-
-					setupPortlets.add(portlet);
-				}
-
-				if (data && !dataPortlets.contains(portlet) &&
-					(portletDataHandler != null)) {
-
-					dataPortlets.add(portlet);
-				}
-			}
-			catch (SystemException se) {
-			}
-		}
-
-		return new Tuple(setupPortlets, dataPortlets);
-	}
 
 	public void importLayouts(
 			long userId, long groupId, boolean privateLayout,

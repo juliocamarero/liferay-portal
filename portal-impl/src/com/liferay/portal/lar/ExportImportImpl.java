@@ -57,11 +57,13 @@ import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
+import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -99,6 +101,7 @@ import org.xml.sax.InputSource;
 
 /**
  * @author Zsolt Berentey
+ * @author Levente Hudák
  */
 public class ExportImportImpl implements ExportImport {
 
@@ -218,7 +221,7 @@ public class ExportImportImpl implements ExportImport {
 			File file)
 		throws Exception {
 
-		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		final Group group = GroupLocalServiceUtil.getGroup(groupId);
 		String userIdStrategy = MapUtil.getString(
 			parameterMap, PortletDataHandlerKeys.USER_ID_STRATEGY);
 		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
@@ -250,6 +253,37 @@ public class ExportImportImpl implements ExportImport {
 
 						manifestSummary.setExportDate(exportDate);
 					}
+					else if (elementName.equals("portlet")) {
+						String portletId = element.attributeValue("portlet-id");
+
+						try {
+							Portlet portlet =
+								PortletLocalServiceUtil.getPortletById(
+									group.getCompanyId(), portletId);
+
+							com.liferay.portal.kernel.lar.PortletDataHandler
+								portletDataHandler =
+									portlet.getPortletDataHandlerInstance();
+
+							if (portletDataHandler != null) {
+								boolean data = GetterUtil.getBoolean(
+									element.attributeValue("portlet-data"));
+
+								if (data) {
+									manifestSummary.addDataPortlet(portlet);
+								}
+
+								boolean setup = GetterUtil.getBoolean(
+									element.attributeValue("portlet-setup"));
+
+								if (setup) {
+									manifestSummary.addSetupPortlet(portlet);
+								}
+							}
+						}
+						catch (SystemException se) {
+						}
+					}
 					else if (elementName.equals("staged-model")) {
 						String className = element.attributeValue("class-name");
 						long count = GetterUtil.getLong(element.getText());
@@ -259,7 +293,7 @@ public class ExportImportImpl implements ExportImport {
 				}
 
 			},
-			new String[] {"header", "staged-model"});
+			new String[] {"header", "portlet", "staged-model"});
 
 		saxParser.setContentHandler(elementHandler);
 
