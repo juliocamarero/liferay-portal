@@ -394,6 +394,17 @@
 		font-style: italic;
 		margin-left: 0.5em;
 	}
+
+	.comment-and-ratings {
+		margin-top: 1em;
+
+		legend {
+			font-size: 1em;
+			font-weight: normal;
+			border-width: 0;
+			margin-bottom: 0;
+		}
+	}
 }
 
 .lfr-root-node {
