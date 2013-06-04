@@ -20,7 +20,6 @@ AUI.add(
 				ATTRS: {
 					alwaysCurrentUserIdNode: defaultConfig,
 					archivedSetupsNode: defaultConfig,
-					categoriesNode: defaultConfig,
 					copyAsNewNode: defaultConfig,
 					currentUserIdNode: defaultConfig,
 					deleteMissingLayoutsNode: defaultConfig,
@@ -660,10 +659,6 @@ AUI.add(
 
 						if (instance._isChecked('deletePortletDataNode')) {
 							selectedGlobalContent.push(Liferay.Language.get('delete-portlet-data-before-importing'));
-						}
-
-						if (instance._isChecked('categoriesNode')) {
-							selectedGlobalContent.push(Liferay.Language.get('categories'));
 						}
 
 						if (instance._isChecked('mirrorNode')) {
