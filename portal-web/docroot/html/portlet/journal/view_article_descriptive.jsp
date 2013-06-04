@@ -20,12 +20,37 @@
 JournalArticle article = (JournalArticle)request.getAttribute("view_entries.jsp-article");
 
 PortletURL tempRowURL = (PortletURL)request.getAttribute("view_entries.jsp-tempRowURL");
+
+JournalArticle latestArticleVersion = null;
+
+Date createDate = article.getCreateDate();
+
+if (article.getVersion() > 1.0) {
+	JournalArticle firstArticleVersion = JournalArticleLocalServiceUtil.getArticle(article.getGroupId(), article.getArticleId(), 1.0);
+
+	createDate = firstArticleVersion.getCreateDate();
+
+	latestArticleVersion = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId(), WorkflowConstants.STATUS_APPROVED);
+}
 %>
 
 <liferay-ui:app-view-entry
 	actionJsp="/html/portlet/journal/article_action.jsp"
+	assetCategoryClassName="<%= JournalArticle.class.getName() %>"
+	assetCategoryClassPK="<%= article.getClassPK() %>"
+	assetTagClassName="<%= JournalArticle.class.getName() %>"
+	assetTagClassPK="<%= article.getClassPK() %>"
+	author="<%= article.getUserName() %>"
+	createDate="<%= createDate %>"
 	description="<%= article.getDescription(locale) %>"
+	displayDate="<%= article.getDisplayDate() %>"
 	displayStyle="descriptive"
+	expirationDate="<%= article.getExpirationDate() %>"
+	latestApprovedVersion="<%= Validator.isNotNull(latestArticleVersion) ? String.valueOf(latestArticleVersion.getVersion()) : null %>"
+	latestApprovedVersionAuthor="<%= Validator.isNotNull(latestArticleVersion) ? String.valueOf(latestArticleVersion.getUserName()) : null %>"
+	modelClassName="<%= article.getModelClassName() %>"
+	modifiedDate="<%= article.getModifiedDate() %>"
+	reviewDate="<%= article.getReviewDate() %>"
 	rowCheckerId="<%= String.valueOf(article.getArticleId()) %>"
 	rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"
 	showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE) %>"
@@ -35,4 +60,5 @@ PortletURL tempRowURL = (PortletURL)request.getAttribute("view_entries.jsp-tempR
 	thumbnailStyle="max-height: 128px; max-width: 128px;"
 	title="<%= article.getTitle(locale) %>"
 	url="<%= tempRowURL.toString() %>"
+	version="<%= String.valueOf(article.getVersion()) %>"
 />

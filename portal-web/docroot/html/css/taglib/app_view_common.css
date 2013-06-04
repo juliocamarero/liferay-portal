@@ -29,7 +29,7 @@
 		display: block;
 		font-size: 1.15em;
 		font-weight: bold;
-		padding: 5px 0 0;
+		padding: 5px 0 10px 0;
 		word-wrap: break-word;
 	}
 
@@ -40,10 +40,20 @@
 		text-decoration: none;
 	}
 
-	.entry-description {
+	.entry-author, .entry-description, .entry-schedule, .entry-latest-approved, .entry-version {
+		color: #999 !important;
 		display: block;
+		line-height: 1.5em;
 		overflow: hidden;
 		word-wrap: break-word;
+	}
+
+	.entry-latest-approved {
+		margin-top: 10px;
+	}
+
+	.entry-last-version {
+		margin-top: -15px;
 	}
 
 	.folder-action, .entry-action {
@@ -101,5 +111,17 @@
 
 	&:hover .overlay, &.hover .overlay, &:hover .entry-selector, &.selected .entry-selector {
 		clip: rect(auto auto auto auto);
+	}
+
+	a>.entry-title {
+		padding-bottom: 5px;
+	}
+
+	a:hover >.entry-title {
+		text-decoration: underline;
+	}
+
+	a:hover {
+		text-decoration: none;
 	}
 }
