@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.lar;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Portlet;
 
@@ -36,7 +37,9 @@ public class ManifestSummary implements Serializable {
 	public static String getManifestSummaryKey(
 		String modelName, String referrerModelName) {
 
-		if (modelName.equals(referrerModelName)) {
+		if (Validator.isNull(referrerModelName) ||
+			modelName.equals(referrerModelName)) {
+
 			return modelName;
 		}
 
@@ -93,10 +96,7 @@ public class ManifestSummary implements Serializable {
 		Class<? extends ClassedModel> clazz,
 		Class<? extends ClassedModel> referrerClass) {
 
-		String manifestSummaryKey = getManifestSummaryKey(
-			clazz.getName(), referrerClass.getName());
-
-		return getModelCount(manifestSummaryKey);
+		return getModelCount(clazz.getName(), referrerClass.getName());
 	}
 
 	public long getModelCount(String manifestSummaryKey) {
@@ -105,6 +105,13 @@ public class ManifestSummary implements Serializable {
 		}
 
 		return _modelCounters.get(manifestSummaryKey);
+	}
+
+	public long getModelCount(String className, String referrerClassName) {
+		String manifestSummaryKey = getManifestSummaryKey(
+			className, referrerClassName);
+
+		return getModelCount(manifestSummaryKey);
 	}
 
 	public Map<String, Long> getModelCounters() {
