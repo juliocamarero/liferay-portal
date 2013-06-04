@@ -17,15 +17,42 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
+String alternativeLayoutFriendlyURL = GetterUtil.getString(SessionMessages.get(request, "portletMessageAlternativeLayoutFriendlyUrl"));
+
 String message = GetterUtil.getString(SessionMessages.get(request, "portalMessageMessage"));
 String cssClass = GetterUtil.getString(SessionMessages.get(request, "portalMessageCssClass"), "alert-info");
 boolean useAnimation = GetterUtil.getBoolean(SessionMessages.get(request, "portalMessageAnimation"), true);
 int timeout = GetterUtil.getInteger(SessionMessages.get(request, "portalMessageTimeout"), 10000);
 %>
 
-<c:if test="<%= Validator.isNotNull(message) %>">
+<c:if test="<%= Validator.isNotNull(alternativeLayoutFriendlyURL) || Validator.isNotNull(message) %>">
 	<div class="helper-hidden alert <%= cssClass %>" id="portalMessageContainer">
-		<liferay-ui:message key="<%= message %>" />
+		<c:choose>
+			<c:when test="<%= Validator.isNotNull(alternativeLayoutFriendlyURL) %>">
+				<liferay-util:buffer var="redirectedLink">
+					<aui:a href="<%= PortalUtil.getCurrentCompleteURL(request) %>">
+						<%= PortalUtil.getCurrentCompleteURL(request) %>
+					</aui:a>
+				</liferay-util:buffer>
+
+				<p class="redirected-to-message">
+					<liferay-ui:message arguments="<%= redirectedLink %>" key="you-have-been-redirected-to-the-following-url" />
+				</p>
+
+				<liferay-util:buffer var="originalLink">
+					<aui:a href="<%= alternativeLayoutFriendlyURL %>">
+						<liferay-ui:message key="link" />
+					</aui:a>
+				</liferay-util:buffer>
+
+				<p class="original-url">
+					<liferay-ui:message arguments="<%= originalLink %>" key="click-in-the-following-link-if-you-want-to-dismiss-this-redirect-and-access-the-original-url" />
+				</p>
+			</c:when>
+			<c:otherwise>
+				<liferay-ui:message key="<%= message %>" />
+			</c:otherwise>
+		</c:choose>
 	</div>
 
 	<aui:script use="liferay-notice">
