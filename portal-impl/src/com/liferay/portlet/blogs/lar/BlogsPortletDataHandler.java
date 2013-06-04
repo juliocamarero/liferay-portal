@@ -54,8 +54,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 				new PortletDataHandlerControl[] {
 					new PortletDataHandlerBoolean(NAMESPACE, "categories"),
 					new PortletDataHandlerBoolean(NAMESPACE, "comments"),
-					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
-					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+					new PortletDataHandlerBoolean(NAMESPACE, "ratings")
 				}));
 		setImportMetadataControls(getExportMetadataControls());
 		setPublishToLiveByDefault(PropsValues.BLOGS_PUBLISH_TO_LIVE_BY_DEFAULT);

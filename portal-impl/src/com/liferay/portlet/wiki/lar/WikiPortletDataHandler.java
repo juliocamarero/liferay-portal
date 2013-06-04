@@ -65,8 +65,7 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 				new PortletDataHandlerControl[] {
 					new PortletDataHandlerBoolean(NAMESPACE, "categories"),
 					new PortletDataHandlerBoolean(NAMESPACE, "comments"),
-					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
-					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+					new PortletDataHandlerBoolean(NAMESPACE, "ratings")
 				}));
 		setImportControls(getExportControls());
 	}
