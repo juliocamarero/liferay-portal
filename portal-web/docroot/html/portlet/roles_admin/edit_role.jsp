@@ -53,8 +53,8 @@ String subtype = BeanParamUtil.getString(role, request, "subtype");
 	<portlet:param name="struts_action" value="/roles_admin/edit_role" />
 </portlet:actionURL>
 
-<aui:form action="<%= editRoleActionURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveRole();" %>'>
-	<aui:input name="<%= Constants.CMD %>" type="hidden" />
+<aui:form action="<%= editRoleActionURL %>" method="post" name="fm">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= (role == null) ? Constants.ADD : Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= editRoleRenderURL %>" />
 	<aui:input name="roleId" type="hidden" value="<%= roleId %>" />
 
@@ -155,11 +155,6 @@ String subtype = BeanParamUtil.getString(role, request, "subtype");
 </aui:form>
 
 <aui:script>
-	function <portlet:namespace />saveRole() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (role == null) ? Constants.ADD : Constants.UPDATE %>";
-		submitForm(document.<portlet:namespace />fm, "<portlet:actionURL><portlet:param name="struts_action" value="/roles_admin/edit_role" /></portlet:actionURL>");
-	}
-
 	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
 		Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />name);
 	</c:if>
