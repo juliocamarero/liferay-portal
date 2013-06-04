@@ -277,12 +277,8 @@ public class FileEntryStagedModelDataHandler
 				DLFileEntry.class, fileEntry.getFileEntryId());
 		}
 
-		if (portletDataContext.getBooleanParameter(
-				DLPortletDataHandler.NAMESPACE, "tags")) {
-
-			assetTagNames = portletDataContext.getAssetTagNames(
-				DLFileEntry.class, fileEntry.getFileEntryId());
-		}
+		assetTagNames = portletDataContext.getAssetTagNames(
+			DLFileEntry.class, fileEntry.getFileEntryId());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			fileEntry, DLPortletDataHandler.NAMESPACE);

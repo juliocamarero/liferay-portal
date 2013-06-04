@@ -281,6 +281,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		long classPK = getClassPK(classedModel);
 
 		addAssetLinks(clazz, classPK);
+		addAssetTags(clazz, classPK);
 		addExpando(element, path, classedModel);
 		addLocks(clazz, String.valueOf(classPK));
 		addPermissions(clazz, classPK);
@@ -298,10 +299,6 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		if (portletDataAll || getBooleanParameter(namespace, "ratings")) {
 			addRatingsEntries(clazz, classPK);
-		}
-
-		if (portletDataAll || getBooleanParameter(namespace, "tags")) {
-			addAssetTags(clazz, classPK);
 		}
 
 		addZipEntry(path, classedModel);
@@ -1863,11 +1860,9 @@ public class PortletDataContextImpl implements PortletDataContext {
 				serviceContext.setAssetCategoryIds(assetCategoryIds);
 			}
 
-			if (portletDataAll || getBooleanParameter(namespace, "tags")) {
-				String[] assetTagNames = getAssetTagNames(clazz, classPK);
+			String[] assetTagNames = getAssetTagNames(clazz, classPK);
 
-				serviceContext.setAssetTagNames(assetTagNames);
-			}
+			serviceContext.setAssetTagNames(assetTagNames);
 		}
 
 		// Expando

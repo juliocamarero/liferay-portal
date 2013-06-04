@@ -56,8 +56,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 				NAMESPACE, "bookmarks", true,
 				new PortletDataHandlerControl[] {
 					new PortletDataHandlerBoolean(NAMESPACE, "categories"),
-					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
-					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+					new PortletDataHandlerBoolean(NAMESPACE, "ratings")
 				}));
 		setImportControls(getExportControls());
 		setPublishToLiveByDefault(true);

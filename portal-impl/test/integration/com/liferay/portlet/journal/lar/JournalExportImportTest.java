@@ -181,7 +181,6 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 		addParameter(parameterMap, "portletResource", PortletKeys.JOURNAL);
 		addParameter(parameterMap, "ratings", true);
 		addParameter(parameterMap, "structures", true);
-		addParameter(parameterMap, "tags", true);
 		addParameter(parameterMap, "version-history", true);
 		addParameter(parameterMap, "web-content", true);
 

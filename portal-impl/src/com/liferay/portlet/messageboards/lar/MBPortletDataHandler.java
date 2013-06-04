@@ -65,8 +65,7 @@ public class MBPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "message-board-messages", true,
 				new PortletDataHandlerControl[] {
-					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
-					new PortletDataHandlerBoolean(NAMESPACE, "tags")
+					new PortletDataHandlerBoolean(NAMESPACE, "ratings")
 				}));
 		setImportControls(getExportControls());
 		setPublishToLiveByDefault(
