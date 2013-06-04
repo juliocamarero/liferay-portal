@@ -281,6 +281,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		Class<?> clazz = classedModel.getModelClass();
 		long classPK = getClassPK(classedModel);
 
+		addAssetCategories(clazz, classPK);
 		addAssetLinks(clazz, classPK);
 		addAssetTags(clazz, classPK);
 		addExpando(element, path, classedModel);
@@ -289,10 +290,6 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		boolean portletDataAll = MapUtil.getBoolean(
 			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
-
-		if (portletDataAll || getBooleanParameter(namespace, "categories")) {
-			addAssetCategories(clazz, classPK);
-		}
 
 		if (portletDataAll || getBooleanParameter(namespace, "comments")) {
 			addComments(clazz, classPK);
@@ -1853,13 +1850,9 @@ public class PortletDataContextImpl implements PortletDataContext {
 			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
 
 		if (isResourceMain(classedModel)) {
-			if (portletDataAll ||
-				getBooleanParameter(namespace, "categories")) {
+			long[] assetCategoryIds = getAssetCategoryIds(clazz, classPK);
 
-				long[] assetCategoryIds = getAssetCategoryIds(clazz, classPK);
-
-				serviceContext.setAssetCategoryIds(assetCategoryIds);
-			}
+			serviceContext.setAssetCategoryIds(assetCategoryIds);
 
 			String[] assetTagNames = getAssetTagNames(clazz, classPK);
 

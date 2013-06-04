@@ -168,7 +168,6 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 			PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT,
 			new String[] {Boolean.FALSE.toString()});
 
-		addParameter(parameterMap, "categories", true);
 		addParameter(parameterMap, "comments", true);
 		addParameter(parameterMap, "doAsGroupId", String.valueOf(groupId));
 		addParameter(parameterMap, "embedded-assets", true);
