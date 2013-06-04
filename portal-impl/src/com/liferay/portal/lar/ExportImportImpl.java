@@ -261,24 +261,18 @@ public class ExportImportImpl implements ExportImport {
 								PortletLocalServiceUtil.getPortletById(
 									group.getCompanyId(), portletId);
 
-							com.liferay.portal.kernel.lar.PortletDataHandler
-								portletDataHandler =
-									portlet.getPortletDataHandlerInstance();
+							if (GetterUtil.getBoolean(
+									element.attributeValue("portlet-setup"))) {
 
-							if (portletDataHandler != null) {
-								boolean data = GetterUtil.getBoolean(
-									element.attributeValue("portlet-data"));
+								manifestSummary.addSetupPortlet(portlet);
+							}
 
-								if (data) {
-									manifestSummary.addDataPortlet(portlet);
-								}
+							if ((portlet.
+									getPortletDataHandlerInstance() != null) &&
+								GetterUtil.getBoolean(
+									element.attributeValue("portlet-data"))) {
 
-								boolean setup = GetterUtil.getBoolean(
-									element.attributeValue("portlet-setup"));
-
-								if (setup) {
-									manifestSummary.addSetupPortlet(portlet);
-								}
+								manifestSummary.addDataPortlet(portlet);
 							}
 						}
 						catch (SystemException se) {

@@ -217,11 +217,10 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 								List<Portlet> setupPortlets = manifestSummary.getSetupPortlets();
 
 								for (Portlet portlet : setupPortlets) {
-									PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
 								%>
 
 									 <li class="tree-item">
-										<aui:input label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" name="<%= PortletDataHandlerKeys.PORTLET_SETUP + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
+										<aui:input label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" name="<%= PortletDataHandlerKeys.PORTLET_SETUP + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" value="<%= true %>" />
 									</li>
 
 								<%
@@ -297,7 +296,7 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 
 								<c:if test="<%= importModelCount != 0 %>">
 									<li>
-										<aui:input checked="<%= portletDataHandler.isPublishToLiveByDefault() %>" label='<%= portletTitle + (importModelCount > 0 ? " (" + importModelCount + ")" : StringPool.BLANK) %>' name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" />
+										<aui:input checked="<%= true %>" label='<%= portletTitle + (importModelCount > 0 ? " (" + importModelCount + ")" : StringPool.BLANK) %>' name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" />
 
 										<%
 										PortletDataHandlerControl[] importControls = portletDataHandler.getImportControls();
