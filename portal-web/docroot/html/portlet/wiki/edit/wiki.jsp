@@ -44,6 +44,8 @@ boolean showSyntaxHelp = ((toggleValue != null) && toggleValue.equals("block"));
 
 		<%@ include file="/html/portlet/wiki/edit/editor_config.jspf" %>
 
+		<% fileBrowserParams.put("Type", "Attachment"); %>
+
 		<c:choose>
 			<c:when test='<%= format.equals("creole") %>'>
 				<liferay-ui:input-editor

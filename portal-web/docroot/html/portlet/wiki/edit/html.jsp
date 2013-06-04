@@ -23,6 +23,8 @@ String content = BeanParamUtil.getString(wikiPage, request, "content");
 
 <%@ include file="/html/portlet/wiki/edit/editor_config.jspf" %>
 
+<% fileBrowserParams.put("Types", "Document,Attachment"); %>
+
 <liferay-ui:input-editor
 	configParams="<%= configParams %>"
 	editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>"
