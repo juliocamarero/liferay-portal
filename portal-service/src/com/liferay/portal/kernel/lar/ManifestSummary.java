@@ -51,10 +51,7 @@ public class ManifestSummary implements Serializable {
 		Class<? extends ClassedModel> clazz,
 		Class<? extends ClassedModel> referrerClass, long modelCount) {
 
-		String manifestSummaryKey = getManifestSummaryKey(
-			clazz.getName(), referrerClass.getName());
-
-		addModelCount(manifestSummaryKey, modelCount);
+		addModelCount(clazz.getName(), referrerClass.getName(), modelCount);
 	}
 
 	public void addModelCount(
@@ -65,6 +62,15 @@ public class ManifestSummary implements Serializable {
 
 	public void addModelCount(String manifestSummaryKey, long modelCount) {
 		_modelCounters.put(manifestSummaryKey, modelCount);
+	}
+
+	public void addModelCount(
+		String className, String referrerClassName, long modelCount) {
+
+		String manifestSummaryKey = getManifestSummaryKey(
+			className, referrerClassName);
+
+		addModelCount(manifestSummaryKey, modelCount);
 	}
 
 	public void addSetupPortlet(Portlet portlet) {

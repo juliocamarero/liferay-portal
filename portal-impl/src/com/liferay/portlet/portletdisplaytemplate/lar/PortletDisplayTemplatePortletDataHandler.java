@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
@@ -40,6 +41,30 @@ public class PortletDisplayTemplatePortletDataHandler
 	extends BasePortletDataHandler {
 
 	public static final String NAMESPACE = "portlet_display_templates";
+
+	@Override
+	public long getExportModelCount(ManifestSummary manifestSummary) {
+		long totalModelCount = -1;
+
+		for (long classNameId : TemplateHandlerRegistryUtil.getClassNameIds()) {
+			long modelCount = manifestSummary.getModelCount(
+				DDMTemplate.class.getName(),
+				PortalUtil.getClassName(classNameId));
+
+			if (modelCount == -1) {
+				continue;
+			}
+
+			if (totalModelCount == -1) {
+				totalModelCount = modelCount;
+			}
+			else {
+				totalModelCount += modelCount;
+			}
+		}
+
+		return totalModelCount;
+	}
 
 	@Override
 	protected String doExportData(
@@ -84,13 +109,19 @@ public class PortletDisplayTemplatePortletDataHandler
 			PortletDataContext portletDataContext)
 		throws Exception {
 
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
 		for (long classNameId : TemplateHandlerRegistryUtil.getClassNameIds()) {
 			ActionableDynamicQuery actionableDynamicQuery =
 				getDDMTemplateActionableDynamicQuery(
 					portletDataContext, new Long[] {classNameId},
 					PortalUtil.getClassName(classNameId));
 
-			actionableDynamicQuery.performCount();
+			manifestSummary.addModelCount(
+				DDMTemplate.class.getName(),
+				PortalUtil.getClassName(classNameId),
+				actionableDynamicQuery.performCount());
 		}
 	}
 
