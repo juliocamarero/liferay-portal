@@ -179,20 +179,6 @@ if (endDateTime > 0) {
 						<li class="tree-item">
 							<aui:input checked="<%= true %>" helpMessage="all-content-export-help" id="allContent" label="all-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= true %>" />
 
-							<div class="hide" id="<portlet:namespace />globalContent">
-								<aui:fieldset cssClass="portlet-data-section" label="all-content">
-									<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= false %>" />
-								</aui:fieldset>
-							</div>
-
-							<ul class="hide" id="<portlet:namespace />showChangeGlobalContent">
-								<li>
-									<div class="selected-labels" id="<portlet:namespace />selectedGlobalContent"></div>
-
-									<aui:a cssClass="modify-link" href="javascript:;" id="globalContentLink" label="change" method="get" />
-								</li>
-							</ul>
-
 							<aui:input helpMessage="choose-content-export-help" id="chooseContent" label="choose-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= false %>" />
 
 							<ul class="hide" id="<portlet:namespace />selectContents">
@@ -308,6 +294,10 @@ if (endDateTime > 0) {
 											<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
 										</li>
 									</ul>
+								</li>
+
+								<li>
+									<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= true %>" />
 								</li>
 
 								<%
@@ -470,7 +460,6 @@ if (endDateTime > 0) {
 	new Liferay.ExportImport(
 		{
 			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
-			categoriesNode: '#<%= PortletDataHandlerKeys.CATEGORIES %>Checkbox',
 			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "content-to-export") %>',
 			form: document.<portlet:namespace />fm1,
 			layoutSetSettingsNode: '#<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>Checkbox',
