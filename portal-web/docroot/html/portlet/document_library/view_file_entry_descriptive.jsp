@@ -1,3 +1,5 @@
+<%@ page
+		import="com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil" %>
 <%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
@@ -40,9 +42,12 @@ if (fileShortcut != null) {
 
 <liferay-ui:app-view-entry
 	actionJsp="/html/portlet/document_library/file_entry_action.jsp"
+	author="<%= fileEntry.getUserName() %>"
+	createDate="<%= fileEntry.getCreateDate() %>"
 	description="<%= fileEntry.getDescription() %>"
 	displayStyle="descriptive"
 	locked="<%= fileEntry.isCheckedOut() %>"
+	modifiedDate="<%= fileEntry.getModifiedDate() %>"
 	rowCheckerId="<%= String.valueOf(rowCheckerId) %>"
 	rowCheckerName="<%= rowCheckerName %>"
 	shortcut="<%= fileShortcut != null %>"
@@ -53,4 +58,5 @@ if (fileShortcut != null) {
 	thumbnailStyle="<%= DLUtil.getThumbnailStyle() %>"
 	title="<%= fileEntry.getTitle() %>"
 	url="<%= tempRowURL.toString() %>"
+	version="<%= String.valueOf(fileEntry.getVersion()) %>"
 />
