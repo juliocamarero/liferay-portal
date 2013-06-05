@@ -1,3 +1,5 @@
+<%@ page import="com.liferay.portlet.asset.DuplicateAssetQueryRuleException" %>
+
 <%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
@@ -235,7 +237,30 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 
 			<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="assetPublisherQueryRulesPanelContainer" persistState="<%= true %>" title="filter[action]">
 				<liferay-ui:asset-tags-error />
+				<liferay-ui:error exception="<%= DuplicateAssetQueryRuleException.class %>">
 
+					<%
+					DuplicateAssetQueryRuleException daeqre = (DuplicateAssetQueryRuleException)errorException;
+
+					String name = "Categories";
+					String contains = "Does not contain";
+					String operator = "Any";
+
+					if (daeqre.getAndOperator()) {
+						operator = "All";
+					}
+
+					if (daeqre.getContains()) {
+						contains = "Contains";
+					}
+
+					if (Validator.equals(daeqre.getName(),("assetTags"))) {
+						name = "Tags";
+					}
+					%>
+
+					<liferay-ui:message arguments="<%= new String[] {contains, operator, name} %>" key="only-one-rule-from-x-x-x-type-is-supported" />
+				</liferay-ui:error>
 				<div id="<portlet:namespace />queryRules">
 					<aui:fieldset label="displayed-assets-must-match-these-rules">
 
