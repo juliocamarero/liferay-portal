@@ -399,7 +399,7 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 <aui:script use="liferay-export-import">
 	new Liferay.ExportImport(
 		{
-			categoriesNode: '#<%= PortletDataHandlerKeys.CATEGORIES %>Checkbox',
+			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
 			deleteMissingLayoutsNode: '#<%= PortletDataHandlerKeys.DELETE_MISSING_LAYOUTS %>Checkbox',
 			deletePortletDataNode: '#<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox',
 			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "content-to-publish") %>',
@@ -411,6 +411,7 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 			rangeDateRangeNode: '#rangeDateRange',
 			rangeLastNode: '#rangeLast',
 			rangeLastPublishNode: '#rangeLastPublish',
+			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',
 			remoteAddressNode: '#<portlet:namespace />remoteAddress',
 			remoteDeletePortletDataNode: '#remoteDeletePortletDataCheckbox',
 			remotePortNode: '#<portlet:namespace />remotePort',
