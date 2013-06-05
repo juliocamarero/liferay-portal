@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -41,13 +40,6 @@ public class PortletDisplayTemplatePortletDataHandler
 	extends BasePortletDataHandler {
 
 	public static final String NAMESPACE = "portlet_display_templates";
-
-	public PortletDisplayTemplatePortletDataHandler() {
-		setExportControls(
-			new PortletDataHandlerBoolean(
-				NAMESPACE, "application-display-templates", true, false, null,
-				DDMTemplate.class.getName()));
-	}
 
 	@Override
 	protected String doExportData(
