@@ -16,7 +16,11 @@
 
 <%@ include file="/html/portal/layout/edit/init.jsp" %>
 
-<div class='<%= portletDisplay.getId().equals(PortletKeys.DOCKBAR) ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />copyPortletsFromPage">
+<%
+String portletId = portletDisplay.getId();
+%>
+
+<div class='<%= portletId.equals(PortletKeys.DOCKBAR) ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />copyPortletsFromPage">
 	<p>
 		<c:if test="<%= selLayout != null %>">
 			<liferay-ui:message arguments="<%= HtmlUtil.escape(selLayout.getName(locale)) %>" key="the-portlets-in-page-x-will-be-replaced-with-the-portlets-in-the-page-you-select-below" />
@@ -71,7 +75,7 @@
 
 	</aui:select>
 
-	<c:if test="<%= !addPage %>">
+	<c:if test="<%= !portletId.equals(PortletKeys.DOCKBAR) %>">
 		<aui:button-row>
 			<aui:button name="copySubmitButton" value="copy" />
 		</aui:button-row>

@@ -1,3 +1,4 @@
+<%@ page import="com.liferay.portal.theme.NavItem" %>
 <%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
@@ -173,20 +174,25 @@ Layout addedLayout = (Layout)SessionMessages.get(renderRequest, portletDisplay.g
 %>
 
 <c:if test="<%= addedLayout != null && !addedLayout.isHidden() %>">
+
+	<%
+	NavItem navItem = new NavItem(request, addedLayout, null);
+	%>
+
 	<aui:script use="aui-base">
-		var TPL_TAB_LINK = '<li class="lfr-nav-item lfr-nav-deletable lfr-nav-sortable lfr-nav-updateable yui3-dd-drop" aria-selected="true"> <a class="" href="{url}" tabindex="-1"><span> {pageTitle} </span> </a> </li>';
-
-		var tabHtml = A.Lang.sub(
-			TPL_TAB_LINK,
-			{
-				pageTitle: A.Lang.String.escapeHTML('<%= addedLayout.getName(locale) %>'),
-				url: '<%= addedLayout.getFriendlyURL() %>'
-			}
-		);
-
 		var navigation = A.one('#banner .nav');
 
 		if (navigation) {
+			var TPL_TAB_LINK = '<li class="lfr-nav-item lfr-nav-deletable lfr-nav-sortable lfr-nav-updateable yui3-dd-drop" aria-selected="true"> <a class="" href="{url}" tabindex="-1"><span> {pageTitle} </span> </a> </li>';
+
+			var tabHtml = A.Lang.sub(
+				TPL_TAB_LINK,
+				{
+					pageTitle: A.Lang.String.escapeHTML('<%= navItem.getName() %>'),
+					url: '<%= navItem.getURL() %>'
+				}
+			);
+
 			navigation.append(tabHtml);
 		}
 	</aui:script>
