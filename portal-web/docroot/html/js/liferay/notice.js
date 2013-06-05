@@ -190,7 +190,7 @@ AUI.add(
 
 				instance._body.addClass('has-alerts');
 
-				if (instance._timeout) {
+				if (instance._timeout > 0) {
 					A.Do.before(instance._beforeNoticeHide, notice, 'hide', instance);
 
 					A.Do.after(instance._afterNoticeShow, notice, 'show', instance);
