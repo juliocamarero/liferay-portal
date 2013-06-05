@@ -190,9 +190,11 @@ public class ActionUtil {
 					return;
 				}
 
+				groupId = themeDisplay.getCompanyGroupId();
+
 				try {
 					ddmStructure = DDMStructureServiceUtil.getStructure(
-						themeDisplay.getCompanyGroupId(),
+						groupId,
 						PortalUtil.getClassNameId(JournalArticle.class),
 						structureId);
 				}
