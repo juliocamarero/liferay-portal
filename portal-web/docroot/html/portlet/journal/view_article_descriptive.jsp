@@ -52,7 +52,6 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 	expirationDate="<%= article.getExpirationDate() %>"
 	latestApprovedVersion="<%= Validator.isNotNull(latestApprovedArticleVersion) ? String.valueOf(latestApprovedArticleVersion.getVersion()) : null %>"
 	latestApprovedVersionAuthor="<%= Validator.isNotNull(latestApprovedArticleVersion) ? String.valueOf(latestApprovedArticleVersion.getUserName()) : null %>"
-	modelClassName="<%= article.getModelClassName() %>"
 	modifiedDate="<%= article.getModifiedDate() %>"
 	reviewDate="<%= article.getReviewDate() %>"
 	rowCheckerId="<%= String.valueOf(article.getArticleId()) %>"

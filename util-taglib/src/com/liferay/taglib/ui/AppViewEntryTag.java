@@ -102,10 +102,6 @@ public class AppViewEntryTag extends IncludeTag {
 		_locked = locked;
 	}
 
-	public void setModelClassName(String modelClassName) {
-		_modelClassName = modelClassName;
-	}
-
 	public void setModifiedDate(Date modifiedDate) {
 		_modifiedDate = modifiedDate;
 	}
@@ -170,14 +166,19 @@ public class AppViewEntryTag extends IncludeTag {
 		_assetTagClassName = null;
 		_assetTagClassPK = 0;
 		_author = null;
+		_createDate = null;
 		_cssClass = null;
 		_data = null;
 		_description = null;
 		_displayDate = null;
 		_displayStyle = null;
+		_expirationDate = null;
 		_folder = false;
+		_latestApprovedVersion = null;
+		_latestApprovedVersionAuthor = null;
 		_locked = false;
 		_modifiedDate = null;
+		_reviewDate = null;
 		_rowCheckerId = null;
 		_rowCheckerName = null;
 		_shortcut = false;
@@ -189,6 +190,7 @@ public class AppViewEntryTag extends IncludeTag {
 		_thumbnailStyle = null;
 		_title = null;
 		_url = null;
+		_version = null;
 	}
 
 	@Override
@@ -215,8 +217,6 @@ public class AppViewEntryTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:app-view-entry:assetTagClassPK", _assetTagClassPK);
 		request.setAttribute("liferay-ui:app-view-entry:author", _author);
-		request.setAttribute(
-			"liferay-ui:app-view-entry:modelClassName", _modelClassName);
 		request.setAttribute(
 			"liferay-ui:app-view-entry:createDate", _createDate);
 		request.setAttribute("liferay-ui:app-view-entry:cssClass", _cssClass);
@@ -283,9 +283,7 @@ public class AppViewEntryTag extends IncludeTag {
 	private boolean _folder;
 	private String _latestApprovedVersion;
 	private String _latestApprovedVersionAuthor;
-
 	private boolean _locked;
-	private String _modelClassName;
 	private Date _modifiedDate;
 	private Date _reviewDate;
 	private String _rowCheckerId;

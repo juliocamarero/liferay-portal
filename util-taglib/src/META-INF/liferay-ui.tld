@@ -64,11 +64,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>modelClassName</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
 			<name>createDate</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
