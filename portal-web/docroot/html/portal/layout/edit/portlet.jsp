@@ -16,21 +16,11 @@
 
 <%@ include file="/html/portal/layout/edit/init.jsp" %>
 
-<%
-boolean addPage = GetterUtil.getBoolean((Boolean)request.getAttribute("add_page.jsp-embedded"), false);
-%>
-
-<div class='<%= addPage ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />copyPortletsFromPage">
-
+<div class='<%= portletDisplay.getId().equals(PortletKeys.DOCKBAR) ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />copyPortletsFromPage">
 	<p>
-		<c:choose>
-			<c:when test="<% Validator.isNotNull(selLayout) %>">
-				<liferay-ui:message arguments="<%= HtmlUtil.escape(selLayout.getName(locale)) %>" key="the-portlets-in-page-x-will-be-replaced-with-the-portlets-in-the-page-you-select-below" />
-			</c:when>
-			<c:otherwise>
-				<liferay-ui:message key="the-portlets-in-the-page-will-be-replaced-with-the-portlets-in-the-page-you-select-below" />
-			</c:otherwise>
-		</c:choose>
+		<c:if test="<%= selLayout != null %>">
+			<liferay-ui:message arguments="<%= HtmlUtil.escape(selLayout.getName(locale)) %>" key="the-portlets-in-page-x-will-be-replaced-with-the-portlets-in-the-page-you-select-below" />
+		</c:if>
 	</p>
 
 	<aui:select label="copy-from-page" name="copyLayoutId" showEmptyOption="<%= true %>">

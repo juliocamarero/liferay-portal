@@ -42,8 +42,6 @@ request.setAttribute(WebKeys.LAYOUT_LISTER_LIST, layoutList);
 Theme selTheme = layout.getTheme();
 
 List<LayoutTemplate> layoutTemplates = LayoutTemplateLocalServiceUtil.getLayoutTemplates(selTheme.getThemeId());
-
-request.setAttribute("add_page.jsp-embedded", true);
 %>
 
 <aui:model-context model="<%= Layout.class %>" />
@@ -75,7 +73,7 @@ request.setAttribute("add_page.jsp-embedded", true);
 				<aui:input id="addLayoutHidden" label="show-in-navigation" name="hidden" type="checkbox" />
 			</div>
 
-			<h5 class="category-header">Templates</h5>
+			<h5 class="category-header"><liferay-ui:message key="templates" /></h5>
 
 			<liferay-util:include page="/html/portlet/dockbar/search_templates.jsp" />
 
@@ -84,7 +82,7 @@ request.setAttribute("add_page.jsp-embedded", true);
 					<div class="active toggler-header toggler-header-collapsed" data-type="portlet">
 						<label class="radio lfr-page-template-title">
 							<input checked id="Blank" name="selectedPageTemplate" type="radio">
-							<strong><%= LanguageUtil.get(pageContext, "blank-default") %></strong>
+							<strong><%= LanguageUtil.get(pageContext, "blank") %></strong>
 						</label>
 					</div>
 
@@ -171,7 +169,7 @@ request.setAttribute("add_page.jsp-embedded", true);
 </aui:form>
 
 <%
-Layout addedLayout = (Layout)SessionMessages.get(renderRequest, portletDisplay.getId() + "PAGE_ADDED");
+Layout addedLayout = (Layout)SessionMessages.get(renderRequest, portletDisplay.getId() + "pageAdded");
 %>
 
 <c:if test="<%= addedLayout != null && !addedLayout.isHidden() %>">
