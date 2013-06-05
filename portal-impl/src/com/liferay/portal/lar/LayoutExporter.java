@@ -578,11 +578,10 @@ public class LayoutExporter {
 						group.isCompany()));
 		}
 
-		if (exportPortletDataAll || exportCategories || group.isCompany()) {
-			exportAssetCategories(portletDataContext);
-		}
+		exportAssetCategories(
+			portletDataContext, exportPortletDataAll, exportCategories,
+			group.isCompany());
 
-		_portletExporter.exportAssetCategories(portletDataContext);
 		_portletExporter.exportAssetLinks(portletDataContext);
 		_portletExporter.exportAssetTags(portletDataContext);
 		_portletExporter.exportComments(portletDataContext);
@@ -626,35 +625,43 @@ public class LayoutExporter {
 		}
 	}
 
-	protected void exportAssetCategories(PortletDataContext portletDataContext)
+	protected void exportAssetCategories(
+			PortletDataContext portletDataContext, boolean exportPortletDataAll,
+			boolean exportCategories, boolean isCompanyGroup)
 		throws Exception {
 
 		Document document = SAXReaderUtil.createDocument();
 
 		Element rootElement = document.addElement("categories-hierarchy");
 
-		Element assetVocabulariesElement = rootElement.addElement(
-			"vocabularies");
+		if (exportPortletDataAll || exportCategories || isCompanyGroup) {
+			Element assetVocabulariesElement = rootElement.addElement(
+				"vocabularies");
 
-		List<AssetVocabulary> assetVocabularies =
-			AssetVocabularyLocalServiceUtil.getGroupVocabularies(
-				portletDataContext.getGroupId());
+			List<AssetVocabulary> assetVocabularies =
+				AssetVocabularyLocalServiceUtil.getGroupVocabularies(
+					portletDataContext.getGroupId());
 
-		for (AssetVocabulary assetVocabulary : assetVocabularies) {
-			_portletExporter.exportAssetVocabulary(
-				portletDataContext, assetVocabulariesElement, assetVocabulary);
+			for (AssetVocabulary assetVocabulary : assetVocabularies) {
+				_portletExporter.exportAssetVocabulary(
+					portletDataContext, assetVocabulariesElement,
+					assetVocabulary);
+			}
+
+			Element categoriesElement = rootElement.addElement("categories");
+
+			List<AssetCategory> assetCategories =
+				AssetCategoryUtil.findByGroupId(
+					portletDataContext.getGroupId());
+
+			for (AssetCategory assetCategory : assetCategories) {
+				_portletExporter.exportAssetCategory(
+					portletDataContext, assetVocabulariesElement,
+					categoriesElement, assetCategory);
+			}
 		}
 
-		Element categoriesElement = rootElement.addElement("categories");
-
-		List<AssetCategory> assetCategories = AssetCategoryUtil.findByGroupId(
-			portletDataContext.getGroupId());
-
-		for (AssetCategory assetCategory : assetCategories) {
-			_portletExporter.exportAssetCategory(
-				portletDataContext, assetVocabulariesElement, categoriesElement,
-				assetCategory);
-		}
+		_portletExporter.exportAssetCategories(portletDataContext, rootElement);
 
 		portletDataContext.addZipEntry(
 			ExportImportPathUtil.getRootPath(portletDataContext) +
