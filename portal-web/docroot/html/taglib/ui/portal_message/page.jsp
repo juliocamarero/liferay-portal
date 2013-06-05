@@ -24,7 +24,7 @@ boolean useAnimation = GetterUtil.getBoolean(SessionMessages.get(request, "porta
 %>
 
 <c:if test="<%= Validator.isNotNull(message) %>">
-	<div class="helper-hidden alert <%= cssClass %>" id="portalMessageContainer">
+	<div class="hide alert <%= cssClass %>" id="portalMessageContainer">
 		<liferay-ui:message key="<%= message %>" />
 	</div>
 
