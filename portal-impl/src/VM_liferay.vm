@@ -86,9 +86,7 @@ img, .png {
 	#if ($themeDisplay.isShowStagingIcon())
 		$theme.runtime("170")
 	#end
-#end
 
-#macro (portal_message)
 	#set ($portal_message_tag = $theme.getPortalMessageTag())
 
 	$portal_message_tag.runTag()
