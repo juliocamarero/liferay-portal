@@ -427,9 +427,19 @@ if (endDateTime > 0) {
 
 								<li>
 									<aui:fieldset cssClass="comments-and-ratings" label="for-each-of-the-selected-content-types-export-their">
-										<aui:input label="comments" name="<%= PortletDataHandlerKeys.COMMENTS %>" type="checkbox" value="<%= true %>" />
+										<div class="selected-labels" id="<portlet:namespace />selectedCommentsAndRatings"></div>
 
-										<aui:input label="ratings" name="<%= PortletDataHandlerKeys.RATINGS %>" type="checkbox" value="<%= true %>" />
+										<aui:a cssClass="modify-link" href="javascript:;" id="commentsAndRatingsLink" label="change" method="get" />
+
+										<div class="hide" id="<portlet:namespace />commentsAndRatings">
+											<ul class="lfr-tree unstyled">
+												<li class="tree-item">
+													<aui:input label="comments" name="<%= PortletDataHandlerKeys.COMMENTS %>" type="checkbox" value="<%= true %>" />
+
+													<aui:input label="ratings" name="<%= PortletDataHandlerKeys.RATINGS %>" type="checkbox" value="<%= true %>" />
+												</li>
+											</ul>
+										</div>
 									</aui:fieldset>
 								</li>
 							</ul>
@@ -467,6 +477,7 @@ if (endDateTime > 0) {
 	new Liferay.ExportImport(
 		{
 			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
+			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
 			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "content-to-export") %>',
 			form: document.<portlet:namespace />fm1,
 			layoutSetSettingsNode: '#<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>Checkbox',
@@ -476,6 +487,7 @@ if (endDateTime > 0) {
 			rangeDateRangeNode: '#rangeDateRange',
 			rangeLastNode: '#rangeLast',
 			rangeLastPublishNode: '#rangeLastPublish',
+			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',
 			themeNode: '#<%= PortletDataHandlerKeys.THEME %>Checkbox',
 			themeReferenceNode: '#<%= PortletDataHandlerKeys.THEME_REFERENCE %>Checkbox',
 			userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'
