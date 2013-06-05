@@ -902,7 +902,8 @@ public class EditLayoutsAction extends PortletAction {
 		Map<Locale, String> robotsMap = LocalizationUtil.getLocalizationMap(
 			actionRequest, "robots");
 		String type = ParamUtil.getString(uploadPortletRequest, "type");
-		boolean hidden = ParamUtil.getBoolean(uploadPortletRequest, "hidden");
+		boolean displayInNavigation = ParamUtil.getBoolean(
+			uploadPortletRequest, "displayInNavigation");
 		Map<Locale, String> friendlyURLMap =
 			LocalizationUtil.getLocalizationMap(actionRequest, "friendlyURL");
 		boolean iconImage = ParamUtil.getBoolean(
@@ -938,7 +939,7 @@ public class EditLayoutsAction extends PortletAction {
 					parentLayout.getDescriptionMap(),
 					parentLayout.getKeywordsMap(), parentLayout.getRobotsMap(),
 					parentLayout.getType(), parentLayout.getTypeSettings(),
-					hidden, friendlyURLMap, serviceContext);
+					!displayInNavigation, friendlyURLMap, serviceContext);
 
 				inheritMobileRuleGroups(layout, serviceContext);
 
@@ -970,7 +971,7 @@ public class EditLayoutsAction extends PortletAction {
 					groupId, privateLayout, parentLayoutId, nameMap, titleMap,
 					descriptionMap, keywordsMap, robotsMap,
 					LayoutConstants.TYPE_PORTLET,
-					formTypeSettingsProperties.toString(), hidden,
+					formTypeSettingsProperties.toString(), !displayInNavigation,
 					friendlyURLMap, serviceContext);
 			}
 			else {
@@ -996,7 +997,7 @@ public class EditLayoutsAction extends PortletAction {
 				layout = LayoutServiceUtil.addLayout(
 					groupId, privateLayout, parentLayoutId, nameMap, titleMap,
 					descriptionMap, keywordsMap, robotsMap, type,
-					formTypeSettingsProperties.toString(), hidden,
+					formTypeSettingsProperties.toString(), !displayInNavigation,
 					friendlyURLMap, serviceContext);
 
 				LayoutTypePortlet layoutTypePortlet =
@@ -1037,8 +1038,8 @@ public class EditLayoutsAction extends PortletAction {
 			layout = LayoutServiceUtil.updateLayout(
 				groupId, privateLayout, layoutId, layout.getParentLayoutId(),
 				nameMap, titleMap, descriptionMap, keywordsMap, robotsMap, type,
-				hidden, friendlyURLMap, Boolean.valueOf(iconImage), iconBytes,
-				serviceContext);
+				!displayInNavigation, friendlyURLMap,
+				Boolean.valueOf(iconImage), iconBytes, serviceContext);
 
 			layoutTypeSettingsProperties = layout.getTypeSettingsProperties();
 

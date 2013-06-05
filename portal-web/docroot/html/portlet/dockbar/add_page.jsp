@@ -71,7 +71,7 @@ List<LayoutTemplate> layoutTemplates = LayoutTemplateLocalServiceUtil.getLayoutT
 		<div class="span12">
 			<div>
 				<aui:input id="addLayoutName" name="name" />
-				<aui:input id="addLayoutHidden" label="show-in-navigation" name="hidden" type="checkbox" />
+				<aui:input id="addLayoutHidden" label="display-in-navigation-menu" name="displayInNavigation" type="checkbox" value="<%= true %>" />
 			</div>
 
 			<h5 class="category-header"><liferay-ui:message key="templates" /></h5>
