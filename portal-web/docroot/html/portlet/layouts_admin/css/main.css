@@ -311,6 +311,17 @@
 }
 
 .export-dialog-tree {
+	.comments-and-ratings {
+		margin-top: 1em;
+
+		legend {
+			font-size: 1em;
+			font-weight: normal;
+			border-width: 0;
+			margin-bottom: 0;
+		}
+	}
+
 	.file-selector {
 		display: block;
 		margin: 0.5em 0 1.5em;
@@ -393,17 +404,6 @@
 		font-size: 0.8em;
 		font-style: italic;
 		margin-left: 0.5em;
-	}
-
-	.comment-and-ratings {
-		margin-top: 1em;
-
-		legend {
-			font-size: 1em;
-			font-weight: normal;
-			border-width: 0;
-			margin-bottom: 0;
-		}
 	}
 }
 
