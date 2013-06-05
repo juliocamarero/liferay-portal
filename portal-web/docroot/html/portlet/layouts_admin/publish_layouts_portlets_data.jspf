@@ -41,8 +41,6 @@ List<Portlet> dataSiteLevelPortlets = LayoutExporter.getDataSiteLevelPortlets(co
 							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
 						</aui:script>
 					</c:if>
-
-					<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= false %>" />
 				</aui:fieldset>
 			</div>
 
@@ -170,6 +168,10 @@ List<Portlet> dataSiteLevelPortlets = LayoutExporter.getDataSiteLevelPortlets(co
 					</ul>
 				</li>
 
+				<li>
+					<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= true %>" />
+				</li>
+
 				<%
 				Set<String> displayedControls = new HashSet<String>();
 				Set<String> portletDataHandlerClasses = new HashSet<String>();
@@ -288,6 +290,23 @@ List<Portlet> dataSiteLevelPortlets = LayoutExporter.getDataSiteLevelPortlets(co
 				}
 				%>
 
+				<li>
+					<aui:fieldset cssClass="comments-and-ratings" label="for-each-of-the-selected-content-types-publish-their">
+						<div class="selected-labels" id="<portlet:namespace />selectedCommentsAndRatings"></div>
+
+						<aui:a cssClass="modify-link" href="javascript:;" id="commentsAndRatingsLink" label="change" method="get" />
+
+						<div class="hide" id="<portlet:namespace />commentsAndRatings">
+							<ul class="lfr-tree unstyled">
+								<li class="tree-item">
+									<aui:input label="comments" name="<%= PortletDataHandlerKeys.COMMENTS %>" type="checkbox" value="<%= true %>" />
+
+									<aui:input label="ratings" name="<%= PortletDataHandlerKeys.RATINGS %>" type="checkbox" value="<%= true %>" />
+								</li>
+							</ul>
+						</div>
+					</aui:fieldset>
+				</li>
 			</ul>
 		</li>
 	</ul>
