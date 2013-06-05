@@ -184,7 +184,11 @@ Layout addedLayout = (Layout)SessionMessages.get(renderRequest, portletDisplay.g
 			}
 		);
 
-		A.one('#banner .nav').append(tabHtml);
+		var navigation = A.one('#banner .nav');
+
+		if (navigation) {
+			navigation.append(tabHtml);
+		}
 	</aui:script>
 </c:if>
 
