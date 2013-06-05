@@ -17,10 +17,10 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
-String message = GetterUtil.getString(SessionMessages.get(request, "portalMessageMessage"));
 String cssClass = GetterUtil.getString(SessionMessages.get(request, "portalMessageCssClass"), "alert-info");
-boolean useAnimation = GetterUtil.getBoolean(SessionMessages.get(request, "portalMessageAnimation"), true);
+String message = GetterUtil.getString(SessionMessages.get(request, "portalMessageMessage"));
 int timeout = GetterUtil.getInteger(SessionMessages.get(request, "portalMessageTimeout"), 10000);
+boolean useAnimation = GetterUtil.getBoolean(SessionMessages.get(request, "portalMessageAnimation"), true);
 %>
 
 <c:if test="<%= Validator.isNotNull(message) %>">
