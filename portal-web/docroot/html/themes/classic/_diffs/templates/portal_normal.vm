@@ -18,6 +18,8 @@ $theme.include($body_top_include)
 
 #dockbar()
 
+#portal_message()
+
 <div class="container-fluid" id="wrapper">
 	<header id="banner" role="banner">
 
