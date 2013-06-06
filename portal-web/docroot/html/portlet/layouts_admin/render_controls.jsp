@@ -72,7 +72,7 @@ for (int i = 0; i < controls.length; i++) {
 			</c:if>
 		</c:when>
 		<c:when test="<%= controls[i] instanceof PortletDataHandlerChoice %>">
-			<aui:field-wrapper label='<%= "&#9632" + LanguageUtil.get(pageContext, controls[i].getControlName()) %>'>
+			<aui:field-wrapper cssClass="portlet-data-section" label='<%= "&#9632" + LanguageUtil.get(pageContext, controls[i].getControlName()) %>'>
 
 				<%
 				PortletDataHandlerChoice control = (PortletDataHandlerChoice)controls[i];

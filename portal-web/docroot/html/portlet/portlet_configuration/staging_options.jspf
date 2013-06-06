@@ -65,35 +65,31 @@
 					%>
 
 						<div class="hide" id="<portlet:namespace />content_<%= selPortlet.getRootPortletId() %>">
-							<aui:field-wrapper label="content">
-								<aui:input data-name='<%= LanguageUtil.get(locale, "delete-portlet-data") %>' label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
+							<aui:input data-name='<%= LanguageUtil.get(locale, "delete-portlet-data") %>' label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
 
-								<div id="<portlet:namespace />showDeleteContentWarning">
-									<div class="alert alert-block">
-										<liferay-ui:message key="delete-content-before-importing-warning" />
+							<div id="<portlet:namespace />showDeleteContentWarning">
+								<div class="alert alert-block">
+									<liferay-ui:message key="delete-content-before-importing-warning" />
 
-										<liferay-ui:message key="delete-content-before-importing-suggestion" />
-									</div>
+									<liferay-ui:message key="delete-content-before-importing-suggestion" />
 								</div>
+							</div>
 
-								<aui:script>
-									Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
-								</aui:script>
+							<aui:script>
+								Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
+							</aui:script>
 
-								<c:if test="<%= exportControls != null %>">
+							<c:if test="<%= exportControls != null %>">
 
-									<%
-									request.setAttribute("render_controls.jsp-controls", exportControls);
-									request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
+								<%
+								request.setAttribute("render_controls.jsp-controls", exportControls);
+								request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
 
-									selectedContent += ArrayUtil.toString(exportControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
-									%>
+								selectedContent += ArrayUtil.toString(exportControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
+								%>
 
-									<ul class="lfr-tree unstyled">
-										<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
-									</ul>
-								</c:if>
-							</aui:field-wrapper>
+								<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
+							</c:if>
 
 							<c:if test="<%= metadataControls != null %>">
 
@@ -109,10 +105,8 @@
 										selectedContent += (selectedContent.equals(StringPool.BLANK) ? "" : ",") + ArrayUtil.toString(childrenControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
 									%>
 
-										<aui:field-wrapper label="content-metadata">
-											<ul class="lfr-tree unstyled">
-												<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
-											</ul>
+										<aui:field-wrapper cssClass="portlet-data-section" label="content-metadata">
+											<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
 										</aui:field-wrapper>
 
 									<%
@@ -122,7 +116,7 @@
 
 							</c:if>
 
-							<aui:field-wrapper label="range">
+							<aui:field-wrapper cssClass="portlet-data-section" label="range">
 								<aui:input data-name='<%= LanguageUtil.get(pageContext, "all") %>' id="rangeAll" label="all" name="range" type="radio" value="all" />
 
 								<aui:input checked="<%= true %>" data-name='<%= LanguageUtil.get(pageContext, "from-last-publish-date") %>' id="rangeLastPublish" label="from-last-publish-date" name="range" type="radio" value="fromLastPublishDate" />
@@ -270,7 +264,6 @@
 		{
 			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
 			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
-			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "staging") %>',
 			form: document.<portlet:namespace />fm1,
 			namespace: '<portlet:namespace />',
 			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',
