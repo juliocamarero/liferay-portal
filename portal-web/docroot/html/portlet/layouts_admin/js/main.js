@@ -56,8 +56,6 @@ AUI.add(
 					initializer: function(config) {
 						var instance = this;
 
-						instance._dialogTitle = config.dialogTitle;
-
 						instance._bindUI();
 
 						instance._initLabels();
@@ -103,7 +101,13 @@ AUI.add(
 							function(event) {
 								var portletId = event.currentTarget.attr('data-portletid');
 
-								var contentDialog = instance._getContentDialog(portletId);
+								var portletTitle = event.currentTarget.attr('data-portlettitle');
+
+								if (!portletTitle) {
+									portletTitle = Liferay.Language.get('content');
+								}
+
+								var contentDialog = instance._getContentDialog(portletId, portletTitle);
 
 								contentDialog.show();
 							},
@@ -259,7 +263,7 @@ AUI.add(
 						return commentsAndRatingsDialog;
 					},
 
-					_getContentDialog: function(portletId) {
+					_getContentDialog: function(portletId, portletTitle) {
 						var instance = this;
 
 						var contentNode = instance.byId('content_' + portletId);
@@ -306,7 +310,7 @@ AUI.add(
 										},
 										width: 400
 									},
-									title: instance._dialogTitle
+									title: portletTitle
 								}
 							);
 
@@ -420,7 +424,7 @@ AUI.add(
 										},
 										width: 400
 									},
-									title: instance._dialogTitle
+									title: Liferay.Language.get('all-content')
 								}
 							);
 
@@ -533,7 +537,7 @@ AUI.add(
 										},
 										width: 400
 									},
-									title: instance._dialogTitle
+									title: Liferay.Language.get('date-range')
 								}
 							);
 
@@ -590,7 +594,7 @@ AUI.add(
 										},
 										width: 400
 									},
-									title: instance._dialogTitle
+									title: Liferay.Language.get('remote-live-connection-settings')
 								}
 							);
 
