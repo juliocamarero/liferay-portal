@@ -24,6 +24,8 @@ public class DuplicateAssetQueryRuleException extends PortalException {
 	public DuplicateAssetQueryRuleException(
 		boolean andOperator, boolean contains, String name) {
 
+		super();
+
 		_andOperator = andOperator;
 		_contains = contains;
 		_name = name;

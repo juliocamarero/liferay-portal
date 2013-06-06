@@ -19,6 +19,15 @@ package com.liferay.portlet.asset.model.impl;
  */
 public class AssetQueryRule {
 
+	public AssetQueryRule(
+		boolean andOperator, boolean contains, String name, String[] values) {
+
+		_andOperator = andOperator;
+		_contains = contains;
+		_name = name;
+		_values = values;
+	}
+
 	public boolean equals(AssetQueryRule assetQueryRule) {
 		if (!_name.equals(assetQueryRule.getName())) {
 			return false;

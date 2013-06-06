@@ -115,7 +115,9 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 					portletConfig, actionRequest, actionResponse);
 			}
 			catch (Exception e) {
-				if (e instanceof DuplicateAssetQueryRuleException) {
+				if (e instanceof AssetTagException ||
+					e instanceof DuplicateAssetQueryRuleException) {
+
 					SessionErrors.add(actionRequest, e.getClass(), e);
 				}
 				else {
@@ -124,65 +126,55 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			}
 		}
 		else {
-			try {
-				if (cmd.equals("add-scope")) {
-					addScope(actionRequest, preferences);
-				}
-				else if (cmd.equals("add-selection")) {
-					AssetPublisherUtil.addSelection(
-						actionRequest, preferences, portletResource);
-				}
-				else if (cmd.equals("move-selection-down")) {
-					moveSelectionDown(actionRequest, preferences);
-				}
-				else if (cmd.equals("move-selection-up")) {
-					moveSelectionUp(actionRequest, preferences);
-				}
-				else if (cmd.equals("remove-selection")) {
-					removeSelection(actionRequest, preferences);
-				}
-				else if (cmd.equals("remove-scope")) {
-					removeScope(actionRequest, preferences);
-				}
-				else if (cmd.equals("select-scope")) {
-					setScopes(actionRequest, preferences);
-				}
-				else if (cmd.equals("selection-style")) {
-					setSelectionStyle(actionRequest, preferences);
-				}
-
-				if (SessionErrors.isEmpty(actionRequest)) {
-					preferences.store();
-
-					LiferayPortletConfig liferayPortletConfig =
-						(LiferayPortletConfig)portletConfig;
-
-					SessionMessages.add(
-						actionRequest,
-						liferayPortletConfig.getPortletId() +
-							SessionMessages.KEY_SUFFIX_REFRESH_PORTLET,
-						portletResource);
-
-					SessionMessages.add(
-						actionRequest,
-						liferayPortletConfig.getPortletId() +
-							SessionMessages.KEY_SUFFIX_UPDATED_CONFIGURATION);
-				}
-
-				String redirect = PortalUtil.escapeRedirect(
-					ParamUtil.getString(actionRequest, "redirect"));
-
-				if (Validator.isNotNull(redirect)) {
-					actionResponse.sendRedirect(redirect);
-				}
+			if (cmd.equals("add-scope")) {
+				addScope(actionRequest, preferences);
 			}
-			catch (Exception e) {
-				if (e instanceof AssetTagException) {
-					SessionErrors.add(actionRequest, e.getClass(), e);
-				}
-				else {
-					throw e;
-				}
+			else if (cmd.equals("add-selection")) {
+				AssetPublisherUtil.addSelection(
+					actionRequest, preferences, portletResource);
+			}
+			else if (cmd.equals("move-selection-down")) {
+				moveSelectionDown(actionRequest, preferences);
+			}
+			else if (cmd.equals("move-selection-up")) {
+				moveSelectionUp(actionRequest, preferences);
+			}
+			else if (cmd.equals("remove-selection")) {
+				removeSelection(actionRequest, preferences);
+			}
+			else if (cmd.equals("remove-scope")) {
+				removeScope(actionRequest, preferences);
+			}
+			else if (cmd.equals("select-scope")) {
+				setScopes(actionRequest, preferences);
+			}
+			else if (cmd.equals("selection-style")) {
+				setSelectionStyle(actionRequest, preferences);
+			}
+
+			if (SessionErrors.isEmpty(actionRequest)) {
+				preferences.store();
+
+				LiferayPortletConfig liferayPortletConfig =
+					(LiferayPortletConfig)portletConfig;
+
+				SessionMessages.add(
+					actionRequest,
+					liferayPortletConfig.getPortletId() +
+						SessionMessages.KEY_SUFFIX_REFRESH_PORTLET,
+					portletResource);
+
+				SessionMessages.add(
+					actionRequest,
+					liferayPortletConfig.getPortletId() +
+						SessionMessages.KEY_SUFFIX_UPDATED_CONFIGURATION);
+			}
+
+			String redirect = PortalUtil.escapeRedirect(
+				ParamUtil.getString(actionRequest, "redirect"));
+
+			if (Validator.isNotNull(redirect)) {
+				actionResponse.sendRedirect(redirect);
 			}
 		}
 	}
@@ -379,6 +371,29 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 		}
 	}
 
+	protected AssetQueryRule getQueryRule(
+		ActionRequest actionRequest, int index) {
+
+		boolean contains = ParamUtil.getBoolean(
+			actionRequest, "queryContains" + index);
+		boolean andOperator = ParamUtil.getBoolean(
+			actionRequest, "queryAndOperator" + index);
+		String name = ParamUtil.getString(actionRequest, "queryName" + index);
+
+		String[] values = null;
+
+		if (name.equals("assetTags")) {
+			values = StringUtil.split(
+				ParamUtil.getString(actionRequest, "queryTagNames" + index));
+		}
+		else {
+			values = StringUtil.split(
+				ParamUtil.getString(actionRequest, "queryCategoryIds" + index));
+		}
+
+		return new AssetQueryRule(andOperator, contains, name, values);
+	}
+
 	protected boolean getSubtypesFieldsFilterEnabled(
 			ActionRequest actionRequest, String[] classNameIds)
 		throws Exception {
@@ -560,7 +575,7 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			}
 		}
 
-		layout = LayoutLocalServiceUtil.updateLayout(
+		LayoutLocalServiceUtil.updateLayout(
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			layout.getTypeSettings());
 	}
@@ -601,45 +616,12 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 		List<AssetQueryRule> assetQueryRules = new ArrayList<AssetQueryRule>();
 
 		for (int queryRulesIndex : queryRulesIndexes) {
-			AssetQueryRule assetQueryRule = new AssetQueryRule();
+			AssetQueryRule assetQueryRule = getQueryRule(
+				actionRequest, queryRulesIndex);
 
-			assetQueryRule.setAndOperator(
-				ParamUtil.getBoolean(
-					actionRequest, "queryAndOperator" + queryRulesIndex));
-			assetQueryRule.setContains(
-				ParamUtil.getBoolean(
-					actionRequest, "queryContains" + queryRulesIndex));
-			assetQueryRule.setName(
-				ParamUtil.getString(
-					actionRequest, "queryName" + queryRulesIndex));
+			validateQueryRule(userId, groupId, assetQueryRules, assetQueryRule);
 
-			if (!assetQueryRules.isEmpty()) {
-				for (AssetQueryRule addedAssetQueryRule : assetQueryRules) {
-					if (addedAssetQueryRule.equals(assetQueryRule)) {
-						throw new DuplicateAssetQueryRuleException(
-							assetQueryRule.getAndOperator(),
-							assetQueryRule.getContains(),
-							assetQueryRule.getName());
-					}
-				}
-			}
-
-			if (assetQueryRule.getName().equals("assetTags")) {
-				assetQueryRule.setValues(
-					StringUtil.split(
-						ParamUtil.getString(
-							actionRequest, "queryTagNames" + queryRulesIndex)));
-
-				AssetTagLocalServiceUtil.checkTags(
-					userId, groupId, assetQueryRule.getValues());
-			}
-			else {
-				assetQueryRule.setValues(
-					StringUtil.split(
-						ParamUtil.getString(
-							actionRequest,
-							"queryCategoryIds" + queryRulesIndex)));
-			}
+			assetQueryRules.add(assetQueryRule);
 
 			setPreference(
 				actionRequest, "queryContains" + i,
@@ -651,8 +633,6 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 				actionRequest, "queryName" + i, assetQueryRule.getName());
 			setPreference(
 				actionRequest, "queryValues" + i, assetQueryRule.getValues());
-
-			assetQueryRules.add(assetQueryRule);
 
 			i++;
 		}
@@ -705,6 +685,31 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 				 !Validator.isVariableTerm(emailFromAddress)) {
 
 			SessionErrors.add(actionRequest, "emailFromAddress");
+		}
+	}
+
+	protected void validateQueryRule(
+			long userId, long groupId, List<AssetQueryRule> assetQueryRules,
+			AssetQueryRule assetQueryRule)
+		throws Exception {
+
+		String name = assetQueryRule.getName();
+
+		if (name.equals("assetTags")) {
+			AssetTagLocalServiceUtil.checkTags(
+				userId, groupId, assetQueryRule.getValues());
+		}
+
+		if (assetQueryRules.isEmpty()) {
+			return;
+		}
+
+		for (AssetQueryRule addedAssetQueryRule : assetQueryRules) {
+			if (addedAssetQueryRule.equals(assetQueryRule)) {
+				throw new DuplicateAssetQueryRuleException(
+					assetQueryRule.getAndOperator(),
+					assetQueryRule.getContains(), assetQueryRule.getName());
+			}
 		}
 	}
 
