@@ -61,7 +61,6 @@ import com.liferay.taglib.ui.JournalContentSearchTag;
 import com.liferay.taglib.ui.LanguageTag;
 import com.liferay.taglib.ui.MySitesTag;
 import com.liferay.taglib.ui.PngImageTag;
-import com.liferay.taglib.ui.PortalMessageTag;
 import com.liferay.taglib.ui.RatingsTag;
 import com.liferay.taglib.ui.SearchTag;
 import com.liferay.taglib.ui.SitesDirectoryTag;
@@ -440,15 +439,6 @@ public class VelocityTaglibImpl implements VelocityTaglib {
 	}
 
 	@Override
-	public PortalMessageTag getPortalMessageTag() throws Exception {
-		PortalMessageTag portalMessageTag = new PortalMessageTag();
-
-		setUp(portalMessageTag);
-
-		return portalMessageTag;
-	}
-
-	@Override
 	public RatingsTag getRatingsTag() throws Exception {
 		RatingsTag ratingsTag = new RatingsTag();
 
@@ -793,12 +783,6 @@ public class VelocityTaglibImpl implements VelocityTaglib {
 		permissionsURL(
 			redirect, modelResourceDescription, modelResourceDescription, null,
 			resourcePrimKey, windowState, roleTypes);
-	}
-
-	public void portalMessage() throws Exception {
-		PortalMessageTag portalMessageTag = new PortalMessageTag();
-
-		portalMessageTag.runTag();
 	}
 
 	@Override
