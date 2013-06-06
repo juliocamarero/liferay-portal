@@ -24,13 +24,7 @@ boolean useAnimation = GetterUtil.getBoolean(SessionMessages.get(request, "porta
 %>
 
 <c:if test="<%= Validator.isNotNull(message) %>">
-	<div class="hide alert <%= cssClass %>" id="portalMessageContainer">
-		<liferay-ui:message key="<%= message %>" />
-	</div>
-
 	<aui:script use="liferay-notice">
-		var portalMessageContainer = A.one('#portalMessageContainer')
-
 		var banner = new Liferay.Notice(
 			{
 				animationConfig:
@@ -39,7 +33,7 @@ boolean useAnimation = GetterUtil.getBoolean(SessionMessages.get(request, "porta
 						top: '0px'
 					},
 				closeText: false,
-				content: portalMessageContainer.html(),
+				content: '<liferay-ui:message key="<%= message %>" /><button type="button" class="close">&times;</button>',
 				noticeClass: 'hide taglib-portal-message <%= cssClass %>',
 				timeout: <%= timeout %>,
 				toggleText: false,
