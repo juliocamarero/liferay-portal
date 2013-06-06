@@ -385,12 +385,12 @@
 }
 
 .lfr-export-dialog {
-	.date-range-options {
-		margin-bottom: 1em;
-	}
+	.portlet-data-section {
+		overflow: auto;
 
-	.portlet-data-section .control-label {
-		font-weight: bold;
+		.control-label {
+			font-weight: bold;
+		}
 	}
 
 	.upload-list li {

@@ -133,7 +133,7 @@
 
 								<ul class="date-range-options hide unstyled" id="<portlet:namespace />startEndDate">
 									<li>
-										<aui:field-wrapper label="start-date">
+										<aui:field-wrapper cssClass="portlet-data-section" label="start-date">
 											<liferay-ui:input-date
 												dayParam="startDateDay"
 												dayValue="<%= yesterday.get(Calendar.DATE) %>"
@@ -163,7 +163,7 @@
 									</li>
 
 									<li>
-										<aui:field-wrapper label="end-date">
+										<aui:field-wrapper cssClass="portlet-data-section" label="end-date">
 											<liferay-ui:input-date
 												dayParam="endDateDay"
 												dayValue="<%= today.get(Calendar.DATE) %>"

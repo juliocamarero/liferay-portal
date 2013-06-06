@@ -204,7 +204,7 @@ if (endDateTime > 0) {
 
 												<ul class="hide unstyled" id="<portlet:namespace />startEndDate">
 													<li>
-														<aui:field-wrapper label="start-date">
+														<aui:field-wrapper cssClass="portlet-data-section" label="start-date">
 															<liferay-ui:input-date
 																dayParam="startDateDay"
 																dayValue="<%= yesterday.get(Calendar.DATE) %>"
@@ -234,7 +234,7 @@ if (endDateTime > 0) {
 													</li>
 
 													<li>
-														<aui:field-wrapper label="end-date">
+														<aui:field-wrapper cssClass="portlet-data-section" label="end-date">
 															<liferay-ui:input-date
 																dayParam="endDateDay"
 																dayValue="<%= today.get(Calendar.DATE) %>"
@@ -277,10 +277,9 @@ if (endDateTime > 0) {
 									</div>
 
 									<liferay-ui:icon
-										cssClass="modify-link"
 										image="calendar"
 										label="<%= true %>"
-										message="filter-to-export-by-date"
+										message="date-range"
 									/>
 
 									<ul>
