@@ -44,7 +44,9 @@ import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.AssetTagException;
+import com.liferay.portlet.asset.DuplicateAssetQueryRuleException;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
+import com.liferay.portlet.asset.model.impl.AssetQueryRule;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.assetpublisher.util.AssetPublisher;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
@@ -57,7 +59,9 @@ import java.io.Serializable;
 
 import java.text.DateFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
@@ -92,21 +96,32 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			super.processAction(portletConfig, actionRequest, actionResponse);
 		}
 		else if (cmd.equals(Constants.UPDATE)) {
-			validateEmailAssetEntryAdded(actionRequest);
-			validateEmailFrom(actionRequest);
+			try {
+				validateEmailAssetEntryAdded(actionRequest);
+				validateEmailFrom(actionRequest);
 
-			updateDisplaySettings(actionRequest);
+				updateDisplaySettings(actionRequest);
 
-			String selectionStyle = getParameter(
-				actionRequest, "selectionStyle");
+				String selectionStyle = getParameter(
+					actionRequest, "selectionStyle");
 
-			if (selectionStyle.equals("dynamic")) {
-				updateQueryLogic(actionRequest, preferences);
+				if (selectionStyle.equals("dynamic")) {
+					updateQueryLogic(actionRequest, preferences);
+				}
+
+				updateDefaultAssetPublisher(actionRequest);
+
+				super.processAction(
+					portletConfig, actionRequest, actionResponse);
 			}
-
-			updateDefaultAssetPublisher(actionRequest);
-
-			super.processAction(portletConfig, actionRequest, actionResponse);
+			catch (Exception e) {
+				if (e instanceof DuplicateAssetQueryRuleException) {
+					SessionErrors.add(actionRequest, e.getClass(), e);
+				}
+				else {
+					throw e;
+				}
+			}
 		}
 		else {
 			try {
@@ -583,36 +598,61 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 
 		int i = 0;
 
+		List<AssetQueryRule> assetQueryRules = new ArrayList<AssetQueryRule>();
+
 		for (int queryRulesIndex : queryRulesIndexes) {
-			boolean contains = ParamUtil.getBoolean(
-				actionRequest, "queryContains" + queryRulesIndex);
-			boolean andOperator = ParamUtil.getBoolean(
-				actionRequest, "queryAndOperator" + queryRulesIndex);
-			String name = ParamUtil.getString(
-				actionRequest, "queryName" + queryRulesIndex);
+			AssetQueryRule assetQueryRule = new AssetQueryRule();
 
-			String[] values = null;
+			assetQueryRule.setAndOperator(
+				ParamUtil.getBoolean(
+					actionRequest, "queryAndOperator" + queryRulesIndex));
+			assetQueryRule.setContains(
+				ParamUtil.getBoolean(
+					actionRequest, "queryContains" + queryRulesIndex));
+			assetQueryRule.setName(
+				ParamUtil.getString(
+					actionRequest, "queryName" + queryRulesIndex));
 
-			if (name.equals("assetTags")) {
-				values = StringUtil.split(
-					ParamUtil.getString(
-						actionRequest, "queryTagNames" + queryRulesIndex));
+			if (!assetQueryRules.isEmpty()) {
+				for (AssetQueryRule addedAssetQueryRule : assetQueryRules) {
+					if (addedAssetQueryRule.equals(assetQueryRule)) {
+						throw new DuplicateAssetQueryRuleException(
+							assetQueryRule.getAndOperator(),
+							assetQueryRule.getContains(),
+							assetQueryRule.getName());
+					}
+				}
+			}
 
-				AssetTagLocalServiceUtil.checkTags(userId, groupId, values);
+			if (assetQueryRule.getName().equals("assetTags")) {
+				assetQueryRule.setValues(
+					StringUtil.split(
+						ParamUtil.getString(
+							actionRequest, "queryTagNames" + queryRulesIndex)));
+
+				AssetTagLocalServiceUtil.checkTags(
+					userId, groupId, assetQueryRule.getValues());
 			}
 			else {
-				values = StringUtil.split(
-					ParamUtil.getString(
-						actionRequest, "queryCategoryIds" + queryRulesIndex));
+				assetQueryRule.setValues(
+					StringUtil.split(
+						ParamUtil.getString(
+							actionRequest,
+							"queryCategoryIds" + queryRulesIndex)));
 			}
 
 			setPreference(
-				actionRequest, "queryContains" + i, String.valueOf(contains));
+				actionRequest, "queryContains" + i,
+				String.valueOf(assetQueryRule.getContains()));
 			setPreference(
 				actionRequest, "queryAndOperator" + i,
-				String.valueOf(andOperator));
-			setPreference(actionRequest, "queryName" + i, name);
-			setPreference(actionRequest, "queryValues" + i, values);
+				String.valueOf(assetQueryRule.getAndOperator()));
+			setPreference(
+				actionRequest, "queryName" + i, assetQueryRule.getName());
+			setPreference(
+				actionRequest, "queryValues" + i, assetQueryRule.getValues());
+
+			assetQueryRules.add(assetQueryRule);
 
 			i++;
 		}
