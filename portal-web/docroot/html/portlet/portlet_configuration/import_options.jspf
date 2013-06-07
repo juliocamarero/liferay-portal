@@ -67,36 +67,32 @@
 					%>
 
 						<div class="hide" id="<portlet:namespace />content_<%= selPortlet.getRootPortletId() %>">
-							<aui:field-wrapper label="content">
-								<aui:input data-name='<%= LanguageUtil.get(locale, "delete-portlet-data") %>' label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
+							<aui:input data-name='<%= LanguageUtil.get(locale, "delete-portlet-data") %>' label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
 
-								<div id="<portlet:namespace />showDeleteContentWarning">
-									<div class="alert alert-block">
-										<liferay-ui:message key="delete-content-before-importing-warning" />
+							<div id="<portlet:namespace />showDeleteContentWarning">
+								<div class="alert alert-block">
+									<liferay-ui:message key="delete-content-before-importing-warning" />
 
-										<liferay-ui:message key="delete-content-before-importing-suggestion" />
-									</div>
+									<liferay-ui:message key="delete-content-before-importing-suggestion" />
 								</div>
+							</div>
 
-								<aui:script>
-									Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
-								</aui:script>
+							<aui:script>
+								Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
+							</aui:script>
 
-								<c:if test="<%= importControls != null %>">
+							<c:if test="<%= importControls != null %>">
 
-									<%
-									request.setAttribute("render_controls.jsp-action", Constants.IMPORT);
-									request.setAttribute("render_controls.jsp-controls", importControls);
-									request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
+								<%
+								request.setAttribute("render_controls.jsp-action", Constants.IMPORT);
+								request.setAttribute("render_controls.jsp-controls", importControls);
+								request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
 
-									selectedContent += ArrayUtil.toString(importControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
-									%>
+								selectedContent += ArrayUtil.toString(importControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
+								%>
 
-									<ul class="lfr-tree unstyled">
-										<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
-									</ul>
-								</c:if>
-							</aui:field-wrapper>
+								<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
+							</c:if>
 
 							<c:if test="<%= metadataControls != null %>">
 
@@ -112,10 +108,8 @@
 										selectedContent += (selectedContent.equals(StringPool.BLANK) ? "" : ",") + ArrayUtil.toString(childrenControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
 									%>
 
-										<aui:field-wrapper label="content-metadata">
-											<ul class="lfr-tree unstyled">
-												<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
-											</ul>
+										<aui:field-wrapper cssClass="portlet-data-section" label="content-metadata">
+											<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
 										</aui:field-wrapper>
 
 									<%
@@ -125,7 +119,7 @@
 
 							</c:if>
 
-							<aui:field-wrapper label="update-data">
+							<aui:field-wrapper cssClass="portlet-data-section" label="update-data">
 								<aui:input checked="<%= true %>" data-name='<%= LanguageUtil.get(locale, "mirror") %>' helpMessage="import-data-strategy-mirror-help" id="mirror" label="mirror" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR %>" />
 
 								<aui:input data-name='<%= LanguageUtil.get(locale, "mirror-with-overwriting") %>' helpMessage="import-data-strategy-mirror-with-overwriting-help" id="mirrorWithOverwriting" label="mirror-with-overwriting" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR_OVERWRITE %>" />
@@ -133,7 +127,7 @@
 								<aui:input data-name='<%= LanguageUtil.get(locale, "copy-as-new") %>' helpMessage="import-data-strategy-copy-as-new-help" id="copyAsNew" label="copy-as-new" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_COPY_AS_NEW %>" />
 							</aui:field-wrapper>
 
-							<aui:field-wrapper label="authorship-of-the-content">
+							<aui:field-wrapper cssClass="portlet-data-section" label="authorship-of-the-content">
 								<aui:input checked="<%= true %>" data-name='<%= LanguageUtil.get(locale, "use-the-original-author") %>' helpMessage="use-the-original-author-help"  id="currentUserId" label="use-the-original-author" name="<%= PortletDataHandlerKeys.USER_ID_STRATEGY %>" type="radio" value="<%= UserIdStrategy.CURRENT_USER_ID %>" />
 
 								<aui:input data-name='<%= LanguageUtil.get(locale, "always-use-my-user-id") %>' helpMessage="use-the-current-user-as-author-help" id="alwaysCurrentUserId" label="use-the-current-user-as-author" name="<%= PortletDataHandlerKeys.USER_ID_STRATEGY %>" type="radio" value="<%= UserIdStrategy.ALWAYS_CURRENT_USER_ID %>" />
@@ -156,7 +150,7 @@
 								data.put("portletid", selPortlet.getRootPortletId());
 								%>
 
-								<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" label="change" method="get" />
+								<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" id='<%= "contentLink" + StringPool.UNDERLINE + selPortlet.getRootPortletId() %>' label="change" method="get" />
 							</li>
 						</ul>
 

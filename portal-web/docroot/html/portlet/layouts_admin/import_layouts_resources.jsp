@@ -168,17 +168,15 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 					<aui:a cssClass="modify-link" href="javascript:;" id="pagesLink" label="change" method="get" />
 
 					<div class="hide" id="<portlet:namespace />pages">
-						<aui:fieldset cssClass="portlet-data-section" label="pages">
-							<aui:input helpMessage="delete-missing-layouts-help" label="delete-missing-layouts" name="<%= PortletDataHandlerKeys.DELETE_MISSING_LAYOUTS %>" type="checkbox" value="<%= false %>" />
+						<aui:input helpMessage="delete-missing-layouts-help" label="delete-missing-layouts" name="<%= PortletDataHandlerKeys.DELETE_MISSING_LAYOUTS %>" type="checkbox" value="<%= false %>" />
 
-							<aui:input label="site-pages-settings" name="<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>" type="checkbox" value="<%= true %>" />
+						<aui:input label="site-pages-settings" name="<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>" type="checkbox" value="<%= true %>" />
 
-							<aui:input helpMessage="export-import-theme-help" label="theme" name="<%= PortletDataHandlerKeys.THEME %>" type="checkbox" value="<%= true %>" />
+						<aui:input helpMessage="export-import-theme-help" label="theme" name="<%= PortletDataHandlerKeys.THEME %>" type="checkbox" value="<%= true %>" />
 
-							<aui:input helpMessage="export-import-theme-settings-help" label="theme-settings" name="<%= PortletDataHandlerKeys.THEME_REFERENCE %>" type="checkbox" value="<%= true %>" />
+						<aui:input helpMessage="export-import-theme-settings-help" label="theme-settings" name="<%= PortletDataHandlerKeys.THEME_REFERENCE %>" type="checkbox" value="<%= true %>" />
 
-							<aui:input label="logo" name="<%= PortletDataHandlerKeys.LOGO %>" type="checkbox" value="<%= true %>" />
-						</aui:fieldset>
+						<aui:input label="logo" name="<%= PortletDataHandlerKeys.LOGO %>" type="checkbox" value="<%= true %>" />
 					</div>
 				</aui:fieldset>
 			</c:if>
@@ -201,11 +199,9 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 						</aui:script>
 
 						<div class="hide" id="<portlet:namespace />globalConfiguration">
-							<aui:fieldset cssClass="portlet-data-section" label="all-applications">
-								<aui:input label="archived-setups" name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>" type="checkbox" value="<%= true %>" />
+							<aui:input label="archived-setups" name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>" type="checkbox" value="<%= true %>" />
 
-								<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" value="<%= true %>" />
-							</aui:fieldset>
+							<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" value="<%= true %>" />
 						</div>
 
 						<aui:input id="chooseApplications" label="choose-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="radio" value="<%= false %>" />
@@ -251,19 +247,17 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 						</aui:script>
 
 						<div class="hide" id="<portlet:namespace />globalContent">
-							<aui:fieldset cssClass="portlet-data-section" label="all-content">
-								<aui:input label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
+							<aui:input label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
 
-								<ul class="unstyled" id="<portlet:namespace />showDeleteContentWarning">
-									<li>
-										<div class="alert alert-block">
-											<liferay-ui:message key="delete-content-before-importing-warning" />
+							<ul class="unstyled" id="<portlet:namespace />showDeleteContentWarning">
+								<li>
+									<div class="alert alert-block">
+										<liferay-ui:message key="delete-content-before-importing-warning" />
 
-											<liferay-ui:message key="delete-content-before-importing-suggestion" />
-										</div>
-									</li>
-								</ul>
-							</aui:fieldset>
+										<liferay-ui:message key="delete-content-before-importing-suggestion" />
+									</div>
+								</li>
+							</ul>
 
 							<aui:script>
 								Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
@@ -306,59 +300,47 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 										%>
 
 											<div class="hide" id="<portlet:namespace />content_<%= portlet.getPortletId() %>">
-												<ul class="lfr-tree unstyled">
-													<li class="tree-item">
-														<aui:fieldset cssClass="portlet-type-data-section" label="<%= portletTitle %>">
 
-															<%
-															if (importControls != null) {
-																request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
-																request.setAttribute("render_controls.jsp-controls", importControls);
-																request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
-																request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
-															%>
+												<%
+												if (importControls != null) {
+													request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
+													request.setAttribute("render_controls.jsp-controls", importControls);
+													request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
+													request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
+												%>
 
-																<aui:field-wrapper label="content">
-																	<ul class="lfr-tree unstyled">
-																		<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
-																	</ul>
-																</aui:field-wrapper>
+													<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
 
-															<%
-															}
+												<%
+												}
 
-															if (importMetadataControls != null) {
-																for (PortletDataHandlerControl metadataControl : importMetadataControls) {
-																	if (!displayedControls.contains(metadataControl.getControlName())) {
-																		displayedControls.add(metadataControl.getControlName());
-																	}
-																	else {
-																		continue;
-																	}
+												if (importMetadataControls != null) {
+													for (PortletDataHandlerControl metadataControl : importMetadataControls) {
+														if (!displayedControls.contains(metadataControl.getControlName())) {
+															displayedControls.add(metadataControl.getControlName());
+														}
+														else {
+															continue;
+														}
 
-																	PortletDataHandlerBoolean control = (PortletDataHandlerBoolean)metadataControl;
+														PortletDataHandlerBoolean control = (PortletDataHandlerBoolean)metadataControl;
 
-																	PortletDataHandlerControl[] childrenControls = control.getChildren();
+														PortletDataHandlerControl[] childrenControls = control.getChildren();
 
-																	if ((childrenControls != null) && (childrenControls.length > 0)) {
-																		request.setAttribute("render_controls.jsp-controls", childrenControls);
-																	%>
+														if ((childrenControls != null) && (childrenControls.length > 0)) {
+															request.setAttribute("render_controls.jsp-controls", childrenControls);
+														%>
 
-																	<aui:field-wrapper label="content-metadata">
-																		<ul class="lfr-tree unstyled">
-																			<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
-																		</ul>
-																	</aui:field-wrapper>
+														<aui:field-wrapper cssClass="portlet-data-section" label="content-metadata">
+															<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
+														</aui:field-wrapper>
 
-																	<%
-																	}
-																}
-															}
-															%>
+														<%
+														}
+													}
+												}
+												%>
 
-														</aui:fieldset>
-													</li>
-												</ul>
 											</div>
 
 											<ul class="hide" id="<portlet:namespace />showChangeContent_<%= portlet.getPortletId() %>">
@@ -369,9 +351,10 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 													Map<String,Object> data = new HashMap<String,Object>();
 
 													data.put("portletid", portlet.getPortletId());
+													data.put("portlettitle", portletTitle);
 													%>
 
-													<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" label="change" method="get" />
+													<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" id='<%= "contentLink" + StringPool.UNDERLINE + portlet.getPortletId() %>' label="change" method="get" />
 												</li>
 											</ul>
 
@@ -504,7 +487,6 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 			currentUserIdNode: '#currentUserId',
 			deleteMissingLayoutsNode: '#<%= PortletDataHandlerKeys.DELETE_MISSING_LAYOUTS %>Checkbox',
 			deletePortletDataNode: '#<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox',
-			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "content-to-import") %>',
 			form: document.<portlet:namespace />fm1,
 			layoutSetSettingsNode: '#<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>Checkbox',
 			logoNode: '#<%= PortletDataHandlerKeys.LOGO %>Checkbox',

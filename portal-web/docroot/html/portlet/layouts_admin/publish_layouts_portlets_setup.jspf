@@ -19,9 +19,7 @@
 		<aui:input checked="<%= true %>" helpMessage="all-applications-publish-help" id="allApplications" label="all-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="radio" value="<%= true %>" />
 
 		<div class="hide" id="<portlet:namespace />globalConfiguration">
-			<aui:fieldset cssClass="portlet-data-section" label="all-applications">
-				<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" value="<%= true %>" />
-			</aui:fieldset>
+			<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" value="<%= true %>" />
 		</div>
 
 		<ul class="hide" id="<portlet:namespace />showChangeGlobalConfiguration">
