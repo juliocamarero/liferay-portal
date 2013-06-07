@@ -71,6 +71,12 @@ public class LanguageServlet extends HttpServlet {
 		Locale locale = LocaleUtil.fromLanguageId(pathArray[0]);
 		String key = pathArray[1];
 
+		if (Validator.isNull(LanguageUtil.get(locale, key, StringPool.BLANK))) {
+			_log.error("Invalid language key is specified");
+
+			return;
+		}
+
 		Object[] arguments = null;
 
 		if (pathArray.length > 2) {
