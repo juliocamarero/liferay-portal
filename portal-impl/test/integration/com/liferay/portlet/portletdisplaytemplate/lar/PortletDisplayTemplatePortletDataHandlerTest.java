@@ -33,8 +33,6 @@ import com.liferay.portlet.dynamicdatamapping.util.DDMTemplateTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.wiki.model.WikiPage;
 
-import java.util.Map;
-
 import org.junit.runner.RunWith;
 
 /**
