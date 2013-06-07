@@ -83,14 +83,8 @@ public class JournalPortletDataHandlerTest
 		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
 			stagingGroup.getGroupId(), ddmStructure.getStructureId());
 
-		portletDataContext.isPathProcessed(
-			ExportImportPathUtil.getModelPath(ddmTemplate));
-
 		DDMTemplate rendererDDMTemplate = DDMTemplateTestUtil.addTemplate(
 			stagingGroup.getGroupId(), ddmStructure.getStructureId());
-
-		portletDataContext.isPathProcessed(
-			ExportImportPathUtil.getModelPath(rendererDDMTemplate));
 
 		JournalTestUtil.addFeed(
 			stagingGroup.getGroupId(), layout.getPlid(),
