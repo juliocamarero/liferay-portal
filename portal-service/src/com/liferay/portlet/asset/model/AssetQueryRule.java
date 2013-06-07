@@ -30,12 +30,19 @@ public class AssetQueryRule {
 		_values = values;
 	}
 
-	public boolean equals(AssetQueryRule assetQueryRule) {
-		if (Validator.equals(_contains, assetQueryRule._contains) &&
-			Validator.equals(_andOperator, assetQueryRule._andOperator) &&
-			Validator.equals(_name, assetQueryRule._name)) {
+	@Override
+	public boolean equals(Object o) {
+		try {
+			AssetQueryRule assetQueryRule = (AssetQueryRule)o;
 
-			return true;
+			if (Validator.equals(_contains, assetQueryRule._contains) &&
+				Validator.equals(_andOperator, assetQueryRule._andOperator) &&
+				Validator.equals(_name, assetQueryRule._name)) {
+
+				return true;
+			}
+		}
+		catch (ClassCastException e){
 		}
 
 		return false;
