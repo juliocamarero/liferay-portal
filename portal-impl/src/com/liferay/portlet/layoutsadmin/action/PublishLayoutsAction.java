@@ -20,12 +20,17 @@ import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.RemoteExportException;
 import com.liferay.portal.RemoteOptionsException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portlet.sites.action.ActionUtil;
+
+import java.util.Date;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -64,37 +69,60 @@ public class PublishLayoutsAction extends EditLayoutsAction {
 			actionRequest, "closeRedirect");
 
 		try {
-			if (cmd.equals("copy_from_live")) {
-				StagingUtil.copyFromLive(actionRequest);
-			}
-			else if (cmd.equals("publish_to_live")) {
-				StagingUtil.publishToLive(actionRequest);
-			}
-			else if (cmd.equals("publish_to_remote")) {
-				StagingUtil.publishToRemote(actionRequest);
-			}
-			else if (cmd.equals("schedule_copy_from_live")) {
-				StagingUtil.scheduleCopyFromLive(actionRequest);
-			}
-			else if (cmd.equals("schedule_publish_to_live")) {
-				StagingUtil.schedulePublishToLive(actionRequest);
-			}
-			else if (cmd.equals("schedule_publish_to_remote")) {
-				StagingUtil.schedulePublishToRemote(actionRequest);
-			}
-			else if (cmd.equals("unschedule_copy_from_live")) {
-				StagingUtil.unscheduleCopyFromLive(actionRequest);
-			}
-			else if (cmd.equals("unschedule_publish_to_live")) {
-				StagingUtil.unschedulePublishToLive(actionRequest);
-			}
-			else if (cmd.equals("unschedule_publish_to_remote")) {
-				StagingUtil.unschedulePublishToRemote(actionRequest);
-			}
+			if (Validator.isNotNull(cmd)) {
+				if (cmd.equals("copy_from_live")) {
+					StagingUtil.copyFromLive(actionRequest);
+				}
+				else if (cmd.equals("publish_to_live")) {
+					StagingUtil.publishToLive(actionRequest);
+				}
+				else if (cmd.equals("publish_to_remote")) {
+					StagingUtil.publishToRemote(actionRequest);
+				}
+				else if (cmd.equals("schedule_copy_from_live")) {
+					StagingUtil.scheduleCopyFromLive(actionRequest);
+				}
+				else if (cmd.equals("schedule_publish_to_live")) {
+					StagingUtil.schedulePublishToLive(actionRequest);
+				}
+				else if (cmd.equals("schedule_publish_to_remote")) {
+					StagingUtil.schedulePublishToRemote(actionRequest);
+				}
+				else if (cmd.equals("unschedule_copy_from_live")) {
+					StagingUtil.unscheduleCopyFromLive(actionRequest);
+				}
+				else if (cmd.equals("unschedule_publish_to_live")) {
+					StagingUtil.unschedulePublishToLive(actionRequest);
+				}
+				else if (cmd.equals("unschedule_publish_to_remote")) {
+					StagingUtil.unschedulePublishToRemote(actionRequest);
+				}
 
-			sendRedirect(
-				portletConfig, actionRequest, actionResponse, redirect,
-				closeRedirect);
+				sendRedirect(
+					portletConfig, actionRequest, actionResponse, redirect,
+					closeRedirect);
+			}
+			else {
+				long groupId = ParamUtil.getLong(actionRequest, "groupId");
+				boolean privateLayout = ParamUtil.getBoolean(
+					actionRequest, "privateLayout");
+
+				DateRange dateRange = ExportImportUtil.getDateRange(
+					actionRequest, groupId, privateLayout, 0, null);
+
+				Date startDate = dateRange.getStartDate();
+				Date endDate = dateRange.getEndDate();
+
+				if (startDate != null) {
+					actionResponse.setRenderParameter(
+						"startDate", String.valueOf(startDate.getTime()));
+				}
+
+				if (endDate != null) {
+					actionResponse.setRenderParameter(
+						"endDate", String.valueOf(endDate.getTime()));
+				}
+			}
 		}
 		catch (Exception e) {
 			if (e instanceof PrincipalException) {
