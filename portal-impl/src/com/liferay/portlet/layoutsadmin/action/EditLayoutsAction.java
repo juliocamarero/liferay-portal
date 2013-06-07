@@ -216,9 +216,6 @@ public class EditLayoutsAction extends PortletAction {
 				closeRedirect = updateCloseRedirect(
 					themeDisplay, closeRedirect, group, null, oldFriendlyURL);
 			}
-			else if (cmd.equals("copy_from_live")) {
-				StagingUtil.copyFromLive(actionRequest);
-			}
 			else if (cmd.equals("display_order")) {
 				updateDisplayOrder(actionRequest);
 			}
@@ -227,12 +224,6 @@ public class EditLayoutsAction extends PortletAction {
 			}
 			else if (cmd.equals("enable")) {
 				enableLayout(actionRequest);
-			}
-			else if (cmd.equals("publish_to_live")) {
-				StagingUtil.publishToLive(actionRequest);
-			}
-			else if (cmd.equals("publish_to_remote")) {
-				StagingUtil.publishToRemote(actionRequest);
 			}
 			else if (cmd.equals("reset_customized_view")) {
 				LayoutTypePortlet layoutTypePortlet =
@@ -251,29 +242,11 @@ public class EditLayoutsAction extends PortletAction {
 			else if (cmd.equals("reset_prototype")) {
 				SitesUtil.resetPrototype(themeDisplay.getLayout());
 			}
-			else if (cmd.equals("schedule_copy_from_live")) {
-				StagingUtil.scheduleCopyFromLive(actionRequest);
-			}
-			else if (cmd.equals("schedule_publish_to_live")) {
-				StagingUtil.schedulePublishToLive(actionRequest);
-			}
-			else if (cmd.equals("schedule_publish_to_remote")) {
-				StagingUtil.schedulePublishToRemote(actionRequest);
-			}
 			else if (cmd.equals("select_layout_set_branch")) {
 				selectLayoutSetBranch(actionRequest);
 			}
 			else if (cmd.equals("select_layout_branch")) {
 				selectLayoutBranch(actionRequest);
-			}
-			else if (cmd.equals("unschedule_copy_from_live")) {
-				StagingUtil.unscheduleCopyFromLive(actionRequest);
-			}
-			else if (cmd.equals("unschedule_publish_to_live")) {
-				StagingUtil.unschedulePublishToLive(actionRequest);
-			}
-			else if (cmd.equals("unschedule_publish_to_remote")) {
-				StagingUtil.unschedulePublishToRemote(actionRequest);
 			}
 			else if (cmd.equals("update_layout_revision")) {
 				updateLayoutRevision(actionRequest, themeDisplay);
