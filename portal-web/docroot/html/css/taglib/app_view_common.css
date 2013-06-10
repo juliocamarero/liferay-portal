@@ -26,8 +26,10 @@
 			border-color: #057CB0;
 		}
 
-		.entry-author, .entry-latest-approved, .entry-schedule, .entry-categories, .entry-tags, .entry-description, .entry-version, .workflow-status-approved, .workflow-status-draft, .workflow-status-expired, .workflow-status-pending {
-			color: #f0f0f0;
+		.entry-metadata {
+			dt, dd, .entry-categories, .entry-tags, .entry-description, .workflow-status-approved, .workflow-status-draft, .workflow-status-expired, .workflow-status-pending {
+				color: #f0f0f0;
+			}
 		}
 	}
 

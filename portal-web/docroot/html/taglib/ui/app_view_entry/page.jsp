@@ -242,12 +242,12 @@ if (showLinkTitle) {
 							</c:when>
 							<c:otherwise>
 								<dt>
-									<liferay-ui:message key="display-date" />
+									<liferay-ui:message key='<%= reviewDate != null ? "schedule" : "display-date" %>' />
 								</dt>
 								<dd>
 									<c:choose>
 										<c:when test="<%= reviewDate != null %>">
-											<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(reviewDate))} %>" key="x-review-date-x" />
+											<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(reviewDate))} %>" key="display-date-x-review-date-x" />
 										</c:when>
 										<c:otherwise>
 											<%= HtmlUtil.escape(dateFormatDateTime.format(displayDate)) %>
