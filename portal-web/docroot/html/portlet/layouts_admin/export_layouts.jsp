@@ -353,7 +353,7 @@ if (endDateTime > 0) {
 																	request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
 																%>
 
-																	<aui:field-wrapper label="content">
+																	<aui:field-wrapper label='<%= Validator.isNotNull(metadataControls) ? "content" : StringPool.BLANK %>'>
 																		<ul class="lfr-tree unstyled">
 																			<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
 																		</ul>
