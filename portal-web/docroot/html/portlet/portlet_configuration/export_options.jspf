@@ -103,7 +103,7 @@ if (endDateTime > 0) {
 
 								<ul class="date-range-options hide unstyled" id="<portlet:namespace />startEndDate">
 									<li>
-										<aui:field-wrapper label="start-date">
+										<aui:fieldset label="start-date">
 											<liferay-ui:input-date
 												dayParam="startDateDay"
 												dayValue="<%= yesterday.get(Calendar.DATE) %>"
@@ -129,11 +129,11 @@ if (endDateTime > 0) {
 												minuteParam='<%= "startDateMinute" %>'
 												minuteValue="<%= yesterday.get(Calendar.MINUTE) %>"
 											/>
-										</aui:field-wrapper>
+										</aui:fieldset>
 									</li>
 
 									<li>
-										<aui:field-wrapper label="end-date">
+										<aui:fieldset label="end-date">
 											<liferay-ui:input-date
 												dayParam="endDateDay"
 												dayValue="<%= today.get(Calendar.DATE) %>"
@@ -158,7 +158,7 @@ if (endDateTime > 0) {
 												minuteParam='<%= "endDateMinute" %>'
 												minuteValue="<%= today.get(Calendar.MINUTE) %>"
 											/>
-										</aui:field-wrapper>
+										</aui:fieldset>
 									</li>
 								</ul>
 							</aui:fieldset>
@@ -166,10 +166,9 @@ if (endDateTime > 0) {
 					</li>
 
 					<liferay-ui:icon
-						cssClass="modify-link"
 						image="calendar"
 						label="<%= true %>"
-						message="filter-to-export-by-date"
+						message="date-range"
 					/>
 
 					<ul>
