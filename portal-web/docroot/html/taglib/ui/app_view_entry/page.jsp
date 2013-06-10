@@ -164,11 +164,11 @@ if (showLinkTitle) {
 				<dl>
 					<c:choose>
 						<c:when test="<%= Validator.isNotNull(version) %>">
-							<dt class="entry-version">
+							<dt>
 								<liferay-ui:message key="version" />
 							</dt>
 
-							<dd class="entry-version">
+							<dd>
 								<liferay-ui:message key="<%= String.valueOf(version) %>" />
 
 								<c:if test="<%= (status != -1) && (status > WorkflowConstants.STATUS_APPROVED) %>">
@@ -184,7 +184,7 @@ if (showLinkTitle) {
 							</dd>
 						</c:when>
 						<c:when test="<%= status > WorkflowConstants.STATUS_APPROVED %>">
-							<dt class="entry-version">
+							<dt>
 								<liferay-ui:message key="status" />
 							</dt>
 
@@ -192,7 +192,7 @@ if (showLinkTitle) {
 							String statusLabel = WorkflowConstants.toLabel(status);
 							%>
 
-							<dd class="entry-version">
+							<dd>
 								<span class="workflow-status-<%= statusLabel %>">
 									<liferay-ui:message key="<%= statusLabel %>" />
 								</span>
@@ -203,12 +203,12 @@ if (showLinkTitle) {
 					<c:if test="<%= (createDate != null) && (modifiedDate != null) && Validator.isNotNull(author) %>">
 						<c:choose>
 							<c:when test="<%= modifiedDate.equals(createDate) %>">
-								<dt class="entry-author">
+								<dt>
 									<liferay-ui:message key="created" />
 								</dt>
 							</c:when>
 							<c:otherwise >
-								<dt class="entry-author">
+								<dt>
 									<liferay-ui:message key="last-updated" />
 								</dt>
 							</c:otherwise>
@@ -224,10 +224,10 @@ if (showLinkTitle) {
 
 					<c:choose>
 						<c:when test="<%= (displayDate != null) && (expirationDate != null) %>">
-							<dt class="entry-schedule">
+							<dt>
 								<liferay-ui:message key="schedule" />
 							</dt>
-							<dd class="entry-schedule">
+							<dd>
 								<c:choose>
 									<c:when test="<%= reviewDate != null %>">
 										<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(expirationDate)), HtmlUtil.escape(dateFormatDateTime.format(reviewDate))} %>" key="x-to-x-review-date-x" />
@@ -240,10 +240,10 @@ if (showLinkTitle) {
 						</c:when>
 
 						<c:when test="<%= (displayDate != null) && (expirationDate == null) %>">
-							<dt class="entry-schedule">
+							<dt>
 								<liferay-ui:message key="display-date" />
 							</dt>
-							<dd class="entry-schedule">
+							<dd>
 								<c:choose>
 									<c:when test="<%= reviewDate != null %>">
 										<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(reviewDate))} %>" key="x-review-date-x" />
@@ -277,10 +277,10 @@ if (showLinkTitle) {
 
 				<c:if test="<%= Validator.isNotNull(latestApprovedVersion) && (status > WorkflowConstants.STATUS_APPROVED) %>">
 					<dl class="entry-latest-approved-container">
-						<dt class="entry-latest-approved">
+						<dt>
 							<liferay-ui:message key="latest-aproved-version" />
 						</dt>
-						<dd class="entry-latest-approved">
+						<dd>
 							<liferay-ui:message arguments="<%= new String[] {latestApprovedVersion, latestApprovedVersionAuthor} %>" key="x-by-x" />
 						</dd>
 					</dl>
