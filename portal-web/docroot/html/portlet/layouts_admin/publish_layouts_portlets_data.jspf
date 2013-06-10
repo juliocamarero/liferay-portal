@@ -36,9 +36,9 @@ if (endDateTime > 0) {
 
 		<aui:input checked="<%= true %>" helpMessage="all-content-publish-help" id="allContent" label="all-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= true %>" />
 
-		<div class="hide" id="<portlet:namespace />globalContent">
-			<aui:fieldset cssClass="portlet-data-section" label="all-content">
-				<c:if test="<%= !selGroup.isStagingGroup() || !localPublishing %>">
+		<c:if test="<%= !selGroup.isStagingGroup() || !localPublishing %>">
+			<div class="hide" id="<portlet:namespace />globalContent">
+				<aui:fieldset cssClass="portlet-data-section" label="all-content">
 					<aui:input helpMessage="delete-portlet-data-help" label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" />
 
 					<ul id="<portlet:namespace />showDeleteContentWarning">
@@ -51,17 +51,17 @@ if (endDateTime > 0) {
 					<aui:script>
 						Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>Checkbox', '<portlet:namespace />showDeleteContentWarning');
 					</aui:script>
-				</c:if>
-			</aui:fieldset>
-		</div>
+				</aui:fieldset>
+			</div>
 
-		<ul class="hide" id="<portlet:namespace />showChangeGlobalContent">
-			<li>
-				<div class="selected-labels" id="<portlet:namespace />selectedGlobalContent"></div>
+			<ul class="hide" id="<portlet:namespace />showChangeGlobalContent">
+				<li>
+					<div class="selected-labels" id="<portlet:namespace />selectedGlobalContent"></div>
 
-				<aui:a cssClass="modify-link" href="javascript:;" id="globalContentLink" label="change" method="get" />
-			</li>
-		</ul>
+					<aui:a cssClass="modify-link" href="javascript:;" id="globalContentLink" label="change" method="get" />
+				</li>
+			</ul>
+		</c:if>
 
 		<aui:input helpMessage="choose-content-publish-help" id="chooseContent" label="choose-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= false %>" />
 
