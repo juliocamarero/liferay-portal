@@ -318,7 +318,7 @@ ManifestSummary manifestSummary = com.liferay.portal.kernel.lar.ExportImportUtil
 																request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
 															%>
 
-																<aui:field-wrapper label="content">
+																<aui:field-wrapper label='<%= Validator.isNotNull(importMetadataControls) ? "content" : StringPool.BLANK %>'>
 																	<ul class="lfr-tree unstyled">
 																		<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
 																	</ul>
