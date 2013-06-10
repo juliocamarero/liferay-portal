@@ -390,6 +390,10 @@
 	}
 
 	.portlet-data-section, .portlet-type-data-section {
+		.control-label {
+			font-weight: bold;
+		}
+
 		legend {
 			display: none;
 		}
