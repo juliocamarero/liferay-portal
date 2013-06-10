@@ -264,6 +264,7 @@
 									Map<String,Object> data = new HashMap<String,Object>();
 
 									data.put("portletid", portlet.getPortletId());
+									data.put("portlettitle", portletTitle);
 									%>
 
 									<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" id='<%= "contentLink_" + portlet.getPortletId() %>' label="change" method="get" />

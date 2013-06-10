@@ -270,7 +270,6 @@
 		{
 			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
 			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
-			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "staging") %>',
 			form: document.<portlet:namespace />fm1,
 			namespace: '<portlet:namespace />',
 			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',

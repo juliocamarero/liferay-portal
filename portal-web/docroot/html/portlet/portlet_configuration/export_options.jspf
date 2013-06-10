@@ -312,7 +312,6 @@ if (endDateTime > 0) {
 		{
 			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
 			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
-			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "content-to-export") %>',
 			form: document.<portlet:namespace />fm1,
 			namespace: '<portlet:namespace />',
 			rangeAllNode: '#rangeAll',
