@@ -385,13 +385,23 @@
 }
 
 .lfr-export-dialog {
-	.date-range-options {
-		margin-bottom: 1em;
-	}
-
 	.portlet-data-section, .portlet-type-data-section {
 		.control-label {
 			font-weight: bold;
+		}
+
+		.date-range-options {
+			margin-bottom: 1em;
+
+			legend {;
+				border: 0;
+				display: block;
+				font-size: 1em;
+				font-weight: normal;
+				line-height: 1em;
+				margin-bottom: 0.2em;
+				padding-top: 1em;
+			}
 		}
 
 		legend {
