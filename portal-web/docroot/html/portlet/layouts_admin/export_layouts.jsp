@@ -404,6 +404,7 @@ if (endDateTime > 0) {
 														Map<String,Object> data = new HashMap<String,Object>();
 
 														data.put("portletid", portlet.getPortletId());
+														data.put("portlettitle", portletTitle);
 														%>
 
 														<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" id='<%= "contentLink_" + portlet.getPortletId() %>' label="change" method="get" />
@@ -478,7 +479,6 @@ if (endDateTime > 0) {
 		{
 			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
 			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
-			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "content-to-export") %>',
 			form: document.<portlet:namespace />fm1,
 			layoutSetSettingsNode: '#<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>Checkbox',
 			logoNode: '#<%= PortletDataHandlerKeys.LOGO %>Checkbox',
