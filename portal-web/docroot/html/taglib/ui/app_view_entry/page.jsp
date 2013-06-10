@@ -169,9 +169,9 @@ if (showLinkTitle) {
 							</dt>
 
 							<dd>
-								<liferay-ui:message key="<%= String.valueOf(version) %>" />
+								<%= HtmlUtil.escape(version) %>
 
-								<c:if test="<%= (status != -1) && (status > WorkflowConstants.STATUS_APPROVED) %>">
+								<c:if test="<%= (status != WorkflowConstants.STATUS_ANY) && (status != WorkflowConstants.STATUS_APPROVED) %>">
 
 									<%
 									String statusLabel = WorkflowConstants.toLabel(status);
@@ -183,7 +183,7 @@ if (showLinkTitle) {
 								</c:if>
 							</dd>
 						</c:when>
-						<c:when test="<%= status > WorkflowConstants.STATUS_APPROVED %>">
+						<c:when test="<%= (status != WorkflowConstants.STATUS_ANY) && (status != WorkflowConstants.STATUS_APPROVED) %>">
 							<dt>
 								<liferay-ui:message key="status" />
 							</dt>
@@ -213,6 +213,7 @@ if (showLinkTitle) {
 								</dt>
 							</c:otherwise>
 						</c:choose>
+
 						<dd class="entry-author">
 							<liferay-ui:message arguments="<%= new String[] {LanguageUtil.getTimeDescription(locale, System.currentTimeMillis() - createDate.getTime(), true), author} %>" key="x-ago-by-x" />
 						</dd>
@@ -222,39 +223,40 @@ if (showLinkTitle) {
 					Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
 					%>
 
-					<c:choose>
-						<c:when test="<%= (displayDate != null) && (expirationDate != null) %>">
-							<dt>
-								<liferay-ui:message key="schedule" />
-							</dt>
-							<dd>
-								<c:choose>
-									<c:when test="<%= reviewDate != null %>">
-										<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(expirationDate)), HtmlUtil.escape(dateFormatDateTime.format(reviewDate))} %>" key="x-to-x-review-date-x" />
-									</c:when>
-									<c:otherwise>
-										<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(expirationDate))} %>" key="x-to-x" />
-									</c:otherwise>
-								</c:choose>
-							</dd>
-						</c:when>
-
-						<c:when test="<%= (displayDate != null) && (expirationDate == null) %>">
-							<dt>
-								<liferay-ui:message key="display-date" />
-							</dt>
-							<dd>
-								<c:choose>
-									<c:when test="<%= reviewDate != null %>">
-										<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(reviewDate))} %>" key="x-review-date-x" />
-									</c:when>
-									<c:otherwise>
-										<liferay-ui:message key="<%= HtmlUtil.escape(dateFormatDateTime.format(displayDate)) %>" />
-									</c:otherwise>
-								</c:choose>
-							</dd>
-						</c:when>
-					</c:choose>
+					<c:if test="<%= displayDate != null %>">
+						<c:choose>
+							<c:when test="<%= expirationDate != null %>">
+								<dt>
+									<liferay-ui:message key="schedule" />
+								</dt>
+								<dd>
+									<c:choose>
+										<c:when test="<%= reviewDate != null %>">
+											<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(expirationDate)), HtmlUtil.escape(dateFormatDateTime.format(reviewDate))} %>" key="x-to-x-review-date-x" />
+										</c:when>
+										<c:otherwise>
+											<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(expirationDate))} %>" key="x-to-x" />
+										</c:otherwise>
+									</c:choose>
+								</dd>
+							</c:when>
+							<c:otherwise>
+								<dt>
+									<liferay-ui:message key="display-date" />
+								</dt>
+								<dd>
+									<c:choose>
+										<c:when test="<%= reviewDate != null %>">
+											<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(dateFormatDateTime.format(displayDate)), HtmlUtil.escape(dateFormatDateTime.format(reviewDate))} %>" key="x-review-date-x" />
+										</c:when>
+										<c:otherwise>
+											<%= HtmlUtil.escape(dateFormatDateTime.format(displayDate)) %>
+										</c:otherwise>
+									</c:choose>
+								</dd>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
 				</dl>
 
 				<c:if test="<%= Validator.isNotNull(assetCategoryClassName) && (assetCategoryClassPK > 0) %>">
