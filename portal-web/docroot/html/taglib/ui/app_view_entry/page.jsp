@@ -200,9 +200,9 @@ if (showLinkTitle) {
 						</c:when>
 					</c:choose>
 
-					<c:if test="<%= (modifiedDate != null) && Validator.isNotNull(author) %>">
+					<c:if test="<%= (createDate != null) && (modifiedDate != null) && Validator.isNotNull(author) %>">
 						<c:choose>
-							<c:when test="<%= (createDate != null) && modifiedDate.equals(createDate) %>">
+							<c:when test="<%= modifiedDate.equals(createDate) %>">
 								<dt class="entry-author">
 									<liferay-ui:message key="created" />
 								</dt>
