@@ -221,7 +221,6 @@ AUI.add(
 									dialog: {
 										bodyContent: commentsAndRatingsNode,
 										centered: true,
-										height: 300,
 										modal: true,
 										render: instance.get('form'),
 										toolbars: {
@@ -250,10 +249,11 @@ AUI.add(
 													label: Liferay.Language.get('cancel')
 												}
 											]
-										},
-										width: 400
+										}
 									},
-									title: Liferay.Language.get('comments-and-ratings')
+									height: 300,
+									title: Liferay.Language.get('comments-and-ratings'),
+									width: 400
 								}
 							);
 
@@ -278,7 +278,6 @@ AUI.add(
 									dialog: {
 										bodyContent: contentNode,
 										centered: true,
-										height: 300,
 										modal: true,
 										render: instance.get('form'),
 										toolbars: {
@@ -307,10 +306,11 @@ AUI.add(
 													label: Liferay.Language.get('cancel')
 												}
 											]
-										},
-										width: 400
+										}
 									},
-									title: portletTitle
+									height: 300,
+									title: portletTitle,
+									width: 400
 								}
 							);
 
@@ -335,7 +335,6 @@ AUI.add(
 									dialog: {
 										bodyContent: globalConfigurationNode,
 										centered: true,
-										height: 300,
 										modal: true,
 										render: instance.get('form'),
 										toolbars: {
@@ -364,10 +363,11 @@ AUI.add(
 													label: Liferay.Language.get('cancel')
 												}
 											]
-										},
-										width: 400
+										}
 									},
-									title: Liferay.Language.get('application-configuration')
+									height: 300,
+									title: Liferay.Language.get('application-configuration'),
+									width: 400
 								}
 							);
 
@@ -392,7 +392,6 @@ AUI.add(
 									dialog: {
 										bodyContent: globalContentNode,
 										centered: true,
-										height: 300,
 										modal: true,
 										render: instance.get('form'),
 										toolbars: {
@@ -421,10 +420,11 @@ AUI.add(
 													label: Liferay.Language.get('cancel')
 												}
 											]
-										},
-										width: 400
+										}
 									},
-									title: Liferay.Language.get('all-content')
+									height: 300,
+									title: Liferay.Language.get('all-content'),
+									width: 400
 								}
 							);
 
@@ -448,7 +448,6 @@ AUI.add(
 								{
 									dialog: {
 										bodyContent: pagesNode,
-										height: 300,
 										modal: true,
 										render: instance.get('form'),
 										toolbars: {
@@ -477,10 +476,11 @@ AUI.add(
 													label: Liferay.Language.get('cancel')
 												}
 											]
-										},
-										width: 400
+										}
 									},
-									title: Liferay.Language.get('pages')
+									height: 300,
+									title: Liferay.Language.get('pages'),
+									width: 400
 								}
 							);
 
@@ -505,7 +505,6 @@ AUI.add(
 									dialog: {
 										bodyContent: rangeNode,
 										centered: true,
-										height: 300,
 										modal: true,
 										render: instance.get('form'),
 										toolbars: {
@@ -534,10 +533,11 @@ AUI.add(
 													label: Liferay.Language.get('cancel')
 												}
 											]
-										},
-										width: 400
+										}
 									},
-									title: Liferay.Language.get('date-range')
+									height: 300,
+									title: Liferay.Language.get('date-range'),
+									width: 400
 								}
 							);
 
@@ -592,9 +592,11 @@ AUI.add(
 												}
 											]
 										},
-										width: 400
+
 									},
-									title: Liferay.Language.get('remote-live-connection-settings')
+									height: 300,
+									title: Liferay.Language.get('remote-live-connection-settings'),
+									width: 400
 								}
 							);
 
@@ -619,7 +621,6 @@ AUI.add(
 									dialog: {
 										bodyContent: scheduledPublishingEventsNode,
 										centered: true,
-										height: 300,
 										modal: true,
 										render: instance.get('form'),
 										toolbars: {
@@ -635,10 +636,11 @@ AUI.add(
 													label: Liferay.Language.get('close')
 												}
 											]
-										},
-										width: 400
+										}
 									},
-									title: Liferay.Language.get('scheduled-events')
+									height: 300,
+									title: Liferay.Language.get('scheduled-events'),
+									width: 400
 								}
 							);
 
