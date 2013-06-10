@@ -14,6 +14,24 @@
  */
 --%>
 
+<%
+long startDateTime = ParamUtil.getLong(request, "startDate");
+long endDateTime = ParamUtil.getLong(request, "endDate");
+
+Date startDate = null;
+Date endDate = null;
+
+if (startDateTime > 0) {
+	startDate = new Date(startDateTime);
+}
+
+if (endDateTime > 0) {
+	endDate = new Date(endDateTime);
+}
+%>
+
+<aui:input name="<%= Constants.CMD %>" type="hidden" value="publish_to_live" />
+
 <div class="export-dialog-tree">
 	<c:if test="<%= supportsSetup %>">
 		<aui:fieldset cssClass="options-group" label="application">
@@ -46,7 +64,13 @@
 	<c:if test="<%= supportsLAR %>">
 
 		<%
+		PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
+
 		PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance();
+
+		portletDataHandler.prepareManifestSummary(portletDataContext);
+
+		ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
 		%>
 
 		<aui:fieldset cssClass="options-group" label="content">
@@ -177,6 +201,7 @@
 
 									<%
 									request.setAttribute("render_controls.jsp-controls", exportControls);
+									request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
 									request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
 
 									selectedContent += ArrayUtil.toString(exportControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
