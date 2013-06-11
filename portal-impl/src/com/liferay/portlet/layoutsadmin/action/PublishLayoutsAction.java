@@ -15,27 +15,15 @@
 package com.liferay.portlet.layoutsadmin.action;
 
 import com.liferay.portal.DuplicateLockException;
-import com.liferay.portal.ImageTypeException;
-import com.liferay.portal.LayoutFriendlyURLException;
-import com.liferay.portal.LayoutNameException;
-import com.liferay.portal.LayoutParentLayoutIdException;
 import com.liferay.portal.LayoutPrototypeException;
-import com.liferay.portal.LayoutSetVirtualHostException;
-import com.liferay.portal.LayoutTypeException;
 import com.liferay.portal.NoSuchGroupException;
-import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.RemoteExportException;
 import com.liferay.portal.RemoteOptionsException;
-import com.liferay.portal.RequiredLayoutException;
-import com.liferay.portal.SitemapChangeFrequencyException;
-import com.liferay.portal.SitemapIncludeException;
-import com.liferay.portal.SitemapPagePriorityException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.staging.StagingUtil;
-import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -129,8 +117,8 @@ public class PublishLayoutsAction extends PortletAction {
 				}
 
 				sendRedirect(
-						portletConfig, actionRequest, actionResponse, redirect,
-						closeRedirect);
+					portletConfig, actionRequest, actionResponse, redirect,
+					closeRedirect);
 			}
 			else {
 				long groupId = ParamUtil.getLong(actionRequest, "groupId");
@@ -155,37 +143,10 @@ public class PublishLayoutsAction extends PortletAction {
 			}
 		}
 		catch (Exception e) {
-			if (e instanceof NoSuchLayoutException ||
-				e instanceof PrincipalException) {
-
+			if (e instanceof PrincipalException) {
 				SessionErrors.add(actionRequest, e.getClass());
 
 				setForward(actionRequest, "portlet.layouts_admin.error");
-			}
-			else if (e instanceof ImageTypeException ||
-					 e instanceof LayoutFriendlyURLException ||
-					 e instanceof LayoutNameException ||
-					 e instanceof LayoutParentLayoutIdException ||
-					 e instanceof LayoutSetVirtualHostException ||
-					 e instanceof LayoutTypeException ||
-					 e instanceof RequiredLayoutException ||
-					 e instanceof SitemapChangeFrequencyException ||
-					 e instanceof SitemapIncludeException ||
-					 e instanceof SitemapPagePriorityException ||
-					 e instanceof UploadException) {
-
-				if (e instanceof LayoutFriendlyURLException) {
-					SessionErrors.add(
-						actionRequest,
-						LayoutFriendlyURLException.class.getName(), e);
-				}
-				else {
-					SessionErrors.add(actionRequest, e.getClass(), e);
-				}
-
-				sendRedirect(
-					portletConfig, actionRequest, actionResponse, redirect,
-					closeRedirect);
 			}
 			else if (e instanceof DuplicateLockException ||
 					 e instanceof LayoutPrototypeException ||
