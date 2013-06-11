@@ -213,7 +213,7 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 	</c:if>
 </c:if>
 
-<aui:form action='<%= portletURL.toString() + "&etag=0&strip=0" %>' method="post" name="exportPagesFm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "publishPages();" %>' >
+<aui:form action='<%= portletURL.toString() + "&etag=0&strip=0" %>' cssClass="lfr-export-dialog" method="post" name="exportPagesFm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "publishPages();" %>' >
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= cmd %>" />
 	<aui:input name="originalCmd" type="hidden" value="<%= cmd %>" />
 	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
