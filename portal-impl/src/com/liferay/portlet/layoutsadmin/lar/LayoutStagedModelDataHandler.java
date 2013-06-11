@@ -239,7 +239,7 @@ public class LayoutStagedModelDataHandler
 
 		Map<Long, Layout> newLayoutsMap =
 			(Map<Long, Layout>)portletDataContext.getNewPrimaryKeysMap(
-				Layout.class + ".layoutImpl");
+				Layout.class + ".layout");
 
 		Map<Long, Long> layoutPlids =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(

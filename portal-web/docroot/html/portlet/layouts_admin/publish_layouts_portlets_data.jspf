@@ -58,7 +58,7 @@
 				<div class="hide" id="<portlet:namespace />range">
 					<ul class="lfr-tree unstyled">
 						<li class="tree-item">
-							<aui:fieldset cssClass="portlet-data-section" label="filter-to-publish-by-date">
+							<aui:fieldset cssClass="portlet-data-section" label="date-range">
 								<aui:input id="rangeAll" label="all" name="range" type="radio" value="all" />
 
 								<aui:input checked="<%= true %>"  id="rangeLastPublish" label="from-last-publish-date" name="range" type="radio" value="fromLastPublishDate" />
