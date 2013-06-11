@@ -30,36 +30,18 @@ import com.liferay.portal.RequiredLayoutException;
 import com.liferay.portal.SitemapChangeFrequencyException;
 import com.liferay.portal.SitemapIncludeException;
 import com.liferay.portal.SitemapPagePriorityException;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.LayoutConstants;
-import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalException;
-import com.liferay.portal.security.permission.ActionKeys;
-import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.service.permission.GroupPermissionUtil;
-import com.liferay.portal.service.permission.LayoutPermissionUtil;
-import com.liferay.portal.service.permission.LayoutPrototypePermissionUtil;
-import com.liferay.portal.service.permission.LayoutSetPrototypePermissionUtil;
-import com.liferay.portal.service.permission.UserPermissionUtil;
-import com.liferay.portal.struts.PortletAction;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.sites.action.ActionUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -72,7 +54,7 @@ import org.apache.struts.action.ActionMapping;
  * @author Raymond Augé
  * @author Levente Hudák
  */
-public class PublishLayoutsAction extends PortletAction {
+public class PublishLayoutsAction extends EditLayoutsAction {
 
 	@Override
 	public void processAction(
@@ -203,140 +185,6 @@ public class PublishLayoutsAction extends PortletAction {
 
 		return mapping.findForward(
 			getForward(renderRequest, "portlet.layouts_admin.publish_layouts"));
-	}
-
-	protected void checkPermission(
-			PermissionChecker permissionChecker, Group group, Layout layout,
-			long selPlid)
-		throws PortalException, SystemException {
-
-		if (selPlid > 0) {
-			LayoutPermissionUtil.check(
-				permissionChecker, layout, ActionKeys.VIEW);
-		}
-		else {
-			GroupPermissionUtil.check(
-				permissionChecker, group, ActionKeys.VIEW);
-		}
-	}
-
-	protected void checkPermissions(PortletRequest portletRequest)
-		throws Exception {
-
-		Group group = getGroup(portletRequest);
-
-		if (group == null) {
-			throw new PrincipalException();
-		}
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		Layout layout = themeDisplay.getLayout();
-
-		String cmd = ParamUtil.getString(portletRequest, Constants.CMD);
-
-		long selPlid = ParamUtil.getLong(portletRequest, "selPlid");
-
-		if (selPlid > 0) {
-			layout = LayoutLocalServiceUtil.getLayout(selPlid);
-		}
-
-		if (cmd.equals(Constants.ADD)) {
-			long parentPlid = ParamUtil.getLong(portletRequest, "parentPlid");
-
-			if (parentPlid == LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
-				if (!GroupPermissionUtil.contains(
-						permissionChecker, group.getGroupId(),
-						ActionKeys.ADD_LAYOUT)) {
-
-					throw new PrincipalException();
-				}
-			}
-			else {
-				layout = LayoutLocalServiceUtil.getLayout(parentPlid);
-
-				if (!LayoutPermissionUtil.contains(
-						permissionChecker, layout, ActionKeys.ADD_LAYOUT)) {
-
-					throw new PrincipalException();
-				}
-			}
-		}
-		else if (cmd.equals(Constants.DELETE)) {
-			if (!LayoutPermissionUtil.contains(
-					permissionChecker, layout, ActionKeys.DELETE)) {
-
-				throw new PrincipalException();
-			}
-		}
-		else if (cmd.equals(Constants.UPDATE)) {
-			if (group.isCompany()) {
-				if (!permissionChecker.isCompanyAdmin()) {
-					throw new PrincipalException();
-				}
-			}
-			else if (group.isLayoutPrototype()) {
-				LayoutPrototypePermissionUtil.check(
-					permissionChecker, group.getClassPK(), ActionKeys.UPDATE);
-			}
-			else if (group.isLayoutSetPrototype()) {
-				LayoutSetPrototypePermissionUtil.check(
-					permissionChecker, group.getClassPK(), ActionKeys.UPDATE);
-			}
-			else if (group.isUser()) {
-				long groupUserId = group.getClassPK();
-
-				User groupUser = UserLocalServiceUtil.getUserById(groupUserId);
-
-				long[] organizationIds = groupUser.getOrganizationIds();
-
-				UserPermissionUtil.check(
-					permissionChecker, groupUserId, organizationIds,
-					ActionKeys.UPDATE);
-			}
-			else {
-				checkPermission(permissionChecker, group, layout, selPlid);
-			}
-		}
-		else if (cmd.equals("publish_to_live")) {
-			boolean hasUpdateLayoutPermission = false;
-
-			if (layout != null) {
-				hasUpdateLayoutPermission = LayoutPermissionUtil.contains(
-					permissionChecker, layout, ActionKeys.UPDATE);
-			}
-
-			if (group.isCompany() || group.isSite()) {
-				boolean publishToLive = GroupPermissionUtil.contains(
-					permissionChecker, group.getGroupId(),
-					ActionKeys.PUBLISH_STAGING);
-
-				if (!hasUpdateLayoutPermission && !publishToLive) {
-					throw new PrincipalException();
-				}
-			}
-			else {
-				checkPermission(permissionChecker, group, layout, selPlid);
-			}
-		}
-		else if (cmd.equals("reset_customized_view")) {
-			if (!LayoutPermissionUtil.contains(
-					permissionChecker, layout, ActionKeys.CUSTOMIZE)) {
-
-				throw new PrincipalException();
-			}
-		}
-		else {
-			checkPermission(permissionChecker, group, layout, selPlid);
-		}
-	}
-
-	protected Group getGroup(PortletRequest portletRequest) throws Exception {
-		return ActionUtil.getGroup(portletRequest);
 	}
 
 }
