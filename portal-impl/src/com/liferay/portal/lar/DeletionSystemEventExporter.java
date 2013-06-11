@@ -106,11 +106,11 @@ public class DeletionSystemEventExporter {
 
 				Date startDate = portletDataContext.getStartDate();
 
-				dynamicQuery.add(createDateProperty.ge(startDate.getTime()));
+				dynamicQuery.add(createDateProperty.ge(startDate));
 
 				Date endDate = portletDataContext.getEndDate();
 
-				dynamicQuery.add(createDateProperty.le(endDate.getTime()));
+				dynamicQuery.add(createDateProperty.le(endDate));
 			}
 		};
 
