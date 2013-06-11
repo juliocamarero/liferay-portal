@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.MissingReference;
+import com.liferay.portal.kernel.lar.MissingReferences;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -849,13 +850,12 @@ public class ExportImportImpl implements ExportImport {
 	}
 
 	@Override
-	public Map<String, MissingReference> validateMissingReferences(
+	public MissingReferences validateMissingReferences(
 			long userId, long groupId, Map<String, String[]> parameterMap,
 			File file)
 		throws Exception {
 
-		final Map<String, MissingReference> missingReferences =
-			new HashMap<String, MissingReference>();
+		final MissingReferences missingReferences= new MissingReferences();
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 		String userIdStrategy = MapUtil.getString(
@@ -878,19 +878,7 @@ public class ExportImportImpl implements ExportImport {
 						validateMissingReference(element);
 
 					if (missingReference != null) {
-						MissingReference existingMissingReference =
-							missingReferences.get(
-								missingReference.getDisplayName());
-
-						if (existingMissingReference != null) {
-							existingMissingReference.addReferrers(
-								missingReference.getReferrers());
-						}
-						else {
-							missingReferences.put(
-								missingReference.getDisplayName(),
-								missingReference);
-						}
+						missingReferences.add(missingReference);
 					}
 				}
 
