@@ -1762,12 +1762,12 @@ public class LayoutLocalServiceUtil {
 	public static void validateImportLayoutsFile(long userId, long groupId,
 		boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
-		java.io.File file)
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		getService()
 			.validateImportLayoutsFile(userId, groupId, privateLayout,
-			parameterMap, file);
+			parameterMap, fileEntry);
 	}
 
 	public static LayoutLocalService getService() {

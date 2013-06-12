@@ -1819,11 +1819,11 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 	public void validateImportLayoutsFile(long userId, long groupId,
 		boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
-		java.io.File file)
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		_layoutLocalService.validateImportLayoutsFile(userId, groupId,
-			privateLayout, parameterMap, file);
+			privateLayout, parameterMap, fileEntry);
 	}
 
 	/**

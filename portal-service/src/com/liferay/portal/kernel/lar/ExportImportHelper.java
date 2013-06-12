@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.lar;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.xml.Document;
@@ -30,7 +32,10 @@ import javax.portlet.PortletRequest;
 /**
  * @author Zsolt Berentey
  */
-public interface ExportImport {
+public interface ExportImportHelper {
+
+	public static final String TEMP_FOLDER_NAME =
+		ExportImportHelper.class.getName();
 
 	public Calendar getDate(
 		PortletRequest portletRequest, String paramPrefix,
@@ -41,6 +46,8 @@ public interface ExportImport {
 			long plid, String portletId)
 		throws Exception;
 
+	public File getLarFile(FileEntry fileEntry) throws Exception;
+
 	public ManifestSummary getManifestSummary(
 			long userId, long groupId, Map<String, String[]> parameterMap,
 			File file)
@@ -50,6 +57,9 @@ public interface ExportImport {
 			long userId, long groupId, Map<String, String[]> parameterMap,
 			FileEntry fileEntry)
 		throws Exception;
+
+	public FileEntry getTempFileEntry(long groupId, long userId)
+		throws PortalException, SystemException;
 
 	public String replaceExportContentReferences(
 			PortletDataContext portletDataContext,

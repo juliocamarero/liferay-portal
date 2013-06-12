@@ -1535,14 +1535,14 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	@Override
 	public void validateImportLayoutsFile(
 			long groupId, boolean privateLayout,
-			Map<String, String[]> parameterMap, File file)
+			Map<String, String[]> parameterMap, FileEntry fileEntry)
 		throws PortalException, SystemException {
 
 		GroupPermissionUtil.check(
 			getPermissionChecker(), groupId, ActionKeys.EXPORT_IMPORT_LAYOUTS);
 
 		layoutLocalService.validateImportLayoutsFile(
-			getUserId(), groupId, privateLayout, parameterMap, file);
+			getUserId(), groupId, privateLayout, parameterMap, fileEntry);
 	}
 
 	protected List<Layout> filterLayouts(List<Layout> layouts)
