@@ -206,6 +206,12 @@
 			</ul>
 		</aui:fieldset>
 	</c:if>
+
+	<aui:button-row>
+		<aui:button cssClass="btn-primary" onClick='<%= renderResponse.getNamespace() + "importData();" %>' value="import" />
+
+		<aui:button href="<%= currentURL %>" type="cancel" />
+	</aui:button-row>
 </div>
 
 <aui:script use="liferay-export-import">
@@ -222,6 +228,12 @@
 </aui:script>
 
 <aui:script>
+	function <portlet:namespace />importData() {
+		document.<portlet:namespace />fm1.encoding = "multipart/form-data";
+
+		submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.IMPORT %>" /></portlet:actionURL>');
+	}
+
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA %>Checkbox', '<portlet:namespace />portletDataControls');
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PERMISSIONS %>Checkbox', '<portlet:namespace />permissionsUl');
 </aui:script>

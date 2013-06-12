@@ -265,6 +265,12 @@
 			</ul>
 		</aui:fieldset>
 	</c:if>
+
+	<aui:button-row>
+		<aui:button cssClass="btn-primary" onClick='<%= renderResponse.getNamespace() + "publishToLive();" %>' value="publish-to-live" />
+
+		<aui:button onClick='<%= renderResponse.getNamespace() + "copyFromLive();" %>' value="copy-from-live" />
+	</aui:button-row>
 </div>
 
 <aui:script use="liferay-export-import">
@@ -281,6 +287,18 @@
 </aui:script>
 
 <aui:script>
+	function <portlet:namespace />copyFromLive() {
+		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-copy-from-live-and-update-the-existing-staging-portlet-information") %>')) {
+			submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="copy_from_live" /></portlet:actionURL>');
+		}
+	}
+
+	function <portlet:namespace />publishToLive() {
+		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-publish-to-live-and-update-the-existing-portlet-data") %>')) {
+			submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="publish_to_live" /></portlet:actionURL>');
+		}
+	}
+
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PERMISSIONS %>Checkbox', '<portlet:namespace />permissionsUl');
 
 	Liferay.Util.toggleRadio('<portlet:namespace />portletMetaDataFilter', '<portlet:namespace />portletMetaDataList');

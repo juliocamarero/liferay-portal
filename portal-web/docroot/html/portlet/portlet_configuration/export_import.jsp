@@ -217,28 +217,6 @@ if (layout.isTypeControlPanel()) {
 								</c:if>
 							</c:when>
 						</c:choose>
-
-						<aui:button-row>
-							<c:choose>
-								<c:when test='<%= tabs2.equals("export") %>'>
-									<aui:button cssClass="btn-primary" onClick='<%= renderResponse.getNamespace() + "exportData();" %>' value="export" />
-
-									<aui:button href="<%= redirect %>" type="cancel" />
-								</c:when>
-								<c:when test='<%= tabs2.equals("import") %>'>
-									<aui:button cssClass="btn-primary" onClick='<%= renderResponse.getNamespace() + "importData();" %>' value="import" />
-
-									<aui:button href="<%= redirect %>" type="cancel" />
-								</c:when>
-								<c:when test='<%= tabs2.equals("staging") %>'>
-									<c:if test="<%= (themeDisplay.getURLPublishToLive() != null) || controlPanel %>">
-										<aui:button cssClass="btn-primary" onClick='<%= renderResponse.getNamespace() + "publishToLive();" %>' value="publish-to-live" />
-
-										<aui:button onClick='<%= renderResponse.getNamespace() + "copyFromLive();" %>' value="copy-from-live" />
-									</c:if>
-								</c:when>
-							</c:choose>
-						</aui:button-row>
 					</aui:fieldset>
 				</c:when>
 				<c:otherwise>
@@ -251,29 +229,3 @@ if (layout.isTypeControlPanel()) {
 		<%= LanguageUtil.format(locale, "the-x-portlet-does-not-have-any-data-that-can-be-exported-or-does-not-include-support-for-it", HtmlUtil.escape(PortalUtil.getPortletTitle(selPortlet, application, locale))) %>
 	</c:otherwise>
 </c:choose>
-
-<aui:script>
-	function <portlet:namespace />copyFromLive() {
-		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-copy-from-live-and-update-the-existing-staging-portlet-information") %>')) {
-			submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="copy_from_live" /></portlet:actionURL>');
-		}
-	}
-
-	function <portlet:namespace />exportData() {
-		document.<portlet:namespace />fm1.encoding = "multipart/form-data";
-
-		submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" /></portlet:actionURL>&etag=0&strip=0', false);
-	}
-
-	function <portlet:namespace />importData() {
-		document.<portlet:namespace />fm1.encoding = "multipart/form-data";
-
-		submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.IMPORT %>" /></portlet:actionURL>');
-	}
-
-	function <portlet:namespace />publishToLive() {
-		if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-publish-to-live-and-update-the-existing-portlet-data") %>')) {
-			submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="publish_to_live" /></portlet:actionURL>');
-		}
-	}
-</aui:script>

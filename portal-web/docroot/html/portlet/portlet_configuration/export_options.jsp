@@ -306,6 +306,12 @@ if (endDateTime > 0) {
 			</ul>
 		</aui:fieldset>
 	</c:if>
+
+	<aui:button-row>
+		<aui:button cssClass="btn-primary" onClick='<%= renderResponse.getNamespace() + "exportData();" %>' value="export" />
+
+		<aui:button href="<%= currentURL %>" type="cancel" />
+	</aui:button-row>
 </div>
 
 <aui:script use="liferay-export-import">
@@ -326,6 +332,12 @@ if (endDateTime > 0) {
 </aui:script>
 
 <aui:script>
+	function <portlet:namespace />exportData() {
+		document.<portlet:namespace />fm1.encoding = "multipart/form-data";
+
+		submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" /></portlet:actionURL>&etag=0&strip=0', false);
+	}
+
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA + "_" + selPortlet.getRootPortletId() %>Checkbox', '<portlet:namespace />portletDataControls');
 
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PERMISSIONS %>Checkbox', '<portlet:namespace />permissionsUl');
