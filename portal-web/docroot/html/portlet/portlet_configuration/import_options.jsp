@@ -22,17 +22,19 @@ String tabs2 = ParamUtil.getString(request, "tabs2", "export");
 Layout exportableLayout = ExportImportUtil.getExportableLayout(themeDisplay);
 %>
 
-<portlet:actionURL var="exportImportPagesURL">
+<portlet:actionURL var="importPortletURL">
 	<portlet:param name="struts_action" value="/portlet_configuration/export_import" />
 </portlet:actionURL>
 
-<aui:form action="<%= exportImportPagesURL %>" cssClass="lfr-export-dialog" method="post" name="fm1">
+<aui:form action="<%= importPortletURL %>" cssClass="lfr-export-dialog" enctype="multipart/form-data" method="post" name="fm1">
 	<aui:input name="tabs1" type="hidden" value="export_import" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="plid" type="hidden" value="<%= exportableLayout.getPlid() %>" />
 	<aui:input name="groupId" type="hidden" value="<%= themeDisplay.getScopeGroupId() %>" />
 	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.IMPORT %>" />
 
 	<div class="export-dialog-tree">
 		<aui:input label="import-a-lar-file-to-overwrite-the-selected-data" name="importFileName" size="50" type="file" />
@@ -226,7 +228,7 @@ Layout exportableLayout = ExportImportUtil.getExportableLayout(themeDisplay);
 		</c:if>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-primary" onClick='<%= renderResponse.getNamespace() + "importData();" %>' value="import" />
+			<aui:button type="submit" value="import" />
 
 			<aui:button href="<%= currentURL %>" type="cancel" />
 		</aui:button-row>
@@ -247,12 +249,6 @@ Layout exportableLayout = ExportImportUtil.getExportableLayout(themeDisplay);
 </aui:script>
 
 <aui:script>
-	function <portlet:namespace />importData() {
-		document.<portlet:namespace />fm1.encoding = "multipart/form-data";
-
-		submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.IMPORT %>" /></portlet:actionURL>');
-	}
-
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA %>Checkbox', '<portlet:namespace />portletDataControls');
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PERMISSIONS %>Checkbox', '<portlet:namespace />permissionsUl');
 </aui:script>

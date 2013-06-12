@@ -76,11 +76,12 @@ else if (stagingGroup.isLayout()) {
 		<liferay-ui:message key="<%= errorMessageKey %>" />
 	</c:when>
 	<c:otherwise>
-		<portlet:actionURL var="exportImportPagesURL">
+		<portlet:actionURL var="publishPortletURL">
 			<portlet:param name="struts_action" value="/portlet_configuration/export_import" />
+			<portlet:param name="<%= Constants.CMD %>" value="publish_to_live" />
 		</portlet:actionURL>
 
-		<aui:form action="<%= exportImportPagesURL %>" cssClass="lfr-export-dialog" method="post" name="fm1">
+		<aui:form action="<%= publishPortletURL %>" cssClass="lfr-export-dialog" method="post" name="fm1" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "publishToLive();" %>'>
 			<aui:input name="tabs1" type="hidden" value="export_import" />
 			<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 			<aui:input name="plid" type="hidden" value="<%= exportableLayout.getPlid() %>" />
@@ -368,7 +369,7 @@ else if (stagingGroup.isLayout()) {
 
 			function <portlet:namespace />publishToLive() {
 				if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-publish-to-live-and-update-the-existing-portlet-data") %>')) {
-					submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="publish_to_live" /></portlet:actionURL>');
+					submitForm(document.<portlet:namespace />fm1);
 				}
 			}
 

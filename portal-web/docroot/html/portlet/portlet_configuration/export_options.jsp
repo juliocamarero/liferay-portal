@@ -38,11 +38,11 @@ if (endDateTime > 0) {
 }
 %>
 
-<portlet:actionURL var="exportImportPagesURL">
+<portlet:actionURL var="exportPortletURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 	<portlet:param name="struts_action" value="/portlet_configuration/export_import" />
 </portlet:actionURL>
 
-<aui:form action="<%= exportImportPagesURL %>" cssClass="lfr-export-dialog" method="post" name="fm1">
+<aui:form action='<%= exportPortletURL + "&etag=0&strip=0" %>' cssClass="lfr-export-dialog" method="post" name="fm1">
 	<aui:input name="tabs1" type="hidden" value="export_import" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="plid" type="hidden" value="<%= exportableLayout.getPlid() %>" />
@@ -346,15 +346,20 @@ if (endDateTime > 0) {
 			userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'
 		}
 	);
+
+	var form = A.one('#<portlet:namespace />fm1');
+
+	form.on(
+		'submit',
+		function(event) {
+			event.preventDefault();
+
+			submitForm(form, form.attr('action'), false);
+		}
+	);
 </aui:script>
 
 <aui:script>
-	function <portlet:namespace />exportData() {
-		document.<portlet:namespace />fm1.encoding = "multipart/form-data";
-
-		submitForm(document.<portlet:namespace />fm1, '<portlet:actionURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/portlet_configuration/export_import" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" /></portlet:actionURL>&etag=0&strip=0', false);
-	}
-
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA + "_" + selPortlet.getRootPortletId() %>Checkbox', '<portlet:namespace />portletDataControls');
 
 	Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PERMISSIONS %>Checkbox', '<portlet:namespace />permissionsUl');
