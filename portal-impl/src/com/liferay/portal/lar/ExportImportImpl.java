@@ -15,6 +15,7 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.LARFileException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ExportImport;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
@@ -36,7 +37,6 @@ import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.DateRange;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.TempFileUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -62,6 +63,7 @@ import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -74,6 +76,7 @@ import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 
@@ -216,6 +219,20 @@ public class ExportImportImpl implements ExportImport {
 	}
 
 	@Override
+	public File getLarFile(FileEntry fileEntry) throws Exception {
+		DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.fetchDLFileEntry(
+			fileEntry.getFileEntryId());
+
+		if (dlFileEntry == null) {
+			return null;
+		}
+
+		return DLStoreUtil.getFile(
+			dlFileEntry.getCompanyId(), dlFileEntry.getDataRepositoryId(),
+			dlFileEntry.getName(), dlFileEntry.getTitle());
+	}
+
+	@Override
 	public ManifestSummary getManifestSummary(
 			long userId, long groupId, Map<String, String[]> parameterMap,
 			File file)
@@ -320,41 +337,24 @@ public class ExportImportImpl implements ExportImport {
 			FileEntry fileEntry)
 		throws Exception {
 
-		File file = DLFileEntryLocalServiceUtil.getFile(
-			userId, fileEntry.getFileEntryId(), fileEntry.getVersion(), false);
-		File newFile = null;
-		boolean rename = false;
+		File file = getLarFile(fileEntry);
 
-		ManifestSummary manifestSummary = null;
+		return getManifestSummary(userId, groupId, parameterMap, file);
+	}
 
-		try {
-			String newFileName = StringUtil.replace(
-				file.getPath(), file.getName(), fileEntry.getTitle());
+	@Override
+	public FileEntry getTempFileEntry(long groupId, long userId)
+		throws PortalException, SystemException {
 
-			newFile = new File(newFileName);
+		String[] tempFileEntryNames = LayoutServiceUtil.getTempFileEntryNames(
+			groupId, TEMP_FOLDER_NAME);
 
-			rename = file.renameTo(newFile);
-
-			if (!rename) {
-				newFile = FileUtil.createTempFile(fileEntry.getExtension());
-
-				FileUtil.copyFile(file, newFile);
-			}
-
-			manifestSummary = getManifestSummary(
-				userId, groupId, parameterMap, newFile);
-
-		}
-		finally {
-			if (rename) {
-				newFile.renameTo(file);
-			}
-			else {
-				FileUtil.delete(newFile);
-			}
+		if (tempFileEntryNames.length == 0) {
+			return null;
 		}
 
-		return manifestSummary;
+		return TempFileUtil.getTempFile(
+			groupId, userId, tempFileEntryNames[0], TEMP_FOLDER_NAME);
 	}
 
 	@Override
