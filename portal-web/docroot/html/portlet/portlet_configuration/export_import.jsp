@@ -29,8 +29,6 @@ portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
 portletURL.setParameter("portletResource", portletResource);
 
-boolean controlPanel = false;
-
 if (layout.isTypeControlPanel()) {
 	Group scopeGroup = themeDisplay.getScopeGroup();
 
@@ -44,8 +42,6 @@ if (layout.isTypeControlPanel()) {
 			layout = LayoutLocalServiceUtil.getLayout(defaultPlid);
 		}
 	}
-
-	controlPanel = true;
 }
 %>
 
@@ -150,79 +146,19 @@ if (layout.isTypeControlPanel()) {
 			<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
 			<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 
-			<%
-			String errorMessageKey = StringPool.BLANK;
-
-			if (tabs2.equals("staging")) {
-				Group stagingGroup = themeDisplay.getScopeGroup();
-				Group liveGroup = stagingGroup.getLiveGroup();
-
-				Layout targetLayout = null;
-
-				if (!controlPanel) {
-					if (liveGroup == null) {
-						errorMessageKey = "this-portlet-is-placed-in-a-page-that-does-not-exist-in-the-live-site-publish-the-page-first";
-					}
-					else {
-						try {
-							if (stagingGroup.isLayout()) {
-								targetLayout = LayoutLocalServiceUtil.getLayout(liveGroup.getClassPK());
-							}
-							else {
-								targetLayout = LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(layout.getUuid(), liveGroup.getGroupId(), layout.isPrivateLayout());
-							}
-						}
-						catch (NoSuchLayoutException nsle) {
-							errorMessageKey = "this-portlet-is-placed-in-a-page-that-does-not-exist-in-the-live-site-publish-the-page-first";
-						}
-
-						if (targetLayout != null) {
-							LayoutType layoutType = targetLayout.getLayoutType();
-
-							if (!(layoutType instanceof LayoutTypePortlet) || !((LayoutTypePortlet)layoutType).hasPortletId(selPortlet.getPortletId())) {
-								errorMessageKey = "this-portlet-has-not-been-added-to-the-live-page-publish-the-page-first";
-							}
-						}
-					}
-				}
-				else if (stagingGroup.isLayout()) {
-					if (liveGroup == null) {
-						errorMessageKey = "a-portlet-is-placed-in-this-page-of-scope-that-does-not-exist-in-the-live-site-publish-the-page-first";
-					}
-					else {
-						try {
-							targetLayout = LayoutLocalServiceUtil.getLayout(liveGroup.getClassPK());
-						}
-						catch (NoSuchLayoutException nsle) {
-							errorMessageKey = "a-portlet-is-placed-in-this-page-of-scope-that-does-not-exist-in-the-live-site-publish-the-page-first";
-						}
-					}
-				}
-			}
-			%>
-
-			<c:choose>
-				<c:when test="<%= Validator.isNull(errorMessageKey) %>">
-					<aui:fieldset>
-						<c:choose>
-							<c:when test='<%= tabs2.equals("export") %>'>
-								<liferay-util:include page="/html/portlet/portlet_configuration/export_options.jsp" />
-							</c:when>
-							<c:when test='<%= tabs2.equals("import") %>'>
-								<liferay-util:include page="/html/portlet/portlet_configuration/import_options.jsp" />
-							</c:when>
-							<c:when test='<%= tabs2.equals("staging") %>'>
-								<c:if test="<%= (themeDisplay.getURLPublishToLive() != null) || controlPanel %>">
-									<liferay-util:include page="/html/portlet/portlet_configuration/staging_options.jsp" />
-								</c:if>
-							</c:when>
-						</c:choose>
-					</aui:fieldset>
-				</c:when>
-				<c:otherwise>
-					<liferay-ui:message key="<%= errorMessageKey %>" />
-				</c:otherwise>
-			</c:choose>
+			<aui:fieldset>
+				<c:choose>
+					<c:when test='<%= tabs2.equals("export") %>'>
+						<liferay-util:include page="/html/portlet/portlet_configuration/export_options.jsp" />
+					</c:when>
+					<c:when test='<%= tabs2.equals("import") %>'>
+						<liferay-util:include page="/html/portlet/portlet_configuration/import_options.jsp" />
+					</c:when>
+					<c:when test='<%= tabs2.equals("staging") %>'>
+						<liferay-util:include page="/html/portlet/portlet_configuration/staging_options.jsp" />
+					</c:when>
+				</c:choose>
+			</aui:fieldset>
 		</aui:form>
 	</c:when>
 	<c:otherwise>
