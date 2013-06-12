@@ -212,14 +212,14 @@ if (layout.isTypeControlPanel()) {
 					<aui:fieldset>
 						<c:choose>
 							<c:when test='<%= tabs2.equals("export") %>'>
-								<%@ include file="/html/portlet/portlet_configuration/export_options.jspf" %>
+								<liferay-util:include page="/html/portlet/portlet_configuration/export_options.jsp" />
 							</c:when>
 							<c:when test='<%= tabs2.equals("import") %>'>
-								<%@ include file="/html/portlet/portlet_configuration/import_options.jspf" %>
+								<liferay-util:include page="/html/portlet/portlet_configuration/import_options.jsp" />
 							</c:when>
 							<c:when test='<%= tabs2.equals("staging") %>'>
 								<c:if test="<%= (themeDisplay.getURLPublishToLive() != null) || controlPanel %>">
-									<%@ include file="/html/portlet/portlet_configuration/staging_options.jspf" %>
+									<liferay-util:include page="/html/portlet/portlet_configuration/staging_options.jsp" />
 								</c:if>
 							</c:when>
 						</c:choose>

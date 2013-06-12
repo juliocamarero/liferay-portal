@@ -14,7 +14,13 @@
  */
 --%>
 
+<%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
+
 <%
+boolean supportsLAR = Validator.isNotNull(selPortlet.getPortletDataHandlerClass());
+
+boolean supportsSetup = Validator.isNotNull(selPortlet.getConfigurationActionClass());
+
 Date startDate = null;
 
 long startDateTime = ParamUtil.getLong(request, "startDate");

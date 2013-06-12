@@ -14,6 +14,14 @@
  */
 --%>
 
+<%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
+
+<%
+boolean supportsLAR = Validator.isNotNull(selPortlet.getPortletDataHandlerClass());
+
+boolean supportsSetup = Validator.isNotNull(selPortlet.getConfigurationActionClass());
+%>
+
 <div class="export-dialog-tree">
 	<aui:input label="import-a-lar-file-to-overwrite-the-selected-data" name="importFileName" size="50" type="file" />
 

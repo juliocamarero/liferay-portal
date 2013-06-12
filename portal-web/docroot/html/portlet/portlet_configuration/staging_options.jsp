@@ -14,6 +14,14 @@
  */
 --%>
 
+<%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
+
+<%
+boolean supportsLAR = Validator.isNotNull(selPortlet.getPortletDataHandlerClass());
+
+boolean supportsSetup = Validator.isNotNull(selPortlet.getConfigurationActionClass());
+%>
+
 <div class="export-dialog-tree">
 	<c:if test="<%= supportsSetup %>">
 		<aui:fieldset cssClass="options-group" label="application">
