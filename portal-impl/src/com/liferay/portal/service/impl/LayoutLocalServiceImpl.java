@@ -24,7 +24,9 @@ import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
+import com.liferay.portal.kernel.lar.ExportImportUtil;
 import com.liferay.portal.kernel.lar.PortletDataException;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -2707,10 +2709,12 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	@Override
 	public void validateImportLayoutsFile(
 			long userId, long groupId, boolean privateLayout,
-			Map<String, String[]> parameterMap, File file)
+			Map<String, String[]> parameterMap, FileEntry fileEntry)
 		throws PortalException, SystemException {
 
 		try {
+			File file = ExportImportUtil.getLarFile(fileEntry);
+
 			LayoutImporter layoutImporter = new LayoutImporter();
 
 			layoutImporter.validateFile(
