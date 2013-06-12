@@ -40,17 +40,23 @@ import com.liferay.portal.kernel.util.TempFileUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UniqueList;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.Portal;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SubscriptionSender;
+import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
@@ -94,8 +100,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.WindowState;
+import javax.portlet.WindowStateException;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Provides the local service for accessing, adding, deleting, moving,
@@ -1960,6 +1970,29 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		PortletFileRepositoryUtil.deletePortletFileEntry(fileEntryId);
 	}
 
+	protected String getPageLayoutURL(
+		Layout layout, ServiceContext serviceContext) {
+
+		HttpServletRequest request = serviceContext.getRequest();
+
+		if (request == null) {
+			return StringPool.BLANK;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		try {
+			String pageLayoutURL = PortalUtil.getLayoutURL(
+				layout, themeDisplay);
+
+			return pageLayoutURL;
+		}
+		catch (Exception e) {
+			return StringPool.BLANK;
+		}
+	}
+
 	protected String getParentPageTitle(WikiPage page) {
 
 		// LPS-4586
@@ -2079,21 +2112,82 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		String diffsURL = StringPool.BLANK;
 
 		if (Validator.isNotNull(layoutFullURL)) {
-			pageURL =
-				layoutFullURL + Portal.FRIENDLY_URL_SEPARATOR + "wiki/" +
-					node.getNodeId() + StringPool.SLASH +
-						HttpUtil.encodeURL(page.getTitle());
+			long controlPanelPlid = PortalUtil.getControlPanelPlid(
+				serviceContext.getCompanyId());
+
+			long wikiPlid = serviceContext.getPlid();
+
+			if (wikiPlid == controlPanelPlid) {
+				wikiPlid = PortalUtil.getPlidFromPortletId(
+					node.getGroupId(), PortletKeys.WIKI);
+
+				if (wikiPlid != LayoutConstants.DEFAULT_PLID) {
+					Layout layout = layoutLocalService.getLayout(wikiPlid);
+
+					layoutFullURL = getPageLayoutURL(layout, serviceContext);
+				}
+			}
+
+			if (wikiPlid != LayoutConstants.DEFAULT_PLID) {
+				pageURL =
+					layoutFullURL + Portal.FRIENDLY_URL_SEPARATOR + "wiki/" +
+						node.getNodeId() + StringPool.SLASH +
+							HttpUtil.encodeURL(page.getTitle());
+			}
+			else {
+				try {
+					HttpServletRequest request = serviceContext.getRequest();
+
+					if (request != null) {
+						PortletURL portletURL = PortletURLFactoryUtil.create(
+							request, PortletKeys.WIKI_ADMIN, wikiPlid,
+							PortletRequest.RENDER_PHASE);
+
+						portletURL.setParameter(
+							"struts_action",
+							"/wiki_admin/view_page_activities");
+						portletURL.setWindowState(WindowState.MAXIMIZED);
+
+						pageURL = portletURL.toString();
+
+						pageURL = HttpUtil.addParameter(
+							pageURL, "nodeId", node.getNodeId());
+						pageURL = HttpUtil.addParameter(
+							pageURL, "title",
+							HttpUtil.encodeURL(page.getTitle()));
+					}
+				}
+				catch (WindowStateException wee) {
+				}
+			}
 
 			if (previousVersionPage != null) {
-				StringBundler sb = new StringBundler(16);
+				String portlet = PortletKeys.WIKI;
+				String strutsAction = "/wiki/compare_versions";
+
+				if (wikiPlid == LayoutConstants.DEFAULT_PLID) {
+					portlet = PortletKeys.WIKI_ADMIN;
+					strutsAction = "/wiki_admin/compare_versions";
+				}
+
+				StringBundler sb = new StringBundler(18);
 
 				sb.append(layoutFullURL);
-				sb.append("?p_p_id=");
-				sb.append(PortletKeys.WIKI);
+
+				if (wikiPlid != LayoutConstants.DEFAULT_PLID) {
+					sb.append("?p_p_id=");
+				}
+				else {
+					sb.append("&p_p_id=");
+				}
+
+				sb.append(portlet);
 				sb.append("&p_p_state=");
 				sb.append(WindowState.MAXIMIZED);
-				sb.append("&struts_action=");
-				sb.append(HttpUtil.encodeURL("/wiki/compare_versions"));
+				sb.append("&_");
+				sb.append(portlet);
+				sb.append("_struts_action=");
+				sb.append(HttpUtil.encodeURL(strutsAction));
 				sb.append("&nodeId=");
 				sb.append(node.getNodeId());
 				sb.append("&title=");
