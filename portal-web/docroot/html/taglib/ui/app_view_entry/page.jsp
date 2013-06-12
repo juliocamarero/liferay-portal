@@ -162,43 +162,28 @@ if (showLinkTitle) {
 				</span>
 
 				<dl>
-					<c:choose>
-						<c:when test="<%= Validator.isNotNull(version) %>">
-							<dt>
-								<liferay-ui:message key="version" />
-							</dt>
+					<c:if test="<%= Validator.isNotNull(version) || ((status != WorkflowConstants.STATUS_ANY) && (status != WorkflowConstants.STATUS_APPROVED)) %>">
+						<dt>
+							<liferay-ui:message key='<%= Validator.isNotNull(version) ? "version" : "status" %>' />
+						</dt>
 
-							<dd>
+						<dd>
+							<c:if test="<%= Validator.isNotNull(version) %>">
 								<%= HtmlUtil.escape(version) %>
+							</c:if>
 
-								<c:if test="<%= (status != WorkflowConstants.STATUS_ANY) && (status != WorkflowConstants.STATUS_APPROVED) %>">
+							<c:if test="<%= (status != WorkflowConstants.STATUS_ANY) && (status != WorkflowConstants.STATUS_APPROVED) %>">
 
-									<%
-									String statusLabel = WorkflowConstants.toLabel(status);
-									%>
+								<%
+								String statusLabel = WorkflowConstants.toLabel(status);
+								%>
 
-									<span class="workflow-status-<%= statusLabel %>">
-										(<liferay-ui:message key="<%= statusLabel %>" />)
-									</span>
-								</c:if>
-							</dd>
-						</c:when>
-						<c:when test="<%= (status != WorkflowConstants.STATUS_ANY) && (status != WorkflowConstants.STATUS_APPROVED) %>">
-							<dt>
-								<liferay-ui:message key="status" />
-							</dt>
-
-							<%
-							String statusLabel = WorkflowConstants.toLabel(status);
-							%>
-
-							<dd>
 								<span class="workflow-status-<%= statusLabel %>">
-									<liferay-ui:message key="<%= statusLabel %>" />
+									(<liferay-ui:message key="<%= statusLabel %>" />)
 								</span>
-							</dd>
-						</c:when>
-					</c:choose>
+							</c:if>
+						</dd>
+					</c:if>
 
 					<c:if test="<%= (createDate != null) && (modifiedDate != null) && Validator.isNotNull(author) %>">
 						<c:choose>
