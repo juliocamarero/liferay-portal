@@ -17,6 +17,8 @@
 <%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
 
 <%
+Layout exportableLayout = ExportImportUtil.getExportableLayout(themeDisplay);
+
 Date startDate = null;
 
 long startDateTime = ParamUtil.getLong(request, "startDate");
@@ -58,7 +60,7 @@ if (endDateTime > 0) {
 					</aui:script>
 
 					<div class="hide" id="<portlet:namespace />globalConfiguration">
-						<c:if test="<%= !PortletItemLocalServiceUtil.getPortletItems(layout.getGroupId(), selPortlet.getRootPortletId(), com.liferay.portal.model.PortletPreferences.class.getName()).isEmpty() %>">
+						<c:if test="<%= !PortletItemLocalServiceUtil.getPortletItems(exportableLayout.getGroupId(), selPortlet.getRootPortletId(), com.liferay.portal.model.PortletPreferences.class.getName()).isEmpty() %>">
 							<aui:input label="archived-setups" name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>" type="checkbox" value="<%= false %>" />
 						</c:if>
 

@@ -29,20 +29,7 @@ portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
 portletURL.setParameter("portletResource", portletResource);
 
-if (layout.isTypeControlPanel()) {
-	Group scopeGroup = themeDisplay.getScopeGroup();
-
-	if (scopeGroup.isLayout()) {
-		layout = LayoutLocalServiceUtil.getLayout(scopeGroup.getClassPK());
-	}
-	else if (!scopeGroup.isCompany()) {
-		long defaultPlid = LayoutLocalServiceUtil.getDefaultPlid(scopeGroupId);
-
-		if (defaultPlid > 0) {
-			layout = LayoutLocalServiceUtil.getLayout(defaultPlid);
-		}
-	}
-}
+Layout exportableLayout = ExportImportUtil.getExportableLayout(themeDisplay);
 %>
 
 <c:choose>
@@ -141,7 +128,7 @@ if (layout.isTypeControlPanel()) {
 		<aui:form action="<%= exportImportPagesURL %>" cssClass="lfr-export-dialog" method="post" name="fm1">
 			<aui:input name="tabs1" type="hidden" value="export_import" />
 			<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
-			<aui:input name="plid" type="hidden" value="<%= layout.getPlid() %>" />
+			<aui:input name="plid" type="hidden" value="<%= exportableLayout.getPlid() %>" />
 			<aui:input name="groupId" type="hidden" value="<%= themeDisplay.getScopeGroupId() %>" />
 			<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
 			<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />

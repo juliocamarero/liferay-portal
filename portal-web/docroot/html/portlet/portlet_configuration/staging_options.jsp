@@ -17,24 +17,7 @@
 <%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
 
 <%
-boolean controlPanel = false;
-
-if (layout.isTypeControlPanel()) {
-	Group scopeGroup = themeDisplay.getScopeGroup();
-
-	if (scopeGroup.isLayout()) {
-		layout = LayoutLocalServiceUtil.getLayout(scopeGroup.getClassPK());
-	}
-	else if (!scopeGroup.isCompany()) {
-		long defaultPlid = LayoutLocalServiceUtil.getDefaultPlid(scopeGroupId);
-
-		if (defaultPlid > 0) {
-			layout = LayoutLocalServiceUtil.getLayout(defaultPlid);
-		}
-	}
-
-	controlPanel = true;
-}
+Layout exportableLayout = ExportImportUtil.getExportableLayout(themeDisplay);
 
 String errorMessageKey = StringPool.BLANK;
 
@@ -43,7 +26,7 @@ Group liveGroup = stagingGroup.getLiveGroup();
 
 Layout targetLayout = null;
 
-if (!controlPanel) {
+if (!layout.isTypeControlPanel()) {
 	if (liveGroup == null) {
 		errorMessageKey = "this-portlet-is-placed-in-a-page-that-does-not-exist-in-the-live-site-publish-the-page-first";
 	}
@@ -53,7 +36,7 @@ if (!controlPanel) {
 				targetLayout = LayoutLocalServiceUtil.getLayout(liveGroup.getClassPK());
 			}
 			else {
-				targetLayout = LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(layout.getUuid(), liveGroup.getGroupId(), layout.isPrivateLayout());
+				targetLayout = LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(exportableLayout.getUuid(), liveGroup.getGroupId(), exportableLayout.isPrivateLayout());
 			}
 		}
 		catch (NoSuchLayoutException nsle) {
@@ -85,7 +68,7 @@ else if (stagingGroup.isLayout()) {
 %>
 
 <c:choose>
-	<c:when test="<%= (themeDisplay.getURLPublishToLive() == null) && !controlPanel %>">
+	<c:when test="<%= (themeDisplay.getURLPublishToLive() == null) && !layout.isTypeControlPanel() %>">
 	</c:when>
 	<c:when test="<%= Validator.isNotNull(errorMessageKey) %>">
 		<liferay-ui:message key="<%= errorMessageKey %>" />
