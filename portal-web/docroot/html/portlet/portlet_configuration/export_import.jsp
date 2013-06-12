@@ -22,18 +22,12 @@ String tabs2 = ParamUtil.getString(request, "tabs2", "export");
 String redirect = ParamUtil.getString(request, "redirect");
 String returnToFullPageURL = ParamUtil.getString(request, "returnToFullPageURL");
 
-String selPortletPrimaryKey = PortletPermissionUtil.getPrimaryKey(layout.getPlid(), selPortlet.getPortletId());
-
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/portlet_configuration/export_import");
 portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
 portletURL.setParameter("portletResource", portletResource);
-
-boolean supportsLAR = Validator.isNotNull(selPortlet.getPortletDataHandlerClass());
-
-boolean supportsSetup = Validator.isNotNull(selPortlet.getConfigurationActionClass());
 
 boolean controlPanel = false;
 
@@ -56,7 +50,7 @@ if (layout.isTypeControlPanel()) {
 %>
 
 <c:choose>
-	<c:when test="<%= supportsLAR || supportsSetup %>">
+	<c:when test="<%= Validator.isNotNull(selPortlet.getPortletDataHandlerClass()) || Validator.isNotNull(selPortlet.getConfigurationActionClass()) %>">
 
 		<%
 		String tabs2Names = "export,import";

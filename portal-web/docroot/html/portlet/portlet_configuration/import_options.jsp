@@ -16,16 +16,10 @@
 
 <%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
 
-<%
-boolean supportsLAR = Validator.isNotNull(selPortlet.getPortletDataHandlerClass());
-
-boolean supportsSetup = Validator.isNotNull(selPortlet.getConfigurationActionClass());
-%>
-
 <div class="export-dialog-tree">
 	<aui:input label="import-a-lar-file-to-overwrite-the-selected-data" name="importFileName" size="50" type="file" />
 
-	<c:if test="<%= supportsSetup %>">
+	<c:if test="<%= Validator.isNotNull(selPortlet.getConfigurationActionClass()) %>">
 		<aui:fieldset cssClass="options-group" label="application">
 			<ul class="lfr-tree unstyled">
 				<li class="tree-item">
@@ -53,7 +47,7 @@ boolean supportsSetup = Validator.isNotNull(selPortlet.getConfigurationActionCla
 		</aui:fieldset>
 	</c:if>
 
-	<c:if test="<%= supportsLAR %>">
+	<c:if test="<%= Validator.isNotNull(selPortlet.getPortletDataHandlerClass()) %>">
 
 		<%
 		PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance();

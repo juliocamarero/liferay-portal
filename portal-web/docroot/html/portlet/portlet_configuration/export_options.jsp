@@ -17,10 +17,6 @@
 <%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
 
 <%
-boolean supportsLAR = Validator.isNotNull(selPortlet.getPortletDataHandlerClass());
-
-boolean supportsSetup = Validator.isNotNull(selPortlet.getConfigurationActionClass());
-
 Date startDate = null;
 
 long startDateTime = ParamUtil.getLong(request, "startDate");
@@ -43,7 +39,7 @@ if (endDateTime > 0) {
 <div class="export-dialog-tree">
 	<aui:input label="export-the-selected-data-to-the-given-lar-file-name" name="exportFileName" size="50" value='<%= StringUtil.replace(selPortlet.getDisplayName(), " ", "_") + "-" + Time.getShortTimestamp() + ".portlet.lar" %>' />
 
-	<c:if test="<%= supportsSetup %>">
+	<c:if test="<%= Validator.isNotNull(selPortlet.getConfigurationActionClass()) %>">
 		<aui:fieldset cssClass="options-group" label="application">
 			<ul class="lfr-tree unstyled">
 				<li class="tree-item">
@@ -73,7 +69,7 @@ if (endDateTime > 0) {
 		</aui:fieldset>
 	</c:if>
 
-	<c:if test="<%= supportsLAR %>">
+	<c:if test="<%= Validator.isNotNull(selPortlet.getPortletDataHandlerClass()) %>">
 
 		<%
 		PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance();
