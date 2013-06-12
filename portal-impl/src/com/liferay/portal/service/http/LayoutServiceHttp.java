@@ -1868,7 +1868,7 @@ public class LayoutServiceHttp {
 	public static void validateImportLayoutsFile(HttpPrincipal httpPrincipal,
 		long groupId, boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
-		java.io.File file)
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
@@ -1877,7 +1877,7 @@ public class LayoutServiceHttp {
 					_validateImportLayoutsFileParameterTypes47);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					privateLayout, parameterMap, file);
+					privateLayout, parameterMap, fileEntry);
 
 			try {
 				TunnelUtil.invoke(httpPrincipal, methodHandler);
@@ -2096,6 +2096,7 @@ public class LayoutServiceHttp {
 			long.class, int.class
 		};
 	private static final Class<?>[] _validateImportLayoutsFileParameterTypes47 = new Class[] {
-			long.class, boolean.class, java.util.Map.class, java.io.File.class
+			long.class, boolean.class, java.util.Map.class,
+			com.liferay.portal.kernel.repository.model.FileEntry.class
 		};
 }
