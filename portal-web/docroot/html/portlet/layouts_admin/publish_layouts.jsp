@@ -17,7 +17,7 @@
 <%@ include file="/html/portlet/layouts_admin/init.jsp" %>
 
 <%
-String cmd = ParamUtil.getString(request, "cmd");
+String cmd = ParamUtil.getString(request, Constants.CMD);
 
 if (Validator.isNull(cmd)) {
 	cmd = ParamUtil.getString(request, "originalCmd", "publish_to_live");
