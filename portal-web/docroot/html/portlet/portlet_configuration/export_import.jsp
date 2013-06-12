@@ -28,8 +28,6 @@ portletURL.setParameter("struts_action", "/portlet_configuration/export_import")
 portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
 portletURL.setParameter("portletResource", portletResource);
-
-Layout exportableLayout = ExportImportUtil.getExportableLayout(themeDisplay);
 %>
 
 <c:choose>
@@ -121,32 +119,17 @@ Layout exportableLayout = ExportImportUtil.getExportableLayout(themeDisplay);
 			<liferay-ui:message arguments="<%= sdske.getStructureKey() %>" key="dynamic-data-mapping-structure-with-structure-key-x-already-exists" />
 		</liferay-ui:error>
 
-		<portlet:actionURL var="exportImportPagesURL">
-			<portlet:param name="struts_action" value="/portlet_configuration/export_import" />
-		</portlet:actionURL>
-
-		<aui:form action="<%= exportImportPagesURL %>" cssClass="lfr-export-dialog" method="post" name="fm1">
-			<aui:input name="tabs1" type="hidden" value="export_import" />
-			<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
-			<aui:input name="plid" type="hidden" value="<%= exportableLayout.getPlid() %>" />
-			<aui:input name="groupId" type="hidden" value="<%= themeDisplay.getScopeGroupId() %>" />
-			<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
-			<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
-
-			<aui:fieldset>
-				<c:choose>
-					<c:when test='<%= tabs2.equals("export") %>'>
-						<liferay-util:include page="/html/portlet/portlet_configuration/export_options.jsp" />
-					</c:when>
-					<c:when test='<%= tabs2.equals("import") %>'>
-						<liferay-util:include page="/html/portlet/portlet_configuration/import_options.jsp" />
-					</c:when>
-					<c:when test='<%= tabs2.equals("staging") %>'>
-						<liferay-util:include page="/html/portlet/portlet_configuration/staging_options.jsp" />
-					</c:when>
-				</c:choose>
-			</aui:fieldset>
-		</aui:form>
+		<c:choose>
+			<c:when test='<%= tabs2.equals("export") %>'>
+				<liferay-util:include page="/html/portlet/portlet_configuration/export_options.jsp" />
+			</c:when>
+			<c:when test='<%= tabs2.equals("import") %>'>
+				<liferay-util:include page="/html/portlet/portlet_configuration/import_options.jsp" />
+			</c:when>
+			<c:when test='<%= tabs2.equals("staging") %>'>
+				<liferay-util:include page="/html/portlet/portlet_configuration/staging_options.jsp" />
+			</c:when>
+		</c:choose>
 	</c:when>
 	<c:otherwise>
 		<%= LanguageUtil.format(locale, "the-x-portlet-does-not-have-any-data-that-can-be-exported-or-does-not-include-support-for-it", HtmlUtil.escape(PortalUtil.getPortletTitle(selPortlet, application, locale))) %>
