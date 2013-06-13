@@ -43,8 +43,15 @@ if ((article != null) && article.isDraft()) {
 		toolbarButtonGroup.push(
 			{
 				icon: 'icon-search',
-				id: '<portlet:namespace />previewArticleButton',
-				label: '<%= UnicodeLanguageUtil.get(pageContext, "preview") %>'
+				label: '<%= UnicodeLanguageUtil.get(pageContext, "preview") %>',
+				on: {
+					click: function(event) {
+						document.<portlet:namespace />fm1.action = '<portlet:actionURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="struts_action" value="/journal/view_article_content" /></portlet:actionURL>';
+						document.<portlet:namespace />fm1.target = '_blank';
+						document.<portlet:namespace />fm1.<portlet:namespace /><%= Constants.CMD %>.value = '<%= Constants.PREVIEW %>';
+						submitForm(document.<portlet:namespace />fm1);
+					}
+				}
 			}
 		);
 	</c:if>
