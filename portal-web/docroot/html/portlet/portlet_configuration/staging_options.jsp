@@ -67,6 +67,20 @@ else if (stagingGroup.isLayout()) {
 		}
 	}
 }
+
+long startDateTime = ParamUtil.getLong(request, "startDate");
+long endDateTime = ParamUtil.getLong(request, "endDate");
+
+Date startDate = null;
+Date endDate = null;
+
+if (startDateTime > 0) {
+	startDate = new Date(startDateTime);
+}
+
+if (endDateTime > 0) {
+	endDate = new Date(endDateTime);
+}
 %>
 
 <c:choose>
@@ -78,7 +92,6 @@ else if (stagingGroup.isLayout()) {
 	<c:otherwise>
 		<portlet:actionURL var="publishPortletURL">
 			<portlet:param name="struts_action" value="/portlet_configuration/export_import" />
-			<portlet:param name="<%= Constants.CMD %>" value="publish_to_live" />
 		</portlet:actionURL>
 
 		<aui:form action="<%= publishPortletURL %>" cssClass="lfr-export-dialog" method="post" name="fm1" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "publishToLive();" %>'>
@@ -88,6 +101,8 @@ else if (stagingGroup.isLayout()) {
 			<aui:input name="plid" type="hidden" value="<%= exportableLayout.getPlid() %>" />
 			<aui:input name="groupId" type="hidden" value="<%= themeDisplay.getScopeGroupId() %>" />
 			<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
+
+			<aui:input name="<%= Constants.CMD %>" type="hidden" value="publish_to_live" />
 
 			<div class="export-dialog-tree">
 				<c:if test="<%= Validator.isNotNull(selPortlet.getConfigurationActionClass()) %>">
@@ -121,7 +136,15 @@ else if (stagingGroup.isLayout()) {
 				<c:if test="<%= Validator.isNotNull(selPortlet.getPortletDataHandlerClass()) %>">
 
 					<%
+					PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
+
 					PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance();
+
+					portletDataHandler.prepareManifestSummary(portletDataContext);
+
+					ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
+
+					long exportModelCount = portletDataHandler.getExportModelCount(manifestSummary);
 					%>
 
 					<aui:fieldset cssClass="options-group" label="content">
@@ -221,9 +244,9 @@ else if (stagingGroup.isLayout()) {
 										<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
 									</li>
 								</ul>
-								
 
-								<aui:input label="content" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
+
+								<aui:input label='<%= LanguageUtil.get(pageContext, "content") + (exportModelCount > 0 ? " (" + exportModelCount + ")" : StringPool.BLANK) %>' name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
 
 								<%
 								PortletDataHandlerControl[] exportControls = portletDataHandler.getExportControls();
@@ -253,6 +276,7 @@ else if (stagingGroup.isLayout()) {
 
 												<%
 												request.setAttribute("render_controls.jsp-controls", exportControls);
+												request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
 												request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
 
 												selectedContent += ArrayUtil.toString(exportControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
@@ -371,8 +395,22 @@ else if (stagingGroup.isLayout()) {
 					commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
 					form: document.<portlet:namespace />fm1,
 					namespace: '<portlet:namespace />',
+					rangeAllNode: '#rangeAll',
+					rangeDateRangeNode: '#rangeDateRange',
+					rangeLastPublishNode: '#rangeLastPublish',
 					ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',
 					userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'
+				}
+			);
+
+			var form = A.one('#<portlet:namespace />fm1');
+
+			form.on(
+				'submit',
+				function(event) {
+					event.preventDefault();
+
+					submitForm(form, form.attr('action'), false);
 				}
 			);
 		</aui:script>
@@ -391,6 +429,7 @@ else if (stagingGroup.isLayout()) {
 			}
 
 			Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PERMISSIONS %>Checkbox', '<portlet:namespace />permissionsUl');
+			Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA %>Checkbox', '<portlet:namespace />showChangeContent');
 
 			Liferay.Util.toggleRadio('<portlet:namespace />portletMetaDataFilter', '<portlet:namespace />portletMetaDataList');
 			Liferay.Util.toggleRadio('<portlet:namespace />portletMetaDataAll', '', ['<portlet:namespace />portletMetaDataList']);
