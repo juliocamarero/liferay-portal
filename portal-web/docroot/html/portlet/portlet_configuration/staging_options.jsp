@@ -151,8 +151,6 @@ if (endDateTime > 0) {
 						<aui:fieldset cssClass="options-group" label="content">
 							<ul class="lfr-tree unstyled">
 								<li class="tree-item">
-									<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= false %>" />
-
 									<div class="hide" id="<portlet:namespace />range">
 										<aui:fieldset cssClass="date-range-options" label="date-range">
 											<aui:input data-name='<%= LanguageUtil.get(pageContext, "all") %>' id="rangeAll" label="all" name="range" type="radio" value="all" />
@@ -248,6 +246,8 @@ if (endDateTime > 0) {
 
 								<c:if test="<%= exportModelCount != 0 %>">
 									<li class="tree-item">
+										<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= false %>" />
+
 										<aui:input label='<%= LanguageUtil.get(pageContext, "content") + (exportModelCount > 0 ? " (" + exportModelCount + ")" : StringPool.BLANK) %>' name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
 
 										<%
