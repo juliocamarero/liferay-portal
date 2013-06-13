@@ -186,7 +186,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(user
 			<aui:fieldset cssClass="options-group" label="application-configuration">
 				<ul class="lfr-tree unstyled">
 					<li class="tree-item">
-						<aui:input checked="<%= true %>" helpMessage="all-applications-import-help" id="allApplications" label="all-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="radio" value="<%= true %>" />
+						<aui:input checked="<%= true %>" helpMessage="all-applications-import-help" id="allApplications" label="all-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="radio" value="<%= true %>" />
 
 						<ul id="<portlet:namespace />showGlobalConfiguration">
 							<li class="tree-item">
@@ -197,7 +197,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(user
 						</ul>
 
 						<aui:script>
-							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_SETUP %>Checkbox', '<portlet:namespace />showGlobalConfiguration');
+							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>Checkbox', '<portlet:namespace />showGlobalConfiguration');
 						</aui:script>
 
 						<div class="hide" id="<portlet:namespace />globalConfiguration">
@@ -208,10 +208,11 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(user
 							</aui:fieldset>
 						</div>
 
-						<aui:input id="chooseApplications" label="choose-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="radio" value="<%= false %>" />
+						<aui:input id="chooseApplications" label="choose-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="radio" value="<%= false %>" />
 
 						<c:if test="<%= !group.isLayoutPrototype() %>">
 							<ul class="hide" id="<portlet:namespace />selectApplications">
+								<aui:input name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="hidden" value="<%= true %>" />
 
 								<%
 								List<Portlet> setupPortlets = manifestSummary.getSetupPortlets();
@@ -236,7 +237,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(user
 			<aui:fieldset cssClass="options-group" label="content">
 				<ul class="lfr-tree unstyled">
 					<li class="tree-item">
-						<aui:input checked="<%= true %>" helpMessage="all-content-import-help" id="allContent" label="all-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="radio" value="<%= true %>" />
+						<aui:input checked="<%= true %>" helpMessage="all-content-import-help" id="allContent" label="all-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= true %>" />
 
 						<ul id="<portlet:namespace />showChangeGlobalContent">
 							<li>
@@ -247,7 +248,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(user
 						</ul>
 
 						<aui:script>
-							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA %>Checkbox', '<portlet:namespace />showChangeGlobalContent');
+							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>Checkbox', '<portlet:namespace />showChangeGlobalContent');
 						</aui:script>
 
 						<div class="hide" id="<portlet:namespace />globalContent">
@@ -270,13 +271,11 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(user
 							</aui:script>
 						</div>
 
-						<aui:input id="chooseContent" label="choose-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="radio" value="<%= false %>" />
+						<aui:input id="chooseContent" label="choose-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= false %>" />
 
 						<ul class="hide" id="<portlet:namespace />selectContents">
 							<li>
 								<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= true %>" />
-
-								<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="hidden" value="<%= true %>" />
 
 								<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= true %>" />
 							</li>
