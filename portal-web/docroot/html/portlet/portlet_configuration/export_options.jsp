@@ -181,21 +181,21 @@ if (endDateTime > 0) {
 									</ul>
 								</aui:fieldset>
 							</div>
+
+							<liferay-ui:icon
+								image="calendar"
+								label="<%= true %>"
+								message="date-range"
+							/>
+
+							<ul>
+								<li>
+									<div class="selected-labels" id="<portlet:namespace />selectedRange"></div>
+
+									<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
+								</li>
+							</ul>
 						</li>
-
-						<liferay-ui:icon
-							image="calendar"
-							label="<%= true %>"
-							message="date-range"
-						/>
-
-						<ul>
-							<li>
-								<div class="selected-labels" id="<portlet:namespace />selectedRange"></div>
-
-								<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
-							</li>
-						</ul>
 
 						<c:if test="<%= exportModelCount != 0 %>">
 							<li class="tree-item">

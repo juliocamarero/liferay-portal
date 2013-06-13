@@ -243,6 +243,7 @@ if (endDateTime > 0) {
 											<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
 										</li>
 									</ul>
+								</li>
 
 								<c:if test="<%= exportModelCount != 0 %>">
 									<li class="tree-item">
