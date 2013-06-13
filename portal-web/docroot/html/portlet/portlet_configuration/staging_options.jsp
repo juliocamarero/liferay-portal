@@ -277,6 +277,7 @@ if (endDateTime > 0) {
 													<c:if test="<%= exportControls != null %>">
 
 														<%
+														request.setAttribute("render_controls.jsp-action", Constants.PUBLISH);
 														request.setAttribute("render_controls.jsp-controls", exportControls);
 														request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
 														request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
