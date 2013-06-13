@@ -68,15 +68,17 @@ else if (stagingGroup.isLayout()) {
 	}
 }
 
-long startDateTime = ParamUtil.getLong(request, "startDate");
-long endDateTime = ParamUtil.getLong(request, "endDate");
-
 Date startDate = null;
-Date endDate = null;
+
+long startDateTime = ParamUtil.getLong(request, "startDate");
 
 if (startDateTime > 0) {
 	startDate = new Date(startDateTime);
 }
+
+Date endDate = null;
+
+long endDateTime = ParamUtil.getLong(request, "endDate");
 
 if (endDateTime > 0) {
 	endDate = new Date(endDateTime);
@@ -136,9 +138,9 @@ if (endDateTime > 0) {
 				<c:if test="<%= Validator.isNotNull(selPortlet.getPortletDataHandlerClass()) %>">
 
 					<%
-					PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
-
 					PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance();
+
+					PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
 
 					portletDataHandler.prepareManifestSummary(portletDataContext);
 
