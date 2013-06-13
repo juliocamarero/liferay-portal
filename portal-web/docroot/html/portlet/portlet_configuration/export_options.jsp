@@ -204,8 +204,6 @@ if (endDateTime > 0) {
 								<aui:input label='<%= LanguageUtil.get(pageContext, "content") + (exportModelCount > 0 ? " (" + exportModelCount + ")" : StringPool.BLANK) %>' name='<%= PortletDataHandlerKeys.PORTLET_DATA + "_" + selPortlet.getRootPortletId() %>' type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
 
 								<%
-								Set<String> displayedControls = new HashSet<String>();
-
 								PortletDataHandlerControl[] exportControls = portletDataHandler.getExportControls();
 								PortletDataHandlerControl[] metadataControls = portletDataHandler.getExportMetadataControls();
 
@@ -233,13 +231,6 @@ if (endDateTime > 0) {
 
 											<%
 											for (PortletDataHandlerControl metadataControl : metadataControls) {
-												if (!displayedControls.contains(metadataControl.getControlName())) {
-													displayedControls.add(metadataControl.getControlName());
-												}
-												else {
-													continue;
-												}
-
 												PortletDataHandlerBoolean control = (PortletDataHandlerBoolean)metadataControl;
 
 												PortletDataHandlerControl[] childrenControls = control.getChildren();

@@ -255,7 +255,6 @@ if (endDateTime > 0) {
 										PortletDataHandlerControl[] metadataControls = portletDataHandler.getExportMetadataControls();
 
 										if (Validator.isNotNull(exportControls) || Validator.isNotNull(metadataControls)) {
-											String selectedContent = StringPool.BLANK;
 										%>
 
 											<div class="hide" id="<portlet:namespace />content_<%= selPortlet.getRootPortletId() %>">
@@ -281,8 +280,6 @@ if (endDateTime > 0) {
 														request.setAttribute("render_controls.jsp-controls", exportControls);
 														request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
 														request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
-
-														selectedContent += ArrayUtil.toString(exportControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
 														%>
 
 														<ul class="lfr-tree unstyled">
@@ -301,8 +298,6 @@ if (endDateTime > 0) {
 
 														if ((childrenControls != null) && (childrenControls.length > 0)) {
 															request.setAttribute("render_controls.jsp-controls", childrenControls);
-
-															selectedContent += (selectedContent.equals(StringPool.BLANK) ? "" : ",") + ArrayUtil.toString(childrenControls, "controlName", StringPool.COMMA_AND_SPACE, locale);
 														%>
 
 															<aui:field-wrapper label="content-metadata">
@@ -321,12 +316,7 @@ if (endDateTime > 0) {
 
 											<ul id="<portlet:namespace />showChangeContent">
 												<li>
-													<div class="selected-labels" id="<portlet:namespace />selectedContent_<%= selPortlet.getRootPortletId() %>">
-
-														<%= selectedContent %>,
-
-														<liferay-ui:message key="from-last-publish-date" />
-													</div>
+													<div class="selected-labels" id="<portlet:namespace />selectedContent_<%= selPortlet.getRootPortletId() %>"></div>
 
 													<%
 													Map<String,Object> data = new HashMap<String,Object>();
