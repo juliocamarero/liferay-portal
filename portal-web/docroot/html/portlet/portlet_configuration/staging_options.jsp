@@ -129,6 +129,83 @@ else if (stagingGroup.isLayout()) {
 							<li class="tree-item">
 								<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= false %>" />
 
+								<aui:fieldset cssClass="date-range-options" label="date-range">
+									<aui:input data-name='<%= LanguageUtil.get(pageContext, "all") %>' id="rangeAll" label="all" name="range" type="radio" value="all" />
+
+									<aui:input checked="<%= true %>" data-name='<%= LanguageUtil.get(pageContext, "from-last-publish-date") %>' id="rangeLastPublish" label="from-last-publish-date" name="range" type="radio" value="fromLastPublishDate" />
+
+									<aui:input data-name='<%= LanguageUtil.get(pageContext, "date-range") %>' helpMessage="export-date-range-help" id="rangeDateRange" label="date-range" name="range" type="radio" value="dateRange" />
+
+									<%
+									Calendar today = CalendarFactoryUtil.getCalendar(timeZone, locale);
+
+									Calendar yesterday = CalendarFactoryUtil.getCalendar(timeZone, locale);
+
+									yesterday.add(Calendar.DATE, -1);
+									%>
+
+									<ul class="date-range-options hide unstyled" id="<portlet:namespace />startEndDate">
+										<li>
+											<aui:fieldset label="start-date">
+												<liferay-ui:input-date
+													dayParam="startDateDay"
+													dayValue="<%= yesterday.get(Calendar.DATE) %>"
+													disabled="<%= false %>"
+													firstDayOfWeek="<%= yesterday.getFirstDayOfWeek() - 1 %>"
+													monthParam="startDateMonth"
+													monthValue="<%= yesterday.get(Calendar.MONTH) %>"
+													yearParam="startDateYear"
+													yearRangeEnd="<%= yesterday.get(Calendar.YEAR) %>"
+													yearRangeStart="<%= yesterday.get(Calendar.YEAR) - 100 %>"
+													yearValue="<%= yesterday.get(Calendar.YEAR) %>"
+												/>
+
+												&nbsp;
+
+												<liferay-ui:input-time
+													amPmParam='<%= "startDateAmPm" %>'
+													amPmValue="<%= yesterday.get(Calendar.AM_PM) %>"
+													disabled="<%= false %>"
+													hourParam='<%= "startDateHour" %>'
+													hourValue="<%= yesterday.get(Calendar.HOUR) %>"
+													minuteInterval="<%= 1 %>"
+													minuteParam='<%= "startDateMinute" %>'
+													minuteValue="<%= yesterday.get(Calendar.MINUTE) %>"
+												/>
+											</aui:fieldset>
+										</li>
+
+										<li>
+											<aui:fieldset label="end-date">
+												<liferay-ui:input-date
+													dayParam="endDateDay"
+													dayValue="<%= today.get(Calendar.DATE) %>"
+													disabled="<%= false %>"
+													firstDayOfWeek="<%= today.getFirstDayOfWeek() - 1 %>"
+													monthParam="endDateMonth"
+													monthValue="<%= today.get(Calendar.MONTH) %>"
+													yearParam="endDateYear"
+													yearRangeEnd="<%= today.get(Calendar.YEAR) %>"
+													yearRangeStart="<%= today.get(Calendar.YEAR) - 100 %>"
+													yearValue="<%= today.get(Calendar.YEAR) %>"
+												/>
+
+												&nbsp;
+
+												<liferay-ui:input-time
+													amPmParam='<%= "endDateAmPm" %>'
+													amPmValue="<%= today.get(Calendar.AM_PM) %>"
+													disabled="<%= false %>"
+													hourParam='<%= "endDateHour" %>'
+													hourValue="<%= today.get(Calendar.HOUR) %>"
+													minuteParam='<%= "endDateMinute" %>'
+													minuteValue="<%= today.get(Calendar.MINUTE) %>"
+												/>
+											</aui:fieldset>
+										</li>
+									</ul>
+								</aui:fieldset>
+
 								<aui:input label="content" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
 
 								<%
@@ -196,83 +273,6 @@ else if (stagingGroup.isLayout()) {
 											%>
 
 										</c:if>
-
-										<aui:fieldset cssClass="date-range-options" label="date-range">
-											<aui:input data-name='<%= LanguageUtil.get(pageContext, "all") %>' id="rangeAll" label="all" name="range" type="radio" value="all" />
-
-											<aui:input checked="<%= true %>" data-name='<%= LanguageUtil.get(pageContext, "from-last-publish-date") %>' id="rangeLastPublish" label="from-last-publish-date" name="range" type="radio" value="fromLastPublishDate" />
-
-											<aui:input data-name='<%= LanguageUtil.get(pageContext, "date-range") %>' helpMessage="export-date-range-help" id="rangeDateRange" label="date-range" name="range" type="radio" value="dateRange" />
-
-											<%
-											Calendar today = CalendarFactoryUtil.getCalendar(timeZone, locale);
-
-											Calendar yesterday = CalendarFactoryUtil.getCalendar(timeZone, locale);
-
-											yesterday.add(Calendar.DATE, -1);
-											%>
-
-											<ul class="date-range-options hide unstyled" id="<portlet:namespace />startEndDate">
-												<li>
-													<aui:fieldset label="start-date">
-														<liferay-ui:input-date
-															dayParam="startDateDay"
-															dayValue="<%= yesterday.get(Calendar.DATE) %>"
-															disabled="<%= false %>"
-															firstDayOfWeek="<%= yesterday.getFirstDayOfWeek() - 1 %>"
-															monthParam="startDateMonth"
-															monthValue="<%= yesterday.get(Calendar.MONTH) %>"
-															yearParam="startDateYear"
-															yearRangeEnd="<%= yesterday.get(Calendar.YEAR) %>"
-															yearRangeStart="<%= yesterday.get(Calendar.YEAR) - 100 %>"
-															yearValue="<%= yesterday.get(Calendar.YEAR) %>"
-														/>
-
-														&nbsp;
-
-														<liferay-ui:input-time
-															amPmParam='<%= "startDateAmPm" %>'
-															amPmValue="<%= yesterday.get(Calendar.AM_PM) %>"
-															disabled="<%= false %>"
-															hourParam='<%= "startDateHour" %>'
-															hourValue="<%= yesterday.get(Calendar.HOUR) %>"
-															minuteInterval="<%= 1 %>"
-															minuteParam='<%= "startDateMinute" %>'
-															minuteValue="<%= yesterday.get(Calendar.MINUTE) %>"
-														/>
-													</aui:fieldset>
-												</li>
-
-												<li>
-													<aui:fieldset label="end-date">
-														<liferay-ui:input-date
-															dayParam="endDateDay"
-															dayValue="<%= today.get(Calendar.DATE) %>"
-															disabled="<%= false %>"
-															firstDayOfWeek="<%= today.getFirstDayOfWeek() - 1 %>"
-															monthParam="endDateMonth"
-															monthValue="<%= today.get(Calendar.MONTH) %>"
-															yearParam="endDateYear"
-															yearRangeEnd="<%= today.get(Calendar.YEAR) %>"
-															yearRangeStart="<%= today.get(Calendar.YEAR) - 100 %>"
-															yearValue="<%= today.get(Calendar.YEAR) %>"
-														/>
-
-														&nbsp;
-
-														<liferay-ui:input-time
-															amPmParam='<%= "endDateAmPm" %>'
-															amPmValue="<%= today.get(Calendar.AM_PM) %>"
-															disabled="<%= false %>"
-															hourParam='<%= "endDateHour" %>'
-															hourValue="<%= today.get(Calendar.HOUR) %>"
-															minuteParam='<%= "endDateMinute" %>'
-															minuteValue="<%= today.get(Calendar.MINUTE) %>"
-														/>
-													</aui:fieldset>
-												</li>
-											</ul>
-										</aui:fieldset>
 									</div>
 
 									<ul id="<portlet:namespace />showChangeContent">
