@@ -293,8 +293,8 @@ public class PortletExporter {
 			parameterMap, PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS);
 		boolean exportPortletDataAll = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_DATA_ALL);
-		boolean exportPortletSetup = MapUtil.getBoolean(
-			parameterMap, PortletDataHandlerKeys.PORTLET_SETUP);
+		boolean exportPortletSetupAll = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_SETUP_ALL);
 		boolean exportPortletUserPreferences = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
 
@@ -315,6 +315,25 @@ public class PortletExporter {
 		else {
 			exportPortletData = MapUtil.getBoolean(
 				parameterMap, PortletDataHandlerKeys.PORTLET_DATA);
+		}
+
+		boolean exportPortletSetup = false;
+
+		if (exportPortletSetupAll) {
+			exportPortletSetup = true;
+		}
+		else if (parameterMap.containsKey(
+					PortletDataHandlerKeys.PORTLET_SETUP + "_" +
+						PortletConstants.getRootPortletId(portletId))) {
+
+			exportPortletSetup = MapUtil.getBoolean(
+				parameterMap,
+				PortletDataHandlerKeys.PORTLET_SETUP + "_" +
+					PortletConstants.getRootPortletId(portletId));
+		}
+		else {
+			 exportPortletSetup = MapUtil.getBoolean(
+				parameterMap, PortletDataHandlerKeys.PORTLET_SETUP);
 		}
 
 		if (_log.isDebugEnabled()) {
