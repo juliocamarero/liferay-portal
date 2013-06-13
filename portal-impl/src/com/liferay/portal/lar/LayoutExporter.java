@@ -892,52 +892,42 @@ public class LayoutExporter {
 		boolean exportCurPortletData = exportPortletData;
 		boolean exportCurPortletSetup = exportPortletSetup;
 
-		// If PORTLET_DATA_ALL is true, this means that staging has just been
-		// activated and all data and setup must be exported. There is no
-		// portlet export control to check in this case.
+		String rootPortletId =
+			ExportImportHelperUtil.getExportableRootPortletId(
+				companyId, portletId);
 
 		if (exportPortletDataAll) {
 			exportCurPortletData = true;
-			exportCurPortletSetup = true;
 		}
-		else {
-			String rootPortletId =
-				ExportImportHelperUtil.getExportableRootPortletId(
-					companyId, portletId);
+		else if (rootPortletId != null) {
 
-			if (rootPortletId != null) {
+			// PORTLET_DATA and the PORTLET_DATA for this specific data handler
+			// must be true
 
-				// Checking if the portlet has a data handler, if it doesn't,
-				// the default values are the ones set in PORTLET_DATA and
-				// PORTLET_SETUP. If it has a data handler, iterate over each
-				// portlet export control.
-
-				// PORTLET_DATA and the PORTLET_DATA for this specific data
-				// handler must be true
-
-				exportCurPortletData =
-					exportPortletData &&
-					MapUtil.getBoolean(
-						parameterMap,
-						PortletDataHandlerKeys.PORTLET_DATA +
-							StringPool.UNDERLINE + rootPortletId);
-
-				// PORTLET_SETUP and the PORTLET_SETUP for this specific data
-				// handler must be true
-
-				exportCurPortletSetup =
-					exportPortletSetup &&
-					MapUtil.getBoolean(
-						parameterMap,
-						PortletDataHandlerKeys.PORTLET_SETUP +
-							StringPool.UNDERLINE + rootPortletId);
-			}
+			exportCurPortletData =
+				exportPortletData &&
+				MapUtil.getBoolean(
+					parameterMap,
+					PortletDataHandlerKeys.PORTLET_DATA +
+						StringPool.UNDERLINE + rootPortletId);
 		}
 
 		if (exportPortletSetupAll ||
 			(exportPortletSetup && type.equals("layout-prototype"))) {
 
 			exportCurPortletSetup = true;
+		}
+		else if (rootPortletId != null) {
+
+			// PORTLET_SETUP and the PORTLET_SETUP for this specific data
+			// handler must be true
+
+			exportCurPortletSetup =
+				exportPortletSetup &&
+				MapUtil.getBoolean(
+					parameterMap,
+					PortletDataHandlerKeys.PORTLET_SETUP +
+						StringPool.UNDERLINE + rootPortletId);
 		}
 
 		return new boolean[] {exportCurPortletData, exportCurPortletSetup};
