@@ -313,8 +313,8 @@ public class PortletImporter {
 			parameterMap, PortletDataHandlerKeys.DELETE_PORTLET_DATA);
 		boolean importPermissions = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PERMISSIONS);
-		boolean importPortletData = MapUtil.getBoolean(
-			parameterMap, PortletDataHandlerKeys.PORTLET_DATA);
+		boolean importPortletDataAll = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_DATA_ALL);
 		boolean importPortletArchivedSetups = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS);
 		boolean importPortletSetup = MapUtil.getBoolean(
@@ -323,6 +323,25 @@ public class PortletImporter {
 			parameterMap, PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
 		String userIdStrategyString = MapUtil.getString(
 			parameterMap, PortletDataHandlerKeys.USER_ID_STRATEGY);
+
+		boolean importPortletData = false;
+
+		if (importPortletDataAll) {
+			importPortletData = true;
+		}
+		else if (parameterMap.containsKey(
+					PortletDataHandlerKeys.PORTLET_DATA + "_" +
+						PortletConstants.getRootPortletId(portletId))) {
+
+			importPortletData = MapUtil.getBoolean(
+				parameterMap,
+				PortletDataHandlerKeys.PORTLET_DATA + "_" +
+					PortletConstants.getRootPortletId(portletId));
+		}
+		else {
+			importPortletData = MapUtil.getBoolean(
+				parameterMap, PortletDataHandlerKeys.PORTLET_DATA);
+		}
 
 		StopWatch stopWatch = null;
 
