@@ -902,42 +902,34 @@ public class LayoutExporter {
 			exportCurPortletSetup = true;
 		}
 		else {
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(
-				companyId, portletId);
+			String rootPortletId = getRootPortletId(companyId, portletId);
 
-			if (portlet != null) {
-				String portletDataHandlerClass =
-					portlet.getPortletDataHandlerClass();
+			if (rootPortletId != null) {
 
 				// Checking if the portlet has a data handler, if it doesn't,
 				// the default values are the ones set in PORTLET_DATA and
 				// PORTLET_SETUP. If it has a data handler, iterate over each
 				// portlet export control.
 
-				if (portletDataHandlerClass != null) {
-					String rootPortletId = PortletConstants.getRootPortletId(
-						portletId);
+				// PORTLET_DATA and the PORTLET_DATA for this specific data
+				// handler must be true
 
-					// PORTLET_DATA and the PORTLET_DATA for this specific data
-					// handler must be true
+				exportCurPortletData =
+					exportPortletData &&
+					MapUtil.getBoolean(
+						parameterMap,
+						PortletDataHandlerKeys.PORTLET_DATA +
+							StringPool.UNDERLINE + rootPortletId);
 
-					exportCurPortletData =
-						exportPortletData &&
-						MapUtil.getBoolean(
-							parameterMap,
-							PortletDataHandlerKeys.PORTLET_DATA +
-								StringPool.UNDERLINE + rootPortletId);
+				// PORTLET_SETUP and the PORTLET_SETUP for this specific data
+				// handler must be true
 
-					// PORTLET_SETUP and the PORTLET_SETUP for this specific
-					// data handler must be true
-
-					exportCurPortletSetup =
-						exportPortletSetup &&
-						MapUtil.getBoolean(
-							parameterMap,
-							PortletDataHandlerKeys.PORTLET_SETUP +
-								StringPool.UNDERLINE + rootPortletId);
-				}
+				exportCurPortletSetup =
+					exportPortletSetup &&
+					MapUtil.getBoolean(
+						parameterMap,
+						PortletDataHandlerKeys.PORTLET_SETUP +
+							StringPool.UNDERLINE + rootPortletId);
 			}
 		}
 
@@ -976,6 +968,24 @@ public class LayoutExporter {
 		sb.append(layoutSetPrototypeUuid);
 
 		return sb.toString();
+	}
+
+	protected String getRootPortletId(long companyId, String portletId)
+		throws Exception {
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			companyId, portletId);
+
+		if (portlet != null) {
+			String portletDataHandlerClass =
+				portlet.getPortletDataHandlerClass();
+
+			if (portletDataHandlerClass != null) {
+				return PortletConstants.getRootPortletId(portletId);
+			}
+		}
+
+		return null;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LayoutExporter.class);
