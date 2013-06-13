@@ -398,17 +398,6 @@ if (endDateTime > 0) {
 					userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'
 				}
 			);
-
-			var form = A.one('#<portlet:namespace />fm1');
-
-			form.on(
-				'submit',
-				function(event) {
-					event.preventDefault();
-
-					submitForm(form, form.attr('action'), false);
-				}
-			);
 		</aui:script>
 
 		<aui:script>
@@ -425,7 +414,6 @@ if (endDateTime > 0) {
 			}
 
 			Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PERMISSIONS %>Checkbox', '<portlet:namespace />permissionsUl');
-			Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA %>Checkbox', '<portlet:namespace />showChangeContent');
 
 			Liferay.Util.toggleRadio('<portlet:namespace />portletMetaDataFilter', '<portlet:namespace />portletMetaDataList');
 			Liferay.Util.toggleRadio('<portlet:namespace />portletMetaDataAll', '', ['<portlet:namespace />portletMetaDataList']);
