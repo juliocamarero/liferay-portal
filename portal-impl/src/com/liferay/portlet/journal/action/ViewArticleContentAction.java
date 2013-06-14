@@ -27,16 +27,11 @@ import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
-import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
-import com.liferay.portlet.dynamicdatamapping.storage.Fields;
-import com.liferay.portlet.dynamicdatamapping.util.DDMUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.impl.JournalArticleImpl;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
-import com.liferay.portlet.journal.util.JournalConverterUtil;
 import com.liferay.portlet.journal.util.JournalUtil;
 
 import java.util.Date;
@@ -136,25 +131,9 @@ public class ViewArticleContentAction extends PortletAction {
 						languageId = LanguageUtil.getLanguageId(actionRequest);
 					}
 
-					DDMStructure ddmStructure =
-						DDMStructureLocalServiceUtil.fetchStructure(
-							groupId,
-							PortalUtil.getClassNameId(JournalArticle.class),
-							structureId);
-
-					if (ddmStructure == null) {
-						ddmStructure =
-							DDMStructureLocalServiceUtil.fetchStructure(
-								themeDisplay.getCompanyGroupId(),
-								PortalUtil.getClassNameId(JournalArticle.class),
-								structureId);
-					}
-
-					Fields fields = DDMUtil.getFields(
-						ddmStructure.getStructureId(), serviceContext);
-
-					content = JournalConverterUtil.getContent(
-						ddmStructure, fields);
+					content = ActionUtil.getContentAndImages(
+						groupId, structureId, null, null, cmd, themeDisplay,
+						serviceContext);
 				}
 
 				article.setContent(content);
