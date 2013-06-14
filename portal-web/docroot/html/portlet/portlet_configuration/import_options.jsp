@@ -20,6 +20,8 @@
 String tabs2 = ParamUtil.getString(request, "tabs2", "export");
 
 Layout exportableLayout = ExportImportHelperUtil.getExportableLayout(themeDisplay);
+
+PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance();
 %>
 
 <portlet:actionURL var="importPortletURL">
@@ -38,42 +40,52 @@ Layout exportableLayout = ExportImportHelperUtil.getExportableLayout(themeDispla
 	<div class="export-dialog-tree">
 		<aui:input label="import-a-lar-file-to-overwrite-the-selected-data" name="importFileName" size="50" type="file" />
 
-		<c:if test="<%= Validator.isNotNull(selPortlet.getConfigurationActionClass()) %>">
+		<c:if test="<%= (portletDataHandler != null) && (portletDataHandler.getConfigurationControls(selPortlet) != null) %>">
 			<aui:fieldset cssClass="options-group" label="application">
 				<ul class="lfr-tree unstyled">
 					<li class="tree-item">
-						<aui:input label="setup" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>" type="checkbox" value="<%= true %>" />
+						<aui:input name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>" type="hidden" value="<%= true %>" />
 
-						<ul id="<portlet:namespace />showChangeGlobalConfiguration">
-							<li class="tree-item">
-								<div class="selected-labels" id="<portlet:namespace />selectedGlobalConfiguration"></div>
+						<aui:input label="configuration" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + selPortlet.getPortletId() %>" type="checkbox" value="<%= true %>" />
 
-								<aui:a cssClass="modify-link" href="javascript:;" id="globalConfigurationLink" label="change" method="get" />
+						<div class="hide" id="<portlet:namespace />configuration_<%= selPortlet.getPortletId() %>">
+							<aui:fieldset cssClass="portlet-type-data-section" label="configuration">
+								<ul class="lfr-tree unstyled">
+
+									<%
+									request.setAttribute("render_controls.jsp-action", Constants.IMPORT);
+									request.setAttribute("render_controls.jsp-controls", portletDataHandler.getConfigurationControls(selPortlet));
+									request.setAttribute("render_controls.jsp-portletId", selPortlet.getPortletId());
+									%>
+
+									<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
+								</ul>
+							</aui:fieldset>
+						</div>
+
+						<ul class="hide" id="<portlet:namespace />showChangeConfiguration_<%= selPortlet.getPortletId() %>">
+							<li>
+								<div class="selected-labels" id="<portlet:namespace />selectedConfiguration_<%= selPortlet.getPortletId() %>"></div>
+
+								<%
+								Map<String,Object> data = new HashMap<String,Object>();
+
+								data.put("portletid", selPortlet.getPortletId());
+								%>
+
+								<aui:a cssClass="configuration-link modify-link" data="<%= data %>" href="javascript:;" label="change" method="get" />
 							</li>
 						</ul>
 
 						<aui:script>
-							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>Checkbox', '<portlet:namespace />showChangeGlobalConfiguration');
+							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + selPortlet.getPortletId() %>Checkbox', '<portlet:namespace />showChangeConfiguration<%= StringPool.UNDERLINE + selPortlet.getPortletId() %>');
 						</aui:script>
-
-						<div class="hide" id="<portlet:namespace />globalConfiguration">
-							<aui:input label="setup" name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="checkbox" value="<%= false %>" />
-
-							<aui:input label="archived-setups" name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>" type="checkbox" value="<%= false %>" />
-
-							<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" value="<%= false %>" />
-						</div>
 					</li>
 				</ul>
 			</aui:fieldset>
 		</c:if>
 
-		<c:if test="<%= Validator.isNotNull(selPortlet.getPortletDataHandlerClass()) %>">
-
-			<%
-			PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance();
-			%>
-
+		<c:if test="<%= portletDataHandler != null %>">
 			<aui:fieldset cssClass="options-group" label="content">
 				<ul class="lfr-tree unstyled">
 					<li class="tree-item">
@@ -228,13 +240,10 @@ Layout exportableLayout = ExportImportHelperUtil.getExportableLayout(themeDispla
 <aui:script use="liferay-export-import">
 	new Liferay.ExportImport(
 		{
-			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
 			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
 			form: document.<portlet:namespace />fm1,
 			namespace: '<portlet:namespace />',
-			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',
-			setupNode: '#<%= PortletDataHandlerKeys.PORTLET_SETUP %>Checkbox',
-			userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'
+			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox'
 		}
 	);
 </aui:script>
