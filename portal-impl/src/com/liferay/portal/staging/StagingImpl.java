@@ -749,13 +749,19 @@ public class StagingImpl implements Staging {
 			PortletDataHandlerKeys.PERMISSIONS,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
+			PortletDataHandlerKeys.PORTLET_CONFIGURATION,
+			new String[] {Boolean.TRUE.toString()});
+		parameterMap.put(
+			PortletDataHandlerKeys.PORTLET_CONFIGURATION_ALL,
+			new String[] {Boolean.TRUE.toString()});
+		parameterMap.put(
 			PortletDataHandlerKeys.PORTLET_DATA,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
 			PortletDataHandlerKeys.PORTLET_DATA_ALL,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_SETUP,
+			PortletDataHandlerKeys.PORTLET_SETUP_ALL,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
 			PortletDataHandlerKeys.PORTLET_USER_PREFERENCES,
@@ -829,6 +835,14 @@ public class StagingImpl implements Staging {
 				new String[] {Boolean.FALSE.toString()});
 		}
 
+		if (!parameterMap.containsKey(
+				PortletDataHandlerKeys.PORTLET_CONFIGURATION)) {
+
+			parameterMap.put(
+				PortletDataHandlerKeys.PORTLET_CONFIGURATION,
+				new String[] {Boolean.TRUE.toString()});
+		}
+
 		if (!parameterMap.containsKey(PortletDataHandlerKeys.PORTLET_DATA)) {
 			parameterMap.put(
 				PortletDataHandlerKeys.PORTLET_DATA,
@@ -841,12 +855,6 @@ public class StagingImpl implements Staging {
 			parameterMap.put(
 				PortletDataHandlerKeys.PORTLET_DATA_ALL,
 				new String[] {Boolean.FALSE.toString()});
-		}
-
-		if (!parameterMap.containsKey(PortletDataHandlerKeys.PORTLET_SETUP)) {
-			parameterMap.put(
-				PortletDataHandlerKeys.PORTLET_SETUP,
-				new String[] {Boolean.TRUE.toString()});
 		}
 
 		if (!parameterMap.containsKey(
