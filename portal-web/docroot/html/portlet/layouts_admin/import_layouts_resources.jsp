@@ -220,13 +220,52 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(user
 								List<Portlet> setupPortlets = manifestSummary.getSetupPortlets();
 
 								for (Portlet portlet : setupPortlets) {
+									PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+
+									if ((portletDataHandler != null) && (portletDataHandler.getConfigurationControls(portlet) != null)) {
+										String portletTitle = PortalUtil.getPortletTitle(portlet, application, locale);
 								%>
 
-									 <li class="tree-item">
-										<aui:input label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" value="<%= true %>" />
-									</li>
+										<li class="tree-item">
+											<aui:input label="<%= portletTitle %>" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
+
+											<div class="hide" id="<portlet:namespace />configuration_<%= portlet.getPortletId() %>">
+												<aui:fieldset cssClass="portlet-type-data-section" label="<%= portletTitle %>">
+													<ul class="lfr-tree unstyled">
+
+														<%
+														request.setAttribute("render_controls.jsp-action", Constants.IMPORT);
+														request.setAttribute("render_controls.jsp-controls", portletDataHandler.getConfigurationControls(portlet));
+														request.setAttribute("render_controls.jsp-portletId", portlet.getPortletId());
+														%>
+
+														<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
+													</ul>
+												</aui:fieldset>
+											</div>
+
+											<ul class="hide" id="<portlet:namespace />showChangeConfiguration_<%= portlet.getPortletId() %>">
+												<li>
+													<div class="selected-labels" id="<portlet:namespace />selectedConfiguration_<%= portlet.getPortletId() %>"></div>
+
+													<%
+													Map<String,Object> data = new HashMap<String,Object>();
+
+													data.put("portletid", portlet.getPortletId());
+													data.put("portlettitle", portletTitle);
+													%>
+
+													<aui:a cssClass="configuration-link modify-link" data="<%= data %>" href="javascript:;" label="change" method="get" />
+												</li>
+											</ul>
+
+											<aui:script>
+												Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + portlet.getPortletId() %>Checkbox', '<portlet:namespace />showChangeConfiguration<%= StringPool.UNDERLINE + portlet.getPortletId() %>');
+											</aui:script>
+										</li>
 
 								<%
+									}
 								}
 								%>
 
