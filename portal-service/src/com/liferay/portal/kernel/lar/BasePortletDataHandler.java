@@ -97,6 +97,26 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 	}
 
 	@Override
+	public PortletDataHandlerControl[] getConfigurationControls()
+		throws PortletDataException {
+
+		PortletDataHandlerControl[] configurationControls =
+			new PortletDataHandlerLabeled[] {
+				new PortletDataHandlerLabeled(
+					PortletDataHandlerKeys.PORTLET_SETUP, "setup", true,
+					false),
+				new PortletDataHandlerLabeled(
+					PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS,
+					"archived-setups", true, false),
+				new PortletDataHandlerLabeled(
+					PortletDataHandlerKeys.PORTLET_USER_PREFERENCES,
+					"user-preferences", true, false)
+			};
+
+		return configurationControls;
+	}
+
+	@Override
 	public DataLevel getDataLevel() {
 		return _dataLevel;
 	}

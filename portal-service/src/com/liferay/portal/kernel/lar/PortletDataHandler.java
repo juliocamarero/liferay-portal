@@ -65,6 +65,9 @@ public interface PortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws PortletDataException;
 
+	public PortletDataHandlerControl[] getConfigurationControls()
+		throws PortletDataException;
+
 	public DataLevel getDataLevel();
 
 	/**
