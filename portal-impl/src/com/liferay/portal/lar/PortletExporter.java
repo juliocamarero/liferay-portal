@@ -291,49 +291,41 @@ public class PortletExporter {
 			parameterMap, PortletDataHandlerKeys.PERMISSIONS);
 		boolean exportPortletArchivedSetups = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS);
+		boolean exportPortletData = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_DATA);
 		boolean exportPortletDataAll = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_DATA_ALL);
+		boolean exportPortletSetup = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_SETUP);
 		boolean exportPortletSetupAll = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_SETUP_ALL);
 		boolean exportPortletUserPreferences = MapUtil.getBoolean(
 			parameterMap, PortletDataHandlerKeys.PORTLET_USER_PREFERENCES);
 
-		boolean exportPortletData = false;
+		String rootPortletId = PortletConstants.getRootPortletId(portletId);
 
 		if (exportPortletDataAll) {
 			exportPortletData = true;
 		}
 		else if (parameterMap.containsKey(
 					PortletDataHandlerKeys.PORTLET_DATA + "_" +
-						PortletConstants.getRootPortletId(portletId))) {
+						rootPortletId)) {
 
 			exportPortletData = MapUtil.getBoolean(
 				parameterMap,
-				PortletDataHandlerKeys.PORTLET_DATA + "_" +
-					PortletConstants.getRootPortletId(portletId));
+				PortletDataHandlerKeys.PORTLET_DATA + "_" + rootPortletId);
 		}
-		else {
-			exportPortletData = MapUtil.getBoolean(
-				parameterMap, PortletDataHandlerKeys.PORTLET_DATA);
-		}
-
-		boolean exportPortletSetup = false;
 
 		if (exportPortletSetupAll) {
 			exportPortletSetup = true;
 		}
 		else if (parameterMap.containsKey(
 					PortletDataHandlerKeys.PORTLET_SETUP + "_" +
-						PortletConstants.getRootPortletId(portletId))) {
+						rootPortletId)) {
 
 			exportPortletSetup = MapUtil.getBoolean(
 				parameterMap,
-				PortletDataHandlerKeys.PORTLET_SETUP + "_" +
-					PortletConstants.getRootPortletId(portletId));
-		}
-		else {
-			 exportPortletSetup = MapUtil.getBoolean(
-				parameterMap, PortletDataHandlerKeys.PORTLET_SETUP);
+				PortletDataHandlerKeys.PORTLET_SETUP + "_" + rootPortletId);
 		}
 
 		if (_log.isDebugEnabled()) {
