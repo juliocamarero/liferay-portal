@@ -110,7 +110,7 @@ if (endDateTime > 0) {
 					<aui:fieldset cssClass="options-group" label="application">
 						<ul class="lfr-tree unstyled">
 							<li class="tree-item">
-								<aui:input label="setup" name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="checkbox" value="<%= true %>" />
+								<aui:input label="setup" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>" type="checkbox" value="<%= true %>" />
 
 								<ul id="<portlet:namespace />showChangeGlobalConfiguration">
 									<li>
@@ -121,10 +121,12 @@ if (endDateTime > 0) {
 								</ul>
 
 								<aui:script>
-									Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_SETUP %>Checkbox', '<portlet:namespace />showChangeGlobalConfiguration');
+									Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>Checkbox', '<portlet:namespace />showChangeGlobalConfiguration');
 								</aui:script>
 
 								<div class="hide" id="<portlet:namespace />globalConfiguration">
+									<aui:input label="setup" name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="checkbox" value="<%= false %>" />
+
 									<aui:input label="archived-setups" name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>" type="checkbox" value="<%= false %>" />
 
 									<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" value="<%= false %>" />
@@ -396,6 +398,7 @@ if (endDateTime > 0) {
 					rangeDateRangeNode: '#rangeDateRange',
 					rangeLastPublishNode: '#rangeLastPublish',
 					ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',
+					setupNode: '#<%= PortletDataHandlerKeys.PORTLET_SETUP %>Checkbox',
 					userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'
 				}
 			);
