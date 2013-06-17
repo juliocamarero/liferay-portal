@@ -879,9 +879,6 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 			PortletDataHandlerKeys.PORTLET_CONFIGURATION,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_USER_PREFERENCES,
-			new String[] {Boolean.TRUE.toString()});
-		parameterMap.put(
 			PortletDataHandlerKeys.PORTLETS_MERGE_MODE,
 			new String[] {PortletDataHandlerKeys.
 				PORTLETS_MERGE_MODE_ADD_TO_BOTTOM});
