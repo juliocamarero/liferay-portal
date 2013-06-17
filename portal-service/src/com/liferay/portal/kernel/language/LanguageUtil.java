@@ -262,10 +262,6 @@ public class LanguageUtil {
 		return getLanguage().isAvailableLocale(locale);
 	}
 
-	public static boolean isAvailableLocale(String languageId) {
-		return getLanguage().isAvailableLocale(languageId);
-	}
-
 	public static boolean isBetaLocale(Locale locale) {
 		return getLanguage().isBetaLocale(locale);
 	}

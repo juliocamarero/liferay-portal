@@ -593,19 +593,6 @@ public class LanguageImpl implements Language {
 	}
 
 	@Override
-	public boolean isAvailableLocale(String languageId) {
-		Locale[] locales = getAvailableLocales();
-
-		for (Locale locale : locales) {
-			if (languageId.equals(locale.toString())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
 	public boolean isBetaLocale(Locale locale) {
 		return _getInstance()._localesBetaSet.contains(locale);
 	}
