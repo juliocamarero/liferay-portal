@@ -41,6 +41,7 @@ AUI.add(
 					remotePathContextNode: defaultConfig,
 					remoteGroupIdNode: defaultConfig,
 					secureConnectionNode: defaultConfig,
+					setupNode: defaultConfig,
 					themeNode: defaultConfig,
 					themeReferenceNode: defaultConfig,
 					userPreferencesNode: defaultConfig
@@ -738,6 +739,10 @@ AUI.add(
 						var instance = this;
 
 						var selectedGlobalConfiguration = [];
+
+						if (instance._isChecked('setupNode')) {
+							selectedGlobalConfiguration.push(Liferay.Language.get('setup'));
+						}
 
 						if (instance._isChecked('archivedSetupsNode')) {
 							selectedGlobalConfiguration.push(Liferay.Language.get('archived-setups'));

@@ -16,11 +16,13 @@
 
 <ul class="lfr-tree unstyled">
 	<li class="tree-item">
-		<aui:input checked="<%= true %>" helpMessage="all-applications-publish-help" id="allApplications" label="all-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="radio" value="<%= true %>" />
+		<aui:input checked="<%= true %>" helpMessage="all-applications-publish-help" id="allApplications" label="all-applications" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION_ALL %>" type="radio" value="<%= true %>" />
 
 		<div class="hide" id="<portlet:namespace />globalConfiguration">
 			<aui:fieldset cssClass="portlet-data-section" label="all-applications">
-				<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" value="<%= true %>" />
+				<aui:input label="setup" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="checkbox" value="<%= true %>" />
+
+				<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES_ALL %>" type="checkbox" value="<%= true %>" />
 			</aui:fieldset>
 		</div>
 
@@ -32,10 +34,10 @@
 			</li>
 		</ul>
 
-		<aui:input helpMessage="choose-applications-publish-help" id="chooseApplications" label="choose-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="radio" value="<%= false %>" />
+		<aui:input helpMessage="choose-applications-publish-help" id="chooseApplications" label="choose-applications" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION_ALL %>" type="radio" value="<%= false %>" />
 
 		<ul class="hide" id="<portlet:namespace />selectApplications">
-			<aui:input name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="hidden" value="<%= true %>" />
+			<aui:input name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>" type="hidden" value="<%= true %>" />
 
 			<%
 			Set<String> portletDataHandlerClasses = new HashSet<String>();
@@ -60,7 +62,7 @@
 			%>
 
 						<li class="tree-item">
-							<aui:input label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" name="<%= PortletDataHandlerKeys.PORTLET_SETUP + StringPool.UNDERLINE + rootPortletId %>" type="checkbox" value="<%= true %>" />
+							<aui:input label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + rootPortletId %>" type="checkbox" value="<%= true %>" />
 						</li>
 
 			<%
