@@ -84,7 +84,7 @@ public class JournalContentPortletDataHandler
 				NAMESPACE, "selected-web-content", true, true,
 				new PortletDataHandlerControl[] {
 					new PortletDataHandlerBoolean(
-						NAMESPACE, "embedded-assets")
+						NAMESPACE, "referenced-content")
 				},
 				JournalArticle.class.getName()));
 

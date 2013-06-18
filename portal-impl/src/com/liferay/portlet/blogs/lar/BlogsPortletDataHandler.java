@@ -48,7 +48,8 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "entries", true, false,
 				new PortletDataHandlerControl[] {
-					new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets")
+					new PortletDataHandlerBoolean(
+						NAMESPACE, "referenced-content")
 				},
 				BlogsEntry.class.getName()));
 		setPublishToLiveByDefault(PropsValues.BLOGS_PUBLISH_TO_LIVE_BY_DEFAULT);
