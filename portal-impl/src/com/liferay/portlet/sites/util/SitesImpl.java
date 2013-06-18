@@ -658,10 +658,7 @@ public class SitesImpl implements Sites {
 			PortletDataHandlerKeys.PORTLET_DATA_ALL,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_SETUP,
-			new String[] {Boolean.TRUE.toString()});
-		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_USER_PREFERENCES,
+			PortletDataHandlerKeys.PORTLET_CONFIGURATION,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
 			PortletDataHandlerKeys.THEME,
@@ -1704,13 +1701,10 @@ public class SitesImpl implements Sites {
 			PortletDataHandlerKeys.PERMISSIONS,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS,
+			PortletDataHandlerKeys.PORTLET_CONFIGURATION,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_SETUP,
-			new String[] {Boolean.TRUE.toString()});
-		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_SETUP_ALL,
+			PortletDataHandlerKeys.PORTLET_CONFIGURATION_ALL,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
 			PortletDataHandlerKeys.THEME,

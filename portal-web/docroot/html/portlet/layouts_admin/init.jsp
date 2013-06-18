@@ -49,6 +49,7 @@ page import="com.liferay.portal.kernel.lar.PortletDataHandlerBoolean" %><%@
 page import="com.liferay.portal.kernel.lar.PortletDataHandlerChoice" %><%@
 page import="com.liferay.portal.kernel.lar.PortletDataHandlerControl" %><%@
 page import="com.liferay.portal.kernel.lar.PortletDataHandlerKeys" %><%@
+page import="com.liferay.portal.kernel.lar.PortletDataHandlerLabeled" %><%@
 page import="com.liferay.portal.kernel.lar.UserIdStrategy" %><%@
 page import="com.liferay.portal.kernel.plugin.PluginPackage" %><%@
 page import="com.liferay.portal.kernel.repository.model.FileEntry" %><%@
