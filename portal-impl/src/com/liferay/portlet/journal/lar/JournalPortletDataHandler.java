@@ -97,7 +97,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "web-content", true, false,
 				new PortletDataHandlerControl[] {
-					new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets")
+					new PortletDataHandlerBoolean(
+						NAMESPACE, "referenced-content")
 				},
 				JournalArticle.class.getName()),
 			new PortletDataHandlerBoolean(

@@ -60,7 +60,8 @@ public class RSSPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "selected-web-content", true, true,
 				new PortletDataHandlerControl[] {
-					new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets")
+					new PortletDataHandlerBoolean(
+						NAMESPACE, "referenced-content")
 				},
 				JournalArticle.class.getName()));
 

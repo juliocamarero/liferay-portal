@@ -60,7 +60,8 @@ public class WikiPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "wiki-pages", true, false,
 				new PortletDataHandlerControl[] {
-					new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets")
+					new PortletDataHandlerBoolean(
+						NAMESPACE, "referenced-content")
 				},
 				WikiPage.class.getName()));
 		setImportControls(getExportControls());
