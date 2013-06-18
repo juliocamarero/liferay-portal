@@ -52,7 +52,6 @@ import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
-import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.model.impl.LayoutImpl;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -902,7 +901,9 @@ public class LayoutExporter {
 			exportCurPortletSetup = true;
 		}
 		else {
-			String rootPortletId = getRootPortletId(companyId, portletId);
+			String rootPortletId =
+				ExportImportHelperUtil.getExportableRootPortletId(
+					companyId, portletId);
 
 			if (rootPortletId != null) {
 
@@ -968,24 +969,6 @@ public class LayoutExporter {
 		sb.append(layoutSetPrototypeUuid);
 
 		return sb.toString();
-	}
-
-	protected String getRootPortletId(long companyId, String portletId)
-		throws Exception {
-
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
-			companyId, portletId);
-
-		if (portlet != null) {
-			String portletDataHandlerClass =
-				portlet.getPortletDataHandlerClass();
-
-			if (portletDataHandlerClass != null) {
-				return PortletConstants.getRootPortletId(portletId);
-			}
-		}
-
-		return null;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(LayoutExporter.class);
