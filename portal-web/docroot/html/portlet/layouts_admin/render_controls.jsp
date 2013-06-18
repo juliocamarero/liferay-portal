@@ -20,12 +20,27 @@
 String action = (String)request.getAttribute("render_controls.jsp-action");
 PortletDataHandlerControl[] controls = (PortletDataHandlerControl[])request.getAttribute("render_controls.jsp-controls");
 ManifestSummary manifestSummary = (ManifestSummary)request.getAttribute("render_controls.jsp-manifestSummary");
+String portletId =(String)request.getAttribute("render_controls.jsp-portletId");
 
 for (int i = 0; i < controls.length; i++) {
 %>
 
 	<li class="handler-control">
 		<c:choose>
+			<c:when test="<%= controls[i] instanceof PortletDataHandlerLabeled %>">
+
+				<%
+				Map<String, Object> data = new HashMap<String, Object>();
+
+				PortletDataHandlerLabeled control = (PortletDataHandlerLabeled)controls[i];
+
+				String controlLabel = LanguageUtil.get(pageContext, control.getControlLabel());
+
+				data.put("name", controlLabel);
+				%>
+
+				<aui:input data="<%= data %>" disabled="<%= controls[i].isDisabled() %>" helpMessage="<%= control.getHelpMessage(locale, action) %>" label="<%= controlLabel %>" name="<%= control.getControlName() + StringPool.UNDERLINE + portletId %>" type="checkbox" value="<%= control.getDefaultState() %>" />
+			</c:when>
 			<c:when test="<%= controls[i] instanceof PortletDataHandlerBoolean %>">
 
 				<%

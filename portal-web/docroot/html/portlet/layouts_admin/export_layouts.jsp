@@ -112,13 +112,15 @@ if (endDateTime > 0) {
 				<aui:fieldset cssClass="options-group" label="application-configuration">
 					<ul class="lfr-tree unstyled">
 						<li class="tree-item">
-							<aui:input checked="<%= true %>" helpMessage="all-applications-export-help" id="allApplications" label="all-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="radio" value="<%= true %>" />
+							<aui:input checked="<%= true %>" helpMessage="all-applications-export-help" id="allApplications" label="all-applications" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION_ALL %>" type="radio" value="<%= true %>" />
 
 							<div class="hide" id="<portlet:namespace />globalConfiguration">
 								<aui:fieldset cssClass="portlet-data-section" label="all-applications">
-									<aui:input label="archived-setups" name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>" type="checkbox" value="<%= true %>" />
+									<aui:input label="setup" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="checkbox" value="<%= true %>" />
 
-									<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" value="<%= true %>" />
+									<aui:input label="archived-setups" name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS_ALL %>" type="checkbox" value="<%= true %>" />
+
+									<aui:input helpMessage="import-user-preferences-help" label="user-preferences" name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES_ALL %>" type="checkbox" value="<%= true %>" />
 								</aui:fieldset>
 							</div>
 
@@ -130,11 +132,11 @@ if (endDateTime > 0) {
 								</li>
 							</ul>
 
-							<aui:input helpMessage="choose-applications-export-help" id="chooseApplications" label="choose-applications" name="<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>" type="radio" value="<%= false %>" />
+							<aui:input helpMessage="choose-applications-export-help" id="chooseApplications" label="choose-applications" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION_ALL %>" type="radio" value="<%= false %>" />
 
 							<c:if test="<%= !group.isLayoutPrototype() %>">
 								<ul class="hide" id="<portlet:namespace />selectApplications">
-									<aui:input name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="hidden" value="<%= true %>" />
+									<aui:input name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>" type="hidden" value="<%= true %>" />
 
 									<%
 									Set<String> portletDataHandlerClasses = new HashSet<String>();
@@ -152,10 +154,57 @@ if (endDateTime > 0) {
 										}
 
 										PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+
+										String portletTitle = PortalUtil.getPortletTitle(portlet, application, locale);
 									%>
 
 										 <li class="tree-item">
-											<aui:input label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" name="<%= PortletDataHandlerKeys.PORTLET_SETUP + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
+											<aui:input label="<%= portletTitle %>" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
+
+											 <%
+											 PortletDataHandlerControl[] configurationControls = portletDataHandler.getConfigurationControls();
+
+											 if (Validator.isNotNull(configurationControls)) {
+											 %>
+
+												 <div class="hide" id="<portlet:namespace />configuration_<%= portlet.getPortletId() %>">
+													<aui:fieldset cssClass="portlet-type-data-section" label="<%= portletTitle %>">
+														<ul class="lfr-tree unstyled">
+
+															<%
+															request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
+															request.setAttribute("render_controls.jsp-controls", configurationControls);
+															request.setAttribute("render_controls.jsp-portletId", portlet.getPortletId());
+															%>
+
+															<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
+														</ul>
+													</aui:fieldset>
+												 </div>
+
+												<ul class="hide" id="<portlet:namespace />showChangeConfiguration_<%= portlet.getPortletId() %>">
+													<li>
+														<div class="selected-labels" id="<portlet:namespace />selectedConfiguration_<%= portlet.getPortletId() %>"></div>
+
+														<%
+														Map<String,Object> data = new HashMap<String,Object>();
+
+														data.put("portletid", portlet.getPortletId());
+														data.put("portlettitle", portletTitle);
+														%>
+
+														<aui:a cssClass="configuration-link modify-link" data="<%= data %>" href="javascript:;" label="change" method="get" />
+													</li>
+												</ul>
+
+												<aui:script>
+													Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + portlet.getPortletId() %>Checkbox', '<portlet:namespace />showChangeConfiguration<%= StringPool.UNDERLINE + portlet.getPortletId() %>');
+												</aui:script>
+
+											 <%
+											 }
+											 %>
+
 										</li>
 
 									<%
@@ -476,7 +525,7 @@ if (endDateTime > 0) {
 <aui:script use="liferay-export-import">
 	new Liferay.ExportImport(
 		{
-			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
+			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS_ALL %>Checkbox',
 			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
 			form: document.<portlet:namespace />fm1,
 			layoutSetSettingsNode: '#<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>Checkbox',
@@ -487,9 +536,10 @@ if (endDateTime > 0) {
 			rangeLastNode: '#rangeLast',
 			rangeLastPublishNode: '#rangeLastPublish',
 			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',
+			setupNode: '#<%= PortletDataHandlerKeys.PORTLET_SETUP_ALL %>Checkbox',
 			themeNode: '#<%= PortletDataHandlerKeys.THEME %>Checkbox',
 			themeReferenceNode: '#<%= PortletDataHandlerKeys.THEME_REFERENCE %>Checkbox',
-			userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'
+			userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES_ALL %>Checkbox'
 		}
 	);
 
