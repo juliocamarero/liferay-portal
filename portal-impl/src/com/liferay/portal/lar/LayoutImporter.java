@@ -816,6 +816,70 @@ public class LayoutImporter {
 		zipReader.close();
 	}
 
+	protected boolean[] getExportPortletControls(
+			long companyId, String portletId,
+			Map<String, String[]> parameterMap, String type)
+		throws Exception {
+
+		boolean exportPortletData = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_DATA);
+		boolean exportPortletDataAll = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_DATA_ALL);
+		boolean exportPortletSetup = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_SETUP);
+		boolean exportPortletSetupAll = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.PORTLET_SETUP_ALL);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Export portlet data " + exportPortletData);
+			_log.debug("Export all portlet data " + exportPortletDataAll);
+			_log.debug("Export portlet setup " + exportPortletSetup);
+		}
+
+		boolean exportCurPortletData = exportPortletData;
+		boolean exportCurPortletSetup = exportPortletSetup;
+
+		String rootPortletId =
+			ExportImportHelperUtil.getExportableRootPortletId(
+				companyId, portletId);
+
+		if (exportPortletDataAll) {
+			exportCurPortletData = true;
+		}
+		else if (rootPortletId != null) {
+
+			// PORTLET_DATA and the PORTLET_DATA for this specific data handler
+			// must be true
+
+			exportCurPortletData =
+				exportPortletData &&
+				MapUtil.getBoolean(
+					parameterMap,
+					PortletDataHandlerKeys.PORTLET_DATA +
+						StringPool.UNDERLINE + rootPortletId);
+		}
+
+		if (exportPortletSetupAll ||
+			(exportPortletSetup && type.equals("layout-prototype"))) {
+
+			exportCurPortletSetup = true;
+		}
+		else if (rootPortletId != null) {
+
+			// PORTLET_SETUP and the PORTLET_SETUP for this specific data
+			// handler must be true
+
+			exportCurPortletSetup =
+				exportPortletSetup &&
+				MapUtil.getBoolean(
+					parameterMap,
+					PortletDataHandlerKeys.PORTLET_SETUP +
+						StringPool.UNDERLINE + rootPortletId);
+		}
+
+		return new boolean[] {exportCurPortletData, exportCurPortletSetup};
+	}
+
 	protected void importLayout(
 			PortletDataContext portletDataContext, List<Layout> newLayouts,
 			Element layoutElement)
