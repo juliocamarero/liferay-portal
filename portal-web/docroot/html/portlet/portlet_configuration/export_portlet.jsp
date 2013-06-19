@@ -61,16 +61,16 @@ PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance
 					<li class="tree-item">
 						<aui:input name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>" type="hidden" value="<%= true %>" />
 
-						<aui:input label="configuration" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + selPortlet.getPortletId() %>" type="checkbox" value="<%= true %>" />
+						<aui:input label="configuration" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + selPortlet.getRootPortletId() %>" type="checkbox" value="<%= true %>" />
 
-						<div class="hide" id="<portlet:namespace />configuration_<%= selPortlet.getPortletId() %>">
+						<div class="hide" id="<portlet:namespace />configuration_<%= selPortlet.getRootPortletId() %>">
 							<aui:fieldset cssClass="portlet-type-data-section" label="configuration">
 								<ul class="lfr-tree unstyled">
 
 									<%
 									request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
 									request.setAttribute("render_controls.jsp-controls", portletDataHandler.getConfigurationControls(selPortlet));
-									request.setAttribute("render_controls.jsp-portletId", selPortlet.getPortletId());
+									request.setAttribute("render_controls.jsp-portletId", selPortlet.getRootPortletId());
 									%>
 
 									<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
@@ -78,14 +78,14 @@ PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance
 							</aui:fieldset>
 						</div>
 
-						<ul class="hide" id="<portlet:namespace />showChangeConfiguration_<%= selPortlet.getPortletId() %>">
+						<ul class="hide" id="<portlet:namespace />showChangeConfiguration_<%= selPortlet.getRootPortletId() %>">
 							<li>
-								<div class="selected-labels" id="<portlet:namespace />selectedConfiguration_<%= selPortlet.getPortletId() %>"></div>
+								<div class="selected-labels" id="<portlet:namespace />selectedConfiguration_<%= selPortlet.getRootPortletId() %>"></div>
 
 								<%
 								Map<String,Object> data = new HashMap<String,Object>();
 
-								data.put("portletid", selPortlet.getPortletId());
+								data.put("portletid", selPortlet.getRootPortletId());
 								%>
 
 								<aui:a cssClass="configuration-link modify-link" data="<%= data %>" href="javascript:;" label="change" method="get" />
@@ -93,7 +93,7 @@ PortletDataHandler portletDataHandler = selPortlet.getPortletDataHandlerInstance
 						</ul>
 
 						<aui:script>
-							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + selPortlet.getPortletId() %>Checkbox', '<portlet:namespace />showChangeConfiguration<%= StringPool.UNDERLINE + selPortlet.getPortletId() %>');
+							Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + selPortlet.getRootPortletId() %>Checkbox', '<portlet:namespace />showChangeConfiguration<%= StringPool.UNDERLINE + selPortlet.getRootPortletId() %>');
 						</aui:script>
 					</li>
 				</ul>
