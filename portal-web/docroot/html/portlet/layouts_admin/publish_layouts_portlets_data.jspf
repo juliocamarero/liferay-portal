@@ -209,11 +209,13 @@ if (endDateTime > 0) {
 				portletDataHandler.prepareManifestSummary(portletDataContext);
 
 				ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
+
+				long exportModelCount = portletDataHandler.getExportModelCount(manifestSummary);
 			%>
 
-				<c:if test="<%= GetterUtil.getBoolean(liveGroupTypeSettings.getProperty(StagingConstants.STAGED_PORTLET + portlet.getRootPortletId()), portletDataHandler.isPublishToLiveByDefault()) %>">
+				<c:if test="<%= GetterUtil.getBoolean(liveGroupTypeSettings.getProperty(StagingConstants.STAGED_PORTLET + portlet.getRootPortletId()), portletDataHandler.isPublishToLiveByDefault()) && (exportModelCount != 0) %>">
 					<li>
-						<aui:input label="<%= portletTitle %>" name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" value="<%= true %>" />
+						<aui:input label='<%= portletTitle + (exportModelCount > 0 ? " (" + exportModelCount + ")" : StringPool.BLANK) %>' name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" value="<%= true %>" />
 
 						<%
 						PortletDataHandlerControl[] exportControls = portletDataHandler.getExportControls();
