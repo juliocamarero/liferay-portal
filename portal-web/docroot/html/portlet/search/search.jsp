@@ -137,9 +137,7 @@ request.setAttribute("search.jsp-returnToFullPageURL", portletDisplay.getURLBack
 		},
 		'#<portlet:namespace />searchContainer'
 	);
-</aui:script>
 
-<aui:script use="aui-base">
 	var searchContainer = A.one('.portlet-search .result .lfr-search-container');
 
 	if (searchContainer) {
