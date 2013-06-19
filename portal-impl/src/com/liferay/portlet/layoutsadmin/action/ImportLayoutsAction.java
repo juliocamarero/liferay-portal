@@ -108,15 +108,23 @@ public class ImportLayoutsAction extends PortletAction {
 
 		try {
 			if (cmd.equals(Constants.ADD_TEMP)) {
-				addTempFileEntry(actionRequest, actionResponse);
+				addTempFileEntry(
+					actionRequest, actionResponse,
+					ExportImportHelper.TEMP_FOLDER_NAME);
 
-				validateImportLayoutsFile(actionRequest, actionResponse);
+				validateImportLayoutsFile(
+					actionRequest, actionResponse,
+					ExportImportHelper.TEMP_FOLDER_NAME);
 			}
 			else if (cmd.equals(Constants.DELETE_TEMP)) {
-				deleteTempFileEntry(actionRequest, actionResponse);
+				deleteTempFileEntry(
+					actionRequest, actionResponse,
+					ExportImportHelper.TEMP_FOLDER_NAME);
 			}
 			else if (cmd.equals(Constants.IMPORT)) {
-				importLayouts(actionRequest, actionResponse);
+				importLayouts(
+					actionRequest, actionResponse,
+					ExportImportHelper.TEMP_FOLDER_NAME);
 
 				String redirect = ParamUtil.getString(
 					actionRequest, "redirect");
@@ -129,7 +137,8 @@ public class ImportLayoutsAction extends PortletAction {
 				cmd.equals(Constants.DELETE_TEMP)) {
 
 				handleUploadException(
-					portletConfig, actionRequest, actionResponse, cmd, e);
+					portletConfig, actionRequest, actionResponse,
+					ExportImportHelper.TEMP_FOLDER_NAME, e);
 			}
 			else {
 				if ((e instanceof LARFileException) ||
@@ -197,7 +206,8 @@ public class ImportLayoutsAction extends PortletAction {
 	}
 
 	protected void addTempFileEntry(
-			ActionRequest actionRequest, ActionResponse actionResponse)
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			String folderName)
 		throws Exception {
 
 		UploadPortletRequest uploadPortletRequest =
@@ -208,7 +218,7 @@ public class ImportLayoutsAction extends PortletAction {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		deleteTempFileEntry(themeDisplay.getScopeGroupId());
+		deleteTempFileEntry(themeDisplay.getScopeGroupId(), folderName);
 
 		InputStream inputStream = null;
 
@@ -220,8 +230,8 @@ public class ImportLayoutsAction extends PortletAction {
 			String contentType = uploadPortletRequest.getContentType("file");
 
 			LayoutServiceUtil.addTempFileEntry(
-				themeDisplay.getScopeGroupId(), sourceFileName,
-				ExportImportHelper.TEMP_FOLDER_NAME, inputStream, contentType);
+				themeDisplay.getScopeGroupId(), sourceFileName, folderName,
+				inputStream, contentType);
 		}
 		catch (Exception e) {
 			UploadException uploadException =
@@ -265,7 +275,8 @@ public class ImportLayoutsAction extends PortletAction {
 	}
 
 	protected void deleteTempFileEntry(
-			ActionRequest actionRequest, ActionResponse actionResponse)
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			String folderName)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
@@ -277,8 +288,7 @@ public class ImportLayoutsAction extends PortletAction {
 			String fileName = ParamUtil.getString(actionRequest, "fileName");
 
 			LayoutServiceUtil.deleteTempFileEntry(
-				themeDisplay.getScopeGroupId(), fileName,
-				ExportImportHelper.TEMP_FOLDER_NAME);
+				themeDisplay.getScopeGroupId(), fileName, folderName);
 
 			jsonObject.put("deleted", Boolean.TRUE);
 		}
@@ -293,16 +303,15 @@ public class ImportLayoutsAction extends PortletAction {
 		writeJSON(actionRequest, actionResponse, jsonObject);
 	}
 
-	protected void deleteTempFileEntry(long groupId)
+	protected void deleteTempFileEntry(long groupId, String folderName)
 		throws PortalException, SystemException {
 
 		String[] tempFileEntryNames = LayoutServiceUtil.getTempFileEntryNames(
-			groupId, ExportImportHelper.TEMP_FOLDER_NAME);
+			groupId, folderName);
 
 		for (String tempFileEntryName : tempFileEntryNames) {
 			LayoutServiceUtil.deleteTempFileEntry(
-				groupId, tempFileEntryName,
-				ExportImportHelper.TEMP_FOLDER_NAME);
+				groupId, tempFileEntryName, folderName);
 		}
 	}
 
@@ -406,7 +415,7 @@ public class ImportLayoutsAction extends PortletAction {
 
 	protected void handleUploadException(
 			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse, String cmd, Exception e)
+			ActionResponse actionResponse, String folderName, Exception e)
 		throws Exception {
 
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(
@@ -570,7 +579,7 @@ public class ImportLayoutsAction extends PortletAction {
 			errorType = ServletResponseConstants.SC_FILE_CUSTOM_EXCEPTION;
 		}
 
-		deleteTempFileEntry(themeDisplay.getScopeGroupId());
+		deleteTempFileEntry(themeDisplay.getScopeGroupId(), folderName);
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -596,7 +605,8 @@ public class ImportLayoutsAction extends PortletAction {
 	}
 
 	protected void importLayouts(
-			ActionRequest actionRequest, ActionResponse actionResponse)
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			String folderName)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
@@ -605,7 +615,7 @@ public class ImportLayoutsAction extends PortletAction {
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
 
 		FileEntry fileEntry = ExportImportHelperUtil.getTempFileEntry(
-			groupId, themeDisplay.getUserId());
+			groupId, themeDisplay.getUserId(), folderName);
 
 		File file = DLFileEntryLocalServiceUtil.getFile(
 			themeDisplay.getUserId(), fileEntry.getFileEntryId(),
@@ -640,7 +650,7 @@ public class ImportLayoutsAction extends PortletAction {
 				groupId, privateLayout, actionRequest.getParameterMap(),
 				newFile);
 
-			deleteTempFileEntry(groupId);
+			deleteTempFileEntry(groupId, folderName);
 
 			addSuccessMessage(actionRequest, actionResponse);
 		}
@@ -661,7 +671,8 @@ public class ImportLayoutsAction extends PortletAction {
 	}
 
 	protected void validateImportLayoutsFile(
-			ActionRequest actionRequest, ActionResponse actionResponse)
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			String folderName)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
@@ -670,7 +681,7 @@ public class ImportLayoutsAction extends PortletAction {
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
 
 		FileEntry fileEntry = ExportImportHelperUtil.getTempFileEntry(
-			groupId, themeDisplay.getUserId());
+			groupId, themeDisplay.getUserId(), folderName);
 
 		File file = DLFileEntryLocalServiceUtil.getFile(
 			themeDisplay.getUserId(), fileEntry.getFileEntryId(),
