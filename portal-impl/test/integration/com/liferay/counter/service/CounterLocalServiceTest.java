@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.process.ProcessCallable;
 import com.liferay.portal.kernel.process.ProcessException;
 import com.liferay.portal.kernel.process.ProcessExecutor;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.InitUtil;
@@ -110,11 +109,9 @@ public class CounterLocalServiceTest {
 		public Long[] call() throws ProcessException {
 			System.setProperty("catalina.base", ".");
 
-			PropsUtil.set(PropsValues.COUNTER_INCREMENT + _COUNTER_NAME, "1");
-			PropsUtil.set(
-				PropsKeys.SCHEDULER_ENABLED, Boolean.FALSE.toString());
-
 			InitUtil.initWithSpring();
+
+			PropsUtil.set(PropsValues.COUNTER_INCREMENT + _COUNTER_NAME, "1");
 
 			List<Long> ids = new ArrayList<Long>();
 
