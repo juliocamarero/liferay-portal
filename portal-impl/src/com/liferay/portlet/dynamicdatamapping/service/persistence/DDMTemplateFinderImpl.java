@@ -48,6 +48,48 @@ public class DDMTemplateFinderImpl
 	public static final String COUNT_BY_C_G_C_C_N_D_T_M_L =
 		DDMTemplateFinder.class.getName() + ".countByC_G_C_C_N_D_T_M_L";
 
+	protected List<DDMTemplate> doFindByG_SC(
+			long groupId, long structureClassNameId, int start, int end,
+			OrderByComparator orderByComparator, boolean inlineSQLHelper)
+		throws SystemException {
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			String sql = CustomSQLUtil.get(FIND_BY_G_SC);
+
+			if (inlineSQLHelper) {
+				sql = InlineSQLHelperUtil.replacePermissionCheck(
+					sql, DDMTemplate.class.getName(), "DDMTemplate.templateId",
+					groupId);
+			}
+
+			if (orderByComparator != null) {
+				sql = CustomSQLUtil.replaceOrderBy(sql, orderByComparator);
+			}
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity("DDMTemplate", DDMTemplateImpl.class);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+			qPos.add(structureClassNameId);
+
+			return (List<DDMTemplate>)QueryUtil.list(
+				q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
 	public static final String FIND_BY_G_SC =
 		DDMTemplateFinder.class.getName() + ".findByG_SC";
 
@@ -174,6 +216,13 @@ public class DDMTemplateFinderImpl
 		return doCountByC_G_C_C_N_D_T_M_L(
 			companyId, groupIds, classNameIds, classPKs, names, descriptions,
 			types, modes, languages, andOperator, false);
+	}
+
+	@Override
+	public int countByG_SC(long groupId, long structureClassNameId)
+		throws SystemException {
+
+		return doCountByG_SC(groupId, structureClassNameId, false);
 	}
 
 	@Override
@@ -822,9 +871,8 @@ public class DDMTemplateFinderImpl
 		}
 	}
 
-	protected List<DDMTemplate> doFindByG_SC(
-			long groupId, long structureClassNameId, int start, int end,
-			OrderByComparator orderByComparator, boolean inlineSQLHelper)
+	protected int doCountByG_SC(
+			long groupId, long structureClassNameId, boolean inlineSQLHelper)
 		throws SystemException {
 
 		Session session = null;
@@ -832,7 +880,7 @@ public class DDMTemplateFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(FIND_BY_G_SC);
+			String sql = CustomSQLUtil.get(COUNT_BY_G_SC);
 
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
@@ -840,21 +888,25 @@ public class DDMTemplateFinderImpl
 					groupId);
 			}
 
-			if (orderByComparator != null) {
-				sql = CustomSQLUtil.replaceOrderBy(sql, orderByComparator);
-			}
-
 			SQLQuery q = session.createSQLQuery(sql);
-
-			q.addEntity("DDMTemplate", DDMTemplateImpl.class);
+			q.addScalar(COUNT_COLUMN_NAME, Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
 			qPos.add(groupId);
 			qPos.add(structureClassNameId);
 
-			return (List<DDMTemplate>)QueryUtil.list(
-				q, getDialect(), start, end);
+			Iterator<Long> itr = q.iterate();
+
+			if (itr.hasNext()) {
+				Long count = itr.next();
+
+				if (count != null) {
+					return count.intValue();
+				}
+			}
+
+			return 0;
 		}
 		catch (Exception e) {
 			throw new SystemException(e);
@@ -863,6 +915,9 @@ public class DDMTemplateFinderImpl
 			closeSession(session);
 		}
 	}
+
+	private static final String COUNT_BY_G_SC =
+		DDMTemplateFinder.class.getName() + ".countByG_SC";
 
 	protected List<DDMTemplate> doFindByG_C_C_SC(
 			long[] groupIds, long classNameId, long classPK,

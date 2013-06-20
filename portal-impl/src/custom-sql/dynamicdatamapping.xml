@@ -113,20 +113,28 @@
 				)
 		]]>
 	</sql>
+	<sql id="com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateFinder.countByG_SC">
+		<![CDATA[
+			SELECT
+        		COUNT(DISTINCT DDMTemplate.templateId) AS COUNT_VALUE 
+			FROM
+        		DDMTemplate, DDMStructure
+			WHERE
+        		(DDMTemplate.classPK IN (DDMStructure.structureId, -1)) AND
+        		(DDMTemplate.groupId = ?) AND (DDMStructure.classNameId = ?)
+		]]>
+	</sql>
 	<sql id="com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateFinder.findByG_SC">
 		<![CDATA[
 			SELECT
-				{DDMTemplate.*}
+        		{DDMTemplate.*}
 			FROM
-				DDMTemplate
-			INNER JOIN
-				DDMStructure ON
-					(DDMTemplate.classPK = DDMStructure.structureId)
+        		DDMTemplate, DDMStructure
 			WHERE
-				(DDMTemplate.groupId = ?) AND
-				(DDMStructure.classNameId = ?)
-			ORDER BY
-				DDMTemplate.templateId DESC
+        		(DDMTemplate.classPK IN (DDMStructure.structureId, -1)) AND
+        		(DDMTemplate.groupId = ?) AND (DDMStructure.classNameId = ?)
+            ORDER BY
+                DDMTemplate.templateId DESC
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateFinder.findByG_C_C_SC">
