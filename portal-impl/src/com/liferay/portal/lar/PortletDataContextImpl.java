@@ -461,7 +461,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 				((type == RoleConstants.TYPE_ORGANIZATION) &&
 				 group.isOrganization()) ||
 				((type == RoleConstants.TYPE_SITE) &&
-				 (group.isLayoutSetPrototype() || group.isSite()))) {
+				 (group.isLayoutSetPrototype() || group.isSite() ||
+				  group.isLayout()))) {
 
 				String name = role.getName();
 
