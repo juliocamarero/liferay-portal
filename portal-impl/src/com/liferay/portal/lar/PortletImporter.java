@@ -1235,6 +1235,12 @@ public class PortletImporter {
 				String rootPotletId = PortletConstants.getRootPortletId(
 					portletId);
 
+				javax.portlet.PortletPreferences jxPreferences =
+					PortletPreferencesFactoryUtil.fromXML(
+						companyId, ownerId, ownerType, plid, portletId, xml);
+
+				//TODO: change update*methods to use and return portletPreferences
+
 				if (rootPotletId.equals(PortletKeys.ASSET_PUBLISHER)) {
 					xml = updateAssetPublisherPortletPreferences(
 						portletDataContext, companyId, ownerId, ownerType, plid,
@@ -1246,6 +1252,17 @@ public class PortletImporter {
 					xml = updateAssetCategoriesNavigationPortletPreferences(
 						portletDataContext, companyId, ownerId, ownerType, plid,
 						portletId, xml);
+				}
+
+				Portlet portlet = PortletLocalServiceUtil.getPortletById(
+					portletId);
+
+				PortletDataHandler portletDataHandler =
+					portlet.getPortletDataHandlerInstance();
+
+				if (portletDataHandler != null) {
+					jxPreferences = portletDataHandler.processImportPreferences(
+						portletDataContext, portletId, jxPreferences);
 				}
 
 				updatePortletPreferences(

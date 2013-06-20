@@ -1204,7 +1204,12 @@ public class PortletExporter {
 			preferencesXML = PortletConstants.DEFAULT_PREFERENCES;
 		}
 
+		javax.portlet.PortletPreferences jxPreferences =
+				PortletPreferencesFactoryUtil.fromDefaultXML(preferencesXML);
+
 		String rootPotletId = PortletConstants.getRootPortletId(portletId);
+
+		//TODO: change update*preference methods to use and return portletPreferences
 
 		if (rootPotletId.equals(PortletKeys.ASSET_PUBLISHER)) {
 			preferencesXML = updateAssetPublisherPortletPreferences(
@@ -1213,6 +1218,16 @@ public class PortletExporter {
 		else if (rootPotletId.equals(PortletKeys.TAGS_CATEGORIES_NAVIGATION)) {
 			preferencesXML = updateAssetCategoriesNavigationPortletPreferences(
 				preferencesXML, plid);
+		}
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+
+		PortletDataHandler portletDataHandler =
+			portlet.getPortletDataHandlerInstance();
+
+		if (portletDataHandler != null) {
+			jxPreferences = portletDataHandler.processExportPreferences(
+				portletDataContext, portletId, jxPreferences, parentElement);
 		}
 
 		Document document = SAXReaderUtil.read(preferencesXML);
