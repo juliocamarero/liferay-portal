@@ -36,11 +36,13 @@ import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.TransactionalCallbackAwareExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.LayoutTestUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.assetpublisher.util.AssetPublisher;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -99,8 +101,19 @@ public class AssetPublisherExportImportTest
 
 		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
 
+		long dlFileEntryClassNameId = PortalUtil.getClassNameId(
+			DLFileEntry.class);
+
+		preferenceMap.put(
+			"anyAssetType",
+			new String[] {String.valueOf(dlFileEntryClassNameId)});
 		preferenceMap.put(
 			"anyClassTypeDLFileEntryAssetRendererFactory",
+			new String[] {
+				String.valueOf(dlFileEntryType.getFileEntryTypeId())
+			});
+		preferenceMap.put(
+			"classTypeIds",
 			new String[] {
 				String.valueOf(dlFileEntryType.getFileEntryTypeId())
 			});
@@ -115,6 +128,21 @@ public class AssetPublisherExportImportTest
 		Assert.assertEquals(
 			anyClassTypeDLFileEntryAssetRendererFactory,
 			importedDLFileEntryType.getFileEntryTypeId());
+
+		String anyAssetTypePreference = portletPreferences.getValue(
+			"anyAssetType", null);
+
+		Assert.assertTrue(
+			anyAssetTypePreference != null &&
+				Validator.isNumber(anyAssetTypePreference));
+
+		String classTypeIdsPreference = portletPreferences.getValue(
+			"classTypeIds", null);
+
+		long classTypeIds = Long.parseLong(classTypeIdsPreference);
+
+		Assert.assertEquals(
+			importedDLFileEntryType.getFileEntryTypeId(), classTypeIds);
 	}
 
 	@Test
@@ -132,11 +160,20 @@ public class AssetPublisherExportImportTest
 
 		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
 
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+
+		preferenceMap.put(
+			"anyAssetType",
+			new String[] {String.valueOf(journalArticleClassNameId)});
 		preferenceMap.put(
 			"anyClassTypeJournalArticleAssetRendererFactory",
 			new String[] {
 				String.valueOf(ddmStructure.getStructureId())
 			});
+		preferenceMap.put(
+			"classTypeIds",
+			new String[] {String.valueOf(ddmStructure.getStructureId())});
 
 		PortletPreferences portletPreferences = getImportedPortletPreferences(
 			preferenceMap);
@@ -149,6 +186,21 @@ public class AssetPublisherExportImportTest
 		Assert.assertEquals(
 			anyClassTypeJournalArticleAssetRendererFactory,
 			importedDDMStructure.getStructureId());
+
+		String anyAssetTypePreference = portletPreferences.getValue(
+			"anyAssetType", null);
+
+		Assert.assertTrue(
+			anyAssetTypePreference != null &&
+				Validator.isNumber(anyAssetTypePreference));
+
+		String classTypeIdsPreference = portletPreferences.getValue(
+			"classTypeIds", null);
+
+		long classTypeIds = Long.parseLong(classTypeIdsPreference);
+
+		Assert.assertEquals(
+			importedDDMStructure.getStructureId(), classTypeIds);
 	}
 
 	@Test
