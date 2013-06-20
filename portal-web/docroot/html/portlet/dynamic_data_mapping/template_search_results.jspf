@@ -35,7 +35,6 @@ if (searchTerms.isAdvancedSearch()) {
 	total = DDMTemplateServiceUtil.searchCount(company.getCompanyId(), groupIds, classNameIds, searchClassPKs, searchTerms.getName(), searchTerms.getDescription(), templateTypeValue, null, null, searchTerms.isAndOperator());
 }
 else if ((classPK == 0) && (classNameIds.length == 1)) {
-
 	results = DDMTemplateServiceUtil.getTemplatesByStructureClassNameId(
 			scopeGroupId, classNameId, searchContainer.getStart(), searchContainer.getEnd(),
 			searchContainer.getOrderByComparator());
