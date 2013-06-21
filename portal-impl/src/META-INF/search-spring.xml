@@ -206,8 +206,10 @@
 				<entry key=".*_ar" value-ref="org.apache.lucene.analysis.ar.ArabicAnalyzer" />
 				<entry key=".*_de_DE" value-ref="org.apache.lucene.analysis.de.GermanAnalyzer" />
 				<entry key=".*_el_GR" value-ref="org.apache.lucene.analysis.el.GreekAnalyzer" />
+				<entry key=".*_es_[A-Z]{2}" value-ref="org.apache.lucene.analysis.es.SpanishAnalyzer" />
 				<entry key=".*_fa_IR" value-ref="org.apache.lucene.analysis.fa.PersianAnalyzer" />
 				<entry key=".*_fr_[A-Z]{2}" value-ref="org.apache.lucene.analysis.fr.FrenchAnalyzer" />
+				<entry key=".*_hu_HU" value-ref="org.apache.lucene.analysis.hu.HungarianAnalyzer" />
 				<entry key=".*_ja_JP" value-ref="org.apache.lucene.analysis.cjk.CJKAnalyzer" />
 				<entry key=".*_ko_KR" value-ref="org.apache.lucene.analysis.cjk.CJKAnalyzer" />
 				<entry key=".*_nl_NL" value-ref="org.apache.lucene.analysis.nl.DutchAnalyzer" />
@@ -248,7 +250,13 @@
 	<bean id="org.apache.lucene.analysis.fa.PersianAnalyzer" class="org.apache.lucene.analysis.fa.PersianAnalyzer">
 		<constructor-arg ref="org.apache.lucene.util.Version" />
 	</bean>
+	<bean id="org.apache.lucene.analysis.hu.HungarianAnalyzer" class="org.apache.lucene.analysis.hu.HungarianAnalyzer">
+		<constructor-arg ref="org.apache.lucene.util.Version" />
+	</bean>
 	<bean id="org.apache.lucene.analysis.ru.RussianAnalyzer" class="org.apache.lucene.analysis.ru.RussianAnalyzer">
+		<constructor-arg ref="org.apache.lucene.util.Version" />
+	</bean>
+	<bean id="org.apache.lucene.analysis.es.SpanishAnalyzer" class="org.apache.lucene.analysis.es.SpanishAnalyzer">
 		<constructor-arg ref="org.apache.lucene.util.Version" />
 	</bean>
 	<bean id="org.apache.lucene.analysis.standard.StandardAnalyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">
