@@ -109,7 +109,8 @@ public class JournalArticleStagedModelDataHandler
 		throws Exception {
 
 		if ((article.getStatus() != WorkflowConstants.STATUS_APPROVED) &&
-			(article.getStatus() != WorkflowConstants.STATUS_EXPIRED)) {
+			(article.getStatus() != WorkflowConstants.STATUS_EXPIRED) &&
+			(article.getStatus() != WorkflowConstants.STATUS_SCHEDULED)) {
 
 			return;
 		}
@@ -563,7 +564,11 @@ public class JournalArticleStagedModelDataHandler
 		serviceContext.setAddGroupPermissions(addGroupPermissions);
 		serviceContext.setAddGuestPermissions(addGuestPermissions);
 
-		if (article.getStatus() != WorkflowConstants.STATUS_APPROVED) {
+		int status = article.getStatus();
+
+		if ((status != WorkflowConstants.STATUS_APPROVED) &&
+			(status != WorkflowConstants.STATUS_SCHEDULED)) {
+
 			serviceContext.setWorkflowAction(
 				WorkflowConstants.ACTION_SAVE_DRAFT);
 		}
