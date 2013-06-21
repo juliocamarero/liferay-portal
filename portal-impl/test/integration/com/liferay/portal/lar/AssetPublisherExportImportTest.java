@@ -75,6 +75,72 @@ public class AssetPublisherExportImportTest
 	extends BasePortletExportImportTestCase {
 
 	@Test
+	public void testAnyDLFileEntryType() throws Exception {
+		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
+
+		long dlFileEntryClassNameId = PortalUtil.getClassNameId(
+			DLFileEntry.class);
+
+		preferenceMap.put(
+			"anyAssetType",
+			new String[] {String.valueOf(dlFileEntryClassNameId)});
+		preferenceMap.put(
+			"anyClassTypeDLFileEntryAssetRendererFactory",
+			new String[] {
+				String.valueOf(Boolean.TRUE)
+			});
+
+		PortletPreferences portletPreferences = getImportedPortletPreferences(
+			preferenceMap);
+
+		long anyAssetType = GetterUtil.getLong(
+			portletPreferences.getValue("anyAssetType", null));
+
+		Assert.assertEquals(dlFileEntryClassNameId, anyAssetType);
+
+		String anyClassTypeDLFileEntryAssetRendererFactory =
+			portletPreferences.getValue(
+				"anyClassTypeDLFileEntryAssetRendererFactory", null);
+
+		Assert.assertEquals(
+			anyClassTypeDLFileEntryAssetRendererFactory,
+			String.valueOf(Boolean.TRUE));
+	}
+
+	@Test
+	public void testAnyJournalStructure() throws Exception {
+		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
+
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+
+		preferenceMap.put(
+			"anyAssetType",
+			new String[] {String.valueOf(journalArticleClassNameId)});
+		preferenceMap.put(
+			"anyClassTypeJournalArticleAssetRendererFactory",
+			new String[] {
+				String.valueOf(Boolean.TRUE)
+			});
+
+		PortletPreferences portletPreferences = getImportedPortletPreferences(
+			preferenceMap);
+
+		long anyAssetType = GetterUtil.getLong(
+			portletPreferences.getValue("anyAssetType", null));
+
+		Assert.assertEquals(journalArticleClassNameId, anyAssetType);
+
+		String anyClassTypeDLFileEntryAssetRendererFactory =
+			portletPreferences.getValue(
+				"anyClassTypeJournalArticleAssetRendererFactory", null);
+
+		Assert.assertEquals(
+			anyClassTypeDLFileEntryAssetRendererFactory,
+			String.valueOf(Boolean.TRUE));
+	}
+
+	@Test
 	public void testChildLayoutScopeIds() throws Exception {
 		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
 
