@@ -634,6 +634,16 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 		_layoutLocalService.deleteLayouts(groupId, privateLayout, serviceContext);
 	}
 
+	@Override
+	public void deleteLayouts(long groupId, boolean privateLayout,
+		com.liferay.portal.service.ServiceContext serviceContext,
+		boolean updatePageCount)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_layoutLocalService.deleteLayouts(groupId, privateLayout,
+			serviceContext, updatePageCount);
+	}
+
 	/**
 	* Exports layouts with the primary keys and criteria as a byte array.
 	*

@@ -618,6 +618,16 @@ public class LayoutLocalServiceUtil {
 		getService().deleteLayouts(groupId, privateLayout, serviceContext);
 	}
 
+	public static void deleteLayouts(long groupId, boolean privateLayout,
+		com.liferay.portal.service.ServiceContext serviceContext,
+		boolean updatePageCount)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.deleteLayouts(groupId, privateLayout, serviceContext,
+			updatePageCount);
+	}
+
 	/**
 	* Exports layouts with the primary keys and criteria as a byte array.
 	*
