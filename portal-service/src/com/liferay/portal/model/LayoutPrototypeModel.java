@@ -41,7 +41,7 @@ import java.util.Map;
  * @generated
  */
 public interface LayoutPrototypeModel extends BaseModel<LayoutPrototype>,
-	StagedAuditedModel {
+	StagedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
