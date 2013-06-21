@@ -14,6 +14,9 @@
  */
 --%>
 
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.Map" %>
+
 <%
 String useDialog = StringPool.BLANK;
 
@@ -100,6 +103,15 @@ if (PropsValues.DOCKBAR_ADMINISTRATIVE_LINKS_SHOW_IN_POP_UP) {
 		</aui:nav-item>
 	</c:when>
 	<c:otherwise>
-		<aui:nav-item cssClass="sign-in" href="<%= themeDisplay.getURLSignIn() %>" label="sign-in" />
+
+		<%
+		Map<String, String> dataMap = new HashMap<String, String>();
+
+		if (PrefsPropsUtil.getBoolean(themeDisplay.getCompanyId(), PropsKeys.CAS_AUTH_ENABLED, PropsValues.CAS_AUTH_ENABLED)) {
+			dataMap.put("redirect", "true");
+		}
+		%>
+
+		<aui:nav-item cssClass="sign-in" data="<%= dataMap %>" href="<%= themeDisplay.getURLSignIn() %>" label="sign-in" />
 	</c:otherwise>
 </c:choose>
