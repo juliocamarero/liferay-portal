@@ -13,10 +13,10 @@ AUI().ready(
 			siteBreadcrumbs.plug(A.Hudcrumbs);
 		}
 
-		var signIn = A.one('li.sign-in a');
+		var signInNode = A.one('li.sign-in a');
 
-		if (signIn) {
-			signIn.on(
+		if (signInNode && !signInNode.ancestor('li.sign-in').attr('data-redirect')) {
+			signInNode.on(
 				'click',
 				function(event) {
 					event.preventDefault();
