@@ -75,7 +75,7 @@ public class AssetPublisherExportImportTest
 	extends BasePortletExportImportTestCase {
 
 	@Test
-	public void testAnyDLFileEntryType() throws Exception {
+	public void testOneDLFileEntryType() throws Exception {
 		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
 			group.getGroupId(), DLFileEntryType.class.getName());
 
@@ -129,24 +129,20 @@ public class AssetPublisherExportImportTest
 			anyClassTypeDLFileEntryAssetRendererFactory,
 			importedDLFileEntryType.getFileEntryTypeId());
 
-		String anyAssetTypePreference = portletPreferences.getValue(
-			"anyAssetType", null);
+		long anyAssetType = GetterUtil.getLong(portletPreferences.getValue(
+			"anyAssetType", null));
 
-		Assert.assertTrue(
-			anyAssetTypePreference != null &&
-				Validator.isNumber(anyAssetTypePreference));
+		Assert.assertEquals(dlFileEntryClassNameId, anyAssetType);
 
-		String classTypeIdsPreference = portletPreferences.getValue(
-			"classTypeIds", null);
-
-		long classTypeIds = Long.parseLong(classTypeIdsPreference);
+		long classTypeIds = GetterUtil.getLong(portletPreferences.getValue(
+			"classTypeIds", null));
 
 		Assert.assertEquals(
 			importedDLFileEntryType.getFileEntryTypeId(), classTypeIds);
 	}
 
 	@Test
-	public void testAnyJournalStructure() throws Exception {
+	public void testOneJournalStructure() throws Exception {
 		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
 			group.getGroupId(), JournalArticle.class.getName());
 
@@ -187,17 +183,13 @@ public class AssetPublisherExportImportTest
 			anyClassTypeJournalArticleAssetRendererFactory,
 			importedDDMStructure.getStructureId());
 
-		String anyAssetTypePreference = portletPreferences.getValue(
-			"anyAssetType", null);
+		long anyAssetType = GetterUtil.getLong(portletPreferences.getValue(
+			"anyAssetType", null));
 
-		Assert.assertTrue(
-			anyAssetTypePreference != null &&
-				Validator.isNumber(anyAssetTypePreference));
+		Assert.assertEquals(journalArticleClassNameId, anyAssetType);
 
-		String classTypeIdsPreference = portletPreferences.getValue(
-			"classTypeIds", null);
-
-		long classTypeIds = Long.parseLong(classTypeIdsPreference);
+		long classTypeIds = GetterUtil.getLong(portletPreferences.getValue(
+			"classTypeIds", null));
 
 		Assert.assertEquals(
 			importedDDMStructure.getStructureId(), classTypeIds);

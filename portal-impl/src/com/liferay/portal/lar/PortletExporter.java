@@ -1555,17 +1555,6 @@ public class PortletExporter {
 		javax.portlet.PortletPreferences jxPreferences =
 			PortletPreferencesFactoryUtil.fromDefaultXML(xml);
 
-		String anyAssetTypeClassName = StringPool.BLANK;
-
-		String anyAssetTypePreference = jxPreferences.getValue(
-			"anyAssetType", StringPool.BLANK);
-
-		if (Validator.isNumber(anyAssetTypePreference)) {
-			long anyAssetType = Long.parseLong(anyAssetTypePreference);
-
-			anyAssetTypeClassName = PortalUtil.getClassName(anyAssetType);
-		}
-
 		Enumeration<String> enu = jxPreferences.getNames();
 
 		while (enu.hasMoreElements()) {
@@ -1629,6 +1618,15 @@ public class PortletExporter {
 		javax.portlet.PortletPreferences jxPreferences =
 			PortletPreferencesFactoryUtil.fromDefaultXML(xml);
 
+		String anyAssetTypeClassName = StringPool.BLANK;
+
+		long anyAssetType = GetterUtil.getLong(
+			jxPreferences.getValue("anyAssetType", null));
+
+		if (anyAssetType > 0) {
+			anyAssetTypeClassName = PortalUtil.getClassName(anyAssetType);
+		}
+
 		Enumeration<String> enu = jxPreferences.getNames();
 
 		while (enu.hasMoreElements()) {
@@ -1646,7 +1644,7 @@ public class PortletExporter {
 						"classTypeIdsDLFileEntryAssetRendererFactory") ||
 					 (name.equals("classTypeIds") &&
 					  anyAssetTypeClassName.equals(
-							DLFileEntry.class.getName()))) {
+						  DLFileEntry.class.getName()))) {
 
 				updatePreferencesClassPKs(
 					jxPreferences, name, DLFileEntryType.class.getName());
@@ -1657,7 +1655,7 @@ public class PortletExporter {
 						"classTypeIdsJournalArticleAssetRendererFactory") ||
 					 (name.equals("classTypeIds") &&
 					  anyAssetTypeClassName.equals(
-							JournalArticle.class.getName()))) {
+						  JournalArticle.class.getName()))) {
 
 				updatePreferencesClassPKs(
 					jxPreferences, name, DDMStructure.class.getName());
