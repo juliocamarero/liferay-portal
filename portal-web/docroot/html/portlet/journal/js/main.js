@@ -338,39 +338,6 @@ AUI.add(
 				}
 			},
 
-			disableFields: function() {
-				var instance = this;
-
-				var fieldsContainer = instance.getById('journalArticleContainer');
-
-				fieldsContainer.all('input:not(:button)').attr('disabled', 'disabled');
-				fieldsContainer.all('textarea, select').attr('disabled', 'disabled');
-			},
-
-			downloadArticleContent: function() {
-				var instance = this;
-
-				var downloadAction = themeDisplay.getPathMain() + '/journal/get_article_content';
-				var auxForm = instance.getPrincipalForm('fm2');
-
-				var articleContent = instance.getArticleContentXML();
-				var xmlInput = instance.getByName(auxForm, 'xml', true);
-
-				if (instance.structureChange()) {
-					if (confirm(Liferay.Language.get('you-should-save-the-structure-first'))) {
-						instance.openSaveStructureDialog();
-					}
-				}
-				else {
-					auxForm.attr('action', downloadAction);
-					auxForm.attr('target', '_self');
-
-					xmlInput.val(articleContent);
-
-					submitForm(auxForm, null, false);
-				}
-			},
-
 			editContainerNormalMode: function() {
 				var instance = this;
 
@@ -422,15 +389,6 @@ AUI.add(
 				}
 
 				instance._attachEditStructureEvents();
-			},
-
-			enableFields: function() {
-				var instance = this;
-
-				var fieldsContainer = instance.getById('journalArticleContainer');
-
-				fieldsContainer.all('input:not(:button)').attr('disabled', '');
-				fieldsContainer.all('textarea, select').attr('disabled', '');
 			},
 
 			getArticleContentXML: function() {
@@ -1025,60 +983,6 @@ AUI.add(
 						dialog._setAlignCenter(true);
 					}
 				);
-			},
-
-			previewArticle: function() {
-				var instance = this;
-
-				var form = instance.getPrincipalForm();
-
-				var auxForm = instance.getPrincipalForm('fm2');
-				var articleContent = instance.getArticleContentXML();
-
-				if (instance.structureChange()) {
-					if (confirm(Liferay.Language.get('you-should-save-the-structure-first'))) {
-						instance.openSaveStructureDialog();
-					}
-				}
-				else if (instance.hasStructure() && !instance.hasTemplate() && !instance.updateStructureDefaultValues()) {
-					var templateMessage = Liferay.Language.get('please-add-a-template-to-render-this-structure');
-
-					alert(templateMessage);
-
-					instance.showMessage(
-						'#selectTemplateMessage',
-						'info',
-						templateMessage,
-						30000
-					);
-
-					var selectTemplateButton = instance.getById('selectTemplateButton');
-
-					if (selectTemplateButton) {
-						selectTemplateButton.focus();
-					}
-				}
-				else {
-					var defaultLocale = instance.getDefaultLocale();
-					var typeInput = instance.getByName(form, 'type');
-					var versionInput = instance.getByName(form, 'version');
-					var structureIdInput = instance.getByName(form, 'structureId');
-					var templateIdInput = instance.getByName(form, 'templateId');
-
-					var previewURL = themeDisplay.getPathMain() + '/journal/view_article_content?cmd=preview&groupId=' + instance.getGroupId() + '&articleId=' + instance.articleId + '&version=' + versionInput.val() + '&languageId=' + defaultLocale + '&type=' + typeInput.val() + '&structureId=' + structureIdInput.val() + '&templateId=' + templateIdInput.val();
-
-					auxForm.attr('action', previewURL);
-					auxForm.attr('target', '_blank');
-
-					var titleInput = instance.getByName(form, 'title_' + defaultLocale);
-					var titleAuxFormInput = instance.getByName(auxForm, 'title', true);
-					var xmlAuxFormInput = instance.getByName(auxForm, 'xml', true);
-
-					titleAuxFormInput.val(titleInput.val());
-					xmlAuxFormInput.val(articleContent);
-
-					submitForm(auxForm, null, false);
-				}
 			},
 
 			renderEditFieldOptions: function(source) {
@@ -2327,10 +2231,8 @@ AUI.add(
 				var instance = this;
 
 				var changeStructureButton = instance.getById('changeStructureButton');
-				var downloadArticleContentButton = instance.getById('downloadArticleContentButton');
 				var editStructureLink = instance.getById('editStructureLink');
 				var loadDefaultStructureButton = instance.getById('loadDefaultStructure');
-				var previewArticleButton = instance.getById('previewArticleButton');
 				var publishButton = instance.getById('publishButton');
 				var saveButton = instance.getById('saveButton');
 				var translateButton = instance.getById('translateButton');
@@ -2346,19 +2248,6 @@ AUI.add(
 							var url = event.currentTarget.attr('href');
 
 							instance.openPopupWindow(url, 'ChangeStructure', 'changeStruture');
-						}
-					);
-				}
-
-				if (downloadArticleContentButton) {
-					downloadArticleContentButton.detach('click');
-
-					downloadArticleContentButton.on(
-						'click',
-						function(event) {
-							instance.downloadArticleContent();
-
-							event.domEvent.preventDefault();
 						}
 					);
 				}
@@ -2389,18 +2278,6 @@ AUI.add(
 					);
 				}
 
-				if (previewArticleButton) {
-					previewArticleButton.detach('click');
-
-					previewArticleButton.on(
-						'click',
-						function(event) {
-							instance.previewArticle();
-
-							event.domEvent.preventDefault();
-						}
-					);
-				}
 			},
 
 			_createDynamicNode: function(nodeName, attributeMap) {
@@ -3453,25 +3330,6 @@ AUI.add(
 						}
 
 						return value;
-					},
-
-					_uiSetOptionsEditable: function(val) {
-						var instance = this;
-
-						var source = instance.get('source');
-
-						if (source) {
-							var journalArticleButtons = source.one('.journal-article-buttons');
-
-							if (journalArticleButtons) {
-								if (val) {
-									journalArticleButtons.show();
-								}
-								else {
-									journalArticleButtons.hide();
-								}
-							}
-						}
 					},
 
 					_getNamespacedId: Journal.prototype._getNamespacedId,
