@@ -39,22 +39,33 @@ if ((article != null) && article.isDraft()) {
 
 	var toolbarButtonGroup = [];
 
-	<c:if test="<%= (article != null) && Validator.isNotNull(structureId) && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
+	<c:if test="<%= (article != null) && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
 		toolbarButtonGroup.push(
 			{
 				icon: 'icon-search',
-				id: '<portlet:namespace />previewArticleButton',
-				label: '<%= UnicodeLanguageUtil.get(pageContext, "preview") %>'
-			}
-		);
-	</c:if>
+				label: '<%= UnicodeLanguageUtil.get(pageContext, "preview") %>',
+				on: {
+					click: function(event) {
+						var form = A.one(document.<portlet:namespace />fm1);
 
-	<c:if test="<%= (article != null) && Validator.isNotNull(structureId) %>">
-		toolbarButtonGroup.push(
-			{
-				icon: 'icon-download',
-				id: '<portlet:namespace />downloadArticleContentButton',
-				label: '<%= UnicodeLanguageUtil.get(pageContext, "download") %>'
+						<c:if test="<%= Validator.isNull(structureId) %>">
+							var content = window['<%= renderResponse.getNamespace() + "structure_el_TextAreaField_content" %>'].getHTML();
+							form.get('<portlet:namespace />articleContent').attr('value', content);
+						</c:if>
+
+						var orginalFormAction = document.<portlet:namespace />fm1.action;
+
+						<portlet:actionURL var="previewURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+							<portlet:param name="struts_action" value="/journal/view_article_content" />
+						</portlet:actionURL>
+
+						form.attr('target', '_blank');
+						form.get('<portlet:namespace /><%= Constants.CMD %>').attr('value', '<%= Constants.PREVIEW %>');
+						submitForm(form, '<%= previewURL.toString() %>', false);
+
+						form.attr('action', orginalFormAction);
+					}
+				}
 			}
 		);
 	</c:if>
