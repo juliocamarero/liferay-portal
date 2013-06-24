@@ -102,7 +102,6 @@ public class ViewArticleContentAction extends PortletAction {
 					uploadPortletRequest, "content");
 
 				if (Validator.isNotNull(structureId)) {
-
 					ServiceContext serviceContext =
 						ServiceContextFactory.getInstance(
 							JournalArticle.class.getName(),
