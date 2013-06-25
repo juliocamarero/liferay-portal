@@ -332,7 +332,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 					statusProperty.in(
 						new Integer[] {
 							WorkflowConstants.STATUS_APPROVED,
-							WorkflowConstants.STATUS_EXPIRED
+							WorkflowConstants.STATUS_EXPIRED,
+							WorkflowConstants.STATUS_SCHEDULED
 						}));
 			}
 
@@ -355,6 +356,18 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 							WorkflowConstants.STATUS_APPROVED);
 				}
 				catch (Exception e) {
+				}
+
+				if (!latestVersion) {
+					try {
+						latestVersion =
+							JournalArticleLocalServiceUtil.isLatestVersion(
+								article.getGroupId(), article.getArticleId(),
+								article.getVersion(),
+								WorkflowConstants.STATUS_SCHEDULED);
+					}
+					catch (Exception e) {
+					}
 				}
 
 				if (portletDataContext.getBooleanParameter(

@@ -180,6 +180,16 @@ public class JournalContentPortletDataHandler
 			}
 		}
 
+		if (article == null) {
+			try {
+				article = JournalArticleLocalServiceUtil.getLatestArticle(
+					articleGroupId, articleId,
+					WorkflowConstants.STATUS_SCHEDULED);
+			}
+			catch (NoSuchArticleException nsae) {
+			}
+		}
+
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
 		if (article == null) {
