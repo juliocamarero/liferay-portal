@@ -37,7 +37,7 @@ import java.util.Date;
  * @see com.liferay.portal.model.impl.UserModelImpl
  * @generated
  */
-public interface UserModel extends BaseModel<User>, StagedModel {
+public interface UserModel extends BaseModel<User> {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
@@ -64,7 +64,6 @@ public interface UserModel extends BaseModel<User>, StagedModel {
 	 * @return the uuid of this user
 	 */
 	@AutoEscape
-	@Override
 	public String getUuid();
 
 	/**
@@ -72,7 +71,6 @@ public interface UserModel extends BaseModel<User>, StagedModel {
 	 *
 	 * @param uuid the uuid of this user
 	 */
-	@Override
 	public void setUuid(String uuid);
 
 	/**
@@ -109,7 +107,6 @@ public interface UserModel extends BaseModel<User>, StagedModel {
 	 *
 	 * @return the company ID of this user
 	 */
-	@Override
 	public long getCompanyId();
 
 	/**
@@ -117,7 +114,6 @@ public interface UserModel extends BaseModel<User>, StagedModel {
 	 *
 	 * @param companyId the company ID of this user
 	 */
-	@Override
 	public void setCompanyId(long companyId);
 
 	/**
@@ -125,7 +121,6 @@ public interface UserModel extends BaseModel<User>, StagedModel {
 	 *
 	 * @return the create date of this user
 	 */
-	@Override
 	public Date getCreateDate();
 
 	/**
@@ -133,7 +128,6 @@ public interface UserModel extends BaseModel<User>, StagedModel {
 	 *
 	 * @param createDate the create date of this user
 	 */
-	@Override
 	public void setCreateDate(Date createDate);
 
 	/**
@@ -141,7 +135,6 @@ public interface UserModel extends BaseModel<User>, StagedModel {
 	 *
 	 * @return the modified date of this user
 	 */
-	@Override
 	public Date getModifiedDate();
 
 	/**
@@ -149,7 +142,6 @@ public interface UserModel extends BaseModel<User>, StagedModel {
 	 *
 	 * @param modifiedDate the modified date of this user
 	 */
-	@Override
 	public void setModifiedDate(Date modifiedDate);
 
 	/**

@@ -40,8 +40,7 @@ import java.util.Map;
  * @see com.liferay.portal.model.impl.RoleModelImpl
  * @generated
  */
-public interface RoleModel extends AttachedModel, BaseModel<Role>,
-	StagedAuditedModel {
+public interface RoleModel extends AttachedModel, BaseModel<Role>, StagedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *

@@ -38,7 +38,7 @@ import java.util.Date;
  * @generated
  */
 public interface WebsiteModel extends AttachedModel, BaseModel<Website>,
-	StagedAuditedModel {
+	StagedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
