@@ -1235,8 +1235,7 @@ public class PortletImporter {
 
 				if (portletDataHandler != null) {
 					jxPreferences = portletDataHandler.processImportPreferences(
-						portletDataContext, companyId, ownerId, ownerType, plid,
-						portletId, jxPreferences);
+						portletDataContext, portletId, jxPreferences);
 				}
 
 				updatePortletPreferences(

@@ -1207,8 +1207,7 @@ public class PortletExporter {
 
 		if (portletDataHandler != null) {
 			jxPreferences = portletDataHandler.processExportPreferences(
-				portletDataContext, portletId, jxPreferences, plid,
-				parentElement);
+				portletDataContext, portletId, jxPreferences, parentElement);
 		}
 
 		Document document = SAXReaderUtil.read(
