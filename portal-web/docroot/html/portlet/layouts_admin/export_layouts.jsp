@@ -135,13 +135,13 @@ if (endDateTime > 0) {
 							<aui:input helpMessage="choose-applications-export-help" id="chooseApplications" label="choose-applications" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION_ALL %>" type="radio" value="<%= false %>" />
 
 							<c:if test="<%= !group.isLayoutPrototype() %>">
-								<ul class="hide" id="<portlet:namespace />selectApplications">
+								<ul class="hide options select-options" id="<portlet:namespace />selectApplications">
 									<aui:input name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION %>" type="hidden" value="<%= true %>" />
 
 									<%
-									Set<String> portletDataHandlerClasses = new HashSet<String>();
-
 									portletDataHandlerPortlets = ListUtil.sort(portletDataHandlerPortlets, new PortletTitleComparator(application, locale));
+
+									int i = 0;
 
 									for (Portlet portlet : portletDataHandlerPortlets) {
 										PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
@@ -150,7 +150,7 @@ if (endDateTime > 0) {
 											String portletTitle = PortalUtil.getPortletTitle(portlet, application, locale);
 									%>
 
-											<li class="tree-item">
+											<li class='<%= i == 0 ? "tree-item" : "tree-item portlet-list" %>'>
 												<aui:input label="<%= portletTitle %>" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + portlet.getRootPortletId() %>" type="checkbox" value="<%= portletDataHandler.isPublishToLiveByDefault() %>" />
 
 												<div class="hide" id="<portlet:namespace />configuration_<%= portlet.getRootPortletId() %>">
@@ -189,6 +189,8 @@ if (endDateTime > 0) {
 											</li>
 
 									<%
+										i++;
+
 										}
 									}
 									%>
@@ -212,7 +214,7 @@ if (endDateTime > 0) {
 
 							<aui:input helpMessage="choose-content-export-help" id="chooseContent" label="choose-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= false %>" />
 
-							<ul class="hide" id="<portlet:namespace />selectContents">
+							<ul class="hide select-options" id="<portlet:namespace />selectContents">
 								<li>
 									<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= true %>" />
 
@@ -311,152 +313,152 @@ if (endDateTime > 0) {
 										</ul>
 									</div>
 
+									<liferay-util:buffer var="selectedLabels">
+										<div class="selected-labels" id="<portlet:namespace />selectedRange"></div>
+
+										<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
+									</liferay-util:buffer>
+
 									<liferay-ui:icon
 										image="calendar"
 										label="<%= true %>"
-										message="date-range"
+										message='<%= LanguageUtil.get(locale, "date-range") + selectedLabels %>'
 									/>
-
-									<ul>
-										<li>
-											<div class="selected-labels" id="<portlet:namespace />selectedRange"></div>
-
-											<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
-										</li>
-									</ul>
 								</li>
 
-								<li>
+								<li class="options">
 									<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= true %>" />
-								</li>
 
-								<%
-								Set<String> displayedControls = new HashSet<String>();
-								Set<String> portletDataHandlerClasses = new HashSet<String>();
+									<%
+									Set<String> displayedControls = new HashSet<String>();
+									Set<String> portletDataHandlerClasses = new HashSet<String>();
 
-								PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
+									PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
 
-								dataSiteLevelPortlets = ListUtil.sort(dataSiteLevelPortlets, new PortletTitleComparator(application, locale));
+									dataSiteLevelPortlets = ListUtil.sort(dataSiteLevelPortlets, new PortletTitleComparator(application, locale));
 
-								for (Portlet portlet : dataSiteLevelPortlets) {
-									String portletDataHandlerClass = portlet.getPortletDataHandlerClass();
+									for (Portlet portlet : dataSiteLevelPortlets) {
+										String portletDataHandlerClass = portlet.getPortletDataHandlerClass();
 
-									if (!portletDataHandlerClasses.contains(portletDataHandlerClass)) {
-										portletDataHandlerClasses.add(portletDataHandlerClass);
-									}
-									else {
-										continue;
-									}
+										if (!portletDataHandlerClasses.contains(portletDataHandlerClass)) {
+											portletDataHandlerClasses.add(portletDataHandlerClass);
+										}
+										else {
+											continue;
+										}
 
-									String portletTitle = PortalUtil.getPortletTitle(portlet, application, locale);
+										String portletTitle = PortalUtil.getPortletTitle(portlet, application, locale);
 
-									PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
+										PortletDataHandler portletDataHandler = portlet.getPortletDataHandlerInstance();
 
-									portletDataHandler.prepareManifestSummary(portletDataContext);
+										portletDataHandler.prepareManifestSummary(portletDataContext);
 
-									ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
+										ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
 
-									long exportModelCount = portletDataHandler.getExportModelCount(manifestSummary);
-								%>
+										long exportModelCount = portletDataHandler.getExportModelCount(manifestSummary);
+									%>
 
-									<c:if test="<%= exportModelCount != 0 %>">
-										<li>
-											<aui:input checked="<%= portletDataHandler.isPublishToLiveByDefault() %>" label='<%= portletTitle + (exportModelCount > 0 ? " (" + exportModelCount + ")" : StringPool.BLANK) %>' name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getRootPortletId() %>" type="checkbox" />
+										<c:if test="<%= exportModelCount != 0 %>">
+											<div class="portlet-list">
+												<liferay-util:buffer var="count">
+													<span class="badge badge-info"><%= exportModelCount > 0 ? exportModelCount : StringPool.BLANK %></span>
+												</liferay-util:buffer>
 
-											<%
-											PortletDataHandlerControl[] exportControls = portletDataHandler.getExportControls();
-											PortletDataHandlerControl[] metadataControls = portletDataHandler.getExportMetadataControls();
+												<aui:input checked="<%= portletDataHandler.isPublishToLiveByDefault() %>" label="<%= portletTitle + count %>" name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getPortletId() %>" type="checkbox" />
 
-											if (Validator.isNotNull(exportControls) || Validator.isNotNull(metadataControls)) {
-											%>
+												<%
+												PortletDataHandlerControl[] exportControls = portletDataHandler.getExportControls();
+												PortletDataHandlerControl[] metadataControls = portletDataHandler.getExportMetadataControls();
 
-												<div class="hide" id="<portlet:namespace />content_<%= portlet.getRootPortletId() %>">
-													<ul class="lfr-tree unstyled">
-														<li class="tree-item">
-															<aui:fieldset cssClass="portlet-type-data-section" label="<%= portletTitle %>">
+												if (Validator.isNotNull(exportControls) || Validator.isNotNull(metadataControls)) {
+												%>
 
-																<%
-																if (exportControls != null) {
-																	request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
-																	request.setAttribute("render_controls.jsp-controls", exportControls);
-																	request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
-																	request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
-																%>
+													<div class="hide" id="<portlet:namespace />content_<%= portlet.getPortletId() %>">
+														<ul class="lfr-tree unstyled">
+															<li class="tree-item">
+																<aui:fieldset cssClass="portlet-type-data-section" label="<%= portletTitle %>">
 
-																	<aui:field-wrapper label='<%= Validator.isNotNull(metadataControls) ? "content" : StringPool.BLANK %>'>
-																		<ul class="lfr-tree unstyled">
-																			<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
-																		</ul>
-																	</aui:field-wrapper>
+																	<%
+																	if (exportControls != null) {
+																		request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
+																		request.setAttribute("render_controls.jsp-controls", exportControls);
+																		request.setAttribute("render_controls.jsp-manifestSummary", manifestSummary);
+																		request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
+																	%>
 
-																<%
-																}
-
-																if (metadataControls != null) {
-																	for (PortletDataHandlerControl metadataControl : metadataControls) {
-																		if (!displayedControls.contains(metadataControl.getControlName())) {
-																			displayedControls.add(metadataControl.getControlName());
-																		}
-																		else {
-																			continue;
-																		}
-
-																		PortletDataHandlerBoolean control = (PortletDataHandlerBoolean)metadataControl;
-
-																		PortletDataHandlerControl[] childrenControls = control.getChildren();
-
-																		if ((childrenControls != null) && (childrenControls.length > 0)) {
-																			request.setAttribute("render_controls.jsp-controls", childrenControls);
-																		%>
-
-																		<aui:field-wrapper label="content-metadata">
+																		<aui:field-wrapper label='<%= Validator.isNotNull(metadataControls) ? "content" : StringPool.BLANK %>'>
 																			<ul class="lfr-tree unstyled">
 																				<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
 																			</ul>
 																		</aui:field-wrapper>
 
-																		<%
+																	<%
+																	}
+
+																	if (metadataControls != null) {
+																		for (PortletDataHandlerControl metadataControl : metadataControls) {
+																			if (!displayedControls.contains(metadataControl.getControlName())) {
+																				displayedControls.add(metadataControl.getControlName());
+																			}
+																			else {
+																				continue;
+																			}
+
+																			PortletDataHandlerBoolean control = (PortletDataHandlerBoolean)metadataControl;
+
+																			PortletDataHandlerControl[] childrenControls = control.getChildren();
+
+																			if ((childrenControls != null) && (childrenControls.length > 0)) {
+																				request.setAttribute("render_controls.jsp-controls", childrenControls);
+																			%>
+
+																			<aui:field-wrapper label="content-metadata">
+																				<ul class="lfr-tree unstyled">
+																					<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
+																				</ul>
+																			</aui:field-wrapper>
+
+																			<%
+																			}
 																		}
 																	}
-																}
-																%>
+																	%>
 
-															</aui:fieldset>
+																</aui:fieldset>
+															</li>
+														</ul>
+													</div>
+
+													<ul class="hide" id="<portlet:namespace />showChangeContent_<%= portlet.getPortletId() %>">
+														<li>
+															<div class="selected-labels" id="<portlet:namespace />selectedContent_<%= portlet.getPortletId() %>"></div>
+
+															<%
+															Map<String,Object> data = new HashMap<String,Object>();
+
+															data.put("portletid", portlet.getPortletId());
+															data.put("portlettitle", portletTitle);
+															%>
+
+															<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" id='<%= "contentLink_" + portlet.getPortletId() %>' label="change" method="get" />
 														</li>
 													</ul>
-												</div>
 
-												<ul class="hide" id="<portlet:namespace />showChangeContent_<%= portlet.getRootPortletId() %>">
-													<li>
-														<div class="selected-labels" id="<portlet:namespace />selectedContent_<%= portlet.getRootPortletId() %>"></div>
+													<aui:script>
+														Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getPortletId() %>Checkbox', '<portlet:namespace />showChangeContent<%= StringPool.UNDERLINE + portlet.getPortletId() %>');
+													</aui:script>
 
-														<%
-														Map<String,Object> data = new HashMap<String,Object>();
+												<%
+												}
+												%>
 
-														data.put("portletid", portlet.getRootPortletId());
-														data.put("portlettitle", portletTitle);
-														%>
+											</div>
+										</c:if>
 
-														<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" id='<%= "contentLink_" + portlet.getRootPortletId() %>' label="change" method="get" />
-													</li>
-												</ul>
+									<%
+									}
+									%>
 
-												<aui:script>
-													Liferay.Util.toggleBoxes('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + portlet.getRootPortletId() %>Checkbox', '<portlet:namespace />showChangeContent<%= StringPool.UNDERLINE + portlet.getRootPortletId() %>');
-												</aui:script>
-
-											<%
-											}
-											%>
-
-										</li>
-									</c:if>
-
-								<%
-								}
-								%>
-
-								<li>
 									<aui:fieldset cssClass="comments-and-ratings" label="for-each-of-the-selected-content-types,-export-their">
 										<div class="selected-labels" id="<portlet:namespace />selectedCommentsAndRatings"></div>
 
