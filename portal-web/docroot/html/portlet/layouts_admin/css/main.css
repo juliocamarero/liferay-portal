@@ -311,6 +311,8 @@
 }
 
 .export-dialog-tree {
+	margin-bottom: 50px;
+
 	.comments-and-ratings {
 		margin-top: 1em;
 
@@ -327,7 +329,7 @@
 
 	.file-selector {
 		display: block;
-		margin: 0.5em 0 1.5em;
+		margin: 0.5em 0 40px !important;
 	}
 
 	.import-file-details {
@@ -350,17 +352,33 @@
 	}
 
 	.options-group {
-		margin-bottom: 1em;
+		margin-bottom: 40px;
+
+		.options {
+			background-color: #FAFAFA;
+			border-bottom: 1px solid #E4E4E4;
+			border-top: 1px solid #E4E4E4;
+		}
+
+		.select-options {
+			margin-left: 55px ;
+			margin-top: 20px;
+		}
 	}
 
 	.page-not-exportable {
 		color: #933;
 	}
 
+	.portlet-list {
+		margin-top: 20px;
+	}
+
 	.selected-labels {
 		color:#999;
-		float:left;
+		display: inline;
 		font-style: italic;
+		margin-left: 0.5em;
 		margin-right: 0.5em;
 	}
 
