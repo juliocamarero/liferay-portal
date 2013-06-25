@@ -73,7 +73,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		long startTime = 0;
 
 		if (_log.isInfoEnabled()) {
-			_log.info("Exporting portlet " + portletId);
+			_log.info("Exporting data of portlet " + portletId);
 
 			startTime = System.currentTimeMillis();
 		}
@@ -92,7 +92,8 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 			if (_log.isInfoEnabled()) {
 				long duration = System.currentTimeMillis() - startTime;
 
-				_log.info("Exported portlet in " + Time.getDuration(duration));
+				_log.info(
+					"Exported portlet data in " + Time.getDuration(duration));
 			}
 		}
 	}
@@ -191,7 +192,7 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		long startTime = 0;
 
 		if (_log.isInfoEnabled()) {
-			_log.info("Importing portlet " + portletId);
+			_log.info("Importing data of portlet " + portletId);
 
 			startTime = System.currentTimeMillis();
 		}
@@ -226,7 +227,8 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 			if (_log.isInfoEnabled()) {
 				long duration = System.currentTimeMillis() - startTime;
 
-				_log.info("Imported portlet in " + Time.getDuration(duration));
+				_log.info(
+					"Imported portlet data in " + Time.getDuration(duration));
 			}
 		}
 	}
@@ -265,6 +267,74 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
+		}
+	}
+
+	@Override
+	public PortletPreferences processExportPreferences(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences, Element rootElement)
+		throws PortletDataException {
+
+		long startTime = 0;
+
+		if (_log.isInfoEnabled()) {
+			_log.info("Exporting preferences of portlet " + portletId);
+
+			startTime = System.currentTimeMillis();
+		}
+
+		try {
+			return doProcessExportPreferences(
+				portletDataContext, portletId, portletPreferences, rootElement);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
+		finally {
+			if (_log.isInfoEnabled()) {
+				long duration = System.currentTimeMillis() - startTime;
+
+				_log.info(
+					"Exported portlet preferences in " +
+						Time.getDuration(duration));
+			}
+		}
+	}
+
+	@Override
+	public PortletPreferences processImportPreferences(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences)
+		throws PortletDataException {
+
+		long startTime = 0;
+
+		if (_log.isInfoEnabled()) {
+			_log.info("Importing preferences of portlet " + portletId);
+
+			startTime = System.currentTimeMillis();
+		}
+
+		long sourceGroupId = portletDataContext.getSourceGroupId();
+
+		try {
+			return doProcessImportPreferences(
+				portletDataContext, portletId, portletPreferences);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
+		finally {
+			portletDataContext.setSourceGroupId(sourceGroupId);
+
+			if (_log.isInfoEnabled()) {
+				long duration = System.currentTimeMillis() - startTime;
+
+				_log.info(
+					"Imported portlet preferences in " +
+						Time.getDuration(duration));
+			}
 		}
 	}
 
@@ -308,12 +378,28 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
 
-		return null;
+		return portletPreferences;
 	}
 
 	protected void doPrepareManifestSummary(
 			PortletDataContext portletDataContext)
 		throws Exception {
+	}
+
+	protected PortletPreferences doProcessExportPreferences(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences, Element rootElement)
+		throws Exception {
+
+		return portletPreferences;
+	}
+
+	protected PortletPreferences doProcessImportPreferences(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		return portletPreferences;
 	}
 
 	protected String getExportDataRootElementString(Element rootElement) {
