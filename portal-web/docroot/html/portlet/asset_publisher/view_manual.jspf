@@ -40,7 +40,13 @@ for (int viewableAssetEntryIndex = 0; viewableAssetEntryIndex < results.size(); 
 		}
 	}
 
-	if ((assetEntry == null) || !assetEntry.isVisible() || (enablePermissions && !assetEntry.getAssetRenderer().hasViewPermission(permissionChecker))) {
+	if ((assetEntry == null) || !assetEntry.isVisible()) {
+		continue;
+	}
+
+	AssetRenderer assetRenderer = assetEntry.getAssetRenderer();
+
+	if (!assetRenderer.isDisplayable() || (enablePermissions && !assetRenderer.hasViewPermission(permissionChecker))) {
 		continue;
 	}
 
@@ -71,10 +77,6 @@ request.setAttribute("view.jsp-results", viewableResults);
 			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetEntry.getClassName());
 
 			AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(assetEntry.getClassPK());
-
-			if (!assetRenderer.isDisplayable()) {
-				continue;
-			}
 
 			String title = assetRenderer.getTitle(locale);
 
