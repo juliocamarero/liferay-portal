@@ -19,8 +19,8 @@ List results = ListUtil.fromArray(assetEntryXmls);
 
 List<AssetEntry> viewableResults = new ArrayList<AssetEntry>();
 
-for (int viewableAssetEntryIndex = 0; viewableAssetEntryIndex < results.size(); viewableAssetEntryIndex++) {
-	String assetEntryXml = (String)results.get(viewableAssetEntryIndex);
+for (int assetEntryIndex = 0; assetEntryIndex < results.size(); assetEntryIndex++) {
+	String assetEntryXml = (String)results.get(assetEntryIndex);
 
 	Document document = SAXReaderUtil.read(assetEntryXml);
 
@@ -71,8 +71,8 @@ request.setAttribute("view.jsp-results", viewableResults);
 	<c:otherwise>
 
 		<%
-		for (int assetEntryIndex = 0; assetEntryIndex < viewableResults.size(); assetEntryIndex++) {
-			AssetEntry assetEntry = viewableResults.get(assetEntryIndex);
+		for (int viewableAssetEntryIndex = 0; viewableAssetEntryIndex < viewableResults.size(); viewableAssetEntryIndex++) {
+			AssetEntry assetEntry = viewableResults.get(viewableAssetEntryIndex);
 
 			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetEntry.getClassName());
 
@@ -83,7 +83,7 @@ request.setAttribute("view.jsp-results", viewableResults);
 			boolean show = true;
 			boolean print = false;
 
-			request.setAttribute("view.jsp-assetEntryIndex", new Integer(assetEntryIndex));
+			request.setAttribute("view.jsp-assetEntryIndex", new Integer(viewableAssetEntryIndex));
 
 			request.setAttribute("view.jsp-assetEntry", assetEntry);
 			request.setAttribute("view.jsp-assetRendererFactory", assetRendererFactory);
