@@ -68,19 +68,6 @@ public interface PortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws PortletDataException;
 
-	public PortletDataHandlerControl[] getConfigurationControls(
-			long companyId, long groupId, Portlet portlet,
-			boolean privateLayout)
-		throws Exception;
-
-	public PortletDataHandlerControl[] getConfigurationControls(
-			long companyId, long groupId, Portlet portlet, long plid,
-			boolean privateLayout)
-		throws Exception;
-
-	public PortletDataHandlerControl[] getConfigurationControls(Portlet portlet)
-		throws PortletDataException;
-
 	public DataLevel getDataLevel();
 
 	/**
@@ -92,6 +79,16 @@ public interface PortletDataHandler {
 	public String[] getDataPortletPreferences();
 
 	public String[] getDeletionSystemEventClassNames();
+
+	public PortletDataHandlerControl[] getExportConfigurationControls(
+			long companyId, long groupId, Portlet portlet,
+			boolean privateLayout)
+		throws Exception;
+
+	public PortletDataHandlerControl[] getExportConfigurationControls(
+			long companyId, long groupId, Portlet portlet, long plid,
+			boolean privateLayout)
+		throws Exception;
 
 	/**
 	 * Returns an array of the controls defined for this data handler. These
@@ -117,6 +114,10 @@ public interface PortletDataHandler {
 		throws PortletDataException;
 
 	public long getExportModelCount(ManifestSummary manifestSummary);
+
+	public PortletDataHandlerControl[] getImportConfigurationControls(
+			Portlet portlet)
+		throws PortletDataException;
 
 	/**
 	 * Returns an array of the controls defined for this data handler. These
