@@ -582,14 +582,23 @@ window.YUI_config = {
 				'liferay-util-window': {
 					path: 'util_window.js',
 					requires: [
+						'aui-modal',
 						'aui-dialog-iframe-deprecated',
-						'aui-modal'
+						'event-resize',
+						'liferay-widget-stack'
 					]
 				},
 				'liferay-xml-formatter': {
 					path: 'xml_formatter.js',
 					requires: [
 						'aui-base'
+					]
+				},
+				'liferay-widget-stack': {
+					path: 'widget_stack.js',
+					requires: [
+						'aui-modal',
+						'plugin'
 					]
 				}
 			},
