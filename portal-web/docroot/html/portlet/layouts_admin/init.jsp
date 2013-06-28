@@ -63,6 +63,9 @@ page import="com.liferay.portal.layoutconfiguration.util.RuntimePageUtil" %><%@
 page import="com.liferay.portal.plugin.PluginUtil" %><%@
 page import="com.liferay.portal.util.LayoutLister" %><%@
 page import="com.liferay.portal.util.LayoutView" %><%@
+page import="com.liferay.portlet.backgroundtask.util.BackgroundTaskUtil" %><%@
+page import="com.liferay.portlet.backgroundtask.util.comparator.BackgroundTaskCompletitionDateComparator" %><%@
+page import="com.liferay.portlet.backgroundtask.util.comparator.BackgroundTaskCreateDateComparator" %><%@
 page import="com.liferay.portlet.documentlibrary.FileSizeException" %><%@
 page import="com.liferay.portlet.documentlibrary.util.DLUtil" %><%@
 page import="com.liferay.portlet.dynamicdatalists.RecordSetDuplicateRecordSetKeyException" %><%@
@@ -77,6 +80,8 @@ page import="com.liferay.portlet.mobiledevicerules.service.permission.MDRRuleGro
 page import="com.liferay.portlet.mobiledevicerules.util.RuleGroupInstancePriorityComparator" %>
 
 <%
+PortalPreferences portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(request);
+
 Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
 %>
 
