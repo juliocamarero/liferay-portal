@@ -585,7 +585,7 @@ window.YUI_config = {
 						'aui-modal',
 						'aui-dialog-iframe-deprecated',
 						'event-resize',
-						'liferay-widget-stack'
+						'liferay-widget-zindex'
 					]
 				},
 				'liferay-xml-formatter': {
@@ -594,8 +594,8 @@ window.YUI_config = {
 						'aui-base'
 					]
 				},
-				'liferay-widget-stack': {
-					path: 'widget_stack.js',
+				'liferay-widget-zindex': {
+					path: 'widget_zindex.js',
 					requires: [
 						'aui-modal',
 						'plugin'

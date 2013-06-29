@@ -196,7 +196,7 @@ AUI.add(
 							A.mix(
 								modalConfig,
 								{
-									plugins: [Liferay.WidgetStack]
+									plugins: [Liferay.WidgetZIndex]
 								}
 							);
 						}
@@ -406,6 +406,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-modal', 'aui-dialog-iframe-deprecated', 'event-resize', 'liferay-widget-stack']
+		requires: ['aui-modal', 'aui-dialog-iframe-deprecated', 'event-resize', 'liferay-widget-zindex']
 	}
 );
