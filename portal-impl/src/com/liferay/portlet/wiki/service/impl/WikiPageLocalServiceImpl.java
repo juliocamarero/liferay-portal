@@ -438,9 +438,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		for (WikiPage oldPage : oldPages) {
 			if (!WorkflowThreadLocal.isEnabled()) {
 				oldPage.setParentTitle(originalParentTitle);
-			}
 
-			wikiPagePersistence.update(oldPage);
+				wikiPagePersistence.update(oldPage);
+			}
 		}
 	}
 
