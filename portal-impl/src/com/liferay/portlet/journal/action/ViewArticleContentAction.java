@@ -15,69 +15,135 @@
 package com.liferay.portlet.journal.action;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.upload.UploadServletRequest;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextFactory;
-import com.liferay.portal.struts.PortletAction;
+import com.liferay.portal.service.ImageLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portal.webserver.WebServerServletTokenUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.impl.JournalArticleImpl;
+import com.liferay.portlet.journal.service.JournalArticleImageLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.util.JournalUtil;
+import com.liferay.util.PwdGenerator;
+
+import java.io.File;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 /**
  * @author Brian Wing Shun Chan
  * @author Raymond Augé
- * @author Roberto Díaz
+ * @deprecated As of 6.2.0, replaced by {@link PreviewArticleContentAction}
  */
-public class ViewArticleContentAction extends PortletAction {
+public class ViewArticleContentAction extends Action {
 
 	@Override
-	public void processAction(
+	public ActionForward execute(
 			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+			HttpServletRequest request, HttpServletResponse response)
 		throws Exception {
 
+		UploadServletRequest uploadServletRequest = null;
+
 		try {
-			String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+			String cmd = ParamUtil.getString(request, Constants.CMD);
 
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
-			long groupId = ParamUtil.getLong(actionRequest, "groupId");
-			String articleId = ParamUtil.getString(actionRequest, "articleId");
+			long groupId = ParamUtil.getLong(request, "groupId");
+			String articleId = ParamUtil.getString(request, "articleId");
 			double version = ParamUtil.getDouble(
-				actionRequest, "version",
-				JournalArticleConstants.VERSION_DEFAULT);
+				request, "version", JournalArticleConstants.VERSION_DEFAULT);
 
-			String languageId = LanguageUtil.getLanguageId(actionRequest);
+			String languageId = LanguageUtil.getLanguageId(request);
 
 			String output = null;
 
 			if (cmd.equals(Constants.PREVIEW)) {
-				output = getPreviewArticleContent(
-					actionRequest, themeDisplay, groupId, articleId, version,
-					languageId);
+				uploadServletRequest = PortalUtil.getUploadServletRequest(
+					request);
+
+				String title = ParamUtil.getString(
+					uploadServletRequest, "title");
+				String description = ParamUtil.getString(
+					uploadServletRequest, "description");
+				String type = ParamUtil.getString(uploadServletRequest, "type");
+				String structureId = ParamUtil.getString(
+					uploadServletRequest, "structureId");
+				String templateId = ParamUtil.getString(
+					uploadServletRequest, "templateId");
+
+				Date now = new Date();
+
+				Date createDate = now;
+				Date modifiedDate = now;
+				Date displayDate = now;
+
+				User user = PortalUtil.getUser(uploadServletRequest);
+
+				String xml = ParamUtil.getString(uploadServletRequest, "xml");
+
+				Document doc = SAXReaderUtil.read(xml);
+
+				Element root = doc.getRootElement();
+
+				String previewArticleId =
+					"PREVIEW_" +
+						PwdGenerator.getPassword(PwdGenerator.KEY3, 10);
+
+				format(
+					groupId, articleId, version, previewArticleId, root,
+					uploadServletRequest);
+
+				Map<String, String> tokens = JournalUtil.getTokens(
+					groupId, themeDisplay);
+
+				tokens.put("article_resource_pk", "-1");
+
+				JournalArticle article = new JournalArticleImpl();
+
+				article.setGroupId(groupId);
+				article.setCompanyId(user.getCompanyId());
+				article.setUserId(user.getUserId());
+				article.setUserName(user.getFullName());
+				article.setCreateDate(createDate);
+				article.setModifiedDate(modifiedDate);
+				article.setArticleId(articleId);
+				article.setVersion(version);
+				article.setTitle(title);
+				article.setDescription(description);
+				article.setContent(xml);
+				article.setType(type);
+				article.setStructureId(structureId);
+				article.setTemplateId(templateId);
+				article.setDisplayDate(displayDate);
+
+				output = JournalArticleLocalServiceUtil.getArticleContent(
+					article, templateId, null, languageId, themeDisplay);
 			}
 			else if (cmd.equals(Constants.VIEW)) {
 				JournalArticle article = JournalArticleServiceUtil.getArticle(
@@ -92,97 +158,98 @@ public class ViewArticleContentAction extends PortletAction {
 					groupId, articleId, version, languageId, themeDisplay);
 			}
 
-			actionRequest.setAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT, output);
+			request.setAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT, output);
 
 			if (output.startsWith("<?xml ")) {
-				setForward(
-					actionRequest, "portlet.journal.raw_article_content");
+				return actionMapping.findForward(
+					"portlet.journal.raw_article_content");
 			}
 			else {
-				setForward(
-					actionRequest, "portlet.journal.view_article_content");
+				return actionMapping.findForward(
+					"portlet.journal.view_article_content");
 			}
 		}
 		catch (Exception e) {
-			SessionErrors.add(actionRequest, e.getClass());
+			PortalUtil.sendError(e, request, response);
 
-			setForward(actionRequest, "portlet.journal.error");
+			return null;
+		}
+		finally {
+			if (uploadServletRequest != null) {
+				uploadServletRequest.cleanUp();
+			}
 		}
 	}
 
-	protected String getPreviewArticleContent(
-			ActionRequest actionRequest, ThemeDisplay themeDisplay,
-			long groupId, String articleId, double version, String languageId)
+	protected void format(
+			long groupId, String articleId, double version,
+			String previewArticleId, Element root,
+			UploadServletRequest uploadServletRequest)
 		throws Exception {
 
-		UploadPortletRequest uploadPortletRequest = null;
+		List<Element> elements = root.elements();
 
-		try {
-			uploadPortletRequest = PortalUtil.getUploadPortletRequest(
-				actionRequest);
+		for (Element element : elements) {
+			Element dynamicContent = element.element("dynamic-content");
 
-			String title = ParamUtil.getString(uploadPortletRequest, "title");
-			String description = ParamUtil.getString(
-				uploadPortletRequest, "description");
-			String type = ParamUtil.getString(uploadPortletRequest, "type");
-			String structureId = ParamUtil.getString(
-				uploadPortletRequest, "structureId");
-			String templateId = ParamUtil.getString(
-				uploadPortletRequest, "templateId");
+			String elInstanceId = element.attributeValue(
+				"instance-id", StringPool.BLANK);
+			String elName = element.attributeValue("name", StringPool.BLANK);
+			String elType = element.attributeValue("type", StringPool.BLANK);
+			String elContent = StringPool.BLANK;
+			String elLanguage = StringPool.BLANK;
 
-			Date now = new Date();
+			if (dynamicContent != null) {
+				elContent = dynamicContent.getTextTrim();
 
-			Date createDate = now;
-			Date modifiedDate = now;
-			Date displayDate = now;
+				elLanguage = dynamicContent.attributeValue(
+					"language-id", StringPool.BLANK);
 
-			User user = PortalUtil.getUser(uploadPortletRequest);
-
-			String content = ParamUtil.getString(
-				uploadPortletRequest, "articleContent");
-
-			if (Validator.isNull(structureId)) {
-				return content;
+				if (!elLanguage.equals(StringPool.BLANK)) {
+					elLanguage = "_" + elLanguage;
+				}
 			}
 
-			ServiceContext serviceContext =
-				ServiceContextFactory.getInstance(
-					JournalArticle.class.getName(), uploadPortletRequest);
+			if (elType.equals("image") && Validator.isNull(elContent)) {
+				File file = uploadServletRequest.getFile(
+					"structure_image_" + elName + elLanguage);
+				byte[] bytes = FileUtil.getBytes(file);
 
-			content = ActionUtil.getContentAndImages(
-				groupId, structureId, null, null, Constants.PREVIEW,
-				themeDisplay, serviceContext);
+				if ((bytes != null) && (bytes.length > 0)) {
+					long imageId =
+						JournalArticleImageLocalServiceUtil.getArticleImageId(
+							groupId, previewArticleId, version, elInstanceId,
+							elName, elLanguage, true);
 
-			Map<String, String> tokens = JournalUtil.getTokens(
-				groupId, themeDisplay);
+					String token = WebServerServletTokenUtil.getToken(imageId);
 
-			tokens.put("article_resource_pk", "-1");
+					dynamicContent.setText(
+						"/image/journal/article?img_id=" + imageId + "&t=" +
+							token);
 
-			JournalArticle article = new JournalArticleImpl();
+					ImageLocalServiceUtil.updateImage(imageId, bytes);
+				}
+				else {
+					if (Validator.isNotNull(articleId)) {
+						long imageId =
+							JournalArticleImageLocalServiceUtil.
+								getArticleImageId(
+									groupId, articleId, version, elInstanceId,
+									elName, elLanguage);
 
-			article.setGroupId(groupId);
-			article.setCompanyId(user.getCompanyId());
-			article.setUserId(user.getUserId());
-			article.setUserName(user.getFullName());
-			article.setCreateDate(createDate);
-			article.setModifiedDate(modifiedDate);
-			article.setArticleId(articleId);
-			article.setVersion(version);
-			article.setTitle(title);
-			article.setDescription(description);
-			article.setContent(content);
-			article.setType(type);
-			article.setStructureId(structureId);
-			article.setTemplateId(templateId);
-			article.setDisplayDate(displayDate);
+						String token = WebServerServletTokenUtil.getToken(
+							imageId);
 
-			return JournalArticleLocalServiceUtil.getArticleContent(
-				article, templateId, null, languageId, themeDisplay);
-		}
-		finally {
-			if (uploadPortletRequest != null) {
-				uploadPortletRequest.cleanUp();
+						dynamicContent.setText(
+							"/image/journal/article?img_id=" + imageId +
+								"&t=" + token);
+					}
+				}
 			}
+
+			format(
+				groupId, articleId, version, previewArticleId, element,
+				uploadServletRequest);
 		}
 	}
 
