@@ -433,6 +433,10 @@ public class JournalArticleLocalServiceImpl
 				WorkflowConstants.ACTION_PUBLISH);
 		}
 
+		// Update serviceContext
+
+		serviceContext.setAttribute("articleId", articleId);
+
 		// Email
 
 		PortletPreferences preferences =
