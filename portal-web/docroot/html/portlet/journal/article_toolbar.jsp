@@ -55,7 +55,7 @@ if ((article != null) && article.isDraft()) {
 						form.one('#<portlet:namespace /><%= Constants.CMD %>').val('<%= Constants.PREVIEW %>');
 
 						<portlet:actionURL var="previewURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-							<portlet:param name="struts_action" value="/journal/view_article_content" />
+							<portlet:param name="struts_action" value="/journal/preview_article_content" />
 						</portlet:actionURL>
 
 						submitForm(form, '<%= previewURL.toString() %>', false);
