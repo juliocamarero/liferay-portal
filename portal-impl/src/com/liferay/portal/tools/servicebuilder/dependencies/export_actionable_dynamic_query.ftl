@@ -62,6 +62,13 @@ public class ${entity.name}ExportActionableDynamicQuery extends ${entity.name}Ac
 		</#if>
 	}
 
+	<#if entity.isResourcedModel()>
+		@Override
+		protected Projection getCountProjection() {
+			return ProjectionFactoryUtil.countDistinct("resourcePrimKey");
+		}
+	</#if>
+
 	protected long getModelDeletionCount() throws PortalException, SystemException {
 		ActionableDynamicQuery actionableDynamicQuery = new SystemEventActionableDynamicQuery() {
 
