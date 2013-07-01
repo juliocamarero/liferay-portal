@@ -23,7 +23,6 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
-import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 
 import javax.portlet.ActionRequest;
@@ -66,17 +65,12 @@ public class PreviewArticleContentAction extends PortletAction {
 					actionRequest, themeDisplay, groupId, articleId, version,
 					languageId);
 			}
-			else if (cmd.equals(Constants.VIEW)) {
+			else {
 				JournalArticle article = JournalArticleServiceUtil.getArticle(
 					groupId, articleId, version);
 
-				output = JournalArticleLocalServiceUtil.getArticleContent(
-					article, article.getTemplateId(), null, languageId,
-					themeDisplay);
-			}
-			else {
-				output = JournalArticleServiceUtil.getArticleContent(
-					groupId, articleId, version, languageId, themeDisplay);
+				output = ActionUtil.getArticleContent(
+					article, languageId, cmd, themeDisplay);
 			}
 
 			actionRequest.setAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT, output);

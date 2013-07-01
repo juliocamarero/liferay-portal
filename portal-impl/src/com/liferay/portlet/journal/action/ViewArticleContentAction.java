@@ -145,17 +145,12 @@ public class ViewArticleContentAction extends Action {
 				output = JournalArticleLocalServiceUtil.getArticleContent(
 					article, templateId, null, languageId, themeDisplay);
 			}
-			else if (cmd.equals(Constants.VIEW)) {
+			else {
 				JournalArticle article = JournalArticleServiceUtil.getArticle(
 					groupId, articleId, version);
 
-				output = JournalArticleLocalServiceUtil.getArticleContent(
-					article, article.getTemplateId(), null, languageId,
-					themeDisplay);
-			}
-			else {
-				output = JournalArticleServiceUtil.getArticleContent(
-					groupId, articleId, version, languageId, themeDisplay);
+				output = ActionUtil.getArticleContent(
+					article, languageId, cmd, themeDisplay);
 			}
 
 			request.setAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT, output);
