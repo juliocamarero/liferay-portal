@@ -566,13 +566,8 @@ portletURL.setParameter("rootNodeName", rootNodeName);
 				/>
 
 				<liferay-ui:search-container-column-text
-					name="task-name"
-					value="<%= backgroundTask.getName() %>"
-				/>
-
-				<liferay-ui:search-container-column-text
 					name="status"
-					value="<%= BackgroundTaskConstants.toLabel(backgroundTask.getStatus()) %>"
+					value="<%= LanguageUtil.get(pageContext, BackgroundTaskConstants.toLabel(backgroundTask.getStatus())) %>"
 				/>
 
 				<liferay-ui:search-container-column-text
@@ -583,9 +578,9 @@ portletURL.setParameter("rootNodeName", rootNodeName);
 				/>
 
 				<liferay-ui:search-container-column-text
-					name="completition-date"
+					name="completion-date"
 					orderable="<%= true %>"
-					orderableProperty="completitionDate"
+					orderableProperty="completionDate"
 					value="<%= backgroundTask.getCompletionDate() != null ? dateFormatDateTime.format(backgroundTask.getCompletionDate()) : StringPool.BLANK %>"
 				/>
 
@@ -595,35 +590,50 @@ portletURL.setParameter("rootNodeName", rootNodeName);
 
 					<%
 					List<FileEntry> attachmentsFileEntries = backgroundTask.getAttachmentsFileEntries();
-
-					for (FileEntry fileEntry : attachmentsFileEntries) {
 					%>
 
-						<portlet:actionURL var="attachmentURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-							<portlet:param name="struts_action" value="/group_pages/get_background_task_attachment" />
-							<portlet:param name="backgroundTaskId" value="<%= String.valueOf(backgroundTask.getBackgroundTaskId()) %>" />
-							<portlet:param name="attachment" value="<%= fileEntry.getTitle() %>" />
-						</portlet:actionURL>
+					<c:choose>
+						<c:when test="<%= !attachmentsFileEntries.isEmpty() %>">
 
-						<%
-						StringBundler sb = new StringBundler(4);
+							<%
+							for (FileEntry fileEntry : attachmentsFileEntries) {
+							%>
 
-						sb.append(fileEntry.getTitle());
-						sb.append(StringPool.OPEN_PARENTHESIS);
-						sb.append(TextFormatter.formatStorageSize(fileEntry.getSize(), locale));
-						sb.append(StringPool.CLOSE_PARENTHESIS);
-						%>
+								<portlet:actionURL var="attachmentURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+									<portlet:param name="struts_action" value="/group_pages/get_background_task_attachment" />
+									<portlet:param name="backgroundTaskId" value="<%= String.valueOf(backgroundTask.getBackgroundTaskId()) %>" />
+									<portlet:param name="attachment" value="<%= fileEntry.getTitle() %>" />
+								</portlet:actionURL>
 
-						<liferay-ui:icon
-							image='<%= "../file_system/small/" + DLUtil.getFileIcon(fileEntry.getExtension()) %>'
-							label="<%= true %>"
-							message="<%= sb.toString() %>"
-							url="<%= attachmentURL %>"
-						/>
+								<%
+								StringBundler sb = new StringBundler(4);
 
-					<%
-					}
-					%>
+								sb.append(fileEntry.getTitle());
+								sb.append(StringPool.OPEN_PARENTHESIS);
+								sb.append(TextFormatter.formatStorageSize(fileEntry.getSize(), locale));
+								sb.append(StringPool.CLOSE_PARENTHESIS);
+								%>
+
+								<liferay-ui:icon
+									image="download"
+									label="<%= true %>"
+									message="<%= sb.toString() %>"
+									url="<%= attachmentURL %>"
+								/>
+
+							<%
+							}
+							%>
+
+						</c:when>
+						<c:otherwise>
+							<liferay-ui:icon
+								image="download"
+								label="<%= true %>"
+								message="<%= backgroundTask.getName() %>"
+							/>
+						</c:otherwise>
+					</c:choose>
 
 				</liferay-ui:search-container-column-text>
 

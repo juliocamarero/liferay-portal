@@ -15,7 +15,7 @@
 package com.liferay.portlet.backgroundtask.util;
 
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portlet.backgroundtask.util.comparator.BackgroundTaskCompletitionDateComparator;
+import com.liferay.portlet.backgroundtask.util.comparator.BackgroundTaskCompletionDateComparator;
 import com.liferay.portlet.backgroundtask.util.comparator.BackgroundTaskCreateDateComparator;
 
 /**
@@ -34,8 +34,8 @@ public class BackgroundTaskUtil {
 
 		OrderByComparator orderByComparator = null;
 
-		if (orderByCol.equals("completition-date")) {
-			orderByComparator = new BackgroundTaskCompletitionDateComparator(
+		if (orderByCol.equals("completion-date")) {
+			orderByComparator = new BackgroundTaskCompletionDateComparator(
 				orderByAsc);
 		}
 		else if (orderByCol.equals("create-date")) {

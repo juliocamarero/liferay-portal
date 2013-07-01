@@ -21,22 +21,21 @@ import com.liferay.portal.model.BackgroundTask;
 /**
  * @author Eduardo Garcia
  */
-public class BackgroundTaskCompletitionDateComparator
-	extends OrderByComparator {
+public class BackgroundTaskCompletionDateComparator extends OrderByComparator {
 
 	public static final String ORDER_BY_ASC =
-		"BackgroundTask.completitionDate ASC";
+		"BackgroundTask.completionDate ASC";
 
 	public static final String ORDER_BY_DESC =
-		"BackgroundTask.completitionDate DESC";
+		"BackgroundTask.completionDate DESC";
 
-	public static final String[] ORDER_BY_FIELDS = {"completitionDate"};
+	public static final String[] ORDER_BY_FIELDS = {"completionDate"};
 
-	public BackgroundTaskCompletitionDateComparator() {
+	public BackgroundTaskCompletionDateComparator() {
 		this(false);
 	}
 
-	public BackgroundTaskCompletitionDateComparator(boolean ascending) {
+	public BackgroundTaskCompletionDateComparator(boolean ascending) {
 		_ascending = ascending;
 	}
 
