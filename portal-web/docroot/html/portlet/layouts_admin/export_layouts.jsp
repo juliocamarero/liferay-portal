@@ -590,7 +590,7 @@ portletURL.setParameter("rootNodeName", rootNodeName);
 				/>
 
 				<liferay-ui:search-container-column-text
-					name="archive-file"
+					name="download"
 				>
 
 					<%
@@ -627,9 +627,7 @@ portletURL.setParameter("rootNodeName", rootNodeName);
 
 				</liferay-ui:search-container-column-text>
 
-				<liferay-ui:search-container-column-text
-					name="delete"
-				>
+				<liferay-ui:search-container-column-text>
 
 					<portlet:actionURL var="deleteBackgroundTaskURL">
 						<portlet:param name="struts_action" value="/group_pages/delete_background_task" />
