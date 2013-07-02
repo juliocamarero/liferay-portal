@@ -97,21 +97,23 @@ public class AssetRendererFactoryRegistryImpl
 	@Override
 	public void register(AssetRendererFactory assetRendererFactory) {
 		String className = assetRendererFactory.getClassName();
+
 		AssetRendererFactory oldByClassName =
 			_assetRenderFactoriesMapByClassName.put(
 				className, assetRendererFactory);
 
-		if (oldByClassName != null) {
+		if (_log.isWarnEnabled() && (oldByClassName != null)) {
 			_log.warn(
 				"Replacing " + oldByClassName + " for className " +
 				className + " with " + assetRendererFactory);
 		}
 
 		String type = assetRendererFactory.getType();
+
 		AssetRendererFactory oldByType =
 			_assetRenderFactoriesMapByClassType.put(type, assetRendererFactory);
 
-		if (oldByType != null) {
+		if (_log.isWarnEnabled() && (oldByType != null)) {
 			_log.warn(
 				"Replacing " + oldByType + " for type " + type +
 				" with " + assetRendererFactory);
