@@ -261,6 +261,9 @@ public interface Portal {
 	 * @return the array of alternate locales
 	 * @throws PortalException if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
+	 *
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 * com.liferay.portal.kernel.language.LanguageUtil.getAvailableLocales()}
 	 */
 	public Locale[] getAlternateLocales(HttpServletRequest request)
 		throws PortalException, SystemException;
