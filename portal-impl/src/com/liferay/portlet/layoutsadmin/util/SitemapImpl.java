@@ -177,18 +177,11 @@ public class SitemapImpl implements Sitemap {
 	}
 
 	protected Map<Locale, String> getAlternateURLs(
-		String canonicalURL, ThemeDisplay themeDisplay, Locale locale,
-		Layout layout) {
+		String canonicalURL, ThemeDisplay themeDisplay, Layout layout) {
 
 		Map<Locale, String> alternateURLs = new HashMap<Locale, String>();
 
-		Locale[] locales = LanguageUtil.getAvailableLocales();
-
-		for (Locale curLocale : locales) {
-			if (curLocale == locale) {
-				continue;
-			}
-
+		for (Locale curLocale : LanguageUtil.getAvailableLocales()) {
 			String alternateURL = PortalUtil.getAlternateURL(
 				canonicalURL, themeDisplay, curLocale, layout);
 
@@ -241,7 +234,7 @@ public class SitemapImpl implements Sitemap {
 				sb.toString(), themeDisplay, layout);
 
 			Map<Locale, String> alternateURLs = getAlternateURLs(
-				articleURL, themeDisplay, themeDisplay.getLocale(), layout);
+				articleURL, themeDisplay, layout);
 
 			addURLElement(
 				element, articleURL, null, journalArticle.getModifiedDate(),
@@ -258,7 +251,7 @@ public class SitemapImpl implements Sitemap {
 							articleURL, themeDisplay, availableLocale, layout);
 
 						alternateURLs = getAlternateURLs(
-							articleURL, themeDisplay, availableLocale, layout);
+							articleURL, themeDisplay, layout);
 
 						addURLElement(
 							element, alternateURL, null,
@@ -292,7 +285,7 @@ public class SitemapImpl implements Sitemap {
 			layoutFullURL, themeDisplay, layout);
 
 		Map<Locale, String> alternateURLs = getAlternateURLs(
-			layoutFullURL, themeDisplay, themeDisplay.getLocale(), layout);
+			layoutFullURL, themeDisplay, layout);
 
 		addURLElement(
 			element, layoutFullURL, typeSettingsProperties,
@@ -312,7 +305,7 @@ public class SitemapImpl implements Sitemap {
 					layoutFullURL, themeDisplay, availableLocale, layout);
 
 				alternateURLs = getAlternateURLs(
-					layoutFullURL, themeDisplay, availableLocale, layout);
+					layoutFullURL, themeDisplay, layout);
 
 				addURLElement(
 					element, alternateURL, typeSettingsProperties,
