@@ -233,12 +233,9 @@ public class SitemapImpl implements Sitemap {
 			String articleURL = PortalUtil.getCanonicalURL(
 				sb.toString(), themeDisplay, layout);
 
-			Map<Locale, String> alternateURLs = getAlternateURLs(
-				articleURL, themeDisplay, layout);
-
 			addURLElement(
 				element, articleURL, null, journalArticle.getModifiedDate(),
-				alternateURLs);
+				getAlternateURLs(articleURL, themeDisplay, layout));
 
 			Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
@@ -250,12 +247,10 @@ public class SitemapImpl implements Sitemap {
 						String alternateURL = PortalUtil.getAlternateURL(
 							articleURL, themeDisplay, availableLocale, layout);
 
-						alternateURLs = getAlternateURLs(
-							articleURL, themeDisplay, layout);
-
 						addURLElement(
 							element, alternateURL, null,
-							journalArticle.getModifiedDate(), alternateURLs);
+							journalArticle.getModifiedDate(),
+							getAlternateURLs(articleURL, themeDisplay, layout));
 					}
 				}
 			}
@@ -284,12 +279,10 @@ public class SitemapImpl implements Sitemap {
 		layoutFullURL = PortalUtil.getCanonicalURL(
 			layoutFullURL, themeDisplay, layout);
 
-		Map<Locale, String> alternateURLs = getAlternateURLs(
-			layoutFullURL, themeDisplay, layout);
-
 		addURLElement(
 			element, layoutFullURL, typeSettingsProperties,
-			layout.getModifiedDate(), alternateURLs);
+			layout.getModifiedDate(),
+			getAlternateURLs(layoutFullURL, themeDisplay, layout));
 
 		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
@@ -304,12 +297,10 @@ public class SitemapImpl implements Sitemap {
 				String alternateURL = PortalUtil.getAlternateURL(
 					layoutFullURL, themeDisplay, availableLocale, layout);
 
-				alternateURLs = getAlternateURLs(
-					layoutFullURL, themeDisplay, layout);
-
 				addURLElement(
 					element, alternateURL, typeSettingsProperties,
-					layout.getModifiedDate(), alternateURLs);
+					layout.getModifiedDate(),
+					getAlternateURLs(layoutFullURL, themeDisplay, layout));
 			}
 		}
 
