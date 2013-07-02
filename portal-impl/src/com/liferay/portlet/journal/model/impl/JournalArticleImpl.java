@@ -224,9 +224,8 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 		if (getClassNameId() == PortalUtil.getClassNameId(DDMStructure.class)) {
 			return false;
 		}
-		else {
-			return super.isIndexable();
-		}
+
+		return super.isIndexable();
 	}
 
 	@Override
