@@ -56,6 +56,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * @author Brian Wing Shun Chan
  * @author Raymond Augé
+ * @deprecated As of 6.2.0, replaced by {@link PreviewArticleContentAction}
  */
 public class ViewArticleContentAction extends Action {
 
@@ -144,17 +145,12 @@ public class ViewArticleContentAction extends Action {
 				output = JournalArticleLocalServiceUtil.getArticleContent(
 					article, templateId, null, languageId, themeDisplay);
 			}
-			else if (cmd.equals(Constants.VIEW)) {
+			else {
 				JournalArticle article = JournalArticleServiceUtil.getArticle(
 					groupId, articleId, version);
 
-				output = JournalArticleLocalServiceUtil.getArticleContent(
-					article, article.getTemplateId(), null, languageId,
-					themeDisplay);
-			}
-			else {
-				output = JournalArticleServiceUtil.getArticleContent(
-					groupId, articleId, version, languageId, themeDisplay);
+				output = ActionUtil.getArticleContent(
+					article, languageId, cmd, themeDisplay);
 			}
 
 			request.setAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT, output);
