@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -86,7 +88,15 @@ public class PreviewArticleContentAction extends PortletAction {
 
 				User user = PortalUtil.getUser(actionRequest);
 
-				String xml = ParamUtil.getString(actionRequest, "xml");
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						JournalArticle.class.getName(), actionRequest);
+
+				Object[] returnValue = ActionUtil.getContentAndImages(
+					groupId, structureId, themeDisplay.getLocale(),
+					themeDisplay, serviceContext);
+
+				String content = (String)returnValue[0];
 
 				Map<String, String> tokens = JournalUtil.getTokens(
 					groupId, themeDisplay);
@@ -105,7 +115,7 @@ public class PreviewArticleContentAction extends PortletAction {
 				article.setVersion(version);
 				article.setTitle(title);
 				article.setDescription(description);
-				article.setContent(xml);
+				article.setContent(content);
 				article.setType(type);
 				article.setStructureId(structureId);
 				article.setTemplateId(templateId);
