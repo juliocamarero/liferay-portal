@@ -148,9 +148,16 @@ public class EditPageAttachmentsAction extends EditFileEntryAction {
 
 				setForward(actionRequest, "portlet.wiki.error");
 			}
-			else {
+			else if (e instanceof DuplicateFileException ||
+					 e instanceof FileExtensionException ||
+					 e instanceof FileNameException ||
+					 e instanceof FileSizeException) {
+
 				handleUploadException(
 					portletConfig, actionRequest, actionResponse, cmd, e);
+			}
+			else {
+				throw e;
 			}
 		}
 	}
@@ -391,83 +398,70 @@ public class EditPageAttachmentsAction extends EditFileEntryAction {
 			ActionResponse actionResponse, String cmd, Exception e)
 		throws Exception {
 
-		if (e instanceof DuplicateFileException ||
-			e instanceof FileExtensionException ||
-			e instanceof FileNameException ||
-			e instanceof FileSizeException) {
-
-			if (!cmd.equals(Constants.ADD_MULTIPLE) &&
-				!cmd.equals(Constants.ADD_TEMP)) {
-
-				SessionErrors.add(actionRequest, e.getClass());
-
-				return;
-			}
-
-			HttpServletResponse response = PortalUtil.getHttpServletResponse(
-				actionResponse);
-
-			response.setContentType(ContentTypes.TEXT_HTML);
-			response.setStatus(HttpServletResponse.SC_OK);
-
-			String errorMessage = StringPool.BLANK;
-			int errorType = 0;
-
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-
-			if (e instanceof DuplicateFileException) {
-				errorMessage = themeDisplay.translate(
-					"please-enter-a-unique-document-name");
-				errorType =
-					ServletResponseConstants.SC_DUPLICATE_FILE_EXCEPTION;
-			}
-			else if (e instanceof FileExtensionException) {
-				errorMessage = themeDisplay.translate(
-					"document-names-must-end-with-one-of-the-following-" +
-						"extensions",
-					StringUtil.merge(
-						getAllowedFileExtensions(
-							portletConfig, actionRequest, actionResponse)));
-				errorType =
-					ServletResponseConstants.SC_FILE_EXTENSION_EXCEPTION;
-			}
-			else if (e instanceof FileNameException) {
-				errorMessage = themeDisplay.translate(
-					"please-enter-a-file-with-a-valid-file-name");
-				errorType = ServletResponseConstants.SC_FILE_NAME_EXCEPTION;
-			}
-			else if (e instanceof FileSizeException) {
-				long fileMaxSize = PrefsPropsUtil.getLong(
-						PropsKeys.DL_FILE_MAX_SIZE);
-
-				if (fileMaxSize == 0) {
-					fileMaxSize = PrefsPropsUtil.getLong(
-						PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE);
-				}
-
-				fileMaxSize /= 1024;
-
-				errorMessage = themeDisplay.translate(
-					"please-enter-a-file-with-a-valid-file-size-no-larger" +
-						"-than-x",
-					fileMaxSize);
-
-				errorType = ServletResponseConstants.SC_FILE_SIZE_EXCEPTION;
-			}
-
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			jsonObject.put("message", errorMessage);
-			jsonObject.put("status", errorType);
-
-			writeJSON(actionRequest, actionResponse, jsonObject);
+		if (!cmd.equals(Constants.ADD_MULTIPLE) &&
+			!cmd.equals(Constants.ADD_TEMP)) {
 
 			SessionErrors.add(actionRequest, e.getClass());
+
+			return;
 		}
-		else {
-			throw e;
+
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(
+			actionResponse);
+
+		response.setContentType(ContentTypes.TEXT_HTML);
+		response.setStatus(HttpServletResponse.SC_OK);
+
+		String errorMessage = StringPool.BLANK;
+		int errorType = 0;
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		if (e instanceof DuplicateFileException) {
+			errorMessage = themeDisplay.translate(
+				"please-enter-a-unique-document-name");
+			errorType = ServletResponseConstants.SC_DUPLICATE_FILE_EXCEPTION;
 		}
+		else if (e instanceof FileExtensionException) {
+			errorMessage = themeDisplay.translate(
+				"document-names-must-end-with-one-of-the-following-extensions",
+				StringUtil.merge(
+					getAllowedFileExtensions(
+						portletConfig, actionRequest, actionResponse)));
+			errorType = ServletResponseConstants.SC_FILE_EXTENSION_EXCEPTION;
+		}
+		else if (e instanceof FileNameException) {
+			errorMessage = themeDisplay.translate(
+				"please-enter-a-file-with-a-valid-file-name");
+			errorType = ServletResponseConstants.SC_FILE_NAME_EXCEPTION;
+		}
+		else if (e instanceof FileSizeException) {
+			long fileMaxSize = PrefsPropsUtil.getLong(
+				PropsKeys.DL_FILE_MAX_SIZE);
+
+			if (fileMaxSize == 0) {
+				fileMaxSize = PrefsPropsUtil.getLong(
+					PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE);
+			}
+
+			fileMaxSize /= 1024;
+
+			errorMessage = themeDisplay.translate(
+				"please-enter-a-file-with-a-valid-file-size-no-larger-than-x",
+				fileMaxSize);
+
+			errorType = ServletResponseConstants.SC_FILE_SIZE_EXCEPTION;
+		}
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("message", errorMessage);
+		jsonObject.put("status", errorType);
+
+		writeJSON(actionRequest, actionResponse, jsonObject);
+
+		SessionErrors.add(actionRequest, e.getClass());
 	}
 
 	protected void restoreAttachment(ActionRequest actionRequest)
