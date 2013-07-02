@@ -90,7 +90,8 @@ public class SitemapImpl implements Sitemap {
 
 	protected void addURLElement(
 		Element element, String url, UnicodeProperties typeSettingsProperties,
-		Date modifiedDate, Map<Locale, String> alternateURLs) {
+		Date modifiedDate, String canonicalURL,
+		Map<Locale, String> alternateURLs) {
 
 		Element urlElement = element.addElement("url");
 
@@ -173,6 +174,12 @@ public class SitemapImpl implements Sitemap {
 					"hreflang", LocaleUtil.toW3cLanguageId(locale));
 				alternateURLElement.addAttribute("href", href);
 			}
+
+			Element alternateURLElement = urlElement.addElement("link");
+
+			alternateURLElement.addAttribute("rel", "alternate");
+			alternateURLElement.addAttribute("hreflang", "x-default");
+			alternateURLElement.addAttribute("href", canonicalURL);
 		}
 	}
 
@@ -235,7 +242,7 @@ public class SitemapImpl implements Sitemap {
 
 			addURLElement(
 				element, articleURL, null, journalArticle.getModifiedDate(),
-				getAlternateURLs(articleURL, themeDisplay, layout));
+				articleURL, getAlternateURLs(articleURL, themeDisplay, layout));
 
 			Locale[] availableLocales = LanguageUtil.getAvailableLocales();
 
@@ -249,7 +256,7 @@ public class SitemapImpl implements Sitemap {
 
 						addURLElement(
 							element, alternateURL, null,
-							journalArticle.getModifiedDate(),
+							journalArticle.getModifiedDate(), articleURL,
 							getAlternateURLs(articleURL, themeDisplay, layout));
 					}
 				}
@@ -281,7 +288,7 @@ public class SitemapImpl implements Sitemap {
 
 		addURLElement(
 			element, layoutFullURL, typeSettingsProperties,
-			layout.getModifiedDate(),
+			layout.getModifiedDate(), layoutFullURL,
 			getAlternateURLs(layoutFullURL, themeDisplay, layout));
 
 		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
@@ -299,7 +306,7 @@ public class SitemapImpl implements Sitemap {
 
 				addURLElement(
 					element, alternateURL, typeSettingsProperties,
-					layout.getModifiedDate(),
+					layout.getModifiedDate(), layoutFullURL,
 					getAlternateURLs(layoutFullURL, themeDisplay, layout));
 			}
 		}

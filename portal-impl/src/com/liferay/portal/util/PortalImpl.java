@@ -923,44 +923,7 @@ public class PortalImpl implements Portal {
 	public Locale[] getAlternateLocales(HttpServletRequest request)
 		throws PortalException, SystemException {
 
-		Locale[] availableLocales = LanguageUtil.getAvailableLocales();
-
-		long mainJournalArticleId = ParamUtil.getLong(request, "p_j_a_id");
-
-		if (mainJournalArticleId <= 0) {
-			return availableLocales;
-		}
-
-		JournalArticle mainJournalArticle =
-			JournalArticleLocalServiceUtil.getJournalArticle(
-				mainJournalArticleId);
-
-		if (mainJournalArticle == null) {
-			return availableLocales;
-		}
-
-		String[] articleLocales = mainJournalArticle.getAvailableLocales();
-
-		if (articleLocales.length > 1) {
-			Locale[] alternateLocales = new Locale[
-				availableLocales.length - articleLocales.length];
-
-			int i = 0;
-
-			for (Locale locale : availableLocales) {
-				if (!ArrayUtil.contains(
-						articleLocales, LocaleUtil.toLanguageId(locale))) {
-
-					alternateLocales[i] = locale;
-
-					i++;
-				}
-			}
-
-			return alternateLocales;
-		}
-
-		return availableLocales;
+		return LanguageUtil.getAvailableLocales();
 	}
 
 	@Override
