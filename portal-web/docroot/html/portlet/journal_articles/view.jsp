@@ -104,17 +104,17 @@ double version = ParamUtil.getDouble(request, "version");
 			String rowHREF = null;
 
 			if (pageUrl.equals("popUp")) {
-				StringBundler sb = new StringBundler(7);
+				PortletURL rowURL = renderResponse.createActionURL();
 
-				sb.append(themeDisplay.getPathMain());
-				sb.append("/journal_articles/view_article_content?groupId=");
-				sb.append(article.getGroupId());
-				sb.append("&articleId=");
-				sb.append(article.getArticleId());
-				sb.append("&version=");
-				sb.append(article.getVersion());
+				rowURL.setParameter("struts_action", "/journal_articles/preview_article_content");
+				rowURL.setParameter("articleId", article.getArticleId());
+				rowURL.setParameter(Constants.CMD, Constants.VIEW);
+				rowURL.setParameter("groupId", String.valueOf(article.getGroupId()));
+				rowURL.setParameter("version", String.valueOf(article.getVersion()));
 
-				rowHREF = sb.toString();
+				rowURL.setWindowState(LiferayWindowState.EXCLUSIVE);
+
+				rowHREF = "javascript:document.hrefFm.target = '_blank'; submitForm(document.hrefFm, '" + HtmlUtil.escapeJS(rowURL.toString()) + "', false);";
 			}
 			else {
 				articleURL.setParameter("returnToFullPageURL", currentURL);
