@@ -785,6 +785,24 @@ if (Validator.isNotNull(content)) {
 		);
 	}
 
+	var loadDefaultStructure = A.one('#<portlet:namespace />loadDefaultStructure');
+
+	if (loadDefaultStructure) {
+		loadDefaultStructure.on(
+			'click',
+			function(event) {
+				event.preventDefault();
+
+				var form = A.one('#<portlet:namespace />fm1');
+
+				form.one('#<portlet:namespace />structureId').val('');
+				form.one('#<portlet:namespace />templateId').val('');
+
+				submitForm(form, null, false, false);
+			}
+		);
+	}
+
 	var templateIdSelector = A.one('select#<portlet:namespace />templateId');
 
 	if (templateIdSelector) {
