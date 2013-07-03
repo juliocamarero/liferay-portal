@@ -43,6 +43,7 @@ import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.model.ExpandoTable;
 import com.liferay.portlet.expando.model.ExpandoValue;
 import com.liferay.portlet.expando.util.ExpandoTestUtil;
+import com.liferay.portlet.wiki.DuplicatePageException;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.util.WikiTestUtil;
@@ -93,6 +94,30 @@ public class WikiPageServiceTest {
 	}
 
 	@Test
+	public void testMovePage() throws Exception {
+		testMovePage(false);
+	}
+
+	@Test
+	public void testMovePageWithExpando() throws Exception {
+		testMovePage(true);
+	}
+
+	@Test(expected = DuplicatePageException.class)
+	public void testMovePageSameName() throws Exception {
+		WikiPage page = WikiTestUtil.addPage(
+			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
+			ServiceTestUtil.randomString(), true);
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			_group.getGroupId());
+
+		WikiPageLocalServiceUtil.movePage(
+			TestPropsValues.getUserId(), _node.getNodeId(), page.getTitle(),
+			page.getTitle(), true, serviceContext);
+	}
+
+	@Test
 	public void testRevertPage() throws Exception {
 		testRevertPage(false);
 		testRevertPage(true);
@@ -133,6 +158,51 @@ public class WikiPageServiceTest {
 				serviceContext.getExpandoBridgeAttributes(),
 				expandoBridge.getAttributes());
 		}
+	}
+
+	protected void testMovePage(boolean hasExpandoValues) throws Exception {
+		WikiPage page = WikiTestUtil.addPage(
+			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
+			ServiceTestUtil.randomString(), true);
+
+		ExpandoColumn column = null;
+		ExpandoValue value = null;
+		ExpandoBridge expandoBridge = null;
+
+		if (hasExpandoValues) {
+			ExpandoTable table = ExpandoTestUtil.addTable(
+				PortalUtil.getClassNameId(WikiPage.class),
+				ServiceTestUtil.randomString());
+
+			column = ExpandoTestUtil.addColumn(
+				table, ServiceTestUtil.randomString(),
+				ExpandoColumnConstants.STRING);
+
+			value = ExpandoTestUtil.addValue(
+				table, column, page.getPrimaryKey(),
+				ServiceTestUtil.randomString());
+
+			expandoBridge = page.getExpandoBridge();
+
+			expandoBridge.addAttribute(
+				column.getName(), ExpandoColumnConstants.STRING,
+				value.getString());
+		}
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			_group.getGroupId());
+
+		WikiPageLocalServiceUtil.movePage(
+			TestPropsValues.getUserId(), _node.getNodeId(), page.getTitle(),
+			"New Title", true, serviceContext);
+
+		WikiPage movedPage = WikiPageLocalServiceUtil.getPage(
+			_node.getNodeId(), "New Title");
+
+		Assert.assertNotNull(movedPage);
+
+		checkPopulatedServiceContext(
+			serviceContext, movedPage, hasExpandoValues);
 	}
 
 	protected void testRevertPage(boolean hasExpandoValues) throws Exception {
