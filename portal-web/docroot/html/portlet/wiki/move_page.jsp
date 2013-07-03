@@ -42,6 +42,7 @@ String newTitle = ParamUtil.get(request, "newTitle", StringPool.BLANK);
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="nodeId" type="hidden" value="<%= node.getNodeId() %>" />
 	<aui:input name="title" type="hidden" value="<%= title %>" />
+	<aui:input name="workflowAction" type="hidden" value="<%= WorkflowConstants.ACTION_PUBLISH %>" />
 
 	<liferay-ui:tabs
 		names="rename,change-parent"
@@ -144,7 +145,23 @@ String newTitle = ParamUtil.get(request, "newTitle", StringPool.BLANK);
 				%>
 
 				<aui:button-row>
-					<aui:button disabled="<%= !newParentAvailable %>" type="submit" value="change-parent" />
+
+					<%
+					boolean pending = false;
+
+					if (wikiPage != null) {
+						pending = wikiPage.isPending();
+					}
+					%>
+
+					<c:choose>
+						<c:when test="<%= WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), scopeGroupId, WikiPage.class.getName()) %>">
+							<aui:button disabled="<%= pending %>" name="publishButton" onClick='<%= renderResponse.getNamespace() + "publishPage();" %>' value="submit-for-publication" />
+						</c:when>
+						<c:otherwise>
+							<aui:button disabled="<%= !newParentAvailable %>" type="submit" value="change-parent" />
+						</c:otherwise>
+					</c:choose>
 
 					<aui:button href="<%= redirect %>" type="cancel" />
 				</aui:button-row>
@@ -158,6 +175,12 @@ String newTitle = ParamUtil.get(request, "newTitle", StringPool.BLANK);
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "changeParent";
 
 		submitForm(document.<portlet:namespace />fm);
+	}
+
+	function <portlet:namespace />publishPage() {
+		document.<portlet:namespace />fm.<portlet:namespace />workflowAction.value = "<%= WorkflowConstants.ACTION_PUBLISH %>";
+
+		<portlet:namespace />changeParent();
 	}
 
 	function <portlet:namespace />renamePage() {
