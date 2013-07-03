@@ -40,7 +40,6 @@ import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumn;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
-import com.liferay.portlet.expando.model.ExpandoTable;
 import com.liferay.portlet.expando.model.ExpandoValue;
 import com.liferay.portlet.expando.util.ExpandoTestUtil;
 import com.liferay.portlet.wiki.DuplicatePageException;
@@ -127,6 +126,19 @@ public class WikiPageServiceTest {
 		testRevertPage(true);
 	}
 
+	protected void addExpandoValueToPage(WikiPage page) throws Exception {
+		ExpandoValue value = ExpandoTestUtil.addValue(
+			PortalUtil.getClassNameId(WikiPage.class), page.getPrimaryKey(),
+			ServiceTestUtil.randomString());
+
+		ExpandoBridge expandoBridge = page.getExpandoBridge();
+
+		ExpandoColumn column = value.getColumn();
+
+		expandoBridge.addAttribute(
+			column.getName(), ExpandoColumnConstants.STRING, value.getString());
+	}
+
 	protected void checkPopulatedServiceContext(
 			ServiceContext serviceContext, WikiPage page,
 			boolean hasExpandoValues)
@@ -169,28 +181,8 @@ public class WikiPageServiceTest {
 			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
 			ServiceTestUtil.randomString(), true);
 
-		ExpandoColumn column = null;
-		ExpandoValue value = null;
-		ExpandoBridge expandoBridge = null;
-
 		if (hasExpandoValues) {
-			ExpandoTable table = ExpandoTestUtil.addTable(
-				PortalUtil.getClassNameId(WikiPage.class),
-				ServiceTestUtil.randomString());
-
-			column = ExpandoTestUtil.addColumn(
-				table, ServiceTestUtil.randomString(),
-				ExpandoColumnConstants.STRING);
-
-			value = ExpandoTestUtil.addValue(
-				table, column, page.getPrimaryKey(),
-				ServiceTestUtil.randomString());
-
-			expandoBridge = page.getExpandoBridge();
-
-			expandoBridge.addAttribute(
-				column.getName(), ExpandoColumnConstants.STRING,
-				value.getString());
+			addExpandoValueToPage(page);
 		}
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
@@ -220,28 +212,8 @@ public class WikiPageServiceTest {
 			ServiceTestUtil.randomString(), originalContent, true,
 			serviceContext);
 
-		ExpandoColumn column = null;
-		ExpandoValue value = null;
-		ExpandoBridge expandoBridge = null;
-
 		if (hasExpandoValues) {
-			ExpandoTable table = ExpandoTestUtil.addTable(
-				PortalUtil.getClassNameId(WikiPage.class),
-				ServiceTestUtil.randomString());
-
-			column = ExpandoTestUtil.addColumn(
-				table, ServiceTestUtil.randomString(),
-				ExpandoColumnConstants.STRING);
-
-			value = ExpandoTestUtil.addValue(
-				table, column, originalPage.getPrimaryKey(),
-				ServiceTestUtil.randomString());
-
-			expandoBridge = originalPage.getExpandoBridge();
-
-			expandoBridge.addAttribute(
-				column.getName(), ExpandoColumnConstants.STRING,
-				value.getString());
+			addExpandoValueToPage(originalPage);
 		}
 
 		WikiPage updatedPage1 = WikiTestUtil.updatePage(
