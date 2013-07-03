@@ -57,16 +57,36 @@ import java.util.Map;
 public class JournalTestUtil {
 
 	public static JournalArticle addArticle(
-			long groupId, long folderId, long classNameId, String title,
-			String description, String content, Locale defaultLocale,
-			boolean workflowEnabled, boolean approved)
+			long groupId, long folderId, String title, String content)
+		throws Exception {
+
+		return addArticle(
+			groupId, folderId, title, title, content, LocaleUtil.getDefault(),
+			false, false);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, long folderId, String title, String content,
+			Locale defaultLocale, boolean workflowEnabled, boolean approved)
+		throws Exception {
+
+		return addArticle(
+			groupId, folderId, title, title, content, defaultLocale,
+			workflowEnabled, approved);
+	}
+
+	public static JournalArticle addArticle(
+			long groupId, long folderId, String title, String description,
+			String content, Locale defaultLocale, boolean workflowEnabled,
+			boolean approved)
 		throws Exception {
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
 		return addArticle(
-			groupId, folderId, classNameId, title, description, content,
-			defaultLocale, workflowEnabled, approved, serviceContext);
+			groupId, folderId, JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			title, description, content, defaultLocale, workflowEnabled,
+			approved, serviceContext);
 	}
 
 	public static JournalArticle addArticle(
@@ -110,42 +130,12 @@ public class JournalTestUtil {
 	}
 
 	public static JournalArticle addArticle(
-			long groupId, long folderId, String title, String content)
-		throws Exception {
-
-		return addArticle(
-			groupId, folderId, JournalArticleConstants.CLASSNAME_ID_DEFAULT,
-			title, title, content, LocaleUtil.getDefault(), false, false);
-	}
-
-	public static JournalArticle addArticle(
-			long groupId, long folderId, String title, String content,
-			Locale defaultLocale, boolean workflowEnabled, boolean approved)
-		throws Exception {
-
-		return addArticle(
-			groupId, folderId, JournalArticleConstants.CLASSNAME_ID_DEFAULT,
-			title, title, content, defaultLocale, workflowEnabled, approved);
-	}
-
-	public static JournalArticle addArticle(
 			long groupId, String title, String content)
 		throws Exception {
 
 		return addArticle(
-			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			JournalArticleConstants.CLASSNAME_ID_DEFAULT, title, title, content,
-			LocaleUtil.getDefault(), false, false);
-	}
-
-	public static JournalArticle addArticle(
-			long groupId, String title, String content, Class<?> klazz)
-		throws Exception {
-
-		return addArticle(
-			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			PortalUtil.getClassNameId(klazz), title, title, content,
-			LocaleUtil.getDefault(), false, false);
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
+			title, content, LocaleUtil.getDefault(), false, false);
 	}
 
 	public static JournalArticle addArticle(
@@ -153,9 +143,8 @@ public class JournalTestUtil {
 		throws Exception {
 
 		return addArticle(
-			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			JournalArticleConstants.CLASSNAME_ID_DEFAULT, title, title, content,
-			defaultLocale, false, false);
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
+			title, content, defaultLocale, false, false);
 	}
 
 	public static JournalArticle addArticle(
@@ -199,9 +188,8 @@ public class JournalTestUtil {
 		throws Exception {
 
 		return addArticle(
-			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			JournalArticleConstants.CLASSNAME_ID_DEFAULT, title, "description",
-			"content", LocaleUtil.getDefault(), true, approved);
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
+			"description", "content", LocaleUtil.getDefault(), true, approved);
 	}
 
 	public static JournalArticle addArticleWithWorkflow(
@@ -220,9 +208,8 @@ public class JournalTestUtil {
 		throws Exception {
 
 		return addArticle(
-			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			JournalArticleConstants.CLASSNAME_ID_DEFAULT, title, title, content,
-			LocaleUtil.getDefault(), true, approved);
+			groupId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title,
+			title, content, LocaleUtil.getDefault(), true, approved);
 	}
 
 	public static JournalArticle addArticleWithWorkflow(
@@ -247,9 +234,8 @@ public class JournalTestUtil {
 
 		return addArticle(
 			TestPropsValues.getGroupId(),
-			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			JournalArticleConstants.CLASSNAME_ID_DEFAULT, title, title, content,
-			LocaleUtil.getDefault(), true, approved);
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title, title,
+			content, LocaleUtil.getDefault(), true, approved);
 	}
 
 	public static JournalArticle addArticleWithXMLContent(
@@ -421,9 +407,8 @@ public class JournalTestUtil {
 			long parentFolderId, String name, ServiceContext serviceContext)
 		throws Exception {
 
-		JournalFolder folder =
-			JournalFolderLocalServiceUtil.fetchFolder(
-				serviceContext.getScopeGroupId(), name);
+		JournalFolder folder = JournalFolderLocalServiceUtil.fetchFolder(
+			serviceContext.getScopeGroupId(), name);
 
 		if (folder != null) {
 			return folder;
@@ -472,9 +457,8 @@ public class JournalTestUtil {
 			}
 		}
 
-		Document document =
-			createDocument(
-				sb.toString(), LocaleUtil.toLanguageId(defaultLocale));
+		Document document = createDocument(
+			sb.toString(), LocaleUtil.toLanguageId(defaultLocale));
 
 		for (Locale locale : _locales) {
 			addLanguageIdElement(
@@ -486,7 +470,6 @@ public class JournalTestUtil {
 	}
 
 	public static String getSampleTemplateXSL() {
-
 		return "$name.getData()";
 	}
 
@@ -556,14 +539,12 @@ public class JournalTestUtil {
 
 		if (layout.isPrivateLayout()) {
 			if (group.isUser()) {
-				friendlyURL =
-					friendlyURL.concat(
-						PortalUtil.getPathFriendlyURLPrivateUser());
+				friendlyURL = friendlyURL.concat(
+					PortalUtil.getPathFriendlyURLPrivateUser());
 			}
 			else {
-				friendlyURL =
-					friendlyURL.concat(
-						PortalUtil.getPathFriendlyURLPrivateGroup());
+				friendlyURL = friendlyURL.concat(
+					PortalUtil.getPathFriendlyURLPrivateGroup());
 			}
 		}
 		else {
@@ -578,7 +559,6 @@ public class JournalTestUtil {
 	}
 
 	private static Map<String, String> _getMap(Element dynamicElementElement) {
-
 		Map<String, String> map = new HashMap<String, String>();
 
 		// Attributes

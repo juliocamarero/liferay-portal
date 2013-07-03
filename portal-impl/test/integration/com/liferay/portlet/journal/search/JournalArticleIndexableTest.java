@@ -12,13 +12,14 @@
  * details.
  */
 
-package com.liferay.portlet.journal.model.impl;
+package com.liferay.portlet.journal.search;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
@@ -27,11 +28,13 @@ import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQueryTestUtil;
 import com.liferay.portlet.asset.util.AssetUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 
 import org.junit.Assert;
@@ -53,43 +56,41 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 @Transactional
-public class JournalArticleImplTest {
+public class JournalArticleIndexableTest {
 
 	@Test
 	public void testJournalArticleIsIndexableByDefault() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
-		String randomTitle = ServiceTestUtil.randomString();
-
 		AssetEntryQuery assetEntryQuery =
 			AssetEntryQueryTestUtil.createAssetEntryQuery(
 				group.getGroupId(), JournalArticle.class.getName(), null, null,
 				new long[] {}, null);
+
 		SearchContext searchContext = ServiceTestUtil.getSearchContext(
 			group.getGroupId());
+
 		searchContext.setGroupIds(assetEntryQuery.getGroupIds());
 
-		Hits results = null;
-		results =
-			AssetUtil.search(
-				searchContext, assetEntryQuery, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS);
-		int initial = results.toList().size();
+		Hits results = AssetUtil.search(
+			searchContext, assetEntryQuery, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 
-		JournalArticle article =
-			JournalTestUtil.addArticle(
-				group.getGroupId(), randomTitle, randomTitle);
+		int initialCount = results.getLength();
+
+		JournalArticle article = JournalTestUtil.addArticle(
+			group.getGroupId(), ServiceTestUtil.randomString(),
+			ServiceTestUtil.randomString());
+
 		Assert.assertTrue(article.isIndexable());
 
-		results =
-			AssetUtil.search(
-				searchContext, assetEntryQuery, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS);
+		results = AssetUtil.search(
+			searchContext, assetEntryQuery, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 
 		Assert.assertEquals(
-			"Regular articles should get indexed", initial + 1,
-			results.toList().size());
-
+			"Regular articles should get indexed", initialCount + 1,
+			results.getLength());
 	}
 
 	@Test
@@ -98,40 +99,40 @@ public class JournalArticleImplTest {
 
 		Group group = GroupTestUtil.addGroup();
 
-		String randomTitle = ServiceTestUtil.randomString();
-
 		AssetEntryQuery assetEntryQuery =
 			AssetEntryQueryTestUtil.createAssetEntryQuery(
 				group.getGroupId(), JournalArticle.class.getName(), null, null,
 				new long[] {}, null);
+
 		SearchContext searchContext = ServiceTestUtil.getSearchContext(
 			group.getGroupId());
+
 		searchContext.setGroupIds(assetEntryQuery.getGroupIds());
 
-		Hits results = null;
-		results =
-			AssetUtil.search(
-				searchContext, assetEntryQuery, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS);
-		int initial = results.toList().size();
+		Hits results = AssetUtil.search(
+			searchContext, assetEntryQuery, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 
-		JournalArticle article =
-			JournalTestUtil.addArticle(
-				group.getGroupId(), randomTitle, randomTitle,
-				DDMStructure.class);
+		int initial = results.getLength();
+
+		JournalArticle article = JournalTestUtil.addArticle(
+			group.getGroupId(), JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			PortalUtil.getClassNameId(DDMStructure.class),
+			ServiceTestUtil.randomString(), ServiceTestUtil.randomString(),
+			ServiceTestUtil.randomString(), LocaleUtil.getDefault(), false,
+			true, ServiceTestUtil.getServiceContext(group.getGroupId()));
+
 		Assert.assertFalse(
 			"Default values holder articles should claim to be NOT indexable",
 			article.isIndexable());
 
-		results =
-			AssetUtil.search(
-				searchContext, assetEntryQuery, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS);
+		results = AssetUtil.search(
+			searchContext, assetEntryQuery, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 
 		Assert.assertEquals(
 			"Default values holder articles should NOT get indexed", initial,
-			results.toList().size());
-
+			results.getLength());
 	}
 
 }
