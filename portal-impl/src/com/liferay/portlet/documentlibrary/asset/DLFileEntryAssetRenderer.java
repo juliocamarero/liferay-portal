@@ -60,11 +60,10 @@ public class DLFileEntryAssetRenderer
 	extends BaseAssetRenderer implements TrashRenderer {
 
 	public DLFileEntryAssetRenderer(
-		FileEntry fileEntry, FileVersion fileVersion, int type) {
+		FileEntry fileEntry, FileVersion fileVersion) {
 
 		_fileEntry = fileEntry;
 		_fileVersion = fileVersion;
-		setAssetRendererType(type);
 	}
 
 	@Override
