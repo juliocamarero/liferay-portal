@@ -230,7 +230,6 @@ if (Validator.isNotNull(content)) {
 									<aui:input name="structureId" type="hidden" value="<%= structureId %>" />
 									<aui:input name="structureName" type="hidden" value="<%= ddmStructureName %>" />
 									<aui:input name="structureDescription" type="hidden" value="<%= ddmStructureDescription %>" />
-									<aui:input name="structureXSD" type="hidden" value="<%= ddmStructureXSD %>" />
 
 									<span class="structure-name-label" id="<portlet:namespace />structureNameLabel">
 										<%= HtmlUtil.escape(ddmStructureName) %>
@@ -247,14 +246,6 @@ if (Validator.isNotNull(content)) {
 										<c:if test="<%= Validator.isNotNull(structureId) %>">
 											<span class="default-link">(<a href="javascript:;" id="<portlet:namespace />loadDefaultStructure"><liferay-ui:message key="use-default" /></a>)</span>
 										</c:if>
-
-										<span class="structure-controls">
-											<span class="structure-buttons">
-												<aui:button cssClass="save-structure-button hide" name="saveStructureButton" value="save" />
-
-												<aui:button cssClass="edit-structure-button hide" name="editStructureButton" value="stop-editing" />
-											</span>
-										</span>
 									</c:if>
 								</div>
 							</aui:fieldset>
@@ -517,7 +508,7 @@ if (Validator.isNotNull(content)) {
 										</label>
 
 										<div class="journal-article-component-container">
-											<liferay-ui:input-editor contentsLanguageId="<%= Validator.isNotNull(toLanguageId) ? toLanguageId : defaultLanguageId %>" editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" name='<%= renderResponse.getNamespace() + "structure_el_TextAreaField_content" %>' toolbarSet="liferay-article" width="100%" />
+											<liferay-ui:input-editor contentsLanguageId="<%= Validator.isNotNull(toLanguageId) ? toLanguageId : defaultLanguageId %>" editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" name="articleContent" toolbarSet="liferay-article" width="100%" />
 										</div>
 
 										<aui:input cssClass="journal-article-localized-checkbox" label="localizable" name="localized" type="hidden" value="<%= true %>" />
@@ -573,18 +564,7 @@ if (Validator.isNotNull(content)) {
 			</c:if>
 		</div>
 	</td>
-
-	<c:choose>
-		<c:when test="<%= Validator.isNull(toLanguageId) %>">
-			<td class="lfr-top">
-				<%@ include file="/html/portlet/journal/edit_article_extra.jspf" %>
-			</td>
-		</c:when>
-		<c:otherwise>
-			<aui:input name="structureId" type="hidden" value="<%= structureId %>" />
-		</c:otherwise>
-	</c:choose>
-</tr>
+	<aui:input name="structureId" type="hidden" value="<%= structureId %>" />
 </table>
 
 <aui:script>
@@ -724,6 +704,30 @@ if (Validator.isNotNull(content)) {
 				document.<portlet:namespace />fm1.<portlet:namespace />ddmTemplateId.value = event.ddmtemplateid;
 
 				submitForm(document.<portlet:namespace />fm1, null, false, false);
+			}
+		);
+	}
+</aui:script>
+
+<aui:script use="aui-base">
+	var loadDefaultStructure = A.one('#<portlet:namespace />loadDefaultStructure');
+
+	if (loadDefaultStructure) {
+		loadDefaultStructure.on(
+			'click',
+			function(event) {
+				event.preventDefault();
+
+				var form = A.one('#<portlet:namespace />fm1');
+
+				form.one('#<portlet:namespace /><%= Constants.CMD %>').val('<%= Constants.RESTORE %>');
+				form.one('#<portlet:namespace />redirect').val('<%= currentURL %>');
+
+				<portlet:actionURL var="restoreURL">
+					<portlet:param name="struts_action" value="/journal/preview_article_content" />
+				</portlet:actionURL>
+
+				submitForm(form, '<%= restoreURL.toString() %>', false, false);
 			}
 		);
 	}
