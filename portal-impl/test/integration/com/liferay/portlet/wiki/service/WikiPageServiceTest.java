@@ -15,8 +15,11 @@
 package com.liferay.portlet.wiki.service;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
+import com.liferay.portal.kernel.test.AssertUtils;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -28,6 +31,12 @@ import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetLink;
+import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetLinkLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumn;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
@@ -38,9 +47,7 @@ import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.util.WikiTestUtil;
 
-import java.io.Serializable;
-
-import java.util.Map;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -89,6 +96,43 @@ public class WikiPageServiceTest {
 	public void testRevertPage() throws Exception {
 		testRevertPage(false);
 		testRevertPage(true);
+	}
+
+	protected void checkPopulatedServiceContext(
+			ServiceContext serviceContext, WikiPage page,
+			boolean hasExpandoValues)
+		throws Exception {
+
+		long[] assetCategoryIds = AssetCategoryLocalServiceUtil.getCategoryIds(
+			WikiPage.class.getName(), page.getResourcePrimKey());
+
+		Assert.assertEquals(
+			assetCategoryIds, serviceContext.getAssetCategoryIds());
+
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(
+			WikiPage.class.getName(), page.getResourcePrimKey());
+
+		List<AssetLink> assetLinks = AssetLinkLocalServiceUtil.getLinks(
+			assetEntry.getEntryId());
+
+		long[] assetLinkEntryIds = StringUtil.split(
+			ListUtil.toString(assetLinks, AssetLink.ENTRY_ID2_ACCESSOR), 0L);
+
+		Assert.assertEquals(
+			assetLinkEntryIds, serviceContext.getAssetLinkEntryIds());
+
+		String[] assetTagNames = AssetTagLocalServiceUtil.getTagNames(
+			WikiPage.class.getName(), page.getResourcePrimKey());
+
+		Assert.assertEquals(assetTagNames, serviceContext.getAssetTagNames());
+
+		if (hasExpandoValues) {
+			ExpandoBridge expandoBridge = page.getExpandoBridge();
+
+			AssertUtils.assertEquals(
+				serviceContext.getExpandoBridgeAttributes(),
+				expandoBridge.getAttributes());
+		}
 	}
 
 	protected void testRevertPage(boolean hasExpandoValues) throws Exception {
@@ -144,19 +188,8 @@ public class WikiPageServiceTest {
 
 		Assert.assertEquals(originalContent, revertedPage.getContent());
 
-		if (hasExpandoValues) {
-			expandoBridge = revertedPage.getExpandoBridge();
-
-			Map<String, Serializable> attributes =
-				expandoBridge.getAttributes();
-
-			if (attributes.isEmpty()) {
-				Assert.fail("Expando values have not been reverted with page");
-			}
-
-			Assert.assertEquals(
-				value.getString(), attributes.get(column.getName()));
-		}
+		checkPopulatedServiceContext(
+			serviceContext, revertedPage, hasExpandoValues);
 	}
 
 	private Group _group;
