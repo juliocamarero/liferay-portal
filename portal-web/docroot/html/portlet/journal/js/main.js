@@ -424,22 +424,6 @@ AUI.add(
 				return templateId && templateId.val();
 			},
 
-			loadDefaultStructure: function() {
-				var instance = this;
-
-				var form = instance.getPrincipalForm();
-
-				var structureIdInput = instance.getByName(form, 'structureId');
-				var templateIdInput = instance.getByName(form, 'templateId');
-				var contentInput = instance.getByName(form, 'content');
-
-				structureIdInput.val('');
-				templateIdInput.val('');
-				contentInput.val('');
-
-				submitForm(form, null, false, false);
-			},
-
 			normalizeValue: function(value) {
 				var instance = this;
 
@@ -1068,7 +1052,6 @@ AUI.add(
 
 				var changeStructureButton = instance.getById('changeStructureButton');
 				var editStructureLink = instance.getById('editStructureLink');
-				var loadDefaultStructureButton = instance.getById('loadDefaultStructure');
 				var publishButton = instance.getById('publishButton');
 				var saveButton = instance.getById('saveButton');
 				var translateButton = instance.getById('translateButton');
@@ -1099,17 +1082,6 @@ AUI.add(
 							instance._attachEditContainerEvents();
 
 							instance.enableEditMode();
-						}
-					);
-				}
-
-				if (loadDefaultStructureButton) {
-					loadDefaultStructureButton.detach('click');
-
-					loadDefaultStructureButton.on(
-						'click',
-						function() {
-							instance.loadDefaultStructure();
 						}
 					);
 				}
@@ -1671,16 +1643,6 @@ AUI.add(
 						}
 
 						return instance.fieldContainer;
-					},
-
-					getFieldElementContainer: function() {
-						var instance = this;
-
-						if (!instance.fieldElementContainer) {
-							instance.fieldElementContainer = instance.getFieldContainer().one('div.journal-article-component-container');
-						}
-
-						return instance.fieldElementContainer;
 					},
 
 					getFieldInstance: function() {

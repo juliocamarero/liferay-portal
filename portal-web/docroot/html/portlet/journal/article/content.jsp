@@ -709,6 +709,30 @@ if (Validator.isNotNull(content)) {
 	}
 </aui:script>
 
+<aui:script use="aui-base">
+	var loadDefaultStructure = A.one('#<portlet:namespace />loadDefaultStructure');
+
+	if (loadDefaultStructure) {
+		loadDefaultStructure.on(
+			'click',
+			function(event) {
+				event.preventDefault();
+
+				var form = A.one('#<portlet:namespace />fm1');
+
+				form.one('#<portlet:namespace /><%= Constants.CMD %>').val('<%= Constants.RESTORE %>');
+				form.one('#<portlet:namespace />redirect').val('<%= currentURL %>');
+
+				<portlet:actionURL var="restoreURL">
+					<portlet:param name="struts_action" value="/journal/preview_article_content" />
+				</portlet:actionURL>
+
+				submitForm(form, '<%= restoreURL.toString() %>', false, false);
+			}
+		);
+	}
+</aui:script>
+
 <aui:script use="aui-base,aui-dialog-iframe-deprecated,liferay-portlet-journal">
 	var editDDMTemplate = A.one('#<portlet:namespace />editDDMTemplate');
 

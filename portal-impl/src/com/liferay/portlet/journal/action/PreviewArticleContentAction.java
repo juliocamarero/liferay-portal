@@ -17,7 +17,9 @@ package com.liferay.portlet.journal.action;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
@@ -71,7 +73,9 @@ public class PreviewArticleContentAction extends PortletAction {
 
 			String output = null;
 
-			if (cmd.equals(Constants.PREVIEW)) {
+			if (cmd.equals(Constants.PREVIEW) ||
+				cmd.equals(Constants.RESTORE)) {
+
 				String title = ParamUtil.getString(actionRequest, "title");
 				String description = ParamUtil.getString(
 					actionRequest, "description");
@@ -148,7 +152,19 @@ public class PreviewArticleContentAction extends PortletAction {
 
 			actionRequest.setAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT, output);
 
-			if (output.startsWith("<?xml ")) {
+			if (cmd.equals(Constants.RESTORE)) {
+				String redirect = ParamUtil.getString(
+					actionRequest, "redirect");
+
+				redirect = HttpUtil.setParameter(redirect, "content", output);
+				redirect = HttpUtil.setParameter(
+					redirect, "structureId", StringPool.BLANK);
+				redirect = HttpUtil.setParameter(
+					redirect, "templateId", StringPool.BLANK);
+
+				sendRedirect(actionRequest, actionResponse, redirect);
+			}
+			else if (output.startsWith("<?xml ")) {
 				setForward(
 					actionRequest, "portlet.journal.raw_article_content");
 			}
