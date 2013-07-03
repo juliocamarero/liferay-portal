@@ -98,11 +98,6 @@ public class WikiPageServiceTest {
 		testMovePage(false);
 	}
 
-	@Test
-	public void testMovePageWithExpando() throws Exception {
-		testMovePage(true);
-	}
-
 	@Test(expected = DuplicatePageException.class)
 	public void testMovePageSameName() throws Exception {
 		WikiPage page = WikiTestUtil.addPage(
@@ -118,8 +113,17 @@ public class WikiPageServiceTest {
 	}
 
 	@Test
+	public void testMovePageWithExpando() throws Exception {
+		testMovePage(true);
+	}
+
+	@Test
 	public void testRevertPage() throws Exception {
 		testRevertPage(false);
+	}
+
+	@Test
+	public void testRevertPageWithExpando() throws Exception {
 		testRevertPage(true);
 	}
 
