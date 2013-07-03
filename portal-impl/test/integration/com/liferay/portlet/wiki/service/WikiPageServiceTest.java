@@ -117,6 +117,16 @@ public class WikiPageServiceTest {
 	}
 
 	@Test
+	public void testRestorePageFromTrash() throws Exception {
+		testRestorePageFromTrash(false);
+	}
+
+	@Test
+	public void testRestorePageFromTrashWithExpando() throws Exception {
+		testRestorePageFromTrash(true);
+	}
+
+	@Test
 	public void testRevertPage() throws Exception {
 		testRevertPage(false);
 	}
@@ -199,6 +209,40 @@ public class WikiPageServiceTest {
 
 		checkPopulatedServiceContext(
 			serviceContext, movedPage, hasExpandoValues);
+	}
+
+	protected void testRestorePageFromTrash(boolean hasExpandoValues)
+		throws Exception {
+
+		WikiPage page = WikiTestUtil.addPage(
+			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
+			ServiceTestUtil.randomString(), true);
+
+		if (hasExpandoValues) {
+			addExpandoValueToPage(page);
+		}
+
+		WikiPageLocalServiceUtil.movePageToTrash(
+			TestPropsValues.getUserId(), _node.getNodeId(), page.getTitle());
+
+		WikiPageLocalServiceUtil.restorePageFromTrash(
+			TestPropsValues.getUserId(), page);
+
+		WikiPage restoredPage = WikiPageLocalServiceUtil.getPage(
+			page.getResourcePrimKey());
+
+		Assert.assertNotNull(restoredPage);
+
+		if (hasExpandoValues) {
+			ExpandoBridge expandoBridge = page.getExpandoBridge();
+
+			ExpandoBridge restoredExpandoBridge =
+				restoredPage.getExpandoBridge();
+
+			AssertUtils.assertEquals(
+				expandoBridge.getAttributes(),
+				restoredExpandoBridge.getAttributes());
+		}
 	}
 
 	protected void testRevertPage(boolean hasExpandoValues) throws Exception {
