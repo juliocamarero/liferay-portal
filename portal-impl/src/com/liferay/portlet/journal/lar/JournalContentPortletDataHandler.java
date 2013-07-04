@@ -154,12 +154,6 @@ public class JournalContentPortletDataHandler
 		if (articleGroupId != portletDataContext.getScopeGroupId()) {
 			portletDataContext.setScopeGroupId(articleGroupId);
 		}
-		else if (articleGroupId ==
-					portletDataContext.getSourceCompanyGroupId()) {
-
-			portletDataContext.setScopeGroupId(
-				portletDataContext.getCompanyGroupId());
-		}
 
 		JournalArticle article = null;
 
