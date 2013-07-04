@@ -730,26 +730,7 @@ if (Validator.isNotNull(content)) {
 		);
 	}
 
-	<%
-	String doAsUserId = themeDisplay.getDoAsUserId();
-
-	if (Validator.isNull(doAsUserId)) {
-		doAsUserId = Encryptor.encrypt(company.getKeyObj(), String.valueOf(themeDisplay.getUserId()));
-	}
-	%>
-
-	<portlet:resourceURL var="editorURL">
-		<portlet:param name="editorImpl" value="<%= EDITOR_WYSIWYG_IMPL_KEY %>" />
-		<portlet:param name="name" value="LIFERAY_NAME" />
-		<portlet:param name="skipEditorLoading" value="LIFERAY_SKIP_EDITOR" />
-		<portlet:param name="struts_action" value="/journal/edit_article" />
-		<portlet:param name="toolbarSet" value="liferay-article" />
-	</portlet:resourceURL>
-
 	Liferay.Portlet.Journal.PROXY = {};
-	Liferay.Portlet.Journal.PROXY.doAsUserId = '<%= HttpUtil.encodeURL(doAsUserId) %>';
-	Liferay.Portlet.Journal.PROXY.editorImpl = '<%= EditorUtil.getEditorValue(request, EDITOR_WYSIWYG_IMPL_KEY) %>';
-	Liferay.Portlet.Journal.PROXY.editorURL = '<%= HtmlUtil.escapeJS(editorURL) %>';
 	Liferay.Portlet.Journal.PROXY.instanceIdKey = '<%= instanceIdKey %>';
 	Liferay.Portlet.Journal.PROXY.pathThemeCss = '<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>';
 	Liferay.Portlet.Journal.PROXY.portletNamespace = '<portlet:namespace />';
