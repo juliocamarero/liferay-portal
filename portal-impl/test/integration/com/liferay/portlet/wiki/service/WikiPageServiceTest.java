@@ -81,6 +81,16 @@ public class WikiPageServiceTest {
 	}
 
 	@Test
+	public void testChangeParent() throws Exception {
+		testChangeParent(false);
+	}
+
+	@Test
+	public void testChangeParentWithExpando() throws Exception {
+		testChangeParent(true);
+	}
+
+	@Test
 	public void testGetPage() throws Exception {
 		WikiPage page = WikiTestUtil.addPage(
 			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
@@ -151,7 +161,7 @@ public class WikiPageServiceTest {
 
 	protected void checkPopulatedServiceContext(
 			ServiceContext serviceContext, WikiPage page,
-			boolean hasExpandoValues)
+			boolean hasExpandoValues, boolean isChangeParent)
 		throws Exception {
 
 		long[] assetCategoryIds = AssetCategoryLocalServiceUtil.getCategoryIds(
@@ -166,11 +176,17 @@ public class WikiPageServiceTest {
 		List<AssetLink> assetLinks = AssetLinkLocalServiceUtil.getLinks(
 			assetEntry.getEntryId());
 
-		long[] assetLinkEntryIds = StringUtil.split(
-			ListUtil.toString(assetLinks, AssetLink.ENTRY_ID2_ACCESSOR), 0L);
+		if (isChangeParent) {
+			Assert.assertNull(serviceContext.getAssetLinkEntryIds());
+		}
+		else {
+			long[] assetLinkEntryIds = StringUtil.split(
+				ListUtil.toString(assetLinks, AssetLink.ENTRY_ID2_ACCESSOR),
+				0L);
 
-		Assert.assertEquals(
-			assetLinkEntryIds, serviceContext.getAssetLinkEntryIds());
+			Assert.assertEquals(
+				assetLinkEntryIds, serviceContext.getAssetLinkEntryIds());
+		}
 
 		String[] assetTagNames = AssetTagLocalServiceUtil.getTagNames(
 			WikiPage.class.getName(), page.getResourcePrimKey());
@@ -184,6 +200,33 @@ public class WikiPageServiceTest {
 				serviceContext.getExpandoBridgeAttributes(),
 				expandoBridge.getAttributes());
 		}
+	}
+
+	protected void testChangeParent(boolean hasExpandoValues) throws Exception {
+		WikiPage page = WikiTestUtil.addPage(
+			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
+			ServiceTestUtil.randomString(), true);
+
+		if (hasExpandoValues) {
+			addExpandoValueToPage(page);
+		}
+
+		WikiPage parentPage = WikiTestUtil.addPage(
+			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
+			ServiceTestUtil.randomString(), true);
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			_group.getGroupId());
+
+		WikiPageLocalServiceUtil.changeParent(
+			TestPropsValues.getUserId(), _node.getNodeId(), page.getTitle(),
+			parentPage.getTitle(), serviceContext);
+
+		WikiPage retrievedPage = WikiPageLocalServiceUtil.getPage(
+			page.getResourcePrimKey());
+
+		checkPopulatedServiceContext(
+			serviceContext, retrievedPage, hasExpandoValues, true);
 	}
 
 	protected void testMovePage(boolean hasExpandoValues) throws Exception {
@@ -208,7 +251,7 @@ public class WikiPageServiceTest {
 		Assert.assertNotNull(movedPage);
 
 		checkPopulatedServiceContext(
-			serviceContext, movedPage, hasExpandoValues);
+			serviceContext, movedPage, hasExpandoValues, false);
 	}
 
 	protected void testRestorePageFromTrash(boolean hasExpandoValues)
@@ -279,7 +322,7 @@ public class WikiPageServiceTest {
 		Assert.assertEquals(originalContent, revertedPage.getContent());
 
 		checkPopulatedServiceContext(
-			serviceContext, revertedPage, hasExpandoValues);
+			serviceContext, revertedPage, hasExpandoValues, false);
 	}
 
 	private Group _group;
