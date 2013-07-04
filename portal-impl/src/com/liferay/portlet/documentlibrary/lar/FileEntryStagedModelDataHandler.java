@@ -509,8 +509,9 @@ public class FileEntryStagedModelDataHandler
 		StagedModelDataHandlerUtil.exportStagedModel(
 			portletDataContext, dlFileEntryType);
 
-		fileEntryElement.addAttribute(
-			"fileEntryTypeUuid", dlFileEntryType.getUuid());
+		portletDataContext.addReferenceElement(
+			fileEntry, fileEntryElement, dlFileEntryType,
+			PortletDataContext.REFERENCE_TYPE_STRONG, false);
 
 		List<DDMStructure> ddmStructures = dlFileEntryType.getDDMStructures();
 
@@ -545,36 +546,64 @@ public class FileEntryStagedModelDataHandler
 			ServiceContext serviceContext)
 		throws Exception {
 
-		String fileEntryTypeUuid = fileEntryElement.attributeValue(
-			"fileEntryTypeUuid");
+		List<Element> referenceDataElements =
+			portletDataContext.getReferenceDataElements(
+				fileEntryElement, DLFileEntryType.class);
 
-		if (Validator.isNull(fileEntryTypeUuid)) {
+		if (referenceDataElements.size() != 1) {
 			return;
 		}
 
+		Element fileEntryTypeElement = referenceDataElements.get(0);
+
+		String fileEntryTypePath = fileEntryTypeElement.attributeValue("path");
+
 		DLFileEntryType dlFileEntryType =
+			(DLFileEntryType)portletDataContext.getZipEntryAsObject(
+				fileEntryTypePath);
+
+		DLFileEntryType existingDLFileEntryType =
 			DLFileEntryTypeLocalServiceUtil.
 				fetchDLFileEntryTypeByUuidAndGroupId(
-					fileEntryTypeUuid, portletDataContext.getScopeGroupId());
+					dlFileEntryType.getUuid(),
+					portletDataContext.getScopeGroupId());
 
-		if (dlFileEntryType == null) {
-
-			dlFileEntryType =
+		if (existingDLFileEntryType == null) {
+			existingDLFileEntryType =
 				DLFileEntryTypeLocalServiceUtil.
 					fetchDLFileEntryTypeByUuidAndGroupId(
+						dlFileEntryType.getUuid(),
 						portletDataContext.getCompanyGroupId());
+		}
 
-			if (dlFileEntryType == null) {
-				serviceContext.setAttribute("fileEntryTypeId", -1);
+		if (existingDLFileEntryType == null) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, dlFileEntryType);
 
-				return;
-			}
+			Map<Long, Long> dlFileEntryTypeIds =
+				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+					DLFileEntryType.class);
+
+			long dlFileEntryTypeId = MapUtil.getLong(
+				dlFileEntryTypeIds, dlFileEntryType.getFileEntryTypeId(),
+				dlFileEntryType.getFileEntryTypeId());
+
+			existingDLFileEntryType =
+				DLFileEntryTypeLocalServiceUtil.fetchDLFileEntryType(
+					dlFileEntryTypeId);
+		}
+
+		if (existingDLFileEntryType == null) {
+			serviceContext.setAttribute("fileEntryTypeId", -1);
+
+			return;
 		}
 
 		serviceContext.setAttribute(
-			"fileEntryTypeId", dlFileEntryType.getFileEntryTypeId());
+			"fileEntryTypeId", existingDLFileEntryType.getFileEntryTypeId());
 
-		List<DDMStructure> ddmStructures = dlFileEntryType.getDDMStructures();
+		List<DDMStructure> ddmStructures =
+			existingDLFileEntryType.getDDMStructures();
 
 		for (DDMStructure ddmStructure : ddmStructures) {
 			Element structureFieldsElement =
