@@ -32,9 +32,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Portlet;
-import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
@@ -289,9 +287,6 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			final PortletDataContext portletDataContext)
 		throws Exception {
 
-		final Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
-			portletDataContext.getCompanyId());
-
 		return new DLFileEntryTypeExportActionableDynamicQuery(
 			portletDataContext) {
 
@@ -305,7 +300,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 					property.in(
 						new Long[] {
 							portletDataContext.getScopeGroupId(),
-							companyGroup.getGroupId()
+							portletDataContext.getCompanyGroupId()
 						}));
 			}
 
