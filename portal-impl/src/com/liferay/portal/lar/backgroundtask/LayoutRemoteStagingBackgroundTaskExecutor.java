@@ -15,7 +15,6 @@
 package com.liferay.portal.lar.backgroundtask;
 
 import com.liferay.portal.NoSuchLayoutException;
-import com.liferay.portal.RemoteExportException;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -177,8 +176,7 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 			long[] layoutIds = getLayoutIds(layouts);
 
 			if (layoutIds.length <= 0) {
-				throw new RemoteExportException(
-					RemoteExportException.NO_LAYOUTS);
+				throw new Exception("No layout ids found to publish");
 			}
 
 			return LayoutLocalServiceUtil.exportLayoutsAsFile(
