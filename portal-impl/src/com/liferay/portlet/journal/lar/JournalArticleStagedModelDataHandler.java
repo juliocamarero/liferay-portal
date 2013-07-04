@@ -616,7 +616,7 @@ public class JournalArticleStagedModelDataHandler
 					article.isSmallImage(), article.getSmallImageURL(),
 					smallFile, images, articleURL, serviceContext);
 			}
-			else {
+			else if (importArticle(portletDataContext, existingArticle)) {
 				importedArticle = JournalArticleLocalServiceUtil.updateArticle(
 					userId, existingArticle.getGroupId(), folderId,
 					existingArticle.getArticleId(), article.getVersion(),
@@ -699,6 +699,20 @@ public class JournalArticleStagedModelDataHandler
 
 		portletDataContext.addReferenceElement(
 			article, articleElement, image, articleImagePath, false);
+	}
+
+	protected boolean importArticle(
+			PortletDataContext portletDataContext, JournalArticle article)
+		throws PortalException, SystemException {
+
+		if ((article.getGroupId() == portletDataContext.getCompanyGroupId()) &&
+			(portletDataContext.getGroupId() !=
+				portletDataContext.getCompanyGroupId())) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	protected void prepareLanguagesForImport(JournalArticle article)

@@ -136,18 +136,17 @@ public class DLFileEntryTypeStagedModelDataHandler
 						serviceContext);
 			}
 			else {
-				if (!isFileEntryTypeGlobal(
-						portletDataContext.getCompanyId(),
-						existingDLFileEntryType)) {
+				if (!importFileEntryType(
+						portletDataContext, existingDLFileEntryType)) {
 
-					DLFileEntryTypeLocalServiceUtil.updateFileEntryType(
-						userId, existingDLFileEntryType.getFileEntryTypeId(),
-						fileEntryType.getNameMap(),
-						fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
-						serviceContext);
+					return;
 				}
 
-				importedDLFileEntryType = existingDLFileEntryType;
+				DLFileEntryTypeLocalServiceUtil.updateFileEntryType(
+					userId, existingDLFileEntryType.getFileEntryTypeId(),
+					fileEntryType.getNameMap(),
+					fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
+					serviceContext);
 			}
 		}
 		else {
@@ -158,12 +157,6 @@ public class DLFileEntryTypeStagedModelDataHandler
 					fileEntryType.getNameMap(),
 					fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
 					serviceContext);
-		}
-
-		if (isFileEntryTypeGlobal(
-				portletDataContext.getCompanyId(), importedDLFileEntryType)) {
-
-			return;
 		}
 
 		portletDataContext.importClassedModel(
@@ -197,17 +190,20 @@ public class DLFileEntryTypeStagedModelDataHandler
 		}
 	}
 
-	protected boolean isFileEntryTypeGlobal(
-			long companyId, DLFileEntryType dlFileEntryType)
+	protected boolean importFileEntryType(
+			PortletDataContext portletDataContext,
+			DLFileEntryType dlFileEntryType)
 		throws PortalException, SystemException {
 
-		Group group = GroupLocalServiceUtil.getCompanyGroup(companyId);
+		if ((dlFileEntryType.getGroupId() ==
+				portletDataContext.getCompanyGroupId()) &&
+			(portletDataContext.getGroupId() !=
+				portletDataContext.getCompanyGroupId())) {
 
-		if (dlFileEntryType.getGroupId() == group.getGroupId()) {
-			return true;
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 }
