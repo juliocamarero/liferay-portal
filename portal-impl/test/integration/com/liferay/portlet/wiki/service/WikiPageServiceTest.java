@@ -81,6 +81,16 @@ public class WikiPageServiceTest {
 	}
 
 	@Test
+	public void testChangeParent() throws Exception {
+		testChangeParent(false);
+	}
+
+	@Test
+	public void testChangeParentWithExpando() throws Exception {
+		testChangeParent(true);
+	}
+
+	@Test
 	public void testGetPage() throws Exception {
 		WikiPage page = WikiTestUtil.addPage(
 			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
@@ -184,6 +194,33 @@ public class WikiPageServiceTest {
 				serviceContext.getExpandoBridgeAttributes(),
 				expandoBridge.getAttributes());
 		}
+	}
+
+	protected void testChangeParent(boolean hasExpandoValues) throws Exception {
+		WikiPage page = WikiTestUtil.addPage(
+			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
+			ServiceTestUtil.randomString(), true);
+
+		if (hasExpandoValues) {
+			addExpandoValueToPage(page);
+		}
+
+		WikiPage parentPage = WikiTestUtil.addPage(
+			TestPropsValues.getUserId(), _group.getGroupId(), _node.getNodeId(),
+			ServiceTestUtil.randomString(), true);
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			_group.getGroupId());
+
+		WikiPageLocalServiceUtil.changeParent(
+			TestPropsValues.getUserId(), _node.getNodeId(), page.getTitle(),
+			parentPage.getTitle(), serviceContext);
+
+		WikiPage retrievedPage = WikiPageLocalServiceUtil.getPage(
+			page.getResourcePrimKey());
+
+		checkPopulatedServiceContext(
+			serviceContext, retrievedPage, hasExpandoValues);
 	}
 
 	protected void testMovePage(boolean hasExpandoValues) throws Exception {
