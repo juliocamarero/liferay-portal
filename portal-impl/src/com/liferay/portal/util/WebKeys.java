@@ -84,9 +84,9 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 
 	public static final String DIFF_RESULTS = "DIFF_RESULTS";
 
-	public static final String DOCUMENT_LIBRARY_FILE_ENTRIES = "DOCUMENT_LIBRARY_FILE_ENTRIES";
+	public static final String DISPLAY_SUCCESS_MESSAGE = "DISPLAY_SUCCESS_MESSAGE"; public static final String DOCUMENT_LIBRARY_FILE_ENTRY = "DOCUMENT_LIBRARY_FILE_ENTRY";
 
-	public static final String DOCUMENT_LIBRARY_FILE_ENTRY = "DOCUMENT_LIBRARY_FILE_ENTRY";
+	public static final String DOCUMENT_LIBRARY_FILE_ENTRIES = "DOCUMENT_LIBRARY_FILE_ENTRIES";
 
 	public static final String DOCUMENT_LIBRARY_FILE_ENTRY_TYPE = "DOCUMENT_LIBRARY_FILE_ENTRY_TYPE";
 

@@ -260,6 +260,13 @@ public class PortletAction extends Action {
 	protected boolean isDisplaySuccessMessage(PortletRequest portletRequest)
 		throws SystemException {
 
+		boolean displaySuccessMessage = GetterUtil.getBoolean(
+			portletRequest.getAttribute(WebKeys.DISPLAY_SUCCESS_MESSAGE), true);
+
+		if (!displaySuccessMessage) {
+			return false;
+		}
+
 		if (!SessionErrors.isEmpty(portletRequest)) {
 			return false;
 		}

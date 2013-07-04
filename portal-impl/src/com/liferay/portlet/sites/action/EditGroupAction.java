@@ -134,6 +134,9 @@ public class EditGroupAction extends PortletAction {
 							PortletKeys.SITE_SETTINGS);
 
 					redirect = siteAdministrationURL.toString();
+
+					actionRequest.setAttribute(
+						WebKeys.DISPLAY_SUCCESS_MESSAGE, false);
 				}
 				else {
 					String oldFriendlyURL = (String)returnValue[1];
