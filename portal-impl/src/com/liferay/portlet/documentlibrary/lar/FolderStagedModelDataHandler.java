@@ -25,12 +25,10 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
-import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.RepositoryLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
@@ -330,13 +328,12 @@ public class FolderStagedModelDataHandler
 						portletDataContext.getScopeGroupId());
 
 			if (dlFileEntryType == null) {
-				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
-					portletDataContext.getCompanyId());
 
 				dlFileEntryType =
 					DLFileEntryTypeLocalServiceUtil.
 						fetchDLFileEntryTypeByUuidAndGroupId(
-							fileEntryTypeUuid, companyGroup.getGroupId());
+							fileEntryTypeUuid,
+							portletDataContext.getCompanyGroupId());
 			}
 
 			if (dlFileEntryType == null) {
