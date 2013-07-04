@@ -405,6 +405,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		WikiPage page = getPage(nodeId, title);
 
+		populateServiceContext(serviceContext, page);
+
 		String originalParentTitle = page.getParentTitle();
 
 		double version = page.getVersion();
@@ -415,17 +417,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		String format = page.getFormat();
 		String redirectTitle = page.getRedirectTitle();
 
-		long[] assetCategoryIds = assetCategoryLocalService.getCategoryIds(
-			WikiPage.class.getName(), page.getResourcePrimKey());
-
-		serviceContext.setAssetCategoryIds(assetCategoryIds);
-
 		serviceContext.setAssetLinkEntryIds(null);
-
-		String[] assetTagNames = assetTagLocalService.getTagNames(
-			WikiPage.class.getName(), page.getResourcePrimKey());
-
-		serviceContext.setAssetTagNames(assetTagNames);
 
 		updatePage(
 			userId, nodeId, title, version, content, summary, minorEdit, format,
