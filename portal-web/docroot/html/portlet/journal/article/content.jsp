@@ -37,7 +37,6 @@ String structureId = BeanParamUtil.getString(article, request, "structureId");
 long ddmStructureGroupId = groupId;
 String ddmStructureName = LanguageUtil.get(pageContext, "default");
 String ddmStructureDescription = StringPool.BLANK;
-String ddmStructureXSD = StringPool.BLANK;
 
 DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
 
@@ -47,7 +46,6 @@ if (ddmStructure != null) {
 	ddmStructureGroupId = ddmStructure.getGroupId();
 	ddmStructureName = ddmStructure.getName(locale);
 	ddmStructureDescription = ddmStructure.getDescription(locale);
-	ddmStructureXSD = ddmStructure.getXsd();
 }
 
 List<DDMTemplate> ddmTemplates = new ArrayList<DDMTemplate>();
