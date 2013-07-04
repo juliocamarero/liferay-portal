@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.documentlibrary.lar;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -136,18 +134,17 @@ public class DLFileEntryTypeStagedModelDataHandler
 						serviceContext);
 			}
 			else {
-				if (!isFileEntryTypeGlobal(
-						portletDataContext.getCompanyId(),
+				if (portletDataContext.isStagedGroupedModelGlobal(
 						existingDLFileEntryType)) {
 
-					DLFileEntryTypeLocalServiceUtil.updateFileEntryType(
-						userId, existingDLFileEntryType.getFileEntryTypeId(),
-						fileEntryType.getNameMap(),
-						fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
-						serviceContext);
+					return;
 				}
 
-				importedDLFileEntryType = existingDLFileEntryType;
+				DLFileEntryTypeLocalServiceUtil.updateFileEntryType(
+					userId, existingDLFileEntryType.getFileEntryTypeId(),
+					fileEntryType.getNameMap(),
+					fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
+					serviceContext);
 			}
 		}
 		else {
@@ -158,12 +155,6 @@ public class DLFileEntryTypeStagedModelDataHandler
 					fileEntryType.getNameMap(),
 					fileEntryType.getDescriptionMap(), ddmStructureIdsArray,
 					serviceContext);
-		}
-
-		if (isFileEntryTypeGlobal(
-				portletDataContext.getCompanyId(), importedDLFileEntryType)) {
-
-			return;
 		}
 
 		portletDataContext.importClassedModel(
@@ -195,19 +186,6 @@ public class DLFileEntryTypeStagedModelDataHandler
 			DDMStructureLocalServiceUtil.updateDDMStructure(
 				importedDDMStructure);
 		}
-	}
-
-	protected boolean isFileEntryTypeGlobal(
-			long companyId, DLFileEntryType dlFileEntryType)
-		throws PortalException, SystemException {
-
-		Group group = GroupLocalServiceUtil.getCompanyGroup(companyId);
-
-		if (dlFileEntryType.getGroupId() == group.getGroupId()) {
-			return true;
-		}
-
-		return false;
 	}
 
 }
