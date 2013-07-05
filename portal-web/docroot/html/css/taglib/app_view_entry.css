@@ -37,6 +37,23 @@
 		}
 	}
 
+	.entry-thumbnail .taglib-workflow-status {
+		top: 4px;
+		left: 5px;
+		margin: 0;
+		padding: 0;
+		position: absolute;
+
+		.workflow-status {
+			margin: 0;
+			padding: 0;
+
+			strong {
+				border-radius: 0 0 4px 0;
+			}
+		}
+	}
+
 	&.display-descriptive {
 		display: block;
 		margin: 5px;
