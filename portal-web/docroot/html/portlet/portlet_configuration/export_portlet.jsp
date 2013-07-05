@@ -127,6 +127,13 @@ portletURL.setParameter("tabs3", "all-export-processes");
 
 					PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
 
+					Map<String, String[]> parameterMap = new HashMap<String, String[]>();
+
+					parameterMap.put(PortletDataHandlerKeys.PORTLET_ID, new String[] {selPortlet.getPortletId()});
+					parameterMap.put(PortletDataHandlerKeys.SELECTED_LAYOUTS, new String[] {String.valueOf(layout.getPlid())});
+
+					portletDataContext.setParameterMap(parameterMap);
+
 					portletDataHandler.prepareManifestSummary(portletDataContext);
 
 					ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
