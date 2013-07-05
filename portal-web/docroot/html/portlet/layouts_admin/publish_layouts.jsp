@@ -437,10 +437,7 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 	</liferay-ui:section>
 
 	<liferay-ui:section>
-		<liferay-util:include page="/html/portlet/layouts_admin/publish_layouts_processes.jsp">
-			<liferay-util:param name="groupId" value="<%= String.valueOf(stagingGroupId) %>" />
-			<liferay-util:param name="closeRedirect" value="<%= closeRedirect %>" />
-		</liferay-util:include>
+		<div id="<portlet:namespace />publishProcesses"></div>
 	</liferay-ui:section>
 	<liferay-ui:section>
 
@@ -484,6 +481,12 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 </aui:script>
 
 <aui:script use="liferay-export-import">
+	<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" var="publishProcessesURL">
+		<portlet:param name="struts_action" value="/layouts_admin/publish_layouts" />
+		<portlet:param name="closeRedirect" value="<%= closeRedirect %>" />
+		<portlet:param name="groupId" value="<%= String.valueOf(stagingGroupId) %>" />
+	</liferay-portlet:resourceURL>
+
 	new Liferay.ExportImport(
 		{
 			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
@@ -493,6 +496,8 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 			layoutSetSettingsNode: '#<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>Checkbox',
 			logoNode: '#<%= PortletDataHandlerKeys.LOGO %>Checkbox',
 			namespace: '<portlet:namespace />',
+			processesNode: '#publishProcesses',
+			processesResourceURL: '<%= publishProcessesURL.toString() %>',
 			rangeAllNode: '#rangeAll',
 			rangeDateRangeNode: '#rangeDateRange',
 			rangeLastNode: '#rangeLast',
