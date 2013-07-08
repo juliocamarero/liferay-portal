@@ -50,21 +50,22 @@
 
 				<%
 				for (Map.Entry<String, PortletURL> entry : addPortletURLs.entrySet()) {
-					String className = entry.getKey();
-
-					String message = _getMessage(className, addPortletURLs, locale);
-
-					PortletURL addPortletURL = entry.getValue();
-
-					String taglibEditURL = _getURL(groupId, plid, entry.getValue(), message, defaultAssetPublisher, layout, pageContext, liferayPortletResponse);
+					String message = _getMessage(entry.getKey(), addPortletURLs, locale);
 					%>
 
 					<c:choose>
 						<c:when test="<%= addPortletURLs.size() == 1 %>">
-							<aui:nav-item href="<%= taglibEditURL %>" iconClass="icon-file" label='<%= LanguageUtil.format(pageContext, "add-x", HtmlUtil.escape(message)) %>' />
+							<aui:nav-item
+								href="<%= _getURL(groupId, plid, entry.getValue(), message, defaultAssetPublisher, layout, pageContext, liferayPortletResponse) %>"
+								iconClass="icon-file"
+								label='<%= LanguageUtil.format(pageContext, "add-x", HtmlUtil.escape(message)) %>'
+							/>
 						</c:when>
 						<c:otherwise>
-							<aui:nav-item href="<%= taglibEditURL %>" iconClass="icon-file" label="<%= HtmlUtil.escape(message) %>" />
+							<aui:nav-item
+								href="<%= _getURL(groupId, plid, entry.getValue(), message, defaultAssetPublisher, layout, pageContext, liferayPortletResponse) %>"
+								iconClass="icon-file"
+								label="<%= HtmlUtil.escape(message) %>" />
 						</c:otherwise>
 					</c:choose>
 
