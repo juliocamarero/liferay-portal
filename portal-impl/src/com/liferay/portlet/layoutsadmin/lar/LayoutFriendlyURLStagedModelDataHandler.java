@@ -81,6 +81,10 @@ public class LayoutFriendlyURLStagedModelDataHandler
 				getExistingLayoutFriendlyURL(
 					portletDataContext, layoutFriendlyURL, plid);
 
+			validateLayoutFriendlyURL(
+				portletDataContext, layoutFriendlyURL,
+				existingLayoutFriendlyURL);
+
 			if (existingLayoutFriendlyURL == null) {
 				serviceContext.setUuid(layoutFriendlyURL.getUuid());
 
@@ -103,6 +107,9 @@ public class LayoutFriendlyURLStagedModelDataHandler
 			}
 		}
 		else {
+			validateLayoutFriendlyURL(
+				portletDataContext, layoutFriendlyURL, null);
+
 			importedLayoutFriendlyURL =
 				LayoutFriendlyURLLocalServiceUtil.addLayoutFriendlyURL(
 					userId, portletDataContext.getCompanyId(),
@@ -135,6 +142,34 @@ public class LayoutFriendlyURLStagedModelDataHandler
 		}
 
 		return existingLayoutFriendlyURL;
+	}
+
+	protected void validateLayoutFriendlyURL(
+			PortletDataContext portletDataContext,
+			LayoutFriendlyURL layoutFriendlyURL,
+			LayoutFriendlyURL existingLayoutFriendlyURL)
+		throws Exception {
+
+		String friendlyURL = layoutFriendlyURL.getFriendlyURL();
+
+		for (int i = 1;; i++) {
+			LayoutFriendlyURL duplicateLayoutFriendlyURL =
+				LayoutFriendlyURLLocalServiceUtil.fetchLayoutFriendlyURL(
+					portletDataContext.getScopeGroupId(),
+					layoutFriendlyURL.isPrivateLayout(),
+					layoutFriendlyURL.getFriendlyURL(),
+					layoutFriendlyURL.getLanguageId());
+
+			if ((duplicateLayoutFriendlyURL == null) ||
+				((existingLayoutFriendlyURL != null) &&
+				 (existingLayoutFriendlyURL.getLayoutFriendlyURLId() ==
+						duplicateLayoutFriendlyURL.getLayoutFriendlyURLId()))) {
+
+				break;
+			}
+
+			layoutFriendlyURL.setFriendlyURL(friendlyURL + i);
+		}
 	}
 
 }
