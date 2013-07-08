@@ -79,7 +79,7 @@ public class LayoutFriendlyURLStagedModelDataHandler
 
 		if (portletDataContext.isDataStrategyMirror()) {
 			LayoutFriendlyURL existingLayoutFriendlyURL =
-				findExistingLayoutFriendlyURL(
+				getExistingLayoutFriendlyURL(
 					portletDataContext, layoutFriendlyURL, plid);
 
 			if (existingLayoutFriendlyURL == null) {
@@ -118,7 +118,7 @@ public class LayoutFriendlyURLStagedModelDataHandler
 			LayoutPortletDataHandler.NAMESPACE);
 	}
 
-	protected LayoutFriendlyURL findExistingLayoutFriendlyURL(
+	protected LayoutFriendlyURL getExistingLayoutFriendlyURL(
 			PortletDataContext portletDataContext,
 			LayoutFriendlyURL layoutFriendlyURL, long plid)
 		throws SystemException {
