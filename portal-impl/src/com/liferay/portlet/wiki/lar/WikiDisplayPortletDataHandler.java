@@ -16,17 +16,23 @@ package com.liferay.portlet.wiki.lar;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.lar.DataLevel;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portlet.wiki.NoSuchNodeException;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
@@ -102,14 +108,11 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 			return StringPool.BLANK;
 		}
 
-		WikiNode node = null;
+		WikiNode node = WikiNodeUtil.fetchByPrimaryKey(nodeId);
 
-		try {
-			node = WikiNodeUtil.findByPrimaryKey(nodeId);
-		}
-		catch (NoSuchNodeException nsne) {
+		if (node == null) {
 			if (_log.isWarnEnabled()) {
-				_log.warn(nsne, nsne);
+				_log.warn("Unable to find wiki node");
 			}
 
 			return StringPool.BLANK;
@@ -163,6 +166,51 @@ public class WikiDisplayPortletDataHandler extends WikiPortletDataHandler {
 		}
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected void doPrepareManifestSummary(
+			PortletDataContext portletDataContext)
+		throws Exception {
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		if (manifestSummary.getModelAdditionCount(WikiPage.class) > -1) {
+			return;
+		}
+
+		Map<String, String[]> parameterMap =
+			portletDataContext.getParameterMap();
+
+		String portletId = MapUtil.getString(
+			parameterMap, PortletDataHandlerKeys.PORTLET_ID);
+
+		if (Validator.isNull(portletId)) {
+			return;
+		}
+
+		long plid = MapUtil.getLong(
+			parameterMap, PortletDataHandlerKeys.SELECTED_LAYOUTS);
+
+		Layout layout = LayoutLocalServiceUtil.fetchLayout(plid);
+
+		if (layout == null) {
+			return;
+		}
+
+		javax.portlet.PortletPreferences jxPortletPreferences =
+			PortletPreferencesFactoryUtil.getStrictPortletSetup(
+				layout, portletId);
+
+		long nodeId = GetterUtil.getLong(
+			jxPortletPreferences.getValue("nodeId", StringPool.BLANK));
+
+		if (nodeId > 0) {
+			manifestSummary.addModelAdditionCount(
+				new StagedModelType(WikiPage.class),
+				WikiPageLocalServiceUtil.getPagesCount(nodeId));
+		}
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

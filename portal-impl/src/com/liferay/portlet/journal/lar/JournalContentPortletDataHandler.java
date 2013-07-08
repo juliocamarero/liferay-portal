@@ -15,10 +15,13 @@
 package com.liferay.portlet.journal.lar;
 
 import com.liferay.portal.kernel.lar.DataLevel;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -31,6 +34,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.documentlibrary.lar.DLPortletDataHandler;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
@@ -318,6 +322,50 @@ public class JournalContentPortletDataHandler
 		portletDataContext.setScopeGroupId(previousScopeGroupId);
 
 		return portletPreferences;
+	}
+
+	@Override
+	protected void doPrepareManifestSummary(
+			PortletDataContext portletDataContext)
+		throws Exception {
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		if (manifestSummary.getModelAdditionCount(JournalArticle.class) > -1) {
+			return;
+		}
+
+		Map<String, String[]> parameterMap =
+			portletDataContext.getParameterMap();
+
+		String portletId = MapUtil.getString(
+			parameterMap, PortletDataHandlerKeys.PORTLET_ID);
+
+		if (Validator.isNull(portletId)) {
+			return;
+		}
+
+		long plid = MapUtil.getLong(
+			parameterMap, PortletDataHandlerKeys.SELECTED_LAYOUTS);
+
+		Layout layout = LayoutLocalServiceUtil.fetchLayout(plid);
+
+		if (layout == null) {
+			return;
+		}
+
+		javax.portlet.PortletPreferences jxPortletPreferences =
+			PortletPreferencesFactoryUtil.getStrictPortletSetup(
+				layout, portletId);
+
+		String articleId = jxPortletPreferences.getValue(
+			"articleId", StringPool.BLANK);
+
+		if (Validator.isNotNull(articleId)) {
+			manifestSummary.addModelAdditionCount(
+				new StagedModelType(JournalArticle.class), 1);
+		}
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
