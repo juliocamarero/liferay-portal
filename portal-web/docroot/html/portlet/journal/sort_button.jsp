@@ -58,6 +58,7 @@ if (orderByType.equals("asc")) {
 						'<portlet:namespace />folderId': folderId,
 						'<portlet:namespace />navigation': '<%= HtmlUtil.escape(navigation) %>',
 						'<portlet:namespace />struts_action': '/journal/view',
+						'<portlet:namespace />structureId': '<%= HtmlUtil.escape(structureId) %>',
 						'<portlet:namespace />viewEntries': <%= Boolean.TRUE.toString() %>,
 						'<portlet:namespace />viewFolders': <%= Boolean.FALSE.toString() %>,
 						'<portlet:namespace />orderByCol': orderByCol,
