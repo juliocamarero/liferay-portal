@@ -550,7 +550,7 @@ public class FileEntryStagedModelDataHandler
 			portletDataContext.getReferenceDataElements(
 				fileEntryElement, DLFileEntryType.class);
 
-		if (referenceDataElements.size() != 1) {
+		if (referenceDataElements.isEmpty()) {
 			return;
 		}
 
