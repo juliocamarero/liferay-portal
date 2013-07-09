@@ -62,7 +62,8 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 			}
 
 			if (_results == null) {
-				_results = (List<R>)pageContext.getAttribute(_resultsVar);
+				_results = (List<R>)pageContext.getAttribute(
+					_searchContainer.getResultsVar());
 				_total = (Integer)pageContext.getAttribute(_totalVar);
 			}
 
@@ -80,7 +81,9 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 
 			searchContainerTag.setHasResults(true);
 
-			pageContext.setAttribute(_resultsVar, _results);
+			pageContext.setAttribute(
+				_searchContainer.getResultsVar(),
+				_searchContainer.getResults());
 
 			return EVAL_PAGE;
 		}
@@ -92,7 +95,6 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 				_results = null;
 				_resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
 				_total = 0;
-				_totalVar = SearchContainer.DEFAULT_TOTAL_VAR;
 			}
 		}
 	}
@@ -109,6 +111,15 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 
 		_searchContainer = searchContainerTag.getSearchContainer();
 
+		if (Validator.equals(
+				_resultsVar, SearchContainer.DEFAULT_RESULTS_VAR) &&
+			Validator.equals(
+				_searchContainer.getResultsVar(),
+				SearchContainer.DEFAULT_RESULTS_VAR)) {
+
+			_searchContainer.setResultsVar(_resultsVar);
+		}
+
 		if ((_totalVar != SearchContainer.DEFAULT_TOTAL_VAR) &&
 			(_searchContainer.getTotalVar() ==
 				SearchContainer.DEFAULT_TOTAL_VAR)) {
@@ -117,7 +128,8 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 		}
 
 		if (_results == null) {
-			pageContext.setAttribute(_resultsVar, new ArrayList<R>());
+			pageContext.setAttribute(
+				_searchContainer.getResultsVar(), new ArrayList<R>());
 			pageContext.setAttribute(
 				_searchContainer.getTotalVar(),
 				SearchContainer.DEFAULT_TOTAL_VAR);
@@ -171,7 +183,7 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 	}
 
 	private List<R> _results;
-	private String _resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
+	private String _resultsVar;
 	private SearchContainer _searchContainer;
 	private int _total;
 	private String _totalVar;
