@@ -17,6 +17,7 @@
 <%@ include file="/html/portlet/journal/init.jsp" %>
 
 <%
+String structureId = ParamUtil.getString(request, "structureId");
 String navigation = ParamUtil.getString(request, "navigation", "home");
 
 long folderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-folderId"));
@@ -57,6 +58,7 @@ if (orderByType.equals("asc")) {
 						'<portlet:namespace />folderId': folderId,
 						'<portlet:namespace />navigation': '<%= HtmlUtil.escape(navigation) %>',
 						'<portlet:namespace />struts_action': '/journal/view',
+						'<portlet:namespace />structureId': '<%= HtmlUtil.escape(structureId) %>',
 						'<portlet:namespace />viewEntries': <%= Boolean.TRUE.toString() %>,
 						'<portlet:namespace />viewFolders': <%= Boolean.FALSE.toString() %>,
 						'<portlet:namespace />orderByCol': orderByCol,
