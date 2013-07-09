@@ -29,9 +29,19 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class SearchContainerResultsTag<R> extends TagSupport {
 
-	public static final String DEFAULT_RESULTS_VAR = "results";
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *     #SearchContainer.DEFAULT_RESULTS_VAR}.
+	 */
+	public static final String DEFAULT_RESULTS_VAR =
+		SearchContainer.DEFAULT_RESULTS_VAR;
 
-	public static final String DEFAULT_TOTAL_VAR = "total";
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *     #SearchContainer.DEFAULT_TOTAL_VAR}.
+	 */
+	public static final String DEFAULT_TOTAL_VAR =
+		SearchContainer.DEFAULT_TOTAL_VAR;
 
 	@Override
 	public int doEndTag() throws JspException {
@@ -44,9 +54,11 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 				searchContainerTag.getSearchContainer();
 
 			int total = searchContainer.getTotal();
+			String totalVar = searchContainer.getTotalVar();
 
 			if (_total == 0) {
 				_total = total;
+				_totalVar = totalVar;
 			}
 
 			if (_results == null) {
@@ -79,7 +91,7 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 		finally {
 			if (!ServerDetector.isResin()) {
 				_results = null;
-				_resultsVar = DEFAULT_RESULTS_VAR;
+				_resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
 				_total = 0;
 				_totalVar = DEFAULT_TOTAL_VAR;
 			}
@@ -112,10 +124,16 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 		return _resultsVar;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0
+	 */
 	public int getTotal() {
 		return _total;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0
+	 */
 	public String getTotalVar() {
 		return _totalVar;
 	}
@@ -128,17 +146,23 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 		_resultsVar = resultsVar;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0
+	 */
 	public void setTotal(int total) {
 		_total = total;
 	}
 
+	/**
+	 * @deprecated As of 6.2.0
+	 */
 	public void setTotalVar(String totalVar) {
 		_totalVar = totalVar;
 	}
 
 	private List<R> _results;
-	private String _resultsVar = DEFAULT_RESULTS_VAR;
+	private String _resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
 	private int _total;
-	private String _totalVar = DEFAULT_TOTAL_VAR;
+	private String _totalVar = SearchContainer.DEFAULT_TOTAL_VAR;
 
 }
