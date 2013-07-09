@@ -16,6 +16,7 @@ package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.util.ServerDetector;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,15 +51,14 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 				(SearchContainerTag<R>)findAncestorWithClass(
 					this, SearchContainerTag.class);
 
-			SearchContainer<R> searchContainer =
-				searchContainerTag.getSearchContainer();
-
-			int total = searchContainer.getTotal();
-			String totalVar = searchContainer.getTotalVar();
+			int total = _searchContainer.getTotal();
 
 			if (_total == 0) {
 				_total = total;
-				_totalVar = totalVar;
+			}
+
+			if (Validator.isNull(_totalVar)) {
+				_totalVar = _searchContainer.getTotalVar();
 			}
 
 			if (_results == null) {
@@ -72,16 +72,15 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 				}
 			}
 
-			searchContainer.setResults(_results);
+			_searchContainer.setResults(_results);
 
-			if (total == 0) {
-				searchContainer.setTotal(_total);
+			if (total == SearchContainer.DEFAULT_TOTAL) {
+				_searchContainer.setTotal(_total);
 			}
 
 			searchContainerTag.setHasResults(true);
 
 			pageContext.setAttribute(_resultsVar, _results);
-			pageContext.setAttribute(_totalVar, _total);
 
 			return EVAL_PAGE;
 		}
@@ -93,7 +92,7 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 				_results = null;
 				_resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
 				_total = 0;
-				_totalVar = DEFAULT_TOTAL_VAR;
+				_totalVar = SearchContainer.DEFAULT_TOTAL_VAR;
 			}
 		}
 	}
@@ -108,9 +107,20 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 			throw new JspTagException("Requires liferay-ui:search-container");
 		}
 
+		_searchContainer = searchContainerTag.getSearchContainer();
+
+		if ((_totalVar != SearchContainer.DEFAULT_TOTAL_VAR) &&
+			(_searchContainer.getTotalVar() ==
+				SearchContainer.DEFAULT_TOTAL_VAR)) {
+
+			_searchContainer.setTotalVar(_totalVar);
+		}
+
 		if (_results == null) {
 			pageContext.setAttribute(_resultsVar, new ArrayList<R>());
-			pageContext.setAttribute(_totalVar, 0);
+			pageContext.setAttribute(
+				_searchContainer.getTotalVar(),
+				SearchContainer.DEFAULT_TOTAL_VAR);
 		}
 
 		return EVAL_BODY_INCLUDE;
@@ -162,7 +172,8 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 
 	private List<R> _results;
 	private String _resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
+	private SearchContainer _searchContainer;
 	private int _total;
-	private String _totalVar = SearchContainer.DEFAULT_TOTAL_VAR;
+	private String _totalVar;
 
 }
