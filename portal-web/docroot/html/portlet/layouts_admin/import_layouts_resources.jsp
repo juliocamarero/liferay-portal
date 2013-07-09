@@ -313,7 +313,6 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(user
 									<li>
 										<div class="alert alert-block">
 											<liferay-ui:message key="delete-content-before-importing-warning" />
-
 											<liferay-ui:message key="delete-content-before-importing-suggestion" />
 										</div>
 									</li>
