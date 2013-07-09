@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/document_library/init.jsp" %>
+<%@ include file="/html/portlet/journal/init.jsp" %>
 
 <%
 String navigation = ParamUtil.getString(request, "navigation", "home");
@@ -33,34 +33,16 @@ if (orderByType.equals("asc")) {
 <aui:nav-item dropdown="<%= true %>" id="sortButtonContainer" label="sort-by">
 
 	<%
-	String taglibURL = "javascript:" + liferayPortletResponse.getNamespace() + "sortEntries('" + folderId + "', 'title','" + reverseOrderByType + "')";
+	String taglibURL = "javascript:" + liferayPortletResponse.getNamespace() + "sortEntries('" + folderId + "', 'display-date','" + reverseOrderByType + "')";
 	%>
 
-	<aui:nav-item href="<%= taglibURL %>" label="title" />
+	<aui:nav-item href="<%= taglibURL %>" label="display-date" />
 
 	<%
-	taglibURL = "javascript:" + liferayPortletResponse.getNamespace() + "sortEntries('" + folderId + "', 'creationDate','" + reverseOrderByType + "')";
-	%>
-
-	<aui:nav-item href="<%= taglibURL %>" label="create-date" />
-
-	<%
-	taglibURL = "javascript:" + liferayPortletResponse.getNamespace() + "sortEntries('" + folderId + "', 'modifiedDate','" + reverseOrderByType + "')";
+	taglibURL = "javascript:" + liferayPortletResponse.getNamespace() + "sortEntries('" + folderId + "', 'modified-date','" + reverseOrderByType + "')";
 	%>
 
 	<aui:nav-item href="<%= taglibURL %>" label="modified-date" />
-
-	<%
-	taglibURL = "javascript:" + liferayPortletResponse.getNamespace() + "sortEntries('" + folderId + "', 'downloads','" + reverseOrderByType + "')";
-	%>
-
-	<aui:nav-item href="<%= taglibURL %>" label="downloads" />
-
-	<%
-	taglibURL = "javascript:" + liferayPortletResponse.getNamespace() + "sortEntries('" + folderId + "', 'size','" + reverseOrderByType + "')";
-	%>
-
-	<aui:nav-item href="<%= taglibURL %>" label="size" />
 </aui:nav-item>
 
 <aui:script>
@@ -74,9 +56,8 @@ if (orderByType.equals("asc")) {
 					requestParams: {
 						'<portlet:namespace />folderId': folderId,
 						'<portlet:namespace />navigation': '<%= HtmlUtil.escape(navigation) %>',
-						'<portlet:namespace />struts_action': '/document_library/view',
-						'<portlet:namespace />viewEntries': <%= Boolean.FALSE.toString() %>,
-						'<portlet:namespace />viewEntriesPage': <%= Boolean.TRUE.toString() %>,
+						'<portlet:namespace />struts_action': '/journal/view',
+						'<portlet:namespace />viewEntries': <%= Boolean.TRUE.toString() %>,
 						'<portlet:namespace />viewFolders': <%= Boolean.FALSE.toString() %>,
 						'<portlet:namespace />orderByCol': orderByCol,
 						'<portlet:namespace />orderByType': reverseOrderByType,
