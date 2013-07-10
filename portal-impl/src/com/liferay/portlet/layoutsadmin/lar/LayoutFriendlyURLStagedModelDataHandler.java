@@ -81,7 +81,7 @@ public class LayoutFriendlyURLStagedModelDataHandler
 				getExistingLayoutFriendlyURL(
 					portletDataContext, layoutFriendlyURL, plid);
 
-			validateLayoutFriendlyURL(
+			layoutFriendlyURL= getLayoutFriendlyURL(
 				portletDataContext, layoutFriendlyURL,
 				existingLayoutFriendlyURL);
 
@@ -107,7 +107,7 @@ public class LayoutFriendlyURLStagedModelDataHandler
 			}
 		}
 		else {
-			validateLayoutFriendlyURL(
+			layoutFriendlyURL = getLayoutFriendlyURL(
 				portletDataContext, layoutFriendlyURL, null);
 
 			importedLayoutFriendlyURL =
@@ -144,7 +144,7 @@ public class LayoutFriendlyURLStagedModelDataHandler
 		return existingLayoutFriendlyURL;
 	}
 
-	protected void validateLayoutFriendlyURL(
+	protected LayoutFriendlyURL getLayoutFriendlyURL(
 			PortletDataContext portletDataContext,
 			LayoutFriendlyURL layoutFriendlyURL,
 			LayoutFriendlyURL existingLayoutFriendlyURL)
@@ -170,6 +170,8 @@ public class LayoutFriendlyURLStagedModelDataHandler
 
 			layoutFriendlyURL.setFriendlyURL(friendlyURL + i);
 		}
+
+		return layoutFriendlyURL;
 	}
 
 }
