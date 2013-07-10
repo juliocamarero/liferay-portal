@@ -37,16 +37,22 @@
 				<%
 				String[] tabs1Names = new String[0];
 
-				boolean hasAddContentPermission = (GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) && !group.isLayoutPrototype());
+				boolean hasAddContentPermission = (GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) && !group.isLayoutPrototype() && !layout.isTypePanel());
 
 				if (hasAddContentPermission) {
 					tabs1Names = ArrayUtil.append(tabs1Names, "content");
 				}
 
-				boolean hasAddApplicationsAndPagePermission = (!themeDisplay.isStateMaximized() && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive());
+				boolean hasAddApplicationsPermission = (!themeDisplay.isStateMaximized() && layout.isTypePortlet()) && !layout.isLayoutPrototypeLinkActive();
 
-				if (hasAddApplicationsAndPagePermission) {
-					tabs1Names = ArrayUtil.append(tabs1Names, "applications,page");
+				if (hasAddApplicationsPermission) {
+					tabs1Names = ArrayUtil.append(tabs1Names, "applications");
+				}
+				
+				boolean hasAddPagePermission = (!themeDisplay.isStateMaximized()) && !layout.isLayoutPrototypeLinkActive();
+
+				if (hasAddPagePermission) {
+					tabs1Names = ArrayUtil.append(tabs1Names, "page");
 				}
 
 				String selectedTab = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_tab", "content"));
@@ -63,11 +69,12 @@
 						</liferay-ui:section>
 					</c:if>
 
-					<c:if test="<%= hasAddApplicationsAndPagePermission %>">
+					<c:if test="<%= hasAddApplicationsPermission %>">
 						<liferay-ui:section>
 							<liferay-util:include page="/html/portlet/dockbar/add_application.jsp" />
 						</liferay-ui:section>
-
+					</c:if>
+					<c:if test="<%= hasAddPagePermission %>">
 						<liferay-ui:section>
 							<liferay-util:include page="/html/portlet/dockbar/add_page.jsp" />
 						</liferay-ui:section>
