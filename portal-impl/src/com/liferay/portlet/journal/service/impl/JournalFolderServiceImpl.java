@@ -201,8 +201,16 @@ public class JournalFolderServiceImpl extends JournalFolderServiceBaseImpl {
 	public int getFoldersCount(long groupId, long parentFolderId)
 		throws SystemException {
 
-		return journalFolderPersistence.filterCountByG_P_S(
+		return getFoldersCount(
 			groupId, parentFolderId, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public int getFoldersCount(long groupId, long parentFolderId, int status)
+		throws SystemException {
+
+		return journalFolderPersistence.filterCountByG_P_S(
+			groupId, parentFolderId, status);
 	}
 
 	@Override

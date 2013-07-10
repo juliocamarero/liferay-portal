@@ -85,8 +85,16 @@ public class BookmarksEntryServiceImpl extends BookmarksEntryServiceBaseImpl {
 	public int getEntriesCount(long groupId, long folderId)
 		throws SystemException {
 
-		return bookmarksEntryPersistence.filterCountByG_F_S(
+		return getEntriesCount(
 			groupId, folderId, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public int getEntriesCount(long groupId, long folderId, int status)
+		throws SystemException {
+
+		return bookmarksEntryPersistence.filterCountByG_F_S(
+			groupId, folderId, status);
 	}
 
 	@Override
