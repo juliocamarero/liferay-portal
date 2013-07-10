@@ -92,6 +92,9 @@ public class PortletPreferencesFinderImpl
 			}
 			else {
 				sql = StringUtil.replace(
+					sql, _PORTLET_ID_INSTANCE_SQL, StringPool.BLANK);
+
+				sql = StringUtil.replace(
 					sql, _PRIVATE_LAYOUT_SQL, StringPool.BLANK);
 			}
 
@@ -115,12 +118,12 @@ public class PortletPreferencesFinderImpl
 
 			qPos.add(ownerType);
 			qPos.add(portletId);
-			qPos.add(portletId.concat("%_INSTANCE_%"));
 
 			if (plid != -1) {
 				qPos.add(plid);
 			}
 			else {
+				qPos.add(portletId.concat("%_INSTANCE_%"));
 				qPos.add(privateLayout);
 			}
 
@@ -328,6 +331,9 @@ public class PortletPreferencesFinderImpl
 		"(PortletPreferences.ownerId = ?) AND";
 
 	private static final String _PLID_SQL = "(Layout.plid = ?) AND";
+
+	private static final String _PORTLET_ID_INSTANCE_SQL =
+		"OR (PortletPreferences.portletId LIKE ?)";
 
 	private static final String _PREFERENCES_SQL =
 		"AND PortletPreferences.preferences != " +
