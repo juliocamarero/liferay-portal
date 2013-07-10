@@ -91,6 +91,9 @@ public class RSSAction extends PortletAction {
 
 			outputStream.write(bytes);
 		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		finally {
 			outputStream.close();
 		}
