@@ -17,7 +17,7 @@
 <%@ include file="/html/portlet/document_library/init.jsp" %>
 
 <%
-long fileEntryTypeId = ParamUtil.getLong(request, "fileEntryTypeId", -1);
+long fileEntryTypeId = ParamUtil.getLong(request, "fileEntryTypeId", DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_ALL);
 
 String navigation = ParamUtil.getString(request, "navigation", "home");
 
