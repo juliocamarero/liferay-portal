@@ -150,7 +150,7 @@ for (int i = 0; i < locales.length; i++) {
 						image='<%= "../language/" + LocaleUtil.toLanguageId(locales[i]) %>'
 						lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>"
 						message="<%= LocaleUtil.getLongDisplayName(locales[i], duplicateLanguages) %>"
-						url='<%= currentLanguageId.equals(languageId) ? null : HttpUtil.addParameter(formAction, namespace + name, LocaleUtil.toLanguageId(locales[i])) %>'
+						url="<%= currentLanguageId.equals(languageId) ? null : HttpUtil.addParameter(formAction, namespace + name, LocaleUtil.toLanguageId(locales[i])) %>"
 					/>
 				</c:otherwise>
 			</c:choose>
