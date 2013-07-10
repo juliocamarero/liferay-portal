@@ -14,6 +14,7 @@
 
 package com.liferay.taglib.ui;
 
+import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
@@ -32,20 +33,12 @@ public class SearchContainerResultsTei extends TagExtraInfo {
 		String resultsVar = tagData.getAttributeString("resultsVar");
 
 		if (Validator.isNull(resultsVar)) {
-			resultsVar = SearchContainerResultsTag.DEFAULT_RESULTS_VAR;
-		}
-
-		String totalVar = tagData.getAttributeString("totalVar");
-
-		if (Validator.isNull(totalVar)) {
-			totalVar = SearchContainerResultsTag.DEFAULT_TOTAL_VAR;
+			resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
 		}
 
 		return new VariableInfo[] {
 			new VariableInfo(
 				resultsVar, List.class.getName(), true, VariableInfo.AT_BEGIN),
-			new VariableInfo(
-				totalVar, Integer.class.getName(), true, VariableInfo.AT_BEGIN)
 		};
 	}
 

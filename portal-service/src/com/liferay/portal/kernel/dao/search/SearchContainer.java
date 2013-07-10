@@ -68,6 +68,12 @@ public class SearchContainer<R> {
 
 	public static final String DEFAULT_ORDER_BY_TYPE_PARAM = "orderByType";
 
+	public static final String DEFAULT_RESULTS_VAR = "results";
+
+	public static final int DEFAULT_TOTAL = 0;
+
+	public static final String DEFAULT_TOTAL_VAR = "total";
+
 	public static final String DEFAULT_VAR = "searchContainer";
 
 	public static final int MAX_DELTA = 200;
@@ -319,6 +325,10 @@ public class SearchContainer<R> {
 		return _results;
 	}
 
+	public String getResultsVar() {
+		return _resultsVar;
+	}
+
 	public RowChecker getRowChecker() {
 		return _rowChecker;
 	}
@@ -333,6 +343,10 @@ public class SearchContainer<R> {
 
 	public int getTotal() {
 		return _total;
+	}
+
+	public String getTotalVar() {
+		return _totalVar;
 	}
 
 	public boolean isDeltaConfigurable() {
@@ -446,6 +460,10 @@ public class SearchContainer<R> {
 		_results = results;
 	}
 
+	public void setResultsVar(String resultsVar) {
+		_resultsVar = resultsVar;
+	}
+
 	public void setRowChecker(RowChecker rowChecker) {
 		_rowChecker = rowChecker;
 	}
@@ -455,6 +473,10 @@ public class SearchContainer<R> {
 
 		_calculateCur();
 		_calculateStartAndEnd();
+	}
+
+	public void setTotalVar(String totalVar) {
+		_totalVar = _totalVar;
 	}
 
 	private void _buildNormalizedHeaderNames(List<String> headerNames) {
@@ -529,10 +551,12 @@ public class SearchContainer<R> {
 	private int _resultEnd;
 	private List<ResultRow> _resultRows = new ArrayList<ResultRow>();
 	private List<R> _results = new ArrayList<R>();
+	private String _resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
 	private RowChecker _rowChecker;
 	private DisplayTerms _searchTerms;
 	private int _start;
 	private int _total;
+	private String _totalVar = SearchContainer.DEFAULT_TOTAL_VAR;
 	private boolean _uniqueId;
 
 }
