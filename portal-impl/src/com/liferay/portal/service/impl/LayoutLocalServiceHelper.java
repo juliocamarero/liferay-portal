@@ -229,6 +229,17 @@ public class LayoutLocalServiceHelper implements IdentifiableBean {
 			}
 		}
 
+		// Layout cannot become a child of a layout that is not sortable because
+		// it is linked to a layout set prototype
+
+		Layout parentLayout = layoutPersistence.findByG_P_L(
+			groupId, privateLayout, parentLayoutId);
+
+		if (!SitesUtil.isLayoutSortable(parentLayout)) {
+			throw new LayoutParentLayoutIdException(
+				LayoutParentLayoutIdException.NOT_SORTABLE);
+		}
+
 		if (firstLayout) {
 			validateFirstLayout(type);
 		}
