@@ -143,22 +143,7 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 						</c:choose>
 					</c:when>
 
-					<c:when test="<%= (socialActivity.getType() == SocialActivityConstants.TYPE_MOVE_TO_TRASH) %>">
-
-						<%
-						double version = extraDataJSONObject.getDouble("version");
-
-						WikiPage socialActivityWikiPage = WikiPageLocalServiceUtil.getPage(node.getNodeId(), wikiPage.getTitle(), version);
-						%>
-
-						<liferay-ui:icon
-							image="trash"
-							label="<%= true %>"
-							message='<%= LanguageUtil.format(pageContext, "activity-wiki-page-move-to-trash", new Object[] {StringPool.BLANK, socialActivityUser.getFullName(), socialActivityWikiPage.getTitle()}) %>'
-						/>
-					</c:when>
-
-					<c:when test="<%= (socialActivity.getType() == WikiActivityKeys.ADD_PAGE) || (socialActivity.getType() == SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) || (socialActivity.getType() == WikiActivityKeys.UPDATE_PAGE) %>">
+					<c:when test="<%= (socialActivity.getType() == WikiActivityKeys.ADD_PAGE) || (socialActivity.getType() == SocialActivityConstants.TYPE_MOVE_TO_TRASH) || (socialActivity.getType() == SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) || (socialActivity.getType() == WikiActivityKeys.UPDATE_PAGE) %>">
 
 						<%
 						double version = extraDataJSONObject.getDouble("version");
@@ -183,6 +168,13 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 									image="add_article"
 									label="<%= true %>"
 									message='<%= LanguageUtil.format(pageContext, "x-added-the-page-x", new Object[] {socialActivityUser.getFullName(), pageTitleLink}) %>'
+								/>
+							</c:when>
+							<c:when test="<%= socialActivity.getType() == SocialActivityConstants.TYPE_MOVE_TO_TRASH %>">
+								<liferay-ui:icon
+									image="trash"
+									label="<%= true %>"
+									message='<%= LanguageUtil.format(pageContext, "activity-wiki-page-move-to-trash", new Object[] {StringPool.BLANK, socialActivityUser.getFullName(), socialActivityWikiPage.getTitle()}) %>'
 								/>
 							</c:when>
 							<c:when test="<%= socialActivity.getType() == SocialActivityConstants.TYPE_RESTORE_FROM_TRASH %>">
