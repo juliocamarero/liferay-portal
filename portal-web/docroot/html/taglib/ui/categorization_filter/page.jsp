@@ -19,6 +19,7 @@
 <%
 String assetType = GetterUtil.getString((String)request.getAttribute("liferay-ui:categorization-filter:assetType"), "content");
 PortletURL portletURL = (PortletURL)request.getAttribute("liferay-ui:categorization-filter:portletURL");
+String selectionStyle = GetterUtil.getString((String)request.getAttribute("liferay-ui:categorization-filter:selectionStyle"), "dynamic");
 
 if (Validator.isNull(portletURL)) {
 	portletURL = renderResponse.createRenderURL();

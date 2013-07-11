@@ -151,12 +151,19 @@ if (!paginationType.equals("none")) {
 }
 %>
 
-<c:if test="<%= showMetadataDescriptions %>">
-	<liferay-ui:categorization-filter
-		assetType="content"
-		portletURL="<%= portletURL %>"
-	/>
-</c:if>
+<c:choose>
+	<c:when test='<%= selectionStyle.equals("manual") %>'>
+		<div class="alert alert-error">
+			<liferay-ui:message key="categorization-filter-does-not-work-in-asset-publisher-manual-asset-selection-mode" />
+		</div>
+	</c:when>
+	<c:when test="<%= showMetadataDescriptions %>">
+		<liferay-ui:categorization-filter
+			assetType="content"
+			portletURL="<%= portletURL %>"
+			/>
+	</c:when>
+</c:choose>
 
 <%
 long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayTemplateDDMTemplateId(themeDisplay.getScopeGroupId(), displayStyle);
