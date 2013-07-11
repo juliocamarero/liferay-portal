@@ -68,7 +68,13 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 			<%
 			User socialActivityUser = UserLocalServiceUtil.getUserById(socialActivity.getUserId());
 
-			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject(socialActivity.getExtraData());
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+			String extraData = socialActivity.getExtraData();
+
+			if (!extraData.equals(StringPool.BLANK)) {
+				extraDataJSONObject = JSONFactoryUtil.createJSONObject(extraData);
+			}
 
 			FileEntry fileEntry = null;
 			FileVersion fileVersion = null;
@@ -139,7 +145,22 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 						</c:choose>
 					</c:when>
 
-					<c:when test="<%= (socialActivity.getType() == WikiActivityKeys.ADD_PAGE) || (socialActivity.getType() == WikiActivityKeys.UPDATE_PAGE) %>">
+					<c:when test="<%= (socialActivity.getType() == SocialActivityConstants.TYPE_MOVE_TO_TRASH) %>">
+
+						<%
+						double version = extraDataJSONObject.getDouble("version");
+
+						WikiPage socialActivityWikiPage = WikiPageLocalServiceUtil.getPage(node.getNodeId(), wikiPage.getTitle(), version);
+						%>
+
+						<liferay-ui:icon
+							image="trash"
+							label="<%= true %>"
+							message='<%= LanguageUtil.format(pageContext, "x-move-to-trash-the-page-x", new Object[] {socialActivityUser.getFullName(), socialActivityWikiPage.getTitle()}) %>'
+						/>
+					</c:when>
+
+					<c:when test="<%= (socialActivity.getType() == WikiActivityKeys.ADD_PAGE) || (socialActivity.getType() == SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) || (socialActivity.getType() == WikiActivityKeys.UPDATE_PAGE) %>">
 
 						<%
 						double version = extraDataJSONObject.getDouble("version");
@@ -165,7 +186,18 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 									label="<%= true %>"
 									message='<%= LanguageUtil.format(pageContext, "x-added-the-page-x", new Object[] {socialActivityUser.getFullName(), pageTitleLink}) %>'
 								/>
-							</c:when >
+							</c:when>
+							<c:when test="<%= socialActivity.getType() == SocialActivityConstants.TYPE_RESTORE_FROM_TRASH %>">
+								<liferay-util:buffer var="pageTitleLink">
+									<aui:a href="<%= viewPageURL.toString() %>"><%= socialActivityWikiPage.getTitle() %></aui:a>
+								</liferay-util:buffer>
+
+								<liferay-ui:icon
+									image="undo"
+									label="<%= true %>"
+									message='<%= LanguageUtil.format(pageContext, "x-restore-from-trash-the-page-x", new Object[] {socialActivityUser.getFullName(), pageTitleLink}) %>'
+								/>
+							</c:when>
 							<c:when test="<%= socialActivity.getType() == WikiActivityKeys.UPDATE_PAGE %>">
 								<liferay-util:buffer var="pageTitleLink">
 									<aui:a href="<%= viewPageURL.toString() %>">
@@ -209,7 +241,7 @@ iteratorURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 						path="/html/portlet/wiki/page_activity_attachment_action.jsp"
 					/>
 				</c:when>
-				<c:when test="<%= (socialActivity.getType() == WikiActivityKeys.ADD_PAGE) || (socialActivity.getType() == WikiActivityKeys.UPDATE_PAGE) %>">
+				<c:when test="<%= (socialActivity.getType() == WikiActivityKeys.ADD_PAGE) || (socialActivity.getType() == SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) || (socialActivity.getType() == WikiActivityKeys.UPDATE_PAGE) %>">
 					<liferay-ui:search-container-column-jsp
 						align="right"
 						path="/html/portlet/wiki/page_activity_page_action.jsp"
