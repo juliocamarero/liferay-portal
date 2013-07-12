@@ -19,6 +19,7 @@
 <%
 String assetType = GetterUtil.getString((String)request.getAttribute("liferay-ui:categorization-filter:assetType"), "content");
 PortletURL portletURL = (PortletURL)request.getAttribute("liferay-ui:categorization-filter:portletURL");
+String selectionStyle = GetterUtil.getString((String)request.getAttribute("liferay-ui:categorization-filter:selectionStyle"), "dynamic");
 
 if (Validator.isNull(portletURL)) {
 	portletURL = renderResponse.createRenderURL();
@@ -89,9 +90,9 @@ if (assetCategoryId != 0) {
 		PortalUtil.addPageKeywords(assetTagName, request);
 		%>
 
-		<h1 class="taglib-categorization-filter entry-title">
+		<div class="taglib-categorization-filter entry-title alert alert-info">
 			<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategory, removeTag} %>" key='<%= assetType.concat("-with-x-x-and-tag-x") %>' />
-		</h1>
+		</div>
 	</c:when>
 	<c:when test="<%= assetCategoryId != 0 %>">
 
@@ -101,9 +102,9 @@ if (assetCategoryId != 0) {
 		PortalUtil.addPageKeywords(assetCategoryTitle, request);
 		%>
 
-		<h1 class="taglib-categorization-filter entry-title">
+		<div class="taglib-categorization-filter entry-title alert alert-info">
 			<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategory} %>" key='<%= assetType.concat("-with-x-x") %>' />
-		</h1>
+		</div>
 	</c:when>
 	<c:when test="<%= Validator.isNotNull(assetTagName) %>">
 
@@ -113,8 +114,8 @@ if (assetCategoryId != 0) {
 		PortalUtil.addPageKeywords(assetTagName, request);
 		%>
 
-		<h1 class="taglib-categorization-filter entry-title">
+		<div class="taglib-categorization-filter entry-title alert alert-info">
 			<liferay-ui:message arguments="<%= removeTag %>" key='<%= assetType.concat("-with-tag-x") %>' />
-		</h1>
+		</div>
 	</c:when>
 </c:choose>
