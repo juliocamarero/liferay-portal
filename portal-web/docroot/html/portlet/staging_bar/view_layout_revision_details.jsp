@@ -193,24 +193,26 @@ else {
 									<portlet:param name="workflowAction" value="<%= String.valueOf((layoutRevision.getStatus() == WorkflowConstants.STATUS_INCOMPLETE) ? WorkflowConstants.ACTION_SAVE_DRAFT : WorkflowConstants.ACTION_PUBLISH) %>" />
 								</portlet:actionURL>
 
-								handler: function(event) {
-									A.io.request(
-										'<%= publishURL %>',
-										{
-											after: {
-												success: function() {
-													<c:choose>
-														<c:when test="<%= layoutRevision.getStatus() == WorkflowConstants.STATUS_INCOMPLETE %>">
-															location.href = '<%= currentURL %>';
-														</c:when>
-														<c:otherwise>
-															Liferay.fire('updatedLayout');
-														</c:otherwise>
-													</c:choose>
+								on: {
+									click: function(event) {
+										A.io.request(
+											'<%= publishURL %>',
+											{
+												after: {
+													success: function() {
+														<c:choose>
+															<c:when test="<%= layoutRevision.getStatus() == WorkflowConstants.STATUS_INCOMPLETE %>">
+																location.href = '<%= currentURL %>';
+															</c:when>
+															<c:otherwise>
+																Liferay.fire('updatedLayout');
+															</c:otherwise>
+														</c:choose>
+													}
 												}
 											}
-										}
-									);
+										);
+									}
 								},
 							</c:when>
 							<c:when test="<%= workflowEnabled %>">
