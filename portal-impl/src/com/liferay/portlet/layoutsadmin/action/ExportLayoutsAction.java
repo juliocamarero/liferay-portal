@@ -95,6 +95,9 @@ public class ExportLayoutsAction extends PortletAction {
 				sendRedirect(actionRequest, actionResponse, redirect);
 			}
 			else {
+				actionResponse.setRenderParameter(
+					"saveLayoutSelection", Boolean.TRUE.toString());
+
 				if (startDate != null) {
 					actionResponse.setRenderParameter(
 						"startDate", String.valueOf(startDate.getTime()));
