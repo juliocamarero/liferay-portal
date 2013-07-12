@@ -56,6 +56,8 @@ if (endDateTime > 0) {
 	endDate = new Date(endDateTime);
 }
 
+boolean saveLayoutSelection = ParamUtil.getBoolean(request, "saveLayoutSelection", false);
+
 long[] selectedLayoutIds = new long[0];
 
 String treeKey = "layoutsExportTree";
@@ -122,7 +124,7 @@ portletURL.setParameter("rootNodeName", rootNodeName);
 										<liferay-util:param name="treeId" value="<%= treeKey %>" />
 										<liferay-util:param name="defaultStateChecked" value="1" />
 										<liferay-util:param name="expandFirstNode" value="1" />
-										<liferay-util:param name="saveState" value="0" />
+										<liferay-util:param name="saveState" value="<%= String.valueOf(saveLayoutSelection) %>" />
 										<liferay-util:param name="selectableTree" value="1" />
 									</liferay-util:include>
 
