@@ -56,6 +56,22 @@ if (endDateTime > 0) {
 	endDate = new Date(endDateTime);
 }
 
+long[] selectedLayoutIds = new long[0];
+
+treeKey = treeKey + privateLayout + layoutSetBranchId;
+
+selectedLayoutIds = GetterUtil.getLongValues(StringUtil.split(SessionTreeJSClicks.getOpenNodes(request, treeKey + "SelectedNode"), ','));
+
+List<Layout> selectedLayouts = new ArrayList<Layout>();
+
+for (int i = 0; i < selectedLayoutIds.length; i++) {
+	try {
+		selectedLayouts.add(LayoutLocalServiceUtil.getLayout(selGroupId, privateLayout, selectedLayoutIds[i]));
+	}
+	catch (NoSuchLayoutException nsle) {
+	}
+}
+
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/layouts_admin/export_layouts");
