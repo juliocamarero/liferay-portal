@@ -16,6 +16,7 @@ package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.util.ServerDetector;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * @author Raymond Augé
+ * @author Roberto Díaz
  */
 public class SearchContainerResultsTag<R> extends TagSupport {
 
@@ -52,6 +54,25 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 
 			if (_deprecatedTotal == 0) {
 				_deprecatedTotal = total;
+			}
+
+			String totalVar = searchContainer.getTotalVar();
+
+			if (!Validator.equals(
+					_deprecatedTotalVar,
+					SearchContainer.DEFAULT_DEPRECATED_TOTAL_VAR) &&
+				Validator.equals(
+					searchContainer.getTotalVar(),
+					SearchContainer.DEFAULT_TOTAL_VAR)) {
+
+				pageContext.removeAttribute(searchContainer.getTotalVar());
+
+				searchContainer.setTotalVar(_deprecatedTotalVar);
+			}
+			else {
+				pageContext.removeAttribute(_deprecatedTotalVar);
+
+				_deprecatedTotalVar = totalVar;
 			}
 
 			if (_results == null) {
