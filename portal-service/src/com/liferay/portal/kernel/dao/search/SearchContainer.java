@@ -70,6 +70,8 @@ public class SearchContainer<R> {
 
 	public static final String DEFAULT_ORDER_BY_TYPE_PARAM = "orderByType";
 
+	public static final String DEFAULT_RESULTS_VAR = "results";
+
 	public static final String DEFAULT_TOTAL_VAR = "total";
 
 	public static final String DEFAULT_VAR = "searchContainer";
