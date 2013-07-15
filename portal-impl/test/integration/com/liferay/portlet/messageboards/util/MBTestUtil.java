@@ -136,6 +136,32 @@ public class MBTestUtil {
 	}
 
 	public static MBMessage addMessage(
+			long groupId, long categoryId, String keywords, boolean approved,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		String subject = "subject";
+		String body = "body";
+
+		if (!Validator.isBlank(keywords)) {
+			subject = keywords;
+			body = keywords;
+		}
+
+		MBMessage message = MBMessageLocalServiceUtil.addMessage(
+			TestPropsValues.getUserId(), ServiceTestUtil.randomString(),
+			groupId, categoryId, subject, body, serviceContext);
+
+		if (!approved) {
+			return MBMessageLocalServiceUtil.updateStatus(
+				message.getStatusByUserId(), message.getMessageId(),
+				WorkflowConstants.STATUS_DRAFT, serviceContext);
+		}
+
+		return message;
+	}
+
+	public static MBMessage addMessage(
 			long categoryId, ServiceContext serviceContext)
 		throws Exception {
 
