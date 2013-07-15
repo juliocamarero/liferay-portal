@@ -9,11 +9,11 @@ import com.liferay.portal.model.Organization;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 
 
-public class OrganizationRSSRenderer extends BaseRSSRenderer {
+public class BlogsOrganizationRSSRenderer extends BlogsBaseRSSRenderer {
 
 	private Organization organization;
 
-	public OrganizationRSSRenderer(
+	public BlogsOrganizationRSSRenderer(
 		Organization organization, List<BlogsEntry> blogsEntries, 
 		HttpServletRequest request) {
 

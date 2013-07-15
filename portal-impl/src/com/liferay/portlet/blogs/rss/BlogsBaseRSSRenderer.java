@@ -24,7 +24,7 @@ import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 
-public abstract class BaseRSSRenderer implements 
+public abstract class BlogsBaseRSSRenderer implements 
 	com.liferay.portlet.rss.RSSRenderer{
 
 	private List<BlogsEntry> blogsEntries;
@@ -45,7 +45,7 @@ public abstract class BaseRSSRenderer implements
 	}
 
 	
-	public BaseRSSRenderer(
+	public BlogsBaseRSSRenderer(
 		List<BlogsEntry> blogsEntries,
 		HttpServletRequest request) {
 

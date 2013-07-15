@@ -34,9 +34,9 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.blogs.model.BlogsEntry;
-import com.liferay.portlet.blogs.rss.CompanyRSSRenderer;
-import com.liferay.portlet.blogs.rss.GroupRSSRenderer;
-import com.liferay.portlet.blogs.rss.OrganizationRSSRenderer;
+import com.liferay.portlet.blogs.rss.BlogsCompanyRSSRenderer;
+import com.liferay.portlet.blogs.rss.BlogsGroupRSSRenderer;
+import com.liferay.portlet.blogs.rss.BlogsOrganizationRSSRenderer;
 import com.liferay.portlet.blogs.service.BlogsEntryServiceUtil;
 import com.liferay.portlet.rss.RSSRenderer;
 import com.liferay.portlet.rss.action.DefaultRSSAction;
@@ -84,7 +84,7 @@ public class RSSAction extends DefaultRSSAction {
 			blogsEntries =
 				BlogsEntryServiceUtil.getCompanyEntries(
 					companyId, new Date(), status, max);
-			return new CompanyRSSRenderer(
+			return new BlogsCompanyRSSRenderer(
 				CompanyLocalServiceUtil.getCompany(companyId), 
 				blogsEntries, request);
 			
@@ -94,14 +94,14 @@ public class RSSAction extends DefaultRSSAction {
 			blogsEntries = BlogsEntryServiceUtil.getGroupEntries(
 				groupId, new Date(), status, max);
 			
-			return new GroupRSSRenderer(
+			return new BlogsGroupRSSRenderer(
 				GroupLocalServiceUtil.getGroup(groupId), blogsEntries, request);
 		}
 		
 		else if (organizationId > 0) {
 			blogsEntries = BlogsEntryServiceUtil.getOrganizationEntries(
 				organizationId, new Date(), status, max);
-			return new OrganizationRSSRenderer(
+			return new BlogsOrganizationRSSRenderer(
 				OrganizationLocalServiceUtil.getOrganization(organizationId),
 				blogsEntries, request);
 		}
@@ -110,7 +110,7 @@ public class RSSAction extends DefaultRSSAction {
 
 			blogsEntries = BlogsEntryServiceUtil.getGroupEntries(
 				groupId, new Date(), status, max);
-			return new GroupRSSRenderer(
+			return new BlogsGroupRSSRenderer(
 				GroupLocalServiceUtil.getGroup(groupId), blogsEntries, request, 
 				true);
 		}

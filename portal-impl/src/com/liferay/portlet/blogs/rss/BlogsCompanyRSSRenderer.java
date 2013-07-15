@@ -9,12 +9,12 @@ import com.liferay.portal.model.Company;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 
 
-public class CompanyRSSRenderer extends BaseRSSRenderer {
+public class BlogsCompanyRSSRenderer extends BlogsBaseRSSRenderer {
 
 	
 	private Company company;
 
-	public CompanyRSSRenderer(
+	public BlogsCompanyRSSRenderer(
 		Company company, List<BlogsEntry> blogsEntries,
 		HttpServletRequest request) {
 

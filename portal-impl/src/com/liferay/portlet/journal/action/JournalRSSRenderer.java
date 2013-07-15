@@ -55,7 +55,8 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	private ResourceRequest request;
 	private ResourceResponse response;
 	
-	public JournalRSSRenderer(ResourceRequest request, ResourceResponse response) {
+	public JournalRSSRenderer(
+		ResourceRequest request, ResourceResponse response) {
 		super(PortalUtil.getHttpServletRequest(request));
 		this.request = request;
 		this.response = response;

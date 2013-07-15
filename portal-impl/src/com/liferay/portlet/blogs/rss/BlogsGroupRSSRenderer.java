@@ -12,20 +12,20 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 
 
-public class GroupRSSRenderer extends BaseRSSRenderer {
+public class BlogsGroupRSSRenderer extends BlogsBaseRSSRenderer {
 
 	private Group group;
 	private long plid;
 	private boolean isScopeGroup;
 
-	public GroupRSSRenderer(
+	public BlogsGroupRSSRenderer(
 		Group group, List<BlogsEntry> blogsEntries, 
 		HttpServletRequest request) {
 		
 		this(group, blogsEntries, request, false);
 	}
 
-	public GroupRSSRenderer(
+	public BlogsGroupRSSRenderer(
 		Group group, List<BlogsEntry> blogsEntries, 
 		HttpServletRequest request, boolean isScopeGroup) {
 		
