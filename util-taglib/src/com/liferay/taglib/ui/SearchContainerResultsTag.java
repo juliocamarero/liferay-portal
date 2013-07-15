@@ -65,9 +65,13 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 					searchContainer.getTotalVar(),
 					SearchContainer.DEFAULT_TOTAL_VAR)) {
 
+				pageContext.removeAttribute(searchContainer.getTotalVar());
+
 				searchContainer.setTotalVar(_deprecatedTotalVar);
 			}
 			else {
+				pageContext.removeAttribute(_deprecatedTotalVar);
+
 				_deprecatedTotalVar = totalVar;
 			}
 
