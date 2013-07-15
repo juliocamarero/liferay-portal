@@ -68,6 +68,8 @@ public class SearchContainer<R> {
 
 	public static final String DEFAULT_ORDER_BY_TYPE_PARAM = "orderByType";
 
+	public static final String DEFAULT_TOTAL_VAR = "total";
+
 	public static final String DEFAULT_VAR = "searchContainer";
 
 	public static final int MAX_DELTA = 200;
@@ -335,6 +337,10 @@ public class SearchContainer<R> {
 		return _total;
 	}
 
+	public String getTotalVar() {
+		return _totalVar;
+	}
+
 	public boolean isDeltaConfigurable() {
 		return _deltaConfigurable;
 	}
@@ -457,6 +463,10 @@ public class SearchContainer<R> {
 		_calculateStartAndEnd();
 	}
 
+	public void setTotalVar(String totalVar) {
+		_totalVar = totalVar;
+	}
+
 	private void _buildNormalizedHeaderNames(List<String> headerNames) {
 		if (headerNames == null) {
 			return;
@@ -533,6 +543,7 @@ public class SearchContainer<R> {
 	private DisplayTerms _searchTerms;
 	private int _start;
 	private int _total;
+	private String _totalVar;
 	private boolean _uniqueId;
 
 }
