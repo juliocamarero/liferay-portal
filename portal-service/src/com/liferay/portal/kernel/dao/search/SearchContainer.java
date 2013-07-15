@@ -59,6 +59,8 @@ public class SearchContainer<R> {
 
 	public static final String DEFAULT_DELTA_PARAM = "delta";
 
+	public static final String DEFAULT_DEPRECATED_TOTAL_VAR = "deprecatedTotal";
+
 	/**
 	 * @deprecated As of 6.2.0, see LPS-6312
 	 */
