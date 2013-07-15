@@ -1,11 +1,18 @@
+/**
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.portlet.activities.action;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -28,54 +35,56 @@ import com.liferay.portlet.social.model.SocialActivityFeedEntry;
 import com.liferay.portlet.social.service.SocialActivityInterpreterLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.util.RSSUtil;
+
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
-	
-	
-	
-	private PortletRequest portletRequest;
-	private ThemeDisplay themeDisplay;
 
 	public ActivitiesRSSRenderer(
 		PortletRequest request, PortletResponse response) {
+
 		super(PortalUtil.getHttpServletRequest(request));
-		portletRequest = request;
-		themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+		_portletRequest = request;
+		_themeDisplay = (ThemeDisplay)_portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
-	
+
 	@Override
 	public String getFeedURL() throws PortalException, SystemException {
-		return PortalUtil.getLayoutFullURL(themeDisplay) +
+		return PortalUtil.getLayoutFullURL(_themeDisplay) +
 			Portal.FRIENDLY_URL_SEPARATOR + "activities/rss";
 	}
-	
+
 	@Override
 	public String getRSSName() {
-		return ParamUtil.getString(portletRequest, "feedTitle");
+		return ParamUtil.getString(_portletRequest, "feedTitle");
 	}
 
 	@Override
-	public void populateFeedEntries(List<? super SyndEntry> syndEntries) 
+	public void populateFeedEntries(List<? super SyndEntry> syndEntries)
 		throws PortalException, SystemException {
-	
+
 		String displayStyle = ParamUtil.getString(
-			portletRequest, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
+			_portletRequest, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
 
 		int max = ParamUtil.getInteger(
-			portletRequest, "max", SearchContainer.DEFAULT_DELTA);
+			_portletRequest, "max", SearchContainer.DEFAULT_DELTA);
 
 		List<SocialActivity> activities;
 		ServiceContext serviceContext;
-		activities = getActivities(portletRequest, max);
+		activities = getActivities(_portletRequest, max);
 
-		serviceContext = ServiceContextFactory.getInstance(portletRequest);
-		
+		serviceContext = ServiceContextFactory.getInstance(_portletRequest);
+
 		for (SocialActivity activity : activities) {
 			SocialActivityFeedEntry activityFeedEntry =
 				SocialActivityInterpreterLocalServiceUtil.interpret(
@@ -117,13 +126,13 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 		}
 
 	}
-	
+
 	protected List<SocialActivity> getActivities(
-			PortletRequest portletRequest, int max) 
+			PortletRequest portletRequest, int max)
 		throws PortalException, SystemException {
 
-		Group group =
-			GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());
+		Group group = GroupLocalServiceUtil.getGroup(
+			_themeDisplay.getScopeGroupId());
 
 		int start = 0;
 
@@ -142,7 +151,8 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 
 		return Collections.emptyList();
 }
-	
-	
+
+	private PortletRequest _portletRequest;
+	private ThemeDisplay _themeDisplay;
 
 }

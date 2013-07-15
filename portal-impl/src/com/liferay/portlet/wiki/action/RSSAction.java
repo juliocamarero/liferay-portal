@@ -14,10 +14,6 @@
 
 package com.liferay.portlet.wiki.action;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -27,20 +23,24 @@ import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
 import com.liferay.portlet.wiki.util.comparator.PageCreateDateComparator;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Jorge Ferrer
  */
 public class RSSAction extends DefaultRSSAction {
 
 	@Override
-	protected RSSRenderer createRSSRenderer(HttpServletRequest request) 
+	protected RSSRenderer createRSSRenderer(HttpServletRequest request)
 		throws Exception {
-		
+
 		long nodeId = ParamUtil.getLong(request, "nodeId");
 		String title = ParamUtil.getString(request, "title");
 		int max = ParamUtil.getInteger(
 			request, "max", SearchContainer.DEFAULT_DELTA);
-		
+
 		if (nodeId > 0) {
 			if (Validator.isNotNull(title)) {
 				List<WikiPage> pages = WikiPageServiceUtil. getPages(
@@ -48,12 +48,12 @@ public class RSSAction extends DefaultRSSAction {
 				return new WikiRSSRenderer(request, pages, true);
 			}
 			else {
-				
 				List<WikiPage> pages = WikiPageServiceUtil.getNodePages(
 					nodeId, max);
 				return new WikiRSSRenderer(request, pages, false);
 			}
 		}
+
 		throw new UnsupportedOperationException();
 	}
 

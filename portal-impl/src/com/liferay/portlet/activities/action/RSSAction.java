@@ -14,11 +14,11 @@
 
 package com.liferay.portlet.activities.action;
 
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
-
 import com.liferay.portlet.rss.RSSRenderer;
 import com.liferay.portlet.rss.action.DefaultRSSAction;
+
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 /**
  * @author Brian Wing Shun Chan
@@ -29,9 +29,9 @@ public class RSSAction extends DefaultRSSAction {
 
 	@Override
 	protected RSSRenderer createRSSRenderer(
-		ResourceRequest request, ResourceResponse response)
+			ResourceRequest request, ResourceResponse response)
 		throws Exception {
-	
+
 		return new ActivitiesRSSRenderer(request, response);
 	}
 

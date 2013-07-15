@@ -1,9 +1,18 @@
+/**
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.portlet.blogs.rss;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -19,70 +28,91 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.util.RSSUtil;
+
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 
-public abstract class BlogsBaseRSSRenderer implements 
-	com.liferay.portlet.rss.RSSRenderer{
+import java.util.Date;
+import java.util.List;
 
-	private List<BlogsEntry> blogsEntries;
-	private HttpServletRequest request;
-	private String displayStyle;
-	private ThemeDisplay themeDisplay;
-	
-	
-	public ThemeDisplay getThemeDisplay() {
-	
-		return themeDisplay;
-	}
+import javax.servlet.http.HttpServletRequest;
+public abstract class BlogsBaseRSSRenderer
+	implements com.liferay.portlet.rss.RSSRenderer {
 
-
-	public HttpServletRequest getRequest() {
-	
-		return request;
-	}
-
-	
 	public BlogsBaseRSSRenderer(
-		List<BlogsEntry> blogsEntries,
-		HttpServletRequest request) {
+		List<BlogsEntry> blogsEntries, HttpServletRequest request) {
 
-		this.blogsEntries = blogsEntries;
-		this.request = request;
-		this.themeDisplay =
-			(ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-		this.displayStyle = ParamUtil.getString(
+		this._blogsEntries = blogsEntries;
+		this._request = request;
+		this._themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+		this._displayStyle = ParamUtil.getString(
 			request, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);;
 	}
 
 	@Override
 	public String getAlternateURL() throws PortalException, SystemException {
 		String feedURL = getFeedURL();
+
 		if (feedURL.endsWith("/-/blogs/rss")) {
 			return feedURL.substring(0, feedURL.length() - 12);
 		}
-		return PortalUtil.getLayoutFullURL(themeDisplay);
+
+		return PortalUtil.getLayoutFullURL(_themeDisplay);
 	}
 
-	abstract protected String getEntryURL() 
+	abstract protected String getEntryURL()
 		throws PortalException, SystemException;
-	
+
 	@Override
 	public String getFeedURL() throws PortalException, SystemException {
-		return themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
+		return _themeDisplay.getPortalURL() + _themeDisplay.getPathMain() +
 		"/blogs/find_entry?";
+	}
+
+	@Override
+	public Date getPublicationDate() throws PortalException, SystemException {
+		return new Date();
+	}
+
+	public HttpServletRequest getRequest() {
+
+		return _request;
+	}
+
+	@Override
+	public String getRSSDescription() throws PortalException, SystemException {
+		return getRSSName();
+	}
+
+	@Override
+	public String getRSSFeedType() throws PortalException, SystemException {
+
+		String type = ParamUtil.getString(
+			getRequest(), "type", RSSUtil.FORMAT_DEFAULT);
+		return RSSUtil.getFeedType(type, getRSSVersion());
+	}
+
+	public double getRSSVersion() throws PortalException, SystemException {
+		return ParamUtil.getDouble(
+			_request, "version", RSSUtil.VERSION_DEFAULT);
+	}
+
+	public ThemeDisplay getThemeDisplay() {
+
+		return _themeDisplay;
 	}
 
 	@Override
 	abstract public String getRSSName() throws PortalException, SystemException;
 
 	@Override
-	public void populateFeedEntries(List<? super SyndEntry> syndEntries) 
+	public void populateFeedEntries(List<? super SyndEntry> syndEntries)
 		throws PortalException, SystemException {
 
-		for (BlogsEntry entry : blogsEntries) {
+		for (BlogsEntry entry : _blogsEntries) {
 			SyndEntry syndEntry = new SyndEntryImpl();
 
 			String author = PortalUtil.getUserName(entry);
@@ -95,7 +125,7 @@ public abstract class BlogsBaseRSSRenderer implements
 
 			String value = null;
 
-			if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_ABSTRACT)) {
+			if (_displayStyle.equals(RSSUtil.DISPLAY_STYLE_ABSTRACT)) {
 				String summary = entry.getDescription();
 
 				if (Validator.isNull(summary)) {
@@ -106,7 +136,7 @@ public abstract class BlogsBaseRSSRenderer implements
 					HtmlUtil.extractText(summary),
 					PropsValues.BLOGS_RSS_ABSTRACT_LENGTH, StringPool.BLANK);
 			}
-			else if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
+			else if (_displayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
 				value = StringPool.BLANK;
 			}
 			else {
@@ -116,8 +146,8 @@ public abstract class BlogsBaseRSSRenderer implements
 						"href=\"/", "src=\"/"
 					},
 					new String[] {
-						"href=\"" + themeDisplay.getURLPortal() + "/",
-						"src=\"" + themeDisplay.getURLPortal() + "/"
+						"href=\"" + _themeDisplay.getURLPortal() + "/",
+						"src=\"" + _themeDisplay.getURLPortal() + "/"
 					});
 			}
 
@@ -126,9 +156,9 @@ public abstract class BlogsBaseRSSRenderer implements
 			syndEntry.setDescription(syndContent);
 
 			StringBundler sb = new StringBundler(4);
-			
+
 			String entryURL = getEntryURL();
-			
+
 			if (entryURL.endsWith("/blogs/rss")) {
 				sb.append(entryURL.substring(0, entryURL.length() - 3));
 				sb.append(entry.getUrlTitle());
@@ -155,31 +185,12 @@ public abstract class BlogsBaseRSSRenderer implements
 
 			syndEntries.add(syndEntry);
 		}
-		
+
 	}
 
-	@Override
-	public String getRSSFeedType() throws PortalException, SystemException {
-		
-		String type = ParamUtil.getString(
-			getRequest(), "type", RSSUtil.FORMAT_DEFAULT);
-		return RSSUtil.getFeedType(type, getRSSVersion());
-	}
-		
-	
-	public double getRSSVersion() throws PortalException, SystemException {
-		return ParamUtil.getDouble(
-			request, "version", RSSUtil.VERSION_DEFAULT);
-	}
-
-	@Override
-	public Date getPublicationDate() throws PortalException, SystemException {
-		return new Date();
-	}
-
-	@Override
-	public String getRSSDescription() throws PortalException, SystemException {
-		return getRSSName();
-	}
+	private List<BlogsEntry> _blogsEntries;
+	private String _displayStyle;
+	private HttpServletRequest _request;
+	private ThemeDisplay _themeDisplay;
 
 }

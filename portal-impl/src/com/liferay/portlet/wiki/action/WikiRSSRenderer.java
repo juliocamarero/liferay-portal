@@ -1,15 +1,22 @@
+/**
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.portlet.wiki.action;
-
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -26,31 +33,29 @@ import com.liferay.portlet.rss.DefaultRSSRenderer;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.util.WikiUtil;
 import com.liferay.util.RSSUtil;
+
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 
+import java.util.List;
+import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 public class WikiRSSRenderer extends DefaultRSSRenderer {
-	
-	private ThemeDisplay themeDisplay;
-	private long nodeId;
-	private HttpServletRequest request;
-	private List<WikiPage> pages;
-	private boolean diff;
-	
+
 	public WikiRSSRenderer(
-		HttpServletRequest request, List<WikiPage> pagesToExport, 
+		HttpServletRequest request, List<WikiPage> pagesToExport,
 		boolean diff) {
-		
+
 		super(request);
-		this.pages = pagesToExport;
-		this.diff = diff;
-		themeDisplay = (ThemeDisplay)request.getAttribute(
+		this._pages = pagesToExport;
+		this._diff = diff;
+		_themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
-		this.request = request;
-		nodeId = ParamUtil.getLong(request, "nodeId");
+		this._request = request;
+		_nodeId = ParamUtil.getLong(request, "nodeId");
 	}
 
 	@Override
@@ -59,43 +64,43 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 		String layoutFullURL;
 		layoutFullURL =
 			PortalUtil.getLayoutFullURL(
-				themeDisplay.getScopeGroupId(), PortletKeys.WIKI);
+				_themeDisplay.getScopeGroupId(), PortletKeys.WIKI);
 
 		StringBundler sb = new StringBundler(4);
 
 		sb.append(layoutFullURL);
 		sb.append(Portal.FRIENDLY_URL_SEPARATOR);
 		sb.append("wiki/");
-		sb.append(nodeId);
+		sb.append(_nodeId);
 
 		return sb.toString();
 	}
 
 	@Override
 	public String getRSSName() {
-		return ParamUtil.getString(request, "title");
+		return ParamUtil.getString(_request, "title");
 	}
 
 	@Override
 	public void populateFeedEntries(List<? super SyndEntry> syndEntries)
 		throws PortalException, SystemException {
-		
+
 		WikiPage latestPage = null;
 
 		StringBundler sb = new StringBundler(6);
-		
+
 		String entryURL = getFeedURL() + StringPool.SLASH + getRSSName();
-		
-		Locale locale = themeDisplay.getLocale();
-		
+
+		Locale locale = _themeDisplay.getLocale();
+
 		String attachmentURLPrefix = WikiUtil.getAttachmentURLPrefix(
-			themeDisplay.getPathMain(), themeDisplay.getPlid(), nodeId,
+			_themeDisplay.getPathMain(), _themeDisplay.getPlid(), _nodeId,
 			getRSSName());
-		
+
 		String displayStyle = ParamUtil.getString(
-			request, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
-		
-		for (WikiPage page : pages) {
+			_request, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
+
+		for (WikiPage page : _pages) {
 			SyndEntry syndEntry = new SyndEntryImpl();
 
 			String author = PortalUtil.getUserName(page);
@@ -114,8 +119,8 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 				sb.append(HttpUtil.encodeURL(page.getTitle()));
 			}
 
-			if (diff) {
-				if ((latestPage != null) || (pages.size() == 1)) {
+			if (_diff) {
+				if ((latestPage != null) || (_pages.size() == 1)) {
 					sb.append(StringPool.QUESTION);
 					sb.append(PortalUtil.getPortletNamespace(PortletKeys.WIKI));
 					sb.append("version=");
@@ -159,8 +164,8 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 					value = StringPool.BLANK;
 				}
 				else {
-					value =
-						WikiUtil.convert(page, null, null, attachmentURLPrefix);
+					value = WikiUtil.convert(
+						page, null, null, attachmentURLPrefix);
 				}
 
 				syndContent.setValue(value);
@@ -191,6 +196,11 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 			latestPage = page;
 		}
 	}
-	
-	private static Log _log = LogFactoryUtil.getLog(WikiRSSRenderer.class); 
+
+	private boolean _diff;
+	private long _nodeId;
+	private List<WikiPage> _pages;
+	private HttpServletRequest _request;
+	private ThemeDisplay _themeDisplay;
+
 }
