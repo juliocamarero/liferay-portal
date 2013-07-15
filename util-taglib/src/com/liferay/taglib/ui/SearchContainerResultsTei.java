@@ -33,7 +33,7 @@ public class SearchContainerResultsTei extends TagExtraInfo {
 		String resultsVar = tagData.getAttributeString("resultsVar");
 
 		if (Validator.isNull(resultsVar)) {
-			resultsVar = SearchContainerResultsTag.DEFAULT_RESULTS_VAR;
+			resultsVar = SearchContainer.DEFAULT_RESULTS_VAR;
 		}
 
 		String totalVar = tagData.getAttributeString("totalVar");
