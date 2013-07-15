@@ -16,7 +16,6 @@ package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.util.ServerDetector;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +62,11 @@ public class SearchContainerResultsTag<R> extends TagSupport {
 
 			String totalVar = searchContainer.getTotalVar();
 
-			if (!Validator.equals(
-					_deprecatedTotalVar,
+			if (!_deprecatedTotalVar.equals(
 					SearchContainer.DEFAULT_DEPRECATED_TOTAL_VAR) &&
-				Validator.equals(
-					searchContainer.getTotalVar(),
-					SearchContainer.DEFAULT_TOTAL_VAR)) {
+				totalVar.equals(SearchContainer.DEFAULT_TOTAL_VAR)) {
 
-				pageContext.removeAttribute(searchContainer.getTotalVar());
+				pageContext.removeAttribute(totalVar);
 
 				searchContainer.setTotalVar(_deprecatedTotalVar);
 			}
