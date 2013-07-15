@@ -737,10 +737,10 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 	}
 
 	@Override
-	public MBThread moveThreadToTrash(long userId, long entryId)
+	public MBThread moveThreadToTrash(long userId, long threadId)
 		throws PortalException, SystemException {
 
-		MBThread thread = mbThreadPersistence.findByPrimaryKey(entryId);
+		MBThread thread = mbThreadPersistence.findByPrimaryKey(threadId);
 
 		return moveThreadToTrash(userId, thread);
 	}
