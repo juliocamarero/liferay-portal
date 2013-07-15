@@ -74,7 +74,8 @@ public class RSSAction extends DefaultRSSAction {
 				groupId, new Date(), status, max);
 
 			return new BlogsGroupRSSRenderer(
-				GroupLocalServiceUtil.getGroup(groupId), blogsEntries, request);
+				GroupLocalServiceUtil.getGroup(
+					groupId), blogsEntries, request, true);
 		}
 
 		else if (organizationId > 0) {
@@ -91,7 +92,7 @@ public class RSSAction extends DefaultRSSAction {
 				groupId, new Date(), status, max);
 			return new BlogsGroupRSSRenderer(
 				GroupLocalServiceUtil.getGroup(groupId), blogsEntries, request,
-				true);
+				false);
 		}
 
 		throw new UnsupportedOperationException();

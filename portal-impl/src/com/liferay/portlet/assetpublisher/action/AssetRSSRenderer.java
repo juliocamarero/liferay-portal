@@ -17,6 +17,8 @@ package com.liferay.portlet.assetpublisher.action;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -93,42 +95,49 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		assetEntries = getAssetEntries();
 
 		for (AssetEntry assetEntry : assetEntries) {
-			SyndEntry syndEntry = new SyndEntryImpl();
+			try {
+				SyndEntry syndEntry = new SyndEntryImpl();
 
-			String author = PortalUtil.getUserName(assetEntry);
+				String author = PortalUtil.getUserName(assetEntry);
 
-			syndEntry.setAuthor(author);
+				syndEntry.setAuthor(author);
 
-			SyndContent syndContent = new SyndContentImpl();
+				SyndContent syndContent = new SyndContentImpl();
 
-			syndContent.setType(RSSUtil.ENTRY_TYPE_DEFAULT);
+				syndContent.setType(RSSUtil.ENTRY_TYPE_DEFAULT);
 
-			String value = null;
+				String value = null;
 
-			String languageId = LanguageUtil.getLanguageId(_portletRequest);
+				String languageId = LanguageUtil.getLanguageId(_portletRequest);
 
-			if (rssDisplayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
-				value = StringPool.BLANK;
+				if (rssDisplayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
+					value = StringPool.BLANK;
+				}
+				else {
+					value = assetEntry.getSummary(languageId, true);
+				}
+
+				syndContent.setValue(value);
+
+				syndEntry.setDescription(syndContent);
+
+				String link;
+				link = getEntryURL(assetLinkBehavior, assetEntry);
+
+				syndEntry.setLink(link);
+
+				syndEntry.setPublishedDate(assetEntry.getPublishDate());
+				syndEntry.setTitle(assetEntry.getTitle(languageId, true));
+				syndEntry.setUpdatedDate(assetEntry.getModifiedDate());
+				syndEntry.setUri(syndEntry.getLink());
+
+				syndEntries.add(syndEntry);
 			}
-			else {
-				value = assetEntry.getSummary(languageId, true);
+			catch (Exception e) {
+				if (_log.isErrorEnabled()) {
+					_log.error("Could not process entry " + assetEntry, e);
+				}
 			}
-
-			syndContent.setValue(value);
-
-			syndEntry.setDescription(syndContent);
-
-			String link;
-			link = getEntryURL(assetLinkBehavior, assetEntry);
-
-			syndEntry.setLink(link);
-
-			syndEntry.setPublishedDate(assetEntry.getPublishDate());
-			syndEntry.setTitle(assetEntry.getTitle(languageId, true));
-			syndEntry.setUpdatedDate(assetEntry.getModifiedDate());
-			syndEntry.setUri(syndEntry.getLink());
-
-			syndEntries.add(syndEntry);
 		}
 	}
 
@@ -232,6 +241,8 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 			}
 		}
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(AssetRSSRenderer.class);
 
 	private PortletPreferences _portletPreferences;
 	private PortletRequest _portletRequest;
