@@ -6,6 +6,8 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -51,8 +53,8 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		
 	}
 
-	protected List<AssetEntry> getAssetEntries()
-	throws Exception {
+	protected List<AssetEntry> getAssetEntries() 
+		throws PortalException, SystemException {
 	
 		int rssDelta = GetterUtil.getInteger(
 			portletPreferences.getValue("rssDelta", "20"));
@@ -64,7 +66,8 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 	
 	@Override
 	public void populateFeedEntries(
-			List<? super SyndEntry> syndEntries) {
+			List<? super SyndEntry> syndEntries) 
+		throws PortalException, SystemException {
 		
 		String assetLinkBehavior = portletPreferences.getValue(
 			"assetLinkBehavior", "showFullContent");
@@ -72,12 +75,7 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 			"rssDisplayStyle", RSSUtil.DISPLAY_STYLE_ABSTRACT);
 		
 		List<AssetEntry> assetEntries;
-		try {
-			assetEntries = getAssetEntries();
-		}
-		catch (Exception e) {
-			return;
-		}
+		assetEntries = getAssetEntries();
 		
 		for (AssetEntry assetEntry : assetEntries) {
 			SyndEntry syndEntry = new SyndEntryImpl();
@@ -106,12 +104,7 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 			syndEntry.setDescription(syndContent);
 
 			String link;
-			try {
-				link = getEntryURL(assetLinkBehavior, assetEntry);
-			}
-			catch (Exception e) {
-				continue;
-			}
+			link = getEntryURL(assetLinkBehavior, assetEntry);
 
 			syndEntry.setLink(link);
 
@@ -125,20 +118,15 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	@Override
-	public String getFeedURL() {
-	
-		try {
-			String feedURL = getAssetPublisherURL();
-			return feedURL.concat("rss");
-		}
-		catch (Exception e) {
-			return StringPool.BLANK;
-		}
+	public String getFeedURL() throws PortalException, SystemException {
+
+		String feedURL = getAssetPublisherURL();
+		return feedURL.concat("rss");
 	}
 
-	protected String getAssetPublisherURL()
-		throws Exception {
-	
+	protected String getAssetPublisherURL() 
+		throws PortalException, SystemException {
+		
 		Layout layout = themeDisplay.getLayout();
 	
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
@@ -164,14 +152,18 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	private String getEntryURL(
-			String linkBehavior, AssetEntry assetEntry)
-		throws Exception {
+			String linkBehavior, AssetEntry assetEntry) throws PortalException, SystemException {
 	
 		if (linkBehavior.equals("viewInPortlet")) {
 			return getEntryURLViewInContext(assetEntry);
 		}
 		else {
-			return getEntryURLAssetPublisher(assetEntry);
+			try {
+				return getEntryURLAssetPublisher(assetEntry);
+			}
+			catch (Exception e) {
+				throw new PortalException(e);
+			}
 		}
 	}
 
@@ -192,9 +184,9 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		return sb.toString();
 	}
 
-	protected String getEntryURLViewInContext(AssetEntry assetEntry)
-		throws Exception {
-	
+	protected String getEntryURLViewInContext(AssetEntry assetEntry) 
+		throws PortalException, SystemException {
+		
 		AssetRendererFactory assetRendererFactory =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
 				assetEntry.getClassName());
@@ -202,9 +194,15 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
 			assetEntry.getClassPK());
 	
-		String viewInContextURL = assetRenderer.getURLViewInContext(
-			(LiferayPortletRequest)portletRequest,
-			(LiferayPortletResponse)portletResponse, null);
+		String viewInContextURL;
+		try {
+			viewInContextURL = assetRenderer.getURLViewInContext(
+				(LiferayPortletRequest)portletRequest,
+				(LiferayPortletResponse)portletResponse, null);
+		}
+		catch (Exception e) {
+			throw new PortalException(e);
+		}
 	
 		if (Validator.isNotNull(viewInContextURL) &&
 			!viewInContextURL.startsWith(Http.HTTP_WITH_SLASH) &&

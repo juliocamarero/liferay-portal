@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Company;
 import com.liferay.portlet.blogs.model.BlogsEntry;
@@ -39,7 +41,7 @@ public class BlogsCompanyRSSRenderer extends BlogsBaseRSSRenderer {
 	}
 
 	@Override
-	protected String getEntryURL() {
+	protected String getEntryURL() throws PortalException, SystemException {
 		return super.getFeedURL();
 	}
 

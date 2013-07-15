@@ -8,6 +8,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
 import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -48,14 +50,9 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 	}
 	
 	@Override
-	public String getFeedURL() {
-		try {
-			return PortalUtil.getLayoutFullURL(themeDisplay) +
-						Portal.FRIENDLY_URL_SEPARATOR + "activities/rss";
-		}
-		catch (Exception e) {
-			return StringPool.BLANK;
-		}
+	public String getFeedURL() throws PortalException, SystemException {
+		return PortalUtil.getLayoutFullURL(themeDisplay) +
+			Portal.FRIENDLY_URL_SEPARATOR + "activities/rss";
 	}
 	
 	@Override
@@ -64,7 +61,8 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	@Override
-	public void populateFeedEntries(List<? super SyndEntry> syndEntries) {
+	public void populateFeedEntries(List<? super SyndEntry> syndEntries) 
+		throws PortalException, SystemException {
 	
 		String displayStyle = ParamUtil.getString(
 			portletRequest, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
@@ -74,16 +72,9 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 
 		List<SocialActivity> activities;
 		ServiceContext serviceContext;
-		try {
-			activities = getActivities(portletRequest, max);
+		activities = getActivities(portletRequest, max);
 
-			serviceContext = ServiceContextFactory.getInstance(
-				portletRequest);
-		}
-		catch (Exception e) {
-			return;
-		}
-
+		serviceContext = ServiceContextFactory.getInstance(portletRequest);
 		
 		for (SocialActivity activity : activities) {
 			SocialActivityFeedEntry activityFeedEntry =
@@ -128,8 +119,8 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 	}
 	
 	protected List<SocialActivity> getActivities(
-		PortletRequest portletRequest, int max)
-		throws Exception {
+			PortletRequest portletRequest, int max) 
+		throws PortalException, SystemException {
 
 		Group group =
 			GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());

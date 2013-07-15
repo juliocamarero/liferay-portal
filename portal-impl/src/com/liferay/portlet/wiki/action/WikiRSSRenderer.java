@@ -5,6 +5,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -52,16 +54,12 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	@Override
-	public String getFeedURL() {
+	public String getFeedURL() throws PortalException, SystemException {
+
 		String layoutFullURL;
-		try {
-			layoutFullURL = PortalUtil.getLayoutFullURL(
+		layoutFullURL =
+			PortalUtil.getLayoutFullURL(
 				themeDisplay.getScopeGroupId(), PortletKeys.WIKI);
-		}
-		catch (Exception e) {
-			_log.warn("Could not get URL for Layout", e);
-			return StringPool.BLANK;
-		}
 
 		StringBundler sb = new StringBundler(4);
 
@@ -79,7 +77,9 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	@Override
-	public void populateFeedEntries(List<? super SyndEntry> syndEntries) {
+	public void populateFeedEntries(List<? super SyndEntry> syndEntries)
+		throws PortalException, SystemException {
+		
 		WikiPage latestPage = null;
 
 		StringBundler sb = new StringBundler(6);
@@ -123,24 +123,21 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 
 					String value = null;
 
-					try {
-						if (latestPage == null) {
-							value =
-								WikiUtil.convert(
-									page, null, null, attachmentURLPrefix);
-						}
-						else {
+					if (latestPage == null) {
+						value =
+							WikiUtil.convert(
+								page, null, null, attachmentURLPrefix);
+					}
+					else {
+						try {
 							value =
 								WikiUtil.diffHtml(
 									latestPage, page, null, null,
 									attachmentURLPrefix);
 						}
-					}
-					catch (Exception e) {
-						if (_log.isWarnEnabled()) {
-							_log.warn("Could not generate content", e);
+						catch (Exception e) {
+							throw new PortalException(e);
 						}
-						continue;
 					}
 
 					syndContent.setValue(value);
@@ -162,13 +159,8 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 					value = StringPool.BLANK;
 				}
 				else {
-					try {
-						value = WikiUtil.convert(
-							page, null, null, attachmentURLPrefix);
-					}
-					catch (Exception e) {
-						_log.warn("", e);
-					}
+					value =
+						WikiUtil.convert(page, null, null, attachmentURLPrefix);
 				}
 
 				syndContent.setValue(value);

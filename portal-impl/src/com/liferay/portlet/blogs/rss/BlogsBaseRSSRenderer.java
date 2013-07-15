@@ -58,32 +58,29 @@ public abstract class BlogsBaseRSSRenderer implements
 	}
 
 	@Override
-	public String getAlternateURL() {
+	public String getAlternateURL() throws PortalException, SystemException {
 		String feedURL = getFeedURL();
 		if (feedURL.endsWith("/-/blogs/rss")) {
 			return feedURL.substring(0, feedURL.length() - 12);
 		}
-		try {
-			return PortalUtil.getLayoutFullURL(themeDisplay);
-		}
-		catch (Exception e) {
-			return null;
-		}
+		return PortalUtil.getLayoutFullURL(themeDisplay);
 	}
 
-	abstract protected String getEntryURL();
+	abstract protected String getEntryURL() 
+		throws PortalException, SystemException;
 	
 	@Override
-	public String getFeedURL() {
+	public String getFeedURL() throws PortalException, SystemException {
 		return themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
 		"/blogs/find_entry?";
 	}
 
 	@Override
-	abstract public String getRSSName();
+	abstract public String getRSSName() throws PortalException, SystemException;
 
 	@Override
-	public void populateFeedEntries(List<? super SyndEntry> syndEntries) {
+	public void populateFeedEntries(List<? super SyndEntry> syndEntries) 
+		throws PortalException, SystemException {
 
 		for (BlogsEntry entry : blogsEntries) {
 			SyndEntry syndEntry = new SyndEntryImpl();
@@ -162,7 +159,7 @@ public abstract class BlogsBaseRSSRenderer implements
 	}
 
 	@Override
-	public String getRSSFeedType() {
+	public String getRSSFeedType() throws PortalException, SystemException {
 		
 		String type = ParamUtil.getString(
 			getRequest(), "type", RSSUtil.FORMAT_DEFAULT);
@@ -170,18 +167,18 @@ public abstract class BlogsBaseRSSRenderer implements
 	}
 		
 	
-	public double getRSSVersion() {
+	public double getRSSVersion() throws PortalException, SystemException {
 		return ParamUtil.getDouble(
 			request, "version", RSSUtil.VERSION_DEFAULT);
 	}
 
 	@Override
-	public Date getPublicationDate() {
+	public Date getPublicationDate() throws PortalException, SystemException {
 		return new Date();
 	}
 
 	@Override
-	public String getRSSDescription() {
+	public String getRSSDescription() throws PortalException, SystemException {
 		return getRSSName();
 	}
 

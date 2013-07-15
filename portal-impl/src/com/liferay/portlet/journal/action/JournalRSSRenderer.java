@@ -16,11 +16,11 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -65,18 +65,10 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	@Override
-	public void populateFeedEntries(List<? super SyndEntry> syndEntries) {
+	public void populateFeedEntries(List<? super SyndEntry> syndEntries) 
+		throws PortalException, SystemException {
 	
-		JournalFeed feed;
-		try {
-			feed = getJournalFeed();
-		}
-		catch (Exception e) {
-			if (_log.isWarnEnabled()) {
-				_log.warn("Could not obtain journal feed", e);
-			}
-			return;
-		}
+		JournalFeed feed = getJournalFeed();
 	
 		String languageId = LanguageUtil.getLanguageId(request);
 	
@@ -91,23 +83,10 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 			}
 			catch (NoSuchLayoutException nsle) {
 			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Could not obtain layout with plid " + plid, e);
-				}
-			}
 		}
 		
 		List<JournalArticle> articles;
-		try {
-			articles = JournalRSSUtil.getArticles(feed);
-		}
-		catch (SystemException e) {
-			if (_log.isWarnEnabled()) {
-				_log.warn("Could not obtain articles for feed " + feed, e);
-			}
-			return;
-		}
+		articles = JournalRSSUtil.getArticles(feed);
 	
 		if (_log.isDebugEnabled()) {
 			_log.debug("Syndicating " + articles.size() + " articles");
@@ -127,14 +106,13 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 			String value = article.getDescription(languageId);
 	
 			try {
-				value = processContent(
-					feed, article, languageId, themeDisplay, syndEntry,
-					syndContent);
+				value =
+					processContent(
+						feed, article, languageId, themeDisplay, syndEntry,
+						syndContent);
 			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(e, e);
-				}
+			catch (DocumentException e) {
+				throw new PortalException(e);
 			}
 	
 			syndContent.setValue(value);
@@ -142,16 +120,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 			syndEntry.setDescription(syndContent);
 	
 			String link;
-			try {
-				link = getEntryURL(feed, article, layout, themeDisplay);
-			}
-			catch (Exception e) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Could not generate entryURL for article" +
-						article);
-				}
-				continue;
-			}
+			link = getEntryURL(feed, article, layout, themeDisplay);
 	
 			syndEntry.setLink(link);
 	
@@ -167,8 +136,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 
 	protected String getEntryURL(
 			JournalFeed feed, JournalArticle article, Layout layout,
-			ThemeDisplay themeDisplay)
-		throws Exception {
+			ThemeDisplay themeDisplay) throws PortalException, SystemException {
 	
 		List<Long> hitLayoutIds =
 			JournalContentSearchLocalServiceUtil.getLayoutIds(
@@ -207,34 +175,21 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	@Override
-	public String getRSSFeedType() {
-		
-		try {
-			JournalFeed feed = getJournalFeed();
-			return feed.getFeedFormat() + "_" + feed.getFeedVersion();
-		}
-		catch (Exception e) {
-			_log.warn("Could not generate RSSFeedType", e);
-			return StringPool.BLANK;
-		}
+	public String getRSSFeedType() throws PortalException, SystemException {
+
+		JournalFeed feed = getJournalFeed();
+		return feed.getFeedFormat() + "_" + feed.getFeedVersion();
 	}
 
 	@Override
-	public String getRSSName() {
-		try {
-			return getJournalFeed().getName();
-		}
-		catch (Exception e) {
-			_log.warn("Could not generate RSSName", e);
-			return StringPool.BLANK;
-		}
+	public String getRSSName() throws PortalException, SystemException {
+		return getJournalFeed().getName();
 	}
 
 	protected String processContent(
 			JournalFeed feed, JournalArticle article, String languageId,
 			ThemeDisplay themeDisplay, SyndEntry syndEntry,
-			SyndContent syndContent)
-		throws Exception {
+			SyndContent syndContent) throws DocumentException {
 	
 		String content = article.getDescription(languageId);
 	
@@ -340,17 +295,11 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	@Override
-	public String getFeedURL() {
+	public String getFeedURL() throws PortalException, SystemException {
 	
 		ResourceURL feedURL = response.createResourceURL();
 		
-		JournalFeed feed;
-		try {
-			feed = getJournalFeed();
-		}
-		catch (Exception e) {
-			return StringPool.BLANK;
-		}
+		JournalFeed feed = getJournalFeed();
 		
 		feedURL.setCacheability(ResourceURL.FULL);
 		feedURL.setParameter("struts_action", "/journal/rss");

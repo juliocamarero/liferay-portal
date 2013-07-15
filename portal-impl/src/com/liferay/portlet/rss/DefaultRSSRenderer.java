@@ -5,8 +5,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -27,53 +28,48 @@ public abstract class DefaultRSSRenderer implements RSSRenderer {
 	}
 
 	@Override
-	public String getAlternateURL() {
-		
-		try {
-			return PortalUtil.getLayoutFullURL(themeDisplay);
-		}
-		catch (Exception e) {
-			return StringPool.BLANK;
-		}
+	public String getAlternateURL() throws PortalException, SystemException {
+		return PortalUtil.getLayoutFullURL(themeDisplay);
 	}
 
 	@Override
-	public Date getPublicationDate() {
+	public Date getPublicationDate() throws PortalException, SystemException {
 
 		return new Date();
 	}
 
 	@Override
-	public String getRSSFeedType() {
+	public String getRSSFeedType() throws PortalException, SystemException {
 
 		return RSSUtil.getFeedType(getRSSFormat(), 
 			getRSSVersion());
 	}
 	
-	protected double getRSSVersion() {
+	protected double getRSSVersion() throws PortalException, SystemException {
 
 		return ParamUtil.getDouble(
 			request, "version", RSSUtil.VERSION_DEFAULT);
 	}
 
-	private String getRSSFormat() {
+	private String getRSSFormat() throws PortalException, SystemException {
 		return ParamUtil.getString(
 			request, "type", RSSUtil.FORMAT_DEFAULT);
 	}
 	
 	@Override
-	public String getRSSDescription() {
+	public String getRSSDescription() throws PortalException, SystemException {
 		return getRSSName();
 	}
 
 	@Override
-	public abstract String getFeedURL();
+	public abstract String getFeedURL() throws PortalException, SystemException;
 
 
 	@Override
-	public abstract String getRSSName();
+	public abstract String getRSSName() throws PortalException, SystemException;
 	
 	@Override
 	public abstract void populateFeedEntries(
-		List<? super SyndEntry> syndEntries);
+			List<? super SyndEntry> syndEntries)  
+		throws PortalException, SystemException;
 }

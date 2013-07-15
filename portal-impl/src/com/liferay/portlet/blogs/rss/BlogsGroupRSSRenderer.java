@@ -4,8 +4,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.util.Portal;
 import com.liferay.portal.util.PortalUtil;
@@ -36,34 +37,23 @@ public class BlogsGroupRSSRenderer extends BlogsBaseRSSRenderer {
 	}
 	
 	@Override
-	public String getFeedURL() {
+	public String getFeedURL() throws PortalException, SystemException {
 		if (isScopeGroup) {
 			return super.getFeedURL() + "p_l_id=" + plid;
 		}
 		
-		try {
-			return PortalUtil.getLayoutFullURL(getThemeDisplay()) +
-					Portal.FRIENDLY_URL_SEPARATOR + "blogs/rss";
-		}
-		catch (Exception e) {
-			return StringPool.BLANK;
-		}
+		return PortalUtil.getLayoutFullURL(getThemeDisplay()) +
+			Portal.FRIENDLY_URL_SEPARATOR + "blogs/rss";
 	}
 	
 	@Override
-	protected String getEntryURL() {
+	protected String getEntryURL() throws PortalException, SystemException {
 		return getFeedURL();
 	}
 
 	@Override
-	public String getRSSName() {
-
-		try {
-			return group.getDescriptiveName();
-		}
-		catch (Exception e) {
-			return StringPool.BLANK;
-		}
+	public String getRSSName() throws PortalException, SystemException {
+		return group.getDescriptiveName();
 	}
 
 }
