@@ -17,11 +17,14 @@
 <%@ include file="/html/portal/layout/edit/init.jsp" %>
 
 <%
+Boolean showCopyPortlets = ParamUtil.getBoolean(request, "showCopyPortlets", false);
+Boolean showLayoutTemplates = ParamUtil.getBoolean(request, "showLayoutTemplates", true);
+
 String portletId = portletDisplay.getId();
 
 LayoutTypePortlet selLayoutTypePortlet = null;
 
-Theme selTheme = null;
+Theme selTheme = layout.getTheme();
 
 if (selLayout != null) {
 	selLayoutTypePortlet = (LayoutTypePortlet)selLayout.getLayoutType();
@@ -38,7 +41,7 @@ if (selLayoutTypePortlet != null) {
 List<LayoutTemplate> layoutTemplates = LayoutTemplateLocalServiceUtil.getLayoutTemplates(selTheme.getThemeId());
 %>
 
-<div class="hide" id="<portlet:namespace />copyPortletsFromPage">
+<div class='<%= showCopyPortlets ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />copyPortletsFromPage">
 	<p>
 		<c:if test="<%= selLayout != null %>">
 			<liferay-ui:message arguments="<%= HtmlUtil.escape(selLayout.getName(locale)) %>" key="the-applications-in-page-x-will-be-replaced-with-the-ones-in-the-page-you-select-below" />
@@ -98,6 +101,6 @@ List<LayoutTemplate> layoutTemplates = LayoutTemplateLocalServiceUtil.getLayoutT
 	</aui:button-row>
 </div>
 
-<div id="<portlet:namespace />layoutTemplates">
+<div class='<%= showLayoutTemplates ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />layoutTemplates">
 	<%@ include file="/html/portlet/layouts_admin/layout/layout_templates_list.jspf" %>
 </div>

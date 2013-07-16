@@ -99,11 +99,13 @@ if (selLayout != null) {
 			</div>
 		</c:when>
 		<c:otherwise>
+
 			<%
 			if (Validator.isNotNull(velocityTemplateId) && Validator.isNotNull(velocityTemplateContent)) {
 				RuntimePageUtil.processCustomizationSettings(pageContext, new StringTemplateResource(velocityTemplateId, velocityTemplateContent));
 			}
 			%>
+
 		</c:otherwise>
 	</c:choose>
 
@@ -115,8 +117,8 @@ if (selLayout != null) {
 			{
 				namespace: '<portlet:namespace />',
 				strings: {
-					HIDE: '<%= LanguageUtil.get(pageContext, "hide-page-customizations")%>',
-					SHOW: '<%= LanguageUtil.get(pageContext, "show-page-customizations")%>'
+					HIDE: '<%= LanguageUtil.get(pageContext, "hide-page-customizations") %>',
+					SHOW: '<%= LanguageUtil.get(pageContext, "show-page-customizations") %>'
 				}
 			}
 		);
