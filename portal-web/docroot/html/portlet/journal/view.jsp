@@ -136,6 +136,28 @@ folderStart = GetterUtil.getInteger(request.getAttribute("view_folders.jsp-folde
 	<portlet:namespace />toggleActionsButton();
 </aui:script>
 
+<aui:script use="aui-base">
+	Liferay.on(
+		'<portlet:namespace />previewArticle',
+		function(event) {
+			event.preventDefault();
+
+			debugger;
+
+			var dialogTitle = event.title;
+			var dialogUri = event.uri;
+
+			Liferay.Util.openWindow(
+				{
+					cache: false,
+					title: dialogTitle,
+					uri: dialogUri
+				}
+			);
+		}
+	);
+</aui:script>
+
 <aui:script use="liferay-journal-navigation">
 	<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" varImpl="mainURL" />
 
