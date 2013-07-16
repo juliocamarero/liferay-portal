@@ -28,6 +28,18 @@ results = results.subList(searchContainer.getStart(), end);
 searchContainer.setResults(results);
 
 request.setAttribute("view.jsp-results", results);
+
+AssetTag tag = null;
+
+if (Validator.isNotNull(assetTagName)) {
+	tag = AssetTagLocalServiceUtil.getTag(scopeGroupId, assetTagName);
+}
+
+AssetCategory category = null;
+
+if (assetCategoryId != 0) {
+	category = AssetCategoryLocalServiceUtil.getAssetCategory(assetCategoryId);
+}
 %>
 
 <c:choose>
@@ -59,6 +71,16 @@ request.setAttribute("view.jsp-results", results);
 			}
 
 			if ((assetEntry == null) || !assetEntry.isVisible()) {
+				continue;
+			}
+
+			List<AssetTag> assetEntryTags = assetEntry.getTags();
+			List<AssetCategory> assetEntryCategories = assetEntry.getCategories();
+
+			if ((tag != null) && !assetEntryTags.contains(tag) || (category != null) && !assetEntryCategories.contains(category)) {
+				results.remove(assetEntryIndex);
+				total--;
+
 				continue;
 			}
 
