@@ -94,7 +94,7 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
 		ActionableDynamicQuery actionableDynamicQuery =
-			getRoleActionableDynamicQuery(portletDataContext);
+			getRoleActionableDynamicQuery(portletDataContext, true);
 
 		actionableDynamicQuery.performActions();
 
@@ -124,8 +124,20 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 		return null;
 	}
 
+	@Override
+	protected void doPrepareManifestSummary(
+			PortletDataContext portletDataContext,
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		ActionableDynamicQuery actionableDynamicQuery =
+			getRoleActionableDynamicQuery(portletDataContext, false);
+
+		actionableDynamicQuery.performCount();
+	}
+
 	protected ActionableDynamicQuery getRoleActionableDynamicQuery(
-			final PortletDataContext portletDataContext)
+			final PortletDataContext portletDataContext, final boolean export)
 		throws SystemException {
 
 		return new RoleExportActionableDynamicQuery(portletDataContext) {
@@ -146,19 +158,21 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 			protected void performAction(Object object)
 				throws PortalException, SystemException {
 
-				Role role = (Role)object;
+				if (export) {
+					Role role = (Role)object;
 
-				long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
-					portletDataContext.getCompanyId());
+					long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
+						portletDataContext.getCompanyId());
 
-				if (!portletDataContext.getBooleanParameter(
-						NAMESPACE, "roles") &&
-					(role.getUserId() == defaultUserId)) {
+					if (!portletDataContext.getBooleanParameter(
+							NAMESPACE, "roles") &&
+						(role.getUserId() == defaultUserId)) {
 
-					return;
+						return;
+					}
+
+					super.performAction(object);
 				}
-
-				super.performAction(object);
 			}
 		};
 	}
