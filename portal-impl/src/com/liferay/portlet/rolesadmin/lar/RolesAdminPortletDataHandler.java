@@ -52,7 +52,7 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 		setDeletionSystemEventStagedModelTypes(new StagedModelType(Role.class));
 		setExportControls(
 			new PortletDataHandlerBoolean(
-				NAMESPACE, "system-roles", true, false));
+				NAMESPACE, "roles", true, false));
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 						portletDataContext.getCompanyId());
 
 					if (!portletDataContext.getBooleanParameter(
-							NAMESPACE, "system-roles") &&
+							NAMESPACE, "roles") &&
 						(role.getUserId() == defaultUserId)) {
 
 						return;
