@@ -4533,13 +4533,6 @@ public class JournalArticleLocalServiceImpl
 				JournalArticle.class.getName(), article.getId(), article,
 				serviceContext);
 		}
-		else if (article.getVersion() ==
-					JournalArticleConstants.VERSION_DEFAULT) {
-
-			// Indexer
-
-			reindex(article);
-		}
 
 		return article;
 	}
