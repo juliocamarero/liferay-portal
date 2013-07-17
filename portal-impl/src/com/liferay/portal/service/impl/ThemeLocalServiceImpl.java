@@ -161,9 +161,7 @@ public class ThemeLocalServiceImpl extends ThemeLocalServiceBaseImpl {
 			}
 
 			theme = _themes.get(themeId);
-		}
-
-		if (theme == null) {
+		
 			if (_themes.isEmpty()) {
 				if (_log.isDebugEnabled()) {
 					_log.debug("No themes are installed");
