@@ -6107,7 +6107,6 @@ public class JournalArticleLocalServiceImpl
 				WorkflowConstants.STATUS_APPROVED, 0, 2);
 
 		if (approvedArticles.isEmpty()) {
-
 			if (article.isIndexable()) {
 				JournalArticle defaultArticle = fetchArticle(
 					article.getGroupId(), article.getArticleId(),
@@ -6126,7 +6125,7 @@ public class JournalArticleLocalServiceImpl
 
 		}
 		else if ((approvedArticles.size() == 1) &&
-			(article.getStatus() == WorkflowConstants.STATUS_APPROVED)) {
+				 (article.getStatus() == WorkflowConstants.STATUS_APPROVED)) {
 
 			if (article.isIndexable()) {
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
