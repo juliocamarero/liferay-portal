@@ -38,8 +38,6 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "user_groups_admin";
 
 	public UserGroupsAdminPortletDataHandler() {
-		super();
-
 		setDataLevel(DataLevel.PORTAL);
 	}
 
