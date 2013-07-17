@@ -6106,9 +6106,29 @@ public class JournalArticleLocalServiceImpl
 				article.getGroupId(), article.getArticleId(),
 				WorkflowConstants.STATUS_APPROVED, 0, 2);
 
-		if (approvedArticles.isEmpty() ||
-			((approvedArticles.size() == 1) &&
-			 (article.getStatus() == WorkflowConstants.STATUS_APPROVED))) {
+		if (approvedArticles.isEmpty()) {
+
+			if (article.isIndexable()) {
+
+				JournalArticle defaultArticle = fetchArticle(
+					article.getGroupId(), article.getArticleId(),
+					article.getVersion());
+
+				if (defaultArticle != null) {
+					reindex(defaultArticle);
+				}
+				else {
+					reindex(article);
+				}
+			}
+
+			assetEntryLocalService.updateVisible(
+				JournalArticle.class.getName(), article.getResourcePrimKey(),
+				false);
+
+		}
+		else if ((approvedArticles.size() == 1) &&
+			(article.getStatus() == WorkflowConstants.STATUS_APPROVED)) {
 
 			if (article.isIndexable()) {
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
