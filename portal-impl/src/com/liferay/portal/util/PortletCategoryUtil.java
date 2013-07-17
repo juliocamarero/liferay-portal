@@ -14,11 +14,13 @@
 
 package com.liferay.portal.util;
 
+import com.liferay.portal.kernel.util.SetUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletCategory;
-import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.PortletLocalServiceUtil;
@@ -33,9 +35,26 @@ import java.util.Set;
 public class PortletCategoryUtil {
 
 	public static PortletCategory getRelevantPortletCategory(
-			PermissionChecker permissionChecker,
+			PermissionChecker permissionChecker, long companyId, Layout layout,
+			PortletCategory portletCategory,
+			LayoutTypePortlet layoutTypePortlet)
+		throws Exception {
+
+		UnicodeProperties typeSettingsProperties =
+			layout.getTypeSettingsProperties();
+
+		Set panelSelectedPortlets = SetUtil.fromArray(StringUtil.split(
+			typeSettingsProperties.getProperty("panelSelectedPortlets")));
+
+		return getRelevantPortletCategory(
+			permissionChecker, companyId, layout, portletCategory,
+			panelSelectedPortlets, layoutTypePortlet);
+	}
+
+	protected static PortletCategory getRelevantPortletCategory(
+			PermissionChecker permissionChecker, long companyId, Layout layout,
 			PortletCategory portletCategory, Set panelSelectedPortlets,
-			LayoutTypePortlet layoutTypePortlet, Layout layout, User user)
+			LayoutTypePortlet layoutTypePortlet)
 		throws Exception {
 
 		PortletCategory relevantPortletCategory = new PortletCategory(
@@ -52,7 +71,7 @@ public class PortletCategoryUtil {
 
 			for (String portletId : curPortletCategory.getPortletIds()) {
 				Portlet portlet = PortletLocalServiceUtil.getPortletById(
-					user.getCompanyId(), portletId);
+					companyId, portletId);
 
 				if (portlet != null) {
 					if (portlet.isSystem()) {
@@ -88,8 +107,8 @@ public class PortletCategoryUtil {
 
 			PortletCategory curRelevantPortletCategory =
 				getRelevantPortletCategory(
-					permissionChecker, curPortletCategory,
-					panelSelectedPortlets, layoutTypePortlet, layout, user);
+					permissionChecker, companyId, layout, curPortletCategory,
+					panelSelectedPortlets, layoutTypePortlet);
 
 			curRelevantPortletCategory.setPortletIds(portletIds);
 

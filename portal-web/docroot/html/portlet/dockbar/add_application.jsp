@@ -123,13 +123,9 @@ refererURL.setParameter("updateLayout", "true");
 			</c:if>
 
 			<%
-			UnicodeProperties typeSettingsProperties = layout.getTypeSettingsProperties();
-
-			Set panelSelectedPortlets = SetUtil.fromArray(StringUtil.split(typeSettingsProperties.getProperty("panelSelectedPortlets")));
-
 			PortletCategory portletCategory = (PortletCategory)WebAppPool.get(company.getCompanyId(), WebKeys.PORTLET_CATEGORY);
 
-			portletCategory = PortletCategoryUtil.getRelevantPortletCategory(permissionChecker, portletCategory, panelSelectedPortlets, layoutTypePortlet, layout, user);
+			portletCategory = PortletCategoryUtil.getRelevantPortletCategory(permissionChecker, user.getCompanyId(), layout, portletCategory, layoutTypePortlet);
 
 			List<PortletCategory> categories = ListUtil.fromCollection(portletCategory.getCategories());
 
