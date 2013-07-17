@@ -94,40 +94,7 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
 		ActionableDynamicQuery actionableDynamicQuery =
-			new RoleExportActionableDynamicQuery(portletDataContext) {
-
-				@Override
-				protected void addCriteria(DynamicQuery dynamicQuery) {
-					super.addCriteria(dynamicQuery);
-
-					long classNameId = PortalUtil.getClassNameId(Team.class);
-
-					Property classNameIdProperty = PropertyFactoryUtil.forName(
-						"classNameId");
-
-					dynamicQuery.add(classNameIdProperty.ne(classNameId));
-				}
-
-				@Override
-				protected void performAction(Object object)
-					throws PortalException, SystemException {
-
-					Role role = (Role)object;
-
-					long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
-						portletDataContext.getCompanyId());
-
-					if (!portletDataContext.getBooleanParameter(
-							NAMESPACE, "roles") &&
-						(role.getUserId() == defaultUserId)) {
-
-						return;
-					}
-
-					super.performAction(object);
-				}
-
-			};
+			getRoleActionableDynamicQuery(portletDataContext);
 
 		actionableDynamicQuery.performActions();
 
@@ -155,6 +122,45 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return null;
+	}
+
+	protected ActionableDynamicQuery getRoleActionableDynamicQuery(
+			final PortletDataContext portletDataContext)
+		throws SystemException {
+
+		return new RoleExportActionableDynamicQuery(portletDataContext) {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				super.addCriteria(dynamicQuery);
+
+				long classNameId = PortalUtil.getClassNameId(Team.class);
+
+				Property classNameIdProperty = PropertyFactoryUtil.forName(
+					"classNameId");
+
+				dynamicQuery.add(classNameIdProperty.ne(classNameId));
+			}
+
+			@Override
+			protected void performAction(Object object)
+				throws PortalException, SystemException {
+
+				Role role = (Role)object;
+
+				long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
+					portletDataContext.getCompanyId());
+
+				if (!portletDataContext.getBooleanParameter(
+						NAMESPACE, "roles") &&
+					(role.getUserId() == defaultUserId)) {
+
+					return;
+				}
+
+				super.performAction(object);
+			}
+		};
 	}
 
 }
