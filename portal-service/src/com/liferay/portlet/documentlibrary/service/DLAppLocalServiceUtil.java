@@ -563,6 +563,15 @@ public class DLAppLocalServiceUtil {
 		return getService().moveFileEntryToTrash(userId, fileEntryId);
 	}
 
+	public static com.liferay.portal.kernel.repository.model.Folder moveFolder(
+		long userId, long folderId, long parentFolderId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .moveFolder(userId, folderId, parentFolderId, serviceContext);
+	}
+
 	/**
 	* Restores the file entry with the primary key from the trash portlet.
 	*

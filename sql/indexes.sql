@@ -80,10 +80,14 @@ create index IX_55F58818 on AssetVocabulary (uuid_);
 create index IX_C4E6FD10 on AssetVocabulary (uuid_, companyId);
 create unique index IX_1B2B8792 on AssetVocabulary (uuid_, groupId);
 
+create index IX_C5A6C78F on BackgroundTask (companyId);
+create index IX_5A09E5D1 on BackgroundTask (groupId);
 create index IX_98CC0AAB on BackgroundTask (groupId, name, taskExecutorClassName);
+create index IX_C71C3B7 on BackgroundTask (groupId, status);
 create index IX_A73B688A on BackgroundTask (groupId, taskExecutorClassName);
 create index IX_7E757D70 on BackgroundTask (groupId, taskExecutorClassName, status);
 create index IX_C07CC7F8 on BackgroundTask (name);
+create index IX_75638CDF on BackgroundTask (status);
 create index IX_2FCFE748 on BackgroundTask (taskExecutorClassName, status);
 
 create index IX_72EF6041 on BlogsEntry (companyId);

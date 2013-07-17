@@ -15,6 +15,7 @@
 package com.liferay.portlet.documentlibrary.service.impl;
 
 import com.liferay.portal.NoSuchGroupException;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
@@ -751,6 +752,46 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		return dlAppHelperLocalService.moveFileEntryToTrash(userId, fileEntry);
 	}
 
+	@Override
+	public Folder moveFolder(
+			long userId, long folderId, long parentFolderId,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		LocalRepository sourceLocalRepository = getFolderLocalRepository(
+			folderId);
+
+		LocalRepository destinationLocalRepository = getFolderLocalRepository(
+			parentFolderId, serviceContext.getScopeGroupId());
+
+		if (parentFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			Folder toFolder = destinationLocalRepository.getFolder(
+				parentFolderId);
+
+			if (toFolder.isMountPoint()) {
+				destinationLocalRepository = getLocalRepository(
+					toFolder.getRepositoryId());
+			}
+		}
+
+		if (sourceLocalRepository.getRepositoryId() ==
+				destinationLocalRepository.getRepositoryId()) {
+
+			// Move file entries within repository
+
+			Folder folder = sourceLocalRepository.moveFolder(
+				userId, folderId, parentFolderId, serviceContext);
+
+			return folder;
+		}
+
+		// Move file entries between repositories
+
+		return moveFolders(
+			userId, folderId, parentFolderId, sourceLocalRepository,
+			destinationLocalRepository, serviceContext);
+	}
+
 	/**
 	 * Restores the file entry with the primary key from the trash portlet.
 	 *
@@ -1403,6 +1444,81 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 			fromLocalRepository, toLocalRepository);
 
 		return destinationFileEntry;
+	}
+
+	protected Folder moveFolders(
+			long userId, long folderId, long parentFolderId,
+			LocalRepository sourceLocalRepository,
+			LocalRepository destinationLocalRepository,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		Folder sourceFolder = sourceLocalRepository.getFolder(folderId);
+
+		Folder destinationFolder = destinationLocalRepository.addFolder(
+			userId, parentFolderId, sourceFolder.getName(),
+			sourceFolder.getDescription(), serviceContext);
+
+		List<Object> foldersAndFileEntriesAndFileShortcuts =
+			dlAppService.getFoldersAndFileEntriesAndFileShortcuts(
+				sourceLocalRepository.getRepositoryId(), folderId,
+				WorkflowConstants.STATUS_ANY, true, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS);
+
+		try {
+			for (Object folderAndFileEntryAndFileShortcut :
+					foldersAndFileEntriesAndFileShortcuts) {
+
+				if (folderAndFileEntryAndFileShortcut instanceof FileEntry) {
+					FileEntry fileEntry =
+						(FileEntry)folderAndFileEntryAndFileShortcut;
+
+					copyFileEntry(
+						userId, destinationLocalRepository, fileEntry,
+						destinationFolder.getFolderId(), serviceContext);
+				}
+				else if (folderAndFileEntryAndFileShortcut instanceof Folder) {
+					Folder folder = (Folder)folderAndFileEntryAndFileShortcut;
+
+					moveFolders(
+						userId, folder.getFolderId(),
+						destinationFolder.getFolderId(), sourceLocalRepository,
+						destinationLocalRepository, serviceContext);
+
+				}
+				else if (folderAndFileEntryAndFileShortcut
+							instanceof DLFileShortcut) {
+
+					if (destinationFolder.isSupportsShortcuts()) {
+						DLFileShortcut dlFileShorcut =
+							(DLFileShortcut)folderAndFileEntryAndFileShortcut;
+
+						dlFileShortcutLocalService.addFileShortcut(
+							userId, dlFileShorcut.getGroupId(),
+							destinationFolder.getFolderId(),
+							dlFileShorcut.getToFileEntryId(), serviceContext);
+					}
+				}
+			}
+		}
+		catch (PortalException pe) {
+			destinationLocalRepository.deleteFolder(
+				destinationFolder.getFolderId());
+
+			throw pe;
+		}
+
+		try {
+			sourceLocalRepository.deleteFolder(folderId);
+		}
+		catch (PortalException pe) {
+			destinationLocalRepository.deleteFolder(
+				destinationFolder.getFolderId());
+
+			throw pe;
+		}
+
+		return destinationFolder;
 	}
 
 }

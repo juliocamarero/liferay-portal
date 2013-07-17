@@ -303,6 +303,23 @@ public class BackgroundTaskLocalServiceUtil {
 			inputStream);
 	}
 
+	public static void cleanUpBackgroundTasks()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService().cleanUpBackgroundTasks();
+	}
+
+	public static void deleteCompanyBackgroundTasks(long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteCompanyBackgroundTasks(companyId);
+	}
+
+	public static void deleteGroupBackgroundTasks(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteGroupBackgroundTasks(groupId);
+	}
+
 	public static com.liferay.portal.model.BackgroundTask fetchFirstBackgroundTask(
 		java.lang.String taskExecutorClassName, int status)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -317,6 +334,12 @@ public class BackgroundTaskLocalServiceUtil {
 		return getService()
 				   .fetchFirstBackgroundTask(taskExecutorClassName, status,
 			orderByComparator);
+	}
+
+	public static java.util.List<com.liferay.portal.model.BackgroundTask> getBackgroundTasks(
+		long groupId, int status)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getBackgroundTasks(groupId, status);
 	}
 
 	public static java.util.List<com.liferay.portal.model.BackgroundTask> getBackgroundTasks(
@@ -391,26 +414,24 @@ public class BackgroundTaskLocalServiceUtil {
 		getService().resumeBackgroundTask(backgroundTaskId);
 	}
 
-	public static com.liferay.portal.model.BackgroundTask updateBackgroundTask(
+	public static com.liferay.portal.model.BackgroundTask amendBackgroundTask(
 		long backgroundTaskId,
 		java.util.Map<java.lang.String, java.io.Serializable> taskContextMap,
 		int status, com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService()
-				   .updateBackgroundTask(backgroundTaskId, taskContextMap,
+				   .amendBackgroundTask(backgroundTaskId, taskContextMap,
 			status, serviceContext);
 	}
 
-	public static com.liferay.portal.model.BackgroundTask updateBackgroundTask(
+	public static com.liferay.portal.model.BackgroundTask amendBackgroundTask(
 		long backgroundTaskId,
 		java.util.Map<java.lang.String, java.io.Serializable> taskContextMap,
 		int status, java.lang.String statusMessage,
 		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService()
-				   .updateBackgroundTask(backgroundTaskId, taskContextMap,
+				   .amendBackgroundTask(backgroundTaskId, taskContextMap,
 			status, statusMessage, serviceContext);
 	}
 

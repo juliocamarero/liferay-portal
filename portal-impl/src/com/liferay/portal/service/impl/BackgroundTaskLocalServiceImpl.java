@@ -15,6 +15,7 @@
 package com.liferay.portal.service.impl;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatus;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusRegistry;
 import com.liferay.portal.kernel.bean.BeanReference;
@@ -32,6 +33,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -146,6 +148,71 @@ public class BackgroundTaskLocalServiceImpl
 	}
 
 	@Override
+	public BackgroundTask amendBackgroundTask(
+			long backgroundTaskId, Map<String, Serializable> taskContextMap,
+			int status, ServiceContext serviceContext)
+		throws SystemException {
+
+		return amendBackgroundTask(
+			backgroundTaskId, taskContextMap, status, null, serviceContext);
+	}
+
+	@Override
+	public BackgroundTask amendBackgroundTask(
+			long backgroundTaskId, Map<String, Serializable> taskContextMap,
+			int status, String statusMessage, ServiceContext serviceContext)
+		throws SystemException {
+
+		Date now = new Date();
+
+		BackgroundTask backgroundTask =
+			backgroundTaskPersistence.fetchByPrimaryKey(backgroundTaskId);
+
+		if (backgroundTask == null) {
+			return null;
+		}
+
+		backgroundTask.setModifiedDate(serviceContext.getModifiedDate(now));
+
+		if (taskContextMap != null) {
+			String taskContext = JSONFactoryUtil.serialize(taskContextMap);
+
+			backgroundTask.setTaskContext(taskContext);
+		}
+
+		if ((status == BackgroundTaskConstants.STATUS_FAILED) ||
+			(status == BackgroundTaskConstants.STATUS_SUCCESSFUL)) {
+
+			backgroundTask.setCompleted(true);
+			backgroundTask.setCompletionDate(now);
+		}
+
+		backgroundTask.setStatus(status);
+
+		if (Validator.isNotNull(statusMessage)) {
+			backgroundTask.setStatusMessage(statusMessage);
+		}
+
+		backgroundTaskPersistence.update(backgroundTask);
+
+		return backgroundTask;
+	}
+
+	@Override
+	public void cleanUpBackgroundTasks() throws SystemException {
+		List<BackgroundTask> backgroundTasks =
+			backgroundTaskPersistence.findByStatus(
+				BackgroundTaskConstants.STATUS_IN_PROGRESS);
+
+		for (BackgroundTask backgroundTask : backgroundTasks) {
+			backgroundTask.setStatus(BackgroundTaskConstants.STATUS_FAILED);
+
+			cleanUpBackgroundTask(
+				backgroundTask, BackgroundTaskConstants.STATUS_FAILED);
+		}
+	}
+
+	@Override
 	public BackgroundTask deleteBackgroundTask(BackgroundTask backgroundTask)
 		throws PortalException, SystemException {
 
@@ -153,6 +220,13 @@ public class BackgroundTaskLocalServiceImpl
 
 		if (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 			PortletFileRepositoryUtil.deleteFolder(folderId);
+		}
+
+		if (backgroundTask.getStatus() ==
+				BackgroundTaskConstants.STATUS_IN_PROGRESS) {
+
+			cleanUpBackgroundTask(
+				backgroundTask, BackgroundTaskConstants.STATUS_CANCELLED);
 		}
 
 		return backgroundTaskPersistence.remove(backgroundTask);
@@ -166,6 +240,30 @@ public class BackgroundTaskLocalServiceImpl
 			backgroundTaskPersistence.findByPrimaryKey(backgroundTaskId);
 
 		return deleteBackgroundTask(backgroundTask);
+	}
+
+	@Override
+	public void deleteCompanyBackgroundTasks(long companyId)
+		throws PortalException, SystemException {
+
+		List<BackgroundTask> backgroundTasks =
+			backgroundTaskPersistence.findByCompanyId(companyId);
+
+		for (BackgroundTask backgroundTask : backgroundTasks) {
+			deleteBackgroundTask(backgroundTask);
+		}
+	}
+
+	@Override
+	public void deleteGroupBackgroundTasks(long groupId)
+		throws PortalException, SystemException {
+
+		List<BackgroundTask> backgroundTasks =
+			backgroundTaskPersistence.findByGroupId(groupId);
+
+		for (BackgroundTask backgroundTask : backgroundTasks) {
+			deleteBackgroundTask(backgroundTask);
+		}
 	}
 
 	@Override
@@ -198,6 +296,13 @@ public class BackgroundTaskLocalServiceImpl
 		throws PortalException, SystemException {
 
 		return backgroundTaskPersistence.findByPrimaryKey(backgroundTaskId);
+	}
+
+	@Override
+	public List<BackgroundTask> getBackgroundTasks(long groupId, int status)
+		throws SystemException {
+
+		return backgroundTaskPersistence.findByG_S(groupId, status);
 	}
 
 	@Override
@@ -310,51 +415,52 @@ public class BackgroundTaskLocalServiceImpl
 		MessageBusUtil.sendMessage(DestinationNames.BACKGROUND_TASK, message);
 	}
 
-	@Override
-	public BackgroundTask updateBackgroundTask(
-			long backgroundTaskId, Map<String, Serializable> taskContextMap,
-			int status, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+	protected void cleanUpBackgroundTask(
+		final BackgroundTask backgroundTask, final int status) {
 
-		return updateBackgroundTask(
-			backgroundTaskId, taskContextMap, status, null, serviceContext);
-	}
+		try {
+			Lock lock = lockLocalService.getLock(
+				BackgroundTaskExecutor.class.getName(),
+				backgroundTask.getTaskExecutorClassName());
 
-	@Override
-	public BackgroundTask updateBackgroundTask(
-			long backgroundTaskId, Map<String, Serializable> taskContextMap,
-			int status, String statusMessage, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+			String owner =
+				backgroundTask.getName() + StringPool.POUND +
+					backgroundTask.getBackgroundTaskId();
 
-		Date now = new Date();
-
-		BackgroundTask backgroundTask =
-			backgroundTaskPersistence.findByPrimaryKey(backgroundTaskId);
-
-		backgroundTask.setModifiedDate(serviceContext.getModifiedDate(now));
-
-		if (taskContextMap != null) {
-			String taskContext = JSONFactoryUtil.serialize(taskContextMap);
-
-			backgroundTask.setTaskContext(taskContext);
+			if (owner.equals(lock.getOwner())) {
+				lockLocalService.unlock(
+					BackgroundTaskExecutor.class.getName(),
+					backgroundTask.getTaskExecutorClassName());
+			}
+		}
+		catch (Exception e) {
 		}
 
-		if ((status == BackgroundTaskConstants.STATUS_FAILED) ||
-			(status == BackgroundTaskConstants.STATUS_SUCCESSFUL)) {
+		TransactionCommitCallbackRegistryUtil.registerCallback(
+			new Callable<Void>() {
 
-			backgroundTask.setCompleted(true);
-			backgroundTask.setCompletionDate(now);
-		}
+				@Override
+				public Void call() throws Exception {
+					Message responseMessage = new Message();
 
-		backgroundTask.setStatus(status);
+					responseMessage.put(
+						"backgroundTaskId",
+						backgroundTask.getBackgroundTaskId());
+					responseMessage.put("name", backgroundTask.getName());
+					responseMessage.put("status", status);
+					responseMessage.put(
+						"taskExecutorClassName",
+						backgroundTask.getTaskExecutorClassName());
 
-		if (Validator.isNotNull(statusMessage)) {
-			backgroundTask.setStatusMessage(statusMessage);
-		}
+					MessageBusUtil.sendMessage(
+						DestinationNames.BACKGROUND_TASK_STATUS,
+						responseMessage);
 
-		backgroundTaskPersistence.update(backgroundTask);
+					return null;
+				}
 
-		return backgroundTask;
+			}
+		);
 	}
 
 	@BeanReference(type = BackgroundTaskStatusRegistry.class)
