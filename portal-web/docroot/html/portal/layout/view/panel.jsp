@@ -1,3 +1,4 @@
+<%@ page import="com.liferay.portal.util.PortletCategoryUtil" %>
 <%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
@@ -20,6 +21,31 @@
 		<table class="lfr-panel-page">
 		<tr>
 			<td class="lfr-top panel-page-menu" width="200">
+
+				<%
+				PortletCategory portletCategory = (PortletCategory)WebAppPool.get(company.getCompanyId(), WebKeys.PORTLET_CATEGORY);
+
+				portletCategory = PortletCategoryUtil.getRelevantPortletCategory(permissionChecker, user.getCompanyId(), layout, portletCategory, layoutTypePortlet);
+
+				List<PortletCategory> categories = ListUtil.fromCollection(portletCategory.getCategories());
+
+				categories = ListUtil.sort(categories, new PortletCategoryComparator(locale));
+
+				for (PortletCategory curPortletCategory : categories) {
+				%>
+
+					<c:if test="<%= !curPortletCategory.isHidden() %>">
+
+						<%
+						request.setAttribute(WebKeys.PORTLET_CATEGORY, curPortletCategory);
+						%>
+
+						<liferay-util:include page="/html/portal/layout/view/view_category.jsp" />
+					</c:if>
+
+				<%
+				}
+				%>
 
 			</td>
 			<td class="lfr-top panel-page-content <%= (!layoutTypePortlet.hasStateMax()) ? "panel-page-frontpage" : "panel-page-application" %>">
