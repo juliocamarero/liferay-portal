@@ -41,12 +41,12 @@ if ((article != null) && article.isDraft()) {
 
 	var form = A.one('#<portlet:namespace />fm1');
 
-	<portlet:renderURL var="previewArticleContentURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+	<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<portlet:param name="struts_action" value="/journal/preview_article_content" />
 		<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
 		<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
 		<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
-	</portlet:renderURL>
+	</liferay-portlet:renderURL>
 
 	var previewArticleContentURL = '<%= previewArticleContentURL %>';
 
