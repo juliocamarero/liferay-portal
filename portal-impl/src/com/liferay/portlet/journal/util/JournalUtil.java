@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -67,6 +68,9 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portal.webserver.WebServerServletTokenUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
+import com.liferay.portlet.asset.model.AssetCategory;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
@@ -866,6 +870,61 @@ public class JournalUtil {
 
 		return PortalUtil.getEmailFromName(
 			preferences, companyId, PropsValues.JOURNAL_EMAIL_FROM_NAME);
+	}
+
+	public static List<AssetEntry> getFilteredAssetEntries(
+			String[] tagNames, long[] categoryIds, List<AssetEntry>entries)
+		throws Exception {
+
+		List<AssetEntry> removableAssetEntries = new ArrayList<AssetEntry>();
+
+		for (AssetEntry assetEntry : entries) {
+			if (tagNames.length > 0) {
+				List<AssetTag> assetEntryTags = assetEntry.getTags();
+
+				List<String> assetEntryTagNames = new ArrayList<String>(
+					tagNames.length);
+
+				for (AssetTag assetEntryTag : assetEntryTags) {
+					assetEntryTagNames.add(assetEntryTag.getName());
+				}
+
+				List<String> tagNamesList = ListUtil.toList(tagNames);
+
+				if (Collections.disjoint(tagNamesList, assetEntryTagNames)) {
+					removableAssetEntries.add(assetEntry);
+
+					continue;
+				}
+			}
+
+			if (categoryIds.length > 0) {
+				List<AssetCategory> assetEntryCategories =
+					assetEntry.getCategories();
+
+				List<Long> assetEntryCategoryIds = new ArrayList<Long>(
+					categoryIds.length);
+
+				for (AssetCategory assetEntryCategory : assetEntryCategories) {
+					assetEntryCategoryIds.add(
+						assetEntryCategory.getCategoryId());
+				}
+
+				List<Long> categoryIdsList = ListUtil.toList(categoryIds);
+
+				if (Collections.disjoint(
+						categoryIdsList, assetEntryCategoryIds)) {
+
+					removableAssetEntries.add(assetEntry);
+
+					continue;
+				}
+			}
+		}
+
+		entries.removeAll(removableAssetEntries);
+
+		return entries;
 	}
 
 	public static String getJournalControlPanelLink(
