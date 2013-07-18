@@ -17,6 +17,10 @@ package com.liferay.portlet.social;
 import com.liferay.portal.events.ServicePreAction;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.messaging.DestinationNames;
+import com.liferay.portal.kernel.messaging.MessageBus;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.messaging.SynchronousDestination;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
@@ -40,16 +44,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.portlet.PortletURL;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
 import org.powermock.api.mockito.PowerMockito;
-
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -58,6 +60,17 @@ import org.springframework.mock.web.MockHttpServletResponse;
  */
 public abstract class BaseSocialActivityInterpreterTestCase
 	extends PowerMockito {
+
+	@BeforeClass
+	public static void setUpClass() {
+		SynchronousDestination syncReplacement = new SynchronousDestination();
+
+		syncReplacement.setName(DestinationNames.ASYNC_SERVICE);
+
+		MessageBus messageBus = MessageBusUtil.getMessageBus();
+
+		messageBus.replace(syncReplacement);
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -102,14 +115,10 @@ public abstract class BaseSocialActivityInterpreterTestCase
 		if (supportsTrash()) {
 			moveEntitiesToTrash();
 
-			Thread.sleep(500 * TestPropsValues.JUNIT_DELAY_FACTOR);
-
 			checkLinks();
 
 			restoreEntitiesFromTrash();
 		}
-
-		Thread.sleep(500 * TestPropsValues.JUNIT_DELAY_FACTOR);
 
 		checkInterpret(renameTime);
 	}
