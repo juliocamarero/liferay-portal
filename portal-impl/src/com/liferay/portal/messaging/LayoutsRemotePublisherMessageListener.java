@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
@@ -104,6 +105,10 @@ public class LayoutsRemotePublisherMessageListener
 			if (last > 0) {
 				Date scheduledFireTime =
 					publisherRequest.getScheduledFireTime();
+
+				if (Validator.isNull(scheduledFireTime)) {
+					scheduledFireTime = new Date();
+				}
 
 				startDate = new Date(
 					scheduledFireTime.getTime() - (last * Time.HOUR));
