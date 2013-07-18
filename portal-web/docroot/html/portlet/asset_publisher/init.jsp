@@ -167,6 +167,10 @@ if (assetCategoryId > 0) {
 	assetVocabularyTitle = assetVocabulary.getTitle(locale);
 
 	PortalUtil.setPageKeywords(assetCategoryTitle, request);
+
+	if (selectionStyle.equals("manual") && (allAssetCategoryIds.length == 0)) {
+		allAssetCategoryIds = ArrayUtil.append(allAssetCategoryIds, assetCategoryId);
+	}
 }
 
 String assetTagName = ParamUtil.getString(request, "tag");
