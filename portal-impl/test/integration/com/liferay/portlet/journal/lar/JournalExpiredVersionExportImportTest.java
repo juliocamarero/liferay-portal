@@ -103,6 +103,8 @@ public class JournalExpiredVersionExportImportTest
 			group.getGroupId(), article.getArticleId(), null,
 			ServiceTestUtil.getServiceContext(group.getGroupId()));
 
+		Thread.sleep(5000);
+
 		Assert.assertEquals(
 			initialSearchArticlesCount,
 			getResultsCount(group.getCompanyId(), group.getGroupId()));
