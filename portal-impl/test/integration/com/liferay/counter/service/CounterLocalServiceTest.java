@@ -28,6 +28,7 @@ import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.util.PwdGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -49,11 +51,16 @@ public class CounterLocalServiceTest {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		CounterLocalServiceUtil.reset(_COUNTER_NAME);
+		CounterLocalServiceUtil.reset(_counterName);
 
-		Counter counter = CounterLocalServiceUtil.createCounter(_COUNTER_NAME);
+		Counter counter = CounterLocalServiceUtil.createCounter(_counterName);
 
 		CounterLocalServiceUtil.updateCounter(counter);
+	}
+
+	@AfterClass
+	public static void tearDownClass() throws Exception {
+		CounterLocalServiceUtil.reset(_counterName);
 	}
 
 	@Test
@@ -67,8 +74,7 @@ public class CounterLocalServiceTest {
 
 		for (int i = 0; i < _PROCESS_COUNT; i++) {
 			ProcessCallable<Long[]> processCallable =
-				new IncrementProcessCallable(
-					"Increment Process-" + i, _COUNTER_NAME, _INCREMENT_COUNT);
+				new IncrementProcessCallable("Increment Process-" + i);
 
 			Future<Long[]> futures = ProcessExecutor.execute(
 				classPath, jvmArguments, processCallable);
@@ -99,31 +105,27 @@ public class CounterLocalServiceTest {
 
 	private static final int _PROCESS_COUNT = 4;
 
-	private static String _COUNTER_NAME = "COUNTER_NAME";
+	private static String _counterName = PwdGenerator.getPassword();
 
 	private static class IncrementProcessCallable
 		implements ProcessCallable<Long[]> {
 
-		public IncrementProcessCallable(
-			String processName, String counterName, int incrementCount) {
-
+		public IncrementProcessCallable(String processName) {
 			_processName = processName;
-			_counterName = counterName;
-			_incrementCount = incrementCount;
 		}
 
 		@Override
 		public Long[] call() throws ProcessException {
 			System.setProperty("catalina.base", ".");
 
-			PropsUtil.set(PropsValues.COUNTER_INCREMENT + _COUNTER_NAME, "1");
+			PropsUtil.set(PropsValues.COUNTER_INCREMENT + _counterName, "1");
 
 			InitUtil.initWithSpring();
 
 			List<Long> ids = new ArrayList<Long>();
 
 			try {
-				for (int i = 0; i < _incrementCount; i++) {
+				for (int i = 0; i < _INCREMENT_COUNT; i++) {
 					ids.add(CounterLocalServiceUtil.increment(_counterName));
 				}
 			}
@@ -149,8 +151,6 @@ public class CounterLocalServiceTest {
 
 		private static final long serialVersionUID = 1L;
 
-		private String _counterName;
-		private int _incrementCount;
 		private String _processName;
 
 	}

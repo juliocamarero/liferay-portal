@@ -913,7 +913,7 @@ public class PortalImpl implements Portal {
 
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             LanguageUtil.getAvailableLocales( )}
+	 *             LanguageUtil#getAvailableLocales( )}
 	 */
 	@Override
 	public Locale[] getAlternateLocales(HttpServletRequest request) {
@@ -6744,12 +6744,6 @@ public class PortalImpl implements Portal {
 			primaryKey = portletPrimaryKey;
 		}
 		else {
-			Group group = GroupLocalServiceUtil.fetchGroup(groupId);
-
-			if ((group != null) && group.isStagingGroup()) {
-				groupId = group.getLiveGroupId();
-			}
-
 			name = ResourceActionsUtil.getPortletBaseResource(rootPortletId);
 			primaryKey = String.valueOf(groupId);
 		}

@@ -262,7 +262,7 @@ public interface Portal {
 	 * @throws     PortalException if a portal exception occurred
 	 * @throws     SystemException if a system exception occurred
 	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             com.liferay.portal.kernel.language.LanguageUtil.getAvailableLocales(
+	 *             com.liferay.portal.kernel.language.LanguageUtil#getAvailableLocales(
 	 *             )}
 	 */
 	public Locale[] getAlternateLocales(HttpServletRequest request)
@@ -275,6 +275,7 @@ public interface Portal {
 	 * @param  canonicalURL the canonical URL previously obtained
 	 * @param  themeDisplay the theme display
 	 * @param  locale the locale of the translated page
+	 * @param  layout the layout
 	 * @return the alternate URL
 	 */
 	public String getAlternateURL(
@@ -285,12 +286,11 @@ public interface Portal {
 	 * Returns the set of struts actions that should not be checked for an
 	 * authentication token.
 	 *
+	 * @return     the set of struts actions that should not be checked for an
+	 *             authentication token
 	 * @deprecated As of 6.2.0, replaced by {@link
 	 *             com.liferay.portal.security.auth.AuthTokenWhitelistUtil#getPortletCSRFWhitelistActions(
 	 *             )}
-	 *
-	 * @return     the set of struts actions that should not be checked for an
-	 *             authentication token
 	 */
 	public Set<String> getAuthTokenIgnoreActions();
 
@@ -298,12 +298,11 @@ public interface Portal {
 	 * Returns the set of IDs of portlets that should not be checked for an
 	 * authentication token.
 	 *
+	 * @return     the set of IDs of portlets that should not be checked for an
+	 *             authentication token
 	 * @deprecated As of 6.2.0, replaced by {@link
 	 *             com.liferay.portal.security.auth.AuthTokenWhitelistUtil#getPortletCSRFWhitelist(
 	 *             )}
-	 *
-	 * @return     the set of IDs of portlets that should not be checked for an
-	 *             authentication token
 	 */
 	public Set<String> getAuthTokenIgnorePortlets();
 
