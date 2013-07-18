@@ -1,0 +1,108 @@
+<%--
+/**
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<%@ include file="/html/portlet/layouts_admin/init.jsp" %>
+
+<%@ include file="/html/portlet/layouts_admin/init_attributes.jspf" %>
+
+<liferay-portlet:renderURL varImpl="redirectURL">
+	<portlet:param name="struts_action" value="/layouts_admin/update_layout" />
+	<portlet:param name="groupId" value="<%= String.valueOf(liveGroupId) %>" />
+</liferay-portlet:renderURL>
+
+<div id="<portlet:namespace />editLayoutPanel">
+	<button class="close pull-right" id="closePanel" type="button">&times;</button>
+
+	<h1><%= LanguageUtil.get(pageContext, "edit-page") %></h1>
+
+	<liferay-util:include page="/html/portlet/layouts_admin/edit_layout.jsp">
+		<liferay-util:param name="displayStyle" value="panel" />
+		<liferay-util:param name="showAddAction" value="<%= Boolean.FALSE.toString() %>" />
+	</liferay-util:include>
+
+	<liferay-portlet:renderURL plid="<%= PortalUtil.getControlPanelPlid(company.getCompanyId()) %>" portletName="<%= PortletKeys.GROUP_PAGES %>" varImpl="siteAdminURL" windowState="<%= WindowState.NORMAL.toString() %>">
+		<portlet:param name="groupId" value="<%= String.valueOf(liveGroupId) %>" />
+		<portlet:param name="selPlid" value="<%= String.valueOf(selPlid) %>" />
+		<portlet:param name="struts_action" value="/group_pages/edit_layouts" />
+		<portlet:param name="tabs1" value="public-pages" />
+		<portlet:param name="treeId" value="layoutsTree" />
+		<portlet:param name="viewLayout" value="true" />
+	</liferay-portlet:renderURL>
+
+	<%
+	String adminURL = HttpUtil.setParameter(siteAdminURL.toString(), "controlPanelCategory", "current_site");
+	adminURL = HttpUtil.setParameter(adminURL, "doAsGroupId", String.valueOf(liveGroupId));
+	adminURL = HttpUtil.setParameter(adminURL, "refererPlid", String.valueOf(selPlid));
+	%>
+
+	<aui:a cssClass="site-admin-link" href="<%= adminURL %>" label="action.VIEW_SITE_ADMINISTRATION" />
+</div>
+
+<c:if test='<%= SessionMessages.contains(renderRequest, "requestProcessed") %>'>
+	<aui:script>
+		window.location.href = themeDisplay.getLayoutURL();
+	</aui:script>
+</c:if>
+
+<aui:script use="aui-io-request,aui-loading-mask-deprecated,liferay-dockbar">
+	A.one('#closePanel').on('click', Liferay.Dockbar.toggleEditLayoutPanel, Liferay.Dockbar);
+
+	var BODY = A.getBody();
+	BODY.plug(A.LoadingMask);
+
+	Liferay.once(
+		'submitForm',
+		function(event) {
+			var form = event.form;
+
+			if (form.hasClass('edit-layout-form')) {
+				event.preventDefault();
+
+				form.get('<portlet:namespace />redirect').set('value', '<%= HttpUtil.addParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selPlid) %>');
+
+				BODY.loadingmask.show();
+
+				A.io.request(
+					form.get('action'),
+					{
+						dataType: 'json',
+						form: {
+							id: form.get('id')
+						},
+						after: {
+							success: function(event, id, obj) {
+								var response = this.get('responseData');
+
+								var panel = A.one('#<portlet:namespace />editLayoutPanel');
+
+								panel.empty();
+
+								panel.plug(A.Plugin.ParseContent);
+
+								panel.setContent(response);
+
+								BODY.loadingmask.hide();
+							},
+							failure: function(event) {
+								BODY.loadingMask.hide();
+							}
+						}
+					}
+				);
+			}
+		}
+	);
+</aui:script>
