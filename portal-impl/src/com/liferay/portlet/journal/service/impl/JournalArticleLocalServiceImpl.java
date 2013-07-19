@@ -5125,6 +5125,18 @@ public class JournalArticleLocalServiceImpl
 			notifySubscribers(article, serviceContext);
 		}
 
+		if (status == WorkflowConstants.STATUS_EXPIRED) {
+
+			List<JournalArticle> approvedArticles =
+					journalArticlePersistence.findByG_A_ST(
+						article.getGroupId(), article.getArticleId(),
+						WorkflowConstants.STATUS_APPROVED, 0, 1);
+
+			if (approvedArticles.isEmpty()) {
+				reindex(article);
+			}
+		}
+
 		return article;
 	}
 
@@ -6106,26 +6118,9 @@ public class JournalArticleLocalServiceImpl
 				article.getGroupId(), article.getArticleId(),
 				WorkflowConstants.STATUS_APPROVED, 0, 2);
 
-		if (approvedArticles.isEmpty()) {
-			if (article.isIndexable()) {
-				JournalArticle defaultArticle = fetchArticle(
-					article.getGroupId(), article.getArticleId(),
-					JournalArticleConstants.VERSION_DEFAULT);
-
-				if (defaultArticle != null) {
-					reindex(defaultArticle);
-				} else {
-					reindex(article);
-				}
-			}
-
-			assetEntryLocalService.updateVisible(
-				JournalArticle.class.getName(), article.getResourcePrimKey(),
-				false);
-
-		}
-		else if ((approvedArticles.size() == 1) &&
-				 (article.getStatus() == WorkflowConstants.STATUS_APPROVED)) {
+		if (approvedArticles.isEmpty() ||
+			((approvedArticles.size() == 1) &&
+			 (article.getStatus() == WorkflowConstants.STATUS_APPROVED))) {
 
 			if (article.isIndexable()) {
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
