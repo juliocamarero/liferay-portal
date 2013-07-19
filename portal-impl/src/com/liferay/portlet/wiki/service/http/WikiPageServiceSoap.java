@@ -417,6 +417,23 @@ public class WikiPageServiceSoap {
 		}
 	}
 
+	public static com.liferay.portlet.wiki.model.WikiPageSoap[] getPages(
+		long nodeId, java.lang.String title, int start, int max,
+		com.liferay.portlet.wiki.util.comparator.PageCreateDateComparator pageCreateDateComparator)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.portlet.wiki.model.WikiPage> returnValue = WikiPageServiceUtil.getPages(nodeId,
+					title, start, max, pageCreateDateComparator);
+
+			return com.liferay.portlet.wiki.model.WikiPageSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static int getPagesCount(long groupId, long nodeId, boolean head)
 		throws RemoteException {
 		try {
