@@ -1,3 +1,4 @@
+<%@ page import="net.sf.cglib.core.CollectionUtils" %>
 <%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
@@ -22,6 +23,50 @@ searchContainer.setTotal(assetEntries.size());
 int end = (assetEntries.size() < searchContainer.getEnd()) ? assetEntries.size() : searchContainer.getEnd();
 
 assetEntries = assetEntries.subList(searchContainer.getStart(), end);
+
+if ((allAssetTagNames.length > 0) || (allAssetCategoryIds.length > 0)) {
+	List<AssetEntry> filteredAssetEntries = new ArrayList<AssetEntry>();
+
+	for (AssetEntry assetEntry : assetEntries) {
+		if (allAssetTagNames.length > 0) {
+			List<AssetTag> assetEntryTags = assetEntry.getTags();
+
+			List<String> assetEntryTagNames = new ArrayList<String>(allAssetTagNames.length);
+
+			for (AssetTag assetEntryTag : assetEntryTags) {
+				assetEntryTagNames.add(assetEntryTag.getName());
+			}
+
+			List<String> allAssetTagNamesList = ListUtil.toList(allAssetTagNames);
+
+			if (Collections.disjoint(allAssetTagNamesList, assetEntryTagNames)) {
+				filteredAssetEntries.add(assetEntry);
+
+				continue;
+			}
+		}
+
+		if (allAssetCategoryIds.length > 0) {
+			List<AssetCategory> assetEntryCategories = assetEntry.getCategories();
+
+			List<Long> assetEntryCategoryIds = new ArrayList<Long>(allAssetCategoryIds.length);
+
+			for (AssetCategory assetEntryCategory : assetEntryCategories) {
+				assetEntryCategoryIds.add(assetEntryCategory.getCategoryId());
+			}
+
+			List<Long> allAssetCategoryIdsList = ListUtil.toList(allAssetCategoryIds);
+
+			if (Collections.disjoint(allAssetCategoryIdsList, assetEntryCategoryIds)) {
+				filteredAssetEntries.add(assetEntry);
+
+				continue;
+			}
+		}
+	}
+
+	assetEntries.removeAll(filteredAssetEntries);
+}
 
 searchContainer.setResults(assetEntries);
 
