@@ -43,8 +43,9 @@ public class PortletCategoryUtil {
 		UnicodeProperties typeSettingsProperties =
 			layout.getTypeSettingsProperties();
 
-		Set panelSelectedPortlets = SetUtil.fromArray(StringUtil.split(
-			typeSettingsProperties.getProperty("panelSelectedPortlets")));
+		Set panelSelectedPortlets = SetUtil.fromArray(
+			StringUtil.split(
+				typeSettingsProperties.getProperty("panelSelectedPortlets")));
 
 		return getRelevantPortletCategory(
 			permissionChecker, companyId, layout, portletCategory,
