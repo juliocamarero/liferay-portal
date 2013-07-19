@@ -3198,10 +3198,15 @@ public class JournalArticleLocalServiceImpl
 		socialActivityCounterLocalService.disableActivityCounters(
 			JournalFolder.class.getName(), article.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", article.getTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, article.getGroupId(), JournalArticle.class.getName(),
 			article.getResourcePrimKey(),
-			SocialActivityConstants.TYPE_MOVE_TO_TRASH, StringPool.BLANK, 0);
+			SocialActivityConstants.TYPE_MOVE_TO_TRASH,
+			extraDataJSONObject.toString(), 0);
 
 		if (oldStatus == WorkflowConstants.STATUS_PENDING) {
 			workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
@@ -3365,11 +3370,15 @@ public class JournalArticleLocalServiceImpl
 		socialActivityCounterLocalService.enableActivityCounters(
 			JournalFolder.class.getName(), article.getFolderId());
 
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("title", article.getTitle());
+
 		socialActivityLocalService.addActivity(
 			userId, article.getGroupId(), JournalArticle.class.getName(),
 			article.getResourcePrimKey(),
-			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH, StringPool.BLANK,
-			0);
+			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
+			extraDataJSONObject.toString(), 0);
 	}
 
 	/**
@@ -5001,13 +5010,18 @@ public class JournalArticleLocalServiceImpl
 
 				// Social
 
+				JSONObject extraDataJSONObject =
+					JSONFactoryUtil.createJSONObject();
+
+				extraDataJSONObject.put("title", article.getTitle());
+
 				if (serviceContext.isCommandUpdate()) {
 					socialActivityLocalService.addActivity(
 						user.getUserId(), article.getGroupId(),
 						JournalArticle.class.getName(),
 						article.getResourcePrimKey(),
 						JournalActivityKeys.UPDATE_ARTICLE,
-						getExtraDataJSON(article, serviceContext), 0);
+						extraDataJSONObject.toString(), 0);
 				}
 				else {
 					socialActivityLocalService.addUniqueActivity(
@@ -5015,7 +5029,7 @@ public class JournalArticleLocalServiceImpl
 						JournalArticle.class.getName(),
 						article.getResourcePrimKey(),
 						JournalActivityKeys.ADD_ARTICLE,
-						getExtraDataJSON(article, serviceContext), 0);
+						extraDataJSONObject.toString(), 0);
 				}
 
 				// Indexer
@@ -5748,16 +5762,6 @@ public class JournalArticleLocalServiceImpl
 		dateInterval[1] = latestExpirationDate;
 
 		return dateInterval;
-	}
-
-	protected String getExtraDataJSON(
-		JournalArticle article, ServiceContext serviceContext) {
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		jsonObject.put("title", article.getTitle(serviceContext.getLocale()));
-
-		return jsonObject.toString();
 	}
 
 	protected String getUniqueUrlTitle(
