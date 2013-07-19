@@ -63,8 +63,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 	}
 
 	@Override
-	public long createStagingRequest(
-			long userId, long groupId, String checksum)
+	public long createStagingRequest(long userId, long groupId, String checksum)
 		throws PortalException, SystemException {
 
 		ServiceContext serviceContext = new ServiceContext();
