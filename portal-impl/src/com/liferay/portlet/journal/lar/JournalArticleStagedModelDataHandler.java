@@ -624,13 +624,12 @@ public class JournalArticleStagedModelDataHandler
 							article.isSmallImage(), article.getSmallImageURL(),
 							smallFile, images, articleURL, serviceContext);
 				}
-				else {
-					if (portletDataContext.isCompanyStagedGroupedModel(
+				else if (portletDataContext.isCompanyStagedGroupedModel(
 							existingArticle)) {
 
-						return;
-					}
-
+					return;
+				}
+				else {
 					importedArticle =
 						JournalArticleLocalServiceUtil.updateArticle(
 							userId, existingArticle.getGroupId(), folderId,
