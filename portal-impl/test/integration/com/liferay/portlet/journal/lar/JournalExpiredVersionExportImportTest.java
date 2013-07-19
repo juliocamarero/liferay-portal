@@ -78,6 +78,8 @@ public class JournalExpiredVersionExportImportTest
 
 		Assert.assertEquals(1.1, article.getVersion(), 0);
 
+		Thread.sleep(3000);
+
 		Assert.assertEquals(
 			initialArticlesCount + 2,
 			JournalArticleLocalServiceUtil.getArticlesCount(
@@ -94,6 +96,8 @@ public class JournalExpiredVersionExportImportTest
 			JournalArticleLocalServiceUtil.getArticlesCount(
 				importedGroup.getGroupId()));
 
+		Thread.sleep(3000);
+
 		Assert.assertEquals(
 			initialSearchArticlesCount + 1,
 			getResultsCount(
@@ -103,13 +107,15 @@ public class JournalExpiredVersionExportImportTest
 			group.getGroupId(), article.getArticleId(), null,
 			ServiceTestUtil.getServiceContext(group.getGroupId()));
 
-		Thread.sleep(5000);
+		Thread.sleep(3000);
 
 		Assert.assertEquals(
 			initialSearchArticlesCount,
 			getResultsCount(group.getCompanyId(), group.getGroupId()));
 
 		doExportImportPortlet(PortletKeys.JOURNAL);
+
+		Thread.sleep(3000);
 
 		Assert.assertEquals(
 			initialSearchArticlesCount,
