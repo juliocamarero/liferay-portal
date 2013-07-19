@@ -58,60 +58,30 @@ import java.util.Map;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Transactional
-public class JournalExpiredVersionExportImportTest extends BasePortletExportImportTestCase {
+public class JournalExpiredVersionExportImportTest
+	extends JournalExportImportTest {
 
-	@Override
-	public String getNamespace() {
-		return JournalPortletDataHandler.NAMESPACE;
-	}
-
-	@Override
-	public String getPortletId() {
-		return PortletKeys.JOURNAL;
+	@Test
+	public void testExportImportAssetLinks() throws Exception {
+		Assert.assertTrue("This test does not apply", true);
 	}
 
 	@Test
 	public void testExportImportBasicJournalArticle() throws Exception {
-		exportImportJournalArticle(false);
+		exportImportJournalArticle();
 	}
 
 	@Test
 	public void testExportImportStructuredJournalArticle() throws Exception {
-		exportImportJournalArticle(true);
+		Assert.assertTrue("This test does not apply", true);
 	}
 
-	@Override
-	protected StagedModel addStagedModel(long groupId) throws Exception {
-		return JournalTestUtil.addArticle(
-			groupId, ServiceTestUtil.randomString(),
-			ServiceTestUtil.randomString());
-	}
-
-	protected void exportImportJournalArticle(boolean structuredContent)
+	protected void exportImportJournalArticle()
 		throws Exception {
 
-		JournalArticle article = null;
-		DDMStructure ddmStructure = null;
-		DDMTemplate ddmTemplate = null;
-
-		if (structuredContent) {
-			ddmStructure = DDMStructureTestUtil.addStructure(
-				group.getGroupId(), JournalArticle.class.getName());
-
-			ddmTemplate = DDMTemplateTestUtil.addTemplate(
-				group.getGroupId(), ddmStructure.getStructureId());
-
-			String content = DDMStructureTestUtil.getSampleStructuredContent();
-
-			article = JournalTestUtil.addArticleWithXMLContent(
-				group.getGroupId(), content, ddmStructure.getStructureKey(),
-				ddmTemplate.getTemplateKey());
-		}
-		else {
-			article = JournalTestUtil.addArticle(
-				group.getGroupId(), ServiceTestUtil.randomString(),
-				ServiceTestUtil.randomString());
-		}
+		JournalArticle article = JournalTestUtil.addArticle(
+			group.getGroupId(), ServiceTestUtil.randomString(),
+			ServiceTestUtil.randomString());
 
 		String exportedResourceUuid = article.getArticleResourceUuid();
 
@@ -127,116 +97,6 @@ public class JournalExpiredVersionExportImportTest extends BasePortletExportImpo
 				exportedResourceUuid, importedGroup.getGroupId());
 
 		Assert.assertNotNull(importedJournalArticleResource);
-
-		if (!structuredContent) {
-			return;
-		}
-
-		DDMStructure importedDDMStructure =
-			DDMStructureLocalServiceUtil.fetchDDMStructureByUuidAndGroupId(
-				ddmStructure.getUuid(), importedGroup.getGroupId());
-
-		Assert.assertNotNull(importedDDMStructure);
-
-		DDMTemplate importedDDMTemplate =
-			DDMTemplateLocalServiceUtil.fetchDDMTemplateByUuidAndGroupId(
-				ddmTemplate.getUuid(), importedGroup.getGroupId());
-
-		Assert.assertNotNull(importedDDMTemplate);
-		Assert.assertEquals(
-			article.getStructureId(), importedDDMStructure.getStructureKey());
-		Assert.assertEquals(
-			article.getTemplateId(), importedDDMTemplate.getTemplateKey());
-		Assert.assertEquals(
-			importedDDMTemplate.getClassPK(),
-			importedDDMStructure.getStructureId());
-	}
-
-	protected Map<String, String[]> getBaseParameterMap(long groupId, long plid)
-		throws Exception {
-
-		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
-
-		parameterMap.put(
-			PortletDataHandlerKeys.CATEGORIES,
-			new String[] {Boolean.TRUE.toString()});
-		parameterMap.put(
-			PortletDataHandlerKeys.PERMISSIONS,
-			new String[] {Boolean.TRUE.toString()});
-		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT,
-			new String[] {Boolean.FALSE.toString()});
-
-		addParameter(parameterMap, "doAsGroupId", String.valueOf(groupId));
-		addParameter(parameterMap, "feeds", true);
-		addParameter(parameterMap, "groupId", String.valueOf(groupId));
-		addParameter(
-			parameterMap, "permissionsAssignedToRoles",
-			Boolean.TRUE.toString());
-		addParameter(parameterMap, "plid", String.valueOf(plid));
-		addParameter(parameterMap, "portletResource", PortletKeys.JOURNAL);
-		addParameter(parameterMap, "referenced-content", true);
-		addParameter(parameterMap, "structures", true);
-		addParameter(parameterMap, "version-history", true);
-		addParameter(parameterMap, "web-content", true);
-
-		return parameterMap;
-	}
-
-	@Override
-	protected Map<String, String[]> getExportParameterMap() throws Exception {
-		Map<String, String[]> parameterMap = getBaseParameterMap(
-			group.getGroupId(), layout.getPlid());
-
-		parameterMap.put(Constants.CMD, new String[] {Constants.EXPORT});
-		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE +
-				PortletKeys.JOURNAL,
-			new String[] {Boolean.TRUE.toString()});
-
-		return parameterMap;
-	}
-
-	@Override
-	protected Map<String, String[]> getImportParameterMap() throws Exception {
-		Map<String, String[]> parameterMap = getBaseParameterMap(
-			importedGroup.getGroupId(), importedLayout.getPlid());
-
-		parameterMap.put(Constants.CMD, new String[] {Constants.IMPORT});
-		parameterMap.put(
-			PortletDataHandlerKeys.DATA_STRATEGY,
-			new String[] {PortletDataHandlerKeys.DATA_STRATEGY_MIRROR});
-		parameterMap.put(
-			PortletDataHandlerKeys.DELETE_PORTLET_DATA,
-			new String[] {Boolean.FALSE.toString()});
-		parameterMap.put(
-			PortletDataHandlerKeys.PORTLET_DATA,
-			new String[] {Boolean.TRUE.toString()});
-		parameterMap.put(
-			PortletDataHandlerKeys.USER_ID_STRATEGY,
-			new String[] {UserIdStrategy.CURRENT_USER_ID});
-
-		return parameterMap;
-	}
-
-	@Override
-	protected StagedModel getStagedModel(String uuid, long groupId)
-		throws PortalException, SystemException {
-
-		JournalArticleResource importedArticleResource =
-			JournalArticleResourceUtil.fetchByUUID_G(uuid, groupId);
-
-		return JournalArticleLocalServiceUtil.getLatestArticle(
-			importedArticleResource.getResourcePrimKey());
-	}
-
-	@Override
-	protected String getStagedModelUuid(StagedModel stagedModel)
-		throws PortalException, SystemException {
-
-		JournalArticle article = (JournalArticle)stagedModel;
-
-		return article.getArticleResourceUuid();
 	}
 
 }
