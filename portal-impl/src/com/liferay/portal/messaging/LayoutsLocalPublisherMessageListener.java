@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Time;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
@@ -103,7 +102,7 @@ public class LayoutsLocalPublisherMessageListener
 				Date scheduledFireTime =
 					publisherRequest.getScheduledFireTime();
 
-				if (Validator.isNull(scheduledFireTime)) {
+				if (scheduledFireTime == null) {
 					scheduledFireTime = new Date();
 				}
 
