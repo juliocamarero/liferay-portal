@@ -521,6 +521,8 @@ public class JournalTestUtil {
 			titleMap.put(locale, title);
 		}
 
+		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
+
 		return JournalArticleLocalServiceUtil.updateArticle(
 			article.getUserId(), article.getGroupId(), article.getFolderId(),
 			article.getArticleId(), article.getVersion(), titleMap,
