@@ -81,18 +81,10 @@ else {
 		</c:if>
 
 		<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.VIEW) %>">
-			<portlet:actionURL var="previewURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-				<portlet:param name="struts_action" value="/journal/preview_article_content" />
-				<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.VIEW %>" />
-				<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
-				<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
-				<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
-			</portlet:actionURL>
-
 			<liferay-ui:icon
-				image="view"
-				target="_blank"
-				url="<%= previewURL.toString() %>"
+				id='<%= row.getPos() + "viewButton" %>'
+				image="preview"
+				url="javascript:;"
 			/>
 
 			<c:if test="<%= JournalPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_ARTICLE) %>">
@@ -135,4 +127,30 @@ else {
 			<liferay-ui:icon-delete trash="<%= TrashUtil.isTrashEnabled(scopeGroupId) %>" url="<%= deleteURL %>" />
 		</c:if>
 	</liferay-ui:icon-menu>
+
+	<aui:script use="aui-base">
+		<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="struts_action" value="/journal/preview_article_content" />
+			<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
+			<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
+			<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
+		</liferay-portlet:renderURL>
+
+		var viewButton = A.one('#<%= portletDisplay.getNamespace() + row.getPos() + "viewButton" %>');
+
+		viewButton.on(
+			'click',
+			function(event) {
+				event.preventDefault();
+
+				Liferay.Util.openWindow(
+					{
+						cache: false,
+						title: '<%= article.getTitle(locale) %>',
+						uri: '<%= previewArticleContentURL.toString() %>'
+					}
+				);
+			}
+		);
+	</aui:script>
 </span>
