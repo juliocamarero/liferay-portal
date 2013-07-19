@@ -71,15 +71,12 @@ private void _buildSiteMap(Layout layout, List<Layout> layouts, Layout rootLayou
 		return;
 	}
 
-	PermissionChecker permissionChecker = themeDisplay.getPermissionChecker();
-	boolean showRoot = (rootLayout != null) && (curDepth == 1) && includeRootInTree;
-
 	sb.append("<ul>");
 
-	if (showRoot) {
-		String cssClass = "root";
-
+	if (includeRootInTree && (rootLayout != null) && (curDepth == 1)) {
 		sb.append("<li>");
+
+		String cssClass = "root";
 
 		if (rootLayout.getPlid() == layout.getPlid()) {
 			cssClass += " current";
@@ -92,17 +89,15 @@ private void _buildSiteMap(Layout layout, List<Layout> layouts, Layout rootLayou
 		_buildSiteMap(layout, layouts, rootLayout, includeRootInTree, displayDepth, showCurrentPage, useHtmlTitle, showHiddenPages, curDepth +1, themeDisplay, sb);
 	}
 	else {
-		for (int i = 0; i < layouts.size(); i++) {
-			Layout curLayout = layouts.get(i);
+		for (Layout curLayout : layouts) {
+			if ((showHiddenPages || !curLayout.isHidden()) && LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), curLayout, ActionKeys.VIEW)) {
+				sb.append("<li>");
 
-			if ((showHiddenPages || !curLayout.isHidden()) && LayoutPermissionUtil.contains(permissionChecker, curLayout, ActionKeys.VIEW)) {
 				String cssClass = StringPool.BLANK;
 
 				if (curLayout.getPlid() == layout.getPlid()) {
 					cssClass = "current";
 				}
-
-				sb.append("<li>");
 
 				_buildLayoutView(curLayout, cssClass, useHtmlTitle, themeDisplay, sb);
 
@@ -111,7 +106,7 @@ private void _buildSiteMap(Layout layout, List<Layout> layouts, Layout rootLayou
 						_buildSiteMap(layout, curLayout.getChildren(), rootLayout, includeRootInTree, displayDepth, showCurrentPage, useHtmlTitle, showHiddenPages, curDepth + 1, themeDisplay, sb);
 					}
 					else {
-						_buildSiteMap(layout, curLayout.getChildren(permissionChecker), rootLayout, includeRootInTree, displayDepth, showCurrentPage, useHtmlTitle, showHiddenPages, curDepth + 1, themeDisplay, sb);
+						_buildSiteMap(layout, curLayout.getChildren(themeDisplay.getPermissionChecker()), rootLayout, includeRootInTree, displayDepth, showCurrentPage, useHtmlTitle, showHiddenPages, curDepth + 1, themeDisplay, sb);
 					}
 				}
 
