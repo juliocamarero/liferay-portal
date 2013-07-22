@@ -24,18 +24,6 @@ double version = ParamUtil.getDouble(renderRequest, "version", JournalArticleCon
 JournalArticle article = JournalArticleServiceUtil.getArticle(groupId, articleId, version);
 %>
 
-<html>
-
-<head>
-	<liferay-util:include page="/html/common/themes/top_head.jsp" />
-</head>
-
-<body>
-
 <%= JournalArticleLocalServiceUtil.getArticleContent(article, article.getTemplateId(), null, themeDisplay.getLanguageId(), themeDisplay) %>
 
 <liferay-util:include page="/html/common/themes/bottom.jsp" />
-
-</body>
-
-</html>
