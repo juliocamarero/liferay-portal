@@ -859,7 +859,7 @@
 			return editable;
 		},
 
-		_onPreviewArticle: function(event) {
+		_defaultPreviewArticleFn: function(event) {
 			var instance = this;
 
 			event.preventDefault();
@@ -2056,7 +2056,7 @@
 	Liferay.publish(
 		'previewArticle',
 		{
-			defaultFn: Util._onPreviewArticle
+			defaultFn: Util._defaultPreviewArticleFn
 		}
 	);
 
