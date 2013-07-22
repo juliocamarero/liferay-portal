@@ -655,27 +655,27 @@ public class LanguageImpl implements Language {
 	}
 
 	private LanguageImpl(long companyId) {
-		String[] localesArray = PropsValues.LOCALES;
+		String[] languageIds = PropsValues.LOCALES;
 
 		if (companyId != CompanyConstants.SYSTEM) {
 			try {
-				localesArray = PrefsPropsUtil.getStringArray(
+				languageIds = PrefsPropsUtil.getStringArray(
 					companyId, PropsKeys.LOCALES, StringPool.COMMA,
 					PropsValues.LOCALES_ENABLED);
 			}
 			catch (SystemException se) {
-				localesArray = PropsValues.LOCALES_ENABLED;
+				languageIds = PropsValues.LOCALES_ENABLED;
 			}
 		}
 
 		_charEncodings = new HashMap<String, String>();
 		_duplicateLanguageCodes = new HashSet<String>();
-		_locales = new Locale[localesArray.length];
-		_localesMap = new HashMap<String, Locale>(localesArray.length);
-		_localesSet = new HashSet<Locale>(localesArray.length);
+		_locales = new Locale[languageIds.length];
+		_localesMap = new HashMap<String, Locale>(languageIds.length);
+		_localesSet = new HashSet<Locale>(languageIds.length);
 
-		for (int i = 0; i < localesArray.length; i++) {
-			String languageId = localesArray[i];
+		for (int i = 0; i < languageIds.length; i++) {
+			String languageId = languageIds[i];
 
 			Locale locale = LocaleUtil.fromLanguageId(languageId, false);
 

@@ -71,7 +71,7 @@ public class MergeLayoutPrototypesThreadLocal {
 		for (int i = 0; i < arguments.length; i++) {
 			sb.append(parameterTypes[i].getName());
 
-			sb.append(arguments[i].toString());
+			sb.append(arguments[i]);
 		}
 
 		return sb.toString();
