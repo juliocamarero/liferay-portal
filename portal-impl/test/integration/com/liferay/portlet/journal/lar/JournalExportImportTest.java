@@ -98,6 +98,14 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 			ServiceTestUtil.randomString());
 	}
 
+	@Override
+	protected void doTestExportImportDisplayStyle(
+			long displayStyleGroupId, String scopeType)
+		throws Exception {
+
+		Assert.assertTrue("This test does not apply", true);
+	}
+
 	protected void exportImportJournalArticle(
 			boolean structuredContent, boolean companyScopeDependencies)
 		throws Exception {
