@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
@@ -12,16 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portal/init.jsp" %>
+package com.liferay.portal.kernel.util;
 
-<%@ page import="com.liferay.portal.kernel.util.TreeView" %><%@
-page import="com.liferay.portal.util.PortletLister" %><%@
-page import="com.liferay.portal.util.PortletListerFactoryUtil" %>
+/**
+ * @author Carlos Sierra Andrés
+ */
+public interface PredicateFilter<T> {
 
-<%
-Layout selLayout = (Layout)request.getAttribute(WebKeys.SEL_LAYOUT);
+	public boolean filter(T t);
 
-String currentLanguageId = LanguageUtil.getLanguageId(request);
-%>
+}

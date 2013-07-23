@@ -102,6 +102,16 @@ public interface VelocityTaglib {
 	public void discussion(
 			String className, long classPK, String formAction, String formName,
 			boolean hideControls, boolean ratingsEnabled, String redirect,
+			long userId)
+		throws Exception;
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #discussion(String, long,
+	 *             String, String, boolean, boolean, String, long)})}
+	 */
+	public void discussion(
+			String className, long classPK, String formAction, String formName,
+			boolean hideControls, boolean ratingsEnabled, String redirect,
 			String subject, long userId)
 		throws Exception;
 

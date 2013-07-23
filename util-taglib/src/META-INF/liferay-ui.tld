@@ -914,8 +914,9 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Deprecated as of 6.2.0, with no direct replacement</description>
 			<name>subject</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -3149,13 +3150,13 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>deprecated As of 6.2.0, replaced by liferay-ui:search-container#total</description>
+			<description>Deprecated as of 6.2.0, replaced by liferay-ui:search-container#total</description>
 			<name>total</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>deprecated As of 6.2.0, replaced by liferay-ui:search-container#totalVar</description>
+			<description>Deprecated as of 6.2.0, replaced by liferay-ui:search-container#totalVar</description>
 			<name>totalVar</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

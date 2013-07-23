@@ -14,6 +14,8 @@
 
 package com.liferay.portal.lar;
 
+import com.liferay.portal.LayoutParentLayoutIdException;
+import com.liferay.portal.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -52,6 +54,16 @@ import org.junit.runner.RunWith;
 @Transactional
 public class LayoutSetPrototypePropagationTest
 	extends BasePrototypePropagationTestCase {
+
+	@Test
+	public void testAddChildLayoutWithLinkDisabled() throws Exception {
+		testAddChildLayout(false);
+	}
+
+	@Test
+	public void testAddChildLayoutWithLinkEnabled() throws Exception {
+		testAddChildLayout(true);
+	}
 
 	@Test
 	public void testAddGroup() throws Exception {
@@ -278,6 +290,8 @@ public class LayoutSetPrototypePropagationTest
 			boolean layoutSetLayoutLinkEnabled)
 		throws Exception {
 
+		MergeLayoutPrototypesThreadLocal.clearMergeComplete();
+
 		Layout layoutSetPrototypeLayout = LayoutTestUtil.addLayout(
 			_layoutSetPrototypeGroup.getGroupId(),
 			ServiceTestUtil.randomString(), true, layoutPrototype,
@@ -347,6 +361,8 @@ public class LayoutSetPrototypePropagationTest
 	}
 
 	protected void propagateChanges(Group group) throws Exception {
+		MergeLayoutPrototypesThreadLocal.clearMergeComplete();
+
 		LayoutLocalServiceUtil.getLayouts(
 			group.getGroupId(), false,
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
@@ -390,6 +406,31 @@ public class LayoutSetPrototypePropagationTest
 		if ((layout != null) && (_layout != null)) {
 			layout = LayoutLocalServiceUtil.getLayout(layout.getPlid());
 			_layout = LayoutLocalServiceUtil.getLayout(_layout.getPlid());
+		}
+	}
+
+	protected void testAddChildLayout(boolean layoutSetPrototypeLinkEnabled)
+		throws Exception {
+
+		setLinkEnabled(layoutSetPrototypeLinkEnabled);
+
+		try {
+			LayoutTestUtil.addLayout(
+				group.getGroupId(), ServiceTestUtil.randomString(),
+				layout.getPlid());
+
+			if (layoutSetPrototypeLinkEnabled) {
+				Assert.fail(
+					"Able to add a child page to a page associated to a site " +
+						"template with link enabled");
+			}
+		}
+		catch (LayoutParentLayoutIdException lplie) {
+			if (!layoutSetPrototypeLinkEnabled) {
+				Assert.fail(
+					"Unable to add a child page to a page associated to a " +
+						"template with link disabled");
+			}
 		}
 	}
 

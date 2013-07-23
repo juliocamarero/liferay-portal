@@ -1127,7 +1127,7 @@ public class JournalUtil {
 
 			_mergeArticleContentUpdate(
 				curDocument, newRootElement,
-				LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
+				LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault()));
 
 			if (removeNullElements) {
 				_mergeArticleContentDelete(curRootElement, newDocument);
