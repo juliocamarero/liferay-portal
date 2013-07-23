@@ -565,6 +565,14 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			end = length;
 		}
 
+		if ((length > 0) && (start >= length)) {
+			int delta = end - start;
+			int cur = start / delta;
+
+			start = (cur == 0) ? 0 : ((cur - 1) * delta);
+			end = start + delta;
+		}
+
 		Set<String> queryTerms = new HashSet<String>();
 
 		IndexReader indexReader = indexSearcher.getIndexReader();
