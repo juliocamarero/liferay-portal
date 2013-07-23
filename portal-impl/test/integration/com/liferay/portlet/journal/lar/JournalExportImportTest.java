@@ -81,7 +81,7 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 
 	@Test
 	public void testExportImportCompanyScopeStructuredJournalArticle()
-			throws Exception {
+		throws Exception {
 
 		exportImportJournalArticle(true, true);
 	}
