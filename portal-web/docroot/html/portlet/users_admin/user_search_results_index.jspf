@@ -39,13 +39,12 @@ while (true) {
 	boolean corruptIndex = (Boolean)tuple.getObject(1);
 
 	if (!corruptIndex) {
-		results = (List<User>)tuple.getObject(0);
+		userSearchContainer.setTotal(hits.getLength());
 		total = hits.getLength();
 
 		break;
 	}
 }
 
-pageContext.setAttribute("results", results);
 pageContext.setAttribute("total", total);
 %>
