@@ -19,8 +19,10 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -83,48 +85,13 @@ public class BasePortletExportImportTestCase extends BaseExportImportTestCase {
 	}
 
 	@Test
-	public void testExportImportDisplayStyle() throws Exception {
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
-			group.getCompanyId(), getPortletId());
+	public void testExportImportDisplayStyleGlobalScope() throws Exception {
+		doExportImportDisplayStyle("company");
+	}
 
-		if (portlet == null) {
-			return;
-		}
-
-		TemplateHandler templateHandler = portlet.getTemplateHandlerInstance();
-
-		if (templateHandler == null) {
-			return;
-		}
-
-		String className = templateHandler.getClassName();
-
-		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
-			group.getGroupId(), PortalUtil.getClassNameId(className), 0);
-
-		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
-
-		String displayStyle =
-			PortletDisplayTemplate.DISPLAY_STYLE_PREFIX + ddmTemplate.getUuid();
-
-		preferenceMap.put("displayStyle",new String[] {displayStyle});
-		preferenceMap.put(
-			"displayStyleGroupId",
-			new String[] {String.valueOf(ddmTemplate.getGroupId())});
-
-		PortletPreferences portletPreferences = getImportedPortletPreferences(
-			preferenceMap);
-
-		String importedDisplayStyle = portletPreferences.getValue(
-			"displayStyle", StringPool.BLANK);
-
-		Assert.assertEquals(displayStyle, importedDisplayStyle);
-
-		long importedDisplayStyleGroupId = GetterUtil.getLong(
-			portletPreferences.getValue("displayStyleGroupId", null));
-
-		Assert.assertEquals(
-			importedGroup.getGroupId(), importedDisplayStyleGroupId);
+	@Test
+	public void testExportImportDisplayStyleLocalScope() throws Exception {
+		doExportImportDisplayStyle(StringPool.BLANK);
 	}
 
 	protected AssetLink addAssetLink(
@@ -146,6 +113,73 @@ public class BasePortletExportImportTestCase extends BaseExportImportTestCase {
 		Map<String, String[]> parameterMap, String name, boolean value) {
 
 		addParameter(parameterMap, getNamespace(), name, value);
+	}
+
+	protected void doExportImportDisplayStyle(String scopeType)
+		throws Exception {
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			group.getCompanyId(), getPortletId());
+
+		if (portlet == null) {
+			return;
+		}
+
+		TemplateHandler templateHandler = portlet.getTemplateHandlerInstance();
+
+		if (templateHandler == null) {
+			Assert.assertTrue("This test does not apply", true);
+
+			return;
+		}
+
+		String className = templateHandler.getClassName();
+
+		long displayStyleGroupId = group.getGroupId();
+
+		if (scopeType.equals("company")) {
+			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+				group.getCompanyId());
+
+			displayStyleGroupId = companyGroup.getGroupId();
+		}
+
+		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
+			displayStyleGroupId, PortalUtil.getClassNameId(className), 0);
+
+		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
+
+		String displayStyle =
+			PortletDisplayTemplate.DISPLAY_STYLE_PREFIX + ddmTemplate.getUuid();
+
+		preferenceMap.put("displayStyle", new String[] {displayStyle});
+		preferenceMap.put(
+			"displayStyleGroupId",
+			new String[] {String.valueOf(ddmTemplate.getGroupId())});
+		preferenceMap.put("lfrScopeType", new String[] {scopeType});
+
+		PortletPreferences portletPreferences = getImportedPortletPreferences(
+			preferenceMap);
+
+		String importedDisplayStyle = portletPreferences.getValue(
+			"displayStyle", StringPool.BLANK);
+
+		Assert.assertEquals(displayStyle, importedDisplayStyle);
+
+		long importedDisplayStyleGroupId = GetterUtil.getLong(
+			portletPreferences.getValue("displayStyleGroupId", null));
+
+		long expectedDisplayStyleGroupId = importedGroup.getGroupId();
+
+		if (scopeType.equals("company")) {
+			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+				importedGroup.getCompanyId());
+
+			expectedDisplayStyleGroupId = companyGroup.getGroupId();
+		}
+
+		Assert.assertEquals(
+			expectedDisplayStyleGroupId, importedDisplayStyleGroupId);
 	}
 
 	protected void doExportImportPortlet(String portletId) throws Exception {
