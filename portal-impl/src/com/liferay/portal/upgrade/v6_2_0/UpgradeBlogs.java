@@ -68,22 +68,26 @@ public class UpgradeBlogs extends BaseUpgradePortletPreferences {
 			PortletPreferencesFactoryUtil.fromXML(
 				companyId, ownerId, ownerType, plid, portletId, xml);
 
+		upgradeRss(portletPreferences);
+
+		return PortletPreferencesFactoryUtil.toXML(portletPreferences);
+	}
+
+	protected void upgradeRss(PortletPreferences portletPreferences)
+		throws Exception {
+
 		String rssFormat = GetterUtil.getString(
 			portletPreferences.getValue("rssFormat", null));
 
 		if (Validator.isNotNull(rssFormat)) {
-			String rssFormatType = RSSUtil.getFormatType(rssFormat);
-			double rssFormatVersion = RSSUtil.getFormatVersion(rssFormat);
-
-			String rssFeedType = RSSUtil.getFeedType(
-				rssFormatType, rssFormatVersion);
-
-			portletPreferences.setValue("rssFeedType", rssFeedType);
+			portletPreferences.setValue(
+				"rssFeedType",
+				RSSUtil.getFeedType(
+					RSSUtil.getFormatType(rssFormat),
+					RSSUtil.getFormatVersion(rssFormat)));
 		}
 
 		portletPreferences.reset("rssFormat");
-
-		return PortletPreferencesFactoryUtil.toXML(portletPreferences);
 	}
 
 }
