@@ -33,6 +33,7 @@ import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.rss.DefaultRSSRenderer;
 import com.liferay.util.RSSUtil;
+
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -52,7 +53,7 @@ import javax.portlet.ResourceResponse;
 public class AssetRSSRenderer extends DefaultRSSRenderer {
 
 	public AssetRSSRenderer(
-		List<AssetEntry> assetEntries, ResourceRequest resourceRequest, 
+		List<AssetEntry> assetEntries, ResourceRequest resourceRequest,
 		ResourceResponse resourceResponse) {
 
 		super(resourceRequest);
@@ -164,6 +165,7 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		if (linkBehavior.equals("viewInPortlet")) {
 			return getEntryURLViewInContext(assetEntry);
 		}
+
 		try {
 			return getEntryURLAssetPublisher(assetEntry);
 		}
@@ -171,7 +173,7 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 			throw new PortalException(e);
 		}
 	}
-	
+
 	protected String getEntryURLAssetPublisher(AssetEntry assetEntry)
 		throws Exception {
 

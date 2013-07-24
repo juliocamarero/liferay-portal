@@ -201,9 +201,9 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 
 	}
 
-	abstract protected String getEntryURL()	
+	abstract protected String getEntryURL()
 		throws PortalException, SystemException;
-	
+
 	private List<BlogsEntry> _blogsEntries;
 	private String _displayStyle;
 	private HttpServletRequest _request;
