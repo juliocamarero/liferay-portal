@@ -57,8 +57,8 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		ResourceResponse resourceResponse) {
 
 		super(resourceRequest);
-		_assetEntries = assetEntries;
 
+		_assetEntries = assetEntries;
 		_resourceRequest = resourceRequest;
 		_resourceResponse = resourceResponse;
 

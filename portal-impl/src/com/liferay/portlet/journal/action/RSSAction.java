@@ -33,18 +33,12 @@ public class RSSAction extends DefaultRSSAction {
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
 
-		JournalFeed feed = (JournalFeed)resourceRequest.getAttribute(
-			"rssJournalFeed");
-
-		if (feed != null) {
-			return new JournalRSSRenderer(
-				feed, resourceRequest, resourceResponse);
-		}
-
 		long id = ParamUtil.getLong(resourceRequest, "id");
 
 		long groupId = ParamUtil.getLong(resourceRequest, "groupId");
 		String feedId = ParamUtil.getString(resourceRequest, "feedId");
+
+		JournalFeed feed = null;
 
 		if (id > 0) {
 			feed = JournalFeedLocalServiceUtil.getFeed(id);
@@ -52,8 +46,6 @@ public class RSSAction extends DefaultRSSAction {
 		else {
 			feed = JournalFeedLocalServiceUtil.getFeed(groupId, feedId);
 		}
-
-		resourceRequest.setAttribute("rssJournalFeed", feed);
 
 		return new JournalRSSRenderer(feed, resourceRequest, resourceResponse);
 	}
