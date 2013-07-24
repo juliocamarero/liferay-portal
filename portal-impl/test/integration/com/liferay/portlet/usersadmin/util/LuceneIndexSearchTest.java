@@ -66,7 +66,7 @@ public class LuceneIndexSearchTest {
 		for (int i = 0; i < 5; i ++ ) {
 			User user = UserTestUtil.addUser(
 				ServiceTestUtil.randomString(), false,
-				ServiceTestUtil.randomString(), TEST_COMMON_SURNAME,
+				ServiceTestUtil.randomString(), "testCommonSurnameKeyword",
 				new long[] {TestPropsValues.getGroupId()});
 
 			_users.add(user);
@@ -152,7 +152,7 @@ public class LuceneIndexSearchTest {
 	}
 
 	protected Hits getHits(int start, int end) throws Exception {
-		return _getHits(TEST_COMMON_SURNAME, start, end);
+		return _getHits("testCommonSurnameKeyword", start, end);
 	}
 
 	protected Hits getSearchWithOneResult(int start, int end) throws Exception {
@@ -186,7 +186,6 @@ public class LuceneIndexSearchTest {
 		return indexer.search(searchContext);
 	}
 
-	private String TEST_COMMON_SURNAME = "testCommonSurname";
 	private int _initialUsersCount = 0;
 	private List<User> _users = new ArrayList<User>();
 
