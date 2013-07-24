@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
@@ -41,7 +40,6 @@ import com.liferay.portlet.journal.model.JournalArticleDisplay;
 import com.liferay.portlet.journal.model.JournalFeed;
 import com.liferay.portlet.journal.model.JournalFeedConstants;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
-import com.liferay.portlet.journal.service.JournalFeedLocalServiceUtil;
 import com.liferay.portlet.journal.util.JournalRSSUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.rss.DefaultRSSRenderer;
@@ -70,10 +68,12 @@ import javax.portlet.ResourceURL;
 public class JournalRSSRenderer extends DefaultRSSRenderer {
 
 	public JournalRSSRenderer(
-		ResourceRequest resourceRequest, ResourceResponse resourceResponse) {
+		JournalFeed feed, ResourceRequest resourceRequest,
+		ResourceResponse resourceResponse) {
 
 		super(resourceRequest);
 
+		_feed = feed;
 		_resourceResponse = resourceResponse;
 	}
 
@@ -81,7 +81,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	public String getFeedURL() throws PortalException, SystemException {
 		ResourceURL feedURL = _resourceResponse.createResourceURL();
 
-		JournalFeed feed = getJournalFeed();
+		JournalFeed feed = _feed;
 
 		feedURL.setCacheability(ResourceURL.FULL);
 		feedURL.setParameter("struts_action", "/journal/rss");
@@ -93,14 +93,14 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 
 	@Override
 	public String getRSSFeedType() throws PortalException, SystemException {
-		JournalFeed feed = getJournalFeed();
+		JournalFeed feed = _feed;
 
 		return feed.getFeedFormat() + "_" + feed.getFeedVersion();
 	}
 
 	@Override
 	public String getRSSName() throws PortalException, SystemException {
-		JournalFeed feed = getJournalFeed();
+		JournalFeed feed = _feed;
 
 		return feed.getName();
 	}
@@ -109,7 +109,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	public void populateFeedEntries(List<? super SyndEntry> syndEntries)
 		throws PortalException, SystemException {
 
-		JournalFeed feed = getJournalFeed();
+		JournalFeed feed = _feed;
 
 		String languageId = LanguageUtil.getLanguageId(request);
 
@@ -149,7 +149,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 			try {
 				value =
 					processContent(
-						feed, article, languageId, themeDisplay, syndEntry,
+						article, languageId, themeDisplay, syndEntry,
 						syndContent);
 			}
 			catch (DocumentException e) {
@@ -161,7 +161,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 			syndEntry.setDescription(syndContent);
 
 			String link;
-			link = getEntryURL(feed, article, layout, themeDisplay);
+			link = getEntryURL(article, layout, themeDisplay);
 
 			syndEntry.setLink(link);
 
@@ -176,7 +176,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	protected String getEntryURL(
-			JournalFeed feed, JournalArticle article, Layout layout,
+			JournalArticle article, Layout layout,
 			ThemeDisplay themeDisplay) throws PortalException, SystemException {
 
 		List<Long> hitLayoutIds =
@@ -195,12 +195,12 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 		}
 		else {
 			long plid = PortalUtil.getPlidFromFriendlyURL(
-				feed.getCompanyId(), feed.getTargetLayoutFriendlyUrl());
+				_feed.getCompanyId(), _feed.getTargetLayoutFriendlyUrl());
 
 			String portletId = PortletKeys.JOURNAL_CONTENT;
 
-			if (Validator.isNotNull(feed.getTargetPortletId())) {
-				portletId = feed.getTargetPortletId();
+			if (Validator.isNotNull(_feed.getTargetPortletId())) {
+				portletId = _feed.getTargetPortletId();
 			}
 
 			PortletURL entryURL = new PortletURLImpl(
@@ -215,51 +215,26 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 		}
 	}
 
-	protected JournalFeed getJournalFeed()
-		throws PortalException, SystemException {
-
-		JournalFeed feed = (JournalFeed)request.getAttribute("rssJournalFeed");
-
-		if (feed != null) {
-			return feed;
-		}
-
-		long id = ParamUtil.getLong(request, "id");
-
-		long groupId = ParamUtil.getLong(request, "groupId");
-		String feedId = ParamUtil.getString(request, "feedId");
-
-		if (id > 0) {
-			feed = JournalFeedLocalServiceUtil.getFeed(id);
-		}
-		else {
-			feed = JournalFeedLocalServiceUtil.getFeed(groupId, feedId);
-		}
-
-		request.setAttribute("rssJournalFeed", feed);
-
-		return feed;
-	}
-
 	protected String processContent(
-			JournalFeed feed, JournalArticle article, String languageId,
+			JournalArticle article, String languageId,
 			ThemeDisplay themeDisplay, SyndEntry syndEntry,
-			SyndContent syndContent) throws DocumentException {
+			SyndContent syndContent)
+		throws DocumentException {
 
 		String content = article.getDescription(languageId);
 
-		String contentField = feed.getContentField();
+		String contentField = _feed.getContentField();
 
 		if (contentField.equals(JournalFeedConstants.RENDERED_WEB_CONTENT)) {
 			String rendererTemplateId = article.getTemplateId();
 
-			if (Validator.isNotNull(feed.getRendererTemplateId())) {
-				rendererTemplateId = feed.getRendererTemplateId();
+			if (Validator.isNotNull(_feed.getRendererTemplateId())) {
+				rendererTemplateId = _feed.getRendererTemplateId();
 			}
 
 			JournalArticleDisplay articleDisplay =
 				JournalContentUtil.getDisplay(
-					feed.getGroupId(), article.getArticleId(),
+					_feed.getGroupId(), article.getArticleId(),
 					rendererTemplateId, null, languageId, themeDisplay, 1,
 					_XML_REQUEST);
 
@@ -291,12 +266,12 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 			if (elType.equals("document_library")) {
 				String url = element.elementText("dynamic-content");
 
-				url = processURL(feed, url, themeDisplay, syndEntry);
+				url = processURL(url, themeDisplay, syndEntry);
 			}
 			else if (elType.equals("image") || elType.equals("image_gallery")) {
 				String url = element.elementText("dynamic-content");
 
-				url = processURL(feed, url, themeDisplay, syndEntry);
+				url = processURL(url, themeDisplay, syndEntry);
 
 				content =
 					content + "<br /><br /><img alt='' src='" +
@@ -316,8 +291,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	protected String processURL(
-		JournalFeed feed, String url, ThemeDisplay themeDisplay,
-		SyndEntry syndEntry) {
+		String url, ThemeDisplay themeDisplay, SyndEntry syndEntry) {
 
 		url = StringUtil.replace(
 			url,
@@ -325,7 +299,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 				"@group_id@", "@image_path@", "@main_path@"
 			},
 			new String[] {
-				String.valueOf(feed.getGroupId()), themeDisplay.getPathImage(),
+				String.valueOf(_feed.getGroupId()), themeDisplay.getPathImage(),
 				themeDisplay.getPathMain()
 			}
 		);
@@ -355,6 +329,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 
 	private static Log _log = LogFactoryUtil.getLog(JournalRSSRenderer.class);
 
+	private JournalFeed _feed;
 	private ResourceResponse _resourceResponse;
 
 }
