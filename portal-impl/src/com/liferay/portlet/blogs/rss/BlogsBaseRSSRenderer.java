@@ -48,14 +48,16 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 
 	public BlogsBaseRSSRenderer(
-		List<BlogsEntry> blogsEntries, HttpServletRequest request) {
+		List<BlogsEntry> entries, HttpServletRequest request) {
 
-		_blogsEntries = blogsEntries;
+		_entries = entries;
 		_request = request;
-		_themeDisplay = (ThemeDisplay)request.getAttribute(
+
+		themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
 		_displayStyle = ParamUtil.getString(
-			request, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);;
+			request, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
 	}
 
 	@Override
@@ -66,7 +68,7 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 			return feedURL.substring(0, feedURL.length() - 12);
 		}
 
-		return PortalUtil.getLayoutFullURL(_themeDisplay);
+		return PortalUtil.getLayoutFullURL(themeDisplay);
 	}
 
 	/**
@@ -75,7 +77,7 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 	 */
 	@Override
 	public String getFeedURL() throws PortalException, SystemException {
-		return _themeDisplay.getPortalURL() + _themeDisplay.getPathMain() +
+		return themeDisplay.getPortalURL() + themeDisplay.getPathMain() +
 			"/blogs/find_entry?";
 	}
 
@@ -114,10 +116,6 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 			_request, "version", RSSUtil.VERSION_DEFAULT);
 	}
 
-	public ThemeDisplay getThemeDisplay() {
-		return _themeDisplay;
-	}
-
 	@Override
 	abstract public String getRSSName() throws PortalException, SystemException;
 
@@ -125,7 +123,7 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 	public void populateFeedEntries(List<? super SyndEntry> syndEntries)
 		throws PortalException, SystemException {
 
-		for (BlogsEntry entry : _blogsEntries) {
+		for (BlogsEntry entry : _entries) {
 			SyndEntry syndEntry = new SyndEntryImpl();
 
 			String author = PortalUtil.getUserName(entry);
@@ -159,8 +157,8 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 						"href=\"/", "src=\"/"
 					},
 					new String[] {
-						"href=\"" + _themeDisplay.getURLPortal() + "/",
-						"src=\"" + _themeDisplay.getURLPortal() + "/"
+						"href=\"" + themeDisplay.getURLPortal() + "/",
+						"src=\"" + themeDisplay.getURLPortal() + "/"
 					});
 			}
 
@@ -198,15 +196,15 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 
 			syndEntries.add(syndEntry);
 		}
-
 	}
 
 	abstract protected String getEntryURL()
 		throws PortalException, SystemException;
 
-	private List<BlogsEntry> _blogsEntries;
+	protected ThemeDisplay themeDisplay;
+
 	private String _displayStyle;
+	private List<BlogsEntry> _entries;
 	private HttpServletRequest _request;
-	private ThemeDisplay _themeDisplay;
 
 }

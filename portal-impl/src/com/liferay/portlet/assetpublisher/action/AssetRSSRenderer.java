@@ -53,12 +53,12 @@ import javax.portlet.ResourceResponse;
 public class AssetRSSRenderer extends DefaultRSSRenderer {
 
 	public AssetRSSRenderer(
-		List<AssetEntry> assetEntries, ResourceRequest resourceRequest,
+		List<AssetEntry> entries, ResourceRequest resourceRequest,
 		ResourceResponse resourceResponse) {
 
 		super(resourceRequest);
 
-		_assetEntries = assetEntries;
+		_entries = entries;
 		_resourceRequest = resourceRequest;
 		_resourceResponse = resourceResponse;
 
@@ -91,7 +91,7 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		String rssDisplayStyle = _portletPreferences.getValue(
 			"rssDisplayStyle", RSSUtil.DISPLAY_STYLE_ABSTRACT);
 
-		for (AssetEntry assetEntry : _assetEntries) {
+		for (AssetEntry assetEntry : _entries) {
 			SyndEntry syndEntry = new SyndEntryImpl();
 
 			String author = PortalUtil.getUserName(assetEntry);
@@ -222,7 +222,7 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		return viewInContextURL;
 	}
 
-	private List<AssetEntry> _assetEntries;
+	private List<AssetEntry> _entries;
 	private PortletPreferences _portletPreferences;
 	private ResourceRequest _resourceRequest;
 	private ResourceResponse _resourceResponse;

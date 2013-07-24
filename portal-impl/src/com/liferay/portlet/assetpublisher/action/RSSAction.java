@@ -66,12 +66,11 @@ public class RSSAction extends DefaultRSSAction {
 		int rssDelta = GetterUtil.getInteger(
 			portletPreferences.getValue("rssDelta", "20"));
 
-		List<AssetEntry> assetEntries = AssetPublisherUtil.getAssetEntries(
+		List<AssetEntry> entries = AssetPublisherUtil.getAssetEntries(
 			portletPreferences, themeDisplay.getLayout(),
 			themeDisplay.getScopeGroupId(), rssDelta, true);
 
-		return new AssetRSSRenderer(
-			assetEntries, resourceRequest, resourceResponse);
+		return new AssetRSSRenderer(entries, resourceRequest, resourceResponse);
 	}
 
 }

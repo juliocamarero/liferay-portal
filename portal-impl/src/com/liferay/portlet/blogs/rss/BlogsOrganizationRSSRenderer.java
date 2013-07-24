@@ -32,10 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 public class BlogsOrganizationRSSRenderer extends BlogsBaseRSSRenderer {
 
 	public BlogsOrganizationRSSRenderer(
-		Organization organization, List<BlogsEntry> blogsEntries,
+		Organization organization, List<BlogsEntry> entries,
 		HttpServletRequest request) {
 
-		super(blogsEntries, request);
+		super(entries, request);
 
 		_organization = organization;
 	}

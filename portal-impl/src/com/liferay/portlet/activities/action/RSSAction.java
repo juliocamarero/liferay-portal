@@ -74,7 +74,6 @@ public class RSSAction extends DefaultRSSAction {
 		else {
 			throw new UnsupportedOperationException();
 		}
-
 	}
 
 }
