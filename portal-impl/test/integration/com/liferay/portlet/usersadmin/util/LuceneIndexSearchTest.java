@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.usersadmin.util;
 
+import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
@@ -56,6 +57,13 @@ public class LuceneIndexSearchTest {
 
 	@Before
 	public void setUp() throws Exception {
+		FinderCacheUtil.clearCache();
+
+		Hits hits = getSearchWithoutResults(
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+		_initialUsersCount = hits.getLength();
+
 		for (int i = 0; i < 5; i ++ ) {
 			User user = UserTestUtil.addUser(
 				ServiceTestUtil.randomString(), false,
@@ -71,6 +79,8 @@ public class LuceneIndexSearchTest {
 		for (User user : _users) {
 			UserLocalServiceUtil.deleteUser(user);
 		}
+
+		_initialUsersCount = 0;
 	}
 
 	@Test
@@ -127,40 +137,44 @@ public class LuceneIndexSearchTest {
 	public void testSearchWithResults() throws Exception {
 		Hits hits = getHits(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		Assert.assertTrue(hits.getLength() == 5);
+		Assert.assertEquals(_getExpectedSearchcount(), hits.getLength());
 	}
 
 	@Test
 	public void testSearchWithResultsWhenTotalEqualsStart() throws Exception {
 		Hits hits = getHits(5, 10);
 
-		Assert.assertTrue(hits.getLength() == 5);
+		Assert.assertEquals(_getExpectedSearchcount(), hits.getLength());
 	}
 
 	@Test
 	public void testSearchWithResultsWhenTotalLessThanStart() throws Exception {
 		Hits hits = getHits(1000, 1005);
 
-		Assert.assertTrue(hits.getLength() == 5);
+		Assert.assertEquals(_getExpectedSearchcount(), hits.getLength());
 	}
 
 	protected Hits getHits(int start, int end) throws Exception {
-		return getHits(StringPool.BLANK, start, end);
+		return _getHits(StringPool.BLANK, start, end);
 	}
 
 	protected Hits getSearchWithOneResult(int start, int end) throws Exception {
 		User user = _users.get(0);
 
-		return getHits(user.getFirstName(), start, end );
+		return _getHits(user.getFirstName(), start, end);
 	}
 
 	protected Hits getSearchWithoutResults(int start, int end)
 		throws Exception {
 
-		return getHits("invalidKeyword", start, end);
+		return _getHits("invalidKeyword", start, end);
 	}
 
-	private Hits getHits(String keyword, int start, int end) throws Exception {
+	private int _getExpectedSearchcount() {
+		return _initialUsersCount + 5;
+	}
+
+	private Hits _getHits(String keyword, int start, int end) throws Exception {
 		Indexer indexer = IndexerRegistryUtil.getIndexer(User.class);
 
 		SearchContext searchContext = new SearchContext();
@@ -179,6 +193,7 @@ public class LuceneIndexSearchTest {
 		return indexer.search(searchContext);
 	}
 
+	private int _initialUsersCount = 0;
 	private List<User> _users = new ArrayList<User>();
 
 }
