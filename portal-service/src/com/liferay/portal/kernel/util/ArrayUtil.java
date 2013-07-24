@@ -873,7 +873,7 @@ public class ArrayUtil {
 		Object[] filteredArray = filteredList.toArray();
 
 		return (T[])Arrays.copyOf(
-			filteredArray, filteredArray.length, filteredArray.getClass());
+			filteredArray, filteredArray.length, array.getClass());
 	}
 
 	public static int getLength(Object[] array) {
