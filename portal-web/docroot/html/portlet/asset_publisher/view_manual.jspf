@@ -17,6 +17,10 @@
 <%
 List<AssetEntry> assetEntries = AssetPublisherUtil.getAssetEntries(renderRequest, portletPreferences, permissionChecker, groupIds, assetEntryXmls, false, enablePermissions);
 
+if ((allAssetTagNames.length > 0) || (allAssetCategoryIds.length > 0)) {
+	assetEntries = JournalUtil.getFilteredAssetEntries(allAssetTagNames, allAssetCategoryIds, assetEntries);
+}
+
 searchContainer.setTotal(assetEntries.size());
 
 int end = (assetEntries.size() < searchContainer.getEnd()) ? assetEntries.size() : searchContainer.getEnd();
