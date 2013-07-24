@@ -202,13 +202,11 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 			ThemeDisplay themeDisplay, boolean showGlobalScope)
 		throws Exception {
 
-		long[] groupIds = new long[] {themeDisplay.getScopeGroupId()};
-
 		if (showGlobalScope) {
-			groupIds = PortalUtil.getSiteAndCompanyGroupIds(themeDisplay);
+			return PortalUtil.getSiteAndCompanyGroupIds(themeDisplay);
 		}
 
-		return groupIds;
+		return new long[] {themeDisplay.getScopeGroupId()};
 	}
 
 	@Override

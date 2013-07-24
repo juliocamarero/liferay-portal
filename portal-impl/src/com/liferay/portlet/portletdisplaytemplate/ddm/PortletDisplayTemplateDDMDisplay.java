@@ -87,15 +87,13 @@ public class PortletDisplayTemplateDDMDisplay extends BaseDDMDisplay {
 			ThemeDisplay themeDisplay, boolean showGlobalScope)
 		throws Exception {
 
-		long[] groupIds = new long[] {
-			PortletDisplayTemplateUtil.getDDMTemplateGroupId(
-				themeDisplay.getScopeGroupId())};
-
 		if (showGlobalScope) {
-			groupIds = PortalUtil.getSiteAndCompanyGroupIds(themeDisplay);
+			return PortalUtil.getSiteAndCompanyGroupIds(themeDisplay);
 		}
 
-		return groupIds;
+		return new long[] {
+			PortletDisplayTemplateUtil.getDDMTemplateGroupId(
+				themeDisplay.getScopeGroupId())};
 	}
 
 	@Override
