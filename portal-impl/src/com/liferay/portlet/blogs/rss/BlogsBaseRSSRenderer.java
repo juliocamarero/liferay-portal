@@ -41,7 +41,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Carlos Sierra Andrés
+ * @author Carlos Sierra AndrÃ©s
  * @author Julio Camarero
  * @author Brian Wing Shun Chan
  */
@@ -68,9 +68,6 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 
 		return PortalUtil.getLayoutFullURL(_themeDisplay);
 	}
-
-	abstract protected String getEntryURL()
-		throws PortalException, SystemException;
 
 	/**
 	 * @throws PortalException
@@ -204,6 +201,9 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 
 	}
 
+	abstract protected String getEntryURL()	
+		throws PortalException, SystemException;
+	
 	private List<BlogsEntry> _blogsEntries;
 	private String _displayStyle;
 	private HttpServletRequest _request;
