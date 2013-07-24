@@ -24,8 +24,6 @@ import com.liferay.portal.kernel.cal.TZSRecurrence;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncBufferedOutputStream;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -69,7 +67,6 @@ import com.liferay.portlet.calendar.EventTitleException;
 import com.liferay.portlet.calendar.model.CalEvent;
 import com.liferay.portlet.calendar.model.CalEventConstants;
 import com.liferay.portlet.calendar.service.base.CalEventLocalServiceBaseImpl;
-import com.liferay.portlet.calendar.social.CalendarActivityKeys;
 import com.liferay.portlet.calendar.util.CalUtil;
 import com.liferay.util.TimeZoneSensitive;
 
@@ -242,16 +239,6 @@ public class CalEventLocalServiceImpl extends CalEventLocalServiceBaseImpl {
 				userId, event.getUserName(), groupId, CalEvent.class.getName(),
 				event.getEventId(), WorkflowConstants.ACTION_PUBLISH);
 		}
-
-		// Social
-
-		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
-
-		extraDataJSONObject.put("title", event.getTitle());
-
-		socialActivityLocalService.addActivity(
-			userId, groupId, CalEvent.class.getName(), eventId,
-			CalendarActivityKeys.ADD_EVENT, extraDataJSONObject.toString(), 0);
 
 		// Pool
 
@@ -861,17 +848,6 @@ public class CalEventLocalServiceImpl extends CalEventLocalServiceBaseImpl {
 			userId, event, serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames(),
 			serviceContext.getAssetLinkEntryIds());
-
-		// Social
-
-		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
-
-		extraDataJSONObject.put("title", event.getTitle());
-
-		socialActivityLocalService.addActivity(
-			userId, event.getGroupId(), CalEvent.class.getName(), eventId,
-			CalendarActivityKeys.UPDATE_EVENT, extraDataJSONObject.toString(),
-			0);
 
 		// Pool
 
