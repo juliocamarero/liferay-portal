@@ -53,7 +53,9 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 		ResourceResponse resourceResponse) {
 
 		super(resourceRequest);
+
 		_activities = activities;
+		_resourceRequest = resourceRequest;
 	}
 
 	@Override
@@ -64,7 +66,7 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 
 	@Override
 	public String getRSSName() {
-		return ParamUtil.getString(request, "feedTitle");
+		return ParamUtil.getString(_resourceRequest, "feedTitle");
 	}
 
 	@Override
@@ -72,10 +74,10 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 		throws PortalException, SystemException {
 
 		String displayStyle = ParamUtil.getString(
-			request, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
+			_resourceRequest, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			request);
+			_resourceRequest);
 
 		for (SocialActivity activity : _activities) {
 			SocialActivityFeedEntry activityFeedEntry =
@@ -120,5 +122,6 @@ public class ActivitiesRSSRenderer extends DefaultRSSRenderer {
 	}
 
 	private List<SocialActivity> _activities;
+	private ResourceRequest _resourceRequest;
 
 }
