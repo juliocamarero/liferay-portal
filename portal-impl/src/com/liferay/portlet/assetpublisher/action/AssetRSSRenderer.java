@@ -31,10 +31,8 @@ import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
-import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 import com.liferay.portlet.rss.DefaultRSSRenderer;
 import com.liferay.util.RSSUtil;
-
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -54,9 +52,11 @@ import javax.portlet.ResourceResponse;
 public class AssetRSSRenderer extends DefaultRSSRenderer {
 
 	public AssetRSSRenderer(
-		ResourceRequest resourceRequest, ResourceResponse resourceResponse) {
+		List<AssetEntry> assetEntries, ResourceRequest resourceRequest, 
+		ResourceResponse resourceResponse) {
 
 		super(resourceRequest);
+		_assetEntries = assetEntries;
 
 		_resourceRequest = resourceRequest;
 		_resourceResponse = resourceResponse;
@@ -90,7 +90,7 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		String rssDisplayStyle = _portletPreferences.getValue(
 			"rssDisplayStyle", RSSUtil.DISPLAY_STYLE_ABSTRACT);
 
-		for (AssetEntry assetEntry : getAssetEntries()) {
+		for (AssetEntry assetEntry : _assetEntries) {
 			SyndEntry syndEntry = new SyndEntryImpl();
 
 			String author = PortalUtil.getUserName(assetEntry);
@@ -128,17 +128,6 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 
 			syndEntries.add(syndEntry);
 		}
-	}
-
-	protected List<AssetEntry> getAssetEntries()
-		throws PortalException, SystemException {
-
-		int rssDelta = GetterUtil.getInteger(
-			_portletPreferences.getValue("rssDelta", "20"));
-
-		return AssetPublisherUtil.getAssetEntries(
-			_portletPreferences, themeDisplay.getLayout(),
-			themeDisplay.getScopeGroupId(), rssDelta, true);
 	}
 
 	protected String getAssetPublisherURL()
@@ -232,6 +221,7 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		}
 	}
 
+	private List<AssetEntry> _assetEntries;
 	private PortletPreferences _portletPreferences;
 	private ResourceRequest _resourceRequest;
 	private ResourceResponse _resourceResponse;
