@@ -240,7 +240,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(path)) {
 			return path;
 		}
-		
+
 		path = StringUtil.replace(path, StringPool.SLASH, _TEMP_SLASH);
 		path = decodeURL(path, true);
 		path = StringUtil.replace(path, _TEMP_SLASH, StringPool.SLASH);
@@ -258,7 +258,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
-		
+
 		return URLCodec.decodeURL(url, StringPool.UTF8, unescapeSpaces);
 	}
 
@@ -271,7 +271,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
-		
+
 		String queryString = getQueryString(url);
 
 		if (Validator.isNull(queryString)) {
@@ -289,7 +289,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(path)) {
 			return path;
 		}
-		
+
 		path = StringUtil.replace(path, StringPool.SLASH, _TEMP_SLASH);
 		path = encodeURL(path, true);
 		path = StringUtil.replace(path, _TEMP_SLASH, StringPool.SLASH);
@@ -307,7 +307,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
-		
+
 		return URLCodec.encodeURL(url, StringPool.UTF8, escapeSpaces);
 	}
 
@@ -365,7 +365,7 @@ public class HttpImpl implements Http {
 		if (isProxyHost(hostConfiguration.getHost())) {
 			return _proxyHttpClient;
 		}
-		
+
 		return _httpClient;
 	}
 
@@ -423,7 +423,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
-		
+
 		url = removeProtocol(url);
 
 		int pos = url.indexOf(CharPool.SLASH);
@@ -502,7 +502,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
-		
+
 		try {
 			URL urlObj = new URL(url);
 
@@ -606,7 +606,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
-		
+
 		int pos = url.indexOf(Http.PROTOCOL_DELIMITER);
 
 		if (pos != -1) {
@@ -641,6 +641,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return false;
 		}
+
 		return Validator.isNotNull(getDomain(url));
 	}
 
@@ -649,13 +650,13 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return false;
 		}
-		
+
 		int pos = url.indexOf(Http.PROTOCOL_DELIMITER);
 
 		if (pos != -1) {
 			return true;
 		}
-	
+
 		return false;
 	}
 
@@ -664,7 +665,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNotNull(_PROXY_HOST) && (_PROXY_PORT > 0)) {
 			return true;
 		}
-	
+
 		return false;
 	}
 
@@ -673,7 +674,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(host)) {
 			return false;
 		}
-		
+
 		if (_nonProxyHostsPattern != null) {
 			Matcher matcher = _nonProxyHostsPattern.matcher(host);
 
@@ -690,11 +691,11 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(host)) {
 			return false;
 		}
-		
+
 		if (hasProxyConfig() && !isNonProxyHost(host)) {
 			return true;
 		}
-	
+
 		return false;
 	}
 
@@ -800,7 +801,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
-		
+
 		if (secure) {
 			if (url.startsWith(Http.HTTP_WITH_SLASH)) {
 				return StringUtil.replace(
@@ -846,7 +847,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
-		
+
 		url = removeProtocol(url);
 
 		int pos = url.indexOf(CharPool.SLASH);
@@ -854,7 +855,7 @@ public class HttpImpl implements Http {
 		if (pos > 0) {
 			return url.substring(pos);
 		}
-	
+
 		return url;
 	}
 
@@ -863,7 +864,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url) || Validator.isNull(name)) {
 			return url;
 		}
-		
+
 		int pos = url.indexOf(CharPool.QUESTION);
 
 		if (pos == -1) {
@@ -924,6 +925,7 @@ public class HttpImpl implements Http {
 		if (Validator.isNull(url)) {
 			return url;
 		}
+
 		if (url.startsWith(Http.HTTP_WITH_SLASH)) {
 			return url.substring(Http.HTTP_WITH_SLASH.length());
 		}
@@ -1076,7 +1078,7 @@ public class HttpImpl implements Http {
 		if (headers.length == 0) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
