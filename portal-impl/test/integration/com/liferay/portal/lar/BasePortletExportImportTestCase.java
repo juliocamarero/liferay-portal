@@ -16,19 +16,33 @@ package com.liferay.portal.lar;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.template.TemplateHandler;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.LayoutTestUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetLinkLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
+import com.liferay.portlet.dynamicdatamapping.util.DDMTemplateTestUtil;
+import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplate;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.portlet.PortletPreferences;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -70,6 +84,16 @@ public class BasePortletExportImportTestCase extends BaseExportImportTestCase {
 		validateImportedLinks(getStagedModelUuid(stagedModel));
 	}
 
+	@Test
+	public void testExportImportDisplayStyleGlobalScope() throws Exception {
+		doExportImportDisplayStyle("company");
+	}
+
+	@Test
+	public void testExportImportDisplayStyleLocalScope() throws Exception {
+		doExportImportDisplayStyle(StringPool.BLANK);
+	}
+
 	protected AssetLink addAssetLink(
 			long groupId, String sourceStagedModelUuid,
 			String targetStagedModelUuid, int weight)
@@ -91,6 +115,73 @@ public class BasePortletExportImportTestCase extends BaseExportImportTestCase {
 		addParameter(parameterMap, getNamespace(), name, value);
 	}
 
+	protected void doExportImportDisplayStyle(String scopeType)
+		throws Exception {
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			group.getCompanyId(), getPortletId());
+
+		if (portlet == null) {
+			return;
+		}
+
+		TemplateHandler templateHandler = portlet.getTemplateHandlerInstance();
+
+		if (templateHandler == null) {
+			Assert.assertTrue("This test does not apply", true);
+
+			return;
+		}
+
+		String className = templateHandler.getClassName();
+
+		long displayStyleGroupId = group.getGroupId();
+
+		if (scopeType.equals("company")) {
+			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+				group.getCompanyId());
+
+			displayStyleGroupId = companyGroup.getGroupId();
+		}
+
+		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
+			displayStyleGroupId, PortalUtil.getClassNameId(className), 0);
+
+		Map<String, String[]> preferenceMap = new HashMap<String, String[]>();
+
+		String displayStyle =
+			PortletDisplayTemplate.DISPLAY_STYLE_PREFIX + ddmTemplate.getUuid();
+
+		preferenceMap.put("displayStyle", new String[] {displayStyle});
+		preferenceMap.put(
+			"displayStyleGroupId",
+			new String[] {String.valueOf(ddmTemplate.getGroupId())});
+		preferenceMap.put("lfrScopeType", new String[] {scopeType});
+
+		PortletPreferences portletPreferences = getImportedPortletPreferences(
+			preferenceMap);
+
+		String importedDisplayStyle = portletPreferences.getValue(
+			"displayStyle", StringPool.BLANK);
+
+		Assert.assertEquals(displayStyle, importedDisplayStyle);
+
+		long importedDisplayStyleGroupId = GetterUtil.getLong(
+			portletPreferences.getValue("displayStyleGroupId", null));
+
+		long expectedDisplayStyleGroupId = importedGroup.getGroupId();
+
+		if (scopeType.equals("company")) {
+			Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+				importedGroup.getCompanyId());
+
+			expectedDisplayStyleGroupId = companyGroup.getGroupId();
+		}
+
+		Assert.assertEquals(
+			expectedDisplayStyleGroupId, importedDisplayStyleGroupId);
+	}
+
 	protected void doExportImportPortlet(String portletId) throws Exception {
 		larFile = LayoutLocalServiceUtil.exportPortletInfoAsFile(
 			layout.getPlid(), layout.getGroupId(), portletId,
@@ -103,6 +194,22 @@ public class BasePortletExportImportTestCase extends BaseExportImportTestCase {
 			TestPropsValues.getUserId(), importedLayout.getPlid(),
 			importedGroup.getGroupId(), portletId, getImportParameterMap(),
 			larFile);
+	}
+
+	protected PortletPreferences getImportedPortletPreferences(
+			Map<String, String[]> preferenceMap)
+		throws Exception {
+
+		// Export site LAR
+
+		String portletId = LayoutTestUtil.addPortletToLayout(
+			TestPropsValues.getUserId(), this.layout, getPortletId(),
+			"column-1", preferenceMap);
+
+		doExportImportPortlet(portletId);
+
+		return LayoutTestUtil.getPortletPreferences(
+			importedLayout.getCompanyId(), importedLayout.getPlid(), portletId);
 	}
 
 	protected void validateImportedLinks(String uuid)
