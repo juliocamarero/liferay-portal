@@ -25,7 +25,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Carlos Sierra Andrés
+ * @author Carlos Sierra Andrï¿½s
  * @author Julio Camarero
  * @author Brian Wing Shun Chan
  */
@@ -46,13 +46,8 @@ public class BlogsCompanyRSSRenderer extends BlogsBaseRSSRenderer {
 	}
 
 	@Override
-	public String getRSSName() {
-		try {
-			return _company.getName();
-		}
-		catch (Exception e) {
-			return StringPool.BLANK;
-		}
+	public String getRSSName() throws PortalException, SystemException {
+		return _company.getName();
 	}
 
 	@Override
