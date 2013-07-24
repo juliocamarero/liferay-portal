@@ -58,6 +58,19 @@ public class UpgradeBlogs extends BaseUpgradePortletPreferences {
 		}
 	}
 
+	protected void upgradeDisplayStyle(PortletPreferences portletPreferences)
+		throws Exception {
+
+		String pageDisplayStyle = GetterUtil.getString(
+			portletPreferences.getValue("pageDisplayStyle", null));
+
+		if (Validator.isNotNull(pageDisplayStyle)) {
+			portletPreferences.setValue("displayStyle", pageDisplayStyle);
+		}
+
+		portletPreferences.reset("pageDisplayStyle");
+	}
+
 	@Override
 	protected String upgradePreferences(
 			long companyId, long ownerId, int ownerType, long plid,
@@ -68,22 +81,27 @@ public class UpgradeBlogs extends BaseUpgradePortletPreferences {
 			PortletPreferencesFactoryUtil.fromXML(
 				companyId, ownerId, ownerType, plid, portletId, xml);
 
+		upgradeDisplayStyle(portletPreferences);
+		upgradeRss(portletPreferences);
+
+		return PortletPreferencesFactoryUtil.toXML(portletPreferences);
+	}
+
+	protected void upgradeRss(PortletPreferences portletPreferences)
+		throws Exception {
+
 		String rssFormat = GetterUtil.getString(
 			portletPreferences.getValue("rssFormat", null));
 
 		if (Validator.isNotNull(rssFormat)) {
-			String rssFormatType = RSSUtil.getFormatType(rssFormat);
-			double rssFormatVersion = RSSUtil.getFormatVersion(rssFormat);
-
-			String rssFeedType = RSSUtil.getFeedType(
-				rssFormatType, rssFormatVersion);
-
-			portletPreferences.setValue("rssFeedType", rssFeedType);
+			portletPreferences.setValue(
+				"rssFeedType",
+				RSSUtil.getFeedType(
+					RSSUtil.getFormatType(rssFormat),
+					RSSUtil.getFormatVersion(rssFormat)));
 		}
 
 		portletPreferences.reset("rssFormat");
-
-		return PortletPreferencesFactoryUtil.toXML(portletPreferences);
 	}
 
 }
