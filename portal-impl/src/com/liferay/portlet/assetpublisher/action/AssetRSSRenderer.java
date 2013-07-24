@@ -46,7 +46,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 /**
- * @author Carlos Sierra Andr�s
+ * @author Carlos Sierra Andrés
  * @author Julio Camarero
  * @author Brian Wing Shun Chan
  */

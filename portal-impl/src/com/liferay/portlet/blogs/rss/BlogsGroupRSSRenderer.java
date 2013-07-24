@@ -27,7 +27,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Carlos Sierra Andrés
+ * @author Carlos Sierra AndrÃ©s
  * @author Julio Camarero
  * @author Brian Wing Shun Chan
  */
