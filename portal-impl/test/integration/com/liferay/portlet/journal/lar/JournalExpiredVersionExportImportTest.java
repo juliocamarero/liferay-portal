@@ -120,6 +120,14 @@ public class JournalExpiredVersionExportImportTest
 		Assert.assertTrue("This test does not apply", true);
 	}
 
+	@Override
+	protected void doTestExportImportDisplayStyle(
+			long displayStyleGroupId, String scopeType)
+		throws Exception {
+
+		Assert.assertTrue("This test does not apply", true);
+	}
+
 	protected int getSearchArticlesCount(long companyId, long groupId)
 		throws Exception {
 
