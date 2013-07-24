@@ -158,6 +158,20 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		return sb.toString();
 	}
 
+	protected String getEntryURL(String linkBehavior, AssetEntry assetEntry)
+		throws PortalException, SystemException {
+
+		if (linkBehavior.equals("viewInPortlet")) {
+			return getEntryURLViewInContext(assetEntry);
+		}
+		try {
+			return getEntryURLAssetPublisher(assetEntry);
+		}
+		catch (Exception e) {
+			throw new PortalException(e);
+		}
+	}
+	
 	protected String getEntryURLAssetPublisher(AssetEntry assetEntry)
 		throws Exception {
 
@@ -204,21 +218,6 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 		}
 
 		return viewInContextURL;
-	}
-
-	private String getEntryURL(String linkBehavior, AssetEntry assetEntry)
-		throws PortalException, SystemException {
-
-		if (linkBehavior.equals("viewInPortlet")) {
-			return getEntryURLViewInContext(assetEntry);
-		}
-
-		try {
-			return getEntryURLAssetPublisher(assetEntry);
-		}
-		catch (Exception e) {
-			throw new PortalException(e);
-		}
 	}
 
 	private List<AssetEntry> _assetEntries;
