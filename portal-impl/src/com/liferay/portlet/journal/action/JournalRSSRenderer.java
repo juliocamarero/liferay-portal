@@ -81,40 +81,32 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	public String getFeedURL() throws PortalException, SystemException {
 		ResourceURL feedURL = _resourceResponse.createResourceURL();
 
-		JournalFeed feed = _feed;
-
 		feedURL.setCacheability(ResourceURL.FULL);
 		feedURL.setParameter("struts_action", "/journal/rss");
-		feedURL.setParameter("groupId", String.valueOf(feed.getGroupId()));
-		feedURL.setParameter("feedId", String.valueOf(feed.getFeedId()));
+		feedURL.setParameter("groupId", String.valueOf(_feed.getGroupId()));
+		feedURL.setParameter("feedId", String.valueOf(_feed.getFeedId()));
 
 		return feedURL.toString();
 	}
 
 	@Override
 	public String getRSSFeedType() throws PortalException, SystemException {
-		JournalFeed feed = _feed;
-
-		return feed.getFeedFormat() + "_" + feed.getFeedVersion();
+		return _feed.getFeedFormat() + "_" + _feed.getFeedVersion();
 	}
 
 	@Override
 	public String getRSSName() throws PortalException, SystemException {
-		JournalFeed feed = _feed;
-
-		return feed.getName();
+		return _feed.getName();
 	}
 
 	@Override
 	public void populateFeedEntries(List<? super SyndEntry> syndEntries)
 		throws PortalException, SystemException {
 
-		JournalFeed feed = _feed;
-
 		String languageId = LanguageUtil.getLanguageId(request);
 
 		long plid = PortalUtil.getPlidFromFriendlyURL(
-			themeDisplay.getCompanyId(), feed.getTargetLayoutFriendlyUrl());
+			themeDisplay.getCompanyId(), _feed.getTargetLayoutFriendlyUrl());
 
 		Layout layout = themeDisplay.getLayout();
 
@@ -127,7 +119,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 		}
 
 		List<JournalArticle> articles;
-		articles = JournalRSSUtil.getArticles(feed);
+		articles = JournalRSSUtil.getArticles(_feed);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Syndicating " + articles.size() + " articles");
