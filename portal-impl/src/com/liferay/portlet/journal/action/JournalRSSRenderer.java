@@ -218,8 +218,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	protected JournalFeed getJournalFeed()
 		throws PortalException, SystemException {
 
-		JournalFeed feed = (JournalFeed) request.getAttribute(
-			"rssJournalFeed");
+		JournalFeed feed = (JournalFeed)request.getAttribute("rssJournalFeed");
 
 		if (feed != null) {
 			return feed;

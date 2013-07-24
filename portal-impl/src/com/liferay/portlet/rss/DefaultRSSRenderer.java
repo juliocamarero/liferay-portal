@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ResourceRequest;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -96,8 +97,7 @@ public abstract class DefaultRSSRenderer implements RSSRenderer {
 	 * @throws SystemException
 	 */
 	protected double getRSSVersion() throws PortalException, SystemException {
-		return ParamUtil.getDouble(
-			request, "version", RSSUtil.VERSION_DEFAULT);
+		return ParamUtil.getDouble(request, "version", RSSUtil.VERSION_DEFAULT);
 	}
 
 	protected HttpServletRequest request;
