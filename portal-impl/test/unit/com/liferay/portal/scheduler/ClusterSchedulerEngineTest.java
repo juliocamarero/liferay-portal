@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.cluster.ClusterResponseCallback;
 import com.liferay.portal.kernel.cluster.Clusterable;
 import com.liferay.portal.kernel.cluster.FutureClusterResponses;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.scheduler.JobState;
@@ -1392,9 +1393,8 @@ public class ClusterSchedulerEngineTest {
 		}
 
 		@Override
-		public Lock lock(
-			String className, String key, String owner,
-			boolean retrieveFromCache) {
+		public Lock lock(String className, String key, String owner)
+			throws SystemException {
 
 			if (_lock == null) {
 				Lock lock = new LockImpl();
@@ -1410,8 +1410,9 @@ public class ClusterSchedulerEngineTest {
 
 		@Override
 		public Lock lock(
-			String className, String key, String expectedOwner,
-			String updatedOwner, boolean retrieveFromCache) {
+				String className, String key, String expectedOwner,
+				String updatedOwner)
+			throws SystemException {
 
 			Lock lock = new LockImpl();
 
@@ -1424,9 +1425,8 @@ public class ClusterSchedulerEngineTest {
 		}
 
 		@Override
-		public void unlock(
-			String className, String key, String owner,
-			boolean retrieveFromCache) {
+		public void unlock(String className, String key, String owner)
+			throws SystemException {
 
 			_lock = null;
 		}
