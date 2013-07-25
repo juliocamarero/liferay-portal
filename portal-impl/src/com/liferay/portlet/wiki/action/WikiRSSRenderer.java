@@ -55,8 +55,9 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 
 		super(request);
 
-		_pages = pagesToExport;
 		_diff = diff;
+		_pages = pagesToExport;
+		
 		_nodeId = ParamUtil.getLong(request, "nodeId");
 	}
 
@@ -188,7 +189,6 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 			}
 
 			syndEntry.setTitle(title);
-
 			syndEntry.setUpdatedDate(page.getModifiedDate());
 			syndEntry.setUri(sb.toString());
 
