@@ -51,6 +51,7 @@ public class RSSAction extends DefaultRSSAction {
 			else {
 				List<WikiPage> pages = WikiPageServiceUtil.getNodePages(
 					nodeId, max);
+
 				return new WikiRSSRenderer(request, pages, false);
 			}
 		}

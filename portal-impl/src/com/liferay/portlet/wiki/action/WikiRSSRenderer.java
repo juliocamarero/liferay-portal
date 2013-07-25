@@ -57,7 +57,7 @@ public class WikiRSSRenderer extends DefaultRSSRenderer {
 
 		_diff = diff;
 		_pages = pagesToExport;
-		
+
 		_nodeId = ParamUtil.getLong(request, "nodeId");
 	}
 

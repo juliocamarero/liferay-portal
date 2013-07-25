@@ -51,13 +51,13 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 		List<BlogsEntry> entries, HttpServletRequest request) {
 
 		_entries = entries;
-		_request = request;
-
-		themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		this.request = request;
 
 		_displayStyle = ParamUtil.getString(
 			request, "displayStyle", RSSUtil.DISPLAY_STYLE_DEFAULT);
+
+		themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 	}
 
 	@Override
@@ -90,10 +90,6 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 		return new Date();
 	}
 
-	public HttpServletRequest getRequest() {
-		return _request;
-	}
-
 	@Override
 	public String getRSSDescription() throws PortalException, SystemException {
 		return getRSSName();
@@ -102,7 +98,7 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 	@Override
 	public String getRSSFeedType() throws PortalException, SystemException {
 		String type = ParamUtil.getString(
-			getRequest(), "type", RSSUtil.FORMAT_DEFAULT);
+			request, "type", RSSUtil.FORMAT_DEFAULT);
 
 		return RSSUtil.getFeedType(type, getRSSVersion());
 	}
@@ -112,8 +108,7 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 	 * @throws SystemException
 	 */
 	public double getRSSVersion() throws PortalException, SystemException {
-		return ParamUtil.getDouble(
-			_request, "version", RSSUtil.VERSION_DEFAULT);
+		return ParamUtil.getDouble(request, "version", RSSUtil.VERSION_DEFAULT);
 	}
 
 	@Override
@@ -188,7 +183,6 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 			String link = sb.toString();
 
 			syndEntry.setLink(link);
-
 			syndEntry.setPublishedDate(entry.getDisplayDate());
 			syndEntry.setTitle(entry.getTitle());
 			syndEntry.setUpdatedDate(entry.getModifiedDate());
@@ -201,10 +195,10 @@ public abstract class BlogsBaseRSSRenderer implements RSSRenderer {
 	abstract protected String getEntryURL()
 		throws PortalException, SystemException;
 
+	protected HttpServletRequest request;
 	protected ThemeDisplay themeDisplay;
 
 	private String _displayStyle;
 	private List<BlogsEntry> _entries;
-	private HttpServletRequest _request;
 
 }

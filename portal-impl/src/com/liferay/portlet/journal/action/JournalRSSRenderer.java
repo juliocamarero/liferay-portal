@@ -155,11 +155,9 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 
 			syndEntry.setDescription(syndContent);
 
-			String link;
-			link = getEntryURL(article, layout, themeDisplay);
+			String link = getEntryURL(article, layout, themeDisplay);
 
 			syndEntry.setLink(link);
-
 			syndEntry.setPublishedDate(article.getDisplayDate());
 			syndEntry.setTitle(article.getTitle(languageId));
 			syndEntry.setUpdatedDate(article.getModifiedDate());

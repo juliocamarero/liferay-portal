@@ -115,17 +115,14 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 
 			syndContent.setValue(value);
 
+			String link = getEntryURL(assetLinkBehavior, assetEntry);
+
 			syndEntry.setDescription(syndContent);
-
-			String link;
-			link = getEntryURL(assetLinkBehavior, assetEntry);
-
 			syndEntry.setLink(link);
-
 			syndEntry.setPublishedDate(assetEntry.getPublishDate());
 			syndEntry.setTitle(assetEntry.getTitle(languageId, true));
 			syndEntry.setUpdatedDate(assetEntry.getModifiedDate());
-			syndEntry.setUri(syndEntry.getLink());
+			syndEntry.setUri(link);
 
 			syndEntries.add(syndEntry);
 		}
@@ -146,14 +143,12 @@ public class AssetRSSRenderer extends DefaultRSSRenderer {
 			sb.append(themeDisplay.getPortalURL());
 		}
 
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
 		sb.append(layoutFriendlyURL);
 		sb.append(Portal.FRIENDLY_URL_SEPARATOR);
 		sb.append("asset_publisher/");
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
 		sb.append(portletDisplay.getInstanceId());
-
 		sb.append(StringPool.SLASH);
 
 		return sb.toString();

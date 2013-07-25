@@ -49,9 +49,9 @@ public class RSSAction extends DefaultRSSAction {
 
 		long companyId = ParamUtil.getLong(request, "companyId");
 		long groupId = ParamUtil.getLong(request, "groupId");
-		long organizationId = ParamUtil.getLong(request, "organizationId");
 		int max = ParamUtil.getInteger(
 			request, "max", SearchContainer.DEFAULT_DELTA);
+		long organizationId = ParamUtil.getLong(request, "organizationId");
 
 		List<BlogsEntry> entries = null;
 
