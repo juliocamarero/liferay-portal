@@ -773,6 +773,7 @@ if (Validator.isNotNull(content)) {
 							<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 							<portlet:param name="classNameId" value="<%= String.valueOf(classNameId) %>" />
 							<portlet:param name="templateId" value="<%= (curDDMTemplate != null) ? String.valueOf(curDDMTemplate.getTemplateId()) : StringPool.BLANK %>" />
+							<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
 						</liferay-portlet:renderURL>
 
 						uri: '<%= editTemplateURL %>'
@@ -803,6 +804,7 @@ if (Validator.isNotNull(content)) {
 								<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 								<portlet:param name="classNameId" value="<%= String.valueOf(PortalUtil.getClassNameId(DDMStructure.class)) %>" />
 								<portlet:param name="classPK" value="<%= String.valueOf(ddmStructure.getStructureId()) %>" />
+								<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
 							</liferay-portlet:renderURL>
 
 							uri: '<%= editStructureURL %>'
