@@ -42,67 +42,40 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 		for (AssetCategory assetCategory : assetCategories) {
 			assetCategory = assetCategory.toEscapedModel();
 
-			long[] oldAllCategoryIds = assetEntryQuery.getAllCategoryIds();
+			long[] assetCategoryIds = ArrayUtil.append(assetEntryQuery.getAnyCategoryIds(), assetCategory.getCategoryId());
 
-			long[] newAllAssetCategoryIds = ArrayUtil.append(oldAllCategoryIds, assetCategory.getCategoryId());
-
-			assetEntryQuery.setAllCategoryIds(newAllAssetCategoryIds);
-
-			int groupTotal = 0;
-
-			if (PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX && (assetEntryQuery.getLinkedAssetEntryId() == 0)) {
-				Hits hits = AssetUtil.search(request, assetEntryQuery, start, end);
-
-				groupTotal = hits.getLength();
-
-				total += groupTotal;
-
-				results = AssetUtil.getAssetEntries(hits);
-			}
-			else {
-				groupTotal = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
-
-				total += groupTotal;
-
-				assetEntryQuery.setEnd(end);
-				assetEntryQuery.setStart(start);
-
-				results = AssetEntryServiceUtil.getEntries(assetEntryQuery);
-			}
-
-			if (!results.isEmpty()) {
-				searchContainer.setResults(results);
-
-				request.setAttribute("view.jsp-results", results);
-%>
-
-				<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_vocabulary_assets.jspf" %>
-
-<%
-			}
-
-			if (groupTotal > 0) {
-				if ((end > 0) && (end > groupTotal)) {
-					end -= groupTotal;
-				}
-				else {
-					end = 0;
-				}
-
-				if ((start > 0) && (start > groupTotal)) {
-					start -= groupTotal;
-				}
-				else {
-					start = 0;
-				}
-			}
-
-			assetEntryQuery.setAllCategoryIds(oldAllCategoryIds);
-			assetEntryQuery.setEnd(QueryUtil.ALL_POS);
-			assetEntryQuery.setStart(QueryUtil.ALL_POS);
+			assetEntryQuery.setAnyCategoryIds(assetCategoryIds);
 		}
 
-		searchContainer.setTotal(total);
+		if (PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX && (assetEntryQuery.getLinkedAssetEntryId() == 0)) {
+			Hits hits = AssetUtil.search(request, assetEntryQuery, start, end);
+
+			total = hits.getLength();
+
+			searchContainer.setTotal(total);
+
+			results = AssetUtil.getAssetEntries(hits);
+		}
+		else {
+			total = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
+
+			searchContainer.setTotal(total);
+
+			results = AssetEntryServiceUtil.getEntries(assetEntryQuery);
+		}
+
+		if (!results.isEmpty()) {
+			searchContainer.setResults(results);
+
+			request.setAttribute("view.jsp-results", results);
+
+			String previousLabel = StringPool.BLANK;
+%>
+
+			<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_vocabulary_assets.jspf" %>
+
+<%
+		}
 	}
 	else if (!groupByClass) {
 		assetEntryQuery.setClassNameIds(classNameIds);
