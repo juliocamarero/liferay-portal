@@ -40,27 +40,51 @@ if ((article != null) && article.isDraft()) {
 	var toolbarButtonGroup = [];
 
 	<c:if test="<%= (article != null) && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
+		<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="struts_action" value="/journal/preview_article_content" />
+			<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
+			<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
+			<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
+		</liferay-portlet:renderURL>
+
+		var previewArticleContentURL = '<%= previewArticleContentURL %>';
+
+		var form = A.one('#<portlet:namespace />fm1');
+
+		form.on(
+			'change',
+			function(event) {
+				previewArticleContentURL = null;
+			}
+		);
+
 		toolbarButtonGroup.push(
 			{
 				icon: 'icon-search',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "preview") %>',
 				on: {
 					click: function(event) {
-						var form = A.one('#<portlet:namespace />fm1');
+						event.domEvent.preventDefault();
 
-						var orginalFormAction = form.attr('action');
+						if (previewArticleContentURL) {
+							Liferay.fire('
+								<portlet:namespace/>previewArticle',
+								{
+									title: '<%= article.getTitle(locale) %>',
+									uri: '<%= previewArticleContentURL.toString() %>'
+								}
+							);
+						}
+						else {
+							if (!confirm('<%= UnicodeLanguageUtil.get(pageContext, "this-article-has-changes-and-to-preview-the-content-you-have-to-save-the-article-as-draft") %>')) {
+								return false;
+							}
 
-						form.attr('target', '_blank');
+							form.one('#<portlet:namespace /><%= Constants.CMD %>').val('<%= Constants.UPDATE %>');
+							form.one('#<portlet:namespace />isPreview').val('<%= StringPool.TRUE %>');
 
-						form.one('#<portlet:namespace /><%= Constants.CMD %>').val('<%= Constants.PREVIEW %>');
-
-						<portlet:actionURL var="previewURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-							<portlet:param name="struts_action" value="/journal/preview_article_content" />
-						</portlet:actionURL>
-
-						submitForm(form, '<%= previewURL.toString() %>', false);
-
-						form.attr('action', orginalFormAction);
+							submitForm(form);
+						}
 					}
 				}
 			}
