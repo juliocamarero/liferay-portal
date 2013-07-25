@@ -146,7 +146,9 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 						syndContent);
 			}
 			catch (DocumentException e) {
-				throw new PortalException(e);
+				if (_log.isWarnEnabled()) {
+					_log.warn(e, e);
+				}
 			}
 
 			syndContent.setValue(value);
