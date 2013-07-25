@@ -74,6 +74,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 		super(resourceRequest);
 
 		_feed = feed;
+		_resourceRequest = resourceRequest;
 		_resourceResponse = resourceResponse;
 	}
 
@@ -103,12 +104,12 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	public void populateFeedEntries(List<? super SyndEntry> syndEntries)
 		throws PortalException, SystemException {
 
-		String languageId = LanguageUtil.getLanguageId(request);
+		String languageId = LanguageUtil.getLanguageId(_resourceRequest);
+
+		Layout layout = themeDisplay.getLayout();
 
 		long plid = PortalUtil.getPlidFromFriendlyURL(
 			themeDisplay.getCompanyId(), _feed.getTargetLayoutFriendlyUrl());
-
-		Layout layout = themeDisplay.getLayout();
 
 		if (plid > 0) {
 			try {
@@ -164,7 +165,6 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 
 			syndEntries.add(syndEntry);
 		}
-
 	}
 
 	protected String getEntryURL(
@@ -196,7 +196,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 			}
 
 			PortletURL entryURL = new PortletURLImpl(
-				request, portletId, plid, PortletRequest.RENDER_PHASE);
+				_resourceRequest, portletId, plid, PortletRequest.RENDER_PHASE);
 
 			entryURL.setParameter("struts_action", "/journal_content/view");
 			entryURL.setParameter(
@@ -322,6 +322,7 @@ public class JournalRSSRenderer extends DefaultRSSRenderer {
 	private static Log _log = LogFactoryUtil.getLog(JournalRSSRenderer.class);
 
 	private JournalFeed _feed;
+	private ResourceRequest _resourceRequest;
 	private ResourceResponse _resourceResponse;
 
 }
