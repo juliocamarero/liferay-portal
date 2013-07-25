@@ -33,10 +33,9 @@ public class RSSAction extends DefaultRSSAction {
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
 
-		long id = ParamUtil.getLong(resourceRequest, "id");
-
-		long groupId = ParamUtil.getLong(resourceRequest, "groupId");
 		String feedId = ParamUtil.getString(resourceRequest, "feedId");
+		long groupId = ParamUtil.getLong(resourceRequest, "groupId");
+		long id = ParamUtil.getLong(resourceRequest, "id");
 
 		JournalFeed feed = null;
 
