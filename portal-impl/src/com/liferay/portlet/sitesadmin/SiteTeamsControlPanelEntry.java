@@ -42,4 +42,19 @@ public class SiteTeamsControlPanelEntry extends BaseControlPanelEntry {
 		return false;
 	}
 
+	@Override
+	protected boolean hasAccessPermissionExplicitlyGranted(
+			PermissionChecker permissionChecker, Group group, Portlet portlet)
+		throws PortalException, SystemException {
+
+		if (GroupPermissionUtil.contains(
+				permissionChecker, group.getGroupId(),
+				ActionKeys.MANAGE_TEAMS)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 }
