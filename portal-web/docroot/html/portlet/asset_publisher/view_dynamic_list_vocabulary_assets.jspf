@@ -16,7 +16,30 @@
 
 <c:choose>
 	<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
-		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, results, contextObjects) %>
+
+<%
+		Map<String, List<AssetEntry>> filteredEntriesMap = AssetPublisherUtil.getFilteredCategoryLabelsAndEntries(results);
+
+		Iterator filteredEntriesIterator = filteredEntriesMap.entrySet().iterator();
+
+		while (filteredEntriesIterator.hasNext()) {
+			Map.Entry entry = (Map.Entry)filteredEntriesIterator.next();
+
+			String label = GetterUtil.getString(entry.getKey());
+
+			if (previousLabel.equals(StringPool.BLANK) || !previousLabel.equals(label)) {
+%>
+
+				<h3 class="asset-entries-group-label"><%= label %></h3>
+
+				<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, (List)entry.getValue(), contextObjects) %>
+
+<%
+				previousLabel = label;
+			}
+		}
+%>
+
 	</c:when>
 	<c:otherwise>
 
@@ -50,22 +73,22 @@
 
 				<h3 class="asset-entries-group-label"><%= label %></h3>
 
-		<%
+			<%
 				previousLabel = label;
-		}
+			}
 
-		try {
+			try {
+			%>
+
+				<%@ include file="/html/portlet/asset_publisher/view_display.jspf" %>
+
+		<%
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
+			}
+		}
 		%>
-
-			<%@ include file="/html/portlet/asset_publisher/view_display.jspf" %>
-
-	<%
-		}
-		catch (Exception e) {
-			_log.error(e.getMessage());
-		}
-	}
-	%>
 
 	</c:otherwise>
 </c:choose>
