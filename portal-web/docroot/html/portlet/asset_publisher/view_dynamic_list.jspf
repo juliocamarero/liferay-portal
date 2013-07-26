@@ -76,16 +76,7 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 				request.setAttribute("view.jsp-results", results);
 %>
 
-				<h3 class="asset-entries-group-label"><%= assetCategory.getTitle(locale) %></h3>
-
-				<c:choose>
-					<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
-						<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, results, contextObjects) %>
-					</c:when>
-					<c:otherwise>
-						<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_asset.jspf" %>
-					</c:otherwise>
-				</c:choose>
+				<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_vocabulary_assets.jspf" %>
 
 <%
 			}
@@ -141,14 +132,7 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 		request.setAttribute("view.jsp-results", results);
 %>
 
-		<c:choose>
-			<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
-				<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, results, contextObjects) %>
-			</c:when>
-			<c:otherwise>
-				<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_asset.jspf" %>
-			</c:otherwise>
-		</c:choose>
+		<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_all_assets.jspf" %>
 
 <%
 	}
@@ -193,16 +177,7 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 			if (!results.isEmpty()) {
 %>
 
-				<h3 class="asset-entries-group-label"><%= ResourceActionsUtil.getModelResource(locale, groupAssetRendererFactory.getClassName()) %></h3>
-
-				<c:choose>
-					<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
-						<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, results, contextObjects) %>
-					</c:when>
-					<c:otherwise>
-						<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_asset.jspf" %>
-					</c:otherwise>
-				</c:choose>
+				<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_class_assets.jspf" %>
 
 <%
 			}
