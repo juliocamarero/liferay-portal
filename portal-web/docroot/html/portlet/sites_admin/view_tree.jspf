@@ -23,18 +23,6 @@ if (groupId > 0) {
 	group = GroupServiceUtil.getGroup(groupId);
 }
 
-long parentGroupId = GroupConstants.DEFAULT_PARENT_GROUP_ID;
-
-String parentGroupName = LanguageUtil.get(pageContext, "sites-home");
-
-if ((group != null) && !group.isRoot()) {
-	Group parentGroup = group.getParentGroup();
-
-	parentGroupId = parentGroup.getGroupId();
-
-	parentGroupName = HtmlUtil.escape(parentGroup.getDescriptiveName());
-}
-
 List<Group> groups = new ArrayList<Group>();
 
 if (filterManageableGroups) {
@@ -46,17 +34,28 @@ if (groupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
 
 	groups.add(GroupLocalServiceUtil.getGroup(groupId));
 }
+
+if (group != null) {
+	SitesUtil.addPortletBreadcrumbEntries(group, request, renderResponse);
+}
 %>
 
-<c:if test="<%= group != null %>">
+<c:if test="<%= (group != null) %>">
+	<liferay-util:include page="/html/portlet/sites_admin/toolbar.jsp" />
 
 	<%
-	SitesUtil.addPortletBreadcrumbEntries(group, request, renderResponse);
-	%>
+	long parentGroupId = GroupConstants.DEFAULT_PARENT_GROUP_ID;
+	String parentGroupName = LanguageUtil.get(pageContext, "sites-home");
 
-	<liferay-util:include page="/html/portlet/sites_admin/toolbar.jsp">
-		<liferay-util:param name="toolbarItem" value='<%= (group == null) ? "add" : "browse" %>' />
-	</liferay-util:include>
+	if (!group.isRoot()) {
+		Group parentGroup = group.getParentGroup();
+
+		if (GroupPermissionUtil.contains(permissionChecker, parentGroup, ActionKeys.VIEW)) {
+			parentGroupId = parentGroup.getGroupId();
+			parentGroupName = parentGroup.getDescriptiveName();
+		}
+	}
+	%>
 
 	<portlet:renderURL var="headerBackURL">
 		<portlet:param name="struts_action" value="/sites_admin/view" />
@@ -66,9 +65,8 @@ if (groupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
 	<liferay-ui:header
 		backLabel="<%= parentGroupName %>"
 		backURL="<%= headerBackURL.toString() %>"
-		escapeXml="<%= false %>"
 		localizeTitle="<%= false %>"
-		title="<%= HtmlUtil.escape(group.getDescriptiveName()) %>"
+		title="<%= group.getDescriptiveName() %>"
 	/>
 </c:if>
 
@@ -113,6 +111,15 @@ if (groupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
 			%>
 
 			<liferay-ui:search-container-results>
+
+				<%
+				long parentGroupId = _getParentGroupId(request, group, filterManageableGroups);
+
+				if (group != null) {
+					parentGroupId = group.getGroupId();
+				}
+				%>
+
 				<c:choose>
 					<c:when test="<%= !searchTerms.hasSearchTerms() && (parentGroupId <= 0) && (filterManageableGroups) %>">
 
@@ -233,3 +240,17 @@ if (groupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
 		</aui:col>
 	</c:if>
 </aui:row>
+
+<%!
+private long _getParentGroupId(HttpServletRequest request, Group group, boolean filterManageableGroups) {
+	if (group != null) {
+		return group.getGroupId();
+	}
+
+	if (filterManageableGroups) {
+		return GroupConstants.ANY_PARENT_GROUP_ID;
+	}
+
+	return GroupConstants.DEFAULT_PARENT_GROUP_ID;
+}
+%>

@@ -88,7 +88,6 @@ public abstract class BaseSocialActivityInterpreterTestCase
 			WebKeys.COMPANY_ID, TestPropsValues.getCompanyId());
 		request.setAttribute(
 			WebKeys.CURRENT_URL, "http://localhost:80/web/guest/home");
-
 		request.setAttribute(WebKeys.USER, TestPropsValues.getUser());
 
 		ServicePreAction servicePreAction = new ServicePreAction();

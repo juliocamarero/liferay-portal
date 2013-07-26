@@ -12,24 +12,26 @@
  * details.
  */
 
-package com.liferay.portlet.shopping.search;
+package com.liferay.portal.kernel.portlet;
 
-import com.liferay.portal.kernel.dao.search.DAOParamUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
-
-import javax.portlet.PortletRequest;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Raymond Augé
  */
-public class CouponSearchTerms extends CouponDisplayTerms {
+public class PortletConfigurationLayoutUtil {
 
-	public CouponSearchTerms(PortletRequest portletRequest) {
-		super(portletRequest);
+	public static Layout getLayout(ThemeDisplay themeDisplay) {
+		Layout layout = themeDisplay.getLayout();
 
-		active = ParamUtil.getBoolean(portletRequest, ACTIVE, true);
-		code = DAOParamUtil.getLike(portletRequest, CODE);
-		discountType = DAOParamUtil.getString(portletRequest, DISCOUNT_TYPE);
+		if (layout.isTypeControlPanel() &&
+			(themeDisplay.getScopeGroupId() != layout.getGroupId())) {
+
+			return null;
+		}
+
+		return layout;
 	}
 
 }

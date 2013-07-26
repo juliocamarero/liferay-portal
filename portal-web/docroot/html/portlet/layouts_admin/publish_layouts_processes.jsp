@@ -18,7 +18,9 @@
 
 <%
 String closeRedirect = ParamUtil.getString(request, "closeRedirect");
+
 long groupId = ParamUtil.getLong(request, "groupId");
+boolean localPublishing = ParamUtil.getBoolean(request, "localPublishing");
 
 PortletURL renderURL = liferayPortletResponse.createRenderURL();
 
@@ -40,6 +42,8 @@ else {
 }
 
 OrderByComparator orderByComparator = BackgroundTaskUtil.getBackgroundTaskOrderByComparator(orderByCol, orderByType);
+
+String backgroundTaskExecutorClassName = localPublishing ? LayoutStagingBackgroundTaskExecutor.class.getName() : LayoutRemoteStagingBackgroundTaskExecutor.class.getName();
 %>
 
 <liferay-ui:search-container
@@ -48,10 +52,10 @@ OrderByComparator orderByComparator = BackgroundTaskUtil.getBackgroundTaskOrderB
 	orderByCol="<%= orderByCol %>"
 	orderByComparator="<%= orderByComparator %>"
 	orderByType="<%= orderByType %>"
-	total="<%= BackgroundTaskLocalServiceUtil.getBackgroundTasksCount(groupId, LayoutStagingBackgroundTaskExecutor.class.getName()) %>"
+	total="<%= BackgroundTaskLocalServiceUtil.getBackgroundTasksCount(groupId, backgroundTaskExecutorClassName) %>"
 >
 	<liferay-ui:search-container-results
-		results="<%= BackgroundTaskLocalServiceUtil.getBackgroundTasks(groupId, LayoutStagingBackgroundTaskExecutor.class.getName(), searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
+		results="<%= BackgroundTaskLocalServiceUtil.getBackgroundTasks(groupId, backgroundTaskExecutorClassName, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
 	/>
 
 	<liferay-ui:search-container-row

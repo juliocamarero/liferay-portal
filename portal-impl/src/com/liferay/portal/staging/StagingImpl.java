@@ -53,14 +53,11 @@ import com.liferay.portal.kernel.staging.Staging;
 import com.liferay.portal.kernel.staging.StagingConstants;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.DateRange;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -73,6 +70,7 @@ import com.liferay.portal.kernel.workflow.WorkflowTaskManagerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.lar.LayoutExporter;
 import com.liferay.portal.lar.backgroundtask.BackgroundTaskContextMapFactory;
+import com.liferay.portal.lar.backgroundtask.LayoutRemoteStagingBackgroundTaskExecutor;
 import com.liferay.portal.lar.backgroundtask.LayoutStagingBackgroundTaskExecutor;
 import com.liferay.portal.lar.backgroundtask.PortletStagingBackgroundTaskExecutor;
 import com.liferay.portal.messaging.LayoutsLocalPublisherRequest;
@@ -106,8 +104,6 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.WorkflowInstanceLinkLocalServiceUtil;
 import com.liferay.portal.service.http.GroupServiceHttp;
-import com.liferay.portal.service.http.LayoutServiceHttp;
-import com.liferay.portal.service.http.StagingServiceHttp;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -122,13 +118,12 @@ import com.liferay.portlet.documentlibrary.FileExtensionException;
 import com.liferay.portlet.documentlibrary.FileNameException;
 import com.liferay.portlet.documentlibrary.FileSizeException;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -241,7 +236,7 @@ public class StagingImpl implements Staging {
 		Map<String, Serializable> taskContextMap =
 			BackgroundTaskContextMapFactory.buildTaskContextMap(
 				userId, sourceGroupId, false, null, parameterMap,
-				ActionKeys.PUBLISH_STAGING, dateRange.getStartDate(),
+				Constants.PUBLISH, dateRange.getStartDate(),
 				dateRange.getEndDate(), StringPool.BLANK);
 
 		taskContextMap.put("sourceGroupId", sourceGroupId);
@@ -314,61 +309,26 @@ public class StagingImpl implements Staging {
 			throw ree;
 		}
 
-		long stagingRequestId = 0;
+		Map<String, Serializable> taskContextMap =
+			BackgroundTaskContextMapFactory.buildTaskContextMap(
+				user.getUserId(), sourceGroupId, privateLayout, null,
+				parameterMap, Constants.PUBLISH, startDate, endDate, null);
 
-		File file = null;
+		taskContextMap.put("httpPrincipal", httpPrincipal);
 
-		FileInputStream fileInputStream = null;
+		if (layoutIdMap != null) {
+			HashMap<Long, Boolean> serializableLayoutIdMap =
+				new HashMap<Long, Boolean>(layoutIdMap);
 
-		try {
-			file = exportLayoutsAsFile(
-				sourceGroupId, privateLayout, layoutIdMap, parameterMap,
-				remoteGroupId, startDate, endDate, httpPrincipal);
-
-			String checksum = FileUtil.getMD5Checksum(file);
-
-			fileInputStream = new FileInputStream(file);
-
-			stagingRequestId = StagingServiceHttp.createStagingRequest(
-				httpPrincipal, remoteGroupId, checksum);
-
-			byte[] bytes =
-				new byte[PropsValues.STAGING_REMOTE_TRANSFER_BUFFER_SIZE];
-
-			int i = 0;
-
-			while ((i = fileInputStream.read(bytes)) >= 0) {
-				if (i < PropsValues.STAGING_REMOTE_TRANSFER_BUFFER_SIZE) {
-					byte[] tempBytes = new byte[i];
-
-					System.arraycopy(bytes, 0, tempBytes, 0, i);
-
-					StagingServiceHttp.updateStagingRequest(
-						httpPrincipal, stagingRequestId, file.getName(),
-						tempBytes);
-				}
-				else {
-					StagingServiceHttp.updateStagingRequest(
-						httpPrincipal, stagingRequestId, file.getName(), bytes);
-				}
-
-				bytes =
-					new byte[PropsValues.STAGING_REMOTE_TRANSFER_BUFFER_SIZE];
-			}
-
-			StagingServiceHttp.publishStagingRequest(
-				httpPrincipal, stagingRequestId, privateLayout, parameterMap);
+			taskContextMap.put("layoutIdMap", serializableLayoutIdMap);
 		}
-		finally {
-			StreamUtil.cleanUp(fileInputStream);
 
-			FileUtil.delete(file);
+		taskContextMap.put("remoteGroupId", remoteGroupId);
 
-			if (stagingRequestId > 0) {
-				StagingServiceHttp.cleanUpStagingRequest(
-					httpPrincipal, stagingRequestId);
-			}
-		}
+		BackgroundTaskLocalServiceUtil.addBackgroundTask(
+			user.getUserId(), sourceGroupId, StringPool.BLANK, null,
+			LayoutRemoteStagingBackgroundTaskExecutor.class, taskContextMap,
+			new ServiceContext());
 	}
 
 	@Override
@@ -838,7 +798,7 @@ public class StagingImpl implements Staging {
 			errorMessage = LanguageUtil.format(
 				locale,
 				"the-available-languages-in-the-lar-file-x-do-not-match-the-" +
-					"portal's-available-languages-x",
+					"site's-available-languages-x",
 				new String[] {
 					StringUtil.merge(
 						le.getSourceAvailableLocales(),
@@ -858,7 +818,7 @@ public class StagingImpl implements Staging {
 				cmd = (String)contextMap.get(Constants.CMD);
 			}
 
-			if (Validator.equals(cmd, ActionKeys.PUBLISH_STAGING)) {
+			if (Validator.equals(cmd, Constants.PUBLISH)) {
 				errorMessage = LanguageUtil.get(
 					locale,
 					"there-are-missing-references-that-could-not-be-found-in-" +
@@ -887,6 +847,16 @@ public class StagingImpl implements Staging {
 			errorMessage = LanguageUtil.get(
 				locale, "please-import-a-lar-file-for-the-current-portlet");
 			errorType = ServletResponseConstants.SC_FILE_CUSTOM_EXCEPTION;
+		}
+		else if (e instanceof RemoteExportException) {
+			RemoteExportException ree = (RemoteExportException)e;
+
+			errorType = ServletResponseConstants.SC_FILE_CUSTOM_EXCEPTION;
+
+			if (ree.getType() == RemoteExportException.NO_LAYOUTS) {
+				errorMessage = LanguageUtil.get(
+					locale, "no-pages-are-selected-for-export");
+			}
 		}
 		else {
 			errorType = ServletResponseConstants.SC_FILE_CUSTOM_EXCEPTION;
@@ -949,7 +919,8 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @see #getMissingRemoteParentLayouts(HttpPrincipal, Layout, long)
+	 * @see LayoutRemoteStagingBackgroundTaskExecutor#getMissingRemoteParentLayouts(
+	 *      HttpPrincipal, Layout, long)
 	 */
 	@Override
 	public List<Layout> getMissingParentLayouts(Layout layout, long liveGroupId)
@@ -1395,8 +1366,7 @@ public class StagingImpl implements Staging {
 		Map<String, Serializable> taskContextMap =
 			BackgroundTaskContextMapFactory.buildTaskContextMap(
 				userId, sourceGroupId, privateLayout, layoutIds, parameterMap,
-				ActionKeys.PUBLISH_STAGING, startDate, endDate,
-				StringPool.BLANK);
+				Constants.PUBLISH, startDate, endDate, StringPool.BLANK);
 
 		taskContextMap.put("sourceGroupId", sourceGroupId);
 		taskContextMap.put("targetGroupId", targetGroupId);
@@ -1834,7 +1804,7 @@ public class StagingImpl implements Staging {
 	protected void addDefaultLayoutSetBranch(
 			long userId, long groupId, String groupName, boolean privateLayout,
 			ServiceContext serviceContext)
-		throws SystemException {
+		throws PortalException, SystemException {
 
 		String masterBranchDescription =
 			LayoutSetBranchConstants.MASTER_BRANCH_DESCRIPTION_PUBLIC;
@@ -1845,7 +1815,8 @@ public class StagingImpl implements Staging {
 		}
 
 		String description = LanguageUtil.format(
-			LocaleUtil.getDefault(), masterBranchDescription, groupName);
+			PortalUtil.getSiteDefaultLocale(groupId), masterBranchDescription,
+			groupName);
 
 		try {
 			LayoutSetBranch layoutSetBranch =
@@ -2037,62 +2008,6 @@ public class StagingImpl implements Staging {
 		}
 	}
 
-	protected File exportLayoutsAsFile(
-			long sourceGroupId, boolean privateLayout,
-			Map<Long, Boolean> layoutIdMap, Map<String, String[]> parameterMap,
-			long remoteGroupId, Date startDate, Date endDate,
-			HttpPrincipal httpPrincipal)
-		throws Exception {
-
-		if ((layoutIdMap == null) || layoutIdMap.isEmpty()) {
-			return LayoutLocalServiceUtil.exportLayoutsAsFile(
-				sourceGroupId, privateLayout, null, parameterMap, startDate,
-				endDate);
-		}
-		else {
-			List<Layout> layouts = new ArrayList<Layout>();
-
-			for (Map.Entry<Long, Boolean> entry : layoutIdMap.entrySet()) {
-				long plid = GetterUtil.getLong(String.valueOf(entry.getKey()));
-				boolean includeChildren = entry.getValue();
-
-				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
-
-				if (!layouts.contains(layout)) {
-					layouts.add(layout);
-				}
-
-				List<Layout> parentLayouts = getMissingRemoteParentLayouts(
-					httpPrincipal, layout, remoteGroupId);
-
-				for (Layout parentLayout : parentLayouts) {
-					if (!layouts.contains(parentLayout)) {
-						layouts.add(parentLayout);
-					}
-				}
-
-				if (includeChildren) {
-					for (Layout childLayout : layout.getAllChildren()) {
-						if (!layouts.contains(childLayout)) {
-							layouts.add(childLayout);
-						}
-					}
-				}
-			}
-
-			long[] layoutIds = getLayoutIds(layouts);
-
-			if (layoutIds.length <= 0) {
-				throw new RemoteExportException(
-					RemoteExportException.NO_LAYOUTS);
-			}
-
-			return LayoutLocalServiceUtil.exportLayoutsAsFile(
-				sourceGroupId, privateLayout, layoutIds, parameterMap,
-				startDate, endDate);
-		}
-	}
-
 	protected boolean getBoolean(
 		PortletRequest portletRequest, Group group, String param) {
 
@@ -2127,40 +2042,6 @@ public class StagingImpl implements Staging {
 		return ParamUtil.getLong(
 			portletRequest, param,
 			GetterUtil.getLong(group.getTypeSettingsProperty(param)));
-	}
-
-	/**
-	 * @see #getMissingParentLayouts(Layout, long)
-	 */
-	protected List<Layout> getMissingRemoteParentLayouts(
-			HttpPrincipal httpPrincipal, Layout layout, long remoteGroupId)
-		throws Exception {
-
-		List<Layout> missingRemoteParentLayouts = new ArrayList<Layout>();
-
-		long parentLayoutId = layout.getParentLayoutId();
-
-		while (parentLayoutId > 0) {
-			Layout parentLayout = LayoutLocalServiceUtil.getLayout(
-				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
-
-			try {
-				LayoutServiceHttp.getLayoutByUuidAndGroupId(
-					httpPrincipal, parentLayout.getUuid(), remoteGroupId,
-					parentLayout.getPrivateLayout());
-
-				// If one parent is found all others are assumed to exist
-
-				break;
-			}
-			catch (NoSuchLayoutException nsle) {
-				missingRemoteParentLayouts.add(parentLayout);
-
-				parentLayoutId = parentLayout.getParentLayoutId();
-			}
-		}
-
-		return missingRemoteParentLayouts;
 	}
 
 	protected PortalPreferences getPortalPreferences(User user)

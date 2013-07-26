@@ -12,22 +12,28 @@
  * details.
  */
 
-package com.liferay.portlet.workflowtasks.search;
+package com.liferay.portlet.socialactivity;
 
-import com.liferay.portal.kernel.dao.search.DAOParamUtil;
-
-import javax.portlet.PortletRequest;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Portlet;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portlet.BaseControlPanelEntry;
 
 /**
- * @author Marcellus Tavares
+ * @author Sergio González
  */
-public class WorkflowTaskSearchTerms extends WorkflowTaskDisplayTerms {
+public class SocialActivityControlPanelEntry extends BaseControlPanelEntry {
 
-	public WorkflowTaskSearchTerms(PortletRequest portletRequest) {
-		super(portletRequest);
+	@Override
+	protected boolean hasAccessPermissionDenied(
+			PermissionChecker permissionChecker, Group group, Portlet portlet)
+		throws Exception {
 
-		name = DAOParamUtil.getLike(portletRequest, NAME);
-		type = DAOParamUtil.getLike(portletRequest, TYPE);
+		if (group.isLayoutSetPrototype()) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
