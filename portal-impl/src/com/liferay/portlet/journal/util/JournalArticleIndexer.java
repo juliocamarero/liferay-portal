@@ -50,6 +50,7 @@ import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUt
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.portlet.dynamicdatamapping.util.DDMIndexerUtil;
 import com.liferay.portlet.dynamicdatamapping.util.DDMUtil;
+import com.liferay.portlet.journal.NoSuchArticleException;
 import com.liferay.portlet.journal.asset.JournalArticleAssetRendererFactory;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
@@ -604,6 +605,14 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 				junction.add(draftArticlesJunction);
 
+				Junction expiredArticlesJunction =
+						RestrictionsFactoryUtil.conjunction();
+
+				expiredArticlesJunction.add(
+						statusProperty.eq(WorkflowConstants.STATUS_EXPIRED));
+
+				junction.add(expiredArticlesJunction);
+
 				dynamicQuery.add(junction);
 
 				Property indexableProperty = PropertyFactoryUtil.forName(
@@ -633,6 +642,33 @@ public class JournalArticleIndexer extends BaseIndexer {
 					latestArticleIds.add(latestArticleId);
 
 					article = latestArticle;
+				}
+				else if(article.getStatus() ==
+						WorkflowConstants.STATUS_EXPIRED){
+
+					try {
+						JournalArticleLocalServiceUtil.getLatestArticle(
+							article.getResourcePrimKey(),
+							WorkflowConstants.STATUS_APPROVED);
+
+						return;
+					} catch (NoSuchArticleException nsae) {
+
+						JournalArticle latestArticle =
+							JournalArticleLocalServiceUtil.getLatestArticle(
+								article.getResourcePrimKey(),
+								WorkflowConstants.STATUS_EXPIRED);
+
+						String latestArticleId = latestArticle.getArticleId();
+
+						if (latestArticleIds.contains(latestArticleId)) {
+							return;
+						}
+
+						latestArticleIds.add(latestArticleId);
+
+						article = latestArticle;
+					}
 				}
 
 				Document document = getDocument(article);
