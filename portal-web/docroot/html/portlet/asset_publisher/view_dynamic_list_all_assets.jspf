@@ -19,6 +19,26 @@
 		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, results, contextObjects) %>
 	</c:when>
 	<c:otherwise>
-		<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_asset.jspf" %>
+
+		<%
+		for (int assetEntryIndex = 0; assetEntryIndex < results.size(); assetEntryIndex++) {
+		%>
+
+			<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_asset.jspf" %>
+
+			<%
+			try {
+			%>
+
+				<%@ include file="/html/portlet/asset_publisher/view_display.jspf" %>
+
+		<%
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
+			}
+		}
+		%>
+
 	</c:otherwise>
 </c:choose>
