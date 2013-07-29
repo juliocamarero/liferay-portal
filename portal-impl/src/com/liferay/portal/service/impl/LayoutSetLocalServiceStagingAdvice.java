@@ -73,7 +73,10 @@ public class LayoutSetLocalServiceStagingAdvice
 		Object thisObject = methodInvocation.getThis();
 		Object[] arguments = methodInvocation.getArguments();
 
-		if (methodName.equals("updateLayoutSetPrototypeLinkEnabled") &&
+		if (methodName.equals("createLayout")) {
+			return methodInvocation.proceed();
+		}
+		else if (methodName.equals("updateLayoutSetPrototypeLinkEnabled") &&
 			(arguments.length == 5)) {
 
 			updateLayoutSetPrototypeLinkEnabled(
@@ -365,6 +368,7 @@ public class LayoutSetLocalServiceStagingAdvice
 		new HashSet<String>();
 
 	static {
+		_layoutSetLocalServiceStagingAdviceMethodNames.add("createLayout");
 		_layoutSetLocalServiceStagingAdviceMethodNames.add(
 			"updateLayoutSetPrototypeLinkEnabled");
 		_layoutSetLocalServiceStagingAdviceMethodNames.add("updateLogo");
