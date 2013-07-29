@@ -185,6 +185,21 @@ public class AssetPublisherUtil {
 		return getAssetPublisher().getEmailFromName(preferences, companyId);
 	}
 
+	public static Map<String, List<AssetEntry>>
+		getFilteredCategoryLabelsAndEntries(List<AssetEntry> entries)
+			throws SystemException {
+
+		return getAssetPublisher().getFilteredCategoryLabelsAndEntries(entries);
+	}
+
+	public static Map<String, List<AssetEntry>>
+		getFilteredClassLabelAndEntries(
+			List<AssetEntry> entries, long[] classNameIds, Locale locale) {
+
+		return getAssetPublisher().getFilteredClassLabelAndEntries(
+			entries, classNameIds, locale);
+	}
+
 	public static long getGroupIdFromScopeId(
 			String scopeId, long siteGroupId, boolean privateLayout)
 		throws PortalException, SystemException {

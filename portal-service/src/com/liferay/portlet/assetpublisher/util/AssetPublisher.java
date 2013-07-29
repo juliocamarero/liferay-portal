@@ -120,6 +120,14 @@ public interface AssetPublisher {
 			PortletPreferences preferences, long companyId)
 		throws SystemException;
 
+	public Map<String, List<AssetEntry>>
+		getFilteredCategoryLabelsAndEntries(List<AssetEntry> entries)
+			throws SystemException;
+
+	public Map<String, List<AssetEntry>>
+		getFilteredClassLabelAndEntries(
+			List<AssetEntry> entries, long[] classNameIds, Locale locale);
+
 	public long getGroupIdFromScopeId(
 			String scopeId, long siteGroupId, boolean privateLayout)
 		throws PortalException, SystemException;
