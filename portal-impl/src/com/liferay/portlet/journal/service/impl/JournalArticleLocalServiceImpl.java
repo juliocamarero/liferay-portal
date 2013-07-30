@@ -4685,7 +4685,7 @@ public class JournalArticleLocalServiceImpl
 			reindex(article);
 		}
 
-		return article;
+		return getArticle(article.getPrimaryKey());
 	}
 
 	/**
