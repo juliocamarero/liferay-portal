@@ -3331,8 +3331,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>101</portlet-name>
-		<display-name>Asset Publisher</display-name>
+		<portlet-name>192</portlet-name>
+		<display-name>Most viewed assets</display-name>
 		<portlet-class>com.liferay.portlet.StrutsPortlet</portlet-class>
 		<init-param>
 			<name>config-template</name>
@@ -3351,6 +3351,16 @@
 			<mime-type>text/html</mime-type>
 		</supports>
 		<resource-bundle>com.liferay.portlet.StrutsResourceBundle</resource-bundle>
+		<portlet-preferences>
+			<preference>
+				<name>orderByColumn1</name>
+				<value>viewCount</value>
+			</preference>
+			<preference>
+				<name>orderByType1</name>
+				<value>DESC</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>guest</role-name>
 		</security-role-ref>
@@ -3366,8 +3376,8 @@
 		<supported-public-render-parameter>tags</supported-public-render-parameter>
 	</portlet>
 	<portlet>
-		<portlet-name>101</portlet-name>
-		<display-name>Asset Publisher</display-name>
+		<portlet-name>193</portlet-name>
+		<display-name>Highest rated assets</display-name>
 		<portlet-class>com.liferay.portlet.StrutsPortlet</portlet-class>
 		<init-param>
 			<name>config-template</name>
@@ -3386,6 +3396,16 @@
 			<mime-type>text/html</mime-type>
 		</supports>
 		<resource-bundle>com.liferay.portlet.StrutsResourceBundle</resource-bundle>
+		<portlet-preferences>
+			<preference>
+				<name>orderByColumn1</name>
+				<value>ratings</value>
+			</preference>
+			<preference>
+				<name>orderByType1</name>
+				<value>DESC</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>guest</role-name>
 		</security-role-ref>
