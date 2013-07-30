@@ -266,6 +266,7 @@ portletURL.setParameter("tabs1", tabs1);
 
 	<portlet:actionURL var="emptyTrashURL">
 		<portlet:param name="struts_action" value="/trash/edit_entry" />
+		<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 	</portlet:actionURL>
 
 	<liferay-ui:trash-empty
