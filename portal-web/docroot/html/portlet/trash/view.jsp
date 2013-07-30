@@ -131,7 +131,7 @@ portletURL.setParameter("tabs1", tabs1);
 
 		pageContext.setAttribute("results", results);
 
-		if ((total == 0) && Validator.isNotNull(searchTerms.getKeywords())) {
+		if ((searchContainer.getTotal() == 0) && Validator.isNotNull(searchTerms.getKeywords())) {
 			searchContainer.setEmptyResultsMessage(LanguageUtil.format(pageContext, "no-entries-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(searchTerms.getKeywords()) + "</strong>"));
 		}
 		%>
@@ -270,7 +270,7 @@ portletURL.setParameter("tabs1", tabs1);
 
 	<liferay-ui:trash-empty
 		portletURL="<%= emptyTrashURL %>"
-		totalEntries="<%= total %>"
+		totalEntries="<%= searchContainer.getTotal() %>"
 	/>
 
 	<aui:form action="<%= searchURL.toString() %>" method="get" name="fm">
