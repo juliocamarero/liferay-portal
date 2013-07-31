@@ -50,9 +50,8 @@
 
 			searchContainer.setTotal(total);
 
-			if (searchContainer.isRecalculateCur()) {
-				assetEntryQuery = new AssetEntryQuery(MBMessage.class.getName(), searchContainer);
-			}
+			assetEntryQuery.setEnd(searchContainer.getEnd());
+			assetEntryQuery.setStart(searchContainer.getStart());
 
 			results = AssetEntryServiceUtil.getEntries(assetEntryQuery);
 		}
@@ -85,7 +84,6 @@
 		}
 
 		pageContext.setAttribute("results", results);
-		pageContext.setAttribute("total", total);
 		%>
 
 	</liferay-ui:search-container-results>

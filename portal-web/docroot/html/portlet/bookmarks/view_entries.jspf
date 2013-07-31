@@ -49,19 +49,22 @@ OrderByComparator orderByComparator = BookmarksUtil.getEntryOrderByComparator(or
 
 			assetEntryQuery.setExcludeZeroViewCount(false);
 
-			results = AssetEntryServiceUtil.getEntries(assetEntryQuery);
-			total = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
+			searchContainer.setTotal(total);
 
-			pageContext.setAttribute("results", results);
-			pageContext.setAttribute("total", total);
+			assetEntryQuery.setEnd(searchContainer.getEnd());
+			assetEntryQuery.setStart(searchContainer.getStart());
+
+			results = AssetEntryServiceUtil.getEntries(assetEntryQuery);
+
+			searchContainer.setResults(results);
 		}
 		else {
 			results = BookmarksEntryServiceUtil.getEntries(scopeGroupId, folderId, searchContainer.getStart(), searchContainer.getEnd(), orderByComparator);
 			total = BookmarksEntryServiceUtil.getEntriesCount(scopeGroupId, folderId);
-		}
 
-		pageContext.setAttribute("results", results);
-		pageContext.setAttribute("total", total);
+			pageContext.setAttribute("results", results);
+			pageContext.setAttribute("total", total);
+		}
 		%>
 
 	</liferay-ui:search-container-results>
