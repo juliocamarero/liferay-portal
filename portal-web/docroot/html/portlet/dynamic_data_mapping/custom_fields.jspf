@@ -188,9 +188,7 @@ int firstDayOfWeek = localeCal.getFirstDayOfWeek() - 1;
 									trigger: instance.get('templateNode'),
 									calendar: {
 										firstDayOfWeek: <%= firstDayOfWeek %>,
-
 										locale: '<%= locale %>',
-
 										strings: {
 											next: '<liferay-ui:message key="next" />',
 											none: '<liferay-ui:message key="none" />',
