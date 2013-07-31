@@ -42,8 +42,9 @@ else {
 	results = DDLUtil.getRecords(hits);
 
 	total = results.size();
+
+	searchContainer.setTotal(total);
 }
 
-pageContext.setAttribute("results", results);
-pageContext.setAttribute("total", total);
+searchContainer.setResults(results);
 %>
