@@ -1,0 +1,94 @@
+<%--
+/**
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<c:choose>
+	<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
+
+<%
+		Map<String, List<AssetEntry>> filteredEntriesMap = AssetPublisherUtil.getFilteredCategoryLabelsAndEntries(results);
+
+		Iterator filteredEntriesIterator = filteredEntriesMap.entrySet().iterator();
+
+		while (filteredEntriesIterator.hasNext()) {
+			Map.Entry entry = (Map.Entry)filteredEntriesIterator.next();
+
+			String label = GetterUtil.getString(entry.getKey());
+
+			if (previousLabel.equals(StringPool.BLANK) || !previousLabel.equals(label)) {
+%>
+
+				<h3 class="asset-entries-group-label"><%= label %></h3>
+
+				<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, (List)entry.getValue(), contextObjects) %>
+
+<%
+				previousLabel = label;
+			}
+		}
+%>
+
+	</c:when>
+	<c:otherwise>
+
+		<%
+		for (int assetEntryIndex = 0; assetEntryIndex < results.size(); assetEntryIndex++) {
+		%>
+
+			<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_asset.jspf" %>
+
+			<%
+			List<String> currentAssetCategoryNames = new ArrayList<String>();
+
+			for (AssetCategory assetCategory : assetCategories) {
+				List<AssetCategory> currentAssetCategories = assetEntry.getCategories();
+
+				List<AssetCategory> concurrentAssetCategories = new ArrayList<AssetCategory>();
+
+				if (currentAssetCategories.contains(assetCategory)) {
+					concurrentAssetCategories.add(assetCategory);
+				}
+
+				for (AssetCategory concurrentAssetCategory : concurrentAssetCategories) {
+					currentAssetCategoryNames.add(concurrentAssetCategory.getTitle(locale));
+				}
+			}
+
+			String label = ListUtil.toString(currentAssetCategoryNames);
+
+			if (previousLabel.equals(StringPool.BLANK) || !previousLabel.equals(label)) {
+			%>
+
+				<h3 class="asset-entries-group-label"><%= label %></h3>
+
+			<%
+				previousLabel = label;
+			}
+
+			try {
+			%>
+
+				<%@ include file="/html/portlet/asset_publisher/view_display.jspf" %>
+
+		<%
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
+			}
+		}
+		%>
+
+	</c:otherwise>
+</c:choose>

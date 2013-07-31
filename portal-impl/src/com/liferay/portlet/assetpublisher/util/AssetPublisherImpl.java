@@ -49,6 +49,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
@@ -745,6 +746,74 @@ public class AssetPublisherImpl implements AssetPublisher {
 		return PortalUtil.getEmailFromName(
 			preferences, companyId,
 			PropsValues.ASSET_PUBLISHER_EMAIL_FROM_NAME);
+	}
+
+	@Override
+	public Map<String, List<AssetEntry>> getFilteredCategoryLabelsAndEntries(
+			List<AssetEntry> entries)
+		throws SystemException {
+
+		Map<String, List<AssetEntry>> filteredEntriesMap = new HashMap();
+
+		List<AssetEntry> groupedEntries = new ArrayList<AssetEntry>();
+
+		List<AssetCategory> previousCategories = new ArrayList<AssetCategory>();
+
+		for (AssetEntry entry : entries) {
+			List<AssetCategory> entryCategories = entry.getCategories();
+
+			if (previousCategories.isEmpty() ||
+				previousCategories.equals(entryCategories)) {
+
+				groupedEntries.add(entry);
+			}
+			else {
+				groupedEntries = new ArrayList<AssetEntry>();
+
+				groupedEntries.add(entry);
+			}
+
+			List<String> categoryNames = new ArrayList<String>();
+
+			for (AssetCategory category : entryCategories) {
+				categoryNames.add(category.getName());
+			}
+
+			filteredEntriesMap.put(
+				ListUtil.toString(categoryNames), groupedEntries);
+
+			previousCategories = entryCategories;
+		}
+
+		return filteredEntriesMap;
+	}
+
+	@Override
+	public Map<String, List<AssetEntry>> getFilteredClassLabelAndEntries(
+		List<AssetEntry> entries, long[] classNameIds, Locale locale) {
+
+		Map<String, List<AssetEntry>> filteredEntriesMap = new HashMap();
+
+		for (long classNameId : classNameIds ) {
+			List filteredEntries = new ArrayList();
+
+			for (AssetEntry entry : entries) {
+				if (entry.getClassNameId() == classNameId) {
+					filteredEntries.add(entry);
+				}
+			}
+
+			if (filteredEntries.size() >0) {
+				String groupClassName = PortalUtil.getClassName(classNameId);
+
+				String classNameLabel = ResourceActionsUtil.getModelResource(
+					locale, groupClassName);
+
+				filteredEntriesMap.put(classNameLabel, filteredEntries);
+			}
+		}
+
+		return filteredEntriesMap;
 	}
 
 	@Override

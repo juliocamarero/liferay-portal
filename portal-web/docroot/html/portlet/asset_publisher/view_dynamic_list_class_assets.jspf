@@ -1,0 +1,84 @@
+<%--
+/**
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<c:choose>
+	<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
+
+		<%
+		Map<String, List<AssetEntry>> filteredEntriesMap = AssetPublisherUtil.getFilteredClassLabelAndEntries(results, classNameIds, themeDisplay.getLocale());
+
+		Iterator filteredEntriesIterator = filteredEntriesMap.entrySet().iterator();
+
+		while (filteredEntriesIterator.hasNext()) {
+			Map.Entry entry = (Map.Entry)filteredEntriesIterator.next();
+
+			String label = GetterUtil.getString(entry.getKey());
+
+			List groupedEntries = (List)entry.getValue();
+
+			if (previousLabel.equals(StringPool.BLANK) || !previousLabel.equals(label)) {
+		%>
+
+				<h3 class="asset-entries-group-label"><%= label %></h3>
+
+				<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayDDMTemplateId, groupedEntries, contextObjects) %>
+
+		<%
+				previousLabel = label;
+			}
+		}
+		%>
+
+	</c:when>
+	<c:otherwise>
+
+		<%
+		for (int assetEntryIndex = 0; assetEntryIndex < results.size(); assetEntryIndex++) {
+		%>
+
+			<%@ include file="/html/portlet/asset_publisher/view_dynamic_list_asset.jspf" %>
+
+			<%
+			long currentAssetClassNameId = assetEntry.getClassNameId();
+
+			AssetRendererFactory groupAssetRendererFactory = groupAssetRendererFactoryMap.get(Long.valueOf(currentAssetClassNameId));
+
+			String label = ResourceActionsUtil.getModelResource(locale, groupAssetRendererFactory.getClassName());
+
+			if (previousLabel.equals(StringPool.BLANK) || !previousLabel.equals(label)) {
+		%>
+
+				<h3 class="asset-entries-group-label"><%= label %></h3>
+
+			<%
+				previousLabel = label;
+			}
+
+			try {
+			%>
+
+				<%@ include file="/html/portlet/asset_publisher/view_display.jspf" %>
+
+		<%
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
+			}
+		}
+		%>
+
+	</c:otherwise>
+</c:choose>
