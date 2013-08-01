@@ -136,6 +136,10 @@ public class MBThreadIndexer extends BaseIndexer {
 
 		Document document = getBaseModelDocument(PORTLET_ID, thread);
 
+		document.addKeyword(Field.CATEGORY_ID, thread.getCategoryId());
+		document.addKeyword(Field.PRIORITY, thread.getPriority());
+		document.addKeyword(Field.VIEW_COUNT, thread.getViewCount());
+
 		try {
 			MBDiscussionLocalServiceUtil.getThreadDiscussion(
 				thread.getThreadId());
@@ -146,9 +150,11 @@ public class MBThreadIndexer extends BaseIndexer {
 			document.addKeyword("discussion", false);
 		}
 
+		document.addKeyword("messageCount", thread.getMessageCount());
 		document.addKeyword("lastPostDate", thread.getLastPostDate().getTime());
 		document.addKeyword(
 			"participantUserIds", thread.getParticipantUserIds());
+		document.addKeyword("rootMessageId", thread.getRootMessageId());
 
 		if (!thread.isInTrash() && thread.isInTrashContainer()) {
 			addTrashFields(
