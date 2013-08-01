@@ -67,6 +67,7 @@ import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageConstants;
 import com.liferay.portlet.messageboards.model.MBStatsUser;
 import com.liferay.portlet.messageboards.model.MBThread;
+import com.liferay.portlet.messageboards.model.impl.MBThreadImpl;
 import com.liferay.portlet.messageboards.service.MBCategoryLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
@@ -722,6 +723,37 @@ public class MBUtil {
 		}
 
 		return priorityPair;
+	}
+
+	public static List<MBThread> getThreads(Hits hits)
+		throws PortalException, SystemException {
+
+		List<MBThread> threads = new ArrayList<MBThread>();
+
+		for (Document document : hits.toList()) {
+			MBThread thread = new MBThreadImpl();
+
+			thread.setGroupId(
+				GetterUtil.getLong(document.get(Field.SCOPE_GROUP_ID)));
+			thread.setCompanyId(
+				GetterUtil.getLong(document.get(Field.COMPANY_ID)));
+			thread.setUserId(GetterUtil.getLong(document.get(Field.USER_ID)));
+			thread.setMessageCount(
+				GetterUtil.getInteger(document.get("messageCount")));
+			thread.setCategoryId(
+				GetterUtil.getLong(document.get(Field.CATEGORY_ID)));
+			thread.setRootMessageId(
+				GetterUtil.getLong(document.get("rootMessageId")));
+			thread.setPriority(
+				GetterUtil.getDouble(document.get(Field.PRIORITY)));
+			thread.setStatus(GetterUtil.getInteger(document.get(Field.STATUS)));
+			thread.setViewCount(
+				GetterUtil.getInteger(document.get(Field.VIEW_COUNT)));
+
+			threads.add(thread);
+		}
+
+		return threads;
 	}
 
 	public static Set<Long> getThreadSubscriptionClassPKs(long userId)
