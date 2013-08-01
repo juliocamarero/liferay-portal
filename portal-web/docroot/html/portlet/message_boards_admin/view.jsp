@@ -435,28 +435,7 @@ if ((category != null) && layout.isTypeControlPanel()) {
 
 					searchContainer.setTotal(hits.getLength());
 
-					Document[] docs = hits.getDocs();
-
-					results = new ArrayList(docs.length);
-
-					for (Document doc : docs) {
-						long classPK = GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK));
-
-						MBThread thread = null;
-
-						try {
-							thread = MBThreadLocalServiceUtil.getMBThread(classPK);
-						}
-						catch (Exception e) {
-							if (_log.isWarnEnabled()) {
-								_log.warn("MB Message search index is stale and contains message {" + classPK + "}");
-							}
-
-							continue;
-						}
-
-						results.add(thread);
-					}
+					results = MBUtil.getThreads(hits);
 
 					pageContext.setAttribute("results", results);
 					%>
