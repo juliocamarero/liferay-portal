@@ -428,14 +428,16 @@ if ((category != null) && layout.isTypeControlPanel()) {
 
 					calendar.add(Calendar.DATE, -offset);
 
-					total = MBThreadServiceUtil.getGroupThreadsCount(scopeGroupId, groupThreadsUserId, calendar.getTime(), WorkflowConstants.STATUS_APPROVED);
+					Date endDate = new Date();
+					Date startDate = calendar.getTime();
 
-					searchContainer.setTotal(total);
+					Hits hits = MBThreadServiceUtil.search(scopeGroupId, groupThreadsUserId, startDate.getTime(), endDate.getTime(), WorkflowConstants.STATUS_APPROVED, searchContainer.getStart(), searchContainer.getEnd());
 
-					results = MBThreadServiceUtil.getGroupThreads(scopeGroupId, groupThreadsUserId, calendar.getTime(), WorkflowConstants.STATUS_APPROVED, searchContainer.getStart(), searchContainer.getEnd());
+					searchContainer.setTotal(hits.getLength());
+
+					results = MBUtil.getThreads(hits);
 
 					pageContext.setAttribute("results", results);
-					pageContext.setAttribute("total", total);
 					%>
 
 				</liferay-ui:search-container-results>
