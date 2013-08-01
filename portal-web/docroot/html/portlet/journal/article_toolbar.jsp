@@ -67,7 +67,7 @@ if ((article != null) && article.isDraft()) {
 					click: function(event) {
 						event.domEvent.preventDefault();
 
-						if (previewArticleContentURL && !(typeof CKEDITOR === 'undefined') && !CKEDITOR.instances.<portlet:namespace />articleContent.checkDirty()) {
+						if (((typeof CKEDITOR === 'undefined') && previewArticleContentURL) || (!(typeof CKEDITOR === 'undefined') && !CKEDITOR.instances.<portlet:namespace />articleContent.checkDirty())) {
 							Liferay.fire(
 								'previewArticle',
 								{
@@ -168,7 +168,7 @@ if ((article != null) && article.isDraft()) {
 	<c:if test="<%= article != null %>">
 		<portlet:renderURL var="viewHistoryURL">
 			<portlet:param name="struts_action" value="/journal/view_article_history" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="redirect" value="<%= currentURLObj.toString() %>" />
 			<portlet:param name="referringPortletResource" value="<%= referringPortletResource %>" />
 			<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
 		</portlet:renderURL>
