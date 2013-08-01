@@ -14,11 +14,15 @@
 
 package com.liferay.portal.staging;
 
+import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -44,9 +48,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.hamcrest.Matchers;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.mockito.Mockito;
+
+import org.powermock.api.mockito.PowerMockito;
 
 /**
  * @author Julio Camarero
@@ -59,7 +69,7 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 @Transactional
-public class StagingImplTest {
+public class StagingImplTest extends PowerMockito {
 
 	@Test
 	public void testLocalStagingCategories() throws Exception {
@@ -69,6 +79,86 @@ public class StagingImplTest {
 	@Test
 	public void testLocalStagingJournal() throws Exception {
 		enableLocalStaging(true, false);
+	}
+
+	@Test
+	public void testLocalStagingNaming() throws Exception {
+		enableLocalStaging(false, false);
+
+		String localStagingMessage = LanguageUtil.get(
+			LocaleThreadLocal.getDefaultLocale(), "staging");
+
+		Assert.assertThat(
+			_stagingGroup.getName(),
+			Matchers.containsString(localStagingMessage));
+	}
+
+	@Test
+	public void testRemoteStagingNaming() throws Exception {
+		StagingImpl stagingImpl = new StagingImpl() {
+
+			@Override
+			protected void validate(
+					String remoteAddress, int remotePort,
+					String remotePathContext, boolean secureConnection,
+					long remoteGroupId)
+				throws Exception {
+
+				return;
+			}
+
+			@Override
+			protected void updateStagedPortlets(
+					String remoteURL, long remoteGroupId,
+					UnicodeProperties typeSettingsProperties)
+				throws Exception {
+
+				return;
+			}
+		};
+
+		StagingImpl spiedStagingImpl = spy(stagingImpl);
+
+		doCallRealMethod().when(
+			spiedStagingImpl, "validate", Mockito.anyString(), Mockito.anyInt(),
+			Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyLong());
+
+		doNothing().when(
+			spiedStagingImpl, "disableRemoteStaging",
+			new Object[] {Mockito.anyString(), Mockito.anyLong()});
+		doNothing().when(
+			spiedStagingImpl, "enableRemoteStaging",
+			new Object[] {Mockito.anyString(), Mockito.anyLong()});
+
+		StagingUtil stagingUtil = (StagingUtil)PortalBeanLocatorUtil.locate(
+			StagingUtil.class.getName());
+
+		stagingUtil.setStaging(spiedStagingImpl);
+
+		Group group = GroupTestUtil.addGroup();
+
+		String remoteAddress = ServiceTestUtil.randomString();
+		int remotePort = ServiceTestUtil.nextInt();
+		String remotePathContext = ServiceTestUtil.randomString();
+		boolean secureConnection = ServiceTestUtil.randomBoolean();
+		long remoteGroupId = ServiceTestUtil.randomLong();
+
+		StagingUtil.enableRemoteStaging(
+			TestPropsValues.getUserId(), group, group, false, false,
+			remoteAddress, remotePort, remotePathContext, secureConnection,
+			remoteGroupId, new ServiceContext());
+
+		String remoteStagingMessage = LanguageUtil.get(
+			LocaleThreadLocal.getDefaultLocale(), "remote-staging");
+
+		Assert.assertThat(
+			group.getName(), Matchers.containsString(remoteStagingMessage));
+
+		StagingUtil.disableStaging(group, new ServiceContext());
+
+		Assert.assertThat(
+			group.getName(),
+			Matchers.not(Matchers.containsString(remoteStagingMessage)));
 	}
 
 	protected AssetCategory addAssetCategory(
@@ -101,23 +191,23 @@ public class StagingImplTest {
 			boolean stageJournal, boolean stageCategories)
 		throws Exception {
 
-		Group group = GroupTestUtil.addGroup();
+		_liveGroup = GroupTestUtil.addGroup();
 
-		LayoutTestUtil.addLayout(group.getGroupId(), "Page1");
-		LayoutTestUtil.addLayout(group.getGroupId(), "Page2");
+		LayoutTestUtil.addLayout(_liveGroup.getGroupId(), "Page1");
+		LayoutTestUtil.addLayout(_liveGroup.getGroupId(), "Page2");
 
 		int initialPagesCount = LayoutLocalServiceUtil.getLayoutsCount(
-			group, false);
+			_liveGroup, false);
 
 		// Create content
 
 		AssetCategory assetCategory = addAssetCategory(
-			group.getGroupId(), "Title", "content");
+			_liveGroup.getGroupId(), "Title", "content");
 		JournalArticle journalArticle = JournalTestUtil.addArticle(
-			group.getGroupId(), "Title", "content");
+			_liveGroup.getGroupId(), "Title", "content");
 
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			group.getGroupId());
+			_liveGroup.getGroupId());
 
 		Map<String, String[]> parameters = StagingUtil.getStagingParameters();
 
@@ -155,29 +245,29 @@ public class StagingImplTest {
 		// Enable staging
 
 		StagingUtil.enableLocalStaging(
-			TestPropsValues.getUserId(), group, group, false, false,
+			TestPropsValues.getUserId(), _liveGroup, _liveGroup, false, false,
 			serviceContext);
 
-		Group stagingGroup = group.getStagingGroup();
+		_stagingGroup = _liveGroup.getStagingGroup();
 
-		Assert.assertNotNull(stagingGroup);
+		Assert.assertNotNull(_stagingGroup);
 
 		Assert.assertEquals(
 			initialPagesCount,
-			LayoutLocalServiceUtil.getLayoutsCount(stagingGroup, false));
+			LayoutLocalServiceUtil.getLayoutsCount(_stagingGroup, false));
 
 		// Update content in staging
 
 		AssetCategory stagingAssetCategory =
 			AssetCategoryLocalServiceUtil.getCategory(
-				assetCategory.getUuid(), stagingGroup.getGroupId());
+				assetCategory.getUuid(), _stagingGroup.getGroupId());
 
 		stagingAssetCategory = updateAssetCategory(
 			stagingAssetCategory, "new name");
 
 		JournalArticle stagingJournalArticle =
 			JournalArticleLocalServiceUtil.getArticleByUrlTitle(
-				stagingGroup.getGroupId(), journalArticle.getUrlTitle());
+				_stagingGroup.getGroupId(), journalArticle.getUrlTitle());
 
 		stagingJournalArticle = JournalTestUtil.updateArticle(
 			stagingJournalArticle, "Title2",
@@ -186,15 +276,15 @@ public class StagingImplTest {
 		// Publish to live
 
 		StagingUtil.publishLayouts(
-			TestPropsValues.getUserId(), stagingGroup.getGroupId(),
-			group.getGroupId(), false, parameters, null, null);
+			TestPropsValues.getUserId(), _stagingGroup.getGroupId(),
+			_liveGroup.getGroupId(), false, parameters, null, null);
 
 		// Retrieve content from live after publishing
 
 		assetCategory = AssetCategoryLocalServiceUtil.getCategory(
-			assetCategory.getUuid(), group.getGroupId());
+			assetCategory.getUuid(), _liveGroup.getGroupId());
 		journalArticle = JournalArticleLocalServiceUtil.getArticle(
-			group.getGroupId(), journalArticle.getArticleId());
+			_liveGroup.getGroupId(), journalArticle.getArticleId());
 
 		if (stageCategories) {
 			for (Locale locale : _locales) {
@@ -248,5 +338,8 @@ public class StagingImplTest {
 		new Locale("en", "US"), new Locale("es", "ES"),
 		new Locale("de", "DE")
 	};
+
+	private Group _liveGroup;
+	private Group _stagingGroup;
 
 }
