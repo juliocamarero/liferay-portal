@@ -62,10 +62,10 @@ if ((article != null) && article.isDraft()) {
 
 		function hasUnsavedChanges() {
 			if (typeof CKEDITOR === 'undefined') {
-		    	return hasChangedForm;
+				return hasChangedForm;
 			}
 			else {
-		    	return hasChangedForm && CKEDITOR.instances.<portlet:namespace />articleContent.checkDirty();
+				return CKEDITOR.instances.<portlet:namespace />articleContent.checkDirty();
 			}
 		}
 
