@@ -311,8 +311,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		}
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getBackgroundTaskId() {
 		return _backgroundTaskId;
 	}
@@ -322,8 +322,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		_backgroundTaskId = backgroundTaskId;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getGroupId() {
 		return _groupId;
 	}
@@ -345,8 +345,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		return _originalGroupId;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getCompanyId() {
 		return _companyId;
 	}
@@ -368,8 +368,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		return _originalCompanyId;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getUserId() {
 		return _userId;
 	}
@@ -389,8 +389,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		_userUuid = userUuid;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getUserName() {
 		if (_userName == null) {
 			return StringPool.BLANK;
@@ -405,8 +405,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		_userName = userName;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public Date getCreateDate() {
 		return _createDate;
 	}
@@ -418,8 +418,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		_createDate = createDate;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
 	}
@@ -429,8 +429,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		_modifiedDate = modifiedDate;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getName() {
 		if (_name == null) {
 			return StringPool.BLANK;
@@ -455,8 +455,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		return GetterUtil.getString(_originalName);
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getServletContextNames() {
 		if (_servletContextNames == null) {
 			return StringPool.BLANK;
@@ -471,8 +471,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		_servletContextNames = servletContextNames;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getTaskExecutorClassName() {
 		if (_taskExecutorClassName == null) {
 			return StringPool.BLANK;
@@ -497,8 +497,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		return GetterUtil.getString(_originalTaskExecutorClassName);
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getTaskContext() {
 		if (_taskContext == null) {
 			return StringPool.BLANK;
@@ -513,8 +513,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		_taskContext = taskContext;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public boolean getCompleted() {
 		return _completed;
 	}
@@ -541,8 +541,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		return _originalCompleted;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public Date getCompletionDate() {
 		return _completionDate;
 	}
@@ -552,8 +552,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		_completionDate = completionDate;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public int getStatus() {
 		return _status;
 	}
@@ -575,8 +575,8 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 		return _originalStatus;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getStatusMessage() {
 		if (_statusMessage == null) {
 			return StringPool.BLANK;

@@ -40,7 +40,7 @@ public class GroupFinderUtil {
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getFinder()
 				   .countByC_C_PG_N_D(companyId, classNameIds, parentGroupId,
-			names, descriptions, params,	andOperator);
+			names, descriptions, params, andOperator);
 	}
 
 	public static java.util.List<com.liferay.portal.model.Group> findByLayouts(
