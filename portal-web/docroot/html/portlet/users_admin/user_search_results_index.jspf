@@ -24,7 +24,9 @@ userParams.put("expandoAttributes", searchTerms.getKeywords());
 
 Sort sort = SortFactoryUtil.getSort(User.class, userSearchContainer.getOrderByCol(), userSearchContainer.getOrderByType());
 
-while (true) {
+boolean corruptIndex = false;
+
+do {
 	Hits hits = null;
 
 	if (searchTerms.isAdvancedSearch()) {
@@ -36,7 +38,7 @@ while (true) {
 
 	Tuple tuple = UsersAdminUtil.getUsers(hits);
 
-	boolean corruptIndex = (Boolean)tuple.getObject(1);
+	corruptIndex = (Boolean)tuple.getObject(1);
 
 	if (!corruptIndex) {
 		results = (List<User>)tuple.getObject(0);
@@ -45,10 +47,8 @@ while (true) {
 
 		break;
 	}
-	else {
-		userSearchContainer.setTotal(0);
-	}
 }
+while (corruptIndex);
 
-pageContext.setAttribute("results", results);
+userSearchContainer.setResults(results);
 %>
