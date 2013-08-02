@@ -55,6 +55,7 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -432,6 +433,16 @@ public class StagingImpl implements Staging {
 				typeSettingsProperties.getProperty("remoteGroupId"));
 
 			disableRemoteStaging(remoteURL, remoteGroupId);
+
+			String groupName = liveGroup.getName();
+			int stagingPartIndex = groupName.lastIndexOf(
+				StringPool.OPEN_PARENTHESIS);
+
+			if (stagingPartIndex >= 0) {
+				groupName = groupName.substring(0, stagingPartIndex - 1);
+			}
+
+			liveGroup.setName(groupName);
 		}
 
 		typeSettingsProperties.remove("branchingPrivate");
@@ -476,8 +487,9 @@ public class StagingImpl implements Staging {
 				liveGroup.getGroupId(), false, true);
 		}
 
-		GroupLocalServiceUtil.updateGroup(
-			liveGroup.getGroupId(), typeSettingsProperties.toString());
+		liveGroup.setTypeSettingsProperties(typeSettingsProperties);
+
+		GroupLocalServiceUtil.updateGroup(liveGroup);
 	}
 
 	@Override
@@ -609,8 +621,22 @@ public class StagingImpl implements Staging {
 		setCommonStagingOptions(
 			liveGroup, typeSettingsProperties, serviceContext);
 
-		GroupLocalServiceUtil.updateGroup(
-			liveGroup.getGroupId(), typeSettingsProperties.toString());
+		String liveGroupName = liveGroup.getName();
+
+		StringBundler sb = new StringBundler();
+
+		sb.append(liveGroupName);
+		sb.append(StringPool.SPACE);
+		sb.append(StringPool.OPEN_PARENTHESIS);
+		sb.append(
+			LanguageUtil.get(LocaleThreadLocal.getDefaultLocale(),
+			"remote-staging"));
+		sb.append(StringPool.CLOSE_PARENTHESIS);
+
+		liveGroup.setName(sb.toString());
+		liveGroup.setTypeSettingsProperties(typeSettingsProperties);
+
+		GroupLocalServiceUtil.updateGroup(liveGroup);
 
 		updateStagedPortlets(remoteURL, remoteGroupId, typeSettingsProperties);
 
