@@ -68,6 +68,7 @@ import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
+import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryServiceUtil;
@@ -81,6 +82,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -450,6 +452,34 @@ public class AssetPublisherImpl implements AssetPublisher {
 		}
 
 		return aassetEntries;
+	}
+
+	@Override
+	public List<AssetEntry> getAssetEntries(
+			PortletRequest portletRequest,
+			PortletPreferences portletPreferences,
+			PermissionChecker permissionChecker, long[] groupIds,
+			String[] assetEntryXmls, boolean deleteMissingAssetEntries,
+			boolean checkPermission, String[] tagNames, long[] categoryIds)
+		throws Exception {
+
+		List<AssetEntry> entries = getAssetEntries(
+			portletRequest, portletPreferences, permissionChecker, groupIds,
+			assetEntryXmls, deleteMissingAssetEntries, checkPermission);
+
+		if ((categoryIds.length == 0) && (tagNames.length == 0)) {
+			return entries;
+		}
+
+		if (categoryIds.length > 0) {
+			entries = _getFilteredByCategoryAssetEntries(categoryIds, entries);
+		}
+
+		if (tagNames.length > 0) {
+			entries = _getFilteredByTagAssetEntries(tagNames, entries);
+		}
+
+		return entries;
 	}
 
 	@Override
@@ -1076,7 +1106,7 @@ public class AssetPublisherImpl implements AssetPublisher {
 	}
 
 	private void _checkAssetEntries(
-			com.liferay.portal.model.PortletPreferences portletPreferences)
+				com.liferay.portal.model.PortletPreferences portletPreferences)
 		throws PortalException, SystemException {
 
 		Layout layout = LayoutLocalServiceUtil.getLayout(
@@ -1165,6 +1195,59 @@ public class AssetPublisherImpl implements AssetPublisher {
 		}
 
 		return xml;
+	}
+
+	private List<AssetEntry> _getFilteredByCategoryAssetEntries(
+			long[] categoryIds, List<AssetEntry> entries)
+		throws Exception {
+
+		List<AssetEntry> filteredAssetEntries = ListUtil.copy(entries);
+
+		for (AssetEntry assetEntry : entries) {
+			List<AssetCategory> assetEntryCategories =
+				assetEntry.getCategories();
+
+			List<Long> assetEntryCategoryIds = new ArrayList<Long>(
+				categoryIds.length);
+
+			for (AssetCategory assetEntryCategory : assetEntryCategories) {
+				assetEntryCategoryIds.add(assetEntryCategory.getCategoryId());
+			}
+
+			List<Long> categoryIdsList = ListUtil.toList(categoryIds);
+
+			if (Collections.disjoint(categoryIdsList, assetEntryCategoryIds)) {
+				filteredAssetEntries.remove(assetEntry);
+			}
+		}
+
+		return filteredAssetEntries;
+	}
+
+	private List<AssetEntry> _getFilteredByTagAssetEntries(
+			String[] tagNames, List<AssetEntry> entries)
+		throws Exception {
+
+		List<AssetEntry> filteredAssetEntries = ListUtil.copy(entries);
+
+		for (AssetEntry assetEntry : entries) {
+			List<AssetTag> assetEntryTags = assetEntry.getTags();
+
+			List<String> assetEntryTagNames = new ArrayList<String>(
+				tagNames.length);
+
+			for (AssetTag assetEntryTag : assetEntryTags) {
+				assetEntryTagNames.add(assetEntryTag.getName());
+			}
+
+			List<String> tagNamesList = ListUtil.toList(tagNames);
+
+			if (Collections.disjoint(tagNamesList, assetEntryTagNames)) {
+				filteredAssetEntries.remove(assetEntry);
+			}
+		}
+
+		return filteredAssetEntries;
 	}
 
 	private long _getPortletPreferencesId(long plid, String portletId)
