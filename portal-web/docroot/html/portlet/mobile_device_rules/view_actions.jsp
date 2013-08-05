@@ -57,11 +57,17 @@ portletURL.setParameter("ruleGroupInstanceId", String.valueOf(ruleGroupInstanceI
 			results = MDRActionLocalServiceUtil.getActions(ruleGroupInstanceId, searchContainer.getStart(), searchContainer.getEnd());
 			total = MDRActionLocalServiceUtil.getActionsCount(ruleGroupInstanceId);
 
-			pageContext.setAttribute("results", results);
-			pageContext.setAttribute("total", total);
-			%>
-
-		</liferay-ui:search-container-results>
+	<liferay-ui:search-container
+		delta="<%= 5 %>"
+		deltaConfigurable="<%= false %>"
+		emptyResultsMessage="no-actions-are-configured-for-this-device-family"
+		headerNames="name,description,type"
+		iteratorURL="<%= portletURL %>"
+		total="<%= MDRActionLocalServiceUtil.getActionsCount(ruleGroupInstanceId) %>"
+	>
+		<liferay-ui:search-container-results
+			results="<%= MDRActionLocalServiceUtil.getActions(ruleGroupInstanceId, searchContainer.getStart(), searchContainer.getEnd()) %>"
+		/>
 
 		<liferay-ui:search-container-row
 			className="com.liferay.portlet.mobiledevicerules.model.MDRAction"
