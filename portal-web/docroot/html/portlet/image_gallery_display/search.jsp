@@ -108,6 +108,8 @@ boolean useAssetEntryQuery = false;
 					_log.warn("Documents and Media search index is stale and contains document " + fileEntryId);
 				}
 			}
+
+			searchContainer.setResults(results);
 		}
 	%>
 
@@ -129,7 +131,6 @@ boolean useAssetEntryQuery = false;
 
 		request.setAttribute("view.jsp-folderId", String.valueOf(folderId));
 		request.setAttribute("view.jsp-mediaGalleryMimeTypes", mediaGalleryMimeTypes);
-		request.setAttribute("view.jsp-results", results);
 		request.setAttribute("view.jsp-searchContainer", searchContainer);
 		%>
 
