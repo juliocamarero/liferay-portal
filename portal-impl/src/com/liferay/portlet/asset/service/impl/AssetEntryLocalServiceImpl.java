@@ -223,6 +223,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		return assetEntryPersistence.findByPrimaryKey(entryId);
 	}
 
+	@Override
 	public AssetEntry getEntry(long classNameId, long classPK)
 		throws PortalException, SystemException {
 
