@@ -348,12 +348,13 @@ if ((category != null) && layout.isTypeControlPanel()) {
 
 							</liferay-ui:search-container-column-text>
 
-							<liferay-ui:search-container-column-text
+							<liferay-ui:search-container-column-status
 								href="<%= rowURL %>"
 								name="status"
-							>
-								<aui:workflow-status showIcon="<%= false %>" showLabel="<%= false %>" status="<%= thread.getStatus() %>" />
-							</liferay-ui:search-container-column-text>
+								statusByUserId="<%= thread.getStatusByUserId() %>"
+								statusDate="<%= thread.getStatusDate() %>"
+								value="<%= thread.getStatus() %>"
+							/>
 
 							<liferay-ui:search-container-column-jsp
 								align="right"
