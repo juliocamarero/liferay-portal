@@ -26,7 +26,9 @@ journalParams.put("expandoAttributes", searchTerms.getKeywords());
 
 Sort sort = SortFactoryUtil.getSort(JournalArticle.class, searchContainer.getOrderByCol(), searchContainer.getOrderByType());
 
-while (true) {
+boolean corruptIndex = false;
+
+do {
 	Hits hits = null;
 
 	if (searchTerms.isAdvancedSearch()) {
@@ -38,19 +40,15 @@ while (true) {
 
 	Tuple tuple = JournalUtil.getArticles(hits);
 
-	boolean corruptIndex = (Boolean)tuple.getObject(1);
+	corruptIndex = (Boolean)tuple.getObject(1);
 
 	if (!corruptIndex) {
 		results = (List<JournalArticle>)tuple.getObject(0);
 
 		searchContainer.setTotal(hits.getLength());
-
-		break;
-	}
-	else {
-		searchContainer.setTotal(0);
 	}
 }
+while (corruptIndex);
 
 searchContainer.setResults(results);
 %>

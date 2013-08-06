@@ -24,7 +24,9 @@ organizationParams.put("expandoAttributes", searchTerms.getKeywords());
 
 Sort sort = SortFactoryUtil.getSort(Organization.class, organizationSearchContainer.getOrderByCol(), organizationSearchContainer.getOrderByType());
 
-while (true) {
+boolean corruptIndex;
+
+do(true) {
 	Hits hits = null;
 
 	if (searchTerms.isAdvancedSearch()) {
@@ -36,19 +38,15 @@ while (true) {
 
 	Tuple tuple = UsersAdminUtil.getOrganizations(hits);
 
-	boolean corruptIndex = (Boolean)tuple.getObject(1);
+	corruptIndex = (Boolean)tuple.getObject(1);
 
 	if (!corruptIndex) {
 		results = (List<Organization>)tuple.getObject(0);
 
 		organizationSearchContainer.setTotal(hits.getLength());
-
-		break;
-	}
-	else {
-		organizationSearchContainer.setTotal(0);
 	}
 }
+while (corruptIndex);
 
-pageContext.setAttribute("results", results);
+organizationSearchContainer.setResults(results);
 %>
