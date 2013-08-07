@@ -1433,6 +1433,31 @@ public class JournalArticleLocalServiceImpl
 		return article;
 	}
 
+	@Override
+	public JournalArticle fetchLatestArticle(
+			long groupId, String articleId, int status)
+		throws PortalException, SystemException {
+
+		List<JournalArticle> articles = null;
+
+		OrderByComparator orderByComparator = new ArticleVersionComparator();
+
+		if (status == WorkflowConstants.STATUS_ANY) {
+			articles = journalArticlePersistence.findByG_A(
+				groupId, articleId, 0, 1, orderByComparator);
+		}
+		else {
+			articles = journalArticlePersistence.findByG_A_ST(
+				groupId, articleId, status, 0, 1, orderByComparator);
+		}
+
+		if (articles.isEmpty()) {
+			return null;
+		}
+
+		return articles.get(0);
+	}
+
 	/**
 	 * Returns the web content article with the ID.
 	 *
@@ -2781,26 +2806,15 @@ public class JournalArticleLocalServiceImpl
 			long groupId, String articleId, int status)
 		throws PortalException, SystemException {
 
-		List<JournalArticle> articles = null;
+		JournalArticle article = fetchLatestArticle(groupId, articleId, status);
 
-		OrderByComparator orderByComparator = new ArticleVersionComparator();
-
-		if (status == WorkflowConstants.STATUS_ANY) {
-			articles = journalArticlePersistence.findByG_A(
-				groupId, articleId, 0, 1, orderByComparator);
-		}
-		else {
-			articles = journalArticlePersistence.findByG_A_ST(
-				groupId, articleId, status, 0, 1, orderByComparator);
-		}
-
-		if (articles.isEmpty()) {
+		if (article == null) {
 			throw new NoSuchArticleException(
 				"No JournalArticle exists with the key {groupId=" + groupId +
 					", articleId=" + articleId + ", status=" + status + "}");
 		}
 
-		return articles.get(0);
+		return article;
 	}
 
 	/**
