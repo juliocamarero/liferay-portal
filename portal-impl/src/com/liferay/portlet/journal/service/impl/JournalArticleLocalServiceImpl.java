@@ -815,6 +815,7 @@ public class JournalArticleLocalServiceImpl
 	 *         found or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle copyArticle(
 			long userId, long groupId, String oldArticleId, String newArticleId,
@@ -1332,6 +1333,7 @@ public class JournalArticleLocalServiceImpl
 	 *         found or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle expireArticle(
 			long userId, long groupId, String articleId, double version,
@@ -1367,8 +1369,9 @@ public class JournalArticleLocalServiceImpl
 	 *         found or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public void expireArticle(
+	public JournalArticle expireArticle(
 			long userId, long groupId, String articleId, String articleURL,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
@@ -1383,15 +1386,22 @@ public class JournalArticleLocalServiceImpl
 					userId, groupId, article.getArticleId(),
 					article.getVersion(), articleURL, serviceContext);
 			}
-		}
-		else {
-			JournalArticle article = getLatestArticle(
-				groupId, articleId, WorkflowConstants.STATUS_APPROVED);
 
-			expireArticle(
-				userId, groupId, article.getArticleId(), article.getVersion(),
-				articleURL, serviceContext);
+			JournalArticleResource articleResource =
+				journalArticleResourcePersistence.fetchByG_A(
+					groupId, articleId);
+
+			return fetchLatestArticle(
+				articleResource.getResourcePrimKey(),
+				WorkflowConstants.STATUS_APPROVED, true);
 		}
+
+		JournalArticle article = getLatestArticle(
+			groupId, articleId, WorkflowConstants.STATUS_APPROVED);
+
+		return expireArticle(
+			userId, groupId, article.getArticleId(), article.getVersion(),
+			articleURL, serviceContext);
 	}
 
 	@Override
@@ -3266,6 +3276,7 @@ public class JournalArticleLocalServiceImpl
 	 *         key could not be found or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle moveArticleFromTrash(
 			long userId, long groupId, JournalArticle article, long newFolderId,
@@ -3298,6 +3309,7 @@ public class JournalArticleLocalServiceImpl
 	 *         article to the Recycle Bin or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle moveArticleToTrash(
 			long userId, JournalArticle article)
@@ -3326,13 +3338,6 @@ public class JournalArticleLocalServiceImpl
 		article = updateStatus(
 			userId, article.getId(), WorkflowConstants.STATUS_IN_TRASH,
 			workflowContext, new ServiceContext());
-
-		// Remove the existing index because we are changing article ID
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			JournalArticle.class);
-
-		indexer.delete(article);
 
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
 			JournalArticle.class.getName(), article.getResourcePrimKey());
@@ -3426,6 +3431,7 @@ public class JournalArticleLocalServiceImpl
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle removeArticleLocale(
 			long groupId, String articleId, double version, String languageId)
@@ -3477,16 +3483,11 @@ public class JournalArticleLocalServiceImpl
 	 *         occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public void restoreArticleFromTrash(long userId, JournalArticle article)
+	public JournalArticle restoreArticleFromTrash(
+			long userId, JournalArticle article)
 		throws PortalException, SystemException {
-
-		// Remove the existing index because we are changing article ID
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			JournalArticle.class);
-
-		indexer.delete(article);
 
 		String trashArticleId = TrashUtil.getOriginalTitle(
 			article.getArticleId());
@@ -3546,6 +3547,8 @@ public class JournalArticleLocalServiceImpl
 			article.getResourcePrimKey(),
 			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
 			extraDataJSONObject.toString(), 0);
+
+		return article;
 	}
 
 	/**
@@ -4836,6 +4839,7 @@ public class JournalArticleLocalServiceImpl
 	 *         occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle updateArticleTranslation(
 			long groupId, String articleId, double version, Locale locale,
@@ -5030,6 +5034,7 @@ public class JournalArticleLocalServiceImpl
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle updateContent(
 			long groupId, String articleId, double version, String content)
