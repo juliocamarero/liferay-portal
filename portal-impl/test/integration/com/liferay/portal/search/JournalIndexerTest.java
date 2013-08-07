@@ -20,7 +20,10 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
@@ -29,6 +32,7 @@ import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.UserTestUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.util.DDMStructureTestUtil;
@@ -39,7 +43,9 @@ import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.util.JournalArticleIndexer;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -110,8 +116,64 @@ public class JournalIndexerTest {
 		Assert.assertTrue(false);
 	}
 
+	@Test
 	public void testRemoveArticleLocale() throws Exception {
-		Assert.assertTrue(false);
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		Locale enLocale = new Locale("en", "US");
+		Locale deLocale = new Locale("de", "DE");
+		Locale esLocale = new Locale("es", "ES");
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(enLocale, "Title");
+		titleMap.put(deLocale, "Titel");
+		titleMap.put(esLocale, "Titulo");
+
+		Map<Locale, String> contentMap = new HashMap<Locale, String>();
+
+		contentMap.put(enLocale, "Liferay Architectural Approach");
+		contentMap.put(deLocale, "Liferay Architektur Ansatz");
+		contentMap.put(esLocale, "Liferay Arquitectura Aproximacion");
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), titleMap, titleMap, contentMap, true);
+
+		User user = UserTestUtil.addUser(group.getGroupId(), esLocale);
+
+		String name = PrincipalThreadLocal.getName();
+
+		try {
+			PrincipalThreadLocal.setName(user.getUserId());
+
+			searchContext.setKeywords("Arquitectura");
+			searchContext.setLocale(esLocale);
+
+			Assert.assertEquals(
+				initialBaseModelsSearchCount + 1,
+				searchCount(group.getGroupId(), searchContext));
+
+			JournalArticleLocalServiceUtil.removeArticleLocale(
+				group.getGroupId(), article.getArticleId(),
+				article.getVersion(), LocaleUtil.toLanguageId(esLocale));
+
+			Assert.assertEquals(
+				initialBaseModelsSearchCount,
+				searchCount(group.getGroupId(), searchContext));
+
+			searchContext.setKeywords("Architectural");
+
+			Assert.assertEquals(
+				initialBaseModelsSearchCount + 1,
+				searchCount(group.getGroupId(), searchContext));
+		}
+		finally {
+			PrincipalThreadLocal.setName(name);
+		}
 	}
 
 	@Test
@@ -193,7 +255,7 @@ public class JournalIndexerTest {
 			searchCount(group.getGroupId(), searchContext));
 
 		String content = DDMStructureTestUtil.getSampleStructuredContent(
-			"name", "Architectural Approach");
+				"name", "Architectural Approach");
 
 		JournalArticleLocalServiceUtil.updateContent(
 			group.getGroupId(), article.getArticleId(), article.getVersion(),
