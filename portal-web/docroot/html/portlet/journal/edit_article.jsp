@@ -46,14 +46,18 @@ String referringPortletResource = ParamUtil.getString(request, "referringPortlet
 
 JournalArticle article = (JournalArticle)request.getAttribute(WebKeys.JOURNAL_ARTICLE);
 
+String articleId = BeanParamUtil.getString(article, request, "articleId");
+
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
+
+if ((article == null) && Validator.isNotNull(articleId)) {
+	article = JournalArticleLocalServiceUtil.getArticle(groupId, articleId);
+}
 
 long folderId = ParamUtil.getLong(request, "folderId", JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
 long classNameId = BeanParamUtil.getLong(article, request, "classNameId");
 long classPK = BeanParamUtil.getLong(article, request, "classPK");
-
-String articleId = BeanParamUtil.getString(article, request, "articleId");
 
 double version = BeanParamUtil.getDouble(article, request, "version", JournalArticleConstants.VERSION_DEFAULT);
 
