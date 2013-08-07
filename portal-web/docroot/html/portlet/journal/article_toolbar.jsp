@@ -146,22 +146,6 @@ if ((article != null) && article.isDraft()) {
 			);
 		</c:if>
 
-		<c:if test="<%= !article.isExpired() && JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) && !article.isApproved() %>">
-			toolbarButtonGroup.push(
-				{
-					icon: 'icon-calendar',
-					label: '<%= UnicodeLanguageUtil.get(pageContext, "expire-this-version") %>',
-					on: {
-						click: function() {
-							<portlet:namespace />expireArticle();
-
-							event.domEvent.preventDefault();
-						}
-					}
-				}
-			);
-		</c:if>
-
 		<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) && !article.isApproved() && !article.isDraft() %>">
 			toolbarButtonGroup.push(
 				{

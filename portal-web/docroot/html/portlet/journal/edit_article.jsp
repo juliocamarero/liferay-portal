@@ -368,12 +368,6 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 		}
 	}
 
-	function <portlet:namespace />expireArticle() {
-		document.<portlet:namespace />fm1.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.EXPIRE %>";
-
-		submitForm(document.<portlet:namespace />fm1);
-	}
-
 	function <portlet:namespace />publishArticle() {
 		document.<portlet:namespace />fm1.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.PUBLISH %>";
 	}
