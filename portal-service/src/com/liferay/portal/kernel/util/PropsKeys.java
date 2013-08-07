@@ -299,6 +299,8 @@ public interface PropsKeys {
 
 	public static final String BOOKMARKS_EMAIL_FROM_NAME = "bookmarks.email.from.name";
 
+	public static final String BOOKMARKS_PUBLISH_TO_LIVE_BY_DEFAULT = "bookmarks.publish.to.live.by.default";
+
 	public static final String BREADCRUMB_DISPLAY_STYLE_DEFAULT = "breadcrumb.display.style.default";
 
 	public static final String BREADCRUMB_DISPLAY_STYLE_OPTIONS = "breadcrumb.display.style.options";
@@ -344,6 +346,8 @@ public interface PropsKeys {
 	public static final String CALENDAR_EVENT_RATINGS_ENABLED = "calendar.event.ratings.enabled";
 
 	public static final String CALENDAR_EVENT_TYPES = "calendar.event.types";
+
+	public static final String CALENDAR_PUBLISH_TO_LIVE_BY_DEFAULT = "calendar.publish.to.live.by.default";
 
 	public static final String CAPTCHA_CHECK_PORTAL_CREATE_ACCOUNT = "captcha.check.portal.create_account";
 
@@ -1099,6 +1103,8 @@ public interface PropsKeys {
 
 	public static final String JOURNAL_ARTICLES_PAGE_DELTA_VALUES = "journal.articles.page.delta.values";
 
+	public static final String JOURNAL_ARTICLES_PUBLISH_TO_LIVE_BY_DEFAULT = "journal.articles.publish.to.live.by.default";
+
 	public static final String JOURNAL_ARTICLES_SEARCH_WITH_INDEX = "journal.articles.search.with.index";
 
 	public static final String JOURNAL_CONTENT_SEARCH_SHOW_LISTED = "journal.content.search.show.listed";
@@ -1633,6 +1639,8 @@ public interface PropsKeys {
 
 	public static final String MINIFIER_INLINE_CONTENT_CACHE_SKIP_JAVASCRIPT = "minifier.inline.content.cache.skip.javascript";
 
+	public static final String MOBILE_DEVICE_RULES_PUBLISH_TO_LIVE_BY_DEFAULT = "mobile.device.rules.publish.to.live.by.default";
+
 	public static final String MOBILE_DEVICE_RULES_RULE_GROUP_COPY_POSTFIX = "mobile.device.rules.rule.group.copy.postfix";
 
 	public static final String MOBILE_DEVICE_SESSION_CACHE_ENABLED = "mobile.device.session.cache.enabled";
@@ -1925,6 +1933,8 @@ public interface PropsKeys {
 
 	public static final String PLUGIN_TYPES = "plugin.types";
 
+	public static final String POLLS_PUBLISH_TO_LIVE_BY_DEFAULT = "polls.publish.to.live.by.default";
+
 	public static final String POLLER_NOTIFICATIONS_TIMEOUT = "poller.notifications.timeout";
 
 	public static final String POLLER_REQUEST_TIMEOUT = "poller.request.timeout";
@@ -2044,6 +2054,8 @@ public interface PropsKeys {
 	public static final String ROLES_SITE_SUBTYPES = "roles.site.subtypes";
 
 	public static final String RSS_CONNECTION_TIMEOUT = "rss.connection.timeout";
+
+	public static final String RSS_PUBLISH_TO_LIVE_BY_DEFAULT = "rss.publish.to.live.by.default";
 
 	public static final String RSS_FEED_DISPLAY_STYLE_DEFAULT = "rss.feed.display.style.default";
 
