@@ -46,14 +46,18 @@ String referringPortletResource = ParamUtil.getString(request, "referringPortlet
 
 JournalArticle article = (JournalArticle)request.getAttribute(WebKeys.JOURNAL_ARTICLE);
 
+String articleId = BeanParamUtil.getString(article, request, "articleId");
+
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
+
+if ((article == null) && Validator.isNotNull(articleId)) {
+	article = JournalArticleLocalServiceUtil.getArticle(groupId, articleId);
+}
 
 long folderId = ParamUtil.getLong(request, "folderId", JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
 long classNameId = BeanParamUtil.getLong(article, request, "classNameId");
 long classPK = BeanParamUtil.getLong(article, request, "classPK");
-
-String articleId = BeanParamUtil.getString(article, request, "articleId");
 
 double version = BeanParamUtil.getDouble(article, request, "version", JournalArticleConstants.VERSION_DEFAULT);
 
@@ -350,29 +354,6 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 <aui:script>
 	var <portlet:namespace />documentLibraryInput = null;
 	var <portlet:namespace />imageGalleryInput = null;
-
-	function <portlet:namespace />deleteArticle() {
-		<c:choose>
-			<c:when test="<%= (article != null) && article.isDraft() %>">
-				var confirmationMessage = '<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-discard-this-draft") %>';
-			</c:when>
-			<c:otherwise>
-				var confirmationMessage = '<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this-web-content-version") %>';
-			</c:otherwise>
-		</c:choose>
-
-		if (confirm(confirmationMessage)) {
-			document.<portlet:namespace />fm1.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.DELETE %>";
-
-			submitForm(document.<portlet:namespace />fm1);
-		}
-	}
-
-	function <portlet:namespace />expireArticle() {
-		document.<portlet:namespace />fm1.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.EXPIRE %>";
-
-		submitForm(document.<portlet:namespace />fm1);
-	}
 
 	function <portlet:namespace />publishArticle() {
 		document.<portlet:namespace />fm1.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.PUBLISH %>";
