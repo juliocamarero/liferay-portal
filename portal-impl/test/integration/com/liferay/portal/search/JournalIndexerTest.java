@@ -128,8 +128,93 @@ public class JournalIndexerTest {
 	}
 
 	@Test
-	public void testExpireArticle() throws Exception {
-		Assert.assertTrue(true);
+	public void testExpireArticleVersion() throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
+
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		JournalFolder folder = JournalTestUtil.addFolder(
+			group.getGroupId(), ServiceTestUtil.randomString());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		String content = "Liferay Architectural Approach";
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), folder.getFolderId(), "title", content, true);
+
+		searchContext.setKeywords("Architectural");
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+
+		content = "Apple tablet";
+
+		article = JournalTestUtil.updateArticle(
+			article, article.getTitle(), content);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount,
+			searchCount(group.getGroupId(), searchContext));
+
+		searchContext.setKeywords("Apple");
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+
+		JournalArticleLocalServiceUtil.expireArticle(
+			TestPropsValues.getUserId(), group.getGroupId(),
+			article.getArticleId(), article.getVersion(), article.getUrlTitle(),
+			serviceContext);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount,
+			searchCount(group.getGroupId(), searchContext));
+
+		searchContext.setKeywords("Architectural");
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+	}
+
+	@Test
+	public void testExpireAllArticleVersions() throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
+
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		JournalFolder folder = JournalTestUtil.addFolder(
+			group.getGroupId(), ServiceTestUtil.randomString());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		String content = "Liferay Architectural Approach";
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), folder.getFolderId(), "title", content, true);
+
+		searchContext.setKeywords("Architectural");
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+
+		JournalArticleLocalServiceUtil.expireArticle(
+			TestPropsValues.getUserId(), group.getGroupId(),
+			article.getArticleId(), article.getUrlTitle(), serviceContext);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount,
+			searchCount(group.getGroupId(), searchContext));
 	}
 
 	@Test
