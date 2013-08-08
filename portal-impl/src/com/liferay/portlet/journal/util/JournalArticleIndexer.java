@@ -450,15 +450,15 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void doReindex(Object obj) throws Exception {
 		JournalArticle article = (JournalArticle)obj;
 
-		Document document = getDocument(article);
+		JournalArticle latestIndexabletArticle =
+			JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+				article.getResourcePrimKey());
 
-		if (!article.isIndexable() ||
-			(!article.isApproved() && !article.isInTrash() &&
-			 !article.isExpired() &&
-			 (article.getVersion() !=
-				  JournalArticleConstants.VERSION_DEFAULT)) ||
-			(PortalUtil.getClassNameId(DDMStructure.class) ==
-				article.getClassNameId())) {
+		if (latestIndexabletArticle == null) {
+			Document document = new DocumentImpl();
+
+			document.addUID(
+				PORTLET_ID, article.getGroupId(), article.getArticleId());
 
 			SearchEngineUtil.deleteDocument(
 				getSearchEngineId(), article.getCompanyId(),
@@ -466,6 +466,8 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 			return;
 		}
+
+		Document document = getDocument(latestIndexabletArticle);
 
 		SearchEngineUtil.updateDocument(
 			getSearchEngineId(), article.getCompanyId(), document);
