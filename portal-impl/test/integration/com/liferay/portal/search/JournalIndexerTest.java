@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
@@ -33,6 +34,7 @@ import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
+import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portal.util.UserTestUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
@@ -83,8 +85,36 @@ public class JournalIndexerTest {
 		Assert.assertTrue(false);
 	}
 
+	@Test
 	public void testCopyArticle() throws Exception {
-		Assert.assertTrue(false);
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		JournalFolder folder = JournalTestUtil.addFolder(
+			group.getGroupId(), ServiceTestUtil.randomString());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		String content = "Liferay Architectural Approach";
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), folder.getFolderId(), "title", content, true);
+
+		searchContext.setKeywords("Architectural");
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+
+		JournalArticleLocalServiceUtil.copyArticle(
+			TestPropsValues.getUserId(), group.getGroupId(),
+			article.getArticleId(), StringPool.BLANK, true,
+			article.getVersion());
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 2,
+			searchCount(group.getGroupId(), searchContext));
 	}
 
 	@Test
