@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
@@ -186,8 +187,81 @@ public class JournalIndexerTest {
 		Assert.assertTrue(false);
 	}
 
+	@Test
 	public void testUpdateArticleTranslation() throws Exception {
-		Assert.assertTrue(false);
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
+
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		Locale enLocale = new Locale("en", "US");
+		Locale deLocale = new Locale("de", "DE");
+		Locale esLocale = new Locale("es", "ES");
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(enLocale, "Title");
+		titleMap.put(deLocale, "Titel");
+		titleMap.put(esLocale, "Titulo");
+
+		Map<Locale, String> contentMap = new HashMap<Locale, String>();
+
+		contentMap.put(enLocale, "Liferay Architectural Approach");
+		contentMap.put(deLocale, "Liferay Architektur Ansatz");
+		contentMap.put(esLocale, "Liferay Arquitectura Aproximacion");
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), titleMap, titleMap, contentMap, true);
+
+		User user = UserTestUtil.addUser(group.getGroupId(), esLocale);
+
+		String name = PrincipalThreadLocal.getName();
+
+		try {
+			PrincipalThreadLocal.setName(user.getUserId());
+
+			searchContext.setKeywords("Arquitectura");
+			searchContext.setLocale(esLocale);
+
+			Assert.assertEquals(
+				initialBaseModelsSearchCount + 1,
+				searchCount(group.getGroupId(), searchContext));
+
+			contentMap.put(esLocale, "Apple manzana tablet");
+
+			String content = JournalTestUtil.createLocalizedContent(
+				contentMap, Locale.getDefault());
+
+			article = JournalArticleLocalServiceUtil.updateArticleTranslation(
+				group.getGroupId(), article.getArticleId(),
+				article.getVersion(), esLocale, article.getTitle(esLocale),
+				article.getDescription(esLocale), content, null,
+				serviceContext);
+
+			searchContext.setKeywords("Apple");
+
+			Assert.assertEquals(
+				initialBaseModelsSearchCount,
+				searchCount(group.getGroupId(), searchContext));
+
+			serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
+
+			JournalArticleLocalServiceUtil.updateArticle(
+				user.getUserId(), article.getGroupId(), article.getFolderId(),
+				article.getArticleId(), article.getVersion(),
+				article.getContent(), serviceContext);
+
+			Assert.assertEquals(
+				initialBaseModelsSearchCount + 1,
+				searchCount(group.getGroupId(), searchContext));
+		}
+		finally {
+			PrincipalThreadLocal.setName(name);
+		}
 	}
 
 	@Test
