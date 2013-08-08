@@ -1103,9 +1103,9 @@ public interface PropsKeys {
 
 	public static final String JOURNAL_ARTICLES_PAGE_DELTA_VALUES = "journal.articles.page.delta.values";
 
-	public static final String JOURNAL_ARTICLES_PUBLISH_TO_LIVE_BY_DEFAULT = "journal.articles.publish.to.live.by.default";
-
 	public static final String JOURNAL_ARTICLES_SEARCH_WITH_INDEX = "journal.articles.search.with.index";
+
+	public static final String JOURNAL_CONTENT_PUBLISH_TO_LIVE_BY_DEFAULT = "journal.content.publish.to.live.by.default";
 
 	public static final String JOURNAL_CONTENT_SEARCH_SHOW_LISTED = "journal.content.search.show.listed";
 
