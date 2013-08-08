@@ -595,13 +595,13 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 	}
 
 	@Override
-	public void movePageToTrash(long nodeId, String title, double version)
+	public WikiPage movePageToTrash(long nodeId, String title, double version)
 		throws PortalException, SystemException {
 
 		WikiPagePermission.check(
 			getPermissionChecker(), nodeId, title, version, ActionKeys.DELETE);
 
-		wikiPageLocalService.movePageToTrash(
+		return wikiPageLocalService.movePageToTrash(
 			getUserId(), nodeId, title, version);
 	}
 
