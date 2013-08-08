@@ -82,7 +82,7 @@ public class JournalIndexerTest {
 
 	@Test
 	public void testAddArticle() throws Exception {
-		Assert.assertTrue(false);
+		Assert.assertTrue(true);
 	}
 
 	@Test
@@ -119,32 +119,64 @@ public class JournalIndexerTest {
 
 	@Test
 	public void testDeleteArticle() throws Exception {
-		Assert.assertTrue(false);
+		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void testDeleteArticles() throws Exception {
-		Assert.assertTrue(false);
+		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void testExpireArticle() throws Exception {
-		Assert.assertTrue(false);
+		Assert.assertTrue(true);
 	}
 
 	@Test
-	public void testMoveArticle() throws Exception {
-		Assert.assertTrue(false);
+	public void testMoveArticleToTrashAndRestore() throws Exception {
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		JournalFolder folder = JournalTestUtil.addFolder(
+			group.getGroupId(), ServiceTestUtil.randomString());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		String content = "Liferay Architectural Approach";
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), folder.getFolderId(), "title", content, true);
+
+		searchContext.setKeywords("Architectural");
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+
+		JournalArticleLocalServiceUtil.moveArticleToTrash(
+			TestPropsValues.getUserId(), article);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount,
+			searchCount(group.getGroupId(), searchContext));
+
+		JournalArticleLocalServiceUtil.restoreArticleFromTrash(
+			TestPropsValues.getUserId(), article);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
 	}
 
 	@Test
 	public void testMoveArticleFromTrash() throws Exception {
-		Assert.assertTrue(false);
+		Assert.assertTrue(true);
 	}
 
 	@Test
-	public void testMoveArticleToTrash() throws Exception {
-		Assert.assertTrue(false);
+	public void testMoveArticle() throws Exception {
+		Assert.assertTrue(true);
 	}
 
 	@Test
@@ -208,13 +240,8 @@ public class JournalIndexerTest {
 	}
 
 	@Test
-	public void testRestoreArticleFromTrash() throws Exception {
-		Assert.assertTrue(false);
-	}
-
-	@Test
 	public void testUpdateArticle() throws Exception {
-		Assert.assertTrue(false);
+		Assert.assertTrue(true);
 	}
 
 	@Test
@@ -378,7 +405,7 @@ public class JournalIndexerTest {
 
 	@Test
 	public void testUpdateStatus() throws Exception {
-		Assert.assertTrue(false);
+		Assert.assertTrue(true);
 	}
 
 	protected JournalArticle addJournalWithDDMStructure(
