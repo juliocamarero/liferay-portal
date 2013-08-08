@@ -352,12 +352,9 @@ public class WikiAttachmentsTest {
 			initialTrashEntriesCount,
 			_page.getDeletedAttachmentsFileEntriesCount());
 
-		long fileEntryId = WikiPageLocalServiceUtil.movePageAttachmentToTrash(
+		FileEntry fileEntry = WikiPageLocalServiceUtil.movePageAttachmentToTrash(
 			TestPropsValues.getUserId(), _page.getNodeId(), _page.getTitle(),
 			fileName);
-
-		FileEntry fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
-			fileEntryId);
 
 		Assert.assertEquals(
 			initialNotInTrashCount, _page.getAttachmentsFileEntriesCount());
@@ -367,7 +364,8 @@ public class WikiAttachmentsTest {
 
 		if (restore) {
 			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				DLFileEntryConstants.getClassName(), fileEntryId);
+				DLFileEntryConstants.getClassName(),
+				fileEntry.getFileEntryId());
 
 			TrashEntryServiceUtil.restoreEntry(trashEntry.getEntryId());
 
