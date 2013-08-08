@@ -420,10 +420,10 @@ public class JournalArticleIndexer extends BaseIndexer {
 		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
 
 		String title = document.get(
-			snippetLocale, prefix + Field.TITLE, Field.TITLE);
+				snippetLocale, prefix + Field.TITLE, Field.TITLE);
 
 		String content = document.get(
-			snippetLocale, prefix + Field.DESCRIPTION, prefix + Field.CONTENT);
+				snippetLocale, prefix + Field.DESCRIPTION, prefix + Field.CONTENT);
 
 		if (Validator.isBlank(content)) {
 			content = document.get(
@@ -450,18 +450,36 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void doReindex(Object obj) throws Exception {
 		JournalArticle article = (JournalArticle)obj;
 
-		Document document = getDocument(article);
+		JournalArticle articleIndex =
+			JournalArticleLocalServiceUtil.fetchLatestArticle(
+				article.getResourcePrimKey(), WorkflowConstants.STATUS_APPROVED,
+				true);
 
-		if (!article.isIndexable() ||
-			(!article.isApproved() && !article.isInTrash() &&
-			 !article.isExpired() &&
-			 (article.getVersion() !=
-				  JournalArticleConstants.VERSION_DEFAULT)) ||
-			(PortalUtil.getClassNameId(DDMStructure.class) ==
-				article.getClassNameId())) {
+		if (articleIndex == null) {
+			Document document = new DocumentImpl();
+
+			document.addUID(
+				PORTLET_ID, article.getGroupId(), article.getArticleId());
 
 			SearchEngineUtil.deleteDocument(
 				getSearchEngineId(), article.getCompanyId(),
+				document.get(Field.UID));
+
+			return;
+		}
+
+		Document document = getDocument(articleIndex);
+
+		if (!articleIndex.isIndexable() ||
+			(!articleIndex.isApproved() && !articleIndex.isInTrash() &&
+			 !articleIndex.isExpired() &&
+			 (articleIndex.getVersion() !=
+				  JournalArticleConstants.VERSION_DEFAULT)) ||
+			(PortalUtil.getClassNameId(DDMStructure.class) ==
+				articleIndex.getClassNameId())) {
+
+			SearchEngineUtil.deleteDocument(
+				getSearchEngineId(), articleIndex.getCompanyId(),
 				document.get(Field.UID));
 
 			return;
