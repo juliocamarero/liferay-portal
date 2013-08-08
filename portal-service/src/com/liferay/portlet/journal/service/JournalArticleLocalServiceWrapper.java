@@ -902,13 +902,14 @@ public class JournalArticleLocalServiceWrapper
 	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	public void expireArticle(long userId, long groupId,
-		java.lang.String articleId, java.lang.String articleURL,
+	public com.liferay.portlet.journal.model.JournalArticle expireArticle(
+		long userId, long groupId, java.lang.String articleId,
+		java.lang.String articleURL,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_journalArticleLocalService.expireArticle(userId, groupId, articleId,
-			articleURL, serviceContext);
+		return _journalArticleLocalService.expireArticle(userId, groupId,
+			articleId, articleURL, serviceContext);
 	}
 
 	@Override
@@ -2377,11 +2378,12 @@ public class JournalArticleLocalServiceWrapper
 	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	public void restoreArticleFromTrash(long userId,
-		com.liferay.portlet.journal.model.JournalArticle article)
+	public com.liferay.portlet.journal.model.JournalArticle restoreArticleFromTrash(
+		long userId, com.liferay.portlet.journal.model.JournalArticle article)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_journalArticleLocalService.restoreArticleFromTrash(userId, article);
+		return _journalArticleLocalService.restoreArticleFromTrash(userId,
+			article);
 	}
 
 	/**
