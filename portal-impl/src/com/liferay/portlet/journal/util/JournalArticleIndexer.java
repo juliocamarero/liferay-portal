@@ -312,8 +312,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 		Document document = getBaseModelDocument(PORTLET_ID, article);
 
-		document.addUID(
-			PORTLET_ID, article.getGroupId(), article.getArticleId());
+		document.addUID(PORTLET_ID, article.getResourcePrimKey());
 
 		String articleDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
 			article.getContent());
@@ -457,8 +456,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 		if (latestIndexabletArticle == null) {
 			Document document = new DocumentImpl();
 
-			document.addUID(
-				PORTLET_ID, article.getGroupId(), article.getArticleId());
+			document.addUID(PORTLET_ID, article.getResourcePrimKey());
 
 			SearchEngineUtil.deleteDocument(
 				getSearchEngineId(), article.getCompanyId(),
