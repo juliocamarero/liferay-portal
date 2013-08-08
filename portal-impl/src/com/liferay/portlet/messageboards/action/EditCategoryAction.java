@@ -32,7 +32,6 @@ import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.messageboards.CategoryNameException;
 import com.liferay.portlet.messageboards.MailingListEmailAddressException;
 import com.liferay.portlet.messageboards.MailingListInServerNameException;
