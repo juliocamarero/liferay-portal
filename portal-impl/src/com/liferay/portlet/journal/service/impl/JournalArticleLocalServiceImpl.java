@@ -1433,6 +1433,24 @@ public class JournalArticleLocalServiceImpl
 		return article;
 	}
 
+	@Override
+	public JournalArticle fetchLatestArticleByStatus(
+			long groupId, String articleId, int status)
+		throws PortalException, SystemException {
+
+		JournalArticle article= null;
+
+		OrderByComparator orderByComparator = new ArticleVersionComparator();
+
+		if (status == WorkflowConstants.STATUS_ANY) {
+			return journalArticlePersistence.fetchByG_A_First(
+				groupId, articleId, orderByComparator);
+		}
+
+		return journalArticlePersistence.fetchByG_A_ST_First(
+			groupId, articleId, status, orderByComparator);
+	}
+
 	/**
 	 * Returns the web content article with the ID.
 	 *
