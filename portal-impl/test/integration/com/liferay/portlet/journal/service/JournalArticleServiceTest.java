@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -61,7 +62,8 @@ public class JournalArticleServiceTest {
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(_group);
 
-		JournalArticleLocalServiceUtil.deleteArticle(_article);
+		JournalArticleLocalServiceUtil.deleteArticle(
+			_group.getGroupId(), _article.getArticleId(), new ServiceContext());
 	}
 
 	@Test
@@ -73,6 +75,42 @@ public class JournalArticleServiceTest {
 	@Test
 	public void testArticleHasAprovedVersion() throws Exception {
 		testFetchLatestArticle(false, WorkflowConstants.STATUS_EXPIRED);
+	}
+
+	@Test
+	public void testFetchLatestArticleByApprovedStatusWhenArticleIsExpired()
+		throws Exception {
+
+		_updateArticle();
+
+		_expireArticle();
+
+		_fetchLatestArticleByStatus(WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertNull(_latestArticle);
+	}
+
+	@Test
+	public void testFetchLatestArticleByApprovedStatusWithApprovedVersion()
+		throws Exception {
+
+		_updateArticle();
+
+		_fetchLatestArticleByStatus(WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertTrue(_latestArticle.isApproved());
+		Assert.assertTrue(1.1 == _latestArticle.getVersion());
+	}
+
+	@Test
+	public void testFetchLatestArticleByDraftStatusWhenNoDraftVersion()
+		throws Exception {
+
+		_updateArticle();
+
+		_fetchLatestArticleByStatus(WorkflowConstants.STATUS_DRAFT);
+
+		Assert.assertNull(_latestArticle);
 	}
 
 	@Test
@@ -182,6 +220,14 @@ public class JournalArticleServiceTest {
 			"This is a test article.");
 	}
 
+	private void _expireArticle() throws Exception {
+		JournalArticleLocalServiceUtil.expireArticle(
+			_article.getUserId(), _article.getGroupId(),
+			_article.getArticleId(), null,
+			ServiceTestUtil.getServiceContext(_group.getGroupId())
+		);
+	}
+
 	private void _expireArticleLatestVersion() throws Exception {
 		_article = JournalArticleLocalServiceUtil.expireArticle(
 			_article.getUserId(), _article.getGroupId(),
@@ -193,6 +239,12 @@ public class JournalArticleServiceTest {
 		_latestArticle = JournalArticleLocalServiceUtil.fetchLatestArticle(
 			_article.getResourcePrimKey(), status,
 			status == WorkflowConstants.STATUS_APPROVED);
+	}
+
+	private void _fetchLatestArticleByStatus(int status) throws Exception {
+		_latestArticle =
+			JournalArticleLocalServiceUtil.fetchLatestArticleByStatus(
+				_group.getGroupId(), _article.getArticleId(), status);
 	}
 
 	private void _updateArticle() throws Exception {
