@@ -176,7 +176,43 @@ public class JournalIndexerTest {
 
 	@Test
 	public void testMoveArticle() throws Exception {
-		Assert.assertTrue(true);
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		JournalFolder folder = JournalTestUtil.addFolder(
+			group.getGroupId(), ServiceTestUtil.randomString());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		String content = "Liferay Architectural Approach";
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), folder.getFolderId(), "title", content, true);
+
+		searchContext.setKeywords("Architectural");
+		searchContext.setFolderIds(new long[]{folder.getFolderId()});
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+
+		JournalFolder newFolder = JournalTestUtil.addFolder(
+			group.getGroupId(), ServiceTestUtil.randomString());
+
+		JournalArticleLocalServiceUtil.moveArticle(
+			group.getGroupId(), article.getArticleId(),
+			newFolder.getFolderId());
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount,
+			searchCount(group.getGroupId(), searchContext));
+
+		searchContext.setFolderIds(new long[]{newFolder.getFolderId()});
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
 	}
 
 	@Test
