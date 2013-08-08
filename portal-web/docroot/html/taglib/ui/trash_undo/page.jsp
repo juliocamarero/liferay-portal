@@ -35,9 +35,9 @@ if (SessionMessages.contains(portletRequest, portletDisplay.getId() + SessionMes
 				continue;
 			}
 
-			primaryKeys = data.get(key);
+			primaryKeys = ArrayUtil.append(primaryKeys, data.get(key));
 
-			trashedEntriesCount += primaryKeys.length;
+			trashedEntriesCount = primaryKeys.length;
 		}
 %>
 
