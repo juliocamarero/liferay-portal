@@ -312,22 +312,22 @@ public class EditPageAttachmentsAction extends EditFileEntryAction {
 		String title = ParamUtil.getString(actionRequest, "title");
 		String attachment = ParamUtil.getString(actionRequest, "fileName");
 
-		long dlFileEntryId = 0;
+		FileEntry fileEntry = null;
 
 		if (moveToTrash) {
-			dlFileEntryId = WikiPageServiceUtil.movePageAttachmentToTrash(
+			fileEntry = WikiPageServiceUtil.movePageAttachmentToTrash(
 				nodeId, title, attachment);
 		}
 		else {
 			WikiPageServiceUtil.deletePageAttachment(nodeId, title, attachment);
 		}
 
-		if (moveToTrash && (dlFileEntryId > 0)) {
+		if (moveToTrash && (fileEntry != null)) {
 			Map<String, String[]> data = new HashMap<String, String[]>();
 
 			data.put(
 				"restoreEntryIds",
-				new String[] {String.valueOf(dlFileEntryId)});
+				new String[] {String.valueOf(fileEntry.getFileEntryId())});
 
 			SessionMessages.add(
 				actionRequest,
