@@ -1570,6 +1570,13 @@ public class JournalArticleWrapper implements JournalArticle,
 	}
 
 	@Override
+	public boolean hasApprovedVersion()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _journalArticle.hasApprovedVersion();
+	}
+
+	@Override
 	public boolean isInTrashContainer()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
