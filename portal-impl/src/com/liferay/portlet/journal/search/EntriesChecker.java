@@ -100,7 +100,7 @@ public class EntriesChecker extends RowChecker {
 				if (JournalArticlePermission.contains(
 						_permissionChecker, article, ActionKeys.DELETE) ||
 					JournalArticlePermission.contains(
-						_permissionChecker, article, ActionKeys.UPDATE)) {
+						_permissionChecker, article, ActionKeys.EXPIRE)) {
 
 					showInput = true;
 				}
