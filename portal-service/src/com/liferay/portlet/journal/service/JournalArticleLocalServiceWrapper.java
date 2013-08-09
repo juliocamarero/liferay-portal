@@ -1639,6 +1639,13 @@ public class JournalArticleLocalServiceWrapper
 		return _journalArticleLocalService.getArticlesCount(groupId, folderId);
 	}
 
+	@Override
+	public java.util.List<com.liferay.portlet.journal.model.JournalArticle> getArticleVersions(
+		long resourcePrimKey)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _journalArticleLocalService.getArticleVersions(resourcePrimKey);
+	}
+
 	/**
 	* Returns an ordered range of all the web content articles matching the
 	* company, version, and workflow status.

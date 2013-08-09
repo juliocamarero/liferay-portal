@@ -1420,6 +1420,11 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	public int getArticlesCount(long groupId, long folderId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.journal.model.JournalArticle> getArticleVersions(
+		long resourcePrimKey)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	/**
 	* Returns an ordered range of all the web content articles matching the
 	* company, version, and workflow status.
