@@ -2414,6 +2414,13 @@ public class JournalArticleLocalServiceImpl
 		return journalArticlePersistence.countByG_F(groupId, folderId);
 	}
 
+	@Override
+	public List<JournalArticle> getArticleVersions(long resourcePrimKey)
+		throws SystemException {
+
+		return journalArticlePersistence.findByResourcePrimKey(resourcePrimKey);
+	}
+
 	/**
 	 * Returns an ordered range of all the web content articles matching the
 	 * company, version, and workflow status.
