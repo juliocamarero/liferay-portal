@@ -99,7 +99,8 @@ public class JournalContentPortletDataHandler
 				dlPortletDataHandler.getExportMetadataControls()));
 
 		setImportControls(getExportControls()[0]);
-		setPublishToLiveByDefault(PropsValues.JOURNAL_CONTENT_PUBLISH_TO_LIVE_BY_DEFAULT);
+		setPublishToLiveByDefault(
+			PropsValues.JOURNAL_CONTENT_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
 
 	@Override

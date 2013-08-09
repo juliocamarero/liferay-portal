@@ -63,7 +63,8 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 				NAMESPACE, "entries", true, false, null,
 				BookmarksEntry.class.getName()));
 		setImportControls(getExportControls());
-		setPublishToLiveByDefault(PropsValues.BOOKMARKS_PUBLISH_TO_LIVE_BY_DEFAULT);
+		setPublishToLiveByDefault(
+			PropsValues.BOOKMARKS_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
 
 	@Override

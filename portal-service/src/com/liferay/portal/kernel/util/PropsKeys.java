@@ -1933,11 +1933,11 @@ public interface PropsKeys {
 
 	public static final String PLUGIN_TYPES = "plugin.types";
 
-	public static final String POLLS_PUBLISH_TO_LIVE_BY_DEFAULT = "polls.publish.to.live.by.default";
-
 	public static final String POLLER_NOTIFICATIONS_TIMEOUT = "poller.notifications.timeout";
 
 	public static final String POLLER_REQUEST_TIMEOUT = "poller.request.timeout";
+
+	public static final String POLLS_PUBLISH_TO_LIVE_BY_DEFAULT = "polls.publish.to.live.by.default";
 
 	public static final String POP_SERVER_NOTIFICATIONS_ENABLED = "pop.server.notifications.enabled";
 
@@ -2055,8 +2055,6 @@ public interface PropsKeys {
 
 	public static final String RSS_CONNECTION_TIMEOUT = "rss.connection.timeout";
 
-	public static final String RSS_PUBLISH_TO_LIVE_BY_DEFAULT = "rss.publish.to.live.by.default";
-
 	public static final String RSS_FEED_DISPLAY_STYLE_DEFAULT = "rss.feed.display.style.default";
 
 	public static final String RSS_FEED_TYPE_DEFAULT = "rss.feed.type.default";
@@ -2064,6 +2062,8 @@ public interface PropsKeys {
 	public static final String RSS_FEED_TYPES = "rss.feed.types";
 
 	public static final String RSS_FEEDS_ENABLED = "rss.feeds.enabled";
+
+	public static final String RSS_PUBLISH_TO_LIVE_BY_DEFAULT = "rss.publish.to.live.by.default";
 
 	public static final String SANDBOX_DEPLOY_DIR = "sandbox.deploy.dir";
 

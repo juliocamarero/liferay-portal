@@ -60,7 +60,8 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "events", true, true, null,
 				CalEvent.class.getName()));
-		setPublishToLiveByDefault(PropsValues.CALENDAR_PUBLISH_TO_LIVE_BY_DEFAULT);
+		setPublishToLiveByDefault(
+			PropsValues.CALENDAR_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
 
 	@Override
