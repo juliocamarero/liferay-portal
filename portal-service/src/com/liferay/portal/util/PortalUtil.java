@@ -1250,6 +1250,12 @@ public class PortalUtil {
 		return getPortal().getRelativeHomeURL(request);
 	}
 
+	public static String getRootNodeName(
+		Group group, boolean privateLayout, PageContext pageContext) {
+
+		return getPortal().getRootNodeName(group, privateLayout, pageContext);
+	}
+
 	public static long getScopeGroupId(HttpServletRequest request)
 		throws PortalException, SystemException {
 
