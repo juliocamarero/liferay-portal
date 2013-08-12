@@ -151,7 +151,10 @@ String assetVocabularyTitle = null;
 if (assetCategoryId > 0) {
 	allAssetCategoryIds = assetEntryQuery.getAllCategoryIds();
 
-	if (!ArrayUtil.contains(allAssetCategoryIds, assetCategoryId)) {
+	if (selectionStyle.equals("manual")) {
+		allAssetCategoryIds = ArrayUtil.append(allAssetCategoryIds, assetCategoryId);
+	}
+	else if (selectionStyle.equals("dynamic") && !ArrayUtil.contains(allAssetCategoryIds, assetCategoryId)) {
 		assetEntryQuery.setAllCategoryIds(ArrayUtil.append(allAssetCategoryIds, assetCategoryId));
 	}
 
