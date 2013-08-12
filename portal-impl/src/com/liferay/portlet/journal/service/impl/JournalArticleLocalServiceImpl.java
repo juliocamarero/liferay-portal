@@ -1141,10 +1141,6 @@ public class JournalArticleLocalServiceImpl
 
 		SystemEventHierarchyEntryThreadLocal.push(JournalArticle.class, 0);
 
-		JournalArticleResource articleResource =
-			journalArticleResourceLocalService.fetchArticleResource(
-				groupId, articleId);
-
 		try {
 			List<JournalArticle> articles = journalArticlePersistence.findByG_A(
 				groupId, articleId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
@@ -1158,10 +1154,16 @@ public class JournalArticleLocalServiceImpl
 			SystemEventHierarchyEntryThreadLocal.pop();
 		}
 
-		systemEventLocalService.addSystemEvent(
-			0, groupId, JournalArticle.class.getName(),
-			articleResource.getResourcePrimKey(), articleResource.getUuid(),
-			null, SystemEventConstants.TYPE_DELETE, StringPool.BLANK);
+		JournalArticleResource articleResource =
+			journalArticleResourceLocalService.fetchArticleResource(
+				groupId, articleId);
+
+		if (articleResource != null) {
+			systemEventLocalService.addSystemEvent(
+				0, groupId, JournalArticle.class.getName(),
+				articleResource.getResourcePrimKey(), articleResource.getUuid(),
+				null, SystemEventConstants.TYPE_DELETE, StringPool.BLANK);
+		}
 	}
 
 	/**
@@ -1431,6 +1433,24 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		return article;
+	}
+
+	@Override
+	public JournalArticle fetchLatestArticleByStatus(
+			long groupId, String articleId, int status)
+		throws PortalException, SystemException {
+
+		JournalArticle article= null;
+
+		OrderByComparator orderByComparator = new ArticleVersionComparator();
+
+		if (status == WorkflowConstants.STATUS_ANY) {
+			return journalArticlePersistence.fetchByG_A_First(
+				groupId, articleId, orderByComparator);
+		}
+
+		return journalArticlePersistence.fetchByG_A_ST_First(
+			groupId, articleId, status, orderByComparator);
 	}
 
 	/**
