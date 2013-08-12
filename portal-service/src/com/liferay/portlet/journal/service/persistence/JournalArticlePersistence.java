@@ -6136,6 +6136,275 @@ public interface JournalArticlePersistence extends BasePersistence<JournalArticl
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns all the journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @return the matching journal articles
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.journal.model.JournalArticle> findByR_NotC_LtD_I_ST(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int status)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns a range of all the journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.journal.model.impl.JournalArticleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @param start the lower bound of the range of journal articles
+	* @param end the upper bound of the range of journal articles (not inclusive)
+	* @return the range of matching journal articles
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.journal.model.JournalArticle> findByR_NotC_LtD_I_ST(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int status, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns an ordered range of all the journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.journal.model.impl.JournalArticleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @param start the lower bound of the range of journal articles
+	* @param end the upper bound of the range of journal articles (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching journal articles
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.journal.model.JournalArticle> findByR_NotC_LtD_I_ST(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int status, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first journal article in the ordered set where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching journal article
+	* @throws com.liferay.portlet.journal.NoSuchArticleException if a matching journal article could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portlet.journal.model.JournalArticle findByR_NotC_LtD_I_ST_First(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int status,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portlet.journal.NoSuchArticleException;
+
+	/**
+	* Returns the first journal article in the ordered set where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching journal article, or <code>null</code> if a matching journal article could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portlet.journal.model.JournalArticle fetchByR_NotC_LtD_I_ST_First(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int status,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last journal article in the ordered set where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching journal article
+	* @throws com.liferay.portlet.journal.NoSuchArticleException if a matching journal article could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portlet.journal.model.JournalArticle findByR_NotC_LtD_I_ST_Last(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int status,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portlet.journal.NoSuchArticleException;
+
+	/**
+	* Returns the last journal article in the ordered set where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching journal article, or <code>null</code> if a matching journal article could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portlet.journal.model.JournalArticle fetchByR_NotC_LtD_I_ST_Last(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int status,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the journal articles before and after the current journal article in the ordered set where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* @param id the primary key of the current journal article
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next journal article
+	* @throws com.liferay.portlet.journal.NoSuchArticleException if a journal article with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portlet.journal.model.JournalArticle[] findByR_NotC_LtD_I_ST_PrevAndNext(
+		long id, long resourcePrimKey, long classNameId,
+		java.util.Date displayDate, boolean indexable, int status,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portlet.journal.NoSuchArticleException;
+
+	/**
+	* Returns all the journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = any &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.journal.model.impl.JournalArticleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param statuses the statuses
+	* @return the matching journal articles
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.journal.model.JournalArticle> findByR_NotC_LtD_I_ST(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int[] statuses)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns a range of all the journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = any &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.journal.model.impl.JournalArticleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param statuses the statuses
+	* @param start the lower bound of the range of journal articles
+	* @param end the upper bound of the range of journal articles (not inclusive)
+	* @return the range of matching journal articles
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.journal.model.JournalArticle> findByR_NotC_LtD_I_ST(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int[] statuses, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns an ordered range of all the journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = any &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portlet.journal.model.impl.JournalArticleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param statuses the statuses
+	* @param start the lower bound of the range of journal articles
+	* @param end the upper bound of the range of journal articles (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching journal articles
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.portlet.journal.model.JournalArticle> findByR_NotC_LtD_I_ST(
+		long resourcePrimKey, long classNameId, java.util.Date displayDate,
+		boolean indexable, int[] statuses, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Removes all the journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63; from the database.
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @throws SystemException if a system exception occurred
+	*/
+	public void removeByR_NotC_LtD_I_ST(long resourcePrimKey, long classNameId,
+		java.util.Date displayDate, boolean indexable, int status)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = &#63;.
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param status the status
+	* @return the number of matching journal articles
+	* @throws SystemException if a system exception occurred
+	*/
+	public int countByR_NotC_LtD_I_ST(long resourcePrimKey, long classNameId,
+		java.util.Date displayDate, boolean indexable, int status)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of journal articles where resourcePrimKey = &#63; and classNameId &ne; &#63; and displayDate &lt; &#63; and indexable = &#63; and status = any &#63;.
+	*
+	* @param resourcePrimKey the resource prim key
+	* @param classNameId the class name ID
+	* @param displayDate the display date
+	* @param indexable the indexable
+	* @param statuses the statuses
+	* @return the number of matching journal articles
+	* @throws SystemException if a system exception occurred
+	*/
+	public int countByR_NotC_LtD_I_ST(long resourcePrimKey, long classNameId,
+		java.util.Date displayDate, boolean indexable, int[] statuses)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Caches the journal article in the entity cache if it is enabled.
 	*
 	* @param journalArticle the journal article
