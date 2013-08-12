@@ -759,6 +759,13 @@ public class AssetEntryLocalServiceUtil {
 				   .search(companyId, groupIds, className, keywords, start, end);
 	}
 
+	public static com.liferay.portlet.asset.model.AssetEntry getEntry(
+		long classNameId, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getEntry(classNameId, classPK);
+	}
+
 	public static com.liferay.portlet.asset.model.AssetEntry updateEntry(
 		long userId, long groupId, java.util.Date createDate,
 		java.util.Date modifiedDate, java.lang.String className, long classPK,
