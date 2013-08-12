@@ -304,9 +304,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void doDelete(Object obj) throws Exception {
 		JournalArticle article = (JournalArticle)obj;
 
-		deleteDocument(
-			article.getCompanyId(), article.getGroupId(),
-			article.getArticleId());
+		deleteDocument(article.getCompanyId(), article.getId());
 
 		setHead(article.getResourcePrimKey());
 	}
@@ -317,8 +315,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 		Document document = getBaseModelDocument(PORTLET_ID, article);
 
-		document.addUID(
-			PORTLET_ID, article.getGroupId(), article.getArticleId());
+		document.addUID(PORTLET_ID, article.getId());
 
 		String articleDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
 			article.getContent());
