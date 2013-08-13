@@ -87,11 +87,12 @@ public class JournalArticleScheduledTest {
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
-		titleMap.put(Locale.getDefault(), ServiceTestUtil.randomString());
+		titleMap.put(LocaleUtil.getDefault(), ServiceTestUtil.randomString());
 
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
 
-		descriptionMap.put(Locale.getDefault(), ServiceTestUtil.randomString());
+		descriptionMap.put(
+			LocaleUtil.getDefault(), ServiceTestUtil.randomString());
 
 		Calendar displayDateCalendar = new GregorianCalendar();
 
@@ -159,7 +160,12 @@ public class JournalArticleScheduledTest {
 		// Modify the article Date surpassing the service to simulate the time
 		// has passed
 
-		article.setDisplayDate(now);
+		Calendar previousDisplayDateCalendar = new GregorianCalendar();
+
+		previousDisplayDateCalendar.setTime(
+			new Date(now.getTime() - Time.MINUTE * 1));
+
+		article.setDisplayDate(previousDisplayDateCalendar.getTime());
 
 		article = JournalArticleUtil.update(article);
 
