@@ -55,15 +55,18 @@ public class JournalArticleServiceTest {
 
 		_group = GroupTestUtil.addGroup();
 
-		_addArticle();
+		_article = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, "Version 1",
+			"This is a test article.");
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		GroupLocalServiceUtil.deleteGroup(_group);
-
 		JournalArticleLocalServiceUtil.deleteArticle(
 			_group.getGroupId(), _article.getArticleId(), new ServiceContext());
+
+		GroupLocalServiceUtil.deleteGroup(_group);
 	}
 
 	@Test
@@ -78,9 +81,14 @@ public class JournalArticleServiceTest {
 
 		_updateArticle();
 
-		_expireArticle();
+		JournalArticleLocalServiceUtil.expireArticle(
+			_article.getUserId(), _article.getGroupId(),
+			_article.getArticleId(), null,
+			ServiceTestUtil.getServiceContext(_group.getGroupId()));
 
-		_fetchLatestArticleByStatus(WorkflowConstants.STATUS_APPROVED);
+		_latestArticle = JournalArticleLocalServiceUtil.fetchLatestArticle(
+			_group.getGroupId(), _article.getArticleId(),
+			WorkflowConstants.STATUS_APPROVED);
 
 		Assert.assertNull(_latestArticle);
 	}
@@ -91,7 +99,9 @@ public class JournalArticleServiceTest {
 
 		_updateArticle();
 
-		_fetchLatestArticleByStatus(WorkflowConstants.STATUS_APPROVED);
+		_latestArticle = JournalArticleLocalServiceUtil.fetchLatestArticle(
+			_group.getGroupId(), _article.getArticleId(),
+			WorkflowConstants.STATUS_APPROVED);
 
 		Assert.assertTrue(_latestArticle.isApproved());
 		Assert.assertTrue(1.1 == _latestArticle.getVersion());
@@ -103,7 +113,9 @@ public class JournalArticleServiceTest {
 
 		_updateArticle();
 
-		_fetchLatestArticleByStatus(WorkflowConstants.STATUS_DRAFT);
+		_latestArticle = JournalArticleLocalServiceUtil.fetchLatestArticle(
+			_group.getGroupId(), _article.getArticleId(),
+			WorkflowConstants.STATUS_DRAFT);
 
 		Assert.assertNull(_latestArticle);
 	}
@@ -163,13 +175,18 @@ public class JournalArticleServiceTest {
 		_updateArticle();
 
 		if (expireLatestVersion) {
-			_expireArticleLatestVersion();
+			_article = JournalArticleLocalServiceUtil.expireArticle(
+				_article.getUserId(), _article.getGroupId(),
+				_article.getArticleId(), 1.1, null,
+				ServiceTestUtil.getServiceContext(_group.getGroupId()));
 
 			Assert.assertTrue(_article.isExpired());
 			Assert.assertEquals(1.1, _article.getVersion(), 0);
 		}
 
-		_fetchLatestArticle(status);
+		_latestArticle = JournalArticleLocalServiceUtil.fetchLatestArticle(
+			_article.getResourcePrimKey(), status,
+			status == WorkflowConstants.STATUS_APPROVED);
 
 		if (expireLatestVersion) {
 			if (status == WorkflowConstants.STATUS_APPROVED) {
@@ -206,40 +223,6 @@ public class JournalArticleServiceTest {
 				Assert.assertNull(_latestArticle);
 			}
 		}
-	}
-
-	private void  _addArticle() throws Exception {
-		_article = JournalTestUtil.addArticle(
-			_group.getGroupId(),
-			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, "Version 1",
-			"This is a test article.");
-	}
-
-	private void _expireArticle() throws Exception {
-		JournalArticleLocalServiceUtil.expireArticle(
-			_article.getUserId(), _article.getGroupId(),
-			_article.getArticleId(), null,
-			ServiceTestUtil.getServiceContext(_group.getGroupId())
-		);
-	}
-
-	private void _expireArticleLatestVersion() throws Exception {
-		_article = JournalArticleLocalServiceUtil.expireArticle(
-			_article.getUserId(), _article.getGroupId(),
-			_article.getArticleId(), 1.1, null,
-			ServiceTestUtil.getServiceContext(_group.getGroupId()));
-	}
-
-	private void _fetchLatestArticle(int status) throws Exception {
-		_latestArticle = JournalArticleLocalServiceUtil.fetchLatestArticle(
-			_article.getResourcePrimKey(), status,
-			status == WorkflowConstants.STATUS_APPROVED);
-	}
-
-	private void _fetchLatestArticleByStatus(int status) throws Exception {
-		_latestArticle =
-			JournalArticleLocalServiceUtil.fetchLatestArticleByStatus(
-				_group.getGroupId(), _article.getArticleId(), status);
 	}
 
 	private void _updateArticle() throws Exception {
