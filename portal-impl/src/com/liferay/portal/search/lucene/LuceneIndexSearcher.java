@@ -31,6 +31,7 @@ import com.browseengine.bobo.facets.impl.RangeFacetHandler;
 import com.browseengine.bobo.facets.impl.SimpleFacetHandler;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.search.SearchPaginationUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -558,26 +559,18 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			long startTime, float searchTime, int start, int end)
 		throws IOException, ParseException {
 
-		int length = hitDocs.getTotalHits();
+		int total = hitDocs.getTotalHits();
 
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
 			start = 0;
-			end = length;
+			end = total;
 		}
 
-		if ((length > 0) && (start >= length)) {
-			int delta = end - start;
+		int[] startAndEnd = SearchPaginationUtil.calculateStartAndEnd(
+			start, end, total);
 
-			int cur = start / delta;
-
-			start = 0;
-
-			if (cur > 0) {
-				start = (cur - 1) * delta;
-			}
-
-			end = start + delta;
-		}
+		start = startAndEnd[0];
+		end = startAndEnd[1];
 
 		Set<String> queryTerms = new HashSet<String>();
 
@@ -597,14 +590,6 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 
 		if ((start < 0) || (start > end)) {
 			return hits;
-		}
-
-		if (end > length) {
-			end = length;
-		}
-
-		if (start > end) {
-			start = end;
 		}
 
 		int subsetTotal = end - start;
@@ -667,7 +652,7 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 		}
 
 		hits.setDocs(subsetDocs.toArray(new Document[subsetDocs.size()]));
-		hits.setLength(length);
+		hits.setLength(total);
 		hits.setQuery(query);
 		hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
 		hits.setScores(subsetScores.toArray(new Float[subsetScores.size()]));
