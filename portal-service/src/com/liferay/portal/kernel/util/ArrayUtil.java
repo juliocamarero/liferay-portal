@@ -679,6 +679,150 @@ public class ArrayUtil {
 		return false;
 	}
 
+	public static boolean containsAll(boolean[] array1, boolean[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean containsAll(byte[] array1, byte[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean containsAll(char[] array1, char[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean containsAll(double[] array1, double[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean containsAll(float[] array1, float[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean containsAll(int[] array1, int[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean containsAll(long[] array1, long[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean containsAll(Object[] array1, Object[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean containsAll(short[] array1, short[] array2) {
+		if ((array1 == null) || (array1.length == 0) ||
+			(array2 == null) || (array2.length == 0)) {
+
+			return false;
+		}
+
+		for (int i = 0; i < array2.length; i++) {
+			if (!contains(array1, array2[i])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public static String[] distinct(String[] array) {
 		return distinct(array, null);
 	}
