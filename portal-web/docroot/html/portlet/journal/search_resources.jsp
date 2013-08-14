@@ -264,9 +264,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 							String className = searchResult.getClassName();
 
 							if (className.equals(JournalArticle.class.getName())) {
-								JournalArticleResource articleResource = JournalArticleResourceLocalServiceUtil.getArticleResource(searchResult.getClassPK());
-
-								article = JournalArticleLocalServiceUtil.getArticle(articleResource.getGroupId(), articleResource.getArticleId());
+								article = JournalArticleLocalServiceUtil.fetchLatestArticle(searchResult.getClassPK(), WorkflowConstants.STATUS_ANY, false);
 							}
 							else if (className.equals(JournalFolder.class.getName())) {
 								curFolder = JournalFolderLocalServiceUtil.getFolder(searchResult.getClassPK());
