@@ -37,7 +37,6 @@ import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
-import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 
 import java.util.Calendar;
@@ -87,11 +86,12 @@ public class JournalArticleScheduledTest {
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
-		titleMap.put(Locale.getDefault(), ServiceTestUtil.randomString());
+		titleMap.put(LocaleUtil.getDefault(), ServiceTestUtil.randomString());
 
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
 
-		descriptionMap.put(Locale.getDefault(), ServiceTestUtil.randomString());
+		descriptionMap.put(
+			LocaleUtil.getDefault(), ServiceTestUtil.randomString());
 
 		Calendar displayDateCalendar = new GregorianCalendar();
 
@@ -161,7 +161,7 @@ public class JournalArticleScheduledTest {
 
 		article.setDisplayDate(now);
 
-		article = JournalArticleUtil.update(article);
+		article = JournalArticleLocalServiceUtil.updateJournalArticle(article);
 
 		// Launch the scheduled task
 

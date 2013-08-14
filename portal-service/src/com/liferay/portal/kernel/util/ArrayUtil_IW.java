@@ -227,6 +227,43 @@ public class ArrayUtil_IW {
 		return ArrayUtil.contains(array, value);
 	}
 
+	public boolean containsAll(boolean[] array1, boolean[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(byte[] array1, byte[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(char[] array1, char[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(double[] array1, double[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(float[] array1, float[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(int[] array1, int[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(long[] array1, long[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(java.lang.Object[] array1,
+		java.lang.Object[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(short[] array1, short[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
 	public java.lang.String[] distinct(java.lang.String[] array) {
 		return ArrayUtil.distinct(array);
 	}

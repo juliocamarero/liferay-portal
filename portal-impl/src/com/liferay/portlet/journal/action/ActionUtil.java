@@ -171,6 +171,7 @@ public class ActionUtil {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		long resourcePrimKey = ParamUtil.getLong(request, "resourcePrimKey");
 		long groupId = ParamUtil.getLong(
 			request, "groupId", themeDisplay.getScopeGroupId());
 		long classNameId = ParamUtil.getLong(request, "classNameId");
@@ -180,7 +181,11 @@ public class ActionUtil {
 
 		JournalArticle article = null;
 
-		if (!cmd.equals(Constants.ADD) && Validator.isNotNull(articleId)) {
+		if (cmd.equals(Constants.ADD) && (resourcePrimKey != 0)) {
+			article = JournalArticleLocalServiceUtil.getLatestArticle(
+				resourcePrimKey, WorkflowConstants.STATUS_ANY, false);
+		}
+		else if (!cmd.equals(Constants.ADD) && Validator.isNotNull(articleId)) {
 			article = JournalArticleServiceUtil.getLatestArticle(
 				groupId, articleId, WorkflowConstants.STATUS_ANY);
 		}
