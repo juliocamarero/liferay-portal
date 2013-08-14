@@ -16,7 +16,6 @@ package com.liferay.portlet.journal.service;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
@@ -27,9 +26,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
-import com.liferay.portal.test.Sync;
-import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
-import com.liferay.portal.test.TransactionalExecutionTestListener;
+import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -37,7 +34,6 @@ import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
-import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 
 import java.util.Calendar;
@@ -58,12 +54,9 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(
 	listeners = {
 		EnvironmentExecutionTestListener.class,
-		SynchronousDestinationExecutionTestListener.class,
-		TransactionalExecutionTestListener.class
+		MainServletExecutionTestListener.class
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
-@Sync
-@Transactional
 public class JournalArticleScheduledTest {
 
 	@Before
@@ -87,11 +80,12 @@ public class JournalArticleScheduledTest {
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
-		titleMap.put(Locale.getDefault(), ServiceTestUtil.randomString());
+		titleMap.put(LocaleUtil.getDefault(), ServiceTestUtil.randomString());
 
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
 
-		descriptionMap.put(Locale.getDefault(), ServiceTestUtil.randomString());
+		descriptionMap.put(
+			LocaleUtil.getDefault(), ServiceTestUtil.randomString());
 
 		Calendar displayDateCalendar = new GregorianCalendar();
 
@@ -159,9 +153,13 @@ public class JournalArticleScheduledTest {
 		// Modify the article Date surpassing the service to simulate the time
 		// has passed
 
-		article.setDisplayDate(now);
+		Calendar displayDateCalendar = new GregorianCalendar();
 
-		article = JournalArticleUtil.update(article);
+		displayDateCalendar.setTime(new Date(now.getTime() - Time.MINUTE * 5));
+
+		article.setDisplayDate(displayDateCalendar.getTime());
+
+		article = JournalArticleLocalServiceUtil.updateJournalArticle(article);
 
 		// Launch the scheduled task
 

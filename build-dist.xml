@@ -2109,10 +2109,29 @@ plugins.includes=</echo>
 						<mkdir dir="${zip.executable.dir}/../patching-tool/logs" />
 						<mkdir dir="${zip.executable.dir}/../patching-tool/patches" />
 
-						<antcall target="exec-patching-tool">
-							<param name="patching.tool.arg.line" value="auto-discovery" />
-							<param name="patching.tool.dir" value="${zip.executable.dir}/../patching-tool" />
-						</antcall>
+						<if>
+							<contains string="${zip.executable.dir}" substring="glassfish" />
+							<then>
+								<echo file="${zip.executable.dir}/../patching-tool/default.properties">
+									global.lib.path=${zip.executable.dir}/domains/domain1/autodeploy/liferay-portal.war/WEB-INF/lib/ext/
+									jdk.version=jdk6
+									patching.mode=binary
+									war.path=${zip.executable.dir}/domains/domain1/autodeploy/liferay-portal.war/
+								</echo>
+							</then>
+							<else>
+								<antcall target="exec-patching-tool">
+									<param name="patching.tool.arg.line" value="auto-discovery ${zip.executable.dir}" />
+									<param name="patching.tool.dir" value="${zip.executable.dir}/../patching-tool" />
+								</antcall>
+							</else>
+						</if>
+
+						<replace
+							file="${zip.executable.dir}/../patching-tool/default.properties"
+							token="${zip.executable.dir}"
+							value="../${zip.executable.dir.name}"
+						/>
 
 						<zip
 							destfile="dist/${zip.executable.file}-${lp.version}.zip"
