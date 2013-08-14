@@ -379,7 +379,7 @@ ${app.server.tomcat.dir}, then run "ant -buildfile build-dist.xml unzip-tomcat".
 				<copy todir="${app.server.lib.global.dir}">
 					<fileset
 						dir="lib/development"
-						includes="saxpath.jar"
+						includes="junit.jar,saxpath.jar"
 					/>
 				</copy>
 			</then>
@@ -809,7 +809,7 @@ Plugins: ${lp.plugins.dir}</echo>
 	</classpath>
 	<web>
 		<link target="/">
-			<dir name="liferay.root/portal-web/docroot/" />
+			<dir name="${basedir}/portal-web/docroot/" />
 		</link>
 	</web>
 </application>]]></echo>

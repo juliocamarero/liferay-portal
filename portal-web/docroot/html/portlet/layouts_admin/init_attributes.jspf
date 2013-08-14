@@ -174,7 +174,7 @@ else {
 	}
 }
 
-String rootNodeName = LanguageUtil.get(pageContext, pagesName);
+String rootNodeName = liveGroup.getLayoutRootNodeName(privateLayout, locale);
 
 LayoutView layoutView = layoutLister.getLayoutView(groupId, privateLayout, rootNodeName, locale);
 
