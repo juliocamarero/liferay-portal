@@ -208,6 +208,8 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 						else {
 							indexer = JournalSearcher.getInstance();
 
+							searchContext.setAttribute(Field.STATUS, WorkflowConstants.STATUS_ANY);
+
 							if (Validator.isNotNull(keywords)) {
 								searchContext.setAttribute(Field.CONTENT, keywords);
 								searchContext.setAttribute(Field.DESCRIPTION, keywords);
@@ -228,7 +230,6 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 
 						searchContext.setAttribute("head", Boolean.FALSE.toString());
 						searchContext.setAttribute("params", params);
-						searchContext.setAttribute("status", WorkflowConstants.STATUS_ANY);
 						searchContext.setEnd(searchContainer.getEnd());
 						searchContext.setFolderIds(searchTerms.getFolderIds());
 
