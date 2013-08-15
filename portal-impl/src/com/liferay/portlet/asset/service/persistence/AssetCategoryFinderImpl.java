@@ -350,6 +350,8 @@ public class AssetCategoryFinderImpl
 			boolean inlineSQLHelper)
 		throws SystemException {
 
+		name = name.trim().toLowerCase();
+
 		Session session = null;
 
 		try {

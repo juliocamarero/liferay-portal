@@ -32,7 +32,7 @@
 				AssetCategory
 			WHERE
 				(AssetCategory.groupId = ?) AND
-				(AssetCategory.name LIKE ? OR ? IS NULL) AND
+				(lower(AssetCategory.name) LIKE ? OR ? IS NULL) AND
 				(AssetCategory.vocabularyId = ?)
 		]]>
 	</sql>
@@ -78,7 +78,7 @@
 				AssetCategory
 			WHERE
 				(AssetCategory.groupId = ?) AND
-				(AssetCategory.name LIKE ? OR ? IS NULL) AND
+				(lower(AssetCategory.name) LIKE ? OR ? IS NULL) AND
 				(AssetCategory.vocabularyId = ?)
 			ORDER BY
 				AssetCategory.name ASC
@@ -351,7 +351,7 @@
 				AssetVocabulary
 			WHERE
 				(AssetVocabulary.groupId = ?) AND
-				(AssetVocabulary.name LIKE ? OR ? IS NULL)
+				(lower(AssetVocabulary.name) LIKE ? OR ? IS NULL)
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.asset.service.persistence.AssetVocabularyFinder.findByG_N">
