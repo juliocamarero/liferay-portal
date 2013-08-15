@@ -108,6 +108,39 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	@Override
+	protected void addStatus(
+			BooleanQuery contextQuery, SearchContext searchContext)
+		throws Exception {
+
+		int status = GetterUtil.getInteger(
+			searchContext.getAttribute(Field.STATUS));
+
+		if (status <= 0) {
+			BooleanQuery statusQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			statusQuery.addTerm(
+				Field.STATUS, WorkflowConstants.STATUS_APPROVED);
+			statusQuery.addTerm(
+				Field.STATUS, WorkflowConstants.STATUS_SCHEDULED);
+
+			contextQuery.add(statusQuery, BooleanClauseOccur.MUST);
+		}
+		else if (status != WorkflowConstants.STATUS_ANY) {
+			contextQuery.addRequiredTerm(Field.STATUS, status);
+		}
+		else {
+			BooleanQuery statusQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			statusQuery.addTerm(
+				Field.STATUS, WorkflowConstants.STATUS_IN_TRASH);
+
+			contextQuery.add(statusQuery, BooleanClauseOccur.MUST_NOT);
+		}
+	}
+
+	@Override
 	public void postProcessContextQuery(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
