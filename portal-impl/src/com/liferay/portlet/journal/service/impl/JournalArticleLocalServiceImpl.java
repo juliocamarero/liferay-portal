@@ -1475,7 +1475,9 @@ public class JournalArticleLocalServiceImpl
 		OrderByComparator orderByComparator = new ArticleVersionComparator();
 
 		int[] statuses = new int[] {
-			WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_IN_TRASH
+			WorkflowConstants.STATUS_APPROVED,
+			WorkflowConstants.STATUS_IN_TRASH,
+			WorkflowConstants.STATUS_SCHEDULED
 		};
 
 		List<JournalArticle> articles =
@@ -5143,6 +5145,7 @@ public class JournalArticleLocalServiceImpl
 	 * @throws PortalException if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle updateStatus(
 			long userId, JournalArticle article, int status, String articleURL,
@@ -5432,6 +5435,7 @@ public class JournalArticleLocalServiceImpl
 	 *         found or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle updateStatus(
 			long userId, long classPK, int status,
@@ -5467,6 +5471,7 @@ public class JournalArticleLocalServiceImpl
 	 *         found or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle updateStatus(
 			long userId, long groupId, String articleId, double version,
