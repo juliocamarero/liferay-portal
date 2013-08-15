@@ -81,6 +81,8 @@ public class AssetCategoryFinderImpl
 	public int countByG_C_N(long groupId, long classNameId, String name)
 		throws SystemException {
 
+		name = name.trim().toLowerCase();
+
 		Session session = null;
 
 		try {
@@ -129,6 +131,8 @@ public class AssetCategoryFinderImpl
 	public int countByG_N_P(
 			long groupId, String name, String[] categoryProperties)
 		throws SystemException {
+
+		name = name.trim().toLowerCase();
 
 		Session session = null;
 
@@ -312,6 +316,8 @@ public class AssetCategoryFinderImpl
 			int end)
 		throws SystemException {
 
+		name = name.trim().toLowerCase();
+
 		Session session = null;
 
 		try {
@@ -349,6 +355,8 @@ public class AssetCategoryFinderImpl
 			long groupId, String name, long vocabularyId,
 			boolean inlineSQLHelper)
 		throws SystemException {
+
+		name = name.trim().toLowerCase();
 
 		Session session = null;
 
