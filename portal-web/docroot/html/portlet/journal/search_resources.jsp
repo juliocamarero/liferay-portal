@@ -208,6 +208,8 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 						else {
 							indexer = JournalSearcher.getInstance();
 
+							searchContext.setAttribute(Field.STATUS, WorkflowConstants.STATUS_ANY);
+
 							if (Validator.isNotNull(keywords)) {
 								searchContext.setAttribute(Field.CONTENT, keywords);
 								searchContext.setAttribute(Field.DESCRIPTION, keywords);
@@ -226,6 +228,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 
 						params.put("expandoAttributes", searchTerms.getKeywords());
 
+						searchContext.setAttribute("head", Boolean.FALSE.toString());
 						searchContext.setAttribute("params", params);
 						searchContext.setEnd(searchContainer.getEnd());
 						searchContext.setFolderIds(searchTerms.getFolderIds());
@@ -261,9 +264,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 							String className = searchResult.getClassName();
 
 							if (className.equals(JournalArticle.class.getName())) {
-								JournalArticleResource articleResource = JournalArticleResourceLocalServiceUtil.getArticleResource(searchResult.getClassPK());
-
-								article = JournalArticleLocalServiceUtil.getArticle(articleResource.getGroupId(), articleResource.getArticleId());
+								article = JournalArticleLocalServiceUtil.fetchLatestArticle(searchResult.getClassPK(), WorkflowConstants.STATUS_ANY, false);
 							}
 							else if (className.equals(JournalFolder.class.getName())) {
 								curFolder = JournalFolderLocalServiceUtil.getFolder(searchResult.getClassPK());
@@ -282,6 +283,10 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 									rowURL.setParameter("folderId", String.valueOf(article.getFolderId()));
 									rowURL.setParameter("articleId", article.getArticleId());
 
+									List<String> versions = searchResult.getVersions();
+
+									Collections.sort(versions);
+
 									request.setAttribute("view_entries.jsp-article", article);
 									%>
 
@@ -299,6 +304,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 										thumbnailSrc='<%= Validator.isNotNull(article.getArticleImageURL(themeDisplay)) ? article.getArticleImageURL(themeDisplay) : themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>'
 										title="<%= (summary != null) ? HtmlUtil.escape(summary.getTitle()) : article.getTitle(locale) %>"
 										url="<%= rowURL.toString() %>"
+										versions="<%= versions %>"
 									/>
 								</c:when>
 
