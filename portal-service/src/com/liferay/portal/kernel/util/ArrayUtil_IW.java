@@ -227,6 +227,43 @@ public class ArrayUtil_IW {
 		return ArrayUtil.contains(array, value);
 	}
 
+	public boolean containsAll(boolean[] array1, boolean[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(byte[] array1, byte[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(char[] array1, char[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(double[] array1, double[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(float[] array1, float[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(int[] array1, int[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(long[] array1, long[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(java.lang.Object[] array1,
+		java.lang.Object[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
+	public boolean containsAll(short[] array1, short[] array2) {
+		return ArrayUtil.containsAll(array1, array2);
+	}
+
 	public java.lang.String[] distinct(java.lang.String[] array) {
 		return ArrayUtil.distinct(array);
 	}
@@ -287,6 +324,42 @@ public class ArrayUtil_IW {
 
 	public java.lang.Object getValue(java.lang.Object[] array, int pos) {
 		return ArrayUtil.getValue(array, pos);
+	}
+
+	public boolean isEmpty(boolean[] array) {
+		return ArrayUtil.isEmpty(array);
+	}
+
+	public boolean isEmpty(byte[] array) {
+		return ArrayUtil.isEmpty(array);
+	}
+
+	public boolean isEmpty(char[] array) {
+		return ArrayUtil.isEmpty(array);
+	}
+
+	public boolean isEmpty(double[] array) {
+		return ArrayUtil.isEmpty(array);
+	}
+
+	public boolean isEmpty(float[] array) {
+		return ArrayUtil.isEmpty(array);
+	}
+
+	public boolean isEmpty(int[] array) {
+		return ArrayUtil.isEmpty(array);
+	}
+
+	public boolean isEmpty(long[] array) {
+		return ArrayUtil.isEmpty(array);
+	}
+
+	public boolean isEmpty(Object[] array) {
+		return ArrayUtil.isEmpty(array);
+	}
+
+	public static boolean isEmpty(short[] array) {
+		return ArrayUtil.isEmpty(array);
 	}
 
 	public boolean[] remove(boolean[] array, boolean value) {

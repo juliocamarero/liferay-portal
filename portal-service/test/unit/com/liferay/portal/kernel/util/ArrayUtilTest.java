@@ -24,8 +24,94 @@ import org.junit.Test;
 
 /**
  * @author Eudaldo Alonso
+ * @author Roberto Díaz
  */
 public class ArrayUtilTest {
+
+	@Test
+	public void testContainsAllBooleanArray() throws Exception {
+		boolean[] array1 = {true};
+		boolean[] array2 = {true, false};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
+
+	@Test
+	public void testContainsAllByteArray() throws Exception {
+		byte[] array1 = {1, 2};
+		byte[] array2= {1, 2, 3};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
+
+	@Test
+	public void testContainsAllCharArray() throws Exception {
+		char[] array1 = {'a', 'b'};
+		char[] array2 = {'a', 'b', 'c'};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
+
+	@Test
+	public void testContainsAllDoubleArray() throws Exception {
+		double[] array1 = {1.5D, 2.5D};
+		double[] array2 = {1.5D, 2.5D, 3.5D};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
+
+	@Test
+	public void testContainsAllFloatArray() throws Exception {
+		float[] array1 = {1.5f, 2.5f};
+		float[] array2 = {1.5f, 2.5f, 3.5f};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
+
+	@Test
+	public void testContainsAllIntArray() throws Exception {
+		int[] array1 = {1, 2};
+		int[] array2 = {1, 2, 3};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
+
+	@Test
+	public void testContainsAllLongArray() throws Exception {
+		long[] array1 = {1L, 2L};
+		long[] array2 = {1L, 2L, 3L};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
+
+	@Test
+	public void testContainsAllShortArray() throws Exception {
+		short[] array1 = {1, 2};
+		short[] array2 = {1, 2, 3};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
+
+	@Test
+	public void testContainsAllUserArray() throws Exception {
+		User brian = new User("brian", 20);
+		User julio = new User("julio", 20);
+		User sergio = new User("sergio", 20);
+
+		User[] array1 = {julio, sergio};
+		User[] array2 = {brian, julio, sergio};
+
+		Assert.assertFalse(ArrayUtil.containsAll(array1, array2));
+		Assert.assertTrue(ArrayUtil.containsAll(array2, array1));
+	}
 
 	@Test
 	public void testFilterDoubleArray() {
@@ -105,6 +191,74 @@ public class ArrayUtilTest {
 		User[] array = ArrayUtil.filter(null, _userPredicateFilter);
 
 		Assert.assertNull(array);
+	}
+
+	@Test
+	public void testIsEmptyBooleanArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((boolean[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new boolean[] {}));
+		Assert.assertFalse(ArrayUtil.isEmpty(new boolean[] {true, true}));
+	}
+
+	@Test
+	public void testIsEmptyByteArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((byte[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new byte[] {}));
+		Assert.assertFalse(ArrayUtil.isEmpty(new byte[] {1, 2}));
+	}
+
+	@Test
+	public void testIsEmptyCharArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((char[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new char[] {}));
+		Assert.assertFalse(ArrayUtil.isEmpty(new char[] {1, 2}));
+	}
+
+	@Test
+	public void testIsEmptyDoubleArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((double[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new double[] {}));
+		Assert.assertFalse(ArrayUtil.isEmpty(new double[] {1, 2}));
+	}
+
+	@Test
+	public void testIsEmptyFloatArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((float[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new float[] {}));
+		Assert.assertFalse(ArrayUtil.isEmpty(new float[] {1, 2}));
+	}
+
+	@Test
+	public void testIsEmptyIntArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((int[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new int[] {}));
+		Assert.assertFalse(ArrayUtil.isEmpty(new int[] {1, 2}));
+	}
+
+	@Test
+	public void testIsEmptyLongArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((long[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new long[] {}));
+		Assert.assertFalse(ArrayUtil.isEmpty(new long[] {1, 2}));
+	}
+
+	@Test
+	public void testIsEmptyShortArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((short[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new short[] {}));
+		Assert.assertFalse(ArrayUtil.isEmpty(new short[] {1, 2}));
+	}
+
+	@Test
+	public void testIsEmptyUserArray() {
+		Assert.assertTrue(ArrayUtil.isEmpty((User[])null));
+		Assert.assertTrue(ArrayUtil.isEmpty(new User[] {}));
+		Assert.assertFalse(
+			ArrayUtil.isEmpty(
+				new User[] {
+					new User("brian", 20), new User("julio", 20),
+					new User("sergio", 20)
+				}));
 	}
 
 	@Test
