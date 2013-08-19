@@ -436,13 +436,11 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		for (long groupId : groupIds) {
-			JSONArray categoriesJSONArray = null;
-
 			for (long vocabularyId : vocabularyIds) {
-				categoriesJSONArray =
-					toJSONArray(
-						getVocabularyCategories(
-							groupId, name, vocabularyId, start, end, null));
+				List<AssetCategory> categories = getVocabularyCategories(
+					groupId, name, vocabularyId, start, end, null);
+
+				JSONArray categoriesJSONArray = toJSONArray(categories);
 
 				for (int j = 0; j < categoriesJSONArray.length(); j++) {
 					jsonArray.put(categoriesJSONArray.getJSONObject(j));
