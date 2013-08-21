@@ -100,13 +100,15 @@ public class AssetPublisherUtil {
 			PortletRequest portletRequest,
 			PortletPreferences portletPreferences,
 			PermissionChecker permissionChecker, long[] groupIds,
-			String[] assetEntryXmls, boolean deleteMissingAssetEntries,
+			long[] assetCategoryIds, String[] assetEntryXmls,
+			String[] assetTagNames, boolean deleteMissingAssetEntries,
 			boolean checkPermission)
 		throws Exception {
 
 		return getAssetPublisher().getAssetEntries(
 			portletRequest, portletPreferences, permissionChecker, groupIds,
-			assetEntryXmls, deleteMissingAssetEntries, checkPermission);
+			assetCategoryIds, assetEntryXmls, assetTagNames,
+			deleteMissingAssetEntries, checkPermission);
 	}
 
 	public static List<AssetEntry> getAssetEntries(
@@ -114,14 +116,12 @@ public class AssetPublisherUtil {
 			PortletPreferences portletPreferences,
 			PermissionChecker permissionChecker, long[] groupIds,
 			String[] assetEntryXmls, boolean deleteMissingAssetEntries,
-			boolean checkPermission, long[] assetCategoryIds,
-			String[] assetTagNames)
+			boolean checkPermission)
 		throws Exception {
 
 		return getAssetPublisher().getAssetEntries(
 			portletRequest, portletPreferences, permissionChecker, groupIds,
-			assetCategoryIds, assetEntryXmls, assetTagNames,
-			deleteMissingAssetEntries, checkPermission);
+			assetEntryXmls, deleteMissingAssetEntries, checkPermission);
 	}
 
 	public static AssetEntryQuery getAssetEntryQuery(
