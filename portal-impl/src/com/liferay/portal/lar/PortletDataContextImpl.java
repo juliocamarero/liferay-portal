@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -769,7 +770,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	@Override
 	public Object fromXML(byte[] bytes) {
-		if ((bytes == null) || (bytes.length == 0)) {
+		if (ArrayUtil.isEmpty(bytes)) {
 			return null;
 		}
 
@@ -2096,10 +2097,12 @@ public class PortletDataContextImpl implements PortletDataContext {
 			return null;
 		}
 
-		StringBundler sb = new StringBundler(4);
+		StringBundler sb = new StringBundler(6);
 
 		sb.append("staged-model");
-		sb.append("[@" + attribute + "='");
+		sb.append("[@");
+		sb.append(attribute);
+		sb.append("='");
 		sb.append(value);
 		sb.append("']");
 
