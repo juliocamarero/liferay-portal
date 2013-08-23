@@ -52,12 +52,15 @@ public class ManifestSummary implements Serializable {
 		return modelName.concat(StringPool.POUND).concat(referrerModelName);
 	}
 
-	public void addConfigurationPortlet(Portlet portlet, String[] options) {
+	public void addConfigurationPortlet(
+		Portlet portlet, String[] configurationPortletOptions) {
+
 		String rootPortletId = portlet.getRootPortletId();
 
 		if (!_configurationPortletOptions.containsKey(rootPortletId)) {
 			_configurationPortlets.add(portlet);
-			_configurationPortletOptions.put(rootPortletId, options);
+			_configurationPortletOptions.put(
+				rootPortletId, configurationPortletOptions);
 		}
 	}
 

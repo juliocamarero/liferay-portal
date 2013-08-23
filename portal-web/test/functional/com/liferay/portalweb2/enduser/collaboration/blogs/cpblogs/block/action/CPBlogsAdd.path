@@ -14,6 +14,11 @@
 	<td>CPBlogsAdd</td>
 </tr>
 <tr>
+	<td>SUCCESS_MESSAGE</td>
+	<td>//div[@class='alert alert-success']</td>
+	<td></td>
+</tr>
+<tr>
 	<td></td>
 	<td></td>
 	<td></td>
@@ -31,6 +36,11 @@
 <tr>
 	<td>PUBLISH_BUTTON</td>
 	<td>//button[@id='_161_publishButton']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SAVE_AS_DRAFT_BUTTON</td>
+	<td>//button[@id='_161_saveButton']</td>
 	<td></td>
 </tr>
 <tr>
