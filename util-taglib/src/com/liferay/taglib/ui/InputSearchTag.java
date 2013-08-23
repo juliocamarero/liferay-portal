@@ -28,12 +28,20 @@ public class InputSearchTag extends IncludeTag {
 		return _buttonLabel;
 	}
 
+	public String getCssClass() {
+		return _cssClass;
+	}
+
 	public DisplayTerms getDisplayTerms() {
 		return _displayTerms;
 	}
 
 	public String getId() {
 		return _id;
+	}
+
+	public String getName() {
+		return _name;
 	}
 
 	public boolean isShowButton() {
@@ -44,12 +52,20 @@ public class InputSearchTag extends IncludeTag {
 		_buttonLabel = buttonLabel;
 	}
 
+	public void setCssClass(String cssClass) {
+		_cssClass = cssClass;
+	}
+
 	public void setDisplayTerms(DisplayTerms displayTerms) {
 		_displayTerms = displayTerms;
 	}
 
 	public void setId(String id) {
 		_id = id;
+	}
+
+	public void setName(String name) {
+		_name = name;
 	}
 
 	public void setShowButton(boolean showButton) {
@@ -70,17 +86,21 @@ public class InputSearchTag extends IncludeTag {
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
 			"liferay-ui:input-search:buttonLabel", _buttonLabel);
+		request.setAttribute("liferay-ui:input-search:cssClass", _cssClass);
 		request.setAttribute(
 			"liferay-ui:input-search:displayTerms", _displayTerms);
 		request.setAttribute("liferay-ui:input-search:id", _id);
+		request.setAttribute("liferay-ui:input-search:name", _name);
 		request.setAttribute("liferay-ui:input-search:showButton", _showButton);
 	}
 
 	private static final String _PAGE = "/html/taglib/ui/input_search/page.jsp";
 
 	private String _buttonLabel;
+	private String _cssClass;
 	private DisplayTerms _displayTerms;
 	private String _id;
+	private String _name;
 	private boolean _showButton = true;
 
 }

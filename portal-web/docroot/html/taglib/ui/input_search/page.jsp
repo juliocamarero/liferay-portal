@@ -17,14 +17,16 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
-String buttonLabel = GetterUtil.getString((String) request.getAttribute("liferay-ui:input-search:buttonLabel"), UnicodeLanguageUtil.get(pageContext, "search"));
+String buttonLabel = GetterUtil.getString((String) request.getAttribute("liferay-ui:input-search:buttonLabel"), LanguageUtil.get(pageContext, "search"));
+String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-search:cssClass"), "input-append");
 DisplayTerms displayTerms = (DisplayTerms)GetterUtil.getObject(request.getAttribute("liferay-ui:input-search:displayTerms"), new DisplayTerms(portletRequest));
 String id = (String)request.getAttribute("liferay-ui:input-search:id");
+String name = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-search:name"), portletResponse.getNamespace() + DisplayTerms.KEYWORDS);
 boolean showButton = GetterUtil.getBoolean(request.getAttribute("liferay-ui:input-search:showButton"), true);
 %>
 
-	<div class="input-append" <%= Validator.isNotNull(id) ? "id=\"" + id + "simple\"" : StringPool.BLANK %> >
-		<input class="search-query span9" id="<%= Validator.isNotNull(id) ? id + DisplayTerms.KEYWORDS : portletResponse.getNamespace() + DisplayTerms.KEYWORDS %>" name="<portlet:namespace /><%= DisplayTerms.KEYWORDS %>" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= HtmlUtil.escapeAttribute(displayTerms.getKeywords()) %>" />
+	<div class="<%= cssClass %>" <%= Validator.isNotNull(id) ? "id=\"" + id + "simple\"" : StringPool.BLANK %> >
+		<input class="search-query span9" id="<%= Validator.isNotNull(id) ? id : portletResponse.getNamespace() + DisplayTerms.KEYWORDS %>" name="<%= name %>" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= HtmlUtil.escapeAttribute(displayTerms.getKeywords()) %>" />
 
 		<c:if test="<%= showButton %>">
 			<button class="btn" type="submit">
