@@ -43,7 +43,7 @@
 		</aui:nav>
 
 		<div class="navbar-search pull-right">
-			<liferay-ui:input-search cssClass="form-search" id='<%= liferayPortletResponse.getNamespace() + "tagsAdminSearchInput" %>' name='<%= liferayPortletResponse.getNamespace() + "tagsAdminSearchInput" %>' showButton="<%= false %>" />
+			<liferay-ui:input-search cssClass="form-search" id="tagsAdminSearchInput" name="tagsAdminSearchInput" showButton="<%= false %>" />
 		</div>
 	</aui:nav-bar>
 
