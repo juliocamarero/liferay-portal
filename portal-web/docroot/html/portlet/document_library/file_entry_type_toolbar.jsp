@@ -45,16 +45,7 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem");
 			</liferay-portlet:renderURL>
 
 			<aui:form action="<%= searchURL.toString() %>" method="post" name="fm">
-
-				<%
-				DisplayTerms displayTerms = new DisplayTerms(renderRequest);
-				%>
-
-				<div class="input-append">
-					<input class="search-query span9" id="<portlet:namespace/>keywords" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= displayTerms.getKeywords() %>" />
-
-					<aui:button primary="<%= false %>" type="submit" value="search" />
-				</div>
+				<liferay-ui:input-search />
 			</aui:form>
 		</div>
 	</div>
