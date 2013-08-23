@@ -50,7 +50,7 @@
 				<aui:option label="vocabularies" selected="<%= true %>" />
 			</aui:select>
 
-			<liferay-ui:input-search cssClass="form-search" id='<%= liferayPortletResponse.getNamespace() + "categoriesAdminSearchInput" %>' name='<%= liferayPortletResponse.getNamespace() + "tagsAdminSearchInput" %>' showButton="<%= false %>" />
+			<liferay-ui:input-search cssClass="form-search" id="categoriesAdminSearchInput" name="tagsAdminSearchInput" showButton="<%= false %>" />
 		</div>
 	</aui:nav-bar>
 

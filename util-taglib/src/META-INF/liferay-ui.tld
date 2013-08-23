@@ -2003,6 +2003,11 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>input-scheduler</name>
+		<tag-class>com.liferay.taglib.ui.InputSchedulerTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	<tag>
 		<name>input-search</name>
 		<tag-class>com.liferay.taglib.ui.InputSearchTag</tag-class>
 		<body-content>JSP</body-content>
@@ -2036,11 +2041,6 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-	</tag>
-	<tag>
-		<name>input-scheduler</name>
-		<tag-class>com.liferay.taglib.ui.InputSchedulerTag</tag-class>
-		<body-content>JSP</body-content>
 	</tag>
 	<tag>
 		<name>input-select</name>
