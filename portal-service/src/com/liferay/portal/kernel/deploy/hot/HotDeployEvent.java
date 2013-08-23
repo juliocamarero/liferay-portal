@@ -14,21 +14,18 @@
 
 package com.liferay.portal.kernel.deploy.hot;
 
-import com.liferay.portal.kernel.deploy.DeployManagerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.plugin.PluginPackage;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
 
@@ -83,60 +80,36 @@ public class HotDeployEvent {
 			return;
 		}
 
-		List<String[]> levelsRequiredDeploymentContexts =
-			DeployManagerUtil.getLevelsRequiredDeploymentContexts();
-
-		for (String[] levelRequiredDeploymentContexts :
-				levelsRequiredDeploymentContexts) {
-
-			if (ArrayUtil.contains(
-					levelRequiredDeploymentContexts,
-					_servletContext.getServletContextName())) {
-
-				break;
-			}
-
-			for (String levelRequiredDeploymentContext :
-					levelRequiredDeploymentContexts) {
-
-				_dependentServletContextNames.add(
-					levelRequiredDeploymentContext);
-			}
-		}
-
-		InputStream inputStream = _servletContext.getResourceAsStream(
+		InputStream is = _servletContext.getResourceAsStream(
 			"/WEB-INF/liferay-plugin-package.properties");
 
-		if (inputStream != null) {
-			String propertiesString = StringUtil.read(inputStream);
-
-			Properties properties = PropertiesUtil.load(propertiesString);
-
-			String[] pluginPackgeRequiredDeploymentContexts =
-				StringUtil.split(
-					properties.getProperty("required-deployment-contexts"));
-
-			for (String pluginPackageRequiredDeploymentContext :
-					pluginPackgeRequiredDeploymentContexts) {
-
-				_dependentServletContextNames.add(
-					pluginPackageRequiredDeploymentContext.trim());
-			}
+		if (is == null) {
+			return;
 		}
 
-		if (!_dependentServletContextNames.isEmpty() && _log.isInfoEnabled()) {
-			String servletContextName = _servletContext.getServletContextName();
+		String propertiesString = StringUtil.read(is);
 
+		Properties properties = PropertiesUtil.load(propertiesString);
+
+		String[] requiredDeploymentContexts = StringUtil.split(
+			properties.getProperty("required-deployment-contexts"));
+
+		if ((requiredDeploymentContexts.length > 0) && _log.isInfoEnabled()) {
 			_log.info(
-				"Plugin " + servletContextName + " requires " +
-					StringUtil.merge(_dependentServletContextNames, ", "));
+				"Plugin " + _servletContext.getServletContextName() +
+					" requires " +
+					StringUtil.merge(requiredDeploymentContexts, ", "));
+		}
+
+		for (String requiredDeploymentContext : requiredDeploymentContexts) {
+			_dependentServletContextNames.add(requiredDeploymentContext.trim());
 		}
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(HotDeployEvent.class);
 
 	private ClassLoader _contextClassLoader;
-	private Set<String> _dependentServletContextNames = new TreeSet<String>();
+	private Set<String> _dependentServletContextNames = new HashSet<String>();
 	private PluginPackage _pluginPackage;
 	private ServletContext _servletContext;
 

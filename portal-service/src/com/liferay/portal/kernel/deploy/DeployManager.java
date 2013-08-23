@@ -38,13 +38,7 @@ public interface DeployManager {
 
 	public List<PluginPackage> getInstalledPluginPackages();
 
-	public List<String[]> getLevelsRequiredDeploymentContexts();
-
-	public List<String[]> getLevelsRequiredDeploymentWARFileNames();
-
 	public boolean isDeployed(String context);
-
-	public boolean isRequiredDeploymentContext(String context);
 
 	public PluginPackage readPluginPackageProperties(
 		String displayName, Properties properties);
