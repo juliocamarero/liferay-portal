@@ -14,18 +14,73 @@
 
 package com.liferay.taglib.ui;
 
+import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.taglib.util.IncludeTag;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Roberto Díaz
  */
 public class InputSearchTag extends IncludeTag {
 
+	public String getButtonLabel() {
+		return _buttonLabel;
+	}
+
+	public DisplayTerms getDisplayTerms() {
+		return _displayTerms;
+	}
+
+	public String getId() {
+		return _id;
+	}
+
+	public boolean isShowButton() {
+		return _showButton;
+	}
+
+	public void setButtonLabel(String buttonLabel) {
+		_buttonLabel = buttonLabel;
+	}
+
+	public void setDisplayTerms(DisplayTerms displayTerms) {
+		_displayTerms = displayTerms;
+	}
+
+	public void setId(String id) {
+		_id = id;
+	}
+
+	public void setShowButton(boolean showButton) {
+		_showButton = showButton;
+	}
+
+	@Override
+	protected void cleanUp() {
+		_showButton = true;
+	}
+
 	@Override
 	protected String getPage() {
 		return _PAGE;
 	}
 
+	@Override
+	protected void setAttributes(HttpServletRequest request) {
+		request.setAttribute(
+			"liferay-ui:input-search:buttonLabel", _buttonLabel);
+		request.setAttribute(
+			"liferay-ui:input-search:displayTerms", _displayTerms);
+		request.setAttribute("liferay-ui:input-search:id", _id);
+		request.setAttribute("liferay-ui:input-search:showButton", _showButton);
+	}
+
 	private static final String _PAGE = "/html/taglib/ui/input_search/page.jsp";
+
+	private String _buttonLabel;
+	private DisplayTerms _displayTerms;
+	private String _id;
+	private boolean _showButton = true;
 
 }
