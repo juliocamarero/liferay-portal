@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="portal-impl" basedir="." default="compile" xmlns:antelope="antlib:ise.antelope.tasks">
+<project name="portal-impl" basedir="." default="compile"
+	xmlns:antelope="antlib:ise.antelope.tasks"
+	xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+>
 	<property name="test.properties" value="portal-test.properties" />
 
 	<import file="../build-common-java.xml" />
@@ -131,6 +134,42 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 			<arg value="javax/naming/directory/DirContext.java" />
 		</java>
 	</target>-->
+
+	<target name="build-bobo-browse-jar">
+		<get dest="release-3.2.0.zip" src="https://codeload.github.com/senseidb/bobo/zip/release-3.2.0" />
+
+		<tstamp>
+			<format property="tstamp.value" pattern="yyyyMMddkkmmssSSS" />
+		</tstamp>
+
+		<unzip
+			dest="${tstamp.value}"
+			src="release-3.2.0.zip"
+		/>
+
+		<delete file="release-3.2.0.zip" />
+
+		<patch patchfile="${project.dir}/lib/portal/bobo-browse/LPS-28980.patch"
+			dir="${tstamp.value}/bobo-release-3.2.0"
+			strip="1"
+		/>
+
+		<patch patchfile="${project.dir}/lib/portal/bobo-browse/LPS-38192.patch"
+			dir="${tstamp.value}/bobo-release-3.2.0"
+			strip="1"
+		/>
+
+		<artifact:mvn pom="${tstamp.value}/bobo-release-3.2.0/bobo-browse/pom.xml">
+			<arg value="package" />
+		</artifact:mvn>
+
+		<move
+			file="${tstamp.value}/bobo-release-3.2.0/bobo-browse/target/bobo-browse-3.2.0.jar"
+			tofile="${project.dir}/lib/portal/bobo-browse.jar.new"
+		/>
+
+		<delete dir="${tstamp.value}" />
+	</target>
 
 	<target name="build-creole-parser">
 		<delete>
@@ -1484,6 +1523,25 @@ public class Creole10Parser]]></replacevalue>
 		</pathconvert>
 
 		<echo file="${portal-impl.classes.dir}/com/liferay/portal/deploy/dependencies/osgi/portal/jars.txt">${osgi.portal.jars.list}</echo>
+
+		<for list="1,2,3,4,5,6,7,8,9" param="index">
+			<sequential>
+				<if>
+					<available file="${portal-impl.classes.dir}/com/liferay/portal/deploy/dependencies/plugins@{index}" />
+					<then>
+						<fileset dir="${portal-impl.classes.dir}/com/liferay/portal/deploy/dependencies/plugins@{index}" id="plugins@{index}.wars">
+							<include name="*.war" />
+						</fileset>
+
+						<pathconvert property="plugins@{index}.wars.list" pathsep="," refid="plugins@{index}.wars">
+							<flattenmapper />
+						</pathconvert>
+
+						<echo file="${portal-impl.classes.dir}/com/liferay/portal/deploy/dependencies/plugins@{index}/wars.txt">${plugins@{index}.wars.list}</echo>
+					</then>
+				</if>
+			</sequential>
+		</for>
 
 		<if>
 			<not>

@@ -126,7 +126,7 @@ List<Group> groups = (List<Group>)request.getAttribute("user.groups");
 
 						var rowColumns = [];
 
-						rowColumns.push(A.Escape.html(event.groupname));
+						rowColumns.push(A.Escape.html(event.groupdescriptivename));
 						rowColumns.push('');
 						rowColumns.push('<a class="modify-link" data-rowId="' + event.groupid + '" href="javascript:;"><%= UnicodeFormatter.toString(removeGroupIcon) %></a>');
 

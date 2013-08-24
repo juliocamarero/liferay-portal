@@ -115,16 +115,16 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 		>
 
 			<%
-			String groupName = HtmlUtil.escape(group.getDescriptiveName(locale));
+			String groupDescriptiveName = HtmlUtil.escape(group.getDescriptiveName(locale));
 
 			if (group.isUser()) {
-				groupName = LanguageUtil.get(pageContext, "my-site");
+				groupDescriptiveName = LanguageUtil.get(pageContext, "my-site");
 			}
 			%>
 
 			<liferay-ui:search-container-column-text
 				name="name"
-				value="<%= groupName %>"
+				value="<%= groupDescriptiveName %>"
 			/>
 
 			<liferay-ui:search-container-column-text
@@ -137,8 +137,8 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 				<%
 				Map<String, Object> data = new HashMap<String, Object>();
 
+				data.put("groupdescriptivename", HtmlUtil.escape(groupDescriptiveName));
 				data.put("groupid", group.getGroupId());
-				data.put("groupname", HtmlUtil.escape(groupName));
 				%>
 
 				<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />

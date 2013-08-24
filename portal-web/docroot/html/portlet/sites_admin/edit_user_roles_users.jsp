@@ -22,7 +22,7 @@ String tabs1 = (String)request.getAttribute("edit_user_roles.jsp-tabs1");
 int cur = (Integer)request.getAttribute("edit_user_roles.jsp-cur");
 
 Group group = (Group)request.getAttribute("edit_user_roles.jsp-group");
-String groupName = (String)request.getAttribute("edit_user_roles.jsp-groupName");
+String groupDescriptiveName = (String)request.getAttribute("edit_user_roles.jsp-groupDescriptiveName");
 Role role = (Role)request.getAttribute("edit_user_roles.jsp-role");
 long roleId = (Long)request.getAttribute("edit_user_roles.jsp-roleId");
 Organization organization = (Organization)request.getAttribute("edit_user_roles.jsp-organization");
@@ -36,7 +36,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_roles.jsp-po
 <div>
 	<%= LanguageUtil.format(pageContext, "step-x-of-x", new String[] {"2", "2"}) %>
 
-	<%= LanguageUtil.format(pageContext, "current-signifies-current-users-associated-with-the-x-role.-available-signifies-all-users-associated-with-the-x-x", new String[] {HtmlUtil.escape(role.getTitle(locale)), HtmlUtil.escape(groupName), LanguageUtil.get(pageContext, (group.isOrganization() ? "organization" : "site"))}) %>
+	<%= LanguageUtil.format(pageContext, "current-signifies-current-users-associated-with-the-x-role.-available-signifies-all-users-associated-with-the-x-x", new String[] {HtmlUtil.escape(role.getTitle(locale)), HtmlUtil.escape(groupDescriptiveName), LanguageUtil.get(pageContext, (group.isOrganization() ? "organization" : "site"))}) %>
 </div>
 
 <br />

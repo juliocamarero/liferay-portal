@@ -522,6 +522,18 @@
 		</licenses>
 	</library>
 	<library>
+		<file-name>lib/development/maven-ant-tasks.jar</file-name>
+		<version>2.1.3</version>
+		<project-name>Maven Ant Tasks</project-name>
+		<project-url>http://maven.apache.org/ant-tasks</project-url>
+		<licenses>
+			<license>
+				<license-name>Apache License 2.0</license-name>
+				<license-url>http://www.apache.org/licenses/LICENSE-2.0</license-url>
+			</license>
+		</licenses>
+	</library>
+	<library>
 		<file-name>lib/development/mockito.jar</file-name>
 		<version>1.9.5</version>
 		<project-name>Mockito</project-name>
@@ -1137,7 +1149,7 @@
 	</library>
 	<library>
 		<file-name>lib/portal/bobo-browse.jar</file-name>
-		<version>3.1.0</version>
+		<version>3.2.0</version>
 		<project-name>Bob Browse</project-name>
 		<project-url>http://code.google.com/p/bobo-browse</project-url>
 		<licenses>
@@ -1147,8 +1159,8 @@
 			</license>
 		</licenses>
 		<comments>
-			This was recompiled for compatibility with JDK 5 and includes a
-			public patch from LPS-28980.
+			This was recompiled for compatibility with JDK 5 and includes
+			public patches from LPS-28980 and LPS-38192.
 		</comments>
 	</library>
 	<library>

@@ -206,7 +206,7 @@ String eventName = "_" + HtmlUtil.escapeJS(portletResource) + "_selectAsset";
 					uri: currentTarget.attr('data-href')
 				},
 				function(event) {
-					selectAsset(event.assetentryid, event.assetclassname, event.assettype, event.assettitle, event.groupname);
+					selectAsset(event.assetentryid, event.assetclassname, event.assettype, event.assettitle, event.groupdescriptivename);
 				}
 			);
 		},

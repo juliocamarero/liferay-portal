@@ -359,7 +359,7 @@ portletURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 
 			if (AUI().Array.indexOf(selectedGroupIds, event.groupid) == -1) {
 				selectedGroupIds.push(event.groupid);
-				selectedGroupNames.push(event.groupname);
+				selectedGroupNames.push(event.groupdescriptivename);
 			}
 
 			<portlet:namespace />updateGroups(selectedGroupIds, selectedGroupNames, event.grouptarget);

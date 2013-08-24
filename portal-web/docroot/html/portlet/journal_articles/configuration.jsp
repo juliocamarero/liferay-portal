@@ -44,14 +44,14 @@ groupId = ParamUtil.getLong(request, "groupId", groupId);
 					for (int i = 0; i < mySiteGroups.size(); i++) {
 						Group group = mySiteGroups.get(i);
 
-						String groupName = HtmlUtil.escape(group.getDescriptiveName(locale));
+						String groupDescriptiveName = HtmlUtil.escape(group.getDescriptiveName(locale));
 
 						if (group.isUser()) {
-							groupName = LanguageUtil.get(pageContext, "my-site");
+							groupDescriptiveName = LanguageUtil.get(pageContext, "my-site");
 						}
 					%>
 
-						<aui:option label="<%= groupName %>" selected="<%= groupId == group.getGroupId() %>" value="<%= group.getGroupId() %>" />
+						<aui:option label="<%= groupDescriptiveName %>" selected="<%= groupId == group.getGroupId() %>" value="<%= group.getGroupId() %>" />
 
 					<%
 					}
