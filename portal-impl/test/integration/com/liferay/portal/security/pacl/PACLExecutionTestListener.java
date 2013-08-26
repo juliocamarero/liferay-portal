@@ -15,6 +15,7 @@
 package com.liferay.portal.security.pacl;
 
 import com.liferay.portal.deploy.hot.HookHotDeployListener;
+import com.liferay.portal.kernel.deploy.hot.DependencyManagementThreadLocal;
 import com.liferay.portal.kernel.deploy.hot.HotDeployEvent;
 import com.liferay.portal.kernel.deploy.hot.HotDeployUtil;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
@@ -101,7 +102,7 @@ public class PACLExecutionTestListener
 
 		mockServletContext.setServletContextName("a-test-hook");
 
-		HotDeployEvent hotDeployEvent = new HotDeployEvent(
+		HotDeployEvent hotDeployEvent = getHotDeployEvent(
 			mockServletContext, classLoader);
 
 		HotDeployUtil.fireDeployEvent(hotDeployEvent);
@@ -124,6 +125,23 @@ public class PACLExecutionTestListener
 		}
 
 		_hotDeployEvents.put(clazz, hotDeployEvent);
+	}
+
+	protected HotDeployEvent getHotDeployEvent(
+		ServletContext servletContext, ClassLoader classLoader) {
+
+		boolean dependencyManagementEnabled =
+			DependencyManagementThreadLocal.isEnabled();
+
+		try {
+			DependencyManagementThreadLocal.setEnabled(false);
+
+			return new HotDeployEvent(servletContext, classLoader);
+		}
+		finally {
+			DependencyManagementThreadLocal.setEnabled(
+				dependencyManagementEnabled);
+		}
 	}
 
 	private static Map<Class<?>, HotDeployEvent> _hotDeployEvents =

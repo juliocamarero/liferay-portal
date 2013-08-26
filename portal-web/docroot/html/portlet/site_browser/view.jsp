@@ -201,8 +201,8 @@ portletURL.setParameter("target", target);
 				<%
 				Map<String, Object> data = new HashMap<String, Object>();
 
+				data.put("groupdescriptivename", HtmlUtil.escape(group.getDescriptiveName(locale)));
 				data.put("groupid", group.getGroupId());
-				data.put("groupname", HtmlUtil.escape(group.getDescriptiveName(locale)));
 				data.put("scopeid", HtmlUtil.escape(AssetPublisherUtil.getScopeId(group, scopeGroupId)));
 				data.put("target", target);
 				%>
