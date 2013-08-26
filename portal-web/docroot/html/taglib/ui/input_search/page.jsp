@@ -26,7 +26,7 @@ boolean showButton = GetterUtil.getBoolean(request.getAttribute("liferay-ui:inpu
 %>
 
 <div class="<%= cssClass %>" <%= Validator.isNotNull(id) ? "id=\"" + namespace + id + "simple\"" : StringPool.BLANK %> >
-	<input class="search-query span9" id="<%= Validator.isNotNull(id) ? id : namespace + DisplayTerms.KEYWORDS %>" name="<%= namespace + name %>" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= HtmlUtil.escapeAttribute(displayTerms.getKeywords()) %>" />
+	<input class="search-query span9" id="<portlet:namespace /><%= Validator.isNotNull(id) ? id : DisplayTerms.KEYWORDS %>" name="<%= namespace + name %>" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= HtmlUtil.escapeAttribute(displayTerms.getKeywords()) %>" />
 
 	<c:if test="<%= showButton %>">
 		<button class="btn" type="submit">
