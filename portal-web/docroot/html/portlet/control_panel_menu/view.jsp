@@ -103,14 +103,14 @@
 					</c:if>
 				</c:if>
 
-				<ul class="category-portlets">
+				<ul aria-labelledby='<%= "panel-manage-" + siteAdministrationCategory %>' class="category-portlets" role="menu">
 
 					<%
 					for (Portlet portlet : portlets) {
 						String portletId = portlet.getPortletId();
 					%>
 
-						<li class="<%= ppid.equals(portletId) ? "selected-portlet" : "" %>">
+						<li class="<%= ppid.equals(portletId) ? "selected-portlet" : "" %>" role="presentation">
 							<liferay-portlet:renderURL
 								doAsGroupId="<%= themeDisplay.getScopeGroupId() %>"
 								portletName="<%= portlet.getRootPortletId() %>"
@@ -118,7 +118,7 @@
 								windowState="<%= WindowState.MAXIMIZED.toString() %>"
 								/>
 
-							<a href="<%= portletURL %>" id="<portlet:namespace />portlet_<%= portletId %>">
+							<a href="<%= portletURL %>" id="<portlet:namespace />portlet_<%= portletId %>" role="menuitem">
 								<c:choose>
 									<c:when test="<%= Validator.isNull(portlet.getIcon()) %>">
 										<liferay-ui:icon src='<%= themeDisplay.getPathContext() + "/html/icons/default.png" %>' />

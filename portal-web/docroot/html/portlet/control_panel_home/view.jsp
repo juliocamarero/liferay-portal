@@ -31,7 +31,7 @@
 			<aui:col width="<%= 25 %>">
 				<h3 class="control-panel-home-category-header" id='<%= "control-panel-home-category-header" + category %>'><%= title %></h3>
 
-					<ul class="unstyled">
+					<ul aria-label="<%= title %>" class="unstyled" role="menu">
 
 						<%
 						for (Portlet categoryPortlet : categoryPortlets) {
@@ -42,7 +42,7 @@
 							String portletDescription = PortalUtil.getPortletDescription(categoryPortlet, application, locale);
 						%>
 
-							<li>
+							<li role="presentation">
 								<liferay-ui:icon
 									cssClass="control-panel-home-link"
 									id='<%= "controlPanelPortletLink_" + categoryPortletId %>'
