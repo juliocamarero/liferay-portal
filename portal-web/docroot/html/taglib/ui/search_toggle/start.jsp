@@ -18,22 +18,17 @@
 
 <div class="taglib-search-toggle">
 	<div class="form-search">
-		<div class="input-append" id="<%= id %>simple">
-			<input class="search-query span9" id="<%= id + displayTerms.KEYWORDS %>" name="<portlet:namespace /><%= displayTerms.KEYWORDS %>" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= displayTerms.getKeywords() %>" />
+		<liferay-ui:input-search buttonLabel="<%= buttonLabel %>" displayTerms="<%= displayTerms %>" id="<%= id + DisplayTerms.KEYWORDS %>" />
 
-			<button class="btn" type="submit">
-				<%= LanguageUtil.get(pageContext, buttonLabel, "search") %>
-			</button>
-		</div>
 		<button class="btn-link" id="<%= id %>toggleAdvanced" type="button">
 			<i class="icon-cog"></i>
 		</button>
 	</div>
 	<div class="popover taglib-search-toggle-advanced" id="<%= id %>advanced">
-		<input id="<%= id + displayTerms.ADVANCED_SEARCH %>" name="<portlet:namespace /><%= displayTerms.ADVANCED_SEARCH %>" type="hidden" value="false" />
+		<input id="<portlet:namespace /><%= id + displayTerms.ADVANCED_SEARCH %>" name="<portlet:namespace /><%= displayTerms.ADVANCED_SEARCH %>" type="hidden" value="false" />
 
-		<div id="<%= id %>advancedContent">
-			<div id="<%= id %>advancedBodyNode">
+		<div id="<portlet:namespace /><%= id %>advancedContent">
+			<div id="<portlet:namespace /><%= id %>advancedBodyNode">
 				<liferay-util:buffer var="andOperator">
 					<aui:select cssClass="inline-control" inlineField="<%= true %>" label="" name="<%= displayTerms.AND_OPERATOR %>">
 						<aui:option label="all" selected="<%= displayTerms.isAndOperator() %>" value="1" />

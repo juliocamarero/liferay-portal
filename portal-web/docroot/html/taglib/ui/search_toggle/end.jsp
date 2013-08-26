@@ -24,10 +24,10 @@
 <aui:script position="inline" use="aui-popover,event-key">
 	var popover;
 
-	var simpleNode = A.one('#<%= id %>simple');
-	var advancedNode = A.one('#<%= id %>advanced');
-	var toggleAdvancedNode = A.one('#<%= id %>toggleAdvanced');
-	var keywordsNode = A.one('#<%= id + displayTerms.KEYWORDS %>');
+	var simpleNode = A.one('#<%= namespace + id %>simple');
+	var advancedNode = A.one('#<%= namespace + id %>advanced');
+	var toggleAdvancedNode = A.one('#<%= namespace + id %>toggleAdvanced');
+	var keywordsNode = A.one('#<%= namespace + id + displayTerms.KEYWORDS %>');
 
 	function enableOrDisableElements(event) {
 		simpleNode.all('input').set('disabled', event.newVal);
@@ -77,7 +77,7 @@
 			}
 		}
 
-		var advancedSearchNode = advancedNode.one('#<%= id + displayTerms.ADVANCED_SEARCH %>');
+		var advancedSearchNode = advancedNode.one('#<%= namespace + id + displayTerms.ADVANCED_SEARCH %>');
 
 		advancedSearchNode.val(!visible);
 
@@ -90,6 +90,6 @@
 
 <c:if test="<%= autoFocus %>">
 	<aui:script>
-		Liferay.Util.focusFormField('#<%= id + displayTerms.KEYWORDS %>');
+		Liferay.Util.focusFormField('#<%= namespace + id + displayTerms.KEYWORDS %>');
 	</aui:script>
 </c:if>
