@@ -16,7 +16,23 @@
 
 <%@ include file="/html/taglib/aui/nav_item/init.jsp" %>
 
-<c:if test="<%=(!dropdown || !emptyBody )%>">
+<%@ page import="javax.servlet.jsp.tagext.BodyContent" %>
+
+<%
+BodyContent bodyContent = (BodyContent)request.getAttribute("aui:nav-item:bodyContent");
+
+boolean emptyBody = false;
+
+if (Validator.isNull(bodyContent)) {
+	emptyBody = true;
+}
+else {
+	String bodyContentString = bodyContent.getString();
+	emptyBody = bodyContentString.trim().isEmpty();
+}
+%>
+
+<c:if test="<%= (!dropdown || !emptyBody ) %>">
 	<li class="<%= cssClass %><%= selected ? " active" : StringPool.BLANK %>" id="<%= id %>" role="presentation" <%= AUIUtil.buildData(data) %> <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
 		<c:if test="<%= Validator.isNotNull(iconClass) || Validator.isNotNull(label) %>">
 			<c:if test="<%= Validator.isNotNull(href) %>">
@@ -104,6 +120,12 @@
 				<ul class='dropdown-menu <%= LanguageUtil.get(locale, "lang.dir").equals("rtl") ? "pull-right" : StringPool.BLANK %>'>
 			</c:if>
 		</c:if>
+
+		<%
+		if (bodyContent != null) {
+			out.print(bodyContent.getString());
+		}
+		%>
 
 		<c:if test="<%= dropdown && wrapDropDownMenu %>">
 			</ul>
