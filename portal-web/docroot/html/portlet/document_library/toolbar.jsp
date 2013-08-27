@@ -116,11 +116,8 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 					<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= folderId %>" />
 					<aui:input name="searchFolderIds" type="hidden" value="<%= folderId %>" />
 
-					<div class="input-append">
-						<input class="search-query span9" id="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" />
+					<liferay-ui:input-search />
 
-						<aui:button primary="<%= false %>" type="submit" value="search" />
-					</div>
 				</aui:form>
 			</div>
 		</div>
