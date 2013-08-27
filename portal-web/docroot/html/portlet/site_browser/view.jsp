@@ -36,9 +36,10 @@ String target = ParamUtil.getString(request, "target");
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/site_browser/view");
+portletURL.setParameter("groupId", String.valueOf(groupId));
+portletURL.setParameter("selectedGroupIds", StringUtil.merge(selectedGroupIds));
 portletURL.setParameter("type", type);
 portletURL.setParameter("types", types);
-portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("filter", filter);
 portletURL.setParameter("includeCompany", String.valueOf(includeCompany));
 portletURL.setParameter("includeUserPersonalSite", String.valueOf(includeUserPersonalSite));
@@ -207,7 +208,7 @@ portletURL.setParameter("target", target);
 				data.put("target", target);
 				%>
 
-				<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />
+				<aui:button cssClass="selector-button" data="<%= data %>" disabled="<%= ArrayUtil.contains(selectedGroupIds, group.getGroupId()) %>" value="choose" />
 			</liferay-ui:search-container-column-text>
 
 		</liferay-ui:search-container-row>

@@ -60,6 +60,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UniqueList;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowHandler;
+import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.model.Account;
 import com.liferay.portal.model.BackgroundTask;
@@ -82,6 +84,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.model.UserPersonalSite;
+import com.liferay.portal.model.WorkflowDefinitionLink;
 import com.liferay.portal.model.impl.LayoutImpl;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -888,6 +891,33 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 				resourceLocalService.deleteResource(
 					group.getCompanyId(), Group.class.getName(),
 					ResourceConstants.SCOPE_INDIVIDUAL, group.getGroupId());
+			}
+
+			// Workflow
+
+			List<WorkflowHandler> scopeableWorkflowHandlers =
+				WorkflowHandlerRegistryUtil.getScopeableWorkflowHandlers();
+
+			for (WorkflowHandler scopeableWorkflowHandler :
+					scopeableWorkflowHandlers) {
+
+				if (!scopeableWorkflowHandler.isVisible()) {
+					continue;
+				}
+
+				WorkflowDefinitionLink workflowDefinitionLink =
+					workflowDefinitionLinkLocalService.
+						fetchWorkflowDefinitionLink(
+							group.getCompanyId(), group.getGroupId(),
+							scopeableWorkflowHandler.getClassName(), 0, 0,
+							true);
+
+				if (workflowDefinitionLink == null) {
+					continue;
+				}
+
+				workflowDefinitionLinkLocalService.deleteWorkflowDefinitionLink(
+					workflowDefinitionLink);
 			}
 
 			// Group
