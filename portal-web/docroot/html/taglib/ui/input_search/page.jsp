@@ -28,7 +28,7 @@ String value = ParamUtil.getString(request, name);
 %>
 
 <div class="<%= cssClass %>" >
-	<input class="search-query span9" id="<portlet:namespace /><%= id %>" name="<%= namespace + name %>" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= HtmlUtil.escapeAttribute(value) %>" />
+	<input class="search-query span9" id="<portlet:namespace /><%= id %>" name="<%= namespace + name %>" placeholder="<%= showButton ? StringPool.BLANK : buttonLabel %>" type="text" value="<%= HtmlUtil.escapeAttribute(value) %>" />
 
 	<c:if test="<%= showButton %>">
 		<button class="btn" type="submit">
