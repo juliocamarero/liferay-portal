@@ -75,7 +75,7 @@ if (Validator.isNotNull(historyKey)) {
 		</c:when>
 		<c:otherwise>
 			<div class="taglib-form-navigator row-fluid" id="<portlet:namespace />tabs">
-				<ul class="form-navigator nav nav-list span4 well">
+				<ul aria-label="<%= portletDisplay.getTitle() %>" class="form-navigator nav nav-list span4 well" role="menubar">
 					<%= Validator.isNotNull(htmlTop) ? htmlTop : StringPool.BLANK %>
 
 					<%
@@ -97,7 +97,7 @@ if (Validator.isNotNull(historyKey)) {
 					%>
 
 							<c:if test="<%= Validator.isNotNull(category) %>">
-								<li class="nav-header"><liferay-ui:message key="<%= category %>" /></li>
+								<li class="nav-header" role="presentation"><liferay-ui:message key="<%= category %>" /></li>
 							</c:if>
 
 							<%
@@ -133,8 +133,8 @@ if (Validator.isNotNull(historyKey)) {
 								}
 							%>
 
-								<li class="<%= cssClass %>" data-sectionId="<%= sectionId %>" id="<%= sectionId %>Tab">
-									<a href="#<%= sectionId %>" id="<%= sectionId %>Link">
+								<li class="<%= cssClass %>" data-sectionId="<%= sectionId %>" id="<%= sectionId %>Tab" role="presentation">
+									<a href="#<%= sectionId %>" id="<%= sectionId %>Link" role="menuitem">
 										<span class="badge badge-important error-notice">!</span>
 
 										<liferay-ui:message key="<%= section %>" />
