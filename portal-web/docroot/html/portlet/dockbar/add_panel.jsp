@@ -23,11 +23,20 @@
 			<%
 			Group group = layout.getGroup();
 
+			boolean hasLayoutAddPermission = false;
+
+			if (layout.getParentLayoutId() == LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
+				hasLayoutAddPermission = GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT);
+			}
+			else {
+				hasLayoutAddPermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.ADD_LAYOUT);
+			}
+
 			boolean hasLayoutCustomizePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE);
 			boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.UPDATE);
 			%>
 
-			<c:if test="<%= (layout.isTypePortlet() || layout.isTypePanel()) && !layout.isLayoutPrototypeLinkActive() && !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
+			<c:if test="<%= !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (hasLayoutAddPermission || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
 				<div class="add-content-menu" id="<portlet:namespace />addPanelContainer">
 					<aui:button cssClass="close pull-right" name="closePanelAdd" value="&times;" />
 
@@ -36,7 +45,7 @@
 
 					boolean stateMaximized = ParamUtil.getBoolean(request, "stateMaximized");
 
-					boolean hasAddContentPermission = !stateMaximized && (GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) && !group.isLayoutPrototype() && !layout.isTypePanel());
+					boolean hasAddContentPermission = !stateMaximized && (hasLayoutAddPermission && !group.isLayoutPrototype() && !layout.isTypePanel());
 
 					if (hasAddContentPermission) {
 						tabs1Names = ArrayUtil.append(tabs1Names, "content");
