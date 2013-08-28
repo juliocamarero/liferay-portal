@@ -18,68 +18,67 @@
 
 <c:choose>
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
+		<c:if test="<%= layout != null %>">
 
-		<%
-		Group group = null;
+			<%
+			Group group = layout.getGroup();
 
-		if (layout != null) {
-			group = layout.getGroup();
-		}
+			boolean hasLayoutCustomizePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE);
 
-		boolean hasLayoutCustomizePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE);
-		boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.UPDATE);
-		%>
+			boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.UPDATE);
 
-		<c:if test="<%= (layout != null) && !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
-			<div class="add-content-menu" id="<portlet:namespace />addPanelContainer">
-				<aui:button cssClass="close pull-right" name="closePanelAdd" value="&times;" />
+			boolean stateMaximized = ParamUtil.getBoolean(request, "stateMaximized");
 
-				<%
-				String[] tabs1Names = new String[0];
+			boolean hasAddContentAndApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() && (hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission));
 
-				boolean stateMaximized = ParamUtil.getBoolean(request, "stateMaximized");
+			boolean hasAddPagePermission = !group.isLayoutPrototype() && GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT);
+			%>
 
-				boolean hasAddContentAndApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() && (hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission));
+			<c:if test="<%= !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
+				<div class="add-content-menu" id="<portlet:namespace />addPanelContainer">
+					<aui:button cssClass="close pull-right" name="closePanelAdd" value="&times;" />
 
-				if (hasAddContentAndApplicationsPermission) {
-					tabs1Names = ArrayUtil.append(tabs1Names, "content,applications");
-				}
+					<%
+					String[] tabs1Names = new String[0];
 
-				boolean hasAddPagePermission = !group.isLayoutPrototype() && GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT);
+					if (hasAddContentAndApplicationsPermission) {
+						tabs1Names = ArrayUtil.append(tabs1Names, "content,applications");
+					}
 
-				if (hasAddPagePermission) {
-					tabs1Names = ArrayUtil.append(tabs1Names, "page");
-				}
+					if (hasAddPagePermission) {
+						tabs1Names = ArrayUtil.append(tabs1Names, "page");
+					}
 
-				String selectedTab = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_tab", "content"));
+					String selectedTab = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_tab", "content"));
 
-				if (stateMaximized) {
-					selectedTab = "page";
-				}
-				%>
+					if (stateMaximized) {
+						selectedTab = "page";
+					}
+					%>
 
-				<liferay-ui:tabs
-					names="<%= StringUtil.merge(tabs1Names) %>"
-					refresh="<%= false %>"
-					value="<%= selectedTab %>"
-				>
-					<c:if test="<%= hasAddContentAndApplicationsPermission %>">
-						<liferay-ui:section>
-							<liferay-util:include page="/html/portlet/dockbar/add_content.jsp" />
-						</liferay-ui:section>
+					<liferay-ui:tabs
+						names="<%= StringUtil.merge(tabs1Names) %>"
+						refresh="<%= false %>"
+						value="<%= selectedTab %>"
+					>
+						<c:if test="<%= hasAddContentAndApplicationsPermission %>">
+							<liferay-ui:section>
+								<liferay-util:include page="/html/portlet/dockbar/add_content.jsp" />
+							</liferay-ui:section>
 
-						<liferay-ui:section>
-							<liferay-util:include page="/html/portlet/dockbar/add_application.jsp" />
-						</liferay-ui:section>
-					</c:if>
+							<liferay-ui:section>
+								<liferay-util:include page="/html/portlet/dockbar/add_application.jsp" />
+							</liferay-ui:section>
+						</c:if>
 
-					<c:if test="<%= hasAddPagePermission %>">
-						<liferay-ui:section>
-							<liferay-util:include page="/html/portlet/layouts_admin/add_layout.jsp" />
-						</liferay-ui:section>
-					</c:if>
-				</liferay-ui:tabs>
-			</div>
+						<c:if test="<%= hasAddPagePermission %>">
+							<liferay-ui:section>
+								<liferay-util:include page="/html/portlet/layouts_admin/add_layout.jsp" />
+							</liferay-ui:section>
+						</c:if>
+					</liferay-ui:tabs>
+				</div>
+			</c:if>
 		</c:if>
 	</c:when>
 	<c:otherwise>
