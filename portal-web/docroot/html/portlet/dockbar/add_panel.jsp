@@ -45,16 +45,10 @@
 
 					boolean stateMaximized = ParamUtil.getBoolean(request, "stateMaximized");
 
-					boolean hasAddContentPermission = !stateMaximized && (hasLayoutAddPermission && !group.isLayoutPrototype() && !layout.isTypePanel());
+					boolean hasAddContentAndApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive();
 
-					if (hasAddContentPermission) {
-						tabs1Names = ArrayUtil.append(tabs1Names, "content");
-					}
-
-					boolean hasAddApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive();
-
-					if (hasAddApplicationsPermission) {
-						tabs1Names = ArrayUtil.append(tabs1Names, "applications");
+					if (hasAddContentAndApplicationsPermission) {
+						tabs1Names = ArrayUtil.append(tabs1Names, "content,applications");
 					}
 
 					boolean hasAddPagePermission = !layout.isLayoutPrototypeLinkActive();
@@ -75,13 +69,11 @@
 						refresh="<%= false %>"
 						value="<%= selectedTab %>"
 					>
-						<c:if test="<%= hasAddContentPermission %>">
+						<c:if test="<%= hasAddContentAndApplicationsPermission %>">
 							<liferay-ui:section>
 								<liferay-util:include page="/html/portlet/dockbar/add_content.jsp" />
 							</liferay-ui:section>
-						</c:if>
 
-						<c:if test="<%= hasAddApplicationsPermission %>">
 							<liferay-ui:section>
 								<liferay-util:include page="/html/portlet/dockbar/add_application.jsp" />
 							</liferay-ui:section>
