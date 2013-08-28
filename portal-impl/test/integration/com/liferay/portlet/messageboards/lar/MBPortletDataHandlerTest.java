@@ -50,7 +50,7 @@ import org.testng.Assert;
 public class MBPortletDataHandlerTest extends BasePortletDataHandlerTestCase {
 
 	@Test
-	public void testDoDeleteAllFolders() throws Exception {
+	public void testDeleteAllFolders() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
 		MBCategory parentCategory = MBTestUtil.addCategory(group.getGroupId());

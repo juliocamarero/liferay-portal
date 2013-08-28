@@ -50,7 +50,7 @@ public class BookmarksPortletDataHandlerTest
 	extends BasePortletDataHandlerTestCase {
 
 	@Test
-	public void testDoDeleteAllFolders() throws Exception {
+	public void testDeleteAllFolders() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
 		BookmarksFolder parentFolder = BookmarksTestUtil.addFolder(

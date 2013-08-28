@@ -62,7 +62,7 @@ public class JournalPortletDataHandlerTest
 	extends BasePortletDataHandlerTestCase {
 
 	@Test
-	public void testDoDeleteAllFolders() throws Exception {
+	public void testDeleteAllFolders() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
 		JournalFolder parentFolder = JournalTestUtil.addFolder(

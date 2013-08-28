@@ -106,7 +106,7 @@ public class DLPortletDataHandlerTest extends BasePortletDataHandlerTestCase {
 
 	@Test
 	@Transactional
-	public void testDoDeleteAllFolders() throws Exception {
+	public void testDeleteAllFolders() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
 		Folder parentFolder = DLAppTestUtil.addFolder(
