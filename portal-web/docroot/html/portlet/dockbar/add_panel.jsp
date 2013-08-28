@@ -30,7 +30,7 @@
 		boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.UPDATE);
 		%>
 
-		<c:if test="<%= (layout != null) && !layout.isLayoutPrototypeLinkActive() && !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
+		<c:if test="<%= (layout != null) && !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
 			<div class="add-content-menu" id="<portlet:namespace />addPanelContainer">
 				<aui:button cssClass="close pull-right" name="closePanelAdd" value="&times;" />
 
@@ -51,7 +51,7 @@
 					tabs1Names = ArrayUtil.append(tabs1Names, "applications");
 				}
 
-				boolean hasAddPagePermission = !layout.isLayoutPrototypeLinkActive() && GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT);
+				boolean hasAddPagePermission = !group.isLayoutPrototype() && GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT);
 
 				if (hasAddPagePermission) {
 					tabs1Names = ArrayUtil.append(tabs1Names, "page");
