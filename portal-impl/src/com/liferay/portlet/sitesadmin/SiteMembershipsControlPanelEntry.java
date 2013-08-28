@@ -32,8 +32,9 @@ public class SiteMembershipsControlPanelEntry extends BaseControlPanelEntry {
 			PermissionChecker permissionChecker, Group group, Portlet portlet)
 		throws Exception {
 
-		if (group.isCompany() || group.isLayoutSetPrototype() ||
-			!group.isManualMembership() || group.isUser()) {
+		if (group.isCompany() || group.isCompanyStaging() ||
+			group.isLayoutSetPrototype() || !group.isManualMembership() ||
+			group.isUser()) {
 
 			return true;
 		}
