@@ -263,7 +263,14 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		long groupClassNameId = PortalUtil.getClassNameId(Group.class);
 
-		if ((classNameId <= 0) || className.equals(Group.class.getName())) {
+		if (staging && className.equals(Company.class.getName())) {
+			className = Group.class.getName();
+			classNameId = groupClassNameId;
+			classPK = liveGroupId;
+		}
+		else if ((classNameId <= 0) ||
+				 className.equals(Group.class.getName())) {
+
 			className = Group.class.getName();
 			classNameId = groupClassNameId;
 			classPK = groupId;

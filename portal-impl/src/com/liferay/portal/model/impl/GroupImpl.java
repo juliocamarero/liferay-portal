@@ -574,6 +574,24 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public boolean isCompanyStaging() {
+		if (!hasClassName(Group.class)) {
+			return false;
+		}
+
+		long classPk = getClassPK();
+
+		try {
+			Group group = GroupLocalServiceUtil.getGroup(classPk);
+
+			return group.isCompany();
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
 	public boolean isControlPanel() {
 		String name = getName();
 
