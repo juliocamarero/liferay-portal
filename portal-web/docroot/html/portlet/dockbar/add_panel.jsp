@@ -51,7 +51,7 @@
 					tabs1Names = ArrayUtil.append(tabs1Names, "applications");
 				}
 
-				boolean hasAddPagePermission = !layout.isLayoutPrototypeLinkActive();
+				boolean hasAddPagePermission = !layout.isLayoutPrototypeLinkActive() && GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT);
 
 				if (hasAddPagePermission) {
 					tabs1Names = ArrayUtil.append(tabs1Names, "page");
