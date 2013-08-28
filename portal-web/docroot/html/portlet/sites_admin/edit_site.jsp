@@ -103,7 +103,7 @@ if (!trashEnabled && ArrayUtil.contains(advancedSections, "recycle-bin")) {
 	advancedSections = ArrayUtil.remove(advancedSections, "recycle-bin");
 }
 
-if ((group != null) && group.isCompany()) {
+if ((group != null) && (group.isCompany() || group.isCompanyStaging())) {
 	mainSections = ArrayUtil.remove(mainSections, "categorization");
 	mainSections = ArrayUtil.remove(mainSections, "site-url");
 	mainSections = ArrayUtil.remove(mainSections, "site-template");
@@ -233,7 +233,7 @@ String[][] categorySections = {mainSections, seoSections, advancedSections, misc
 		</c:if>
 
 		if (ok) {
-			<c:if test="<%= (group != null) && !group.isCompany() %>">
+			<c:if test="<%= (group != null) && !group.isCompany() && !group.isCompanyStaging() %>">
 				<portlet:namespace />saveLocales();
 			</c:if>
 
