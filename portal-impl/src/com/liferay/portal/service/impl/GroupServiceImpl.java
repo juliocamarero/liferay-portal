@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -1188,9 +1189,17 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		UnicodeProperties typeSettings = group.getTypeSettingsProperties();
 
 		for (String stagedPortletId : StringUtil.split(stagedPortletIds)) {
-			typeSettings.setProperty(
-				StagingUtil.getStagedPortletId(stagedPortletId),
-				Boolean.TRUE.toString());
+			String key = StagingUtil.getStagedPortletId(stagedPortletId);
+			String value = Boolean.TRUE.toString();
+
+			int pos = stagedPortletId.indexOf(CharPool.EQUAL);
+
+			if (pos != -1) {
+				key = stagedPortletId.substring(0, pos);
+				value = stagedPortletId.substring(pos + 1);
+			}
+
+			typeSettings.setProperty(key, value);
 		}
 
 		groupLocalService.updateGroup(group);
