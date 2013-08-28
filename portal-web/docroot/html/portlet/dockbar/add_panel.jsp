@@ -51,9 +51,7 @@
 						tabs1Names = ArrayUtil.append(tabs1Names, "content,applications");
 					}
 
-					boolean hasAddPagePermission = !layout.isLayoutPrototypeLinkActive();
-
-					if (hasAddPagePermission) {
+					if (hasLayoutAddPermission) {
 						tabs1Names = ArrayUtil.append(tabs1Names, "page");
 					}
 
@@ -79,7 +77,7 @@
 							</liferay-ui:section>
 						</c:if>
 
-						<c:if test="<%= hasAddPagePermission %>">
+						<c:if test="<%= hasLayoutAddPermission %>">
 							<liferay-ui:section>
 								<liferay-util:include page="/html/portlet/layouts_admin/add_layout.jsp" />
 							</liferay-ui:section>
