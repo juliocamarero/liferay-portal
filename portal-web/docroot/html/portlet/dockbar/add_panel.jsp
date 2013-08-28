@@ -45,7 +45,7 @@
 					tabs1Names = ArrayUtil.append(tabs1Names, "content");
 				}
 
-				boolean hasAddApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive();
+				boolean hasAddApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() && (hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission));
 
 				if (hasAddApplicationsPermission) {
 					tabs1Names = ArrayUtil.append(tabs1Names, "applications");
