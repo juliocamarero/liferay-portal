@@ -32,7 +32,7 @@ public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {
 			PermissionChecker permissionChecker, Group group, Portlet portlet)
 		throws Exception {
 
-		return group.isCompany();
+		return group.isCompany() || group.isCompanyStaging();
 	}
 
 	@Override

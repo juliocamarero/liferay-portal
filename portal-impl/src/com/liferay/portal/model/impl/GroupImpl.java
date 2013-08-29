@@ -574,6 +574,17 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public boolean isCompanyStaging() {
+		Group liveGroup = getLiveGroup();
+
+		if (liveGroup == null) {
+			return false;
+		}
+
+		return liveGroup.isCompany();
+	}
+
+	@Override
 	public boolean isControlPanel() {
 		String name = getName();
 
