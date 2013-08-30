@@ -84,6 +84,31 @@ public class GroupServiceTest {
 	}
 
 	@Test
+	public void testAddCompanyStagingGroup() throws Exception {
+		Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+			TestPropsValues.getCompanyId());
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setAttribute("staging", Boolean.TRUE);
+
+		Group companyStagingGroup = GroupLocalServiceUtil.addGroup(
+			TestPropsValues.getUserId(), GroupConstants.DEFAULT_PARENT_GROUP_ID,
+			companyGroup.getClassName(), companyGroup.getClassPK(),
+			companyGroup.getGroupId(), companyGroup.getDescriptiveName(),
+			companyGroup.getDescription(), companyGroup.getType(),
+			companyGroup.isManualMembership(),
+			companyGroup.getMembershipRestriction(),
+			companyGroup.getFriendlyURL(), false, companyGroup.isActive(),
+			serviceContext);
+
+		Assert.assertTrue(companyStagingGroup.isCompanyStagingGroup());
+
+		Assert.assertEquals(
+			companyGroup.getGroupId(), companyStagingGroup.getLiveGroupId());
+	}
+
+	@Test
 	public void testAddPermissionsCustomRole() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 

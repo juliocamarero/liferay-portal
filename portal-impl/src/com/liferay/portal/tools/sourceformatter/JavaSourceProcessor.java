@@ -687,8 +687,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			if (requiresEmptyLine) {
 				if (!content.contains("\n\n" + javaTermContent)) {
 					return StringUtil.replace(
-						content,
-						"\n" + javaTermContent, "\n\n" + javaTermContent);
+						content, "\n" + javaTermContent,
+						"\n\n" + javaTermContent);
 				}
 			}
 			else if (content.contains("\n\n" + javaTermContent)) {
@@ -972,6 +972,18 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			checkUnprocessedExceptions(newContent, file, packagePath, fileName);
 		}
 
+		// LPS-39508
+
+		if (!fileName.contains("SecureRandomUtil") &&
+			content.contains("java.security.SecureRandom") &&
+			!content.contains("javax.crypto.KeyGenerator")) {
+
+			processErrorMessage(
+				fileName,
+				"Use SecureRandomUtil instead of java.security.SecureRandom: " +
+					fileName);
+		}
+
 		String oldContent = newContent;
 
 		while (true) {
@@ -986,7 +998,9 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			oldContent = newContent;
 		}
 
-		if (isAutoFix() && (newContent != null) && !content.equals(newContent)) {
+		if (isAutoFix() && (newContent != null) &&
+			!content.equals(newContent)) {
+
 			fileUtil.write(file, newContent);
 
 			sourceFormatterHelper.printError(fileName, file);
@@ -1249,6 +1263,37 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			if (!trimmedLine.contains(StringPool.DOUBLE_SLASH) &&
 				!trimmedLine.startsWith(StringPool.STAR)) {
 
+				String strippedQuotesLine = stripQuotes(
+					trimmedLine, CharPool.QUOTE);
+
+				for (int x = -1;;) {
+					x = strippedQuotesLine.indexOf(StringPool.EQUAL, x + 1);
+
+					if (x == -1) {
+						break;
+					}
+
+					char c = strippedQuotesLine.charAt(x - 1);
+
+					if (Character.isLetterOrDigit(c)) {
+						line = StringUtil.replace(line, c + "=", c + " =");
+
+						break;
+					}
+
+					if (x == (strippedQuotesLine.length() - 1)) {
+						break;
+					}
+
+					c = strippedQuotesLine.charAt(x + 1);
+
+					if (Character.isLetterOrDigit(c)) {
+						line = StringUtil.replace(line, "=" + c, "= " + c);
+
+						break;
+					}
+				}
+
 				while (trimmedLine.contains(StringPool.TAB)) {
 					line = StringUtil.replaceLast(
 						line, StringPool.TAB, StringPool.SPACE);
@@ -1361,9 +1406,6 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 
 				if (trimmedLine.endsWith(StringPool.PLUS) &&
 					!trimmedLine.startsWith(StringPool.OPEN_PARENTHESIS)) {
-
-					String strippedQuotesLine = stripQuotes(
-						trimmedLine, CharPool.QUOTE);
 
 					int closeParenthesisCount = StringUtil.count(
 						strippedQuotesLine, StringPool.CLOSE_PARENTHESIS);
@@ -1751,7 +1793,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					pos = linePart.length();
 				}
 
-				if (previousLineLength + pos < 80) {
+				if ((previousLineLength + pos) < 80) {
 					if (linePart.contains(StringPool.SPACE)) {
 						return new Tuple(
 							previousLine + StringPool.SPACE,

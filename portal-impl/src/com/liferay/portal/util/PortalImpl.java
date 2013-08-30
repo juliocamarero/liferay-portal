@@ -287,22 +287,27 @@ public class PortalImpl implements Portal {
 
 		if (Validator.isNull(_computerName)) {
 			try {
-				_computerName = InetAddress.getLocalHost().getHostName();
+				InetAddress inetAddress = InetAddress.getLocalHost();
+
+				_computerName = inetAddress.getHostName();
 			}
 			catch (UnknownHostException uhe) {
 			}
 		}
 
 		try {
-			_computerAddress = InetAddress.getByName(
-				_computerName).getHostAddress();
+			InetAddress inetAddress = InetAddress.getByName(_computerName);
+
+			_computerAddress = inetAddress.getHostAddress();
 		}
 		catch (UnknownHostException uhe) {
 		}
 
 		if (Validator.isNull(_computerAddress)) {
 			try {
-				_computerAddress = InetAddress.getLocalHost().getHostAddress();
+				InetAddress inetAddress = InetAddress.getLocalHost();
+
+				_computerAddress = inetAddress.getHostAddress();
 			}
 			catch (UnknownHostException uhe) {
 			}
