@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ContainerModel;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
@@ -83,6 +84,20 @@ public class JournalFolderTrashHandler extends JournalBaseTrashHandler {
 		throws PortalException, SystemException {
 
 		JournalFolder folder = getJournalFolder(classPK);
+
+		long parentFolderId = folder.getParentFolderId();
+
+		if (parentFolderId <= 0) {
+			return null;
+		}
+
+		return getContainerModel(parentFolderId);
+	}
+
+	public ContainerModel getParentContainerModel(TrashedModel trashedModel)
+		throws PortalException, SystemException {
+
+		JournalFolder folder = (JournalFolder)trashedModel;
 
 		long parentFolderId = folder.getParentFolderId();
 
