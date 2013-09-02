@@ -93,13 +93,7 @@ public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 		JournalArticle article =
 			JournalArticleLocalServiceUtil.getLatestArticle(classPK);
 
-		long parentFolderId = article.getFolderId();
-
-		if (parentFolderId <= 0) {
-			return null;
-		}
-
-		return getContainerModel(parentFolderId);
+		return getParentContainerModel(article);
 	}
 
 	@Override
