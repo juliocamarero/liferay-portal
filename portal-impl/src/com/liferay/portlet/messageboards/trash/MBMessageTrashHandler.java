@@ -61,7 +61,7 @@ public class MBMessageTrashHandler extends BaseTrashHandler {
 
 		return MBThreadLocalServiceUtil.getThread(message.getThreadId());
 	}
-	
+
 	@Override
 	public ContainerModel getTrashContainer(long classPK)
 		throws PortalException, SystemException {
