@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
  * @author Sandeep Soni
  * @author Ganesh Ram
  * @author Shuyang Zhou
+ * @author Hugo Huijser
  */
 public class StringUtil {
 
@@ -480,15 +481,14 @@ public class StringUtil {
 		if (s == null) {
 			return null;
 		}
-		else {
-			int index = s.indexOf(delimiter);
 
-			if (index < 0) {
-				return null;
-			}
-			else {
-				return s.substring(0, index);
-			}
+		int index = s.indexOf(delimiter);
+
+		if (index < 0) {
+			return null;
+		}
+		else {
+			return s.substring(0, index);
 		}
 	}
 
@@ -507,15 +507,14 @@ public class StringUtil {
 		if (s == null) {
 			return null;
 		}
-		else {
-			int index = s.indexOf(delimiter);
 
-			if (index < 0) {
-				return null;
-			}
-			else {
-				return s.substring(0, index);
-			}
+		int index = s.indexOf(delimiter);
+
+		if (index < 0) {
+			return null;
+		}
+		else {
+			return s.substring(0, index);
 		}
 	}
 
@@ -534,15 +533,14 @@ public class StringUtil {
 		if (s == null) {
 			return null;
 		}
-		else {
-			int index = s.lastIndexOf(delimiter);
 
-			if (index < 0) {
-				return null;
-			}
-			else {
-				return s.substring(index + 1);
-			}
+		int index = s.lastIndexOf(delimiter);
+
+		if (index < 0) {
+			return null;
+		}
+		else {
+			return s.substring(index + 1);
 		}
 	}
 
@@ -561,15 +559,14 @@ public class StringUtil {
 		if (s == null) {
 			return null;
 		}
-		else {
-			int index = s.lastIndexOf(delimiter);
 
-			if (index < 0) {
-				return null;
-			}
-			else {
-				return s.substring(index + delimiter.length());
-			}
+		int index = s.lastIndexOf(delimiter);
+
+		if (index < 0) {
+			return null;
+		}
+		else {
+			return s.substring(index + delimiter.length());
 		}
 	}
 
@@ -1000,12 +997,67 @@ public class StringUtil {
 		if (offset > s.length()) {
 			return s.concat(insert);
 		}
-		else {
-			String prefix = s.substring(0, offset);
-			String postfix = s.substring(offset);
 
-			return prefix.concat(insert).concat(postfix);
+		String prefix = s.substring(0, offset);
+		String postfix = s.substring(offset);
+
+		return prefix.concat(insert).concat(postfix);
+	}
+
+	public static boolean isLowerCase(String s) {
+		if (s == null) {
+			return false;
 		}
+
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+
+			// Fast path for ascii code, fallback to the slow unicode detection
+
+			if (c <= 255) {
+				if ((c >= CharPool.UPPER_CASE_A) &&
+					(c <= CharPool.UPPER_CASE_Z)) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Character.isLetter(c) && Character.isUpperCase(c)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean isUpperCase(String s) {
+		if (s == null) {
+			return false;
+		}
+
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+
+			// Fast path for ascii code, fallback to the slow unicode detection
+
+			if (c <= 255) {
+				if ((c >= CharPool.LOWER_CASE_A) &&
+					(c <= CharPool.LOWER_CASE_Z)) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Character.isLetter(c) && Character.isLowerCase(c)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -1952,22 +2004,21 @@ public class StringUtil {
 
 			return sb.toString().trim();
 		}
-		else {
-			InputStream is = classLoader.getResourceAsStream(name);
 
-			if (is == null) {
-				throw new IOException(
-					"Unable to open resource in class loader " + name);
-			}
+		InputStream is = classLoader.getResourceAsStream(name);
 
-			try {
-				String s = read(is);
+		if (is == null) {
+			throw new IOException(
+				"Unable to open resource in class loader " + name);
+		}
 
-				return s;
-			}
-			finally {
-				StreamUtil.cleanUp(is);
-			}
+		try {
+			String s = read(is);
+
+			return s;
+		}
+		finally {
+			StreamUtil.cleanUp(is);
 		}
 	}
 
@@ -2394,6 +2445,12 @@ public class StringUtil {
 	 *         string <code>newSub</code>
 	 */
 	public static String replaceFirst(String s, String oldSub, String newSub) {
+		return replaceFirst(s, oldSub, newSub, 0);
+	}
+
+	public static String replaceFirst(
+		String s, String oldSub, String newSub, int fromIndex) {
+
 		if ((s == null) || (oldSub == null) || (newSub == null)) {
 			return null;
 		}
@@ -2402,7 +2459,7 @@ public class StringUtil {
 			return s;
 		}
 
-		int y = s.indexOf(oldSub);
+		int y = s.indexOf(oldSub, fromIndex);
 
 		if (y >= 0) {
 			return s.substring(0, y).concat(newSub).concat(

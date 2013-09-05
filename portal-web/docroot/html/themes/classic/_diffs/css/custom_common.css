@@ -1,15 +1,19 @@
 @import "compass";
+@import "compass/css3/user-interface";
 @import "mixins";
+
+@import "aui/font-awesome/scss/mixins";
+@import "aui/font-awesome/scss/variables";
 
 .aui {
 	body {
 		color: #555;
-		font-weight: lighter;
+		font-weight: 200;
 	}
 
 	a {
 		color: #009AE5;
-		font-weight: lighter;
+		font-weight: 200;
 
 		&:hover {
 			color: #009AE5;
@@ -68,7 +72,7 @@
 	input[type="color"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="email"], input[type="month"], input[type="number"], input[type="password"], input[type="search"], input[type="tel"], input[type="text"], input[type="time"], input[type="url"], input[type="week"], select, textarea, .uneditable-input {
 		border: 1px solid #DDD;
 		color: #8D8D8D;
-		font-weight: lighter;
+		font-weight: 200;
 		margin-bottom: 7px;
 
 		&:focus {
@@ -88,7 +92,7 @@
 	label {
 		color: #555;
 		font-size: 15px;
-		font-weight: lighter;
+		font-weight: 200;
 	}
 
 	select:focus {
@@ -109,6 +113,10 @@
 
 	.field-wrapper .btn {
 		margin-top: 0;
+	}
+
+	.btn.disabled, .btn[disabled] {
+		opacity: 0.4;
 	}
 
 	.btn-link {
@@ -273,10 +281,10 @@
 					li a {
 						color: #FFF;
 						font-size: 0.9em;
-						font-weight: lighter;
 
 						&:hover {
 							background: #2FA4F5;
+							@include filter-gradient(#2FA4F5, #2FA4F5, vertical);
 						}
 
 						[class^="icon-"], [class*=" icon-"] {
@@ -465,9 +473,14 @@
 				background-image: none;
 
 				.accordion-toggle:before {
-					content: '\25BA';
-					color: #333;
+					content: $chevron-sign-right;
+
+					@include icon-FontAwesome();
+
 					display: inline-block;
+					margin-right: 5px;
+
+					@include opacity(0.5);
 				}
 			}
 
@@ -475,7 +488,6 @@
 				position: relative;
 
 				.accordion-toggle:after {
-					border-bottom: 1px solid #E5E5E5;
 					content: '';
 					margin-left: 10px;
 					position: absolute;
@@ -485,7 +497,15 @@
 			}
 
 			&.toggler-header-expanded .accordion-toggle:before {
-				content: '\25BC';
+				content: $chevron-sign-down;
+			}
+		}
+
+		.toggler-content-expanded {
+			border: 1px solid $borderColor;
+
+			.accordion-inner {
+				border-width: 0;
 			}
 		}
 
@@ -541,6 +561,73 @@
 
 			&.toggler-header-expanded {
 				background-image: url(../images/arrows/05_down.png);
+			}
+		}
+	}
+
+	/* ---------- Side Accordion Navigations ---------- */
+
+	.add-content-menu, .lfr-edit-layout-panel, .panel-page-menu .portlet-borderless-container {
+		.accordion {
+			background: #FFF;
+			border: 1px solid #D3D3D3;
+			border-top-width: 0;
+
+			.accordion-group {
+				border-width: 0;
+				margin-bottom: 0;
+
+				.accordion-heading {
+					cursor: pointer;
+
+					.accordion-toggle {
+						font-size: 16px;
+						font-weight: 300;
+						padding: 0;
+						text-transform: capitalize;
+					}
+				}
+
+				.accordion-inner {
+					background: #FCFCFC;
+					border-width: 0;
+					padding: 6px 0 15px;
+				}
+
+				.toggler-header {
+					background: #F2F2F2;
+					border: solid #D3D3D3;
+					border-width: 1px 0;
+					padding: 6px 10px;
+
+					@include user-select(none);
+
+					.accordion-toggle {
+						background: #F2F2F2 url(../images/arrows/13_left.png) no-repeat 100% -20px;
+					}
+				}
+
+				.toggler-header-collapsed {
+					border-bottom-width: 0;
+
+					.accordion-toggle {
+						background-position: 100% 0;
+					}
+				}
+			}
+		}
+	}
+
+	.lfr-add-panel .add-content-menu {
+		.lfr-content-item {
+			color: #009AE5;
+
+			&:hover {
+				background-color: #E5F5FC;
+			}
+
+			&.lfr-portlet-used {
+				color: #BBB;
 			}
 		}
 	}

@@ -414,7 +414,27 @@ public class DLImpl implements DL {
 	}
 
 	@Override
-	public String getDLControlPanelLink(
+	public String getDLFileEntryControlPanelLink(
+			PortletRequest portletRequest, long fileEntryId)
+		throws PortalException, SystemException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			portletRequest, PortletKeys.DOCUMENT_LIBRARY,
+			PortalUtil.getControlPanelPlid(themeDisplay.getCompanyId()),
+			PortletRequest.RENDER_PHASE);
+
+		portletURL.setParameter(
+			"struts_action", "/document_library/view_file_entry");
+		portletURL.setParameter("fileEntryId", String.valueOf(fileEntryId));
+
+		return portletURL.toString();
+	}
+
+	@Override
+	public String getDLFolderControlPanelLink(
 			PortletRequest portletRequest, long folderId)
 		throws PortalException, SystemException {
 
@@ -945,7 +965,7 @@ public class DLImpl implements DL {
 	@Override
 	public String getTitleWithExtension(String title, String extension) {
 		if (Validator.isNotNull(extension)) {
-			String periodAndExtension = StringPool.PERIOD + extension;
+			String periodAndExtension = StringPool.PERIOD.concat(extension);
 
 			if (!title.endsWith(periodAndExtension)) {
 				title += periodAndExtension;

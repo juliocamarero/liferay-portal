@@ -14,21 +14,26 @@
 
 package com.liferay.portal.kernel.servlet;
 
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
-import com.liferay.portal.kernel.util.SetUtil;
+import com.liferay.portal.kernel.util.SortedProperties;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -47,20 +52,11 @@ public class SanitizedServletResponse extends HttpServletResponseWrapper {
 		setXFrameOptions(request, response);
 		setXXSSProtection(request, response);
 
-		if (ServerDetector.isTomcat()) {
-			return response;
+		if (ServerDetector.isResin()) {
+			response = new SanitizedServletResponse(response);
 		}
 
-		return new SanitizedServletResponse(response);
-	}
-
-	@Override
-	public void addCookie(Cookie cookie) {
-		if (!_cookieHttpOnlyCookieNamesExcludes.contains(cookie.getName())) {
-			cookie.setHttpOnly(true);
-		}
-
-		super.addCookie(cookie);
+		return response;
 	}
 
 	@Override
@@ -117,29 +113,14 @@ public class SanitizedServletResponse extends HttpServletResponseWrapper {
 			return;
 		}
 
-		if (_xFrameOptionsProperties.size() > 0) {
-			String requestURI = request.getRequestURI();
+		String requestURI = request.getRequestURI();
 
-			for (int i = 0; i < 256; i++) {
-				String key = "url." + i;
+		for (KeyValuePair _xFrameOptionKVP : _xFrameOptionKVPs) {
+			String url = _xFrameOptionKVP.getKey();
 
-				if (!_xFrameOptionsProperties.containsKey(key)) {
-					continue;
-				}
-
-				String url = StringUtil.trim(
-					_xFrameOptionsProperties.getProperty(key));
-
-				if (!requestURI.startsWith(url)) {
-					continue;
-				}
-
-				String value = StringUtil.trim(
-					_xFrameOptionsProperties.getProperty("value." + i));
-
-				if (Validator.isNotNull(value)) {
-					response.setHeader(HttpHeaders.X_FRAME_OPTIONS, value);
-				}
+			if (requestURI.startsWith(url)) {
+				response.setHeader(
+					HttpHeaders.X_FRAME_OPTIONS, _xFrameOptionKVP.getValue());
 
 				return;
 			}
@@ -171,17 +152,70 @@ public class SanitizedServletResponse extends HttpServletResponseWrapper {
 		PropsUtil.getArray(
 			PropsKeys.HTTP_HEADER_SECURE_X_CONTENT_TYPE_OPTIONS_URLS_EXCLUDES);
 
-	private static final boolean _X_FRAME_OPTIONS = GetterUtil.getBoolean(
-		PropsUtil.get(PropsKeys.HTTP_HEADER_SECURE_X_FRAME_OPTIONS), true);
+	private static final boolean _X_FRAME_OPTIONS;
 
 	private static final boolean _X_XSS_PROTECTION = GetterUtil.getBoolean(
 		PropsUtil.get(PropsKeys.HTTP_HEADER_SECURE_X_XSS_PROTECTION), true);
 
-	private static Set<String> _cookieHttpOnlyCookieNamesExcludes =
-		SetUtil.fromArray(
-			PropsUtil.getArray(PropsKeys.COOKIE_HTTP_ONLY_NAMES_EXCLUDES));
-	private static Properties _xFrameOptionsProperties =
-		PropsUtil.getProperties(
-			PropsKeys.HTTP_HEADER_SECURE_X_FRAME_OPTIONS + ".", true);
+	private static final KeyValuePair[] _xFrameOptionKVPs;
+
+	static {
+		Properties properties = new SortedProperties(
+			new Comparator<String>() {
+
+				@Override
+				public int compare(String key1, String key2) {
+					return GetterUtil.getIntegerStrict(key1) -
+						GetterUtil.getIntegerStrict(key2);
+				}
+
+			},
+			PropsUtil.getProperties(
+				PropsKeys.HTTP_HEADER_SECURE_X_FRAME_OPTIONS +
+					StringPool.PERIOD,
+				true));
+
+		List<KeyValuePair> xFrameOptionKVPs = new ArrayList<KeyValuePair>(
+			properties.size());
+
+		for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+			String propertyValue = (String)entry.getValue();
+
+			String[] propertyValueParts = StringUtil.split(
+				propertyValue, CharPool.COMMA);
+
+			if (propertyValueParts.length != 2) {
+				continue;
+			}
+
+			String url = StringUtil.trim(propertyValueParts[0]);
+
+			if (Validator.isNull(url)) {
+				continue;
+			}
+
+			String value = StringUtil.trim(propertyValueParts[1]);
+
+			if (Validator.isNull(value)) {
+				continue;
+			}
+
+			KeyValuePair x = new KeyValuePair(url, value);
+
+			xFrameOptionKVPs.add(x);
+		}
+
+		_xFrameOptionKVPs = xFrameOptionKVPs.toArray(
+			new KeyValuePair[xFrameOptionKVPs.size()]);
+
+		if (_xFrameOptionKVPs.length == 0) {
+			_X_FRAME_OPTIONS = false;
+		}
+		else {
+			_X_FRAME_OPTIONS = GetterUtil.getBoolean(
+				PropsUtil.get(PropsKeys.HTTP_HEADER_SECURE_X_FRAME_OPTIONS),
+				true);
+		}
+	}
 
 }

@@ -421,18 +421,35 @@ public class TrashImpl implements Trash {
 
 		Collections.reverse(containerModels);
 
+		containerModelURL.setParameter("struts_action", "/trash/view");
+
+		PortalUtil.addPortletBreadcrumbEntry(
+			request, LanguageUtil.get(themeDisplay.getLocale(), "recycle-bin"),
+			containerModelURL.toString());
+
 		for (ContainerModel containerModel : containerModels) {
+			TrashHandler containerModelTrashHandler =
+				TrashHandlerRegistryUtil.getTrashHandler(
+					containerModel.getModelClassName());
+
+			if (!containerModelTrashHandler.isInTrash(
+					containerModel.getContainerModelId()) &&
+				(containerModelTrashHandler.getTrashContainer(
+					containerModel.getContainerModelId()) == null)) {
+
+				continue;
+			}
+
+			containerModelURL.setParameter(
+				"struts_action", "/trash/view_content");
+
 			containerModelURL.setParameter(
 				paramName,
 				String.valueOf(containerModel.getContainerModelId()));
 
 			String name = containerModel.getContainerModelName();
 
-			TrashHandler containerTrashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					containerModel.getModelClassName());
-
-			if (containerTrashHandler.isInTrash(
+			if (containerModelTrashHandler.isInTrash(
 					containerModel.getContainerModelId())) {
 
 				name = TrashUtil.getOriginalTitle(name);

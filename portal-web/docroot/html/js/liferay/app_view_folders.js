@@ -527,22 +527,12 @@ AUI.add(
 						if (breadcrumb) {
 							var breadcrumbContainer;
 
-							var journalBreadcrumb = breadcrumb.one('.portlet-breadcrumb ul');
+							var portletBreadcrumb = breadcrumb.one('.portlet-breadcrumb');
 
-							if (journalBreadcrumb) {
+							if (portletBreadcrumb) {
 								breadcrumbContainer = instance.byId('breadcrumbContainer');
 
-								breadcrumbContainer.setContent(journalBreadcrumb);
-							}
-
-							var portalBreadcrumb = breadcrumb.one('.portal-breadcrumb ul');
-
-							if (portalBreadcrumb) {
-								breadcrumbContainer = A.one('#breadcrumbs ul');
-
-								if (breadcrumbContainer) {
-									breadcrumbContainer.setContent(portalBreadcrumb.html());
-								}
+								breadcrumbContainer.setContent(portletBreadcrumb.html());
 							}
 						}
 					},
@@ -555,7 +545,9 @@ AUI.add(
 						if (addButton) {
 							var addButtonContainer = instance.byId('addButtonContainer');
 
-							addButtonContainer.replace(addButton.html());
+							if (addButtonContainer) {
+								addButtonContainer.replace(addButton.html());
+							}
 						}
 
 						var displayStyleButtons = instance.one('#displayStyleButtons', content);
@@ -594,7 +586,9 @@ AUI.add(
 
 						var addButtonContainer = instance.byId('addButtonContainer');
 
-						addButtonContainer.show();
+						if (addButtonContainer) {
+							addButtonContainer.show();
+						}
 
 						var sortButtonContainer = instance.byId('sortButtonContainer');
 
