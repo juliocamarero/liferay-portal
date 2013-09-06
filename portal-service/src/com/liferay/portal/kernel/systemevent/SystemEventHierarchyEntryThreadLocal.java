@@ -49,6 +49,10 @@ public class SystemEventHierarchyEntryThreadLocal {
 		return pop(-1, -1);
 	}
 
+	public static SystemEventHierarchyEntry pop(Class<?> clazz) {
+		return pop(PortalUtil.getClassNameId(clazz), 0);
+	}
+
 	public static SystemEventHierarchyEntry pop(Class<?> clazz, long classPK) {
 		return pop(PortalUtil.getClassNameId(clazz), classPK);
 	}
@@ -83,6 +87,14 @@ public class SystemEventHierarchyEntryThreadLocal {
 
 	public static SystemEventHierarchyEntry push() throws SystemException {
 		return push(SystemEventConstants.ACTION_SKIP);
+	}
+
+	public static SystemEventHierarchyEntry push(Class<?> clazz)
+		throws SystemException {
+
+		return push(
+			PortalUtil.getClassNameId(clazz), 0,
+			SystemEventConstants.ACTION_SKIP);
 	}
 
 	public static SystemEventHierarchyEntry push(Class<?> clazz, long classPK)
