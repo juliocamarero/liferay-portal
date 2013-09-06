@@ -253,6 +253,18 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 		return new StagedModelType(FileEntry.class);
 	}
 
+	@Override
+	public int getStatus() {
+		try {
+			DLFileVersion dlFileVersion = getFileVersion();
+
+			return dlFileVersion.getStatus();
+		}
+		catch (Exception e) {
+			return -1;
+		}
+	}
+
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link DLFileVersion#getUserId()}
 	 */
