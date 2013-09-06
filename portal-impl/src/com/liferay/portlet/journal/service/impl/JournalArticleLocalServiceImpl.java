@@ -1074,7 +1074,7 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 		finally {
-			SystemEventHierarchyEntryThreadLocal.pop();
+			SystemEventHierarchyEntryThreadLocal.pop(JournalArticle.class, 0);
 		}
 
 		if (articleResource != null) {
@@ -1122,7 +1122,7 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 		finally {
-			SystemEventHierarchyEntryThreadLocal.pop();
+			SystemEventHierarchyEntryThreadLocal.pop(JournalArticle.class, 0);
 		}
 
 		for (JournalArticleResource articleResource : articleResources) {
@@ -1197,7 +1197,7 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 		finally {
-			SystemEventHierarchyEntryThreadLocal.pop();
+			SystemEventHierarchyEntryThreadLocal.pop(JournalArticle.class, 0);
 		}
 
 		for (JournalArticleResource articleResource : articleResources) {
@@ -5164,7 +5164,8 @@ public class JournalArticleLocalServiceImpl
 								article.getPrimaryKey());
 						}
 						finally {
-							SystemEventHierarchyEntryThreadLocal.pop();
+							SystemEventHierarchyEntryThreadLocal.pop(
+								JournalArticle.class, 0);
 						}
 					}
 				}

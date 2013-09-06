@@ -189,7 +189,8 @@ public class RepositoryLocalServiceImpl extends RepositoryLocalServiceBaseImpl {
 					SystemEventConstants.TYPE_DELETE, StringPool.BLANK);
 			}
 			finally {
-				SystemEventHierarchyEntryThreadLocal.pop();
+				SystemEventHierarchyEntryThreadLocal.pop(
+					Repository.class, repositoryId);
 			}
 		}
 
