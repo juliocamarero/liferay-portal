@@ -748,7 +748,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 			}
 
 			try {
-				ContainerModel containerModel = trashHandler.getParentContainerModel(this);
+				ContainerModel containerModel = trashHandler.getParentContainerModel(getResourcePrimKey());
 
 				if ((containerModel == null) || !(containerModel instanceof TrashedModel)) {
 					return null;

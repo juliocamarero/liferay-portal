@@ -487,7 +487,7 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 			}
 
 			try {
-				ContainerModel containerModel = trashHandler.getParentContainerModel(this);
+				ContainerModel containerModel = trashHandler.getParentContainerModel(getResourcePrimKey());
 
 				if ((containerModel == null) || !(containerModel instanceof TrashedModel)) {
 					return null;
