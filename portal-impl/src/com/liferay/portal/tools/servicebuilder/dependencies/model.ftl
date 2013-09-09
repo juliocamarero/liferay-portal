@@ -345,6 +345,13 @@ public interface ${entity.name}Model extends
 		</#if>
 
 		/**
+		* Returns the trash container model of the ${entity.humanName}.
+		*
+		* @return the trash container model of the ${entity.humanName}.
+		*/
+		public TrashedModel getTrashContainer();
+
+		/**
 		 * Returns the trash entry created when this ${entity.humanName} was moved to the Recycle Bin. The trash entry may belong to one of the ancestors of this ${entity.humanName}.
 		 *
 		 * @return the trash entry created when this ${entity.humanName} was moved to the Recycle Bin

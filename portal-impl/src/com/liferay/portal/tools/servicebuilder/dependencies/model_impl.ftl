@@ -740,6 +740,35 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 
 		@Override
+		public TrashedModel getTrashContainer() {
+			TrashHandler trashHandler = getTrashHandler();
+
+			if ((trashHandler == null) || Validator.isNull(trashHandler.getContainerModelClassName())) {
+				return null;
+			}
+
+			try {
+				ContainerModel containerModel = trashHandler.getParentContainerModel(this);
+
+				if ((containerModel == null) || !(containerModel instanceof TrashedModel)) {
+					return null;
+				}
+
+				TrashedModel trashModel = (TrashedModel)containerModel;
+
+				if (trashModel.isInTrash()) {
+					return trashModel;
+				}
+
+				return trashModel.getTrashContainer();
+			}
+			catch (Exception e) {
+			}
+
+			return null;
+		}
+
+		@Override
 		public TrashEntry getTrashEntry() throws PortalException, SystemException {
 			if (!isInTrash() && !isInTrashContainer()) {
 				return null;
