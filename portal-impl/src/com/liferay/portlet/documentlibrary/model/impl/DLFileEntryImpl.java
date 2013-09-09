@@ -29,7 +29,6 @@ import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.service.LockLocalServiceUtil;
 import com.liferay.portal.service.RepositoryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.NoSuchFolderException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
@@ -254,26 +253,6 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 		return new StagedModelType(FileEntry.class);
 	}
 
-	@Override
-	public DLFolder getTrashContainer()
-		throws PortalException, SystemException {
-
-		DLFolder dlFolder = null;
-
-		try {
-			dlFolder = getFolder();
-		}
-		catch (NoSuchFolderException nsfe) {
-			return null;
-		}
-
-		if (dlFolder.isInTrash()) {
-			return dlFolder;
-		}
-
-		return dlFolder.getTrashContainer();
-	}
-
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link DLFileVersion#getUserId()}
 	 */
@@ -372,18 +351,6 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 		}
 
 		return false;
-	}
-
-	@Override
-	public boolean isInTrashContainer()
-		throws PortalException, SystemException {
-
-		if (getTrashContainer() != null) {
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 
 	@Override
