@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ContainerModel;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -93,6 +94,15 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 
 		DLFolder dlFolder = getDLFolder(classPK);
 
+		return getParentContainerModel(dlFolder);
+	}
+
+	@Override
+	public ContainerModel getParentContainerModel(TrashedModel trashedModel)
+		throws PortalException, SystemException {
+
+		DLFolder dlFolder = (DLFolder)trashedModel;
+
 		long parentFolderId = dlFolder.getParentFolderId();
 
 		if (parentFolderId <= 0) {
@@ -141,7 +151,7 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 		try {
 			DLFolder dlFolder = getDLFolder(classPK);
 
-			return dlFolder.getTrashContainer();
+			return (DLFolder)dlFolder.getTrashContainer();
 		}
 		catch (InvalidRepositoryException ire) {
 			return null;
