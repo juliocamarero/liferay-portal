@@ -377,9 +377,8 @@ public interface ${entity.name}Model extends
 		 * Returns <code>true</code> if the parent of this ${entity.humanName} is in the Recycle Bin.
 		 *
 		 * @return <code>true</code> if the parent of this ${entity.humanName} is in the Recycle Bin; <code>false</code> otherwise
-		 * @throws SystemException if a system exception occurred
 		 */
-		public boolean isInTrashContainer() throws PortalException, SystemException;
+		public boolean isInTrashContainer();
 	</#if>
 
 	<#if entity.isWorkflowEnabled()>
