@@ -544,7 +544,7 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 		}
 
 		@Override
-		public boolean isInTrashContainer() throws PortalException, SystemException {
+		public boolean isInTrashContainer() {
 			if (getTrashContainer() != null) {
 				return true;
 			}

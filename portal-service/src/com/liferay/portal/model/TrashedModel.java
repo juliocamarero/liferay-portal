@@ -34,6 +34,6 @@ public interface TrashedModel {
 
 	public boolean isInTrash();
 
-	public boolean isInTrashContainer() throws PortalException, SystemException;
+	public boolean isInTrashContainer();
 
 }
