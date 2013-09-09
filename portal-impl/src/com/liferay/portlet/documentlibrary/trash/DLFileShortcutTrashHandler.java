@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.repository.Repository;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.model.ContainerModel;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -28,6 +29,7 @@ import com.liferay.portal.service.RepositoryServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.documentlibrary.NoSuchFolderException;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppHelperLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileShortcutLocalServiceUtil;
@@ -61,6 +63,15 @@ public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 		throws PortalException, SystemException {
 
 		DLFileShortcut dlFileShortcut = getDLFileShortcut(classPK);
+
+		return getParentContainerModel(dlFileShortcut);
+	}
+
+	@Override
+	public ContainerModel getParentContainerModel(TrashedModel trashedModel)
+		throws PortalException, SystemException {
+
+		DLFileShortcut dlFileShortcut = (DLFileShortcut)trashedModel;
 
 		long parentFolderId = dlFileShortcut.getFolderId();
 
@@ -110,7 +121,7 @@ public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 		DLFileShortcut dlFileShortcut =
 			DLFileShortcutLocalServiceUtil.getDLFileShortcut(classPK);
 
-		return dlFileShortcut.getTrashContainer();
+		return (DLFolder)dlFileShortcut.getTrashContainer();
 	}
 
 	@Override
