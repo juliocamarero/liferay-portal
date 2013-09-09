@@ -254,26 +254,6 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 		return new StagedModelType(FileEntry.class);
 	}
 
-	@Override
-	public DLFolder getTrashContainer()
-		throws PortalException, SystemException {
-
-		DLFolder dlFolder = null;
-
-		try {
-			dlFolder = getFolder();
-		}
-		catch (NoSuchFolderException nsfe) {
-			return null;
-		}
-
-		if (dlFolder.isInTrash()) {
-			return dlFolder;
-		}
-
-		return dlFolder.getTrashContainer();
-	}
-
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link DLFileVersion#getUserId()}
 	 */
@@ -372,18 +352,6 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 		}
 
 		return false;
-	}
-
-	@Override
-	public boolean isInTrashContainer()
-		throws PortalException, SystemException {
-
-		if (getTrashContainer() != null) {
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 
 	@Override
