@@ -780,24 +780,10 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 				return trashEntry;
 			}
 
-			TrashHandler trashHandler = getTrashHandler();
+			TrashedModel trashedModel = getTrashContainer();
 
-			if (!Validator.isNull(trashHandler.getContainerModelClassName())) {
-				ContainerModel containerModel = trashHandler.getParentContainerModel(this);
-
-				while (containerModel != null) {
-					if (containerModel instanceof TrashedModel) {
-						return ((TrashedModel)containerModel).getTrashEntry();
-					}
-
-					trashHandler = TrashHandlerRegistryUtil.getTrashHandler(trashHandler.getContainerModelClassName());
-
-					if (trashHandler == null) {
-						return null;
-					}
-
-					containerModel = trashHandler.getContainerModel(containerModel.getParentContainerModelId());
-				}
+			if (trashedModel != null) {
+				return trashedModel.getTrashEntry();
 			}
 
 			return null;
@@ -819,26 +805,13 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		}
 
 		@Override
-		public boolean isInTrashContainer()
-			throws PortalException, SystemException {
-
-			TrashHandler trashHandler = getTrashHandler();
-
-			if ((trashHandler == null) || Validator.isNull(trashHandler.getContainerModelClassName())) {
+		public boolean isInTrashContainer() throws PortalException, SystemException {
+			if (getTrashContainer() != null) {
+				return true;
+			}
+			else {
 				return false;
 			}
-
-			ContainerModel containerModel = trashHandler.getParentContainerModel(this);
-
-			if (containerModel == null) {
-				return false;
-			}
-
-			if (containerModel instanceof TrashedModel) {
-				return ((TrashedModel)containerModel).isInTrash();
-			}
-
-			return false;
 		}
 	</#if>
 
