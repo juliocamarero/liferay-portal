@@ -396,7 +396,7 @@
 		<reference package-path="com.liferay.portlet.asset" entity="AssetTag" />
 		<reference package-path="com.liferay.portlet.trash" entity="TrashEntry" />
 	</entity>
-	<entity name="DLFileVersion" human-name="document library file version" uuid="true" local-service="true" remote-service="true" trashed-model="true">
+	<entity name="DLFileVersion" human-name="document library file version" uuid="true" local-service="true" remote-service="true">
 
 		<!-- PK fields -->
 
