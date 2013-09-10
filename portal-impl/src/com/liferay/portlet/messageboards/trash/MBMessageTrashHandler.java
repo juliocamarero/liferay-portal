@@ -25,6 +25,7 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBMessage;
+import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBMessageServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
@@ -45,6 +46,11 @@ public class MBMessageTrashHandler extends BaseTrashHandler {
 	@Override
 	public String getClassName() {
 		return MBMessage.class.getName();
+	}
+
+	@Override
+	public String getContainerModelClassName() {
+		return MBThread.class.getName();
 	}
 
 	@Override
