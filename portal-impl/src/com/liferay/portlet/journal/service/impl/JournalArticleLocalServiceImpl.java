@@ -278,7 +278,7 @@ public class JournalArticleLocalServiceImpl
 		// Article
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		articleId = articleId.trim().toUpperCase();
+		articleId = StringUtil.toUpperCase(articleId.trim());
 
 		Date displayDate = null;
 		Date expirationDate = null;
@@ -744,8 +744,8 @@ public class JournalArticleLocalServiceImpl
 		// Article
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		oldArticleId = oldArticleId.trim().toUpperCase();
-		newArticleId = newArticleId.trim().toUpperCase();
+		oldArticleId = StringUtil.toUpperCase(oldArticleId.trim());
+		newArticleId = StringUtil.toUpperCase(newArticleId.trim());
 		Date now = new Date();
 
 		JournalArticle oldArticle = journalArticlePersistence.findByG_A_V(
@@ -1057,7 +1057,7 @@ public class JournalArticleLocalServiceImpl
 			long groupId, String articleId, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		SystemEventHierarchyEntryThreadLocal.push(JournalArticle.class, 0);
+		SystemEventHierarchyEntryThreadLocal.push(JournalArticle.class);
 
 		JournalArticleResource articleResource =
 			journalArticleResourceLocalService.fetchArticleResource(
@@ -1074,7 +1074,7 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 		finally {
-			SystemEventHierarchyEntryThreadLocal.pop();
+			SystemEventHierarchyEntryThreadLocal.pop(JournalArticle.class);
 		}
 
 		if (articleResource != null) {
@@ -1096,7 +1096,7 @@ public class JournalArticleLocalServiceImpl
 	public void deleteArticles(long groupId)
 		throws PortalException, SystemException {
 
-		SystemEventHierarchyEntryThreadLocal.push(JournalArticle.class, 0);
+		SystemEventHierarchyEntryThreadLocal.push(JournalArticle.class);
 
 		List<JournalArticleResource> articleResources =
 			new ArrayList<JournalArticleResource>();
@@ -1122,7 +1122,7 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 		finally {
-			SystemEventHierarchyEntryThreadLocal.pop();
+			SystemEventHierarchyEntryThreadLocal.pop(JournalArticle.class);
 		}
 
 		for (JournalArticleResource articleResource : articleResources) {
@@ -1165,7 +1165,7 @@ public class JournalArticleLocalServiceImpl
 			long groupId, long folderId, boolean includeTrashedEntries)
 		throws PortalException, SystemException {
 
-		SystemEventHierarchyEntryThreadLocal.push(JournalArticle.class, 0);
+		SystemEventHierarchyEntryThreadLocal.push(JournalArticle.class);
 
 		List<JournalArticleResource> articleResources =
 			new ArrayList<JournalArticleResource>();
@@ -1197,7 +1197,7 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 		finally {
-			SystemEventHierarchyEntryThreadLocal.pop();
+			SystemEventHierarchyEntryThreadLocal.pop(JournalArticle.class);
 		}
 
 		for (JournalArticleResource articleResource : articleResources) {
@@ -4492,7 +4492,7 @@ public class JournalArticleLocalServiceImpl
 		// Article
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		articleId = articleId.trim().toUpperCase();
+		articleId = StringUtil.toUpperCase(articleId.trim());
 
 		byte[] smallImageBytes = null;
 
@@ -5155,8 +5155,7 @@ public class JournalArticleLocalServiceImpl
 							AssetLinkConstants.TYPE_RELATED);
 
 						SystemEventHierarchyEntryThreadLocal.push(
-							JournalArticle.class, 0,
-							SystemEventConstants.ACTION_SKIP);
+							JournalArticle.class);
 
 						try {
 							assetEntryLocalService.deleteEntry(
@@ -5164,7 +5163,8 @@ public class JournalArticleLocalServiceImpl
 								article.getPrimaryKey());
 						}
 						finally {
-							SystemEventHierarchyEntryThreadLocal.pop();
+							SystemEventHierarchyEntryThreadLocal.pop(
+								JournalArticle.class);
 						}
 					}
 				}
