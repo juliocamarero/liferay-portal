@@ -255,19 +255,6 @@ public class LiferayFileVersion extends LiferayModel implements FileVersion {
 		return _dlFileVersion.getTitle();
 	}
 
-	public DLFolder getTrashContainer() {
-		DLFolder dlFolder = null;
-
-		try {
-			dlFolder = _dlFileVersion.getTrashContainer();
-		}
-		catch (Exception e) {
-			return null;
-		}
-
-		return dlFolder;
-	}
-
 	@Override
 	public long getUserId() {
 		return _dlFileVersion.getUserId();
