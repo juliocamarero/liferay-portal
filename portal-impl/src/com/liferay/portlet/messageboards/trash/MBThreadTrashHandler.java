@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
@@ -59,6 +60,13 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 	@Override
 	public String getClassName() {
 		return MBThread.class.getName();
+	}
+
+	@Override
+	public ContainerModel getContainerModel(long containerModelId)
+		throws PortalException, SystemException {
+
+		return MBCategoryLocalServiceUtil.getCategory(containerModelId);
 	}
 
 	@Override
@@ -101,6 +109,15 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 		return MBCategoryLocalServiceUtil.getCategoriesCount(
 			thread.getGroupId(), parentContainerModelId,
 			WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public ContainerModel getParentContainerModel(TrashedModel trashedModel)
+		throws PortalException, SystemException {
+
+		MBThread thread = (MBThread)trashedModel;
+
+		return getContainerModel(thread.getCategoryId());
 	}
 
 	@Override
@@ -150,7 +167,7 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 
 		MBThread thread = MBThreadLocalServiceUtil.getThread(classPK);
 
-		return thread.getTrashContainer();
+		return (MBCategory)thread.getTrashContainer();
 	}
 
 	@Override
