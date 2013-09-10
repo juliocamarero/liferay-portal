@@ -160,7 +160,7 @@ public class Validator {
 	 *         instance, or both <code>null</code>; <code>false</code> otherwise
 	 */
 	public static boolean equals(Object obj1, Object obj2) {
-		if ((obj1 == null) && (obj2 == null)) {
+		if (obj1 == obj2) {
 			return true;
 		}
 		else if ((obj1 == null) || (obj2 == null)) {

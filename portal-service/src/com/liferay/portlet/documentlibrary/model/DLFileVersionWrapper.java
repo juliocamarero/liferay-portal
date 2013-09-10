@@ -866,16 +866,6 @@ public class DLFileVersionWrapper implements DLFileVersion,
 	}
 
 	/**
-	* Returns <code>true</code> if this document library file version is in the Recycle Bin.
-	*
-	* @return <code>true</code> if this document library file version is in the Recycle Bin; <code>false</code> otherwise
-	*/
-	@Override
-	public boolean isInTrash() {
-		return _dlFileVersion.isInTrash();
-	}
-
-	/**
 	* Returns <code>true</code> if this document library file version is pending.
 	*
 	* @return <code>true</code> if this document library file version is pending; <code>false</code> otherwise
@@ -1029,20 +1019,6 @@ public class DLFileVersionWrapper implements DLFileVersion,
 	@Override
 	public java.lang.String getIcon() {
 		return _dlFileVersion.getIcon();
-	}
-
-	@Override
-	public com.liferay.portlet.documentlibrary.model.DLFolder getTrashContainer()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _dlFileVersion.getTrashContainer();
-	}
-
-	@Override
-	public boolean isInTrashContainer()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _dlFileVersion.isInTrashContainer();
 	}
 
 	@Override

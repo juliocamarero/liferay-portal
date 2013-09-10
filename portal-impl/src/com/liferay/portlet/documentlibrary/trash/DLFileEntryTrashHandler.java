@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ContainerModel;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -94,6 +95,15 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 
 		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
 
+		return getParentContainerModel(dlFileEntry);
+	}
+
+	@Override
+	public ContainerModel getParentContainerModel(TrashedModel trashedModel)
+		throws PortalException, SystemException {
+
+		DLFileEntry dlFileEntry = (DLFileEntry)trashedModel;
+
 		long parentFolderId = dlFileEntry.getFolderId();
 
 		if (parentFolderId <= 0) {
@@ -143,7 +153,7 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 		try {
 			DLFileEntry dlFileEntry = getDLFileEntry(classPK);
 
-			return dlFileEntry.getTrashContainer();
+			return (DLFolder)dlFileEntry.getTrashContainer();
 		}
 		catch (InvalidRepositoryException ire) {
 			return null;
@@ -172,9 +182,7 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 		try {
 			DLFileEntry dlFileEntry = getDLFileEntry(classPK);
 
-			DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
-
-			return dlFileVersion.isInTrash();
+			return dlFileEntry.isInTrash();
 		}
 		catch (InvalidRepositoryException ire) {
 			return false;
