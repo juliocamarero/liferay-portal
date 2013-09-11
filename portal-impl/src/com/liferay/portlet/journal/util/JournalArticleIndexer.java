@@ -369,11 +369,12 @@ public class JournalArticleIndexer extends BaseIndexer {
 		document.addKeyword("ddmTemplateKey", article.getTemplateId());
 		document.addDate("displayDate", article.getDisplayDate());
 		document.addKeyword("head", false);
+		document.addKeyword("treePath", article.getTreePath());
 
 		addDDMStructureAttributes(document, article);
 
 		if (!article.isInTrash() && article.isInTrashContainer()) {
-			JournalFolder folder = article.getTrashContainer();
+			JournalFolder folder = (JournalFolder)article.getTrashContainer();
 
 			addTrashFields(
 				document, JournalFolder.class.getName(), folder.getFolderId(),
@@ -638,8 +639,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 		for (JournalArticle curArticle : articles) {
 			if (!curArticle.isIndexable() ||
 				((latestIndexableArticle != null) &&
-				 (curArticle.getArticleId() ==
-					latestIndexableArticle.getArticleId()))) {
+				 (curArticle.getId() == latestIndexableArticle.getId()))) {
 
 				continue;
 			}

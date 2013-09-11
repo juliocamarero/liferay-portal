@@ -92,7 +92,7 @@
 			<finder-column name="version" />
 		</finder>
 	</entity>
-	<entity name="DLFileEntry" human-name="document library file entry" uuid="true" local-service="true" remote-service="true">
+	<entity name="DLFileEntry" human-name="document library file entry" uuid="true" local-service="true" remote-service="true" trashed-model="true">
 
 		<!-- PK fields -->
 
@@ -116,6 +116,7 @@
 		<column name="classPK" type="long" />
 		<column name="repositoryId" type="long" />
 		<column name="folderId" type="long" />
+		<column name="treePath" type="String" />
 		<column name="name" type="String" />
 		<column name="extension" type="String" />
 		<column name="mimeType" type="String" />
@@ -340,7 +341,7 @@
 
 		<reference package-path="com.liferay.portal" entity="Layout" />
 	</entity>
-	<entity name="DLFileShortcut" human-name="document library file shortcut" uuid="true" local-service="true" remote-service="true">
+	<entity name="DLFileShortcut" human-name="document library file shortcut" uuid="true" local-service="true" remote-service="true" trashed-model="true">
 
 		<!-- PK fields -->
 
@@ -363,6 +364,7 @@
 		<column name="repositoryId" type="long" />
 		<column name="folderId" type="long" />
 		<column name="toFileEntryId" type="long" />
+		<column name="treePath" type="String" />
 		<column name="active" type="boolean" />
 		<column name="status" type="int" />
 		<column name="statusByUserId" type="long" />
@@ -371,6 +373,9 @@
 
 		<!-- Finder methods -->
 
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
 		<finder name="ToFileEntryId" return-type="Collection">
 			<finder-column name="toFileEntryId" />
 		</finder>
@@ -419,6 +424,7 @@
 		<column name="repositoryId" type="long" />
 		<column name="folderId" type="long" />
 		<column name="fileEntryId" type="long" />
+		<column name="treePath" type="String" />
 		<column name="extension" type="String" />
 		<column name="mimeType" type="String" />
 		<column name="title" type="String" />
@@ -443,6 +449,9 @@
 
 		<!-- Finders -->
 
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
 		<finder name="FileEntryId" return-type="Collection">
 			<finder-column name="fileEntryId" />
 		</finder>
@@ -469,7 +478,7 @@
 			<finder-column name="version" />
 		</finder>
 	</entity>
-	<entity name="DLFolder" human-name="document library folder" uuid="true" local-service="true" remote-service="true">
+	<entity name="DLFolder" human-name="document library folder" uuid="true" local-service="true" remote-service="true" trashed-model="true">
 
 		<!-- PK fields -->
 
@@ -492,6 +501,7 @@
 		<column name="repositoryId" type="long" />
 		<column name="mountPoint" type="boolean" />
 		<column name="parentFolderId" type="long" parent-container-model="true" />
+		<column name="treePath" type="String" />
 		<column name="name" type="String" />
 		<column name="description" type="String" />
 		<column name="lastPostDate" type="Date" />

@@ -16,6 +16,8 @@ package com.liferay.portlet.bookmarks.model.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portlet.bookmarks.NoSuchFolderException;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.model.BookmarksFolderConstants;
@@ -30,6 +32,15 @@ import java.util.List;
 public class BookmarksFolderImpl extends BookmarksFolderBaseImpl {
 
 	public BookmarksFolderImpl() {
+	}
+
+	@Override
+	public String buildTreePath() throws PortalException, SystemException {
+		StringBundler sb = new StringBundler();
+
+		buildTreePath(sb, this);
+
+		return sb.toString();
 	}
 
 	@Override
@@ -98,43 +109,6 @@ public class BookmarksFolderImpl extends BookmarksFolderBaseImpl {
 	}
 
 	@Override
-	public BookmarksFolder getTrashContainer() {
-		BookmarksFolder folder = null;
-
-		try {
-			folder = getParentFolder();
-		}
-		catch (Exception e) {
-			return null;
-		}
-
-		while (folder != null) {
-			if (folder.isInTrash()) {
-				return folder;
-			}
-
-			try {
-				folder = folder.getParentFolder();
-			}
-			catch (Exception e) {
-				return null;
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public boolean isInTrashContainer() {
-		if (getTrashContainer() != null) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	@Override
 	public boolean isRoot() {
 		if (getParentFolderId() ==
 				BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
@@ -143,6 +117,20 @@ public class BookmarksFolderImpl extends BookmarksFolderBaseImpl {
 		}
 
 		return false;
+	}
+
+	protected void buildTreePath(StringBundler sb, BookmarksFolder folder)
+		throws PortalException, SystemException {
+
+		if (folder == null) {
+			sb.append(StringPool.SLASH);
+		}
+		else {
+			buildTreePath(sb, folder.getParentFolder());
+
+			sb.append(folder.getFolderId());
+			sb.append(StringPool.SLASH);
+		}
 	}
 
 }

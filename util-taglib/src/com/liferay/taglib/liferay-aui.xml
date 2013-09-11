@@ -580,8 +580,9 @@
 			</attribute>
 			<attribute>
 				<name>max</name>
-				<inputType>int</inputType>
-				<outputType>int</outputType>
+				<inputType>java.lang.Object</inputType>
+				<outputType>java.lang.Number</outputType>
+				<defaultValue>null</defaultValue>
 			</attribute>
 			<attribute>
 				<name>model</name>
@@ -590,8 +591,9 @@
 			</attribute>
 			<attribute>
 				<name>min</name>
-				<inputType>int</inputType>
-				<outputType>int</outputType>
+				<inputType>java.lang.Object</inputType>
+				<outputType>java.lang.Number</outputType>
+				<defaultValue>null</defaultValue>
 			</attribute>
 			<attribute>
 				<name>multiple</name>
@@ -665,6 +667,12 @@
 				<name>value</name>
 				<inputType>java.lang.Object</inputType>
 				<outputType>java.lang.Object</outputType>
+			</attribute>
+			<attribute>
+				<name>wrapperCssClass</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+				<type>java.lang.String</type>
 			</attribute>
 		</attributes>
 	</component>

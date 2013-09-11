@@ -126,8 +126,10 @@ public class DLFolderIndexer extends BaseIndexer {
 			Field.HIDDEN, (dlFolder.isHidden() || dlFolder.isInHiddenFolder()));
 		document.addText(Field.TITLE, dlFolder.getName());
 
+		document.addKeyword("treePath", dlFolder.getTreePath());
+
 		if (!dlFolder.isInTrash() && dlFolder.isInTrashContainer()) {
-			DLFolder trashedFolder = dlFolder.getTrashContainer();
+			DLFolder trashedFolder = (DLFolder)dlFolder.getTrashContainer();
 
 			if (trashedFolder != null) {
 				addTrashFields(

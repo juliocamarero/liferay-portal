@@ -255,19 +255,6 @@ public class LiferayFileVersion extends LiferayModel implements FileVersion {
 		return _dlFileVersion.getTitle();
 	}
 
-	public DLFolder getTrashContainer() {
-		DLFolder dlFolder = null;
-
-		try {
-			dlFolder = _dlFileVersion.getTrashContainer();
-		}
-		catch (Exception e) {
-			return null;
-		}
-
-		return dlFolder;
-	}
-
 	@Override
 	public long getUserId() {
 		return _dlFileVersion.getUserId();
@@ -321,21 +308,6 @@ public class LiferayFileVersion extends LiferayModel implements FileVersion {
 	@Override
 	public boolean isExpired() {
 		return _dlFileVersion.isExpired();
-	}
-
-	@Override
-	public boolean isInTrash() {
-		return _dlFileVersion.isInTrash();
-	}
-
-	@Override
-	public boolean isInTrashContainer() {
-		try {
-			return _dlFileVersion.isInTrashContainer();
-		}
-		catch (Exception e) {
-			return false;
-		}
 	}
 
 	@Override

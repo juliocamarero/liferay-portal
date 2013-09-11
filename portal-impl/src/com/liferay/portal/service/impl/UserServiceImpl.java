@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.model.Address;
@@ -1811,9 +1812,11 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 				prefixId, suffixId, birthdayMonth, birthdayDay, birthdayYear,
 				male, jobTitle);
 
-			emailAddress = emailAddress.trim().toLowerCase();
+			emailAddress = StringUtil.toLowerCase(emailAddress.trim());
 
-			if (!emailAddress.equalsIgnoreCase(user.getEmailAddress())) {
+			if (!StringUtil.equalsIgnoreCase(
+					emailAddress, user.getEmailAddress())) {
+
 				validateEmailAddress(user, emailAddress);
 			}
 		}
@@ -2622,11 +2625,13 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			fields.add("birthday");
 		}
 
-		if (!emailAddress.equalsIgnoreCase(user.getEmailAddress())) {
+		if (!StringUtil.equalsIgnoreCase(
+				emailAddress, user.getEmailAddress())) {
+
 			fields.add("emailAddress");
 		}
 
-		if (!firstName.equalsIgnoreCase(user.getFirstName())) {
+		if (!StringUtil.equalsIgnoreCase(firstName, user.getFirstName())) {
 			fields.add("firstName");
 		}
 
@@ -2634,15 +2639,15 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			fields.add("gender");
 		}
 
-		if (!jobTitle.equalsIgnoreCase(user.getJobTitle())) {
+		if (!StringUtil.equalsIgnoreCase(jobTitle, user.getJobTitle())) {
 			fields.add("jobTitle");
 		}
 
-		if (!lastName.equalsIgnoreCase(user.getLastName())) {
+		if (!StringUtil.equalsIgnoreCase(lastName, user.getLastName())) {
 			fields.add("lastName");
 		}
 
-		if (!middleName.equalsIgnoreCase(user.getMiddleName())) {
+		if (!StringUtil.equalsIgnoreCase(middleName, user.getMiddleName())) {
 			fields.add("middleName");
 		}
 
@@ -2650,7 +2655,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			fields.add("prefix");
 		}
 
-		if (!screenName.equalsIgnoreCase(user.getScreenName())) {
+		if (!StringUtil.equalsIgnoreCase(screenName, user.getScreenName())) {
 			fields.add("screenName");
 		}
 

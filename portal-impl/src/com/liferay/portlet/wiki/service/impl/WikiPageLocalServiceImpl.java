@@ -1284,7 +1284,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Check if the new title already exists
 
-		if (title.equalsIgnoreCase(newTitle)) {
+		if (StringUtil.equalsIgnoreCase(title, newTitle)) {
 			throw new DuplicatePageException(newTitle);
 		}
 
@@ -1932,6 +1932,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		page.setStatusByUserName(user.getFullName());
 		page.setStatusDate(now);
 
+		wikiPagePersistence.update(page);
+
 		if (status == WorkflowConstants.STATUS_APPROVED) {
 
 			// Asset
@@ -2253,7 +2255,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		Map<String, Boolean> links = WikiCacheUtil.getOutgoingLinks(page);
 
-		Boolean link = links.get(targetTitle.toLowerCase());
+		Boolean link = links.get(StringUtil.toLowerCase(targetTitle));
 
 		if (link != null) {
 			return true;

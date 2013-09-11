@@ -39,6 +39,10 @@ public interface JournalFolder extends JournalFolderModel, PersistedModel {
 			}
 		};
 
+	public java.lang.String buildTreePath()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public java.util.List<java.lang.Long> getAncestorFolderIds()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
@@ -50,10 +54,6 @@ public interface JournalFolder extends JournalFolderModel, PersistedModel {
 	public com.liferay.portlet.journal.model.JournalFolder getParentFolder()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
-
-	public com.liferay.portlet.journal.model.JournalFolder getTrashContainer();
-
-	public boolean isInTrashContainer();
 
 	public boolean isRoot();
 }
