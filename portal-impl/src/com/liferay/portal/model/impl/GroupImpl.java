@@ -809,7 +809,7 @@ public class GroupImpl extends GroupBaseImpl {
 				portlet.getPortletDataHandlerClass();
 
 			if (Validator.isNull(portletDataHandlerClass)) {
-				return true;
+				return false;
 			}
 
 			for (Map.Entry<String, String> entry :
