@@ -301,7 +301,8 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 			String userMappingsScreenName = GetterUtil.getString(
 				userMappings.getProperty("screenName"));
 
-			userMappingsScreenName = userMappingsScreenName.toLowerCase();
+			userMappingsScreenName = StringUtil.toLowerCase(
+				userMappingsScreenName);
 
 			SearchControls searchControls = new SearchControls(
 				SearchControls.SUBTREE_SCOPE, 1, 0,
@@ -502,8 +503,8 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 				String defaultPassword =
 					PropsValues.LDAP_IMPORT_USER_PASSWORD_DEFAULT;
 
-				if (defaultPassword.equalsIgnoreCase(
-						_USER_PASSWORD_SCREEN_NAME)) {
+				if (StringUtil.equalsIgnoreCase(
+						defaultPassword, _USER_PASSWORD_SCREEN_NAME)) {
 
 					defaultPassword = ldapUser.getScreenName();
 				}
@@ -632,7 +633,8 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 			String groupMappingsGroupName = GetterUtil.getString(
 				groupMappings.getProperty("groupName"));
 
-			groupMappingsGroupName = groupMappingsGroupName.toLowerCase();
+			groupMappingsGroupName = StringUtil.toLowerCase(
+				groupMappingsGroupName);
 
 			cookie = PortalLDAPUtil.getGroups(
 				ldapServerId, companyId, ldapContext, cookie, 0,
@@ -690,7 +692,8 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 			String userMappingsScreenName = GetterUtil.getString(
 				userMappings.getProperty("screenName"));
 
-			userMappingsScreenName = userMappingsScreenName.toLowerCase();
+			userMappingsScreenName = StringUtil.toLowerCase(
+				userMappingsScreenName);
 
 			cookie = PortalLDAPUtil.getUsers(
 				ldapServerId, companyId, ldapContext, cookie, 0,
@@ -837,7 +840,8 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 				String groupMappingsGroupName = GetterUtil.getString(
 					groupMappings.getProperty("groupName"));
 
-				groupMappingsGroupName = groupMappingsGroupName.toLowerCase();
+				groupMappingsGroupName = StringUtil.toLowerCase(
+					groupMappingsGroupName);
 
 				cookie = PortalLDAPUtil.searchLDAP(
 					companyId, ldapContext, cookie, 0, baseDN, sb.toString(),
@@ -1237,7 +1241,9 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 		if (!PropsValues.LDAP_IMPORT_USER_PASSWORD_ENABLED) {
 			password = PropsValues.LDAP_IMPORT_USER_PASSWORD_DEFAULT;
 
-			if (password.equalsIgnoreCase(_USER_PASSWORD_SCREEN_NAME)) {
+			if (StringUtil.equalsIgnoreCase(
+					password, _USER_PASSWORD_SCREEN_NAME)) {
+
 				password = ldapUser.getScreenName();
 			}
 		}

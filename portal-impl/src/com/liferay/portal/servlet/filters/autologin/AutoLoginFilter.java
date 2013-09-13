@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
@@ -118,8 +119,25 @@ public class AutoLoginFilter extends BasePortalFilter {
 		session.setAttribute("j_remoteuser", jUsername);
 
 		if (PropsValues.PORTAL_JAAS_ENABLE) {
-			response.sendRedirect(
-				PortalUtil.getPathMain() + "/portal/protected");
+			String redirect = PortalUtil.getPathMain().concat(
+				"/portal/protected");
+
+			if (PropsValues.AUTH_FORWARD_BY_LAST_PATH) {
+				String autoLoginRedirect = (String)request.getAttribute(
+					AutoLogin.AUTO_LOGIN_REDIRECT_AND_CONTINUE);
+
+				redirect = redirect.concat("?redirect=");
+
+				if (Validator.isNotNull(autoLoginRedirect)) {
+					redirect = redirect.concat(autoLoginRedirect);
+				}
+				else {
+					redirect = redirect.concat(
+						PortalUtil.getCurrentCompleteURL(request));
+				}
+			}
+
+			response.sendRedirect(redirect);
 		}
 
 		return jUsername;
@@ -148,7 +166,7 @@ public class AutoLoginFilter extends BasePortalFilter {
 
 		String contextPath = PortalUtil.getPathContext();
 
-		String path = request.getRequestURI().toLowerCase();
+		String path = StringUtil.toLowerCase(request.getRequestURI());
 
 		if (!contextPath.equals(StringPool.SLASH) &&
 			path.contains(contextPath)) {

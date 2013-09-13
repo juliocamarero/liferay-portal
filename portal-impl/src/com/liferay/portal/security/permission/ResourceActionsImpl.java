@@ -791,14 +791,16 @@ public class ResourceActionsImpl implements ResourceActions {
 
 			if (mimeTypePortletModes != null) {
 				for (String actionId : mimeTypePortletModes) {
-					if (actionId.equalsIgnoreCase("edit")) {
+					if (StringUtil.equalsIgnoreCase(actionId, "edit")) {
 						actions.add(ActionKeys.PREFERENCES);
 					}
-					else if (actionId.equalsIgnoreCase("edit_guest")) {
+					else if (StringUtil.equalsIgnoreCase(
+								actionId, "edit_guest")) {
+
 						actions.add(ActionKeys.GUEST_PREFERENCES);
 					}
 					else {
-						actions.add(actionId.toUpperCase());
+						actions.add(StringUtil.toUpperCase(actionId));
 					}
 				}
 			}

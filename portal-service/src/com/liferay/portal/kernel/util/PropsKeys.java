@@ -127,7 +127,11 @@ public interface PropsKeys {
 
 	public static final String ASSET_RENDERER_ENABLED = "asset.renderer.enabled.";
 
+	public static final String ASSET_TAG_PERMISSIONS_ENABLED = "asset.tag.permissions.enabled";
+
 	public static final String ASSET_TAG_PROPERTIES_DEFAULT = "asset.tag.properties.default";
+
+	public static final String ASSET_TAG_PROPERTIES_ENABLED = "asset.tag.properties.enabled";
 
 	public static final String ASSET_TAG_SUGGESTIONS_ENABLED = "asset.tag.suggestions.enabled";
 
@@ -1645,8 +1649,6 @@ public interface PropsKeys {
 
 	public static final String MINIFIER_ENABLED = "minifier.enabled";
 
-	public static final String MINIFIER_FILES_LIMIT = "minifier.files.limit";
-
 	public static final String MINIFIER_INLINE_CONTENT_CACHE_SIZE = "minifier.inline.content.cache.size";
 
 	public static final String MINIFIER_INLINE_CONTENT_CACHE_SKIP_CSS = "minifier.inline.content.cache.skip.css";
@@ -1968,6 +1970,8 @@ public interface PropsKeys {
 	public static final String PORTAL_JAAS_ENABLE = "portal.jaas.enable";
 
 	public static final String PORTAL_JAAS_IMPL = "portal.jaas.impl";
+
+	public static final String PORTAL_JAAS_PLAIN_PASSWORD = "portal.jaas.plain.password";
 
 	public static final String PORTAL_JAAS_STRICT_PASSWORD = "portal.jaas.strict.password";
 

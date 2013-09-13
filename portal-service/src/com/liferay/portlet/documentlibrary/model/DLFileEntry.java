@@ -31,6 +31,10 @@ public interface DLFileEntry extends DLFileEntryModel, PersistedModel {
 	 *
 	 * Never modify this interface directly. Add methods to {@link com.liferay.portlet.documentlibrary.model.impl.DLFileEntryImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public java.lang.String buildTreePath()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public java.io.InputStream getContentStream()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
@@ -78,6 +82,8 @@ public interface DLFileEntry extends DLFileEntryModel, PersistedModel {
 
 	public java.lang.String getLuceneProperties();
 
+	public int getStatus();
+
 	public com.liferay.portlet.documentlibrary.model.DLFolder getTrashContainer()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
@@ -102,6 +108,8 @@ public interface DLFileEntry extends DLFileEntryModel, PersistedModel {
 	public boolean isCheckedOut();
 
 	public boolean isInHiddenFolder();
+
+	public boolean isInTrash();
 
 	public boolean isInTrashContainer()
 		throws com.liferay.portal.kernel.exception.PortalException,

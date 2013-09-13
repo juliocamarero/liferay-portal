@@ -203,7 +203,7 @@ public class LocaleUtil {
 		String languageId1 = _toLanguageId(locale1);
 		String languageId2 = _toLanguageId(locale2);
 
-		return languageId1.equalsIgnoreCase(languageId2);
+		return StringUtil.equalsIgnoreCase(languageId1, languageId2);
 	}
 
 	private Locale _fromLanguageId(String languageId, boolean validate) {
@@ -367,13 +367,14 @@ public class LocaleUtil {
 
 		if (language.length() > 3) {
 			language = locale.getLanguage();
-			language = language.toUpperCase();
+			language = StringUtil.toUpperCase(language);
 		}
 
 		String country = locale.getCountry();
 
 		return _getDisplayName(
-			language, country.toUpperCase(), locale, duplicateLanguages);
+			language, StringUtil.toUpperCase(country), locale,
+			duplicateLanguages);
 	}
 
 	private Locale _getSiteDefault() {

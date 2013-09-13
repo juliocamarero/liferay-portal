@@ -154,7 +154,7 @@ public class ServiceBuilder {
 
 				String name = element.attributeValue("name");
 
-				entityElements.put(name.toLowerCase(), element);
+				entityElements.put(StringUtil.toLowerCase(name), element);
 			}
 			else if (elementName.equals("exceptions")) {
 				element.detach();
@@ -4041,7 +4041,7 @@ public class ServiceBuilder {
 
 				String indexHash = StringUtil.toHexString(indexSpec.hashCode());
 
-				indexHash = indexHash.toUpperCase();
+				indexHash = StringUtil.toUpperCase(indexHash);
 
 				String indexName = "IX_" + indexHash;
 
@@ -4108,21 +4108,21 @@ public class ServiceBuilder {
 				sb.append(col.getDBName());
 				sb.append(" ");
 
-				if (colType.equalsIgnoreCase("boolean")) {
+				if (StringUtil.equalsIgnoreCase(colType, "boolean")) {
 					sb.append("BOOLEAN");
 				}
-				else if (colType.equalsIgnoreCase("double") ||
-						 colType.equalsIgnoreCase("float")) {
+				else if (StringUtil.equalsIgnoreCase(colType, "double") ||
+						 StringUtil.equalsIgnoreCase(colType, "float")) {
 
 					sb.append("DOUBLE");
 				}
 				else if (colType.equals("int") ||
 						 colType.equals("Integer") ||
-						 colType.equalsIgnoreCase("short")) {
+						 StringUtil.equalsIgnoreCase(colType, "short")) {
 
 					sb.append("INTEGER");
 				}
-				else if (colType.equalsIgnoreCase("long")) {
+				else if (StringUtil.equalsIgnoreCase(colType, "long")) {
 					sb.append("LONG");
 				}
 				else if (colType.equals("String")) {
@@ -4221,21 +4221,21 @@ public class ServiceBuilder {
 			sb.append(col.getDBName());
 			sb.append(" ");
 
-			if (colType.equalsIgnoreCase("boolean")) {
+			if (StringUtil.equalsIgnoreCase(colType, "boolean")) {
 				sb.append("BOOLEAN");
 			}
-			else if (colType.equalsIgnoreCase("double") ||
-					 colType.equalsIgnoreCase("float")) {
+			else if (StringUtil.equalsIgnoreCase(colType, "double") ||
+					 StringUtil.equalsIgnoreCase(colType, "float")) {
 
 				sb.append("DOUBLE");
 			}
 			else if (colType.equals("int") ||
 					 colType.equals("Integer") ||
-					 colType.equalsIgnoreCase("short")) {
+					 StringUtil.equalsIgnoreCase(colType, "short")) {
 
 				sb.append("INTEGER");
 			}
-			else if (colType.equalsIgnoreCase("long")) {
+			else if (StringUtil.equalsIgnoreCase(colType, "long")) {
 				sb.append("LONG");
 			}
 			else if (colType.equals("Blob")) {
@@ -4580,6 +4580,8 @@ public class ServiceBuilder {
 			entityElement.attributeValue("cache-enabled"), true);
 		boolean jsonEnabled = GetterUtil.getBoolean(
 			entityElement.attributeValue("json-enabled"), remoteService);
+		boolean trashedModel = GetterUtil.getBoolean(
+			entityElement.attributeValue("trashed-model"));
 		boolean deprecated = GetterUtil.getBoolean(
 			entityElement.attributeValue("deprecated"));
 
@@ -4835,7 +4837,7 @@ public class ServiceBuilder {
 
 		String alias = TextFormatter.format(ejbName, TextFormatter.I);
 
-		if (_badAliasNames.contains(alias.toLowerCase())) {
+		if (_badAliasNames.contains(StringUtil.toLowerCase(alias))) {
 			alias += StringPool.UNDERLINE;
 		}
 
@@ -4959,8 +4961,9 @@ public class ServiceBuilder {
 				humanName, table, alias, uuid, uuidAccessor, localService,
 				remoteService, persistenceClass, finderClass, dataSource,
 				sessionFactory, txManager, cacheEnabled, jsonEnabled,
-				deprecated, pkList, regularColList, blobList, collectionList,
-				columnList, order, finderList, referenceList, txRequiredList));
+				trashedModel, deprecated, pkList, regularColList, blobList,
+				collectionList, columnList, order, finderList, referenceList,
+				txRequiredList));
 	}
 
 	private String _processTemplate(String name) throws Exception {

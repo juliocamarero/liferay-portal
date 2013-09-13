@@ -63,6 +63,7 @@ public class DLFileEntryWrapper implements DLFileEntry,
 		attributes.put("classPK", getClassPK());
 		attributes.put("repositoryId", getRepositoryId());
 		attributes.put("folderId", getFolderId());
+		attributes.put("treePath", getTreePath());
 		attributes.put("name", getName());
 		attributes.put("extension", getExtension());
 		attributes.put("mimeType", getMimeType());
@@ -154,6 +155,12 @@ public class DLFileEntryWrapper implements DLFileEntry,
 
 		if (folderId != null) {
 			setFolderId(folderId);
+		}
+
+		String treePath = (String)attributes.get("treePath");
+
+		if (treePath != null) {
+			setTreePath(treePath);
 		}
 
 		String name = (String)attributes.get("name");
@@ -543,6 +550,26 @@ public class DLFileEntryWrapper implements DLFileEntry,
 	@Override
 	public void setFolderId(long folderId) {
 		_dlFileEntry.setFolderId(folderId);
+	}
+
+	/**
+	* Returns the tree path of this document library file entry.
+	*
+	* @return the tree path of this document library file entry
+	*/
+	@Override
+	public java.lang.String getTreePath() {
+		return _dlFileEntry.getTreePath();
+	}
+
+	/**
+	* Sets the tree path of this document library file entry.
+	*
+	* @param treePath the tree path of this document library file entry
+	*/
+	@Override
+	public void setTreePath(java.lang.String treePath) {
+		_dlFileEntry.setTreePath(treePath);
 	}
 
 	/**
@@ -961,6 +988,13 @@ public class DLFileEntryWrapper implements DLFileEntry,
 	}
 
 	@Override
+	public java.lang.String buildTreePath()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _dlFileEntry.buildTreePath();
+	}
+
+	@Override
 	public java.io.InputStream getContentStream()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -1050,6 +1084,11 @@ public class DLFileEntryWrapper implements DLFileEntry,
 	}
 
 	@Override
+	public int getStatus() {
+		return _dlFileEntry.getStatus();
+	}
+
+	@Override
 	public com.liferay.portlet.documentlibrary.model.DLFolder getTrashContainer()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -1093,6 +1132,11 @@ public class DLFileEntryWrapper implements DLFileEntry,
 	@Override
 	public boolean isInHiddenFolder() {
 		return _dlFileEntry.isInHiddenFolder();
+	}
+
+	@Override
+	public boolean isInTrash() {
+		return _dlFileEntry.isInTrash();
 	}
 
 	@Override

@@ -102,6 +102,7 @@ public class BookmarksEntryLocalServiceImpl
 		entry.setCreateDate(serviceContext.getCreateDate(now));
 		entry.setModifiedDate(serviceContext.getModifiedDate(now));
 		entry.setFolderId(folderId);
+		entry.setTreePath(entry.buildTreePath());
 		entry.setName(name);
 		entry.setUrl(url);
 		entry.setDescription(description);
@@ -313,6 +314,7 @@ public class BookmarksEntryLocalServiceImpl
 		BookmarksEntry entry = getBookmarksEntry(entryId);
 
 		entry.setFolderId(parentFolderId);
+		entry.setTreePath(entry.buildTreePath());
 
 		bookmarksEntryPersistence.update(entry);
 
@@ -376,6 +378,24 @@ public class BookmarksEntryLocalServiceImpl
 			entryId);
 
 		return openEntry(userId, entry);
+	}
+
+	@Override
+	public void rebuildTree(long companyId)
+		throws PortalException, SystemException {
+
+		List<BookmarksEntry> entries = bookmarksEntryPersistence.findByC_NotS(
+			companyId, WorkflowConstants.STATUS_IN_TRASH);
+
+		for (BookmarksEntry entry : entries) {
+			if (entry.isInTrashContainer()) {
+				continue;
+			}
+
+			entry.setTreePath(entry.buildTreePath());
+
+			bookmarksEntryPersistence.update(entry);
+		}
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -484,6 +504,7 @@ public class BookmarksEntryLocalServiceImpl
 
 		entry.setModifiedDate(serviceContext.getModifiedDate(null));
 		entry.setFolderId(folderId);
+		entry.setTreePath(entry.buildTreePath());
 		entry.setName(name);
 		entry.setUrl(url);
 		entry.setDescription(description);
@@ -577,7 +598,8 @@ public class BookmarksEntryLocalServiceImpl
 		else if (status == WorkflowConstants.STATUS_IN_TRASH) {
 			trashEntryLocalService.addTrashEntry(
 				userId, entry.getGroupId(), BookmarksEntry.class.getName(),
-				entry.getEntryId(), oldStatus, null, null);
+				entry.getEntryId(), entry.getUuid(), null, oldStatus, null,
+				null);
 		}
 
 		return entry;

@@ -16,7 +16,6 @@ package com.liferay.portal.jsonwebservice;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.servlet.PluginContextListener;
 import com.liferay.portal.kernel.upload.UploadServletRequest;
 import com.liferay.portal.kernel.util.ContextPathUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -45,13 +44,6 @@ import javax.servlet.http.HttpSession;
  * @author Igor Spasic
  */
 public class JSONWebServiceServlet extends JSONServlet {
-
-	@Override
-	public void destroy() {
-		_jsonWebServiceServiceAction.destroy();
-
-		super.destroy();
-	}
 
 	@Override
 	public void service(
@@ -132,20 +124,15 @@ public class JSONWebServiceServlet extends JSONServlet {
 
 	@Override
 	protected JSONAction getJSONAction(ServletContext servletContext) {
-		ClassLoader classLoader = (ClassLoader)servletContext.getAttribute(
-			PluginContextListener.PLUGIN_CLASS_LOADER);
+		JSONWebServiceServiceAction jsonWebServiceServiceAction =
+			new JSONWebServiceServiceAction();
 
-		_jsonWebServiceServiceAction = new JSONWebServiceServiceAction(
-			servletContext, classLoader);
+		jsonWebServiceServiceAction.setServletContext(servletContext);
 
-		_jsonWebServiceServiceAction.setServletContext(servletContext);
-
-		return _jsonWebServiceServiceAction;
+		return jsonWebServiceServiceAction;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
 		JSONWebServiceServlet.class);
-
-	private JSONWebServiceServiceAction _jsonWebServiceServiceAction;
 
 }
