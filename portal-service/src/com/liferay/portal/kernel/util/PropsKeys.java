@@ -105,6 +105,8 @@ public interface PropsKeys {
 
 	public static final String ASSET_FILTER_SEARCH_LIMIT = "asset.filter.search.limit";
 
+	public static final String ASSET_PUBLISHER_ASSET_ENTRY_QUERY_PROCESSORS = "asset.publisher.asset.entry.query.processors";
+
 	public static final String ASSET_PUBLISHER_DISPLAY_STYLE_DEFAULT = "asset.publisher.display.style.default";
 
 	public static final String ASSET_PUBLISHER_DISPLAY_STYLES = "asset.publisher.display.styles";
@@ -123,11 +125,17 @@ public interface PropsKeys {
 
 	public static final String ASSET_PUBLISHER_EMAIL_FROM_NAME = "asset.publisher.email.from.name";
 
+	public static final String ASSET_PUBLISHER_QUERY_FORM_CONFIGURATION = "asset.publisher.query.form.configuration";
+
 	public static final String ASSET_PUBLISHER_SEARCH_WITH_INDEX = "asset.publisher.search.with.index";
 
 	public static final String ASSET_RENDERER_ENABLED = "asset.renderer.enabled.";
 
+	public static final String ASSET_TAG_PERMISSIONS_ENABLED = "asset.tag.permissions.enabled";
+
 	public static final String ASSET_TAG_PROPERTIES_DEFAULT = "asset.tag.properties.default";
+
+	public static final String ASSET_TAG_PROPERTIES_ENABLED = "asset.tag.properties.enabled";
 
 	public static final String ASSET_TAG_SUGGESTIONS_ENABLED = "asset.tag.suggestions.enabled";
 
@@ -1463,6 +1471,8 @@ public interface PropsKeys {
 
 	public static final String LOGIN_CREATE_ACCOUNT_ALLOW_CUSTOM_PASSWORD = "login.create.account.allow.custom.password";
 
+	public static final String LOGIN_DIALOG_DISABLED = "login.dialog.disabled";
+
 	public static final String LOGIN_EMAIL_FROM_ADDRESS = "login.email.from.address";
 
 	public static final String LOGIN_EMAIL_FROM_NAME = "login.email.from.name";
@@ -1644,8 +1654,6 @@ public interface PropsKeys {
 	public static final String MIME_TYPES_WEB_IMAGES = "mime.types.web.images";
 
 	public static final String MINIFIER_ENABLED = "minifier.enabled";
-
-	public static final String MINIFIER_FILES_LIMIT = "minifier.files.limit";
 
 	public static final String MINIFIER_INLINE_CONTENT_CACHE_SIZE = "minifier.inline.content.cache.size";
 
@@ -1968,6 +1976,8 @@ public interface PropsKeys {
 	public static final String PORTAL_JAAS_ENABLE = "portal.jaas.enable";
 
 	public static final String PORTAL_JAAS_IMPL = "portal.jaas.impl";
+
+	public static final String PORTAL_JAAS_PLAIN_PASSWORD = "portal.jaas.plain.password";
 
 	public static final String PORTAL_JAAS_STRICT_PASSWORD = "portal.jaas.strict.password";
 

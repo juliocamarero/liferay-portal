@@ -242,7 +242,9 @@ public class AutoDeployDir {
 			boolean blacklistedFileExists = false;
 
 			for (File file : files) {
-				if (blacklistedFileName.equalsIgnoreCase(file.getName())) {
+				if (StringUtil.equalsIgnoreCase(
+						blacklistedFileName, file.getName())) {
+
 					blacklistedFileExists = true;
 				}
 			}
@@ -261,7 +263,7 @@ public class AutoDeployDir {
 		for (File file : files) {
 			String fileName = file.getName();
 
-			fileName = fileName.toLowerCase();
+			fileName = StringUtil.toLowerCase(fileName);
 
 			if (file.isFile() &&
 				(fileName.endsWith(".jar") || fileName.endsWith(".lpkg") ||

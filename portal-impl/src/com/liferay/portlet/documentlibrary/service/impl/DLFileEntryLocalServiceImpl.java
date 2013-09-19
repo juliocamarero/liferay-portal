@@ -77,6 +77,7 @@ import com.liferay.portlet.documentlibrary.ImageSizeException;
 import com.liferay.portlet.documentlibrary.InvalidFileEntryTypeException;
 import com.liferay.portlet.documentlibrary.InvalidFileVersionException;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
+import com.liferay.portlet.documentlibrary.NoSuchFileEntryMetadataException;
 import com.liferay.portlet.documentlibrary.NoSuchFileVersionException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
@@ -218,6 +219,7 @@ public class DLFileEntryLocalServiceImpl
 
 		dlFileEntry.setRepositoryId(repositoryId);
 		dlFileEntry.setFolderId(folderId);
+		dlFileEntry.setTreePath(dlFileEntry.buildTreePath());
 		dlFileEntry.setName(name);
 		dlFileEntry.setExtension(extension);
 		dlFileEntry.setMimeType(mimeType);
@@ -708,10 +710,7 @@ public class DLFileEntryLocalServiceImpl
 				groupId, folderId, start, end);
 
 			for (DLFileEntry dlFileEntry : dlFileEntries) {
-				DLFileVersion dlFileVersion = dlFileEntry.getLatestFileVersion(
-					true);
-
-				if (includeTrashedEntries || !dlFileVersion.isInTrash()) {
+				if (includeTrashedEntries || !dlFileEntry.isInTrash()) {
 					dlAppHelperLocalService.deleteFileEntry(
 						new LiferayFileEntry(dlFileEntry));
 
@@ -796,7 +795,7 @@ public class DLFileEntryLocalServiceImpl
 
 		DLFileEntry dlFileEntry = getFileEntry(fileEntryId);
 
-		return deleteFileEntry(dlFileEntry);
+		return dlFileEntryLocalService.deleteFileEntry(dlFileEntry);
 	}
 
 	@Indexable(type = IndexableType.DELETE)
@@ -809,7 +808,7 @@ public class DLFileEntryLocalServiceImpl
 		}
 
 		try {
-			return deleteFileEntry(fileEntryId);
+			return dlFileEntryLocalService.deleteFileEntry(fileEntryId);
 		}
 		finally {
 			unlockFileEntry(fileEntryId);
@@ -1338,6 +1337,27 @@ public class DLFileEntryLocalServiceImpl
 	}
 
 	@Override
+	public void rebuildTree(long companyId)
+		throws PortalException, SystemException {
+
+		QueryDefinition queryDefinition = new QueryDefinition(
+			WorkflowConstants.STATUS_ANY);
+
+		List<DLFileEntry> dlFileEntries = dlFileEntryFinder.findByCompanyId(
+			companyId, queryDefinition);
+
+		for (DLFileEntry dlFileEntry : dlFileEntries) {
+			if (dlFileEntry.isInTrashContainer()) {
+				continue;
+			}
+
+			dlFileEntry.setTreePath(dlFileEntry.buildTreePath());
+
+			dlFileEntryPersistence.update(dlFileEntry);
+		}
+	}
+
+	@Override
 	public void revertFileEntry(
 			long userId, long fileEntryId, String version,
 			ServiceContext serviceContext)
@@ -1670,7 +1690,8 @@ public class DLFileEntryLocalServiceImpl
 			trashEntryLocalService.addTrashEntry(
 				userId, dlFileEntry.getGroupId(),
 				DLFileEntryConstants.getClassName(),
-				dlFileEntry.getFileEntryId(), oldDLFileVersionStatus,
+				dlFileEntry.getFileEntryId(), dlFileEntry.getUuid(),
+				dlFileEntry.getClassName(), oldDLFileVersionStatus,
 				dlFileVersionStatusOVPs, typeSettingsProperties);
 		}
 
@@ -1767,6 +1788,7 @@ public class DLFileEntryLocalServiceImpl
 		dlFileVersion.setRepositoryId(dlFileEntry.getRepositoryId());
 		dlFileVersion.setFolderId(dlFileEntry.getFolderId());
 		dlFileVersion.setFileEntryId(dlFileEntry.getFileEntryId());
+		dlFileVersion.setTreePath(dlFileVersion.buildTreePath());
 		dlFileVersion.setExtension(extension);
 		dlFileVersion.setMimeType(mimeType);
 		dlFileVersion.setTitle(title);
@@ -2033,10 +2055,18 @@ public class DLFileEntryLocalServiceImpl
 		List<DDMStructure> ddmStructures = dlFileEntryType.getDDMStructures();
 
 		for (DDMStructure ddmStructure : ddmStructures) {
-			DLFileEntryMetadata lastFileEntryMetadata =
-				dlFileEntryMetadataLocalService.getFileEntryMetadata(
-					ddmStructure.getStructureId(),
-					lastDLFileVersion.getFileVersionId());
+			DLFileEntryMetadata lastFileEntryMetadata = null;
+
+			try {
+				lastFileEntryMetadata =
+					dlFileEntryMetadataLocalService.getFileEntryMetadata(
+						ddmStructure.getStructureId(),
+						lastDLFileVersion.getFileVersionId());
+			}
+			catch (NoSuchFileEntryMetadataException nsfem) {
+				return false;
+			}
+
 			DLFileEntryMetadata latestFileEntryMetadata =
 				dlFileEntryMetadataLocalService.getFileEntryMetadata(
 					ddmStructure.getStructureId(),
@@ -2047,15 +2077,23 @@ public class DLFileEntryLocalServiceImpl
 			Fields latestFields = StorageEngineUtil.getFields(
 				latestFileEntryMetadata.getDDMStorageId());
 
-			Set<String> fieldNames = lastFields.getNames();
+			Set<String> lastFieldNames = lastFields.getNames();
+			Set<String> latestFieldNames = latestFields.getNames();
 
-			for (String fieldName : fieldNames) {
+			if (lastFieldNames.size() != latestFieldNames.size()) {
+				return false;
+			}
+
+			for (String fieldName : lastFieldNames) {
 				com.liferay.portlet.dynamicdatamapping.storage.Field
 					lastField = lastFields.get(fieldName);
 				com.liferay.portlet.dynamicdatamapping.storage.Field
 					latestField = latestFields.get(fieldName);
 
-				if (!lastField.equals(latestField) && !lastField.isPrivate()) {
+				if ((latestFieldNames == null) ||
+					(!lastField.equals(latestField) &&
+					 !lastField.isPrivate())) {
+
 					return false;
 				}
 			}
@@ -2192,6 +2230,7 @@ public class DLFileEntryLocalServiceImpl
 
 		dlFileEntry.setModifiedDate(serviceContext.getModifiedDate(null));
 		dlFileEntry.setFolderId(newFolderId);
+		dlFileEntry.setTreePath(dlFileEntry.buildTreePath());
 
 		dlFileEntryPersistence.update(dlFileEntry);
 
@@ -2202,6 +2241,7 @@ public class DLFileEntryLocalServiceImpl
 
 		for (DLFileVersion dlFileVersion : dlFileVersions) {
 			dlFileVersion.setFolderId(newFolderId);
+			dlFileVersion.setTreePath(dlFileVersion.buildTreePath());
 
 			dlFileVersionPersistence.update(dlFileVersion);
 		}

@@ -130,7 +130,7 @@ if ((checkedOut || pending) && !PropsValues.DL_FILE_ENTRY_DRAFTS_ENABLED) {
 					<c:otherwise>
 
 						<%
-						String lockExpirationTime = LanguageUtil.getTimeDescription(pageContext, DLFileEntryConstants.LOCK_EXPIRATION_TIME).toLowerCase();
+						String lockExpirationTime = StringUtil.toLowerCase(LanguageUtil.getTimeDescription(pageContext, DLFileEntryConstants.LOCK_EXPIRATION_TIME));
 						%>
 
 						<%= LanguageUtil.format(pageContext, "you-now-have-a-lock-on-this-document", lockExpirationTime, false) %>
@@ -342,13 +342,13 @@ editFileEntryURL.setParameter("workflowAction", String.valueOf(WorkflowConstants
 				<%
 				boolean inherited = false;
 
-					if (folder != null) {
-						DLFolder dlFolder = (DLFolder)folder.getModel();
+				if (folder != null) {
+					DLFolder dlFolder = (DLFolder)folder.getModel();
 
-						inherited = !dlFolder.isOverrideFileEntryTypes();
-					}
+					inherited = !dlFolder.isOverrideFileEntryTypes();
+				}
 
-					List<DLFileEntryType> dlFileEntryTypes = DLFileEntryTypeLocalServiceUtil.getFolderFileEntryTypes(PortalUtil.getSiteAndCompanyGroupIds(themeDisplay), folderId, inherited);
+				List<DLFileEntryType> dlFileEntryTypes = DLFileEntryTypeLocalServiceUtil.getFolderFileEntryTypes(PortalUtil.getSiteAndCompanyGroupIds(themeDisplay), folderId, inherited);
 				%>
 
 				<c:choose>
@@ -357,11 +357,13 @@ editFileEntryURL.setParameter("workflowAction", String.valueOf(WorkflowConstants
 
 							<%
 							for (DLFileEntryType curDLFileEntryType : dlFileEntryTypes) {
+								if ((curDLFileEntryType.getFileEntryTypeId() == DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT) || (fileEntryTypeId == curDLFileEntryType.getFileEntryTypeId()) || DLFileEntryTypePermission.contains(permissionChecker, curDLFileEntryType, ActionKeys.VIEW)) {
 							%>
 
 								<aui:option label="<%= HtmlUtil.escape(curDLFileEntryType.getName(locale)) %>" selected="<%= (fileEntryTypeId == curDLFileEntryType.getPrimaryKey()) %>" value="<%= curDLFileEntryType.getPrimaryKey() %>" />
 
 							<%
+								}
 							}
 							%>
 
@@ -371,6 +373,8 @@ editFileEntryURL.setParameter("workflowAction", String.valueOf(WorkflowConstants
 						<aui:input name="fileEntryTypeId" type="hidden" value="<%= fileEntryTypeId %>" />
 					</c:otherwise>
 				</c:choose>
+
+				<aui:input name="defaultLanguageId" type="hidden" value="<%= themeDisplay.getLanguageId() %>" />
 
 				<%
 				if (fileEntryTypeId > 0) {

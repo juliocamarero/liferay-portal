@@ -2217,6 +2217,33 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 					<elseif>
 						<equals arg1="${database.family}" arg2="mysql" />
 						<then>
+							<var name="mysql.arg.line" unset="true" />
+
+							<if>
+								<and>
+									<equals arg1="${database.password}" arg2="" />
+									<equals arg1="${database.username}" arg2="" />
+								</and>
+								<then>
+									<var name="mysql.arg.line" value="" />
+								</then>
+								<elseif>
+									<equals arg1="${database.password}" arg2="" />
+									<then>
+										<var name="mysql.arg.line" value="-u ${database.username}" />
+									</then>
+								</elseif>
+								<elseif>
+									<equals arg1="${database.username}" arg2="" />
+									<then>
+										<var name="mysql.arg.line" value="-p${database.password}" />
+									</then>
+								</elseif>
+								<else>
+									<var name="mysql.arg.line" value="-p${database.password} -u ${database.username}" />
+								</else>
+							</if>
+
 							<exec executable="${mysql.executable}" input="create.sql">
 								<arg line="${mysql.arg.line}" />
 							</exec>
@@ -2318,6 +2345,20 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 		</exec>
 	</target>
 
+	<target name="run-selenium-smoke-test">
+		<antcall target="compile" />
+
+		<antcall target="start-selenium" />
+
+		<ant dir="portal-impl" target="compile-test" inheritAll="false" />
+
+		<ant dir="portal-web" target="test-class" inheritAll="false">
+			<property name="class" value="SeleniumSmokeTestSuite" />
+		</ant>
+
+		<antcall target="stop-selenium" />
+	</target>
+
 	<target name="run-selenium-test">
 		<if>
 			<and>
@@ -2355,15 +2396,73 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 			</else>
 		</if>
 
-		<antcall target="generate-tests" inheritAll="false">
-			<param name="test.class" value="${test.class}" />
-		</antcall>
-
 		<ant dir="portal-impl" target="compile-test" inheritAll="false" />
 
-		<ant dir="portal-web" target="test-class" inheritAll="false">
-			<property name="class" value="${test.class}" />
-		</ant>
+		<if>
+			<contains string="${test.class}" substring="#" />
+			<then>
+				<replace
+					file="portal-web/test/test-portal-web.properties"
+					token="testing.class.method=false"
+					value="testing.class.method=true"
+				/>
+
+				<script classpathref="project.classpath" language="beanshell">
+					String testClass = project.getProperty("test.class");
+
+					int x = testClass.indexOf("#");
+
+					String testMethodName = testClass.substring(x + 1);
+
+					project.setProperty("test.method.name", testMethodName);
+
+					String testSimpleClassName =  testClass.substring(0, x);
+
+					project.setProperty("test.simple.class.name", testSimpleClassName);
+				</script>
+
+				<antcall target="generate-tests" inheritAll="false">
+					<param name="test.class" value="${test.simple.class.name}" />
+				</antcall>
+
+				<for param="file">
+					<path>
+						<fileset dir="portal-web/test/functional-generated">
+							<include name="**/${test.simple.class.name}.java" />
+						</fileset>
+					</path>
+					<sequential>
+						<var name="file" value="@{file}" />
+
+						<script classpathref="project.classpath" language="beanshell">
+							String file = project.getProperty("file");
+
+							int x = file.lastIndexOf("\\com\\") + 1;
+							int y = file.lastIndexOf(".");
+
+							file = file.substring(x, y);
+
+							project.setProperty("test.class.name", file.replaceAll("\\\\", "."));
+						</script>
+					</sequential>
+				</for>
+
+				<ant dir="portal-web" target="test-method">
+					<property name="class" value="${test.class.name}" />
+					<property name="methods" value="${test.method.name}" />
+					<property name="test.type" value="functional" />
+				</ant>
+			</then>
+			<else>
+				<antcall target="generate-tests" inheritAll="false">
+					<param name="test.class" value="${test.class}" />
+				</antcall>
+
+				<ant dir="portal-web" target="test-class" inheritAll="false">
+					<property name="class" value="${test.class}" />
+				</ant>
+			</else>
+		</if>
 	</target>
 
 	<target name="run-simple-server">
@@ -2419,6 +2518,13 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 			</then>
 		</if>
 
+		<ant antfile="build-test-plugins.xml" target="deploy-simple-server-plugins">
+			<property name="plugin.types" value="portlets" />
+			<property name="plugins.includes" value="marketplace-portlet" />
+		</ant>
+
+		<property name="plugins.deployed" value="true" />
+
 		<if>
 			<isset property="hook.plugins.includes" />
 			<then>
@@ -2427,8 +2533,6 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 					<property name="plugins.deployed" value="${plugins.deployed}" />
 					<property name="plugins.includes" value="${hook.plugins.includes}" />
 				</ant>
-
-				<property name="plugins.deployed" value="true" />
 			</then>
 		</if>
 
@@ -2440,8 +2544,6 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 					<property name="plugins.deployed" value="${plugins.deployed}" />
 					<property name="plugins.includes" value="${layouttpl.plugins.includes}" />
 				</ant>
-
-				<property name="plugins.deployed" value="true" />
 			</then>
 		</if>
 
@@ -2462,8 +2564,6 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 					<property name="plugins.deployed" value="${plugins.deployed}" />
 					<property name="plugins.includes" value="${portlet.plugins.includes}" />
 				</ant>
-
-				<property name="plugins.deployed" value="true" />
 			</then>
 		</if>
 
@@ -2475,8 +2575,6 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 					<property name="plugins.deployed" value="${plugins.deployed}" />
 					<property name="plugins.includes" value="chat-portlet,flash-portlet,portal-compat-hook,sample-service-builder-portlet,test-pacl-portlet" />
 				</ant>
-
-				<property name="plugins.deployed" value="true" />
 			</then>
 		</if>
 
@@ -2488,8 +2586,6 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 					<property name="plugins.deployed" value="${plugins.deployed}" />
 					<property name="plugins.includes" value="${theme.plugins.includes}" />
 				</ant>
-
-				<property name="plugins.deployed" value="true" />
 			</then>
 		</if>
 
@@ -2501,8 +2597,6 @@ custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
 					<property name="plugins.deployed" value="${plugins.deployed}" />
 					<property name="plugins.includes" value="${web.plugins.includes}" />
 				</ant>
-
-				<property name="plugins.deployed" value="true" />
 			</then>
 		</if>
 

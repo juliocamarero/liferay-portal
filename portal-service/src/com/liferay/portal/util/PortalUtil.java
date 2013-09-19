@@ -1724,6 +1724,12 @@ public class PortalUtil {
 		return getPortal().isLayoutSitemapable(layout);
 	}
 
+	public static boolean isLoginRedirectRequired(HttpServletRequest request)
+		throws SystemException {
+
+		return getPortal().isLoginRedirectRequired(request);
+	}
+
 	public static boolean isMethodGet(PortletRequest portletRequest) {
 		return getPortal().isMethodGet(portletRequest);
 	}

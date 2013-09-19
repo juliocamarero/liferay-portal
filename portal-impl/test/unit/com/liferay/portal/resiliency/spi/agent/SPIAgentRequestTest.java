@@ -14,6 +14,9 @@
 
 package com.liferay.portal.resiliency.spi.agent;
 
+import com.liferay.portal.cache.MultiVMPoolImpl;
+import com.liferay.portal.cache.memory.MemoryPortalCacheManager;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.test.CodeCoverageAssertor;
 import com.liferay.portal.kernel.upload.FileItem;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -23,6 +26,7 @@ import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.ThreadLocalDistributor;
 import com.liferay.portal.resiliency.spi.agent.SPIAgentRequest.AgentHttpServletRequestWrapper;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -90,6 +94,20 @@ public class SPIAgentRequestTest {
 
 			}
 		);
+
+		MemoryPortalCacheManager<Serializable, Serializable>
+			memoryPortalCacheManager =
+				new MemoryPortalCacheManager<Serializable, Serializable>();
+
+		memoryPortalCacheManager.afterPropertiesSet();
+
+		MultiVMPoolImpl multiVMPoolImpl = new MultiVMPoolImpl();
+
+		multiVMPoolImpl.setPortalCacheManager(memoryPortalCacheManager);
+
+		MultiVMPoolUtil multiVMPoolUtil = new MultiVMPoolUtil();
+
+		multiVMPoolUtil.setMultiVMPool(multiVMPoolImpl);
 
 		PortalUtil portalUtil = new PortalUtil();
 
@@ -444,9 +462,12 @@ public class SPIAgentRequestTest {
 			populatedHttpServletRequest.getHeaderNames());
 
 		Assert.assertEquals(3, headerNames.size());
-		Assert.assertTrue(headerNames.contains(_HEADER_NAME_1.toLowerCase()));
-		Assert.assertTrue(headerNames.contains(_HEADER_NAME_2.toLowerCase()));
-		Assert.assertTrue(headerNames.contains(_HEADER_NAME_3.toLowerCase()));
+		Assert.assertTrue(
+			headerNames.contains(StringUtil.toLowerCase(_HEADER_NAME_1)));
+		Assert.assertTrue(
+			headerNames.contains(StringUtil.toLowerCase(_HEADER_NAME_2)));
+		Assert.assertTrue(
+			headerNames.contains(StringUtil.toLowerCase(_HEADER_NAME_3)));
 
 		List<String> headers = ListUtil.fromEnumeration(
 			populatedHttpServletRequest.getHeaders(_HEADER_NAME_1));

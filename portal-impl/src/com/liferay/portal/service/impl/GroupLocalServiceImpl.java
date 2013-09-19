@@ -1229,11 +1229,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			name = organization.getName();
 
-			Group organizationGroup = organization.getGroup();
-
-			if (organizationGroup.isStaged() && group.isStagingGroup()) {
-				name = name + " (" + LanguageUtil.get(locale, "staging") + ")";
-			}
+			group = organization.getGroup();
 		}
 		else if (group.isUser()) {
 			long userId = group.getClassPK();
@@ -1260,6 +1256,14 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			Account account = company.getAccount();
 
 			name = account.getName();
+		}
+
+		if (group.isStaged() && !group.isStagedRemotely() &&
+			group.isStagingGroup()) {
+
+			Group liveGroup = group.getLiveGroup();
+
+			name = liveGroup.getDescriptiveName(locale);
 		}
 
 		return name;
@@ -4082,7 +4086,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			String[] searchNames = CustomSQLUtil.keywords(name);
 
 			String guestName = StringUtil.quote(
-				GroupConstants.GUEST.toLowerCase(), StringPool.PERCENT);
+				StringUtil.toLowerCase(GroupConstants.GUEST),
+				StringPool.PERCENT);
 
 			return ArrayUtil.append(searchNames, guestName);
 		}

@@ -125,9 +125,8 @@ public class JournalContentPortletDataHandler
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		portletDataContext.addPermissions(
-			JournalPermission.RESOURCE_NAME,
-			portletDataContext.getScopeGroupId());
+		portletDataContext.addPortletPermissions(
+			JournalPermission.RESOURCE_NAME);
 
 		String articleId = portletPreferences.getValue("articleId", null);
 
@@ -218,10 +217,8 @@ public class JournalContentPortletDataHandler
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
 
-		portletDataContext.importPermissions(
-			JournalPermission.RESOURCE_NAME,
-			portletDataContext.getSourceGroupId(),
-			portletDataContext.getScopeGroupId());
+		portletDataContext.importPortletPermissions(
+			JournalPermission.RESOURCE_NAME);
 
 		long previousScopeGroupId = portletDataContext.getScopeGroupId();
 
@@ -238,7 +235,7 @@ public class JournalContentPortletDataHandler
 		List<Element> ddmStructureElements = ddmStructuresElement.elements();
 
 		for (Element ddmStructureElement : ddmStructureElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
+			StagedModelDataHandlerUtil.importReferenceStagedModel(
 				portletDataContext, ddmStructureElement);
 		}
 
@@ -248,7 +245,7 @@ public class JournalContentPortletDataHandler
 		List<Element> ddmTemplateElements = ddmTemplatesElement.elements();
 
 		for (Element ddmTemplateElement : ddmTemplateElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
+			StagedModelDataHandlerUtil.importReferenceStagedModel(
 				portletDataContext, ddmTemplateElement);
 		}
 
@@ -258,7 +255,7 @@ public class JournalContentPortletDataHandler
 		List<Element> articleElements = articlesElement.elements();
 
 		if (!articleElements.isEmpty()) {
-			StagedModelDataHandlerUtil.importStagedModel(
+			StagedModelDataHandlerUtil.importReferenceStagedModel(
 				portletDataContext, articleElements.get(0));
 		}
 

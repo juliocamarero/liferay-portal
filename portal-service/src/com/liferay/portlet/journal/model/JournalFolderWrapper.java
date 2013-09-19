@@ -60,6 +60,7 @@ public class JournalFolderWrapper implements JournalFolder,
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("parentFolderId", getParentFolderId());
+		attributes.put("treePath", getTreePath());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 		attributes.put("status", getStatus());
@@ -124,6 +125,12 @@ public class JournalFolderWrapper implements JournalFolder,
 
 		if (parentFolderId != null) {
 			setParentFolderId(parentFolderId);
+		}
+
+		String treePath = (String)attributes.get("treePath");
+
+		if (treePath != null) {
+			setTreePath(treePath);
 		}
 
 		String name = (String)attributes.get("name");
@@ -386,6 +393,26 @@ public class JournalFolderWrapper implements JournalFolder,
 	}
 
 	/**
+	* Returns the tree path of this journal folder.
+	*
+	* @return the tree path of this journal folder
+	*/
+	@Override
+	public java.lang.String getTreePath() {
+		return _journalFolder.getTreePath();
+	}
+
+	/**
+	* Sets the tree path of this journal folder.
+	*
+	* @param treePath the tree path of this journal folder
+	*/
+	@Override
+	public void setTreePath(java.lang.String treePath) {
+		_journalFolder.setTreePath(treePath);
+	}
+
+	/**
 	* Returns the name of this journal folder.
 	*
 	* @return the name of this journal folder
@@ -528,6 +555,50 @@ public class JournalFolderWrapper implements JournalFolder,
 	}
 
 	/**
+	* Returns the trash entry created when this journal folder was moved to the Recycle Bin. The trash entry may belong to one of the ancestors of this journal folder.
+	*
+	* @return the trash entry created when this journal folder was moved to the Recycle Bin
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.trash.model.TrashEntry getTrashEntry()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _journalFolder.getTrashEntry();
+	}
+
+	/**
+	* Returns the trash handler for this journal folder.
+	*
+	* @return the trash handler for this journal folder
+	*/
+	@Override
+	public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler() {
+		return _journalFolder.getTrashHandler();
+	}
+
+	/**
+	* Returns <code>true</code> if this journal folder is in the Recycle Bin.
+	*
+	* @return <code>true</code> if this journal folder is in the Recycle Bin; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isInTrash() {
+		return _journalFolder.isInTrash();
+	}
+
+	/**
+	* Returns <code>true</code> if the parent of this journal folder is in the Recycle Bin.
+	*
+	* @return <code>true</code> if the parent of this journal folder is in the Recycle Bin; <code>false</code> otherwise
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public boolean isInTrashContainer() {
+		return _journalFolder.isInTrashContainer();
+	}
+
+	/**
 	* @deprecated As of 6.1.0, replaced by {@link #isApproved()}
 	*/
 	@Override
@@ -593,16 +664,6 @@ public class JournalFolderWrapper implements JournalFolder,
 	@Override
 	public boolean isIncomplete() {
 		return _journalFolder.isIncomplete();
-	}
-
-	/**
-	* Returns <code>true</code> if this journal folder is in the Recycle Bin.
-	*
-	* @return <code>true</code> if this journal folder is in the Recycle Bin; <code>false</code> otherwise
-	*/
-	@Override
-	public boolean isInTrash() {
-		return _journalFolder.isInTrash();
 	}
 
 	/**
@@ -781,6 +842,13 @@ public class JournalFolderWrapper implements JournalFolder,
 	}
 
 	@Override
+	public java.lang.String buildTreePath()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _journalFolder.buildTreePath();
+	}
+
+	@Override
 	public java.util.List<java.lang.Long> getAncestorFolderIds()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -804,11 +872,6 @@ public class JournalFolderWrapper implements JournalFolder,
 	@Override
 	public com.liferay.portlet.journal.model.JournalFolder getTrashContainer() {
 		return _journalFolder.getTrashContainer();
-	}
-
-	@Override
-	public boolean isInTrashContainer() {
-		return _journalFolder.isInTrashContainer();
 	}
 
 	@Override

@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.messageboards.util;
 
-import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.shard.ShardCallable;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -221,10 +220,11 @@ public class MBUtil {
 
 		Object partContent = part.getContent();
 
-		String contentType = part.getContentType().toLowerCase();
+		String contentType = StringUtil.toLowerCase(part.getContentType());
 
 		if ((part.getDisposition() != null) &&
-			part.getDisposition().equalsIgnoreCase(MimeMessage.ATTACHMENT)) {
+			StringUtil.equalsIgnoreCase(
+				part.getDisposition(), MimeMessage.ATTACHMENT)) {
 
 			if (_log.isDebugEnabled()) {
 				_log.debug("Processing attachment");
@@ -1071,21 +1071,9 @@ public class MBUtil {
 	private static int _getMessageCount(MBCategory category)
 		throws SystemException {
 
-		int messageCount = MBMessageLocalServiceUtil.getCategoryMessagesCount(
+		return MBMessageLocalServiceUtil.getCategoryMessagesCount(
 			category.getGroupId(), category.getCategoryId(),
 			WorkflowConstants.STATUS_APPROVED);
-
-		QueryDefinition queryDefinition = new QueryDefinition(
-			WorkflowConstants.STATUS_IN_TRASH);
-
-		List<MBThread> threads = MBThreadLocalServiceUtil.getGroupThreads(
-			category.getGroupId(), queryDefinition);
-
-		for (MBThread thread : threads) {
-			messageCount = messageCount - thread.getMessageCount();
-		}
-
-		return messageCount;
 	}
 
 	private static String _getParentMessageIdFromSubject(Message message)

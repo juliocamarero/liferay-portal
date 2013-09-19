@@ -98,6 +98,22 @@
 			};
 		},
 
+		addInputCancel: function() {
+			A.use(
+				'aui-button-search-cancel',
+				function(A) {
+					new A.ButtonSearchCancel(
+						{
+							trigger: 'input[type=password], input[type=search], input.clearable, input.search-query',
+							zIndex: Liferay.zIndex.WINDOW + 100
+						}
+					);
+				}
+			);
+
+			Util.addInputCancel = function(){};
+		},
+
 		addInputFocus: function() {
 			A.use(
 				'aui-base',
@@ -461,6 +477,10 @@
 			return window.name || Window._name || '';
 		},
 
+		getWindowWidth: function() {
+			return (window.innerWidth > 0) ? window.innerWidth : screen.width;
+		},
+
 		getURLWithSessionId: function(url) {
 			if (!themeDisplay.isAddSessionIdToURL()) {
 				return url;
@@ -504,6 +524,18 @@
 
 		isEditorPresent: function(editorImpl) {
 			return Liferay.EDITORS && Liferay.EDITORS[editorImpl];
+		},
+
+		isPhone: function() {
+			var instance = this;
+
+			return (instance.getWindowWidth() < Liferay.BREAKPOINTS.PHONE);
+		},
+
+		isTablet: function() {
+			var instance = this;
+
+			return (instance.getWindowWidth() < Liferay.BREAKPOINTS.TABLET);
 		},
 
 		ns: function(namespace, obj) {
@@ -2163,8 +2195,9 @@
 		DROP_AREA: 440,
 		DROP_POSITION: 450,
 		DRAG_ITEM: 460,
-		TOOLTIP: 10000,
+		OVERLAY: 1000,
 		WINDOW: 1200,
-		MENU: 5000
+		MENU: 5000,
+		TOOLTIP: 10000
 	};
 })(AUI(), Liferay);
