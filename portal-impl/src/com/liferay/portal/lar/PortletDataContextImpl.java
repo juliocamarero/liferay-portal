@@ -281,7 +281,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 		addAssetCategories(clazz, classPK);
 		addAssetLinks(clazz, classPK);
 		addAssetTags(clazz, classPK);
-		addExpando(element, path, classedModel);
+		addExpando(element, path, classedModel, clazz);
 		addLocks(clazz, String.valueOf(classPK));
 		addPermissions(clazz, classPK);
 
@@ -388,35 +388,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 			Element element, String path, ClassedModel classedModel)
 		throws PortalException, SystemException {
 
-		Class<?> clazz = classedModel.getModelClass();
-
-		String className = clazz.getName();
-
-		if (!_expandoColumnsMap.containsKey(className)) {
-			List<ExpandoColumn> expandoColumns =
-				ExpandoColumnLocalServiceUtil.getDefaultTableColumns(
-					_companyId, className);
-
-			for (ExpandoColumn expandoColumn : expandoColumns) {
-				addPermissions(
-					ExpandoColumn.class, expandoColumn.getColumnId());
-			}
-
-			_expandoColumnsMap.put(className, expandoColumns);
-		}
-
-		ExpandoBridge expandoBridge = classedModel.getExpandoBridge();
-
-		Map<String, Serializable> expandoBridgeAttributes =
-			expandoBridge.getAttributes();
-
-		if (!expandoBridgeAttributes.isEmpty()) {
-			String expandoPath = ExportImportPathUtil.getExpandoPath(path);
-
-			element.addAttribute("expando-path", expandoPath);
-
-			addZipEntry(expandoPath, expandoBridgeAttributes);
-		}
+		addExpando(element, path, classedModel, classedModel.getModelClass());
 	}
 
 	@Override
@@ -1949,6 +1921,40 @@ public class PortletDataContextImpl implements PortletDataContext {
 	@Override
 	public String toXML(Object object) {
 		return _xStream.toXML(object);
+	}
+
+	protected void addExpando(
+			Element element, String path, ClassedModel classedModel,
+			Class<?> clazz)
+		throws PortalException, SystemException {
+
+		String className = clazz.getName();
+
+		if (!_expandoColumnsMap.containsKey(className)) {
+			List<ExpandoColumn> expandoColumns =
+				ExpandoColumnLocalServiceUtil.getDefaultTableColumns(
+					_companyId, className);
+
+			for (ExpandoColumn expandoColumn : expandoColumns) {
+				addPermissions(
+					ExpandoColumn.class, expandoColumn.getColumnId());
+			}
+
+			_expandoColumnsMap.put(className, expandoColumns);
+		}
+
+		ExpandoBridge expandoBridge = classedModel.getExpandoBridge();
+
+		Map<String, Serializable> expandoBridgeAttributes =
+			expandoBridge.getAttributes();
+
+		if (!expandoBridgeAttributes.isEmpty()) {
+			String expandoPath = ExportImportPathUtil.getExpandoPath(path);
+
+			element.addAttribute("expando-path", expandoPath);
+
+			addZipEntry(expandoPath, expandoBridgeAttributes);
+		}
 	}
 
 	protected ServiceContext createServiceContext(
