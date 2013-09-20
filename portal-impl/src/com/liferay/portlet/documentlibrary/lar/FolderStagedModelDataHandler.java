@@ -90,8 +90,7 @@ public class FolderStagedModelDataHandler
 		Element folderElement = portletDataContext.getExportDataElement(
 			folder, Folder.class);
 
-		String folderPath = ExportImportPathUtil.getModelPath(
-			folder.getGroupId(), Folder.class.getName(), folder.getFolderId());
+		String folderPath = ExportImportPathUtil.getModelPath(folder);
 
 		Repository repository = null;
 

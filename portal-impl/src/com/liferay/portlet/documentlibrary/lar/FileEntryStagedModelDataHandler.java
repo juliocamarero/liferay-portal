@@ -128,9 +128,7 @@ public class FileEntryStagedModelDataHandler
 		Element fileEntryElement = portletDataContext.getExportDataElement(
 			fileEntry, FileEntry.class);
 
-		String fileEntryPath = ExportImportPathUtil.getModelPath(
-			fileEntry.getGroupId(), FileEntry.class.getName(),
-			fileEntry.getFileEntryId());
+		String fileEntryPath = ExportImportPathUtil.getModelPath(fileEntry);
 
 		if (!fileEntry.isDefaultRepository()) {
 			Repository repository = RepositoryLocalServiceUtil.getRepository(
