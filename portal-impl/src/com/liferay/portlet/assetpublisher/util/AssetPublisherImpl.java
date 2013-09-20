@@ -47,6 +47,7 @@ import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -868,7 +869,15 @@ public class AssetPublisherImpl implements AssetPublisher {
 			String scopeIdSuffix = scopeId.substring(
 				SCOPE_ID_PARENT_GROUP_PREFIX.length());
 
-			return GetterUtil.getLong(scopeIdSuffix);
+			long groupId = GetterUtil.getLong(scopeIdSuffix);
+
+			Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+			if (!SitesUtil.isContentSharingWithChildrenEnabled(group)) {
+				throw new PrincipalException();
+			}
+
+			return groupId;
 		}
 		else {
 			throw new IllegalArgumentException("Invalid scope ID " + scopeId);
@@ -883,23 +892,21 @@ public class AssetPublisherImpl implements AssetPublisher {
 		String[] scopeIds = portletPreferences.getValues(
 			"scopeIds", new String[] {SCOPE_ID_GROUP_PREFIX + scopeGroupId});
 
-		long[] groupIds = new long[scopeIds.length];
-
-		int i = 0;
+		List<Long> groupIds = new ArrayList<Long>();
 
 		for (String scopeId : scopeIds) {
 			try {
-				groupIds[i] = getGroupIdFromScopeId(
+				long groupId = getGroupIdFromScopeId(
 					scopeId, scopeGroupId, layout.isPrivateLayout());
 
-				i++;
+				groupIds.add(groupId);
 			}
 			catch (Exception e) {
 				continue;
 			}
 		}
 
-		return groupIds;
+		return ArrayUtil.toArray(groupIds.toArray(new Long[groupIds.size()]));
 	}
 
 	@Override
