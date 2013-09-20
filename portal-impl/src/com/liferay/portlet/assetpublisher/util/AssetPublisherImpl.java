@@ -936,7 +936,9 @@ public class AssetPublisherImpl implements AssetPublisher {
 		else {
 			Group scopeGroup = GroupLocalServiceUtil.getGroup(scopeGroupId);
 
-			if (scopeGroup.hasAncestor(group.getGroupId())) {
+			if (scopeGroup.hasAncestor(group.getGroupId()) &&
+				SitesUtil.isContentSharingWithChildrenEnabled(group)) {
+
 				key = SCOPE_ID_PARENT_GROUP_PREFIX + group.getGroupId();
 			}
 			else if (group.hasAncestor(scopeGroup.getGroupId())) {
