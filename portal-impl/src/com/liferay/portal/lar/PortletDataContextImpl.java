@@ -329,8 +329,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 			String namespace)
 		throws PortalException, SystemException {
 
-		addClassedModel(
-			element, path, classedModel, classedModel.getModelClass());
+		addClassedModel(element, path, classedModel);
 	}
 
 	@Override
