@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
@@ -115,7 +116,7 @@ public class DLFileShortcutStagedModelDataHandler
 			Folder folder = (Folder)portletDataContext.getZipEntryAsObject(
 				folderPath);
 
-			StagedModelDataHandlerUtil.importStagedModel(
+			StagedModelDataHandlerUtil.importReferenceStagedModel(
 				portletDataContext, folder);
 		}
 
@@ -141,7 +142,7 @@ public class DLFileShortcutStagedModelDataHandler
 		FileEntry fileEntry = (FileEntry)portletDataContext.getZipEntryAsObject(
 			fileEntryPath);
 
-		StagedModelDataHandlerUtil.importStagedModel(
+		StagedModelDataHandlerUtil.importReferenceStagedModel(
 			portletDataContext, fileEntry);
 
 		Element fileShortcutElement =
@@ -196,6 +197,33 @@ public class DLFileShortcutStagedModelDataHandler
 
 		portletDataContext.importClassedModel(
 			fileShortcut, importedFileShortcut, DLPortletDataHandler.NAMESPACE);
+	}
+
+	@Override
+	protected void doRestoreStagedModel(
+			PortletDataContext portletDataContext, DLFileShortcut fileShortcut)
+		throws Exception {
+
+		long userId = portletDataContext.getUserId(fileShortcut.getUserUuid());
+
+		DLFileShortcut existingFileShortcut =
+			DLFileShortcutLocalServiceUtil.fetchDLFileShortcutByUuidAndGroupId(
+				fileShortcut.getUuid(), portletDataContext.getScopeGroupId());
+
+		if ((existingFileShortcut == null) ||
+			!existingFileShortcut.isInTrash()) {
+
+			return;
+		}
+
+		TrashHandler trashHandler = existingFileShortcut.getTrashHandler();
+
+		if (trashHandler.isRestorable(
+				existingFileShortcut.getFileShortcutId())) {
+
+			trashHandler.restoreTrashEntry(
+				userId, existingFileShortcut.getFileShortcutId());
+		}
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

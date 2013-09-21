@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.StagedModel;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.model.WorkflowedModel;
 
 /**
@@ -81,6 +82,19 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 	}
 
 	@Override
+	public void importCompanyStagedModel(
+			PortletDataContext portletDataContext, T stagedModel)
+		throws PortletDataException {
+
+		try {
+			doImportCompanyStagedModel(portletDataContext, stagedModel);
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
+	}
+
+	@Override
 	public void importStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
@@ -98,10 +112,27 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			PortletDataHandlerStatusMessageSenderUtil.sendStatusMessage(
 				"stagedModel", stagedModel, manifestSummary);
 
+			if (stagedModel instanceof TrashedModel) {
+				restoreStagedModel(portletDataContext, stagedModel);
+			}
+
 			doImportStagedModel(portletDataContext, stagedModel);
 
 			manifestSummary.incrementModelAdditionCount(
 				stagedModel.getStagedModelType());
+		}
+		catch (Exception e) {
+			throw new PortletDataException(e);
+		}
+	}
+
+	@Override
+	public void restoreStagedModel(
+			PortletDataContext portletDataContext, T stagedModel)
+		throws PortletDataException {
+
+		try {
+			doRestoreStagedModel(portletDataContext, stagedModel);
 		}
 		catch (Exception e) {
 			throw new PortletDataException(e);
@@ -149,9 +180,23 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
 
+	protected void doImportCompanyStagedModel(
+			PortletDataContext portletDataContext, T stagedModel)
+		throws Exception {
+
+		throw new UnsupportedOperationException();
+	}
+
 	protected abstract void doImportStagedModel(
 			PortletDataContext portletDataContext, T stagedModel)
 		throws Exception;
+
+	protected void doRestoreStagedModel(
+			PortletDataContext portletDataContext, T stagedModel)
+		throws Exception {
+
+		throw new UnsupportedOperationException();
+	}
 
 	protected boolean isExportable(
 		PortletDataContext portletDataContext, T stagedModel) {

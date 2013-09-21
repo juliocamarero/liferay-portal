@@ -5,15 +5,9 @@
 
 	<property name="war.file" value="${ant.project.name}" />
 
-	<!--
-	When upgrading CKEditor, make sure to delete
-	docroot/html/js/editor/ckeditor_diffs/ckeditor.js.
-	-->
-
-	<property name="ckeditor.file" value="ckeditor-4.0-stable.zip" />
-
+	<property name="alloy-font-awesome.file" value="alloy-font-awesome-1.0.0.zip" />
+	<property name="ckeditor.file" value="ckeditor_4.0.3_liferay.zip" />
 	<property name="fckeditor.file" value="FCKeditor_2.6.3.zip" />
-	<property name="font-awesome.file" value="font-awesome-3.2.1.zip" />
 	<property name="scayt.file" value="scayt_4.0.3.zip" />
 	<property name="tinymce.file" value="tinymce_3.5.6.zip" />
 	<property name="vaadin.file" value="vaadin-6.8.12-liferay.zip" />
@@ -58,7 +52,7 @@
 	<target name="build-alloy">
 		<antcall target="build-alloy-bootstrap" />
 
-		<property name="alloy.version" value="2.0.0pr6" />
+		<property name="alloy.version" value="2.0.0pr7" />
 
 		<property name="alloy.file" value="alloy-${alloy.version}.zip" />
 
@@ -220,87 +214,44 @@
 			</then>
 		</if>
 
-		<!-- Build Font-Awesome -->
+		<!-- Build Alloy Font Awesome -->
 
-		<antcall target="build-font-awesome">
+		<antcall target="build-alloy-font-awesome">
 			<param name="alloy.bootstrap.deploy" value="${alloy.bootstrap.deploy}" />
 		</antcall>
 	</target>
 
+	<target name="build-alloy-font-awesome">
+		<if>
+			<not>
+				<uptodate
+					srcfile="third-party/${alloy-font-awesome.file}"
+					targetfile="${alloy.bootstrap.deploy}/alloy-font-awesome"
+				/>
+			</not>
+			<then>
+				<delete dir="${alloy.bootstrap.deploy}/alloy-font-awesome" />
+
+				<unzip src="third-party/${alloy-font-awesome.file}" dest="${alloy.bootstrap.deploy}" />
+
+				<delete dir="${alloy.bootstrap.deploy}/alloy-font-awesome/css" />
+				<delete dir="${alloy.bootstrap.deploy}/alloy-font-awesome/less" />
+			</then>
+		</if>
+	</target>
+
 	<target name="build-ckeditor">
 		<if>
-			<or>
-				<not>
-					<available file="docroot/html/js/editor/ckeditor_diffs/ckeditor.js" />
-				</not>
-				<not>
-					<uptodate
-						srcfile="third-party/${ckeditor.file}"
-						targetfile="docroot/html/js/editor/ckeditor"
-					/>
-				</not>
-			</or>
+			<not>
+				<uptodate
+					srcfile="third-party/${ckeditor.file}"
+					targetfile="docroot/html/js/editor/ckeditor"
+				/>
+			</not>
 			<then>
 				<delete dir="docroot/html/js/editor/ckeditor" />
 
 				<unzip src="third-party/${ckeditor.file}" dest="docroot/html/js/editor" />
-
-				<if>
-					<not>
-						<available file="docroot/html/js/editor/ckeditor_diffs/ckeditor.js" />
-					</not>
-					<then>
-						<delete dir="docroot/html/js/editor/ckeditor/dev/builder/release" />
-
-						<replace file="docroot/html/js/editor/ckeditor/plugins/wysiwygarea/plugin.js">
-							<replacetoken><![CDATA[var data = fullPage]]></replacetoken>
-							<replacevalue>
-								<![CDATA[
-									if (!doc) {
-										return null;
-									}
-
-									var data = fullPage
-								]]>
-							</replacevalue>
-						</replace>
-
-						<property name="arg.line" value="" />
-
-						<java
-							classname="ckbuilder.ckbuilder"
-							classpathref="project.classpath"
-							dir="${basedir}/docroot/html/js/editor/ckeditor/dev/builder"
-							fork="true"
-							newenvironment="true"
-						>
-							<arg line="--build ../../" />
-							<arg line="release" />
-							<arg line="--version=&quot;4.0 STABLE&quot;" />
-							<arg line="--build-config ${basedir}/docroot/html/js/editor/ckeditor/dev/builder/build-config.js" />
-							<arg line="${arg.line}" />
-						</java>
-					</then>
-				</if>
-
-				<move
-					file="docroot/html/js/editor/ckeditor/dev/builder/release/ckeditor"
-					preservelastmodified="true"
-					tofile="docroot/html/js/editor/ckeditor.tmp"
-				/>
-
-				<delete dir="docroot/html/js/editor/ckeditor" />
-
-				<move
-					file="docroot/html/js/editor/ckeditor.tmp"
-					preservelastmodified="true"
-					tofile="docroot/html/js/editor/ckeditor"
-				/>
-
-				<copy
-					file="docroot/html/js/editor/ckeditor/ckeditor.js"
-					tofile="docroot/html/js/editor/ckeditor_diffs/ckeditor.js"
-				/>
 
 				<copy todir="docroot/html/js/editor/ckeditor" overwrite="true" preservelastmodified="true">
 					<fileset dir="docroot/html/js/editor/ckeditor_diffs" />
@@ -316,27 +267,7 @@
 				</copy>
 			</else>
 		</if>
-
-		<replace file="docroot/html/js/editor/ckeditor/plugins/link/dialogs/link.js">
-			<replacetoken><![CDATA[return 'mailto:' +]]></replacetoken>
-			<replacevalue><![CDATA[rest = decodeURIComponent(rest); return "mailto:" + ]]></replacevalue>
-		</replace>
-
-		<replace file="docroot/html/js/editor/ckeditor/plugins/link/dialogs/link.js">
-			<replacetoken><![CDATA[body = encodeURIComponent( email.body || '' );]]></replacetoken>
-			<replacevalue><![CDATA[body = email.body || ''; body = encodeURIComponent(body).replace(/%/g, '%25');]]></replacevalue>
-		</replace>
 	</target>
-
-	<target name="build-ckeditor-dev">
-		<delete file="docroot/html/js/editor/ckeditor_diffs/ckeditor.js" />
-
-		<antcall target="build-ckeditor">
-			<param name="arg.line" value="--leave-css-unminified --leave-js-unminified" />
-		</antcall>
-
-		<delete file="docroot/html/js/editor/ckeditor_diffs/ckeditor.js" />
- 	</target>
 
 	<target name="build-ckeditor-plugins-bbcode">
 		<concat destfile="docroot/html/js/editor/ckeditor_diffs/plugins/bbcode/bbcode_parser.js">
@@ -483,7 +414,7 @@
 			<arg value="sass.dir.0=/html/css" />
 			<arg value="sass.dir.1=/html/portlet" />
 			<arg value="sass.dir.2=/html/themes" />
-			<arg value="saas.docroot.dir=${basedir}/docroot" />
+			<arg value="sass.docroot.dir=${basedir}/docroot" />
 			<arg value="sass.portal.common.dir=${basedir}/docroot/html/css/common" />
 		</java>
 	</target>
@@ -693,7 +624,7 @@
 
 				<replaceregexp file="docroot/html/js/editor/fckeditor/editor/filemanager/browser/liferay/frmresourcetype.html"
 					match="var aTypes = \[\r?(\n)(\t*)(.)+\] ;"
-					replace="var aTypes = [\1\2['Document','Document'],\1\2['Page','Page'],\1\2['Attachment', 'Attachment'],\1\2['Video', 'Video']\1] ;"
+					replace="var aTypes = [\1\2['Document','Document'],\1\2['Page','Page'],\1\2['Attachment', 'Attachment'],\1\2['Audio', 'Audio'],\1\2['Video', 'Video']\1] ;"
 					flags="s"
 				/>
 
@@ -781,6 +712,9 @@
 							case 210:
 								alert( 'You cannot upload a video file if video preview generation is disabled.' );
 								break ;
+							case 211:
+								alert( 'You cannot upload an audio file if audio preview generation is disabled.' );
+								break ;
 							default :
 						]]>
 					</replacevalue>
@@ -856,25 +790,6 @@
 					<fileset dir="docroot/html/js/editor/fckeditor_diffs" />
 				</copy>
 			</else>
-		</if>
-	</target>
-
-	<target name="build-font-awesome">
-		<if>
-			<not>
-				<uptodate
-					srcfile="third-party/${font-awesome.file}"
-					targetfile="${alloy.bootstrap.deploy}/font-awesome"
-				/>
-			</not>
-			<then>
-				<delete dir="${alloy.bootstrap.deploy}/font-awesome" />
-
-				<unzip src="third-party/${font-awesome.file}" dest="${alloy.bootstrap.deploy}" />
-
-				<delete dir="${alloy.bootstrap.deploy}/font-awesome/css" />
-				<delete dir="${alloy.bootstrap.deploy}/font-awesome/less" />
-			</then>
 		</if>
 	</target>
 

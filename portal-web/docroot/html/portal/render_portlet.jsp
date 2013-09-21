@@ -210,10 +210,10 @@ if (!portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
 
 		showConfigurationIcon = true;
 
-		boolean supportsLAR = Validator.isNotNull(portlet.getPortletDataHandlerClass());
-		boolean supportsSetup = Validator.isNotNull(portlet.getConfigurationActionClass());
+		boolean supportsConfigurationLAR = Validator.isNotNull(portlet.getConfigurationActionClass());
+		boolean supportsDataLAR = !(portlet.getPortletDataHandlerInstance() instanceof DefaultConfigurationPortletDataHandler);
 
-		if (supportsLAR || (supportsSetup && !group.isControlPanel())) {
+		if (supportsConfigurationLAR || supportsDataLAR || !group.isControlPanel()) {
 			showExportImportIcon = true;
 		}
 
@@ -1014,7 +1014,7 @@ if (themeDisplay.isStatePopUp()) {
 
 				};
 
-				Liferay.Util.getOpener().Liferay.Portlet.refresh('#p_p_id_<%= refreshPortletId %>_', data);
+				Liferay.Util.getOpener().Liferay.Portlet.refresh('#p_p_id_<%= HtmlUtil.escapeJS(refreshPortletId) %>_', data);
 			}
 		</aui:script>
 

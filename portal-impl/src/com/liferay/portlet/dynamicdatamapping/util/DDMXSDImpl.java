@@ -756,8 +756,9 @@ public class DDMXSDImpl implements DDMXSD {
 			fieldStructure.get("readOnly"));
 
 		if ((fieldReadOnly && Validator.isNotNull(mode) &&
-			 mode.equalsIgnoreCase(
-				DDMTemplateConstants.TEMPLATE_MODE_EDIT)) || readOnly) {
+			 StringUtil.equalsIgnoreCase(
+				mode, DDMTemplateConstants.TEMPLATE_MODE_EDIT)) ||
+			readOnly) {
 
 			fieldNamespace = _DEFAULT_READ_ONLY_NAMESPACE;
 
@@ -772,7 +773,7 @@ public class DDMXSDImpl implements DDMXSD {
 		StringBundler resourcePath = new StringBundler(5);
 
 		resourcePath.append(_TPL_PATH);
-		resourcePath.append(fieldNamespace.toLowerCase());
+		resourcePath.append(StringUtil.toLowerCase(fieldNamespace));
 		resourcePath.append(CharPool.SLASH);
 		resourcePath.append(templateName);
 		resourcePath.append(_TPL_EXT);

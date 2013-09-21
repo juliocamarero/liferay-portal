@@ -52,12 +52,12 @@ int searchType = ParamUtil.getInteger(request, "searchType");
 int entryStart = ParamUtil.getInteger(request, "entryStart");
 int entryEnd = ParamUtil.getInteger(request, "entryEnd", SearchContainer.DEFAULT_DELTA);
 
-boolean ajaxRequest = ParamUtil.getBoolean(request, "ajax");
+boolean ajax = ParamUtil.getBoolean(request, "ajax");
 
 boolean showSearchInfo = ParamUtil.getBoolean(request, "showSearchInfo");
 
 if (searchType == JournalSearchConstants.FRAGMENT) {
-	if (ajaxRequest) {
+	if (ajax) {
 		showSearchInfo = false;
 	}
 	else {
@@ -66,7 +66,7 @@ if (searchType == JournalSearchConstants.FRAGMENT) {
 		showSearchInfo = true;
 	}
 }
-else if ((searchType == JournalSearchConstants.SINGLE) && !ajaxRequest) {
+else if ((searchType == JournalSearchConstants.SINGLE) && !ajax) {
 	showSearchInfo = true;
 }
 

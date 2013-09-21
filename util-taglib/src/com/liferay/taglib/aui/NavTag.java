@@ -44,7 +44,7 @@ public class NavTag extends BaseNavTag {
 
 				sb.append("<a class=\"btn btn-navbar\" id=\"");
 				sb.append(_getNamespacedId());
-				sb.append("NavbarBtn\"");
+				sb.append("NavbarBtn\" ");
 				sb.append("data-navId=\"");
 				sb.append(_getNamespacedId());
 				sb.append("\">");
@@ -90,6 +90,10 @@ public class NavTag extends BaseNavTag {
 
 		_namespacedId = getId();
 
+		if (Validator.isNull(_namespacedId)) {
+			_namespacedId = PwdGenerator.getPassword(4);
+		}
+
 		HttpServletRequest request =
 			(HttpServletRequest)pageContext.getRequest();
 
@@ -97,11 +101,7 @@ public class NavTag extends BaseNavTag {
 			JavaConstants.JAVAX_PORTLET_RESPONSE);
 
 		if ((portletResponse != null) && getUseNamespace()) {
-			_namespacedId = portletResponse.getNamespace() + getId();
-		}
-
-		if (Validator.isNull(_namespacedId)) {
-			_namespacedId = PwdGenerator.getPassword(4);
+			_namespacedId = portletResponse.getNamespace() + _namespacedId;
 		}
 
 		return _namespacedId;

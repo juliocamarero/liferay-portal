@@ -92,12 +92,7 @@ if (workflowEnabled) {
 
 			<c:if test="<%= folder != null %>">
 				<aui:field-wrapper label="parent-folder">
-					<portlet:renderURL var="viewFolderURL">
-						<portlet:param name="struts_action" value="/document_library/view" />
-						<portlet:param name="folderId" value="<%= String.valueOf(parentFolderId) %>" />
-					</portlet:renderURL>
-
-					<aui:a href="<%= viewFolderURL %>" id="parentFolderName"><%= parentFolderName %></aui:a>
+					<liferay-ui:input-resource url="<%= parentFolderName %>" />
 				</aui:field-wrapper>
 			</c:if>
 
@@ -313,7 +308,7 @@ if (workflowEnabled) {
 			{
 				id: '<portlet:namespace />fileEntryTypeSeclector',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "document-types") %>',
-				uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/document_library/select_file_entry_type" /><portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" /><portlet:param name="includeBasicFileEntryType" value="1" /></portlet:renderURL>'
+				uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/document_library/select_restricted_file_entry_type" /><portlet:param name="includeBasicFileEntryType" value="1" /></portlet:renderURL>'
 			}
 		);
 	}

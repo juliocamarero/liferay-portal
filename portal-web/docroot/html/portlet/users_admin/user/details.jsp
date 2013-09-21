@@ -154,7 +154,7 @@ if (selContact != null) {
 		<liferay-ui:error exception="<%= UserIdException.class %>" message="please-enter-a-valid-user-id" />
 
 		<aui:field-wrapper name="userId">
-			<%= selUser.getUserId() %>
+			<liferay-ui:input-resource url="<%= String.valueOf(selUser.getUserId()) %>" />
 
 			<aui:input name="userId" type="hidden" value="<%= selUser.getUserId() %>" />
 		</aui:field-wrapper>
@@ -164,7 +164,7 @@ if (selContact != null) {
 		<c:when test="<%= PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.FIELD_ENABLE_COM_LIFERAY_PORTAL_MODEL_CONTACT_BIRTHDAY) %>">
 			<liferay-ui:error exception="<%= ContactBirthdayException.class %>" message="please-enter-a-valid-date" />
 
-			<aui:input bean="<%= selContact %>" disabled='<%= !UsersAdminUtil.hasUpdateFieldPermission(selUser, "birthday") %>' model="<%= Contact.class %>" name="birthday" value="<%= birthday %>" />
+			<aui:input bean="<%= selContact %>" cssClass="modify-link" disabled='<%= !UsersAdminUtil.hasUpdateFieldPermission(selUser, "birthday") %>' model="<%= Contact.class %>" name="birthday" value="<%= birthday %>" />
 		</c:when>
 		<c:otherwise>
 			<aui:input name="birthdayMonth" type="hidden" value="<%= Calendar.JANUARY %>" />

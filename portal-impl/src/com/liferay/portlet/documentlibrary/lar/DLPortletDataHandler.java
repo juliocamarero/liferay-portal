@@ -39,7 +39,6 @@ import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.model.DLFileRank;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
-import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
@@ -76,6 +75,9 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			new StagedModelType(Folder.class));
 		setExportControls(
 			new PortletDataHandlerBoolean(
+				NAMESPACE, "folders", true, false, null,
+				Folder.class.getName()),
+			new PortletDataHandlerBoolean(
 				NAMESPACE, "documents", true, false,
 				new PortletDataHandlerControl[] {
 					new PortletDataHandlerBoolean(
@@ -111,24 +113,25 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		portletDataContext.addPermissions(
-			DLPermission.RESOURCE_NAME, portletDataContext.getScopeGroupId());
+		portletDataContext.addPortletPermissions(DLPermission.RESOURCE_NAME);
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "folders")) {
+			ActionableDynamicQuery folderActionableDynamicQuery =
+				getFolderActionableDynamicQuery(portletDataContext);
+
+			folderActionableDynamicQuery.performActions();
+		}
+
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "documents")) {
 			ActionableDynamicQuery fileEntryTypeActionableDynamicQuery =
 				getDLFileEntryTypeActionableDynamicQuery(portletDataContext);
 
 			fileEntryTypeActionableDynamicQuery.performActions();
-
-			ActionableDynamicQuery folderActionableDynamicQuery =
-				getFolderActionableDynamicQuery(portletDataContext);
-
-			folderActionableDynamicQuery.performActions();
 
 			ActionableDynamicQuery fileEntryActionableDynamicQuery =
 				getFileEntryActionableDynamicQuery(portletDataContext);
@@ -152,9 +155,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
 
-		portletDataContext.importPermissions(
-			DLPermission.RESOURCE_NAME, portletDataContext.getSourceGroupId(),
-			portletDataContext.getScopeGroupId());
+		portletDataContext.importPortletPermissions(DLPermission.RESOURCE_NAME);
 
 		Element fileEntryTypesElement =
 			portletDataContext.getImportDataGroupElement(DLFileEntryType.class);
@@ -166,7 +167,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, fileEntryTypeElement);
 		}
 
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "documents")) {
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "folders")) {
 			Element foldersElement =
 				portletDataContext.getImportDataGroupElement(Folder.class);
 
@@ -176,7 +177,9 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 				StagedModelDataHandlerUtil.importStagedModel(
 					portletDataContext, folderElement);
 			}
+		}
 
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "documents")) {
 			Element fileEntriesElement =
 				portletDataContext.getImportDataGroupElement(FileEntry.class);
 
@@ -245,8 +248,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 			portletDataContext.addReferenceElement(
 				portlet, rootElement, folder, Folder.class,
 				PortletDataContext.REFERENCE_TYPE_DEPENDENCY,
-				!portletDataContext.getBooleanParameter(
-					NAMESPACE, "documents"));
+				!portletDataContext.getBooleanParameter(NAMESPACE, "folders"));
 		}
 
 		return portletPreferences;
@@ -364,9 +366,7 @@ public class DLPortletDataHandler extends BasePortletDataHandler {
 
 				DLFileEntry dlFileEntry = (DLFileEntry)object;
 
-				DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
-
-				if (dlFileVersion.isInTrash() ||
+				if (dlFileEntry.isInTrash() ||
 					dlFileEntry.isInTrashContainer()) {
 
 					return;

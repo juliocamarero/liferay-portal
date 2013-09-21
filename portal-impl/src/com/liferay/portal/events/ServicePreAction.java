@@ -55,6 +55,7 @@ import com.liferay.portal.model.Image;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.model.LayoutTemplate;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.model.Portlet;
@@ -382,9 +383,7 @@ public class ServicePreAction extends Action {
 
 				controlPanelCategory = PortletCategoryKeys.PORTLET;
 			}
-			else if (Validator.isNotNull(controlPanelCategory) &&
-					 Validator.isNotNull(ppid)) {
-
+			else if (Validator.isNotNull(ppid)) {
 				Portlet portlet = PortletLocalServiceUtil.getPortletById(
 					companyId, ppid);
 
@@ -594,7 +593,7 @@ public class ServicePreAction extends Action {
 
 				PortalPreferences portalPreferences =
 					PortletPreferencesFactoryUtil.getPortalPreferences(
-						companyId, user.getUserId(), true);
+						user.getUserId(), true);
 
 				layoutTypePortlet.setPortalPreferences(portalPreferences);
 			}
@@ -1264,14 +1263,23 @@ public class ServicePreAction extends Action {
 
 		themeDisplay.setURLPortal(portalURL.concat(contextPath));
 
-		String urlSignIn = mainPath.concat(_PATH_PORTAL_LOGIN);
+		boolean secure = false;
+
+		if (PropsValues.COMPANY_SECURITY_AUTH_REQUIRES_HTTPS ||
+			request.isSecure()) {
+
+			secure = true;
+		}
+
+		String securePortalURL = PortalUtil.getPortalURL(request, secure);
+
+		String urlSignIn = securePortalURL.concat(mainPath).concat(
+			_PATH_PORTAL_LOGIN);
 
 		if (layout != null) {
 			urlSignIn = HttpUtil.addParameter(
 				urlSignIn, "p_l_id", layout.getPlid());
 		}
-
-		urlSignIn = HttpUtil.addParameter(urlSignIn, "redirect", currentURL);
 
 		themeDisplay.setURLSignIn(urlSignIn);
 
@@ -1285,7 +1293,17 @@ public class ServicePreAction extends Action {
 
 		// Control Panel redirects
 
-		if (group.isControlPanel() && Validator.isNull(ppid)) {
+		if (group.isControlPanel() && Validator.isNotNull(ppid)) {
+			if (!PortletPermissionUtil.hasControlPanelAccessPermission(
+					permissionChecker, scopeGroupId, ppid)) {
+
+				String redirect = HttpUtil.removeParameter(
+					currentURL, "p_p_id");
+
+				response.sendRedirect(redirect);
+			}
+		}
+		else if (group.isControlPanel() && Validator.isNull(ppid)) {
 			if (controlPanelCategory.startsWith(
 					PortletCategoryKeys.CURRENT_SITE)) {
 
@@ -1408,15 +1426,15 @@ public class ServicePreAction extends Action {
 		layoutTypePortlet.setLayoutTemplateId(
 			0, PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_TEMPLATE_ID, false);
 
-		for (int i = 0; i < 10; i++) {
-			String columnId = "column-" + i;
-			String portletIds = PropsUtil.get(
-				PropsKeys.DEFAULT_USER_PRIVATE_LAYOUT_COLUMN + i);
+		LayoutTemplate layoutTemplate = layoutTypePortlet.getLayoutTemplate();
 
-			String[] portletIdsArray = StringUtil.split(portletIds);
+		for (String columnId : layoutTemplate.getColumns()) {
+			String keyPrefix = PropsKeys.DEFAULT_USER_PRIVATE_LAYOUT_PREFIX;
+
+			String portletIds = PropsUtil.get(keyPrefix.concat(columnId));
 
 			layoutTypePortlet.addPortletIds(
-				0, portletIdsArray, columnId, false);
+				0, StringUtil.split(portletIds), columnId, false);
 		}
 
 		LayoutLocalServiceUtil.updateLayout(
@@ -1506,15 +1524,15 @@ public class ServicePreAction extends Action {
 		layoutTypePortlet.setLayoutTemplateId(
 			0, PropsValues.DEFAULT_USER_PUBLIC_LAYOUT_TEMPLATE_ID, false);
 
-		for (int i = 0; i < 10; i++) {
-			String columnId = "column-" + i;
-			String portletIds = PropsUtil.get(
-				PropsKeys.DEFAULT_USER_PUBLIC_LAYOUT_COLUMN + i);
+		LayoutTemplate layoutTemplate = layoutTypePortlet.getLayoutTemplate();
 
-			String[] portletIdsArray = StringUtil.split(portletIds);
+		for (String columnId : layoutTemplate.getColumns()) {
+			String keyPrefix = PropsKeys.DEFAULT_USER_PUBLIC_LAYOUT_PREFIX;
+
+			String portletIds = PropsUtil.get(keyPrefix.concat(columnId));
 
 			layoutTypePortlet.addPortletIds(
-				0, portletIdsArray, columnId, false);
+				0, StringUtil.split(portletIds), columnId, false);
 		}
 
 		LayoutLocalServiceUtil.updateLayout(

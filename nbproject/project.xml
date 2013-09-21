@@ -244,13 +244,13 @@
 				<classpath mode="compile">lib/development/ant-installer.jar</classpath>
 				<classpath mode="compile">lib/development/antelope.jar</classpath>
 				<classpath mode="compile">lib/development/catalina.jar</classpath>
-				<classpath mode="compile">lib/development/ckbuilder.jar</classpath>
 				<classpath mode="compile">lib/development/cobertura.jar</classpath>
 				<classpath mode="compile">lib/development/deployment.jar</classpath>
 				<classpath mode="compile">lib/development/derby.jar</classpath>
 				<classpath mode="compile">lib/development/derbytools.jar</classpath>
 				<classpath mode="compile">lib/development/dtddoc.jar</classpath>
 				<classpath mode="compile">lib/development/dtdparser.jar</classpath>
+				<classpath mode="compile">lib/development/dumbster.jar</classpath>
 				<classpath mode="compile">lib/development/ecj.jar</classpath>
 				<classpath mode="compile">lib/development/firebird.jar</classpath>
 				<classpath mode="compile">lib/development/hamcrest-core.jar</classpath>
@@ -379,8 +379,6 @@
 				<classpath mode="compile">lib/portal/freshcookies-security.jar</classpath>
 				<classpath mode="compile">lib/portal/gif89.jar</classpath>
 				<classpath mode="compile">lib/portal/groovy.jar</classpath>
-				<classpath mode="compile">lib/portal/gt-coverage.jar</classpath>
-				<classpath mode="compile">lib/portal/gt-metadata.jar</classpath>
 				<classpath mode="compile">lib/portal/hessian.jar</classpath>
 				<classpath mode="compile">lib/portal/hibernate3.jar</classpath>
 				<classpath mode="compile">lib/portal/htmlparser.jar</classpath>

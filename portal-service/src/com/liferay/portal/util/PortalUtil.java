@@ -955,6 +955,18 @@ public class PortalUtil {
 		return getPortal().getPathContext();
 	}
 
+	public static String getPathContext(HttpServletRequest request) {
+		return getPortal().getPathContext(request);
+	}
+
+	public static String getPathContext(PortletRequest portletRequest) {
+		return getPortal().getPathContext(portletRequest);
+	}
+
+	public static String getPathContext(String contextPath) {
+		return getPortal().getPathContext(contextPath);
+	}
+
 	public static String getPathFriendlyURLPrivateGroup() {
 		return getPortal().getPathFriendlyURLPrivateGroup();
 	}
@@ -1722,6 +1734,12 @@ public class PortalUtil {
 
 	public static boolean isLayoutSitemapable(Layout layout) {
 		return getPortal().isLayoutSitemapable(layout);
+	}
+
+	public static boolean isLoginRedirectRequired(HttpServletRequest request)
+		throws SystemException {
+
+		return getPortal().isLoginRedirectRequired(request);
 	}
 
 	public static boolean isMethodGet(PortletRequest portletRequest) {

@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.JavaDetector;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.model.impl.ImageImpl;
 import com.liferay.portal.util.FileImpl;
@@ -179,7 +180,9 @@ public class ImageToolImpl implements ImageTool {
 
 			String[] output = imageMagick.identify(imOperation.getCmdArgs());
 
-			if ((output.length == 1) && output[0].equalsIgnoreCase("CMYK")) {
+			if ((output.length == 1) &&
+				StringUtil.equalsIgnoreCase(output[0], "CMYK")) {
+
 				if (_log.isInfoEnabled()) {
 					_log.info("The image is in the CMYK colorspace");
 				}
@@ -607,10 +610,10 @@ public class ImageToolImpl implements ImageTool {
 				type = "jpeg";
 			}
 
-			ImageDecoder decoder = ImageCodec.createImageDecoder(
+			ImageDecoder imageDecoder = ImageCodec.createImageDecoder(
 				type, new UnsyncByteArrayInputStream(bytes), null);
 
-			renderedImage = decoder.decodeAsRenderedImage();
+			renderedImage = imageDecoder.decodeAsRenderedImage();
 		}
 		catch (IOException ioe) {
 			if (_log.isDebugEnabled()) {

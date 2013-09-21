@@ -124,7 +124,7 @@
 	}
 }
 
-@include respond-to(phone) {
+@include respond-to(phone, tablet) {
 	.navbar .navbar-search .form-search .search-query {
 		@include border-radius(14px);
 	}
@@ -222,6 +222,12 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 		.add-content-search .field-input {
 			@include border-radius(4px);
 		}
+	}
+}
+
+.lfr-add-dialog, .lfr-add-panel {
+	.add-content-menu .search-query {
+		@include border-radius(15px);
 	}
 }
 

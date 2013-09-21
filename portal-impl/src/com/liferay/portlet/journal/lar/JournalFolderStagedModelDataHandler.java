@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
@@ -88,10 +89,6 @@ public class JournalFolderStagedModelDataHandler
 
 		long userId = portletDataContext.getUserId(folder.getUserUuid());
 
-		Map<Long, Long> folderIds =
-			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
-				JournalFolder.class);
-
 		if (folder.getParentFolderId() !=
 				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
@@ -102,9 +99,13 @@ public class JournalFolderStagedModelDataHandler
 			JournalFolder parentFolder =
 				(JournalFolder)portletDataContext.getZipEntryAsObject(path);
 
-			StagedModelDataHandlerUtil.importStagedModel(
+			StagedModelDataHandlerUtil.importReferenceStagedModel(
 				portletDataContext, parentFolder);
 		}
+
+		Map<Long, Long> folderIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				JournalFolder.class);
 
 		long parentFolderId = MapUtil.getLong(
 			folderIds, folder.getParentFolderId(), folder.getParentFolderId());
@@ -144,6 +145,29 @@ public class JournalFolderStagedModelDataHandler
 
 		portletDataContext.importClassedModel(
 			folder, importedFolder, JournalPortletDataHandler.NAMESPACE);
+	}
+
+	@Override
+	protected void doRestoreStagedModel(
+			PortletDataContext portletDataContext, JournalFolder folder)
+		throws Exception {
+
+		long userId = portletDataContext.getUserId(folder.getUserUuid());
+
+		JournalFolder existingFolder =
+			JournalFolderLocalServiceUtil.fetchJournalFolderByUuidAndGroupId(
+				folder.getUuid(), portletDataContext.getScopeGroupId());
+
+		if ((existingFolder == null) || !existingFolder.isInTrash()) {
+			return;
+		}
+
+		TrashHandler trashHandler = existingFolder.getTrashHandler();
+
+		if (trashHandler.isRestorable(existingFolder.getFolderId())) {
+			trashHandler.restoreTrashEntry(
+				userId, existingFolder.getFolderId());
+		}
 	}
 
 }

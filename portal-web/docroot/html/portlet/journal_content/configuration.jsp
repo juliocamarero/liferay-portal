@@ -242,13 +242,11 @@ catch (NoSuchArticleException nsae) {
 	<aui:input name="preferences--articleId--" type="hidden" value="<%= articleId %>" />
 	<aui:input name="preferences--ddmTemplateKey--" type="hidden" value="<%= ddmTemplateKey %>" />
 
-	<aui:fieldset cssClass="hide">
+	<aui:fieldset>
 		<aui:field-wrapper label="portlet-id">
-			<%= HtmlUtil.escape(portletResource) %>
+			<liferay-ui:input-resource url="<%= portletResource %>" />
 		</aui:field-wrapper>
 	</aui:fieldset>
-
-	<br />
 
 	<aui:fieldset>
 		<aui:input name="preferences--showAvailableLocales--" type="checkbox" value="<%= showAvailableLocales %>" />
@@ -259,7 +257,7 @@ catch (NoSuchArticleException nsae) {
 			for (String conversion : conversions) {
 			%>
 
-				<aui:field-wrapper inlineField="<%= true %>" inlineLabel="left" label="<%= conversion.toUpperCase() %>">
+				<aui:field-wrapper inlineField="<%= true %>" inlineLabel="left" label="<%= StringUtil.toUpperCase(conversion) %>">
 					<input <%= ArrayUtil.contains(extensions, conversion) ? "checked": "" %> <%= !openOfficeServerEnabled ? "disabled" : "" %> name="<portlet:namespace />extensions" type="checkbox" value="<%= conversion %>" />
 				</aui:field-wrapper>
 

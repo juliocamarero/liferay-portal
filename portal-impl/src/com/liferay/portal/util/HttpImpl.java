@@ -705,7 +705,7 @@ public class HttpImpl implements Http {
 	public boolean isSecure(String url) {
 		String protocol = getProtocol(url);
 
-		return protocol.equalsIgnoreCase(Http.HTTPS);
+		return StringUtil.equalsIgnoreCase(protocol, Http.HTTPS);
 	}
 
 	@Override
@@ -1076,7 +1076,7 @@ public class HttpImpl implements Http {
 			return null;
 		}
 
-		String protocol = url.getProtocol().toLowerCase();
+		String protocol = StringUtil.toLowerCase(url.getProtocol());
 
 		if (protocol.startsWith(Http.HTTP) || protocol.startsWith(Http.HTTPS)) {
 			return URLtoString(url.toString());

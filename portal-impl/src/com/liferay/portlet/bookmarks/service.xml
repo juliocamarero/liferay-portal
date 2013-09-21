@@ -3,7 +3,7 @@
 
 <service-builder package-path="com.liferay.portlet.bookmarks">
 	<namespace>Bookmarks</namespace>
-	<entity name="BookmarksEntry" uuid="true" local-service="true" remote-service="true">
+	<entity name="BookmarksEntry" uuid="true" local-service="true" remote-service="true" trash-enabled="true">
 
 		<!-- PK fields -->
 
@@ -28,6 +28,7 @@
 		<!-- Other fields -->
 
 		<column name="folderId" type="long" />
+		<column name="treePath" type="String" />
 		<column name="name" type="String" />
 		<column name="url" type="String" />
 		<column name="description" type="String" />
@@ -47,6 +48,9 @@
 
 		<!-- Finder methods -->
 
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
 		<finder name="G_F" return-type="Collection">
 			<finder-column name="groupId" />
 			<finder-column name="folderId" arrayable-operator="OR" />
@@ -54,6 +58,10 @@
 		<finder name="G_S" return-type="Collection">
 			<finder-column name="groupId" />
 			<finder-column name="status" />
+		</finder>
+		<finder name="C_NotS" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="status" comparator="!=" />
 		</finder>
 		<finder name="G_U_S" return-type="Collection">
 			<finder-column name="groupId" />
@@ -89,7 +97,7 @@
 		<reference package-path="com.liferay.portlet.social" entity="SocialActivity" />
 		<reference package-path="com.liferay.portlet.trash" entity="TrashEntry" />
 	</entity>
-	<entity name="BookmarksFolder" uuid="true" local-service="true" remote-service="true">
+	<entity name="BookmarksFolder" uuid="true" local-service="true" remote-service="true" trash-enabled="true">
 
 		<!-- PK fields -->
 
@@ -114,6 +122,7 @@
 		<!-- Other fields -->
 
 		<column name="parentFolderId" type="long" parent-container-model="true" />
+		<column name="treePath" type="String" />
 		<column name="name" type="String" />
 		<column name="description" type="String" />
 		<column name="status" type="int" />
@@ -139,6 +148,10 @@
 		<finder name="G_P" return-type="Collection">
 			<finder-column name="groupId" />
 			<finder-column name="parentFolderId" />
+		</finder>
+		<finder name="C_NotS" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="status" comparator="!=" />
 		</finder>
 		<finder name="G_P_S" return-type="Collection">
 			<finder-column name="groupId" />

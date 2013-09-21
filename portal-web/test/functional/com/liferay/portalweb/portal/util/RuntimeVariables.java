@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 /**
  * @author Brian Wing Shun Chan
  */
@@ -88,7 +86,7 @@ public class RuntimeVariables {
 					result = String.valueOf(operandValue.length());
 				}
 				else if (method.startsWith("lowercase")) {
-					result = operandValue.toLowerCase();
+					result = StringUtil.toLowerCase(operandValue);
 				}
 				else if (method.startsWith("replace")) {
 					result = operandValue.replace(
@@ -118,7 +116,7 @@ public class RuntimeVariables {
 		varValue = varValue.replace("\\{", "{");
 		varValue = varValue.replace("\\}", "}");
 
-		return StringEscapeUtils.escapeJava(varValue);
+		return varValue;
 	}
 
 	public static String getValue(String key) {

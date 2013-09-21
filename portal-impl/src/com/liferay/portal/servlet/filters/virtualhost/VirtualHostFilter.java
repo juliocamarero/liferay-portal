@@ -79,7 +79,7 @@ public class VirtualHostFilter extends BasePortalFilter {
 	}
 
 	protected boolean isValidFriendlyURL(String friendlyURL) {
-		friendlyURL = friendlyURL.toLowerCase();
+		friendlyURL = StringUtil.toLowerCase(friendlyURL);
 
 		if (PortalInstances.isVirtualHostsIgnorePath(friendlyURL) ||
 			friendlyURL.startsWith(_PATH_MODULE_SLASH) ||
@@ -160,7 +160,7 @@ public class VirtualHostFilter extends BasePortalFilter {
 
 				if (((pos != -1) && (pos != languageId.length())) ||
 					((pos == -1) &&
-					 !friendlyURL.equalsIgnoreCase(languageId))) {
+					 !StringUtil.equalsIgnoreCase(friendlyURL, languageId))) {
 
 					continue;
 				}

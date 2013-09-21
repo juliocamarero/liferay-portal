@@ -26,13 +26,13 @@
 	<classpathentry kind="lib" path="lib/development/ant-ext.jar"/>
 	<classpathentry kind="lib" path="lib/development/ant-installer.jar"/>
 	<classpathentry kind="lib" path="lib/development/catalina.jar"/>
-	<classpathentry kind="lib" path="lib/development/ckbuilder.jar"/>
 	<classpathentry kind="lib" path="lib/development/cobertura.jar"/>
 	<classpathentry kind="lib" path="lib/development/deployment.jar"/>
 	<classpathentry kind="lib" path="lib/development/derby.jar"/>
 	<classpathentry kind="lib" path="lib/development/derbytools.jar"/>
 	<classpathentry kind="lib" path="lib/development/dtddoc.jar"/>
 	<classpathentry kind="lib" path="lib/development/dtdparser.jar"/>
+	<classpathentry kind="lib" path="lib/development/dumbster.jar"/>
 	<classpathentry kind="lib" path="lib/development/ecj.jar"/>
 	<classpathentry kind="lib" path="lib/development/firebird.jar"/>
 	<classpathentry kind="lib" path="lib/development/hamcrest-core.jar"/>
@@ -160,8 +160,6 @@
 	<classpathentry kind="lib" path="lib/portal/freshcookies-security.jar"/>
 	<classpathentry kind="lib" path="lib/portal/gif89.jar"/>
 	<classpathentry kind="lib" path="lib/portal/groovy.jar"/>
-	<classpathentry kind="lib" path="lib/portal/gt-coverage.jar"/>
-	<classpathentry kind="lib" path="lib/portal/gt-metadata.jar"/>
 	<classpathentry kind="lib" path="lib/portal/hessian.jar"/>
 	<classpathentry kind="lib" path="lib/portal/hibernate3.jar"/>
 	<classpathentry kind="lib" path="lib/portal/htmlparser.jar"/>

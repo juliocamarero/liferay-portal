@@ -23,7 +23,7 @@
 				<aui:nav-item id="addTagButton" label="add-tag" />
 			</c:if>
 
-			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) %>">
+			<c:if test="<%= PropsValues.ASSET_TAG_PERMISSIONS_ENABLED && AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) %>">
 				<liferay-security:permissionsURL
 					modelResource="com.liferay.portlet.asset"
 					modelResourceDescription="<%= themeDisplay.getScopeGroupName() %>"
@@ -42,9 +42,9 @@
 			</aui:nav-item>
 		</aui:nav>
 
-		<div class="navbar-search pull-right">
+		<aui:nav-bar-search cssClass="pull-right">
 			<liferay-ui:input-search cssClass="form-search" id="tagsAdminSearchInput" name="tagsAdminSearchInput" showButton="<%= false %>" />
-		</div>
+		</aui:nav-bar-search>
 	</aui:nav-bar>
 
 	<div class="tags-admin-container lfr-app-column-view">

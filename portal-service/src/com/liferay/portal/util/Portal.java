@@ -852,6 +852,12 @@ public interface Portal {
 
 	public String getPathContext();
 
+	public String getPathContext(HttpServletRequest request);
+
+	public String getPathContext(PortletRequest portletRequest);
+
+	public String getPathContext(String contextPath);
+
 	public String getPathFriendlyURLPrivateGroup();
 
 	public String getPathFriendlyURLPrivateUser();
@@ -1238,6 +1244,9 @@ public interface Portal {
 	public boolean isLayoutParentable(String type);
 
 	public boolean isLayoutSitemapable(Layout layout);
+
+	public boolean isLoginRedirectRequired(HttpServletRequest request)
+		throws SystemException;
 
 	public boolean isMethodGet(PortletRequest portletRequest);
 

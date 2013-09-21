@@ -455,6 +455,14 @@ public class StagingUtil {
 			layoutElement, layout, portletDataContext);
 	}
 
+	public static void updateLastPublishDate(
+		long sourceGroupId, boolean privateLayout, Date endDate)
+	throws Exception {
+
+		getStaging().updateLastPublishDate(
+			sourceGroupId, privateLayout, endDate);
+	}
+
 	public static void updateStaging(
 			PortletRequest PortletRequest, Group liveGroup)
 		throws Exception {

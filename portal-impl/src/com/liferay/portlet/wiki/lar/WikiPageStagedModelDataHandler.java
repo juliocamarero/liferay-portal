@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
@@ -108,7 +109,8 @@ public class WikiPageStagedModelDataHandler
 		WikiNode node = (WikiNode)portletDataContext.getZipEntryAsObject(
 			nodePath);
 
-		StagedModelDataHandlerUtil.importStagedModel(portletDataContext, node);
+		StagedModelDataHandlerUtil.importReferenceStagedModel(
+			portletDataContext, node);
 
 		Element pageElement =
 			portletDataContext.getImportDataStagedModelElement(page);
@@ -205,6 +207,29 @@ public class WikiPageStagedModelDataHandler
 
 		portletDataContext.importClassedModel(
 			page, importedPage, WikiPortletDataHandler.NAMESPACE);
+	}
+
+	@Override
+	protected void doRestoreStagedModel(
+			PortletDataContext portletDataContext, WikiPage page)
+		throws Exception {
+
+		long userId = portletDataContext.getUserId(page.getUserUuid());
+
+		WikiPage existingPage =
+			WikiPageLocalServiceUtil.fetchWikiPageByUuidAndGroupId(
+				page.getUuid(), portletDataContext.getScopeGroupId());
+
+		if ((existingPage == null) || !existingPage.isInTrash()) {
+			return;
+		}
+
+		TrashHandler trashHandler = existingPage.getTrashHandler();
+
+		if (trashHandler.isRestorable(existingPage.getResourcePrimKey())) {
+			trashHandler.restoreTrashEntry(
+				userId, existingPage.getResourcePrimKey());
+		}
 	}
 
 }

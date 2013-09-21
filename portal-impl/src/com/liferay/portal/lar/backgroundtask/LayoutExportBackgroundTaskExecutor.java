@@ -16,6 +16,8 @@ package com.liferay.portal.lar.backgroundtask;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
+import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.model.BackgroundTask;
@@ -67,6 +69,13 @@ public class LayoutExportBackgroundTaskExecutor
 
 		BackgroundTaskLocalServiceUtil.addBackgroundTaskAttachment(
 			userId, backgroundTask.getBackgroundTaskId(), fileName, larFile);
+
+		boolean updateLastPublishDate = MapUtil.getBoolean(
+			parameterMap, PortletDataHandlerKeys.UPDATE_LAST_PUBLISH_DATE);
+
+		if (updateLastPublishDate) {
+			StagingUtil.updateLastPublishDate(groupId, privateLayout, endDate);
+		}
 
 		return BackgroundTaskResult.SUCCESS;
 	}
