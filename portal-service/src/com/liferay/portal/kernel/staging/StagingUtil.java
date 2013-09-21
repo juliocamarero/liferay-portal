@@ -456,11 +456,11 @@ public class StagingUtil {
 	}
 
 	public static void updateLastPublishDate(
-		long sourceGroupId, boolean privateLayout, long lastPublishDate)
+		long sourceGroupId, boolean privateLayout, Date endDate)
 	throws Exception {
 
 		getStaging().updateLastPublishDate(
-			sourceGroupId, privateLayout, lastPublishDate);
+			sourceGroupId, privateLayout, endDate);
 	}
 
 	public static void updateStaging(

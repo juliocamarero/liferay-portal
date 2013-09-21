@@ -126,14 +126,8 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 				parameterMap, PortletDataHandlerKeys.UPDATE_LAST_PUBLISH_DATE);
 
 			if (updateLastPublishDate) {
-				long lastPublishDate = System.currentTimeMillis();
-
-				if (endDate != null) {
-					lastPublishDate = endDate.getTime();
-				}
-
 				StagingUtil.updateLastPublishDate(
-					sourceGroupId, privateLayout, lastPublishDate);
+					sourceGroupId, privateLayout, endDate);
 			}
 		}
 		finally {

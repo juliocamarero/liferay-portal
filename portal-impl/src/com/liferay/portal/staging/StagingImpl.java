@@ -1742,8 +1742,14 @@ public class StagingImpl implements Staging {
 
 	@Override
 	public void updateLastPublishDate(
-			long groupId, boolean privateLayout, long lastPublishDate)
+			long groupId, boolean privateLayout, Date endDate)
 		throws Exception {
+
+		long lastPublishDate = System.currentTimeMillis();
+
+		if (endDate != null) {
+			lastPublishDate = endDate.getTime();
+		}
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
 			groupId, privateLayout);
@@ -1751,13 +1757,8 @@ public class StagingImpl implements Staging {
 		UnicodeProperties settingsProperties =
 			layoutSet.getSettingsProperties();
 
-		if (lastPublishDate <= 0) {
-			settingsProperties.remove("last-publish-date");
-		}
-		else {
-			settingsProperties.setProperty(
-				"last-publish-date", String.valueOf(lastPublishDate));
-		}
+		settingsProperties.setProperty(
+			"last-publish-date", String.valueOf(lastPublishDate));
 
 		LayoutSetLocalServiceUtil.updateSettings(
 			layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
