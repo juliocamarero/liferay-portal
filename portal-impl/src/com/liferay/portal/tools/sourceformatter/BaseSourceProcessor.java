@@ -239,6 +239,37 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		}
 	}
 
+	protected void checkInefficientStringMethods(
+		String line, String fileName, int lineCount) {
+
+		if (mainReleaseVersion.equals(MAIN_RELEASE_VERSION_6_1_0)) {
+			return;
+		}
+
+		String methodName = "toLowerCase";
+
+		int pos = line.indexOf(".toLowerCase()");
+
+		if (pos == -1) {
+			methodName = "toUpperCase";
+
+			pos = line.indexOf(".toUpperCase()");
+		}
+
+		if ((pos == -1) && !line.contains("StringUtil.equalsIgnoreCase(")) {
+			methodName = "equalsIgnoreCase";
+
+			pos = line.indexOf(".equalsIgnoreCase(");
+		}
+
+		if (pos != -1) {
+			processErrorMessage(
+				fileName,
+				"Use StringUtil." + methodName + ": " + fileName + " " +
+					lineCount);
+		}
+	}
+
 	protected void checkLanguageKeys(
 			String fileName, String content, Pattern pattern)
 		throws IOException {
@@ -523,7 +554,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 			return _compatClassNamesMap;
 		}
 
-		_compatClassNamesMap = new HashMap<String, String>();
+		Map<String, String> compatClassNamesMap = new HashMap<String, String>();
 
 		String[] includes = new String[] {
 			"**\\portal-compat-shared\\src\\com\\liferay\\compat\\**\\*.java"
@@ -565,9 +596,11 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 				compatClassName, "compat.", StringPool.BLANK);
 
 			if (content.contains("extends " + extendedClassName)) {
-				_compatClassNamesMap.put(compatClassName, extendedClassName);
+				compatClassNamesMap.put(compatClassName, extendedClassName);
 			}
 		}
+
+		_compatClassNamesMap = compatClassNamesMap;
 
 		return _compatClassNamesMap;
 	}

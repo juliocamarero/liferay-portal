@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
@@ -61,8 +62,7 @@ public class WikiNodeStagedModelDataHandler
 		Element nodeElement = portletDataContext.getExportDataElement(node);
 
 		portletDataContext.addClassedModel(
-			nodeElement, ExportImportPathUtil.getModelPath(node), node,
-			WikiPortletDataHandler.NAMESPACE);
+			nodeElement, ExportImportPathUtil.getModelPath(node), node);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class WikiNodeStagedModelDataHandler
 		long userId = portletDataContext.getUserId(node.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			node, WikiPortletDataHandler.NAMESPACE);
+			node);
 
 		WikiNode importedNode = null;
 
@@ -127,8 +127,29 @@ public class WikiNodeStagedModelDataHandler
 				userId, nodeName, node.getDescription(), serviceContext);
 		}
 
-		portletDataContext.importClassedModel(
-			node, importedNode, WikiPortletDataHandler.NAMESPACE);
+		portletDataContext.importClassedModel(node, importedNode);
+	}
+
+	@Override
+	protected void doRestoreStagedModel(
+			PortletDataContext portletDataContext, WikiNode node)
+		throws Exception {
+
+		long userId = portletDataContext.getUserId(node.getUserUuid());
+
+		WikiNode existingNode =
+			WikiNodeLocalServiceUtil.fetchNodeByUuidAndGroupId(
+				node.getUuid(), portletDataContext.getScopeGroupId());
+
+		if ((existingNode == null) || !existingNode.isInTrash()) {
+			return;
+		}
+
+		TrashHandler trashHandler = existingNode.getTrashHandler();
+
+		if (trashHandler.isRestorable(existingNode.getNodeId())) {
+			trashHandler.restoreTrashEntry(userId, existingNode.getNodeId());
+		}
 	}
 
 	protected String getNodeName(

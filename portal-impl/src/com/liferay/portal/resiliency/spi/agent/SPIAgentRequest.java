@@ -27,6 +27,8 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.model.Portlet;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.upload.UploadServletRequestImpl;
 import com.liferay.portal.util.WebKeys;
@@ -55,6 +57,10 @@ import javax.servlet.http.HttpSession;
 public class SPIAgentRequest extends SPIAgentSerializable {
 
 	public SPIAgentRequest(HttpServletRequest request) throws IOException {
+		super(
+			((Portlet)request.getAttribute(
+				WebKeys.SPI_AGENT_PORTLET)).getContextName());
+
 		cookies = request.getCookies();
 		distributedRequestAttributes = extractDistributedRequestAttributes(
 			request, Direction.REQUEST);
@@ -68,19 +74,21 @@ public class SPIAgentRequest extends SPIAgentSerializable {
 		if ((contentType != null) &&
 			contentType.startsWith(ContentTypes.MULTIPART)) {
 
+			HttpServletRequest currentRequest = request;
+
 			UploadServletRequest uploadServletRequest = null;
 
-			while (request instanceof HttpServletRequestWrapper) {
-				if (request instanceof UploadServletRequest) {
-					uploadServletRequest = (UploadServletRequest)request;
+			while (currentRequest instanceof HttpServletRequestWrapper) {
+				if (currentRequest instanceof UploadServletRequest) {
+					uploadServletRequest = (UploadServletRequest)currentRequest;
 
 					break;
 				}
 
 				HttpServletRequestWrapper httpServletRequestWrapper =
-					(HttpServletRequestWrapper)request;
+					(HttpServletRequestWrapper)currentRequest;
 
-				request =
+				currentRequest =
 					(HttpServletRequest)httpServletRequestWrapper.getRequest();
 			}
 
@@ -94,25 +102,28 @@ public class SPIAgentRequest extends SPIAgentSerializable {
 
 				try {
 					StreamUtil.transfer(
-						request.getInputStream(), fileOutputStream, false);
+						currentRequest.getInputStream(), fileOutputStream,
+						false);
 				}
 				finally {
 					fileOutputStream.close();
 				}
+
+				uploadServletRequest = new UploadServletRequestImpl(
+					new AgentHttpServletRequestWrapper(currentRequest));
 			}
-			else {
-				Map<String, FileItem[]> multipartParameterMap =
-					uploadServletRequest.getMultipartParameterMap();
-				Map<String, List<String>> regularParameterMap =
-					uploadServletRequest.getRegularParameterMap();
 
-				if (!multipartParameterMap.isEmpty()) {
-					this.multipartParameterMap = multipartParameterMap;
-				}
+			Map<String, FileItem[]> multipartParameterMap =
+				uploadServletRequest.getMultipartParameterMap();
+			Map<String, List<String>> regularParameterMap =
+				uploadServletRequest.getRegularParameterMap();
 
-				if (!regularParameterMap.isEmpty()) {
-					this.regularParameterMap = regularParameterMap;
-				}
+			if (!multipartParameterMap.isEmpty()) {
+				this.multipartParameterMap = multipartParameterMap;
+			}
+
+			if (!regularParameterMap.isEmpty()) {
+				this.regularParameterMap = regularParameterMap;
 			}
 		}
 
@@ -127,9 +138,7 @@ public class SPIAgentRequest extends SPIAgentSerializable {
 				new String[] {StringPool.FALSE});
 		}
 
-		HttpSession session = request.getSession();
-
-		originalSessionAttributes = extractSessionAttributes(session);
+		originalSessionAttributes = extractSessionAttributes(request);
 
 		captureThreadLocals();
 	}
@@ -264,7 +273,7 @@ public class SPIAgentRequest extends SPIAgentSerializable {
 
 		@Override
 		public String getHeader(String name) {
-			List<String> values = headerMap.get(name.toLowerCase());
+			List<String> values = headerMap.get(StringUtil.toLowerCase(name));
 
 			if ((values == null) || values.isEmpty()) {
 				return null;
@@ -280,7 +289,7 @@ public class SPIAgentRequest extends SPIAgentSerializable {
 
 		@Override
 		public Enumeration<String> getHeaders(String name) {
-			List<String> values = headerMap.get(name.toLowerCase());
+			List<String> values = headerMap.get(StringUtil.toLowerCase(name));
 
 			if (values == null) {
 				values = Collections.emptyList();

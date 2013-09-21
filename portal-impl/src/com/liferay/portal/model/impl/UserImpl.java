@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.RemotePreference;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -69,9 +70,13 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
@@ -84,6 +89,11 @@ import java.util.TreeSet;
 public class UserImpl extends UserBaseImpl {
 
 	public UserImpl() {
+	}
+
+	@Override
+	public void addRemotePreference(RemotePreference remotePreference) {
+		_remotePreferences.put(remotePreference.getName(), remotePreference);
 	}
 
 	@Override
@@ -544,6 +554,18 @@ public class UserImpl extends UserBaseImpl {
 	}
 
 	@Override
+	public RemotePreference getRemotePreference(String name) {
+		return _remotePreferences.get(name);
+	}
+
+	@Override
+	public Iterable<RemotePreference> getRemotePreferences() {
+		Collection<RemotePreference> values = _remotePreferences.values();
+
+		return Collections.unmodifiableCollection(values);
+	}
+
+	@Override
 	public long[] getRoleIds() throws SystemException {
 		List<Role> roles = getRoles();
 
@@ -766,6 +788,8 @@ public class UserImpl extends UserBaseImpl {
 	private boolean _passwordModified;
 	private PasswordPolicy _passwordPolicy;
 	private String _passwordUnencrypted;
+	private transient Map<String, RemotePreference> _remotePreferences =
+		new HashMap<String, RemotePreference>();
 	private TimeZone _timeZone;
 
 }

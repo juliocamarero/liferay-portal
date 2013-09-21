@@ -101,18 +101,6 @@
 		</licenses>
 	</library>
 	<library>
-		<file-name>lib/development/ckbuilder.jar</file-name>
-		<version>1.6</version>
-		<project-name>CKBuilder</project-name>
-		<project-url>http://download.cksource.com/CKBuilder/1.6</project-url>
-		<licenses>
-			<license>
-				<license-name>LGPL 2.1</license-name>
-				<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
-			</license>
-		</licenses>
-	</library>
-	<library>
 		<file-name>lib/development/cobertura.jar</file-name>
 		<version>1.9.4.1</version>
 		<project-name>Cobertura</project-name>
@@ -181,6 +169,18 @@
 			<license>
 				<license-name>LGPL 2.1</license-name>
 				<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
+			</license>
+		</licenses>
+	</library>
+	<library>
+		<file-name>lib/development/dumbster.jar</file-name>
+		<version>1.6</version>
+		<project-name>Dumbster</project-name>
+		<project-url>http://sourceforge.net/projects/dumbster</project-url>
+		<licenses>
+			<license>
+				<license-name>Apache License 2.0</license-name>
+				<license-url>http://www.apache.org/licenses/LICENSE-2.0</license-url>
 			</license>
 		</licenses>
 	</library>
@@ -1805,30 +1805,6 @@
 			<license>
 				<license-name>BSD Style License</license-name>
 				<license-url>http://en.wikipedia.org/wiki/BSD_licenses</license-url>
-			</license>
-		</licenses>
-	</library>
-	<library>
-		<file-name>lib/portal/gt-coverage.jar</file-name>
-		<version>2.6.1</version>
-		<project-name>Geo Tools</project-name>
-		<project-url>http://geotools.codehaus.org</project-url>
-		<licenses>
-			<license>
-				<license-name>LGPL 2.1</license-name>
-				<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
-			</license>
-		</licenses>
-	</library>
-	<library>
-		<file-name>lib/portal/gt-metadata.jar</file-name>
-		<version>2.6.1</version>
-		<project-name>Geo Tools</project-name>
-		<project-url>http://geotools.codehaus.org</project-url>
-		<licenses>
-			<license>
-				<license-name>LGPL 2.1</license-name>
-				<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
 			</license>
 		</licenses>
 	</library>

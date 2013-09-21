@@ -556,23 +556,11 @@ public class ResourceActionsImpl implements ResourceActions {
 			long companyId, Group group, String modelResource, int[] roleTypes)
 		throws SystemException {
 
-		List<Role> allRoles = roleLocalService.getRoles(companyId);
-
 		if (roleTypes == null) {
 			roleTypes = getRoleTypes(companyId, group, modelResource);
 		}
 
-		List<Role> roles = new ArrayList<Role>();
-
-		for (int roleType : roleTypes) {
-			for (Role role : allRoles) {
-				if (role.getType() == roleType) {
-					roles.add(role);
-				}
-			}
-		}
-
-		return roles;
+		return roleLocalService.getRoles(companyId, roleTypes);
 	}
 
 	@Override
@@ -791,14 +779,16 @@ public class ResourceActionsImpl implements ResourceActions {
 
 			if (mimeTypePortletModes != null) {
 				for (String actionId : mimeTypePortletModes) {
-					if (actionId.equalsIgnoreCase("edit")) {
+					if (StringUtil.equalsIgnoreCase(actionId, "edit")) {
 						actions.add(ActionKeys.PREFERENCES);
 					}
-					else if (actionId.equalsIgnoreCase("edit_guest")) {
+					else if (StringUtil.equalsIgnoreCase(
+								actionId, "edit_guest")) {
+
 						actions.add(ActionKeys.GUEST_PREFERENCES);
 					}
 					else {
-						actions.add(actionId.toUpperCase());
+						actions.add(StringUtil.toUpperCase(actionId));
 					}
 				}
 			}

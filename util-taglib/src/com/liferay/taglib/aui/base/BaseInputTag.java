@@ -129,7 +129,7 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 		return _last;
 	}
 
-	public int getMax() {
+	public java.lang.Object getMax() {
 		return _max;
 	}
 
@@ -137,7 +137,7 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 		return _model;
 	}
 
-	public int getMin() {
+	public java.lang.Object getMin() {
 		return _min;
 	}
 
@@ -195,6 +195,10 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 
 	public java.lang.Object getValue() {
 		return _value;
+	}
+
+	public java.lang.String getWrapperCssClass() {
+		return _wrapperCssClass;
 	}
 
 	public void setAutoFocus(boolean autoFocus) {
@@ -341,7 +345,7 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 		setScopedAttribute("last", last);
 	}
 
-	public void setMax(int max) {
+	public void setMax(java.lang.Object max) {
 		_max = max;
 
 		setScopedAttribute("max", max);
@@ -353,7 +357,7 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 		setScopedAttribute("model", model);
 	}
 
-	public void setMin(int min) {
+	public void setMin(java.lang.Object min) {
 		_min = min;
 
 		setScopedAttribute("min", min);
@@ -443,6 +447,12 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 		setScopedAttribute("value", value);
 	}
 
+	public void setWrapperCssClass(java.lang.String wrapperCssClass) {
+		_wrapperCssClass = wrapperCssClass;
+
+		setScopedAttribute("wrapperCssClass", wrapperCssClass);
+	}
+
 	@Override
 	protected void cleanUp() {
 		_autoFocus = false;
@@ -469,9 +479,9 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 		_label = null;
 		_languageId = null;
 		_last = false;
-		_max = 0;
+		_max = null;
 		_model = null;
-		_min = 0;
+		_min = null;
 		_multiple = false;
 		_name = null;
 		_onChange = null;
@@ -486,6 +496,7 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 		_type = null;
 		_useNamespace = true;
 		_value = null;
+		_wrapperCssClass = null;
 	}
 
 	@Override
@@ -536,6 +547,7 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 		setNamespacedAttribute(request, "type", _type);
 		setNamespacedAttribute(request, "useNamespace", _useNamespace);
 		setNamespacedAttribute(request, "value", _value);
+		setNamespacedAttribute(request, "wrapperCssClass", _wrapperCssClass);
 	}
 
 	protected static final String _ATTRIBUTE_NAMESPACE = "aui:input:";
@@ -567,9 +579,9 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 	private java.lang.String _label = null;
 	private java.lang.String _languageId = null;
 	private boolean _last = false;
-	private int _max = 0;
+	private java.lang.Object _max = null;
 	private java.lang.Class<?> _model = null;
-	private int _min = 0;
+	private java.lang.Object _min = null;
 	private boolean _multiple = false;
 	private java.lang.String _name = null;
 	private java.lang.String _onChange = null;
@@ -584,5 +596,6 @@ public class BaseInputTag extends com.liferay.taglib.util.IncludeTag {
 	private java.lang.String _type = null;
 	private boolean _useNamespace = true;
 	private java.lang.Object _value = null;
+	private java.lang.String _wrapperCssClass = null;
 
 }

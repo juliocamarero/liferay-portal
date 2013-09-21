@@ -107,9 +107,7 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 			return StringPool.BLANK;
 		}
 
-		portletDataContext.addPermissions(
-			PollsPermission.RESOURCE_NAME,
-			portletDataContext.getScopeGroupId());
+		portletDataContext.addPortletPermissions(PollsPermission.RESOURCE_NAME);
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -142,10 +140,8 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
 
-		portletDataContext.importPermissions(
-			PollsPermission.RESOURCE_NAME,
-			portletDataContext.getSourceGroupId(),
-			portletDataContext.getScopeGroupId());
+		portletDataContext.importPortletPermissions(
+			PollsPermission.RESOURCE_NAME);
 
 		Element questionsElement = portletDataContext.getImportDataGroupElement(
 			PollsQuestion.class);
@@ -153,7 +149,7 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 		List<Element> questionElements = questionsElement.elements();
 
 		for (Element questionElement : questionElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
+			StagedModelDataHandlerUtil.importReferenceStagedModel(
 				portletDataContext, questionElement);
 		}
 
@@ -163,7 +159,7 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 		List<Element> choiceElements = choicesElement.elements();
 
 		for (Element choiceElement : choiceElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
+			StagedModelDataHandlerUtil.importReferenceStagedModel(
 				portletDataContext, choiceElement);
 		}
 
@@ -176,7 +172,7 @@ public class PollsDisplayPortletDataHandler extends PollsPortletDataHandler {
 			List<Element> voteElements = votesElement.elements();
 
 			for (Element voteElement : voteElements) {
-				StagedModelDataHandlerUtil.importStagedModel(
+				StagedModelDataHandlerUtil.importReferenceStagedModel(
 					portletDataContext, voteElement);
 			}
 		}

@@ -2,8 +2,8 @@
 @import "compass/css3/user-interface";
 @import "mixins";
 
-@import "aui/font-awesome/scss/mixins";
-@import "aui/font-awesome/scss/variables";
+@import "aui/alloy-font-awesome/scss/mixins-alloy";
+@import "aui/alloy-font-awesome/scss/variables";
 
 @import url(custom_responsive.css);
 
@@ -114,7 +114,7 @@
 	}
 
 	.btn.disabled, .btn[disabled] {
-		opacity: 0.4;
+		@include opacity(0.4);
 	}
 
 	.btn-link {
@@ -177,18 +177,8 @@
 	}
 
 	.portlet-options {
-		&, &.open {
-			.dropdown-toggle {
-				background: url(../images/portlet/options.png) no-repeat;
-				display: inline-block;
-				height: 16px;
-				vertical-align: middle;
-				width: 16px;
-
-				.caret {
-					display: none;
-				}
-			}
+		.dropdown-toggle .caret {
+			display: none;
 		}
 	}
 
@@ -241,6 +231,10 @@
 	.dockbar {
 		.navbar-inner {
 			background: #333;
+
+			.container .btn-navbar {
+				color: #FFF;
+			}
 		}
 
 		.nav {
@@ -349,7 +343,7 @@
 	}
 
 	.navbar {
-		.container .btn-navbar {
+		.container .btn {
 			background: transparent;
 			border-color: #DDD;
 
@@ -420,6 +414,36 @@
 
 		.only .divider {
 			display: none;
+		}
+
+		@include respond-to(phone) {
+			padding-left: 5px;
+			padding-right: 5px;
+
+			li {
+				display: none;
+
+				&.only, &.first, &.last, &.current-parent {
+					display: inline-block;
+				}
+
+				&.breadcrumb-truncate {
+					&.only, &.first a, &.last a, &.active, &.current-parent a {
+						display: inline-block;
+						max-width: 65px;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						vertical-align: bottom;
+						white-space: nowrap;
+					}
+
+					&.current-parent:before {
+						color: #999;
+						content: " ... / ";
+						font-weight: bold;
+					}
+				}
+			}
 		}
 	}
 
@@ -495,6 +519,19 @@
 		}
 	}
 
+	%toggler-header-icon-base {
+		content: $chevron-sign-right;
+
+		@include icon-FontAwesome();
+
+		display: inline-block;
+		margin-right: 5px;
+	}
+
+	%toggler-header-icon-expanded {
+		content: $chevron-sign-down;
+	}
+
 	.accordion-group {
 		border-width: 0;
 
@@ -512,12 +549,7 @@
 				background-image: none;
 
 				.accordion-toggle:before {
-					content: $chevron-sign-right;
-
-					@include icon-FontAwesome();
-
-					display: inline-block;
-					margin-right: 5px;
+					@extend %toggler-header-icon-base;
 
 					@include opacity(0.5);
 				}
@@ -536,7 +568,7 @@
 			}
 
 			&.toggler-header-expanded .accordion-toggle:before {
-				content: $chevron-sign-down;
+				@extend %toggler-header-icon-expanded;
 			}
 		}
 
@@ -671,17 +703,52 @@
 		}
 	}
 
-	.lfr-add-panel .add-content-menu {
-		.lfr-content-item {
-			color: #009AE5;
+	.lfr-add-panel {
+		.add-content-menu {
+			.lfr-content-item {
+				color: #009AE5;
 
-			&:hover {
-				background-color: #E5F5FC;
+				&:hover {
+					background-color: #E5F5FC;
+				}
+
+				&.lfr-portlet-used {
+					color: #BBB;
+				}
+			}
+		}
+
+		.lfr-page-template .lfr-page-template-title {
+			&.toggler-header-collapsed, &.toggler-header-expanded {
+				&:before {
+					@extend %toggler-header-icon-base;
+
+					color: #8D8D8D;
+					position: absolute;
+					right: 5px;
+					top: 0;
+				}
 			}
 
-			&.lfr-portlet-used {
-				color: #BBB;
+			&.toggler-header-expanded {
+				&:before {
+					@extend %toggler-header-icon-expanded;
+				}
 			}
+
+			&.active {
+				&:before {
+					color: #FFF;
+				}
+			}
+		}
+	}
+
+	.lfr-add-panel, .lfr-device-preview-panel, .lfr-edit-layout-panel {
+		&.lfr-admin-panel h1 {
+			color: #3EA9DB;
+			font-size: 26px;
+			line-height: 26px;
 		}
 	}
 
@@ -756,7 +823,7 @@
 	}
 
 	.navbar {
-		.container .btn-navbar {
+		.container .btn {
 			&, .icon-bar {
 				@include box-shadow(0 1px 0 #FFF);
 			}
@@ -773,7 +840,7 @@
 		}
 	}
 
-	.dockbar .container .btn-navbar {
+	.dockbar .container .btn {
 		@include box-shadow(none);
 	}
 

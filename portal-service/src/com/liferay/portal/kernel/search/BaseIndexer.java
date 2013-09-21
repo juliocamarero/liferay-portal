@@ -53,6 +53,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupedModel;
 import com.liferay.portal.model.Region;
 import com.liferay.portal.model.ResourcedModel;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.WorkflowedModel;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -918,7 +919,7 @@ public abstract class BaseIndexer implements Indexer {
 
 		MultiValueFacet multiValueFacet = new MultiValueFacet(searchContext);
 
-		multiValueFacet.setFieldName(Field.FOLDER_ID);
+		multiValueFacet.setFieldName(Field.TREE_PATH);
 		multiValueFacet.setStatic(true);
 		multiValueFacet.setValues(searchContext.getFolderIds());
 
@@ -1151,6 +1152,76 @@ public abstract class BaseIndexer implements Indexer {
 
 		if (Validator.isNotNull(type)) {
 			document.addKeyword(Field.TYPE, type, true);
+		}
+	}
+
+	protected void addTrashFields(Document document, TrashedModel trashedModel)
+		throws SystemException {
+
+		TrashEntry trashEntry = null;
+
+		try {
+			trashEntry = trashedModel.getTrashEntry();
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Unable to get trash entry for " + trashedModel);
+			}
+		}
+
+		if (trashEntry == null) {
+			document.addDate(Field.REMOVED_DATE, new Date());
+
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			if (serviceContext != null) {
+				try {
+					User user = UserLocalServiceUtil.getUser(
+						serviceContext.getUserId());
+
+					document.addKeyword(
+						Field.REMOVED_BY_USER_NAME, user.getFullName(), true);
+				}
+				catch (PortalException pe) {
+				}
+			}
+		}
+		else {
+			document.addDate(Field.REMOVED_DATE, trashEntry.getCreateDate());
+			document.addKeyword(
+				Field.REMOVED_BY_USER_NAME, trashEntry.getUserName(), true);
+
+			if (trashedModel.isInTrash() &&
+				!trashEntry.isTrashEntry(trashedModel)) {
+
+				document.addKeyword(
+					Field.ROOT_ENTRY_CLASS_NAME, trashEntry.getClassName());
+				document.addKeyword(
+					Field.ROOT_ENTRY_CLASS_PK, trashEntry.getClassPK());
+			}
+		}
+
+		TrashHandler trashHandler = trashedModel.getTrashHandler();
+
+		try {
+			TrashRenderer trashRenderer = null;
+
+			if ((trashHandler != null) && (trashEntry != null)) {
+				trashRenderer = trashHandler.getTrashRenderer(
+					trashEntry.getClassPK());
+			}
+
+			if (trashRenderer != null) {
+				document.addKeyword(Field.TYPE, trashRenderer.getType(), true);
+			}
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Unable to get trash renderer for " +
+						trashEntry.getClassName());
+			}
 		}
 	}
 
@@ -1494,9 +1565,13 @@ public abstract class BaseIndexer implements Indexer {
 				(WorkflowedModel)workflowedBaseModel;
 
 			document.addKeyword(Field.STATUS, workflowedModel.getStatus());
+		}
 
-			if ((groupedModel != null) && workflowedModel.isInTrash()) {
-				addTrashFields(document, className, classPK, null, null, null);
+		if ((groupedModel != null) && (baseModel instanceof TrashedModel)) {
+			TrashedModel trashedModel = (TrashedModel)baseModel;
+
+			if (trashedModel.isInTrash()) {
+				addTrashFields(document, trashedModel);
 			}
 		}
 
@@ -1522,7 +1597,7 @@ public abstract class BaseIndexer implements Indexer {
 		for (Locale locale : locales) {
 			String countryName = country.getName(locale);
 
-			countryName = countryName.toLowerCase();
+			countryName = StringUtil.toLowerCase(countryName);
 
 			countryNames.add(countryName);
 		}
@@ -1607,7 +1682,7 @@ public abstract class BaseIndexer implements Indexer {
 			try {
 				Region region = RegionServiceUtil.getRegion(regionId);
 
-				regions.add(region.getName().toLowerCase());
+				regions.add(StringUtil.toLowerCase(region.getName()));
 			}
 			catch (NoSuchRegionException nsre) {
 				if (_log.isWarnEnabled()) {
@@ -1620,13 +1695,13 @@ public abstract class BaseIndexer implements Indexer {
 		List<String> zips = new ArrayList<String>();
 
 		for (Address address : addresses) {
-			cities.add(address.getCity().toLowerCase());
+			cities.add(StringUtil.toLowerCase(address.getCity()));
 			countries.addAll(getLocalizedCountryNames(address.getCountry()));
-			regions.add(address.getRegion().getName().toLowerCase());
-			streets.add(address.getStreet1().toLowerCase());
-			streets.add(address.getStreet2().toLowerCase());
-			streets.add(address.getStreet3().toLowerCase());
-			zips.add(address.getZip().toLowerCase());
+			regions.add(StringUtil.toLowerCase(address.getRegion().getName()));
+			streets.add(StringUtil.toLowerCase(address.getStreet1()));
+			streets.add(StringUtil.toLowerCase(address.getStreet2()));
+			streets.add(StringUtil.toLowerCase(address.getStreet3()));
+			zips.add(StringUtil.toLowerCase(address.getZip()));
 		}
 
 		document.addText("city", cities.toArray(new String[cities.size()]));

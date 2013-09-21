@@ -39,6 +39,10 @@ public interface JournalArticle extends JournalArticleModel, PersistedModel {
 			}
 		};
 
+	public java.lang.String buildTreePath()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public java.lang.String getArticleImageURL(
 		com.liferay.portal.theme.ThemeDisplay themeDisplay);
 
@@ -76,10 +80,6 @@ public interface JournalArticle extends JournalArticleModel, PersistedModel {
 
 	public boolean hasApprovedVersion()
 		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public boolean isInTrashContainer()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
 
 	public boolean isTemplateDriven();
 

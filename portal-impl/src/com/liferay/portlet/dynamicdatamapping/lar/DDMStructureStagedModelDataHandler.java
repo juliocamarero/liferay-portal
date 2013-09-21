@@ -58,6 +58,30 @@ public class DDMStructureStagedModelDataHandler
 	}
 
 	@Override
+	public void doImportCompanyStagedModel(
+			PortletDataContext portletDataContext, DDMStructure structure)
+		throws Exception {
+
+		DDMStructure existingStructure =
+			DDMStructureLocalServiceUtil.fetchDDMStructureByUuidAndGroupId(
+				structure.getUuid(), portletDataContext.getCompanyGroupId());
+
+		Map<Long, Long> structureIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				DDMStructure.class);
+
+		structureIds.put(
+			structure.getStructureId(), existingStructure.getStructureId());
+
+		Map<String, String> structureKeys =
+			(Map<String, String>)portletDataContext.getNewPrimaryKeysMap(
+				DDMStructure.class + ".ddmStructureKey");
+
+		structureKeys.put(
+			structure.getStructureKey(), existingStructure.getStructureKey());
+	}
+
+	@Override
 	public String[] getClassNames() {
 		return CLASS_NAMES;
 	}
@@ -96,7 +120,7 @@ public class DDMStructureStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			structureElement, ExportImportPathUtil.getModelPath(structure),
-			structure, DDMPortletDataHandler.NAMESPACE);
+			structure);
 	}
 
 	@Override
@@ -133,7 +157,7 @@ public class DDMStructureStagedModelDataHandler
 				DDMStructure.class + ".ddmStructureKey");
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			structure, DDMPortletDataHandler.NAMESPACE);
+			structure);
 
 		DDMStructure importedStructure = null;
 
@@ -160,14 +184,6 @@ public class DDMStructureStagedModelDataHandler
 			}
 
 			if (existingStructure == null) {
-				existingStructure =
-					DDMStructureLocalServiceUtil.
-						fetchDDMStructureByUuidAndGroupId(
-							structure.getUuid(),
-							portletDataContext.getCompanyGroupId());
-			}
-
-			if (existingStructure == null) {
 				serviceContext.setUuid(structure.getUuid());
 
 				importedStructure = DDMStructureLocalServiceUtil.addStructure(
@@ -177,19 +193,6 @@ public class DDMStructureStagedModelDataHandler
 					structure.getDescriptionMap(), structure.getXsd(),
 					structure.getStorageType(), structure.getType(),
 					serviceContext);
-			}
-			else if (portletDataContext.isCompanyStagedGroupedModel(
-						existingStructure)) {
-
-				structureIds.put(
-					structure.getStructureId(),
-					existingStructure.getStructureId());
-
-				structureKeys.put(
-					structure.getStructureKey(),
-					existingStructure.getStructureKey());
-
-				return;
 			}
 			else {
 				importedStructure =
@@ -208,8 +211,7 @@ public class DDMStructureStagedModelDataHandler
 				structure.getType(), serviceContext);
 		}
 
-		portletDataContext.importClassedModel(
-			structure, importedStructure, DDMPortletDataHandler.NAMESPACE);
+		portletDataContext.importClassedModel(structure, importedStructure);
 
 		structureKeys.put(
 			structure.getStructureKey(), importedStructure.getStructureKey());
@@ -229,6 +231,22 @@ public class DDMStructureStagedModelDataHandler
 			defaultLocale, availableLocales);
 
 		structure.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
+	@Override
+	protected boolean validateMissingReference(
+			String uuid, long companyId, long groupId)
+		throws Exception {
+
+		DDMStructure structure =
+			DDMStructureLocalServiceUtil.fetchDDMStructureByUuidAndGroupId(
+				uuid, groupId);
+
+		if (structure == null) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

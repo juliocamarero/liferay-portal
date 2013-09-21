@@ -61,6 +61,7 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("resourceBlockId", getResourceBlockId());
 		attributes.put("folderId", getFolderId());
+		attributes.put("treePath", getTreePath());
 		attributes.put("name", getName());
 		attributes.put("url", getUrl());
 		attributes.put("description", getDescription());
@@ -134,6 +135,12 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 
 		if (folderId != null) {
 			setFolderId(folderId);
+		}
+
+		String treePath = (String)attributes.get("treePath");
+
+		if (treePath != null) {
+			setTreePath(treePath);
 		}
 
 		String name = (String)attributes.get("name");
@@ -434,6 +441,26 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 	}
 
 	/**
+	* Returns the tree path of this bookmarks entry.
+	*
+	* @return the tree path of this bookmarks entry
+	*/
+	@Override
+	public java.lang.String getTreePath() {
+		return _bookmarksEntry.getTreePath();
+	}
+
+	/**
+	* Sets the tree path of this bookmarks entry.
+	*
+	* @param treePath the tree path of this bookmarks entry
+	*/
+	@Override
+	public void setTreePath(java.lang.String treePath) {
+		_bookmarksEntry.setTreePath(treePath);
+	}
+
+	/**
 	* Returns the name of this bookmarks entry.
 	*
 	* @return the name of this bookmarks entry
@@ -636,6 +663,50 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 	}
 
 	/**
+	* Returns the trash entry created when this bookmarks entry was moved to the Recycle Bin. The trash entry may belong to one of the ancestors of this bookmarks entry.
+	*
+	* @return the trash entry created when this bookmarks entry was moved to the Recycle Bin
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.portlet.trash.model.TrashEntry getTrashEntry()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _bookmarksEntry.getTrashEntry();
+	}
+
+	/**
+	* Returns the trash handler for this bookmarks entry.
+	*
+	* @return the trash handler for this bookmarks entry
+	*/
+	@Override
+	public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler() {
+		return _bookmarksEntry.getTrashHandler();
+	}
+
+	/**
+	* Returns <code>true</code> if this bookmarks entry is in the Recycle Bin.
+	*
+	* @return <code>true</code> if this bookmarks entry is in the Recycle Bin; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isInTrash() {
+		return _bookmarksEntry.isInTrash();
+	}
+
+	/**
+	* Returns <code>true</code> if the parent of this bookmarks entry is in the Recycle Bin.
+	*
+	* @return <code>true</code> if the parent of this bookmarks entry is in the Recycle Bin; <code>false</code> otherwise
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public boolean isInTrashContainer() {
+		return _bookmarksEntry.isInTrashContainer();
+	}
+
+	/**
 	* @deprecated As of 6.1.0, replaced by {@link #isApproved()}
 	*/
 	@Override
@@ -701,16 +772,6 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 	@Override
 	public boolean isIncomplete() {
 		return _bookmarksEntry.isIncomplete();
-	}
-
-	/**
-	* Returns <code>true</code> if this bookmarks entry is in the Recycle Bin.
-	*
-	* @return <code>true</code> if this bookmarks entry is in the Recycle Bin; <code>false</code> otherwise
-	*/
-	@Override
-	public boolean isInTrash() {
-		return _bookmarksEntry.isInTrash();
 	}
 
 	/**
@@ -839,6 +900,13 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 	}
 
 	@Override
+	public java.lang.String buildTreePath()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _bookmarksEntry.buildTreePath();
+	}
+
+	@Override
 	public com.liferay.portlet.bookmarks.model.BookmarksFolder getFolder()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -850,13 +918,6 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _bookmarksEntry.getTrashContainer();
-	}
-
-	@Override
-	public boolean isInTrashContainer()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _bookmarksEntry.isInTrashContainer();
 	}
 
 	@Override

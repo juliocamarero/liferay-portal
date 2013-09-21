@@ -86,7 +86,7 @@ public class DDLRecordSetStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			recordSetElement, ExportImportPathUtil.getModelPath(recordSet),
-			recordSet, DDLPortletDataHandler.NAMESPACE);
+			recordSet);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class DDLRecordSetStagedModelDataHandler
 		DDMStructure ddmStructure =
 			(DDMStructure)portletDataContext.getZipEntryAsObject(structurePath);
 
-		StagedModelDataHandlerUtil.importStagedModel(
+		StagedModelDataHandlerUtil.importReferenceStagedModel(
 			portletDataContext, ddmStructure);
 
 		Map<Long, Long> ddmStructureIds =
@@ -119,12 +119,12 @@ public class DDLRecordSetStagedModelDataHandler
 				recordSet, DDMTemplate.class);
 
 		for (Element ddmTemplateElement : ddmTemplateElements) {
-			StagedModelDataHandlerUtil.importStagedModel(
+			StagedModelDataHandlerUtil.importReferenceStagedModel(
 				portletDataContext, ddmTemplateElement);
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			recordSet, DDLPortletDataHandler.NAMESPACE);
+			recordSet);
 
 		DDLRecordSet importedRecordSet = null;
 
@@ -159,8 +159,7 @@ public class DDLRecordSetStagedModelDataHandler
 				recordSet.getScope(), serviceContext);
 		}
 
-		portletDataContext.importClassedModel(
-			recordSet, importedRecordSet, DDLPortletDataHandler.NAMESPACE);
+		portletDataContext.importClassedModel(recordSet, importedRecordSet);
 	}
 
 }

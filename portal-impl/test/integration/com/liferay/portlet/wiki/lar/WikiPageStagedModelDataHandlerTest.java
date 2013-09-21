@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.wiki.lar;
 
-import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
@@ -27,6 +26,8 @@ import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.persistence.RepositoryUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
+import com.liferay.portal.test.Sync;
+import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portal.test.TransactionalExecutionTestListener;
 import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.wiki.attachments.WikiAttachmentsTest;
@@ -50,8 +51,10 @@ import org.junit.runner.RunWith;
 @ExecutionTestListeners(
 	listeners = {
 		MainServletExecutionTestListener.class,
+		SynchronousDestinationExecutionTestListener.class,
 		TransactionalExecutionTestListener.class
 	})
+@Sync
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class WikiPageStagedModelDataHandlerTest
 	extends BaseWorkflowedStagedModelDataHandlerTestCase {
@@ -162,24 +165,6 @@ public class WikiPageStagedModelDataHandlerTest
 	@Override
 	protected Class<? extends StagedModel> getStagedModelClass() {
 		return WikiPage.class;
-	}
-
-	@Override
-	protected String getStagedModelPath(long groupId, StagedModel stagedModel) {
-		if (stagedModel instanceof FileEntry) {
-			FileEntry fileEntry = (FileEntry)stagedModel;
-
-			return ExportImportPathUtil.getModelPath(
-				groupId, FileEntry.class.getName(), fileEntry.getFileEntryId());
-		}
-		else if (stagedModel instanceof Folder) {
-			Folder folder = (Folder)stagedModel;
-
-			return ExportImportPathUtil.getModelPath(
-				groupId, Folder.class.getName(), folder.getFolderId());
-		}
-
-		return super.getStagedModelPath(groupId, stagedModel);
 	}
 
 	@Override

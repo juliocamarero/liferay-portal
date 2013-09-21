@@ -95,7 +95,7 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		portletDataContext.addClassedModel(
 			ruleGroupInstanceElement,
 			ExportImportPathUtil.getModelPath(ruleGroupInstance),
-			ruleGroupInstance, MDRPortletDataHandler.NAMESPACE);
+			ruleGroupInstance);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		MDRRuleGroup ruleGroup =
 			(MDRRuleGroup)portletDataContext.getZipEntryAsObject(ruleGroupPath);
 
-		StagedModelDataHandlerUtil.importStagedModel(
+		StagedModelDataHandlerUtil.importReferenceStagedModel(
 			portletDataContext, ruleGroup);
 
 		Map<Long, Long> ruleGroupIds =
@@ -168,7 +168,7 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			ruleGroupInstance, MDRPortletDataHandler.NAMESPACE);
+			ruleGroupInstance);
 
 		serviceContext.setUserId(userId);
 
@@ -208,8 +208,7 @@ public class MDRRuleGroupInstanceStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			ruleGroupInstance, importedRuleGroupInstance,
-			MDRPortletDataHandler.NAMESPACE);
+			ruleGroupInstance, importedRuleGroupInstance);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

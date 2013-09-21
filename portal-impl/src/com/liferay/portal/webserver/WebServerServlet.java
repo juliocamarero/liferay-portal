@@ -72,7 +72,6 @@ import com.liferay.portal.service.ImageServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.Portal;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
@@ -81,7 +80,6 @@ import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.NoSuchFolderException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
-import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
@@ -310,13 +308,11 @@ public class WebServerServlet extends HttpServlet {
 
 		DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
 
-		DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
-
 		int status = ParamUtil.getInteger(
 			request, "status", WorkflowConstants.STATUS_APPROVED);
 
 		if ((status != WorkflowConstants.STATUS_IN_TRASH) &&
-			(dlFileVersion.isInTrash() || dlFileEntry.isInTrashContainer())) {
+			(dlFileEntry.isInTrash() || dlFileEntry.isInTrashContainer())) {
 
 			return null;
 		}
@@ -706,8 +702,7 @@ public class WebServerServlet extends HttpServlet {
 			return;
 		}
 
-		String redirect =
-			request.getContextPath() + Portal.PATH_MAIN + "/portal/login";
+		String redirect = PortalUtil.getPathMain() + "/portal/login";
 
 		String currentURL = PortalUtil.getCurrentURL(request);
 
@@ -838,14 +833,11 @@ public class WebServerServlet extends HttpServlet {
 		String tempFileId = DLUtil.getTempFileId(
 			fileEntry.getFileEntryId(), version);
 
-		FileVersion fileVersion = fileEntry.getFileVersion(version);
+		if (fileEntry.getModel() instanceof DLFileEntry) {
+			LiferayFileEntry liferayFileEntry = (LiferayFileEntry)fileEntry;
 
-		if (fileVersion.getModel() instanceof DLFileVersion) {
-			LiferayFileVersion liferayFileVersion =
-				(LiferayFileVersion)fileVersion;
-
-			if (liferayFileVersion.isInTrash() ||
-				liferayFileVersion.isInTrashContainer()) {
+			if (liferayFileEntry.isInTrash() ||
+				liferayFileEntry.isInTrashContainer()) {
 
 				int status = ParamUtil.getInteger(
 					request, "status", WorkflowConstants.STATUS_APPROVED);
@@ -865,6 +857,8 @@ public class WebServerServlet extends HttpServlet {
 				}
 			}
 		}
+
+		FileVersion fileVersion = fileEntry.getFileVersion(version);
 
 		if ((ParamUtil.getInteger(request, "height") > 0) ||
 			(ParamUtil.getInteger(request, "width") > 0)) {
@@ -1172,12 +1166,10 @@ public class WebServerServlet extends HttpServlet {
 			return;
 		}
 
-		FileVersion fileVersion = fileEntry.getFileVersion();
-
 		String fileName = HttpUtil.decodeURL(
 			HtmlUtil.escape(pathArray[2]), true);
 
-		if (fileVersion.isInTrash()) {
+		if (fileEntry.isInTrash()) {
 			fileName = TrashUtil.getOriginalTitle(fileName);
 		}
 
@@ -1313,12 +1305,13 @@ public class WebServerServlet extends HttpServlet {
 	}
 
 	private static final boolean _WEB_SERVER_SERVLET_VERSION_VERBOSITY_DEFAULT =
-		PropsValues.WEB_SERVER_SERVLET_VERSION_VERBOSITY.equalsIgnoreCase(
+		StringUtil.equalsIgnoreCase(
+			PropsValues.WEB_SERVER_SERVLET_VERSION_VERBOSITY,
 			ReleaseInfo.getName());
 
 	private static final boolean _WEB_SERVER_SERVLET_VERSION_VERBOSITY_PARTIAL =
-		PropsValues.WEB_SERVER_SERVLET_VERSION_VERBOSITY.equalsIgnoreCase(
-			"partial");
+		StringUtil.equalsIgnoreCase(
+			PropsValues.WEB_SERVER_SERVLET_VERSION_VERBOSITY, "partial");
 
 	private static Log _log = LogFactoryUtil.getLog(WebServerServlet.class);
 

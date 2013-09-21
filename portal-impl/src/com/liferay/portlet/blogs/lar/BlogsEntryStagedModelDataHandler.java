@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportHelperUtil;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -111,8 +112,7 @@ public class BlogsEntryStagedModelDataHandler
 		entry.setContent(content);
 
 		portletDataContext.addClassedModel(
-			entryElement, ExportImportPathUtil.getModelPath(entry), entry,
-			BlogsPortletDataHandler.NAMESPACE);
+			entryElement, ExportImportPathUtil.getModelPath(entry), entry);
 	}
 
 	@Override
@@ -179,8 +179,7 @@ public class BlogsEntryStagedModelDataHandler
 			}
 
 			ServiceContext serviceContext =
-				portletDataContext.createServiceContext(
-					entry, BlogsPortletDataHandler.NAMESPACE);
+				portletDataContext.createServiceContext(entry);
 
 			BlogsEntry importedEntry = null;
 
@@ -224,11 +223,32 @@ public class BlogsEntryStagedModelDataHandler
 					smallImageFileName, smallImageInputStream, serviceContext);
 			}
 
-			portletDataContext.importClassedModel(
-				entry, importedEntry, BlogsPortletDataHandler.NAMESPACE);
+			portletDataContext.importClassedModel(entry, importedEntry);
 		}
 		finally {
 			StreamUtil.cleanUp(smallImageInputStream);
+		}
+	}
+
+	@Override
+	protected void doRestoreStagedModel(
+			PortletDataContext portletDataContext, BlogsEntry entry)
+		throws Exception {
+
+		long userId = portletDataContext.getUserId(entry.getUserUuid());
+
+		BlogsEntry existingEntry =
+			BlogsEntryLocalServiceUtil.fetchBlogsEntryByUuidAndGroupId(
+				entry.getUuid(), portletDataContext.getScopeGroupId());
+
+		if ((existingEntry == null) || !existingEntry.isInTrash()) {
+			return;
+		}
+
+		TrashHandler trashHandler = existingEntry.getTrashHandler();
+
+		if (trashHandler.isRestorable(existingEntry.getEntryId())) {
+			trashHandler.restoreTrashEntry(userId, existingEntry.getEntryId());
 		}
 	}
 

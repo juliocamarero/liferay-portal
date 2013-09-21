@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
@@ -132,8 +133,8 @@ public class MBMessageStagedModelDataHandler
 		}
 
 		portletDataContext.addClassedModel(
-			messageElement, ExportImportPathUtil.getModelPath(message), message,
-			MBPortletDataHandler.NAMESPACE);
+			messageElement, ExportImportPathUtil.getModelPath(message),
+			message);
 	}
 
 	@Override
@@ -174,8 +175,7 @@ public class MBMessageStagedModelDataHandler
 
 		try {
 			ServiceContext serviceContext =
-				portletDataContext.createServiceContext(
-					message, MBPortletDataHandler.NAMESPACE);
+				portletDataContext.createServiceContext(message);
 
 			if ((parentCategoryId !=
 					MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) &&
@@ -191,7 +191,7 @@ public class MBMessageStagedModelDataHandler
 					(MBCategory)portletDataContext.getZipEntryAsObject(
 						categoryPath);
 
-				StagedModelDataHandlerUtil.importStagedModel(
+				StagedModelDataHandlerUtil.importReferenceStagedModel(
 					portletDataContext, category);
 
 				parentCategoryId = MapUtil.getLong(
@@ -247,8 +247,7 @@ public class MBMessageStagedModelDataHandler
 
 			threadIds.put(message.getThreadId(), importedMessage.getThreadId());
 
-			portletDataContext.importClassedModel(
-				message, importedMessage, MBPortletDataHandler.NAMESPACE);
+			portletDataContext.importClassedModel(message, importedMessage);
 		}
 		finally {
 			for (ObjectValuePair<String, InputStream> inputStreamOVP :
@@ -257,6 +256,42 @@ public class MBMessageStagedModelDataHandler
 				InputStream inputStream = inputStreamOVP.getValue();
 
 				StreamUtil.cleanUp(inputStream);
+			}
+		}
+	}
+
+	@Override
+	protected void doRestoreStagedModel(
+			PortletDataContext portletDataContext, MBMessage message)
+		throws Exception {
+
+		long userId = portletDataContext.getUserId(message.getUserUuid());
+
+		MBMessage existingMessage =
+			MBMessageLocalServiceUtil.fetchMBMessageByUuidAndGroupId(
+				message.getUuid(), portletDataContext.getScopeGroupId());
+
+		if (existingMessage == null) {
+			return;
+		}
+
+		if (existingMessage.isInTrash()) {
+			TrashHandler trashHandler = existingMessage.getTrashHandler();
+
+			if (trashHandler.isRestorable(existingMessage.getMessageId())) {
+				trashHandler.restoreTrashEntry(
+					userId, existingMessage.getMessageId());
+			}
+		}
+
+		if (existingMessage.isInTrashContainer()) {
+			MBThread existingThread = existingMessage.getThread();
+
+			TrashHandler trashHandler = existingThread.getTrashHandler();
+
+			if (trashHandler.isRestorable(existingThread.getThreadId())) {
+				trashHandler.restoreTrashEntry(
+					userId, existingThread.getThreadId());
 			}
 		}
 	}

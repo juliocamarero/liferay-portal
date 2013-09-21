@@ -131,7 +131,7 @@ if ((liveGroup != null) && (liveGroup.getMembershipRestriction() == GroupConstan
 		</c:when>
 		<c:when test="<%= (liveGroup != null) && liveGroup.isOrganization() %>">
 			<aui:field-wrapper helpMessage="the-name-of-this-site-cannot-be-edited-because-it-belongs-to-an-organization" label="name">
-				<%= HtmlUtil.escape(liveGroup.getDescriptiveName(locale)) %>
+				<liferay-ui:input-resource url="<%= liveGroup.getDescriptiveName(locale) %>" />
 			</aui:field-wrapper>
 		</c:when>
 		<c:otherwise>
@@ -177,7 +177,7 @@ if ((liveGroup != null) && (liveGroup.getMembershipRestriction() == GroupConstan
 
 	<c:if test="<%= liveGroup != null %>">
 		<aui:field-wrapper label="site-id">
-			<%= liveGroup.getGroupId() %>
+			<liferay-ui:input-resource url="<%= String.valueOf(liveGroup.getGroupId()) %>" />
 		</aui:field-wrapper>
 	</c:if>
 </aui:fieldset>
@@ -218,7 +218,7 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 										String servletContextName = settingsProperties.getProperty("customJspServletContextName", StringPool.BLANK);
 									%>
 
-										<aui:option data-servletContextName="<%= servletContextName %>" disabled="<%= (privateLayoutSetPrototype != null) && (curLayoutSetPrototype.getLayoutSetPrototypeId() == privateLayoutSetPrototype.getLayoutSetPrototypeId()) %>" value="<%= curLayoutSetPrototype.getLayoutSetPrototypeId() %>"><%= HtmlUtil.escape(curLayoutSetPrototype.getName(user.getLanguageId())) %></aui:option>
+										<aui:option data-servletContextName="<%= servletContextName %>" value="<%= curLayoutSetPrototype.getLayoutSetPrototypeId() %>"><%= HtmlUtil.escape(curLayoutSetPrototype.getName(user.getLanguageId())) %></aui:option>
 
 									<%
 									}
@@ -320,7 +320,7 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 										String servletContextName = settingsProperties.getProperty("customJspServletContextName", StringPool.BLANK);
 									%>
 
-										<aui:option data-servletContextName="<%= servletContextName %>" disabled="<%= (publicLayoutSetPrototype != null) && (curLayoutSetPrototype.getLayoutSetPrototypeId() == publicLayoutSetPrototype.getLayoutSetPrototypeId()) %>" value="<%= curLayoutSetPrototype.getLayoutSetPrototypeId() %>"><%= HtmlUtil.escape(curLayoutSetPrototype.getName(user.getLanguageId())) %></aui:option>
+										<aui:option data-servletContextName="<%= servletContextName %>" value="<%= curLayoutSetPrototype.getLayoutSetPrototypeId() %>"><%= HtmlUtil.escape(curLayoutSetPrototype.getName(user.getLanguageId())) %></aui:option>
 
 									<%
 									}

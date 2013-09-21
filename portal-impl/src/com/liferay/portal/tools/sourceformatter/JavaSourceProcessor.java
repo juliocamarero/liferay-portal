@@ -1199,6 +1199,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				}
 			}
 
+			checkInefficientStringMethods(line, fileName, lineCount);
+
 			if (trimmedLine.startsWith(StringPool.EQUAL)) {
 				processErrorMessage(
 					fileName, "equal: " + fileName + " " + lineCount);
@@ -1215,6 +1217,14 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					fileName,
 					"Rename mapping to ActionMapping: " + fileName + " " +
 						lineCount);
+			}
+
+			if (fileName.contains("/upgrade/") &&
+				line.contains("rs.getDate(")) {
+
+				processErrorMessage(
+					fileName,
+					"Use rs.getTimeStamp: " + fileName + " " + lineCount);
 			}
 
 			if (!trimmedLine.equals("{") && line.endsWith("{") &&
