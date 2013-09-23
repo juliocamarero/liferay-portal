@@ -502,7 +502,7 @@ public class UsersAdminImpl implements UsersAdmin {
 			String zip = ParamUtil.getString(
 				actionRequest, "addressZip" + addressesIndex);
 			long countryId = ParamUtil.getLong(
-					actionRequest, "addressCountryId" + addressesIndex);
+				actionRequest, "addressCountryId" + addressesIndex);
 
 			if (Validator.isNull(street1) && Validator.isNull(street2) &&
 				Validator.isNull(street3) && Validator.isNull(city) &&
