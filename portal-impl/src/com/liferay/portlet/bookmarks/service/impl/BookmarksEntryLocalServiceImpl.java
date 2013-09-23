@@ -54,6 +54,7 @@ import com.liferay.portlet.bookmarks.util.BookmarksUtil;
 import com.liferay.portlet.bookmarks.util.comparator.EntryModifiedDateComparator;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.model.TrashVersion;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -328,11 +329,33 @@ public class BookmarksEntryLocalServiceImpl
 
 		BookmarksEntry entry = getBookmarksEntry(entryId);
 
-		if (entry.isInTrash()) {
+		TrashEntry trashEntry = entry.getTrashEntry();
+
+		if (trashEntry.isTrashEntry(BookmarksEntry.class, entryId)) {
 			restoreEntryFromTrash(userId, entryId);
 		}
 		else {
-			updateStatus(userId, entry, entry.getStatus());
+
+			// Entry
+
+			TrashVersion trashVersion =
+				trashVersionLocalService.fetchVersion(
+					trashEntry.getEntryId(), BookmarksEntry.class.getName(),
+					entryId);
+
+			int status = WorkflowConstants.STATUS_APPROVED;
+
+			if (trashVersion != null) {
+				status = trashVersion.getStatus();
+			}
+
+			updateStatus(userId, entry, status);
+
+			// Trash
+
+			if (trashVersion != null) {
+				trashVersionLocalService.deleteTrashVersion(trashVersion);
+			}
 		}
 
 		return bookmarksEntryLocalService.moveEntry(entryId, parentFolderId);
@@ -349,8 +372,7 @@ public class BookmarksEntryLocalServiceImpl
 
 		trashEntryLocalService.addTrashEntry(
 			userId, entry.getGroupId(), BookmarksEntry.class.getName(),
-			entry.getEntryId(), entry.getUuid(), null, oldStatus, null,
-			null);
+			entry.getEntryId(), entry.getUuid(), null, oldStatus, null, null);
 
 		return entry;
 	}
