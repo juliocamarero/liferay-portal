@@ -674,39 +674,22 @@ public class BookmarksFolderLocalServiceImpl
 		bookmarksFolderLocalService.deleteFolder(fromFolder);
 	}
 
-	protected void moveDependentToTrash(
-			List<Object> foldersAndEntries, int status)
+	protected void moveDependentToTrash(List<Object> foldersAndEntries)
 		throws PortalException, SystemException {
 
 		for (Object object : foldersAndEntries) {
 			if (object instanceof BookmarksEntry) {
 				BookmarksEntry entry = (BookmarksEntry)object;
 
-				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+				// Asset
 
-					// Asset
+				assetEntryLocalService.updateVisible(
+					BookmarksEntry.class.getName(), entry.getEntryId(), false);
 
-					assetEntryLocalService.updateVisible(
-						BookmarksEntry.class.getName(), entry.getEntryId(),
-						false);
+				if (entry.getStatus() == WorkflowConstants.STATUS_PENDING) {
+					entry.setStatus(WorkflowConstants.STATUS_DRAFT);
 
-					if (entry.getStatus() == WorkflowConstants.STATUS_PENDING) {
-						entry.setStatus(WorkflowConstants.STATUS_DRAFT);
-
-						bookmarksEntryPersistence.update(entry);
-					}
-				}
-				else {
-
-					// Asset
-
-					if (entry.getStatus() ==
-							WorkflowConstants.STATUS_APPROVED) {
-
-						assetEntryLocalService.updateVisible(
-							BookmarksEntry.class.getName(), entry.getEntryId(),
-							true);
-					}
+					bookmarksEntryPersistence.update(entry);
 				}
 
 				// Indexer
@@ -728,24 +711,13 @@ public class BookmarksFolderLocalServiceImpl
 				List<Object> curFoldersAndEntries = getFoldersAndEntries(
 					folder.getGroupId(), folder.getFolderId());
 
-				updateDependentStatus(curFoldersAndEntries, status);
+				moveDependentToTrash(curFoldersAndEntries);
 
-				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+				// Asset
 
-					// Asset
-
-					assetEntryLocalService.updateVisible(
-						BookmarksFolder.class.getName(), folder.getFolderId(),
-						false);
-				}
-				else {
-
-					// Asset
-
-					assetEntryLocalService.updateVisible(
-						BookmarksFolder.class.getName(), folder.getFolderId(),
-						true);
-				}
+				assetEntryLocalService.updateVisible(
+					BookmarksFolder.class.getName(), folder.getFolderId(),
+					false);
 
 				// Index
 
@@ -757,39 +729,19 @@ public class BookmarksFolderLocalServiceImpl
 		}
 	}
 
-	protected void restoreDependentFromTrash(
-			List<Object> foldersAndEntries, int status)
+	protected void restoreDependentFromTrash(List<Object> foldersAndEntries)
 		throws PortalException, SystemException {
 
 		for (Object object : foldersAndEntries) {
 			if (object instanceof BookmarksEntry) {
 				BookmarksEntry entry = (BookmarksEntry)object;
 
-				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+				// Asset
 
-					// Asset
-
+				if (entry.getStatus() == WorkflowConstants.STATUS_APPROVED) {
 					assetEntryLocalService.updateVisible(
 						BookmarksEntry.class.getName(), entry.getEntryId(),
-						false);
-
-					if (entry.getStatus() == WorkflowConstants.STATUS_PENDING) {
-						entry.setStatus(WorkflowConstants.STATUS_DRAFT);
-
-						bookmarksEntryPersistence.update(entry);
-					}
-				}
-				else {
-
-					// Asset
-
-					if (entry.getStatus() ==
-							WorkflowConstants.STATUS_APPROVED) {
-
-						assetEntryLocalService.updateVisible(
-							BookmarksEntry.class.getName(), entry.getEntryId(),
-							true);
-					}
+						true);
 				}
 
 				// Indexer
@@ -811,24 +763,13 @@ public class BookmarksFolderLocalServiceImpl
 				List<Object> curFoldersAndEntries = getFoldersAndEntries(
 					folder.getGroupId(), folder.getFolderId());
 
-				updateDependentStatus(curFoldersAndEntries, status);
+				restoreDependentFromTrash(curFoldersAndEntries);
 
-				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+				// Asset
 
-					// Asset
-
-					assetEntryLocalService.updateVisible(
-						BookmarksFolder.class.getName(), folder.getFolderId(),
-						false);
-				}
-				else {
-
-					// Asset
-
-					assetEntryLocalService.updateVisible(
-						BookmarksFolder.class.getName(), folder.getFolderId(),
-						true);
-				}
+				assetEntryLocalService.updateVisible(
+					BookmarksFolder.class.getName(), folder.getFolderId(),
+					true);
 
 				// Index
 
