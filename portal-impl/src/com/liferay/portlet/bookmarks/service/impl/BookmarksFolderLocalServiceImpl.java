@@ -674,7 +674,90 @@ public class BookmarksFolderLocalServiceImpl
 		bookmarksFolderLocalService.deleteFolder(fromFolder);
 	}
 
-	protected void updateDependentStatus(
+	protected void moveDependentToTrash(
+			List<Object> foldersAndEntries, int status)
+		throws PortalException, SystemException {
+
+		for (Object object : foldersAndEntries) {
+			if (object instanceof BookmarksEntry) {
+				BookmarksEntry entry = (BookmarksEntry)object;
+
+				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						BookmarksEntry.class.getName(), entry.getEntryId(),
+						false);
+
+					if (entry.getStatus() == WorkflowConstants.STATUS_PENDING) {
+						entry.setStatus(WorkflowConstants.STATUS_DRAFT);
+
+						bookmarksEntryPersistence.update(entry);
+					}
+				}
+				else {
+
+					// Asset
+
+					if (entry.getStatus() ==
+							WorkflowConstants.STATUS_APPROVED) {
+
+						assetEntryLocalService.updateVisible(
+							BookmarksEntry.class.getName(), entry.getEntryId(),
+							true);
+					}
+				}
+
+				// Indexer
+
+				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					BookmarksEntry.class);
+
+				indexer.reindex(entry);
+			}
+			else if (object instanceof BookmarksFolder) {
+				BookmarksFolder folder = (BookmarksFolder)object;
+
+				if (folder.isInTrash()) {
+					continue;
+				}
+
+				// Folders and entries
+
+				List<Object> curFoldersAndEntries = getFoldersAndEntries(
+					folder.getGroupId(), folder.getFolderId());
+
+				updateDependentStatus(curFoldersAndEntries, status);
+
+				if (status == WorkflowConstants.STATUS_IN_TRASH) {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						BookmarksFolder.class.getName(), folder.getFolderId(),
+						false);
+				}
+				else {
+
+					// Asset
+
+					assetEntryLocalService.updateVisible(
+						BookmarksFolder.class.getName(), folder.getFolderId(),
+						true);
+				}
+
+				// Index
+
+				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					BookmarksFolder.class);
+
+				indexer.reindex(folder);
+			}
+		}
+	}
+
+	protected void restoreDependentFromTrash(
 			List<Object> foldersAndEntries, int status)
 		throws PortalException, SystemException {
 
