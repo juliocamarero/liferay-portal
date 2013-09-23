@@ -91,27 +91,17 @@ if (ddmTemplateId > 0) {
 	}
 }
 
-String languageId = LanguageUtil.getLanguageId(request);
-
 String defaultLanguageId = ParamUtil.getString(request, "defaultLanguageId");
 
 String toLanguageId = ParamUtil.getString(request, "toLanguageId");
 
-if (Validator.isNotNull(toLanguageId)) {
-	languageId = toLanguageId;
-}
+if (Validator.isNull(defaultLanguageId) || !LanguageUtil.isAvailableLocale(themeDisplay.getSiteGroupId(), defaultLanguageId)) {
 
-if ((article == null) && (Validator.isNull(defaultLanguageId) || !LanguageUtil.isAvailableLocale(themeDisplay.getSiteGroupId(), defaultLanguageId))) {
-	if (LanguageUtil.isAvailableLocale(themeDisplay.getSiteGroupId(), languageId)) {
-		defaultLanguageId = languageId;
+	if (article != null) {
+		defaultLanguageId = article.getDefaultLanguageId();
 	}
 	else {
 		defaultLanguageId = LocaleUtil.toLanguageId(themeDisplay.getSiteDefaultLocale());
-	}
-}
-else {
-	if (Validator.isNull(defaultLanguageId) || !LanguageUtil.isAvailableLocale(themeDisplay.getSiteGroupId(), defaultLanguageId)) {
-		defaultLanguageId = article.getDefaultLanguageId();
 	}
 }
 
@@ -136,7 +126,6 @@ request.setAttribute("edit_article.jsp-redirect", redirect);
 request.setAttribute("edit_article.jsp-structure", ddmStructure);
 request.setAttribute("edit_article.jsp-template", ddmTemplate);
 
-request.setAttribute("edit_article.jsp-languageId", languageId);
 request.setAttribute("edit_article.jsp-defaultLanguageId", defaultLanguageId);
 request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 %>
@@ -286,7 +275,7 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 								String[] translations = article.getAvailableLanguageIds();
 								%>
 
-								<aui:button disabled="<%= languageId.equals(defaultLanguageId) || !ArrayUtil.contains(translations, languageId) %>" name="removeArticleLocaleButton" onClick='<%= renderResponse.getNamespace() + "removeArticleLocale();" %>' value="remove-translation" />
+								<aui:button disabled="<%= toLanguageId.equals(defaultLanguageId) || !ArrayUtil.contains(translations, toLanguageId) %>" name="removeArticleLocaleButton" onClick='<%= renderResponse.getNamespace() + "removeArticleLocale();" %>' value="remove-translation" />
 							</c:otherwise>
 						</c:choose>
 						<aui:button href="<%= redirect %>" type="cancel" />
