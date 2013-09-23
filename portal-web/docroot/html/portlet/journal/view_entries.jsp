@@ -273,6 +273,11 @@ for (int i = 0; i < results.size(); i++) {
 						rowURL.setParameter("groupId", String.valueOf(curArticle.getGroupId()));
 						rowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
 						rowURL.setParameter("articleId", curArticle.getArticleId());
+
+						if (!permissionChecker.isCompanyAdmin() || !permissionChecker.isGroupAdmin(scopeGroupId)) {
+							status = WorkflowConstants.STATUS_APPROVED;
+						}
+						rowURL.setParameter("status", String.valueOf(status));
 						%>
 
 						<liferay-ui:icon
