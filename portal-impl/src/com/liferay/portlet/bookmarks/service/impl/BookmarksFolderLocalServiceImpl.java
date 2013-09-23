@@ -364,6 +364,14 @@ public class BookmarksFolderLocalServiceImpl
 		}
 		else {
 			updateStatus(userId, folder, WorkflowConstants.STATUS_APPROVED);
+
+			// Folders and entries
+
+			List<Object> foldersAndEntries =
+				bookmarksFolderLocalService.getFoldersAndEntries(
+					folder.getGroupId(), folder.getFolderId());
+
+			restoreDependentFromTrash(foldersAndEntries);
 		}
 
 		return bookmarksFolderLocalService.moveFolder(folderId, parentFolderId);
@@ -379,7 +387,25 @@ public class BookmarksFolderLocalServiceImpl
 		BookmarksFolder folder = bookmarksFolderPersistence.findByPrimaryKey(
 			folderId);
 
-		updateStatus(userId, folder, WorkflowConstants.STATUS_IN_TRASH);
+		int oldStatus = folder.getStatus();
+
+		folder = updateStatus(
+			userId, folder, WorkflowConstants.STATUS_IN_TRASH);
+
+		// Trash
+
+		trashEntryLocalService.addTrashEntry(
+			userId, folder.getGroupId(), BookmarksFolder.class.getName(),
+			folder.getFolderId(), folder.getUuid(), null, oldStatus, null,
+			null);
+
+		// Folders and entries
+
+		List<Object> foldersAndEntries =
+			bookmarksFolderLocalService.getFoldersAndEntries(
+				folder.getGroupId(), folder.getFolderId());
+
+		moveDependentToTrash(foldersAndEntries);
 
 		// Social
 
@@ -427,6 +453,18 @@ public class BookmarksFolderLocalServiceImpl
 			BookmarksFolder.class.getName(), folderId);
 
 		updateStatus(userId, folder, trashEntry.getStatus());
+
+		// Folders and entries
+
+		List<Object> foldersAndEntries =
+			bookmarksFolderLocalService.getFoldersAndEntries(
+				folder.getGroupId(), folder.getFolderId());
+
+		restoreDependentFromTrash(foldersAndEntries);
+
+		// Trash
+
+		trashEntryLocalService.deleteEntry(trashEntry.getEntryId());
 
 		// Social
 
@@ -537,8 +575,6 @@ public class BookmarksFolderLocalServiceImpl
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
-		int oldStatus = folder.getStatus();
-
 		folder.setStatus(status);
 		folder.setStatusByUserId(userId);
 		folder.setStatusByUserName(user.getFullName());
@@ -546,40 +582,15 @@ public class BookmarksFolderLocalServiceImpl
 
 		bookmarksFolderPersistence.update(folder);
 
-		// Folders and entries
-
-		List<Object> foldersAndEntries =
-			bookmarksFolderLocalService.getFoldersAndEntries(
-				folder.getGroupId(), folder.getFolderId());
-
-		updateDependentStatus(foldersAndEntries, status);
+		// Asset
 
 		if (status == WorkflowConstants.STATUS_APPROVED) {
-
-			// Asset
-
 			assetEntryLocalService.updateVisible(
 				BookmarksFolder.class.getName(), folder.getFolderId(), true);
 		}
 		else if (status == WorkflowConstants.STATUS_IN_TRASH) {
-
-			// Asset
-
 			assetEntryLocalService.updateVisible(
 				BookmarksFolder.class.getName(), folder.getFolderId(), false);
-		}
-
-		// Trash
-
-		if (oldStatus == WorkflowConstants.STATUS_IN_TRASH) {
-			trashEntryLocalService.deleteEntry(
-				BookmarksFolder.class.getName(), folder.getFolderId());
-		}
-		else if (status == WorkflowConstants.STATUS_IN_TRASH) {
-			trashEntryLocalService.addTrashEntry(
-				userId, folder.getGroupId(), BookmarksFolder.class.getName(),
-				folder.getFolderId(), folder.getUuid(), null, oldStatus, null,
-				null);
 		}
 
 		// Index

@@ -343,7 +343,16 @@ public class BookmarksEntryLocalServiceImpl
 	public BookmarksEntry moveEntryToTrash(long userId, BookmarksEntry entry)
 		throws PortalException, SystemException {
 
-		return updateStatus(userId, entry, WorkflowConstants.STATUS_IN_TRASH);
+		int oldStatus = entry.getStatus();
+
+		entry = updateStatus(userId, entry, WorkflowConstants.STATUS_IN_TRASH);
+
+		trashEntryLocalService.addTrashEntry(
+			userId, entry.getGroupId(), BookmarksEntry.class.getName(),
+			entry.getEntryId(), entry.getUuid(), null, oldStatus, null,
+			null);
+
+		return entry;
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -409,7 +418,12 @@ public class BookmarksEntryLocalServiceImpl
 		TrashEntry trashEntry = trashEntryLocalService.getEntry(
 			BookmarksEntry.class.getName(), entryId);
 
-		return updateStatus(userId, entry, trashEntry.getStatus());
+		entry = updateStatus(userId, entry, trashEntry.getStatus());
+
+		trashEntryLocalService.deleteEntry(
+			BookmarksEntry.class.getName(), entry.getEntryId());
+
+		return entry;
 	}
 
 	@Override
@@ -546,8 +560,6 @@ public class BookmarksEntryLocalServiceImpl
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
-		int oldStatus = entry.getStatus();
-
 		entry.setStatus(status);
 		entry.setStatusByUserId(userId);
 		entry.setStatusByUserName(user.getScreenName());
@@ -587,19 +599,6 @@ public class BookmarksEntryLocalServiceImpl
 				userId, entry.getGroupId(), BookmarksEntry.class.getName(),
 				entry.getEntryId(), SocialActivityConstants.TYPE_MOVE_TO_TRASH,
 				extraDataJSONObject.toString(), 0);
-		}
-
-		// Trash
-
-		if (oldStatus == WorkflowConstants.STATUS_IN_TRASH) {
-			trashEntryLocalService.deleteEntry(
-				BookmarksEntry.class.getName(), entry.getEntryId());
-		}
-		else if (status == WorkflowConstants.STATUS_IN_TRASH) {
-			trashEntryLocalService.addTrashEntry(
-				userId, entry.getGroupId(), BookmarksEntry.class.getName(),
-				entry.getEntryId(), entry.getUuid(), null, oldStatus, null,
-				null);
 		}
 
 		return entry;
