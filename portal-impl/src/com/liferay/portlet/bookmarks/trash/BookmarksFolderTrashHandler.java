@@ -102,15 +102,6 @@ public class BookmarksFolderTrashHandler extends BookmarksBaseTrashHandler {
 	}
 
 	@Override
-	public ContainerModel getTrashContainer(long classPK)
-		throws PortalException, SystemException {
-
-		BookmarksFolder folder = getBookmarksFolder(classPK);
-
-		return folder.getTrashContainer();
-	}
-
-	@Override
 	public TrashRenderer getTrashRenderer(long classPK)
 		throws PortalException, SystemException {
 

@@ -419,10 +419,6 @@ public class BookmarksEntryLocalServiceImpl
 			companyId, WorkflowConstants.STATUS_IN_TRASH);
 
 		for (BookmarksEntry entry : entries) {
-			if (entry.isInTrashContainer()) {
-				continue;
-			}
-
 			entry.setTreePath(entry.buildTreePath());
 
 			bookmarksEntryPersistence.update(entry);
