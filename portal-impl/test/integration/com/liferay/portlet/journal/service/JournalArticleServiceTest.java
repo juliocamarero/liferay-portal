@@ -15,6 +15,7 @@
 package com.liferay.portlet.journal.service;
 
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -22,6 +23,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.Sync;
@@ -31,6 +33,9 @@ import com.liferay.portal.util.GroupTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.util.JournalTestUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -230,6 +235,108 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
+	public void testGroupArticlesWhenUserNotNullAndStatusAny()
+		throws Exception {
+
+		List<JournalArticle> expectedArticles = addGroupArticles(2);
+
+		_article = updateArticleStatus(WorkflowConstants.STATUS_DRAFT);
+
+		expectedArticles.add(_article);
+
+		int articlesCount =
+			JournalArticleServiceUtil.getGroupArticlesCount(
+				_group.getGroupId(), _article.getUserId(),
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		Assert.assertEquals(3, articlesCount);
+
+		List<JournalArticle> articles =
+			JournalArticleServiceUtil.getGroupArticles(
+				_group.getGroupId(), _article.getUserId(),
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		Assert.assertEquals(expectedArticles, articles);
+	}
+
+	@Test
+	public void testGroupArticlesWhenUserNotNullAndStatusApproved()
+		throws Exception {
+
+		List<JournalArticle> expectedArticles = addGroupArticles(2);
+
+		_article = updateArticleStatus(WorkflowConstants.STATUS_DRAFT);
+
+		int articlesCount =
+			JournalArticleServiceUtil.getGroupArticlesCount(
+				_group.getGroupId(), _article.getUserId(),
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(2, articlesCount);
+
+		List<JournalArticle> articles =
+			JournalArticleServiceUtil.getGroupArticles(
+				_group.getGroupId(), _article.getUserId(),
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, null);
+
+		Assert.assertEquals(expectedArticles, articles);
+	}
+
+	@Test
+	public void testGroupArticlesWhenUserNullAndStatusAny() throws Exception {
+		List<JournalArticle> expectedArticles = addGroupArticles(2);
+
+		_article = updateArticleStatus(WorkflowConstants.STATUS_DRAFT);
+
+		expectedArticles.add(_article);
+
+		int articlesCount =
+			JournalArticleServiceUtil.getGroupArticlesCount(
+				_group.getGroupId(), 0,
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		Assert.assertEquals(3, articlesCount);
+
+		List<JournalArticle> articles =
+			JournalArticleServiceUtil.getGroupArticles(
+				_group.getGroupId(), 0,
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		Assert.assertEquals(expectedArticles, articles);
+	}
+
+	@Test
+	public void testGroupArticlesWhenUserNullAndStatusApproved()
+		throws Exception {
+
+		List<JournalArticle> expectedArticles = addGroupArticles(2);
+
+		_article = updateArticleStatus(WorkflowConstants.STATUS_DRAFT);
+
+		int articlesCount =
+			JournalArticleServiceUtil.getGroupArticlesCount(
+				_group.getGroupId(), 0,
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(2, articlesCount);
+
+		List<JournalArticle> articles =
+			JournalArticleServiceUtil.getGroupArticles(
+				_group.getGroupId(), 0,
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, null);
+
+		Assert.assertEquals(expectedArticles, articles);
+	}
+
+	@Test
 	public void testUpdateArticle() throws Exception {
 		_article = JournalTestUtil.updateArticle(_article, "Version 2");
 
@@ -237,6 +344,24 @@ public class JournalArticleServiceTest {
 			"Version 2", _article.getTitle(LocaleUtil.getDefault()));
 		Assert.assertTrue(_article.isApproved());
 		Assert.assertEquals(1.1, _article.getVersion(), 0);
+	}
+
+	protected List<JournalArticle> addGroupArticles(int count)
+		throws Exception {
+
+		List<JournalArticle> articles = new ArrayList<JournalArticle>(count);
+
+		for (int i = 0; i < count; i++) {
+			JournalArticle article = JournalTestUtil.addArticle(
+				_group.getGroupId(),
+				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+				ServiceTestUtil.randomString(),
+				ServiceTestUtil.randomString(50));
+
+			articles.add(article);
+		}
+
+		return articles;
 	}
 
 	protected JournalArticle fetchLatestArticle(int status) throws Exception {
@@ -263,6 +388,22 @@ public class JournalArticleServiceTest {
 
 		_article = JournalTestUtil.expireArticle(
 			_group.getGroupId(), _article, 1.1);
+	}
+
+	protected JournalArticle updateArticleStatus(int status) throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		if (status == WorkflowConstants.STATUS_DRAFT) {
+			serviceContext.setWorkflowAction(
+				WorkflowConstants.ACTION_SAVE_DRAFT);
+		}
+		else {
+			serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
+		}
+
+		return JournalTestUtil.updateArticle(
+			_article, "Version 2", ServiceTestUtil.randomString(),
+			serviceContext);
 	}
 
 	private JournalArticle _article;
