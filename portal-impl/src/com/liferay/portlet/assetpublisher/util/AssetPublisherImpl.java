@@ -811,7 +811,19 @@ public class AssetPublisherImpl implements AssetPublisher {
 			String scopeIdSuffix = scopeId.substring(
 				SCOPE_ID_CHILD_GROUP_PREFIX.length());
 
-			return GetterUtil.getLong(scopeIdSuffix);
+			long childGroupId = GetterUtil.getLong(scopeIdSuffix);
+
+			Group childGroup = GroupLocalServiceUtil.getGroup(childGroupId);
+
+			String treePath = childGroup.getTreePath();
+
+			if (!treePath.contains(
+					StringPool.SLASH + siteGroupId + StringPool.SLASH)) {
+
+				throw new PrincipalException();
+			}
+
+			return childGroupId;
 		}
 		else if (scopeId.startsWith(SCOPE_ID_GROUP_PREFIX)) {
 			String scopeIdSuffix = scopeId.substring(
@@ -869,15 +881,25 @@ public class AssetPublisherImpl implements AssetPublisher {
 			String scopeIdSuffix = scopeId.substring(
 				SCOPE_ID_PARENT_GROUP_PREFIX.length());
 
-			long groupId = GetterUtil.getLong(scopeIdSuffix);
+			long parentGroupId = GetterUtil.getLong(scopeIdSuffix);
 
-			Group group = GroupLocalServiceUtil.getGroup(groupId);
+			Group parentGroup = GroupLocalServiceUtil.getGroup(parentGroupId);
 
-			if (!SitesUtil.isContentSharingWithChildrenEnabled(group)) {
+			if (!SitesUtil.isContentSharingWithChildrenEnabled(parentGroup)) {
 				throw new PrincipalException();
 			}
 
-			return groupId;
+			Group group = GroupLocalServiceUtil.getGroup(siteGroupId);
+
+			String treePath = group.getTreePath();
+
+			if (!treePath.contains(
+					StringPool.SLASH + parentGroupId + StringPool.SLASH)) {
+
+				throw new PrincipalException();
+			}
+
+			return parentGroupId;
 		}
 		else {
 			throw new IllegalArgumentException("Invalid scope ID " + scopeId);
