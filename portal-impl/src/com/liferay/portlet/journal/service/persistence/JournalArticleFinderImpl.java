@@ -730,7 +730,8 @@ public class JournalArticleFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(COUNT_BY_G_F, queryDefinition);
+			String sql = CustomSQLUtil.get(
+				COUNT_BY_G_F, queryDefinition, "JournalArticle");
 
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(

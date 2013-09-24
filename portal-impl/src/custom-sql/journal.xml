@@ -7,10 +7,16 @@
 				COUNT(DISTINCT JournalArticle.articleId) AS COUNT_VALUE
 			FROM
 				JournalArticle
+			LEFT JOIN
+				JournalArticle tempJournalArticle ON
+					(JournalArticle.groupId = tempJournalArticle.groupId) AND
+					(JournalArticle.articleId = tempJournalArticle.articleId) AND
+					(JournalArticle.version < tempJournalArticle.version)
 			WHERE
-				(groupId = ?) AND
-				([$STATUS$]) AND
-				[$FOLDER_ID$]
+				(JournalArticle.groupId = ?) AND
+				[$STATUS$] AND
+				[$FOLDER_ID$] AND
+				(tempJournalArticle.id_ IS NULL)
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.journal.service.persistence.JournalArticleFinder.countByG_C_S">
@@ -32,12 +38,17 @@
 				COUNT(DISTINCT JournalArticle.articleId) AS COUNT_VALUE
 			FROM
 				JournalArticle
+			LEFT JOIN JournalArticle tempJournalArticle ON
+				(JournalArticle.groupId = tempJournalArticle.groupId) AND
+				(JournalArticle.articleId = tempJournalArticle.articleId) AND
+				(JournalArticle.version < tempJournalArticle.version)
 			WHERE
-				(groupId = ?) AND
-				(userId = ?) AND
+				(JournalArticle.groupId = ?) AND
+				(JournalArticle.userId = ?) AND
 				([$FOLDER_ID$]) AND
-				(classNameId = ?) AND
-				([$STATUS$])
+				(JournalArticle.classNameId = ?) AND
+				[$STATUS$] AND
+				(tempJournalArticle.id_ IS NULL)
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.journal.service.persistence.JournalArticleFinder.countByC_G_F_C_A_V_T_D_C_T_S_T_D_R">
