@@ -70,8 +70,6 @@ request.setAttribute("view.jsp-showIconLabel", true);
 			<c:if test="<%= (enableConversions && assetRenderer.isConvertible()) && !print %>">
 
 				<%
-				String languageId = LanguageUtil.getLanguageId(request);
-
 				PortletURL exportAssetURL = assetRenderer.getURLExport(liferayPortletRequest, liferayPortletResponse);
 				%>
 
@@ -82,8 +80,6 @@ request.setAttribute("view.jsp-showIconLabel", true);
 			<c:if test="<%= (showAvailableLocales && assetRenderer.isLocalizable()) && !print %>">
 
 				<%
-				String languageId = LanguageUtil.getLanguageId(request);
-
 				String[] availableLanguageIds = assetRenderer.getAvailableLanguageIds();
 				%>
 
@@ -93,7 +89,7 @@ request.setAttribute("view.jsp-showIconLabel", true);
 					</c:if>
 
 					<div class="locale-actions">
-						<liferay-ui:language displayStyle="<%= 0 %>" languageIds="<%= availableLanguageIds %>" />
+						<liferay-ui:language displayStyle="<%= 0 %>" formAction="<%= currentURL.toString() %>" languageId="<%= LanguageUtil.getLanguageId(request) %>" languageIds="<%= availableLanguageIds %>" />
 					</div>
 				</c:if>
 			</c:if>
