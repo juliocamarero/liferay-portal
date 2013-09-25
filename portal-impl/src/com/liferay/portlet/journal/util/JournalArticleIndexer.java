@@ -587,6 +587,8 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	protected void updateArticles(JournalArticle article) throws Exception {
+		Collection<Document> documents = new ArrayList<Document>();
+
 		JournalArticle latestIndexableArticle =
 			JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
 				article.getResourcePrimKey());
@@ -607,8 +609,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 			document.addKeyword("head", false);
 
-			SearchEngineUtil.updateDocument(
-				getSearchEngineId(), curArticle.getCompanyId(), document);
+			documents.add(document);
 		}
 
 		if (latestIndexableArticle != null) {
@@ -616,18 +617,18 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 			document.addKeyword("head", true);
 
-			SearchEngineUtil.updateDocument(
-				getSearchEngineId(), latestIndexableArticle.getCompanyId(),
-				document);
+			documents.add(document);
 		}
 		else if (article.getStatus() == WorkflowConstants.STATUS_IN_TRASH) {
 			Document document = getDocument(article);
 
 			document.addKeyword("head", true);
 
-			SearchEngineUtil.updateDocument(
-				getSearchEngineId(), article.getCompanyId(), document);
+			documents.add(document);
 		}
+
+		SearchEngineUtil.updateDocuments(
+			getSearchEngineId(), article.getCompanyId(), documents);
 	}
 
 }
