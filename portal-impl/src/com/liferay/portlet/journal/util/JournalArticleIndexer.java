@@ -279,7 +279,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 		deleteDocument(article.getCompanyId(), article.getId());
 
-		updateArticles(article);
+		reindexArticleVersions(article);
 	}
 
 	@Override
@@ -414,11 +414,11 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void doReindex(Object obj) throws Exception {
 		JournalArticle article = (JournalArticle)obj;
 
-		Document document = getDocument(article);
-
 		if (!article.isIndexable() ||
 			(PortalUtil.getClassNameId(DDMStructure.class) ==
 				article.getClassNameId())) {
+
+			Document document = getDocument(article);
 
 			SearchEngineUtil.deleteDocument(
 				getSearchEngineId(), article.getCompanyId(),
@@ -427,10 +427,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 			return;
 		}
 
-		SearchEngineUtil.updateDocument(
-			getSearchEngineId(), article.getCompanyId(), document);
-
-		updateArticles(article);
+		reindexArticleVersions(article);
 	}
 
 	@Override
@@ -533,60 +530,9 @@ public class JournalArticleIndexer extends BaseIndexer {
 			ddmStructure, fields, LocaleUtil.fromLanguageId(languageId));
 	}
 
-	protected String[] getLanguageIds(
-		String defaultLanguageId, String content) {
-
-		String[] languageIds = LocalizationUtil.getAvailableLanguageIds(
-			content);
-
-		if (languageIds.length == 0) {
-			languageIds = new String[] {defaultLanguageId};
-		}
-
-		return languageIds;
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return PORTLET_ID;
-	}
-
-	protected void reindexArticles(long companyId)
+	protected Collection<Document> getArticleVersions(JournalArticle article)
 		throws PortalException, SystemException {
 
-		final Collection<Document> documents = new ArrayList<Document>();
-
-		ActionableDynamicQuery actionableDynamicQuery =
-			new JournalArticleActionableDynamicQuery() {
-
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				Property indexableProperty = PropertyFactoryUtil.forName(
-					"indexable");
-
-				dynamicQuery.add(indexableProperty.eq(true));
-			}
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				JournalArticle article = (JournalArticle)object;
-
-				Document document = getDocument(article);
-
-				documents.add(document);
-			}
-
-		};
-
-		actionableDynamicQuery.setCompanyId(companyId);
-
-		actionableDynamicQuery.performActions();
-
-		SearchEngineUtil.updateDocuments(
-			getSearchEngineId(), companyId, documents);
-	}
-
-	protected void updateArticles(JournalArticle article) throws Exception {
 		Collection<Document> documents = new ArrayList<Document>();
 
 		JournalArticle latestIndexableArticle =
@@ -627,8 +573,68 @@ public class JournalArticleIndexer extends BaseIndexer {
 			documents.add(document);
 		}
 
+		return documents;
+	}
+
+	protected String[] getLanguageIds(
+		String defaultLanguageId, String content) {
+
+		String[] languageIds = LocalizationUtil.getAvailableLanguageIds(
+			content);
+
+		if (languageIds.length == 0) {
+			languageIds = new String[] {defaultLanguageId};
+		}
+
+		return languageIds;
+	}
+
+	@Override
+	protected String getPortletId(SearchContext searchContext) {
+		return PORTLET_ID;
+	}
+
+	protected void reindexArticles(long companyId)
+		throws PortalException, SystemException {
+
+		final Collection<Document> documents = new ArrayList<Document>();
+
+		ActionableDynamicQuery actionableDynamicQuery =
+			new JournalArticleActionableDynamicQuery() {
+
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				Property indexableProperty = PropertyFactoryUtil.forName(
+					"indexable");
+
+				dynamicQuery.add(indexableProperty.eq(true));
+			}
+
+			@Override
+			protected void performAction(Object object)
+				throws PortalException, SystemException {
+
+				JournalArticle article = (JournalArticle)object;
+
+				documents.addAll(getArticleVersions(article));
+			}
+
+		};
+
+		actionableDynamicQuery.setCompanyId(companyId);
+
+		actionableDynamicQuery.performActions();
+
 		SearchEngineUtil.updateDocuments(
-			getSearchEngineId(), article.getCompanyId(), documents);
+			getSearchEngineId(), companyId, documents);
+	}
+
+	protected void reindexArticleVersions(JournalArticle article)
+		throws PortalException, SystemException {
+
+		SearchEngineUtil.updateDocuments(
+			getSearchEngineId(), article.getCompanyId(),
+			getArticleVersions(article));
 	}
 
 }
