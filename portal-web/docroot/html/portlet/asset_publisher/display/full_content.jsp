@@ -18,6 +18,7 @@
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
+String languageId = LanguageUtil.getLanguageId(request);
 
 List results = (List)request.getAttribute("view.jsp-results");
 
@@ -35,7 +36,7 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view.jsp-assetEntry");
 AssetRendererFactory assetRendererFactory = (AssetRendererFactory)request.getAttribute("view.jsp-assetRendererFactory");
 AssetRenderer assetRenderer = (AssetRenderer)request.getAttribute("view.jsp-assetRenderer");
 
-String title = (String)request.getAttribute("view.jsp-title");
+String title = assetRenderer.getTitle(LocaleUtil.fromLanguageId(languageId));
 
 boolean show = ((Boolean)request.getAttribute("view.jsp-show")).booleanValue();
 boolean print = ((Boolean)request.getAttribute("view.jsp-print")).booleanValue();
@@ -89,7 +90,7 @@ request.setAttribute("view.jsp-showIconLabel", true);
 					</c:if>
 
 					<div class="locale-actions">
-						<liferay-ui:language displayStyle="<%= 0 %>" formAction="<%= currentURL.toString() %>" languageId="<%= LanguageUtil.getLanguageId(request) %>" languageIds="<%= availableLanguageIds %>" />
+						<liferay-ui:language displayStyle="<%= 0 %>" formAction="<%= currentURL.toString() %>" languageId="<%= languageId %>" languageIds="<%= availableLanguageIds %>" />
 					</div>
 				</c:if>
 			</c:if>
