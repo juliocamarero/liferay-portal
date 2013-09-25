@@ -89,6 +89,7 @@ import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.dynamicdatamapping.NoSuchStructureException;
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStorageLink;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.storage.FieldConstants;
@@ -427,6 +428,17 @@ public class JournalArticleLocalServiceImpl
 
 		if (PortalUtil.getClassNameId(DDMStructure.class) == classNameId) {
 			updateDDMStructureXSD(classPK, content, serviceContext);
+		}
+
+		if (Validator.isNotNull(ddmStructureKey)) {
+			DDMStructure ddmStructure = ddmStructureLocalService.getStructure(
+				PortalUtil.getSiteGroupId(groupId),
+				PortalUtil.getClassNameId(JournalArticle.class),
+				ddmStructureKey, true);
+
+			ddmStorageLinkLocalService.addStorageLink(
+				PortalUtil.getClassNameId(JournalArticle.class),
+				article.getId(), ddmStructure.getStructureId(), serviceContext);
 		}
 
 		// Message boards
@@ -902,6 +914,10 @@ public class JournalArticleLocalServiceImpl
 
 			updatePreviousApprovedArticle(article);
 		}
+
+		// Dynamic data mapping
+
+		ddmStorageLinkLocalService.deleteClassStorageLink(article.getId());
 
 		// Email
 
@@ -4768,6 +4784,9 @@ public class JournalArticleLocalServiceImpl
 				article.getClassPK(), content, serviceContext);
 		}
 
+		updateDDMStorageLink(
+			groupId, article.getId(), ddmStructureKey, serviceContext);
+
 		// Small image
 
 		saveImages(
@@ -6364,6 +6383,36 @@ public class JournalArticleLocalServiceImpl
 		subscriptionSender.addRuntimeSubscribers(toAddress, toName);
 
 		subscriptionSender.flushNotificationsAsync();
+	}
+
+	protected void updateDDMStorageLink(
+			long groupId, long classPK, String ddmStructureKey,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		DDMStorageLink ddmStorageLink =
+			ddmStorageLinkPersistence.fetchByClassPK(classPK);
+
+		if (Validator.isNotNull(ddmStructureKey)) {
+			DDMStructure ddmStructure = ddmStructureLocalService.getStructure(
+				PortalUtil.getSiteGroupId(groupId),
+				PortalUtil.getClassNameId(JournalArticle.class),
+				ddmStructureKey, true);
+
+			if (ddmStorageLink == null) {
+				ddmStorageLinkLocalService.addStorageLink(
+					PortalUtil.getClassNameId(JournalArticle.class), classPK,
+					ddmStructure.getStructureId(), serviceContext);
+			}
+			else {
+				ddmStorageLink.setStructureId(ddmStructure.getStructureId());
+
+				ddmStorageLinkPersistence.update(ddmStorageLink);
+			}
+		}
+		else if (ddmStorageLink != null) {
+			ddmStorageLinkPersistence.remove(ddmStorageLink);
+		}
 	}
 
 	protected void updateDDMStructureXSD(
