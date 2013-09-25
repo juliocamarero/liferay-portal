@@ -147,7 +147,7 @@ request.setAttribute("view.jsp-showIconLabel", true);
 				contentId="<%= String.valueOf(assetEntry.getEntryId()) %>"
 				displayStyle="<%= socialBookmarksDisplayStyle %>"
 				target="_blank"
-				title="<%= assetEntry.getTitle(locale) %>"
+				title="<%= title %>"
 				url="<%= PortalUtil.getCanonicalURL(viewFullContentURL.toString(), themeDisplay, layout) %>"
 			/>
 		</c:if>
@@ -168,7 +168,7 @@ request.setAttribute("view.jsp-showIconLabel", true);
 				<liferay-ui:flags
 					className="<%= assetEntry.getClassName() %>"
 					classPK="<%= assetEntry.getClassPK() %>"
-					contentTitle="<%= assetRenderer.getTitle(locale) %>"
+					contentTitle="<%= title %>"
 					reportedUserId="<%= assetRenderer.getUserId() %>"
 				/>
 			</div>
@@ -178,7 +178,7 @@ request.setAttribute("view.jsp-showIconLabel", true);
 			<liferay-ui:social-bookmarks
 				displayStyle="<%= socialBookmarksDisplayStyle %>"
 				target="_blank"
-				title="<%= assetEntry.getTitle(locale) %>"
+				title="<%= title %>"
 				url="<%= PortalUtil.getCanonicalURL(viewFullContentURL.toString(), themeDisplay, layout) %>"
 			/>
 		</c:if>
