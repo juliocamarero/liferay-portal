@@ -101,11 +101,9 @@ String emailSignature = PrefsParamUtil.getString(portletPreferences, request, em
 
 					<%
 					for (int i = 0; i < MBMessageConstants.FORMATS.length; i++) {
-
-						String format = MBMessageConstants.FORMATS[i];
 					%>
 
-						<c:if test="<%= MBUtil.isValidMessageFormat(format) %>">
+						<c:if test="<%= MBUtil.isValidMessageFormat(MBMessageConstants.FORMATS[i]) %>">
 							<aui:option label='<%= LanguageUtil.get(pageContext,"message-boards.message-formats." + MBMessageConstants.FORMATS[i]) %>' selected="<%= messageFormat.equals(MBMessageConstants.FORMATS[i]) %>" value="<%= MBMessageConstants.FORMATS[i] %>" />
 						</c:if>
 
