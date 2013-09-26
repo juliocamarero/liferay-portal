@@ -110,8 +110,9 @@ for (int i = 0; i < locales.length; i++) {
 	<c:otherwise>
 
 		<%
+		String currentLanguageId = LocaleUtil.toLanguageId(locale);
+
 		for (int i = 0; i < locales.length; i++) {
-			String currentLanguageId = LocaleUtil.toLanguageId(locale);
 			String languageId = LocaleUtil.toLanguageId(locales[i]);
 
 			if (!displayCurrentLocale && currentLanguageId.equals(languageId)) {
