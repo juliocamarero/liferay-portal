@@ -151,7 +151,7 @@ int total = 0;
 		if (displayTerms.getNavigation().equals("mine")) {
 			userId = themeDisplay.getUserId();
 		}
-		else if (!permissionChecker.isCompanyAdmin() || !permissionChecker.isGroupAdmin(scopeGroupId)) {
+		else if (!(permissionChecker.isCompanyAdmin() || permissionChecker.isGroupAdmin(scopeGroupId) || RoleLocalServiceUtil.hasUserRole(user.getUserId(), user.getCompanyId(), RoleConstants.PORTAL_CONTENT_REVIEWER, true))) {
 			status = WorkflowConstants.STATUS_APPROVED;
 		}
 
@@ -188,7 +188,7 @@ int total = 0;
 	<c:otherwise>
 
 		<%
-		if (!permissionChecker.isCompanyAdmin() || !permissionChecker.isGroupAdmin(scopeGroupId)) {
+		if (!(permissionChecker.isCompanyAdmin() || permissionChecker.isGroupAdmin(scopeGroupId) || RoleLocalServiceUtil.hasUserRole(user.getUserId(), user.getCompanyId(), RoleConstants.PORTAL_CONTENT_REVIEWER, true))) {
 			status = WorkflowConstants.STATUS_APPROVED;
 		}
 
@@ -249,7 +249,7 @@ for (int i = 0; i < results.size(); i++) {
 					tempRowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
 					tempRowURL.setParameter("articleId", curArticle.getArticleId());
 
-					if (!permissionChecker.isCompanyAdmin() || !permissionChecker.isGroupAdmin(scopeGroupId)) {
+						if (!(permissionChecker.isCompanyAdmin() || permissionChecker.isGroupAdmin(scopeGroupId) || RoleLocalServiceUtil.hasUserRole(user.getUserId(), user.getCompanyId(), RoleConstants.PORTAL_CONTENT_REVIEWER, true))) {
 						status = WorkflowConstants.STATUS_APPROVED;
 					}
 
@@ -281,7 +281,7 @@ for (int i = 0; i < results.size(); i++) {
 						rowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
 						rowURL.setParameter("articleId", curArticle.getArticleId());
 
-						if (!permissionChecker.isCompanyAdmin() || !permissionChecker.isGroupAdmin(scopeGroupId)) {
+							if (!(permissionChecker.isCompanyAdmin() || permissionChecker.isGroupAdmin(scopeGroupId) || RoleLocalServiceUtil.hasUserRole(user.getUserId(), user.getCompanyId(), RoleConstants.PORTAL_CONTENT_REVIEWER, true))) {
 							status = WorkflowConstants.STATUS_APPROVED;
 						}
 
