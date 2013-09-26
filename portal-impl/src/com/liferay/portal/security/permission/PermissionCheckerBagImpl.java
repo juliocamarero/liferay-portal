@@ -24,6 +24,7 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.permission.LayoutPrototypePermissionUtil;
 import com.liferay.portal.service.permission.LayoutSetPrototypePermissionUtil;
@@ -213,6 +214,21 @@ public class PermissionCheckerBagImpl implements PermissionCheckerBag {
 				isOrganizationOwnerImpl(permissionChecker, organization));
 
 			_organizationOwners.put(organization.getOrganizationId(), value);
+		}
+
+		return value.booleanValue();
+	}
+
+	@Override
+	public boolean isReviewer(PermissionChecker permissionChecker, Group group)
+		throws Exception {
+
+		Boolean value = _reviewers.get(group.getCompanyId());
+
+		if (value == null) {
+			value = Boolean.valueOf(isReviewerImpl(permissionChecker, group));
+
+			_reviewers.put(group.getCompanyId(), value);
 		}
 
 		return value.booleanValue();
@@ -418,6 +434,22 @@ public class PermissionCheckerBagImpl implements PermissionCheckerBag {
 		return false;
 	}
 
+	protected boolean isReviewerImpl(
+			PermissionChecker permissionChecker, Group group)
+		throws Exception {
+
+		if (permissionChecker.isCompanyAdmin() ||
+			permissionChecker.isOmniadmin() ||
+			permissionChecker.isGroupAdmin(group.getGroupId())) {
+
+			return true;
+		}
+
+		return RoleLocalServiceUtil.hasUserRole(
+				_userId, group.getCompanyId(),
+				RoleConstants.PORTAL_CONTENT_REVIEWER, true);
+	}
+
 	private Map<Long, Boolean> _groupAdmins = new HashMap<Long, Boolean>();
 	private Map<Long, Boolean> _groupOwners = new HashMap<Long, Boolean>();
 	private List<Group> _groups;
@@ -425,6 +457,7 @@ public class PermissionCheckerBagImpl implements PermissionCheckerBag {
 		new HashMap<Long, Boolean>();
 	private Map<Long, Boolean> _organizationOwners =
 		new HashMap<Long, Boolean>();
+	private Map<Long, Boolean> _reviewers = new HashMap<Long, Boolean>();
 	private long[] _roleIds;
 	private List<Role> _roles;
 	private List<Group> _userGroups;
