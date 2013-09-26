@@ -112,9 +112,9 @@ for (int i = 0; i < locales.length; i++) {
 
 		<%
 		for (int i = 0; i < locales.length; i++) {
-			String curLanguageId = LocaleUtil.toLanguageId(locales[i]);
+			String currentLanguageId = LocaleUtil.toLanguageId(locales[i]);
 
-			if (!displayCurrentLocale && curLanguageId.equals(languageId)) {
+			if (!displayCurrentLocale && languageId.equals(currentLanguageId)) {
 				continue;
 			}
 
@@ -137,20 +137,20 @@ for (int i = 0; i < locales.length; i++) {
 			<c:choose>
 				<c:when test="<%= (displayStyle == LanguageTag.LIST_LONG_TEXT) || (displayStyle == LanguageTag.LIST_SHORT_TEXT) %>">
 					<c:choose>
-						<c:when test="<%= curLanguageId.equals(languageId) %>">
+						<c:when test="<%= languageId.equals(currentLanguageId) %>">
 							<span class="<%= cssClassName %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>"><%= localeDisplayName %></span>
 						</c:when>
 						<c:otherwise>
-							<aui:a cssClass="<%= cssClassName %>" href="<%= HttpUtil.addParameter(formAction, namespace + name, curLanguageId) %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>"><%= localeDisplayName %></aui:a>
+							<aui:a cssClass="<%= cssClassName %>" href="<%= HttpUtil.addParameter(formAction, namespace + name, currentLanguageId) %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>"><%= localeDisplayName %></aui:a>
 						</c:otherwise>
 					</c:choose>
 				</c:when>
 				<c:otherwise>
 					<liferay-ui:icon
-						image='<%= "../language/" + curLanguageId %>'
+						image='<%= "../language/" + currentLanguageId %>'
 						lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>"
 						message="<%= LocaleUtil.getLongDisplayName(locales[i], duplicateLanguages) %>"
-						url="<%= curLanguageId.equals(languageId) ? null : HttpUtil.setParameter(formAction, namespace + name, curLanguageId) %>"
+						url="<%= languageId.equals(currentLanguageId) ? null : HttpUtil.setParameter(formAction, namespace + name, currentLanguageId) %>"
 					/>
 				</c:otherwise>
 			</c:choose>
