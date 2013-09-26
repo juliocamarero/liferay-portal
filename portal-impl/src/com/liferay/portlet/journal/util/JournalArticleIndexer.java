@@ -565,7 +565,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 			double version = GetterUtil.getDouble(document.get(Field.VERSION));
 
 			JournalArticle article =
-				JournalArticleLocalServiceUtil.fetchArticle(
+				JournalArticleLocalServiceUtil.getArticle(
 					groupId, articleId, version);
 
 			JournalArticleDisplay articleDisplay =
