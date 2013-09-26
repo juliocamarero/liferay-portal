@@ -248,6 +248,12 @@ for (int i = 0; i < results.size(); i++) {
 					tempRowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
 					tempRowURL.setParameter("articleId", curArticle.getArticleId());
 
+					if (!permissionChecker.isCompanyAdmin() || !permissionChecker.isGroupAdmin(scopeGroupId)) {
+						status = WorkflowConstants.STATUS_APPROVED;
+					}
+
+					tempRowURL.setParameter("status", String.valueOf(status));
+
 					request.setAttribute("view_entries.jsp-article", curArticle);
 
 					request.setAttribute("view_entries.jsp-tempRowURL", tempRowURL);
