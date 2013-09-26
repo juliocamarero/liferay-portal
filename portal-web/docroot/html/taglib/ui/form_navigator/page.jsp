@@ -75,6 +75,12 @@ if (Validator.isNotNull(historyKey)) {
 		</c:when>
 		<c:otherwise>
 			<div class="taglib-form-navigator row-fluid" id="<portlet:namespace />tabs">
+				<liferay-util:buffer var="formSectionsBuffer">
+					<div class="form-navigator-content span8">
+						<%@ include file="/html/taglib/ui/form_navigator/sections.jspf" %>
+					</div>
+				</liferay-util:buffer>
+
 				<ul class="form-navigator nav nav-list span4 well">
 					<%= Validator.isNotNull(htmlTop) ? htmlTop : StringPool.BLANK %>
 
@@ -82,6 +88,7 @@ if (Validator.isNotNull(historyKey)) {
 					String[] modifiedSections = StringUtil.split(ParamUtil.getString(request, "modifiedSections"));
 
 					String errorSection = (String)request.getAttribute("errorSection");
+					String focusField = (String)request.getAttribute("focusField");
 
 					if (Validator.isNull(errorSection)) {
 						modifiedSections = null;
@@ -118,7 +125,7 @@ if (Validator.isNotNull(historyKey)) {
 
 								String cssClass = StringPool.BLANK;
 
-								if (StringUtil.endsWith(sectionId, errorSection)) {
+								if (sectionId.equals(namespace + errorSection)) {
 									cssClass += "section-error";
 
 									curSection = section;
@@ -163,9 +170,7 @@ if (Validator.isNotNull(historyKey)) {
 					<%= Validator.isNotNull(htmlBottom) ? htmlBottom : StringPool.BLANK %>
 				</ul>
 
-				<div class="form-navigator-content span8">
-					<%@ include file="/html/taglib/ui/form_navigator/sections.jspf" %>
-				</div>
+				<%= formSectionsBuffer %>
 			</div>
 
 			<aui:script use="aui-event-input,aui-tabview,aui-url,history,io-form">
@@ -211,6 +216,12 @@ if (Validator.isNotNull(historyKey)) {
 					modifiedSectionsNode.val(modifiedSections.join());
 
 					tabNode.addClass('section-modified');
+				}
+
+				function updateSectionError() {
+					var tabNode = tabview.get('selection').get('boundingBox');
+
+					var sectionId = tabNode.getData('sectionId');
 
 					tabNode.toggleClass(
 						'section-error',
@@ -273,12 +284,6 @@ if (Validator.isNotNull(historyKey)) {
 					}
 				);
 
-				if (formNode) {
-					formNode.all('.modify-link').on('click', updateSectionStatus);
-
-					formNode.delegate('change', updateSectionStatus, 'input, select, textarea');
-				}
-
 				var currentUrl = new A.Url(location.href);
 
 				var currentAnchor = currentUrl.getAnchor();
@@ -299,6 +304,24 @@ if (Validator.isNotNull(historyKey)) {
 
 				if (<%= error %>) {
 					Liferay.fire('formNavigator:reveal<portlet:namespace /><%= errorSection %>');
+				}
+
+				if (formNode) {
+					var focusField = formNode.one('.form-section.active input:not([type="hidden"]).field');
+
+					<c:if test="<%= Validator.isNotNull(focusField) %>">
+						focusField = formNode.one('#<portlet:namespace /><%= focusField %>');
+					</c:if>
+
+					if (focusField) {
+						Liferay.Util.focusFormField(focusField);
+					}
+
+					formNode.all('.modify-link').on('click', updateSectionStatus);
+
+					formNode.delegate('change', updateSectionStatus, 'input, select, textarea');
+
+					formNode.on('blur', updateSectionError, 'input, select, textarea');
 				}
 			</aui:script>
 		</c:otherwise>
