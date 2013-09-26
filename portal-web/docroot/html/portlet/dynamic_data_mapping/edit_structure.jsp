@@ -111,6 +111,19 @@ if (Validator.isNotNull(script)) {
 	<aui:model-context bean="<%= structure %>" model="<%= DDMStructure.class %>" />
 
 	<aui:fieldset>
+		<aui:field-wrapper>
+			<c:if test="<%= DDMStorageLinkLocalServiceUtil.getStructureStorageLinksCount(classPK) > 0 %>">
+				<div class="alert alert-warning">
+					<liferay-ui:message key="there-are-content-references-to-this-structure.-you-may-lose-data-if-any-field-name-is-renamed-or-removed" />
+				</div>
+			</c:if>
+			<c:if test="<%= (classPK > 0) && (DDMTemplateLocalServiceUtil.getTemplatesCount(groupId, classNameId, classPK) > 0) %>">
+				<div class="alert alert-info">
+					<liferay-ui:message key="there-are-template-references-to-this-structure.-please-update-them-if-any-field-name-is-renamed-or-removed" />
+				</div>
+			</c:if>
+		</aui:field-wrapper>
+
 		<aui:input name="name" />
 
 		<liferay-ui:panel-container cssClass="lfr-structure-entry-details-container" extended="<%= false %>" id="structureDetailsPanelContainer" persistState="<%= true %>">
