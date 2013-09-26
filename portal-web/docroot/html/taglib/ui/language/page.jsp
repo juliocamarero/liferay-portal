@@ -110,12 +110,12 @@ for (int i = 0; i < locales.length; i++) {
 	<c:otherwise>
 
 		<%
-		String currentLanguageId = LocaleUtil.toLanguageId(locale);
+		String languageId = LocaleUtil.toLanguageId(locale);
 
 		for (int i = 0; i < locales.length; i++) {
-			String languageId = LocaleUtil.toLanguageId(locales[i]);
+			String currentLanguageId = LocaleUtil.toLanguageId(locales[i]);
 
-			if (!displayCurrentLocale && currentLanguageId.equals(languageId)) {
+			if (!displayCurrentLocale && languageId.equals(currentLanguageId)) {
 				continue;
 			}
 
@@ -138,7 +138,7 @@ for (int i = 0; i < locales.length; i++) {
 			<c:choose>
 				<c:when test="<%= (displayStyle == LanguageTag.LIST_LONG_TEXT) || (displayStyle == LanguageTag.LIST_SHORT_TEXT) %>">
 					<c:choose>
-						<c:when test="<%= currentLanguageId.equals(languageId) %>">
+						<c:when test="<%= languageId.equals(currentLanguageId) %>">
 							<span class="<%= cssClassName %>" lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>"><%= localeDisplayName %></span>
 						</c:when>
 						<c:otherwise>
@@ -151,7 +151,7 @@ for (int i = 0; i < locales.length; i++) {
 						image='<%= "../language/" + LocaleUtil.toLanguageId(locales[i]) %>'
 						lang="<%= LocaleUtil.toW3cLanguageId(locales[i]) %>"
 						message="<%= LocaleUtil.getLongDisplayName(locales[i], duplicateLanguages) %>"
-						url="<%= currentLanguageId.equals(languageId) ? null : HttpUtil.addParameter(formAction, namespace + name, LocaleUtil.toLanguageId(locales[i])) %>"
+						url="<%= languageId.equals(currentLanguageId) ? null : HttpUtil.addParameter(formAction, namespace + name, LocaleUtil.toLanguageId(locales[i])) %>"
 					/>
 				</c:otherwise>
 			</c:choose>
