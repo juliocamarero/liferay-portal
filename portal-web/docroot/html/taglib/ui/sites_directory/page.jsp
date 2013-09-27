@@ -115,6 +115,12 @@
 										else {
 											layoutSet = childGroup.getPrivateLayoutSet();
 										}
+
+										String url = StringPool.BLANK;
+
+										if (childGroup.getGroupId() != scopeGroupId) {
+											url = PortalUtil.getGroupFriendlyURL(childGroup, !childGroup.hasPublicLayouts(), themeDisplay);
+										}
 										%>
 
 										<liferay-ui:app-view-entry
@@ -127,7 +133,7 @@
 											showCheckbox="<%= false %>"
 											thumbnailSrc='<%= themeDisplay.getPathImage() + "/layout_set_logo?img_id=" + layoutSet.getLogoId() + "&t=" + WebServerServletTokenUtil.getToken(layoutSet.getLogoId()) %>'
 											title="<%= HtmlUtil.escape(childGroup.getDescriptiveName(locale)) %>"
-											url="<%= PortalUtil.getGroupFriendlyURL(childGroup, !childGroup.hasPublicLayouts(), themeDisplay) %>"
+											url="<%= url %>"
 										/>
 									</liferay-ui:search-container-row>
 
@@ -228,7 +234,14 @@ private void _buildSitesList(Group rootGroup, Group curGroup, List<Group> branch
 			sb.append("\" ");
 		}
 
-		sb.append("><a ");
+		sb.append(">");
+
+		if (childGroup.getGroupId() != themeDisplay.getScopeGroupId()) {
+			sb.append("<a ");
+		}
+		else {
+			sb.append("<span ");
+		}
 
 		if (Validator.isNotNull(className)) {
 			sb.append("class=\"");
@@ -236,13 +249,22 @@ private void _buildSitesList(Group rootGroup, Group curGroup, List<Group> branch
 			sb.append("\" ");
 		}
 
-		sb.append("href=\"");
-		sb.append(HtmlUtil.escapeHREF(PortalUtil.getGroupFriendlyURL(childGroup, !childGroup.hasPublicLayouts(), themeDisplay)));
-		sb.append("\"> ");
+		if (childGroup.getGroupId() != themeDisplay.getScopeGroupId()) {
+			sb.append("href=\"");
+			sb.append(HtmlUtil.escapeHREF(PortalUtil.getGroupFriendlyURL(childGroup, !childGroup.hasPublicLayouts(), themeDisplay)));
+			sb.append("\"");
+		}
+
+		sb.append("> ");
 
 		sb.append(HtmlUtil.escape(childGroup.getDescriptiveName(themeDisplay.getLocale())));
 
-		sb.append("</a>");
+		if (childGroup.getGroupId() != themeDisplay.getScopeGroupId()) {
+			sb.append("</a>");
+		}
+		else {
+			sb.append("</span>");
+		}
 
 		if (open) {
 			StringBundler childGroupSB = null;
