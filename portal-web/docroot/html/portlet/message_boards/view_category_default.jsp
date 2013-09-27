@@ -40,11 +40,11 @@ if ((category != null) && layout.isTypeControlPanel()) {
 	%>
 
 	<c:if test="<%= categoriesCount > 0 %>">
-		<liferay-ui:panel collapsible="<%= categoriesPanelCollapsible %>" extended="<%= categoriesPanelExtended %>" id="messageBoardsCategoriesPanel" persistState="<%= true %>" title='<%= LanguageUtil.get(pageContext, (category != null) ? "subcategories" : "categories") %>'>
+		<liferay-ui:panel collapsible="<%= categoriesPanelCollapsible %>" extended="<%= categoriesPanelExtended %>" id="messageBoardsCategoriesPanel" persistState="<%= true %>" title='<%= LanguageUtil.get(pageContext, (category != null) ? "subcategories[MessageBoard]" : "categories[MessageBoard]") %>'>
 			<liferay-ui:search-container
 				curParam="cur1"
 				deltaConfigurable="<%= false %>"
-				headerNames="category,categories,threads,posts"
+				headerNames="category[MessageBoard],categories[MessageBoard],threads[MessageBoard],posts[MessageBoard]"
 				iteratorURL="<%= portletURL %>"
 				total="<%= categoriesCount %>"
 			>
@@ -57,6 +57,7 @@ if ((category != null) && layout.isTypeControlPanel()) {
 					escapedModel="<%= true %>"
 					keyProperty="categoryId"
 					modelVar="curCategory"
+
 				>
 					<liferay-ui:search-container-row-parameter name="categorySubscriptionClassPKs" value="<%= categorySubscriptionClassPKs %>" />
 
@@ -73,7 +74,7 @@ if ((category != null) && layout.isTypeControlPanel()) {
 		</liferay-ui:panel>
 	</c:if>
 
-	<liferay-ui:panel collapsible="<%= threadsPanelCollapsible %>" cssClass="threads-panel" extended="<%= threadsPanelExtended %>" id="messageBoardsThreadsPanel" persistState="<%= true %>" title='<%= LanguageUtil.get(pageContext, "threads") %>'>
+	<liferay-ui:panel collapsible="<%= threadsPanelCollapsible %>" cssClass="threads-panel" extended="<%= threadsPanelExtended %>" id="messageBoardsThreadsPanel" persistState="<%= true %>" title='<%= LanguageUtil.get(pageContext, "threads[MessageBoard]") %>'>
 		<liferay-ui:search-container
 			curParam="cur2"
 			emptyResultsMessage="there-are-no-threads-in-this-category"
