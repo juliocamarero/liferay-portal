@@ -111,6 +111,7 @@ public class LayoutRevisionImpl extends LayoutRevisionBaseImpl {
 			getGroupId(), isPrivateLayout());
 	}
 
+	@Override
 	public String getRegularURL(ProtectedServletRequest request)
 		throws PortalException, SystemException {
 
@@ -126,8 +127,9 @@ public class LayoutRevisionImpl extends LayoutRevisionBaseImpl {
 		if (!CookieKeys.hasSessionId(request) &&
 			(url.startsWith(portalURL) || url.startsWith(StringPool.SLASH))) {
 
-			url = PortalUtil.getURLWithSessionId(
-				url, request.getSession().getId());
+			String sessionId = request.getSession().getId();
+
+			url = PortalUtil.getURLWithSessionId(url, sessionId);
 		}
 
 		return url;
