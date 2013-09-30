@@ -680,6 +680,71 @@ public class AssetUtil {
 		return sortType;
 	}
 
+	protected long[] filterCategoryIds(long[] categoryIds)
+		throws PortalException, SystemException {
+
+		List<Long> viewableCategoryIds = new ArrayList<Long>();
+
+		for (long categoryId : categoryIds) {
+			AssetCategory category = assetCategoryPersistence.fetchByPrimaryKey(
+				categoryId);
+
+			if ((category != null) &&
+				AssetCategoryPermission.contains(
+					getPermissionChecker(), categoryId, ActionKeys.VIEW)) {
+
+				viewableCategoryIds.add(categoryId);
+			}
+		}
+
+		return ArrayUtil.toArray(
+			viewableCategoryIds.toArray(new Long[viewableCategoryIds.size()]));
+	}
+
+	protected long[] filterTagIds(long[] tagIds)
+		throws PortalException, SystemException {
+
+		List<Long> viewableTagIds = new ArrayList<Long>();
+
+		for (long tagId : tagIds) {
+			if (AssetTagPermission.contains(
+					getPermissionChecker(), tagId, ActionKeys.VIEW)) {
+
+				viewableTagIds.add(tagId);
+			}
+		}
+
+		return ArrayUtil.toArray(
+			viewableTagIds.toArray(new Long[viewableTagIds.size()]));
+	}
+
+	protected long[][] filterTagIdsArray(long[][] tagIdsArray)
+		throws PortalException, SystemException {
+
+		List<long[]> viewableTagIdsArray = new ArrayList<long[]>();
+
+		for (int i = 0; i< tagIdsArray.length; i++) {
+			long[] tagIds = tagIdsArray[i];
+
+			List<Long> viewableTagIds = new ArrayList<Long>();
+
+			for (long tagId : tagIds) {
+				if (AssetTagPermission.contains(
+						getPermissionChecker(), tagId, ActionKeys.VIEW)) {
+
+					viewableTagIds.add(tagId);
+				}
+			}
+
+			viewableTagIdsArray.add(
+				ArrayUtil.toArray(
+					viewableTagIds.toArray(new Long[viewableTagIds.size()])));
+		}
+
+		return viewableTagIdsArray.toArray(
+			new long[viewableTagIdsArray.size()][]);
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(AssetUtil.class);
 
 }
