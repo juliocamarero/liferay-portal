@@ -181,24 +181,31 @@ public class LayoutStagingHandler implements InvocationHandler, Serializable {
 		long layoutRevisionId = ParamUtil.getLong(
 			serviceContext, "layoutRevisionId");
 
-		if (layoutRevisionId <= 0) {
-			layoutRevisionId = StagingUtil.getRecentLayoutRevisionId(
-				user, layoutSetBranchId, layout.getPlid());
-		}
-
 		if (layoutRevisionId > 0) {
 			layoutRevision =
 				LayoutRevisionLocalServiceUtil.fetchLayoutRevision(
 					layoutRevisionId);
+		}
 
-			if (layoutRevision.getStatus() !=
-					WorkflowConstants.STATUS_INACTIVE) {
+		if ((layoutRevisionId <= 0) ||
+			((layoutRevision != null) &&
+				(layoutRevision.getPlid() != layout.getPlid()))) {
+
+			layoutRevisionId = StagingUtil.getRecentLayoutRevisionId(
+				user, layoutSetBranchId, layout.getPlid());
+
+			layoutRevision =
+				LayoutRevisionLocalServiceUtil.fetchLayoutRevision(
+					layoutRevisionId);
+		}
+
+		if ((layoutRevision != null) &&
+			(layoutRevision.getStatus() != WorkflowConstants.STATUS_INACTIVE)) {
 
 				return layoutRevision;
-			}
-
-			layoutRevision = null;
 		}
+
+		layoutRevision = null;
 
 		List<LayoutRevision> layoutRevisions =
 			LayoutRevisionLocalServiceUtil.getLayoutRevisions(
