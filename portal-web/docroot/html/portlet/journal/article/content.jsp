@@ -647,9 +647,11 @@ if (Validator.isNotNull(content)) {
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "templates") %>'
 			},
 			function(event) {
-				document.<portlet:namespace />fm1.<portlet:namespace />ddmTemplateId.value = event.ddmtemplateid;
+				if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-template-will-delete-all-unsaved-content") %>')) {
+					document.<portlet:namespace />fm1.<portlet:namespace />ddmTemplateId.value = event.ddmtemplateid;
 
-				submitForm(document.<portlet:namespace />fm1, null, false, false);
+					submitForm(document.<portlet:namespace />fm1, null, false, false);
+				}
 			}
 		);
 	}
