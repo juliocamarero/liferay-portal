@@ -280,23 +280,12 @@ if (Validator.isNotNull(content)) {
 									</c:if>
 
 									<c:if test="<%= ddmStructure != null %>">
-
-										<%
-										StringBundler sb = new StringBundler(5);
-
-										sb.append("javascript:");
-										sb.append(renderResponse.getNamespace());
-										sb.append("openDDMTemplateSelector('");
-										sb.append(ddmStructure.getStructureId());
-										sb.append("');");
-										%>
-
 										<liferay-ui:icon
 											iconClass="icon-search"
 											label="<%= true %>"
 											linkCssClass="btn"
 											message="select"
-											url="<%= sb.toString() %>"
+											url='<%= "javascript:" + renderResponse.getNamespace() + "openDDMTemplateSelector();" %>'
 										/>
 									</c:if>
 								</div>
@@ -641,12 +630,12 @@ if (Validator.isNotNull(content)) {
 		);
 	}
 
-	function <portlet:namespace />openDDMTemplateSelector(ddmStructureId) {
+	function <portlet:namespace />openDDMTemplateSelector() {
 		Liferay.Util.openDDMPortlet(
 			{
 				basePortletURL: '<%= PortletURLFactoryUtil.create(request, PortletKeys.DYNAMIC_DATA_MAPPING, themeDisplay.getPlid(), PortletRequest.RENDER_PHASE) %>',
 				classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
-				classPK: ddmStructureId,
+				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey() : 0 %>,
 				dialog: {
 					destroyOnHide: true
 				},
