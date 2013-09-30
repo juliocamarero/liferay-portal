@@ -32,6 +32,7 @@ import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.service.base.AssetEntryServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetEntryPermission;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
+import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -214,13 +215,17 @@ public class AssetEntryServiceImpl extends AssetEntryServiceBaseImpl {
 		AssetEntryQuery filteredEntryQuery = new AssetEntryQuery(entryQuery);
 
 		filteredEntryQuery.setAllCategoryIds(
-			filterCategoryIds(entryQuery.getAllCategoryIds()));
+			AssetUtil.filterCategoryIds(
+				entryQuery.getAllCategoryIds(), getPermissionChecker()));
 		filteredEntryQuery.setAllTagIdsArray(
-			filterTagIdsArray(entryQuery.getAllTagIdsArray()));
+			AssetUtil.filterTagIdsArray(
+				entryQuery.getAllTagIdsArray(), getPermissionChecker()));
 		filteredEntryQuery.setAnyCategoryIds(
-			filterCategoryIds(entryQuery.getAnyCategoryIds()));
+			AssetUtil.filterCategoryIds(
+				entryQuery.getAnyCategoryIds(), getPermissionChecker()));
 		filteredEntryQuery.setAnyTagIds(
-			filterTagIds(entryQuery.getAnyTagIds()));
+			AssetUtil.filterTagIds(
+				entryQuery.getAnyTagIds(), getPermissionChecker()));
 
 		return filteredEntryQuery;
 	}
