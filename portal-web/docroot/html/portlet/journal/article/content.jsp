@@ -643,6 +643,7 @@ if (Validator.isNotNull(content)) {
 				groupId: <%= groupId %>,
 				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
 				struts_action: '/dynamic_data_mapping/select_template',
+				templateId: <%= (ddmTemplate != null) ? ddmTemplate.getTemplateId() : 0 %>,
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "templates") %>'
 			},
 			function(event) {
