@@ -91,8 +91,8 @@ $dockbarOpenGradientStart: #0EA6F9;
 							}
 						}
 
-						&.site-variations .dropdown-menu {
-							background-color: #026ED2;
+						&.staging-toggle .dropdown-menu {
+							background-color: #51B5FA;
 						}
 					}
 				}
@@ -110,7 +110,7 @@ $dockbarOpenGradientStart: #0EA6F9;
 		}
 
 		.staging-bar {
-			.site-variations {
+			.staging-toggle {
 				color: #FFF;
 
 				li a {
