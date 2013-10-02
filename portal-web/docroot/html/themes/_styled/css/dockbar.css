@@ -144,8 +144,6 @@ $editLayoutPanelWidth: 460px;
 						}
 
 						&.staging-toggle {
-							background-color: #0ECD27;
-
 							> a {
 								&, &:hover {
 									background-color: transparent;
@@ -154,10 +152,6 @@ $editLayoutPanelWidth: 460px;
 
 							span.nav-item-label {
 								padding: 5px 10px;
-							}
-
-							&.active span.nav-item-label {
-								background-color: #080;
 							}
 						}
 					}
