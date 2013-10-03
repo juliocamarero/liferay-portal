@@ -226,9 +226,9 @@ if (Validator.isNotNull(content)) {
 
 									<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
 										<liferay-ui:icon
-											cssClass="btn"
 											iconClass="icon-search"
 											label="<%= true %>"
+											linkCssClass="btn"
 											message="select"
 											url='<%= "javascript:" + renderResponse.getNamespace() + "openDDMStructureSelector();" %>'
 										/>
