@@ -439,15 +439,26 @@ public class PermissionCheckerBagImpl implements PermissionCheckerBag {
 		throws Exception {
 
 		if (permissionChecker.isCompanyAdmin() ||
-			permissionChecker.isOmniadmin() ||
-			permissionChecker.isGroupAdmin(group.getGroupId())) {
+			permissionChecker.isGroupAdmin(group.getGroupId()) ||
+			permissionChecker.isOmniadmin()) {
 
 			return true;
 		}
 
-		return RoleLocalServiceUtil.hasUserRole(
+		if (RoleLocalServiceUtil.hasUserRole(
 				_userId, group.getCompanyId(),
-				RoleConstants.PORTAL_CONTENT_REVIEWER, true);
+				RoleConstants.PORTAL_CONTENT_REVIEWER, true)) {
+
+			return true;
+		}
+
+		if (!group.isSite()) {
+			return false;
+		}
+
+		return UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+				_userId, group.getGroupId(),
+				RoleConstants.SITE_CONTENT_REVIEWER);
 	}
 
 	private Map<Long, Boolean> _groupAdmins = new HashMap<Long, Boolean>();

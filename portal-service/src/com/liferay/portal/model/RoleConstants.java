@@ -42,6 +42,8 @@ public class RoleConstants {
 
 	public static final String SITE_ADMINISTRATOR = "Site Administrator";
 
+	public static final String SITE_CONTENT_REVIEWER = "Site Content Reviewer";
+
 	public static final String SITE_MEMBER = "Site Member";
 
 	public static final String SITE_OWNER = "Site Owner";
