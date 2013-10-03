@@ -17,11 +17,14 @@ package com.liferay.portal.security.permission;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.RoleServiceUtil;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.test.EnvironmentExecutionTestListener;
@@ -51,17 +54,10 @@ public class PermissionCheckerTest {
 	@Before
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
-
-		_reviewerRole = RoleLocalServiceUtil.fetchRole(
-			_group.getCompanyId(), RoleConstants.PORTAL_CONTENT_REVIEWER);
-
-		if (_reviewerRole == null) {
-			_reviewerRole = addReviewerRole();
-		}
 	}
 
 	@Test
-	public void testIsReviewerWithCompanyAdminUser() throws Exception {
+	public void testIsReviewerWithCompanyAdmin() throws Exception {
 		User user = TestPropsValues.getUser();
 
 		PermissionChecker permissionChecker =
@@ -73,15 +69,32 @@ public class PermissionCheckerTest {
 	}
 
 	@Test
-	public void testIsReviewerWithGroupAdminUser() throws Exception {
+	public void testIsReviewerWithGroupAdmin() throws Exception {
 		User user = UserTestUtil.addGroupAdminUser(_group);
 
 		PermissionChecker permissionChecker =
 			PermissionCheckerFactoryUtil.create(user);
 
 		Assert.assertTrue(
-			permissionChecker.isReviewer(user.getCompanyId(),
-			_group.getGroupId()));
+			permissionChecker.isReviewer(
+				user.getCompanyId(), _group.getGroupId()));
+	}
+
+	@Test
+	public void testIsReviewerWithPortalReviewer() throws Exception {
+		User user = UserTestUtil.addUser();
+
+		Role portalReviewerRole = addReviewerRole();
+
+		UserLocalServiceUtil.setRoleUsers(
+			portalReviewerRole.getRoleId(), new long[] {user.getUserId()});
+
+		PermissionChecker permissionChecker =
+			PermissionCheckerFactoryUtil.create(user);
+
+		Assert.assertTrue(
+			permissionChecker.isReviewer(
+				user.getCompanyId(), _group.getGroupId()));
 	}
 
 	@Test
@@ -92,16 +105,23 @@ public class PermissionCheckerTest {
 			PermissionCheckerFactoryUtil.create(user);
 
 		Assert.assertFalse(
-			permissionChecker.isReviewer(user.getCompanyId(),
-			_group.getGroupId()));
+			permissionChecker.isReviewer(
+				user.getCompanyId(), _group.getGroupId()));
 	}
 
 	@Test
-	public void testIsReviewerWithReviewerUser() throws Exception {
-		User user = UserTestUtil.addUser();
+	public void testIsReviewerWithSiteReviewer() throws Exception {
+		_group = GroupLocalServiceUtil.getGroup(
+			TestPropsValues.getCompanyId(), GroupConstants.GUEST);
 
-		UserLocalServiceUtil.setRoleUsers(
-			_reviewerRole.getRoleId(), new long[] {user.getUserId()});
+		_group.setSite(true);
+
+		_group = GroupLocalServiceUtil.updateGroup(_group);
+
+		addSiteReviewerRole();
+
+		User user = UserTestUtil.addGroupUser(
+			_group, RoleConstants.SITE_CONTENT_REVIEWER);
 
 		PermissionChecker permissionChecker =
 			PermissionCheckerFactoryUtil.create(user);
@@ -112,6 +132,13 @@ public class PermissionCheckerTest {
 	}
 
 	protected Role addReviewerRole() throws Exception {
+		Role portalReviewerRole = RoleLocalServiceUtil.fetchRole(
+			_group.getCompanyId(), RoleConstants.PORTAL_CONTENT_REVIEWER);
+
+		if (portalReviewerRole != null) {
+			return portalReviewerRole;
+		}
+
 		return RoleServiceUtil.addRole(
 			null, 0, RoleConstants.PORTAL_CONTENT_REVIEWER,
 			ServiceTestUtil.randomLocaleStringMap(),
@@ -120,7 +147,25 @@ public class PermissionCheckerTest {
 			ServiceTestUtil.getServiceContext());
 	}
 
+	protected void addSiteReviewerRole() throws Exception {
+		Role siteReviewerRole = RoleLocalServiceUtil.fetchRole(
+			_group.getCompanyId(), RoleConstants.PORTAL_CONTENT_REVIEWER);
+
+		if (siteReviewerRole != null) {
+			return;
+		}
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
+
+		serviceContext.setCompanyId(TestPropsValues.getCompanyId());
+
+		RoleServiceUtil.addRole(
+			null, 0, RoleConstants.SITE_CONTENT_REVIEWER,
+			ServiceTestUtil.randomLocaleStringMap(),
+			ServiceTestUtil.randomLocaleStringMap(), RoleConstants.TYPE_SITE,
+			ServiceTestUtil.randomString(), serviceContext);
+	}
+
 	private Group _group;
-	private Role _reviewerRole;
 
 }
