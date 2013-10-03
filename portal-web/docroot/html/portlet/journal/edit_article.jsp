@@ -59,6 +59,8 @@ double version = BeanParamUtil.getDouble(article, request, "version", JournalArt
 
 String structureId = BeanParamUtil.getString(article, request, "structureId");
 
+String templateId = BeanParamUtil.getString(article, request, "templateId");
+
 DDMStructure ddmStructure = null;
 
 long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
@@ -88,6 +90,13 @@ if (ddmTemplateId > 0) {
 		ddmTemplate = DDMTemplateLocalServiceUtil.getTemplate(ddmTemplateId);
 	}
 	catch (NoSuchTemplateException nste) {
+	}
+}
+else if (Validator.isNotNull(templateId)) {
+	try {
+		ddmTemplate = DDMTemplateLocalServiceUtil.getTemplate(groupId, PortalUtil.getClassNameId(DDMStructure.class), templateId, true);
+	}
+	catch (NoSuchStructureException nste) {
 	}
 }
 
