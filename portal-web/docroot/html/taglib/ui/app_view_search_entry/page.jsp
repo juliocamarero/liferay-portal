@@ -75,11 +75,22 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 
 						<c:if test="<%= Validator.isNotNull(containerName) %>">
 							<dt>
-								<liferay-ui:icon
-									image='<%= (Validator.isNotNull(containerIcon)) ? containerIcon : "folder" %>'
-									label="<%= true %>"
-									message='<%= LanguageUtil.get(locale, containerType) %>'
-								/>
+								<c:choose>
+									<c:when test="<%= Validator.isNotNull(containerSrc) %>">
+										<liferay-ui:icon
+											label="<%= true %>"
+											message="<%= LanguageUtil.get(locale, containerType) %>"
+											src="<%= containerSrc %>"
+										/>
+									</c:when>
+									<c:otherwise>
+										<liferay-ui:icon
+											image='<%= (Validator.isNotNull(containerIcon)) ? containerIcon : "folder" %>'
+											label="<%= true %>"
+											message="<%= LanguageUtil.get(locale, containerType) %>"
+										/>
+									</c:otherwise>
+								</c:choose>
 								:
 							</dt>
 							<dd>
