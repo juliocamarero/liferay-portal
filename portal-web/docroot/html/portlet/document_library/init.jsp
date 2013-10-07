@@ -32,6 +32,7 @@ page import="com.liferay.portal.kernel.search.QueryConfig" %><%@
 page import="com.liferay.portal.kernel.search.SearchContext" %><%@
 page import="com.liferay.portal.kernel.search.SearchContextFactory" %><%@
 page import="com.liferay.portal.kernel.search.SearchResult" %><%@
+page import="com.liferay.portal.kernel.search.SearchResultExtraInfo" %><%@
 page import="com.liferay.portal.kernel.search.SearchResultUtil" %><%@
 page import="com.liferay.portal.kernel.search.Sort" %><%@
 page import="com.liferay.portal.kernel.search.Summary" %><%@

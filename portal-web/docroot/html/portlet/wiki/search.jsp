@@ -115,6 +115,10 @@ portletURL.setParameter("keywords", keywords);
 			WikiNode curNode = wikiPage.getNode();
 
 			Summary summary = searchResult.getSummary();
+
+			List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+			extraInfo.add(new SearchResultExtraInfo(LanguageUtil.get(locale, "wiki-node"), curNode.getName(), "all_pages", true));
 			%>
 
 			<portlet:renderURL var="rowURL">
@@ -124,11 +128,9 @@ portletURL.setParameter("keywords", keywords);
 			</portlet:renderURL>
 
 			<liferay-ui:app-view-search-entry
-				containerIcon="all_pages"
-				containerName="<%= curNode.getName() %>"
-				containerType='<%= LanguageUtil.get(locale, "wiki-node") %>'
 				cssClass='<%= MathUtil.isEven(index) ? "search" : "search alt" %>'
 				description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : wikiPage.getSummary() %>"
+				extraInfo="<%= extraInfo %>"
 				fileEntryTuples="<%= searchResult.getFileEntryTuples() %>"
 				mbMessages="<%= searchResult.getMBMessages() %>"
 				queryTerms="<%= hits.getQueryTerms() %>"

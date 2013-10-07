@@ -239,13 +239,17 @@ else if ((searchType == DLSearchConstants.SINGLE) && !ajax) {
 							}
 
 							request.setAttribute("view_entries.jsp-fileEntry", fileEntry);
+
+							List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+							extraInfo.add(new SearchResultExtraInfo("folder", DLUtil.getAbsolutePath(liferayPortletRequest, fileEntry.getFolderId()), "folder", true));
 							%>
 
 							<liferay-ui:app-view-search-entry
 								actionJsp="/html/portlet/document_library/file_entry_action.jsp"
-								containerName="<%= DLUtil.getAbsolutePath(liferayPortletRequest, fileEntry.getFolderId()) %>"
 								cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 								description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : fileEntry.getDescription() %>"
+								extraInfo="<%= extraInfo %>"
 								locked="<%= fileEntry.isCheckedOut() %>"
 								mbMessages="<%= searchResult.getMBMessages() %>"
 								queryTerms="<%= hits.getQueryTerms() %>"
@@ -283,13 +287,17 @@ else if ((searchType == DLSearchConstants.SINGLE) && !ajax) {
 							request.setAttribute("view_entries.jsp-folder", curFolder);
 							request.setAttribute("view_entries.jsp-folderId", String.valueOf(curFolder.getFolderId()));
 							request.setAttribute("view_entries.jsp-repositoryId", String.valueOf(curFolder.getRepositoryId()));
+
+							List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+							extraInfo.add(new SearchResultExtraInfo("folder", DLUtil.getAbsolutePath(liferayPortletRequest, curFolder.getParentFolderId()), "folder", true));
 							%>
 
 							<liferay-ui:app-view-search-entry
 								actionJsp="/html/portlet/document_library/folder_action.jsp"
-								containerName="<%= DLUtil.getAbsolutePath(liferayPortletRequest, curFolder.getParentFolderId()) %>"
 								cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 								description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : curFolder.getDescription() %>"
+								extraInfo="<%= extraInfo %>"
 								queryTerms="<%= hits.getQueryTerms() %>"
 								rowCheckerId="<%= String.valueOf(curFolder.getFolderId()) %>"
 								rowCheckerName="<%= Folder.class.getSimpleName() %>"
