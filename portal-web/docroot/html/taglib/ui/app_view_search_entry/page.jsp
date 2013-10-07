@@ -1,3 +1,5 @@
+<%@ page import="com.liferay.portal.kernel.search.SearchResultExtraInfo" %>
+
 <%--
 /**
  * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
@@ -18,11 +20,8 @@
 
 <%
 String actionJsp = (String)request.getAttribute("liferay-ui:app-view-search-entry:actionJsp");
-String containerIcon = GetterUtil.getString(request.getAttribute("liferay-ui:app-view-search-entry:containerIcon"), "folder");
-String containerName = (String)request.getAttribute("liferay-ui:app-view-search-entry:containerName");
-String containerSrc = (String)request.getAttribute("liferay-ui:app-view-search-entry:containerSrc");
-String containerType = GetterUtil.getString(request.getAttribute("liferay-ui:app-view-search-entry:containerType"), LanguageUtil.get(locale, "folder"));
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:app-view-search-entry:cssClass"));
+List<SearchResultExtraInfo> extraInfo = (List<SearchResultExtraInfo>)request.getAttribute("liferay-ui:app-view-search-entry:extraInfo");
 String description = (String)request.getAttribute("liferay-ui:app-view-search-entry:description");
 List<Tuple> fileEntryTuples = (List<Tuple>)request.getAttribute("liferay-ui:app-view-search-entry:fileEntryTuples");
 boolean locked = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:locked"));
@@ -59,7 +58,7 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 				</c:if>
 			</span>
 
-			<c:if test="<%= ((versions != null) && !versions.isEmpty()) || Validator.isNotNull(containerName) %>">
+			<c:if test="<%= ((versions != null) && !versions.isEmpty()) || ((extraInfo != null) && !extraInfo.isEmpty()) %>">
 				<small>
 					<dl>
 						<c:if test="<%= (versions != null) && !versions.isEmpty() %>">
@@ -73,31 +72,48 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 							</dd>
 						</c:if>
 
-						<c:if test="<%= Validator.isNotNull(containerName) %>">
+						<c:if test="<%= ((extraInfo != null) && !extraInfo.isEmpty()) %>">
+
+							<%
+							for (SearchResultExtraInfo searchResultExtraInfo : extraInfo) {
+							%>
+
 							<dt>
 								<c:choose>
-									<c:when test="<%= Validator.isNotNull(containerSrc) %>">
-										<liferay-ui:icon
-											label="<%= true %>"
-											message="<%= LanguageUtil.get(locale, containerType) %>"
-											src="<%= containerSrc %>"
-										/>
+									<c:when test="<%= Validator.isNotNull(searchResultExtraInfo.getSrc()) %>">
+										<c:choose>
+											<c:when test="<%= !searchResultExtraInfo.isImage() %>">
+												<liferay-ui:icon
+													label="<%= true %>"
+													message="<%= LanguageUtil.get(locale, searchResultExtraInfo.getKey()) %>"
+													src="<%= searchResultExtraInfo.getSrc() %>"
+												/>
+											</c:when>
+											<c:otherwise>
+												<liferay-ui:icon
+													image="<%= searchResultExtraInfo.getSrc() %>"
+													label="<%= true %>"
+													message="<%= LanguageUtil.get(locale, searchResultExtraInfo.getKey()) %>"
+												/>
+											</c:otherwise>
+										</c:choose>
 									</c:when>
 									<c:otherwise>
-										<liferay-ui:icon
-											image='<%= (Validator.isNotNull(containerIcon)) ? containerIcon : "folder" %>'
-											label="<%= true %>"
-											message="<%= LanguageUtil.get(locale, containerType) %>"
-										/>
+										<liferay-ui:message key="<%= searchResultExtraInfo.getKey() %>" />
 									</c:otherwise>
 								</c:choose>
 								:
 							</dt>
 							<dd>
 
-								<%= containerName %>
+								<%= searchResultExtraInfo.getValue() %>
 
 							</dd>
+
+							<%
+							}
+							%>
+
 						</c:if>
 					</dl>
 				</small>
