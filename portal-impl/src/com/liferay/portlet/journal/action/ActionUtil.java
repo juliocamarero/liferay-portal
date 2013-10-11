@@ -178,11 +178,13 @@ public class ActionUtil {
 		long classNameId = ParamUtil.getLong(request, "classNameId");
 		long classPK = ParamUtil.getLong(request, "classPK");
 		String articleId = ParamUtil.getString(request, "articleId");
+		long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
 		String structureId = ParamUtil.getString(request, "structureId");
 		int status = ParamUtil.getInteger(
 			request, "status", WorkflowConstants.STATUS_ANY);
 
 		JournalArticle article = null;
+		DDMStructure ddmStructure = null;
 
 		if (cmd.equals(Constants.ADD) && (resourcePrimKey != 0)) {
 			article = JournalArticleLocalServiceUtil.getLatestArticle(
@@ -201,8 +203,6 @@ public class ActionUtil {
 				groupId, className, classPK);
 		}
 		else if (Validator.isNotNull(structureId)) {
-			DDMStructure ddmStructure = null;
-
 			try {
 				ddmStructure = DDMStructureServiceUtil.getStructure(
 					groupId, PortalUtil.getClassNameId(JournalArticle.class),
@@ -213,7 +213,17 @@ public class ActionUtil {
 			}
 
 			article = getNewArticle(groupId, ddmStructure);
+		}
+		else if (Validator.isNotNull(ddmStructureId)) {
+			try {
+				ddmStructure = DDMStructureServiceUtil.getStructure(
+					ddmStructureId);
+			}
+			catch (NoSuchStructureException nsse) {
+				return;
+			}
 
+			article = getNewArticle(groupId, ddmStructure);
 		}
 
 		request.setAttribute(WebKeys.JOURNAL_ARTICLE, article);
