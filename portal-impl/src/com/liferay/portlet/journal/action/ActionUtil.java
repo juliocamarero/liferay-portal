@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.action;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -210,19 +212,8 @@ public class ActionUtil {
 				return;
 			}
 
-			article = JournalArticleServiceUtil.getArticle(
-				ddmStructure.getGroupId(), DDMStructure.class.getName(),
-				ddmStructure.getStructureId());
+			article = getNewArticle(groupId, ddmStructure);
 
-			article.setNew(true);
-
-			article.setId(0);
-			article.setGroupId(groupId);
-			article.setClassNameId(
-				JournalArticleConstants.CLASSNAME_ID_DEFAULT);
-			article.setClassPK(0);
-			article.setArticleId(null);
-			article.setVersion(0);
 		}
 
 		request.setAttribute(WebKeys.JOURNAL_ARTICLE, article);
@@ -468,6 +459,26 @@ public class ActionUtil {
 		}
 
 		return images;
+	}
+
+	protected static JournalArticle getNewArticle(
+			long groupId, DDMStructure ddmStructure)
+		throws PortalException, SystemException {
+
+		JournalArticle article = JournalArticleServiceUtil.getArticle(
+			ddmStructure.getGroupId(), DDMStructure.class.getName(),
+			ddmStructure.getStructureId());
+
+		article.setNew(true);
+
+		article.setId(0);
+		article.setGroupId(groupId);
+		article.setClassNameId(JournalArticleConstants.CLASSNAME_ID_DEFAULT);
+		article.setClassPK(0);
+		article.setArticleId(null);
+		article.setVersion(0);
+
+		return article;
 	}
 
 	protected static boolean hasArticle(ActionRequest actionRequest)
