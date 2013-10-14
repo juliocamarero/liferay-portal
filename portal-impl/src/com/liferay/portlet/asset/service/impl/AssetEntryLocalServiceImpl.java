@@ -30,8 +30,10 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InstancePool;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -39,11 +41,13 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.NoSuchEntryException;
+import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
@@ -645,6 +649,28 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		}
 
 		// Categories
+
+		try {
+			List<AssetCategory> currentCategories =
+				assetCategoryLocalService.getCategories(classNameId, classPK);
+
+			List<AssetCategory> visibleCategories =
+				assetCategoryService.getCategories(className, classPK);
+
+			currentCategories = ListUtil.remove(
+				currentCategories, visibleCategories);
+
+			if (!currentCategories.isEmpty() && (categoryIds == null)) {
+				categoryIds = new long[0];
+			}
+
+			for (AssetCategory category : currentCategories) {
+				categoryIds = ArrayUtil.append(
+					categoryIds, category.getCategoryId());
+			}
+		}
+		catch (PrincipalException pe) {
+		}
 
 		if (categoryIds != null) {
 			assetEntryPersistence.setAssetCategories(
