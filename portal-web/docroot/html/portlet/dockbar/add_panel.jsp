@@ -47,8 +47,11 @@
 
 					boolean hasAddContentAndApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive();
 
-					if (hasAddContentAndApplicationsPermission) {
+					if (hasAddContentAndApplicationsPermission && hasLayoutUpdatePermission) {
 						tabs1Names = ArrayUtil.append(tabs1Names, "content,applications");
+					}
+					else if (hasAddContentAndApplicationsPermission) {
+						tabs1Names = ArrayUtil.append(tabs1Names, "content");
 					}
 
 					if (hasLayoutAddPermission) {
