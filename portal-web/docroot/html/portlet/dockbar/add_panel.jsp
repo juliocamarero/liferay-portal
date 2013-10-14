@@ -45,13 +45,10 @@
 
 					boolean stateMaximized = ParamUtil.getBoolean(request, "stateMaximized");
 
-					boolean hasAddContentAndApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive();
+					boolean hasAddContentAndApplicationsPermission = !stateMaximized && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() && (hasLayoutUpdatePermission|| (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission));
 
-					if (hasAddContentAndApplicationsPermission && hasLayoutUpdatePermission) {
+					if (hasAddContentAndApplicationsPermission) {
 						tabs1Names = ArrayUtil.append(tabs1Names, "content,applications");
-					}
-					else if (hasAddContentAndApplicationsPermission) {
-						tabs1Names = ArrayUtil.append(tabs1Names, "content");
 					}
 
 					if (hasLayoutAddPermission) {
