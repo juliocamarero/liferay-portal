@@ -77,6 +77,14 @@ boolean showAssetCount = dataJSONObject.getBoolean("showAssetCount", true);
 			}
 
 			TermCollector termCollector = termCollectors.get(i);
+
+			long curCategoryId = GetterUtil.getLong(termCollector.getTerm());
+
+			if (curCategoryId == 0) {
+				continue;
+			}
+
+			AssetCategory curAssetCategory = AssetCategoryLocalServiceUtil.getAssetCategory(curCategoryId);
 		%>
 
 				<c:if test="<%= fieldParam.equals(termCollector.getTerm()) %>">
@@ -84,7 +92,7 @@ boolean showAssetCount = dataJSONObject.getBoolean("showAssetCount", true);
 						Liferay.Search.tokenList.add(
 							{
 								clearFields: '<%= renderResponse.getNamespace() + facet.getFieldId() %>',
-								text: '<%= HtmlUtil.escapeJS(termCollector.getTerm()) %>'
+								text: '<%= HtmlUtil.escapeJS(curAssetCategory.getTitle(locale)) %>'
 							}
 						);
 					</aui:script>
@@ -101,7 +109,7 @@ boolean showAssetCount = dataJSONObject.getBoolean("showAssetCount", true);
 		%>
 
 			<li class="facet-value tag-popularity-<%= popularity %> <%= fieldParam.equals(termCollector.getTerm()) ? "current-term" : StringPool.BLANK %>">
-				<a data-value="<%= HtmlUtil.escapeAttribute(termCollector.getTerm()) %>" href="javascript:;"><%= HtmlUtil.escape(termCollector.getTerm()) %></a>
+				<a data-value="<%= HtmlUtil.escapeAttribute(String.valueOf(curCategoryId)) %>" href="javascript:;"><%= HtmlUtil.escape(curAssetCategory.getTitle(locale)) %></a>
 
 				<c:if test="<%= showAssetCount %>">
 					<span class="frequency">(<%= termCollector.getFrequency() %>)</span>
