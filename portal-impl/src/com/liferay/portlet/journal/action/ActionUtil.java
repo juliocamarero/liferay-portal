@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.journal.action;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -178,13 +176,11 @@ public class ActionUtil {
 		long classNameId = ParamUtil.getLong(request, "classNameId");
 		long classPK = ParamUtil.getLong(request, "classPK");
 		String articleId = ParamUtil.getString(request, "articleId");
-		long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
 		String structureId = ParamUtil.getString(request, "structureId");
 		int status = ParamUtil.getInteger(
 			request, "status", WorkflowConstants.STATUS_ANY);
 
 		JournalArticle article = null;
-		DDMStructure ddmStructure = null;
 
 		if (cmd.equals(Constants.ADD) && (resourcePrimKey != 0)) {
 			article = JournalArticleLocalServiceUtil.getLatestArticle(
@@ -203,6 +199,8 @@ public class ActionUtil {
 				groupId, className, classPK);
 		}
 		else if (Validator.isNotNull(structureId)) {
+			DDMStructure ddmStructure = null;
+
 			try {
 				ddmStructure = DDMStructureServiceUtil.getStructure(
 					groupId, PortalUtil.getClassNameId(JournalArticle.class),
@@ -212,18 +210,19 @@ public class ActionUtil {
 				return;
 			}
 
-			article = getNewArticle(groupId, ddmStructure);
-		}
-		else if (Validator.isNotNull(ddmStructureId)) {
-			try {
-				ddmStructure = DDMStructureServiceUtil.getStructure(
-					ddmStructureId);
-			}
-			catch (NoSuchStructureException nsse) {
-				return;
-			}
+			article = JournalArticleServiceUtil.getArticle(
+				ddmStructure.getGroupId(), DDMStructure.class.getName(),
+				ddmStructure.getStructureId());
 
-			article = getNewArticle(groupId, ddmStructure);
+			article.setNew(true);
+
+			article.setId(0);
+			article.setGroupId(groupId);
+			article.setClassNameId(
+				JournalArticleConstants.CLASSNAME_ID_DEFAULT);
+			article.setClassPK(0);
+			article.setArticleId(null);
+			article.setVersion(0);
 		}
 
 		request.setAttribute(WebKeys.JOURNAL_ARTICLE, article);
@@ -469,26 +468,6 @@ public class ActionUtil {
 		}
 
 		return images;
-	}
-
-	protected static JournalArticle getNewArticle(
-			long groupId, DDMStructure ddmStructure)
-		throws PortalException, SystemException {
-
-		JournalArticle article = JournalArticleServiceUtil.getArticle(
-			ddmStructure.getGroupId(), DDMStructure.class.getName(),
-			ddmStructure.getStructureId());
-
-		article.setNew(true);
-
-		article.setId(0);
-		article.setGroupId(groupId);
-		article.setClassNameId(JournalArticleConstants.CLASSNAME_ID_DEFAULT);
-		article.setClassPK(0);
-		article.setArticleId(null);
-		article.setVersion(0);
-
-		return article;
 	}
 
 	protected static boolean hasArticle(ActionRequest actionRequest)
