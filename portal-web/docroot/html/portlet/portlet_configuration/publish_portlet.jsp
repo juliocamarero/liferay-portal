@@ -244,6 +244,7 @@ portletURL.setParameter("tabs3", "current-and-previous");
 																	hourValue="<%= yesterday.get(Calendar.HOUR) %>"
 																	minuteParam='<%= "startDateMinute" %>'
 																	minuteValue="<%= yesterday.get(Calendar.MINUTE) %>"
+																	name="startTime"
 																/>
 															</aui:fieldset>
 														</li>
