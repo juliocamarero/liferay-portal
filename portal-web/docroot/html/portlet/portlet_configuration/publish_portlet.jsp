@@ -172,18 +172,18 @@ portletURL.setParameter("tabs3", "current-and-previous");
 							<%
 							Date startDate = null;
 
-							long startDateTime = ParamUtil.getLong(request, "startDate");
+							long selStartTime = ParamUtil.getLong(request, "selStartTime");
 
-							if (startDateTime > 0) {
-								startDate = new Date(startDateTime);
+							if (selStartTime > 0) {
+								startDate = new Date(selStartTime);
 							}
 
 							Date endDate = null;
 
-							long endDateTime = ParamUtil.getLong(request, "endDate");
+							long selEndTime = ParamUtil.getLong(request, "selEndTime");
 
-							if (endDateTime > 0) {
-								endDate = new Date(endDateTime);
+							if (selEndTime > 0) {
+								endDate = new Date(selEndTime);
 							}
 
 							PortletDataContext portletDataContext = PortletDataContextFactoryUtil.createPreparePortletDataContext(themeDisplay, startDate, endDate);
