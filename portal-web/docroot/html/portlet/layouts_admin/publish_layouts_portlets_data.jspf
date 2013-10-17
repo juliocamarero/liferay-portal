@@ -15,7 +15,7 @@
 --%>
 
 <%
-DateRange dateRange = ExportImportHelperUtil.getDateRange(renderRequest, stagingGroupId, privateLayout, 0, null);
+DateRange dateRange = ExportImportHelperUtil.getDateRange(renderRequest, stagingGroupId, privateLayout, 0, null, "fromLastPublishDate");
 
 Date startDate = dateRange.getStartDate();
 Date endDate = dateRange.getEndDate();

@@ -200,13 +200,14 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 	@Override
 	public DateRange getDateRange(
 			PortletRequest portletRequest, long groupId, boolean privateLayout,
-			long plid, String portletId)
+			long plid, String portletId, String defaultRange)
 		throws Exception {
 
 		Date startDate = null;
 		Date endDate = null;
 
-		String range = ParamUtil.getString(portletRequest, "range");
+		String range = ParamUtil.getString(
+			portletRequest, "range", defaultRange);
 
 		if (range.equals("dateRange")) {
 			Calendar startCalendar = getCalendar(

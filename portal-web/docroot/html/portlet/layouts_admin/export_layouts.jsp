@@ -40,7 +40,7 @@ boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 
 String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 
-DateRange dateRange = ExportImportHelperUtil.getDateRange(renderRequest, groupId, privateLayout, 0, null);
+DateRange dateRange = ExportImportHelperUtil.getDateRange(renderRequest, groupId, privateLayout, 0, null, "all");
 
 Date startDate = dateRange.getStartDate();
 Date endDate = dateRange.getEndDate();

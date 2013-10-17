@@ -258,7 +258,8 @@ public class ExportImportAction extends ImportLayoutsAction {
 				actionRequest, "exportFileName");
 
 			DateRange dateRange = ExportImportHelperUtil.getDateRange(
-				actionRequest, groupId, false, plid, portlet.getPortletId());
+				actionRequest, groupId, false, plid, portlet.getPortletId(),
+				"all");
 
 			LayoutServiceUtil.exportPortletInfoAsFileInBackground(
 				portlet.getPortletId(), plid, groupId, portlet.getPortletId(),

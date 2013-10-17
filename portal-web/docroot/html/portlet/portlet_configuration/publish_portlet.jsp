@@ -170,7 +170,7 @@ portletURL.setParameter("tabs3", "current-and-previous");
 						<c:if test="<%= !portletDataHandler.isDisplayPortlet() %>">
 
 							<%
-							DateRange dateRange = ExportImportHelperUtil.getDateRange(renderRequest, themeDisplay.getScopeGroupId(), false, plid, selPortlet.getPortletId());
+							DateRange dateRange = ExportImportHelperUtil.getDateRange(renderRequest, themeDisplay.getScopeGroupId(), false, plid, selPortlet.getPortletId(), "fromLastPublishDate");
 
 							Date startDate = dateRange.getStartDate();
 							Date endDate = dateRange.getEndDate();

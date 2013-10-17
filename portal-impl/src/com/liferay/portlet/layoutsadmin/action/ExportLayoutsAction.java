@@ -75,7 +75,7 @@ public class ExportLayoutsAction extends PortletAction {
 				actionRequest, "privateLayout");
 			long[] layoutIds = getLayoutIds(actionRequest);
 			DateRange dateRange = ExportImportHelperUtil.getDateRange(
-				actionRequest, groupId, privateLayout, 0, null);
+				actionRequest, groupId, privateLayout, 0, null, "all");
 
 			if (Validator.isNotNull(cmd)) {
 				LayoutServiceUtil.exportLayoutsAsFileInBackground(
