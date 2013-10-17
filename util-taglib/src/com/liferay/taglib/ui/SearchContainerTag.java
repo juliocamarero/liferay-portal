@@ -229,7 +229,17 @@ public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 	}
 
 	public boolean isHasResults() {
-		return _hasResults;
+		if (_hasResults) {
+			return true;
+		}
+
+		List results = _searchContainer.getResults();
+
+		if (!results.isEmpty()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean isHover() {
