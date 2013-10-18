@@ -288,13 +288,17 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 									Collections.sort(versions);
 
 									request.setAttribute("view_entries.jsp-article", article);
+
+									List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+									extraInfo.add(new SearchResultExtraInfo("folder", JournalUtil.getAbsolutePath(liferayPortletRequest, article.getFolderId()), "folder", true));
 									%>
 
 									<liferay-ui:app-view-search-entry
 										actionJsp="/html/portlet/journal/article_action.jsp"
-										containerName="<%= JournalUtil.getAbsolutePath(liferayPortletRequest, article.getFolderId()) %>"
 										cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 										description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : article.getDescription(locale) %>"
+										extraInfo="<%= extraInfo %>"
 										mbMessages="<%= searchResult.getMBMessages() %>"
 										queryTerms="<%= hits.getQueryTerms() %>"
 										rowCheckerId="<%= String.valueOf(article.getArticleId()) %>"
@@ -325,13 +329,17 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 									rowURL.setParameter("folderId", String.valueOf(curFolder.getFolderId()));
 
 									request.setAttribute("view_entries.jsp-folder", curFolder);
+
+									List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+									extraInfo.add(new SearchResultExtraInfo("folder", JournalUtil.getAbsolutePath(liferayPortletRequest, curFolder.getParentFolderId()), "folder", true));
 									%>
 
 									<liferay-ui:app-view-search-entry
 										actionJsp="/html/portlet/journal/folder_action.jsp"
-										containerName="<%= JournalUtil.getAbsolutePath(liferayPortletRequest, curFolder.getParentFolderId()) %>"
 										cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 										description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : curFolder.getDescription() %>"
+										extraInfo="<%= extraInfo %>"
 										queryTerms="<%= hits.getQueryTerms() %>"
 										rowCheckerId="<%= String.valueOf(curFolder.getFolderId()) %>"
 										rowCheckerName="<%= JournalFolder.class.getSimpleName() %>"
@@ -388,13 +396,17 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, entryEn
 									rowURL.setParameter("articleId", curArticle.getArticleId());
 
 									request.setAttribute("view_entries.jsp-article", curArticle);
+
+									List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+									extraInfo.add(new SearchResultExtraInfo("folder", JournalUtil.getAbsolutePath(liferayPortletRequest, curArticle.getFolderId()), "folder", true));
 									%>
 
 									<liferay-ui:app-view-search-entry
 										actionJsp="/html/portlet/journal/article_action.jsp"
-										containerName="<%= JournalUtil.getAbsolutePath(liferayPortletRequest, curArticle.getFolderId()) %>"
 										cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 										description="<%= curArticle.getDescription(locale) %>"
+										extraInfo="<%= extraInfo %>"
 										queryTerms="<%= queryTerms %>"
 										rowCheckerId="<%= String.valueOf(curArticle.getArticleId()) %>"
 										rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"

@@ -123,6 +123,10 @@ String keywords = ParamUtil.getString(request, "keywords");
 			MBMessage message = MBMessageLocalServiceUtil.getMessage(searchResult.getClassPK());
 
 			Summary summary = searchResult.getSummary();
+
+			List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+			extraInfo.add(new SearchResultExtraInfo(LanguageUtil.get(locale, "category[message-board]"), MBUtil.getAbsolutePath(renderRequest, message.getCategoryId()), "../common/conversation", true));
 			%>
 
 			<portlet:renderURL var="rowURL">
@@ -132,11 +136,9 @@ String keywords = ParamUtil.getString(request, "keywords");
 			</portlet:renderURL>
 
 			<liferay-ui:app-view-search-entry
-				containerIcon="../common/conversation"
-				containerName="<%= MBUtil.getAbsolutePath(renderRequest, message.getCategoryId()) %>"
-				containerType='<%= LanguageUtil.get(locale, "category[message-board]") %>'
 				cssClass='<%= MathUtil.isEven(index) ? "search" : "search alt" %>'
 				description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : StringPool.BLANK %>"
+				extraInfo="<%= extraInfo %>"
 				fileEntryTuples="<%= searchResult.getFileEntryTuples() %>"
 				queryTerms="<%= hits.getQueryTerms() %>"
 				title="<%= (summary != null) ? HtmlUtil.escape(summary.getTitle()) : HtmlUtil.escape(message.getSubject()) %>"

@@ -14,6 +14,7 @@
 
 package com.liferay.taglib.ui;
 
+import com.liferay.portal.kernel.search.SearchResultExtraInfo;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portlet.messageboards.model.MBMessage;
@@ -37,24 +38,16 @@ public class AppViewSearchEntryTag extends IncludeTag {
 		_actionJsp = actionJsp;
 	}
 
-	public void setContainerIcon(String containerIcon) {
-		_containerIcon = containerIcon;
-	}
-
-	public void setContainerName(String containerName) {
-		_containerName = containerName;
-	}
-
-	public void setContainerType(String containerType) {
-		_containerType = containerType;
-	}
-
 	public void setCssClass(String cssClass) {
 		_cssClass = cssClass;
 	}
 
 	public void setDescription(String description) {
 		_description = HtmlUtil.unescape(description);
+	}
+
+	public void setExtraInfo(List<SearchResultExtraInfo> extraInfo) {
+		_extraInfo = extraInfo;
 	}
 
 	public void setFileEntryTuples(List<Tuple> fileEntryTuples) {
@@ -108,11 +101,9 @@ public class AppViewSearchEntryTag extends IncludeTag {
 	@Override
 	protected void cleanUp() {
 		_actionJsp = null;
-		_containerIcon = null;
-		_containerName = null;
-		_containerType = null;
 		_cssClass = null;
 		_description = null;
+		_extraInfo = null;
 		_fileEntryTuples = null;
 		_locked = false;
 		_mbMessages = null;
@@ -142,15 +133,11 @@ public class AppViewSearchEntryTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:app-view-search-entry:actionJsp", _actionJsp);
 		request.setAttribute(
-			"liferay-ui:app-view-search-entry:containerIcon", _containerIcon);
-		request.setAttribute(
-			"liferay-ui:app-view-search-entry:containerName", _containerName);
-		request.setAttribute(
-			"liferay-ui:app-view-search-entry:containerType", _containerType);
-		request.setAttribute(
 			"liferay-ui:app-view-search-entry:cssClass", _cssClass);
 		request.setAttribute(
 			"liferay-ui:app-view-search-entry:description", _description);
+		request.setAttribute(
+			"liferay-ui:app-view-search-entry:extraInfo", _extraInfo);
 		request.setAttribute(
 			"liferay-ui:app-view-search-entry:fileEntryTuples",
 			_fileEntryTuples);
@@ -182,11 +169,9 @@ public class AppViewSearchEntryTag extends IncludeTag {
 		"/html/taglib/ui/app_view_search_entry/page.jsp";
 
 	private String _actionJsp;
-	private String _containerIcon;
-	private String _containerName;
-	private String _containerType;
 	private String _cssClass;
 	private String _description;
+	private List<SearchResultExtraInfo> _extraInfo;
 	private List<Tuple> _fileEntryTuples;
 	private boolean _locked;
 	private List<MBMessage> _mbMessages;

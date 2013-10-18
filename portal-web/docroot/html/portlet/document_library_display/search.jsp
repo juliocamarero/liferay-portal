@@ -183,6 +183,10 @@ int mountFoldersCount = DLAppServiceUtil.getMountFoldersCount(scopeGroupId, DLFo
 
 					<%
 					request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
+
+					List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+					extraInfo.add(new SearchResultExtraInfo("folder", DLUtil.getAbsolutePath(renderRequest, fileEntry.getFolderId()), "folder", true));
 					%>
 
 					<portlet:renderURL var="rowURL">
@@ -193,9 +197,9 @@ int mountFoldersCount = DLAppServiceUtil.getMountFoldersCount(scopeGroupId, DLFo
 
 					<liferay-ui:app-view-search-entry
 						actionJsp='<%= (showActions) ? "/html/portlet/document_library/file_entry_action.jsp" : StringPool.BLANK %>'
-						containerName="<%= DLUtil.getAbsolutePath(renderRequest, fileEntry.getFolderId()) %>"
 						cssClass='<%= MathUtil.isEven(index) ? "search" : "search alt" %>'
 						description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : fileEntry.getDescription() %>"
+						extraInfo="<%= extraInfo %>"
 						mbMessages="<%= searchResult.getMBMessages() %>"
 						queryTerms="<%= hits.getQueryTerms() %>"
 						thumbnailSrc="<%= DLUtil.getThumbnailSrc(fileEntry, null, themeDisplay) %>"
@@ -215,6 +219,10 @@ int mountFoldersCount = DLAppServiceUtil.getMountFoldersCount(scopeGroupId, DLFo
 					request.setAttribute("view.jsp-folder", folder);
 					request.setAttribute("view.jsp-folderId", String.valueOf(folder.getFolderId()));
 					request.setAttribute("view.jsp-repositoryId", String.valueOf(folder.getRepositoryId()));
+
+					List<SearchResultExtraInfo> extraInfo = new ArrayList<SearchResultExtraInfo>();
+
+					extraInfo.add(new SearchResultExtraInfo("folder", DLUtil.getAbsolutePath(renderRequest, folder.getParentFolderId()), "folder", true));
 					%>
 
 					<portlet:renderURL var="rowURL">
@@ -225,9 +233,9 @@ int mountFoldersCount = DLAppServiceUtil.getMountFoldersCount(scopeGroupId, DLFo
 
 					<liferay-ui:app-view-search-entry
 						actionJsp='<%= (showActions) ? "/html/portlet/document_library/folder_action.jsp" : StringPool.BLANK %>'
-						containerName="<%= DLUtil.getAbsolutePath(renderRequest, folder.getParentFolderId()) %>"
 						cssClass='<%= MathUtil.isEven(index) ? "search" : "search alt" %>'
 						description="<%= (summary != null) ? HtmlUtil.escape(summary.getContent()) : folder.getDescription() %>"
+						extraInfo="<%= extraInfo %>"
 						queryTerms="<%= hits.getQueryTerms() %>"
 						thumbnailSrc='<%= themeDisplay.getPathThemeImages() + "/file_system/large/" + folderImage + ".png" %>'
 						title="<%= (summary != null) ? HtmlUtil.escape(summary.getTitle()) : folder.getName() %>"
