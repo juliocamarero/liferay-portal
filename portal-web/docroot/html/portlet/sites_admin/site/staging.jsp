@@ -45,6 +45,7 @@ if (stagedLocally) {
 		<portlet:param name="groupId" value="<%= String.valueOf(stagingGroupId) %>" />
 		<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
 		<portlet:param name="localPublishing" value="<%= String.valueOf(stagedLocally) %>" />
+		<portlet:param name="range" value="fromLastPublishDate" />
 	</liferay-portlet:renderURL>
 
 	<div class="alert alert-block">

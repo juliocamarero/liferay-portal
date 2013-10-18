@@ -102,6 +102,7 @@ String publishMessage = LanguageUtil.get(pageContext, publishDialogTitle);
 	<liferay-portlet:param name="tabs1" value='<%= (privateLayout) ? "private-pages" : "public-pages" %>' />
 	<liferay-portlet:param name="closeRedirect" value="<%= currentURL %>" />
 	<liferay-portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+	<liferay-portlet:param name="range" value="fromLastPublishDate" />
 	<liferay-portlet:param name="selPlid" value="<%= String.valueOf(selPlid) %>" />
 </liferay-portlet:renderURL>
 

@@ -39,6 +39,7 @@ page import="com.liferay.portal.kernel.lar.PortletDataHandlerKeys" %><%@
 page import="com.liferay.portal.kernel.lar.UserIdStrategy" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletModeFactory" %><%@
 page import="com.liferay.portal.kernel.repository.model.FileEntry" %><%@
+page import="com.liferay.portal.kernel.util.DateRange" %><%@
 page import="com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil" %><%@
 page import="com.liferay.portal.lar.backgroundtask.PortletExportBackgroundTaskExecutor" %><%@
 page import="com.liferay.portal.lar.backgroundtask.PortletImportBackgroundTaskExecutor" %><%@

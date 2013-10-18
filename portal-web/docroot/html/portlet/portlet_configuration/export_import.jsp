@@ -123,6 +123,8 @@ else if (scopeGroup.isLayout()) {
 		<liferay-util:include page="/html/portlet/portlet_configuration/import_portlet.jsp" />
 	</c:when>
 	<c:when test='<%= tabs2.equals("staging") %>'>
-		<liferay-util:include page="/html/portlet/portlet_configuration/publish_portlet.jsp" />
+		<liferay-util:include page="/html/portlet/portlet_configuration/publish_portlet.jsp">
+			<liferay-util:param name="range" value="fromLastPublishDate" />
+		</liferay-util:include>
 	</c:when>
 </c:choose>
