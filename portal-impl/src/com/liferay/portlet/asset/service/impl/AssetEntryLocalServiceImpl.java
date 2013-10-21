@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.StringPool;
@@ -39,17 +40,23 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.NoSuchEntryException;
+import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.service.base.AssetEntryLocalServiceBaseImpl;
+import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
+import com.liferay.portlet.asset.service.permission.AssetTagPermission;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portlet.asset.util.AssetEntryValidator;
 import com.liferay.portlet.blogs.model.BlogsEntry;
@@ -647,6 +654,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		// Categories
 
 		if (categoryIds != null) {
+			categoryIds = checkCategories(className, classPK, categoryIds);
+
 			assetEntryPersistence.setAssetCategories(
 				entry.getEntryId(), categoryIds);
 		}
@@ -654,6 +663,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		// Tags
 
 		if (tagNames != null) {
+			tagNames = checkTags(className, classPK, tagNames);
+
 			long siteGroupId = PortalUtil.getSiteGroupId(groupId);
 
 			Group siteGroup = groupLocalService.getGroup(siteGroupId);
@@ -915,6 +926,60 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			PropsValues.ASSET_ENTRY_VALIDATOR);
 
 		validator.validate(groupId, className, categoryIds, tagNames);
+	}
+
+	protected long[] checkCategories(
+			String className, long classPK, long[] categoryIds)
+		throws PortalException, SystemException {
+
+		PermissionChecker permissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		if (permissionChecker == null) {
+			return categoryIds;
+		}
+
+		List<AssetCategory> oldCategories =
+			assetCategoryLocalService.getCategories(className, classPK);
+
+		for (AssetCategory category : oldCategories) {
+			if (!ArrayUtil.contains(
+					categoryIds, category.getCategoryId()) &&
+				!AssetCategoryPermission.contains(
+					permissionChecker, category, ActionKeys.VIEW)) {
+
+				categoryIds = ArrayUtil.append(
+					categoryIds, category.getCategoryId());
+			}
+		}
+
+		return categoryIds;
+	}
+
+	protected String[] checkTags(
+			String className, long classPK, String[] tagNames)
+		throws PortalException, SystemException {
+
+		PermissionChecker permissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		if (permissionChecker == null) {
+			return tagNames;
+		}
+
+		List<AssetTag> oldTags = assetTagLocalService.getTags(
+			className, classPK);
+
+		for (AssetTag tag : oldTags) {
+			if (!ArrayUtil.contains(tagNames, tag.getName()) &&
+				!AssetTagPermission.contains(
+					permissionChecker, tag, ActionKeys.VIEW)) {
+
+				tagNames = ArrayUtil.append(tagNames, tag.getName());
+			}
+		}
+
+		return tagNames;
 	}
 
 	protected String[] getClassNames(long companyId, String className) {
