@@ -86,6 +86,7 @@ import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.LayoutSettings;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.mobiledevicerules.model.MDRAction;
@@ -201,6 +202,22 @@ public class EditLayoutsAction extends PortletAction {
 					themeDisplay, redirect, group, null, oldFriendlyURL);
 
 				long refererPlid = themeDisplay.getRefererPlid();
+
+				String portletId = (String)actionRequest.getAttribute(
+					WebKeys.PORTLET_ID);
+
+				if (portletId.equals(PortletKeys.DOCKBAR) &&
+					(plid == refererPlid)) {
+
+					closeRedirect = HttpUtil.addParameter(
+						redirect,
+						actionResponse.getNamespace() + "closeRedirect",
+						closeRedirect);
+
+					actionResponse.sendRedirect(redirect);
+
+					return;
+				}
 
 				if (plid == refererPlid) {
 					redirect = HttpUtil.setParameter(
