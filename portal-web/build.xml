@@ -827,6 +827,7 @@
 		<java
 			classname="com.liferay.portal.tools.seleniumbuilder.SeleniumBuilder"
 			classpathref="project.classpath"
+			failonerror="true"
 			fork="true"
 			maxmemory="1024m"
 			newenvironment="true"

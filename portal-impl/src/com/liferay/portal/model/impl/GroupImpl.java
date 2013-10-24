@@ -123,6 +123,11 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public void clearStagingGroup() {
+		_stagingGroup = null;
+	}
+
+	@Override
 	public List<Group> getAncestors() throws PortalException, SystemException {
 		Group group = null;
 

@@ -864,24 +864,6 @@ public class SeleniumBuilderContext {
 		return false;
 	}
 
-	private boolean _isTestCaseCommand(
-		String testCaseName, String testCaseCommand) {
-
-		Set<String> commands = _testCaseCommandNames.get(testCaseName);
-
-		return commands.contains(testCaseCommand);
-	}
-
-	private boolean _isTestCaseName(String name) {
-		for (String testCaseName : _testCaseNames) {
-			if (testCaseName.equals(name)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	private boolean _isValidLocatorKey(
 		String actionName, String caseComparator, String locatorKey) {
 
@@ -1048,38 +1030,6 @@ public class SeleniumBuilderContext {
 		if (!_isSeleniumCommand(selenium)) {
 			_seleniumBuilderFileUtil.throwValidationException(
 				1012, fileName, element, "selenium", selenium);
-		}
-	}
-
-	private void _validateTestCaseCommandElement(
-		String fileName, Element element) {
-
-		String testCaseCommand = element.attributeValue("test-case-command");
-
-		int x = testCaseCommand.lastIndexOf("#");
-
-		String testCaseName = testCaseCommand.substring(0, x);
-
-		if (!_isTestCaseName(testCaseName)) {
-			_seleniumBuilderFileUtil.throwValidationException(
-				1016, fileName, element, "test-case-command", testCaseName);
-		}
-
-		String testCaseCommandName = testCaseCommand.substring(x + 1);
-
-		if (!_isTestCaseCommand(testCaseName, testCaseCommandName)) {
-			_seleniumBuilderFileUtil.throwValidationException(
-				1016, fileName, element, "test-case-command",
-				testCaseCommandName);
-		}
-	}
-
-	private void _validateTestCaseElement(String fileName, Element element) {
-		String testCase = element.attributeValue("test-case");
-
-		if (!_isTestCaseName(testCase)) {
-			_seleniumBuilderFileUtil.throwValidationException(
-				1011, fileName, element, "test-case", testCase);
 		}
 	}
 
