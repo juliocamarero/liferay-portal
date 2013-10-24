@@ -105,7 +105,7 @@ public class GroupFinderTest {
 	public void testFindByC_C_N_DJoinByRoleResourcePermissions()
 		throws Exception {
 
-		List<Group> groups = findByC_C_N_D(
+		List<Group> groups = doFindByC_C_N_D(
 			_arbitraryResourceAction.getActionId(),
 			_resourcePermission.getName(), _resourcePermission.getRoleId());
 
@@ -124,7 +124,7 @@ public class GroupFinderTest {
 	public void testFindByC_C_N_DJoinByRoleResourceTypePermissions()
 		throws Exception {
 
-		List<Group> groups = findByC_C_N_D(
+		List<Group> groups = doFindByC_C_N_D(
 			_bookmarkFolderResourceAction.getActionId(),
 			_resourceTypePermission.getName(),
 			_resourceTypePermission.getRoleId());
@@ -179,12 +179,7 @@ public class GroupFinderTest {
 		LayoutTestUtil.addLayout(groupId, ServiceTestUtil.randomString(), true);
 	}
 
-	protected List<Group> doFindByLayouts(long parentGroupId) throws Exception {
-		return GroupFinderUtil.findByLayouts(
-			TestPropsValues.getCompanyId(), parentGroupId, true, -1, -1);
-	}
-
-	protected List<Group> findByC_C_N_D(
+	protected List<Group> doFindByC_C_N_D(
 			String actionId, String name, long roleId)
 		throws Exception {
 
@@ -207,6 +202,11 @@ public class GroupFinderTest {
 			GroupConstants.ANY_PARENT_GROUP_ID, new String[] {null},
 			new String[] {null}, groupParams, true, QueryUtil.ALL_POS,
 			QueryUtil.ALL_POS, null);
+	}
+
+	protected List<Group> doFindByLayouts(long parentGroupId) throws Exception {
+		return GroupFinderUtil.findByLayouts(
+			TestPropsValues.getCompanyId(), parentGroupId, true, -1, -1);
 	}
 
 	protected long[] generateGroupHierarchy() throws Exception {
