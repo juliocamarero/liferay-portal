@@ -676,7 +676,20 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 				JournalArticle article = (JournalArticle)object;
 
-				addDocuments(getArticleVersions(article));
+				JournalArticle latestIndexableArticle =
+					JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+						article.getResourcePrimKey());
+
+				Document document = getDocument(article);
+
+				if (article.getId() == latestIndexableArticle.getId()) {
+					document.addKeyword("head", true);
+				}
+				else {
+					document.addKeyword("head", false);
+				}
+
+				addDocument(document);
 			}
 
 		};
