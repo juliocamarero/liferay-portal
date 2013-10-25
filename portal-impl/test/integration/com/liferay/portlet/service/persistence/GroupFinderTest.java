@@ -145,30 +145,32 @@ public class GroupFinderTest {
 		List<Group> groups = doFindByLayouts(
 			GroupConstants.DEFAULT_PARENT_GROUP_ID);
 
-		Assert.assertNotNull(groups);
-
-		long[] groupHierarchy = generateGroupHierarchy();
-
 		int initialGroupCount = groups.size();
+
+		GroupTestUtil.addGroup("rootGroup");
+		Group parentGroup = GroupTestUtil.addGroup("parentGroup");
+		Group childGroup1 = GroupTestUtil.addGroup(
+			parentGroup.getGroupId(), "childGroup1");
+		Group childGroup2 = GroupTestUtil.addGroup(
+			parentGroup.getGroupId(), "childGroup2");
+
+		LayoutTestUtil.addLayout(
+			parentGroup.getGroupId(), ServiceTestUtil.randomString(), false);
+		LayoutTestUtil.addLayout(
+			childGroup1.getGroupId(), ServiceTestUtil.randomString(), false);
+		LayoutTestUtil.addLayout(
+			childGroup2.getGroupId(), ServiceTestUtil.randomString(), true);
 
 		groups = doFindByLayouts(GroupConstants.DEFAULT_PARENT_GROUP_ID);
 
-		Assert.assertNotNull(groups);
 		Assert.assertEquals(initialGroupCount + 1, groups.size());
 
-		groups = doFindByLayouts(groupHierarchy[0]);
+		groups = doFindByLayouts(parentGroup.getGroupId());
 
-		Assert.assertNotNull(groups);
 		Assert.assertEquals(2, groups.size());
 
-		groups = doFindByLayouts(groupHierarchy[1]);
+		groups = doFindByLayouts(childGroup1.getGroupId());
 
-		Assert.assertNotNull(groups);
-		Assert.assertTrue(groups.isEmpty());
-
-		groups = doFindByLayouts(groupHierarchy[2]);
-
-		Assert.assertNotNull(groups);
 		Assert.assertTrue(groups.isEmpty());
 	}
 
@@ -207,25 +209,6 @@ public class GroupFinderTest {
 	protected List<Group> doFindByLayouts(long parentGroupId) throws Exception {
 		return GroupFinderUtil.findByLayouts(
 			TestPropsValues.getCompanyId(), parentGroupId, true, -1, -1);
-	}
-
-	protected long[] generateGroupHierarchy() throws Exception {
-		Group parentGroup = GroupTestUtil.addGroup("parentGroup");
-
-		addLayout(parentGroup.getGroupId());
-
-		Group childGroup1 = GroupTestUtil.addGroup(
-			parentGroup.getGroupId(), "childGroup1");
-		Group childGroup2 = GroupTestUtil.addGroup(
-			parentGroup.getGroupId(), "childGroup2");
-
-		addLayout(childGroup1.getGroupId());
-		addLayout(childGroup2.getGroupId());
-
-		return new long[] {
-			parentGroup.getGroupId(), childGroup1.getGroupId(),
-			childGroup2.getGroupId()
-		};
 	}
 
 	private static ResourceAction _arbitraryResourceAction;
