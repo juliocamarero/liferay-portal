@@ -6314,7 +6314,7 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		subscriptionSender.addPersistedSubscribers(
-			JournalFolder.class.getName(), article.getGroupId());
+			JournalArticle.class.getName(), article.getGroupId());
 
 		subscriptionSender.flushNotificationsAsync();
 	}
