@@ -36,6 +36,8 @@ import com.liferay.portlet.journal.service.JournalFolderServiceUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.trash.BaseTrashHandlerTestCase;
 
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -49,6 +51,12 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
+
+	@Ignore()
+	@Override
+	@Test
+	public void testTrashDuplicate() throws Exception {
+	}
 
 	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
