@@ -35,8 +35,9 @@ import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderServiceUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.trash.BaseTrashHandlerTestCase;
-import com.liferay.portlet.trash.util.TrashUtil;
 
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -50,6 +51,12 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
+
+	@Ignore()
+	@Override
+	@Test
+	public void testTrashDuplicate() throws Exception {
+	}
 
 	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
@@ -171,11 +178,7 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 
 	@Override
 	protected String getUniqueTitle(BaseModel<?> baseModel) {
-		JournalArticle article = (JournalArticle)baseModel;
-
-		String articleId = article.getArticleId();
-
-		return TrashUtil.getOriginalTitle(articleId);
+		return null;
 	}
 
 	@Override
