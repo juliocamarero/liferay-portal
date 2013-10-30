@@ -74,10 +74,8 @@ public class TrashVersionLocalServiceImpl
 
 		long classNameId = PortalUtil.getClassNameId(className);
 
-		TrashVersion version = trashVersionPersistence.fetchByE_C_C(
+		return trashVersionPersistence.fetchByE_C_C(
 			entryId, classNameId, classPK);
-
-		return version;
 	}
 
 	@Override
