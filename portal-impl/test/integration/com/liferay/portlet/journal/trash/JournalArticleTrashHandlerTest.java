@@ -15,9 +15,11 @@
 package com.liferay.portlet.journal.trash;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ClassedModel;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.WorkflowedModel;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -36,6 +38,8 @@ import com.liferay.portlet.journal.service.JournalFolderServiceUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.trash.BaseTrashHandlerTestCase;
 import com.liferay.portlet.trash.util.TrashUtil;
+
+import java.util.List;
 
 import org.junit.runner.RunWith;
 
@@ -208,6 +212,13 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 		throws Exception {
 
 		JournalFolderServiceUtil.moveFolderToTrash(primaryKey);
+	}
+
+	@Override
+	protected void restoreParentBaseModelFromTrash(long primaryKey)
+		throws Exception {
+
+		JournalFolderServiceUtil.restoreFolderFromTrash(primaryKey);
 	}
 
 	@Override
