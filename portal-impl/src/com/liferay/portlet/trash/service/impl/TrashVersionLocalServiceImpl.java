@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.trash.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -50,6 +51,20 @@ public class TrashVersionLocalServiceImpl
 		trashVersion.setStatus(status);
 
 		trashVersionPersistence.update(trashVersion);
+	}
+
+	@Override
+	public TrashVersion deleteTrashVersion(
+			long entryId, String className, long classPK)
+		throws PortalException, SystemException {
+
+		TrashVersion trashVersion = fetchVersion(entryId, className, classPK);
+
+		if (trashVersion != null) {
+			return deleteTrashVersion(trashVersion);
+		}
+
+		return null;
 	}
 
 	@Override
