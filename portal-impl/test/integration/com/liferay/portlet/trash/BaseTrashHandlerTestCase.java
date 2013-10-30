@@ -50,6 +50,7 @@ import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
+import com.liferay.portlet.trash.service.TrashVersionLocalServiceUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,6 +78,37 @@ public abstract class BaseTrashHandlerTestCase {
 	@After
 	public void tearDown() throws Exception {
 		GroupLocalServiceUtil.deleteGroup(group);
+	}
+
+	@Test
+	@Transactional
+	public void testDeleteTrashVersions() throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		int initialTrashVersionsCount =
+			TrashVersionLocalServiceUtil.getTrashVersionsCount();
+
+		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+
+		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
+
+		baseModel = updateBaseModel(
+			(Long)baseModel.getPrimaryKeyObj(), serviceContext);
+
+		moveParentBaseModelToTrash((Long)parentBaseModel.getPrimaryKeyObj());
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			getBaseModelClassName());
+
+		trashHandler.deleteTrashEntry(getTrashEntryClassPK(baseModel));
+
+		Assert.assertEquals(
+			initialTrashVersionsCount,
+			TrashVersionLocalServiceUtil.getTrashVersionsCount());
 	}
 
 	@Test
