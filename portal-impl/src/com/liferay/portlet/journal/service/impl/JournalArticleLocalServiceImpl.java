@@ -928,6 +928,22 @@ public class JournalArticleLocalServiceImpl
 
 		expandoRowLocalService.deleteRows(article.getId());
 
+		// Trash
+
+		if (article.isInTrash()) {
+			TrashEntry trashEntry = article.getTrashEntry();
+
+			if ((trashEntry != null) &&
+				!trashEntry.isTrashEntry(
+					JournalArticle.class.getName(),
+					article.getResourcePrimKey())) {
+
+				trashVersionLocalService.deleteTrashVersion(
+					trashEntry.getEntryId(), JournalArticle.class.getName(),
+					article.getId());
+			}
+		}
+
 		// Workflow
 
 		if (!article.isDraft()) {
