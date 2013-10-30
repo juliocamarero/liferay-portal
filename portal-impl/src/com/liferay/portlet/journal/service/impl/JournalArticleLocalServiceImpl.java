@@ -933,11 +933,7 @@ public class JournalArticleLocalServiceImpl
 		if (article.isInTrash()) {
 			TrashEntry trashEntry = article.getTrashEntry();
 
-			if ((trashEntry != null) &&
-				!trashEntry.isTrashEntry(
-					JournalArticle.class.getName(),
-					article.getResourcePrimKey())) {
-
+			if ((trashEntry != null)) {
 				trashVersionLocalService.deleteTrashVersion(
 					trashEntry.getEntryId(), JournalArticle.class.getName(),
 					article.getId());
