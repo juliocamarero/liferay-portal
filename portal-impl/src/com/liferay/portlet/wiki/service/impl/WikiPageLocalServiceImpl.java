@@ -507,6 +507,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			}
 		}
 
+		List<WikiPage> versionPages = wikiPagePersistence.findByN_T(
+			page.getNodeId(), page.getTitle());
+
 		wikiPagePersistence.removeByN_T(page.getNodeId(), page.getTitle());
 
 		// References
@@ -544,9 +547,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Asset
 
-		List<WikiPage> versionPages = wikiPagePersistence.findByN_T(
-			page.getNodeId(), page.getTitle());
-
 		for (WikiPage versionPage : versionPages) {
 			assetEntryLocalService.deleteEntry(
 				WikiPage.class.getName(), versionPage.getPrimaryKey());
@@ -567,10 +567,23 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		// Trash
 
 		if (page.isInTrash()) {
-			page.setTitle(TrashUtil.getOriginalTitle(page.getTitle()));
+			TrashEntry trashEntry = page.getTrashEntry();
 
-			trashEntryLocalService.deleteEntry(
-				WikiPage.class.getName(), page.getResourcePrimKey());
+			if ((trashEntry != null) &&
+				trashEntry.isTrashEntry(
+					WikiPage.class, page.getResourcePrimKey())) {
+
+				page.setTitle(TrashUtil.getOriginalTitle(page.getTitle()));
+
+				trashEntryLocalService.deleteEntry(
+					WikiPage.class.getName(), page.getResourcePrimKey());
+			}
+			else {
+				for (WikiPage versionPage : versionPages) {
+					trashVersionLocalService.deleteTrashVersion(
+						WikiPage.class.getName(), versionPage.getPageId());
+				}
+			}
 		}
 
 		// Indexer
@@ -586,16 +599,13 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// All versions
 
-		List<WikiPage> pages = wikiPagePersistence.findByN_T(
-			page.getNodeId(), page.getTitle());
-
-		for (WikiPage curPage : pages) {
+		for (WikiPage versionPage : versionPages) {
 
 			// Workflow
 
 			workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(
-				curPage.getCompanyId(), curPage.getGroupId(),
-				WikiPage.class.getName(), curPage.getPageId());
+				versionPage.getCompanyId(), versionPage.getGroupId(),
+				WikiPage.class.getName(), versionPage.getPageId());
 		}
 	}
 
