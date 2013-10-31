@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.expando.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.expando.model.impl.ExpandoTableModelImpl
  * @generated
  */
+@ProviderType
 public interface ExpandoTable extends ExpandoTableModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

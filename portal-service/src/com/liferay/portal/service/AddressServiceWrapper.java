@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link AddressService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see AddressService
  * @generated
  */
+@ProviderType
 public class AddressServiceWrapper implements AddressService,
 	ServiceWrapper<AddressService> {
 	public AddressServiceWrapper(AddressService addressService) {

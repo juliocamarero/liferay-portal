@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see SCFrameworkVersion
  * @generated
  */
+@ProviderType
 public class SCFrameworkVersionWrapper implements SCFrameworkVersion,
 	ModelWrapper<SCFrameworkVersion> {
 	public SCFrameworkVersionWrapper(SCFrameworkVersion scFrameworkVersion) {

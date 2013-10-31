@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link QuartzLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see QuartzLocalService
  * @generated
  */
+@ProviderType
 public class QuartzLocalServiceWrapper implements QuartzLocalService,
 	ServiceWrapper<QuartzLocalService> {
 	public QuartzLocalServiceWrapper(QuartzLocalService quartzLocalService) {

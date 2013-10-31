@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.dynamicdatalists.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class DDLRecordSetFinderUtil {
 	public static int countByKeywords(long companyId, long groupId,
 		java.lang.String keywords, int scope)

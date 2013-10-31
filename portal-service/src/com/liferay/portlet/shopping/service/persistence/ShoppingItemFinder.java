@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface ShoppingItemFinder {
 	public int countByG_C(long groupId,
 		java.util.List<java.lang.Long> categoryIds)

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.UserIdMapper;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.UserIdMapper;
  * @see UserIdMapperUtil
  * @generated
  */
+@ProviderType
 public interface UserIdMapperPersistence extends BasePersistence<UserIdMapper> {
 	/*
 	 * NOTE FOR DEVELOPERS:

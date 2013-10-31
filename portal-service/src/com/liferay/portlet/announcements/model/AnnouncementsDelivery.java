@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.announcements.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.announcements.model.impl.AnnouncementsDeliveryModelImpl
  * @generated
  */
+@ProviderType
 public interface AnnouncementsDelivery extends AnnouncementsDeliveryModel,
 	PersistedModel {
 	/*

@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class MBMessageFinderUtil {
 	public static int countByC_T(java.util.Date createDate, long threadId)
 		throws com.liferay.portal.kernel.exception.SystemException {

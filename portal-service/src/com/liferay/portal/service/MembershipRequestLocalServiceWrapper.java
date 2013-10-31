@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link MembershipRequestLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see MembershipRequestLocalService
  * @generated
  */
+@ProviderType
 public class MembershipRequestLocalServiceWrapper
 	implements MembershipRequestLocalService,
 		ServiceWrapper<MembershipRequestLocalService> {

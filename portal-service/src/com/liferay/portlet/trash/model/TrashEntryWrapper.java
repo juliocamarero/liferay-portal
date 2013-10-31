@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.trash.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see TrashEntry
  * @generated
  */
+@ProviderType
 public class TrashEntryWrapper implements TrashEntry, ModelWrapper<TrashEntry> {
 	public TrashEntryWrapper(TrashEntry trashEntry) {
 		_trashEntry = trashEntry;

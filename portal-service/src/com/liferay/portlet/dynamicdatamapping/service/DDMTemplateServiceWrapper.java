@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatamapping.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see DDMTemplateService
  * @generated
  */
+@ProviderType
 public class DDMTemplateServiceWrapper implements DDMTemplateService,
 	ServiceWrapper<DDMTemplateService> {
 	public DDMTemplateServiceWrapper(DDMTemplateService ddmTemplateService) {

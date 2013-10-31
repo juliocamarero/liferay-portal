@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link ResourceTypePermissionLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see ResourceTypePermissionLocalService
  * @generated
  */
+@ProviderType
 public class ResourceTypePermissionLocalServiceWrapper
 	implements ResourceTypePermissionLocalService,
 		ServiceWrapper<ResourceTypePermissionLocalService> {

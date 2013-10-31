@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link PortletLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see PortletLocalService
  * @generated
  */
+@ProviderType
 public class PortletLocalServiceWrapper implements PortletLocalService,
 	ServiceWrapper<PortletLocalService> {
 	public PortletLocalServiceWrapper(PortletLocalService portletLocalService) {

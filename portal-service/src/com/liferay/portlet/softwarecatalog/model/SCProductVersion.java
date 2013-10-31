@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.softwarecatalog.model.impl.SCProductVersionModelImpl
  * @generated
  */
+@ProviderType
 public interface SCProductVersion extends SCProductVersionModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

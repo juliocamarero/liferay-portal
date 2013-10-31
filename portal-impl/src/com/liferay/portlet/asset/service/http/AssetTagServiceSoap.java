@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.asset.service.AssetTagServiceUtil
  * @generated
  */
+@ProviderType
 public class AssetTagServiceSoap {
 	public static com.liferay.portlet.asset.model.AssetTagSoap addTag(
 		java.lang.String name, java.lang.String[] tagProperties,

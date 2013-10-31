@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
@@ -40,6 +42,7 @@ import java.util.Date;
  * @see com.liferay.portlet.journal.model.impl.JournalFeedModelImpl
  * @generated
  */
+@ProviderType
 public interface JournalFeedModel extends BaseModel<JournalFeed>,
 	StagedGroupedModel {
 	/*

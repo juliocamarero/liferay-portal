@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -62,6 +64,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.documentlibrary.service.DLFolderServiceUtil
  * @generated
  */
+@ProviderType
 public class DLFolderServiceSoap {
 	public static com.liferay.portlet.documentlibrary.model.DLFolderSoap addFolder(
 		long groupId, long repositoryId, boolean mountPoint,

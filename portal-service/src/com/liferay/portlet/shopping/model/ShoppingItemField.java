@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.shopping.model.impl.ShoppingItemFieldModelImpl
  * @generated
  */
+@ProviderType
 public interface ShoppingItemField extends ShoppingItemFieldModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

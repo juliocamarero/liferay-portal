@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link PluginSettingService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see PluginSettingService
  * @generated
  */
+@ProviderType
 public class PluginSettingServiceWrapper implements PluginSettingService,
 	ServiceWrapper<PluginSettingService> {
 	public PluginSettingServiceWrapper(

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.announcements.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see AnnouncementsDelivery
  * @generated
  */
+@ProviderType
 public class AnnouncementsDeliveryWrapper implements AnnouncementsDelivery,
 	ModelWrapper<AnnouncementsDelivery> {
 	public AnnouncementsDeliveryWrapper(

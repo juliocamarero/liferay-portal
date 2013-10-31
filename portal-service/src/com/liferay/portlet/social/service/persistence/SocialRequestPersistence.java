@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.social.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.social.model.SocialRequest;
@@ -30,6 +32,7 @@ import com.liferay.portlet.social.model.SocialRequest;
  * @see SocialRequestUtil
  * @generated
  */
+@ProviderType
 public interface SocialRequestPersistence extends BasePersistence<SocialRequest> {
 	/*
 	 * NOTE FOR DEVELOPERS:

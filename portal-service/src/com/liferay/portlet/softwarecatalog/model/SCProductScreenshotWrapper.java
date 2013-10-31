@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see SCProductScreenshot
  * @generated
  */
+@ProviderType
 public class SCProductScreenshotWrapper implements SCProductScreenshot,
 	ModelWrapper<SCProductScreenshot> {
 	public SCProductScreenshotWrapper(SCProductScreenshot scProductScreenshot) {

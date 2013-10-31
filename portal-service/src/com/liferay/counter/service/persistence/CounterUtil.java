@@ -14,6 +14,8 @@
 
 package com.liferay.counter.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.counter.model.Counter;
 
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
@@ -37,6 +39,7 @@ import java.util.List;
  * @see CounterPersistenceImpl
  * @generated
  */
+@ProviderType
 public class CounterUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:

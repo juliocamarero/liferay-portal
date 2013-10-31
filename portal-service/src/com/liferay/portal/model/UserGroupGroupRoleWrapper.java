@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
@@ -28,6 +30,7 @@ import java.util.Map;
  * @see UserGroupGroupRole
  * @generated
  */
+@ProviderType
 public class UserGroupGroupRoleWrapper implements UserGroupGroupRole,
 	ModelWrapper<UserGroupGroupRole> {
 	public UserGroupGroupRoleWrapper(UserGroupGroupRole userGroupGroupRole) {

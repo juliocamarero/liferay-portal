@@ -14,12 +14,15 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class LayoutFinderUtil {
 	public static java.util.List<com.liferay.portal.model.Layout> findByNoPermissions(
 		long roleId) throws com.liferay.portal.kernel.exception.SystemException {

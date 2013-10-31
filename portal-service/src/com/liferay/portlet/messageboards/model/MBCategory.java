@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.messageboards.model.impl.MBCategoryModelImpl
  * @generated
  */
+@ProviderType
 public interface MBCategory extends MBCategoryModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

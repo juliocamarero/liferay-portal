@@ -14,9 +14,12 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface PortletPreferencesFinder {
 	public long countByO_O_P(long ownerId, int ownerType,
 		java.lang.String portletId, boolean excludeDefaultPreferences)

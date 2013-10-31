@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.ratings.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -36,6 +38,7 @@ import java.io.Serializable;
  * @see com.liferay.portlet.ratings.model.impl.RatingsStatsModelImpl
  * @generated
  */
+@ProviderType
 public interface RatingsStatsModel extends AttachedModel, BaseModel<RatingsStats> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.BrowserTracker;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.BrowserTracker;
  * @see BrowserTrackerUtil
  * @generated
  */
+@ProviderType
 public interface BrowserTrackerPersistence extends BasePersistence<BrowserTracker> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,9 +14,12 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface PasswordPolicyFinder {
 	public int countByC_N(long companyId, java.lang.String name)
 		throws com.liferay.portal.kernel.exception.SystemException;

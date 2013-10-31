@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.announcements.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -38,6 +40,7 @@ import java.util.Date;
  * @see com.liferay.portlet.announcements.model.impl.AnnouncementsFlagModelImpl
  * @generated
  */
+@ProviderType
 public interface AnnouncementsFlagModel extends BaseModel<AnnouncementsFlag> {
 	/*
 	 * NOTE FOR DEVELOPERS:

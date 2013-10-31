@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.trash.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see TrashVersionLocalService
  * @generated
  */
+@ProviderType
 public class TrashVersionLocalServiceWrapper implements TrashVersionLocalService,
 	ServiceWrapper<TrashVersionLocalService> {
 	public TrashVersionLocalServiceWrapper(
@@ -286,6 +289,14 @@ public class TrashVersionLocalServiceWrapper implements TrashVersionLocalService
 		throws com.liferay.portal.kernel.exception.SystemException {
 		_trashVersionLocalService.addTrashVersion(trashEntryId, className,
 			classPK, status, typeSettingsProperties);
+	}
+
+	@Override
+	public com.liferay.portlet.trash.model.TrashVersion deleteTrashVersion(
+		long entryId, java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _trashVersionLocalService.deleteTrashVersion(entryId, className,
+			classPK);
 	}
 
 	@Override

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.messageboards.model.MBDiscussion;
@@ -30,6 +32,7 @@ import com.liferay.portlet.messageboards.model.MBDiscussion;
  * @see MBDiscussionUtil
  * @generated
  */
+@ProviderType
 public interface MBDiscussionPersistence extends BasePersistence<MBDiscussion> {
 	/*
 	 * NOTE FOR DEVELOPERS:

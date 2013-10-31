@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.ratings.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.ratings.model.RatingsStats;
@@ -30,6 +32,7 @@ import com.liferay.portlet.ratings.model.RatingsStats;
  * @see RatingsStatsUtil
  * @generated
  */
+@ProviderType
 public interface RatingsStatsPersistence extends BasePersistence<RatingsStats> {
 	/*
 	 * NOTE FOR DEVELOPERS:

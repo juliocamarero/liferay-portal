@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class MBCategoryFinderUtil {
 	public static int countByS_G_U_P(long groupId, long userId,
 		long[] parentCategoryIds,

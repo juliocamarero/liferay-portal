@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface MBThreadFinder {
 	public int countByG_U(long groupId, long userId,
 		com.liferay.portal.kernel.dao.orm.QueryDefinition queryDefinition)

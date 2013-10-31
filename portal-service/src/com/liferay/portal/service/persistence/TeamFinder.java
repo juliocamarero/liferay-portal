@@ -14,9 +14,12 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface TeamFinder {
 	public int countByG_N_D(long groupId, java.lang.String name,
 		java.lang.String description,

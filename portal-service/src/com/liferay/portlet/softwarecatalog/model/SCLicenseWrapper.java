@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see SCLicense
  * @generated
  */
+@ProviderType
 public class SCLicenseWrapper implements SCLicense, ModelWrapper<SCLicense> {
 	public SCLicenseWrapper(SCLicense scLicense) {
 		_scLicense = scLicense;

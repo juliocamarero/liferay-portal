@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.shopping.service.ShoppingOrderServiceUtil
  * @generated
  */
+@ProviderType
 public class ShoppingOrderServiceSoap {
 	public static void completeOrder(long groupId, java.lang.String number,
 		java.lang.String ppTxnId, java.lang.String ppPaymentStatus,

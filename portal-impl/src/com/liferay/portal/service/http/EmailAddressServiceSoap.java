@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.service.EmailAddressServiceUtil;
@@ -60,6 +62,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portal.service.EmailAddressServiceUtil
  * @generated
  */
+@ProviderType
 public class EmailAddressServiceSoap {
 	/**
 	* @deprecated As of 6.2.0, replaced by {@link #addEmailAddress( String,

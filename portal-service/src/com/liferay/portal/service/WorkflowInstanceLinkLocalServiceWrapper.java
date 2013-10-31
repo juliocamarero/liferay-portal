@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link WorkflowInstanceLinkLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see WorkflowInstanceLinkLocalService
  * @generated
  */
+@ProviderType
 public class WorkflowInstanceLinkLocalServiceWrapper
 	implements WorkflowInstanceLinkLocalService,
 		ServiceWrapper<WorkflowInstanceLinkLocalService> {

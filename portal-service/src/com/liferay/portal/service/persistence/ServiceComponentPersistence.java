@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.ServiceComponent;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.ServiceComponent;
  * @see ServiceComponentUtil
  * @generated
  */
+@ProviderType
 public interface ServiceComponentPersistence extends BasePersistence<ServiceComponent> {
 	/*
 	 * NOTE FOR DEVELOPERS:

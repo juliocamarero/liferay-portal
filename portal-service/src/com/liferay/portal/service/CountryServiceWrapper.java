@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link CountryService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see CountryService
  * @generated
  */
+@ProviderType
 public class CountryServiceWrapper implements CountryService,
 	ServiceWrapper<CountryService> {
 	public CountryServiceWrapper(CountryService countryService) {

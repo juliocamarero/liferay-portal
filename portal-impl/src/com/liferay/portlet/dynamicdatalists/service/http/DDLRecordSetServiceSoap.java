@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatalists.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -65,6 +67,7 @@ import java.util.Map;
  * @see com.liferay.portlet.dynamicdatalists.service.DDLRecordSetServiceUtil
  * @generated
  */
+@ProviderType
 public class DDLRecordSetServiceSoap {
 	public static com.liferay.portlet.dynamicdatalists.model.DDLRecordSetSoap addRecordSet(
 		long groupId, long ddmStructureId, java.lang.String recordSetKey,

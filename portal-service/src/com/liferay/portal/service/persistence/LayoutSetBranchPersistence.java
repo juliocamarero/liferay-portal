@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.LayoutSetBranch;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.LayoutSetBranch;
  * @see LayoutSetBranchUtil
  * @generated
  */
+@ProviderType
 public interface LayoutSetBranchPersistence extends BasePersistence<LayoutSetBranch> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -62,6 +64,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.shopping.service.ShoppingItemServiceUtil
  * @generated
  */
+@ProviderType
 public class ShoppingItemServiceSoap {
 	public static void addBookItems(long groupId, long categoryId,
 		java.lang.String[] isbns) throws RemoteException {

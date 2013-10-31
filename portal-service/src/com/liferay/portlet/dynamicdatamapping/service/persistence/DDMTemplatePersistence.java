@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
@@ -30,6 +32,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
  * @see DDMTemplateUtil
  * @generated
  */
+@ProviderType
 public interface DDMTemplatePersistence extends BasePersistence<DDMTemplate> {
 	/*
 	 * NOTE FOR DEVELOPERS:

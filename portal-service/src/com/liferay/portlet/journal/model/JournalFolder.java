@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Accessor;
 import com.liferay.portal.model.PersistedModel;
 
@@ -26,6 +28,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.journal.model.impl.JournalFolderModelImpl
  * @generated
  */
+@ProviderType
 public interface JournalFolder extends JournalFolderModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

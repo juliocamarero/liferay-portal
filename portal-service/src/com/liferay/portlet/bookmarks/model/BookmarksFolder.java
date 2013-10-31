@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.bookmarks.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PermissionedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PermissionedModel;
  * @see com.liferay.portlet.bookmarks.model.impl.BookmarksFolderModelImpl
  * @generated
  */
+@ProviderType
 public interface BookmarksFolder extends BookmarksFolderModel, PermissionedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link ThemeService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see ThemeService
  * @generated
  */
+@ProviderType
 public class ThemeServiceWrapper implements ThemeService,
 	ServiceWrapper<ThemeService> {
 	public ThemeServiceWrapper(ThemeService themeService) {

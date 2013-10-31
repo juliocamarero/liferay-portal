@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.flags.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -50,6 +52,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.flags.service.FlagsEntryServiceUtil
  * @generated
  */
+@ProviderType
 public class FlagsEntryServiceSoap {
 	public static void addEntry(java.lang.String className, long classPK,
 		java.lang.String reporterEmailAddress, long reportedUserId,

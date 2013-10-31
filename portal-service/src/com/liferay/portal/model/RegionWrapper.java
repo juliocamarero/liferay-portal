@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
@@ -28,6 +30,7 @@ import java.util.Map;
  * @see Region
  * @generated
  */
+@ProviderType
 public class RegionWrapper implements Region, ModelWrapper<Region> {
 	public RegionWrapper(Region region) {
 		_region = region;

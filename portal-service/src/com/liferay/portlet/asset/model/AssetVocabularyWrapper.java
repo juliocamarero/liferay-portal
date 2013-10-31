@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
@@ -31,6 +33,7 @@ import java.util.Map;
  * @see AssetVocabulary
  * @generated
  */
+@ProviderType
 public class AssetVocabularyWrapper implements AssetVocabulary,
 	ModelWrapper<AssetVocabulary> {
 	public AssetVocabularyWrapper(AssetVocabulary assetVocabulary) {

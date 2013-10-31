@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.UserGroup;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.UserGroup;
  * @see UserGroupUtil
  * @generated
  */
+@ProviderType
 public interface UserGroupPersistence extends BasePersistence<UserGroup> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -33,6 +35,7 @@ import java.io.Serializable;
  * @see com.liferay.portal.model.impl.OrgLaborModelImpl
  * @generated
  */
+@ProviderType
 public interface OrgLaborModel extends BaseModel<OrgLabor> {
 	/*
 	 * NOTE FOR DEVELOPERS:

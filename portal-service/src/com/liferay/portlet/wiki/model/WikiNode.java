@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.wiki.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.wiki.model.impl.WikiNodeModelImpl
  * @generated
  */
+@ProviderType
 public interface WikiNode extends WikiNodeModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

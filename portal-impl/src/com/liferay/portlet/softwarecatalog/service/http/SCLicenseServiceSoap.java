@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.softwarecatalog.service.SCLicenseServiceUtil
  * @generated
  */
+@ProviderType
 public class SCLicenseServiceSoap {
 	public static com.liferay.portlet.softwarecatalog.model.SCLicenseSoap addLicense(
 		java.lang.String name, java.lang.String url, boolean openSource,

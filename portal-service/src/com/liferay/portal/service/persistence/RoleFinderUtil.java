@@ -14,12 +14,15 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class RoleFinderUtil {
 	public static int countByR_U(long roleId, long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {

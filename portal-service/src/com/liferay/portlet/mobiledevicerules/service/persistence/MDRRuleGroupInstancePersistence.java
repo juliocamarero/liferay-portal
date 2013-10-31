@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.mobiledevicerules.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
@@ -30,6 +32,7 @@ import com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstance;
  * @see MDRRuleGroupInstanceUtil
  * @generated
  */
+@ProviderType
 public interface MDRRuleGroupInstancePersistence extends BasePersistence<MDRRuleGroupInstance> {
 	/*
 	 * NOTE FOR DEVELOPERS:

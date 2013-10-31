@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link ImageService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see ImageService
  * @generated
  */
+@ProviderType
 public class ImageServiceWrapper implements ImageService,
 	ServiceWrapper<ImageService> {
 	public ImageServiceWrapper(ImageService imageService) {

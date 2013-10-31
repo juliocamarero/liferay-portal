@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.service.AddressServiceUtil;
@@ -60,6 +62,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portal.service.AddressServiceUtil
  * @generated
  */
+@ProviderType
 public class AddressServiceSoap {
 	/**
 	* @deprecated As of 6.2.0, replaced by {@link #addAddress( String, long,

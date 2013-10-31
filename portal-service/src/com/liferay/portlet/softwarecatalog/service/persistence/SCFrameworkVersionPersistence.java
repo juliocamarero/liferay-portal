@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion;
@@ -30,6 +32,7 @@ import com.liferay.portlet.softwarecatalog.model.SCFrameworkVersion;
  * @see SCFrameworkVersionUtil
  * @generated
  */
+@ProviderType
 public interface SCFrameworkVersionPersistence extends BasePersistence<SCFrameworkVersion> {
 	/*
 	 * NOTE FOR DEVELOPERS:

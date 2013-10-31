@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatalists.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion;
@@ -30,6 +32,7 @@ import com.liferay.portlet.dynamicdatalists.model.DDLRecordVersion;
  * @see DDLRecordVersionUtil
  * @generated
  */
+@ProviderType
 public interface DDLRecordVersionPersistence extends BasePersistence<DDLRecordVersion> {
 	/*
 	 * NOTE FOR DEVELOPERS:

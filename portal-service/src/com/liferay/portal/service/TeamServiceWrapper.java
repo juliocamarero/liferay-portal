@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link TeamService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see TeamService
  * @generated
  */
+@ProviderType
 public class TeamServiceWrapper implements TeamService,
 	ServiceWrapper<TeamService> {
 	public TeamServiceWrapper(TeamService teamService) {

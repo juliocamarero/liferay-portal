@@ -14,9 +14,12 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface LockFinder {
 	public com.liferay.portal.model.Lock fetchByC_K(
 		java.lang.String className, java.lang.String key,

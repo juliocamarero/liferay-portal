@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Ticket;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Ticket;
  * @see TicketUtil
  * @generated
  */
+@ProviderType
 public interface TicketPersistence extends BasePersistence<Ticket> {
 	/*
 	 * NOTE FOR DEVELOPERS:

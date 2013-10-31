@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.asset.service.AssetEntryServiceUtil
  * @generated
  */
+@ProviderType
 public class AssetEntryServiceSoap {
 	public static com.liferay.portlet.asset.model.AssetEntrySoap[] getCompanyEntries(
 		long companyId, int start, int end) throws RemoteException {

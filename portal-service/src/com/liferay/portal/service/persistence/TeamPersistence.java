@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Team;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Team;
  * @see TeamUtil
  * @generated
  */
+@ProviderType
 public interface TeamPersistence extends BasePersistence<Team> {
 	/*
 	 * NOTE FOR DEVELOPERS:

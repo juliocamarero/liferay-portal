@@ -14,12 +14,15 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class ResourceTypePermissionFinderUtil {
 	public static java.util.List<com.liferay.portal.model.ResourceTypePermission> findByEitherScopeC_G_N(
 		long companyId, long groupId, java.lang.String name)

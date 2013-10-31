@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.softwarecatalog.model.SCLicense;
@@ -30,6 +32,7 @@ import com.liferay.portlet.softwarecatalog.model.SCLicense;
  * @see SCLicenseUtil
  * @generated
  */
+@ProviderType
 public interface SCLicensePersistence extends BasePersistence<SCLicense> {
 	/*
 	 * NOTE FOR DEVELOPERS:

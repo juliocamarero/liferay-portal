@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.social.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.social.model.SocialActivityCounter;
@@ -30,6 +32,7 @@ import com.liferay.portlet.social.model.SocialActivityCounter;
  * @see SocialActivityCounterUtil
  * @generated
  */
+@ProviderType
 public interface SocialActivityCounterPersistence extends BasePersistence<SocialActivityCounter> {
 	/*
 	 * NOTE FOR DEVELOPERS:

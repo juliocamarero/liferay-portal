@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Lock;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Lock;
  * @see LockUtil
  * @generated
  */
+@ProviderType
 public interface LockPersistence extends BasePersistence<Lock> {
 	/*
 	 * NOTE FOR DEVELOPERS:

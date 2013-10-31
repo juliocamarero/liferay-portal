@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link PhoneService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see PhoneService
  * @generated
  */
+@ProviderType
 public class PhoneServiceWrapper implements PhoneService,
 	ServiceWrapper<PhoneService> {
 	public PhoneServiceWrapper(PhoneService phoneService) {

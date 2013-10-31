@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.UserNotificationEvent;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.UserNotificationEvent;
  * @see UserNotificationEventUtil
  * @generated
  */
+@ProviderType
 public interface UserNotificationEventPersistence extends BasePersistence<UserNotificationEvent> {
 	/*
 	 * NOTE FOR DEVELOPERS:

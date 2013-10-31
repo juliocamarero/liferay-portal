@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see User
  * @generated
  */
+@ProviderType
 public class UserWrapper implements User, ModelWrapper<User> {
 	public UserWrapper(User user) {
 		_user = user;

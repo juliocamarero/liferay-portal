@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
@@ -28,6 +30,7 @@ import java.util.Map;
  * @see Portlet
  * @generated
  */
+@ProviderType
 public class PortletWrapper implements Portlet, ModelWrapper<Portlet> {
 	public PortletWrapper(Portlet portlet) {
 		_portlet = portlet;

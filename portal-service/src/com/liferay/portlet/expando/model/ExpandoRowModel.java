@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.expando.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.service.ServiceContext;
@@ -35,6 +37,7 @@ import java.util.Date;
  * @see com.liferay.portlet.expando.model.impl.ExpandoRowModelImpl
  * @generated
  */
+@ProviderType
 public interface ExpandoRowModel extends BaseModel<ExpandoRow> {
 	/*
 	 * NOTE FOR DEVELOPERS:

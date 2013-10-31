@@ -14,9 +14,12 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface UserGroupRoleFinder {
 	public java.util.List<com.liferay.portal.model.UserGroupRole> findByUserUserGroupGroupRole(
 		long userId, long groupId)

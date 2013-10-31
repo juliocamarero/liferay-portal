@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.service.StagingServiceUtil;
@@ -49,6 +51,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portal.service.StagingServiceUtil
  * @generated
  */
+@ProviderType
 public class StagingServiceSoap {
 	public static void cleanUpStagingRequest(long stagingRequestId)
 		throws RemoteException {

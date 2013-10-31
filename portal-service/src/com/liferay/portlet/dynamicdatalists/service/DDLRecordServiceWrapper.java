@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatalists.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see DDLRecordService
  * @generated
  */
+@ProviderType
 public class DDLRecordServiceWrapper implements DDLRecordService,
 	ServiceWrapper<DDLRecordService> {
 	public DDLRecordServiceWrapper(DDLRecordService ddlRecordService) {

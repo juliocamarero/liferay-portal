@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.shopping.model.ShoppingCart;
@@ -30,6 +32,7 @@ import com.liferay.portlet.shopping.model.ShoppingCart;
  * @see ShoppingCartUtil
  * @generated
  */
+@ProviderType
 public interface ShoppingCartPersistence extends BasePersistence<ShoppingCart> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see DLSyncEvent
  * @generated
  */
+@ProviderType
 public class DLSyncEventWrapper implements DLSyncEvent,
 	ModelWrapper<DLSyncEvent> {
 	public DLSyncEventWrapper(DLSyncEvent dlSyncEvent) {

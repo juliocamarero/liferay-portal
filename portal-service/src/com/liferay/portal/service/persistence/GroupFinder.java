@@ -14,9 +14,12 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface GroupFinder {
 	public int countByLayouts(long companyId, long parentGroupId, boolean site)
 		throws com.liferay.portal.kernel.exception.SystemException;

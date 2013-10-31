@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * The extended model interface for the ResourceAction service. Represents a row in the &quot;ResourceAction&quot; database table, with each column mapped to a property of this class.
  *
@@ -23,6 +25,7 @@ package com.liferay.portal.model;
  * @see com.liferay.portal.model.impl.ResourceActionModelImpl
  * @generated
  */
+@ProviderType
 public interface ResourceAction extends ResourceActionModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.announcements.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see AnnouncementsFlag
  * @generated
  */
+@ProviderType
 public class AnnouncementsFlagWrapper implements AnnouncementsFlag,
 	ModelWrapper<AnnouncementsFlag> {
 	public AnnouncementsFlagWrapper(AnnouncementsFlag announcementsFlag) {

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.social.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -37,6 +39,7 @@ import java.util.List;
  * @see SocialActivitySetPersistenceImpl
  * @generated
  */
+@ProviderType
 public class SocialActivitySetUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link ResourceActionLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see ResourceActionLocalService
  * @generated
  */
+@ProviderType
 public class ResourceActionLocalServiceWrapper
 	implements ResourceActionLocalService,
 		ServiceWrapper<ResourceActionLocalService> {

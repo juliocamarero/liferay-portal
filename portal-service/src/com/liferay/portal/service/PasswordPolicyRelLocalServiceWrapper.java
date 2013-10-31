@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link PasswordPolicyRelLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see PasswordPolicyRelLocalService
  * @generated
  */
+@ProviderType
 public class PasswordPolicyRelLocalServiceWrapper
 	implements PasswordPolicyRelLocalService,
 		ServiceWrapper<PasswordPolicyRelLocalService> {

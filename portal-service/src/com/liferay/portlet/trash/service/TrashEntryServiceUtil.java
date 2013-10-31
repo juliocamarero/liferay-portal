@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.trash.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
@@ -31,6 +33,7 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see com.liferay.portlet.trash.service.impl.TrashEntryServiceImpl
  * @generated
  */
+@ProviderType
 public class TrashEntryServiceUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Layout;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Layout;
  * @see LayoutUtil
  * @generated
  */
+@ProviderType
 public interface LayoutPersistence extends BasePersistence<Layout> {
 	/*
 	 * NOTE FOR DEVELOPERS:

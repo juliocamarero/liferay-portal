@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see AssetTag
  * @generated
  */
+@ProviderType
 public class AssetTagWrapper implements AssetTag, ModelWrapper<AssetTag> {
 	public AssetTagWrapper(AssetTag assetTag) {
 		_assetTag = assetTag;

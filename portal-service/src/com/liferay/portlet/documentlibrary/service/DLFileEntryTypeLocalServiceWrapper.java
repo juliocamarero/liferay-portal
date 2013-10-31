@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see DLFileEntryTypeLocalService
  * @generated
  */
+@ProviderType
 public class DLFileEntryTypeLocalServiceWrapper
 	implements DLFileEntryTypeLocalService,
 		ServiceWrapper<DLFileEntryTypeLocalService> {

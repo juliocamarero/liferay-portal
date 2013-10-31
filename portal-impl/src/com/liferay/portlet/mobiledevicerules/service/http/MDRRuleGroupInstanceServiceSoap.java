@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.mobiledevicerules.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.mobiledevicerules.service.MDRRuleGroupInstanceServiceUtil
  * @generated
  */
+@ProviderType
 public class MDRRuleGroupInstanceServiceSoap {
 	public static com.liferay.portlet.mobiledevicerules.model.MDRRuleGroupInstanceSoap addRuleGroupInstance(
 		long groupId, java.lang.String className, long classPK,

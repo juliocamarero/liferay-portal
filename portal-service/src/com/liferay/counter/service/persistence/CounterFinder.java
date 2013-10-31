@@ -14,9 +14,12 @@
 
 package com.liferay.counter.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface CounterFinder {
 	public void afterPropertiesSet();
 

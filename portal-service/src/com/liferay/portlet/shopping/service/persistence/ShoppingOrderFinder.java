@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface ShoppingOrderFinder {
 	public int countByG_C_U_N_PPPS(long groupId, long companyId, long userId,
 		java.lang.String number, java.lang.String billingFirstName,

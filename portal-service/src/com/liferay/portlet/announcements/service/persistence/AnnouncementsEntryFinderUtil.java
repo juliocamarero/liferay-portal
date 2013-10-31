@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.announcements.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class AnnouncementsEntryFinderUtil {
 	public static int countByScope(long userId, long classNameId,
 		long[] classPKs, int displayDateMonth, int displayDateDay,

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
@@ -40,6 +42,7 @@ import java.util.Date;
  * @see com.liferay.portlet.messageboards.model.impl.MBBanModelImpl
  * @generated
  */
+@ProviderType
 public interface MBBanModel extends BaseModel<MBBan>, StagedGroupedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

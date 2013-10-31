@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.messageboards.model.MBThread;
@@ -30,6 +32,7 @@ import com.liferay.portlet.messageboards.model.MBThread;
  * @see MBThreadUtil
  * @generated
  */
+@ProviderType
 public interface MBThreadPersistence extends BasePersistence<MBThread> {
 	/*
 	 * NOTE FOR DEVELOPERS:

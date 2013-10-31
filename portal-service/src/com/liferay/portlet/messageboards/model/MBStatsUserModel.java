@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -38,6 +40,7 @@ import java.util.Date;
  * @see com.liferay.portlet.messageboards.model.impl.MBStatsUserModelImpl
  * @generated
  */
+@ProviderType
 public interface MBStatsUserModel extends BaseModel<MBStatsUser> {
 	/*
 	 * NOTE FOR DEVELOPERS:

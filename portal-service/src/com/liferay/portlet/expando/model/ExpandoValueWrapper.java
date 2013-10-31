@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.expando.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see ExpandoValue
  * @generated
  */
+@ProviderType
 public class ExpandoValueWrapper implements ExpandoValue,
 	ModelWrapper<ExpandoValue> {
 	public ExpandoValueWrapper(ExpandoValue expandoValue) {

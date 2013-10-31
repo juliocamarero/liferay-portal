@@ -14,6 +14,8 @@
 
 package com.liferay.counter.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -36,6 +38,7 @@ import java.io.Serializable;
  * @see com.liferay.counter.model.impl.CounterModelImpl
  * @generated
  */
+@ProviderType
 public interface CounterModel extends BaseModel<Counter> {
 	/*
 	 * NOTE FOR DEVELOPERS:

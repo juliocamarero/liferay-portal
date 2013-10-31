@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.wiki.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class WikiPageFinderUtil {
 	public static int countByCreateDate(long groupId, long nodeId,
 		java.util.Date createDate, boolean before)

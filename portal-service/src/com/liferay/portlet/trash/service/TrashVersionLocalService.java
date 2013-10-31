@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.trash.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.transaction.Isolation;
@@ -34,6 +36,7 @@ import com.liferay.portal.service.PersistedModelLocalService;
  * @see com.liferay.portlet.trash.service.impl.TrashVersionLocalServiceImpl
  * @generated
  */
+@ProviderType
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})
 public interface TrashVersionLocalService extends BaseLocalService,
@@ -246,6 +249,10 @@ public interface TrashVersionLocalService extends BaseLocalService,
 	public void addTrashVersion(long trashEntryId, java.lang.String className,
 		long classPK, int status,
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.portlet.trash.model.TrashVersion deleteTrashVersion(
+		long entryId, java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.WorkflowDefinitionLink;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.WorkflowDefinitionLink;
  * @see WorkflowDefinitionLinkUtil
  * @generated
  */
+@ProviderType
 public interface WorkflowDefinitionLinkPersistence extends BasePersistence<WorkflowDefinitionLink> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class ShoppingCouponFinderUtil {
 	public static int countByG_C_C_A_DT(long groupId, long companyId,
 		java.lang.String code, boolean active, java.lang.String discountType,

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.VirtualHost;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.VirtualHost;
  * @see VirtualHostUtil
  * @generated
  */
+@ProviderType
 public interface VirtualHostPersistence extends BasePersistence<VirtualHost> {
 	/*
 	 * NOTE FOR DEVELOPERS:

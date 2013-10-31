@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.service.WebsiteServiceUtil;
@@ -60,6 +62,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portal.service.WebsiteServiceUtil
  * @generated
  */
+@ProviderType
 public class WebsiteServiceSoap {
 	/**
 	* @deprecated As of 6.2.0, replaced by {@link #addWebsite( String, long,

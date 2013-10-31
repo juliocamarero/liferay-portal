@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.announcements.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface AnnouncementsEntryFinder {
 	public int countByScope(long userId, long classNameId, long[] classPKs,
 		int displayDateMonth, int displayDateDay, int displayDateYear,

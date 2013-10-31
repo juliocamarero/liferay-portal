@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.expando.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see ExpandoValueService
  * @generated
  */
+@ProviderType
 public class ExpandoValueServiceWrapper implements ExpandoValueService,
 	ServiceWrapper<ExpandoValueService> {
 	public ExpandoValueServiceWrapper(ExpandoValueService expandoValueService) {

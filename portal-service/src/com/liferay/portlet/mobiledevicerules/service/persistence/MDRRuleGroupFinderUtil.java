@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.mobiledevicerules.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Edward C. Han
  */
+@ProviderType
 public class MDRRuleGroupFinderUtil {
 	public static int countByKeywords(long groupId, java.lang.String keywords,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params)

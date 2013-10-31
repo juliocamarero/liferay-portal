@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.documentlibrary.model.DLContent;
@@ -30,6 +32,7 @@ import com.liferay.portlet.documentlibrary.model.DLContent;
  * @see DLContentUtil
  * @generated
  */
+@ProviderType
 public interface DLContentPersistence extends BasePersistence<DLContent> {
 	/*
 	 * NOTE FOR DEVELOPERS:

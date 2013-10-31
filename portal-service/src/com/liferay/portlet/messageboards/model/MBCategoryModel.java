@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -46,6 +48,7 @@ import java.util.Date;
  * @see com.liferay.portlet.messageboards.model.impl.MBCategoryModelImpl
  * @generated
  */
+@ProviderType
 public interface MBCategoryModel extends BaseModel<MBCategory>, ContainerModel,
 	StagedGroupedModel, TrashedModel, WorkflowedModel {
 	/*

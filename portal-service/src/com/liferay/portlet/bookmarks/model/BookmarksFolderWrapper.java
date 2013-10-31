@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.bookmarks.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
@@ -31,6 +33,7 @@ import java.util.Map;
  * @see BookmarksFolder
  * @generated
  */
+@ProviderType
 public class BookmarksFolderWrapper implements BookmarksFolder,
 	ModelWrapper<BookmarksFolder> {
 	public BookmarksFolderWrapper(BookmarksFolder bookmarksFolder) {

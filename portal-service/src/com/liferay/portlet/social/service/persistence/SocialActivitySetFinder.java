@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.social.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface SocialActivitySetFinder {
 	public int countByRelation(long userId)
 		throws com.liferay.portal.kernel.exception.SystemException;

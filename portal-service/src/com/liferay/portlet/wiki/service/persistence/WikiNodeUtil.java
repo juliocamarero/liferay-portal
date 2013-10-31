@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.wiki.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -37,6 +39,7 @@ import java.util.List;
  * @see WikiNodePersistenceImpl
  * @generated
  */
+@ProviderType
 public class WikiNodeUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:

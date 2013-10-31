@@ -1,5 +1,7 @@
 package ${packagePath}.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -12,6 +14,11 @@ import com.liferay.portal.service.ServiceWrapper;
 </#if>
  * @generated
  */
+
+<#if pluginName == "">
+	@ProviderType
+</#if>
+
 public class ${entity.name}${sessionTypeName}ServiceWrapper implements ${entity.name}${sessionTypeName}Service, ServiceWrapper<${entity.name}${sessionTypeName}Service> {
 
 	public ${entity.name}${sessionTypeName}ServiceWrapper(${entity.name}${sessionTypeName}Service ${entity.varName}${sessionTypeName}Service) {

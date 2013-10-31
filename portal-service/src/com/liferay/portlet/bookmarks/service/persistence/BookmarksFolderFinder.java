@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.bookmarks.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface BookmarksFolderFinder {
 	public int countF_E_ByG_F(long groupId, long folderId,
 		com.liferay.portal.kernel.dao.orm.QueryDefinition queryDefinition)

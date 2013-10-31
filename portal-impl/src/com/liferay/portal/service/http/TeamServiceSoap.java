@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.service.TeamServiceUtil;
@@ -60,6 +62,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portal.service.TeamServiceUtil
  * @generated
  */
+@ProviderType
 public class TeamServiceSoap {
 	public static com.liferay.portal.model.TeamSoap addTeam(long groupId,
 		java.lang.String name, java.lang.String description)

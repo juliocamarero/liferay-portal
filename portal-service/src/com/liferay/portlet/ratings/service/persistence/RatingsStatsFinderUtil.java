@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.ratings.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class RatingsStatsFinderUtil {
 	public static java.util.List<com.liferay.portlet.ratings.model.RatingsStats> findByC_C(
 		long classNameId, java.util.List<java.lang.Long> classPKs)

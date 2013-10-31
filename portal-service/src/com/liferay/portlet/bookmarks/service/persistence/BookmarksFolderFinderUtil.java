@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.bookmarks.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class BookmarksFolderFinderUtil {
 	public static int countF_E_ByG_F(long groupId, long folderId,
 		com.liferay.portal.kernel.dao.orm.QueryDefinition queryDefinition)

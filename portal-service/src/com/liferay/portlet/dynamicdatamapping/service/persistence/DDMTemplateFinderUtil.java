@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class DDMTemplateFinderUtil {
 	public static int countByKeywords(long companyId, long groupId,
 		long classNameId, long classPK, java.lang.String keywords,

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see MBStatsUser
  * @generated
  */
+@ProviderType
 public class MBStatsUserWrapper implements MBStatsUser,
 	ModelWrapper<MBStatsUser> {
 	public MBStatsUserWrapper(MBStatsUser mbStatsUser) {

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Shard;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Shard;
  * @see ShardUtil
  * @generated
  */
+@ProviderType
 public interface ShardPersistence extends BasePersistence<Shard> {
 	/*
 	 * NOTE FOR DEVELOPERS:

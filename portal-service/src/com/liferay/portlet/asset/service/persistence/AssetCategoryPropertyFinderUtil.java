@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.asset.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class AssetCategoryPropertyFinderUtil {
 	public static int countByG_K(long groupId, java.lang.String key)
 		throws com.liferay.portal.kernel.exception.SystemException {

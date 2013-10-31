@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link RepositoryEntryLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see RepositoryEntryLocalService
  * @generated
  */
+@ProviderType
 public class RepositoryEntryLocalServiceWrapper
 	implements RepositoryEntryLocalService,
 		ServiceWrapper<RepositoryEntryLocalService> {

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see DLAppLocalService
  * @generated
  */
+@ProviderType
 public class DLAppLocalServiceWrapper implements DLAppLocalService,
 	ServiceWrapper<DLAppLocalService> {
 	public DLAppLocalServiceWrapper(DLAppLocalService dlAppLocalService) {

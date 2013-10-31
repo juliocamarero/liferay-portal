@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.blogs.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface BlogsStatsUserFinder {
 	public int countByOrganizationId(long organizationId)
 		throws com.liferay.portal.kernel.exception.SystemException;

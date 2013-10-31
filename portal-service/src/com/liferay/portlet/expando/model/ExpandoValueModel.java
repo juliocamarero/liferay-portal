@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.expando.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.AttachedModel;
 import com.liferay.portal.model.BaseModel;
@@ -35,6 +37,7 @@ import java.io.Serializable;
  * @see com.liferay.portlet.expando.model.impl.ExpandoValueModelImpl
  * @generated
  */
+@ProviderType
 public interface ExpandoValueModel extends AttachedModel, BaseModel<ExpandoValue> {
 	/*
 	 * NOTE FOR DEVELOPERS:

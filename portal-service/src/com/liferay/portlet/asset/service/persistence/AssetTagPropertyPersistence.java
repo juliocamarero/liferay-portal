@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.asset.model.AssetTagProperty;
@@ -30,6 +32,7 @@ import com.liferay.portlet.asset.model.AssetTagProperty;
  * @see AssetTagPropertyUtil
  * @generated
  */
+@ProviderType
 public interface AssetTagPropertyPersistence extends BasePersistence<AssetTagProperty> {
 	/*
 	 * NOTE FOR DEVELOPERS:

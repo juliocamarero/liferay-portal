@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
@@ -28,6 +30,7 @@ import java.util.Map;
  * @see UserNotificationEvent
  * @generated
  */
+@ProviderType
 public class UserNotificationEventWrapper implements UserNotificationEvent,
 	ModelWrapper<UserNotificationEvent> {
 	public UserNotificationEventWrapper(

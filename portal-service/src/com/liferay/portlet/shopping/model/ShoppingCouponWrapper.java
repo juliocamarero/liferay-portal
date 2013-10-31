@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see ShoppingCoupon
  * @generated
  */
+@ProviderType
 public class ShoppingCouponWrapper implements ShoppingCoupon,
 	ModelWrapper<ShoppingCoupon> {
 	public ShoppingCouponWrapper(ShoppingCoupon shoppingCoupon) {

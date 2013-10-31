@@ -14,6 +14,8 @@
 
 package com.liferay.counter.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
@@ -31,6 +33,7 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see com.liferay.counter.service.impl.CounterLocalServiceImpl
  * @generated
  */
+@ProviderType
 public class CounterLocalServiceUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:

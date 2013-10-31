@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface DDMStructureFinder {
 	public int countByKeywords(long companyId, long[] groupIds,
 		long[] classNameIds, java.lang.String keywords)

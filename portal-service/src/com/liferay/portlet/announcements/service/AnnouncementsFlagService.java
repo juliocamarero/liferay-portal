@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.announcements.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -34,6 +36,7 @@ import com.liferay.portal.service.BaseService;
  * @see com.liferay.portlet.announcements.service.impl.AnnouncementsFlagServiceImpl
  * @generated
  */
+@ProviderType
 @AccessControlled
 @JSONWebService
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {

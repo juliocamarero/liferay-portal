@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -36,6 +38,7 @@ import java.io.Serializable;
  * @see com.liferay.portlet.shopping.model.impl.ShoppingItemFieldModelImpl
  * @generated
  */
+@ProviderType
 public interface ShoppingItemFieldModel extends BaseModel<ShoppingItemField> {
 	/*
 	 * NOTE FOR DEVELOPERS:

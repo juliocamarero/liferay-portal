@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.expando.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.expando.model.ExpandoTable;
@@ -30,6 +32,7 @@ import com.liferay.portlet.expando.model.ExpandoTable;
  * @see ExpandoTableUtil
  * @generated
  */
+@ProviderType
 public interface ExpandoTablePersistence extends BasePersistence<ExpandoTable> {
 	/*
 	 * NOTE FOR DEVELOPERS:

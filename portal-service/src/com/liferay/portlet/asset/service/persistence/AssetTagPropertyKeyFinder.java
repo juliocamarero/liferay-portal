@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.asset.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface AssetTagPropertyKeyFinder {
 	public int countByGroupId(long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException;

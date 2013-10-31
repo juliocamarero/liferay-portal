@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link TicketLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see TicketLocalService
  * @generated
  */
+@ProviderType
 public class TicketLocalServiceWrapper implements TicketLocalService,
 	ServiceWrapper<TicketLocalService> {
 	public TicketLocalServiceWrapper(TicketLocalService ticketLocalService) {

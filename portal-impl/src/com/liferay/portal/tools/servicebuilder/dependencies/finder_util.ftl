@@ -1,8 +1,14 @@
 package ${packagePath}.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
+
+<#if pluginName == "">
+	@ProviderType
+</#if>
 
 public class ${entity.name}FinderUtil {
 

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.wiki.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.wiki.model.WikiPageResource;
@@ -30,6 +32,7 @@ import com.liferay.portlet.wiki.model.WikiPageResource;
  * @see WikiPageResourceUtil
  * @generated
  */
+@ProviderType
 public interface WikiPageResourcePersistence extends BasePersistence<WikiPageResource> {
 	/*
 	 * NOTE FOR DEVELOPERS:

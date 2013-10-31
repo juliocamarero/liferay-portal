@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface JournalFolderFinder {
 	public int countF_A_ByG_F(long groupId, long folderId,
 		com.liferay.portal.kernel.dao.orm.QueryDefinition queryDefinition)

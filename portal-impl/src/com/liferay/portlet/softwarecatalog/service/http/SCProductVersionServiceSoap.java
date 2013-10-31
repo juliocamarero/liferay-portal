@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.softwarecatalog.service.SCProductVersionServiceUtil
  * @generated
  */
+@ProviderType
 public class SCProductVersionServiceSoap {
 	public static com.liferay.portlet.softwarecatalog.model.SCProductVersionSoap addProductVersion(
 		long productEntryId, java.lang.String version,

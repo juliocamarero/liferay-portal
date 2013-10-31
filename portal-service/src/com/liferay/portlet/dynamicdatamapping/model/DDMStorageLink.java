@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatamapping.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.dynamicdatamapping.model.impl.DDMStorageLinkModelImpl
  * @generated
  */
+@ProviderType
 public interface DDMStorageLink extends DDMStorageLinkModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

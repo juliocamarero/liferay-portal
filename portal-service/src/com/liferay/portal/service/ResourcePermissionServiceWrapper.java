@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link ResourcePermissionService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see ResourcePermissionService
  * @generated
  */
+@ProviderType
 public class ResourcePermissionServiceWrapper
 	implements ResourcePermissionService,
 		ServiceWrapper<ResourcePermissionService> {

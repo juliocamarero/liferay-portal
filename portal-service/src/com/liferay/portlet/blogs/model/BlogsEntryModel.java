@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.blogs.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -45,6 +47,7 @@ import java.util.Date;
  * @see com.liferay.portlet.blogs.model.impl.BlogsEntryModelImpl
  * @generated
  */
+@ProviderType
 public interface BlogsEntryModel extends BaseModel<BlogsEntry>,
 	StagedGroupedModel, TrashedModel, WorkflowedModel {
 	/*

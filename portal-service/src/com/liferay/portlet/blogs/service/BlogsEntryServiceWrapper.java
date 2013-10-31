@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.blogs.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see BlogsEntryService
  * @generated
  */
+@ProviderType
 public class BlogsEntryServiceWrapper implements BlogsEntryService,
 	ServiceWrapper<BlogsEntryService> {
 	public BlogsEntryServiceWrapper(BlogsEntryService blogsEntryService) {

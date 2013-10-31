@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see AssetLink
  * @generated
  */
+@ProviderType
 public class AssetLinkWrapper implements AssetLink, ModelWrapper<AssetLink> {
 	public AssetLinkWrapper(AssetLink assetLink) {
 		_assetLink = assetLink;

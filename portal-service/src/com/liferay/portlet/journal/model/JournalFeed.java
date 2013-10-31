@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.journal.model.impl.JournalFeedModelImpl
  * @generated
  */
+@ProviderType
 public interface JournalFeed extends JournalFeedModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

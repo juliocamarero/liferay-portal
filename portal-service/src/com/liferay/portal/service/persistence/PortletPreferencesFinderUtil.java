@@ -14,12 +14,15 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class PortletPreferencesFinderUtil {
 	public static long countByO_O_P(long ownerId, int ownerType,
 		java.lang.String portletId, boolean excludeDefaultPreferences)

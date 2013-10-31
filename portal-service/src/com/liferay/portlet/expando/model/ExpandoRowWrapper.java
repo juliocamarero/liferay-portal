@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.expando.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see ExpandoRow
  * @generated
  */
+@ProviderType
 public class ExpandoRowWrapper implements ExpandoRow, ModelWrapper<ExpandoRow> {
 	public ExpandoRowWrapper(ExpandoRow expandoRow) {
 		_expandoRow = expandoRow;

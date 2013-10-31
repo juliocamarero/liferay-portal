@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.bookmarks.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -62,6 +64,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.bookmarks.service.BookmarksFolderServiceUtil
  * @generated
  */
+@ProviderType
 public class BookmarksFolderServiceSoap {
 	public static com.liferay.portlet.bookmarks.model.BookmarksFolderSoap addFolder(
 		long parentFolderId, java.lang.String name,

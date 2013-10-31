@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.asset.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface AssetEntryFinder {
 	public int countEntries(
 		com.liferay.portlet.asset.service.persistence.AssetEntryQuery entryQuery)

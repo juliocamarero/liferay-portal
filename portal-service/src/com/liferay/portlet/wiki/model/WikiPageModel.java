@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.wiki.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -46,6 +48,7 @@ import java.util.Date;
  * @see com.liferay.portlet.wiki.model.impl.WikiPageModelImpl
  * @generated
  */
+@ProviderType
 public interface WikiPageModel extends BaseModel<WikiPage>, ResourcedModel,
 	StagedGroupedModel, TrashedModel, WorkflowedModel {
 	/*

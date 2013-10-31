@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.flags.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
@@ -31,6 +33,7 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see com.liferay.portlet.flags.service.impl.FlagsEntryServiceImpl
  * @generated
  */
+@ProviderType
 public class FlagsEntryServiceUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see AssetCategoryProperty
  * @generated
  */
+@ProviderType
 public class AssetCategoryPropertyWrapper implements AssetCategoryProperty,
 	ModelWrapper<AssetCategoryProperty> {
 	public AssetCategoryPropertyWrapper(

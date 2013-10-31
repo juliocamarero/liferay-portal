@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.transaction.Isolation;
@@ -35,6 +37,7 @@ import com.liferay.portal.service.BaseLocalService;
             Dynamic Data Mapping framework to handle structures
  * @generated
  */
+@ProviderType
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})
 public interface JournalStructureLocalService extends BaseLocalService {

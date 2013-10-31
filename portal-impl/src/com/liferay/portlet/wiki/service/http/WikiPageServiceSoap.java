@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.wiki.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -62,6 +64,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.wiki.service.WikiPageServiceUtil
  * @generated
  */
+@ProviderType
 public class WikiPageServiceSoap {
 	public static com.liferay.portlet.wiki.model.WikiPageSoap addPage(
 		long nodeId, java.lang.String title, java.lang.String content,

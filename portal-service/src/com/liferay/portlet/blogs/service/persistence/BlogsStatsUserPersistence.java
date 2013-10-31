@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.blogs.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.blogs.model.BlogsStatsUser;
@@ -30,6 +32,7 @@ import com.liferay.portlet.blogs.model.BlogsStatsUser;
  * @see BlogsStatsUserUtil
  * @generated
  */
+@ProviderType
 public interface BlogsStatsUserPersistence extends BasePersistence<BlogsStatsUser> {
 	/*
 	 * NOTE FOR DEVELOPERS:

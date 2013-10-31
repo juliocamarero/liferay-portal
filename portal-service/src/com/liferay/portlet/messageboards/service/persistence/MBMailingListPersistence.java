@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.messageboards.model.MBMailingList;
@@ -30,6 +32,7 @@ import com.liferay.portlet.messageboards.model.MBMailingList;
  * @see MBMailingListUtil
  * @generated
  */
+@ProviderType
 public interface MBMailingListPersistence extends BasePersistence<MBMailingList> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link WebsiteService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see WebsiteService
  * @generated
  */
+@ProviderType
 public class WebsiteServiceWrapper implements WebsiteService,
 	ServiceWrapper<WebsiteService> {
 	public WebsiteServiceWrapper(WebsiteService websiteService) {

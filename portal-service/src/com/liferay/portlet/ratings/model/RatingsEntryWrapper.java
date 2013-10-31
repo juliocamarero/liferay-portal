@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.ratings.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see RatingsEntry
  * @generated
  */
+@ProviderType
 public class RatingsEntryWrapper implements RatingsEntry,
 	ModelWrapper<RatingsEntry> {
 	public RatingsEntryWrapper(RatingsEntry ratingsEntry) {

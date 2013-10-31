@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.polls.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
@@ -31,6 +33,7 @@ import java.util.Map;
  * @see PollsQuestion
  * @generated
  */
+@ProviderType
 public class PollsQuestionWrapper implements PollsQuestion,
 	ModelWrapper<PollsQuestion> {
 	public PollsQuestionWrapper(PollsQuestion pollsQuestion) {

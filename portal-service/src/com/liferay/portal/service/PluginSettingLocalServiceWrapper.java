@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link PluginSettingLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see PluginSettingLocalService
  * @generated
  */
+@ProviderType
 public class PluginSettingLocalServiceWrapper
 	implements PluginSettingLocalService,
 		ServiceWrapper<PluginSettingLocalService> {

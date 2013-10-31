@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.expando.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -34,6 +36,7 @@ import java.io.Serializable;
  * @see com.liferay.portlet.expando.model.impl.ExpandoColumnModelImpl
  * @generated
  */
+@ProviderType
 public interface ExpandoColumnModel extends BaseModel<ExpandoColumn> {
 	/*
 	 * NOTE FOR DEVELOPERS:

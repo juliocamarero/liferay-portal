@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Date;
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see SystemEvent
  * @generated
  */
+@ProviderType
 public class SystemEventWrapper implements SystemEvent,
 	ModelWrapper<SystemEvent> {
 	public SystemEventWrapper(SystemEvent systemEvent) {

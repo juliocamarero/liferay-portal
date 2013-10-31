@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatalists.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -62,6 +64,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.dynamicdatalists.service.DDLRecordServiceUtil
  * @generated
  */
+@ProviderType
 public class DDLRecordServiceSoap {
 	public static com.liferay.portlet.dynamicdatalists.model.DDLRecordSoap deleteRecordLocale(
 		long recordId, String locale,

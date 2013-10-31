@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.calendar.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class CalEventFinderUtil {
 	public static int countByG_SD_T(long groupId, java.util.Date startDateGT,
 		java.util.Date startDateLT, boolean timeZoneSensitive,

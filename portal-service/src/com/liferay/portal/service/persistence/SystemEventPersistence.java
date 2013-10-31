@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.SystemEvent;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.SystemEvent;
  * @see SystemEventUtil
  * @generated
  */
+@ProviderType
 public interface SystemEventPersistence extends BasePersistence<SystemEvent> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class DLFolderFinderUtil {
 	public static int countF_FE_FS_ByG_F_M_M(long groupId, long folderId,
 		java.lang.String[] mimeTypes, boolean includeMountFolders,

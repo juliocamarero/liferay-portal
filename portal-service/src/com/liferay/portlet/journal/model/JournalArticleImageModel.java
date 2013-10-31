@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -36,6 +38,7 @@ import java.io.Serializable;
  * @see com.liferay.portlet.journal.model.impl.JournalArticleImageModelImpl
  * @generated
  */
+@ProviderType
 public interface JournalArticleImageModel extends BaseModel<JournalArticleImage> {
 	/*
 	 * NOTE FOR DEVELOPERS:

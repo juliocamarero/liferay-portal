@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.UserTracker;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.UserTracker;
  * @see UserTrackerUtil
  * @generated
  */
+@ProviderType
 public interface UserTrackerPersistence extends BasePersistence<UserTracker> {
 	/*
 	 * NOTE FOR DEVELOPERS:

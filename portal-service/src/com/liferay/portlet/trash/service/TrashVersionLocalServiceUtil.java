@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.trash.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
@@ -31,6 +33,7 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see com.liferay.portlet.trash.service.impl.TrashVersionLocalServiceImpl
  * @generated
  */
+@ProviderType
 public class TrashVersionLocalServiceUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -275,6 +278,12 @@ public class TrashVersionLocalServiceUtil {
 		getService()
 			.addTrashVersion(trashEntryId, className, classPK, status,
 			typeSettingsProperties);
+	}
+
+	public static com.liferay.portlet.trash.model.TrashVersion deleteTrashVersion(
+		long entryId, java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().deleteTrashVersion(entryId, className, classPK);
 	}
 
 	public static com.liferay.portlet.trash.model.TrashVersion fetchVersion(

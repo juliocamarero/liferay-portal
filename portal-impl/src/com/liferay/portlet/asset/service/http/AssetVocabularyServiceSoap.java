@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -65,6 +67,7 @@ import java.util.Map;
  * @see com.liferay.portlet.asset.service.AssetVocabularyServiceUtil
  * @generated
  */
+@ProviderType
 public class AssetVocabularyServiceSoap {
 	/**
 	* @deprecated As of 6.1.0 {@link #addVocabulary(String, Map, Map, String,

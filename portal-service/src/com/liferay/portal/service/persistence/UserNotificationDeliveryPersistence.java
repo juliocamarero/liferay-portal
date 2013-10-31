@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.UserNotificationDelivery;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.UserNotificationDelivery;
  * @see UserNotificationDeliveryUtil
  * @generated
  */
+@ProviderType
 public interface UserNotificationDeliveryPersistence extends BasePersistence<UserNotificationDelivery> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.blogs.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface BlogsEntryFinder {
 	public int countByOrganizationId(long organizationId,
 		java.util.Date displayDate,

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -50,6 +52,7 @@ import java.util.Map;
  * @see com.liferay.portlet.journal.model.impl.JournalArticleModelImpl
  * @generated
  */
+@ProviderType
 public interface JournalArticleModel extends AttachedModel,
 	BaseModel<JournalArticle>, ResourcedModel, StagedGroupedModel, TrashedModel,
 	WorkflowedModel {

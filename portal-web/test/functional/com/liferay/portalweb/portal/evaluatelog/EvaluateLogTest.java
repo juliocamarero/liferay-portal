@@ -182,6 +182,15 @@ public class EvaluateLogTest extends BaseTestCase {
 				}
 			}
 
+			// LPS-41863
+
+			if (line.matches(
+					".*[org.hibernate.engine.jdbc.JdbcSupportLoader] (MSC " +
+						"service thread .*) Disabling contextual LOB .*")) {
+
+				continue;
+			}
+
 			System.out.println("\nException Line:\n\n" + line + "\n");
 
 			return false;

@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.social.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface SocialActivityCounterFinder {
 	public int countU_ByG_N(long groupId, java.lang.String[] names)
 		throws com.liferay.portal.kernel.exception.SystemException;

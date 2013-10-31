@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link LockLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see LockLocalService
  * @generated
  */
+@ProviderType
 public class LockLocalServiceWrapper implements LockLocalService,
 	ServiceWrapper<LockLocalService> {
 	public LockLocalServiceWrapper(LockLocalService lockLocalService) {

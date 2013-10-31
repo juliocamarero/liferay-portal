@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.polls.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.polls.service.PollsVoteServiceUtil
  * @generated
  */
+@ProviderType
 public class PollsVoteServiceSoap {
 	public static com.liferay.portlet.polls.model.PollsVoteSoap addVote(
 		long questionId, long choiceId,

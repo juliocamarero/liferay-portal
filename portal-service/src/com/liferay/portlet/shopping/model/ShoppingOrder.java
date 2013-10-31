@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.shopping.model.impl.ShoppingOrderModelImpl
  * @generated
  */
+@ProviderType
 public interface ShoppingOrder extends ShoppingOrderModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

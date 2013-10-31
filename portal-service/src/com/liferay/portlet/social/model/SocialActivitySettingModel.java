@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.social.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -37,6 +39,7 @@ import java.io.Serializable;
  * @see com.liferay.portlet.social.model.impl.SocialActivitySettingModelImpl
  * @generated
  */
+@ProviderType
 public interface SocialActivitySettingModel extends BaseModel<SocialActivitySetting>,
 	TypedModel {
 	/*

@@ -14,12 +14,15 @@
 
 package com.liferay.counter.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class CounterFinderUtil {
 	public static void afterPropertiesSet() {
 		getFinder().afterPropertiesSet();

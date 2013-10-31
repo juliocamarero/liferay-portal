@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PortletPreferences;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.PortletPreferences;
  * @see PortletPreferencesUtil
  * @generated
  */
+@ProviderType
 public interface PortletPreferencesPersistence extends BasePersistence<PortletPreferences> {
 	/*
 	 * NOTE FOR DEVELOPERS:

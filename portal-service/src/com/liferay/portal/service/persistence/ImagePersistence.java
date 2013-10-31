@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Image;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Image;
  * @see ImageUtil
  * @generated
  */
+@ProviderType
 public interface ImagePersistence extends BasePersistence<Image> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.messageboards.model.MBBan;
@@ -30,6 +32,7 @@ import com.liferay.portlet.messageboards.model.MBBan;
  * @see MBBanUtil
  * @generated
  */
+@ProviderType
 public interface MBBanPersistence extends BasePersistence<MBBan> {
 	/*
 	 * NOTE FOR DEVELOPERS:

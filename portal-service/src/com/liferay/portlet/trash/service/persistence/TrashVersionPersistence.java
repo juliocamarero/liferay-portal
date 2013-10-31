@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.trash.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.trash.model.TrashVersion;
@@ -30,6 +32,7 @@ import com.liferay.portlet.trash.model.TrashVersion;
  * @see TrashVersionUtil
  * @generated
  */
+@ProviderType
 public interface TrashVersionPersistence extends BasePersistence<TrashVersion> {
 	/*
 	 * NOTE FOR DEVELOPERS:

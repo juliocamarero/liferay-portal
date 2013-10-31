@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.asset.model.AssetTagStats;
@@ -30,6 +32,7 @@ import com.liferay.portlet.asset.model.AssetTagStats;
  * @see AssetTagStatsUtil
  * @generated
  */
+@ProviderType
 public interface AssetTagStatsPersistence extends BasePersistence<AssetTagStats> {
 	/*
 	 * NOTE FOR DEVELOPERS:

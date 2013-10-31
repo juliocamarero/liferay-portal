@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.blogs.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -38,6 +40,7 @@ import java.util.Date;
  * @see com.liferay.portlet.blogs.model.impl.BlogsStatsUserModelImpl
  * @generated
  */
+@ProviderType
 public interface BlogsStatsUserModel extends BaseModel<BlogsStatsUser> {
 	/*
 	 * NOTE FOR DEVELOPERS:

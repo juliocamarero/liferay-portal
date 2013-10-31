@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see JournalFeedService
  * @generated
  */
+@ProviderType
 public class JournalFeedServiceWrapper implements JournalFeedService,
 	ServiceWrapper<JournalFeedService> {
 	public JournalFeedServiceWrapper(JournalFeedService journalFeedService) {

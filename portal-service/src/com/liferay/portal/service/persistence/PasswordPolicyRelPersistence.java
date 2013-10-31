@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PasswordPolicyRel;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.PasswordPolicyRel;
  * @see PasswordPolicyRelUtil
  * @generated
  */
+@ProviderType
 public interface PasswordPolicyRelPersistence extends BasePersistence<PasswordPolicyRel> {
 	/*
 	 * NOTE FOR DEVELOPERS:

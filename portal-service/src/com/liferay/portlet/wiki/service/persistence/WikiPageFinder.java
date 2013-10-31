@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.wiki.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface WikiPageFinder {
 	public int countByCreateDate(long groupId, long nodeId,
 		java.util.Date createDate, boolean before)

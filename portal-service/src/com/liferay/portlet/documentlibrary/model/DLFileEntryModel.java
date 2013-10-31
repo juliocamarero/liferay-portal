@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -45,6 +47,7 @@ import java.util.Date;
  * @see com.liferay.portlet.documentlibrary.model.impl.DLFileEntryModelImpl
  * @generated
  */
+@ProviderType
 public interface DLFileEntryModel extends AttachedModel, BaseModel<DLFileEntry>,
 	StagedGroupedModel, TrashedModel {
 	/*

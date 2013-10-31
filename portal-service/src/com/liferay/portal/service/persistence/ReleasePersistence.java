@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Release;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Release;
  * @see ReleaseUtil
  * @generated
  */
+@ProviderType
 public interface ReleasePersistence extends BasePersistence<Release> {
 	/*
 	 * NOTE FOR DEVELOPERS:

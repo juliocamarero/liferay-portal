@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link StagingLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see StagingLocalService
  * @generated
  */
+@ProviderType
 public class StagingLocalServiceWrapper implements StagingLocalService,
 	ServiceWrapper<StagingLocalService> {
 	public StagingLocalServiceWrapper(StagingLocalService stagingLocalService) {

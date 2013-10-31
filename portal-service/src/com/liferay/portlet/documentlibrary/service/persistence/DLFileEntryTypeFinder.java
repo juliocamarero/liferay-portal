@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface DLFileEntryTypeFinder {
 	public int countByKeywords(long companyId, long[] groupIds,
 		java.lang.String keywords, boolean includeBasicFileEntryType)

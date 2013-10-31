@@ -14,6 +14,8 @@
 
 package com.liferay.counter.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.counter.model.impl.CounterModelImpl
  * @generated
  */
+@ProviderType
 public interface Counter extends CounterModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

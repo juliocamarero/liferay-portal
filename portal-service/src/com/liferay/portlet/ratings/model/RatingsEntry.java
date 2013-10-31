@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.ratings.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.ratings.model.impl.RatingsEntryModelImpl
  * @generated
  */
+@ProviderType
 public interface RatingsEntry extends RatingsEntryModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

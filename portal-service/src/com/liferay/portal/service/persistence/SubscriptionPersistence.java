@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Subscription;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Subscription;
  * @see SubscriptionUtil
  * @generated
  */
+@ProviderType
 public interface SubscriptionPersistence extends BasePersistence<Subscription> {
 	/*
 	 * NOTE FOR DEVELOPERS:

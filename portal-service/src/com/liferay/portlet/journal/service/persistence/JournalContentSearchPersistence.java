@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.journal.model.JournalContentSearch;
@@ -30,6 +32,7 @@ import com.liferay.portlet.journal.model.JournalContentSearch;
  * @see JournalContentSearchUtil
  * @generated
  */
+@ProviderType
 public interface JournalContentSearchPersistence extends BasePersistence<JournalContentSearch> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.ClassName;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.ClassName;
  * @see ClassNameUtil
  * @generated
  */
+@ProviderType
 public interface ClassNamePersistence extends BasePersistence<ClassName> {
 	/*
 	 * NOTE FOR DEVELOPERS:

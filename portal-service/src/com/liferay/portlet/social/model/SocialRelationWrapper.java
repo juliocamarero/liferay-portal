@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.social.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see SocialRelation
  * @generated
  */
+@ProviderType
 public class SocialRelationWrapper implements SocialRelation,
 	ModelWrapper<SocialRelation> {
 	public SocialRelationWrapper(SocialRelation socialRelation) {

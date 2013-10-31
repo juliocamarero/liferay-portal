@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Accessor;
 import com.liferay.portal.model.PersistedModel;
 
@@ -26,6 +28,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.asset.model.impl.AssetLinkModelImpl
  * @generated
  */
+@ProviderType
 public interface AssetLink extends AssetLinkModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.journal.model.JournalArticleImage;
@@ -30,6 +32,7 @@ import com.liferay.portlet.journal.model.JournalArticleImage;
  * @see JournalArticleImageUtil
  * @generated
  */
+@ProviderType
 public interface JournalArticleImagePersistence extends BasePersistence<JournalArticleImage> {
 	/*
 	 * NOTE FOR DEVELOPERS:

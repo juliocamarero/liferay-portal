@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface DLFileRankFinder {
 	public java.util.List<java.lang.Object[]> findByStaleRanks(int count)
 		throws com.liferay.portal.kernel.exception.SystemException;

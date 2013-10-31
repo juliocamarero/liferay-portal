@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.flags.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see FlagsEntryService
  * @generated
  */
+@ProviderType
 public class FlagsEntryServiceWrapper implements FlagsEntryService,
 	ServiceWrapper<FlagsEntryService> {
 	public FlagsEntryServiceWrapper(FlagsEntryService flagsEntryService) {

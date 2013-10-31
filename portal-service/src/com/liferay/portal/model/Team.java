@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Accessor;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.kernel.util.Accessor;
  * @see com.liferay.portal.model.impl.TeamModelImpl
  * @generated
  */
+@ProviderType
 public interface Team extends TeamModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

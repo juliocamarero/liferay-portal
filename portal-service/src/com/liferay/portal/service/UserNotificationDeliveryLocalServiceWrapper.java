@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link UserNotificationDeliveryLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see UserNotificationDeliveryLocalService
  * @generated
  */
+@ProviderType
 public class UserNotificationDeliveryLocalServiceWrapper
 	implements UserNotificationDeliveryLocalService,
 		ServiceWrapper<UserNotificationDeliveryLocalService> {

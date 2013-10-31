@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatamapping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -30,6 +32,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
  * @see DDMStructureUtil
  * @generated
  */
+@ProviderType
 public interface DDMStructurePersistence extends BasePersistence<DDMStructure> {
 	/*
 	 * NOTE FOR DEVELOPERS:

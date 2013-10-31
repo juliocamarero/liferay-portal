@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Address;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Address;
  * @see AddressUtil
  * @generated
  */
+@ProviderType
 public interface AddressPersistence extends BasePersistence<Address> {
 	/*
 	 * NOTE FOR DEVELOPERS:

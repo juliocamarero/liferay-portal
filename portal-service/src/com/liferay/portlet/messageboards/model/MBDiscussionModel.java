@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.AttachedModel;
@@ -41,6 +43,7 @@ import java.util.Date;
  * @see com.liferay.portlet.messageboards.model.impl.MBDiscussionModelImpl
  * @generated
  */
+@ProviderType
 public interface MBDiscussionModel extends AttachedModel, BaseModel<MBDiscussion>,
 	StagedGroupedModel {
 	/*

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link RoleService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see RoleService
  * @generated
  */
+@ProviderType
 public class RoleServiceWrapper implements RoleService,
 	ServiceWrapper<RoleService> {
 	public RoleServiceWrapper(RoleService roleService) {

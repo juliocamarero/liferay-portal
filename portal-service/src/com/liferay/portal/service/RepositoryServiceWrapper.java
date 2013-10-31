@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link RepositoryService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see RepositoryService
  * @generated
  */
+@ProviderType
 public class RepositoryServiceWrapper implements RepositoryService,
 	ServiceWrapper<RepositoryService> {
 	public RepositoryServiceWrapper(RepositoryService repositoryService) {

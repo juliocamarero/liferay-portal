@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.calendar.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
@@ -40,6 +42,7 @@ import java.util.Date;
  * @see com.liferay.portlet.calendar.model.impl.CalEventModelImpl
  * @generated
  */
+@ProviderType
 public interface CalEventModel extends BaseModel<CalEvent>, StagedGroupedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

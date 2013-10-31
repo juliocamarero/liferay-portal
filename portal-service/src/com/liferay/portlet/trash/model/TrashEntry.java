@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.trash.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.trash.model.impl.TrashEntryModelImpl
  * @generated
  */
+@ProviderType
 public interface TrashEntry extends TrashEntryModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

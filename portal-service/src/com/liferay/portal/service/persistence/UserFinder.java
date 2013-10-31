@@ -14,9 +14,12 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface UserFinder {
 	public int countByUser(long userId,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params)

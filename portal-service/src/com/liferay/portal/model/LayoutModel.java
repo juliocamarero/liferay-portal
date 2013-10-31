@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -40,6 +42,7 @@ import java.util.Map;
  * @see com.liferay.portal.model.impl.LayoutModelImpl
  * @generated
  */
+@ProviderType
 public interface LayoutModel extends BaseModel<Layout>, StagedGroupedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -36,6 +38,7 @@ import java.util.List;
  * @see LayoutSetPrototypePersistenceImpl
  * @generated
  */
+@ProviderType
 public class LayoutSetPrototypeUtil {
 	/*
 	 * NOTE FOR DEVELOPERS:

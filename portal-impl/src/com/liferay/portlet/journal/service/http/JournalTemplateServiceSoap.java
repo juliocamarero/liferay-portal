@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -56,6 +58,7 @@ import java.util.Map;
             Dynamic Data Mapping framework to handle templates
  * @generated
  */
+@ProviderType
 public class JournalTemplateServiceSoap {
 	public static com.liferay.portlet.journal.model.JournalTemplateSoap addTemplate(
 		long groupId, java.lang.String templateId, boolean autoTemplateId,

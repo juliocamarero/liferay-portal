@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link UserIdMapperLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see UserIdMapperLocalService
  * @generated
  */
+@ProviderType
 public class UserIdMapperLocalServiceWrapper implements UserIdMapperLocalService,
 	ServiceWrapper<UserIdMapperLocalService> {
 	public UserIdMapperLocalServiceWrapper(

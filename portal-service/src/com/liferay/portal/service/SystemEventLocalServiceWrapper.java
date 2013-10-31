@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link SystemEventLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see SystemEventLocalService
  * @generated
  */
+@ProviderType
 public class SystemEventLocalServiceWrapper implements SystemEventLocalService,
 	ServiceWrapper<SystemEventLocalService> {
 	public SystemEventLocalServiceWrapper(

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -66,6 +68,7 @@ import java.util.Map;
  * @see com.liferay.portlet.journal.service.JournalArticleServiceUtil
  * @generated
  */
+@ProviderType
 public class JournalArticleServiceSoap {
 	/**
 	* Adds a web content article without any images.

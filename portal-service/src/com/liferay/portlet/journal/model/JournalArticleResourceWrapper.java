@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see JournalArticleResource
  * @generated
  */
+@ProviderType
 public class JournalArticleResourceWrapper implements JournalArticleResource,
 	ModelWrapper<JournalArticleResource> {
 	public JournalArticleResourceWrapper(

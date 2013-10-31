@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.documentlibrary.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class DLFileEntryFinderUtil {
 	public static int countByExtraSettings()
 		throws com.liferay.portal.kernel.exception.SystemException {

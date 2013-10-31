@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.dynamicdatalists.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface DDLRecordFinder {
 	public int countByR_S(long recordSetId, int status)
 		throws com.liferay.portal.kernel.exception.SystemException;

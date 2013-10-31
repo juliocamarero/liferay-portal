@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.ratings.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.ratings.service.RatingsEntryServiceUtil
  * @generated
  */
+@ProviderType
 public class RatingsEntryServiceSoap {
 	public static void deleteEntry(java.lang.String className, long classPK)
 		throws RemoteException {

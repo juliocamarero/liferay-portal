@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.ServiceContext;
@@ -35,6 +37,7 @@ import java.io.Serializable;
  * @see com.liferay.portal.model.impl.LayoutBranchModelImpl
  * @generated
  */
+@ProviderType
 public interface LayoutBranchModel extends BaseModel<LayoutBranch> {
 	/*
 	 * NOTE FOR DEVELOPERS:

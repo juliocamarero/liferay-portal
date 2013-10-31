@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
@@ -38,6 +40,7 @@ import java.sql.Blob;
  * @see com.liferay.portlet.documentlibrary.model.impl.DLContentModelImpl
  * @generated
  */
+@ProviderType
 public interface DLContentModel extends BaseModel<DLContent> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.WebDAVProps;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.WebDAVProps;
  * @see WebDAVPropsUtil
  * @generated
  */
+@ProviderType
 public interface WebDAVPropsPersistence extends BasePersistence<WebDAVProps> {
 	/*
 	 * NOTE FOR DEVELOPERS:

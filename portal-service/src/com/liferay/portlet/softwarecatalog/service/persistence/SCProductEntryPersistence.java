@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.softwarecatalog.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.softwarecatalog.model.SCProductEntry;
@@ -30,6 +32,7 @@ import com.liferay.portlet.softwarecatalog.model.SCProductEntry;
  * @see SCProductEntryUtil
  * @generated
  */
+@ProviderType
 public interface SCProductEntryPersistence extends BasePersistence<SCProductEntry> {
 	/*
 	 * NOTE FOR DEVELOPERS:

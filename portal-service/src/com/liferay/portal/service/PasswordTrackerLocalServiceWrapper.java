@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link PasswordTrackerLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see PasswordTrackerLocalService
  * @generated
  */
+@ProviderType
 public class PasswordTrackerLocalServiceWrapper
 	implements PasswordTrackerLocalService,
 		ServiceWrapper<PasswordTrackerLocalService> {

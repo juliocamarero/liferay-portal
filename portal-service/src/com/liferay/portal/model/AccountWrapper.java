@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Date;
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see Account
  * @generated
  */
+@ProviderType
 public class AccountWrapper implements Account, ModelWrapper<Account> {
 	public AccountWrapper(Account account) {
 		_account = account;

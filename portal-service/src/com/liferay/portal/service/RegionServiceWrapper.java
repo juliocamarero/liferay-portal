@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link RegionService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see RegionService
  * @generated
  */
+@ProviderType
 public class RegionServiceWrapper implements RegionService,
 	ServiceWrapper<RegionService> {
 	public RegionServiceWrapper(RegionService regionService) {

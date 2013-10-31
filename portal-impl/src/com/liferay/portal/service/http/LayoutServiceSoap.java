@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -64,6 +66,7 @@ import java.util.Map;
  * @see com.liferay.portal.service.LayoutServiceUtil
  * @generated
  */
+@ProviderType
 public class LayoutServiceSoap {
 	/**
 	* Adds a layout with additional parameters.

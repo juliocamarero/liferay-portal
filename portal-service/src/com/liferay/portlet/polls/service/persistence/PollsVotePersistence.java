@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.polls.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.polls.model.PollsVote;
@@ -30,6 +32,7 @@ import com.liferay.portlet.polls.model.PollsVote;
  * @see PollsVoteUtil
  * @generated
  */
+@ProviderType
 public interface PollsVotePersistence extends BasePersistence<PollsVote> {
 	/*
 	 * NOTE FOR DEVELOPERS:

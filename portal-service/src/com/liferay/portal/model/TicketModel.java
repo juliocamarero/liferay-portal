@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.service.ServiceContext;
 
@@ -36,6 +38,7 @@ import java.util.Date;
  * @see com.liferay.portal.model.impl.TicketModelImpl
  * @generated
  */
+@ProviderType
 public interface TicketModel extends AttachedModel, BaseModel<Ticket> {
 	/*
 	 * NOTE FOR DEVELOPERS:

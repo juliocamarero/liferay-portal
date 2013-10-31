@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link ShardLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see ShardLocalService
  * @generated
  */
+@ProviderType
 public class ShardLocalServiceWrapper implements ShardLocalService,
 	ServiceWrapper<ShardLocalService> {
 	public ShardLocalServiceWrapper(ShardLocalService shardLocalService) {

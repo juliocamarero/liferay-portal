@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.blogs.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.blogs.model.impl.BlogsEntryModelImpl
  * @generated
  */
+@ProviderType
 public interface BlogsEntry extends BlogsEntryModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
@@ -31,6 +33,7 @@ import java.util.Map;
  * @see MBThreadFlag
  * @generated
  */
+@ProviderType
 public class MBThreadFlagWrapper implements MBThreadFlag,
 	ModelWrapper<MBThreadFlag> {
 	public MBThreadFlagWrapper(MBThreadFlag mbThreadFlag) {

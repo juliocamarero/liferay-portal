@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.announcements.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.announcements.service.AnnouncementsEntryServiceUtil
  * @generated
  */
+@ProviderType
 public class AnnouncementsEntryServiceSoap {
 	public static com.liferay.portlet.announcements.model.AnnouncementsEntrySoap addEntry(
 		long plid, long classNameId, long classPK, java.lang.String title,

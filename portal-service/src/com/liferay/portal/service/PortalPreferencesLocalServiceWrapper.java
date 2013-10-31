@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link PortalPreferencesLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see PortalPreferencesLocalService
  * @generated
  */
+@ProviderType
 public class PortalPreferencesLocalServiceWrapper
 	implements PortalPreferencesLocalService,
 		ServiceWrapper<PortalPreferencesLocalService> {

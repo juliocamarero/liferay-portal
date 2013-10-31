@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatalists.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
@@ -40,6 +42,7 @@ import java.util.Date;
  * @see com.liferay.portlet.dynamicdatalists.model.impl.DDLRecordModelImpl
  * @generated
  */
+@ProviderType
 public interface DDLRecordModel extends BaseModel<DDLRecord>, StagedGroupedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

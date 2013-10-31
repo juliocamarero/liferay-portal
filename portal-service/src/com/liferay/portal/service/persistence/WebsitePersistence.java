@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Website;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Website;
  * @see WebsiteUtil
  * @generated
  */
+@ProviderType
 public interface WebsitePersistence extends BasePersistence<Website> {
 	/*
 	 * NOTE FOR DEVELOPERS:

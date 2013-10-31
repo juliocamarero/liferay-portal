@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.journal.model.JournalFeed;
@@ -30,6 +32,7 @@ import com.liferay.portlet.journal.model.JournalFeed;
  * @see JournalFeedUtil
  * @generated
  */
+@ProviderType
 public interface JournalFeedPersistence extends BasePersistence<JournalFeed> {
 	/*
 	 * NOTE FOR DEVELOPERS:

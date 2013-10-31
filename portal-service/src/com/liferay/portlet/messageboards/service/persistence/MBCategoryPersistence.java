@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.messageboards.model.MBCategory;
@@ -30,6 +32,7 @@ import com.liferay.portlet.messageboards.model.MBCategory;
  * @see MBCategoryUtil
  * @generated
  */
+@ProviderType
 public interface MBCategoryPersistence extends BasePersistence<MBCategory> {
 	/*
 	 * NOTE FOR DEVELOPERS:

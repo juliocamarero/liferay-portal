@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.dynamicdatalists.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -43,6 +45,7 @@ import java.util.Map;
  * @see com.liferay.portlet.dynamicdatalists.model.impl.DDLRecordSetModelImpl
  * @generated
  */
+@ProviderType
 public interface DDLRecordSetModel extends BaseModel<DDLRecordSet>,
 	StagedGroupedModel {
 	/*

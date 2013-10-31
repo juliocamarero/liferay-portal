@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link BrowserTrackerLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see BrowserTrackerLocalService
  * @generated
  */
+@ProviderType
 public class BrowserTrackerLocalServiceWrapper
 	implements BrowserTrackerLocalService,
 		ServiceWrapper<BrowserTrackerLocalService> {

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.documentlibrary.service.DLFileVersionServiceUtil
  * @generated
  */
+@ProviderType
 public class DLFileVersionServiceSoap {
 	public static com.liferay.portlet.documentlibrary.model.DLFileVersionSoap getFileVersion(
 		long fileVersionId) throws RemoteException {

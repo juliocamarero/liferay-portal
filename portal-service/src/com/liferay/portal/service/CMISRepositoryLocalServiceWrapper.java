@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link CMISRepositoryLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see CMISRepositoryLocalService
  * @generated
  */
+@ProviderType
 public class CMISRepositoryLocalServiceWrapper
 	implements CMISRepositoryLocalService,
 		ServiceWrapper<CMISRepositoryLocalService> {

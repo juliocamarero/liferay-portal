@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Phone;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Phone;
  * @see PhoneUtil
  * @generated
  */
+@ProviderType
 public interface PhonePersistence extends BasePersistence<Phone> {
 	/*
 	 * NOTE FOR DEVELOPERS:

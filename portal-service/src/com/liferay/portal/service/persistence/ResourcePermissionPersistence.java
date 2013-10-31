@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.ResourcePermission;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.ResourcePermission;
  * @see ResourcePermissionUtil
  * @generated
  */
+@ProviderType
 public interface ResourcePermissionPersistence extends BasePersistence<ResourcePermission> {
 	/*
 	 * NOTE FOR DEVELOPERS:

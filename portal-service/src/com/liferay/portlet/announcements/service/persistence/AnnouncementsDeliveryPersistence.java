@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.announcements.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.announcements.model.AnnouncementsDelivery;
@@ -30,6 +32,7 @@ import com.liferay.portlet.announcements.model.AnnouncementsDelivery;
  * @see AnnouncementsDeliveryUtil
  * @generated
  */
+@ProviderType
 public interface AnnouncementsDeliveryPersistence extends BasePersistence<AnnouncementsDelivery> {
 	/*
 	 * NOTE FOR DEVELOPERS:

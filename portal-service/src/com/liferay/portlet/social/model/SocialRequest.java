@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.social.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.social.model.impl.SocialRequestModelImpl
  * @generated
  */
+@ProviderType
 public interface SocialRequest extends SocialRequestModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

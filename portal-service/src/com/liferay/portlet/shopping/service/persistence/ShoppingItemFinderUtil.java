@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class ShoppingItemFinderUtil {
 	public static int countByG_C(long groupId,
 		java.util.List<java.lang.Long> categoryIds)

@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.social.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class SocialActivitySetFinderUtil {
 	public static int countByRelation(long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {

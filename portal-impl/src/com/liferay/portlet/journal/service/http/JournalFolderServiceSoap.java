@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.journal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -62,6 +64,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.journal.service.JournalFolderServiceUtil
  * @generated
  */
+@ProviderType
 public class JournalFolderServiceSoap {
 	public static com.liferay.portlet.journal.model.JournalFolderSoap addFolder(
 		long groupId, long parentFolderId, java.lang.String name,

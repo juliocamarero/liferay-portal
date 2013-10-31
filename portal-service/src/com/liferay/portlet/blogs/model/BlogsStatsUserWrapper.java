@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.blogs.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see BlogsStatsUser
  * @generated
  */
+@ProviderType
 public class BlogsStatsUserWrapper implements BlogsStatsUser,
 	ModelWrapper<BlogsStatsUser> {
 	public BlogsStatsUserWrapper(BlogsStatsUser blogsStatsUser) {

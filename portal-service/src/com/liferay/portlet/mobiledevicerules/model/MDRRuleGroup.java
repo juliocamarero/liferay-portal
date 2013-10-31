@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.mobiledevicerules.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.mobiledevicerules.model.impl.MDRRuleGroupModelImpl
  * @generated
  */
+@ProviderType
 public interface MDRRuleGroup extends MDRRuleGroupModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

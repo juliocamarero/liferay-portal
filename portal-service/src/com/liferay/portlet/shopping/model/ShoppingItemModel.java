@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
@@ -40,6 +42,7 @@ import java.util.Date;
  * @see com.liferay.portlet.shopping.model.impl.ShoppingItemModelImpl
  * @generated
  */
+@ProviderType
 public interface ShoppingItemModel extends BaseModel<ShoppingItem>, GroupedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

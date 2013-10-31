@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.messageboards.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.ServiceWrapper;
 
 /**
@@ -23,6 +25,7 @@ import com.liferay.portal.service.ServiceWrapper;
  * @see MBThreadLocalService
  * @generated
  */
+@ProviderType
 public class MBThreadLocalServiceWrapper implements MBThreadLocalService,
 	ServiceWrapper<MBThreadLocalService> {
 	public MBThreadLocalServiceWrapper(

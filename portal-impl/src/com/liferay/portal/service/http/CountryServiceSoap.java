@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.service.CountryServiceUtil;
@@ -60,6 +62,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portal.service.CountryServiceUtil
  * @generated
  */
+@ProviderType
 public class CountryServiceSoap {
 	public static com.liferay.portal.model.CountrySoap addCountry(
 		java.lang.String name, java.lang.String a2, java.lang.String a3,

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -62,6 +64,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.shopping.service.ShoppingCategoryServiceUtil
  * @generated
  */
+@ProviderType
 public class ShoppingCategoryServiceSoap {
 	public static com.liferay.portlet.shopping.model.ShoppingCategorySoap addCategory(
 		long parentCategoryId, java.lang.String name,

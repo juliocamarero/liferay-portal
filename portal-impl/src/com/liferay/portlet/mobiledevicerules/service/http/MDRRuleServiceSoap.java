@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.mobiledevicerules.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -65,6 +67,7 @@ import java.util.Map;
  * @see com.liferay.portlet.mobiledevicerules.service.MDRRuleServiceUtil
  * @generated
  */
+@ProviderType
 public class MDRRuleServiceSoap {
 	public static com.liferay.portlet.mobiledevicerules.model.MDRRuleSoap addRule(
 		long ruleGroupId, java.lang.String[] nameMapLanguageIds,

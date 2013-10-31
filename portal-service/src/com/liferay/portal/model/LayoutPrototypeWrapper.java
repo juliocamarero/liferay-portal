@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -30,6 +32,7 @@ import java.util.Map;
  * @see LayoutPrototype
  * @generated
  */
+@ProviderType
 public class LayoutPrototypeWrapper implements LayoutPrototype,
 	ModelWrapper<LayoutPrototype> {
 	public LayoutPrototypeWrapper(LayoutPrototype layoutPrototype) {

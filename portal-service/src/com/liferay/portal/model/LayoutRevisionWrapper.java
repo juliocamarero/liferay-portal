@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Date;
@@ -29,6 +31,7 @@ import java.util.Map;
  * @see LayoutRevision
  * @generated
  */
+@ProviderType
 public class LayoutRevisionWrapper implements LayoutRevision,
 	ModelWrapper<LayoutRevision> {
 	public LayoutRevisionWrapper(LayoutRevision layoutRevision) {

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link GroupService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see GroupService
  * @generated
  */
+@ProviderType
 public class GroupServiceWrapper implements GroupService,
 	ServiceWrapper<GroupService> {
 	public GroupServiceWrapper(GroupService groupService) {

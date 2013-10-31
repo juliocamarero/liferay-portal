@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.wiki.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.wiki.model.WikiNode;
@@ -30,6 +32,7 @@ import com.liferay.portlet.wiki.model.WikiNode;
  * @see WikiNodeUtil
  * @generated
  */
+@ProviderType
 public interface WikiNodePersistence extends BasePersistence<WikiNode> {
 	/*
 	 * NOTE FOR DEVELOPERS:

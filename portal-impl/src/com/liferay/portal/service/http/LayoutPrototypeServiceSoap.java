@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -64,6 +66,7 @@ import java.util.Map;
  * @see com.liferay.portal.service.LayoutPrototypeServiceUtil
  * @generated
  */
+@ProviderType
 public class LayoutPrototypeServiceSoap {
 	/**
 	* @deprecated As of 6.2.0, replaced by {@link #addLayoutPrototype(Map,

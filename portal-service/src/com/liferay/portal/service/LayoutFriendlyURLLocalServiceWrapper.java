@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link LayoutFriendlyURLLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see LayoutFriendlyURLLocalService
  * @generated
  */
+@ProviderType
 public class LayoutFriendlyURLLocalServiceWrapper
 	implements LayoutFriendlyURLLocalService,
 		ServiceWrapper<LayoutFriendlyURLLocalService> {

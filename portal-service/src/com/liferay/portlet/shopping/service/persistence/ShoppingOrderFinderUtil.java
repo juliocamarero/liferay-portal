@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class ShoppingOrderFinderUtil {
 	public static int countByG_C_U_N_PPPS(long groupId, long companyId,
 		long userId, java.lang.String number,

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link BackgroundTaskLocalService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see BackgroundTaskLocalService
  * @generated
  */
+@ProviderType
 public class BackgroundTaskLocalServiceWrapper
 	implements BackgroundTaskLocalService,
 		ServiceWrapper<BackgroundTaskLocalService> {

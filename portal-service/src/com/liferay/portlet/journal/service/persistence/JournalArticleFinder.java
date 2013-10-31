@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface JournalArticleFinder {
 	public int countByKeywords(long companyId, long groupId,
 		java.util.List<java.lang.Long> folderIds, long classNameId,

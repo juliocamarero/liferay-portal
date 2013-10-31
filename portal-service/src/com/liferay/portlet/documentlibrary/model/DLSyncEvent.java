@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.PersistedModel;
 
 /**
@@ -25,6 +27,7 @@ import com.liferay.portal.model.PersistedModel;
  * @see com.liferay.portlet.documentlibrary.model.impl.DLSyncEventModelImpl
  * @generated
  */
+@ProviderType
 public interface DLSyncEvent extends DLSyncEventModel, PersistedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:

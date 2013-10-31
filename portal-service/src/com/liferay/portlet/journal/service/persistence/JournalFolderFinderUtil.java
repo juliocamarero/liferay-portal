@@ -14,12 +14,15 @@
 
 package com.liferay.portlet.journal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public class JournalFolderFinderUtil {
 	public static int countF_A_ByG_F(long groupId, long folderId,
 		com.liferay.portal.kernel.dao.orm.QueryDefinition queryDefinition)

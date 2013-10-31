@@ -14,9 +14,12 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface ShoppingCouponFinder {
 	public int countByG_C_C_A_DT(long groupId, long companyId,
 		java.lang.String code, boolean active, java.lang.String discountType,

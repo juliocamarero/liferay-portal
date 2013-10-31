@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.documentlibrary.service.http;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -61,6 +63,7 @@ import java.rmi.RemoteException;
  * @see com.liferay.portlet.documentlibrary.service.DLFileShortcutServiceUtil
  * @generated
  */
+@ProviderType
 public class DLFileShortcutServiceSoap {
 	public static com.liferay.portlet.documentlibrary.model.DLFileShortcutSoap addFileShortcut(
 		long groupId, long folderId, long toFileEntryId,

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.service.persistence.BasePersistence;
 
 import com.liferay.portlet.shopping.model.ShoppingOrderItem;
@@ -30,6 +32,7 @@ import com.liferay.portlet.shopping.model.ShoppingOrderItem;
  * @see ShoppingOrderItemUtil
  * @generated
  */
+@ProviderType
 public interface ShoppingOrderItemPersistence extends BasePersistence<ShoppingOrderItem> {
 	/*
 	 * NOTE FOR DEVELOPERS:

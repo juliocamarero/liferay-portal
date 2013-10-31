@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.shopping.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.service.ServiceContext;
@@ -35,6 +37,7 @@ import java.io.Serializable;
  * @see com.liferay.portlet.shopping.model.impl.ShoppingItemPriceModelImpl
  * @generated
  */
+@ProviderType
 public interface ShoppingItemPriceModel extends BaseModel<ShoppingItemPrice> {
 	/*
 	 * NOTE FOR DEVELOPERS:

@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.asset.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.AuditedModel;
@@ -40,6 +42,7 @@ import java.util.Date;
  * @see com.liferay.portlet.asset.model.impl.AssetTagPropertyModelImpl
  * @generated
  */
+@ProviderType
 public interface AssetTagPropertyModel extends AuditedModel,
 	BaseModel<AssetTagProperty> {
 	/*

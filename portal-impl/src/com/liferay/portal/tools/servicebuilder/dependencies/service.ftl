@@ -1,5 +1,7 @@
 package ${packagePath}.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -43,6 +45,10 @@ import com.liferay.portal.service.PersistedModelLocalService;
 </#if>
  * @generated
  */
+</#if>
+
+<#if pluginName == "">
+	@ProviderType
 </#if>
 
 <#if entity.hasRemoteService() && sessionTypeName != "Local">

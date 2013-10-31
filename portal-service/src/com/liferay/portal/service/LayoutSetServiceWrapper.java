@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Provides a wrapper for {@link LayoutSetService}.
  *
@@ -21,6 +23,7 @@ package com.liferay.portal.service;
  * @see LayoutSetService
  * @generated
  */
+@ProviderType
 public class LayoutSetServiceWrapper implements LayoutSetService,
 	ServiceWrapper<LayoutSetService> {
 	public LayoutSetServiceWrapper(LayoutSetService layoutSetService) {

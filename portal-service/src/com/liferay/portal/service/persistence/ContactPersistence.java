@@ -14,6 +14,8 @@
 
 package com.liferay.portal.service.persistence;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.model.Contact;
 
 /**
@@ -28,6 +30,7 @@ import com.liferay.portal.model.Contact;
  * @see ContactUtil
  * @generated
  */
+@ProviderType
 public interface ContactPersistence extends BasePersistence<Contact> {
 	/*
 	 * NOTE FOR DEVELOPERS:
