@@ -22,14 +22,6 @@ String referringPortletResource = ParamUtil.getString(request, "referringPortlet
 JournalArticle article = (JournalArticle)request.getAttribute(WebKeys.JOURNAL_ARTICLE);
 
 long classNameId = BeanParamUtil.getLong(article, request, "classNameId");
-
-String structureId = BeanParamUtil.getString(article, request, "structureId");
-
-String deleteButtonLabel = "delete-this-version";
-
-if ((article != null) && article.isDraft()) {
-	deleteButtonLabel = "discard-draft";
-}
 %>
 
 <c:if test="<%= article != null %>">
