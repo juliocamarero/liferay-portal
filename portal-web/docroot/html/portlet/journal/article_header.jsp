@@ -46,6 +46,11 @@ else if (article != null) {
 	else {
 		title = article.getTitle(locale);
 	}
+
+	if (article.isNew() && Validator.isNull(title)) {
+		localizeTitle = true;
+		title = "new-web-content";
+	}
 }
 %>
 
