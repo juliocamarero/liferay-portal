@@ -567,10 +567,23 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		// Trash
 
 		if (page.isInTrash()) {
-			page.setTitle(TrashUtil.getOriginalTitle(page.getTitle()));
+			TrashEntry trashEntry = page.getTrashEntry();
 
-			trashEntryLocalService.deleteEntry(
-				WikiPage.class.getName(), page.getResourcePrimKey());
+			if ((trashEntry != null) &&
+				trashEntry.isTrashEntry(
+					WikiPage.class, page.getResourcePrimKey())) {
+
+				page.setTitle(TrashUtil.getOriginalTitle(page.getTitle()));
+
+				trashEntryLocalService.deleteEntry(
+					WikiPage.class.getName(), page.getResourcePrimKey());
+			}
+			else {
+				for (WikiPage versionPage : versionPages) {
+					trashVersionLocalService.deleteTrashVersion(
+						WikiPage.class.getName(), versionPage.getPageId());
+				}
+			}
 		}
 
 		// Indexer
