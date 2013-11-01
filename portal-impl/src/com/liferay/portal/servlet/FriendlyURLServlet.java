@@ -292,7 +292,7 @@ public class FriendlyURLServlet extends HttpServlet {
 
 				Locale locale = PortalUtil.getLocale(request);
 
-				if (!friendlyURL.startsWith(layout.getFriendlyURL(locale))) {
+				if (!friendlyURL.equals(layout.getFriendlyURL(locale))) {
 					setAlternativeLayoutFriendlyURL(
 						request, layout, friendlyURL);
 

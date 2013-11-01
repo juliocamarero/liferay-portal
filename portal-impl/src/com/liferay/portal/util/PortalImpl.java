@@ -897,6 +897,7 @@ public class PortalImpl implements Portal {
 		throws PortalException, SystemException {
 
 		Layout layout = null;
+		String curFriendlyURL = friendlyURL;
 		String queryString = StringPool.BLANK;
 
 		if (Validator.isNull(friendlyURL)) {
@@ -917,10 +918,12 @@ public class PortalImpl implements Portal {
 					requestContext);
 
 			layout = layoutQueryStringComposite.getLayout();
+			curFriendlyURL = layoutQueryStringComposite.getFriendlyURL();
 			queryString = layoutQueryStringComposite.getQueryString();
 		}
 
-		return new LayoutQueryStringComposite(layout, queryString);
+		return new LayoutQueryStringComposite(
+			layout, curFriendlyURL, queryString);
 	}
 
 	@Override
@@ -2898,6 +2901,7 @@ public class PortalImpl implements Portal {
 					requestContext);
 
 			layout = layoutQueryStringComposite.getLayout();
+			layoutFriendlyURL = layoutQueryStringComposite.getFriendlyURL();
 		}
 
 		return new LayoutFriendlyURLComposite(layout, layoutFriendlyURL);
@@ -4196,7 +4200,7 @@ public class PortalImpl implements Portal {
 		Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
 			groupId, privateLayout, friendlyURL);
 
-		return new LayoutQueryStringComposite(layout, queryString);
+		return new LayoutQueryStringComposite(layout, friendlyURL, queryString);
 	}
 
 	@Override
