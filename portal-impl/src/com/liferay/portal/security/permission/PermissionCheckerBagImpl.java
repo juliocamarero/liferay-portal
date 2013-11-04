@@ -234,28 +234,6 @@ public class PermissionCheckerBagImpl implements PermissionCheckerBag {
 		return value.booleanValue();
 	}
 
-	protected boolean hasUserGroupRole(Group group) {
-		try {
-			return UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-				_userId, group.getGroupId(),
-				RoleConstants.SITE_CONTENT_REVIEWER);
-		}
-		catch (Exception ex) {
-			return false;
-		}
-	}
-
-	protected boolean hasUserRole(Group group) {
-		try {
-			return RoleLocalServiceUtil.hasUserRole(
-				_userId, group.getCompanyId(),
-				RoleConstants.PORTAL_CONTENT_REVIEWER, true);
-		}
-		catch (Exception ex) {
-			return false;
-		}
-	}
-
 	protected boolean isGroupAdminImpl(
 			PermissionChecker permissionChecker, Group group)
 		throws PortalException, SystemException {
@@ -450,20 +428,27 @@ public class PermissionCheckerBagImpl implements PermissionCheckerBag {
 
 	protected boolean isReviewerImpl(
 			PermissionChecker permissionChecker, Group group)
-		throws Exception {
+		throws PortalException, SystemException {
 
 		if (permissionChecker.isCompanyAdmin() ||
-			permissionChecker.isGroupAdmin(group.getGroupId()) ||
-			permissionChecker.isOmniadmin()) {
+			permissionChecker.isGroupAdmin(group.getGroupId())) {
 
 			return true;
 		}
 
-		if (group.isSite() && hasUserGroupRole(group)) {
-			return true;
+		if (group.isSite()) {
+			if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+					_userId, group.getGroupId(),
+					RoleConstants.SITE_CONTENT_REVIEWER, true)) {
+
+				return true;
+			}
 		}
 
-		if (hasUserRole(group)) {
+		if (RoleLocalServiceUtil.hasUserRole(
+				_userId, group.getCompanyId(),
+				RoleConstants.PORTAL_CONTENT_REVIEWER, true)) {
+
 			return true;
 		}
 
