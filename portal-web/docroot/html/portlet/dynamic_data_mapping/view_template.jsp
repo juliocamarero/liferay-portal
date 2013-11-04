@@ -49,9 +49,9 @@ if (layout != null) {
 
 TemplateSearch templateSearch = new TemplateSearch(renderRequest, portletURL);
 
-TemplateSearchTerms searchTerms = (TemplateSearchTerms)templateSearch.getSearchTerms();
+TemplateSearchTerms templateSearchTerms = (TemplateSearchTerms)templateSearch.getSearchTerms();
 
-String title = ddmDisplay.getViewTemplatesTitle(structure, controlPanel, searchTerms.isSearch(), locale);
+String title = ddmDisplay.getViewTemplatesTitle(structure, controlPanel, templateSearchTerms.isSearch(), locale);
 %>
 
 <liferay-ui:error exception="<%= RequiredTemplateException.class %>">
