@@ -262,7 +262,8 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 
 	@Override
 	public String getViewTemplatesTitle(
-		DDMStructure structure, boolean controlPanel, Locale locale) {
+		DDMStructure structure, boolean controlPanel, boolean search,
+		Locale locale) {
 
 		if (structure != null) {
 			return LanguageUtil.format(
@@ -275,7 +276,7 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 
 	@Override
 	public String getViewTemplatesTitle(DDMStructure structure, Locale locale) {
-		return getViewTemplatesTitle(structure, false, locale);
+		return getViewTemplatesTitle(structure, false, false, locale);
 	}
 
 	@Override
