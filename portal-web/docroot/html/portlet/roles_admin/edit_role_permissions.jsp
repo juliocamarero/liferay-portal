@@ -192,7 +192,7 @@ portletURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 
 		var getNoResultsNode = function() {
 			if (!noResultsNode) {
-				noResultsNode = A.Node.create('<div class="alert"><%= LanguageUtil.get(pageContext, "there-are-no-results") %></div>');
+				noResultsNode = A.Node.create('<div class="alert"><%= UnicodeLanguageUtil.get(pageContext, "there-are-no-results") %></div>');
 			}
 
 			return noResultsNode;
