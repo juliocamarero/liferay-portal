@@ -7,16 +7,10 @@
 				COUNT(DISTINCT JournalArticle.articleId) AS COUNT_VALUE
 			FROM
 				JournalArticle
-			LEFT JOIN
-				JournalArticle tempJournalArticle ON
-					(JournalArticle.groupId = tempJournalArticle.groupId) AND
-					(JournalArticle.articleId = tempJournalArticle.articleId) AND
-					(JournalArticle.version < tempJournalArticle.version)
 			WHERE
 				(JournalArticle.groupId = ?) AND
 				[$STATUS$] AND
-				[$FOLDER_ID$] AND
-				(tempJournalArticle.id_ IS NULL)
+				[$FOLDER_ID$]
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.journal.service.persistence.JournalArticleFinder.countByG_C_S">
@@ -38,17 +32,12 @@
 				COUNT(DISTINCT JournalArticle.articleId) AS COUNT_VALUE
 			FROM
 				JournalArticle
-			LEFT JOIN JournalArticle tempJournalArticle ON
-				(JournalArticle.groupId = tempJournalArticle.groupId) AND
-				(JournalArticle.articleId = tempJournalArticle.articleId) AND
-				(JournalArticle.version < tempJournalArticle.version)
 			WHERE
 				(JournalArticle.groupId = ?) AND
 				(JournalArticle.classNameId = ?) AND
 				(JournalArticle.userId = ?) AND
 				([$FOLDER_ID$]) AND
-				[$STATUS$] AND
-				(tempJournalArticle.id_ IS NULL)
+				[$STATUS$]
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.journal.service.persistence.JournalArticleFinder.countByC_G_F_C_A_V_T_D_C_T_S_T_D_R">
@@ -57,10 +46,6 @@
 				COUNT(DISTINCT JournalArticle.articleId) AS COUNT_VALUE
 			FROM
 				JournalArticle
-			LEFT JOIN JournalArticle tempJournalArticle ON
-				(JournalArticle.groupId = tempJournalArticle.groupId) AND
-				(JournalArticle.articleId = tempJournalArticle.articleId) AND
-				(JournalArticle.version < tempJournalArticle.version)
 			WHERE
 				(JournalArticle.companyId = ?) AND
 				(JournalArticle.groupId = ?) AND
@@ -79,8 +64,7 @@
 				) AND
 				(JournalArticle.type_ = ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
 				(JournalArticle.structureId LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
-				(JournalArticle.templateId LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
-				(tempJournalArticle.id_ IS NULL)
+				(JournalArticle.templateId LIKE ? [$AND_OR_NULL_CHECK$])
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.journal.service.persistence.JournalArticleFinder.findByExpirationDate">
