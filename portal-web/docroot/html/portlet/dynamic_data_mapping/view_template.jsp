@@ -39,13 +39,6 @@ portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("classNameId", String.valueOf(classNameId));
 portletURL.setParameter("classPK", String.valueOf(classPK));
 
-PortletURL iteratorURL = renderResponse.createRenderURL();
-
-iteratorURL.setParameter("struts_action", "/dynamic_data_mapping/view_template");
-iteratorURL.setParameter("tabs1", tabs1);
-iteratorURL.setParameter("classNameId", String.valueOf(classNameId));
-iteratorURL.setParameter("classPK", String.valueOf(classPK));
-
 boolean controlPanel = false;
 
 if (layout != null) {
@@ -54,7 +47,7 @@ if (layout != null) {
 	controlPanel = group.isControlPanel();
 }
 
-TemplateSearch templateSearch = new TemplateSearch(renderRequest, iteratorURL);
+TemplateSearch templateSearch = new TemplateSearch(renderRequest, PortletURLUtil.clone(portletURL, renderResponse));
 
 TemplateSearchTerms templateSearchTerms = (TemplateSearchTerms)templateSearch.getSearchTerms();
 
