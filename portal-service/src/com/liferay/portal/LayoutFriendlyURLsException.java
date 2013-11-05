@@ -24,6 +24,10 @@ import java.util.List;
  */
 public class LayoutFriendlyURLsException extends PortalException {
 
+	public LayoutFriendlyURLsException() {
+		super();
+	}
+
 	public void addLayoutFriendlyURLException(
 		LayoutFriendlyURLException lfurle) {
 
