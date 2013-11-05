@@ -72,66 +72,6 @@
 					<aui:a cssClass="site-admin-link" href="<%= siteAdministrationURLString %>" label="site-administration" />
 				</c:if>
 			</c:if>
-
-			<aui:script use="aui-io-request,aui-loading-mask-deprecated,liferay-dockbar">
-				A.one('#<portlet:namespace />closePanelEdit').on('click', Liferay.Dockbar.toggleEditLayoutPanel, Liferay.Dockbar);
-
-				var nameInput = A.one('#<portlet:namespace />name');
-
-				if (nameInput) {
-					nameInput.focus();
-				}
-
-				var loadingMask = A.getBody().plug(A.LoadingMask).loadingmask;
-
-				Liferay.once(
-					'submitForm',
-					function(event) {
-						var form = event.form;
-
-						if (form.hasClass('edit-layout-form')) {
-							event.preventDefault();
-
-							<liferay-portlet:renderURL varImpl="redirectURL">
-								<portlet:param name="struts_action" value="/layouts_admin/update_layout" />
-								<portlet:param name="groupId" value="<%= String.valueOf(liveGroupId) %>" />
-							</liferay-portlet:renderURL>
-
-							form.get('<portlet:namespace />redirect').val('<%= HttpUtil.addParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selPlid) %>');
-
-							loadingMask.show();
-
-							A.io.request(
-								form.attr('action'),
-								{
-									dataType: 'json',
-									form: {
-										id: form.attr('id')
-									},
-									after: {
-										success: function(event, id, obj) {
-											var response = this.get('responseData');
-
-											var panel = A.one('#<portlet:namespace />editLayoutContainer');
-
-											panel.empty();
-
-											panel.plug(A.Plugin.ParseContent);
-
-											panel.setContent(response);
-
-											loadingMask.hide();
-										},
-										failure: function(event) {
-											loadingMask.hide();
-										}
-									}
-								}
-							);
-						}
-					}
-				);
-			</aui:script>
 		</c:otherwise>
 	</c:choose>
 </div>
