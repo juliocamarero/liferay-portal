@@ -32,12 +32,12 @@ if ((classPK > 0) && (structureClassNameId == classNameId)) {
 
 boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 
-PortletURL portletURL = renderResponse.createRenderURL();
+PortletURL iteratorURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/dynamic_data_mapping/view_template");
-portletURL.setParameter("tabs1", tabs1);
-portletURL.setParameter("classNameId", String.valueOf(classNameId));
-portletURL.setParameter("classPK", String.valueOf(classPK));
+iteratorURL.setParameter("struts_action", "/dynamic_data_mapping/view_template");
+iteratorURL.setParameter("tabs1", tabs1);
+iteratorURL.setParameter("classNameId", String.valueOf(classNameId));
+iteratorURL.setParameter("classPK", String.valueOf(classPK));
 
 boolean controlPanel = false;
 
@@ -47,7 +47,7 @@ if (layout != null) {
 	controlPanel = group.isControlPanel();
 }
 
-TemplateSearch templateSearch = new TemplateSearch(renderRequest, portletURL);
+TemplateSearch templateSearch = new TemplateSearch(renderRequest, iteratorURL);
 
 TemplateSearchTerms templateSearchTerms = (TemplateSearchTerms)templateSearch.getSearchTerms();
 
@@ -66,6 +66,13 @@ String title = ddmDisplay.getViewTemplatesTitle(structure, controlPanel, templat
 		title="<%= title %>"
 	/>
 </c:if>
+
+<portlet:renderURL var="portletURL">
+	<portlet:param name="struts_action" value="/dynamic_data_mapping/view_template" />
+	<portlet:param name="tabs1" value="<%= tabs1 %>" />
+	<portlet:param name="classNameId" value="<%= String.valueOf(classNameId) %>" />
+	<portlet:param name="classPK" value="<%= String.valueOf(classPK) %>" />
+</portlet:renderURL>
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
