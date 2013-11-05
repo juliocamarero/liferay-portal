@@ -160,9 +160,6 @@ public class EditArticleAction extends PortletAction {
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
 				deleteArticles(actionRequest, true);
 			}
-			else if (cmd.equals(Constants.RESTORE)) {
-				restoreArticles(actionRequest);
-			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribeArticles(actionRequest);
 			}
@@ -480,21 +477,6 @@ public class EditArticleAction extends PortletAction {
 
 			JournalArticleServiceUtil.removeArticleLocale(
 				groupId, articleId, version, languageId);
-		}
-	}
-
-	protected void restoreArticles(ActionRequest actionRequest)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		String[] restoreEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreEntryIds"));
-
-		for (String restoreEntryId : restoreEntryIds) {
-			JournalArticleServiceUtil.restoreArticleFromTrash(
-				themeDisplay.getScopeGroupId(), restoreEntryId);
 		}
 	}
 
