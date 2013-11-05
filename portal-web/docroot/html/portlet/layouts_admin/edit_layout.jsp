@@ -36,6 +36,13 @@ boolean privateLayout = ((Boolean)request.getAttribute("edit_pages.jsp-privateLa
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_pages.jsp-portletURL");
 PortletURL redirectURL = (PortletURL)request.getAttribute("edit_pages.jsp-redirectURL");
 
+if (portletName.equals(PortletKeys.DOCKBAR)) {
+	redirectURL = liferayPortletResponse.createRenderURL();
+
+	redirectURL.setParameter("struts_action", "/layouts_admin/update_layout");
+	redirectURL.setParameter("groupId", String.valueOf(liveGroupId));
+}
+
 long refererPlid = ParamUtil.getLong(request, "refererPlid", LayoutConstants.DEFAULT_PLID);
 
 Set<Long> parentPlids = new HashSet<Long>();
@@ -349,7 +356,9 @@ boolean showAddAction = ParamUtil.getBoolean(request, "showAddAction", true);
 					return false;
 				}
 
-				document.<portlet:namespace />fm.<portlet:namespace />redirect.value = '<%= HttpUtil.setParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selLayout.getParentPlid()) %>';
+				<c:if test="<%= !portletName.equals(PortletKeys.DOCKBAR) %>">
+					document.<portlet:namespace />fm.<portlet:namespace />redirect.value = '<%= HttpUtil.setParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selLayout.getParentPlid()) %>';
+				</c:if>
 			}
 
 			document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = action;
