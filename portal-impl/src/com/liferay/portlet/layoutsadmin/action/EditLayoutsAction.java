@@ -15,7 +15,7 @@
 package com.liferay.portlet.layoutsadmin.action;
 
 import com.liferay.portal.ImageTypeException;
-import com.liferay.portal.LayoutFriendlyURLException;
+import com.liferay.portal.LayoutFriendlyURLsException;
 import com.liferay.portal.LayoutNameException;
 import com.liferay.portal.LayoutParentLayoutIdException;
 import com.liferay.portal.LayoutSetVirtualHostException;
@@ -265,7 +265,7 @@ public class EditLayoutsAction extends PortletAction {
 				setForward(actionRequest, "portlet.layouts_admin.error");
 			}
 			else if (e instanceof ImageTypeException ||
-					 e instanceof LayoutFriendlyURLException ||
+					 e instanceof LayoutFriendlyURLsException ||
 					 e instanceof LayoutNameException ||
 					 e instanceof LayoutParentLayoutIdException ||
 					 e instanceof LayoutSetVirtualHostException ||
@@ -276,10 +276,10 @@ public class EditLayoutsAction extends PortletAction {
 					 e instanceof SitemapPagePriorityException ||
 					 e instanceof UploadException) {
 
-				if (e instanceof LayoutFriendlyURLException) {
+				if (e instanceof LayoutFriendlyURLsException) {
 					SessionErrors.add(
 						actionRequest,
-						LayoutFriendlyURLException.class.getName(), e);
+						LayoutFriendlyURLsException.class.getName(), e);
 				}
 				else {
 					SessionErrors.add(actionRequest, e.getClass(), e);
