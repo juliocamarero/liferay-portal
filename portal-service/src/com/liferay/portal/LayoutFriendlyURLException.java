@@ -16,6 +16,8 @@ package com.liferay.portal;
 
 import com.liferay.portal.kernel.exception.PortalException;
 
+import java.util.Locale;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -49,6 +51,10 @@ public class LayoutFriendlyURLException extends PortalException {
 		return _keywordConflict;
 	}
 
+	public Locale getLocale() {
+		return _locale;
+	}
+
 	public int getType() {
 		return _type;
 	}
@@ -57,7 +63,12 @@ public class LayoutFriendlyURLException extends PortalException {
 		_keywordConflict = keywordConflict;
 	}
 
+	public void setLocale(Locale locale) {
+		_locale = locale;
+	}
+
 	private String _keywordConflict;
+	private Locale _locale;
 	private int _type;
 
 }

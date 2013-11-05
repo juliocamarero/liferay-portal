@@ -60,7 +60,10 @@ StringBuilder friendlyURLBase = new StringBuilder();
 		List<LayoutFriendlyURLException> layoutFriendlyURLExceptions = lfurlse.getLayoutFriendlyURLExceptions();
 
 		for (LayoutFriendlyURLException lfurle : layoutFriendlyURLExceptions) {
+			Locale localeException = lfurle.getLocale();
 		%>
+
+			<%= localeException.getDisplayName(locale) %>:
 
 			<c:if test="<%= lfurle.getType() == LayoutFriendlyURLException.ADJACENT_SLASHES %>">
 				<liferay-ui:message key="please-enter-a-friendly-url-that-does-not-have-adjacent-slashes" />
