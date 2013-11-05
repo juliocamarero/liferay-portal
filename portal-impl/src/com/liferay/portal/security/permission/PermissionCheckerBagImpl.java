@@ -247,6 +247,13 @@ public class PermissionCheckerBagImpl implements PermissionCheckerBag {
 			return true;
 		}
 
+		if (RoleLocalServiceUtil.hasUserRole(
+				_userId, group.getCompanyId(),
+				RoleConstants.PORTAL_CONTENT_REVIEWER, true)) {
+
+			return true;
+		}
+
 		if (group.isSite()) {
 			if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
 					_userId, group.getGroupId(),
@@ -254,13 +261,6 @@ public class PermissionCheckerBagImpl implements PermissionCheckerBag {
 
 				return true;
 			}
-		}
-
-		if (RoleLocalServiceUtil.hasUserRole(
-				_userId, group.getCompanyId(),
-				RoleConstants.PORTAL_CONTENT_REVIEWER, true)) {
-
-			return true;
 		}
 
 		return false;
