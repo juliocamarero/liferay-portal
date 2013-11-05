@@ -55,6 +55,9 @@ import com.liferay.portlet.blogs.NoSuchEntryException;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.service.BlogsEntryServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import java.io.InputStream;
 
@@ -392,7 +395,11 @@ public class EditEntryAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
 
 		for (long restoreEntryId : restoreEntryIds) {
-			BlogsEntryServiceUtil.restoreEntryFromTrash(restoreEntryId);
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				BlogsEntry.class.getName(), restoreEntryId);
+
+			TrashEntryServiceUtil.restoreEntry(
+				trashEntry.getEntryId(), 0L, null);
 		}
 	}
 
