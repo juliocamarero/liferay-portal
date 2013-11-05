@@ -42,6 +42,9 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.HashMap;
@@ -331,14 +334,22 @@ public class EditEntryAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
 
 		for (long restoreFolderId : restoreFolderIds) {
-			JournalFolderServiceUtil.restoreFolderFromTrash(restoreFolderId);
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				JournalFolder.class.getName(), Long.valueOf(restoreFolderId));
+
+			TrashEntryServiceUtil.restoreEntry(
+				trashEntry.getEntryId(), 0L, null);
 		}
 
 		long[] restoreArticleIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreArticleIds"), 0L);
 
 		for (long restoreEntryId : restoreArticleIds) {
-			JournalArticleServiceUtil.restoreArticleFromTrash(restoreEntryId);
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				JournalArticle.class.getName(), Long.valueOf(restoreEntryId));
+
+			TrashEntryServiceUtil.restoreEntry(
+				trashEntry.getEntryId(), 0L, null);
 		}
 	}
 
