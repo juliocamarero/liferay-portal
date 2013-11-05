@@ -25,7 +25,7 @@ JournalFolder folder = (JournalFolder)request.getAttribute(WebKeys.JOURNAL_FOLDE
 	<%
 	int status = WorkflowConstants.STATUS_APPROVED;
 
-	if (permissionChecker.isReviewer(user.getCompanyId(), scopeGroupId)) {
+	if (permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
 		status = WorkflowConstants.STATUS_ANY;
 	}
 

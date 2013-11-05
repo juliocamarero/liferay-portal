@@ -646,6 +646,18 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 	}
 
 	@Override
+	public boolean isContentReviewer(long companyId, long groupId) {
+		try {
+			return isContentReviewerImpl(companyId, groupId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean isGroupAdmin(long groupId) {
 		try {
 			return isGroupAdminImpl(groupId);
@@ -703,18 +715,6 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 			return false;
 		}
-	}
-
-	@Override
-	public boolean isReviewer(long companyId, long groupId) {
-		try {
-			return isReviewerImpl(companyId, groupId);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
-
-		return false;
 	}
 
 	protected void addTeamRoles(long userId, Group group, List<Role> roles)
@@ -1068,6 +1068,45 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 		return value.booleanValue();
 	}
 
+	protected boolean isContentReviewerImpl(long companyId, long groupId)
+		throws Exception {
+
+		if (!signedIn) {
+			return false;
+		}
+
+		if (isOmniadmin()) {
+			return true;
+		}
+
+		if (isCompanyAdmin(companyId)) {
+			return true;
+		}
+
+		if (groupId <= 0) {
+			return false;
+		}
+
+		if (isGroupAdmin(groupId)) {
+			return true;
+		}
+
+		PermissionCheckerBag bag = getUserBag(user.getUserId(), groupId);
+
+		if (bag == null) {
+			_log.error("Bag should never be null");
+		}
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		if (bag.isContentReviewer(this, group)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	protected boolean isGroupAdminImpl(long groupId) throws Exception {
 		if (!signedIn) {
 			return false;
@@ -1282,45 +1321,6 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 		}
 
 		if (bag.isOrganizationOwner(this, organization)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	protected boolean isReviewerImpl(long companyId, long groupId)
-		throws Exception {
-
-		if (!signedIn) {
-			return false;
-		}
-
-		if (isOmniadmin()) {
-			return true;
-		}
-
-		if (isCompanyAdmin(companyId)) {
-			return true;
-		}
-
-		if (groupId <= 0) {
-			return false;
-		}
-
-		if (isGroupAdmin(groupId)) {
-			return true;
-		}
-
-		PermissionCheckerBag bag = getUserBag(user.getUserId(), groupId);
-
-		if (bag == null) {
-			_log.error("Bag should never be null");
-		}
-
-		Group group = GroupLocalServiceUtil.getGroup(groupId);
-
-		if (bag.isReviewer(this, group)) {
 			return true;
 		}
 		else {

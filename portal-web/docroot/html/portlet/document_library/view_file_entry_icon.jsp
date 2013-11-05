@@ -21,7 +21,7 @@ FileEntry fileEntry = (FileEntry)request.getAttribute("view_entries.jsp-fileEntr
 
 FileVersion latestFileVersion = fileEntry.getFileVersion();
 
-if ((user.getUserId() == fileEntry.getUserId()) || permissionChecker.isReviewer(user.getCompanyId(), scopeGroupId) || DLFileEntryPermission.contains(permissionChecker, fileEntry, ActionKeys.UPDATE)) {
+if ((user.getUserId() == fileEntry.getUserId()) || permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId) || DLFileEntryPermission.contains(permissionChecker, fileEntry, ActionKeys.UPDATE)) {
 	latestFileVersion = fileEntry.getLatestFileVersion();
 }
 

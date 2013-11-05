@@ -150,7 +150,7 @@ int total = 0;
 		if (displayTerms.getNavigation().equals("mine")) {
 			userId = themeDisplay.getUserId();
 		}
-		else if (!permissionChecker.isReviewer(user.getCompanyId(), scopeGroupId)) {
+		else if (!permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
 			status = WorkflowConstants.STATUS_APPROVED;
 		}
 
@@ -187,7 +187,7 @@ int total = 0;
 	<c:otherwise>
 
 		<%
-		if (!permissionChecker.isReviewer(user.getCompanyId(), scopeGroupId)) {
+		if (!permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
 			status = WorkflowConstants.STATUS_APPROVED;
 		}
 
@@ -248,7 +248,7 @@ for (int i = 0; i < results.size(); i++) {
 					tempRowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
 					tempRowURL.setParameter("articleId", curArticle.getArticleId());
 
-					if (!permissionChecker.isReviewer(user.getCompanyId(), scopeGroupId)) {
+					if (!permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
 						status = WorkflowConstants.STATUS_APPROVED;
 					}
 
@@ -280,7 +280,7 @@ for (int i = 0; i < results.size(); i++) {
 						rowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
 						rowURL.setParameter("articleId", curArticle.getArticleId());
 
-						if (!permissionChecker.isReviewer(user.getCompanyId(), scopeGroupId)) {
+						if (!permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
 							status = WorkflowConstants.STATUS_APPROVED;
 						}
 

@@ -72,6 +72,51 @@ public class PermissionCheckerTest {
 	}
 
 	@Test
+	public void testIsContentReviewerWithCompanyAdminUser() throws Exception {
+		PermissionChecker permissionChecker = _getPermissionChecker(
+			TestPropsValues.getUser());
+
+		Assert.assertTrue(
+			permissionChecker.isContentReviewer(
+				TestPropsValues.getCompanyId(), _group.getGroupId()));
+	}
+
+	@Test
+	public void testIsContentReviewerWithReviewerUser() throws Exception {
+		User user = UserTestUtil.addUser();
+
+		Role portalContentReviewerRole = RoleTestUtil.addRole(
+			RoleConstants.PORTAL_CONTENT_REVIEWER, RoleConstants.TYPE_REGULAR);
+
+		UserLocalServiceUtil.setRoleUsers(
+			portalContentReviewerRole.getRoleId(),
+			new long[] {user.getUserId()});
+
+		PermissionChecker permissionChecker = _getPermissionChecker(user);
+
+		Assert.assertTrue(
+			permissionChecker.isContentReviewer(
+				user.getCompanyId(), _group.getGroupId()));
+	}
+
+	@Test
+	public void testIsContentReviewerWithSiteContentReviewer()
+		throws Exception {
+
+		RoleTestUtil.addRole(
+			RoleConstants.SITE_CONTENT_REVIEWER, RoleConstants.TYPE_SITE);
+
+		User user = UserTestUtil.addGroupUser(
+			_group, RoleConstants.SITE_CONTENT_REVIEWER);
+
+		PermissionChecker permissionChecker = _getPermissionChecker(user);
+
+		Assert.assertTrue(
+			permissionChecker.isContentReviewer(
+				user.getCompanyId(), _group.getGroupId()));
+	}
+
+	@Test
 	public void testIsGroupAdminWithCompanyAdmin() throws Exception {
 		PermissionChecker permissionChecker = _getPermissionChecker(
 			TestPropsValues.getUser());
@@ -294,48 +339,6 @@ public class PermissionCheckerTest {
 		Assert.assertFalse(
 			permissionChecker.isOrganizationOwner(
 				organization.getOrganizationId()));
-	}
-
-	@Test
-	public void testIsReviewerWithCompanyAdminUser() throws Exception {
-		PermissionChecker permissionChecker = _getPermissionChecker(
-			TestPropsValues.getUser());
-
-		Assert.assertTrue(
-			permissionChecker.isReviewer(
-				TestPropsValues.getCompanyId(), _group.getGroupId()));
-	}
-
-	@Test
-	public void testIsReviewerWithReviewerUser() throws Exception {
-		User user = UserTestUtil.addUser();
-
-		Role reviewerRole = RoleTestUtil.addRole(
-			RoleConstants.PORTAL_CONTENT_REVIEWER, RoleConstants.TYPE_REGULAR);
-
-		UserLocalServiceUtil.setRoleUsers(
-			reviewerRole.getRoleId(), new long[] {user.getUserId()});
-
-		PermissionChecker permissionChecker = _getPermissionChecker(user);
-
-		Assert.assertTrue(
-			permissionChecker.isReviewer(
-				user.getCompanyId(), _group.getGroupId()));
-	}
-
-	@Test
-	public void testIsReviewerWithSiteReviewer() throws Exception {
-		RoleTestUtil.addRole(
-			RoleConstants.SITE_CONTENT_REVIEWER, RoleConstants.TYPE_SITE);
-
-		User user = UserTestUtil.addGroupUser(
-			_group, RoleConstants.SITE_CONTENT_REVIEWER);
-
-		PermissionChecker permissionChecker = _getPermissionChecker(user);
-
-		Assert.assertTrue(
-			permissionChecker.isReviewer(
-				user.getCompanyId(), _group.getGroupId()));
 	}
 
 	private PermissionChecker _getPermissionChecker(User user)
