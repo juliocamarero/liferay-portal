@@ -117,7 +117,9 @@
 					FROM
 						JournalArticle
 					WHERE
-						(groupId = ?)
+						(groupId = ?) AND
+						([$STATUS$]) AND
+						[$FOLDER_ID$]
 					GROUP BY
 						groupId, articleId
 				) TEMP_TABLE
@@ -126,9 +128,6 @@
 						(TEMP_TABLE.tempGroupId = JournalArticle.groupId) AND
 						(TEMP_TABLE.tempArticleId = JournalArticle.articleId) AND
 						(TEMP_TABLE.tempVersion = JournalArticle.version)
-			WHERE
-				([$STATUS$]) AND
-				[$FOLDER_ID$]
 			ORDER BY
 				id_ ASC
 		]]>
@@ -145,7 +144,9 @@
 						JournalArticle
 					WHERE
 						(groupId = ?) AND
-						(classNameId = ?)
+						(classNameId = ?) AND
+						(structureId = ?) AND
+						([$STATUS$])
 					GROUP BY
 						groupId, articleId
 				) TEMP_TABLE
@@ -154,9 +155,6 @@
 						(TEMP_TABLE.tempGroupId = JournalArticle.groupId) AND
 						(TEMP_TABLE.tempArticleId = JournalArticle.articleId) AND
 						(TEMP_TABLE.tempVersion = JournalArticle.version)
-			WHERE
-				(structureId = ?) AND
-				([$STATUS$])
 			ORDER BY
 				id_ ASC
 		]]>
@@ -173,7 +171,10 @@
 						JournalArticle
 					WHERE
 						(groupId = ?) AND
-						(classNameId = ?)
+						(classNameId = ?) AND
+						(userId = ?) AND
+						([$FOLDER_ID$]) AND
+						([$STATUS$])
 					GROUP BY
 						groupId, articleId
 				) TEMP_TABLE
@@ -182,10 +183,6 @@
 						(TEMP_TABLE.tempGroupId = JournalArticle.groupId) AND
 						(TEMP_TABLE.tempArticleId = JournalArticle.articleId) AND
 						(TEMP_TABLE.tempVersion = JournalArticle.version)
-			WHERE
-				(userId = ?) AND
-				([$FOLDER_ID$]) AND
-				([$STATUS$])
 			ORDER BY
 				id_ ASC
 		]]>
