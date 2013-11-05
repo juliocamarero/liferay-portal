@@ -116,7 +116,12 @@ public class Logger {
 		sb.append("errorList = window.document.getElementById('errorList');");
 		sb.append("var newLine = window.document.createElement('div');");
 		sb.append("newLine.innerHTML = '");
-		sb.append(generateStackTrace(throwable));
+
+		String stackTrace = generateStackTrace(throwable);
+
+		stackTrace = StringEscapeUtils.escapeEcmaScript(stackTrace);
+
+		sb.append(stackTrace);
 		sb.append("';");
 		sb.append("errorList.appendChild(newLine);");
 
@@ -377,9 +382,7 @@ public class Logger {
 		sb.append("</textarea>");
 		sb.append("</p>");
 
-		String stackTrace = sb.toString();
-
-		return stackTrace.replace("'", "\\'");
+		return sb.toString();
 	}
 
 	protected String generateXpath(Stack<String> ids) {
@@ -414,17 +417,13 @@ public class Logger {
 	protected void log(String log, String message) {
 		StringBundler sb = new StringBundler();
 
-		String formattedMessage = StringEscapeUtils.escapeJava(message);
-
-		formattedMessage = formattedMessage.replace("'", "\\'");
-
 		sb.append("logger = window.document.getElementById('");
 		sb.append(log);
 		sb.append("');");
 		sb.append("var newLine = window.document.createElement('div');");
 		sb.append("newLine.setAttribute('class', 'line');");
 		sb.append("newLine.innerHTML = '");
-		sb.append(formattedMessage);
+		sb.append(StringEscapeUtils.escapeEcmaScript(message));
 		sb.append("';");
 		sb.append("logger.appendChild(newLine);");
 		sb.append("logger.scrollTop = logger.scrollHeight;");

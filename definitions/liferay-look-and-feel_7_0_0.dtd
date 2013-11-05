@@ -110,8 +110,9 @@ See the comments in the group-id element.
 The theme element contains the declarative data of a theme.
 -->
 <!ELEMENT theme (root-path?, templates-path?, css-path?, images-path?,
-javascript-path?, virtual-path?, template-extension?, settings?, wap-theme?,
-roles?, color-scheme*, layout-templates?)>
+javascript-path?, virtual-path?, template-extension?, settings?,
+control-panel-theme?, page-theme?, wap-theme?, roles?, color-scheme*,
+layout-templates?)>
 
 <!--
 The id attribute specifies the unique key for a theme. For convenience, the id
@@ -262,6 +263,18 @@ See the comments in the settings element.
 	type CDATA #IMPLIED
 	options CDATA #IMPLIED
 >
+
+<!--
+Set the control-panel-theme value to true if the theme is designed for the
+Control Panel. The default value is false.
+-->
+<!ELEMENT control-panel-theme (#PCDATA)>
+
+<!--
+Set the page-theme value to true if the theme is designed for regular pages. The
+default value is true.
+-->
+<!ELEMENT page-theme (#PCDATA)>
 
 <!--
 Set the wap-theme value to true if the theme is designed for cellular phones or
