@@ -41,8 +41,6 @@ import com.liferay.portlet.bookmarks.NoSuchFolderException;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryServiceUtil;
-import com.liferay.portlet.trash.model.TrashEntry;
-import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import java.util.HashMap;
@@ -239,22 +237,16 @@ public class EditEntryAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
 
 		for (long restoreFolderId : restoreFolderIds) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				BookmarksFolder.class.getName(), restoreFolderId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0, null);
+				BookmarksFolder.class.getName(), restoreFolderId);
 		}
 
 		long[] restoreEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
 
 		for (long restoreEntryId : restoreEntryIds) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				BookmarksEntry.class.getName(), restoreEntryId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0, null);
+				BookmarksEntry.class.getName(), restoreEntryId);
 		}
 	}
 

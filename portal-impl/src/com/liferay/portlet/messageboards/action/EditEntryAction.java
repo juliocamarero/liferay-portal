@@ -29,8 +29,6 @@ import com.liferay.portlet.messageboards.LockedThreadException;
 import com.liferay.portlet.messageboards.NoSuchCategoryException;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBThread;
-import com.liferay.portlet.trash.model.TrashEntry;
-import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import javax.portlet.ActionRequest;
@@ -97,22 +95,16 @@ public class EditEntryAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "restoreCategoryIds"), 0L);
 
 		for (long restoreCategoryId : restoreCategoryIds) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				MBCategory.class.getName(), restoreCategoryId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0, null);
+				MBCategory.class.getName(), restoreCategoryId);
 		}
 
 		long[] restoreThreadIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreThreadIds"), 0L);
 
 		for (long restoreThreadId : restoreThreadIds) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				MBThread.class.getName(), restoreThreadId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0, null);
+				MBThread.class.getName(), restoreThreadId);
 		}
 	}
 

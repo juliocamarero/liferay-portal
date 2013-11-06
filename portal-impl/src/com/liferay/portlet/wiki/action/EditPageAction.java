@@ -36,8 +36,6 @@ import com.liferay.portlet.PortletResponseImpl;
 import com.liferay.portlet.PortletURLImpl;
 import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.AssetTagException;
-import com.liferay.portlet.trash.model.TrashEntry;
-import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.DuplicatePageException;
@@ -373,11 +371,9 @@ public class EditPageAction extends PortletAction {
 				}
 			}
 
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				WikiPage.class.getName(), restoreEntryId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), overridePageResourcePrimKey, null);
+				WikiPage.class.getName(), restoreEntryId,
+				overridePageResourcePrimKey, null);
 		}
 	}
 

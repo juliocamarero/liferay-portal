@@ -46,8 +46,6 @@ import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
-import com.liferay.portlet.trash.model.TrashEntry;
-import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -421,33 +419,24 @@ public class EditEntryAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
 
 		for (long restoreFolderId : restoreFolderIds) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				DLFolder.class.getName(), restoreFolderId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0, null);
+				DLFolder.class.getName(), restoreFolderId);
 		}
 
 		long[] restoreFileEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreFileEntryIds"), 0L);
 
 		for (long restoreFileEntryId : restoreFileEntryIds) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				DLFileEntry.class.getName(), restoreFileEntryId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0, null);
+				DLFileEntry.class.getName(), restoreFileEntryId);
 		}
 
 		long[] restoreFileShortcutIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreFileShortcutIds"), 0L);
 
 		for (long restoreFileShortcutId : restoreFileShortcutIds) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				DLFileShortcut.class.getName(), restoreFileShortcutId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0, null);
+				DLFileShortcut.class.getName(), restoreFileShortcutId);
 		}
 	}
 

@@ -28,8 +28,6 @@ import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.portlet.trash.model.TrashEntry;
-import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.DuplicateNodeNameException;
@@ -218,11 +216,8 @@ public class EditNodeAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
 
 		for (long restoreEntryId : restoreEntryIds) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				WikiNode.class.getName(), restoreEntryId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0, null);
+				WikiNode.class.getName(), restoreEntryId);
 		}
 	}
 
