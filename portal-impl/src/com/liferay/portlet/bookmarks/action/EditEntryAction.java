@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -39,8 +38,11 @@ import com.liferay.portlet.bookmarks.EntryURLException;
 import com.liferay.portlet.bookmarks.NoSuchEntryException;
 import com.liferay.portlet.bookmarks.NoSuchFolderException;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
+import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryServiceUtil;
-import com.liferay.portlet.bookmarks.service.BookmarksFolderServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +54,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
+import com.liferay.portlet.trash.util.TrashUtil;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -84,7 +87,7 @@ public class EditEntryAction extends PortletAction {
 				deleteEntry(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntryFromTrash(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribeEntry(actionRequest);
@@ -190,6 +193,8 @@ public class EditEntryAction extends PortletAction {
 				ParamUtil.getString(actionRequest, "deleteEntryIds"), 0L);
 		}
 
+		String[] restoreEntryIds = new String[deleteEntryIds.length];
+
 		for (int i = 0; i < deleteEntryIds.length; i++) {
 			long deleteEntryId = deleteEntryIds[i];
 
@@ -200,6 +205,11 @@ public class EditEntryAction extends PortletAction {
 				if (i == 0) {
 					deleteEntryTitle = entry.getName();
 				}
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					BookmarksEntry.class.getName(), entry.getEntryId());
+
+				restoreEntryIds[i] = String.valueOf(trashEntry.getEntryId());
 			}
 			else {
 				BookmarksEntryServiceUtil.deleteEntry(deleteEntryId);
@@ -207,43 +217,31 @@ public class EditEntryAction extends PortletAction {
 		}
 
 		if (moveToTrash && (deleteEntryIds.length > 0)) {
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			data.put(
-				"deleteEntryClassName",
-				new String[] {BookmarksEntry.class.getName()});
-
-			if (Validator.isNotNull(deleteEntryTitle)) {
-				data.put("deleteEntryTitle", new String[] {deleteEntryTitle});
-			}
-
-			data.put(
-				"restoreEntryIds", ArrayUtil.toStringArray(deleteEntryIds));
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+			TrashUtil.addTrashSessionMessages(
+				actionRequest, BookmarksEntry.class.getName(), deleteEntryTitle,
+				restoreEntryIds);
 
 			hideDefaultSuccessMessage(actionRequest);
 		}
 	}
 
-	protected void restoreEntryFromTrash(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
 
 		for (long restoreFolderId : restoreFolderIds) {
-			BookmarksFolderServiceUtil.restoreFolderFromTrash(restoreFolderId);
+			TrashEntryServiceUtil.restoreEntry(
+				BookmarksFolder.class.getName(), restoreFolderId);
 		}
 
 		long[] restoreEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
 
 		for (long restoreEntryId : restoreEntryIds) {
-			BookmarksEntryServiceUtil.restoreEntryFromTrash(restoreEntryId);
+			TrashEntryServiceUtil.restoreEntry(
+				BookmarksEntry.class.getName(), restoreEntryId);
 		}
 	}
 

@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.journal.action;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -73,9 +71,6 @@ public class EditFolderAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
 				deleteFolders(actionRequest, true);
-			}
-			else if (cmd.equals(Constants.RESTORE)) {
-				restoreFolderFromTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.MOVE)) {
 				moveFolder(actionRequest);
@@ -201,17 +196,6 @@ public class EditFolderAction extends PortletAction {
 
 		JournalFolderServiceUtil.moveFolder(
 			folderId, parentFolderId, serviceContext);
-	}
-
-	protected void restoreFolderFromTrash(ActionRequest actionRequest)
-		throws PortalException, SystemException {
-
-		long[] restoreEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
-
-		for (long restoreEntryId : restoreEntryIds) {
-			JournalFolderServiceUtil.restoreFolderFromTrash(restoreEntryId);
-		}
 	}
 
 	protected void updateFolder(ActionRequest actionRequest) throws Exception {

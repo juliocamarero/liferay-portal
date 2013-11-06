@@ -20,6 +20,19 @@
 String portletURL = (String)request.getAttribute("liferay-ui:trash-undo:portletURL");
 String redirect = GetterUtil.getString((String)request.getAttribute("liferay-ui:trash-undo:redirect"), currentURL);
 
+String restoreNamespace = namespace;
+
+if (Validator.isNull(portletURL)) {
+	PortletURL restoreURL = PortletURLFactoryUtil.create(request, PortletKeys.TRASH, themeDisplay.getPlid(), PortletRequest.ACTION_PHASE);
+
+	restoreURL.setParameter("struts_action", "/trash/edit_entry");
+	restoreURL.setParameter(Constants.CMD, Constants.RESTORE);
+
+	portletURL = restoreURL.toString();
+
+	restoreNamespace = PortalUtil.getPortletNamespace(PortletKeys.TRASH);
+}
+
 if (SessionMessages.contains(portletRequest, portletDisplay.getId() + SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA)) {
 	Map<String, String[]> data = (HashMap<String, String[]>)SessionMessages.get(portletRequest, portletDisplay.getId() + SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA);
 
@@ -42,7 +55,7 @@ if (SessionMessages.contains(portletRequest, portletDisplay.getId() + SessionMes
 %>
 
 		<div class="alert alert-success taglib-trash-undo">
-			<aui:form action="<%= portletURL %>" name="undoForm">
+			<aui:form action="<%= portletURL %>" name="undoForm" portletNamespace="<%= restoreNamespace %>">
 				<liferay-util:buffer var="trashLink">
 					<c:choose>
 						<c:when test="<%= themeDisplay.isShowSiteAdministrationIcon() %>">
@@ -141,7 +154,7 @@ if (SessionMessages.contains(portletRequest, portletDisplay.getId() + SessionMes
 					</c:otherwise>
 				</c:choose>
 
-				<a class="btn btn-primary btn-small trash-undo-link" href="javascript:;" id="<%= namespace %>undo"><liferay-ui:message key="undo" /></a>
+				<a class="btn btn-primary btn-small trash-undo-link" href="javascript:;" id="<%= restoreNamespace %>undo"><liferay-ui:message key="undo" /></a>
 
 				<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 
@@ -165,13 +178,13 @@ if (SessionMessages.contains(portletRequest, portletDisplay.getId() + SessionMes
 		</div>
 
 		<aui:script use="aui-base">
-			var undoLink = A.one('#<%= namespace %>undo');
+			var undoLink = A.one('#<%= restoreNamespace %>undo');
 
 			if (undoLink) {
 				undoLink.on(
 					'click',
 					function(event) {
-						submitForm(document.<%= namespace %>undoForm);
+						submitForm(document.<%= restoreNamespace %>undoForm);
 					}
 				);
 			}

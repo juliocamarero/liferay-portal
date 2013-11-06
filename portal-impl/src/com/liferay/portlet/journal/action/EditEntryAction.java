@@ -42,9 +42,14 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
@@ -90,7 +95,7 @@ public class EditEntryAction extends PortletAction {
 				deleteEntries(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntryFromTrash(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 
 			String redirect = PortalUtil.escapeRedirect(
@@ -196,6 +201,8 @@ public class EditEntryAction extends PortletAction {
 		String deleteEntryClassName = null;
 		String deleteEntryTitle = null;
 
+		List<String> restoreEntryIds = new ArrayList<String>();
+
 		long[] deleteFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "folderIds"), 0L);
 
@@ -212,6 +219,11 @@ public class EditEntryAction extends PortletAction {
 					deleteEntryTitle = TrashUtil.getOriginalTitle(
 						folder.getName());
 				}
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					JournalFolder.class.getName(), folder.getFolderId());
+
+				restoreEntryIds.add(String.valueOf(trashEntry.getEntryId()));
 			}
 			else {
 				JournalFolderServiceUtil.deleteFolder(deleteFolderId);
@@ -239,37 +251,22 @@ public class EditEntryAction extends PortletAction {
 				}
 
 				restoreArticleIds[i] = article.getResourcePrimKey();
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					JournalArticle.class.getName(),
+					article.getResourcePrimKey());
+
+				restoreEntryIds.add(String.valueOf(trashEntry.getEntryId()));
 			}
 			else {
 				ActionUtil.deleteArticle(actionRequest, deleteArticleId);
 			}
 		}
 
-		if (moveToTrash &&
-			((deleteArticleIds.length > 0) || (deleteFolderIds.length > 0))) {
-
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			if (Validator.isNotNull(deleteEntryClassName)) {
-				data.put(
-					"deleteEntryClassName",
-					new String[] {deleteEntryClassName});
-			}
-
-			if (Validator.isNotNull(deleteEntryTitle)) {
-				data.put("deleteEntryTitle", new String[] {deleteEntryTitle});
-			}
-
-			data.put(
-				"restoreArticleIds",
-				ArrayUtil.toStringArray(restoreArticleIds));
-			data.put(
-				"restoreFolderIds", ArrayUtil.toStringArray(deleteFolderIds));
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+		if (moveToTrash && (restoreEntryIds.size() > 0)) {
+			TrashUtil.addTrashSessionMessages(
+				actionRequest, deleteEntryClassName, deleteEntryTitle,
+				ArrayUtil.toStringArray(restoreEntryIds.toArray()));
 
 			hideDefaultSuccessMessage(actionRequest);
 		}
@@ -324,21 +321,23 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void restoreEntryFromTrash(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
 
 		for (long restoreFolderId : restoreFolderIds) {
-			JournalFolderServiceUtil.restoreFolderFromTrash(restoreFolderId);
+			TrashEntryServiceUtil.restoreEntry(
+					JournalFolder.class.getName(), restoreFolderId);
 		}
 
 		long[] restoreArticleIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreArticleIds"), 0L);
 
 		for (long restoreEntryId : restoreArticleIds) {
-			JournalArticleServiceUtil.restoreArticleFromTrash(restoreEntryId);
+			TrashEntryServiceUtil.restoreEntry(
+					JournalArticle.class.getName(), restoreEntryId);
 		}
 	}
 

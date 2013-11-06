@@ -27,8 +27,9 @@ import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.messageboards.LockedThreadException;
 import com.liferay.portlet.messageboards.NoSuchCategoryException;
-import com.liferay.portlet.messageboards.service.MBCategoryServiceUtil;
-import com.liferay.portlet.messageboards.service.MBThreadServiceUtil;
+import com.liferay.portlet.messageboards.model.MBCategory;
+import com.liferay.portlet.messageboards.model.MBThread;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -55,7 +56,7 @@ public class EditEntryAction extends PortletAction {
 
 		try {
 			if (cmd.equals(Constants.RESTORE)) {
-				restoreEntries(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 
 			WindowState windowState = actionRequest.getWindowState();
@@ -87,21 +88,23 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void restoreEntries(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreCategoryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreCategoryIds"), 0L);
 
 		for (long restoreCategoryId : restoreCategoryIds) {
-			MBCategoryServiceUtil.restoreCategoryFromTrash(restoreCategoryId);
+			TrashEntryServiceUtil.restoreEntry(
+				MBCategory.class.getName(), restoreCategoryId);
 		}
 
 		long[] restoreThreadIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreThreadIds"), 0L);
 
 		for (long restoreThreadId : restoreThreadIds) {
-			MBThreadServiceUtil.restoreThreadFromTrash(restoreThreadId);
+			TrashEntryServiceUtil.restoreEntry(
+				MBThread.class.getName(), restoreThreadId);
 		}
 	}
 

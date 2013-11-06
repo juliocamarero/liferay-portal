@@ -28,6 +28,9 @@ import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.DuplicateNodeNameException;
 import com.liferay.portlet.wiki.NoSuchNodeException;
@@ -78,7 +81,7 @@ public class EditNodeAction extends PortletAction {
 				deleteNode(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreNode(actionRequest);
+				restoreNodesFromTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribeNode(actionRequest);
@@ -162,10 +165,17 @@ public class EditNodeAction extends PortletAction {
 
 		String deleteEntryTitle = null;
 
+		String restoreEntryIds = StringPool.BLANK;
+
 		if (moveToTrash) {
 			WikiNode node = WikiNodeServiceUtil.moveNodeToTrash(nodeId);
 
 			deleteEntryTitle = node.getName();
+
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				WikiNode.class.getName(), node.getNodeId());
+
+			restoreEntryIds = String.valueOf(trashEntry.getEntryId());
 		}
 		else {
 			WikiNodeServiceUtil.deleteNode(nodeId);
@@ -178,25 +188,9 @@ public class EditNodeAction extends PortletAction {
 		updatePreferences(actionRequest, oldName, StringPool.BLANK);
 
 		if (moveToTrash) {
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			data.put(
-				"deleteEntryClassName",
-				new String[] {WikiNode.class.getName()});
-
-			if (Validator.isNotNull(deleteEntryTitle)) {
-				data.put(
-					"deleteEntryTitle",
-					new String[] {
-						TrashUtil.getOriginalTitle(deleteEntryTitle)});
-			}
-
-			data.put("restoreEntryIds", new String[] {String.valueOf(nodeId)});
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+			TrashUtil.addTrashSessionMessages(
+				actionRequest, WikiNode.class.getName(),
+				TrashUtil.getOriginalTitle(deleteEntryTitle), restoreEntryIds);
 
 			hideDefaultSuccessMessage(actionRequest);
 		}
@@ -208,12 +202,15 @@ public class EditNodeAction extends PortletAction {
 		return node.getName();
 	}
 
-	protected void restoreNode(ActionRequest actionRequest) throws Exception {
+	protected void restoreNodesFromTrash(ActionRequest actionRequest)
+		throws Exception {
+
 		long[] restoreEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
 
 		for (long restoreEntryId : restoreEntryIds) {
-			WikiNodeServiceUtil.restoreNodeFromTrash(restoreEntryId);
+			TrashEntryServiceUtil.restoreEntry(
+				WikiNode.class.getName(), restoreEntryId);
 		}
 	}
 
