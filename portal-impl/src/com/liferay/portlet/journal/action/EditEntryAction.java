@@ -335,10 +335,10 @@ public class EditEntryAction extends PortletAction {
 
 		for (long restoreFolderId : restoreFolderIds) {
 			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				JournalFolder.class.getName(), Long.valueOf(restoreFolderId));
+				JournalFolder.class.getName(), restoreFolderId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 
 		long[] restoreArticleIds = StringUtil.split(
@@ -346,10 +346,10 @@ public class EditEntryAction extends PortletAction {
 
 		for (long restoreEntryId : restoreArticleIds) {
 			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				JournalArticle.class.getName(), Long.valueOf(restoreEntryId));
+				JournalArticle.class.getName(), restoreEntryId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 	}
 

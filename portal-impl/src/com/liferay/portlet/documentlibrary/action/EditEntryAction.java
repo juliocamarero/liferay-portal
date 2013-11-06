@@ -422,10 +422,10 @@ public class EditEntryAction extends PortletAction {
 
 		for (long restoreFolderId : restoreFolderIds) {
 			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				DLFolder.class.getName(), Long.valueOf(restoreFolderId));
+				DLFolder.class.getName(), restoreFolderId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 
 		long[] restoreFileEntryIds = StringUtil.split(
@@ -433,10 +433,10 @@ public class EditEntryAction extends PortletAction {
 
 		for (long restoreFileEntryId : restoreFileEntryIds) {
 			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				DLFileEntry.class.getName(), Long.valueOf(restoreFileEntryId));
+				DLFileEntry.class.getName(), restoreFileEntryId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 
 		long[] restoreFileShortcutIds = StringUtil.split(
@@ -444,11 +444,10 @@ public class EditEntryAction extends PortletAction {
 
 		for (long restoreFileShortcutId : restoreFileShortcutIds) {
 			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				DLFileShortcut.class.getName(),
-				Long.valueOf(restoreFileShortcutId));
+				DLFileShortcut.class.getName(), restoreFileShortcutId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 	}
 

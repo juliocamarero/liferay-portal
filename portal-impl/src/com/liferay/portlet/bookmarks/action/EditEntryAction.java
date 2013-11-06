@@ -243,7 +243,7 @@ public class EditEntryAction extends PortletAction {
 				BookmarksFolder.class.getName(), restoreFolderId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 
 		long[] restoreEntryIds = StringUtil.split(
@@ -254,7 +254,7 @@ public class EditEntryAction extends PortletAction {
 				BookmarksEntry.class.getName(), restoreEntryId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 	}
 

@@ -222,7 +222,7 @@ public class EditNodeAction extends PortletAction {
 				WikiNode.class.getName(), restoreEntryId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 	}
 

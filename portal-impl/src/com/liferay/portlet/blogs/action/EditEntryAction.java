@@ -399,7 +399,7 @@ public class EditEntryAction extends PortletAction {
 				BlogsEntry.class.getName(), restoreEntryId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 	}
 

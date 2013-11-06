@@ -101,7 +101,7 @@ public class EditEntryAction extends PortletAction {
 				MBCategory.class.getName(), restoreCategoryId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 
 		long[] restoreThreadIds = StringUtil.split(
@@ -112,7 +112,7 @@ public class EditEntryAction extends PortletAction {
 				MBThread.class.getName(), restoreThreadId);
 
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), 0L, null);
+				trashEntry.getEntryId(), 0, null);
 		}
 	}
 
