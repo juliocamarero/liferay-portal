@@ -81,7 +81,7 @@ public class EditNodeAction extends PortletAction {
 				deleteNode(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreNode(actionRequest);
+				restoreNodesFromTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribeNode(actionRequest);
@@ -211,7 +211,9 @@ public class EditNodeAction extends PortletAction {
 		return node.getName();
 	}
 
-	protected void restoreNode(ActionRequest actionRequest) throws Exception {
+	protected void restoreNodesFromTrash(ActionRequest actionRequest)
+		throws Exception {
+
 		long[] restoreEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
 

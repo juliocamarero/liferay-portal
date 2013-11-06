@@ -118,7 +118,7 @@ public class EditEntryAction extends PortletAction {
 				subscribe(actionRequest);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntries(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.UNSUBSCRIBE)) {
 				unsubscribe(actionRequest);
@@ -388,7 +388,7 @@ public class EditEntryAction extends PortletAction {
 		return portletURL.toString();
 	}
 
-	protected void restoreEntries(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreEntryIds = StringUtil.split(

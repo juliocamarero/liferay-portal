@@ -87,7 +87,7 @@ public class EditEntryAction extends PortletAction {
 				deleteEntry(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntryFromTrash(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribeEntry(actionRequest);
@@ -232,7 +232,7 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void restoreEntryFromTrash(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreFolderIds = StringUtil.split(

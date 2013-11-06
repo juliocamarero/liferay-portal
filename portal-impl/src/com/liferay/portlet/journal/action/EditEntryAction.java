@@ -93,7 +93,7 @@ public class EditEntryAction extends PortletAction {
 				deleteEntries(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntryFromTrash(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 
 			String redirect = PortalUtil.escapeRedirect(
@@ -327,7 +327,7 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void restoreEntryFromTrash(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreFolderIds = StringUtil.split(

@@ -104,7 +104,7 @@ public class EditEntryAction extends PortletAction {
 				deleteEntries(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntries(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 
 			WindowState windowState = actionRequest.getWindowState();
@@ -414,7 +414,7 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void restoreEntries(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreFolderIds = StringUtil.split(
