@@ -49,6 +49,9 @@ import com.liferay.portlet.wiki.PageVersionException;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.WikiPageConstants;
+import com.liferay.portlet.wiki.model.WikiPageResource;
+import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
+import com.liferay.portlet.wiki.service.WikiPageResourceLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
 
 import java.util.HashMap;
@@ -346,25 +349,28 @@ public class EditPageAction extends PortletAction {
 	}
 
 	protected void restorePage(ActionRequest actionRequest) throws Exception {
-		long nodeId = ParamUtil.getLong(actionRequest, "nodeId");
 		long[] restoreEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
-		String title = ParamUtil.getString(actionRequest, "title");
-
-		long overridePageResourcePrimKey = 0L;
-
-		if ((nodeId != 0) && Validator.isNotNull(title) &&
-			title.equals(WikiPageConstants.FRONT_PAGE)) {
-
-			WikiPage overridePage = WikiPageServiceUtil.fetchPage(
-				nodeId, title, 0);
-
-			if (overridePage != null) {
-				overridePageResourcePrimKey = overridePage.getResourcePrimKey();
-			}
-		}
 
 		for (long restoreEntryId : restoreEntryIds) {
+			long overridePageResourcePrimKey = 0L;
+
+			WikiPageResource pageResource =
+				WikiPageResourceLocalServiceUtil.getPageResource(
+					restoreEntryId);
+
+			String title = TrashUtil.getOriginalTitle(pageResource.getTitle());
+
+			if (title.equals(WikiPageConstants.FRONT_PAGE)) {
+				WikiPage overridePage = WikiPageLocalServiceUtil.fetchPage(
+					pageResource.getNodeId(), WikiPageConstants.FRONT_PAGE);
+
+				if (overridePage != null) {
+					overridePageResourcePrimKey =
+						overridePage.getResourcePrimKey();
+				}
+			}
+
 			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
 				WikiPage.class.getName(), restoreEntryId);
 
