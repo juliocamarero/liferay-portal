@@ -25,6 +25,7 @@ import com.liferay.portlet.trash.model.TrashEntry;
 import java.util.Date;
 import java.util.List;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +46,18 @@ public interface Trash {
 			HttpServletRequest request, String className, long classPK,
 			PortletURL containerModelURL)
 		throws PortalException, SystemException;
+
+	public void addTrashSessionMessages(
+		ActionRequest actionRequest, String className, String title,
+		String restoreEntryId);
+
+	public void addTrashSessionMessages(
+		ActionRequest actionRequest, String[] classNames, String[] titles,
+		String[] restoreEntryIds);
+
+	public void addTrashSessionMessages(
+		ActionRequest actionRequest, String className, String title,
+		String[] restoreEntryIds);
 
 	public void deleteEntriesAttachments(
 			long companyId, long repositoryId, Date date,

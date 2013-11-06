@@ -23,9 +23,11 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -60,8 +62,11 @@ import java.text.Format;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
@@ -113,6 +118,47 @@ public class TrashImpl implements Trash {
 
 		addBreadcrumbEntries(
 			request, className, classPK, "containerModelId", containerModelURL);
+	}
+
+	@Override
+	public void addTrashSessionMessages(
+		ActionRequest actionRequest, String className, String title,
+		String restoreEntryId) {
+
+		addTrashSessionMessages(
+			actionRequest, new String[]{className}, new String[]{title},
+			new String[] {restoreEntryId});
+	}
+
+	@Override
+	public void addTrashSessionMessages(
+		ActionRequest actionRequest, String className, String title,
+		String[] restoreEntryIds) {
+
+		addTrashSessionMessages(
+			actionRequest, new String[]{className}, new String[]{title},
+			restoreEntryIds);
+	}
+
+	@Override
+	public void addTrashSessionMessages(
+		ActionRequest actionRequest, String[] classNames, String[] titles,
+		String[] restoreEntryIds) {
+
+		Map<String, String[]> data = new HashMap<String, String[]>();
+
+		data.put("deleteEntryClassName", classNames);
+
+		if (ArrayUtil.isNotEmpty(titles)) {
+			data.put("deleteEntryTitle", titles);
+		}
+
+		data.put("restoreEntryIds",restoreEntryIds);
+
+		SessionMessages.add(
+			actionRequest,
+			PortalUtil.getPortletId(actionRequest) +
+				SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import com.liferay.portlet.trash.model.TrashEntry;
 import java.util.Date;
 import java.util.List;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +52,30 @@ public class TrashUtil {
 
 		getTrash().addContainerModelBreadcrumbEntries(
 			request, className, classPK, containerModelURL);
+	}
+
+	public static void addTrashSessionMessages(
+		ActionRequest actionRequest, String className, String title,
+		String restoreEntryId) {
+
+		getTrash().addTrashSessionMessages(
+			actionRequest, className, title, restoreEntryId);
+	}
+
+	public static void addTrashSessionMessages(
+		ActionRequest actionRequest, String[] classNames, String[] titles,
+		String[] restoreEntryIds) {
+
+		getTrash().addTrashSessionMessages(
+			actionRequest, classNames, titles, restoreEntryIds);
+	}
+
+	public static void addTrashSessionMessages(
+		ActionRequest actionRequest, String className, String title,
+		String[] restoreEntryIds) {
+
+		getTrash().addTrashSessionMessages(
+			actionRequest, className, title, restoreEntryIds);
 	}
 
 	public static void deleteEntriesAttachments(

@@ -46,10 +46,14 @@ import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
@@ -276,6 +280,8 @@ public class EditEntryAction extends PortletAction {
 		long[] deleteFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "folderIds"), 0L);
 
+		List<String> restoreEntryIds = new ArrayList<String>();
+
 		for (int i = 0; i < deleteFolderIds.length; i++) {
 			long deleteFolderId = deleteFolderIds[i];
 
@@ -288,6 +294,11 @@ public class EditEntryAction extends PortletAction {
 					deleteEntryTitle = TrashUtil.getOriginalTitle(
 						folder.getName());
 				}
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					DLFolder.class.getName(), folder.getFolderId());
+
+				restoreEntryIds.add(String.valueOf(trashEntry.getEntryId()));
 			}
 			else {
 				DLAppServiceUtil.deleteFolder(deleteFolderId);
@@ -312,6 +323,12 @@ public class EditEntryAction extends PortletAction {
 
 					deleteEntryTitle = fileShortcut.getToTitle();
 				}
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					DLFileShortcut.class.getName(),
+					fileShortcut.getFileShortcutId());
+
+				restoreEntryIds.add(String.valueOf(trashEntry.getEntryId()));
 			}
 			else {
 				DLAppServiceUtil.deleteFileShortcut(deleteFileShortcutId);
@@ -333,42 +350,21 @@ public class EditEntryAction extends PortletAction {
 					deleteEntryTitle = TrashUtil.getOriginalTitle(
 						fileEntry.getTitle());
 				}
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					DLFileEntry.class.getName(), fileEntry.getFileEntryId());
+
+				restoreEntryIds.add(String.valueOf(trashEntry.getEntryId()));
 			}
 			else {
 				DLAppServiceUtil.deleteFileEntry(deleteFileEntryId);
 			}
 		}
 
-		if (moveToTrash &&
-			((deleteFileEntryIds.length > 0) ||
-			 (deleteFileShortcutIds.length > 0) ||
-			 (deleteFolderIds.length > 0))) {
-
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			if (Validator.isNotNull(deleteEntryClassName)) {
-				data.put(
-					"deleteEntryClassName",
-					new String[] {deleteEntryClassName});
-			}
-
-			if (Validator.isNotNull(deleteEntryTitle)) {
-				data.put("deleteEntryTitle", new String[] {deleteEntryTitle});
-			}
-
-			data.put(
-				"restoreFileEntryIds",
-				ArrayUtil.toStringArray(deleteFileEntryIds));
-			data.put(
-				"restoreFileShortcutIds",
-				ArrayUtil.toStringArray(deleteFileShortcutIds));
-			data.put(
-				"restoreFolderIds", ArrayUtil.toStringArray(deleteFolderIds));
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+		if (moveToTrash && (restoreEntryIds.size() > 0)) {
+			TrashUtil.addTrashSessionMessages(
+				actionRequest, deleteEntryClassName, deleteEntryTitle,
+				ArrayUtil.toStringArray(restoreEntryIds.toArray()));
 
 			hideDefaultSuccessMessage(actionRequest);
 		}

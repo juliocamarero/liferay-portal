@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -41,6 +40,8 @@ import com.liferay.portlet.bookmarks.NoSuchFolderException;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import java.util.HashMap;
@@ -53,6 +54,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
+import com.liferay.portlet.trash.util.TrashUtil;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -191,6 +193,8 @@ public class EditEntryAction extends PortletAction {
 				ParamUtil.getString(actionRequest, "deleteEntryIds"), 0L);
 		}
 
+		String[] restoreEntryIds = new String[deleteEntryIds.length];
+
 		for (int i = 0; i < deleteEntryIds.length; i++) {
 			long deleteEntryId = deleteEntryIds[i];
 
@@ -201,6 +205,11 @@ public class EditEntryAction extends PortletAction {
 				if (i == 0) {
 					deleteEntryTitle = entry.getName();
 				}
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					BookmarksEntry.class.getName(), entry.getEntryId());
+
+				restoreEntryIds[i] = String.valueOf(trashEntry.getEntryId());
 			}
 			else {
 				BookmarksEntryServiceUtil.deleteEntry(deleteEntryId);
@@ -208,23 +217,9 @@ public class EditEntryAction extends PortletAction {
 		}
 
 		if (moveToTrash && (deleteEntryIds.length > 0)) {
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			data.put(
-				"deleteEntryClassName",
-				new String[] {BookmarksEntry.class.getName()});
-
-			if (Validator.isNotNull(deleteEntryTitle)) {
-				data.put("deleteEntryTitle", new String[] {deleteEntryTitle});
-			}
-
-			data.put(
-				"restoreEntryIds", ArrayUtil.toStringArray(deleteEntryIds));
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+			TrashUtil.addTrashSessionMessages(
+				actionRequest, BookmarksEntry.class.getName(), deleteEntryTitle,
+				restoreEntryIds);
 
 			hideDefaultSuccessMessage(actionRequest);
 		}

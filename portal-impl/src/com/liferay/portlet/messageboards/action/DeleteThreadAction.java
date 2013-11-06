@@ -29,6 +29,8 @@ import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBThreadServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +39,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 
+import com.liferay.portlet.trash.util.TrashUtil;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
@@ -98,6 +101,8 @@ public class DeleteThreadAction extends PortletAction {
 				ParamUtil.getString(actionRequest, "threadIds"), 0L);
 		}
 
+		String[] restoreEntryIds = new String[deleteThreadIds.length];
+
 		for (int i = 0; i < deleteThreadIds.length; i++) {
 			long deleteThreadId = deleteThreadIds[i];
 
@@ -111,6 +116,11 @@ public class DeleteThreadAction extends PortletAction {
 
 					deleteEntryTitle = message.getSubject();
 				}
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					MBThread.class.getName(), thread.getThreadId());
+
+				restoreEntryIds[i] = String.valueOf(trashEntry.getEntryId());
 			}
 			else {
 				MBThreadServiceUtil.deleteThread(deleteThreadId);
@@ -118,23 +128,9 @@ public class DeleteThreadAction extends PortletAction {
 		}
 
 		if (moveToTrash && (deleteThreadIds.length > 0)) {
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			data.put(
-				"deleteEntryClassName",
-				new String[] {MBThread.class.getName()});
-
-			if (Validator.isNotNull(deleteEntryTitle)) {
-				data.put("deleteEntryTitle", new String[] {deleteEntryTitle});
-			}
-
-			data.put(
-				"restoreThreadIds", ArrayUtil.toStringArray(deleteThreadIds));
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+			TrashUtil.addTrashSessionMessages(
+				actionRequest, MBThread.class.getName(), deleteEntryTitle,
+				ArrayUtil.toStringArray(deleteThreadIds));
 
 			hideDefaultSuccessMessage(actionRequest);
 		}

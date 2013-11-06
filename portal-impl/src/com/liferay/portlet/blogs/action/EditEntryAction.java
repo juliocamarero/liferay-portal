@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.sanitizer.SanitizerException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HttpUtil;
@@ -55,6 +54,8 @@ import com.liferay.portlet.blogs.NoSuchEntryException;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.service.BlogsEntryServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import java.io.InputStream;
@@ -73,6 +74,7 @@ import javax.portlet.WindowState;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portlet.trash.util.TrashUtil;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -309,6 +311,8 @@ public class EditEntryAction extends PortletAction {
 
 		String deleteEntryTitle = null;
 
+		String[] restoreEntryIds = new String[deleteEntryIds.length];
+
 		for (int i = 0; i < deleteEntryIds.length; i++) {
 			long deleteEntryId = deleteEntryIds[i];
 
@@ -319,6 +323,11 @@ public class EditEntryAction extends PortletAction {
 				if (i == 0) {
 					deleteEntryTitle = entry.getTitle();
 				}
+
+				TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+					BlogsEntry.class.getName(), entry.getEntryId());
+
+				restoreEntryIds[i] = String.valueOf(trashEntry.getEntryId());
 			}
 			else {
 				BlogsEntryServiceUtil.deleteEntry(deleteEntryId);
@@ -326,23 +335,9 @@ public class EditEntryAction extends PortletAction {
 		}
 
 		if (moveToTrash && (deleteEntryIds.length > 0)) {
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			data.put(
-				"deleteEntryClassName",
-				new String[] {BlogsEntry.class.getName()});
-
-			if (Validator.isNotNull(deleteEntryTitle)) {
-				data.put("deleteEntryTitle", new String[] {deleteEntryTitle});
-			}
-
-			data.put(
-				"restoreEntryIds", ArrayUtil.toStringArray(deleteEntryIds));
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+			TrashUtil.addTrashSessionMessages(
+				actionRequest, BlogsEntry.class.getName(), deleteEntryTitle,
+				restoreEntryIds);
 
 			hideDefaultSuccessMessage(actionRequest);
 		}
