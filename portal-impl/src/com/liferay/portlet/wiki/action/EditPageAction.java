@@ -353,7 +353,7 @@ public class EditPageAction extends PortletAction {
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
 
 		for (long restoreEntryId : restoreEntryIds) {
-			long overridePageResourcePrimKey = 0L;
+			long overridePageResourcePrimKey = 0;
 
 			WikiPageResource pageResource =
 				WikiPageResourceLocalServiceUtil.getPageResource(
