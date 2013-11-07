@@ -22,13 +22,12 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.ServletResponseConstants;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.servlet.SessionMessages;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
@@ -48,8 +47,8 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -269,11 +268,10 @@ public class EditEntryAction extends PortletAction {
 			ActionRequest actionRequest, boolean moveToTrash)
 		throws Exception {
 
-		String deleteEntryClassName = null;
-		String deleteEntryTitle = null;
-
 		long[] deleteFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "folderIds"), 0L);
+
+		List<TrashedModel> trashedModels = new ArrayList<TrashedModel>();
 
 		for (int i = 0; i < deleteFolderIds.length; i++) {
 			long deleteFolderId = deleteFolderIds[i];
@@ -282,10 +280,8 @@ public class EditEntryAction extends PortletAction {
 				Folder folder = DLAppServiceUtil.moveFolderToTrash(
 					deleteFolderId);
 
-				if (i == 0) {
-					deleteEntryClassName = DLFolder.class.getName();
-					deleteEntryTitle = TrashUtil.getOriginalTitle(
-						folder.getName());
+				if (folder.getModel() instanceof DLFolder) {
+					trashedModels.add((DLFolder)folder.getModel());
 				}
 			}
 			else {
@@ -306,11 +302,7 @@ public class EditEntryAction extends PortletAction {
 					DLAppServiceUtil.moveFileShortcutToTrash(
 						deleteFileShortcutId);
 
-				if (i == 0) {
-					deleteEntryClassName = DLFileShortcut.class.getName();
-
-					deleteEntryTitle = fileShortcut.getToTitle();
-				}
+				trashedModels.add(fileShortcut);
 			}
 			else {
 				DLAppServiceUtil.deleteFileShortcut(deleteFileShortcutId);
@@ -320,17 +312,13 @@ public class EditEntryAction extends PortletAction {
 		long[] deleteFileEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "fileEntryIds"), 0L);
 
-		for (int i = 0; i < deleteFileEntryIds.length; i++) {
-			long deleteFileEntryId = deleteFileEntryIds[i];
-
+		for (long deleteFileEntryId : deleteFileEntryIds) {
 			if (moveToTrash) {
 				FileEntry fileEntry = DLAppServiceUtil.moveFileEntryToTrash(
 					deleteFileEntryId);
 
-				if (i == 0) {
-					deleteEntryClassName = DLFileEntry.class.getName();
-					deleteEntryTitle = TrashUtil.getOriginalTitle(
-						fileEntry.getTitle());
+				if (fileEntry.getModel() instanceof DLFileEntry) {
+					trashedModels.add((DLFileEntry)fileEntry.getModel());
 				}
 			}
 			else {
@@ -338,36 +326,8 @@ public class EditEntryAction extends PortletAction {
 			}
 		}
 
-		if (moveToTrash &&
-			((deleteFileEntryIds.length > 0) ||
-			 (deleteFileShortcutIds.length > 0) ||
-			 (deleteFolderIds.length > 0))) {
-
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			if (Validator.isNotNull(deleteEntryClassName)) {
-				data.put(
-					"deleteEntryClassName",
-					new String[] {deleteEntryClassName});
-			}
-
-			if (Validator.isNotNull(deleteEntryTitle)) {
-				data.put("deleteEntryTitle", new String[] {deleteEntryTitle});
-			}
-
-			data.put(
-				"restoreFileEntryIds",
-				ArrayUtil.toStringArray(deleteFileEntryIds));
-			data.put(
-				"restoreFileShortcutIds",
-				ArrayUtil.toStringArray(deleteFileShortcutIds));
-			data.put(
-				"restoreFolderIds", ArrayUtil.toStringArray(deleteFolderIds));
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+		if (moveToTrash && (trashedModels.size() > 0)) {
+			TrashUtil.addTrashSessionMessages(actionRequest, trashedModels);
 
 			hideDefaultSuccessMessage(actionRequest);
 		}
