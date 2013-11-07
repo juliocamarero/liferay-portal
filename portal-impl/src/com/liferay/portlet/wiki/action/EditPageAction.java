@@ -16,7 +16,6 @@ package com.liferay.portlet.wiki.action;
 
 import com.liferay.portal.kernel.sanitizer.SanitizerException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -30,7 +29,6 @@ import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.struts.StrutsActionPortletURL;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletResponseImpl;
 import com.liferay.portlet.PortletURLImpl;
@@ -53,9 +51,6 @@ import com.liferay.portlet.wiki.model.WikiPageResource;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageResourceLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -231,22 +226,7 @@ public class EditPageAction extends PortletAction {
 		}
 
 		if (moveToTrash && (wikiPage != null)) {
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			data.put(
-				"deleteEntryClassName",
-				new String[] {WikiPage.class.getName()});
-			data.put(
-				"deleteEntryTitle",
-				new String[] {TrashUtil.getOriginalTitle(wikiPage.getTitle())});
-			data.put(
-				"restoreEntryIds",
-				new String[] {String.valueOf(wikiPage.getResourcePrimKey())});
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+			TrashUtil.addTrashSessionMessages(actionRequest, wikiPage);
 
 			hideDefaultSuccessMessage(actionRequest);
 		}
@@ -350,14 +330,17 @@ public class EditPageAction extends PortletAction {
 
 	protected void restorePage(ActionRequest actionRequest) throws Exception {
 		long[] restoreEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
+			ParamUtil.getString(actionRequest, "restoreTrashEntryIds"), 0L);
 
 		for (long restoreEntryId : restoreEntryIds) {
 			long overridePageResourcePrimKey = 0;
 
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getTrashEntry(
+				restoreEntryId);
+
 			WikiPageResource pageResource =
 				WikiPageResourceLocalServiceUtil.getPageResource(
-					restoreEntryId);
+					trashEntry.getClassPK());
 
 			String title = TrashUtil.getOriginalTitle(pageResource.getTitle());
 
@@ -371,11 +354,8 @@ public class EditPageAction extends PortletAction {
 				}
 			}
 
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
-				WikiPage.class.getName(), restoreEntryId);
-
 			TrashEntryServiceUtil.restoreEntry(
-				trashEntry.getEntryId(), overridePageResourcePrimKey, null);
+				restoreEntryId, overridePageResourcePrimKey, null);
 		}
 	}
 
