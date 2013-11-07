@@ -17,18 +17,15 @@ package com.liferay.portlet.bookmarks.action;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.servlet.SessionMessages;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 import com.liferay.portlet.bookmarks.FolderNameException;
@@ -36,9 +33,10 @@ import com.liferay.portlet.bookmarks.NoSuchFolderException;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.service.BookmarksFolderServiceUtil;
+import com.liferay.portlet.trash.util.TrashUtil;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -134,8 +132,6 @@ public class EditFolderAction extends PortletAction {
 			ActionRequest actionRequest, boolean moveToTrash)
 		throws Exception {
 
-		String deleteFolderTitle = null;
-
 		long[] deleteFolderIds = null;
 
 		long folderId = ParamUtil.getLong(actionRequest, "folderId");
@@ -148,17 +144,15 @@ public class EditFolderAction extends PortletAction {
 				ParamUtil.getString(actionRequest, "folderIds"), 0L);
 		}
 
-		for (int i = 0; i < deleteFolderIds.length; i++) {
-			long deleteFolderId = deleteFolderIds[i];
+		List<TrashedModel> trashedModels = new ArrayList<TrashedModel>();
 
+		for (long deleteFolderId : deleteFolderIds) {
 			if (moveToTrash) {
 				BookmarksFolder folder =
 					BookmarksFolderServiceUtil.moveFolderToTrash(
 						deleteFolderId);
 
-				if (i == 0) {
-					deleteFolderTitle = folder.getName();
-				}
+				trashedModels.add(folder);
 			}
 			else {
 				BookmarksFolderServiceUtil.deleteFolder(deleteFolderId);
@@ -168,24 +162,8 @@ public class EditFolderAction extends PortletAction {
 				actionRequest, BookmarksEntry.class.getName(), deleteFolderId);
 		}
 
-		if (moveToTrash && (deleteFolderIds.length > 0)) {
-			Map<String, String[]> data = new HashMap<String, String[]>();
-
-			data.put(
-				"deleteEntryClassName",
-				new String[] {BookmarksFolder.class.getName()});
-
-			if (Validator.isNotNull(deleteFolderTitle)) {
-				data.put("deleteEntryTitle", new String[] {deleteFolderTitle});
-			}
-
-			data.put(
-				"restoreFolderIds", ArrayUtil.toStringArray(deleteFolderIds));
-
-			SessionMessages.add(
-				actionRequest,
-				PortalUtil.getPortletId(actionRequest) +
-					SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
+		if (moveToTrash && (trashedModels.size() > 0)) {
+			TrashUtil.addTrashSessionMessages(actionRequest, trashedModels);
 
 			hideDefaultSuccessMessage(actionRequest);
 		}
