@@ -182,6 +182,8 @@ cobertura.ser
 
 /portal-web/test/test-portal-web-ext.properties
 
+/selenium-output
+
 /sql/create
 /sql/create-bare
 /sql/create-sharded
