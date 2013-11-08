@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.journal.action;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
@@ -87,9 +85,6 @@ public class EditEntryAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
 				deleteEntries(actionRequest, true);
-			}
-			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntryFromTrash(actionRequest);
 			}
 
 			String redirect = PortalUtil.escapeRedirect(
@@ -278,24 +273,6 @@ public class EditEntryAction extends PortletAction {
 		for (String articleId : articleIds) {
 			JournalArticleServiceUtil.moveArticle(
 				themeDisplay.getScopeGroupId(), articleId, newFolderId);
-		}
-	}
-
-	protected void restoreEntryFromTrash(ActionRequest actionRequest)
-		throws PortalException, SystemException {
-
-		long[] restoreFolderIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
-
-		for (long restoreFolderId : restoreFolderIds) {
-			JournalFolderServiceUtil.restoreFolderFromTrash(restoreFolderId);
-		}
-
-		long[] restoreArticleIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreArticleIds"), 0L);
-
-		for (long restoreEntryId : restoreArticleIds) {
-			JournalArticleServiceUtil.restoreArticleFromTrash(restoreEntryId);
 		}
 	}
 
