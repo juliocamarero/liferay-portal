@@ -264,8 +264,10 @@ Format dateFormatDate = FastDateFormatFactoryUtil.getDate(locale, timeZone);
 <%@ include file="/html/portlet/asset_publisher/init-ext.jsp" %>
 
 <%!
-private String _checkViewURL(AssetEntry assetEntry, boolean viewInContext, String viewURL, String currentURL, ThemeDisplay themeDisplay) {
+private String _checkViewURL(AssetEntry assetEntry, boolean viewInContext, boolean inheritRedirect, String viewURL, String currentURL, ThemeDisplay themeDisplay) {
 	if (Validator.isNotNull(viewURL)) {
+		viewURL = HttpUtil.setParameter(viewURL, "inheritRedirect", inheritRedirect);
+
 		Layout layout = themeDisplay.getLayout();
 
 		String assetEntryLayoutUuid = assetEntry.getLayoutUuid();
