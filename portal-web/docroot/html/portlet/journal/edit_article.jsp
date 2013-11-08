@@ -322,7 +322,7 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 	</aui:form>
 </div>
 
-<c:if test='<%= (article != null) && SessionMessages.contains(renderRequest, "showPreview") %>'>
+<c:if test='<%= (article != null) && SessionMessages.contains(renderRequest, "previewRequested") %>'>
 	<aui:script use="liferay-journal-preview">
 		<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/journal/preview_article_content" />

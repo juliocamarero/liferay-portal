@@ -235,7 +235,7 @@ public class EditArticleAction extends PortletAction {
 					portletConfig, actionRequest, article, redirect);
 
 				if (cmd.equals(Constants.PREVIEW)) {
-					SessionMessages.add(actionRequest, "showPreview");
+					SessionMessages.add(actionRequest, "previewRequested");
 
 					hideDefaultSuccessMessage(actionRequest);
 				}
