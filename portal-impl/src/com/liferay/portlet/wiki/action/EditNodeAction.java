@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
@@ -70,9 +69,6 @@ public class EditNodeAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
 				deleteNode(actionRequest, true);
-			}
-			else if (cmd.equals(Constants.RESTORE)) {
-				restoreNode(actionRequest);
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribeNode(actionRequest);
@@ -180,15 +176,6 @@ public class EditNodeAction extends PortletAction {
 		WikiNode node = WikiNodeServiceUtil.getNode(nodeId);
 
 		return node.getName();
-	}
-
-	protected void restoreNode(ActionRequest actionRequest) throws Exception {
-		long[] restoreEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
-
-		for (long restoreEntryId : restoreEntryIds) {
-			WikiNodeServiceUtil.restoreNodeFromTrash(restoreEntryId);
-		}
 	}
 
 	protected void subscribeNode(ActionRequest actionRequest) throws Exception {
