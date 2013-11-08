@@ -206,8 +206,15 @@ request.setAttribute("view.jsp-showIconLabel", true);
 		</c:if>
 
 		<c:if test="<%= showContextLink && !print && assetEntry.isVisible() %>">
+
+			<%
+			String urlViewInContext = assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString);
+
+			urlViewInContext = HttpUtil.setParameter(urlViewInContext, "inheritRedirect", true);
+			%>
+
 			<div class="asset-more">
-				<a href="<%= assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString) %>"><liferay-ui:message key="<%= assetRenderer.getViewInContextMessage() %>" /> &raquo;</a>
+				<a href="<%= urlViewInContext %>"><liferay-ui:message key="<%= assetRenderer.getViewInContextMessage() %>" /> &raquo;</a>
 			</div>
 		</c:if>
 

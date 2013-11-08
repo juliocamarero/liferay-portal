@@ -55,13 +55,24 @@ if (Validator.isNotNull(assetRenderer.getUrlTitle())) {
 	viewFullContentURL.setParameter("urlTitle", assetRenderer.getUrlTitle());
 }
 
-String viewFullContentURLString = viewFullContentURL.toString();
+String viewURL = null;
 
-viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redirect", currentURL);
+boolean inheritRedirect = false;
 
-String viewURL = viewInContext ? assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString) : viewFullContentURL.toString();
+if (viewInContext) {
+	inheritRedirect = true;
 
-viewURL = _checkViewURL(assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
+	String viewFullContentURLString = viewFullContentURL.toString();
+
+	viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redirect", currentURL);
+
+	viewURL = assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString);
+}
+else {
+	viewURL = viewFullContentURL.toString();
+}
+
+viewURL = _checkViewURL(assetEntry, viewInContext, inheritRedirect, viewURL, currentURL, themeDisplay);
 
 request.setAttribute("view.jsp-showIconLabel", false);
 %>
