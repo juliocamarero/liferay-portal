@@ -15,8 +15,6 @@
 package com.liferay.portlet.documentlibrary.action;
 
 import com.liferay.portal.DuplicateLockException;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
@@ -98,9 +96,6 @@ public class EditEntryAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
 				deleteEntries(actionRequest, true);
-			}
-			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntries(actionRequest);
 			}
 
 			WindowState windowState = actionRequest.getWindowState();
@@ -368,32 +363,6 @@ public class EditEntryAction extends PortletAction {
 			DLAppServiceUtil.updateFileShortcut(
 				fileShortcutId, newFolderId, fileShortcut.getToFileEntryId(),
 				serviceContext);
-		}
-	}
-
-	protected void restoreEntries(ActionRequest actionRequest)
-		throws PortalException, SystemException {
-
-		long[] restoreFolderIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
-
-		for (long restoreFolderId : restoreFolderIds) {
-			DLAppServiceUtil.restoreFolderFromTrash(restoreFolderId);
-		}
-
-		long[] restoreFileEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreFileEntryIds"), 0L);
-
-		for (long restoreFileEntryId : restoreFileEntryIds) {
-			DLAppServiceUtil.restoreFileEntryFromTrash(restoreFileEntryId);
-		}
-
-		long[] restoreFileShortcutIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreFileShortcutIds"), 0L);
-
-		for (long restoreFileShortcutId : restoreFileShortcutIds) {
-			DLAppServiceUtil.restoreFileShortcutFromTrash(
-				restoreFileShortcutId);
 		}
 	}
 

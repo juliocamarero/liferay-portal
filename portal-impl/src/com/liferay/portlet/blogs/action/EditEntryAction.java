@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.blogs.action;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
@@ -113,9 +111,6 @@ public class EditEntryAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribe(actionRequest);
-			}
-			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntries(actionRequest);
 			}
 			else if (cmd.equals(Constants.UNSUBSCRIBE)) {
 				unsubscribe(actionRequest);
@@ -363,17 +358,6 @@ public class EditEntryAction extends PortletAction {
 		portletURL.setWindowState(actionRequest.getWindowState());
 
 		return portletURL.toString();
-	}
-
-	protected void restoreEntries(ActionRequest actionRequest)
-		throws PortalException, SystemException {
-
-		long[] restoreEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
-
-		for (long restoreEntryId : restoreEntryIds) {
-			BlogsEntryServiceUtil.restoreEntryFromTrash(restoreEntryId);
-		}
 	}
 
 	protected void subscribe(ActionRequest actionRequest) throws Exception {
