@@ -116,7 +116,6 @@ public class DLFileEntryIndexer extends BaseIndexer {
 
 		document.addKeyword(Field.FOLDER_ID, dlFileEntry.getFolderId());
 		document.addKeyword(Field.HIDDEN, dlFileEntry.isInHiddenFolder());
-		document.addKeyword(Field.RELATED_ENTRY, true);
 	}
 
 	@Override
@@ -383,20 +382,17 @@ public class DLFileEntryIndexer extends BaseIndexer {
 			addFileEntryTypeAttributes(document, dlFileVersion);
 
 			if (dlFileEntry.isInHiddenFolder()) {
-				try {
-					Repository repository =
-						RepositoryLocalServiceUtil.getRepository(
-							dlFileEntry.getRepositoryId());
+				Indexer indexer = IndexerRegistryUtil.getIndexer(
+					dlFileEntry.getClassName());
 
-					String portletId = repository.getPortletId();
+				if (indexer != null) {
+					indexer.addRelatedEntryFields(document, obj);
 
-					for (Indexer indexer : IndexerRegistryUtil.getIndexers()) {
-						if (portletId.equals(indexer.getPortletId())) {
-							indexer.addRelatedEntryFields(document, obj);
-						}
-					}
-				}
-				catch (Exception e) {
+					document.addKeyword(
+						Field.CLASS_NAME_ID, dlFileEntry.getClassName());
+					document.addKeyword(
+						Field.CLASS_PK, dlFileEntry.getClassPK());
+					document.addKeyword(Field.RELATED_ENTRY, true);
 				}
 			}
 
