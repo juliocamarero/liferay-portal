@@ -91,10 +91,6 @@ public class MBMessageIndexer extends BaseIndexer {
 			dlFileEntry.getFileEntryId());
 
 		document.addKeyword(Field.CATEGORY_ID, message.getCategoryId());
-		document.addKeyword(
-			Field.CLASS_NAME_ID,
-			PortalUtil.getClassNameId(MBMessage.class.getName()));
-		document.addKeyword(Field.CLASS_PK, message.getMessageId());
 
 		document.addKeyword("discussion", false);
 		document.addKeyword("threadId", message.getThreadId());
