@@ -95,7 +95,6 @@ public class WikiPageIndexer extends BaseIndexer {
 		}
 
 		document.addKeyword(Field.NODE_ID, page.getNodeId());
-		document.addKeyword(Field.RELATED_ENTRY, true);
 	}
 
 	@Override

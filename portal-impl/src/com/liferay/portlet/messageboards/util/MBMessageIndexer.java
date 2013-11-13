@@ -95,7 +95,6 @@ public class MBMessageIndexer extends BaseIndexer {
 			Field.CLASS_NAME_ID,
 			PortalUtil.getClassNameId(MBMessage.class.getName()));
 		document.addKeyword(Field.CLASS_PK, message.getMessageId());
-		document.addKeyword(Field.RELATED_ENTRY, true);
 
 		document.addKeyword("discussion", false);
 		document.addKeyword("threadId", message.getThreadId());
@@ -269,6 +268,8 @@ public class MBMessageIndexer extends BaseIndexer {
 
 			if (indexer != null) {
 				indexer.addRelatedEntryFields(document, obj);
+
+				document.addKeyword(Field.RELATED_ENTRY, true);
 			}
 		}
 
