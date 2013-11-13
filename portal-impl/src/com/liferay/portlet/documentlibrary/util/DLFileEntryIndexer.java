@@ -116,7 +116,6 @@ public class DLFileEntryIndexer extends BaseIndexer {
 
 		document.addKeyword(Field.FOLDER_ID, dlFileEntry.getFolderId());
 		document.addKeyword(Field.HIDDEN, dlFileEntry.isInHiddenFolder());
-		document.addKeyword(Field.RELATED_ENTRY, true);
 	}
 
 	@Override
@@ -393,6 +392,8 @@ public class DLFileEntryIndexer extends BaseIndexer {
 					for (Indexer indexer : IndexerRegistryUtil.getIndexers()) {
 						if (portletId.equals(indexer.getPortletId())) {
 							indexer.addRelatedEntryFields(document, obj);
+
+							document.addKeyword(Field.RELATED_ENTRY, true);
 						}
 					}
 				}
