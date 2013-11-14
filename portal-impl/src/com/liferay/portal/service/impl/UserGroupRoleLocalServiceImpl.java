@@ -281,9 +281,7 @@ public class UserGroupRoleLocalServiceImpl
 			return false;
 		}
 
-		long roleId = role.getRoleId();
-
-		return hasUserGroupRole(userId, groupId, roleId, inherit);
+		return hasUserGroupRole(userId, groupId, role.getRoleId(), inherit);
 	}
 
 	protected UserGroupRole addUserGroupRole(
