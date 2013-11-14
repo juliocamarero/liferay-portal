@@ -54,11 +54,7 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 
 String viewURL = null;
 
-boolean inheritRedirect = false;
-
 if (viewInContext) {
-	inheritRedirect = true;
-
 	String viewFullContentURLString = viewFullContentURL.toString();
 
 	viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redirect", currentURL);
@@ -75,7 +71,7 @@ if (Validator.isNull(viewURL)) {
 
 String viewURLMessage = viewInContext ? assetRenderer.getViewInContextMessage() : "read-more-x-about-x";
 
-viewURL = _checkViewURL(assetEntry, viewInContext, inheritRedirect, viewURL, currentURL, themeDisplay);
+viewURL = _checkViewURL(assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
 %>
 
 <c:if test="<%= show %>">

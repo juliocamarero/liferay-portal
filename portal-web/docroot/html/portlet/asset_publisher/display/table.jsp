@@ -57,11 +57,7 @@ if (Validator.isNotNull(assetRenderer.getUrlTitle())) {
 
 String viewURL = null;
 
-boolean inheritRedirect = false;
-
 if (viewInContext) {
-	inheritRedirect = true;
-
 	String viewFullContentURLString = viewFullContentURL.toString();
 
 	viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redirect", currentURL);
@@ -72,7 +68,7 @@ else {
 	viewURL = viewFullContentURL.toString();
 }
 
-viewURL = _checkViewURL(assetEntry, viewInContext, inheritRedirect, viewURL, currentURL, themeDisplay);
+viewURL = _checkViewURL(assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
 
 request.setAttribute("view.jsp-showIconLabel", false);
 %>
