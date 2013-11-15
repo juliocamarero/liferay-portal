@@ -3157,24 +3157,6 @@ public class ServiceBuilder {
 		writeFile(ejbFile, content, _author);
 	}
 
-	private void _deleteSpringLegacyXml() throws Exception {
-		if (Validator.isNull(_pluginName)) {
-			return;
-		}
-
-		FileUtil.delete("docroot/WEB-INF/src/META-INF/base-spring.xml");
-		FileUtil.delete("docroot/WEB-INF/src/META-INF/cluster-spring.xml");
-		FileUtil.delete("docroot/WEB-INF/src/META-INF/data-source-spring.xml");
-		FileUtil.delete(
-			"docroot/WEB-INF/src/META-INF/dynamic-data-source-spring.xml");
-		FileUtil.delete("docroot/WEB-INF/src/META-INF/hibernate-spring.xml");
-		FileUtil.delete(
-			"docroot/WEB-INF/src/META-INF/infrastructure-spring.xml");
-		FileUtil.delete("docroot/WEB-INF/src/META-INF/misc-spring.xml");
-		FileUtil.delete(
-			"docroot/WEB-INF/src/META-INF/shard-data-source-spring.xml");
-	}
-
 	private void _createSpringXml() throws Exception {
 		if (_packagePath.equals("com.liferay.counter")) {
 			return;
@@ -3698,6 +3680,24 @@ public class ServiceBuilder {
 
 			FileUtil.write(sqlFile, sb.toString(), true);
 		}
+	}
+
+	private void _deleteSpringLegacyXml() throws Exception {
+		if (Validator.isNull(_pluginName)) {
+			return;
+		}
+
+		FileUtil.delete("docroot/WEB-INF/src/META-INF/base-spring.xml");
+		FileUtil.delete("docroot/WEB-INF/src/META-INF/cluster-spring.xml");
+		FileUtil.delete("docroot/WEB-INF/src/META-INF/data-source-spring.xml");
+		FileUtil.delete(
+			"docroot/WEB-INF/src/META-INF/dynamic-data-source-spring.xml");
+		FileUtil.delete("docroot/WEB-INF/src/META-INF/hibernate-spring.xml");
+		FileUtil.delete(
+			"docroot/WEB-INF/src/META-INF/infrastructure-spring.xml");
+		FileUtil.delete("docroot/WEB-INF/src/META-INF/misc-spring.xml");
+		FileUtil.delete(
+			"docroot/WEB-INF/src/META-INF/shard-data-source-spring.xml");
 	}
 
 	private String _fixHbmXml(String content) throws IOException {
