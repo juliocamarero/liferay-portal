@@ -48,6 +48,9 @@ public interface ImageTool {
 
 	public BufferedImage convertImageType(BufferedImage sourceImage, int type);
 
+	public RenderedImage crop(
+		RenderedImage renderedImage, int height, int width, int x, int y);
+
 	public void encodeGIF(RenderedImage renderedImage, OutputStream os)
 		throws IOException;
 
@@ -58,9 +61,6 @@ public interface ImageTool {
 
 	public byte[] getBytes(RenderedImage renderedImage, String contentType)
 		throws IOException;
-
-	public RenderedImage crop(
-		RenderedImage renderedImage, int height, int width, int x, int y);
 
 	public Image getDefaultCompanyLogo();
 
