@@ -241,7 +241,7 @@ public class EditCompanyLogoAction extends PortletAction {
 				int x = jsonObject.getInt("x");
 				int y = jsonObject.getInt("y");
 
-				renderedImage = ImageToolUtil.getCroppedRenderedImage(
+				renderedImage = ImageToolUtil.crop(
 					renderedImage, height, width, x, y);
 			}
 
