@@ -120,6 +120,13 @@ public class ImageToolUtil {
 		return getImageTool().getBytes(renderedImage, contentType);
 	}
 
+	public static RenderedImage getCroppedRenderedImage(
+		RenderedImage renderedImage, int height, int width, int x, int y) {
+
+		return getImageTool().getCroppedRenderedImage(
+			renderedImage, height, width, x, y);
+	}
+
 	public static Image getDefaultCompanyLogo() {
 		return getImageTool().getDefaultCompanyLogo();
 	}

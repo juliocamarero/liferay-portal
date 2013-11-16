@@ -59,6 +59,9 @@ public interface ImageTool {
 	public byte[] getBytes(RenderedImage renderedImage, String contentType)
 		throws IOException;
 
+	public RenderedImage getCroppedRenderedImage(
+		RenderedImage renderedImage, int height, int width, int x, int y);
+
 	public Image getDefaultCompanyLogo();
 
 	public Image getDefaultOrganizationLogo();
