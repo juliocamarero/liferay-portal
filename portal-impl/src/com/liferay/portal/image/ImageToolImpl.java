@@ -17,6 +17,7 @@ package com.liferay.portal.image;
 import com.liferay.portal.kernel.image.ImageBag;
 import com.liferay.portal.kernel.image.ImageMagick;
 import com.liferay.portal.kernel.image.ImageTool;
+import com.liferay.portal.kernel.image.ImageToolUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.log.Log;
@@ -37,6 +38,7 @@ import com.sun.media.jai.codec.ImageEncoder;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.IndexColorModel;
@@ -312,6 +314,21 @@ public class ImageToolImpl implements ImageTool {
 		write(renderedImage, contentType, baos);
 
 		return baos.toByteArray();
+	}
+
+	@Override
+	public RenderedImage getCroppedRenderedImage(
+		RenderedImage renderedImage, int height, int width, int x, int y) {
+
+		Rectangle rectangle = new Rectangle(width, height);
+
+		Rectangle croppedRectangle = rectangle.intersection(
+			new Rectangle(renderedImage.getWidth(), renderedImage.getHeight()));
+
+		BufferedImage bufferedImage = getBufferedImage(renderedImage);
+
+		return bufferedImage.getSubimage(
+			x, y, croppedRectangle.width, croppedRectangle.height);
 	}
 
 	@Override
