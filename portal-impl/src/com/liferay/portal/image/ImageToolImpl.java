@@ -317,7 +317,7 @@ public class ImageToolImpl implements ImageTool {
 	}
 
 	@Override
-	public RenderedImage getCroppedRenderedImage(
+	public RenderedImage crop(
 		RenderedImage renderedImage, int height, int width, int x, int y) {
 
 		Rectangle rectangle = new Rectangle(width, height);
