@@ -40,10 +40,61 @@ import org.junit.runner.RunWith;
 
 /**
  * @author Shuyang Zhou
+ * @author Sampsa Sohlman
  */
 @ExecutionTestListeners(listeners = {EnvironmentExecutionTestListener.class})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class ImageToolImplTest {
+
+	public ImageToolImplTest() throws Exception {
+		LIFERAY_GIF = getRenderedImage("liferay.gif");
+	}
+
+	@Test
+	public void testCropBottomRight() throws Exception {
+
+		testCrop(
+			LIFERAY_GIF, LIFERAY_GIF.getHeight() / 2,
+			LIFERAY_GIF.getWidth() / 2, LIFERAY_GIF.getWidth() / 2,
+			LIFERAY_GIF.getHeight() / 2);
+	}
+
+	@Test
+	public void testCropCenter() throws Exception {
+		testCrop(
+			LIFERAY_GIF, LIFERAY_GIF.getHeight() -
+				LIFERAY_GIF.getHeight() / 2,
+			LIFERAY_GIF.getWidth() - LIFERAY_GIF.getWidth() / 2,
+			LIFERAY_GIF.getWidth() / 4, LIFERAY_GIF.getHeight() / 4);
+	}
+
+	@Test
+	public void testCropMoveUpperCornerDownAndRight() throws Exception {
+		testCrop(
+			LIFERAY_GIF, LIFERAY_GIF.getHeight(), LIFERAY_GIF.getWidth(),
+			(LIFERAY_GIF.getWidth() / 4), (LIFERAY_GIF.getHeight() / 4));
+	}
+
+	@Test
+	public void testCropMoveUpperCornerUpAndLeft() throws Exception {
+		testCrop(
+			LIFERAY_GIF, LIFERAY_GIF.getHeight(), LIFERAY_GIF.getWidth(),
+			-(LIFERAY_GIF.getWidth() / 4), -(LIFERAY_GIF.getHeight() / 4));
+	}
+
+	@Test
+	public void testCropSame() throws Exception {
+		testCrop(
+			LIFERAY_GIF, LIFERAY_GIF.getHeight(), LIFERAY_GIF.getWidth(), 0, 0);
+	}
+
+	@Test
+	public void testCropTopLeft() throws Exception {
+		testCrop(
+			LIFERAY_GIF, (LIFERAY_GIF.getHeight() -
+				(LIFERAY_GIF.getHeight() / 2)),
+			(LIFERAY_GIF.getWidth() - (LIFERAY_GIF.getWidth() / 2)), 0, 0);
+	}
 
 	@Test
 	public void testReadBMP() throws Exception {
@@ -70,12 +121,23 @@ public class ImageToolImplTest {
 		read("liferay.png");
 	}
 
-	protected void read(String fileName) throws Exception {
+	protected File getFile(String fileName) {
 		fileName =
 			"portal-impl/test/integration/com/liferay/portal/image/" +
 				"dependencies/" + fileName;
 
-		File file = new File(fileName);
+		return new File(fileName);
+	}
+
+	protected RenderedImage getRenderedImage(String fileName) throws Exception {
+		File file = getFile(fileName);
+		ImageBag imageBag = ImageToolUtil.read(file);
+
+		return imageBag.getRenderedImage();
+	}
+
+	protected void read(String fileName) throws Exception {
+		File file = getFile(fileName);
 
 		BufferedImage expectedImage = ImageIO.read(file);
 
@@ -115,5 +177,23 @@ public class ImageToolImplTest {
 			StringUtil.equalsIgnoreCase(expectedType, resultType));
 		Assert.assertTrue(Arrays.deepEquals(expectedData, resultData));
 	}
+
+	protected void testCrop(
+				RenderedImage image, int height, int width, int x, int y)
+		throws Exception {
+
+		RenderedImage croppedImage = ImageToolUtil.crop(
+			image, height, width, x, y);
+
+		int maxHeight = image.getHeight() - (y < 0 ? -y : y);
+		int maxWidth = image.getWidth() - (x < 0 ? -x : x);
+
+		Assert.assertEquals(
+			croppedImage.getHeight(), Math.min(maxHeight, height));
+
+		Assert.assertEquals(croppedImage.getWidth(), Math.min(maxWidth, width));
+	}
+
+	protected RenderedImage LIFERAY_GIF;
 
 }
