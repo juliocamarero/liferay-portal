@@ -131,6 +131,10 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 		</c:choose>
 	</c:if>
 
+	<%
+	boolean enableRSS = !PortalUtil.isRSSFeedsEnabled() ? false : GetterUtil.getBoolean(portletPreferences.getValue("enableRss", null));
+	%>
+
 	<c:if test="<%= enableRSS %>">
 		<liferay-portlet:resourceURL varImpl="rssURL">
 			<portlet:param name="struts_action" value="/asset_publisher/rss" />

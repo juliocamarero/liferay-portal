@@ -251,12 +251,6 @@ String allMetadataFields = "create-date,modified-date,publish-date,expiration-da
 
 String[] metadataFields = StringUtil.split(portletPreferences.getValue("metadataFields", defaultMetadataFields));
 
-boolean enableRSS = !PortalUtil.isRSSFeedsEnabled() ? false : GetterUtil.getBoolean(portletPreferences.getValue("enableRss", null));
-int rssDelta = GetterUtil.getInteger(portletPreferences.getValue("rssDelta", StringPool.BLANK), SearchContainer.DEFAULT_DELTA);
-String rssDisplayStyle = portletPreferences.getValue("rssDisplayStyle", RSSUtil.DISPLAY_STYLE_ABSTRACT);
-String rssFeedType = portletPreferences.getValue("rssFeedType", RSSUtil.FEED_TYPE_DEFAULT);
-String rssName = portletPreferences.getValue("rssName", portletDisplay.getTitle());
-
 String[] assetEntryXmls = portletPreferences.getValues("assetEntryXml", new String[0]);
 
 boolean viewInContext = assetLinkBehavior.equals("viewInPortlet");
