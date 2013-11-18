@@ -35,6 +35,7 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -46,54 +47,54 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class ImageToolImplTest {
 
-	public ImageToolImplTest() throws Exception {
-		LIFERAY_GIF = getRenderedImage("liferay.gif");
+	@Before
+	public void setUp() throws Exception {
+		File file = getFile("liferay.gif");
+
+		ImageBag imageBag = ImageToolUtil.read(file);
+
+		image =  imageBag.getRenderedImage();
 	}
 
 	@Test
 	public void testCropBottomRight() throws Exception {
-
 		testCrop(
-			LIFERAY_GIF, LIFERAY_GIF.getHeight() / 2,
-			LIFERAY_GIF.getWidth() / 2, LIFERAY_GIF.getWidth() / 2,
-			LIFERAY_GIF.getHeight() / 2);
+			image, image.getHeight() / 2, image.getWidth() / 2,
+			image.getWidth() / 2, image.getHeight() / 2);
 	}
 
 	@Test
 	public void testCropCenter() throws Exception {
 		testCrop(
-			LIFERAY_GIF, LIFERAY_GIF.getHeight() -
-				LIFERAY_GIF.getHeight() / 2,
-			LIFERAY_GIF.getWidth() - LIFERAY_GIF.getWidth() / 2,
-			LIFERAY_GIF.getWidth() / 4, LIFERAY_GIF.getHeight() / 4);
+			image, image.getHeight() - (image.getHeight() / 2),
+			image.getWidth() - (image.getWidth() / 2), image.getWidth() / 4,
+			image.getHeight() / 4);
 	}
 
 	@Test
 	public void testCropMoveUpperCornerDownAndRight() throws Exception {
 		testCrop(
-			LIFERAY_GIF, LIFERAY_GIF.getHeight(), LIFERAY_GIF.getWidth(),
-			(LIFERAY_GIF.getWidth() / 4), (LIFERAY_GIF.getHeight() / 4));
+			image, image.getHeight(), image.getWidth(), image.getWidth() / 4,
+			image.getHeight() / 4);
 	}
 
 	@Test
 	public void testCropMoveUpperCornerUpAndLeft() throws Exception {
 		testCrop(
-			LIFERAY_GIF, LIFERAY_GIF.getHeight(), LIFERAY_GIF.getWidth(),
-			-(LIFERAY_GIF.getWidth() / 4), -(LIFERAY_GIF.getHeight() / 4));
+			image, image.getHeight(), image.getWidth(), -(image.getWidth() / 4),
+			-(image.getHeight() / 4));
 	}
 
 	@Test
 	public void testCropSame() throws Exception {
-		testCrop(
-			LIFERAY_GIF, LIFERAY_GIF.getHeight(), LIFERAY_GIF.getWidth(), 0, 0);
+		testCrop(image, image.getHeight(), image.getWidth(), 0, 0);
 	}
 
 	@Test
 	public void testCropTopLeft() throws Exception {
 		testCrop(
-			LIFERAY_GIF, (LIFERAY_GIF.getHeight() -
-				(LIFERAY_GIF.getHeight() / 2)),
-			(LIFERAY_GIF.getWidth() - (LIFERAY_GIF.getWidth() / 2)), 0, 0);
+			image, image.getHeight() - (image.getHeight() / 2),
+			image.getWidth() - (image.getWidth() / 2), 0, 0);
 	}
 
 	@Test
@@ -127,13 +128,6 @@ public class ImageToolImplTest {
 				"dependencies/" + fileName;
 
 		return new File(fileName);
-	}
-
-	protected RenderedImage getRenderedImage(String fileName) throws Exception {
-		File file = getFile(fileName);
-		ImageBag imageBag = ImageToolUtil.read(file);
-
-		return imageBag.getRenderedImage();
 	}
 
 	protected void read(String fileName) throws Exception {
@@ -185,8 +179,8 @@ public class ImageToolImplTest {
 		RenderedImage croppedImage = ImageToolUtil.crop(
 			image, height, width, x, y);
 
-		int maxHeight = image.getHeight() - (y < 0 ? -y : y);
-		int maxWidth = image.getWidth() - (x < 0 ? -x : x);
+		int maxHeight = image.getHeight() - Math.abs(y);
+		int maxWidth = image.getWidth() - Math.abs(x);
 
 		Assert.assertEquals(
 			croppedImage.getHeight(), Math.min(maxHeight, height));
@@ -194,6 +188,6 @@ public class ImageToolImplTest {
 		Assert.assertEquals(croppedImage.getWidth(), Math.min(maxWidth, width));
 	}
 
-	protected RenderedImage LIFERAY_GIF;
+	protected RenderedImage image;
 
 }
