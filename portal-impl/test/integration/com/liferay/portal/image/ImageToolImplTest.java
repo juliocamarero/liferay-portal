@@ -35,7 +35,6 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,54 +46,29 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class ImageToolImplTest {
 
-	@Before
-	public void setUp() throws Exception {
-		File file = getFile("liferay.gif");
-
-		ImageBag imageBag = ImageToolUtil.read(file);
-
-		image =  imageBag.getRenderedImage();
+	@Test
+	public void testCropBMP() throws Exception {
+		crop("liferay.bmp");
 	}
 
 	@Test
-	public void testCropBottomRight() throws Exception {
-		testCrop(
-			image, image.getHeight() / 2, image.getWidth() / 2,
-			image.getWidth() / 2, image.getHeight() / 2);
+	public void testCropGIF() throws Exception {
+		crop("liferay.gif");
 	}
 
 	@Test
-	public void testCropCenter() throws Exception {
-		testCrop(
-			image, image.getHeight() - (image.getHeight() / 2),
-			image.getWidth() - (image.getWidth() / 2), image.getWidth() / 4,
-			image.getHeight() / 4);
+	public void testCropJPEG() throws Exception {
+		crop("liferay.jpeg");
 	}
 
 	@Test
-	public void testCropMoveUpperCornerDownAndRight() throws Exception {
-		testCrop(
-			image, image.getHeight(), image.getWidth(), image.getWidth() / 4,
-			image.getHeight() / 4);
+	public void testCropJPG() throws Exception {
+		crop("liferay.jpg");
 	}
 
 	@Test
-	public void testCropMoveUpperCornerUpAndLeft() throws Exception {
-		testCrop(
-			image, image.getHeight(), image.getWidth(), -(image.getWidth() / 4),
-			-(image.getHeight() / 4));
-	}
-
-	@Test
-	public void testCropSame() throws Exception {
-		testCrop(image, image.getHeight(), image.getWidth(), 0, 0);
-	}
-
-	@Test
-	public void testCropTopLeft() throws Exception {
-		testCrop(
-			image, image.getHeight() - (image.getHeight() / 2),
-			image.getWidth() - (image.getWidth() / 2), 0, 0);
+	public void testCropPNG() throws Exception {
+		crop("liferay.png");
 	}
 
 	@Test
@@ -120,6 +94,49 @@ public class ImageToolImplTest {
 	@Test
 	public void testReadPNG() throws Exception {
 		read("liferay.png");
+	}
+
+	protected void crop(String fileName) throws Exception {
+		File file = getFile(fileName);
+
+		ImageBag imageBag = ImageToolUtil.read(file);
+
+		RenderedImage image =  imageBag.getRenderedImage();
+
+		// Crop Bottom Right
+
+		testCrop(
+			image, image.getHeight() / 2, image.getWidth() / 2,
+			image.getWidth() / 2, image.getHeight() / 2);
+
+		// Crop Center
+
+		testCrop(
+			image, image.getHeight() - (image.getHeight() / 2),
+			image.getWidth() - (image.getWidth() / 2), image.getWidth() / 4,
+			image.getHeight() / 4);
+
+		// Move Down and Right
+
+		testCrop(
+			image, image.getHeight(), image.getWidth(), image.getWidth() / 4,
+			image.getHeight() / 4);
+
+		// Move Up and Left
+
+		testCrop(
+			image, image.getHeight(), image.getWidth(), -(image.getWidth() / 4),
+			-(image.getHeight() / 4));
+
+		// Crop Same Image
+
+		testCrop(image, image.getHeight(), image.getWidth(), 0, 0);
+
+		// Crop Top Left
+
+		testCrop(
+			image, image.getHeight() - (image.getHeight() / 2),
+			image.getWidth() - (image.getWidth() / 2), 0, 0);
 	}
 
 	protected File getFile(String fileName) {
@@ -187,7 +204,5 @@ public class ImageToolImplTest {
 
 		Assert.assertEquals(croppedImage.getWidth(), Math.min(maxWidth, width));
 	}
-
-	protected RenderedImage image;
 
 }
