@@ -210,10 +210,9 @@ boolean enableConversions = openOfficeServerEnabled && (extensions != null) && (
 boolean enablePrint = GetterUtil.getBoolean(portletPreferences.getValue("enablePrint", null));
 boolean enableFlags = GetterUtil.getBoolean(portletPreferences.getValue("enableFlags", null));
 
-String defaultMetadataFields = StringPool.BLANK;
 String allMetadataFields = "create-date,modified-date,publish-date,expiration-date,priority,author,view-count,categories,tags";
 
-String[] metadataFields = StringUtil.split(portletPreferences.getValue("metadataFields", defaultMetadataFields));
+String[] metadataFields = StringUtil.split(portletPreferences.getValue("metadataFields", StringPool.BLANK));
 
 String[] assetEntryXmls = portletPreferences.getValues("assetEntryXml", new String[0]);
 
