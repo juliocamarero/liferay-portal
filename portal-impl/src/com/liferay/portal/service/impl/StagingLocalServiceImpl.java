@@ -44,7 +44,6 @@ import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.auth.RemoteAuthException;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
-import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.StagingLocalServiceBaseImpl;
 import com.liferay.portal.service.http.GroupServiceHttp;
@@ -217,14 +216,13 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			if (liveGroup.getParentGroupId() !=
 					GroupConstants.DEFAULT_PARENT_GROUP_ID) {
 
-				Group parentGroup = GroupLocalServiceUtil.fetchGroup(
-					liveGroup.getParentGroupId());
-
-				parentGroupId = parentGroup.getGroupId();
+				Group parentGroup = liveGroup.getParentGroup();
 
 				if (parentGroup.hasStagingGroup()) {
-					parentGroupId = parentGroup.getStagingGroup().getGroupId();
+					parentGroup = parentGroup.getStagingGroup();
 				}
+
+				parentGroupId = parentGroup.getGroupId();
 			}
 
 			Group stagingGroup = groupLocalService.addGroup(
