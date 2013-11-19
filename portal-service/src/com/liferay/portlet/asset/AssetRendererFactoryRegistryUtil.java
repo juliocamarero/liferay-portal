@@ -63,13 +63,6 @@ public class AssetRendererFactoryRegistryUtil {
 		return _assetRendererFactoryRegistry;
 	}
 
-	public static long[] getAvailableClassNameIds(
-		long companyId, boolean onlyAvailable) {
-
-		return getAssetRendererFactoryRegistry().getAvailableClassNameIds(
-			companyId, onlyAvailable);
-	}
-
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link #getClassNameIds( long)}
 	 */
@@ -79,6 +72,13 @@ public class AssetRendererFactoryRegistryUtil {
 
 	public static long[] getClassNameIds(long companyId) {
 		return getAssetRendererFactoryRegistry().getClassNameIds(companyId);
+	}
+
+	public static long[] getClassNameIds(
+		long companyId, boolean filterSelectable) {
+
+		return getAssetRendererFactoryRegistry().getClassNameIds(
+			companyId, filterSelectable);
 	}
 
 	public static void register(AssetRendererFactory assetRendererFactory) {

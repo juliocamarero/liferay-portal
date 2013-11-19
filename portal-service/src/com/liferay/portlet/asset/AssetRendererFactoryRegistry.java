@@ -37,15 +37,14 @@ public interface AssetRendererFactoryRegistry {
 
 	public AssetRendererFactory getAssetRendererFactoryByType(String type);
 
-	public long[] getAvailableClassNameIds(
-		long companyId, boolean onlyAvailable);
-
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link #getClassNameIds( long)}
 	 */
 	public long[] getClassNameIds();
 
 	public long[] getClassNameIds(long companyId);
+
+	public long[] getClassNameIds(long companyId, boolean filterSelectable);
 
 	public void register(AssetRendererFactory assetRendererFactory);
 
