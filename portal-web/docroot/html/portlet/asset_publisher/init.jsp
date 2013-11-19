@@ -19,7 +19,6 @@
 <%@ page import="com.liferay.portal.NoSuchModelException" %><%@
 page import="com.liferay.portal.kernel.util.DateFormatFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil" %><%@
-page import="com.liferay.portal.kernel.util.PredicateFilter" %><%@
 page import="com.liferay.portlet.asset.DuplicateQueryRuleException" %><%@
 page import="com.liferay.portlet.asset.NoSuchTagException" %><%@
 page import="com.liferay.portlet.asset.NoSuchTagPropertyException" %><%@
@@ -42,19 +41,7 @@ String selectionStyle = GetterUtil.getString(portletPreferences.getValue("select
 
 long[] groupIds = AssetPublisherUtil.getGroupIds(portletPreferences, scopeGroupId, layout);
 
-long[] availableClassNameIds = AssetRendererFactoryRegistryUtil.getClassNameIds(company.getCompanyId());
-
-availableClassNameIds = ArrayUtil.filter(
-	availableClassNameIds,
-	new PredicateFilter<Long>() {
-
-		public boolean filter(Long classNameId) {
-			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(PortalUtil.getClassName(classNameId));
-
-			return assetRendererFactory.isSelectable();
-		}
-
-	});
+long[] availableClassNameIds = AssetRendererFactoryRegistryUtil.getAvailableClassNameIds(company.getCompanyId(), true);
 
 boolean anyAssetType = GetterUtil.getBoolean(portletPreferences.getValue("anyAssetType", null), true);
 
