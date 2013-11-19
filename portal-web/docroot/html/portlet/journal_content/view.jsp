@@ -310,38 +310,48 @@ boolean showIconsActions = themeDisplay.isSignedIn() && !layout.isLayoutPrototyp
 	<div class="lfr-meta-actions icons-container">
 		<div class="lfr-icon-actions">
 			<c:if test="<%= showEditArticleIcon %>">
-				<liferay-portlet:renderURL portletName="<%= PortletKeys.JOURNAL %>" var="editURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
+				<liferay-portlet:renderURL portletName="<%= PortletKeys.JOURNAL %>" var="editURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<portlet:param name="struts_action" value="/journal/edit_article" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="groupId" value="<%= String.valueOf(latestArticle.getGroupId()) %>" />
 					<portlet:param name="articleId" value="<%= latestArticle.getArticleId() %>" />
 					<portlet:param name="version" value="<%= String.valueOf(latestArticle.getVersion()) %>" />
+					<portlet:param name="showHeader" value="<%= Boolean.FALSE.toString() %>" />
 				</liferay-portlet:renderURL>
+
+				<%
+				String taglibEditURL = "javascript:Liferay.Util.openWindow({id: '" + liferayPortletResponse.getNamespace() + "editArticle', title: '" + UnicodeFormatter.toString(ResourceActionsUtil.getModelResource(locale, JournalArticle.class.getName())) + "', uri:'" + HtmlUtil.escapeURL(editURL.toString()) + "'});";
+				%>
 
 				<liferay-ui:icon
 					cssClass="lfr-icon-action lfr-icon-action-edit"
 					image="edit"
 					label="<%= true %>"
 					message="edit"
-					url="<%= editURL %>"
+					url="<%= taglibEditURL %>"
 				/>
 			</c:if>
 
 			<c:if test="<%= showEditTemplateIcon %>">
-				<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editTemplateURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
+				<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editTemplateURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
+					<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
 					<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL_CONTENT %>" />
 					<portlet:param name="groupId" value="<%= String.valueOf(ddmTemplate.getGroupId()) %>" />
 					<portlet:param name="templateId" value="<%= String.valueOf(ddmTemplate.getTemplateId()) %>" />
 				</liferay-portlet:renderURL>
+
+				<%
+				String taglibEditURL = "javascript:Liferay.Util.openWindow({id: '" + liferayPortletResponse.getNamespace() + "editTemplate', title: '" + UnicodeLanguageUtil.get(pageContext, "templates") + "', uri:'" + HtmlUtil.escapeURL(editTemplateURL.toString()) + "'});";
+				%>
 
 				<liferay-ui:icon
 					cssClass="lfr-icon-action lfr-icon-action-edit-template"
 					image="../file_system/small/xml"
 					label="<%= true %>"
 					message="edit-template"
-					url="<%= editTemplateURL %>"
+					url="<%= taglibEditURL %>"
 				/>
 			</c:if>
 
@@ -358,19 +368,24 @@ boolean showIconsActions = themeDisplay.isSignedIn() && !layout.isLayoutPrototyp
 			</c:if>
 
 			<c:if test="<%= showAddArticleIcon %>">
-				<liferay-portlet:renderURL portletName="<%= PortletKeys.JOURNAL %>" var="addArticleURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
+				<liferay-portlet:renderURL portletName="<%= PortletKeys.JOURNAL %>" var="addArticleURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<portlet:param name="struts_action" value="/journal/edit_article" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="portletResource" value="<%= portletDisplay.getId() %>" />
 					<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+					<portlet:param name="showHeader" value="<%= Boolean.FALSE.toString() %>" />
 				</liferay-portlet:renderURL>
+
+				<%
+				String taglibEditURL = "javascript:Liferay.Util.openWindow({id: '" + liferayPortletResponse.getNamespace() + "addArticle', title: '" + UnicodeFormatter.toString(ResourceActionsUtil.getModelResource(locale, JournalArticle.class.getName())) + "', uri:'" + HtmlUtil.escapeURL(addArticleURL.toString()) + "'});";
+				%>
 
 				<liferay-ui:icon
 					cssClass="lfr-icon-action lfr-icon-action-add"
 					image="add_article"
 					label="<%= true %>"
 					message="add"
-					url="<%= addArticleURL %>"
+					url="<%= taglibEditURL %>"
 				/>
 			</c:if>
 		</div>
