@@ -118,12 +118,7 @@ if (selectionStyle.equals("dynamic")) {
 	AssetPublisherUtil.processAssetEntryQuery(user, portletPreferences, assetEntryQuery);
 }
 
-long assetVocabularyId = GetterUtil.getLong(portletPreferences.getValue("assetVocabularyId", StringPool.BLANK));
-
 long assetCategoryId = ParamUtil.getLong(request, "categoryId");
-
-String assetCategoryTitle = null;
-String assetVocabularyTitle = null;
 
 if (assetCategoryId > 0) {
 	if (selectionStyle.equals("dynamic")) {
@@ -141,15 +136,7 @@ if (assetCategoryId > 0) {
 
 	assetCategory = assetCategory.toEscapedModel();
 
-	assetCategoryTitle = assetCategory.getTitle(locale);
-
-	AssetVocabulary assetVocabulary = AssetVocabularyLocalServiceUtil.getAssetVocabulary(assetCategory.getVocabularyId());
-
-	assetVocabulary = assetVocabulary.toEscapedModel();
-
-	assetVocabularyTitle = assetVocabulary.getTitle(locale);
-
-	PortalUtil.setPageKeywords(assetCategoryTitle, request);
+	PortalUtil.setPageKeywords(assetCategory.getTitle(locale), request);
 }
 
 String assetTagName = ParamUtil.getString(request, "tag");
@@ -235,7 +222,6 @@ String[] assetEntryXmls = portletPreferences.getValues("assetEntryXml", new Stri
 boolean viewInContext = assetLinkBehavior.equals("viewInPortlet");
 
 boolean showPortletWithNoResults = false;
-boolean groupByClass = (assetVocabularyId == -1);
 
 Map<String, PortletURL> addPortletURLs = null;
 
