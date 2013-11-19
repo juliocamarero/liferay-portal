@@ -195,9 +195,7 @@ assetEntryQuery.setPaginationType(paginationType);
 boolean showAvailableLocales = GetterUtil.getBoolean(portletPreferences.getValue("showAvailableLocales", null));
 boolean showMetadataDescriptions = GetterUtil.getBoolean(portletPreferences.getValue("showMetadataDescriptions", null), true);
 
-boolean enablePermissions = (!portletName.equals(PortletKeys.HIGHEST_RATED_ASSETS) && !portletName.equals(PortletKeys.MOST_VIEWED_ASSETS) && PropsValues.ASSET_PUBLISHER_SEARCH_WITH_INDEX) ? true : GetterUtil.getBoolean(portletPreferences.getValue("enablePermissions", null));
-
-assetEntryQuery.setEnablePermissions(enablePermissions);
+assetEntryQuery.setEnablePermissions(AssetUtil.isEnablePermissions(portletPreferences, portletName));
 
 boolean enableRelatedAssets = GetterUtil.getBoolean(portletPreferences.getValue("enableRelatedAssets", null), true);
 boolean enableRatings = GetterUtil.getBoolean(portletPreferences.getValue("enableRatings", null));
