@@ -132,6 +132,20 @@
 
 	<aui:input name="preferences--enableCommentRatings--" type="checkbox" value="<%= enableCommentRatings %>" />
 
+	<%
+	boolean enableSocialBookmarks = GetterUtil.getBoolean(portletPreferences.getValue("enableSocialBookmarks", null), true);
+
+	String socialBookmarksDisplayStyle = portletPreferences.getValue("socialBookmarksDisplayStyle", null);
+
+	if (Validator.isNull(socialBookmarksDisplayStyle)) {
+		String[] socialBookmarksDisplayStyles = PropsUtil.getArray(PropsKeys.SOCIAL_BOOKMARK_DISPLAY_STYLES);
+
+		socialBookmarksDisplayStyle = socialBookmarksDisplayStyles[0];
+	}
+
+	String socialBookmarksDisplayPosition = portletPreferences.getValue("socialBookmarksDisplayPosition", "bottom");
+	%>
+
 	<liferay-ui:social-bookmarks-settings
 		displayPosition="<%= socialBookmarksDisplayPosition %>"
 		displayStyle="<%= socialBookmarksDisplayStyle %>"
