@@ -63,6 +63,13 @@ public class AssetRendererFactoryRegistryUtil {
 		return _assetRendererFactoryRegistry;
 	}
 
+	public static long[] getAvailableClassNameIds(
+		long companyId, boolean onlyAvailable) {
+
+		return getAssetRendererFactoryRegistry().getAvailableClassNameIds(
+			companyId, onlyAvailable);
+	}
+
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link #getClassNameIds( long)}
 	 */

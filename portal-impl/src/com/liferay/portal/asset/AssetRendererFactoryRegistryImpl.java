@@ -61,16 +61,10 @@ public class AssetRendererFactoryRegistryImpl
 		return _assetRenderFactoriesMapByClassType.get(type);
 	}
 
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #getClassNameIds( long)}
-	 */
 	@Override
-	public long[] getClassNameIds() {
-		return getClassNameIds(0);
-	}
+	public long[] getAvailableClassNameIds(
+		long companyId, boolean onlyAvailable) {
 
-	@Override
-	public long[] getClassNameIds(long companyId) {
 		Map<String, AssetRendererFactory> assetRenderFactories =
 			_assetRenderFactoriesMapByClassName;
 
@@ -86,12 +80,27 @@ public class AssetRendererFactoryRegistryImpl
 		for (AssetRendererFactory assetRendererFactory :
 				assetRenderFactories.values()) {
 
-			classNameIds[i] = assetRendererFactory.getClassNameId();
+			if (!onlyAvailable || assetRendererFactory.isSelectable()) {
+				classNameIds[i] = assetRendererFactory.getClassNameId();
 
-			i++;
+				i++;
+			}
 		}
 
 		return classNameIds;
+	}
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #getClassNameIds( long)}
+	 */
+	@Override
+	public long[] getClassNameIds() {
+		return getClassNameIds(0);
+	}
+
+	@Override
+	public long[] getClassNameIds(long companyId) {
+		return getAvailableClassNameIds(companyId, false);
 	}
 
 	@Override
