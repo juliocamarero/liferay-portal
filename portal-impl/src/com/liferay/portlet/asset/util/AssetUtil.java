@@ -160,21 +160,22 @@ public class AssetUtil {
 		AssetEntry assetEntry, boolean viewInContext, String viewURL,
 		String currentURL, ThemeDisplay themeDisplay) {
 
-		if (Validator.isNotNull(viewURL)) {
-			viewURL = HttpUtil.setParameter(
-				viewURL, "inheritRedirect", viewInContext);
+		if (Validator.isNull(viewURL)) {
+			return viewURL;
+		}
 
-			Layout layout = themeDisplay.getLayout();
+		viewURL = HttpUtil.setParameter(
+			viewURL, "inheritRedirect", viewInContext);
 
-			String assetEntryLayoutUuid = assetEntry.getLayoutUuid();
+		Layout layout = themeDisplay.getLayout();
 
-			if (!viewInContext ||
-				(Validator.isNotNull(assetEntryLayoutUuid) &&
-				 !assetEntryLayoutUuid.equals(layout.getUuid()))) {
+		String assetEntryLayoutUuid = assetEntry.getLayoutUuid();
 
-				viewURL = HttpUtil.setParameter(
-					viewURL, "redirect", currentURL);
-			}
+		if (!viewInContext ||
+			(Validator.isNotNull(assetEntryLayoutUuid) &&
+		 	!assetEntryLayoutUuid.equals(layout.getUuid()))) {
+
+			viewURL = HttpUtil.setParameter(viewURL, "redirect", currentURL);
 		}
 
 		return viewURL;
