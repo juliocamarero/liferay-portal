@@ -35,9 +35,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.TempFileUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.Company;
 import com.liferay.portal.security.auth.PrincipalException;
-import com.liferay.portal.service.CompanyServiceUtil;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -55,19 +53,16 @@ import javax.portlet.ActionResponse;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class EditLogoAction extends PortletAction {
+public abstract class EditLogoAction extends PortletAction {
 
 	@Override
 	public void processAction(
@@ -92,7 +87,7 @@ public class EditLogoAction extends PortletAction {
 			if (e instanceof PrincipalException) {
 				SessionErrors.add(actionRequest, e.getClass());
 
-				setForward(actionRequest, "portlet.portal_settings.error");
+				setForward(actionRequest, "portal.error");
 			}
 			else if (e instanceof FileSizeException ||
 					 e instanceof ImageTypeException) {
@@ -112,18 +107,6 @@ public class EditLogoAction extends PortletAction {
 				throw e;
 			}
 		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		return actionMapping.findForward(
-			getForward(
-				renderRequest, "portlet.portal_settings.edit_company_logo"));
 	}
 
 	@Override
@@ -200,12 +183,8 @@ public class EditLogoAction extends PortletAction {
 			getTempImageFileName(portletRequest), getTempImageFolderName());
 	}
 
-	protected String getTempImageFileName(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		return String.valueOf(themeDisplay.getCompanyId());
-	}
+	protected abstract String getTempImageFileName(
+		PortletRequest portletRequest);
 
 	protected String getTempImageFolderName() {
 		Class<?> clazz = getClass();
@@ -265,18 +244,9 @@ public class EditLogoAction extends PortletAction {
 		}
 	}
 
-	protected void saveTempImageFile(
+	protected abstract void saveTempImageFile(
 			PortletRequest portletRequest, byte[] bytes)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		Company company = CompanyServiceUtil.updateLogo(
-			themeDisplay.getCompanyId(), bytes);
-
-		themeDisplay.setCompany(company);
-	}
+		throws Exception;
 
 	protected void serveTempImageFile(
 			MimeResponse mimeResponse, InputStream tempImageStream)
