@@ -28,7 +28,7 @@ import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.NoSuchFileException;
-import com.liferay.portlet.portalsettings.action.EditCompanyLogoAction;
+import com.liferay.portlet.portalsettings.action.EditLogoAction;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -44,7 +44,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * @author Brian Wing Shun Chan
  */
-public class EditUserPortraitAction extends EditCompanyLogoAction {
+public class EditUserPortraitAction extends EditLogoAction {
 
 	@Override
 	public void processAction(
