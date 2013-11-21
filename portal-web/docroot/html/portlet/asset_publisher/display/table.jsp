@@ -68,7 +68,7 @@ else {
 	viewURL = viewFullContentURL.toString();
 }
 
-viewURL = _checkViewURL(assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
+viewURL = AssetUtil.checkViewURL(assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
 
 request.setAttribute("view.jsp-showIconLabel", false);
 %>

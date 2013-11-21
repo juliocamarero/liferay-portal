@@ -62,7 +62,7 @@ else {
 	viewURL = viewFullContentURL.toString();
 }
 
-viewURL = _checkViewURL(assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
+viewURL = AssetUtil.checkViewURL(assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
 %>
 
 	<c:if test="<%= assetEntryIndex == 0 %>">
