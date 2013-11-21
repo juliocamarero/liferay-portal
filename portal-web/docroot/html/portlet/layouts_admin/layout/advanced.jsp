@@ -50,45 +50,17 @@ UnicodeProperties layoutTypeSettings = selLayout.getTypeSettingsProperties();
 	<aui:input name="iconImage" type="hidden" value="<%= selLayout.isIconImage() %>" />
 
 	<aui:field-wrapper helpMessage="this-icon-will-be-shown-in-the-navigation-menu" label="icon" name="iconFileName">
-		<aui:input inlineField="<%= true %>" label="" name="iconFileName" type="file" />
+		<portlet:renderURL var="editLayoutIconImageURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="struts_action" value="/layouts_admin/edit_layout_icon_image" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="plid" value="<%= String.valueOf(selLayout.getPlid()) %>" />
+			<portlet:param name="imageId" value="<%= String.valueOf(selLayout.getIconImageId()) %>" />
+		</portlet:renderURL>
 
-		<c:if test="<%= selLayout.getIconImage() %>">
-			<liferay-ui:icon
-				cssClass="modify-link"
-				id="deleteIconLink"
-				image="delete"
-				label="<%= true %>"
-				url="javascript:;"
-			/>
-
-			<div id="<portlet:namespace />layoutIconContainer">
-				<liferay-theme:layout-icon layout="<%= selLayout %>" />
-			</div>
-		</c:if>
+		<liferay-ui:logo-selector
+			editLogoURL="<%= editLayoutIconImageURL %>"
+			imageId="<%= selLayout.getIconImageId() %>"
+			logoDisplaySelector=".layout-icon-image"
+		/>
 	</aui:field-wrapper>
 </aui:fieldset>
-
-<aui:script use="aui-base">
-	var panel = A.one('#<portlet:namespace />advanced');
-
-	var deleteLogoLink = panel.one('#<portlet:namespace />deleteIconLink');
-	var iconFileNameInput = panel.one('#<portlet:namespace />iconFileName');
-	var iconImageInput = panel.one('#<portlet:namespace />iconImage');
-	var layoutIconContainer = panel.one('#<portlet:namespace />layoutIconContainer');
-
-	var changeLogo = function(event) {
-		var changeLogo = (event.type == 'change');
-
-		iconImageInput.val(changeLogo);
-
-		if (layoutIconContainer) {
-			layoutIconContainer.hide();
-		}
-	};
-
-	if (deleteLogoLink) {
-		deleteLogoLink.on('click', changeLogo);
-	}
-
-	iconFileNameInput.on('change', changeLogo);
-</aui:script>
