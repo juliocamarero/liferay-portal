@@ -165,7 +165,9 @@
 	<aui:field-wrapper label="metadata-fields">
 
 		<%
-		Set<String> availableMetadataFields = SetUtil.fromArray(StringUtil.split(allMetadataFields));
+		String[] allMetadataFields = new String[] {"create-date", "modified-date", "publish-date", "expiration-date", "priority", "author", "view-count", "categories", "tags"};
+
+		Set<String> availableMetadataFields = SetUtil.fromArray(allMetadataFields);
 
 		// Left list
 
