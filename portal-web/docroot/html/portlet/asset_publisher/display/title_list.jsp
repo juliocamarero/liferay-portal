@@ -31,8 +31,6 @@ if (Validator.isNull(title)) {
 	title = assetRenderer.getTitle(locale);
 }
 
-boolean show = ((Boolean)request.getAttribute("view.jsp-show")).booleanValue();
-
 request.setAttribute("view.jsp-showIconLabel", false);
 
 PortletURL viewFullContentURL = renderResponse.createRenderURL();

@@ -37,8 +37,6 @@ if (Validator.isNull(title)) {
 	title = assetRenderer.getTitle(locale);
 }
 
-boolean show = ((Boolean)request.getAttribute("view.jsp-show")).booleanValue();
-
 PortletURL editPortletURL = assetRenderer.getURLEdit(liferayPortletRequest, liferayPortletResponse);
 
 PortletURL viewFullContentURL = renderResponse.createRenderURL();
