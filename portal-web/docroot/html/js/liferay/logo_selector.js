@@ -14,8 +14,22 @@ AUI.add(
 						value: ''
 					},
 
-					editLogoURL: {
+					editLogoFn: {
+						setter: function(value) {
+							var fn = function() {};
+
+							if (value && value !== '') {
+								fn = window[value] || fn;
+							}
+
+							return fn;
+						},
+						validator: A.Lang.isString,
 						value: ''
+					},
+
+					editLogoURL: {
+						value: '',
 					},
 
 					logoDisplaySelector: {
@@ -120,6 +134,8 @@ AUI.add(
 						if (logoDisplay) {
 							logoDisplay.attr('src', logoURL);
 						}
+
+						instance.get('editLogoFn').apply(instance, [logoURL, deleteLogo]);
 
 						instance._deleteLogoInput.val(deleteLogo);
 						instance._deleteLogoButton.attr('disabled', deleteLogo ? 'disabled' : '');
