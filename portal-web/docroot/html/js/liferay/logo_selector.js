@@ -69,12 +69,6 @@ AUI.add(
 						var portletNamespace = instance._portletNamespace;
 						var randomNamespace = instance._randomNamespace;
 
-						var logoDisplaySelector = instance.get('logoDisplaySelector');
-
-						if (logoDisplaySelector) {
-							instance._logoDisplay = A.one(logoDisplaySelector);
-						}
-
 						var contentBox = instance.get('contentBox');
 
 						instance._avatar = contentBox.one('#' + randomNamespace + 'avatar');
@@ -125,20 +119,26 @@ AUI.add(
 						var instance = this;
 
 						var logoURL = value;
-						var logoDisplay = instance._logoDisplay;
+
+						var logoDisplaySelector = instance.get('logoDisplaySelector');
 
 						var deleteLogo = src == DELETE_LOGO;
 
 						instance._avatar.attr('src', logoURL);
 
-						if (logoDisplay) {
-							logoDisplay.attr('src', logoURL);
+						if (logoDisplaySelector) {
+							var logoDisplay = A.one(logoDisplaySelector);
+
+							if (logoDisplay) {
+								logoDisplay.attr('src', logoURL);
+							}
 						}
 
 						instance.get('editLogoFn').apply(instance, [logoURL, deleteLogo]);
 
 						instance._deleteLogoInput.val(deleteLogo);
 						instance._deleteLogoButton.attr('disabled', deleteLogo ? 'disabled' : '');
+						instance._deleteLogoButton.toggleClass('disabled', deleteLogo);
 					}
 				}
 			}
