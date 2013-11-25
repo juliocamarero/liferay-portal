@@ -95,6 +95,8 @@
 		<div class="field-row">
 
 			<%
+			String[] conversions = DocumentConversionUtil.getConversions("html");
+
 			for (String conversion : conversions) {
 			%>
 
