@@ -50,6 +50,8 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 
 String viewURL = null;
 
+boolean viewInContext = ((Boolean)request.getAttribute("view.jsp-viewInContext")).booleanValue();
+
 if (viewInContext) {
 	String viewFullContentURLString = viewFullContentURL.toString();
 

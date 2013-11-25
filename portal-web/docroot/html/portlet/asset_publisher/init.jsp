@@ -162,7 +162,6 @@ boolean showAddContentButton = GetterUtil.getBoolean(portletPreferences.getValue
 boolean showAssetTitle = GetterUtil.getBoolean(portletPreferences.getValue("showAssetTitle", null), true);
 boolean showContextLink = GetterUtil.getBoolean(portletPreferences.getValue("showContextLink", null), true);
 int abstractLength = GetterUtil.getInteger(portletPreferences.getValue("abstractLength", null), 200);
-String assetLinkBehavior = GetterUtil.getString(portletPreferences.getValue("assetLinkBehavior", "showFullContent"));
 String orderByColumn1 = GetterUtil.getString(portletPreferences.getValue("orderByColumn1", "modifiedDate"));
 String orderByColumn2 = GetterUtil.getString(portletPreferences.getValue("orderByColumn2", "title"));
 String orderByType1 = GetterUtil.getString(portletPreferences.getValue("orderByType1", "DESC"));
@@ -198,8 +197,6 @@ boolean enableFlags = GetterUtil.getBoolean(portletPreferences.getValue("enableF
 String[] metadataFields = StringUtil.split(portletPreferences.getValue("metadataFields", StringPool.BLANK));
 
 String[] assetEntryXmls = portletPreferences.getValues("assetEntryXml", new String[0]);
-
-boolean viewInContext = assetLinkBehavior.equals("viewInPortlet");
 
 boolean showPortletWithNoResults = false;
 

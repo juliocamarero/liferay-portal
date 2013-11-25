@@ -55,6 +55,8 @@ if (Validator.isNotNull(assetRenderer.getUrlTitle())) {
 
 String viewURL = null;
 
+boolean viewInContext = ((Boolean)request.getAttribute("view.jsp-viewInContext")).booleanValue();
+
 if (viewInContext) {
 	String viewFullContentURLString = viewFullContentURL.toString();
 
