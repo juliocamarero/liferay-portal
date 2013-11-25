@@ -226,9 +226,13 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 			if (Validator.isNotNull(portletId) && (plid > 0)) {
 				Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
+				if (layout.isTypeControlPanel()) {
+					layout.setGroupId(groupId);
+				}
+
 				PortletPreferences preferences =
-					PortletPreferencesFactoryUtil.getPortletSetup(
-						layout, portletId, StringPool.BLANK);
+					PortletPreferencesFactoryUtil.getStrictPortletSetup(
+						layout, portletId);
 
 				lastPublishDate = GetterUtil.getLong(
 					preferences.getValue(
