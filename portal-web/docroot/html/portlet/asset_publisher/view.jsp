@@ -77,9 +77,16 @@ if (assetCategoryId > 0) {
 }
 
 if (Validator.isNotNull(assetTagName)) {
-	long[] assetTagIds = AssetTagLocalServiceUtil.getTagIds(groupIds, allAssetTagNames);
+	if (selectionStyle.equals("dynamic")) {
+		if (!ArrayUtil.contains(allAssetTagNames, assetTagName)) {
+			long[] allAssetTagIds = AssetTagLocalServiceUtil.getTagIds(groupIds, ArrayUtil.append(allAssetTagNames, assetTagName));
 
-	assetEntryQuery.setAnyTagIds(assetTagIds);
+			assetEntryQuery.setAllTagIds(allAssetTagIds);
+		}
+	}
+	else if (selectionStyle.equals("manual")) {
+		allAssetTagNames = ArrayUtil.append(allAssetTagNames, assetTagName);
+	}
 }
 
 if (showOnlyLayoutAssets) {
@@ -96,8 +103,6 @@ if (portletName.equals(PortletKeys.RELATED_ASSETS)) {
 
 assetEntryQuery.setPaginationType(paginationType);
 assetEntryQuery.setEnablePermissions(AssetUtil.isEnablePermissions(portletPreferences, portletName));
-
-long[] allAssetTagIds = new long[0];
 
 if (mergeUrlTags || mergeLayoutTags) {
 	String[] compilerTagNames = new String[0];
@@ -121,9 +126,7 @@ if (mergeUrlTags || mergeLayoutTags) {
 
 		allAssetTagNames = ArrayUtil.distinct(newAssetTagNames, new StringComparator());
 
-		allAssetTagIds = AssetTagLocalServiceUtil.getTagIds(scopeGroupId, allAssetTagNames);
-
-		assetEntryQuery.setAllTagIds(allAssetTagIds);
+		assetEntryQuery.setAllTagIds(AssetTagLocalServiceUtil.getTagIds(scopeGroupId, allAssetTagNames));
 
 		titleEntry = compilerTagNames[compilerTagNames.length - 1];
 	}
@@ -156,7 +159,7 @@ for (String curAssetTagName : allAssetTagNames) {
 	}
 }
 
-if (enableTagBasedNavigation && selectionStyle.equals("manual") && ((allAssetCategoryIds.length > 0) || (allAssetTagIds.length > 0))) {
+if (enableTagBasedNavigation && selectionStyle.equals("manual") && ((allAssetCategoryIds.length > 0) || (allAssetTagNames.length > 0))) {
 	selectionStyle = "dynamic";
 }
 
