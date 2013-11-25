@@ -73,10 +73,28 @@ public interface AssetPublisher {
 
 	public void checkAssetEntries() throws Exception;
 
+	public long[] getAssetCategoryIds(PortletPreferences portletPreferences)
+		throws Exception;
+
 	public List<AssetEntry> getAssetEntries(
 			PortletPreferences portletPreferences, Layout layout,
 			long scopeGroupId, int max, boolean checkPermission)
 		throws PortalException, SystemException;
+
+	public List<AssetEntry> getAssetEntries(
+			PortletRequest portletRequest,
+			PortletPreferences portletPreferences,
+			PermissionChecker permissionChecker, long[] groupIds,
+			boolean deleteMissingAssetEntries, boolean checkPermission)
+		throws Exception;
+
+	public List<AssetEntry> getAssetEntries(
+			PortletRequest portletRequest,
+			PortletPreferences portletPreferences,
+			PermissionChecker permissionChecker, long[] groupIds,
+			long[] allCategoryIds, String[] allTagNames,
+			boolean deleteMissingAssetEntries, boolean checkPermission)
+		throws Exception;
 
 	public List<AssetEntry> getAssetEntries(
 			PortletRequest portletRequest,
