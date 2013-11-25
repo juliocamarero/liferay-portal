@@ -97,6 +97,8 @@ if (portletName.equals(PortletKeys.RELATED_ASSETS)) {
 assetEntryQuery.setPaginationType(paginationType);
 assetEntryQuery.setEnablePermissions(AssetUtil.isEnablePermissions(portletPreferences, portletName));
 
+long[] allAssetTagIds = new long[0];
+
 if (mergeUrlTags || mergeLayoutTags) {
 	String[] compilerTagNames = new String[0];
 
@@ -119,7 +121,7 @@ if (mergeUrlTags || mergeLayoutTags) {
 
 		allAssetTagNames = ArrayUtil.distinct(newAssetTagNames, new StringComparator());
 
-		long[] allAssetTagIds = AssetTagLocalServiceUtil.getTagIds(scopeGroupId, allAssetTagNames);
+		allAssetTagIds = AssetTagLocalServiceUtil.getTagIds(scopeGroupId, allAssetTagNames);
 
 		assetEntryQuery.setAllTagIds(allAssetTagIds);
 
@@ -154,7 +156,7 @@ for (String curAssetTagName : allAssetTagNames) {
 	}
 }
 
-if (enableTagBasedNavigation && selectionStyle.equals("manual") && ((assetEntryQuery.getAllCategoryIds().length > 0) || (assetEntryQuery.getAllTagIds().length > 0))) {
+if (enableTagBasedNavigation && selectionStyle.equals("manual") && ((allAssetCategoryIds.length > 0) || (allAssetTagIds.length > 0))) {
 	selectionStyle = "dynamic";
 }
 
