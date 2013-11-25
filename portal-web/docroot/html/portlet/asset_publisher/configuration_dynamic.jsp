@@ -19,6 +19,35 @@
 <%
 boolean anyAssetType = GetterUtil.getBoolean(portletPreferences.getValue("anyAssetType", null), true);
 
+String ddmStructureDisplayFieldValue = StringPool.BLANK;
+String ddmStructureFieldLabel = StringPool.BLANK;
+String ddmStructureFieldName = StringPool.BLANK;
+Serializable ddmStructureFieldValue = null;
+
+boolean subtypeFieldsFilterEnabled = GetterUtil.getBoolean(portletPreferences.getValue("subtypeFieldsFilterEnabled", Boolean.FALSE.toString()));
+
+if ((classNameIds.length == 1) && (classTypeIds.length == 1)) {
+	AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(PortalUtil.getClassName(classNameIds[0]));
+
+	ddmStructureDisplayFieldValue = GetterUtil.getString(portletPreferences.getValue("ddmStructureDisplayFieldValue", StringPool.BLANK));
+	ddmStructureFieldName = GetterUtil.getString(portletPreferences.getValue("ddmStructureFieldName", StringPool.BLANK));
+	ddmStructureFieldValue = portletPreferences.getValue("ddmStructureFieldValue", StringPool.BLANK);
+
+	if (Validator.isNotNull(ddmStructureFieldName) && Validator.isNotNull(ddmStructureFieldValue)) {
+		List<Tuple> classTypeFieldNames = assetRendererFactory.getClassTypeFieldNames(classTypeIds[0], locale, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+		for (Tuple classTypeFieldName : classTypeFieldNames) {
+			String fieldName = (String)classTypeFieldName.getObject(1);
+
+			if (fieldName.equals(ddmStructureFieldName)) {
+				ddmStructureFieldLabel = (String)classTypeFieldName.getObject(0);
+
+				break;
+			}
+		}
+	}
+}
+
 List<AssetRendererFactory> classTypesAssetRendererFactories = (List<AssetRendererFactory>)request.getAttribute("configuration.jsp-classTypesAssetRendererFactories");
 PortletURL configurationRenderURL = (PortletURL)request.getAttribute("configuration.jsp-configurationRenderURL");
 String redirect = (String)request.getAttribute("configuration.jsp-redirect");
