@@ -76,6 +76,12 @@ public interface AssetPublisher {
 	public long[] getAssetCategoryIds(PortletPreferences portletPreferences)
 		throws Exception;
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 * AssetPublisher#getAssetEntries(
+	 *  PortletRequest, PortletPreferences, PermissionChecker, long[], boolean,
+	 *  boolean)}
+	 */
 	public List<AssetEntry> getAssetEntries(
 			PortletPreferences portletPreferences, Layout layout,
 			long scopeGroupId, int max, boolean checkPermission)
@@ -96,6 +102,12 @@ public interface AssetPublisher {
 			boolean deleteMissingAssetEntries, boolean checkPermission)
 		throws Exception;
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 * AssetPublisher#getAssetEntries(
+	 *  PortletRequest, PortletPreferences, PermissionChecker, long[], long[],
+	 *  String[], boolean , boolean)}
+	 */
 	public List<AssetEntry> getAssetEntries(
 			PortletRequest portletRequest,
 			PortletPreferences portletPreferences,
