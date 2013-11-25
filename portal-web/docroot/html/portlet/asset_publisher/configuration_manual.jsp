@@ -44,7 +44,7 @@ String eventName = "_" + HtmlUtil.escapeJS(portletResource) + "_selectAsset";
 			<%
 			boolean enablePermissions = AssetUtil.isEnablePermissions(portletPreferences, portletName);
 
-			List<AssetEntry> assetEntries = AssetPublisherUtil.getAssetEntries(renderRequest, portletPreferences, permissionChecker, groupIds, assetEntryXmls, true, enablePermissions);
+			List<AssetEntry> assetEntries = AssetPublisherUtil.getAssetEntries(renderRequest, portletPreferences, permissionChecker, groupIds, true, enablePermissions);
 			%>
 
 			<liferay-ui:search-container
@@ -113,6 +113,7 @@ String eventName = "_" + HtmlUtil.escapeJS(portletResource) + "_selectAsset";
 							assetBrowserURL.setParameter("groupId", String.valueOf(groupId));
 							assetBrowserURL.setParameter("selectedGroupIds", String.valueOf(groupId));
 							assetBrowserURL.setParameter("eventName", eventName);
+							assetBrowserURL.setParameter("showEmptyOption", Boolean.FALSE.toString());
 							assetBrowserURL.setPortletMode(PortletMode.VIEW);
 							assetBrowserURL.setWindowState(LiferayWindowState.POP_UP);
 
