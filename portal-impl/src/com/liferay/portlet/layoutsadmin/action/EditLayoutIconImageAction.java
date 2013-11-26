@@ -22,15 +22,11 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.NoSuchFileException;
 import com.liferay.portlet.portalsettings.action.EditLogoAction;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -119,16 +115,7 @@ public class EditLayoutIconImageAction extends EditLogoAction {
 
 		long plid = ParamUtil.getLong(portletRequest, "plid");
 
-		InputStream inputStream = null;
-
-		try {
-			inputStream = new ByteArrayInputStream(bytes);
-
-			LayoutServiceUtil.updateIconImage(plid, bytes);
-		}
-		finally {
-			StreamUtil.cleanUp(inputStream);
-		}
+		LayoutServiceUtil.updateIconImage(plid, bytes);
 	}
 
 }
