@@ -118,7 +118,7 @@ public class FindActionTest {
 	}
 
 	protected void addLayouts(
-			boolean portletExists, boolean blogEntryWithAlternateGroup)
+			boolean portletExists, boolean blogEntryWithDifferentGroup)
 		throws Exception {
 
 		_group = GroupTestUtil.addGroup();
@@ -142,14 +142,14 @@ public class FindActionTest {
 			TestPropsValues.getUserId(), _assetLayout, _assetPublisherPortletId,
 			"column-1", preferenceMap);
 
-		Group blogEntryGroup = _group;
+		Group group = _group;
 
-		if (blogEntryWithAlternateGroup) {
-			blogEntryGroup = GroupTestUtil.addGroup();
+		if (blogEntryWithDifferentGroup) {
+			group = GroupTestUtil.addGroup();
 		}
 
 		_blogsEntry = BlogsTestUtil.addEntry(
-			TestPropsValues.getUserId(), blogEntryGroup, true);
+			TestPropsValues.getUserId(), group, true);
 	}
 
 	protected HttpServletRequest getHttpServletRequest() throws Exception {
