@@ -63,7 +63,7 @@ UnicodeProperties layoutTypeSettings = selLayout.getTypeSettingsProperties();
 		%>
 
 		<liferay-ui:logo-selector
-			defaultLogoURL='<%= themeDisplay.getPathThemeImages() + "/common/page.png" %>'
+			defaultLogoURL='<%= themeDisplay.getPathThemeImages() + "/spacer.png" %>'
 			editLogoFn="<%= editLogoFn %>"
 			editLogoURL="<%= editLayoutIconImageURL %>"
 			imageId="<%= selLayout.isIconImage() ? selLayout.getIconImageId() : 0 %>"

@@ -21,7 +21,14 @@ long selPlid = ParamUtil.getLong(request, "plid");
 
 Layout selLayout = LayoutLocalServiceUtil.getLayout(selPlid);
 
-String iconImageURL = themeDisplay.getPathImage() + "/logo?img_id=" + selLayout.getIconImageId() + "&t=" + WebServerServletTokenUtil.getToken(selLayout.getIconImageId());
+String iconImageURL = null;
+
+if (selLayout.getIconImageId() == 0) {
+	iconImageURL = themeDisplay.getPathThemeImages() + "/spacer.png";
+}
+else {
+	iconImageURL = themeDisplay.getPathImage() + "/logo?img_id=" + selLayout.getIconImageId() + "&t=" + WebServerServletTokenUtil.getToken(selLayout.getIconImageId());
+}
 %>
 
 <c:choose>
