@@ -66,6 +66,54 @@ public class SQLQueryImpl implements SQLQuery {
 		return this;
 	}
 
+	@Override
+	public SQLQuery addSynchronizedEntityClass(Class<?> entityClass) {
+		_sqlQuery.addSynchronizedEntityClass(entityClass);
+
+		return this;
+	}
+
+	@Override
+	public SQLQuery addSynchronizedEntityClasses(Class<?>... entityClasses) {
+		for (Class<?> entityClass : entityClasses) {
+			_sqlQuery.addSynchronizedEntityClass(entityClass);
+		}
+
+		return this;
+	}
+
+	@Override
+	public SQLQuery addSynchronizedEntityName(String entityName) {
+		_sqlQuery.addSynchronizedEntityName(entityName);
+
+		return this;
+	}
+
+	@Override
+	public SQLQuery addSynchronizedEntityNames(String... entityNames) {
+		for (String entityName : entityNames) {
+			_sqlQuery.addSynchronizedEntityName(entityName);
+		}
+
+		return this;
+	}
+
+	@Override
+	public SQLQuery addSynchronizedQuerySpace(String querySpace) {
+		_sqlQuery.addSynchronizedQuerySpace(querySpace);
+
+		return this;
+	}
+
+	@Override
+	public SQLQuery addSynchronizedQuerySpaces(String... querySpaces) {
+		for (String querySpace : querySpaces) {
+			_sqlQuery.addSynchronizedQuerySpace(querySpace);
+		}
+
+		return this;
+	}
+
 	@NotPrivileged
 	@Override
 	public int executeUpdate() throws ORMException {

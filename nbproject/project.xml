@@ -367,7 +367,6 @@
 				<classpath mode="compile">lib/portal/displaytag.jar</classpath>
 				<classpath mode="compile">lib/portal/dom4j.jar</classpath>
 				<classpath mode="compile">lib/portal/easyconf.jar</classpath>
-				<classpath mode="compile">lib/portal/eclipselink.jar</classpath>
 				<classpath mode="compile">lib/portal/eclipse-core-runtime.jar</classpath>
 				<classpath mode="compile">lib/portal/ecs.jar</classpath>
 				<classpath mode="compile">lib/portal/ehcache.jar</classpath>

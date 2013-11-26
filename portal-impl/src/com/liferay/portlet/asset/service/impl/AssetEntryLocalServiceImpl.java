@@ -858,8 +858,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		updateVisible(entry, visible);
 
-		assetEntryPersistence.update(entry);
-
 		return entry;
 	}
 
@@ -879,8 +877,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		updateVisible(entry, visible);
 
-		assetEntryPersistence.update(entry);
-
 		return entry;
 	}
 
@@ -895,8 +891,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			classNameId, classPK);
 
 		updateVisible(entry, visible);
-
-		assetEntryPersistence.update(entry);
 
 		return entry;
 	}
@@ -1020,8 +1014,14 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		if (visible == entry.isVisible()) {
+			assetEntryPersistence.update(entry);
+
 			return;
 		}
+
+		entry.setVisible(visible);
+
+		assetEntryPersistence.update(entry);
 
 		List<AssetTag> tags = assetEntryPersistence.getAssetTags(
 			entry.getEntryId());
@@ -1044,8 +1044,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			socialActivityCounterLocalService.disableActivityCounters(
 				entry.getClassNameId(), entry.getClassPK());
 		}
-
-		entry.setVisible(visible);
 	}
 
 }
