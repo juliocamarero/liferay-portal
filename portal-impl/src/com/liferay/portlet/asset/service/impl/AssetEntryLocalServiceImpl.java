@@ -1023,6 +1023,10 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			return;
 		}
 
+		entry.setVisible(visible);
+
+		assetEntryPersistence.update(entry);
+
 		List<AssetTag> tags = assetEntryPersistence.getAssetTags(
 			entry.getEntryId());
 
@@ -1044,8 +1048,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			socialActivityCounterLocalService.disableActivityCounters(
 				entry.getClassNameId(), entry.getClassPK());
 		}
-
-		entry.setVisible(visible);
 	}
 
 }
