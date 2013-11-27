@@ -21,9 +21,6 @@ String className = ParamUtil.getString(request, "className");
 long classTypeId = ParamUtil.getLong(request, "classTypeId");
 String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectDDMStructureField");
 
-String ddmStructureFieldName = GetterUtil.getString(portletPreferences.getValue("ddmStructureFieldName", StringPool.BLANK));
-Serializable ddmStructureFieldValue = portletPreferences.getValue("ddmStructureFieldValue", StringPool.BLANK);
-
 AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
 
 PortletURL portletURL = renderResponse.createRenderURL();
@@ -56,7 +53,7 @@ portletURL.setParameter("classTypeId", String.valueOf(classTypeId));
 			%>
 
 			<liferay-ui:search-container-column-text>
-				<input data-button-id="<%= renderResponse.getNamespace() + "applyButton" + name %>" data-form-id="<%= renderResponse.getNamespace() + name + "fieldForm" %>" name="<portlet:namespace />selectStructureFieldSubtype" type="radio" <%= name.equals(ddmStructureFieldName) ? "checked" : StringPool.BLANK %> />
+				<input data-button-id="<%= renderResponse.getNamespace() + "applyButton" + name %>" data-form-id="<%= renderResponse.getNamespace() + name + "fieldForm" %>" name="<portlet:namespace />selectStructureFieldSubtype" type="radio" <%= name.equals(assetPublisherDisplayContext.getDDMStructureFieldName()) ? "checked" : StringPool.BLANK %> />
 			</liferay-ui:search-container-column-text>
 
 			<%
@@ -84,7 +81,9 @@ portletURL.setParameter("classTypeId", String.valueOf(classTypeId));
 					ddmField.setDDMStructureId(ddmStructureId);
 					ddmField.setName(name);
 
-					if (name.equals(ddmStructureFieldName)) {
+					Serializable ddmStructureFieldValue = assetPublisherDisplayContext.getDDMStructureFieldValue();
+
+					if (name.equals(assetPublisherDisplayContext.getDDMStructureFieldName())) {
 						if (fieldType.equals(DDMImpl.TYPE_DDM_DATE)) {
 							ddmStructureFieldValue = GetterUtil.getDate(ddmStructureFieldValue, DateFormatFactoryUtil.getSimpleDateFormat("yyyyMMddHHmmss"));
 						}
@@ -112,7 +111,7 @@ portletURL.setParameter("classTypeId", String.valueOf(classTypeId));
 				data.put("name", name);
 				%>
 
-				<aui:button cssClass="selector-button" data="<%= data %>" disabled="<%= name.equals(ddmStructureFieldName) ? false : true %>" id='<%= renderResponse.getNamespace() + "applyButton" + name %>' value="apply" />
+				<aui:button cssClass="selector-button" data="<%= data %>" disabled="<%= name.equals(assetPublisherDisplayContext.getDDMStructureFieldName()) ? false : true %>" id='<%= renderResponse.getNamespace() + "applyButton" + name %>' value="apply" />
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
