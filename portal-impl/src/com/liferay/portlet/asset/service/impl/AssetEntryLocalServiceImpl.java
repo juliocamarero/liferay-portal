@@ -856,9 +856,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		entry.setPublishDate(publishDate);
 
-		updateVisible(entry, visible);
-
-		return entry;
+		return updateVisible(entry, visible);
 	}
 
 	@Override
@@ -875,9 +873,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		entry.setExpirationDate(expirationDate);
 		entry.setPublishDate(publishDate);
 
-		updateVisible(entry, visible);
-
-		return entry;
+		return updateVisible(entry, visible);
 	}
 
 	@Override
@@ -890,9 +886,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		AssetEntry entry = assetEntryPersistence.findByC_C(
 			classNameId, classPK);
 
-		updateVisible(entry, visible);
-
-		return entry;
+		return updateVisible(entry, visible);
 	}
 
 	@Override
@@ -1010,13 +1004,11 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		return null;
 	}
 
-	protected void updateVisible(AssetEntry entry, boolean visible)
+	protected AssetEntry updateVisible(AssetEntry entry, boolean visible)
 		throws PortalException, SystemException {
 
 		if (visible == entry.isVisible()) {
-			assetEntryPersistence.update(entry);
-
-			return;
+			return assetEntryPersistence.update(entry);
 		}
 
 		entry.setVisible(visible);
@@ -1044,6 +1036,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			socialActivityCounterLocalService.disableActivityCounters(
 				entry.getClassNameId(), entry.getClassPK());
 		}
+
+		return entry;
 	}
 
 }
