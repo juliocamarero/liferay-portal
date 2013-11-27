@@ -17,7 +17,7 @@
 <%@ include file="/html/portlet/users_admin/init.jsp" %>
 
 <%
-String toolbarItem = GetterUtil.getString(request.getAttribute("view.jsp-toolbarItem"));
+String toolbarItem = "view-all-organizations";
 
 String usersListView = (String)request.getAttribute("view.jsp-usersListView");
 
