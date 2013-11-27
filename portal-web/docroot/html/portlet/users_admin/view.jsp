@@ -87,11 +87,6 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 
 	<c:choose>
 		<c:when test="<%= usersListView.equals(UserConstants.LIST_VIEW_FLAT_ORGANIZATIONS) %>">
-
-			<%
-			request.setAttribute("view.jsp-toolbarItem", "view-all-organizations");
-			%>
-
 			<liferay-util:include page="/html/portlet/users_admin/view_flat_organizations.jsp" />
 		</c:when>
 		<c:when test="<%= usersListView.equals(UserConstants.LIST_VIEW_FLAT_USERS) %>">
