@@ -414,7 +414,7 @@ public class EditUserAction extends PortletAction {
 				mySpaceSn, skypeSn, twitterSn, ymSn, jobTitle, groupIds,
 				organizationIds, roleIds, userGroupRoles, userGroupIds,
 				addresses, emailAddresses, phones, websites,
-				announcementsDeliveries, serviceContext);
+				announcementsDeliveries, true, null, serviceContext);
 		}
 
 		long publicLayoutSetPrototypeId = ParamUtil.getLong(
@@ -657,7 +657,8 @@ public class EditUserAction extends PortletAction {
 			smsSn, aimSn, facebookSn, icqSn, jabberSn, msnSn, mySpaceSn,
 			skypeSn, twitterSn, ymSn, jobTitle, groupIds, organizationIds,
 			roleIds, userGroupRoles, userGroupIds, addresses, emailAddresses,
-			phones, websites, announcementsDeliveries, serviceContext);
+			phones, websites, announcementsDeliveries, true, null,
+			serviceContext);
 
 		if (oldScreenName.equals(user.getScreenName())) {
 			oldScreenName = StringPool.BLANK;
