@@ -4818,6 +4818,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @param  roleIds the primary keys of the user's roles
 	 * @param  userGroupRoles the user user's group roles
 	 * @param  userGroupIds the primary keys of the user's user groups
+	 * @param  portrait if the user has a custom portrait image
+	 * @param  portraitBytes the new portrait image data
+
 	 * @param  serviceContext the service context to be applied (optionally
 	 *         <code>null</code>). Can set the UUID (with the <code>uuid</code>
 	 *         attribute), asset category IDs, asset tag names, and expando
