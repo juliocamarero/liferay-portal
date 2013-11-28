@@ -322,6 +322,8 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 	 *         <code>null</code>)
 	 * @param  type the company's account type (optionally <code>null</code>)
 	 * @param  size the company's account size (optionally <code>null</code>)
+	 * @param  logo if the company has a custom logo
+	 * @param  logoBytes the new logo image data
 	 * @return the the company with the primary key
 	 * @throws PortalException if a company with the primary key could not be
 	 *         found or if the new information was invalid or if the user was
@@ -439,6 +441,8 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 	 * @param  phones the company's phone numbers
 	 * @param  websites the company's websites
 	 * @param  properties the company's properties
+	 * @param  logo if the company has a custom logo
+	 * @param  logoBytes the new logo image data
 	 * @return the company with the primary key
 	 * @throws PortalException the company with the primary key could not be
 	 *         found or if the new information was invalid or if the user was
