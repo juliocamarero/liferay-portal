@@ -4671,49 +4671,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
-		long imageMaxSize = PrefsPropsUtil.getLong(
-			PropsKeys.USERS_IMAGE_MAX_SIZE);
+		user = updatePortrait(user, bytes);
 
-		if ((imageMaxSize > 0) &&
-			((bytes == null) || (bytes.length > imageMaxSize))) {
-
-			throw new UserPortraitSizeException();
-		}
-
-		long portraitId = user.getPortraitId();
-
-		if (portraitId <= 0) {
-			portraitId = counterLocalService.increment();
-
-			user.setPortraitId(portraitId);
-		}
-
-		try {
-			ImageBag imageBag = ImageToolUtil.read(bytes);
-
-			RenderedImage renderedImage = imageBag.getRenderedImage();
-
-			if (renderedImage == null) {
-				throw new UserPortraitTypeException();
-			}
-
-			renderedImage = ImageToolUtil.scale(
-				renderedImage, PropsValues.USERS_IMAGE_MAX_HEIGHT,
-				PropsValues.USERS_IMAGE_MAX_WIDTH);
-
-			String contentType = imageBag.getType();
-
-			imageLocalService.updateImage(
-				portraitId,
-				ImageToolUtil.getBytes(renderedImage, contentType));
-		}
-		catch (IOException ioe) {
-			throw new ImageSizeException(ioe);
-		}
-
-		userPersistence.update(user);
-
-		return user;
+		return userPersistence.update(user);
 	}
 
 	/**
@@ -5839,6 +5799,52 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		}
 
 		PermissionCacheUtil.clearCache();
+	}
+
+	protected User updatePortrait(User user, byte[] bytes)
+		throws PortalException, SystemException {
+
+		long imageMaxSize = PrefsPropsUtil.getLong(
+			PropsKeys.USERS_IMAGE_MAX_SIZE);
+
+		if ((imageMaxSize > 0) &&
+			((bytes == null) || (bytes.length > imageMaxSize))) {
+
+			throw new UserPortraitSizeException();
+		}
+
+		long portraitId = user.getPortraitId();
+
+		if (portraitId <= 0) {
+			portraitId = counterLocalService.increment();
+
+			user.setPortraitId(portraitId);
+		}
+
+		try {
+			ImageBag imageBag = ImageToolUtil.read(bytes);
+
+			RenderedImage renderedImage = imageBag.getRenderedImage();
+
+			if (renderedImage == null) {
+				throw new UserPortraitTypeException();
+			}
+
+			renderedImage = ImageToolUtil.scale(
+				renderedImage, PropsValues.USERS_IMAGE_MAX_HEIGHT,
+				PropsValues.USERS_IMAGE_MAX_WIDTH);
+
+			String contentType = imageBag.getType();
+
+			imageLocalService.updateImage(
+				portraitId,
+				ImageToolUtil.getBytes(renderedImage, contentType));
+		}
+		catch (IOException ioe) {
+			throw new ImageSizeException(ioe);
+		}
+
+		return user;
 	}
 
 	protected void updateUserGroupRoles(
