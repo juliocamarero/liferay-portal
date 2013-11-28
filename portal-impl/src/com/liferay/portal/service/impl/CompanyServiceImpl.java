@@ -286,7 +286,7 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 			long companyId, String virtualHost, String mx, String homeURL,
 			String name, String legalName, String legalId, String legalType,
 			String sicCode, String tickerSymbol, String industry, String type,
-			String size)
+			String size, boolean logo, byte[] logoBytes)
 		throws PortalException, SystemException {
 
 		if (!roleLocalService.hasUserRole(
@@ -297,7 +297,8 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 
 		return companyLocalService.updateCompany(
 			companyId, virtualHost, mx, homeURL, name, legalName, legalId,
-			legalType, sicCode, tickerSymbol, industry, type, size);
+			legalType, sicCode, tickerSymbol, industry, type, size, logo,
+			logoBytes);
 	}
 
 	/**
@@ -344,12 +345,13 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 			String size, String languageId, String timeZoneId,
 			List<Address> addresses, List<EmailAddress> emailAddresses,
 			List<Phone> phones, List<Website> websites,
-			UnicodeProperties properties)
+			UnicodeProperties properties, boolean logo, byte[] logoBytes)
 		throws PortalException, SystemException {
 
 		Company company = updateCompany(
 			companyId, virtualHost, mx, homeURL, name, legalName, legalId,
-			legalType, sicCode, tickerSymbol, industry, type, size);
+			legalType, sicCode, tickerSymbol, industry, type, size, logo,
+			logoBytes);
 
 		updateDisplay(company.getCompanyId(), languageId, timeZoneId);
 
