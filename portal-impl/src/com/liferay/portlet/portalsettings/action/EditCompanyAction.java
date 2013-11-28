@@ -171,8 +171,8 @@ public class EditCompanyAction extends PortletAction {
 		CompanyServiceUtil.updateCompany(
 			companyId, virtualHostname, mx, homeURL, name, legalName, legalId,
 			legalType, sicCode, tickerSymbol, industry, type, size, languageId,
-			timeZoneId, addresses, emailAddresses, phones, websites,
-			properties);
+			timeZoneId, addresses, emailAddresses, phones, websites, properties,
+			true, null);
 
 		PortalUtil.resetCDNHosts();
 	}
