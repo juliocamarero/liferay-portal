@@ -1742,6 +1742,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 	 * @param  phones the user's phone numbers
 	 * @param  websites the user's websites
 	 * @param  announcementsDelivers the announcements deliveries
+	 * @param  portrait if the user has a custom portrait image
+	 * @param  portraitBytes the new portrait image data
 	 * @param  serviceContext the service context to be applied (optionally
 	 *         <code>null</code>). Can set the UUID (with the <code>uuid</code>
 	 *         attribute), asset category IDs, asset tag names, and expando
