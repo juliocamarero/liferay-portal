@@ -4847,6 +4847,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			String twitterSn, String ymSn, String jobTitle, long[] groupIds,
 			long[] organizationIds, long[] roleIds,
 			List<UserGroupRole> userGroupRoles, long[] userGroupIds,
+			boolean portrait, byte[] portraitBytes,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -4957,6 +4958,19 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setLastName(lastName);
 		user.setJobTitle(jobTitle);
 		user.setExpandoBridgeAttributes(serviceContext);
+
+		// Portrait
+
+		if (portrait) {
+			if (ArrayUtil.isNotEmpty(portraitBytes)) {
+				user = updatePortrait(user, portraitBytes);
+			}
+		}
+		else if (user.getPortraitId() > 0) {
+			imageLocalService.deleteImage(user.getPortraitId());
+
+			user.setPortraitId(0);
+		}
 
 		userPersistence.update(user, serviceContext);
 
