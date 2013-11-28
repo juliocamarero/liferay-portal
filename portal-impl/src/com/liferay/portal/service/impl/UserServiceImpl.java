@@ -1770,8 +1770,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			List<UserGroupRole> userGroupRoles, long[] userGroupIds,
 			List<Address> addresses, List<EmailAddress> emailAddresses,
 			List<Phone> phones, List<Website> websites,
-			List<AnnouncementsDelivery> announcementsDelivers,
-			ServiceContext serviceContext)
+			List<AnnouncementsDelivery> announcementsDelivers, boolean portrait,
+			byte[] portraitBytes, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		UserPermissionUtil.check(
@@ -2004,7 +2004,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			birthdayMonth, birthdayDay, birthdayYear, smsSn, aimSn, facebookSn,
 			icqSn, jabberSn, msnSn, mySpaceSn, skypeSn, twitterSn, ymSn,
 			jobTitle, groupIds, organizationIds, roleIds, userGroupRoles,
-			userGroupIds, serviceContext);
+			userGroupIds, portrait, portraitBytes, serviceContext);
 
 		if (!addGroupIds.isEmpty() || !removeGroupIds.isEmpty()) {
 			SiteMembershipPolicyUtil.propagateMembership(
@@ -2136,7 +2136,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			birthdayMonth, birthdayDay, birthdayYear, smsSn, aimSn, facebookSn,
 			icqSn, jabberSn, msnSn, mySpaceSn, skypeSn, twitterSn, ymSn,
 			jobTitle, groupIds, organizationIds, roleIds, userGroupRoles,
-			userGroupIds, null, null, null, null, null, serviceContext);
+			userGroupIds, null, null, null, null, null, true, null,
+			serviceContext);
 	}
 
 	protected void checkAddUserPermission(
