@@ -492,7 +492,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public void deleteLogo(long companyId)
+	public Company deleteLogo(long companyId)
 		throws PortalException, SystemException {
 
 		Company company = companyPersistence.findByPrimaryKey(companyId);
@@ -502,10 +502,12 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		if (logoId > 0) {
 			company.setLogoId(0);
 
-			companyPersistence.update(company);
+			company = companyPersistence.update(company);
 
 			imageLocalService.deleteImage(logoId);
 		}
+
+		return company;
 	}
 
 	/**
@@ -929,7 +931,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			long companyId, String virtualHostname, String mx, String homeURL,
 			String name, String legalName, String legalId, String legalType,
 			String sicCode, String tickerSymbol, String industry, String type,
-			String size)
+			String size, boolean logo, byte[] logoBytes)
 		throws PortalException, SystemException {
 
 		// Company
@@ -951,6 +953,19 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		}
 
 		company.setHomeURL(homeURL);
+
+		// Logo
+
+		if (logo) {
+			if (ArrayUtil.isNotEmpty(logoBytes)) {
+				company = updateLogo(company, logoBytes);
+			}
+		}
+		else if (company.getLogoId() > 0) {
+			imageLocalService.deleteImage(company.getLogoId());
+
+			company.setLogoId(0);
+		}
 
 		companyPersistence.update(company);
 
@@ -1445,6 +1460,22 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		account.setSize(size);
 
 		accountPersistence.update(account);
+	}
+
+	protected Company updateLogo(Company company, byte[] bytes)
+		throws PortalException, SystemException {
+
+		long logoId = company.getLogoId();
+
+		if (logoId <= 0) {
+			logoId = counterLocalService.increment();
+
+			company.setLogoId(logoId);
+		}
+
+		imageLocalService.updateImage(logoId, bytes);
+
+		return company;
 	}
 
 	protected void updateVirtualHostname(long companyId, String virtualHostname)
