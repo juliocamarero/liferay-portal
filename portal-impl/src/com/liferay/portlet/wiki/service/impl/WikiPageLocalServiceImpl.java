@@ -68,7 +68,6 @@ import com.liferay.portlet.trash.model.TrashVersion;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.DuplicatePageException;
 import com.liferay.portlet.wiki.NoSuchPageException;
-import com.liferay.portlet.wiki.NoSuchPageResourceException;
 import com.liferay.portlet.wiki.PageContentException;
 import com.liferay.portlet.wiki.PageTitleException;
 import com.liferay.portlet.wiki.PageVersionException;
@@ -524,11 +523,12 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Resource
 
-		try {
-			wikiPageResourceLocalService.deletePageResource(
+		WikiPageResource pageResource =
+			wikiPageResourceLocalService.fetchPageResource(
 				page.getNodeId(), page.getTitle());
-		}
-		catch (NoSuchPageResourceException nspre) {
+
+		if (pageResource != null) {
+			wikiPageResourceLocalService.deleteWikiPageResource(pageResource);
 		}
 
 		// Attachments
@@ -593,6 +593,18 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(
 				versionPage.getCompanyId(), versionPage.getGroupId(),
 				WikiPage.class.getName(), versionPage.getPageId());
+		}
+
+		if (pageResource != null) {
+			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+			extraDataJSONObject.put("version", page.getVersion());
+
+			systemEventLocalService.addSystemEvent(
+				0, page.getGroupId(), page.getModelClassName(),
+				page.getPrimaryKey(), pageResource.getUuid(), null,
+				SystemEventConstants.TYPE_DELETE,
+				extraDataJSONObject.toString());
 		}
 	}
 
