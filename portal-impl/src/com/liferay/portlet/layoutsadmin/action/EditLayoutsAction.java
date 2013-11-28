@@ -767,18 +767,12 @@ public class EditLayoutsAction extends PortletAction {
 		for (String key : themeSettings.keySet()) {
 			ThemeSetting themeSetting = themeSettings.get(key);
 
-			String value = null;
+			String property =
+				device + "ThemeSettingsProperties--" + key +
+					StringPool.DOUBLE_DASH;
 
-			if (!themeId.equals(deviceThemeId)) {
-				value = themeSetting.getValue();
-			}
-			else {
-				String property =
-					device + "ThemeSettingsProperties--" + key +
-						StringPool.DOUBLE_DASH;
-
-				value = ParamUtil.getString(actionRequest, property);
-			}
+			String value = ParamUtil.getString(
+				actionRequest, property, themeSetting.getValue());
 
 			if (!Validator.equals(
 					value, layoutSet.getThemeSetting(key, device))) {
