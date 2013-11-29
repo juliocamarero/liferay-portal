@@ -23,6 +23,7 @@ import com.liferay.portal.DuplicateOpenIdException;
 import com.liferay.portal.DuplicateUserEmailAddressException;
 import com.liferay.portal.DuplicateUserScreenNameException;
 import com.liferay.portal.GroupFriendlyURLException;
+import com.liferay.portal.ImageTypeException;
 import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.NoSuchImageException;
 import com.liferay.portal.NoSuchOrganizationException;
@@ -38,8 +39,6 @@ import com.liferay.portal.UserEmailAddressException;
 import com.liferay.portal.UserIdException;
 import com.liferay.portal.UserLockoutException;
 import com.liferay.portal.UserPasswordException;
-import com.liferay.portal.UserPortraitSizeException;
-import com.liferay.portal.UserPortraitTypeException;
 import com.liferay.portal.UserReminderQueryException;
 import com.liferay.portal.UserScreenNameException;
 import com.liferay.portal.UserSmsException;
@@ -130,6 +129,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SubscriptionSender;
+import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.ImageSizeException;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.usersadmin.util.UsersAdminUtil;
@@ -5920,7 +5920,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		if ((imageMaxSize > 0) &&
 			((bytes == null) || (bytes.length > imageMaxSize))) {
 
-			throw new UserPortraitSizeException();
+			throw new FileSizeException();
 		}
 
 		long portraitId = user.getPortraitId();
@@ -5937,7 +5937,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			RenderedImage renderedImage = imageBag.getRenderedImage();
 
 			if (renderedImage == null) {
-				throw new UserPortraitTypeException();
+				throw new ImageTypeException();
 			}
 
 			renderedImage = ImageToolUtil.scale(
