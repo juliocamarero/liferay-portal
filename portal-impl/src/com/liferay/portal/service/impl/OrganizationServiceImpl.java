@@ -684,7 +684,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 		return updateOrganization(
 			organizationId, parentOrganizationId, name, type, regionId,
 			countryId, statusId, comments, site, addresses, emailAddresses,
-			orgLabors, phones, websites, serviceContext);
+			orgLabors, phones, websites, true, null, serviceContext);
 	}
 
 	/**
@@ -766,8 +766,8 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 			String type, long regionId, long countryId, int statusId,
 			String comments, boolean site, List<Address> addresses,
 			List<EmailAddress> emailAddresses, List<OrgLabor> orgLabors,
-			List<Phone> phones, List<Website> websites,
-			ServiceContext serviceContext)
+			List<Phone> phones, List<Website> websites, boolean logo,
+			byte[] logoBytes, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		Organization organization = organizationPersistence.findByPrimaryKey(
@@ -832,8 +832,8 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 
 		organization = organizationLocalService.updateOrganization(
 			user.getCompanyId(), organizationId, parentOrganizationId, name,
-			type, regionId, countryId, statusId, comments, site,
-			serviceContext);
+			type, regionId, countryId, statusId, comments, site, logo,
+			logoBytes, serviceContext);
 
 		OrganizationMembershipPolicyUtil.verifyPolicy(
 			organization, oldOrganization, oldAssetCategories, oldAssetTags,
@@ -877,7 +877,7 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 		return updateOrganization(
 			organizationId, parentOrganizationId, name, type, regionId,
 			countryId, statusId, comments, site, null, null, null, null, null,
-			serviceContext);
+			true, null, serviceContext);
 	}
 
 }
