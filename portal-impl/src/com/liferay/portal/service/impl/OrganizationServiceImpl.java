@@ -750,6 +750,8 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	 * @param  orgLabors the organization's hours of operation
 	 * @param  phones the organization's phone numbers
 	 * @param  websites the organization's websites
+	 * @param  logo if the organization has a custom logo
+	 * @param  logoBytes the new logo image data
 	 * @param  serviceContext the service context to be applied (optionally
 	 *         <code>null</code>). Can set asset category IDs and asset tag
 	 *         names for the organization, and merge expando bridge attributes

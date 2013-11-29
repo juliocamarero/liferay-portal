@@ -1674,6 +1674,8 @@ public class OrganizationLocalServiceImpl
 	 * @param  comments the comments about the organization
 	 * @param  site whether the organization is to be associated with a main
 	 *         site
+	 * @param  logo if the organization has a custom logo
+	 * @param  logoBytes the new logo image data
 	 * @param  serviceContext the service context to be applied (optionally
 	 *         <code>null</code>). Can set asset category IDs and asset tag
 	 *         names for the organization, and merge expando bridge attributes
