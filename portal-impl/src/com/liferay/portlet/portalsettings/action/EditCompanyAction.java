@@ -36,7 +36,6 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Address;
-import com.liferay.portal.model.Company;
 import com.liferay.portal.model.EmailAddress;
 import com.liferay.portal.model.Phone;
 import com.liferay.portal.model.Website;
@@ -85,7 +84,6 @@ public class EditCompanyAction extends PortletAction {
 				}
 				else {
 					updateCompany(actionRequest);
-					updateDisplay(actionRequest);
 
 					sendRedirect(actionRequest, actionResponse);
 				}
@@ -177,32 +175,6 @@ public class EditCompanyAction extends PortletAction {
 			properties);
 
 		PortalUtil.resetCDNHosts();
-	}
-
-	protected void updateDisplay(ActionRequest actionRequest) throws Exception {
-		Company company = PortalUtil.getCompany(actionRequest);
-
-		String languageId = ParamUtil.getString(actionRequest, "languageId");
-		String timeZoneId = ParamUtil.getString(actionRequest, "timeZoneId");
-
-		CompanyServiceUtil.updateDisplay(
-			company.getCompanyId(), languageId, timeZoneId);
-
-		boolean siteLogo = ParamUtil.getBoolean(
-			actionRequest,
-			"settings--" + PropsKeys.COMPANY_SECURITY_SITE_LOGO + "--");
-
-		CompanyServiceUtil.updateSecurity(
-			company.getCompanyId(), company.getAuthType(),
-			company.isAutoLogin(), company.isSendPassword(),
-			company.isStrangers(), company.isStrangersWithMx(),
-			company.isStrangersVerify(), siteLogo);
-
-		boolean deleteLogo = ParamUtil.getBoolean(actionRequest, "deleteLogo");
-
-		if (deleteLogo) {
-			CompanyServiceUtil.deleteLogo(company.getCompanyId());
-		}
 	}
 
 	protected void validateCAS(ActionRequest actionRequest) throws Exception {
