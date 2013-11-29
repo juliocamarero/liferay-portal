@@ -6295,10 +6295,15 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public boolean isRightToLeft(HttpServletRequest request) {
-		String langDir = LanguageUtil.get(
-			PortalUtil.getLocale(request), "lang.dir");
+		Locale locale = getLocale(request);
 
-		return langDir.equals("rtl");
+		String langDir = LanguageUtil.get(locale, "lang.dir");
+
+		if (langDir.equals("rtl")) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
