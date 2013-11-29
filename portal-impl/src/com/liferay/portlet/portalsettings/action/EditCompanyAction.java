@@ -28,8 +28,10 @@ import com.liferay.portal.NoSuchListTypeException;
 import com.liferay.portal.NoSuchRegionException;
 import com.liferay.portal.PhoneNumberException;
 import com.liferay.portal.WebsiteURLException;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropertiesParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -44,6 +46,7 @@ import com.liferay.portal.service.CompanyServiceUtil;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.usersadmin.util.UsersAdminUtil;
 
 import java.util.List;
@@ -168,11 +171,23 @@ public class EditCompanyAction extends PortletAction {
 		UnicodeProperties properties = PropertiesParamUtil.getProperties(
 			actionRequest, "settings--");
 
+		long fileEntryId = ParamUtil.getLong(actionRequest, "fileEntryId");
+		boolean deleteLogo = ParamUtil.getBoolean(actionRequest, "deleteLogo");
+
+		byte[] logoBytes = null;
+
+		if (fileEntryId > 0) {
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
+				fileEntryId);
+
+			logoBytes = FileUtil.getBytes(fileEntry.getContentStream());
+		}
+
 		CompanyServiceUtil.updateCompany(
 			companyId, virtualHostname, mx, homeURL, name, legalName, legalId,
 			legalType, sicCode, tickerSymbol, industry, type, size, languageId,
 			timeZoneId, addresses, emailAddresses, phones, websites, properties,
-			true, null);
+			!deleteLogo, logoBytes);
 
 		PortalUtil.resetCDNHosts();
 	}
