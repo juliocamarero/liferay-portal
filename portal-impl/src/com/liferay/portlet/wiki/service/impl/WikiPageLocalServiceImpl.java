@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.sanitizer.SanitizerUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
+import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -483,7 +484,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 	@Override
 	@SystemEvent(
-		action = SystemEventConstants.ACTION_SKIP,
+		action = SystemEventConstants.ACTION_SKIP, send = false,
 		type = SystemEventConstants.TYPE_DELETE)
 	public void deletePage(WikiPage page)
 		throws PortalException, SystemException {
@@ -502,7 +503,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				wikiPagePersistence.update(childrenPage);
 			}
 			else {
-				deletePage(childrenPage);
+				wikiPageLocalService.deletePage(childrenPage);
 			}
 		}
 
@@ -547,9 +548,18 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Asset
 
-		for (WikiPage versionPage : versionPages) {
-			assetEntryLocalService.deleteEntry(
-				WikiPage.class.getName(), versionPage.getPrimaryKey());
+		SystemEventHierarchyEntryThreadLocal.pop(
+			page.getModelClass(), page.getPageId());
+
+		try {
+			for (WikiPage versionPage : versionPages) {
+				assetEntryLocalService.deleteEntry(
+					WikiPage.class.getName(), versionPage.getPrimaryKey());
+			}
+		}
+		finally {
+			SystemEventHierarchyEntryThreadLocal.push(
+				page.getModelClass(), page.getPageId());
 		}
 
 		assetEntryLocalService.deleteEntry(
@@ -658,14 +668,14 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			nodeId, true, StringPool.BLANK);
 
 		for (WikiPage page : pages) {
-			deletePage(page);
+			wikiPageLocalService.deletePage(page);
 		}
 
 		pages = wikiPagePersistence.findByN_H_P(
 			nodeId, false, StringPool.BLANK);
 
 		for (WikiPage page : pages) {
-			deletePage(page);
+			wikiPageLocalService.deletePage(page);
 		}
 	}
 
@@ -2089,8 +2099,16 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 						userId, assetEntry.getEntryId(), assetLinkEntryIds,
 						AssetLinkConstants.TYPE_RELATED);
 
-					assetEntryLocalService.deleteEntry(
-						draftAssetEntry.getEntryId());
+					SystemEventHierarchyEntryThreadLocal.push(WikiPage.class);
+
+					try {
+						assetEntryLocalService.deleteEntry(
+							draftAssetEntry.getEntryId());
+					}
+					finally {
+						SystemEventHierarchyEntryThreadLocal.pop(
+							WikiPage.class);
+					}
 				}
 			}
 
