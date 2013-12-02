@@ -177,7 +177,7 @@ public class JournalArticleStagedModelDataHandler
 		try {
 			existingArticle = getExistingArticle(
 				articleResourceUuid, portletDataContext.getCompanyGroupId(),
-				articleArticleId, null, 0.0, preloaded);
+				articleArticleId, null, 0.0, preloaded, null);
 		}
 		catch (Exception e) {
 			if (e instanceof SystemException) {
@@ -572,7 +572,6 @@ public class JournalArticleStagedModelDataHandler
 				"article-resource-uuid");
 
 			if (portletDataContext.isDataStrategyMirror()) {
-				serviceContext.setUuid(articleResourceUuid);
 				serviceContext.setAttribute("urlTitle", article.getUrlTitle());
 
 				boolean preloaded = GetterUtil.getBoolean(
@@ -580,7 +579,8 @@ public class JournalArticleStagedModelDataHandler
 
 				JournalArticle existingArticle = getExistingArticle(
 					articleResourceUuid, portletDataContext.getScopeGroupId(),
-					articleId, newArticleId, article.getVersion(), preloaded);
+					articleId, newArticleId, article.getVersion(), preloaded,
+					serviceContext);
 
 				if (existingArticle == null) {
 					importedArticle =
@@ -674,7 +674,7 @@ public class JournalArticleStagedModelDataHandler
 		JournalArticle existingArticle = getExistingArticle(
 			articleResourceUuid, portletDataContext.getScopeGroupId(),
 			article.getArticleId(), article.getArticleId(),
-			article.getVersion(), preloaded);
+			article.getVersion(), preloaded, null);
 
 		if ((existingArticle == null) || !existingArticle.isInTrash()) {
 			return;
@@ -695,7 +695,7 @@ public class JournalArticleStagedModelDataHandler
 		throws SystemException {
 
 		Image image = ImageLocalServiceUtil.fetchImage(
-			articleImage.getArticleImageId());
+				articleImage.getArticleImageId());
 
 		if ((image == null) || (image.getTextObj() == null)) {
 			return;
@@ -734,7 +734,8 @@ public class JournalArticleStagedModelDataHandler
 
 	protected JournalArticle getExistingArticle(
 			String articleResourceUuid, long groupId, String articleId,
-			String newArticleId, double version, boolean preloaded)
+			String newArticleId, double version, boolean preloaded,
+			ServiceContext serviceContext)
 		throws Exception {
 
 		JournalArticleResource existingArticleResource = null;
@@ -749,6 +750,10 @@ public class JournalArticleStagedModelDataHandler
 			existingArticleResource =
 				JournalArticleResourceLocalServiceUtil.fetchArticleResource(
 					groupId, articleId);
+		}
+
+		if (serviceContext != null) {
+			serviceContext.setUuid(existingArticleResource.getUuid());
 		}
 
 		JournalArticle existingArticle = null;
