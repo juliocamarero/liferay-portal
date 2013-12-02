@@ -792,7 +792,7 @@ public class BookmarksFolderLocalServiceImpl
 
 				if (oldStatus != WorkflowConstants.STATUS_APPROVED) {
 					trashVersionLocalService.addTrashVersion(
-						trashEntryId, BookmarksEntry.class.getName(),
+						trashEntryId, BookmarksFolder.class.getName(),
 						folder.getFolderId(), oldStatus, null);
 				}
 
