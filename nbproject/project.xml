@@ -252,6 +252,7 @@
 				<classpath mode="compile">lib/development/dtdparser.jar</classpath>
 				<classpath mode="compile">lib/development/dumbster.jar</classpath>
 				<classpath mode="compile">lib/development/ecj.jar</classpath>
+				<classpath mode="compile">lib/development/error-prone-ant.jar</classpath>
 				<classpath mode="compile">lib/development/firebird.jar</classpath>
 				<classpath mode="compile">lib/development/hamcrest-core.jar</classpath>
 				<classpath mode="compile">lib/development/hamcrest-library.jar</classpath>
