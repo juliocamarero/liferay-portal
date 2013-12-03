@@ -954,18 +954,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		company.setHomeURL(homeURL);
 
-		// Logo
-
-		if (logo) {
-			if (ArrayUtil.isNotEmpty(logoBytes)) {
-				company = updateLogo(company, logoBytes);
-			}
-		}
-		else if (company.getLogoId() > 0) {
-			imageLocalService.deleteImage(company.getLogoId());
-
-			company.setLogoId(0);
-		}
+		PortalUtil.updateImageId(company, logo, logoBytes, "logoId",0 ,0, 0);
 
 		companyPersistence.update(company);
 
@@ -1460,22 +1449,6 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		account.setSize(size);
 
 		accountPersistence.update(account);
-	}
-
-	protected Company updateLogo(Company company, byte[] bytes)
-		throws PortalException, SystemException {
-
-		long logoId = company.getLogoId();
-
-		if (logoId <= 0) {
-			logoId = counterLocalService.increment();
-
-			company.setLogoId(logoId);
-		}
-
-		imageLocalService.updateImage(logoId, bytes);
-
-		return company;
 	}
 
 	protected void updateVirtualHostname(long companyId, String virtualHostname)
