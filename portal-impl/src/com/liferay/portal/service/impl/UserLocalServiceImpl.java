@@ -38,16 +38,12 @@ import com.liferay.portal.UserEmailAddressException;
 import com.liferay.portal.UserIdException;
 import com.liferay.portal.UserLockoutException;
 import com.liferay.portal.UserPasswordException;
-import com.liferay.portal.UserPortraitSizeException;
-import com.liferay.portal.UserPortraitTypeException;
 import com.liferay.portal.UserReminderQueryException;
 import com.liferay.portal.UserScreenNameException;
 import com.liferay.portal.UserSmsException;
 import com.liferay.portal.kernel.dao.shard.ShardCallable;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.image.ImageBag;
-import com.liferay.portal.kernel.image.ImageToolUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -130,16 +126,12 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SubscriptionSender;
-import com.liferay.portlet.documentlibrary.ImageSizeException;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.usersadmin.util.UsersAdminUtil;
 import com.liferay.util.Encryptor;
 import com.liferay.util.EncryptorException;
 import com.liferay.util.PwdGenerator;
 
-import java.awt.image.RenderedImage;
-
-import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -4671,7 +4663,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
-		user = updatePortrait(user, bytes);
+		PortalUtil.updateImageId(
+			user, true, bytes, "portraitId",
+			PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE),
+			PropsValues.USERS_IMAGE_MAX_HEIGHT,
+			PropsValues.USERS_IMAGE_MAX_WIDTH);
 
 		return userPersistence.update(user);
 	}
@@ -4959,18 +4955,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setJobTitle(jobTitle);
 		user.setExpandoBridgeAttributes(serviceContext);
 
-		// Portrait
-
-		if (portrait) {
-			if (ArrayUtil.isNotEmpty(portraitBytes)) {
-				user = updatePortrait(user, portraitBytes);
-			}
-		}
-		else if (user.getPortraitId() > 0) {
-			imageLocalService.deleteImage(user.getPortraitId());
-
-			user.setPortraitId(0);
-		}
+		PortalUtil.updateImageId(
+			user, portrait, portraitBytes, "portraitId",
+			PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE),
+			PropsValues.USERS_IMAGE_MAX_HEIGHT,
+			PropsValues.USERS_IMAGE_MAX_WIDTH);
 
 		userPersistence.update(user, serviceContext);
 
@@ -5813,52 +5802,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		}
 
 		PermissionCacheUtil.clearCache();
-	}
-
-	protected User updatePortrait(User user, byte[] bytes)
-		throws PortalException, SystemException {
-
-		long imageMaxSize = PrefsPropsUtil.getLong(
-			PropsKeys.USERS_IMAGE_MAX_SIZE);
-
-		if ((imageMaxSize > 0) &&
-			((bytes == null) || (bytes.length > imageMaxSize))) {
-
-			throw new UserPortraitSizeException();
-		}
-
-		long portraitId = user.getPortraitId();
-
-		if (portraitId <= 0) {
-			portraitId = counterLocalService.increment();
-
-			user.setPortraitId(portraitId);
-		}
-
-		try {
-			ImageBag imageBag = ImageToolUtil.read(bytes);
-
-			RenderedImage renderedImage = imageBag.getRenderedImage();
-
-			if (renderedImage == null) {
-				throw new UserPortraitTypeException();
-			}
-
-			renderedImage = ImageToolUtil.scale(
-				renderedImage, PropsValues.USERS_IMAGE_MAX_HEIGHT,
-				PropsValues.USERS_IMAGE_MAX_WIDTH);
-
-			String contentType = imageBag.getType();
-
-			imageLocalService.updateImage(
-				portraitId,
-				ImageToolUtil.getBytes(renderedImage, contentType));
-		}
-		catch (IOException ioe) {
-			throw new ImageSizeException(ioe);
-		}
-
-		return user;
 	}
 
 	protected void updateUserGroupRoles(
