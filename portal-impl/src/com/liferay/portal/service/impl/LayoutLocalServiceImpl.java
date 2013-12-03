@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntry;
 import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntryThreadLocal;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -2344,16 +2343,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		layout.setHidden(hidden);
 		layout.setFriendlyURL(friendlyURL);
 
-		if (iconImage) {
-			long iconImageId = layout.getIconImageId();
-
-			if (iconImageId <= 0) {
-				iconImageId = counterLocalService.increment();
-
-				layout.setIconImageId(iconImageId);
-			}
-		}
-
 		boolean layoutUpdateable = ParamUtil.getBoolean(
 			serviceContext, Sites.LAYOUT_UPDATEABLE, true);
 
@@ -2375,19 +2364,12 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			layout.setLayoutPrototypeLinkEnabled(layoutPrototypeLinkEnabled);
 		}
 
+		PortalUtil.updateImageId(
+			layout, iconImage, iconBytes, "iconImageId", 0, 0, 0);
+
 		layout.setExpandoBridgeAttributes(serviceContext);
 
 		layoutPersistence.update(layout);
-
-		// Icon
-
-		if (!iconImage) {
-			imageLocalService.deleteImage(layout.getIconImageId());
-		}
-		else if (ArrayUtil.isNotEmpty(iconBytes)) {
-			imageLocalService.updateImage(
-				layout.getIconImageId(), iconBytes);
-		}
 
 		// Layout friendly URLs
 
