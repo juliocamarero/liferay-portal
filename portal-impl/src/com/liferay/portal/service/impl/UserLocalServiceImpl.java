@@ -5182,12 +5182,12 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		return updateUser(
 			userId, oldPassword, newPassword1, newPassword2, passwordReset,
 			reminderQueryQuestion, reminderQueryAnswer, screenName,
-			emailAddress, facebookId, openId, languageId, timeZoneId, greeting,
-			comments, firstName, middleName, lastName, prefixId, suffixId, male,
-			birthdayMonth, birthdayDay, birthdayYear, smsSn, aimSn, facebookSn,
-			icqSn, jabberSn, msnSn, mySpaceSn, skypeSn, twitterSn, ymSn,
-			jobTitle, groupIds, organizationIds, roleIds, userGroupRoles,
-			userGroupIds, true, null, serviceContext);
+			emailAddress, facebookId, openId, true, null, languageId,
+			timeZoneId, greeting, comments, firstName, middleName, lastName,
+			prefixId, suffixId, male, birthdayMonth, birthdayDay, birthdayYear,
+			smsSn, aimSn, facebookSn, icqSn, jabberSn, msnSn, mySpaceSn,
+			skypeSn, twitterSn, ymSn, jobTitle, groupIds, organizationIds,
+			roleIds, userGroupRoles, userGroupIds, serviceContext);
 	}
 
 	/**

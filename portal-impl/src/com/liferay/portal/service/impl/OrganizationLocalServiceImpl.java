@@ -1720,10 +1720,12 @@ public class OrganizationLocalServiceImpl
 
 		if (logo) {
 			if (ArrayUtil.isNotEmpty(logoBytes)) {
+				Group group = organization.getGroup();
+
 				layoutSetLocalService.updateLogo(
-					group.getGroupId(), true, true, bytes);
+					group.getGroupId(), true, true, logoBytes);
 				layoutSetLocalService.updateLogo(
-					group.getGroupId(), false, true, bytes);
+					group.getGroupId(), false, true, logoBytes);
 			}
 		}
 		else if (organization.getLogoId() > 0) {
