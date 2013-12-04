@@ -1285,7 +1285,7 @@ public class PortalLDAPImporterImpl implements PortalLDAPImporter {
 			passwordReset, ldapUser.getReminderQueryQuestion(),
 			ldapUser.getReminderQueryAnswer(), ldapUser.getScreenName(),
 			ldapUser.getEmailAddress(), ldapUser.getFacebookId(),
-			ldapUser.getOpenId(), ldapUser.getPortraitId() > 0,
+			ldapUser.getOpenId(), (ldapUser.getPortraitId() > 0),
 			ldapUser.getPortraitBytes(), ldapUser.getLanguageId(),
 			ldapUser.getTimeZoneId(), ldapUser.getGreeting(),
 			ldapUser.getComments(), ldapUser.getFirstName(),

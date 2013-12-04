@@ -876,7 +876,6 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	 *         long, long, String, String, long, long, int, String, boolean,
 	 *         java.util.List, java.util.List, java.util.List, java.util.List,
 	 *         java.util.List, boolean, byte[], ServiceContext)}
-	 *
 	 */
 	@Override
 	public Organization updateOrganization(
