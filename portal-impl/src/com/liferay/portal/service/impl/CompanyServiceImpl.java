@@ -415,8 +415,8 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		return updateCompany(
-			companyId, virtualHost, mx, homeURL, true, null, name, legalName, legalId,
-			legalType, sicCode, tickerSymbol, industry, type, size);
+			companyId, virtualHost, mx, homeURL, true, null, name, legalName,
+			legalId, legalType, sicCode, tickerSymbol, industry, type, size);
 	}
 
 	/**
