@@ -6760,6 +6760,8 @@ public class PortalImpl implements Portal {
 			long maxSize, int maxHeight, int maxWidth)
 		throws PortalException, SystemException {
 
+		long imageId = BeanPropertiesUtil.getLong(baseModel, fieldName);
+
 		if (!image) {
 			if (imageId > 0) {
 				ImageLocalServiceUtil.deleteImage(imageId);
@@ -6769,7 +6771,6 @@ public class PortalImpl implements Portal {
 
 			return;
 		}
-
 
 		if (ArrayUtil.isEmpty(bytes)) {
 			return;
