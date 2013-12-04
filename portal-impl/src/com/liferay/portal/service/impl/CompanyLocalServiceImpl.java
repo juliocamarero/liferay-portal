@@ -969,9 +969,9 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	@Override
 	public Company updateCompany(
 			long companyId, String virtualHostname, String mx, String homeURL,
-			String name, String legalName, String legalId, String legalType,
-			String sicCode, String tickerSymbol, String industry, String type,
-			String size, boolean logo, byte[] logoBytes)
+			boolean logo, byte[] logoBytes, String name, String legalName,
+			String legalId, String legalType, String sicCode,
+			String tickerSymbol, String industry, String type, String size)
 		throws PortalException, SystemException {
 
 		// Company

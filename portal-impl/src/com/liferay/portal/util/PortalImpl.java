@@ -6757,56 +6757,56 @@ public class PortalImpl implements Portal {
 	@Override
 	public void updateImageId(
 			BaseModel baseModel, boolean image, byte[] bytes, String fieldName,
-			long imageMaxSize, int maxHeight, int maxWidht)
+			long maxSize, int maxHeight, int maxWidth)
 		throws PortalException, SystemException {
 
-		long imageId = BeanPropertiesUtil.getLong(baseModel, fieldName);
+		if (!image) {
+			if (imageId > 0) {
+				ImageLocalServiceUtil.deleteImage(imageId);
 
-		if (image) {
-			if (ArrayUtil.isNotEmpty(bytes)) {
-				if ((imageMaxSize > 0) &&
-					((bytes == null) || (bytes.length > imageMaxSize))) {
+				BeanPropertiesUtil.setProperty(baseModel, fieldName, 0);
+			}
 
-					throw new ImageSizeException();
+			return;
+		}
+
+
+		if (ArrayUtil.isEmpty(bytes)) {
+			return;
+		}
+
+		if ((maxSize > 0) && ((bytes == null) || (bytes.length > maxSize))) {
+			throw new ImageSizeException();
+		}
+
+		if (imageId <= 0) {
+			imageId = CounterLocalServiceUtil.increment();
+
+			BeanPropertiesUtil.setProperty(baseModel, fieldName, imageId);
+		}
+
+		if ((maxHeight > 0) || (maxWidth > 0)) {
+			try {
+				ImageBag imageBag = ImageToolUtil.read(bytes);
+
+				RenderedImage renderedImage = imageBag.getRenderedImage();
+
+				if (renderedImage == null) {
+					throw new ImageTypeException();
 				}
 
-				if (imageId <= 0) {
-					imageId = CounterLocalServiceUtil.increment();
+				renderedImage = ImageToolUtil.scale(
+					renderedImage, maxHeight, maxWidth);
 
-					BeanPropertiesUtil.setProperty(
-						baseModel, fieldName, imageId);
-				}
-
-				if ((maxHeight > 0) || (maxWidht > 0)) {
-					try {
-						ImageBag imageBag = ImageToolUtil.read(bytes);
-
-						RenderedImage renderedImage =
-							imageBag.getRenderedImage();
-
-						if (renderedImage == null) {
-							throw new ImageTypeException();
-						}
-
-						renderedImage = ImageToolUtil.scale(
-							renderedImage, maxHeight, maxWidht);
-
-						bytes = ImageToolUtil.getBytes(
-							renderedImage, imageBag.getType());
-					}
-					catch (IOException ioe) {
-						throw new ImageSizeException(ioe);
-					}
-				}
-
-				ImageLocalServiceUtil.updateImage(imageId, bytes);
+				bytes = ImageToolUtil.getBytes(
+					renderedImage, imageBag.getType());
+			}
+			catch (IOException ioe) {
+				throw new ImageSizeException(ioe);
 			}
 		}
-		else if (imageId > 0) {
-			ImageLocalServiceUtil.deleteImage(imageId);
 
-			BeanPropertiesUtil.setProperty(baseModel, fieldName, 0);
-		}
+		ImageLocalServiceUtil.updateImage(imageId, bytes);
 	}
 
 	@Override
