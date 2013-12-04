@@ -1655,7 +1655,7 @@ public class OrganizationLocalServiceImpl
 
 		return updateOrganization(
 			companyId, organizationId, parentOrganizationId, name, type,
-			regionId, countryId, statusId, comments, site, true, null,
+			regionId, countryId, statusId, comments, true, null, site,
 			serviceContext);
 	}
 
@@ -1688,8 +1688,8 @@ public class OrganizationLocalServiceImpl
 	public Organization updateOrganization(
 			long companyId, long organizationId, long parentOrganizationId,
 			String name, String type, long regionId, long countryId,
-			int statusId, String comments, boolean site, boolean logo,
-			byte[] logoBytes, ServiceContext serviceContext)
+			int statusId, String comments, boolean logo, byte[] logoBytes,
+			boolean site, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		// Organization
@@ -1717,6 +1717,19 @@ public class OrganizationLocalServiceImpl
 		organization.setCountryId(countryId);
 		organization.setStatusId(statusId);
 		organization.setComments(comments);
+
+		if (logo) {
+			if (ArrayUtil.isNotEmpty(logoBytes)) {
+				layoutSetLocalService.updateLogo(
+					group.getGroupId(), true, true, bytes);
+				layoutSetLocalService.updateLogo(
+					group.getGroupId(), false, true, bytes);
+			}
+		}
+		else if (organization.getLogoId() > 0) {
+			deleteLogo(organizationId);
+		}
+
 		organization.setExpandoBridgeAttributes(serviceContext);
 
 		organizationPersistence.update(organization);
@@ -1762,17 +1775,6 @@ public class OrganizationLocalServiceImpl
 
 		if (group.isSite() != site) {
 			groupLocalService.updateSite(group.getGroupId(), site);
-		}
-
-		// Logo
-
-		if (logo) {
-			if (ArrayUtil.isNotEmpty(logoBytes)) {
-				updateLogo(group, logoBytes);
-			}
-		}
-		else if (organization.getLogoId() > 0) {
-			deleteLogo(organizationId);
 		}
 
 		// Asset
@@ -1967,14 +1969,6 @@ public class OrganizationLocalServiceImpl
 		else {
 			return false;
 		}
-	}
-
-	protected void updateLogo(Group group, byte[] bytes)
-		throws PortalException, SystemException {
-
-		layoutSetService.updateLogo(group.getGroupId(), true, true, bytes);
-
-		layoutSetService.updateLogo(group.getGroupId(), false, true, bytes);
 	}
 
 	protected void validate(

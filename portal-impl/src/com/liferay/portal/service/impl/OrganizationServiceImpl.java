@@ -684,8 +684,8 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 
 		return updateOrganization(
 			organizationId, parentOrganizationId, name, type, regionId,
-			countryId, statusId, comments, site, addresses, emailAddresses,
-			orgLabors, phones, websites, true, null, serviceContext);
+			countryId, statusId, comments, true, null, site, addresses,
+			emailAddresses, orgLabors, phones, websites, serviceContext);
 	}
 
 	/**
@@ -765,10 +765,10 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 	public Organization updateOrganization(
 			long organizationId, long parentOrganizationId, String name,
 			String type, long regionId, long countryId, int statusId,
-			String comments, boolean site, List<Address> addresses,
-			List<EmailAddress> emailAddresses, List<OrgLabor> orgLabors,
-			List<Phone> phones, List<Website> websites, boolean logo,
-			byte[] logoBytes, ServiceContext serviceContext)
+			String comments, boolean logo, byte[] logoBytes, boolean site,
+			List<Address> addresses, List<EmailAddress> emailAddresses,
+			List<OrgLabor> orgLabors, List<Phone> phones,
+			List<Website> websites, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		Organization organization = organizationPersistence.findByPrimaryKey(
@@ -833,8 +833,8 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 
 		organization = organizationLocalService.updateOrganization(
 			user.getCompanyId(), organizationId, parentOrganizationId, name,
-			type, regionId, countryId, statusId, comments, site, logo,
-			logoBytes, serviceContext);
+			type, regionId, countryId, statusId, comments, logo, logoBytes,
+			site, serviceContext);
 
 		OrganizationMembershipPolicyUtil.verifyPolicy(
 			organization, oldOrganization, oldAssetCategories, oldAssetTags,
@@ -890,8 +890,8 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 
 		return updateOrganization(
 			organizationId, parentOrganizationId, name, type, regionId,
-			countryId, statusId, comments, site, addresses, emailAddresses,
-			orgLabors, phones, websites, true, null, serviceContext);
+			countryId, statusId, comments, true, null, site, addresses,
+			emailAddresses, orgLabors, phones, websites, serviceContext);
 	}
 
 	/**
@@ -928,8 +928,8 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 
 		return updateOrganization(
 			organizationId, parentOrganizationId, name, type, regionId,
-			countryId, statusId, comments, site, null, null, null, null, null,
-			true, null, serviceContext);
+			countryId, statusId, comments, true, null, site, null, null, null,
+			null, null, serviceContext);
 	}
 
 }

@@ -1359,7 +1359,7 @@ public interface Portal {
 
 	public void updateImageId(
 			BaseModel baseModel, boolean image, byte[] bytes, String fieldName,
-			long imageMaxSize, int maxHeight, int maxWidht)
+			long maxSize, int maxHeight, int maxWidth)
 		throws PortalException, SystemException;
 
 	public PortletMode updatePortletMode(
