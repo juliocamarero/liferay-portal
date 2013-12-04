@@ -331,9 +331,9 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 	@Override
 	public Company updateCompany(
 			long companyId, String virtualHost, String mx, String homeURL,
-			String name, String legalName, String legalId, String legalType,
-			String sicCode, String tickerSymbol, String industry, String type,
-			String size, boolean logo, byte[] logoBytes)
+			boolean logo, byte[] logoBytes, String name, String legalName,
+			String legalId, String legalType, String sicCode,
+			String tickerSymbol, String industry, String type, String size)
 		throws PortalException, SystemException {
 
 		if (!roleLocalService.hasUserRole(
@@ -343,9 +343,9 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 		}
 
 		return companyLocalService.updateCompany(
-			companyId, virtualHost, mx, homeURL, name, legalName, legalId,
-			legalType, sicCode, tickerSymbol, industry, type, size, logo,
-			logoBytes);
+			companyId, virtualHost, mx, homeURL, logo, logoBytes, name,
+			legalName, legalId, legalType, sicCode, tickerSymbol, industry,
+			type, size);
 	}
 
 	/**
@@ -449,18 +449,18 @@ public class CompanyServiceImpl extends CompanyServiceBaseImpl {
 	@Override
 	public Company updateCompany(
 			long companyId, String virtualHost, String mx, String homeURL,
-			String name, String legalName, String legalId, String legalType,
-			String sicCode, String tickerSymbol, String industry, String type,
-			String size, String languageId, String timeZoneId,
-			List<Address> addresses, List<EmailAddress> emailAddresses,
-			List<Phone> phones, List<Website> websites,
-			UnicodeProperties properties, boolean logo, byte[] logoBytes)
+			boolean logo, byte[] logoBytes, String name, String legalName,
+			String legalId, String legalType, String sicCode,
+			String tickerSymbol, String industry, String type, String size,
+			String languageId, String timeZoneId, List<Address> addresses,
+			List<EmailAddress> emailAddresses, List<Phone> phones,
+			List<Website> websites, UnicodeProperties properties)
 		throws PortalException, SystemException {
 
 		Company company = updateCompany(
-			companyId, virtualHost, mx, homeURL, name, legalName, legalId,
-			legalType, sicCode, tickerSymbol, industry, type, size, logo,
-			logoBytes);
+			companyId, virtualHost, mx, homeURL, logo, logoBytes, name,
+			legalName, legalId, legalType, sicCode, tickerSymbol, industry,
+			type, size);
 
 		updateDisplay(company.getCompanyId(), languageId, timeZoneId);
 
