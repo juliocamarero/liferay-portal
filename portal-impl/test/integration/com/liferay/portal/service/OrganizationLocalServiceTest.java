@@ -233,7 +233,7 @@ public class OrganizationLocalServiceTest {
 			organizationB.getOrganizationId(), organizationAA.getName(),
 			organizationAA.getType(), organizationAA.getRegionId(),
 			organizationAA.getCountryId(), organizationAA.getStatusId(),
-			organizationAA.getComments(), false, null,true, null);
+			organizationAA.getComments(), false, null, true, null);
 
 		Assert.assertEquals(
 			organizationB.getOrganizationId(),

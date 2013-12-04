@@ -1976,8 +1976,7 @@ public class PortalUtil {
 		throws PortalException, SystemException {
 
 		getPortal().updateImageId(
-			baseModel, image, bytes, fieldName, maxSize, maxHeight,
-			maxWidth);
+			baseModel, image, bytes, fieldName, maxSize, maxHeight, maxWidth);
 	}
 
 	public static PortletMode updatePortletMode(
