@@ -997,6 +997,10 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 * @throws PortalException if a company with the primary key could not be
 	 *         found or if the new information was invalid
 	 * @throws SystemException if a system exception occurred
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #updateCompany(long, String, String, String, boolean, byte[],
+	 *             String, String, String, String, String, String, String,
+	 *             String, String)}
 	 */
 	@Override
 	public Company updateCompany(
