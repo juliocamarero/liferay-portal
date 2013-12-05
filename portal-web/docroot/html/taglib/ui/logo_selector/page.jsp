@@ -20,9 +20,9 @@
 String randomNamespace = PortalUtil.generateRandomKey(request, "taglib_ui_logo_selector") + StringPool.UNDERLINE;
 
 String currentLogoURL = (String)request.getAttribute("liferay-ui:logo-selector:currentLogoURL");
+boolean defaultLogo = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:logo-selector:defaultLogo"));
 String defaultLogoURL = (String)request.getAttribute("liferay-ui:logo-selector:defaultLogoURL");
 String editLogoFn = (String)request.getAttribute("liferay-ui:logo-selector:editLogoFn");
-long imageId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:logo-selector:imageId"));
 String logoDisplaySelector = (String)request.getAttribute("liferay-ui:logo-selector:logoDisplaySelector");
 long maxFileSize = GetterUtil.getLong((String)request.getAttribute("liferay-ui:logo-selector:maxFileSize"));
 boolean showBackground = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:logo-selector:showBackground"));
@@ -40,7 +40,7 @@ boolean deleteLogo = ParamUtil.getBoolean(request, "deleteLogo");
 		<div class="portrait-icons">
 			<div class="btn-group">
 				<aui:button cssClass="btn edit-logo" icon="icon-picture" value="change" />
-				<aui:button cssClass="btn delete-logo" disabled="<%= (imageId == 0) %>" icon="icon-remove" value="delete" />
+				<aui:button cssClass="btn delete-logo" disabled="<%= defaultLogo %>" icon="icon-remove" value="delete" />
 			</div>
 
 			<aui:input name="deleteLogo" type="hidden" value="<%= deleteLogo %>" />
