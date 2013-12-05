@@ -29,21 +29,12 @@ boolean showBackground = GetterUtil.getBoolean((String)request.getAttribute("lif
 String tempImageFileName = (String)request.getAttribute("liferay-ui:logo-selector:tempImageFileName");
 
 boolean deleteLogo = ParamUtil.getBoolean(request, "deleteLogo");
-
-String imageSrc = null;
-
-if (deleteLogo || (imageId == 0)) {
-	imageSrc = defaultLogoURL;
-}
-else {
-	imageSrc = themeDisplay.getPathImage() + "/logo?img_id=" + imageId + "&t" + WebServerServletTokenUtil.getToken(imageId);
-}
 %>
 
 <div class="taglib-logo-selector" id="<%= randomNamespace %>taglibLogoSelector">
 	<div class="taglib-logo-selector-content" id="<%= randomNamespace %>taglibLogoSelectorContent">
 		<a class='lfr-change-logo <%= showBackground ? "show-background" : StringPool.BLANK %>' href="javascript:;">
-			<img alt="<liferay-ui:message key="current-image" />" class="img-polaroid avatar" id="<%= randomNamespace %>avatar" src="<%= HtmlUtil.escape(imageSrc) %>" />
+			<img alt="<liferay-ui:message key="current-image" />" class="img-polaroid avatar" id="<%= randomNamespace %>avatar" src="<%= HtmlUtil.escape(deleteLogo ? defaultLogoURL : currentLogoURL) %>" />
 		</a>
 
 		<div class="portrait-icons">
