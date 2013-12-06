@@ -29,23 +29,42 @@ boolean showBackground = GetterUtil.getBoolean((String)request.getAttribute("lif
 String tempImageFileName = (String)request.getAttribute("liferay-ui:logo-selector:tempImageFileName");
 
 boolean deleteLogo = ParamUtil.getBoolean(request, "deleteLogo");
+long fileEntryId = ParamUtil.getLong(request, "fileEntryId");
+
+String imageURL = null;
+
+if (deleteLogo) {
+	imageURL = defaultLogoURL;
+}
+else if (fileEntryId > 0) {
+	ResourceURL previewURL = PortletURLFactoryUtil.create(portletRequest, PortletKeys.IMAGE_UPLOADER, plid, PortletRequest.RESOURCE_PHASE);
+
+	previewURL.setParameter("struts_action", "/image_uploader/view");
+	previewURL.setParameter(Constants.CMD, Constants.GET_TEMP);
+	previewURL.setParameter("tempImageFileName", tempImageFileName);
+
+	imageURL = previewURL.toString();
+}
+else {
+	imageURL = currentLogoURL;
+}
 %>
 
 <div class="taglib-logo-selector" id="<%= randomNamespace %>taglibLogoSelector">
 	<div class="taglib-logo-selector-content" id="<%= randomNamespace %>taglibLogoSelectorContent">
 		<a class='lfr-change-logo <%= showBackground ? "show-background" : StringPool.BLANK %>' href="javascript:;">
-			<img alt="<liferay-ui:message key="current-image" />" class="img-polaroid avatar" id="<%= randomNamespace %>avatar" src="<%= HtmlUtil.escape(deleteLogo ? defaultLogoURL : currentLogoURL) %>" />
+			<img alt="<liferay-ui:message key="current-image" />" class="img-polaroid avatar" id="<%= randomNamespace %>avatar" src="<%= HtmlUtil.escape(imageURL) %>" />
 		</a>
 
 		<div class="portrait-icons">
 			<div class="btn-group">
 				<aui:button cssClass="btn edit-logo" icon="icon-picture" value="change" />
-				<aui:button cssClass="btn delete-logo" disabled="<%= defaultLogo %>" icon="icon-remove" value="delete" />
+				<aui:button cssClass="btn delete-logo" disabled="<%= defaultLogo && (fileEntryId == 0) %>" icon="icon-remove" value="delete" />
 			</div>
 
 			<aui:input name="deleteLogo" type="hidden" value="<%= deleteLogo %>" />
 
-			<aui:input name="fileEntryId" type="hidden" />
+			<aui:input name="fileEntryId" type="hidden" value="<%= fileEntryId %>" />
 		</div>
 	</div>
 </div>
