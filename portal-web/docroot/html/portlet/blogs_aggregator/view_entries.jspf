@@ -49,14 +49,14 @@
 
 	if (selectionMethod.equals("users")) {
 		if (organizationId > 0) {
-			rssURLParams = "&organizationId=".concat(organizationId);
+			rssURLParams = "&organizationId=" + organizationId;
 		}
 		else {
-			rssURLParams = "&companyId=".concat(company.getCompanyId());
+			rssURLParams = "&companyId=" + company.getCompanyId();
 		}
 	}
 	else {
-		rssURLParams = "&groupId=".concat(themeDisplay.getScopeGroupId());
+		rssURLParams = "&groupId=" + themeDisplay.getScopeGroupId();
 	}
 	%>
 
