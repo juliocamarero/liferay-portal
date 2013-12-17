@@ -169,7 +169,9 @@ if (ddmStructureId > 0) {
 
 				A.one('#<portlet:namespace />ddmStructureId').val(event.ddmstructureid);
 
-				A.one('#<portlet:namespace />ddmStructureNameDisplay').val(event.name);
+				var text = A.one('#<portlet:namespace />ddmStructureNameDisplay').html(event.name).text();
+
+				A.one('#<portlet:namespace />ddmStructureNameDisplay').val(text);
 			}
 		);
 	}
