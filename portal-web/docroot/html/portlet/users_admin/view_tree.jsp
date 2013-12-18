@@ -128,30 +128,18 @@ if (organization != null) {
 			}
 			%>
 
-			<c:choose>
-				<c:when test="<%= Validator.isNotNull(backURL) %>">
-					<liferay-ui:header
-						backLabel="<%= parentOrganizationName %>"
-						backURL="<%= backURL %>"
-						localizeTitle="<%= false %>"
-						title="<%= organization.getName() %>"
-					/>
-				</c:when>
-				<c:otherwise>
-					<portlet:renderURL var="headerBackURL">
-						<portlet:param name="struts_action" value="/users_admin/view" />
-						<portlet:param name="toolbarItem" value="<%= toolbarItem %>" />
-						<portlet:param name="organizationId" value="<%= String.valueOf(parentOrganizationId) %>" />
-					</portlet:renderURL>
+			<portlet:renderURL var="headerBackURL">
+				<portlet:param name="struts_action" value="/users_admin/view" />
+				<portlet:param name="toolbarItem" value="<%= toolbarItem %>" />
+				<portlet:param name="organizationId" value="<%= String.valueOf(parentOrganizationId) %>" />
+			</portlet:renderURL>
 
-					<liferay-ui:header
-						backLabel="<%= parentOrganizationName %>"
-						backURL="<%= headerBackURL.toString() %>"
-						localizeTitle="<%= false %>"
-						title="<%= organization.getName() %>"
-					/>
-				</c:otherwise>
-			</c:choose>
+			<liferay-ui:header
+				backLabel="<%= parentOrganizationName %>"
+				backURL="<%= Validator.isNotNull(backURL) ? backURL : headerBackURL.toString() %>"
+				localizeTitle="<%= false %>"
+				title="<%= organization.getName() %>"
+			/>
 		</c:if>
 
 		<aui:row>
