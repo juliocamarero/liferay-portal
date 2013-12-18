@@ -171,9 +171,11 @@ if (ddmStructureId > 0) {
 
 				var ddmStructureNameDisplay = A.one('#<portlet:namespace />ddmStructureNameDisplay');
 
-				var ddmStructureName = ddmStructureNameDisplay.html(event.name).text();
+				var tempNode = A.Node.create('<span>' + event.name + '</span>');
 
-				ddmStructureNameDisplay.val(ddmStructureName);
+				var ddmStructureNameText = tempNode.text();
+
+				ddmStructureNameDisplay.val(ddmStructureNameText);
 			}
 		);
 	}
