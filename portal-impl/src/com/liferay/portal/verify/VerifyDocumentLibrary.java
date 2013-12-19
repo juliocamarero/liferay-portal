@@ -201,9 +201,7 @@ public class VerifyDocumentLibrary extends VerifyProcess {
 			new DLFileVersionActionableDynamicQuery() {
 
 			@Override
-			protected void performAction(Object object)
-				throws PortalException, SystemException {
-
+			protected void performAction(Object object) throws SystemException {
 				DLFileVersion dlFileVersion = (DLFileVersion)object;
 
 				InputStream inputStream = null;
@@ -215,14 +213,25 @@ public class VerifyDocumentLibrary extends VerifyProcess {
 						dlFileVersion.getVersion(), false);
 				}
 				catch (Exception e) {
-					DLFileEntry fileEntry = dlFileVersion.getFileEntry();
-
 					if (_log.isWarnEnabled()) {
-						_log.warn(
-							"Unable to find file version " +
-								dlFileVersion.getVersion() + " for file " +
-									"entry " + fileEntry.getName(),
-							e);
+						DLFileEntry dlFileEntry =
+							DLFileEntryLocalServiceUtil.fetchDLFileEntry(
+								dlFileVersion.getFileEntryId());
+
+						if (dlFileEntry == null) {
+							_log.warn(
+								"Unable to find file entry associated with " +
+									"file version " +
+										dlFileVersion.getFileVersionId(),
+								e);
+						}
+						else {
+							_log.warn(
+								"Unable to find file version " +
+									dlFileVersion.getVersion() + " for file " +
+										"entry " + dlFileEntry.getName(),
+								e);
+						}
 					}
 
 					return;
