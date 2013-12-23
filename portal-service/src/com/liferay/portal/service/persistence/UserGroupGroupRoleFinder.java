@@ -12,23 +12,15 @@
  * details.
  */
 
-package com.liferay.portal.model;
+package com.liferay.portal.service.persistence;
+
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class ModelHintsConstants {
-
-	public static final String TEXT_DISPLAY_HEIGHT = "15";
-
-	public static final String TEXT_DISPLAY_WIDTH = "210";
-
-	public static final String TEXT_MAX_LENGTH = "75";
-
-	public static final String TEXTAREA_DISPLAY_HEIGHT = "100";
-
-	public static final String TEXTAREA_DISPLAY_WIDTH = "500";
-
-	public static final String TEXTAREA_MAX_LENGTH = "4000";
-
+@ProviderType
+public interface UserGroupGroupRoleFinder {
+	public java.util.List<com.liferay.portal.model.UserGroupGroupRole> findByUserId(
+		long userId) throws com.liferay.portal.kernel.exception.SystemException;
 }
