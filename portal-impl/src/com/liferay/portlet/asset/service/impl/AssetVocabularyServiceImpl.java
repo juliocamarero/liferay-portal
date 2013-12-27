@@ -31,6 +31,7 @@ import com.liferay.portlet.asset.model.AssetVocabularyDisplay;
 import com.liferay.portlet.asset.service.base.AssetVocabularyServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetPermission;
 import com.liferay.portlet.asset.service.permission.AssetVocabularyEntryPermission;
+import com.liferay.portlet.asset.service.permission.AssetVocabularyPermission;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.util.ArrayList;
@@ -250,7 +251,10 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 			total = getGroupVocabulariesCount(groupId);
 		}
 
-		if (addDefaultVocabulary && (total == 0)) {
+		if (addDefaultVocabulary && (total == 0) &&
+			AssetVocabularyPermission.contains(
+				getPermissionChecker(), groupId, ActionKeys.VIEW)) {
+
 			vocabularies = new ArrayList<AssetVocabulary>();
 
 			vocabularies.add(
