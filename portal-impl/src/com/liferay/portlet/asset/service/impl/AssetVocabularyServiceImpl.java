@@ -30,7 +30,7 @@ import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.model.AssetVocabularyDisplay;
 import com.liferay.portlet.asset.service.base.AssetVocabularyServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetPermission;
-import com.liferay.portlet.asset.service.permission.AssetVocabularyPermission;
+import com.liferay.portlet.asset.service.permission.AssetVocabularyEntryPermission;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 
 		for (long vocabularyId : vocabularyIds) {
 			try {
-				AssetVocabularyPermission.check(
+				AssetVocabularyEntryPermission.check(
 					getPermissionChecker(), vocabularyId, ActionKeys.DELETE);
 
 				assetVocabularyLocalService.deleteVocabulary(vocabularyId);
@@ -150,7 +150,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 	public void deleteVocabulary(long vocabularyId)
 		throws PortalException, SystemException {
 
-		AssetVocabularyPermission.check(
+		AssetVocabularyEntryPermission.check(
 			getPermissionChecker(), vocabularyId, ActionKeys.DELETE);
 
 		assetVocabularyLocalService.deleteVocabulary(vocabularyId);
@@ -326,7 +326,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 	public AssetVocabulary getVocabulary(long vocabularyId)
 		throws PortalException, SystemException {
 
-		AssetVocabularyPermission.check(
+		AssetVocabularyEntryPermission.check(
 			getPermissionChecker(), vocabularyId, ActionKeys.VIEW);
 
 		return assetVocabularyLocalService.getVocabulary(vocabularyId);
@@ -356,7 +356,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		AssetVocabularyPermission.check(
+		AssetVocabularyEntryPermission.check(
 			getPermissionChecker(), vocabularyId, ActionKeys.UPDATE);
 
 		return assetVocabularyLocalService.updateVocabulary(
@@ -377,7 +377,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 		while (itr.hasNext()) {
 			AssetVocabulary vocabulary = itr.next();
 
-			if (!AssetVocabularyPermission.contains(
+			if (!AssetVocabularyEntryPermission.contains(
 					permissionChecker, vocabulary, ActionKeys.VIEW)) {
 
 				itr.remove();
