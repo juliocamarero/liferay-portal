@@ -25,7 +25,7 @@ import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
  * @author Eduardo Lundgren
  * @author JorgeFerrer
  */
-public class AssetVocabularyPermission {
+public class AssetVocabularyEntryPermission {
 
 	public static void check(
 			PermissionChecker permissionChecker, AssetVocabulary vocabulary,
