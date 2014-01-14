@@ -6032,10 +6032,14 @@ public class JournalArticleLocalServiceImpl
 			long imageId = journalArticleImageLocalService.getArticleImageId(
 				groupId, articleId, version, elInstanceId, elName, elLanguage);
 
-			if (dynamicContent.getText().equals("delete") ||
-				Validator.isNull(dynamicContent.getText())) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+				dynamicContent.getText());
+			String imageSrc = jsonObject.getString("image");
 
-				dynamicContent.setText(StringPool.BLANK);
+			if (imageSrc.equals("delete") || Validator.isNull(imageSrc)) {
+				jsonObject.put("image", StringPool.BLANK);
+
+				dynamicContent.setText(jsonObject.toString());
 
 				imageLocalService.deleteImage(imageId);
 
@@ -6069,7 +6073,9 @@ public class JournalArticleLocalServiceImpl
 			}
 
 			if (ArrayUtil.isNotEmpty(bytes)) {
-				dynamicContent.setText(elContent);
+				jsonObject.put("image", elContent);
+
+				dynamicContent.setText(jsonObject.toString());
 				dynamicContent.addAttribute("id", String.valueOf(imageId));
 
 				imageLocalService.updateImage(imageId, bytes);
@@ -6098,15 +6104,19 @@ public class JournalArticleLocalServiceImpl
 				}
 
 				if (oldImage != null) {
-					dynamicContent.setText(elContent);
+					jsonObject.put("image", elContent);
+
+					dynamicContent.setText(jsonObject.toString());
 					dynamicContent.addAttribute("id", String.valueOf(imageId));
 
 					bytes = oldImage.getTextObj();
 
 					imageLocalService.updateImage(imageId, bytes);
 				}
-				else if (dynamicContent.getText().equals("update")) {
-					dynamicContent.setText(StringPool.BLANK);
+				else if (imageSrc.equals("update")) {
+					jsonObject.put("image", StringPool.BLANK);
+
+					dynamicContent.setText(jsonObject.toString());
 				}
 
 				continue;
@@ -6115,24 +6125,27 @@ public class JournalArticleLocalServiceImpl
 			Image image = imageLocalService.getImage(imageId);
 
 			if (image != null) {
-				dynamicContent.setText(elContent);
+				jsonObject.put("image", elContent);
+
+				dynamicContent.setText(jsonObject.toString());
 				dynamicContent.addAttribute("id", String.valueOf(imageId));
 
 				continue;
 			}
-			else if (dynamicContent.getText().equals("update")) {
-				dynamicContent.setText(StringPool.BLANK);
+			else if (imageSrc.equals("update")) {
+				jsonObject.put("image", StringPool.BLANK);
+
+				dynamicContent.setText(jsonObject.toString());
 
 				continue;
 			}
 
 			long contentImageId = GetterUtil.getLong(
-				HttpUtil.getParameter(dynamicContent.getText(), "img_id"));
+				HttpUtil.getParameter(imageSrc, "img_id"));
 
 			if (contentImageId <= 0) {
 				contentImageId = GetterUtil.getLong(
-					HttpUtil.getParameter(
-						dynamicContent.getText(), "img_id", false));
+					HttpUtil.getParameter(imageSrc, "img_id", false));
 			}
 
 			if (contentImageId > 0) {
@@ -6161,7 +6174,9 @@ public class JournalArticleLocalServiceImpl
 			Image defaultImage = imageLocalService.getImage(defaultImageId);
 
 			if (defaultImage != null) {
-				dynamicContent.setText(elContent);
+				jsonObject.put("image", elContent);
+
+				dynamicContent.setText(jsonObject.toString());
 				dynamicContent.addAttribute(
 					"id", String.valueOf(defaultImageId));
 
@@ -6173,7 +6188,9 @@ public class JournalArticleLocalServiceImpl
 			}
 
 			if (Validator.isNotNull(elLanguage)) {
-				dynamicContent.setText(StringPool.BLANK);
+				jsonObject.put("image", StringPool.BLANK);
+
+				dynamicContent.setText(jsonObject.toString());
 			}
 		}
 	}
