@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.templateparser;
 
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -73,6 +75,24 @@ public class TemplateNode extends LinkedHashMap<String, Object> {
 
 	public void appendSibling(TemplateNode templateNode) {
 		_siblingTemplateNodes.add(templateNode);
+	}
+
+	public String getAlt() {
+		String type = getType();
+
+		if (type.equals("image")) {
+			String data = (String)get("data");
+
+			try {
+				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(data);
+
+				return jsonObject.getString("alt");
+			}
+			catch (Exception e) {
+			}
+		}
+
+		return StringPool.BLANK;
 	}
 
 	public TemplateNode getChild(String name) {
