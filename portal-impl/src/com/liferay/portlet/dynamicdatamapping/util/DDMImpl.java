@@ -497,14 +497,23 @@ public class DDMImpl implements DDM {
 				File file = uploadRequest.getFile(fieldNameValue);
 
 				try {
+					String alt = GetterUtil.getString(
+						serviceContext.getAttribute(fieldNameValue + "Alt"));
+
 					byte[] bytes = FileUtil.getBytes(file);
 
+					String image = "update";
+
 					if (ArrayUtil.isNotEmpty(bytes)) {
-						fieldValue = UnicodeFormatter.bytesToHex(bytes);
+						image = UnicodeFormatter.bytesToHex(bytes);
 					}
-					else {
-						fieldValue = "update";
-					}
+
+					JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+					jsonObject.put("alt", alt);
+					jsonObject.put("image", image);
+
+					fieldValue = jsonObject.toString();
 				}
 				catch (IOException ioe) {
 					return null;
