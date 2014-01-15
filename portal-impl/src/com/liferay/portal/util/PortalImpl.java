@@ -1015,6 +1015,16 @@ public class PortalImpl implements Portal {
 			Company company = themeDisplay.getCompany();
 
 			virtualHost = company.getVirtualHostname();
+
+			String portalURL = themeDisplay.getPortalURL();
+
+			String portalDomain = HttpUtil.getDomain(portalURL);
+
+			if (!StringUtil.equalsIgnoreCase(portalDomain, _LOCALHOST) &&
+				StringUtil.equalsIgnoreCase(virtualHost, _LOCALHOST)) {
+
+				virtualHost = portalDomain;
+			}
 		}
 
 		String i18nPath = buildI18NPath(locale);
