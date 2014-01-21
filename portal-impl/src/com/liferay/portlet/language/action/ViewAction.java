@@ -124,6 +124,9 @@ public class ViewAction extends PortletAction {
 			layoutURL = redirect.substring(0, pos);
 			queryString = redirect.substring(pos);
 		}
+		else {
+			layoutURL = redirect;
+		}
 
 		Layout layout = themeDisplay.getLayout();
 
