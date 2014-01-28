@@ -28,7 +28,6 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.journal.model.JournalArticleDisplay;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
@@ -173,8 +172,7 @@ public class JournalContentImpl implements JournalContent {
 		}
 
 		try {
-			if (PropsValues.JOURNAL_ARTICLE_VIEW_PERMISSION_CHECK_ENABLED &&
-				(articleDisplay != null) && (themeDisplay != null) &&
+			if ((articleDisplay != null) && (themeDisplay != null) &&
 				!JournalArticlePermission.contains(
 					themeDisplay.getPermissionChecker(), groupId, articleId,
 					ActionKeys.VIEW)) {
