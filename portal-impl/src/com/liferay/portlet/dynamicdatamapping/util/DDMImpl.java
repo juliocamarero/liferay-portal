@@ -218,11 +218,11 @@ public class DDMImpl implements DDM {
 				continue;
 			}
 
-			Map<String, String> attributes = getFieldAttributeValues(
+			Map<String, String> fieldAttributes = getFieldAttributes(
 				ddmStructure, fieldName, fieldNamespace, serviceContext);
 
 			Field field = createField(
-				ddmStructure, fieldName, fieldValues, attributes,
+				ddmStructure, fieldName, fieldValues, fieldAttributes,
 				serviceContext);
 
 			fields.put(field);
@@ -371,7 +371,7 @@ public class DDMImpl implements DDM {
 
 	protected Field createField(
 			DDMStructure ddmStructure, String fieldName,
-			List<Serializable> fieldValues, Map<String, String> attributes,
+			List<Serializable> fieldValues, Map<String, String> fieldAttributes,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -398,7 +398,7 @@ public class DDMImpl implements DDM {
 
 		field.setDefaultLocale(defaultLocale);
 
-		field.setAttributes(locale, attributes);
+		field.setAttributes(locale, fieldAttributes);
 		field.setName(fieldName);
 		field.setValues(locale, fieldValues);
 
@@ -428,12 +428,16 @@ public class DDMImpl implements DDM {
 		return ddmStructure;
 	}
 
-	protected Map<String, String> getFieldAttributeValues(
+	protected Map<String, String> getFieldAttributes(
 			DDMStructure ddmStructure, String fieldName, String fieldNamespace,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		String fieldDataType = ddmStructure.getFieldDataType(fieldName);
+
+		if (!fieldDataType.equals(FieldConstants.IMAGE)) {
+			return null;
+		}
 
 		List<String> fieldNames = getFieldNames(
 			fieldNamespace, fieldName, serviceContext);
@@ -442,16 +446,8 @@ public class DDMImpl implements DDM {
 			fieldNames.size());
 
 		for (String fieldNameValue : fieldNames) {
-			String attributeValue = null;
-
-			if (fieldDataType.equals(FieldConstants.IMAGE)) {
-				attributeValue = GetterUtil.getString(
-					serviceContext.getAttribute(fieldNameValue + "Alt"));
-			}
-
-			if (attributeValue == null) {
-				return null;
-			}
+			String attributeValue = GetterUtil.getString(
+				serviceContext.getAttribute(fieldNameValue + "Alt"));
 
 			attributeValues.put("alt", attributeValue);
 		}
