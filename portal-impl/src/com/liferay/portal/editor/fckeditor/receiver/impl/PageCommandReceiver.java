@@ -31,6 +31,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,6 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 			_getFolders(commandArgument, document, rootNode);
 		}
 		catch (Exception e) {
-
 			if (_log.isDebugEnabled()) {
 				_log.debug(e, e);
 			}
@@ -82,7 +82,6 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 			_getFiles(commandArgument, document, rootNode);
 		}
 		catch (Exception e) {
-
 			if (_log.isDebugEnabled()) {
 				_log.debug(e, e);
 			}
@@ -283,6 +282,6 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 		return canonicalURL;
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(
-			PageCommandReceiver.class);
+	private static Log _log = LogFactoryUtil.getLog(PageCommandReceiver.class);
+
 }

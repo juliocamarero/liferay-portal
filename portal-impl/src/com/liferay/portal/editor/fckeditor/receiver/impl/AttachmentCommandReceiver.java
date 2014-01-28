@@ -28,6 +28,7 @@ import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageServiceUtil;
 
 import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,6 @@ public class AttachmentCommandReceiver extends BaseCommandReceiver {
 				nodeId, title, inputStreamOVPs);
 		}
 		catch (Exception e) {
-
 			if (_log.isDebugEnabled()) {
 				_log.debug(e, e);
 			}
@@ -101,7 +101,6 @@ public class AttachmentCommandReceiver extends BaseCommandReceiver {
 			_getFiles(commandArgument, document, rootNode);
 		}
 		catch (Exception e) {
-
 			if (_log.isDebugEnabled()) {
 				_log.debug(e, e);
 			}
@@ -150,4 +149,5 @@ public class AttachmentCommandReceiver extends BaseCommandReceiver {
 
 	private static Log _log = LogFactoryUtil.getLog(
 			AttachmentCommandReceiver.class);
+
 }

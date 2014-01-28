@@ -175,7 +175,6 @@ public class DocumentCommandReceiver extends BaseCommandReceiver {
 			_getFolders(commandArgument, document, rootNode);
 		}
 		catch (Exception e) {
-
 			if (_log.isDebugEnabled()) {
 				_log.debug(e, e);
 			}
@@ -198,7 +197,6 @@ public class DocumentCommandReceiver extends BaseCommandReceiver {
 			}
 		}
 		catch (Exception e) {
-
 			if (_log.isDebugEnabled()) {
 				_log.debug(e, e);
 			}
