@@ -139,6 +139,13 @@ public class JournalContentImpl implements JournalContent {
 
 		if (themeDisplay != null) {
 			try {
+				if (!JournalArticlePermission.contains(
+						themeDisplay.getPermissionChecker(), groupId, articleId,
+						ActionKeys.VIEW)) {
+
+					return null;
+				}
+
 				Layout layout = themeDisplay.getLayout();
 
 				LayoutSet layoutSet = layout.getLayoutSet();
@@ -169,18 +176,6 @@ public class JournalContentImpl implements JournalContent {
 
 				portalCache.put(key, articleDisplay);
 			}
-		}
-
-		try {
-			if ((articleDisplay != null) && (themeDisplay != null) &&
-				!JournalArticlePermission.contains(
-					themeDisplay.getPermissionChecker(), groupId, articleId,
-					ActionKeys.VIEW)) {
-
-				articleDisplay = null;
-			}
-		}
-		catch (Exception e) {
 		}
 
 		if (_log.isDebugEnabled()) {
