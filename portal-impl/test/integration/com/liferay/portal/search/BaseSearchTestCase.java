@@ -208,6 +208,15 @@ public abstract class BaseSearchTestCase {
 			message.getMessageId(), message.getSubject(), body, serviceContext);
 	}
 
+	protected void checkUserPermissionsBaseModelsSearchCount(
+			boolean addBaseModelPermission, int initialBaseModelsSearchCount,
+			int searchBaseModelsCount)
+		throws Exception {
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount, searchBaseModelsCount);
+	}
+
 	protected void expireBaseModelVersions(
 			BaseModel<?> baseModel, boolean expireAllVersions,
 			ServiceContext serviceContext)
@@ -839,10 +848,12 @@ public abstract class BaseSearchTestCase {
 
 			searchContext.setUserId(user.getUserId());
 
-			Assert.assertEquals(
-				initialBaseModelsSearchCount,
-				searchBaseModelsCount(
-					getBaseModelClass(), group.getGroupId(), searchContext));
+			int searchBaseModelsCount = searchBaseModelsCount(
+				getBaseModelClass(), group.getGroupId(), searchContext);
+
+			checkUserPermissionsBaseModelsSearchCount(
+				addBaseModelPermission, initialBaseModelsSearchCount,
+				searchBaseModelsCount);
 		}
 		finally {
 			PermissionThreadLocal.setPermissionChecker(
