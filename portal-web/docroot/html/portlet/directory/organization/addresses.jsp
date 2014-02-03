@@ -42,9 +42,11 @@ if (classPK > 0) {
 		String city = address.getCity();
 
 		Region region = address.getRegion();
+
 		String regionName = region.getName();
 
 		Country country = address.getCountry();
+
 		String countryName = country.getName(locale);
 
 		String mailingName = LanguageUtil.get(pageContext, address.getType().getName());
