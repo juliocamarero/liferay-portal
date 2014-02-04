@@ -107,6 +107,46 @@
 
 	Liferay.provide(
 		ToolTip,
+		'hide',
+		function() {
+			var instance = this;
+
+			if (instance._cached) {
+				instance._cached.hide();
+			}
+		},
+		['aui-tooltip']
+	);
+
+	Liferay.provide(
+		ToolTip,
+		'addShowListeners',
+		function() {
+			var showTooltip = function(event) {
+				var node = event.currentTarget;
+
+				var tooltipContainerNode = node.next('.tooltip-container');
+
+				if (tooltipContainerNode) {
+					var content = tooltipContainerNode.get('innerHTML');
+
+					Liferay.Portal.ToolTip.show(node, content);
+				}
+			};
+
+			var DOC = A.config.doc;
+
+			A.delegate('mouseover', showTooltip, DOC, '.tooltip-target' );
+
+			A.delegate('focus', showTooltip, DOC, '.tooltip-target' );
+
+			A.delegate('blur', Liferay.Portal.ToolTip.hide, DOC, '.tooltip-target');
+		},
+		['aui-tooltip']
+	);
+
+	Liferay.provide(
+		ToolTip,
 		'show',
 		function(obj, text) {
 			var instance = this;
