@@ -45,7 +45,6 @@ import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderServiceUtil;
 import com.liferay.portlet.journal.util.JournalTestUtil;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -112,19 +111,8 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
-	protected void checkUserPermissionsBaseModelsSearchCount(
-			boolean addBaseModelPermission, int initialBaseModelsSearchCount,
-			int searchBaseModelsCount)
-		throws Exception {
-
-		if (addBaseModelPermission &&
-			!PropsValues.JOURNAL_ARTICLE_VIEW_PERMISSION_CHECK_ENABLED) {
-
-			initialBaseModelsSearchCount++;
-		}
-
-		Assert.assertEquals(
-			initialBaseModelsSearchCount, searchBaseModelsCount);
+	protected boolean checkBaseModelPermission() {
+		return PropsValues.JOURNAL_ARTICLE_VIEW_PERMISSION_CHECK_ENABLED;
 	}
 
 	@Override
