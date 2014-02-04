@@ -4626,7 +4626,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setPasswordEncrypted(true);
 		user.setPasswordReset(passwordReset);
 
-		if (Validator.isNull(user.getPasswordModifiedDate())) {
+		if (!silentUpdate || (user.getPasswordModifiedDate() == null)) {
 			user.setPasswordModifiedDate(new Date());
 		}
 
@@ -4634,7 +4634,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setGraceLoginCount(0);
 
 		if (!silentUpdate) {
-			user.setPasswordModifiedDate(new Date());
 			user.setPasswordModified(true);
 		}
 
