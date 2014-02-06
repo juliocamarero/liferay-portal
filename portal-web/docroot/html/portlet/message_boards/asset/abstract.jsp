@@ -32,7 +32,7 @@ if (assetRenderer != null) {
 	}
 %>
 
-	<%= summary %>
+	<%= HtmlUtil.escape(summary) %>
 
 <%
 }
