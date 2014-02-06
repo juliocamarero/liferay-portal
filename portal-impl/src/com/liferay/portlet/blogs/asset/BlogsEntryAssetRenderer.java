@@ -99,6 +99,8 @@ public class BlogsEntryAssetRenderer
 	public String getSummary(Locale locale) {
 		String summary = _entry.getDescription();
 
+		summary = HtmlUtil.replaceNewLine(summary);
+
 		if (Validator.isNull(summary)) {
 			summary = StringUtil.shorten(
 				HtmlUtil.stripHtml(_entry.getContent()), 200);
