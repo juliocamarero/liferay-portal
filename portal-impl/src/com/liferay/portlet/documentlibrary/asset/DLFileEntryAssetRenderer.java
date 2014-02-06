@@ -144,7 +144,7 @@ public class DLFileEntryAssetRenderer
 
 	@Override
 	public String getSummary(Locale locale) {
-		return HtmlUtil.stripHtml(_fileEntry.getDescription());
+		return _fileEntry.getDescription();
 	}
 
 	@Override
