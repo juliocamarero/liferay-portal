@@ -382,7 +382,7 @@ AUI.add(
 							A.Plugin.NodeFocusManager,
 							{
 								circular: true,
-								descendants: 'li a',
+								descendants: '.dropdown-menu li:visible a',
 								keys: {
 									next: 'down:39,40',
 									previous: 'down:37,38'
@@ -397,6 +397,9 @@ AUI.add(
 
 								if (!event.newVal) {
 									instance.set('activeDescendant', 0);
+								}
+								else {
+									instance.refresh();
 								}
 							}
 						);
