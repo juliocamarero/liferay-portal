@@ -67,6 +67,13 @@ AUI.add(
 						}
 
 						instance._hideMenu();
+
+						Liferay.fire(
+							'exitNavigation',
+							{
+								originalEvent: event
+							}
+						);
 					},
 
 					_handleKey: function(event, direction) {
@@ -154,6 +161,18 @@ AUI.add(
 
 								Liferay.fire('showNavigationMenu', mapHover);
 							}
+						}
+
+						var descendants = instance._focusManager.get('descendants');
+						var first = descendants.first();
+						var last = descendants.last();
+
+						if (menuOld && (menuOld.one('a') === last) && (menuNew.one('a') === first)) {
+							Liferay.fire('lastNavigation', {navigation: instance.get('host')});
+						}
+
+						if (menuOld && (menuOld.one('a') === first) && (menuNew.one('a') === last)) {
+							//Liferay.fire('firstNavigation', {navigation: instance.get('host')});
 						}
 					},
 
