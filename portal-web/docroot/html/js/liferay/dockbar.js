@@ -311,7 +311,11 @@ AUI.add(
 
 				var btnNavigation = A.oneNS(namespace, '#navSiteNavigationNavbarBtn');
 
+				btnNavigation.addClass(CSS_DOCKBAR_ITEM);
+
 				var navigation = A.one(Liferay.Data.NAV_SELECTOR);
+
+				btnNavigation.setData('menuItem', navigation);
 
 				var handle;
 
@@ -374,10 +378,12 @@ AUI.add(
 
 				if (BODY.hasClass('dockbar-split')) {
 					if (navAccountControls) {
-						navAccountControls.plug(Liferay.DockbarKeyboardInteraction);
+						dockBar.plug(Liferay.DockbarKeyboardInteraction);
 					}
 
 					if (navAddControls) {
+						navAddControls.one('.dropdown-toggle').get('parentNode').addClass(CSS_DOCKBAR_ITEM);
+
 						navAddControls.plug(
 							A.Plugin.NodeFocusManager,
 							{
@@ -395,11 +401,10 @@ AUI.add(
 							function(event) {
 								var instance = this;
 
+								instance.refresh();
+
 								if (!event.newVal) {
 									instance.set('activeDescendant', 0);
-								}
-								else {
-									instance.refresh();
 								}
 							}
 						);

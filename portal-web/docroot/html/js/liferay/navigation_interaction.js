@@ -155,6 +155,18 @@ AUI.add(
 								Liferay.fire('showNavigationMenu', mapHover);
 							}
 						}
+
+						var descendants = instance._focusManager.get('descendants');
+						var first = descendants.first();
+						var last = descendants.last();
+
+						if (menuOld && (menuOld.one('a') === last) && (menuNew.one('a') === first)) {
+							Liferay.fire('lastNavigation', {navigation: instance.get('host')});
+						}
+
+						if (menuOld && (menuOld.one('a') === first) && (menuNew.one('a') === last)) {
+							//Liferay.fire('firstNavigation', {navigation: instance.get('host')});
+						}
 					},
 
 					_hideMenu: function() {
@@ -233,6 +245,7 @@ AUI.add(
 						var handleMenuToggle = (newMenuIndex || (newMenuIndex === 0));
 
 						if (handleMenuToggle) {
+							console.log(handleMenuToggle);
 							var focusManager = instance._focusManager;
 
 							var activeDescendant = focusManager.get(ACTIVE_DESCENDANT);
