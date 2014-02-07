@@ -13,11 +13,11 @@ AUI.add(
 
 		var NAME = 'liferaydockbarkeyboardinteraction';
 
-		var SELECTOR_DOCKBAR_ITEM = '.dockbar-item';
+		var SELECTOR_DOCKBAR_ITEM = '.dockbar-item:visible, a.dockbar-item:visible';
 
-		var SELECTOR_DOCKBAR_ITEM_FIRST_LINK = '.dockbar-item > a';
+		var SELECTOR_DOCKBAR_ITEM_FIRST_LINK = '.dockbar-item > a, a.dockbar-item';
 
-		var SELECTOR_DOCKBAR_ITEM_LINK = '.dockbar-item a';
+		var SELECTOR_DOCKBAR_ITEM_LINK = '.dockbar-item:visible a, a.dockbar-item:visible';
 
 		var DockbarKeyboardInteraction = A.Component.create(
 			{
@@ -46,8 +46,16 @@ AUI.add(
 
 						var menuItem = event.currentTarget.ancestor(SELECTOR_DOCKBAR_ITEM);
 
-						if (menuItem.hasClass(CSS_DROPDOWN)) {
+						if (!menuItem) {
+							menuItem = event.currentTarget.getData('menuItem');
+						}
+
+						if (menuItem.hasClass(CSS_DROPDOWN) || menuItem.hasClass('site-navigation')) {
 							menuItem.addClass(CSS_OPEN);
+						}
+
+						if (menuItem.hasClass('site-navigation')) {
+							A.soon(function() { menuItem.one('li a').focus(); });
 						}
 					},
 
@@ -68,6 +76,10 @@ AUI.add(
 
 						var currentMenuItem = event.currentTarget.ancestor(SELECTOR_DOCKBAR_ITEM);
 
+						if (!currentMenuItem) {
+							currentMenuItem = event.currentTarget;
+						}
+
 						var nextMenuItemPos = menuItems.indexOf(currentMenuItem) + increment;
 
 						if (nextMenuItemPos < 0) {
@@ -78,6 +90,10 @@ AUI.add(
 						}
 
 						var focusTarget = menuItems.item(nextMenuItemPos).one('a');
+
+						if (!focusTarget) {
+							focusTarget = menuItems.item(nextMenuItemPos);
+						}
 
 						instance.hostFocusManager.focus(focusTarget);
 					},
@@ -107,8 +123,16 @@ AUI.add(
 								if (item === focusedCurrent) {
 									var menuItem = A.one('#' + index).ancestor(SELECTOR_DOCKBAR_ITEM);
 
-									if (menuItem.hasClass(CSS_DROPDOWN)) {
+									if (!menuItem) {
+										menuItem = A.one('#' + index).getData('menuItem');
+									}
+
+									if (menuItem.hasClass(CSS_DROPDOWN) || menuItem.hasClass('site-navigation')) {
 										menuItem.addClass(CSS_OPEN);
+									}
+
+									if (menuItem.hasClass('site-navigation')) {
+										A.soon(function() { menuItem.all('li a').last().focus(); });
 									}
 
 									return true;
@@ -150,6 +174,8 @@ AUI.add(
 							function(event) {
 								var instance = this;
 
+								instance.refresh();
+
 								if (!event.newVal) {
 									instance.set(ACTIVE_DESCENDANT, 0);
 								}
@@ -168,6 +194,28 @@ AUI.add(
 						host.delegate(EVENT_KEY, instance._handleLeftRightKeyPress, 'down:37,39', SELECTOR_DOCKBAR_ITEM_LINK, instance);
 
 						host.delegate(EVENT_KEY, instance._handleTabKeyPress, 'down:9');
+
+						Liferay.on(
+							'lastNavigation',
+							function(event) {
+								A.soon(function() {
+									event.navigation.removeClass(CSS_OPEN);
+									var active = host.focusManager.get(ACTIVE_DESCENDANT);
+									host.focusManager.focus(host.focusManager.get('descendants').item(active+1));
+								});
+							}
+						);
+
+						Liferay.on(
+							'firstNavigation',
+							function(event) {
+								A.soon(function() {
+									event.navigation.removeClass(CSS_OPEN);
+									var active = host.focusManager.get(ACTIVE_DESCENDANT);
+									host.focusManager.focus(host.focusManager.get('descendants').last());
+								});
+							}
+						);
 					}
 				}
 			}
