@@ -311,44 +311,88 @@ AUI.add(
 
 				var btnNavigation = A.oneNS(namespace, '#navSiteNavigationNavbarBtn');
 
+				btnNavigation.addClass(CSS_DOCKBAR_ITEM);
+
 				var navigation = A.one(Liferay.Data.NAV_SELECTOR);
+
+				btnNavigation.setData('menuItem', navigation);
 
 				var handle;
 
-				if (btnNavigation && navigation) {
-					btnNavigation.on(
-						EVENT_CLICK,
+if (btnNavigation && navigation) {
+					var toggleNavigation = function(event) {
+						var open = navigation.hasClass(STR_OPEN);
+
+						if (open && handle) {
+							handle.detach();
+
+							handle = null;
+						}
+						else {
+							handle = navigation.on(
+								EVENT_MOUSEDOWN_OUTSIDE,
+								function(event) {
+									if (!btnNavigation.contains(event.target)) {
+										handle.detach();
+
+										btnNavigation.removeClass(STR_ACTIVE);
+										navigation.removeClass(STR_OPEN);
+									}
+								}
+							);
+						}
+
+						btnNavigation.toggleClass(STR_ACTIVE);
+						navigation.toggleClass(STR_OPEN);
+					};
+
+					var handleNavigationBtnKeyDown = function(event) {
+						var open = navigation.hasClass(STR_OPEN);
+
+						var shouldToggle = true;
+
+						if (event.isKey('DOWN')) {
+							event.preventDefault();
+
+							if (!open) {
+								toggleNavigation();
+							}
+
+							navigation.one('li a').focus();
+						}
+						else if ((open && event.isKey('TAB')) || !event.isKey('TAB')) {
+							toggleNavigation();
+						}
+					};
+
+					Liferay.on(
+						'exitNavigation',
 						function(event) {
 							var open = navigation.hasClass(STR_OPEN);
 
-							if (open && handle) {
-								handle.detach();
+							var nextElement = btnNavigation.siblings('.nav-collapse:visible').first();
 
-								handle = null;
+							if (nextElement) {
+								if (open) {
+									toggleNavigation();
+								}
+
+								if (!event.originalEvent.shiftKey) {
+									event.originalEvent.preventDefault();
+
+									nextElement.one('li a').focus();
+								}
 							}
-							else {
-								handle = navigation.on(
-									EVENT_MOUSEDOWN_OUTSIDE,
-									function(event) {
-										if (!btnNavigation.contains(event.target)) {
-											handle.detach();
-
-											btnNavigation.removeClass(STR_ACTIVE);
-											navigation.removeClass(STR_OPEN);
-										}
-									}
-								);
-							}
-
-							btnNavigation.toggleClass(STR_ACTIVE);
-							navigation.toggleClass(STR_OPEN);
 						}
 					);
+
+					btnNavigation.on(EVENT_CLICK, toggleNavigation);
+					btnNavigation.on('key', handleNavigationBtnKeyDown, 'down:9,13,40');
 				}
 
 				Liferay.fire('dockbarLoaded');
 			},
-			['aui-io-request', 'liferay-node', 'liferay-store', 'node-focusmanager']
+			['aui-io-request', 'event-key', 'liferay-node', 'liferay-store', 'node-focusmanager']
 		);
 
 		Liferay.provide(
@@ -374,15 +418,17 @@ AUI.add(
 
 				if (BODY.hasClass('dockbar-split')) {
 					if (navAccountControls) {
-						navAccountControls.plug(Liferay.DockbarKeyboardInteraction);
+						dockBar.plug(Liferay.DockbarKeyboardInteraction);
 					}
 
 					if (navAddControls) {
+						navAddControls.one('.dropdown-toggle').get('parentNode').addClass(CSS_DOCKBAR_ITEM);
+
 						navAddControls.plug(
 							A.Plugin.NodeFocusManager,
 							{
 								circular: true,
-								descendants: 'li a',
+								descendants: '.dropdown-menu li:visible a',
 								keys: {
 									next: 'down:39,40',
 									previous: 'down:37,38'
@@ -394,6 +440,8 @@ AUI.add(
 							'focusedChange',
 							function(event) {
 								var instance = this;
+
+								instance.refresh();
 
 								if (!event.newVal) {
 									instance.set('activeDescendant', 0);
