@@ -155,6 +155,13 @@ public class DLFileEntryIndexer extends BaseIndexer {
 	}
 
 	@Override
+	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(classPK);
+
+		return fileEntry.isInTrash() || fileEntry.isInTrashContainer();
+	}
+
+	@Override
 	public void postProcessContextQuery(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
