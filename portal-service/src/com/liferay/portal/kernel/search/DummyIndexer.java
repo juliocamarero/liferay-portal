@@ -113,6 +113,11 @@ public class DummyIndexer implements Indexer {
 	}
 
 	@Override
+	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+		return true;
+	}
+
+	@Override
 	public boolean isStagingAware() {
 		return false;
 	}

@@ -372,6 +372,11 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	@Override
+	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+		return false;
+	}
+
+	@Override
 	public boolean isStagingAware() {
 		return _stagingAware;
 	}
