@@ -24,7 +24,7 @@
 	</#if>
 
 	<#if (field??)>
-		<#assign alt = field.getAttribute(requestedLocale, "alt")>
+		<#assign alt = field.getAttribute(requestedLocale, "alt", valueIndex)>
 	</#if>
 
 	<@aui.input label="image-description" name="${namespacedFieldName}Alt" type="text" value=alt />

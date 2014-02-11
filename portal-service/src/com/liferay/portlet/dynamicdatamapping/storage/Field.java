@@ -76,7 +76,9 @@ public class Field implements Serializable {
 	public void addAttributes(
 		Locale locale, List<Serializable> attributesList) {
 
-		_attributesMap.put(locale, attributesList);
+		for (Serializable attributes : attributesList) {
+			addAttributes(locale, attributes);
+		}
 	}
 
 	public void addAttributes(Locale locale, Serializable attributes) {
@@ -132,37 +134,63 @@ public class Field implements Serializable {
 	}
 
 	public Serializable getAttribute(Locale locale, String name) {
-		List<Serializable> attributesList = _attributesMap.get(locale);
+		List<Serializable> attributesList = _getAttributes(locale);
 
-		if (attributesList == null) {
-			Locale defaultLocale = getDefaultLocale();
-
-			attributesList = _attributesMap.get(defaultLocale);
+		if (attributesList.isEmpty()) {
+			return null;
 		}
 
-		Attributes attributes = (Attributes)attributesList.get(0);
+		try {
+			DDMStructure ddmStructure = getDDMStructure();
 
-		return attributes.getAttribute(name);
+			if (ddmStructure == null) {
+				return _getAttribute(attributesList.get(0), name);
+			}
+
+			boolean repeatable = isRepeatable();
+
+			if (repeatable) {
+				List<Serializable> attributes = new ArrayList<Serializable>();
+
+				for (Serializable attribute : attributesList) {
+					attributes.add(_getAttribute(attribute, name));
+				}
+
+				return FieldConstants.getSerializable(
+					getDataType(), attributes);
+			}
+
+			return _getAttribute(attributesList.get(0), name);
+		}
+		catch (Exception e) {
+			_log.error(e);
+		}
+
+		return null;
+	}
+
+	public Serializable getAttribute(Locale locale, String name, int index) {
+		List<Serializable> attributeList = _getAttributes(locale);
+
+		if (index >= attributeList.size()) {
+			return null;
+		}
+
+		return _getAttribute(attributeList.get(index), name);
 	}
 
 	public List<Serializable> getAttributes(Locale locale) {
-		List<Serializable> attributesList = _attributesMap.get(locale);
-
-		if (attributesList == null) {
-			_attributesMap.put(locale, new ArrayList<Serializable>());
-		}
-
-		return _attributesMap.get(locale);
+		return _getAttributes(locale);
 	}
 
 	public Serializable getAttributes(Locale locale, int index) {
-		List<Serializable> attributesList = _attributesMap.get(locale);
+		List<Serializable> attributeList = _getAttributes(locale);
 
-		if (attributesList == null) {
-			_attributesMap.put(locale, new ArrayList<Serializable>());
+		if (index >= attributeList.size()) {
+			return null;
 		}
 
-		return attributesList.get(index);
+		return attributeList.get(index);
 	}
 
 	public Set<Locale> getAvailableLocales() {
@@ -345,6 +373,34 @@ public class Field implements Serializable {
 		}
 
 		return FieldRendererFactory.getFieldRenderer(dataType);
+	}
+
+	private Serializable _getAttribute(
+		Serializable attributesValue, String name) {
+
+		Attributes attributes = (Attributes)attributesValue;
+
+		return attributes.getAttribute(name);
+	}
+
+	private List<Serializable> _getAttributes(Locale locale) {
+		Set<Locale> availableLocales = getAvailableLocales();
+
+		if (!availableLocales.contains(locale)) {
+			locale = getDefaultLocale();
+		}
+
+		if (locale == null) {
+			locale = LocaleUtil.getSiteDefault();
+		}
+
+		List<Serializable> values = _attributesMap.get(locale);
+
+		if (values == null) {
+			return Collections.emptyList();
+		}
+
+		return values;
 	}
 
 	private List<Serializable> _getValues(Locale locale) {

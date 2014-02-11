@@ -217,7 +217,7 @@ public class DDMImpl implements DDM {
 				continue;
 			}
 
-			Serializable fieldAttributes = getFieldAttributes(
+			List<Serializable> fieldAttributes = getFieldAttributes(
 				ddmStructure, fieldName, fieldNamespace, serviceContext);
 
 			Field field = createField(
@@ -370,7 +370,7 @@ public class DDMImpl implements DDM {
 
 	protected Field createField(
 			DDMStructure ddmStructure, String fieldName,
-			List<Serializable> fieldValues, Serializable fieldAttributes,
+			List<Serializable> fieldValues, List<Serializable> fieldAttributes,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -427,7 +427,7 @@ public class DDMImpl implements DDM {
 		return ddmStructure;
 	}
 
-	protected Serializable getFieldAttributes(
+	protected List<Serializable> getFieldAttributes(
 			DDMStructure ddmStructure, String fieldName, String fieldNamespace,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
@@ -441,13 +441,17 @@ public class DDMImpl implements DDM {
 		List<String> fieldNames = getFieldNames(
 			fieldNamespace, fieldName, serviceContext);
 
-		Attributes attributeValues = new Attributes();
+		List<Serializable> attributeValues = new ArrayList<Serializable>();
 
 		for (String fieldNameValue : fieldNames) {
 			String attributeValue = GetterUtil.getString(
 				serviceContext.getAttribute(fieldNameValue + "Alt"));
 
-			attributeValues.addAttribute("alt", attributeValue);
+			Attributes attributes = new Attributes();
+
+			attributes.addAttribute("alt", attributeValue);
+
+			attributeValues.add(attributes);
 		}
 
 		return attributeValues;

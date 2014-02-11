@@ -238,6 +238,9 @@ public class JournalConverterImpl implements JournalConverter {
 
 			if (existingDDMField != null) {
 				for (Locale locale : ddmField.getAvailableLocales()) {
+					existingDDMField.addAttributes(
+						locale, ddmField.getAttributes(locale));
+
 					existingDDMField.addValues(
 						locale, ddmField.getValues(locale));
 				}
@@ -577,8 +580,10 @@ public class JournalConverterImpl implements JournalConverter {
 				dynamicContentElement.addAttribute(
 					"language-id", LocaleUtil.toLanguageId(locale));
 
+				int count = ddmFieldsCounter.get(fieldName);
+
 				Serializable fieldAttributes = ddmField.getAttributes(
-					locale, 0);
+					locale, count);
 
 				Attributes attributes = (Attributes)fieldAttributes;
 
@@ -590,8 +595,6 @@ public class JournalConverterImpl implements JournalConverter {
 					dynamicContentElement.addAttribute(
 						entry.getKey(), entry.getValue());
 				}
-
-				int count = ddmFieldsCounter.get(fieldName);
 
 				Serializable fieldValue = ddmField.getValue(locale, count);
 
