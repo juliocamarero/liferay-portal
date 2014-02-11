@@ -81,6 +81,13 @@ public class BlogsIndexer extends BaseIndexer {
 	}
 
 	@Override
+	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+		BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(classPK);
+
+		return entry.isInTrash();
+	}
+
+	@Override
 	public void postProcessContextQuery(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {

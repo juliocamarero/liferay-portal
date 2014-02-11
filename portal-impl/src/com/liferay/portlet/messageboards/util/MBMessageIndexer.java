@@ -123,6 +123,10 @@ public class MBMessageIndexer extends BaseIndexer {
 			Indexer indexer = IndexerRegistryUtil.getIndexer(
 				message.getClassName());
 
+			if (indexer.isRelatedEntryInTrash(message.getClassPK())) {
+				return false;
+			}
+
 			return indexer.hasPermission(
 				permissionChecker, message.getClassName(), message.getClassPK(),
 				ActionKeys.VIEW);

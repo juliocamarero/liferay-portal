@@ -127,6 +127,11 @@ public class IndexerWrapper implements Indexer {
 	}
 
 	@Override
+	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+		return _indexer.isRelatedEntryInTrash(classPK);
+	}
+
+	@Override
 	public boolean isStagingAware() {
 		return _indexer.isStagingAware();
 	}

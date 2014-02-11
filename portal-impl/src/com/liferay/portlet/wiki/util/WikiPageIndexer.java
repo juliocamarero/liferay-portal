@@ -121,6 +121,13 @@ public class WikiPageIndexer extends BaseIndexer {
 	}
 
 	@Override
+	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
+
+		return page.isInTrash() || page.isInTrashContainer();
+	}
+
+	@Override
 	public void postProcessContextQuery(
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
