@@ -72,9 +72,12 @@ public interface Indexer {
 
 	public boolean isPermissionAware();
 
-	public boolean isRelatedEntryInTrash(long classPK) throws Exception;
-
 	public boolean isStagingAware();
+
+	public boolean isVisible(long classPK, int status) throws Exception;
+
+	public boolean isVisibleRelatedEntry(long classPK, int status)
+		throws Exception;
 
 	public void postProcessContextQuery(
 			BooleanQuery contextQuery, SearchContext searchContext)

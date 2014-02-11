@@ -81,10 +81,10 @@ public class BlogsIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+	public boolean isVisible(long classPK, int status) throws Exception {
 		BlogsEntry entry = BlogsEntryLocalServiceUtil.getEntry(classPK);
 
-		return entry.isInTrash();
+		return isVisible(entry.getStatus(), status);
 	}
 
 	@Override

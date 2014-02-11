@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
@@ -155,10 +156,32 @@ public class DLFileEntryIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+	public boolean isVisible(long classPK, int status) throws Exception {
 		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(classPK);
 
-		return fileEntry.isInTrash() || fileEntry.isInTrashContainer();
+		FileVersion fileVersion = fileEntry.getFileVersion();
+
+		return isVisible(fileVersion.getStatus(), status);
+	}
+
+	@Override
+	public boolean isVisibleRelatedEntry(long classPK, int status)
+		throws Exception {
+
+		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(classPK);
+
+		if (fileEntry instanceof LiferayFileEntry) {
+			DLFileEntry dlFileEntry = (DLFileEntry)fileEntry.getModel();
+
+			if (dlFileEntry.isInHiddenFolder()) {
+				Indexer indexer = IndexerRegistryUtil.getIndexer(
+					dlFileEntry.getClassName());
+
+				return indexer.isVisible(dlFileEntry.getClassPK(), status);
+			}
+		}
+
+		return true;
 	}
 
 	@Override

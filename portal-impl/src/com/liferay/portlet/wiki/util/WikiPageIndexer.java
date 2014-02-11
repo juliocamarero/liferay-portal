@@ -121,10 +121,10 @@ public class WikiPageIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public boolean isRelatedEntryInTrash(long classPK) throws Exception {
+	public boolean isVisible(long classPK, int status) throws Exception {
 		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
 
-		return page.isInTrash() || page.isInTrashContainer();
+		return isVisible(page.getStatus(), status);
 	}
 
 	@Override

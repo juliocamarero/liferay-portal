@@ -123,10 +123,6 @@ public class MBMessageIndexer extends BaseIndexer {
 			Indexer indexer = IndexerRegistryUtil.getIndexer(
 				message.getClassName());
 
-			if (indexer.isRelatedEntryInTrash(message.getClassPK())) {
-				return false;
-			}
-
 			return indexer.hasPermission(
 				permissionChecker, message.getClassName(), message.getClassPK(),
 				ActionKeys.VIEW);
@@ -134,6 +130,29 @@ public class MBMessageIndexer extends BaseIndexer {
 
 		return MBMessagePermission.contains(
 			permissionChecker, entryClassPK, ActionKeys.VIEW);
+	}
+
+	@Override
+	public boolean isVisible(long classPK, int status) throws Exception {
+		MBMessage message = MBMessageLocalServiceUtil.getMessage(classPK);
+
+		return isVisible(message.getStatus(), status);
+	}
+
+	@Override
+	public boolean isVisibleRelatedEntry(long classPK, int status)
+		throws Exception {
+
+		MBMessage message = MBMessageLocalServiceUtil.getMessage(classPK);
+
+		if (message.isDiscussion()) {
+			Indexer indexer = IndexerRegistryUtil.getIndexer(
+				message.getClassName());
+
+			return indexer.isVisible(message.getClassPK(), status);
+		}
+
+		return true;
 	}
 
 	@Override
