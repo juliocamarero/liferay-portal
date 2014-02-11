@@ -179,7 +179,7 @@ public class AssetUtil {
 			viewURL = HttpUtil.setParameter(viewURL, "redirect", currentURL);
 		}
 
-		return PortalUtil.addPreservedParameters(themeDisplay, viewURL);
+		return viewURL;
 	}
 
 	public static long[] filterCategoryIds(
