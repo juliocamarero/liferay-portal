@@ -63,6 +63,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -435,7 +436,7 @@ public class DDMImpl implements DDM {
 		String fieldDataType = ddmStructure.getFieldDataType(fieldName);
 
 		if (!fieldDataType.equals(FieldConstants.IMAGE)) {
-			return null;
+			return Collections.EMPTY_LIST;
 		}
 
 		List<String> fieldNames = getFieldNames(
