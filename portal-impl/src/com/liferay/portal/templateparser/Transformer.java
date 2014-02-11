@@ -53,6 +53,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.xsl.XSLTemplateResource;
 import com.liferay.portal.xsl.XSLURIResolver;
+import com.liferay.portlet.dynamicdatamapping.storage.Attributes;
 import com.liferay.portlet.journal.util.JournalXSLURIResolver;
 import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateConstants;
 import com.liferay.taglib.util.VelocityTaglib;
@@ -525,10 +526,11 @@ public class Transformer {
 			String type = dynamicElementElement.attributeValue(
 				"type", StringPool.BLANK);
 
-			Map<String, String> attributes = new HashMap<String, String>();
+			Attributes attributes = new Attributes();
 
 			for (Attribute attribute : dynamicContentElement.attributes()) {
-				attributes.put(attribute.getName(), attribute.getValue());
+				attributes.addAttribute(
+					attribute.getName(), attribute.getValue());
 			}
 
 			TemplateNode templateNode = new TemplateNode(

@@ -73,8 +73,22 @@ public class Field implements Serializable {
 		this(0, name, value);
 	}
 
-	public void addAttributes(Locale locale, Map<String, String> attributes) {
-		_attributesMap.put(locale, attributes);
+	public void addAttributes(
+		Locale locale, List<Serializable> attributesList) {
+
+		_attributesMap.put(locale, attributesList);
+	}
+
+	public void addAttributes(Locale locale, Serializable attributes) {
+		List<Serializable> attributesList = _attributesMap.get(locale);
+
+		if (attributesList == null) {
+			attributesList = new ArrayList<Serializable>();
+
+			_attributesMap.put(locale, attributesList);
+		}
+
+		attributesList.add(attributes);
 	}
 
 	public void addValue(Locale locale, Serializable value) {
@@ -118,25 +132,37 @@ public class Field implements Serializable {
 	}
 
 	public Serializable getAttribute(Locale locale, String name) {
-		Map<String, String> attributes = _attributesMap.get(locale);
+		List<Serializable> attributesList = _attributesMap.get(locale);
 
-		if (attributes == null) {
+		if (attributesList == null) {
 			Locale defaultLocale = getDefaultLocale();
 
-			attributes = _attributesMap.get(defaultLocale);
+			attributesList = _attributesMap.get(defaultLocale);
 		}
 
-		return attributes.get(name);
+		Attributes attributes = (Attributes)attributesList.get(0);
+
+		return attributes.getAttribute(name);
 	}
 
-	public Map<String, String> getAttributes(Locale locale) {
-		Map<String, String> attributes = _attributesMap.get(locale);
+	public List<Serializable> getAttributes(Locale locale) {
+		List<Serializable> attributesList = _attributesMap.get(locale);
 
-		if (attributes == null) {
-			_attributesMap.put(locale, new HashMap<String, String>());
+		if (attributesList == null) {
+			_attributesMap.put(locale, new ArrayList<Serializable>());
 		}
 
 		return _attributesMap.get(locale);
+	}
+
+	public Serializable getAttributes(Locale locale, int index) {
+		List<Serializable> attributesList = _attributesMap.get(locale);
+
+		if (attributesList == null) {
+			_attributesMap.put(locale, new ArrayList<Serializable>());
+		}
+
+		return attributesList.get(index);
 	}
 
 	public Set<Locale> getAvailableLocales() {
@@ -257,8 +283,10 @@ public class Field implements Serializable {
 		return ddmStructure.isFieldRepeatable(_name);
 	}
 
-	public void setAttributes(Locale locale, Map<String, String> attributes) {
-		_attributesMap.put(locale, attributes);
+	public void setAttributes(
+		Locale locale, List<Serializable> attributesList) {
+
+		_attributesMap.put(locale, attributesList);
 	}
 
 	public void setDDMStructureId(long ddmStructureId) {
@@ -341,8 +369,8 @@ public class Field implements Serializable {
 
 	private static Log _log = LogFactoryUtil.getLog(Field.class);
 
-	private Map<Locale, Map<String, String>> _attributesMap =
-		new HashMap<Locale, Map<String, String>>();
+	private Map<Locale, List<Serializable>> _attributesMap =
+		new HashMap<Locale, List<Serializable>>();
 	private long _ddmStructureId;
 	private Locale _defaultLocale;
 	private String _name;

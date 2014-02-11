@@ -47,6 +47,7 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.storage.Attributes;
 import com.liferay.portlet.dynamicdatamapping.storage.Field;
 import com.liferay.portlet.dynamicdatamapping.storage.FieldConstants;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
@@ -63,11 +64,9 @@ import java.text.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -218,7 +217,7 @@ public class DDMImpl implements DDM {
 				continue;
 			}
 
-			Map<String, String> fieldAttributes = getFieldAttributes(
+			Serializable fieldAttributes = getFieldAttributes(
 				ddmStructure, fieldName, fieldNamespace, serviceContext);
 
 			Field field = createField(
@@ -371,7 +370,7 @@ public class DDMImpl implements DDM {
 
 	protected Field createField(
 			DDMStructure ddmStructure, String fieldName,
-			List<Serializable> fieldValues, Map<String, String> fieldAttributes,
+			List<Serializable> fieldValues, Serializable fieldAttributes,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -398,7 +397,7 @@ public class DDMImpl implements DDM {
 
 		field.setDefaultLocale(defaultLocale);
 
-		field.setAttributes(locale, fieldAttributes);
+		field.addAttributes(locale, fieldAttributes);
 		field.setName(fieldName);
 		field.setValues(locale, fieldValues);
 
@@ -428,7 +427,7 @@ public class DDMImpl implements DDM {
 		return ddmStructure;
 	}
 
-	protected Map<String, String> getFieldAttributes(
+	protected Serializable getFieldAttributes(
 			DDMStructure ddmStructure, String fieldName, String fieldNamespace,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
@@ -442,14 +441,13 @@ public class DDMImpl implements DDM {
 		List<String> fieldNames = getFieldNames(
 			fieldNamespace, fieldName, serviceContext);
 
-		Map<String, String> attributeValues = new HashMap<String, String>(
-			fieldNames.size());
+		Attributes attributeValues = new Attributes();
 
 		for (String fieldNameValue : fieldNames) {
 			String attributeValue = GetterUtil.getString(
 				serviceContext.getAttribute(fieldNameValue + "Alt"));
 
-			attributeValues.put("alt", attributeValue);
+			attributeValues.addAttribute("alt", attributeValue);
 		}
 
 		return attributeValues;

@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+import com.liferay.portlet.dynamicdatamapping.storage.Attributes;
 import com.liferay.portlet.dynamicdatamapping.storage.Field;
 import com.liferay.portlet.dynamicdatamapping.storage.FieldConstants;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
@@ -397,8 +398,7 @@ public class JournalConverterImpl implements JournalConverter {
 			Locale locale = LocaleUtil.fromLanguageId(
 				dynamicContentElement.attributeValue("language-id"));
 
-			Map<String, String> attributes = getFieldAttributes(
-				dynamicContentElement);
+			Serializable attributes = getFieldAttributes(dynamicContentElement);
 
 			ddmField.addAttributes(locale, attributes);
 
@@ -411,14 +411,14 @@ public class JournalConverterImpl implements JournalConverter {
 		return ddmField;
 	}
 
-	protected Map<String, String> getFieldAttributes(
-			Element dynamicContentElement)
+	protected Serializable getFieldAttributes(Element dynamicContentElement)
 		throws Exception {
 
-		Map<String, String> fieldAttributes = new HashMap<String, String>();
+		Attributes fieldAttributes = new Attributes();
 
 		for (Attribute attribute : dynamicContentElement.attributes()) {
-			fieldAttributes.put(attribute.getName(), attribute.getValue());
+			fieldAttributes.addAttribute(
+				attribute.getName(), attribute.getValue());
 		}
 
 		return fieldAttributes;
@@ -577,11 +577,15 @@ public class JournalConverterImpl implements JournalConverter {
 				dynamicContentElement.addAttribute(
 					"language-id", LocaleUtil.toLanguageId(locale));
 
-				Map<String, String> fieldAttributes = ddmField.getAttributes(
-					locale);
+				Serializable fieldAttributes = ddmField.getAttributes(
+					locale, 0);
+
+				Attributes attributes = (Attributes)fieldAttributes;
+
+				Map<String, String> attributesMap = attributes.getAttributes();
 
 				for (Map.Entry<String, String> entry :
-						fieldAttributes.entrySet()) {
+						attributesMap.entrySet()) {
 
 					dynamicContentElement.addAttribute(
 						entry.getKey(), entry.getValue());
