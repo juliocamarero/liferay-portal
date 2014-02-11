@@ -63,7 +63,6 @@ else {
 }
 
 viewURL = AssetUtil.checkViewURL(assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
-viewURL = PortalUtil.addPreservedParameters(themeDisplay, viewURL);
 %>
 
 	<c:if test="<%= assetEntryIndex == 0 %>">
