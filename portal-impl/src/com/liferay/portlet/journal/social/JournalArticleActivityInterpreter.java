@@ -23,7 +23,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
-import com.liferay.portlet.journal.service.permission.JournalPermission;
+import com.liferay.portlet.journal.service.permission.JournalFolderPermission;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -114,9 +114,13 @@ public class JournalArticleActivityInterpreter
 
 		int activityType = activity.getType();
 
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.getLatestArticle(
+				activity.getClassPK());
+
 		if ((activityType == JournalActivityKeys.ADD_ARTICLE) &&
-			!JournalPermission.contains(
-				permissionChecker, activity.getGroupId(),
+			!JournalFolderPermission.contains(
+				permissionChecker, activity.getGroupId(), article.getFolderId(),
 				ActionKeys.ADD_ARTICLE)) {
 
 			return false;
