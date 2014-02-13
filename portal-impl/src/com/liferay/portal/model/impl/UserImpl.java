@@ -265,7 +265,10 @@ public class UserImpl extends UserBaseImpl {
 	 * @return the user's display URL
 	 * @throws PortalException if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
+	 *
+	 * @deprecated As of 7.0.0, replaced by {@link #getDisplayURL(ThemeDisplay)}
 	 */
+	@Deprecated
 	@Override
 	public String getDisplayURL(String portalURL, String mainPath)
 		throws PortalException, SystemException {
@@ -305,7 +308,10 @@ public class UserImpl extends UserBaseImpl {
 	 * @return the user's display URL
 	 * @throws PortalException if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
+	 *
+	 * @deprecated As of 7.0.0, replaced by {@link #getDisplayURL(ThemeDisplay)}
 	 */
+	@Deprecated
 	@Override
 	public String getDisplayURL(
 			String portalURL, String mainPath, boolean privateLayout)
@@ -377,8 +383,7 @@ public class UserImpl extends UserBaseImpl {
 	public String getDisplayURL(ThemeDisplay themeDisplay)
 		throws PortalException, SystemException {
 
-		return getDisplayURL(
-			themeDisplay.getPortalURL(), themeDisplay.getPathMain(), false);
+		return getDisplayURL(themeDisplay, false);
 	}
 
 	/**
