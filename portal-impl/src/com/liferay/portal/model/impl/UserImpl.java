@@ -418,9 +418,42 @@ public class UserImpl extends UserBaseImpl {
 			ThemeDisplay themeDisplay, boolean privateLayout)
 		throws PortalException, SystemException {
 
-		return getDisplayURL(
-			themeDisplay.getPortalURL(), themeDisplay.getPathMain(),
-			privateLayout);
+		if (isDefaultUser()) {
+			return StringPool.BLANK;
+		}
+
+		String portalURL = themeDisplay.getPortalURL();
+
+		String profileFriendlyURL = getProfileFriendlyURL();
+
+		if (Validator.isNotNull(profileFriendlyURL)) {
+			return portalURL.concat(PortalUtil.getPathContext()).concat(
+				profileFriendlyURL);
+		}
+
+		Group group = getGroup();
+
+		int publicLayoutsPageCount = group.getPublicLayoutsPageCount();
+
+		if (publicLayoutsPageCount > 0) {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(portalURL);
+			sb.append(themeDisplay.getPathMain());
+			sb.append("/my_sites/view?groupId=");
+			sb.append(group.getGroupId());
+
+			if (privateLayout) {
+				sb.append("&privateLayout=1");
+			}
+			else {
+				sb.append("&privateLayout=0");
+			}
+
+			return sb.toString();
+		}
+
+		return StringPool.BLANK;
 	}
 
 	/**
