@@ -2906,6 +2906,23 @@ public interface UserLocalService extends BaseLocalService,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Updates the user's workflow status.
+	*
+	* @param userId the primary key of the user
+	* @param status the user's new workflow status
+	* @param serviceContext the service context to be applied. Can set the
+	unencrypted password (with the <code>passwordUnencrypted</code>
+	attribute), used by LDAP listener.
+	* @return the user
+	* @throws PortalException if a user with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portal.model.User updateStatus(long userId, int status,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Updates the user.
 	*
 	* @param userId the primary key of the user
