@@ -114,23 +114,18 @@ public class JournalArticleActivityInterpreter
 
 		int activityType = activity.getType();
 
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.getLatestArticle(
-				activity.getClassPK());
+		if (activityType == JournalActivityKeys.ADD_ARTICLE) {
+			JournalArticle article =
+				JournalArticleLocalServiceUtil.getLatestArticle(
+					activity.getClassPK());
 
-		if ((activityType == JournalActivityKeys.ADD_ARTICLE) &&
-			!JournalFolderPermission.contains(
-				permissionChecker, activity.getGroupId(), article.getFolderId(),
-				ActionKeys.ADD_ARTICLE)) {
-
-			return false;
+			return JournalFolderPermission.contains(
+				permissionChecker, article.getGroupId(), article.getFolderId(),
+				ActionKeys.ADD_ARTICLE);
 		}
-		else if ((activityType == JournalActivityKeys.UPDATE_ARTICLE) &&
-				 !JournalArticlePermission.contains(
-					 permissionChecker, activity.getClassPK(),
-					 ActionKeys.UPDATE)) {
-
-			return false;
+		else if (activityType == JournalActivityKeys.UPDATE_ARTICLE) {
+			return JournalArticlePermission.contains(
+				permissionChecker, activity.getClassPK(), ActionKeys.UPDATE);
 		}
 
 		return JournalArticlePermission.contains(
