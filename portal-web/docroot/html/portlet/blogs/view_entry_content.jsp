@@ -309,3 +309,20 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 
 	</c:otherwise>
 </c:choose>
+
+<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
+
+	<%
+	String href = "#" + renderResponse.getNamespace() + entry.getEntryId();
+	%>
+
+	<liferay-ui:quick-access-entry label="<%= entry.getTitle() %>" url="<%= href %>">
+		<p>No muestra el body</p>
+	</liferay-ui:quick-access-entry>
+
+
+	<liferay-ui:quick-access-entry>
+		<strong>Body: </strong>
+		<p>Body bonito bonito</p>
+	</liferay-ui:quick-access-entry>
+</c:if>
