@@ -78,3 +78,5 @@ portletURL.setParameter("struts_action", "/blogs/view");
 
 	<%@ include file="/html/portlet/blogs/view_entries.jspf" %>
 </aui:form>
+
+<liferay-ui:quick-access-entry label="search blogs" onClick='Liferay.Util.focusFormField("#_33_keywords1")' url="javascript:;" />
