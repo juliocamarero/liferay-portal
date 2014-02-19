@@ -83,7 +83,7 @@ public class AssetCategoryIndexer extends BaseIndexer {
 		throws Exception {
 
 		long[] vocabularyIds = (long[])searchContext.getAttribute(
-			"vocabularyIds");
+			Field.ASSET_VOCABULARY_IDS);
 
 		if (!ArrayUtil.isEmpty(vocabularyIds)) {
 			BooleanQuery vocabularyQuery = BooleanQueryFactoryUtil.create(
@@ -91,7 +91,7 @@ public class AssetCategoryIndexer extends BaseIndexer {
 
 			for (long vocabularyId : vocabularyIds) {
 				vocabularyQuery.addTerm(
-					VOCABULARY_ID, String.valueOf(vocabularyId));
+					Field.ASSET_VOCABULARY_ID, String.valueOf(vocabularyId));
 			}
 
 			contextQuery.add(vocabularyQuery, BooleanClauseOccur.MUST);
@@ -120,12 +120,14 @@ public class AssetCategoryIndexer extends BaseIndexer {
 
 		Document document = getBaseModelDocument(PORTLET_ID, assetCategory);
 
-		document.addKeyword(Field.CATEGORY_ID, assetCategory.getCategoryId());
+		document.addKeyword(
+			Field.ASSET_CATEGORY_ID, assetCategory.getCategoryId());
 		document.addLocalizedText(
 			Field.DESCRIPTION, assetCategory.getDescriptionMap());
 		document.addText(Field.NAME, assetCategory.getName());
 		document.addLocalizedText(Field.TITLE, assetCategory.getTitleMap());
-		document.addKeyword(VOCABULARY_ID, assetCategory.getVocabularyId());
+		document.addKeyword(
+			Field.ASSET_VOCABULARY_ID, assetCategory.getVocabularyId());
 
 		return document;
 	}
@@ -194,7 +196,5 @@ public class AssetCategoryIndexer extends BaseIndexer {
 
 		actionableDynamicQuery.performActions();
 	}
-
-	private static final String VOCABULARY_ID = "vocabularyId";
 
 }
