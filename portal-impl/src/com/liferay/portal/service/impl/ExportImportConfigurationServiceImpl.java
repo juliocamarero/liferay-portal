@@ -20,7 +20,6 @@ import com.liferay.portal.model.ExportImportConfiguration;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.base.ExportImportConfigurationServiceBaseImpl;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
-import com.liferay.portlet.trash.model.TrashEntry;
 
 /**
  * @author Brian Wing Shun Chan
