@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.model.ExportImportConfiguration;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.Locale;
 
@@ -66,11 +65,7 @@ public class ExportImportConfigurationTrashRenderer extends BaseTrashRenderer {
 
 	@Override
 	public String getTitle(Locale locale) {
-		if (!_exportImportConfiguration.isInTrash()) {
-			return _exportImportConfiguration.getName();
-		}
-
-		return TrashUtil.getOriginalTitle(_exportImportConfiguration.getName());
+		return _exportImportConfiguration.getName();
 	}
 
 	@Override
