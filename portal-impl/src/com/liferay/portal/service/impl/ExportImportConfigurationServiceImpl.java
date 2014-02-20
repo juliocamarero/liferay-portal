@@ -20,6 +20,7 @@ import com.liferay.portal.model.ExportImportConfiguration;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.base.ExportImportConfigurationServiceBaseImpl;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
 
 /**
  * @author Brian Wing Shun Chan
@@ -61,6 +62,24 @@ public class ExportImportConfigurationServiceImpl
 		return exportImportConfigurationLocalService.
 			moveExportImportConfigurationToTrash(
 				getUserId(), exportImportConfiguration);
+	}
+
+	@Override
+	public ExportImportConfiguration restoreExportImportConfigurationFromTrash(
+			long userId, long exportImportConfigurationId)
+		throws PortalException, SystemException {
+
+		ExportImportConfiguration exportImportConfiguration =
+			exportImportConfigurationLocalService.getExportImportConfiguration(
+				exportImportConfigurationId);
+
+		GroupPermissionUtil.check(
+			getPermissionChecker(), exportImportConfiguration.getGroupId(),
+			ActionKeys.DELETE);
+
+		return exportImportConfigurationLocalService.
+			restoreExportImportConfigurationFromTrash(
+				getUserId(), exportImportConfigurationId);
 	}
 
 }
