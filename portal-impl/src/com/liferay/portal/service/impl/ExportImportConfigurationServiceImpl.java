@@ -61,12 +61,12 @@ public class ExportImportConfigurationServiceImpl
 
 		return exportImportConfigurationLocalService.
 			moveExportImportConfigurationToTrash(
-				getUserId(), exportImportConfiguration);
+				getUserId(), exportImportConfigurationId);
 	}
 
 	@Override
 	public ExportImportConfiguration restoreExportImportConfigurationFromTrash(
-			long userId, long exportImportConfigurationId)
+			long exportImportConfigurationId)
 		throws PortalException, SystemException {
 
 		ExportImportConfiguration exportImportConfiguration =
