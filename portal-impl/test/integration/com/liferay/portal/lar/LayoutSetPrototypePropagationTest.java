@@ -108,6 +108,14 @@ public class LayoutSetPrototypePropagationTest
 	}
 
 	@Test
+	public void testLayoutPermissionProgagationWithLinkEnabled()
+		throws Exception {
+
+		// Implement method
+
+	}
+
+	@Test
 	public void testLayoutPropagationWithLayoutPrototypeLinkDisabled()
 		throws Exception {
 
