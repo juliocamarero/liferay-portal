@@ -80,7 +80,18 @@ public class UploadImageAction extends PortletAction {
 		try {
 			String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
-			if (cmd.equals(Constants.ADD_TEMP)) {
+			UploadException uploadException =
+				(UploadException)actionRequest.getAttribute(
+					WebKeys.UPLOAD_EXCEPTION);
+
+			if (uploadException != null) {
+				if (uploadException.isExceededSizeLimit()) {
+					throw new FileSizeException(uploadException.getCause());
+				}
+
+				throw new PortalException(uploadException.getCause());
+			}
+			else if (cmd.equals(Constants.ADD_TEMP)) {
 				addTempImageFile(actionRequest);
 			}
 			else {
@@ -104,16 +115,15 @@ public class UploadImageAction extends PortletAction {
 
 				setForward(actionRequest, "portal.error");
 			}
-			else if (e instanceof FileSizeException ||
-					 e instanceof ImageTypeException) {
-
+			else if (e instanceof ImageTypeException) {
 				JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 				jsonObject.putException(e);
 
 				writeJSON(actionRequest, actionResponse, jsonObject);
 			}
-			else if (e instanceof NoSuchFileException ||
+			else if (e instanceof FileSizeException ||
+					 e instanceof NoSuchFileException ||
 					 e instanceof UploadException) {
 
 				SessionErrors.add(actionRequest, e.getClass());
