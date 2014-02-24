@@ -104,6 +104,13 @@ public class UploadImageAction extends PortletAction {
 					fileEntry = saveTempImageFile(actionRequest);
 				}
 
+				long maxFileSize = ParamUtil.getLong(
+					actionRequest, "maxFileSize");
+
+				if (fileEntry.getSize() > (maxFileSize * 1024)) {
+					throw new FileSizeException();
+				}
+
 				SessionMessages.add(actionRequest, "imageUploaded", fileEntry);
 
 				sendRedirect(actionRequest, actionResponse);
