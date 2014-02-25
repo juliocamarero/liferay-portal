@@ -17,8 +17,6 @@
 <%@ include file="/html/portlet/portlet_configuration/init.jsp" %>
 
 <%
-String tabs2 = ParamUtil.getString(request, "tabs2", "any-website");
-
 String redirect = ParamUtil.getString(request, "redirect");
 String returnToFullPageURL = ParamUtil.getString(request, "returnToFullPageURL");
 
@@ -44,7 +42,6 @@ String widgetURL = PortalUtil.getWidgetURL(portlet, themeDisplay);
 
 <aui:form action="<%= editSharingURL %>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.SAVE %>" />
-	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="returnToFullPageURL" type="hidden" value="<%= returnToFullPageURL %>" />
 	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
@@ -181,7 +178,3 @@ String widgetURL = PortalUtil.getWidgetURL(portlet, themeDisplay);
 		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>
-
-<%
-PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, tabs2), currentURL);
-%>
