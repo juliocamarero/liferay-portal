@@ -626,8 +626,15 @@ public class DummyVelocityTaglib implements VelocityTaglib {
 		throws Exception {
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #stagingMenu}
+	 */
 	@Override
 	public void staging() throws Exception {
+	}
+
+	@Override
+	public void stagingMenu() throws Exception {
 	}
 
 	@Override
