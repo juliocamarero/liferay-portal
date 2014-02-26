@@ -142,6 +142,14 @@ public class ExportImportConfigurationLocalServiceImpl
 	}
 
 	@Override
+	public int getExportImportConfigurationsCount(long groupId)
+		throws SystemException {
+
+		return exportImportConfigurationPersistence.countByG_S(
+			groupId, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
 	public int getExportImportConfigurationsCount(long groupId, int type)
 		throws SystemException {
 
