@@ -18,18 +18,13 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.BaseIndexer;
-import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.util.PortletKeys;
@@ -82,62 +77,11 @@ public class AssetVocabularyIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
-		throws Exception {
-
-		long[] groupIds = searchContext.getGroupIds();
-
-		if (!ArrayUtil.isEmpty(groupIds)) {
-			BooleanQuery groupQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
-
-			for (long groupId : groupIds) {
-				groupQuery.addTerm(Field.GROUP_ID, String.valueOf(groupId));
-			}
-
-			contextQuery.add(groupQuery, BooleanClauseOccur.MUST);
-		}
-	}
-
-	@Override
 	public void postProcessSearchQuery(
 			BooleanQuery searchQuery, SearchContext searchContext)
 		throws Exception {
 
 		addSearchLocalizedTerm(searchQuery, searchContext, Field.TITLE, true);
-	}
-
-	@Override
-	protected void addSearchLocalizedTerm(
-			BooleanQuery searchQuery, SearchContext searchContext, String field,
-			boolean like)
-		throws Exception {
-
-		if (Validator.isNull(field)) {
-			return;
-		}
-
-		String value = String.valueOf(searchContext.getAttribute(field));
-
-		if (Validator.isNull(value)) {
-			value = searchContext.getKeywords();
-		}
-
-		if (Validator.isNull(value)) {
-			return;
-		}
-
-		String localizedField = DocumentImpl.getLocalizedName(
-			searchContext.getLocale(), field);
-
-		BooleanQuery localizedQuery = BooleanQueryFactoryUtil.create(
-			searchContext);
-
-		localizedQuery.addTerm(field, value, like);
-		localizedQuery.addTerm(localizedField, value, like);
-
-		searchQuery.add(localizedQuery, BooleanClauseOccur.MUST);
 	}
 
 	@Override
