@@ -44,15 +44,11 @@
 
 			<if>
 				<not>
-					<contains string="${system-ext.properties.content}"  substring="liferay.lib.portal.dir" />
+					<contains string="${system-ext.properties.content}" substring="liferay.lib.portal.dir" />
 				</not>
 				<then>
-					<echo
-						append="true"
-						file="portal-impl/classes/system-jrebel.properties"
-					>
-						liferay.lib.portal.dir=${app.server.lib.portal.dir}
-					</echo>
+					<echo append="true" file="portal-impl/classes/system-jrebel.properties">
+liferay.lib.portal.dir=${app.server.lib.portal.dir}</echo>
 				</then>
 			</if>
 		</sequential>
