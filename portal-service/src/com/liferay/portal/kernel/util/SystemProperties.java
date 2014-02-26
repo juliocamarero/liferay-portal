@@ -80,70 +80,15 @@ public class SystemProperties {
 		boolean systemPropertiesQuiet = GetterUtil.getBoolean(
 			System.getProperty(SYSTEM_PROPERTIES_QUIET));
 
-		// system.properties
-
-		try {
-			URL url = classLoader.getResource("system.properties");
-
-			if (url != null) {
-				InputStream inputStream = url.openStream();
-
-				properties.load(inputStream);
-
-				inputStream.close();
-
-				if (!systemPropertiesQuiet) {
-					System.out.println("Loading " + url);
-				}
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// system-jrebel.properties
-
-		try {
-			URL url = classLoader.getResource("system-jrebel.properties");
-
-			if (url != null) {
-				InputStream inputStream = url.openStream();
-
-				properties.load(inputStream);
-
-				inputStream.close();
-
-				if (!systemPropertiesQuiet) {
-					System.out.println("Loading " + url);
-				}
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// system-ext.properties
-
-		try {
-			URL url = classLoader.getResource("system-ext.properties");
-
-			if (url != null) {
-				_loaded = true;
-
-				InputStream inputStream = url.openStream();
-
-				properties.load(inputStream);
-
-				inputStream.close();
-
-				if (!systemPropertiesQuiet) {
-					System.out.println("Loading " + url);
-				}
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		properties = loadSystemProperties(
+			properties, classLoader, "system.properties",
+			systemPropertiesQuiet);
+		properties = loadSystemProperties(
+			properties, classLoader, "system-jrebel.properties",
+			systemPropertiesQuiet);
+		properties = loadSystemProperties(
+			properties, classLoader, "system-ext.properties",
+			systemPropertiesQuiet);
 
 		// Set environment properties
 
@@ -184,6 +129,36 @@ public class SystemProperties {
 		System.setProperty(key, value);
 
 		_properties.put(key, value);
+	}
+
+	protected static Properties loadSystemProperties(
+		Properties properties, ClassLoader classLoader, String fileName,
+		boolean systemPropertiesQuiet) {
+
+		try {
+			URL url = classLoader.getResource(fileName);
+
+			if (url != null) {
+				if (fileName.equals("system-ext.properties")) {
+					_loaded = true;
+				}
+
+				InputStream inputStream = url.openStream();
+
+				properties.load(inputStream);
+
+				inputStream.close();
+
+				if (!systemPropertiesQuiet) {
+					System.out.println("Loading " + url);
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return properties;
 	}
 
 	private static boolean _loaded;
