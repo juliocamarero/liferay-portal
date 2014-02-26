@@ -262,7 +262,6 @@ public class PortletBagFactory {
 					WorkflowHandler.class, workflowHandlerClass);
 
 			workflowHandlerInstances.add(workflowHandlerInstance);
-
 			WorkflowHandlerRegistryUtil.register(workflowHandlerInstance);
 		}
 
@@ -825,8 +824,22 @@ public class PortletBagFactory {
 		throws Exception {
 
 		if (_warFile) {
-			return ProxyFactory.newInstance(
-				_classLoader, interfaceClasses, implClassName);
+			try {
+				return ProxyFactory.newInstance(
+					_classLoader, interfaceClasses, implClassName);
+			}
+			catch (IllegalArgumentException e) {
+				Class<?>[] newInterfaceClasses =
+					new Class<?>[interfaceClasses.length];
+
+				for (int i = 0; i < interfaceClasses.length; i++) {
+					newInterfaceClasses[i] = _classLoader.loadClass(
+						interfaceClasses[i].getName());
+				}
+
+				return ProxyFactory.newInstance(
+					_classLoader, newInterfaceClasses, implClassName);
+			}
 		}
 		else {
 			Class<?> clazz = _classLoader.loadClass(implClassName);
