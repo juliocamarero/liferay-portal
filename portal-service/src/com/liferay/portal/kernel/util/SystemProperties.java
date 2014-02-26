@@ -107,8 +107,6 @@ public class SystemProperties {
 			URL url = classLoader.getResource("system-jrebel.properties");
 
 			if (url != null) {
-				_loaded = true;
-
 				InputStream inputStream = url.openStream();
 
 				properties.load(inputStream);
