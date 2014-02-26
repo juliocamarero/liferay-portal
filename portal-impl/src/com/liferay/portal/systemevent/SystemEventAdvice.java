@@ -233,7 +233,7 @@ public class SystemEventAdvice
 	}
 
 	protected String getUuid(ClassedModel classedModel) throws Exception {
-		String uuid = null;
+		String uuid = StringPool.BLANK;
 
 		if (classedModel instanceof StagedModel) {
 			StagedModel stagedModel = (StagedModel)classedModel;
@@ -241,17 +241,19 @@ public class SystemEventAdvice
 			uuid = stagedModel.getUuid();
 		}
 		else {
-			Class<?> modelClass = classedModel.getClass();
+			Method getUuidMethod = null;
 
-			Method getUuidMethod = modelClass.getMethod(
-				"getUuid", new Class[0]);
+			try {
+				Class<?> modelClass = classedModel.getClass();
+
+				getUuidMethod = modelClass.getMethod("getUuid", new Class[0]);
+			}
+			catch (Exception e) {
+			}
 
 			if (getUuidMethod != null) {
 				uuid = (String)getUuidMethod.invoke(
 					classedModel, new Object[0]);
-			}
-			else {
-				uuid = StringPool.BLANK;
 			}
 		}
 
