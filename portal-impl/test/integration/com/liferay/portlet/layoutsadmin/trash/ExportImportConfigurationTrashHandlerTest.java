@@ -190,8 +190,8 @@ public class ExportImportConfigurationTrashHandlerTest
 		throws Exception {
 
 		return ExportImportConfigurationLocalServiceUtil.
-				getExportImportConfigurationsCount(
-					(Long)parentBaseModel.getPrimaryKeyObj());
+			getExportImportConfigurationsCount(
+				(Long)parentBaseModel.getPrimaryKeyObj());
 	}
 
 	@Override
