@@ -233,31 +233,24 @@ public class SystemEventAdvice
 	}
 
 	protected String getUuid(ClassedModel classedModel) throws Exception {
-		String uuid = StringPool.BLANK;
-
 		if (classedModel instanceof StagedModel) {
 			StagedModel stagedModel = (StagedModel)classedModel;
 
-			uuid = stagedModel.getUuid();
-		}
-		else {
-			Method getUuidMethod = null;
-
-			try {
-				Class<?> modelClass = classedModel.getClass();
-
-				getUuidMethod = modelClass.getMethod("getUuid", new Class[0]);
-			}
-			catch (Exception e) {
-			}
-
-			if (getUuidMethod != null) {
-				uuid = (String)getUuidMethod.invoke(
-					classedModel, new Object[0]);
-			}
+			return stagedModel.getUuid();
 		}
 
-		return uuid;
+		Method getUuidMethod = null;
+
+		try {
+			Class<?> modelClass = classedModel.getClass();
+
+			getUuidMethod = modelClass.getMethod("getUuid", new Class[0]);
+		}
+		catch (Exception e) {
+			return StringPool.BLANK;
+		}
+
+		return (String)getUuidMethod.invoke(classedModel, new Object[0]);
 	}
 
 	protected boolean isValid(MethodInvocation methodInvocation, int phase) {
