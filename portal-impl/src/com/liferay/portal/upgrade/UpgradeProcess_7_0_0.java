@@ -16,6 +16,8 @@ package com.liferay.portal.upgrade;
 
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.ReleaseInfo;
+import com.liferay.portal.upgrade.v7_0_0.UpgradeAsset;
+import com.liferay.portal.upgrade.v7_0_0.UpgradeJournal;
 import com.liferay.portal.upgrade.v7_0_0.UpgradeRepositoryEntry;
 import com.liferay.portal.upgrade.v7_0_0.UpgradeSchema;
 import com.liferay.portal.upgrade.v7_0_0.UpgradeShopping;
@@ -34,6 +36,8 @@ public class UpgradeProcess_7_0_0 extends UpgradeProcess {
 	@Override
 	protected void doUpgrade() throws Exception {
 		upgrade(UpgradeSchema.class);
+		upgrade(UpgradeAsset.class);
+		upgrade(UpgradeJournal.class);
 		upgrade(UpgradeRepositoryEntry.class);
 		upgrade(UpgradeShopping.class);
 		upgrade(UpgradeSubscription.class);
