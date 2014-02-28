@@ -60,183 +60,14 @@ String emailBody = PrefsParamUtil.getString(portletPreferences, request, emailBo
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 
 	<liferay-ui:tabs
-		names="general,email-notifications"
-		param="tabs1"
-		url="<%= configurationRenderURL %>"
-	/>
+		names="general,email-from,password-changed-notification,password-reset-notification"
+		refresh="<%= false %>"
+	>
 
-	<c:choose>
-		<c:when test='<%= tabs1.equals("email-notifications") %>'>
+		<liferay-ui:error key="emailFromAddress" message="please-enter-a-valid-email-address" />
+		<liferay-ui:error key="emailFromName" message="please-enter-a-valid-name" />
 
-			<liferay-ui:tabs
-				names="general,password-changed-notification,password-reset-notification"
-				param="tabs2"
-				url="<%= configurationRenderURL %>"
-			/>
-
-			<liferay-ui:error key="emailFromAddress" message="please-enter-a-valid-email-address" />
-			<liferay-ui:error key="emailFromName" message="please-enter-a-valid-name" />
-
-			<c:choose>
-				<c:when test='<%= tabs2.equals("password-changed-notification") || tabs2.equals("password-reset-notification") %>'>
-					<div class="alert alert-info">
-						<liferay-ui:message key="enter-custom-values-or-leave-it-blank-to-use-the-default-portal-settings" />
-					</div>
-
-					<aui:fieldset>
-						<aui:select label="language" name="languageId" onChange='<%= renderResponse.getNamespace() + "updateLanguage(this);" %>'>
-
-							<%
-							Locale[] locales = LanguageUtil.getAvailableLocales(themeDisplay.getSiteGroupId());
-
-							for (int i = 0; i < locales.length; i++) {
-								String style = StringPool.BLANK;
-
-								if (Validator.isNotNull(portletPreferences.getValue(emailParam + "Subject_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK)) ||
-									Validator.isNotNull(portletPreferences.getValue(emailParam + "Body_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK))) {
-
-									style = "font-weight: bold;";
-								}
-							%>
-
-								<aui:option label="<%= locales[i].getDisplayName(locale) %>" selected="<%= currentLanguageId.equals(LocaleUtil.toLanguageId(locales[i])) %>" style="<%= style %>" value="<%= LocaleUtil.toLanguageId(locales[i]) %>" />
-
-							<%
-							}
-							%>
-
-						</aui:select>
-
-						<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= "preferences--" + emailSubjectParam + "--" %>' value="<%= emailSubject %>" />
-
-						<aui:field-wrapper label="body">
-							<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" />
-
-							<aui:input name='<%= "preferences--" + emailBodyParam + "--" %>' type="hidden" />
-						</aui:field-wrapper>
-					</aui:fieldset>
-
-					<aui:fieldset cssClass="definition-of-terms">
-						<legend>
-							<liferay-ui:message key="definition-of-terms" />
-						</legend>
-
-						<dl>
-							<dt>
-								[$FROM_ADDRESS$]
-							</dt>
-							<dd>
-								<%= HtmlUtil.escape(emailFromAddress) %>
-							</dd>
-							<dt>
-								[$FROM_NAME$]
-							</dt>
-							<dd>
-								<%= HtmlUtil.escape(emailFromName) %>
-							</dd>
-
-							<c:if test='<%= tabs2.equals("password-reset-notification") %>'>
-								<dt>
-									[$PASSWORD_RESET_URL$]
-								</dt>
-								<dd>
-									<liferay-ui:message key="the-password-reset-url" />
-								</dd>
-							</c:if>
-
-							<dt>
-								[$PORTAL_URL$]
-							</dt>
-							<dd>
-								<%= company.getVirtualHostname() %>
-							</dd>
-							<dt>
-								[$REMOTE_ADDRESS$]
-							</dt>
-							<dd>
-								<liferay-ui:message key="the-browser's-remote-address" />
-							</dd>
-							<dt>
-								[$REMOTE_HOST$]
-							</dt>
-							<dd>
-								<liferay-ui:message key="the-browser's-remote-host" />
-							</dd>
-
-							<dt>
-								[$TO_ADDRESS$]
-							</dt>
-							<dd>
-								<liferay-ui:message key="the-address-of-the-email-recipient" />
-							</dd>
-							<dt>
-								[$TO_NAME$]
-							</dt>
-							<dd>
-								<liferay-ui:message key="the-name-of-the-email-recipient" />
-							</dd>
-
-							<dt>
-								[$USER_AGENT$]
-							</dt>
-							<dd>
-								<liferay-ui:message key="the-browser's-user-agent" />
-							</dd>
-
-							<dt>
-								[$USER_ID$]
-							</dt>
-							<dd>
-								<liferay-ui:message key="the-user-id" />
-							</dd>
-
-							<c:if test='<%= tabs2.equals("password-changed-notification") %>'>
-								<dt>
-									[$USER_PASSWORD$]
-								</dt>
-								<dd>
-									<liferay-ui:message key="the-user-password" />
-								</dd>
-							</c:if>
-
-							<dt>
-								[$USER_SCREENNAME$]
-							</dt>
-							<dd>
-								<liferay-ui:message key="the-user-screen-name" />
-							</dd>
-						</dl>
-					</aui:fieldset>
-				</c:when>
-				<c:otherwise>
-					<aui:fieldset>
-						<aui:input cssClass="lfr-input-text-container" label="name" name="preferences--emailFromName--" value="<%= emailFromName %>" />
-
-						<aui:input cssClass="lfr-input-text-container" label="address" name="preferences--emailFromAddress--" value="<%= emailFromAddress %>" />
-					</aui:fieldset>
-				</c:otherwise>
-			</c:choose>
-
-			<aui:script>
-				function <portlet:namespace />initEditor() {
-					return "<%= UnicodeFormatter.toString(emailBody) %>";
-				}
-
-				function <portlet:namespace />saveConfiguration() {
-					<c:if test='<%= tabs2.endsWith("-notification") %>'>
-						document.<portlet:namespace />fm.<portlet:namespace /><%= emailBodyParam %>.value = window.<portlet:namespace />editor.getHTML();
-					</c:if>
-
-					submitForm(document.<portlet:namespace />fm);
-				}
-
-				function <portlet:namespace />updateLanguage() {
-					document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '';
-					submitForm(document.<portlet:namespace />fm);
-				}
-			</aui:script>
-		</c:when>
-		<c:otherwise>
+		<liferay-ui:section>
 			<aui:fieldset>
 				<aui:select label="authentication-type" name="preferences--authType--" value="<%= authType %>">
 					<aui:option label="default" value="" />
@@ -245,13 +76,280 @@ String emailBody = PrefsParamUtil.getString(portletPreferences, request, emailBo
 					<aui:option label="by-user-id" value="<%= CompanyConstants.AUTH_TYPE_ID %>" />
 				</aui:select>
 			</aui:fieldset>
-		</c:otherwise>
-	</c:choose>
+		</liferay-ui:section>
+
+		<liferay-ui:section>
+			<aui:fieldset>
+				<aui:input cssClass="lfr-input-text-container" label="name" name="preferences--emailFromName--" value="<%= emailFromName %>" />
+
+				<aui:input cssClass="lfr-input-text-container" label="address" name="preferences--emailFromAddress--" value="<%= emailFromAddress %>" />
+			</aui:fieldset>
+		</liferay-ui:section>
+
+		<liferay-ui:section>
+			<div class="alert alert-info">
+				<liferay-ui:message key="enter-custom-values-or-leave-it-blank-to-use-the-default-portal-settings" />
+			</div>
+
+			<aui:fieldset>
+				<aui:select label="language" name="languageId" onChange='<%= renderResponse.getNamespace() + "updateLanguage(this);" %>'>
+
+					<%
+					Locale[] locales = LanguageUtil.getAvailableLocales(themeDisplay.getSiteGroupId());
+
+					for (int i = 0; i < locales.length; i++) {
+						String style = StringPool.BLANK;
+
+						if (Validator.isNotNull(portletPreferences.getValue(emailParam + "Subject_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK)) ||
+							Validator.isNotNull(portletPreferences.getValue(emailParam + "Body_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK))) {
+
+							style = "font-weight: bold;";
+						}
+					%>
+
+						<aui:option label="<%= locales[i].getDisplayName(locale) %>" selected="<%= currentLanguageId.equals(LocaleUtil.toLanguageId(locales[i])) %>" style="<%= style %>" value="<%= LocaleUtil.toLanguageId(locales[i]) %>" />
+
+					<%
+					}
+					%>
+
+				</aui:select>
+
+				<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= "preferences--" + emailSubjectParam + "--" %>' value="<%= emailSubject %>" />
+
+				<aui:field-wrapper label="body">
+					<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" />
+
+					<aui:input name='<%= "preferences--" + emailBodyParam + "--" %>' type="hidden" />
+				</aui:field-wrapper>
+			</aui:fieldset>
+
+			<aui:fieldset cssClass="definition-of-terms">
+				<legend>
+					<liferay-ui:message key="definition-of-terms" />
+				</legend>
+
+				<dl>
+					<dt>
+						[$FROM_ADDRESS$]
+					</dt>
+					<dd>
+						<%= HtmlUtil.escape(emailFromAddress) %>
+					</dd>
+					<dt>
+						[$FROM_NAME$]
+					</dt>
+					<dd>
+						<%= HtmlUtil.escape(emailFromName) %>
+					</dd>
+
+					<dt>
+						[$PORTAL_URL$]
+					</dt>
+					<dd>
+						<%= company.getVirtualHostname() %>
+					</dd>
+					<dt>
+						[$REMOTE_ADDRESS$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-browser's-remote-address" />
+					</dd>
+					<dt>
+						[$REMOTE_HOST$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-browser's-remote-host" />
+					</dd>
+
+					<dt>
+						[$TO_ADDRESS$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-address-of-the-email-recipient" />
+					</dd>
+					<dt>
+						[$TO_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-name-of-the-email-recipient" />
+					</dd>
+
+					<dt>
+						[$USER_AGENT$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-browser's-user-agent" />
+					</dd>
+
+					<dt>
+						[$USER_ID$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-user-id" />
+					</dd>
+
+					<dt>
+						[$USER_SCREENNAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-user-screen-name" />
+					</dd>
+				</dl>
+			</aui:fieldset>
+		</liferay-ui:section>
+
+		<liferay-ui:section>
+			<div class="alert alert-info">
+				<liferay-ui:message key="enter-custom-values-or-leave-it-blank-to-use-the-default-portal-settings" />
+			</div>
+
+			<aui:fieldset>
+				<aui:select label="language" name="languageId" onChange='<%= renderResponse.getNamespace() + "updateLanguage(this);" %>'>
+
+					<%
+					Locale[] locales = LanguageUtil.getAvailableLocales(themeDisplay.getSiteGroupId());
+
+					for (int i = 0; i < locales.length; i++) {
+						String style = StringPool.BLANK;
+
+						if (Validator.isNotNull(portletPreferences.getValue(emailParam + "Subject_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK)) ||
+							Validator.isNotNull(portletPreferences.getValue(emailParam + "Body_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK))) {
+
+							style = "font-weight: bold;";
+						}
+					%>
+
+						<aui:option label="<%= locales[i].getDisplayName(locale) %>" selected="<%= currentLanguageId.equals(LocaleUtil.toLanguageId(locales[i])) %>" style="<%= style %>" value="<%= LocaleUtil.toLanguageId(locales[i]) %>" />
+
+					<%
+					}
+					%>
+
+				</aui:select>
+
+				<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= "preferences--" + emailSubjectParam + "--" %>' value="<%= emailSubject %>" />
+
+				<aui:field-wrapper label="body">
+					<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" />
+
+					<aui:input name='<%= "preferences--" + emailBodyParam + "--" %>' type="hidden" />
+				</aui:field-wrapper>
+			</aui:fieldset>
+
+			<aui:fieldset cssClass="definition-of-terms">
+				<legend>
+					<liferay-ui:message key="definition-of-terms" />
+				</legend>
+
+				<dl>
+					<dt>
+						[$FROM_ADDRESS$]
+					</dt>
+					<dd>
+						<%= HtmlUtil.escape(emailFromAddress) %>
+					</dd>
+					<dt>
+						[$FROM_NAME$]
+					</dt>
+					<dd>
+						<%= HtmlUtil.escape(emailFromName) %>
+					</dd>
+
+					<dt>
+						[$PASSWORD_RESET_URL$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-password-reset-url" />
+					</dd>
+
+					<dt>
+						[$PORTAL_URL$]
+					</dt>
+					<dd>
+						<%= company.getVirtualHostname() %>
+					</dd>
+					<dt>
+						[$REMOTE_ADDRESS$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-browser's-remote-address" />
+					</dd>
+					<dt>
+						[$REMOTE_HOST$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-browser's-remote-host" />
+					</dd>
+
+					<dt>
+						[$TO_ADDRESS$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-address-of-the-email-recipient" />
+					</dd>
+					<dt>
+						[$TO_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-name-of-the-email-recipient" />
+					</dd>
+
+					<dt>
+						[$USER_AGENT$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-browser's-user-agent" />
+					</dd>
+
+					<dt>
+						[$USER_ID$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-user-id" />
+					</dd>
+
+					<dt>
+						[$USER_PASSWORD$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-user-password" />
+					</dd>
+
+					<dt>
+						[$USER_SCREENNAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-user-screen-name" />
+					</dd>
+				</dl>
+			</aui:fieldset>
+		</liferay-ui:section>
+	</liferay-ui:tabs>
 
 	<aui:button-row>
 		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>
+
+<aui:script>
+	function <portlet:namespace />initEditor() {
+		return "<%= UnicodeFormatter.toString(emailBody) %>";
+	}
+
+	function <portlet:namespace />saveConfiguration() {
+		<c:if test='<%= tabs2.endsWith("-notification") %>'>
+			document.<portlet:namespace />fm.<portlet:namespace /><%= emailBodyParam %>.value = window.<portlet:namespace />editor.getHTML();
+		</c:if>
+
+		submitForm(document.<portlet:namespace />fm);
+	}
+
+	function <portlet:namespace />updateLanguage() {
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '';
+		submitForm(document.<portlet:namespace />fm);
+	}
+</aui:script>
 
 <%!
 public static final String EDITOR_WYSIWYG_IMPL_KEY = "editor.wysiwyg.portal-web.docroot.html.portlet.login.configuration.jsp";
