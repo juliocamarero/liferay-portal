@@ -19,6 +19,8 @@
 <%
 String emailFromName = ParamUtil.getString(request, "preferences--emailFromName--", LoginUtil.getEmailFromName(portletPreferences, company.getCompanyId()));
 String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAddress--", LoginUtil.getEmailFromAddress(portletPreferences, company.getCompanyId()));
+
+String currentLanguageId = LanguageUtil.getLanguageId(request);
 %>
 
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
@@ -27,6 +29,7 @@ String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAd
 
 <aui:form action="<%= configurationActionURL %>" method="post" name="fm" onSubmit='<%= renderResponse.getNamespace() + "saveConfiguration();" %>'>
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
+	<aui:input name="languageId" type="hidden" value="<%= currentLanguageId %>" />
 	<aui:input name="redirect" type="hidden" value="<%= configurationRenderURL %>" />
 
 	<liferay-ui:tabs
@@ -68,11 +71,6 @@ String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAd
 	function <portlet:namespace />saveConfiguration() {
 		<portlet:namespace />saveEmails();
 
-		submitForm(document.<portlet:namespace />fm);
-	}
-
-	function <portlet:namespace />updateLanguage() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '';
 		submitForm(document.<portlet:namespace />fm);
 	}
 </aui:script>
