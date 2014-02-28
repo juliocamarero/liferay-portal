@@ -509,12 +509,12 @@ public class JournalFolderLocalServiceUtil {
 		return getService().isSubscribed(companyId, groupId, userId, folderId);
 	}
 
-	public static boolean isSubscribed(long companyId, long userId,
-		long groupId, long folderId, boolean recursive)
+	public static boolean isSubscribed(long companyId, long groupId,
+		long userId, long folderId, boolean recursive)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
-				   .isSubscribed(companyId, userId, groupId, folderId, recursive);
+				   .isSubscribed(companyId, groupId, userId, folderId, recursive);
 	}
 
 	public static com.liferay.portlet.journal.model.JournalFolder moveFolder(

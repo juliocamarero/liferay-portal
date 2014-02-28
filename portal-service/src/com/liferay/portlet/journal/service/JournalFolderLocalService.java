@@ -442,7 +442,7 @@ public interface JournalFolderLocalService extends BaseLocalService,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isSubscribed(long companyId, long userId, long groupId,
+	public boolean isSubscribed(long companyId, long groupId, long userId,
 		long folderId, boolean recursive)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;

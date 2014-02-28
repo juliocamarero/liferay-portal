@@ -423,7 +423,7 @@ public class JournalFolderLocalServiceImpl
 	}
 
 	@Override
-	public boolean isSubscribed(long companyId, long userId, long groupId,
+	public boolean isSubscribed(long companyId, long groupId, long userId,
 		long folderId, boolean recursive)
 		throws PortalException, SystemException {
 

@@ -570,12 +570,12 @@ public class JournalFolderLocalServiceWrapper
 	}
 
 	@Override
-	public boolean isSubscribed(long companyId, long userId, long groupId,
+	public boolean isSubscribed(long companyId, long groupId, long userId,
 		long folderId, boolean recursive)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return _journalFolderLocalService.isSubscribed(companyId, userId,
-			groupId, folderId, recursive);
+		return _journalFolderLocalService.isSubscribed(companyId, groupId,
+			userId, folderId, recursive);
 	}
 
 	@Override
