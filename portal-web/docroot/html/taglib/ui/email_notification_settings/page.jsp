@@ -23,10 +23,13 @@ boolean emailEnabled = GetterUtil.getBoolean((String)request.getAttribute("lifer
 String emailParam = (String)request.getAttribute("liferay-ui:email-notification-settings:emailParam");
 String emailSubject = (String)request.getAttribute("liferay-ui:email-notification-settings:emailSubject");
 String languageId = (String)request.getAttribute("liferay-ui:email-notification-settings:languageId");
+boolean showEmailEnabled = GetterUtil.getBoolean(request.getAttribute("liferay-ui:email-notification-settings:showEmailEnabled"));
 %>
 
 <aui:fieldset>
-	<aui:input label="enabled" name='<%= "preferences--" + emailParam + "Enabled--" %>' type="checkbox" value="<%= emailEnabled %>" />
+	<c:if test="<%= showEmailEnabled %>">
+		<aui:input label="enabled" name='<%= "preferences--" + emailParam + "Enabled--" %>' type="checkbox" value="<%= emailEnabled %>" />
+	</c:if>
 
 	<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= "preferences--" + emailParam + "Subject" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' value="<%= emailSubject %>" />
 
