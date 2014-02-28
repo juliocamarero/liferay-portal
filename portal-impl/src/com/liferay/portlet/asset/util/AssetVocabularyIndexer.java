@@ -17,9 +17,12 @@ package com.liferay.portlet.asset.util;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
@@ -88,22 +91,35 @@ public class AssetVocabularyIndexer extends BaseIndexer {
 	protected void doDelete(Object obj) throws Exception {
 		AssetVocabulary assetVocabulary = (AssetVocabulary)obj;
 
-		deleteDocument(
-			assetVocabulary.getCompanyId(), assetVocabulary.getVocabularyId());
+		Document document = new DocumentImpl();
+
+		document.addUID(PORTLET_ID, assetVocabulary.getVocabularyId());
+
+		SearchEngineUtil.deleteDocument(
+			getSearchEngineId(), assetVocabulary.getCompanyId(),
+			document.get(Field.UID));
 	}
 
 	@Override
 	protected Document doGetDocument(Object obj) throws Exception {
 		AssetVocabulary assetVocabulary = (AssetVocabulary)obj;
 
+		if (_log.isDebugEnabled()) {
+			_log.debug("Indexing folder " + assetVocabulary);
+		}
+
 		Document document = getBaseModelDocument(PORTLET_ID, assetVocabulary);
 
+		document.addKeyword(
+			Field.ASSET_VOCABULARY_ID, assetVocabulary.getVocabularyId());
 		document.addLocalizedText(
 			Field.DESCRIPTION, assetVocabulary.getDescriptionMap());
 		document.addText(Field.NAME, assetVocabulary.getName());
 		document.addLocalizedText(Field.TITLE, assetVocabulary.getTitleMap());
-		document.addKeyword(
-			Field.ASSET_VOCABULARY_ID, assetVocabulary.getVocabularyId());
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Document " + assetVocabulary + " indexed successfully");
+		}
 
 		return document;
 	}
@@ -148,7 +164,7 @@ public class AssetVocabularyIndexer extends BaseIndexer {
 		return PORTLET_ID;
 	}
 
-	protected void reindexAssetVocabularies(long companyId)
+	protected void reindexAssetVocabularies(final long companyId)
 		throws PortalException, SystemException {
 
 		ActionableDynamicQuery actionableDynamicQuery =
@@ -158,7 +174,7 @@ public class AssetVocabularyIndexer extends BaseIndexer {
 			protected void performAction(Object object) throws PortalException {
 				AssetVocabulary assetVocabulary = (AssetVocabulary)object;
 
-					Document document = getDocument(assetVocabulary);
+				Document document = getDocument(assetVocabulary);
 
 				if (document != null) {
 					addDocument(document);
@@ -171,5 +187,8 @@ public class AssetVocabularyIndexer extends BaseIndexer {
 
 		actionableDynamicQuery.performActions();
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		AssetVocabularyIndexer.class);
 
 }

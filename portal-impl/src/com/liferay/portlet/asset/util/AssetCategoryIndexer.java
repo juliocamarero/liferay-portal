@@ -17,11 +17,14 @@ package com.liferay.portlet.asset.util;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
@@ -110,24 +113,37 @@ public class AssetCategoryIndexer extends BaseIndexer {
 	protected void doDelete(Object obj) throws Exception {
 		AssetCategory assetCategory = (AssetCategory)obj;
 
-		deleteDocument(
-			assetCategory.getCompanyId(), assetCategory.getCategoryId());
+		Document document = new DocumentImpl();
+
+		document.addUID(PORTLET_ID, assetCategory.getCategoryId());
+
+		SearchEngineUtil.deleteDocument(
+			getSearchEngineId(), assetCategory.getCompanyId(),
+			document.get(Field.UID));
 	}
 
 	@Override
 	protected Document doGetDocument(Object obj) throws Exception {
 		AssetCategory assetCategory = (AssetCategory)obj;
 
+		if (_log.isDebugEnabled()) {
+			_log.debug("Indexing folder " + assetCategory);
+		}
+
 		Document document = getBaseModelDocument(PORTLET_ID, assetCategory);
 
 		document.addKeyword(
 			Field.ASSET_CATEGORY_ID, assetCategory.getCategoryId());
+		document.addKeyword(
+			Field.ASSET_VOCABULARY_ID, assetCategory.getVocabularyId());
 		document.addLocalizedText(
 			Field.DESCRIPTION, assetCategory.getDescriptionMap());
 		document.addText(Field.NAME, assetCategory.getName());
 		document.addLocalizedText(Field.TITLE, assetCategory.getTitleMap());
-		document.addKeyword(
-			Field.ASSET_VOCABULARY_ID, assetCategory.getVocabularyId());
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Document " + assetCategory + " indexed successfully");
+		}
 
 		return document;
 	}
@@ -172,7 +188,7 @@ public class AssetCategoryIndexer extends BaseIndexer {
 		return PORTLET_ID;
 	}
 
-	protected void reindexAssetCategories(long companyId)
+	protected void reindexAssetCategories(final long companyId)
 		throws PortalException, SystemException {
 
 		ActionableDynamicQuery actionableDynamicQuery =
@@ -196,5 +212,7 @@ public class AssetCategoryIndexer extends BaseIndexer {
 
 		actionableDynamicQuery.performActions();
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(AssetCategoryIndexer.class);
 
 }
