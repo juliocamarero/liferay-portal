@@ -41,11 +41,6 @@ public class BookmarksSearcher extends BaseSearcher {
 		return new BookmarksSearcher();
 	}
 
-	public BookmarksSearcher() {
-		setFilterSearch(true);
-		setPermissionAware(true);
-	}
-
 	@Override
 	public String[] getClassNames() {
 		return CLASS_NAMES;
@@ -66,6 +61,13 @@ public class BookmarksSearcher extends BaseSearcher {
 		IndexerPostProcessor indexerPostProcessor) {
 
 		throw new UnsupportedOperationException();
+	}
+
+	protected BookmarksSearcher() {
+		super(CLASS_NAMES);
+
+		setFilterSearch(true);
+		setPermissionAware(true);
 	}
 
 	@Override
