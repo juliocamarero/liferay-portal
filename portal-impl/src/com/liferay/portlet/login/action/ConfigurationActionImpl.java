@@ -35,12 +35,7 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			ActionResponse actionResponse)
 		throws Exception {
 
-		String tabs1 = ParamUtil.getString(actionRequest, "tabs1");
-		String tabs2 = ParamUtil.getString(actionRequest, "tabs2");
-
-		if (tabs1.equals("email-notifications") && tabs2.equals("general")) {
-			validateEmailFrom(actionRequest);
-		}
+		validateEmailFrom(actionRequest);
 
 		super.processAction(portletConfig, actionRequest, actionResponse);
 	}
