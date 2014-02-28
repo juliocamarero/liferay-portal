@@ -623,6 +623,21 @@ public class JournalUtil {
 		}
 	}
 
+	public static boolean getEmailArticleAnyEventEnabled(
+		PortletPreferences preferences) {
+
+		return JournalUtil.getEmailArticleAddedEnabled(preferences) ||
+			JournalUtil.getEmailArticleApprovalDeniedEnabled(
+				preferences) ||
+			JournalUtil.getEmailArticleApprovalGrantedEnabled(
+				preferences) ||
+			JournalUtil.getEmailArticleApprovalRequestedEnabled(
+				preferences) ||
+			JournalUtil.getEmailArticleReviewEnabled(
+				preferences) ||
+			JournalUtil.getEmailArticleUpdatedEnabled(preferences);
+	}
+
 	public static String getEmailArticleApprovalDeniedBody(
 		PortletPreferences preferences) {
 
