@@ -22,28 +22,6 @@ String tabs2 = ParamUtil.getString(request, "tabs2", "general");
 
 String emailFromName = ParamUtil.getString(request, "preferences--emailFromName--", LoginUtil.getEmailFromName(portletPreferences, company.getCompanyId()));
 String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAddress--", LoginUtil.getEmailFromAddress(portletPreferences, company.getCompanyId()));
-
-String emailParam = "emailPasswordSent";
-String defaultEmailSubject = StringPool.BLANK;
-String defaultEmailBody = StringPool.BLANK;
-
-if (tabs2.equals("password-reset-notification")) {
-	emailParam = "emailPasswordReset";
-	defaultEmailSubject = ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_RESET_SUBJECT);
-	defaultEmailBody = ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_RESET_BODY);
-}
-else if (tabs2.equals("password-changed-notification")) {
-	defaultEmailSubject = ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_SENT_SUBJECT);
-	defaultEmailBody = ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_SENT_BODY);
-}
-
-String currentLanguageId = LanguageUtil.getLanguageId(request);
-
-String emailSubjectParam = emailParam + "Subject_" + currentLanguageId;
-String emailBodyParam = emailParam + "Body_" + currentLanguageId;
-
-String emailSubject = PrefsParamUtil.getString(portletPreferences, request, emailSubjectParam, defaultEmailSubject);
-String emailBody = PrefsParamUtil.getString(portletPreferences, request, emailBodyParam, defaultEmailBody);
 %>
 
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
@@ -95,14 +73,8 @@ String emailBody = PrefsParamUtil.getString(portletPreferences, request, emailBo
 </aui:form>
 
 <aui:script>
-	function <portlet:namespace />initEditor() {
-		return "<%= UnicodeFormatter.toString(emailBody) %>";
-	}
-
 	function <portlet:namespace />saveConfiguration() {
-		<c:if test='<%= tabs2.endsWith("-notification") %>'>
-			document.<portlet:namespace />fm.<portlet:namespace /><%= emailBodyParam %>.value = window.<portlet:namespace />editor.getHTML();
-		</c:if>
+		<portlet:namespace />saveEmails();
 
 		submitForm(document.<portlet:namespace />fm);
 	}
