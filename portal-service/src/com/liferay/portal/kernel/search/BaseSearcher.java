@@ -14,10 +14,34 @@
 
 package com.liferay.portal.kernel.search;
 
+import java.util.Locale;
+
+import javax.portlet.PortletURL;
+
 /**
  * @author Eudaldo Alonso
+ * @author László Csontos
  */
 public abstract class BaseSearcher extends BaseIndexer {
+
+	public BaseSearcher(String[] classNames) {
+		_classNames = classNames;
+	}
+
+	@Override
+	public String[] getClassNames() {
+		return _classNames;
+	}
+
+	@Override
+	public IndexerPostProcessor[] getIndexerPostProcessors() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getPortletId() {
+		return null;
+	}
 
 	@Override
 	public void postProcessSearchQuery(
@@ -34,5 +58,53 @@ public abstract class BaseSearcher extends BaseIndexer {
 			indexer.postProcessSearchQuery(searchQuery, searchContext);
 		}
 	}
+
+	@Override
+	public void registerIndexerPostProcessor(
+		IndexerPostProcessor indexerPostProcessor) {
+
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected void doDelete(Object obj) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected Document doGetDocument(Object obj) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected Summary doGetSummary(
+			Document document, Locale locale, String snippet,
+			PortletURL portletURL)
+		throws Exception {
+
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected void doReindex(Object obj) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected void doReindex(String className, long classPK) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected void doReindex(String[] ids) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected String getPortletId(SearchContext searchContext) {
+		return null;
+	}
+
+	private String[] _classNames;
 
 }
