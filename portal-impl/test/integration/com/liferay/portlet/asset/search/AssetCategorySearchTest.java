@@ -68,6 +68,12 @@ public class AssetCategorySearchTest extends BaseSearchTestCase {
 	@Ignore()
 	@Override
 	@Test
+	public void testSearchComments() throws Exception {
+	}
+
+	@Ignore()
+	@Override
+	@Test
 	public void testSearchExpireAllVersions() throws Exception {
 	}
 
@@ -125,11 +131,6 @@ public class AssetCategorySearchTest extends BaseSearchTestCase {
 	@Override
 	protected String getSearchKeywords() {
 		return "Title";
-	}
-
-	@Override
-	protected void moveBaseModelToTrash(long primaryKey) throws Exception {
-		AssetCategoryServiceUtil.deleteCategory(primaryKey);
 	}
 
 }
