@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet;
+package com.liferay.portal.language;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
