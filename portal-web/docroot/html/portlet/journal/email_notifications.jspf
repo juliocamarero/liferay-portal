@@ -15,110 +15,67 @@
 --%>
 
 <%
-boolean emailArticleAddedEnabled = ParamUtil.getBoolean(request, "preferences--emailArticleAddedEnabled--", JournalUtil.getEmailArticleAddedEnabled(portletPreferences));
-boolean emailArticleApprovalDeniedEnabled = ParamUtil.getBoolean(request, "preferences--emailArticleApprovalDeniedEnabled--", JournalUtil.getEmailArticleApprovalDeniedEnabled(portletPreferences));
-boolean emailArticleApprovalGrantedEnabled = ParamUtil.getBoolean(request, "preferences--emailArticleApprovalGrantedEnabled--", JournalUtil.getEmailArticleApprovalGrantedEnabled(portletPreferences));
-boolean emailArticleApprovalRequestedEnabled = ParamUtil.getBoolean(request, "preferences--emailArticleApprovalRequestedEnabled--", JournalUtil.getEmailArticleApprovalRequestedEnabled(portletPreferences));
-boolean emailArticleReviewEnabled = ParamUtil.getBoolean(request, "preferences--emailArticleReviewEnabled--", JournalUtil.getEmailArticleReviewEnabled(portletPreferences));
-boolean emailArticleUpdatedEnabled = ParamUtil.getBoolean(request, "preferences--emailArticleUpdatedEnabled--", JournalUtil.getEmailArticleUpdatedEnabled(portletPreferences));
-
 Map<String, String> emailDefinitionTerms = JournalUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName);
 %>
 
 <liferay-ui:section>
-
-	<%
-	String emailSubject = PrefsParamUtil.getString(portletPreferences, request, "emailArticleAddedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_ADDED_SUBJECT));
-	String emailBody = PrefsParamUtil.getString(portletPreferences, request, "emailArticleAddedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_ADDED_BODY));
-	%>
-
 	<liferay-ui:email-notifications-settings
-		emailBody="<%= emailBody %>"
+		emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleAddedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_ADDED_BODY)) %>'
 		emailDefinitionTerms="<%= emailDefinitionTerms %>"
-		emailEnabled="<%= emailArticleAddedEnabled %>"
+		emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleAddedEnabled--", JournalUtil.getEmailArticleAddedEnabled(portletPreferences)) %>'
 		emailParam="emailArticleAdded"
-		emailSubject="<%= emailSubject %>"
+		emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleAddedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_ADDED_SUBJECT)) %>'
 	/>
 </liferay-ui:section>
 
 <liferay-ui:section>
-
-	<%
-	String emailSubject = PrefsParamUtil.getString(portletPreferences, request, "emailArticleReviewSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_REVIEW_SUBJECT));
-	String emailBody = PrefsParamUtil.getString(portletPreferences, request, "emailArticleReviewBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_REVIEW_BODY));
-	%>
-
 	<liferay-ui:email-notifications-settings
-		emailBody="<%= emailBody %>"
+		emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleReviewBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_REVIEW_BODY)) %>'
 		emailDefinitionTerms="<%= emailDefinitionTerms %>"
-		emailEnabled="<%= emailArticleReviewEnabled %>"
+		emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleReviewEnabled--", JournalUtil.getEmailArticleReviewEnabled(portletPreferences)) %>'
 		emailParam="emailArticleReview"
-		emailSubject="<%= emailSubject %>"
+		emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleReviewSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_REVIEW_SUBJECT)) %>'
 	/>
 </liferay-ui:section>
 
 <liferay-ui:section>
-
-	<%
-	String emailSubject = PrefsParamUtil.getString(portletPreferences, request, "emailArticleUpdatedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_UPDATED_SUBJECT));
-	String emailBody = PrefsParamUtil.getString(portletPreferences, request, "emailArticleUpdatedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_UPDATED_BODY));
-	%>
-
 	<liferay-ui:email-notifications-settings
-		emailBody="<%= emailBody %>"
+		emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleUpdatedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_UPDATED_BODY)) %>'
 		emailDefinitionTerms="<%= emailDefinitionTerms %>"
-		emailEnabled="<%= emailArticleUpdatedEnabled %>"
+		emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleUpdatedEnabled--", JournalUtil.getEmailArticleUpdatedEnabled(portletPreferences)) %>'
 		emailParam="emailArticleUpdated"
-		emailSubject="<%= emailSubject %>"
+		emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleUpdatedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_UPDATED_SUBJECT)) %>'
 	/>
 </liferay-ui:section>
 
 <c:if test="<%= WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), scopeGroupId, JournalArticle.class.getName()) %>">
 	<liferay-ui:section>
-
-		<%
-		String emailSubject = PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalDeniedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_DENIED_SUBJECT));
-		String emailBody = PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalDeniedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_DENIED_BODY));
-		%>
-
 		<liferay-ui:email-notifications-settings
-			emailBody="<%= emailBody %>"
+			emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalDeniedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_DENIED_BODY)) %>'
 			emailDefinitionTerms="<%= emailDefinitionTerms %>"
-			emailEnabled="<%= emailArticleApprovalDeniedEnabled %>"
+			emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleApprovalDeniedEnabled--", JournalUtil.getEmailArticleApprovalDeniedEnabled(portletPreferences)) %>'
 			emailParam="emailArticleApprovalDenied"
-			emailSubject="<%= emailSubject %>"
+			emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalDeniedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_DENIED_SUBJECT)) %>'
 		/>
 	</liferay-ui:section>
 
 	<liferay-ui:section>
-
-		<%
-		String emailSubject = PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalGrantedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_GRANTED_SUBJECT));
-		String emailBody = PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalGrantedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_GRANTED_BODY));
-		%>
-
 		<liferay-ui:email-notifications-settings
-			emailBody="<%= emailBody %>"
+			emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalGrantedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_GRANTED_BODY)) %>'
 			emailDefinitionTerms="<%= emailDefinitionTerms %>"
-			emailEnabled="<%= emailArticleApprovalGrantedEnabled %>"
+			emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleApprovalGrantedEnabled--", JournalUtil.getEmailArticleApprovalGrantedEnabled(portletPreferences)) %>'
 			emailParam="emailArticleApprovalGranted"
-			emailSubject="<%= emailSubject %>"
+			emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalGrantedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_GRANTED_SUBJECT)) %>'
 		/>
 	</liferay-ui:section>
 
 	<liferay-ui:section>
-
-		<%
-		String emailSubject = PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalRequestedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_REQUESTED_SUBJECT));
-		String emailBody = PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalRequestedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_REQUESTED_BODY));
-		%>
-
 		<liferay-ui:email-notifications-settings
-			emailBody="<%= emailBody %>"
+			emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalRequestedBody", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_REQUESTED_BODY)) %>'
 			emailDefinitionTerms="<%= emailDefinitionTerms %>"
-			emailEnabled="<%= emailArticleApprovalRequestedEnabled %>"
+			emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleApprovalRequestedEnabled--", JournalUtil.getEmailArticleApprovalRequestedEnabled(portletPreferences)) %>'
 			emailParam="emailArticleApprovalRequested"
-			emailSubject="<%= emailSubject %>"
+			emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailArticleApprovalRequestedSubject", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_REQUESTED_SUBJECT)) %>'
 		/>
 	</liferay-ui:section>
 </c:if>

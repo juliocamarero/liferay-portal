@@ -43,17 +43,11 @@
 
 		</aui:select>
 
-		<%
-		Map<String, String> emailDefinitionTerms = LoginUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName, false);
-		String emailSubject = PrefsParamUtil.getString(portletPreferences, request, "emailPasswordSentSubject_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_SENT_SUBJECT));
-		String emailBody = PrefsParamUtil.getString(portletPreferences, request, "emailPasswordSentBody_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_SENT_BODY));
-		%>
-
 		<liferay-ui:email-notifications-settings
-			emailBody="<%= emailBody %>"
-			emailDefinitionTerms="<%= emailDefinitionTerms %>"
+			emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailPasswordSentBody_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_SENT_BODY)) %>'
+			emailDefinitionTerms="<%= LoginUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName, false) %>"
 			emailParam="emailPasswordSent"
-			emailSubject="<%= emailSubject %>"
+			emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailPasswordSentSubject_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_SENT_SUBJECT)) %>'
 			languageId="<%= currentLanguageId %>"
 			showEmailEnabled="<%= false %>"
 		/>
@@ -89,17 +83,11 @@
 
 		</aui:select>
 
-		<%
-		Map<String, String> emailDefinitionTerms = LoginUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName, true);
-		String emailSubject = PrefsParamUtil.getString(portletPreferences, request, "emailPasswordResetSubject_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_RESET_SUBJECT));
-		String emailBody = PrefsParamUtil.getString(portletPreferences, request, "emailPasswordResetBody_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_RESET_BODY));
-		%>
-
 		<liferay-ui:email-notifications-settings
-			emailBody="<%= emailBody %>"
-			emailDefinitionTerms="<%= emailDefinitionTerms %>"
+			emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailPasswordResetBody_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_RESET_BODY)) %>'
+			emailDefinitionTerms="<%= LoginUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName, true) %>"
 			emailParam="emailPasswordReset"
-			emailSubject="<%= emailSubject %>"
+			emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailPasswordResetSubject_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_RESET_SUBJECT)) %>'
 			languageId="<%= currentLanguageId %>"
 			showEmailEnabled="<%= false %>"
 		/>
