@@ -222,7 +222,6 @@ public class AssetCategoryLocalServiceImpl
 		return deleteCategory(category, false);
 	}
 
-	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public AssetCategory deleteCategory(long categoryId)
 		throws PortalException, SystemException {
@@ -230,7 +229,7 @@ public class AssetCategoryLocalServiceImpl
 		AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
 			categoryId);
 
-		return deleteCategory(category);
+		return assetCategoryLocalService.deleteCategory(category);
 	}
 
 	@Override

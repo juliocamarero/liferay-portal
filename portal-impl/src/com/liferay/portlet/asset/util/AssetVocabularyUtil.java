@@ -16,6 +16,7 @@ package com.liferay.portlet.asset.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
@@ -39,13 +40,12 @@ public class AssetVocabularyUtil {
 	public static List<AssetVocabulary> getVocabularies(Hits hits)
 		throws PortalException, SystemException {
 
-		List<com.liferay.portal.kernel.search.Document> documents =
-			hits.toList();
+		List<Document> documents = hits.toList();
 
 		List<AssetVocabulary> vocabularies = new ArrayList<AssetVocabulary>(
 			documents.size());
 
-		for (com.liferay.portal.kernel.search.Document document : documents) {
+		for (Document document : documents) {
 			long vocabularyId = GetterUtil.getLong(
 				document.get(Field.ASSET_VOCABULARY_ID));
 

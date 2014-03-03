@@ -16,6 +16,7 @@ package com.liferay.portlet.asset.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
@@ -38,13 +39,12 @@ public class AssetCategoryUtil {
 	public static List<AssetCategory> getCategories(Hits hits)
 		throws PortalException, SystemException {
 
-		List<com.liferay.portal.kernel.search.Document> documents =
-			hits.toList();
+		List<Document> documents = hits.toList();
 
 		List<AssetCategory> categories = new ArrayList<AssetCategory>(
 			documents.size());
 
-		for (com.liferay.portal.kernel.search.Document document : documents) {
+		for (Document document : documents) {
 			long categoryId = GetterUtil.getLong(
 				document.get(Field.ASSET_CATEGORY_ID));
 
