@@ -59,7 +59,85 @@ String currentLanguageId = LanguageUtil.getLanguageId(request);
 			</aui:fieldset>
 		</liferay-ui:section>
 
-		<%@ include file="/html/portlet/login/email_notifications.jspf" %>
+		<liferay-ui:section>
+			<div class="alert alert-info">
+				<liferay-ui:message key="enter-custom-values-or-leave-it-blank-to-use-the-default-portal-settings" />
+			</div>
+
+			<aui:fieldset>
+				<aui:select label="language" name="emailPasswordSentlanguageId" onChange='<%= renderResponse.getNamespace() + "updateLanguage(this.value);" %>'>
+
+					<%
+					Locale[] locales = LanguageUtil.getAvailableLocales(themeDisplay.getSiteGroupId());
+
+					for (int i = 0; i < locales.length; i++) {
+						String style = StringPool.BLANK;
+
+						if (Validator.isNotNull(portletPreferences.getValue("emailPasswordSentSubject_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK)) ||
+							Validator.isNotNull(portletPreferences.getValue("emailPasswordSentBody_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK))) {
+
+							style = "font-weight: bold;";
+						}
+					%>
+
+						<aui:option label="<%= locales[i].getDisplayName(locale) %>" selected="<%= currentLanguageId.equals(LocaleUtil.toLanguageId(locales[i])) %>" style="<%= style %>" value="<%= LocaleUtil.toLanguageId(locales[i]) %>" />
+
+					<%
+					}
+					%>
+
+				</aui:select>
+
+				<liferay-ui:email-notifications-settings
+					emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailPasswordSentBody_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_SENT_BODY)) %>'
+					emailDefinitionTerms="<%= LoginUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName, false) %>"
+					emailParam="emailPasswordSent"
+					emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailPasswordSentSubject_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_SENT_SUBJECT)) %>'
+					languageId="<%= currentLanguageId %>"
+					showEmailEnabled="<%= false %>"
+				/>
+			</aui:fieldset>
+		</liferay-ui:section>
+
+		<liferay-ui:section>
+			<div class="alert alert-info">
+				<liferay-ui:message key="enter-custom-values-or-leave-it-blank-to-use-the-default-portal-settings" />
+			</div>
+
+			<aui:fieldset>
+				<aui:select label="language" name="emailPasswordResetlanguageId" onChange='<%= renderResponse.getNamespace() + "updateLanguage(this.value);" %>'>
+
+					<%
+					Locale[] locales = LanguageUtil.getAvailableLocales(themeDisplay.getSiteGroupId());
+
+					for (int i = 0; i < locales.length; i++) {
+						String style = StringPool.BLANK;
+
+						if (Validator.isNotNull(portletPreferences.getValue("emailPasswordResetSubject_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK)) ||
+							Validator.isNotNull(portletPreferences.getValue("emailPasswordResetBody_" + LocaleUtil.toLanguageId(locales[i]), StringPool.BLANK))) {
+
+							style = "font-weight: bold;";
+						}
+					%>
+
+						<aui:option label="<%= locales[i].getDisplayName(locale) %>" selected="<%= currentLanguageId.equals(LocaleUtil.toLanguageId(locales[i])) %>" style="<%= style %>" value="<%= LocaleUtil.toLanguageId(locales[i]) %>" />
+
+					<%
+					}
+					%>
+
+				</aui:select>
+
+				<liferay-ui:email-notifications-settings
+					emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailPasswordResetBody_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_RESET_BODY)) %>'
+					emailDefinitionTerms="<%= LoginUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName, true) %>"
+					emailParam="emailPasswordReset"
+					emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailPasswordResetSubject_" + currentLanguageId, ContentUtil.get(PropsValues.ADMIN_EMAIL_PASSWORD_RESET_SUBJECT)) %>'
+					languageId="<%= currentLanguageId %>"
+					showEmailEnabled="<%= false %>"
+				/>
+			</aui:fieldset>
+		</liferay-ui:section>
 	</liferay-ui:tabs>
 
 	<aui:button-row>
@@ -68,9 +146,30 @@ String currentLanguageId = LanguageUtil.getLanguageId(request);
 </aui:form>
 
 <aui:script>
+	function <portlet:namespace />updateLanguage(languageId) {
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '';
+		document.<portlet:namespace />fm.<portlet:namespace />languageId.value = languageId;
+
+		submitForm(document.<portlet:namespace />fm);
+	}
+
 	function <portlet:namespace />saveConfiguration() {
 		<portlet:namespace />saveEmails();
 
 		submitForm(document.<portlet:namespace />fm);
+	}
+
+	function <portlet:namespace />saveEmails() {
+		try {
+			document.<portlet:namespace />fm['<portlet:namespace />preferences--emailPasswordSentBody_<%= currentLanguageId %>--'].value = window['<portlet:namespace />emailPasswordSent'].getHTML();
+		}
+		catch (e) {
+		}
+
+		try {
+			document.<portlet:namespace />fm['<portlet:namespace />preferences--emailPasswordResetBody_<%= currentLanguageId %>--'].value = window['<portlet:namespace />emailPasswordReset'].getHTML();
+		}
+		catch (e) {
+		}
 	}
 </aui:script>
