@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
@@ -71,16 +72,29 @@ public class AssetCategoryPermission {
 			return false;
 		}
 
-		if (permissionChecker.hasOwnerPermission(
-				category.getCompanyId(), AssetCategory.class.getName(),
-				category.getCategoryId(), category.getUserId(), actionId)) {
+		if (actionId.equals(ActionKeys.VIEW) &&
+			PropsValues.PERMISSIONS_VIEW_DYNAMIC_INHERITANCE) {
 
-			return true;
+			long parentCategoryId = category.getParentCategoryId();
+
+			while (parentCategoryId !=
+						AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
+
+				category = AssetCategoryLocalServiceUtil.getCategory(
+					parentCategoryId);
+
+				if (!_hasPermission(permissionChecker, category, actionId)) {
+					return false;
+				}
+
+				parentCategoryId = category.getParentCategoryId();
+			}
+
+			return AssetVocabularyPermission.contains(
+				permissionChecker, category.getVocabularyId(), actionId);
 		}
 
-		return permissionChecker.hasPermission(
-			category.getGroupId(), AssetCategory.class.getName(),
-			category.getCategoryId(), actionId);
+		return _hasPermission(permissionChecker, category, actionId);
 	}
 
 	public static boolean contains(
@@ -106,6 +120,23 @@ public class AssetCategoryPermission {
 			categoryId);
 
 		return contains(permissionChecker, category, actionId);
+	}
+
+	private static boolean _hasPermission(
+		PermissionChecker permissionChecker, AssetCategory category,
+		String actionId) {
+
+		if (permissionChecker.hasOwnerPermission(
+				category.getCompanyId(), AssetCategory.class.getName(),
+				category.getCategoryId(), category.getUserId(), actionId) ||
+			permissionChecker.hasPermission(
+				category.getGroupId(), AssetCategory.class.getName(),
+				category.getCategoryId(), actionId)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
