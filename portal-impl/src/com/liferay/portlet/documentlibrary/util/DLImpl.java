@@ -1172,6 +1172,7 @@ public class DLImpl implements DL {
 
 			if (recursive) {
 				ancestorFolderIds.addAll(folder.getAncestorFolderIds());
+
 				ancestorFolderIds.add(groupId);
 			}
 		}

@@ -214,16 +214,16 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(searchContainer
 	<c:if test="<%= JournalPermission.contains(permissionChecker, scopeGroupId, ActionKeys.SUBSCRIBE) && JournalUtil.getEmailArticleAnyEventEnabled(portletPreferences) %>">
 
 		<%
-			boolean subscribed = false;
-			boolean unsubscribable = true;
+		boolean subscribed = false;
+		boolean unsubscribable = true;
 
-			subscribed = JournalFolderLocalServiceUtil.isSubscribed(themeDisplay.getCompanyId(), scopeGroupId, user.getUserId(), folderId);
+		subscribed = JournalUtil.isSubscribedToFolder(themeDisplay.getCompanyId(), scopeGroupId, user.getUserId(), folderId);
 
-			if (subscribed) {
-				if (!JournalFolderLocalServiceUtil.isSubscribed(themeDisplay.getCompanyId(), scopeGroupId, user.getUserId(), folderId, false)) {
-					unsubscribable = false;
-				}
+		if (subscribed) {
+			if (!JournalUtil.isSubscribedToFolder(themeDisplay.getCompanyId(), scopeGroupId, user.getUserId(), folderId, false)) {
+				unsubscribable = false;
 			}
+		}
 		%>
 
 		<c:choose>
@@ -231,40 +231,40 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(searchContainer
 				<c:choose>
 					<c:when test="<%= unsubscribable %>">
 						<portlet:actionURL var="unsubscribeURL">
-							<portlet:param name="struts_action" value="/journal/edit_folder"/>
+							<portlet:param name="struts_action" value="/journal/edit_folder" />
 							<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.UNSUBSCRIBE %>" />
 							<portlet:param name="redirect" value="<%= currentURL %>" />
 							<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
 						</portlet:actionURL>
 
 						<liferay-ui:icon
-								image="unsubscribe"
-								label="<%= true %>"
-								url="<%= unsubscribeURL %>"
-								/>
+							image="unsubscribe"
+							label="<%= true %>"
+							url="<%= unsubscribeURL %>"
+						/>
 					</c:when>
 					<c:otherwise>
 						<liferay-ui:icon
-								image="unsubscribe"
-								label="<%= true %>"
-								message="subscribed-to-a-parent-folder"
-								/>
+							image="unsubscribe"
+							label="<%= true %>"
+							message="subscribed-to-a-parent-folder"
+						/>
 					</c:otherwise>
 				</c:choose>
 			</c:when>
 			<c:otherwise>
 				<portlet:actionURL var="subscribeURL">
-					<portlet:param name="struts_action" value="/journal/edit_folder"/>
+					<portlet:param name="struts_action" value="/journal/edit_folder" />
 					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.SUBSCRIBE %>" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
 				</portlet:actionURL>
 
 				<liferay-ui:icon
-						image="subscribe"
-						label="<%= true %>"
-						url="<%= subscribeURL %>"
-						/>
+					image="subscribe"
+					label="<%= true %>"
+					url="<%= subscribeURL %>"
+				/>
 			</c:otherwise>
 		</c:choose>
 	</c:if>

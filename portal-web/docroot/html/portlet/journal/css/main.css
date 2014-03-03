@@ -205,13 +205,6 @@
 		margin-bottom: 0;
 	}
 
-	.subscribe-action {
-		margin-bottom: 10px;
-		margin-right: 10px;
-		margin-top: 5px;
-		text-align: right;
-	}
-
 	.move-list-info {
 		margin: 5px 0;
 
@@ -289,6 +282,13 @@
 			margin: 7px 0 0 5px;
 			padding: 7px 10px 10px;
 		}
+	}
+
+	.subscribe-action {
+		margin-bottom: 10px;
+		margin-right: 10px;
+		margin-top: 5px;
+		text-align: right;
 	}
 
 	.component-group .tree-placeholder {
