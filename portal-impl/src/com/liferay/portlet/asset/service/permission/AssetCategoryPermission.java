@@ -17,6 +17,7 @@ package com.liferay.portlet.asset.service.permission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
@@ -30,7 +31,7 @@ public class AssetCategoryPermission {
 	public static void check(
 			PermissionChecker permissionChecker, AssetCategory category,
 			String actionId)
-		throws PortalException {
+		throws PortalException, SystemException {
 
 		if (!contains(permissionChecker, category, actionId)) {
 			throw new PrincipalException();
@@ -58,8 +59,17 @@ public class AssetCategoryPermission {
 	}
 
 	public static boolean contains(
-		PermissionChecker permissionChecker, AssetCategory category,
-		String actionId) {
+			PermissionChecker permissionChecker, AssetCategory category,
+			String actionId)
+		throws PortalException, SystemException {
+
+		if (actionId.equals(ActionKeys.VIEW) &&
+			!AssetVocabularyPermission.contains(
+				permissionChecker, category.getVocabularyId(),
+				ActionKeys.VIEW)) {
+
+			return false;
+		}
 
 		if (permissionChecker.hasOwnerPermission(
 				category.getCompanyId(), AssetCategory.class.getName(),
