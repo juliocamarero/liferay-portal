@@ -19,10 +19,19 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.FacetedSearcher;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
@@ -247,6 +256,32 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 	}
 
 	@Override
+	public List<AssetVocabulary> getGroupVocabulariesByTitle(
+			long groupId, String title, int start, int end)
+		throws PortalException, SystemException {
+
+		Hits hits = null;
+
+		List<AssetVocabulary> assetVocabularies =
+						new ArrayList<AssetVocabulary>();
+
+		hits = getHits(groupId, title, start, end);
+
+		List<Document> documents = hits.toList();
+
+		for (Document document : documents) {
+			long vocabularyId = GetterUtil.getLong(
+				document.get("vocabularyId"));
+
+			AssetVocabulary assetVocabulary = getVocabulary(vocabularyId);
+
+			assetVocabularies.add(assetVocabulary);
+			}
+
+		return assetVocabularies;
+	}
+
+	@Override
 	public int getGroupVocabulariesCount(long groupId) throws SystemException {
 		return assetVocabularyPersistence.filterCountByGroupId(groupId);
 	}
@@ -432,5 +467,37 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 
 		return vocabularies;
 	}
+
+	protected Hits getHits(long groupId, String title, int start, int end)
+		throws SystemException {
+
+		try {
+			SearchContext searchContext = new SearchContext();
+
+			searchContext.setAndSearch(false);
+			searchContext.setAttribute(Field.TITLE, title);
+			searchContext.setCompanyId(CompanyThreadLocal.getCompanyId());
+			searchContext.setEnd(end);
+			searchContext.setEntryClassNames(
+				new String[] {AssetVocabulary.class.getName()});
+			searchContext.setGroupIds(new long[] {groupId});
+
+			QueryConfig queryConfig = new QueryConfig();
+
+			queryConfig.setHighlightEnabled(false);
+			queryConfig.setScoreEnabled(false);
+
+			searchContext.setQueryConfig(queryConfig);
+
+			searchContext.setStart(start);
+
+			Indexer indexer = FacetedSearcher.getInstance();
+
+			return indexer.search(searchContext);
+		}
+			catch (Exception e) {
+				throw new SystemException(e);
+		}
+}
 
 }
