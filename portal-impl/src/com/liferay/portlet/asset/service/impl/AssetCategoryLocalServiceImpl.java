@@ -17,8 +17,16 @@ package com.liferay.portlet.asset.service.impl;
 import com.liferay.portal.kernel.cache.ThreadLocalCachable;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.search.BaseModelSearchResult;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -40,6 +48,9 @@ import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetCategoryProperty;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.base.AssetCategoryLocalServiceBaseImpl;
+import com.liferay.portlet.asset.util.AssetCategoryUtil;
+
+import java.io.Serializable;
 
 import java.util.Collections;
 import java.util.Date;
@@ -476,6 +487,29 @@ public class AssetCategoryLocalServiceImpl
 			groupId, name, categoryProperties, start, end);
 	}
 
+	@Override
+	public BaseModelSearchResult<AssetCategory> searchCategories(
+			long companyId, long groupIds, String title, long vocabularyId,
+			int start, int end)
+		throws PortalException, SystemException {
+
+		return searchCategories(
+			companyId, new long[] {groupIds}, title, new long[] {vocabularyId},
+			start, end);
+	}
+
+	@Override
+	public BaseModelSearchResult<AssetCategory> searchCategories(
+			long companyId, long[] groupIds, String title, long[] vocabularyIds,
+			int start, int end)
+		throws PortalException, SystemException {
+
+		SearchContext searchContext = buildSearchContext(
+			companyId, groupIds, title, vocabularyIds, start, end);
+
+		return searchCategories(searchContext);
+	}
+
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetCategory updateCategory(
@@ -609,6 +643,36 @@ public class AssetCategoryLocalServiceImpl
 		return category;
 	}
 
+	protected SearchContext buildSearchContext(
+		long companyId, long[] groupIds, String title, long[] vocabularyIds,
+		int start, int end) {
+
+		SearchContext searchContext = new SearchContext();
+
+		Map<String, Serializable> attributes =
+			new HashMap<String, Serializable>();
+
+		attributes.put(Field.TITLE, title);
+		attributes.put("vocabularyIds", vocabularyIds);
+
+		searchContext.setAttributes(attributes);
+
+		searchContext.setCompanyId(companyId);
+		searchContext.setEnd(end);
+		searchContext.setGroupIds(groupIds);
+
+		QueryConfig queryConfig = new QueryConfig();
+
+		queryConfig.setHighlightEnabled(false);
+		queryConfig.setScoreEnabled(false);
+
+		searchContext.setQueryConfig(queryConfig);
+
+		searchContext.setStart(start);
+
+		return searchContext;
+	}
+
 	protected AssetCategory deleteCategory(
 			AssetCategory category, boolean childCategory)
 		throws PortalException, SystemException {
@@ -675,6 +739,30 @@ public class AssetCategoryLocalServiceImpl
 	protected String[] getCategoryNames(List<AssetCategory> categories) {
 		return StringUtil.split(
 			ListUtil.toString(categories, AssetCategory.NAME_ACCESSOR));
+	}
+
+	protected BaseModelSearchResult<AssetCategory> searchCategories(
+			SearchContext searchContext)
+		throws PortalException, SystemException {
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			AssetCategory.class);
+
+		for (int i = 0; i < 10; i++) {
+			Hits hits = indexer.search(
+				searchContext, AssetCategoryUtil.SELECTED_FIELD_NAMES);
+
+			List<AssetCategory> categories = AssetCategoryUtil.getCategories(
+				hits);
+
+			if (categories != null) {
+				return new BaseModelSearchResult<AssetCategory>(
+					categories, hits.getLength());
+			}
+		}
+
+		throw new SearchException(
+			"Unable to fix the search index after 10 attempts");
 	}
 
 	protected void updateChildrenVocabularyId(
