@@ -113,11 +113,8 @@ public class AssetCategorySearchTest extends BaseSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
-		AssetCategory assetCategory =
-						AssetCategoryServiceUtil.addCategory(
-							keywords, 0, serviceContext);
-
-		return assetCategory;
+		return AssetCategoryServiceUtil.addCategory(
+			keywords, 0, serviceContext);
 	}
 
 	@Override

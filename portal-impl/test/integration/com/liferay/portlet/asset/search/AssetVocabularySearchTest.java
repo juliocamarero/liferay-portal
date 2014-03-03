@@ -113,11 +113,8 @@ public class AssetVocabularySearchTest extends BaseSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
-		AssetVocabulary assetVocabulary =
-						AssetVocabularyServiceUtil.addVocabulary(
-							keywords, serviceContext);
-
-		return assetVocabulary;
+		return AssetVocabularyServiceUtil.addVocabulary(
+			keywords, serviceContext);
 	}
 
 	@Override
