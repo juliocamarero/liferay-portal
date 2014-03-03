@@ -310,13 +310,13 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 			long groupId, String title, long vocabularyId, int start, int end)
 		throws PortalException, SystemException {
 
-		Hits hits = null;
+		Hits hits = getHits(
+			groupId, title, new long[] {vocabularyId}, start, end);
 
-		List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();
+		Document[] documents = hits.getDocs();
 
-		hits = getHits(groupId, title, new long[] {vocabularyId}, start, end);
-
-		List<Document> documents = hits.toList();
+		List<AssetCategory> assetCategories = new ArrayList<AssetCategory>(
+			documents.length);
 
 		for (Document document : documents) {
 			long categoryId = GetterUtil.getLong(
@@ -325,7 +325,7 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 			AssetCategory assetCategory = getCategory(categoryId);
 
 			assetCategories.add(assetCategory);
-			}
+		}
 
 		return assetCategories;
 	}

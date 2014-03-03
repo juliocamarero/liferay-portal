@@ -260,14 +260,12 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 			long groupId, String title, int start, int end)
 		throws PortalException, SystemException {
 
-		Hits hits = null;
+		Hits hits = getHits(groupId, title, start, end);
+
+		Document[] documents = hits.getDocs();
 
 		List<AssetVocabulary> assetVocabularies =
-						new ArrayList<AssetVocabulary>();
-
-		hits = getHits(groupId, title, start, end);
-
-		List<Document> documents = hits.toList();
+			new ArrayList<AssetVocabulary>(documents.length);
 
 		for (Document document : documents) {
 			long vocabularyId = GetterUtil.getLong(
@@ -276,7 +274,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 			AssetVocabulary assetVocabulary = getVocabulary(vocabularyId);
 
 			assetVocabularies.add(assetVocabulary);
-			}
+		}
 
 		return assetVocabularies;
 	}
