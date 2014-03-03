@@ -76,10 +76,10 @@ public class EditFolderAction extends PortletAction {
 				moveFolder(actionRequest);
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
-				subscribeRootFolder(actionRequest);
+				subscribeFolder(actionRequest);
 			}
 			else if (cmd.equals(Constants.UNSUBSCRIBE)) {
-				unsubscribeRootFolder(actionRequest);
+				unsubscribeFolder(actionRequest);
 			}
 
 			sendRedirect(actionRequest, actionResponse);
@@ -183,26 +183,28 @@ public class EditFolderAction extends PortletAction {
 			folderId, parentFolderId, serviceContext);
 	}
 
-	protected void subscribeRootFolder(ActionRequest actionRequest)
+	protected void subscribeFolder(ActionRequest actionRequest)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		long folderId = ParamUtil.getLong(actionRequest, "folderId");
 
 		JournalFolderServiceUtil.subscribe(
-			themeDisplay.getScopeGroupId(),
-			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+			themeDisplay.getScopeGroupId(), folderId);
 	}
 
-	protected void unsubscribeRootFolder(ActionRequest actionRequest)
+	protected void unsubscribeFolder(ActionRequest actionRequest)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		long folderId = ParamUtil.getLong(actionRequest, "folderId");
+
 		JournalFolderServiceUtil.unsubscribe(
-			themeDisplay.getScopeGroupId(),
-			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+			themeDisplay.getScopeGroupId(), folderId);
 	}
 
 	protected void updateFolder(ActionRequest actionRequest) throws Exception {
