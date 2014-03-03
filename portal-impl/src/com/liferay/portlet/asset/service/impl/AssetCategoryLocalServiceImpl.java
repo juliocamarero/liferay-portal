@@ -234,7 +234,7 @@ public class AssetCategoryLocalServiceImpl
 					AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
 
 				assetCategoryLocalService.deleteCategory(
-								category.getCategoryId());
+					category.getCategoryId());
 			}
 		}
 	}
@@ -610,7 +610,7 @@ public class AssetCategoryLocalServiceImpl
 	}
 
 	protected AssetCategory deleteCategory(
-					AssetCategory category, boolean childCategory)
+			AssetCategory category, boolean childCategory)
 		throws PortalException, SystemException {
 
 		// Categories
