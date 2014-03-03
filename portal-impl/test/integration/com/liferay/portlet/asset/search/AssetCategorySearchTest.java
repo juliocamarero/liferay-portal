@@ -16,14 +16,18 @@ package com.liferay.portlet.asset.search;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.model.BaseModel;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.search.BaseSearchTestCase;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousDestinationExecutionTestListener;
 import com.liferay.portlet.asset.model.AssetCategory;
+import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetCategoryServiceUtil;
+import com.liferay.portlet.asset.service.AssetVocabularyServiceUtil;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,12 +44,6 @@ import org.junit.runner.RunWith;
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
 public class AssetCategorySearchTest extends BaseSearchTestCase {
-
-	@Ignore()
-	@Override
-	@Test
-	public void testParentBaseModelUserPermissions() throws Exception {
-	}
 
 	@Ignore()
 	@Override
@@ -119,13 +117,24 @@ public class AssetCategorySearchTest extends BaseSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception {
 
+		AssetVocabulary vocabulary = (AssetVocabulary)parentBaseModel;
+
 		return AssetCategoryServiceUtil.addCategory(
-			keywords, 0, serviceContext);
+			keywords, vocabulary.getVocabularyId(), serviceContext);
 	}
 
 	@Override
 	protected Class<?> getBaseModelClass() {
 		return AssetCategory.class;
+	}
+
+	@Override
+	protected BaseModel<?> getParentBaseModel(
+			Group group, ServiceContext serviceContext)
+		throws Exception {
+
+		return AssetVocabularyServiceUtil.addVocabulary(
+			ServiceTestUtil.randomString(), serviceContext);
 	}
 
 	@Override
