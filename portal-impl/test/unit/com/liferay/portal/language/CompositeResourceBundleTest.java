@@ -42,12 +42,11 @@ public class CompositeResourceBundleTest {
 			"valueB", compositeResourceBundle.getString("keyB"));
 
 		Assert.assertEquals(
-			new HashSet<String>(){{
+			new HashSet<String>(){ {
 				add("keyA");
 				add("keyB");
 			}},
 			compositeResourceBundle.keySet());
-
 	}
 
 	private ResourceBundle _createResourceBundle(
