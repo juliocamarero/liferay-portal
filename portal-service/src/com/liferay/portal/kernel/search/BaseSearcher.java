@@ -24,15 +24,6 @@ import javax.portlet.PortletURL;
  */
 public abstract class BaseSearcher extends BaseIndexer {
 
-	public BaseSearcher(String[] classNames) {
-		_classNames = classNames;
-	}
-
-	@Override
-	public String[] getClassNames() {
-		return _classNames;
-	}
-
 	@Override
 	public IndexerPostProcessor[] getIndexerPostProcessors() {
 		throw new UnsupportedOperationException();
@@ -104,7 +95,5 @@ public abstract class BaseSearcher extends BaseIndexer {
 	protected String getPortletId(SearchContext searchContext) {
 		return null;
 	}
-
-	private String[] _classNames;
 
 }
