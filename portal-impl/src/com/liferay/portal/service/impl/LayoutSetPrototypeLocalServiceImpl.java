@@ -118,6 +118,11 @@ public class LayoutSetPrototypeLocalServiceImpl
 		return layoutSetPrototype;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #addLayoutSetPrototype(long,
+	 *             long, Map, Map, boolean, boolean, ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public LayoutSetPrototype addLayoutSetPrototype(
 			long userId, long companyId, Map<Locale, String> nameMap,
@@ -298,6 +303,11 @@ public class LayoutSetPrototypeLocalServiceImpl
 		return layoutSetPrototype;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #updateLayoutSetPrototype(
+	 *             long, Map, Map, boolean, boolean, ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public LayoutSetPrototype updateLayoutSetPrototype(
 			long layoutSetPrototypeId, Map<Locale, String> nameMap,
