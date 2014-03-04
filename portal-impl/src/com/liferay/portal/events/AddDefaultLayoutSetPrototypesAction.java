@@ -56,7 +56,8 @@ public class AddDefaultLayoutSetPrototypesAction
 		for (LayoutSetPrototype layoutSetPrototype : layoutSetPrototypes) {
 			String curName = layoutSetPrototype.getName(
 				LocaleUtil.getDefault());
-			String curDescription = layoutSetPrototype.getDescription();
+			String curDescription = layoutSetPrototype.getDescription(
+				LocaleUtil.getDefault());
 
 			if (name.equals(curName) && description.equals(curDescription)) {
 				return null;
@@ -67,9 +68,13 @@ public class AddDefaultLayoutSetPrototypesAction
 
 		nameMap.put(LocaleUtil.getDefault(), name);
 
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+
+		descriptionMap.put(LocaleUtil.getDefault(), description);
+
 		LayoutSetPrototype layoutSetPrototype =
 			LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(
-				defaultUserId, companyId, nameMap, description, true, true,
+				defaultUserId, companyId, nameMap, descriptionMap, true, true,
 				new ServiceContext());
 
 		LayoutSet layoutSet = layoutSetPrototype.getLayoutSet();
