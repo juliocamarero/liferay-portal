@@ -55,6 +55,11 @@ public class LayoutSetPrototypeServiceImpl
 			active, layoutsUpdateable, serviceContext);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #addLayoutSetPrototype(Map,
+	 *             Map, boolean, boolean, ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public LayoutSetPrototype addLayoutSetPrototype(
 			Map<Locale, String> nameMap, String description, boolean active,
@@ -133,6 +138,11 @@ public class LayoutSetPrototypeServiceImpl
 			layoutsUpdateable, serviceContext);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #updateLayoutSetPrototype(
+	 *             long, Map, Map, boolean, boolean, ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public LayoutSetPrototype updateLayoutSetPrototype(
 			long layoutSetPrototypeId, Map<Locale, String> nameMap,
