@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
+import com.liferay.portlet.asset.util.AssetCategoryIndexer;
+import com.liferay.portlet.asset.util.AssetVocabularyIndexer;
 import com.liferay.portlet.assetpublisher.util.AssetIndexer;
 import com.liferay.portlet.blogs.asset.BlogsEntryAssetRendererFactory;
 import com.liferay.portlet.blogs.trash.BlogsEntryTrashHandler;
@@ -95,6 +97,8 @@ public class PortalRegisterTestUtil {
 
 	protected static void registerIndexers() {
 		IndexerRegistryUtil.register(new AssetIndexer());
+		IndexerRegistryUtil.register(new AssetCategoryIndexer());
+		IndexerRegistryUtil.register(new AssetVocabularyIndexer());
 		IndexerRegistryUtil.register(new BlogsIndexer());
 		IndexerRegistryUtil.register(new ContactIndexer());
 		IndexerRegistryUtil.register(new BookmarksEntryIndexer());
