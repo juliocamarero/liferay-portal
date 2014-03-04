@@ -33,11 +33,14 @@ public class JournalSearcher extends BaseSearcher {
 		return new JournalSearcher();
 	}
 
-	protected JournalSearcher() {
-		super(CLASS_NAMES);
-
+	public JournalSearcher() {
 		setFilterSearch(true);
 		setPermissionAware(true);
+	}
+
+	@Override
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
 }

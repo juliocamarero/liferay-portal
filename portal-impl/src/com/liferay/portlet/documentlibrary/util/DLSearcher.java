@@ -33,11 +33,14 @@ public class DLSearcher extends BaseSearcher {
 		return new DLSearcher();
 	}
 
-	protected DLSearcher() {
-		super(CLASS_NAMES);
-
+	public DLSearcher() {
 		setFilterSearch(true);
 		setPermissionAware(true);
+	}
+
+	@Override
+	public String[] getClassNames() {
+		return CLASS_NAMES;
 	}
 
 }
