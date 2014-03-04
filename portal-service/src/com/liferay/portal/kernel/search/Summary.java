@@ -139,8 +139,8 @@ public class Summary {
 			text, ESCAPE_SAFE_HIGHLIGHTS, SearchUtil.HIGHLIGHTS);
 	}
 
-	private static final String[] ESCAPE_SAFE_HIGHLIGHTS = {
-		"[@HIGHLIGHT1@]", "[@HIGHLIGHT2@]"};
+	private static final String[] ESCAPE_SAFE_HIGHLIGHTS =
+		{"[@HIGHLIGHT1@]", "[@HIGHLIGHT2@]"};
 
 	private String _content;
 	private boolean _highlight;
