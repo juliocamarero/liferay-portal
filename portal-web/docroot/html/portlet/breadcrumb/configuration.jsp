@@ -74,6 +74,7 @@
 	var formNode = A.one('#<portlet:namespace />fm');
 
 	var data = {
+		'_<%= HtmlUtil.escapeJS(portletResource) %>_configurationPreview': <%= Boolean.TRUE %>,
 		'_<%= HtmlUtil.escapeJS(portletResource) %>_showCurrentGroup': <%= showCurrentGroup %>,
 		'_<%= HtmlUtil.escapeJS(portletResource) %>_showCurrentPortlet': <%= showCurrentPortlet %>,
 		'_<%= HtmlUtil.escapeJS(portletResource) %>_showGuestGroup': <%= showGuestGroup %>,

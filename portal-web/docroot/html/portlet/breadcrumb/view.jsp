@@ -16,6 +16,16 @@
 
 <%@ include file="/html/portlet/breadcrumb/init.jsp" %>
 
+<%
+boolean configurationPreview = ParamUtil.getBoolean(renderRequest, "configurationPreview");
+
+if (configurationPreview) {
+	PortalUtil.addPortletBreadcrumbEntry(request, PortalUtil.getPortletTitle(renderResponse), null);
+	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "configuration"), null);
+	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "setup"), null);
+}
+%>
+
 <liferay-ui:breadcrumb
 	displayStyle="<%= displayStyle %>"
 	showCurrentGroup="<%= showCurrentGroup %>"
