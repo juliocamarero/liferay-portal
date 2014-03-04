@@ -109,6 +109,7 @@ public class ConfigurationPortlet extends StrutsPortlet {
 		throws IOException, PortletException {
 
 		_portletRequestThreadLocal.set(actionRequest);
+
 		actionRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG, getPortletConfig());
 
@@ -121,6 +122,7 @@ public class ConfigurationPortlet extends StrutsPortlet {
 		throws IOException, PortletException {
 
 		_portletRequestThreadLocal.set(eventRequest);
+
 		eventRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG, getPortletConfig());
 
@@ -133,6 +135,7 @@ public class ConfigurationPortlet extends StrutsPortlet {
 		throws IOException, PortletException {
 
 		_portletRequestThreadLocal.set(renderRequest);
+
 		renderRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG, getPortletConfig());
 
@@ -145,6 +148,7 @@ public class ConfigurationPortlet extends StrutsPortlet {
 		throws IOException, PortletException {
 
 		_portletRequestThreadLocal.set(resourceRequest);
+
 		resourceRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG, getPortletConfig());
 
