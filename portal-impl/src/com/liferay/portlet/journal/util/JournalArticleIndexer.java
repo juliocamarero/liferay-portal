@@ -41,8 +41,10 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.dynamicdatamapping.StructureFieldException;
@@ -56,7 +58,9 @@ import com.liferay.portlet.journal.model.JournalArticleDisplay;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.service.persistence.JournalArticleActionableDynamicQuery;
+import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
+import com.liferay.util.portlet.PortletRequestUtil;
 
 import java.io.Serializable;
 
@@ -66,6 +70,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 /**
@@ -95,6 +101,47 @@ public class JournalArticleIndexer extends BaseIndexer {
 	@Override
 	public String getPortletId() {
 		return PORTLET_ID;
+	}
+
+	@Override
+	public Summary getSummary(
+		Document document, Locale locale, String snippet, PortletURL portletURL,
+		PortletRequest portletRequest, PortletResponse portletResponse) {
+
+		Locale snippetLocale = getSnippetLocale(document, locale);
+
+		if (snippetLocale == null) {
+			snippetLocale = LocaleUtil.fromLanguageId(
+					document.get("defaultLanguageId"));
+		}
+
+		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
+
+		String title = document.get(
+				snippetLocale, prefix + Field.TITLE, Field.TITLE);
+
+		String content = StringPool.BLANK;
+
+		String ddmStructureKey = document.get("ddmStructureKey");
+
+		if (Validator.isNotNull(ddmStructureKey)) {
+			content = getDDMContentSummary(
+				document, snippetLocale, portletRequest, portletResponse);
+		}
+		else {
+			content = getBasicContentSummary(document, snippetLocale);
+		}
+
+		String groupId = document.get(Field.GROUP_ID);
+		String articleId = document.get("articleId");
+		String version = document.get(Field.VERSION);
+
+		portletURL.setParameter("struts_action", "/journal/edit_article");
+		portletURL.setParameter("groupId", groupId);
+		portletURL.setParameter("articleId", articleId);
+		portletURL.setParameter("version", version);
+
+		return new Summary(snippetLocale, title, content, portletURL);
 	}
 
 	@Override
@@ -419,39 +466,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 		Document document, Locale locale, String snippet,
 		PortletURL portletURL) {
 
-		Locale snippetLocale = getSnippetLocale(document, locale);
-
-		if (snippetLocale == null) {
-			snippetLocale = LocaleUtil.fromLanguageId(
-				document.get("defaultLanguageId"));
-		}
-
-		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
-
-		String title = document.get(
-			snippetLocale, prefix + Field.TITLE, Field.TITLE);
-
-		String content = StringPool.BLANK;
-
-		String ddmStructureKey = document.get("ddmStructureKey");
-
-		if (Validator.isNotNull(ddmStructureKey)) {
-			content = getDDMContentSummary(document, snippetLocale);
-		}
-		else {
-			content = getBasicContentSummary(document, snippetLocale);
-		}
-
-		String groupId = document.get(Field.GROUP_ID);
-		String articleId = document.get("articleId");
-		String version = document.get(Field.VERSION);
-
-		portletURL.setParameter("struts_action", "/journal/edit_article");
-		portletURL.setParameter("groupId", groupId);
-		portletURL.setParameter("articleId", articleId);
-		portletURL.setParameter("version", version);
-
-		return new Summary(snippetLocale, title, content, portletURL);
+		return getSummary(document, locale, snippet, portletURL, null, null);
 	}
 
 	@Override
@@ -614,27 +629,32 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	protected String getDDMContentSummary(
-		Document document, Locale snippetLocale) {
+		Document document, Locale snippetLocale, PortletRequest portletRequest,
+		PortletResponse portletResponse) {
 
 		String content = StringPool.BLANK;
+
+		if ((portletRequest == null) || (portletResponse == null)) {
+			return content;
+		}
 
 		try {
 			long groupId = GetterUtil.getLong(document.get(Field.GROUP_ID));
 			String articleId = document.get("articleId");
 			double version = GetterUtil.getDouble(document.get(Field.VERSION));
 
-			JournalArticle article =
-				JournalArticleLocalServiceUtil.fetchArticle(
-					groupId, articleId, version);
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)portletRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
 
-			if (article == null) {
-				return content;
-			}
+			String xmlRequest = PortletRequestUtil.toXML(
+				portletRequest, portletResponse);
 
 			JournalArticleDisplay articleDisplay =
-				JournalArticleLocalServiceUtil.getArticleDisplay(
-					article, null, Constants.VIEW,
-					LocaleUtil.toLanguageId(snippetLocale), 1, null, null);
+				JournalContentUtil.getDisplay(
+					groupId, articleId, version, null, Constants.VIEW,
+					LocaleUtil.toLanguageId(snippetLocale), themeDisplay, 1,
+					xmlRequest);
 
 			content = HtmlUtil.escape(articleDisplay.getDescription());
 			content = HtmlUtil.replaceNewLine(content);
