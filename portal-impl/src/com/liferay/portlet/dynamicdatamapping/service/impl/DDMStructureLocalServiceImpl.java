@@ -795,9 +795,7 @@ public class DDMStructureLocalServiceImpl
 					structureKey);
 		}
 
-		for (long curGroupId :
-				PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId)) {
-
+		for (long curGroupId : PortalUtil.getAncestorSiteGroupIds(groupId)) {
 			structure = ddmStructurePersistence.fetchByG_C_S(
 				curGroupId, classNameId, structureKey);
 
@@ -808,7 +806,7 @@ public class DDMStructureLocalServiceImpl
 
 		throw new NoSuchStructureException(
 			"No DDMStructure exists with the structure key " +
-				structureKey + "in the ancestor groups");
+				structureKey + " in the ancestor groups");
 	}
 
 	/**
