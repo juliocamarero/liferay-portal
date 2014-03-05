@@ -19,6 +19,8 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 /**
@@ -109,6 +111,18 @@ public class IndexerWrapper implements Indexer {
 		throws SearchException {
 
 		return _indexer.getSummary(document, locale, snippet, portletURL);
+	}
+
+	@Override
+	public Summary getSummary(
+			Document document, Locale locale, String snippet,
+			PortletURL portletURL, PortletRequest portletRequest,
+			PortletResponse portletResponse)
+		throws SearchException {
+
+		return _indexer.getSummary(
+			document, locale, snippet, portletURL, portletRequest,
+			portletResponse);
 	}
 
 	@Override
