@@ -1808,22 +1808,20 @@ public class PortalImpl implements Portal {
 
 		List<Group> groups = new ArrayList<Group>();
 
-		Group scopeGroup = GroupLocalServiceUtil.getGroup(groupId);
+		long siteGroupId = getSiteGroupId(groupId);
 
-		if (scopeGroup.isLayout()) {
-			scopeGroup = scopeGroup.getParentGroup();
+		Group siteGroup = GroupLocalServiceUtil.getGroup(siteGroupId);
+
+		if (!siteGroup.isLayoutPrototype()) {
+			groups.add(siteGroup);
 		}
 
-		if (!scopeGroup.isLayoutPrototype()) {
-			groups.add(scopeGroup);
-		}
+		groups.addAll(siteGroup.getAncestors());
 
-		groups.addAll(scopeGroup.getAncestors());
-
-		if (!scopeGroup.isCompany()) {
+		if (!siteGroup.isCompany()) {
 			groups.add(
 				GroupLocalServiceUtil.getCompanyGroup(
-					scopeGroup.getCompanyId()));
+					siteGroup.getCompanyId()));
 		}
 
 		long[] groupIds = new long[groups.size()];
