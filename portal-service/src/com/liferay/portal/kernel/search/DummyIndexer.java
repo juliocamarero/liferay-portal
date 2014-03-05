@@ -20,6 +20,8 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 /**
@@ -95,6 +97,14 @@ public class DummyIndexer implements Indexer {
 	public Summary getSummary(
 		Document document, Locale locale, String snippet,
 		PortletURL portletURL) {
+
+		return null;
+	}
+
+	@Override
+	public Summary getSummary(
+		Document document, Locale locale, String snippet, PortletURL portletURL,
+		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		return null;
 	}

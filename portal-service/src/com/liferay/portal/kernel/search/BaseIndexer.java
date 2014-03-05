@@ -93,6 +93,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 /**
@@ -344,6 +346,16 @@ public abstract class BaseIndexer implements Indexer {
 		catch (Exception e) {
 			throw new SearchException(e);
 		}
+	}
+
+	@Override
+	public Summary getSummary(
+			Document document, Locale locale, String snippet,
+			PortletURL portletURL, PortletRequest portletRequest,
+			PortletResponse portletResponse)
+		throws SearchException {
+
+		return getSummary(document, locale, snippet, portletURL);
 	}
 
 	@Override
