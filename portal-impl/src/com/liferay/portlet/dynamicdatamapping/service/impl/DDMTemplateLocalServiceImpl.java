@@ -616,9 +616,7 @@ public class DDMTemplateLocalServiceImpl
 				"No DDMTemplate exists with the template key " + templateKey);
 		}
 
-		for (long curGroupId :
-				PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId)) {
-
+		for (long curGroupId : PortalUtil.getAncestorSiteGroupIds(groupId)) {
 			template = ddmTemplatePersistence.fetchByG_C_T(
 				curGroupId, classNameId, templateKey);
 
@@ -628,8 +626,8 @@ public class DDMTemplateLocalServiceImpl
 		}
 
 		throw new NoSuchTemplateException(
-			"No DDMStructure exists with the structure key " +
-				templateKey + "in the ancestor groups");
+			"No DDMTemplate exists with the template key " + templateKey +
+				" in the ancestor groups");
 	}
 
 	@Override

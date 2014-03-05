@@ -309,6 +309,9 @@ public interface Portal {
 			Layout layout)
 		throws PortalException, SystemException;
 
+	public long[] getAncestorSiteGroupIds(long groupId)
+		throws PortalException, SystemException;
+
 	/**
 	 * Returns the set of struts actions that should not be checked for an
 	 * authentication token.

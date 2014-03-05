@@ -369,6 +369,12 @@ public class PortalUtil {
 			canonicalURL, themeDisplay, locale, layout);
 	}
 
+	public static long[] getAncestorSiteGroupIds(long groupId)
+		throws PortalException, SystemException {
+
+		return getPortal().getAncestorSiteGroupIds(groupId);
+	}
+
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link
 	 *             com.liferay.portal.security.auth.AuthTokenWhitelistUtil#getPortletCSRFWhitelistActions}
