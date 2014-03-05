@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.search;
 
+import com.liferay.portal.kernel.util.ArrayUtil;
+
 import java.util.Locale;
 
 import javax.portlet.PortletURL;
@@ -39,7 +41,13 @@ public abstract class BaseSearcher extends BaseIndexer {
 			BooleanQuery searchQuery, SearchContext searchContext)
 		throws Exception {
 
-		for (String className : getClassNames()) {
+		String[] classNames = getClassNames();
+
+		if (ArrayUtil.isEmpty(classNames)) {
+			return;
+		}
+
+		for (String className : classNames) {
 			Indexer indexer = IndexerRegistryUtil.getIndexer(className);
 
 			if (indexer == null) {
