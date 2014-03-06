@@ -76,8 +76,8 @@ public class EmailNotificationSettingsTag extends IncludeTag {
 	@Override
 	protected void cleanUp() {
 		_bodyLabel = null;
-		_emailDefinitionTerms = null;
 		_emailBody = null;
+		_emailDefinitionTerms = null;
 		_emailEnabled = false;
 		_emailParam = null;
 		_emailSubject = null;
@@ -106,10 +106,10 @@ public class EmailNotificationSettingsTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:email-notification-settings:bodyLabel", _bodyLabel);
 		request.setAttribute(
+			"liferay-ui:email-notification-settings:emailBody", _emailBody);
+		request.setAttribute(
 			"liferay-ui:email-notification-settings:emailDefinitionTerms",
 			_emailDefinitionTerms);
-		request.setAttribute(
-			"liferay-ui:email-notification-settings:emailBody", _emailBody);
 		request.setAttribute(
 			"liferay-ui:email-notification-settings:emailEnabled",
 			String.valueOf(_emailEnabled));
