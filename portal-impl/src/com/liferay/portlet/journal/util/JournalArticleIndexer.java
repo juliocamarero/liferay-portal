@@ -104,47 +104,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public Summary getSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
-		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		Locale snippetLocale = getSnippetLocale(document, locale);
-
-		if (snippetLocale == null) {
-			snippetLocale = LocaleUtil.fromLanguageId(
-					document.get("defaultLanguageId"));
-		}
-
-		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
-
-		String title = document.get(
-				snippetLocale, prefix + Field.TITLE, Field.TITLE);
-
-		String content = StringPool.BLANK;
-
-		String ddmStructureKey = document.get("ddmStructureKey");
-
-		if (Validator.isNotNull(ddmStructureKey)) {
-			content = getDDMContentSummary(
-				document, snippetLocale, portletRequest, portletResponse);
-		}
-		else {
-			content = getBasicContentSummary(document, snippetLocale);
-		}
-
-		String groupId = document.get(Field.GROUP_ID);
-		String articleId = document.get("articleId");
-		String version = document.get(Field.VERSION);
-
-		portletURL.setParameter("struts_action", "/journal/edit_article");
-		portletURL.setParameter("groupId", groupId);
-		portletURL.setParameter("articleId", articleId);
-		portletURL.setParameter("version", version);
-
-		return new Summary(snippetLocale, title, content, portletURL);
-	}
-
-	@Override
 	public boolean hasPermission(
 			PermissionChecker permissionChecker, String entryClassName,
 			long entryClassPK, String actionId)
@@ -463,10 +422,43 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet,
-		PortletURL portletURL) {
+		Document document, Locale locale, String snippet, PortletURL portletURL,
+		PortletRequest portletRequest, PortletResponse portletResponse) {
 
-		return getSummary(document, locale, snippet, portletURL, null, null);
+		Locale snippetLocale = getSnippetLocale(document, locale);
+
+		if (snippetLocale == null) {
+			snippetLocale = LocaleUtil.fromLanguageId(
+				document.get("defaultLanguageId"));
+		}
+
+		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
+
+		String title = document.get(
+			snippetLocale, prefix + Field.TITLE, Field.TITLE);
+
+		String content = StringPool.BLANK;
+
+		String ddmStructureKey = document.get("ddmStructureKey");
+
+		if (Validator.isNotNull(ddmStructureKey)) {
+			content = getDDMContentSummary(
+				document, snippetLocale, portletRequest, portletResponse);
+		}
+		else {
+			content = getBasicContentSummary(document, snippetLocale);
+		}
+
+		String groupId = document.get(Field.GROUP_ID);
+		String articleId = document.get("articleId");
+		String version = document.get(Field.VERSION);
+
+		portletURL.setParameter("struts_action", "/journal/edit_article");
+		portletURL.setParameter("groupId", groupId);
+		portletURL.setParameter("articleId", articleId);
+		portletURL.setParameter("version", version);
+
+		return new Summary(snippetLocale, title, content, portletURL);
 	}
 
 	@Override

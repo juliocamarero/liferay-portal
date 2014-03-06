@@ -93,6 +93,12 @@ public class DummyIndexer implements Indexer {
 		return StringPool.BLANK;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #getSummary(Document, Locale, String, PortletURL,
+	 *             PortletRequest, PortletResponse)}
+	 */
+	@Deprecated
 	@Override
 	public Summary getSummary(
 		Document document, Locale locale, String snippet,
