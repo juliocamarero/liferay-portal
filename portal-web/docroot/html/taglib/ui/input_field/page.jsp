@@ -408,8 +408,8 @@ if (hints != null) {
 				if (Validator.isNotNull(bean)) {
 					xml = BeanPropertiesUtil.getString(bean, field);
 				}
-				else if (field.equals(fieldParam)) {
-					Map<Locale, String> localizationMap = LocalizationUtil.getLocalizationMap(portletRequest, field);
+				else {
+					Map<Locale, String> localizationMap = LocalizationUtil.getLocalizationMap(portletRequest, fieldParam);
 
 					xml = LocalizationUtil.updateLocalization(localizationMap, xml, field, defaultLanguageId);
 				}
