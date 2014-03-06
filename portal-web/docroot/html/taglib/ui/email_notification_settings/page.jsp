@@ -23,6 +23,7 @@ Map<String, String> emailDefinitionTerms = (Map<String, String>)request.getAttri
 boolean emailEnabled = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:email-notification-settings:emailEnabled"));
 String emailParam = (String)request.getAttribute("liferay-ui:email-notification-settings:emailParam");
 String emailSubject = (String)request.getAttribute("liferay-ui:email-notification-settings:emailSubject");
+String fieldPrefix = (String)request.getAttribute("liferay-ui:email-notification-settings:fieldPrefix");
 String helpMessage = (String)request.getAttribute("liferay-ui:email-notification-settings:helpMessage");
 String languageId = (String)request.getAttribute("liferay-ui:email-notification-settings:languageId");
 boolean showEmailEnabled = GetterUtil.getBoolean(request.getAttribute("liferay-ui:email-notification-settings:showEmailEnabled"));
@@ -31,17 +32,17 @@ boolean showSubject = GetterUtil.getBoolean(request.getAttribute("liferay-ui:ema
 
 <aui:fieldset>
 	<c:if test="<%= showEmailEnabled %>">
-		<aui:input label="enabled" name='<%= "preferences--" + emailParam + "Enabled--" %>' type="checkbox" value="<%= emailEnabled %>" />
+		<aui:input label="enabled" name='<%= fieldPrefix + "--" + emailParam + "Enabled--" %>' type="checkbox" value="<%= emailEnabled %>" />
 	</c:if>
 
 	<c:if test="<%= showSubject %>">
-		<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= "preferences--" + emailParam + "Subject" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' value="<%= emailSubject %>" />
+		<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= fieldPrefix + "--" + emailParam + "Subject" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' value="<%= emailSubject %>" />
 	</c:if>
 
 	<aui:field-wrapper helpMessage="<%= helpMessage %>" label="<%= bodyLabel %>">
 		<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" initMethod='<%= "init" + emailParam + "BodyEditor" %>' name="<%= emailParam %>" />
 
-		<aui:input name='<%= "preferences--" + emailParam + "Body" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' type="hidden" />
+		<aui:input name='<%= fieldPrefix + "--" + emailParam + "Body" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' type="hidden" />
 	</aui:field-wrapper>
 </aui:fieldset>
 

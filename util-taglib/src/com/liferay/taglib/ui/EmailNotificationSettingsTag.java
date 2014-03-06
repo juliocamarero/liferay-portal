@@ -57,6 +57,10 @@ public class EmailNotificationSettingsTag extends IncludeTag {
 		_emailSubject = emailSubject;
 	}
 
+	public void setFieldPrefix(String fieldPrefix) {
+		_fieldPrefix = fieldPrefix;
+	}
+
 	public void setHelpMessage(String helpMessage) {
 		_helpMessage = helpMessage;
 	}
@@ -81,6 +85,7 @@ public class EmailNotificationSettingsTag extends IncludeTag {
 		_emailEnabled = false;
 		_emailParam = null;
 		_emailSubject = null;
+		_fieldPrefix = null;
 		_helpMessage = null;
 		_languageId = null;
 		_showEmailEnabled = true;
@@ -103,6 +108,10 @@ public class EmailNotificationSettingsTag extends IncludeTag {
 			_bodyLabel = "body";
 		}
 
+		if (Validator.isNull(_fieldPrefix)) {
+			_fieldPrefix = "preferences";
+		}
+
 		request.setAttribute(
 			"liferay-ui:email-notification-settings:bodyLabel", _bodyLabel);
 		request.setAttribute(
@@ -118,6 +127,8 @@ public class EmailNotificationSettingsTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:email-notification-settings:emailSubject",
 			_emailSubject);
+		request.setAttribute(
+			"liferay-ui:email-notification-settings:fieldPrefix", _fieldPrefix);
 		request.setAttribute(
 			"liferay-ui:email-notification-settings:helpMessage", _helpMessage);
 		request.setAttribute(
@@ -141,6 +152,7 @@ public class EmailNotificationSettingsTag extends IncludeTag {
 	private boolean _emailEnabled;
 	private String _emailParam;
 	private String _emailSubject;
+	private String _fieldPrefix;
 	private String _helpMessage;
 	private String _languageId;
 	private boolean _showEmailEnabled;
