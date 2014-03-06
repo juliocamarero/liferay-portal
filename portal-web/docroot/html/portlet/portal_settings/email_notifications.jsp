@@ -166,7 +166,3 @@ PortletPreferences preferences = PrefsPropsUtil.getPreferences(company.getCompan
 		}
 	}
 </aui:script>
-
-<%!
-public static final String EDITOR_WYSIWYG_IMPL_KEY = "editor.wysiwyg.portal-web.docroot.html.portlet.portal_settings.email_notifications.jsp";
-%>
