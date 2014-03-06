@@ -19,6 +19,8 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 /**
@@ -63,6 +65,12 @@ public interface Indexer {
 	public Summary getSummary(
 			Document document, Locale locale, String snippet,
 			PortletURL portletURL)
+		throws SearchException;
+
+	public Summary getSummary(
+			Document document, Locale locale, String snippet,
+			PortletURL portletURL, PortletRequest portletRequest,
+			PortletResponse portletResponse)
 		throws SearchException;
 
 	public boolean hasPermission(
