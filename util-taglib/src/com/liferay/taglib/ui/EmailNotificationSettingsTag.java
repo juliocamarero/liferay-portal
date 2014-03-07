@@ -137,8 +137,7 @@ public class EmailNotificationSettingsTag extends IncludeTag {
 			"liferay-ui:email-notification-settings:showEmailEnabled",
 			_showEmailEnabled);
 		request.setAttribute(
-			"liferay-ui:email-notification-settings:showSubject",
-			_showSubject);
+			"liferay-ui:email-notification-settings:showSubject", _showSubject);
 	}
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
