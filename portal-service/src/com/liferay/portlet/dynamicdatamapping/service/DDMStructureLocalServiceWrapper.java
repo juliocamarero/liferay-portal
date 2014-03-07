@@ -1494,6 +1494,44 @@ public class DDMStructureLocalServiceWrapper implements DDMStructureLocalService
 	}
 
 	/**
+	* Subscribe the user to changes in elements that belongs to specified
+	* structure.
+	*
+	* @param groupId the primary key of the folder's group
+	* @param userId the primary key of the user to be subscribed
+	* @param structureId the primary key of the structure to subscribe to
+	* @throws PortalException if the user, group os structure could not be
+	found, or if subscribing was not permissible
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public void subscribeStructure(long groupId, long userId, long structureId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_ddmStructureLocalService.subscribeStructure(groupId, userId,
+			structureId);
+	}
+
+	/**
+	* Unsubscribe the user from changes in elements that belongs to specified
+	* structure.
+	*
+	* @param groupId the primary key of the folder's group
+	* @param userId the primary key of the user to be subscribed
+	* @param structureId the primary key of the structure to subscribe to
+	* @throws PortalException if the user, group os structure could not be
+	found, or if subscribing was not permissible
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public void unsubscribeStructure(long groupId, long userId, long structureId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_ddmStructureLocalService.unsubscribeStructure(groupId, userId,
+			structureId);
+	}
+
+	/**
 	* Updates the structure matching the class name ID, structure key, and
 	* group, replacing its old parent structure, name map, description map, and
 	* XSD with new ones.

@@ -1262,6 +1262,36 @@ public interface DDMStructureLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Subscribe the user to changes in elements that belongs to specified
+	* structure.
+	*
+	* @param groupId the primary key of the folder's group
+	* @param userId the primary key of the user to be subscribed
+	* @param structureId the primary key of the structure to subscribe to
+	* @throws PortalException if the user, group os structure could not be
+	found, or if subscribing was not permissible
+	* @throws SystemException if a system exception occurred
+	*/
+	public void subscribeStructure(long groupId, long userId, long structureId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Unsubscribe the user from changes in elements that belongs to specified
+	* structure.
+	*
+	* @param groupId the primary key of the folder's group
+	* @param userId the primary key of the user to be subscribed
+	* @param structureId the primary key of the structure to subscribe to
+	* @throws PortalException if the user, group os structure could not be
+	found, or if subscribing was not permissible
+	* @throws SystemException if a system exception occurred
+	*/
+	public void unsubscribeStructure(long groupId, long userId, long structureId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Updates the structure matching the class name ID, structure key, and
 	* group, replacing its old parent structure, name map, description map, and
 	* XSD with new ones.
