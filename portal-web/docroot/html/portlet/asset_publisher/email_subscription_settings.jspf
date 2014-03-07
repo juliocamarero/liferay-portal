@@ -62,7 +62,7 @@ String currentLanguageId = LanguageUtil.getLanguageId(request);
 		<liferay-ui:email-notifications-settings
 			emailBody='<%= PrefsParamUtil.getString(portletPreferences, request, "emailAssetEntryAddedBody_" + currentLanguageId, ContentUtil.get(PropsValues.ASSET_PUBLISHER_EMAIL_ASSET_ENTRY_ADDED_BODY)) %>'
 			emailDefinitionTerms="<%= AssetPublisherUtil.getEmailDefinitionTerms(renderRequest, emailFromAddress, emailFromName) %>"
-			emailEnabled='<%= emailAssetEntryAddedEnabled %>'
+			emailEnabled="<%= emailAssetEntryAddedEnabled %>"
 			emailParam="emailAssetEntryAdded"
 			emailSubject='<%= PrefsParamUtil.getString(portletPreferences, request, "emailAssetEntryAddedSubject_" + currentLanguageId, ContentUtil.get(PropsValues.ASSET_PUBLISHER_EMAIL_ASSET_ENTRY_ADDED_SUBJECT)) %>'
 			languageId="<%= currentLanguageId %>"
