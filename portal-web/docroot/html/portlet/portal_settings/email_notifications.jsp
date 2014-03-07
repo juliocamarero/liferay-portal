@@ -55,7 +55,7 @@ PortletPreferences preferences = PrefsPropsUtil.getPreferences(company.getCompan
 
 			<liferay-ui:email-notifications-settings
 				bodyLabel="body-with-password"
-				emailBody='<%= preferences.getValue("adminEmailUserAddedBody", PropsValues.ADMIN_EMAIL_USER_ADDED_BODY) %>'
+				emailBody='<%= ContentUtil.get(preferences.getValue("adminEmailUserAddedBody", PropsValues.ADMIN_EMAIL_USER_ADDED_BODY)) %>'
 				emailParam="adminEmailUserAdded"
 				fieldPrefix="settings"
 				helpMessage="account-created-notification-body-with-password-help"
@@ -67,7 +67,7 @@ PortletPreferences preferences = PrefsPropsUtil.getPreferences(company.getCompan
 
 			<liferay-ui:email-notifications-settings
 				bodyLabel="body-without-password"
-				emailBody='<%= preferences.getValue("adminEmailUserAddedNoPasswordBody", PropsValues.ADMIN_EMAIL_USER_ADDED_NO_PASSWORD_BODY) %>'
+				emailBody='<%= ContentUtil.get(preferences.getValue("adminEmailUserAddedNoPasswordBody", PropsValues.ADMIN_EMAIL_USER_ADDED_NO_PASSWORD_BODY)) %>'
 				emailParam="adminEmailUserAddedNoPassword"
 				fieldPrefix="settings"
 				helpMessage="account-created-notification-body-without-password-help"
@@ -86,9 +86,9 @@ PortletPreferences preferences = PrefsPropsUtil.getPreferences(company.getCompan
 		<liferay-ui:error key="emailVerificationBody" message="please-enter-a-valid-body" />
 
 		<liferay-ui:email-notifications-settings
-			emailBody='<%= preferences.getValue("adminEmailVerificationBody", PropsValues.ADMIN_EMAIL_VERIFICATION_BODY) %>'
+			emailBody='<%= ContentUtil.get(preferences.getValue("adminEmailVerificationBody", PropsValues.ADMIN_EMAIL_VERIFICATION_BODY)) %>'
 			emailParam="adminEmailVerification"
-			emailSubject='<%= preferences.getValue("adminEmailVerificationSubject", PropsValues.ADMIN_EMAIL_VERIFICATION_SUBJECT) %>'
+			emailSubject='<%= ContentUtil.get(preferences.getValue("adminEmailVerificationSubject", PropsValues.ADMIN_EMAIL_VERIFICATION_SUBJECT)) %>'
 			fieldPrefix="settings"
 			showEmailEnabled="<%= false %>"
 		/>
@@ -103,9 +103,9 @@ PortletPreferences preferences = PrefsPropsUtil.getPreferences(company.getCompan
 			<liferay-ui:error key="emailPasswordSentBody" message="please-enter-a-valid-body" />
 
 		<liferay-ui:email-notifications-settings
-			emailBody='<%= preferences.getValue("adminEmailPasswordSentBody", PropsValues.ADMIN_EMAIL_PASSWORD_SENT_BODY) %>'
+			emailBody='<%= ContentUtil.get(preferences.getValue("adminEmailPasswordSentBody", PropsValues.ADMIN_EMAIL_PASSWORD_SENT_BODY)) %>'
 			emailParam="adminEmailPasswordSent"
-			emailSubject='<%= preferences.getValue("adminEmailPasswordSentSubject", PropsValues.ADMIN_EMAIL_PASSWORD_SENT_SUBJECT) %>'
+			emailSubject='<%= ContentUtil.get(preferences.getValue("adminEmailPasswordSentSubject", PropsValues.ADMIN_EMAIL_PASSWORD_SENT_SUBJECT)) %>'
 			fieldPrefix="settings"
 			showEmailEnabled="<%= false %>"
 		/>
@@ -120,9 +120,9 @@ PortletPreferences preferences = PrefsPropsUtil.getPreferences(company.getCompan
 			<liferay-ui:error key="emailPasswordResetBody" message="please-enter-a-valid-body" />
 
 		<liferay-ui:email-notifications-settings
-			emailBody='<%= preferences.getValue("adminEmailPasswordResetBody", PropsValues.ADMIN_EMAIL_PASSWORD_RESET_BODY) %>'
+			emailBody='<%= ContentUtil.get(preferences.getValue("adminEmailPasswordResetBody", PropsValues.ADMIN_EMAIL_PASSWORD_RESET_BODY)) %>'
 			emailParam="adminEmailPasswordReset"
-			emailSubject='<%= preferences.getValue("adminEmailPasswordResetSubject", PropsValues.ADMIN_EMAIL_PASSWORD_RESET_SUBJECT) %>'
+			emailSubject='<%= ContentUtil.get(preferences.getValue("adminEmailPasswordResetSubject", PropsValues.ADMIN_EMAIL_PASSWORD_RESET_SUBJECT)) %>'
 			fieldPrefix="settings"
 			showEmailEnabled="<%= false %>"
 		/>
