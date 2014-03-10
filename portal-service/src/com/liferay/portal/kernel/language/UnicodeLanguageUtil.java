@@ -17,8 +17,7 @@ package com.liferay.portal.kernel.language;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 
 import java.util.Locale;
-
-import javax.portlet.PortletConfig;
+import java.util.ResourceBundle;
 
 import javax.servlet.jsp.PageContext;
 
@@ -111,38 +110,6 @@ public class UnicodeLanguageUtil {
 			pageContext, pattern, arguments, translateArguments);
 	}
 
-	public static String format(
-		PortletConfig portletConfig, Locale locale, String pattern,
-		Object argument) {
-
-		return getUnicodeLanguage().format(
-			portletConfig, locale, pattern, argument);
-	}
-
-	public static String format(
-		PortletConfig portletConfig, Locale locale, String pattern,
-		Object argument, boolean translateArguments) {
-
-		return getUnicodeLanguage().format(
-			portletConfig, locale, pattern, argument, translateArguments);
-	}
-
-	public static String format(
-		PortletConfig portletConfig, Locale locale, String pattern,
-		Object[] arguments) {
-
-		return getUnicodeLanguage().format(
-			portletConfig, locale, pattern, arguments);
-	}
-
-	public static String format(
-		PortletConfig portletConfig, Locale locale, String pattern,
-		Object[] arguments, boolean translateArguments) {
-
-		return getUnicodeLanguage().format(
-			portletConfig, locale, pattern, arguments, translateArguments);
-	}
-
 	public static String get(Locale locale, String key) {
 		return getUnicodeLanguage().get(locale, key);
 	}
@@ -161,18 +128,14 @@ public class UnicodeLanguageUtil {
 		return getUnicodeLanguage().get(pageContext, key, defaultValue);
 	}
 
-	public static String get(
-		PortletConfig portletConfig, Locale locale, String key) {
-
-		return getUnicodeLanguage().get(portletConfig, locale, key);
+	public static String get(ResourceBundle resourceBundle, String key) {
+		return getUnicodeLanguage().get(resourceBundle, key);
 	}
 
 	public static String get(
-		PortletConfig portletConfig, Locale locale, String key,
-		String defaultValue) {
+		ResourceBundle resourceBundle, String key, String defaultValue) {
 
-		return getUnicodeLanguage().get(
-			portletConfig, locale, key, defaultValue);
+		return getUnicodeLanguage().get(resourceBundle, key, defaultValue);
 	}
 
 	public static String getTimeDescription(
