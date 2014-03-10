@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.TreeModelFinder;
@@ -44,6 +45,8 @@ import com.liferay.portlet.journal.FolderNameException;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
+import com.liferay.portlet.journal.service.JournalFolderLocalService;
+import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.portlet.journal.service.base.JournalFolderLocalServiceBaseImpl;
 import com.liferay.portlet.journal.util.comparator.FolderIdComparator;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -410,6 +413,40 @@ public class JournalFolderLocalServiceImpl
 			getSubfolderIds(
 				folderIds, folder.getGroupId(), folder.getFolderId());
 		}
+	}
+
+	@Override
+	public boolean isSubscribed(long companyId, long groupId, long userId,
+		long folderId) throws PortalException, SystemException {
+
+		return isSubscribed(companyId, groupId, userId, folderId, true);
+	}
+
+	@Override
+	public boolean isSubscribed(long companyId, long groupId, long userId,
+		long folderId, boolean recursive)
+		throws PortalException, SystemException {
+
+		List<Long> ancestorFolderIds = new ArrayList<Long>();
+
+		if (folderId == JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			ancestorFolderIds.add(groupId);
+		}
+		else {
+			JournalFolder folder = JournalFolderLocalServiceUtil.getFolder(
+				folderId);
+
+			ancestorFolderIds.add(folderId);
+
+			if (recursive) {
+				ancestorFolderIds.addAll(folder.getAncestorFolderIds());
+				ancestorFolderIds.add(groupId);
+			}
+		}
+
+		return subscriptionLocalService.isSubscribed(
+			companyId, userId, JournalFolder.class.getName(),
+			ArrayUtil.toLongArray(ancestorFolderIds));
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
