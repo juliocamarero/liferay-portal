@@ -650,16 +650,12 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 
 		Map<String, Map<String, Map<String, String>>>
 			localizedPersistentFieldsMap = getLocalizedPersistentFieldsMap();
-
 		Map<String, Map<String, Map<String, String>>>
 			localizedTransientFieldsMap = getLocalizedTransientFieldsMap();
-
 		Map<String, Map<String, String>> fieldsMap =
 			new LinkedHashMap<String, Map<String, String>>();
-
 		Map<String, Map<String, String>> persistentFieldsMap =
 			new LinkedHashMap<String, Map<String, String>>();
-
 		Map<String, Map<String, String>> transientFieldsMap =
 			new LinkedHashMap<String, Map<String, String>>();
 
