@@ -360,8 +360,8 @@ public class LiferayPortlet extends GenericPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		ResourceBundle resourceBundle =
-			getResourceBundle(themeDisplay.getLocale());
+		ResourceBundle resourceBundle = getResourceBundle(
+			themeDisplay.getLocale());
 
 		return LanguageUtil.get(resourceBundle, themeDisplay.getLocale(), key);
 	}
@@ -372,8 +372,8 @@ public class LiferayPortlet extends GenericPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		ResourceBundle resourceBundle =
-			getResourceBundle(themeDisplay.getLocale());
+		ResourceBundle resourceBundle = getResourceBundle(
+			themeDisplay.getLocale());
 
 		return LanguageUtil.format(resourceBundle, key, arguments);
 	}
