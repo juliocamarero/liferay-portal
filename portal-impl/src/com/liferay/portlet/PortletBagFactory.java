@@ -864,7 +864,9 @@ public class PortletBagFactory {
 		}
 	}
 
-	protected List<OpenSearch> newOpenSearches(Portlet portlet) throws Exception {
+	protected List<OpenSearch> newOpenSearches(Portlet portlet)
+		throws Exception {
+
 		ServiceTrackerList<OpenSearch> openSearchInstances =
 			getServiceTrackerList(OpenSearch.class, portlet);
 
