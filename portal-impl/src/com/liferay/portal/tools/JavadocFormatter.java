@@ -131,9 +131,7 @@ public class JavadocFormatter {
 		for (String limit : limits) {
 			List<String> includes = new ArrayList<String>();
 
-			if (Validator.isNotNull(limit) &&
-				!limit.startsWith("$")) {
-
+			if (Validator.isNotNull(limit) && !limit.startsWith("$")) {
 				System.out.println("Limit on " + limit);
 
 				String[] limitArray = StringUtil.split(limit, '/');
@@ -159,8 +157,7 @@ public class JavadocFormatter {
 
 			fileNames = directoryScanner.getIncludedFiles();
 
-			if ((fileNames.length == 0) &&
-				Validator.isNotNull(limit) &&
+			if ((fileNames.length == 0) && Validator.isNotNull(limit) &&
 				!limit.startsWith("$")) {
 
 				StringBundler sb = new StringBundler("Limit file not found: ");
@@ -176,8 +173,8 @@ public class JavadocFormatter {
 				System.out.println(sb.toString());
 			}
 
-			_languagePropertiesFile =
-				new File("src/content/Language.properties");
+			_languagePropertiesFile = new File(
+				"src/content/Language.properties");
 
 			if (_languagePropertiesFile.exists()) {
 				_languageProperties = new Properties();
