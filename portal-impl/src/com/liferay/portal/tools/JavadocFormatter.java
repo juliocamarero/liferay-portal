@@ -106,8 +106,7 @@ public class JavadocFormatter {
 
 		System.out.println("Input directory is " + _inputDir);
 
-		String[] limits = StringUtil.split(
-			arguments.get("javadoc.limit"), ",");
+		String[] limits = StringUtil.split(arguments.get("javadoc.limit"), ",");
 
 		_outputFilePrefix = GetterUtil.getString(
 			arguments.get("javadoc.output.file.prefix"));
