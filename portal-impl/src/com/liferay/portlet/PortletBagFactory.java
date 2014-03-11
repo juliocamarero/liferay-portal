@@ -129,7 +129,7 @@ public class PortletBagFactory {
 
 		List<Indexer> indexerInstances = newIndexers(portlet);
 
-		List<OpenSearch> openSearchInstances = newOpenSearchs(portlet);
+		List<OpenSearch> openSearchInstances = newOpenSearches(portlet);
 
 		FriendlyURLMapper friendlyURLMapperInstance = newFriendlyURLMapper(
 			portlet);
@@ -864,7 +864,7 @@ public class PortletBagFactory {
 		}
 	}
 
-	protected List<OpenSearch> newOpenSearchs(Portlet portlet) throws Exception {
+	protected List<OpenSearch> newOpenSearches(Portlet portlet) throws Exception {
 		ServiceTrackerList<OpenSearch> openSearchInstances =
 			getServiceTrackerList(OpenSearch.class, portlet);
 
