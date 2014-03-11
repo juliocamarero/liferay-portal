@@ -657,14 +657,6 @@ public class WikiUtil {
 		return orderedNodes;
 	}
 
-	public static String processContent(String content) {
-		content = content.replaceAll("</p>", "</p>\n");
-		content = content.replaceAll("</br>", "</br>\n");
-		content = content.replaceAll("</div>", "</div>\n");
-
-		return content;
-	}
-
 	public static String unescapeName(String name) {
 		return StringUtil.replace(name, _ESCAPED_CHARS, _UNESCAPED_CHARS);
 	}
