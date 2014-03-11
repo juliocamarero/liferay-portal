@@ -117,8 +117,7 @@ public class PortletPreferencesLocalServiceTest {
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesLocalServiceUtil.addPortletPreferences(
-				_layout.getCompanyId(),
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				_layout.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
 				_portlet.getPortletId(), null, null);
 
