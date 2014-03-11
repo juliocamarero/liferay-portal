@@ -1184,8 +1184,6 @@ public class LiferaySeleniumHelper {
 		}
 	}
 
-	private static String _liferayPortalBundle =
-		TestPropsValues.LIFERAY_PORTAL_BUNDLE;
 	private static int _screenshotCount = 0;
 
 }
