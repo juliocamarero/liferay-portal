@@ -34,6 +34,7 @@ import com.liferay.portal.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.GroupFinder;
 import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.SubscriptionPersistence;
 import com.liferay.portal.service.persistence.SystemEventPersistence;
 import com.liferay.portal.service.persistence.UserFinder;
 import com.liferay.portal.service.persistence.UserPersistence;
@@ -752,6 +753,44 @@ public abstract class DDMStructureLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the subscription local service.
+	 *
+	 * @return the subscription local service
+	 */
+	public com.liferay.portal.service.SubscriptionLocalService getSubscriptionLocalService() {
+		return subscriptionLocalService;
+	}
+
+	/**
+	 * Sets the subscription local service.
+	 *
+	 * @param subscriptionLocalService the subscription local service
+	 */
+	public void setSubscriptionLocalService(
+		com.liferay.portal.service.SubscriptionLocalService subscriptionLocalService) {
+		this.subscriptionLocalService = subscriptionLocalService;
+	}
+
+	/**
+	 * Returns the subscription persistence.
+	 *
+	 * @return the subscription persistence
+	 */
+	public SubscriptionPersistence getSubscriptionPersistence() {
+		return subscriptionPersistence;
+	}
+
+	/**
+	 * Sets the subscription persistence.
+	 *
+	 * @param subscriptionPersistence the subscription persistence
+	 */
+	public void setSubscriptionPersistence(
+		SubscriptionPersistence subscriptionPersistence) {
+		this.subscriptionPersistence = subscriptionPersistence;
+	}
+
+	/**
 	 * Returns the system event local service.
 	 *
 	 * @return the system event local service
@@ -1140,6 +1179,10 @@ public abstract class DDMStructureLocalServiceBaseImpl
 	protected GroupFinder groupFinder;
 	@BeanReference(type = com.liferay.portal.service.ResourceLocalService.class)
 	protected com.liferay.portal.service.ResourceLocalService resourceLocalService;
+	@BeanReference(type = com.liferay.portal.service.SubscriptionLocalService.class)
+	protected com.liferay.portal.service.SubscriptionLocalService subscriptionLocalService;
+	@BeanReference(type = SubscriptionPersistence.class)
+	protected SubscriptionPersistence subscriptionPersistence;
 	@BeanReference(type = com.liferay.portal.service.SystemEventLocalService.class)
 	protected com.liferay.portal.service.SystemEventLocalService systemEventLocalService;
 	@BeanReference(type = SystemEventPersistence.class)

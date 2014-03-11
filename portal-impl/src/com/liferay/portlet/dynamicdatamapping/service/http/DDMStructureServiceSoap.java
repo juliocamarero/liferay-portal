@@ -662,6 +662,54 @@ public class DDMStructureServiceSoap {
 	}
 
 	/**
+	* Subscribe the user to changes in elements that belongs to specified
+	* structure.
+	*
+	* @param groupId the primary key of the folder's group
+	* @param userId the primary key of the user to be subscribed
+	* @param structureId the primary key of the structure to subscribe to
+	* @throws PortalException if the user, group os structure could not be
+	found, or if subscribing was not permissible
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void subscribeStructure(long groupId, long userId,
+		long structureId) throws RemoteException {
+		try {
+			DDMStructureServiceUtil.subscribeStructure(groupId, userId,
+				structureId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* Unsubscribe the user from changes in elements that belongs to specified
+	* structure.
+	*
+	* @param groupId the primary key of the folder's group
+	* @param userId the primary key of the user to be subscribed
+	* @param structureId the primary key of the structure to subscribe to
+	* @throws PortalException if the user, group os structure could not be
+	found, or if subscribing was not permissible
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void unsubscribeStructure(long groupId, long userId,
+		long structureId) throws RemoteException {
+		try {
+			DDMStructureServiceUtil.unsubscribeStructure(groupId, userId,
+				structureId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
 	* Updates the structure matching the class name ID, structure key, and
 	* group, replacing its old parent structure, name map, description map, and
 	* XSD with new ones.

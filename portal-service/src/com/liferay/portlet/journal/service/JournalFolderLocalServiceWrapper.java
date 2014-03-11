@@ -561,6 +561,24 @@ public class JournalFolderLocalServiceWrapper
 	}
 
 	@Override
+	public boolean isSubscribed(long companyId, long groupId, long userId,
+		long folderId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _journalFolderLocalService.isSubscribed(companyId, groupId,
+			userId, folderId);
+	}
+
+	@Override
+	public boolean isSubscribed(long companyId, long groupId, long userId,
+		long folderId, boolean recursive)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _journalFolderLocalService.isSubscribed(companyId, groupId,
+			userId, folderId, recursive);
+	}
+
+	@Override
 	public com.liferay.portlet.journal.model.JournalFolder moveFolder(
 		long folderId, long parentFolderId,
 		com.liferay.portal.service.ServiceContext serviceContext)
