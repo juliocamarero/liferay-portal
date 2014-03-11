@@ -1287,10 +1287,10 @@ public class ResourcePermissionLocalServiceImpl
 
 		long plid = 0;
 
-		int pos = primKey.indexOf(PortletConstants.LAYOUT_SEPARATOR);
+		int index = primKey.indexOf(PortletConstants.LAYOUT_SEPARATOR);
 
-		if (pos != -1) {
-			plid = GetterUtil.getLong(primKey.substring(0, pos));
+		if (index != -1) {
+			plid = GetterUtil.getLong(primKey.substring(0, index));
 		}
 		else if (name.equals(Layout.class.getName())) {
 			plid = GetterUtil.getLong(primKey);
