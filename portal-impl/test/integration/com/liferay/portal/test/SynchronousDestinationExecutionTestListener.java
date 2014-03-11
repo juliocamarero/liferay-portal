@@ -137,7 +137,6 @@ public class SynchronousDestinationExecutionTestListener
 		private List<Destination> _asyncServiceDestinations =
 			new ArrayList<Destination>();
 		private boolean _forceSync;
-
 		private Sync _sync;
 
 	}

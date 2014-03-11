@@ -35,9 +35,8 @@ import org.junit.runner.RunWith;
  * @author Manuel de la Peña
  */
 @ExecutionTestListeners(
-	listeners = {
-		SynchronousMailExecutionTestListener.class
-})
+	listeners = {SynchronousMailExecutionTestListener.class}
+)
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class MailEngineTest {
 
