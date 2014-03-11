@@ -2274,8 +2274,8 @@ public class PortletImpl extends PortletBaseImpl {
 			return false;
 		}
 
-		for (String element : _rolesArray) {
-			if (StringUtil.equalsIgnoreCase(element, roleName)) {
+		for (String curRoleName : _rolesArray) {
+			if (StringUtil.equalsIgnoreCase(curRoleName, roleName)) {
 				return true;
 			}
 		}
