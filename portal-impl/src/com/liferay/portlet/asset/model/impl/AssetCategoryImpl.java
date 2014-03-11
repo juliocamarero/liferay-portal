@@ -60,7 +60,7 @@ public class AssetCategoryImpl extends AssetCategoryBaseImpl {
 
 		List<AssetCategory> categories = getAncestors();
 
-		StringBundler sb = new StringBundler((categories.size() * 2) + 1);
+		StringBundler sb = new StringBundler((categories.size() * 4) + 1);
 
 		AssetVocabulary vocabulary =
 			AssetVocabularyLocalServiceUtil.getVocabulary(getVocabularyId());
@@ -68,8 +68,9 @@ public class AssetCategoryImpl extends AssetCategoryBaseImpl {
 		sb.append(vocabulary.getTitle(locale));
 
 		for (AssetCategory category : categories) {
-			sb.append(
-				StringPool.SPACE + StringPool.GREATER_THAN + StringPool.SPACE);
+			sb.append(StringPool.SPACE);
+			sb.append(StringPool.GREATER_THAN);
+			sb.append(StringPool.SPACE);
 			sb.append(category.getTitle(locale));
 		}
 
