@@ -238,7 +238,7 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(searchContainer
 				<c:choose>
 					<c:when test="<%= unsubscribable %>">
 						<portlet:actionURL var="unsubscribeURL">
-							<portlet:param name="struts_action" value='<%= Validator.isNull(displayTerms.getStructureId()) ? "/journal/edit_folder" : "/journal/edit_structure" %>' />
+							<portlet:param name="struts_action" value='<%= Validator.isNull(displayTerms.getStructureId()) ? "/journal/edit_folder" : "/journal/edit_article" %>' />
 							<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.UNSUBSCRIBE %>" />
 							<portlet:param name="redirect" value="<%= currentURL %>" />
 
@@ -247,7 +247,7 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(searchContainer
 									<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
 								</c:when>
 								<c:otherwise>
-									<portlet:param name="structureId" value="<%= String.valueOf(ddmStructureId) %>" />
+									<portlet:param name="ddmStructureId" value="<%= String.valueOf(ddmStructureId) %>" />
 								</c:otherwise>
 							</c:choose>
 						</portlet:actionURL>
@@ -269,7 +269,7 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(searchContainer
 			</c:when>
 			<c:otherwise>
 				<portlet:actionURL var="subscribeURL">
-					<portlet:param name="struts_action" value='<%= Validator.isNull(displayTerms.getStructureId()) ? "/journal/edit_folder" : "/journal/edit_structure" %>' />
+					<portlet:param name="struts_action" value='<%= Validator.isNull(displayTerms.getStructureId()) ? "/journal/edit_folder" : "/journal/edit_article" %>' />
 					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.SUBSCRIBE %>" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 
@@ -278,7 +278,7 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(searchContainer
 							<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
 						</c:when>
 						<c:otherwise>
-							<portlet:param name="structureId" value="<%= String.valueOf(ddmStructureId) %>" />
+							<portlet:param name="ddmStructureId" value="<%= String.valueOf(ddmStructureId) %>" />
 						</c:otherwise>
 					</c:choose>
 				</portlet:actionURL>
