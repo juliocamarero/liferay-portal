@@ -577,17 +577,15 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 			ratingsEntries.size(), importedRatingsEntries.size());
 
 		for (RatingsEntry ratingsEntry : ratingsEntries) {
-			Iterator<RatingsEntry> importedRatingsEntriesIterator =
-				importedRatingsEntries.iterator();
+			Iterator<RatingsEntry> iterator = importedRatingsEntries.iterator();
 
-			while (importedRatingsEntriesIterator.hasNext()) {
-				RatingsEntry importedRatingsEntry =
-					importedRatingsEntriesIterator.next();
+			while (iterator.hasNext()) {
+				RatingsEntry importedRatingsEntry = iterator.next();
 
 				if (ratingsEntry.getScore() ==
 						importedRatingsEntry.getScore()) {
 
-					importedRatingsEntriesIterator.remove();
+					iterator.remove();
 
 					break;
 				}
