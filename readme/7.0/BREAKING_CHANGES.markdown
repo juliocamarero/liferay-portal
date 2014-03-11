@@ -27,9 +27,12 @@ backwards compatibility.
 Each change must have a brief descriptive title and contain the following
 information:
 
+* **[Title]** Provide a brief descriptive title. Use past tense and follow
+the capitalization rules from 
+<http://en.wikibooks.org/wiki/Basic_Book_Design/Capitalizing_Words_in_Titles>.
 * **Date:** Specify the date you submitted the change. Format the date as
 *YYYY-MMM* (e.g. 2014-Mar) or *YYYY-MMM-DD* (e.g., 2014-Feb-25).
-* **Jira Ticket:** Reference the related Jira ticket (e.g., LPS-123456)
+* **JIRA Ticket:** Reference the related JIRA ticket (e.g., LPS-123456)
 (Optional).
 * **What changed?** Identify the affected component and the type of change that
 was made.
@@ -45,8 +48,8 @@ horizontal rule):
 
 ```
 ### [Title]
-* Date:
-* Jira Ticket:
+- **Date:**
+- **JIRA Ticket:**
 
 #### What changed?
 
@@ -60,9 +63,55 @@ horizontal rule):
 ```
 ---------------------------------------
 
+### Merge fields signature and body for message boards and wiki e-mail configuration
+* **Date**: 28th February 2014
+* **JIRA Ticket**: LPS-44599
+
+#### What changed?
+The configuration for e-mail signatures of notifications from message boards and
+wiki has been removed. An automatic update process has been developed to
+append the signatures into the bodies of the e-mail messages for wiki and
+message boards notifications. This process only applies if you have configured
+your signatures in database. In case your signatures were declared in
+portal.properties they should be updated manually as explained below.
+
+#### Who is affected?
+Users who have configured e-mail signatures for wiki or message boards
+notifications. Especially those who have done it in their portal.properties
+file since manual changes are required.
+
+#### How should I update my code?
+You should modify your portal.properties file to remove the properties
+message.boards.email.message.added.signature,
+message.boards.email.message.updated.signature, wiki.email.page.added.signature,
+and wiki.email.page.updated.signature. Then, you should append the contents of
+the signatures to the bodies you have configured in you portal.properties file.
+
+**Example**
+
+Replace:
+```
+wiki.email.page.updated.body=A wiki page was updated.
+wiki.email.page.updated.signature=For any doubts e-mail the system administrator
+```
+
+With:
+```
+wiki.email.page.updated.body=A wiki page was updated.\n--\nFor any doubts e-mail the system administrator
+```
+
+#### Why was this change made?
+This change helps simplify the user interface. The signatures can still be set
+inside the body and there was no real benefit in having both things separated.
+
+---------------------------------------
+
 ### Removal of Methods `get` and `format`, which use the PortletConfig
 * Date: 7th March 2014
-* Jira Ticket: LPS-44342
+* JIRA Ticket: LPS-44342
+### Removed `get` and `format` Methods That Used `PortletConfig` Parameters
+- **Date:** 7th March 2014
+- **JIRA Ticket:** LPS-44342
 
 #### What changed?
 All the methods `get()` and `format()` which had the PortletConfig as a

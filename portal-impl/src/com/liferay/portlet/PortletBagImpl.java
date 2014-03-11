@@ -59,7 +59,7 @@ public class PortletBagImpl implements PortletBag {
 	public PortletBagImpl(
 		String portletName, ServletContext servletContext,
 		Portlet portletInstance,
-		ConfigurationAction configurationActionInstance,
+		List<ConfigurationAction> configurationActionInstances,
 		List<Indexer> indexerInstances, OpenSearch openSearchInstance,
 		FriendlyURLMapper friendlyURLMapperInstance,
 		URLEncoder urlEncoderInstance,
@@ -86,7 +86,7 @@ public class PortletBagImpl implements PortletBag {
 		_portletName = portletName;
 		_servletContext = servletContext;
 		_portletInstance = portletInstance;
-		_configurationActionInstance = configurationActionInstance;
+		_configurationActionInstances = configurationActionInstances;
 		_indexerInstances = indexerInstances;
 		_openSearchInstance = openSearchInstance;
 		_friendlyURLMapperInstance = friendlyURLMapperInstance;
@@ -118,7 +118,7 @@ public class PortletBagImpl implements PortletBag {
 	public Object clone() {
 		return new PortletBagImpl(
 			getPortletName(), getServletContext(), getPortletInstance(),
-			getConfigurationActionInstance(), getIndexerInstances(),
+			getConfigurationActionInstances(), getIndexerInstances(),
 			getOpenSearchInstance(), getFriendlyURLMapperInstance(),
 			getURLEncoderInstance(), getPortletDataHandlerInstance(),
 			getStagedModelDataHandlerInstances(), getTemplateHandlerInstance(),
@@ -138,10 +138,17 @@ public class PortletBagImpl implements PortletBag {
 
 	@Override
 	public void destroy() {
-		ServiceTrackerList<Indexer> serviceTrackerList =
+		ServiceTrackerList<ConfigurationAction>
+			configurationActionInstancesServiceTrackerList =
+				(ServiceTrackerList<ConfigurationAction>)
+					_configurationActionInstances;
+
+		configurationActionInstancesServiceTrackerList.close();
+
+		ServiceTrackerList<Indexer> indexerInstancesServiceTrackerList =
 			(ServiceTrackerList<Indexer>)_indexerInstances;
 
-		serviceTrackerList.close();
+		indexerInstancesServiceTrackerList.close();
 	}
 
 	@Override
@@ -155,8 +162,8 @@ public class PortletBagImpl implements PortletBag {
 	}
 
 	@Override
-	public ConfigurationAction getConfigurationActionInstance() {
-		return _configurationActionInstance;
+	public List<ConfigurationAction> getConfigurationActionInstances() {
+		return _configurationActionInstances;
 	}
 
 	@Override
@@ -319,7 +326,7 @@ public class PortletBagImpl implements PortletBag {
 
 	private List<AssetRendererFactory> _assetRendererFactoryInstances;
 	private List<AtomCollectionAdapter<?>> _atomCollectionAdapterInstances;
-	private ConfigurationAction _configurationActionInstance;
+	private List<ConfigurationAction> _configurationActionInstances;
 	private ControlPanelEntry _controlPanelEntryInstance;
 	private List<CustomAttributesDisplay> _customAttributesDisplayInstances;
 	private FriendlyURLMapper _friendlyURLMapperInstance;
