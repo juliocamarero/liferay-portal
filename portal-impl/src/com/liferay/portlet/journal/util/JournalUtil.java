@@ -1211,15 +1211,19 @@ public class JournalUtil {
 	}
 
 	public static boolean isSubscribedToStructure(
-		long companyId, long groupId, long userId, long structureId)
+		long companyId, long groupId, long userId, long ddmStructureId)
 			throws PortalException, SystemException {
 
-		if (structureId == 0) {
-			structureId = groupId;
+		String className = DDMStructure.class.getName();
+		long classPK = ddmStructureId;
+
+		if (ddmStructureId == 0) {
+			className += JournalArticle.class.getName();
+			classPK = groupId;
 		}
 
 		return SubscriptionLocalServiceUtil.isSubscribed(
-			companyId, userId, DDMStructure.class.getName(), structureId);
+			companyId, userId, className, classPK);
 	}
 
 	public static String mergeArticleContent(
