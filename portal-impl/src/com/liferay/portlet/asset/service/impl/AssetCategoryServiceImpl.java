@@ -489,7 +489,7 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		return searchCategoriesDisplay(
-			new long[]{groupId}, title, new long[]{vocabularyId}, start, end);
+			new long[] {groupId}, title, new long[] {vocabularyId}, start, end);
 	}
 
 	@Override
@@ -500,13 +500,14 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 
 		User user = getUser();
 
-		BaseModelSearchResult<AssetCategory> results =
+		BaseModelSearchResult<AssetCategory> baseModelSearchResult =
 			assetCategoryLocalService.searchCategories(
 				user.getCompanyId(), groupIds, title, vocabularyIds, start,
 				end);
 
 		return new AssetCategoryDisplay(
-			results.getBaseModels(), results.getLength(), start, end);
+			baseModelSearchResult.getBaseModels(),
+			baseModelSearchResult.getLength(), start, end);
 	}
 
 	@Override

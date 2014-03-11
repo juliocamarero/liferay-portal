@@ -384,12 +384,13 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 
 		User user = getUser();
 
-		BaseModelSearchResult<AssetVocabulary> results =
+		BaseModelSearchResult<AssetVocabulary> baseModelSearchResult =
 			assetVocabularyLocalService.searchVocabularies(
 				user.getCompanyId(), groupId, title, start, end);
 
-		List<AssetVocabulary> vocabularies = results.getBaseModels();
-		int total = results.getLength();
+		List<AssetVocabulary> vocabularies =
+			baseModelSearchResult.getBaseModels();
+		int total = baseModelSearchResult.getLength();
 
 		if (addDefaultVocabulary && (total == 0)) {
 			total = assetVocabularyPersistence.countByGroupId(groupId);
