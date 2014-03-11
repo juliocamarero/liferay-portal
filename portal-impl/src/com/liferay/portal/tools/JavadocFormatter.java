@@ -106,9 +106,8 @@ public class JavadocFormatter {
 
 		System.out.println("Input directory is " + _inputDir);
 
-		String limit = arguments.get("javadoc.limit");
-
-		String[] classLimits = StringUtil.split(limit, ",");
+		String[] limits = StringUtil.split(
+			arguments.get("javadoc.limit"), ",");
 
 		_outputFilePrefix = GetterUtil.getString(
 			arguments.get("javadoc.output.file.prefix"));
@@ -129,15 +128,15 @@ public class JavadocFormatter {
 		directoryScanner.setExcludes(
 			new String[] {"**\\classes\\**", "**\\portal-client\\**"});
 
-		for (int i = 0; i < classLimits.length; i++) {
+		for (String limit : limits) {
 			List<String> includes = new ArrayList<String>();
 
-			if (Validator.isNotNull(classLimits[i]) &&
-				!classLimits[i].startsWith("$")) {
+			if (Validator.isNotNull(limit) &&
+				!limit.startsWith("$")) {
 
-				System.out.println("Limit on " + classLimits[i]);
+				System.out.println("Limit on " + limit);
 
-				String[] limitArray = StringUtil.split(classLimits[i], '/');
+				String[] limitArray = StringUtil.split(limit, '/');
 
 				for (String curLimit : limitArray) {
 					includes.add(
@@ -161,14 +160,14 @@ public class JavadocFormatter {
 			fileNames = directoryScanner.getIncludedFiles();
 
 			if ((fileNames.length == 0) &&
-				Validator.isNotNull(classLimits[i]) &&
-				!classLimits[i].startsWith("$")) {
+				Validator.isNotNull(limit) &&
+				!limit.startsWith("$")) {
 
 				StringBundler sb = new StringBundler("Limit file not found: ");
 
-				sb.append(classLimits[i]);
+				sb.append(limit);
 
-				if (classLimits[i].contains(".")) {
+				if (limit.contains(".")) {
 					sb.append(
 						" Specify limit filename without package path or ");
 					sb.append("file type suffix.");
