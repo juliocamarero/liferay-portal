@@ -27,10 +27,21 @@
 
 <%
 String contentsLanguageId = ParamUtil.getString(request, "contentsLanguageId");
+
+Locale contentsLocale = LocaleUtil.fromLanguageId(contentsLanguageId);
+
+contentsLanguageId = LocaleUtil.toLanguageId(contentsLocale);
+
 String cssPath = ParamUtil.getString(request, "cssPath");
 String cssClasses = ParamUtil.getString(request, "cssClasses");
 boolean inlineEdit = ParamUtil.getBoolean(request, "inlineEdit");
+
 String languageId = ParamUtil.getString(request, "languageId");
+
+Locale locale = LocaleUtil.fromLanguageId(languageId);
+
+languageId = LocaleUtil.toLanguageId(locale);
+
 String name = ParamUtil.getString(request, "name");
 boolean resizable = ParamUtil.getBoolean(request, "resizable");
 
@@ -81,12 +92,6 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 	config.contentsCss = ['<%= HtmlUtil.escapeJS(cssPath) %>/aui.css', '<%= HtmlUtil.escapeJS(cssPath) %>/main.css'];
 
 	<%
-	Locale contentsLocale = LocaleUtil.fromLanguageId(contentsLanguageId);
-
-	// LPS-44780
-
-	contentsLanguageId = LocaleUtil.toLanguageId(contentsLocale);
-
 	String contentsLanguageDir = LanguageUtil.get(contentsLocale, "lang.dir");
 	%>
 
@@ -99,14 +104,6 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 	config.extraPlugins = 'ajaxsave,media,restore,scayt,wsc';
 
 	config.height = 265;
-
-	<%
-	Locale locale = LocaleUtil.fromLanguageId(languageId);
-
-	// LPS-44780
-
-	languageId = LocaleUtil.toLanguageId(locale);
-	%>
 
 	config.language = '<%= languageId.replace("iw_", "he_") %>';
 
