@@ -1211,6 +1211,8 @@ public class ResourcePermissionLocalServiceImpl
 
 		resourcePermissionPersistence.update(resourcePermission);
 
+		updateLayoutModifiedDate(name, primKey);
+
 		PermissionCacheUtil.clearCache();
 
 		SearchEngineUtil.updatePermissionFields(name, primKey);
@@ -1255,6 +1257,8 @@ public class ResourcePermissionLocalServiceImpl
 					companyId, name, scope, primKey, ownerId, roleId, actionIds,
 					ResourcePermissionConstants.OPERATOR_SET, false);
 			}
+
+			updateLayoutModifiedDate(name, primKey);
 		}
 		finally {
 			PermissionThreadLocal.setIndexEnabled(flushEnabled);
@@ -1349,8 +1353,6 @@ public class ResourcePermissionLocalServiceImpl
 				companyId, name, scope, primKey, ownerId, roleId, actionIds,
 				operator, true);
 
-			updateLayoutModifiedDate(name, primKey);
-
 			return;
 		}
 
@@ -1385,8 +1387,6 @@ public class ResourcePermissionLocalServiceImpl
 			lock.unlock();
 
 			LockRegistry.freeLock(groupName, key);
-
-			updateLayoutModifiedDate(name, primKey);
 		}
 	}
 
@@ -1426,8 +1426,6 @@ public class ResourcePermissionLocalServiceImpl
 			doUpdateResourcePermission(
 				companyId, name, scope, primKey, ownerId, roleIdsToActionIds);
 
-			updateLayoutModifiedDate(name, primKey);
-
 			return;
 		}
 
@@ -1461,8 +1459,6 @@ public class ResourcePermissionLocalServiceImpl
 			lock.unlock();
 
 			LockRegistry.freeLock(groupName, key);
-
-			updateLayoutModifiedDate(name, primKey);
 		}
 	}
 
