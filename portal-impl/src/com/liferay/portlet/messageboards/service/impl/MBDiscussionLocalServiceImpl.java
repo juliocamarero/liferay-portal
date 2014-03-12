@@ -113,7 +113,6 @@ public class MBDiscussionLocalServiceImpl
 		return mbDiscussionPersistence.findByThreadId(threadId);
 	}
 
-	@Override
 	public void subscribeDiscussion(
 			long userId, long groupId, String className, long classPK)
 		throws PortalException, SystemException {
@@ -122,7 +121,6 @@ public class MBDiscussionLocalServiceImpl
 			userId, groupId, className, classPK);
 	}
 
-	@Override
 	public void unsubscribeDiscussion(
 			long userId, String className, long classPK)
 		throws PortalException, SystemException {
