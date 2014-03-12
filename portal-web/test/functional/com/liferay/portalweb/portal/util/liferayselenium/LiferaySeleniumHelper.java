@@ -860,18 +860,16 @@ public class LiferaySeleniumHelper {
 	public static void typeFrame(
 		LiferaySelenium liferaySelenium, String locator, String value) {
 
+		StringBundler sb = new StringBundler();
+
 		String titleAttibute = liferaySelenium.getAttribute(locator + "@title");
 
 		int x = titleAttibute.indexOf(",");
 
-		value = value.replace("\\", "\\\\");
-		value = HtmlUtil.escapeJS(value);
-
-		StringBundler sb = new StringBundler();
-
 		sb.append(titleAttibute.substring(x + 1));
+
 		sb.append(".setHTML(\"");
-		sb.append(value);
+		sb.append(HtmlUtil.escapeJS(value.replace("\\", "\\\\")));
 		sb.append("\")");
 
 		liferaySelenium.runScript(sb.toString());
