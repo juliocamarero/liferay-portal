@@ -12,29 +12,23 @@
  * details.
  */
 
-package com.liferay.portlet.comments.notifications;
+package com.liferay.portlet.blogs.notifications;
 
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.Constants;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BaseModel;
-import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
-import com.liferay.portal.service.SubscriptionLocalServiceUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousMailExecutionTestListener;
 import com.liferay.portal.util.BaseUserNotificationTestCase;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portal.util.UserTestUtil;
 import com.liferay.portlet.blogs.model.BlogsEntry;
+import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.util.BlogsTestUtil;
-import com.liferay.portlet.messageboards.model.MBMessageDisplay;
-import com.liferay.portlet.messageboards.model.MBThread;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
 import org.junit.runner.RunWith;
 
@@ -49,76 +43,43 @@ import org.junit.runner.RunWith;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
-public class CommentsUserNotificationTest extends BaseUserNotificationTestCase {
-
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-
-		User siteAdmin = UserTestUtil.addGroupUser(
-			group, RoleConstants.SITE_ADMINISTRATOR);
-
-		_commentedEntry = BlogsTestUtil.addEntry(
-			siteAdmin.getUserId(), group, true);
-
-		siteMember = UserTestUtil.addGroupUser(
-			group, RoleConstants.SITE_MEMBER);
-	}
+public class BlogsUserNotificationTest extends BaseUserNotificationTestCase {
 
 	@Override
 	protected BaseModel<?> addBaseModel() throws Exception {
-		MBMessageDisplay messageDisplay =
-			MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
-				siteMember.getUserId(), group.getGroupId(),
-				BlogsEntry.class.getName(), _commentedEntry.getEntryId(),
-				WorkflowConstants.STATUS_APPROVED);
-
-		MBThread thread =  messageDisplay.getThread();
-
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			group.getGroupId());
-
-		serviceContext.setCommand(Constants.ADD);
-		serviceContext.setLayoutFullURL("http://localhost");
-
-		return MBMessageLocalServiceUtil.addDiscussionMessage(
-			siteMember.getUserId(), user.getFullName(), group.getGroupId(),
-			BlogsEntry.class.getName(), _commentedEntry.getEntryId(),
-			thread.getThreadId(), thread.getRootMessageId(),
-			ServiceTestUtil.randomString(), ServiceTestUtil.randomString(50),
-			serviceContext);
+		return BlogsTestUtil.addEntry(user.getUserId(), group, true);
 	}
 
 	@Override
 	protected String getPortletId() {
-		return PortletKeys.COMMENTS;
+		return PortletKeys.BLOGS;
 	}
 
 	@Override
 	protected void subscribeToContainer() throws Exception {
-		SubscriptionLocalServiceUtil.addSubscription(
-			user.getUserId(), group.getGroupId(), BlogsEntry.class.getName(),
-			_commentedEntry.getEntryId());
+		BlogsEntryLocalServiceUtil.subscribe(
+			user.getUserId(), group.getGroupId());
 	}
 
 	@Override
 	protected BaseModel<?> updateBaseModel(BaseModel<?> baseModel)
 		throws Exception {
 
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			group.getGroupId());
+		BlogsEntry blogsEntry = (BlogsEntry)baseModel;
+
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext();
 
 		serviceContext.setCommand(Constants.UPDATE);
 		serviceContext.setLayoutFullURL("http://localhost");
+		serviceContext.setScopeGroupId(group.getGroupId());
 
-		return MBMessageLocalServiceUtil.updateDiscussionMessage(
-			siteMember.getUserId(), (Long)baseModel.getPrimaryKeyObj(),
-			BlogsEntry.class.getName(), _commentedEntry.getEntryId(),
-			ServiceTestUtil.randomString(), ServiceTestUtil.randomString(50),
+		return BlogsEntryLocalServiceUtil.updateEntry(
+			blogsEntry.getUserId(), blogsEntry.getEntryId(),
+			ServiceTestUtil.randomString(), blogsEntry.getDescription(),
+			blogsEntry.getContent(), 1, 1, 2012, 12, 00, true, true,
+			new String[0], blogsEntry.getSmallImage(),
+			blogsEntry.getSmallImageURL(), StringPool.BLANK, null,
 			serviceContext);
 	}
-
-	private BlogsEntry _commentedEntry;
-	private User siteMember;
 
 }
