@@ -1066,6 +1066,25 @@ public class JournalUtil {
 		return ArrayUtil.toLongArray(classPKs);
 	}
 
+	public static long getSubscriptionToStructureClass(
+		long groupId, long ddmStructureId, StringBundler outClassName) {
+
+		long classPK;
+
+		outClassName.append(DDMStructure.class.getName());
+
+		if (ddmStructureId == 0) {
+			outClassName.append(CharPool.POUND);
+			outClassName.append(JournalArticle.class.getName());
+			classPK = groupId;
+		}
+		else {
+			classPK = ddmStructureId;
+		}
+
+		return classPK;
+	}
+
 	public static String getTemplateScript(
 		DDMTemplate ddmTemplate, Map<String, String> tokens, String languageId,
 		boolean transform) {
@@ -1213,16 +1232,12 @@ public class JournalUtil {
 		long companyId, long groupId, long userId, long ddmStructureId)
 			throws PortalException, SystemException {
 
-		String className = DDMStructure.class.getName();
-		long classPK = ddmStructureId;
-
-		if (ddmStructureId == 0) {
-			className += JournalArticle.class.getName();
-			classPK = groupId;
-		}
+		StringBundler className = new StringBundler(128);
+		long classPK = getSubscriptionToStructureClass(
+			groupId, ddmStructureId, className);
 
 		return SubscriptionLocalServiceUtil.isSubscribed(
-			companyId, userId, className, classPK);
+			companyId, userId, className.toString(), classPK);
 	}
 
 	public static String mergeArticleContent(
