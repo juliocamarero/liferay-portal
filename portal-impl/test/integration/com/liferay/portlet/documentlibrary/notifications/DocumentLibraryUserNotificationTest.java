@@ -25,6 +25,7 @@ import com.liferay.portal.test.Sync;
 import com.liferay.portal.test.SynchronousMailExecutionTestListener;
 import com.liferay.portal.util.BaseUserNotificationTestCase;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
