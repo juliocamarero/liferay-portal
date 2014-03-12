@@ -70,7 +70,8 @@ public class DocumentLibraryUserNotificationTest
 	@Override
 	protected void subscribeToContainer() throws Exception {
 		DLAppLocalServiceUtil.subscribeFolder(
-			user.getUserId(), group.getGroupId(), _folder.getFolderId());
+			TestPropsValues.getUserId(), group.getGroupId(),
+			_folder.getFolderId());
 	}
 
 	@Override
