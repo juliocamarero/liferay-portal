@@ -100,7 +100,6 @@ public class StagedModelDataHandlerRegistryUtil {
 		_instance._unregister(stagedModelDataHandler);
 	}
 
-	@SuppressWarnings("unchecked")
 	private StagedModelDataHandlerRegistryUtil() {
 		Registry registry = RegistryUtil.getRegistry();
 
@@ -125,7 +124,6 @@ public class StagedModelDataHandlerRegistryUtil {
 		return ListUtil.fromCollection(values);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void _register(StagedModelDataHandler<?> stagedModelDataHandler) {
 		Registry registry = RegistryUtil.getRegistry();
 
