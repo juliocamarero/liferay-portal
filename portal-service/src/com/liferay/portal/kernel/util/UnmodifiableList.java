@@ -29,9 +29,9 @@ import java.util.ListIterator;
  * <code>java.lang.UnsupportedOperationException</code>.
  * </p>
  *
- * @author Alexander Chow
- * @deprecated As of 7.0.0, use
- * {@link java.util.Collections#unmodifiableList(java.util.List)} instead.
+ * @author     Alexander Chow
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             java.util.Collections#unmodifiableList(java.util.List)}
  */
 @Deprecated
 public class UnmodifiableList<E> implements List<E>, Serializable {
