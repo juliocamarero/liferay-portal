@@ -135,7 +135,11 @@ boolean advancedSearch = ParamUtil.getBoolean(request, displayTerms.ADVANCED_SEA
 
 String keywords = ParamUtil.getString(request, "keywords");
 
-int status = WorkflowConstants.STATUS_ANY;
+int status = WorkflowConstants.STATUS_APPROVED;
+
+if (permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
+	status = WorkflowConstants.STATUS_ANY;
+}
 
 List results = null;
 int total = 0;
@@ -151,9 +155,6 @@ int total = 0;
 			userId = themeDisplay.getUserId();
 
 			status = WorkflowConstants.STATUS_ANY;
-		}
-		else if (!permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
-			status = WorkflowConstants.STATUS_APPROVED;
 		}
 
 		total = JournalArticleServiceUtil.getGroupArticlesCount(scopeGroupId, userId, folderId, status);
@@ -189,10 +190,6 @@ int total = 0;
 	<c:otherwise>
 
 		<%
-		if (!permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
-			status = WorkflowConstants.STATUS_APPROVED;
-		}
-
 		total = JournalFolderServiceUtil.getFoldersAndArticlesCount(scopeGroupId, folderId, status);
 
 		searchContainer.setTotal(total);
@@ -310,10 +307,6 @@ for (int i = 0; i < results.size(); i++) {
 					tempRowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
 					tempRowURL.setParameter("articleId", curArticle.getArticleId());
 
-					if (!permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
-						status = WorkflowConstants.STATUS_APPROVED;
-					}
-
 					tempRowURL.setParameter("status", String.valueOf(status));
 
 					request.setAttribute("view_entries.jsp-article", curArticle);
@@ -341,10 +334,6 @@ for (int i = 0; i < results.size(); i++) {
 						rowURL.setParameter("groupId", String.valueOf(curArticle.getGroupId()));
 						rowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
 						rowURL.setParameter("articleId", curArticle.getArticleId());
-
-						if (!permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
-							status = WorkflowConstants.STATUS_APPROVED;
-						}
 
 						rowURL.setParameter("status", String.valueOf(status));
 						%>
