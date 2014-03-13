@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.util;
+package com.liferay.portal.kernel.diff;
 
 import java.io.Reader;
 
@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * @author Bruno Farache
- * @see    com.liferay.portal.kernel.util.DiffUtil
+ * @see    DiffUtil
  */
 public interface Diff {
 

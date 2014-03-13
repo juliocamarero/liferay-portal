@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.util;
+package com.liferay.portal.kernel.diff;
 
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 
@@ -29,7 +29,7 @@ import java.util.List;
  * Take a look at <code>DiffTest</code> to see the expected inputs and outputs.
  *
  * @author Bruno Farache
- * @see    com.liferay.portal.kernel.util.DiffUtil
+ * @see    DiffUtil
  */
 public class DiffUtil {
 
