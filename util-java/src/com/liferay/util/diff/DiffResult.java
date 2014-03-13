@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author     Bruno Farache
  * @deprecated As of 6.2.0, moved to {@link
- *             com.liferay.portal.kernel.util.DiffResult}
+ *             com.liferay.portal.kernel.diff.DiffResult}
  */
 @Deprecated
 public class DiffResult {
