@@ -131,10 +131,6 @@ if (displayTerms.isNavigationRecent()) {
 	searchContainer.setOrderByType(orderByType);
 }
 
-boolean advancedSearch = ParamUtil.getBoolean(request, displayTerms.ADVANCED_SEARCH);
-
-String keywords = ParamUtil.getString(request, "keywords");
-
 int status = WorkflowConstants.STATUS_APPROVED;
 
 if (permissionChecker.isContentReviewer(user.getCompanyId(), scopeGroupId)) {
