@@ -4409,6 +4409,54 @@ public class JournalArticleLocalServiceImpl
 	}
 
 	/**
+	 * Subscribe the user to changes in elements that belongs to specified
+	 * structure.
+	 *
+	 * @param  groupId the primary key of the folder's group
+	 * @param  userId the primary key of the user to be subscribed
+	 * @param ddmStructureId the primary key of the structure to subscribe to
+	 * @throws PortalException if the user, group os structure could not be
+	 * 		   found, or if subscribing was not permissible
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public void subscribeStructure(
+		long groupId, long userId, long ddmStructureId)
+			throws PortalException, SystemException {
+
+		StringBundler className = new StringBundler(128);
+		long classPK = JournalUtil.getSubscriptionToStructureClass(
+			groupId, ddmStructureId, className);
+
+		subscriptionLocalService.addSubscription(
+			userId, groupId, className.toString(), classPK);
+	}
+
+	/**
+	 * Unsubscribe the user from changes in elements that belongs to specified
+	 * structure.
+	 *
+	 * @param  groupId the primary key of the folder's group
+	 * @param  userId the primary key of the user to be subscribed
+	 * @param ddmStructureId the primary key of the structure to subscribe to
+	 * @throws PortalException if the user, group os structure could not be
+	 * 		   found, or if subscribing was not permissible
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public void unsubscribeStructure(
+		long groupId, long userId, long ddmStructureId) throws PortalException,
+		SystemException {
+
+		StringBundler className = new StringBundler(128);
+		long classPK = JournalUtil.getSubscriptionToStructureClass(
+			groupId, ddmStructureId, className);
+
+		subscriptionLocalService.deleteSubscription(
+			userId, className.toString(), classPK);
+	}
+
+	/**
 	 * Updates the web content article matching the version, replacing its
 	 * folder, title, description, content, and layout UUID.
 	 *
@@ -6456,6 +6504,9 @@ public class JournalArticleLocalServiceImpl
 
 		JournalFolder folder = article.getFolder();
 
+		subscriptionSender.addPersistedSubscribers(
+			JournalFolder.class.getName(), article.getGroupId());
+
 		if (folder != null) {
 			subscriptionSender.addPersistedSubscribers(
 				JournalFolder.class.getName(), folder.getFolderId());
@@ -6466,8 +6517,23 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 
-		subscriptionSender.addPersistedSubscribers(
-			JournalFolder.class.getName(), article.getGroupId());
+		if (article.isTemplateDriven()) {
+			DDMStructure structure = ddmStructureLocalService.getStructure(
+				article.getGroupId(),
+				classNameLocalService.getClassNameId(JournalArticle.class),
+				article.getStructureId(), true);
+
+			subscriptionSender.addPersistedSubscribers(
+				DDMStructure.class.getName(), structure.getStructureId());
+		}
+		else {
+			StringBundler className = new StringBundler(128);
+			JournalUtil.getSubscriptionToStructureClass(
+				article.getGroupId(), 0, className);
+
+			subscriptionSender.addPersistedSubscribers(
+				className.toString(), article.getGroupId());
+		}
 
 		subscriptionSender.addPersistedSubscribers(
 			JournalArticle.class.getName(), article.getResourcePrimKey());

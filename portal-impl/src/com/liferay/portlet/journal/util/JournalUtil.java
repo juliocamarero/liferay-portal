@@ -1068,6 +1068,25 @@ public class JournalUtil {
 		return ArrayUtil.toLongArray(classPKs);
 	}
 
+	public static long getSubscriptionToStructureClass(
+		long groupId, long ddmStructureId, StringBundler outClassName) {
+
+		long classPK;
+
+		outClassName.append(DDMStructure.class.getName());
+
+		if (ddmStructureId == 0) {
+			outClassName.append(CharPool.POUND);
+			outClassName.append(JournalArticle.class.getName());
+			classPK = groupId;
+		}
+		else {
+			classPK = ddmStructureId;
+		}
+
+		return classPK;
+	}
+
 	public static String getTemplateScript(
 		DDMTemplate ddmTemplate, Map<String, String> tokens, String languageId,
 		boolean transform) {
@@ -1177,8 +1196,8 @@ public class JournalUtil {
 	}
 
 	public static boolean isSubscribedToFolder(
-			long companyId, long groupId, long userId, long folderId)
-		throws PortalException, SystemException {
+		long companyId, long groupId, long userId, long folderId)
+			throws PortalException, SystemException {
 
 		return isSubscribedToFolder(companyId, groupId, userId, folderId, true);
 	}
@@ -1209,6 +1228,18 @@ public class JournalUtil {
 		return SubscriptionLocalServiceUtil.isSubscribed(
 			companyId, userId, JournalFolder.class.getName(),
 			ArrayUtil.toLongArray(ancestorFolderIds));
+	}
+
+	public static boolean isSubscribedToStructure(
+		long companyId, long groupId, long userId, long ddmStructureId)
+			throws PortalException, SystemException {
+
+		StringBundler className = new StringBundler(128);
+		long classPK = getSubscriptionToStructureClass(
+			groupId, ddmStructureId, className);
+
+		return SubscriptionLocalServiceUtil.isSubscribed(
+			companyId, userId, className.toString(), classPK);
 	}
 
 	public static String mergeArticleContent(
