@@ -59,12 +59,10 @@ public class LiferayIntegrationJUnitTestRunner
 				Object inheritableThreadLocals =
 					_inheritableThreadLocalsField.get(currentThread);
 
-				if (inheritableThreadLocals != null) {
-					_inheritableThreadLocalsField.set(
-						currentThread,
-						_createInheritedMapMethod.invoke(
-							null, inheritableThreadLocals));
-				}
+				_inheritableThreadLocalsField.set(
+					currentThread,
+					_createInheritedMapMethod.invoke(
+						null, inheritableThreadLocals));
 
 				Object threadLocals = _threadLocalsField.get(currentThread);
 
