@@ -221,8 +221,11 @@ public class JournalArticleAssetRendererFactory
 			PermissionChecker permissionChecker, long groupId, long classTypeId)
 		throws Exception {
 
-		if ((classTypeId > 0) &&
-			!DDMStructurePermission.contains(
+		if (classTypeId == 0) {
+			return false;
+		}
+
+		if (!DDMStructurePermission.contains(
 				permissionChecker, classTypeId, ActionKeys.VIEW)) {
 
 			return false;
