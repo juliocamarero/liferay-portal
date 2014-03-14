@@ -14,6 +14,9 @@
 
 package com.liferay.portal.kernel.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -234,6 +237,22 @@ public class StringUtilTest {
 				"Hello World HELLO WORLD Hello World HELLO WORLD",
 				new String[] {"Hello", "HELLO"},
 				new String[] {"Aloha", "ALOHA"}));
+	}
+
+	@Test(timeout = 1000)
+	public void testReplaceMap() throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+
+		map.put("Hallo", "Hello");
+		map.put("Wirld", "World");
+
+		Assert.assertEquals(
+			"Hello World",
+			StringUtil.replace("AB Hallo CD AB Wirld CD", "AB ", " CD", map));
+		Assert.assertEquals(
+			"Hello World",
+			StringUtil.replace(
+				"Hello World", StringPool.BLANK, StringPool.BLANK, map));
 	}
 
 	@Test
