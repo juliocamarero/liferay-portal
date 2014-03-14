@@ -2713,8 +2713,8 @@ public class StringUtil {
 	public static StringBundler replaceToStringBundler(
 		String s, String begin, String end, Map<String, String> values) {
 
-		if ((s == null) || (begin == null) || (end == null) ||
-			(values == null) || (values.size() == 0)) {
+		if (Validator.isBlank(s) || Validator.isBlank(begin) ||
+			Validator.isBlank(end) || MapUtil.isEmpty(values)) {
 
 			return new StringBundler(s);
 		}
@@ -2755,8 +2755,8 @@ public class StringUtil {
 	public static StringBundler replaceWithStringBundler(
 		String s, String begin, String end, Map<String, StringBundler> values) {
 
-		if ((s == null) || (begin == null) || (end == null) ||
-			(values == null) || (values.size() == 0)) {
+		if (Validator.isBlank(s) || Validator.isBlank(begin) ||
+			Validator.isBlank(end) || MapUtil.isEmpty(values)) {
 
 			return new StringBundler(s);
 		}
