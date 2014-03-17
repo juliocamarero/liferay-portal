@@ -3658,7 +3658,9 @@ public class StringUtil {
 	 *         <code>null</code>
 	 */
 	public static String stripBetween(String s, String begin, String end) {
-		if ((s == null) || (begin == null) || (end == null)) {
+		if (Validator.isBlank(s) || Validator.isBlank(begin) ||
+			Validator.isBlank(end)) {
+
 			return s;
 		}
 
