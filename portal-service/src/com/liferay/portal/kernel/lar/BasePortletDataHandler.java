@@ -443,8 +443,8 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		// For now, we are going to throw an exception if one portlet data
 		// handler has an exception to ensure that the transaction is rolled
 		// back for data integrity. We may decide that this is not the best
-		// behavior in the future because a bad plugin could prevent deletion
-		// of groups.
+		// behavior in the future because a bad plugin could prevent deletion of
+		// groups.
 
 		return true;
 	}

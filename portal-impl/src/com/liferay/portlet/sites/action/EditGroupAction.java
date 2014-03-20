@@ -29,7 +29,6 @@ import com.liferay.portal.RequiredGroupException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.servlet.MultiSessionMessages;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.staging.StagingConstants;
 import com.liferay.portal.kernel.staging.StagingUtil;
@@ -152,10 +151,6 @@ public class EditGroupAction extends PortletAction {
 					redirect = siteAdministrationURL.toString();
 
 					hideDefaultSuccessMessage(actionRequest);
-
-					MultiSessionMessages.add(
-						actionRequest,
-						PortletKeys.SITE_SETTINGS + "requestProcessed");
 				}
 				else {
 					String oldFriendlyURL = (String)returnValue[1];
