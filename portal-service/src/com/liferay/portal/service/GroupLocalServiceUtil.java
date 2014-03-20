@@ -1063,8 +1063,7 @@ public class GroupLocalServiceUtil {
 
 	public static com.liferay.portal.model.Group fetchCompanyGroup(
 		long companyId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().fetchCompanyGroup(companyId);
 	}
 
