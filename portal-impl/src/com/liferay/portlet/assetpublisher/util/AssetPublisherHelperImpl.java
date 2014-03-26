@@ -14,11 +14,11 @@
 
 package com.liferay.portlet.assetpublisher.util;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
@@ -55,19 +55,18 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 		viewURL.setParameter("type", assetRendererFactory.getType());
 
 		if (Validator.isNotNull(assetRenderer.getUrlTitle())) {
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)liferayPortletRequest.getAttribute(
-					WebKeys.THEME_DISPLAY);
-
-			if (assetRenderer.getGroupId() != themeDisplay.getScopeGroupId()) {
-				viewURL.setParameter(
-					"groupId", String.valueOf(assetRenderer.getGroupId()));
-			}
-
 			viewURL.setParameter("urlTitle", assetRenderer.getUrlTitle());
 		}
 
-		return viewURL.toString();
+        String viewURLSTR = viewURL.toString();
+        try {
+            viewURLSTR = assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewURL.toString());
+        } catch (Exception e) {
+            if (_log.isWarnEnabled())
+                _log.warn("Exception getting asset urlViewInContext", e);
+        }
+		return viewURLSTR;
 	}
 
+    private static Log _log = LogFactoryUtil.getLog(AssetPublisherHelperImpl.class);
 }
