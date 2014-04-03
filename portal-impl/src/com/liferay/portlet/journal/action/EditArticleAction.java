@@ -63,7 +63,6 @@ import com.liferay.portlet.journal.ArticleTitleException;
 import com.liferay.portlet.journal.ArticleTypeException;
 import com.liferay.portlet.journal.ArticleVersionException;
 import com.liferay.portlet.journal.DuplicateArticleIdException;
-import com.liferay.portlet.journal.InvalidDDMStructureException;
 import com.liferay.portlet.journal.NoSuchArticleException;
 import com.liferay.portlet.journal.asset.JournalArticleAssetRenderer;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -153,9 +152,6 @@ public class EditArticleAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.EXPIRE)) {
 				expireArticles(actionRequest);
-			}
-			else if (cmd.equals(Constants.MOVE)) {
-				moveArticles(actionRequest);
 			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
 				deleteArticles(actionRequest, true);
@@ -289,7 +285,6 @@ public class EditArticleAction extends PortletAction {
 					 e instanceof ArticleTypeException ||
 					 e instanceof ArticleVersionException ||
 					 e instanceof DuplicateArticleIdException ||
-					 e instanceof InvalidDDMStructureException ||
 					 e instanceof StorageFieldRequiredException) {
 
 				SessionErrors.add(actionRequest, e.getClass());
@@ -433,28 +428,6 @@ public class EditArticleAction extends PortletAction {
 		portletURL.setWindowState(actionRequest.getWindowState());
 
 		return portletURL.toString();
-	}
-
-	protected void moveArticles(ActionRequest actionRequest) throws Exception {
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		String articleId = ParamUtil.getString(actionRequest, "articleId");
-		long newFolderId = ParamUtil.getLong(actionRequest, "newFolderId");
-
-		if (Validator.isNotNull(articleId)) {
-			JournalArticleServiceUtil.moveArticle(
-				themeDisplay.getScopeGroupId(), articleId, newFolderId);
-		}
-		else {
-			String[] articleIds = StringUtil.split(
-				ParamUtil.getString(actionRequest, "articleIds"));
-
-			for (int i = 0; i < articleIds.length; i++) {
-				JournalArticleServiceUtil.moveArticle(
-					themeDisplay.getScopeGroupId(), articleIds[i], newFolderId);
-			}
-		}
 	}
 
 	protected void removeArticlesLocale(ActionRequest actionRequest)
