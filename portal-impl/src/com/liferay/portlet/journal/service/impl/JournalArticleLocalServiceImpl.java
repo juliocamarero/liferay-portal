@@ -1695,7 +1695,7 @@ public class JournalArticleLocalServiceImpl
 
 		return getArticleContent(
 			groupId, articleId, version, viewMode, null, languageId,
-			themeDisplay);
+			(PortletRequestModel)null, themeDisplay);
 	}
 
 	public String getArticleContent(
@@ -1760,7 +1760,8 @@ public class JournalArticleLocalServiceImpl
 		throws PortalException, SystemException {
 
 		return getArticleContent(
-			groupId, articleId, viewMode, null, languageId, themeDisplay);
+			groupId, articleId, viewMode, null, languageId,
+			(PortletRequestModel)null, themeDisplay);
 	}
 
 	@Override
