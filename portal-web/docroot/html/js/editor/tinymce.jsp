@@ -19,7 +19,7 @@
 <%
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
 String editorImpl = (String)request.getAttribute("liferay-ui:input-editor:editorImpl");
-String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMethod");
+String value = (String)request.getAttribute("liferay-ui:input-editor:value");
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
 
 String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:onChangeMethod");
@@ -81,8 +81,8 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		},
 
 		initInstanceCallback: function() {
-			<c:if test="<%= Validator.isNotNull(initMethod) %>">
-				window['<%= name %>'].init(<%= HtmlUtil.escape(namespace + initMethod) %>());
+			<c:if test="<%= Validator.isNotNull(value) %>">
+				window['<%= name %>'].init(<%= value %>());
 			</c:if>
 
 			var iframe = A.one('#<%= name %>_ifr');

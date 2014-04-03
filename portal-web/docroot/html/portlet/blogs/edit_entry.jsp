@@ -98,9 +98,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 		</c:if>
 
 		<aui:field-wrapper label="content">
-			<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" />
-
-			<aui:input name="content" type="hidden" />
+			<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" value="<%= content %>" />
 		</aui:field-wrapper>
 
 		<liferay-ui:custom-attributes-available className="<%= BlogsEntry.class.getName() %>">
@@ -283,10 +281,6 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 		return document.<portlet:namespace />fm.<portlet:namespace />title.value + ' ' + window.<portlet:namespace />editor.getHTML();
 	}
 
-	function <portlet:namespace />initEditor() {
-		return "<%= UnicodeFormatter.toString(content) %>";
-	}
-
 	function <portlet:namespace />previewEntry() {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (entry == null) ? Constants.ADD : Constants.UPDATE %>";
 		document.<portlet:namespace />fm.<portlet:namespace />preview.value = "true";
@@ -422,6 +416,8 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 				<portlet:namespace />clearSaveDraftIntervalId();
 
 				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= (entry == null) ? Constants.ADD : Constants.UPDATE %>";
+
+				// TODO: This should go into the form or the taglib
 				document.<portlet:namespace />fm.<portlet:namespace />content.value = content;
 
 				if (draft) {

@@ -18,7 +18,7 @@
 
 <%
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
-String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMethod");
+String value = (String)request.getAttribute("liferay-ui:input-editor:value");
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
 
 String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:onChangeMethod");
@@ -51,18 +51,14 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 		},
 
 		initEditor: function() {
-			<c:if test="<%= Validator.isNotNull(initMethod) %>">
-				<%= name %>.setHTML(<%= namespace + initMethod %>());
-
-				<c:if test="<%= resizable %>">
-					new A.Resize(
-						{
-							handles: 'br',
-							node: '#<%= name %>_container',
-							wrap: true
-						}
-					);
-				</c:if>
+			<c:if test="<%= resizable %>">
+				new A.Resize(
+					{
+						handles: 'br',
+						node: '#<%= name %>_container',
+						wrap: true
+					}
+				);
 			</c:if>
 		},
 
@@ -90,7 +86,7 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 			}
 			%>
 
-			style="font-family: monospace; height: 100%; min-height: 8em; min-width: 10em; resize: vertical; width: 100%;"></textarea>
+			style="font-family: monospace; height: 100%; min-height: 8em; min-width: 10em; resize: vertical; width: 100%;" value="<%= value %>"></textarea>
 		</td>
 	</tr>
 	</table>

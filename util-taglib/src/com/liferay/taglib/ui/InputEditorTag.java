@@ -52,8 +52,8 @@ public class InputEditorTag extends IncludeTag {
 		_height = height;
 	}
 
-	public void setInitMethod(String initMethod) {
-		_initMethod = initMethod;
+	public void setValue(String value) {
+		_value = value;
 	}
 
 	public void setInlineEdit(boolean inlineEdit) {
@@ -104,7 +104,7 @@ public class InputEditorTag extends IncludeTag {
 		_editorImpl = null;
 		_fileBrowserParams = null;
 		_height = null;
-		_initMethod = "initEditor";
+		_value = null;
 		_inlineEdit = false;
 		_inlineEditSaveURL = null;
 		_name = "editor";
@@ -147,7 +147,7 @@ public class InputEditorTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:input-editor:fileBrowserParams", _fileBrowserParams);
 		request.setAttribute("liferay-ui:input-editor:height", _height);
-		request.setAttribute("liferay-ui:input-editor:initMethod", _initMethod);
+		request.setAttribute("liferay-ui:input-editor:value", _value);
 		request.setAttribute(
 			"liferay-ui:input-editor:inlineEdit", String.valueOf(_inlineEdit));
 		request.setAttribute(
@@ -174,7 +174,6 @@ public class InputEditorTag extends IncludeTag {
 	private String _editorImpl;
 	private Map<String, String> _fileBrowserParams;
 	private String _height;
-	private String _initMethod = "initEditor";
 	private boolean _inlineEdit;
 	private String _inlineEditSaveURL;
 	private String _name = "editor";
@@ -185,6 +184,7 @@ public class InputEditorTag extends IncludeTag {
 	private boolean _resizable = true;
 	private boolean _skipEditorLoading;
 	private String _toolbarSet = "liferay";
+	private String _value;
 	private String _width;
 
 }

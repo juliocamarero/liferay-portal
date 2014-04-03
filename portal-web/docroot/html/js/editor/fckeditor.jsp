@@ -45,7 +45,7 @@ if (configParams != null) {
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
 String cssClasses = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClasses"));
 String editorImpl = (String)request.getAttribute("liferay-ui:input-editor:editorImpl");
-String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMethod");
+String value = (String)request.getAttribute("liferay-ui:input-editor:value");
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
 
 String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:onChangeMethod");
@@ -117,10 +117,6 @@ String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolba
 
 		initFckArea: function() {
 			var textArea = document.getElementById('<%= name %>');
-
-			<c:if test="<%= Validator.isNotNull(initMethod) %>">
-				textArea.value = <%= HtmlUtil.escape(namespace + initMethod) %>();
-			</c:if>
 
 			var fckEditor = new FCKeditor('<%= name %>');
 
@@ -212,5 +208,5 @@ String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolba
 </aui:script>
 
 <div class="<%= HtmlUtil.escapeAttribute(cssClass) %>">
-	<textarea id="<%= name %>" name="<%= name %>" style="display: none;"></textarea>
+	<textarea id="<%= name %>" name="<%= name %>" style="display: none;"><%= HtmlUtil.escape(value) %></textarea>
 </div>

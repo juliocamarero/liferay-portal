@@ -54,7 +54,7 @@ String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:
 String cssClasses = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClasses"));
 String editorImpl = (String)request.getAttribute("liferay-ui:input-editor:editorImpl");
 String name = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
-String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMethod");
+String value = (String)request.getAttribute("liferay-ui:input-editor:valued");
 boolean inlineEdit = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:inlineEdit"));
 String inlineEditSaveURL = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:inlineEditSaveURL"));
 
@@ -199,7 +199,7 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 %>
 
 <div class="<%= cssClass %>">
-	<textarea id="<%= textareaName %>" name="<%= textareaName %>" style="display: none;"></textarea>
+	<textarea id="<%= textareaName %>" name="<%= textareaName %>" style="display: none;"><%= HtmlUtil.escape(value) %></textarea>
 </div>
 
 <script type="text/javascript">
@@ -272,9 +272,9 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 		}
 
 		function initData() {
-			<c:if test="<%= Validator.isNotNull(initMethod) && !(inlineEdit && (inlineEditSaveURL != null)) %>">
+			<c:if test="<%= Validator.isNotNull(value) && !(inlineEdit && (inlineEditSaveURL != null)) %>">
 				ckEditor.setData(
-					window['<%= HtmlUtil.escapeJS(namespace + initMethod) %>'](),
+					value,
 					function() {
 						ckEditor.resetDirty();
 					}

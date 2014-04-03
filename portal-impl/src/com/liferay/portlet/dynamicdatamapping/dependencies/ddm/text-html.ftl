@@ -3,10 +3,10 @@
 <#assign skipEditorLoading = paramUtil.getBoolean(request, "p_p_isolated")>
 
 <@aui["field-wrapper"] data=data helpMessage=escape(fieldStructure.tip) label=escape(label) required=required>
-	<@liferay_ui["input-editor"] initMethod="${namespacedFieldName}InitEditor" name="${namespacedFieldName}Editor" onBlurMethod="${namespacedFieldName}OnBlurEditor" skipEditorLoading=skipEditorLoading />
+	<@liferay_ui["input-editor"] initMethod="${namespacedFieldName}InitEditor" name="${namespacedFieldName}Editor" onBlurMethod="${namespacedFieldName}OnBlurEditor" skipEditorLoading=skipEditorLoading value="${fieldValue}" />
 
-	<@aui.input name=namespacedFieldName type="hidden" value=fieldValue>
-		<#if required>
+//  TODO: Add required attribute to liferay-ui:input-editor
+	<#if required>
 			<@aui.validator name="required" />
 		</#if>
 	</@>
@@ -15,10 +15,6 @@
 </@>
 
 <@aui.script>
-	window['${portletNamespace}${namespacedFieldName}InitEditor'] = function() {
-		return "${unicodeFormatter.toString(fieldValue)}";
-	}
-
 	Liferay.provide(
 		window,
 		'${portletNamespace}${namespacedFieldName}OnBlurEditor',

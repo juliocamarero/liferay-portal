@@ -18,7 +18,7 @@
 
 <%
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
-String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMethod");
+String value = (String)request.getAttribute("liferay-ui:input-editor:value");
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
 %>
 
@@ -33,7 +33,7 @@ String name = namespace + GetterUtil.getString((String)request.getAttribute("lif
 		}
 	);
 
-	<c:if test="<%= Validator.isNotNull(initMethod) %>">
-		window['<%= name %>'].setHTML(<%= HtmlUtil.escape(namespace + initMethod) %>());
+	<c:if test="<%= Validator.isNotNull(value) %>">
+		window['<%= name %>'].setHTML(value);
 	</c:if>
 </aui:script>
