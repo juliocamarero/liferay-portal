@@ -45,8 +45,19 @@ if (Validator.isNotNull(keywords)) {
 
 <liferay-util:include page="/html/portlet/trash/restore_path.jsp" />
 
-<liferay-ui:error exception="<%= DuplicateEntryException.class %>">
-	<liferay-ui:message key="unable-to-move-this-item-to-the-selected-destination" />
+<liferay-ui:error exception="<%= RestoreEntryException.class %>">
+
+	<%
+	RestoreEntryException ree = (RestoreEntryException)errorException;
+	%>
+
+	<c:if test="<%= ree.getType() == RestoreEntryException.DUPLICATE %>">
+		<liferay-ui:message key="unable-to-move-this-item-to-the-selected-destination" />
+	</c:if>
+
+	<c:if test="<%= ree.getType() == RestoreEntryException.NO_VALID_CONTAINER %>">
+		<liferay-ui:message key="the-destination-you-selected-is-not-a-valid-container.-please-select-a-different-destination" />
+	</c:if>
 </liferay-ui:error>
 
 <liferay-ui:error exception="<%= TrashPermissionException.class %>">

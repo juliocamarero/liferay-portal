@@ -24,6 +24,9 @@ import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.journal.asset.JournalArticleAssetRenderer;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleResource;
@@ -33,8 +36,10 @@ import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.service.permission.JournalFolderPermission;
 import com.liferay.portlet.journal.util.JournalUtil;
-import com.liferay.portlet.trash.DuplicateEntryException;
+import com.liferay.portlet.trash.RestoreEntryException;
 import com.liferay.portlet.trash.model.TrashEntry;
+
+import java.util.List;
 
 import javax.portlet.PortletRequest;
 
@@ -48,23 +53,23 @@ import javax.portlet.PortletRequest;
 public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 
 	@Override
-	public void checkDuplicateEntry(
+	public void checkRestorableEntry(
 			long classPK, long containerModelId, String newName)
 		throws PortalException, SystemException {
 
 		JournalArticle article =
 			JournalArticleLocalServiceUtil.getLatestArticle(classPK);
 
-		checkDuplicateEntry(
+		checkRestorableEntry(
 			classPK, 0, containerModelId, article.getArticleId(), newName);
 	}
 
 	@Override
-	public void checkDuplicateTrashEntry(
+	public void checkRestorableEntry(
 			TrashEntry trashEntry, long containerModelId, String newName)
 		throws PortalException, SystemException {
 
-		checkDuplicateEntry(
+		checkRestorableEntry(
 			trashEntry.getClassPK(), trashEntry.getEntryId(), containerModelId,
 			trashEntry.getTypeSettingsProperty("title"), newName);
 	}
@@ -263,8 +268,8 @@ public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 	}
 
 	protected void checkDuplicateEntry(
-			long classPK, long trashEntryId, long containerModelId,
-			String originalTitle, String newName)
+			long classPK, long trashEntryId, String originalTitle,
+			String newName)
 		throws PortalException, SystemException {
 
 		JournalArticle article =
@@ -285,18 +290,59 @@ public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 			(journalArticleResource.getPrimaryKey() !=
 				originalArticleResource.getPrimaryKey())) {
 
-			DuplicateEntryException dee = new DuplicateEntryException();
+			RestoreEntryException ree = new RestoreEntryException(
+				RestoreEntryException.DUPLICATE);
 
 			JournalArticle duplicateArticle =
 				JournalArticleLocalServiceUtil.getArticle(
 					originalArticleResource.getGroupId(), originalTitle);
 
-			dee.setDuplicateEntryId(duplicateArticle.getResourcePrimKey());
-			dee.setOldName(duplicateArticle.getArticleId());
-			dee.setTrashEntryId(trashEntryId);
+			ree.setDuplicateEntryId(duplicateArticle.getResourcePrimKey());
+			ree.setOldName(duplicateArticle.getArticleId());
+			ree.setTrashEntryId(trashEntryId);
 
-			throw dee;
+			throw ree;
 		}
+	}
+
+	protected void checkRestorableEntry(
+			long classPK, long trashEntryId, long containerModelId,
+			String originalTitle, String newName)
+		throws PortalException, SystemException {
+
+		checkValidContainer(classPK, containerModelId);
+
+		checkDuplicateEntry(classPK, trashEntryId, originalTitle, newName);
+	}
+
+	protected void checkValidContainer(long classPK, long containerModelId)
+		throws PortalException, SystemException {
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.getLatestArticle(classPK);
+
+		long groupId = article.getGroupId();
+
+		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
+			PortalUtil.getSiteGroupId(groupId),
+			PortalUtil.getClassNameId(JournalArticle.class),
+			article.getStructureId(), true);
+
+		List<DDMStructure> ddmStructures =
+			JournalFolderLocalServiceUtil.getFolderDDMStructures(
+				PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId),
+				containerModelId, true);
+
+		for (DDMStructure curDDMStructure : ddmStructures) {
+			if (curDDMStructure.getStructureId() ==
+					ddmStructure.getStructureId()) {
+
+				return;
+			}
+		}
+
+		throw new RestoreEntryException(
+			RestoreEntryException.NO_VALID_CONTAINER);
 	}
 
 	@Override
