@@ -659,15 +659,12 @@ public class AssetCategoryLocalServiceImpl
 		searchContext.setCompanyId(companyId);
 		searchContext.setEnd(end);
 		searchContext.setGroupIds(groupIds);
+		searchContext.setStart(start);
 
-		QueryConfig queryConfig = new QueryConfig();
+		QueryConfig queryConfig = searchContext.getQueryConfig();
 
 		queryConfig.setHighlightEnabled(false);
 		queryConfig.setScoreEnabled(false);
-
-		searchContext.setQueryConfig(queryConfig);
-
-		searchContext.setStart(start);
 
 		return searchContext;
 	}
@@ -748,8 +745,7 @@ public class AssetCategoryLocalServiceImpl
 			AssetCategory.class);
 
 		for (int i = 0; i < 10; i++) {
-			Hits hits = indexer.search(
-				searchContext, AssetCategoryUtil.SELECTED_FIELD_NAMES);
+			Hits hits = indexer.search(searchContext);
 
 			List<AssetCategory> categories = AssetCategoryUtil.getCategories(
 				hits);

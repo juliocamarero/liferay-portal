@@ -442,16 +442,13 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 				getClassNames(companyId, className));
 			searchContext.setGroupIds(groupIds);
 			searchContext.setKeywords(keywords);
+			searchContext.setStart(start);
+			searchContext.setUserId(userId);
 
-			QueryConfig queryConfig = new QueryConfig();
+			QueryConfig queryConfig = searchContext.getQueryConfig();
 
 			queryConfig.setHighlightEnabled(false);
 			queryConfig.setScoreEnabled(false);
-
-			searchContext.setQueryConfig(queryConfig);
-
-			searchContext.setStart(start);
-			searchContext.setUserId(userId);
 
 			Indexer indexer = FacetedSearcher.getInstance();
 
@@ -504,16 +501,13 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			searchContext.setEntryClassNames(
 				getClassNames(companyId, className));
 			searchContext.setGroupIds(groupIds);
+			searchContext.setStart(start);
+			searchContext.setUserId(userId);
 
-			QueryConfig queryConfig = new QueryConfig();
+			QueryConfig queryConfig = searchContext.getQueryConfig();
 
 			queryConfig.setHighlightEnabled(false);
 			queryConfig.setScoreEnabled(false);
-
-			searchContext.setQueryConfig(queryConfig);
-
-			searchContext.setStart(start);
-			searchContext.setUserId(userId);
 
 			Indexer indexer = FacetedSearcher.getInstance();
 

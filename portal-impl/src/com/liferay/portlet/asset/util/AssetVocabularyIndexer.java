@@ -56,6 +56,11 @@ public class AssetVocabularyIndexer extends BaseIndexer {
 	public static final String PORTLET_ID = PortletKeys.ASSET_CATEGORIES_ADMIN;
 
 	public AssetVocabularyIndexer() {
+		setDefaultSelectedFieldNames(
+			new String[] {
+				Field.ASSET_VOCABULARY_ID, Field.COMPANY_ID, Field.GROUP_ID,
+				Field.UID,
+			});
 		setFilterSearch(true);
 		setPermissionAware(true);
 	}
