@@ -48,6 +48,8 @@ public class UserGroupRoleLocalServiceImpl
 			userGroupRoles.add(userGroupRole);
 		}
 
+		groupPersistence.addUser(groupId, userId);
+
 		PermissionCacheUtil.clearCache();
 
 		return userGroupRoles;
@@ -66,6 +68,8 @@ public class UserGroupRoleLocalServiceImpl
 
 			userGroupRoles.add(userGroupRole);
 		}
+
+		groupPersistence.addUsers(groupId, userIds);
 
 		PermissionCacheUtil.clearCache();
 
