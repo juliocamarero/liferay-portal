@@ -49,7 +49,14 @@ if (Validator.isNull(url) && (userDisplay != null)) {
 			</c:when>
 			<c:otherwise>
 				<span class="user-profile-image">
-					<img alt="" class="avatar" src="<%= HtmlUtil.escape(taglibSrc) %>" style="height: <%= height %>px; width: <%= width %>px;" />
+					<c:choose>
+						<c:when test="<%= (width != 0) && (height != 0) %>">
+							<img alt="" class="avatar" src="<%= HtmlUtil.escape(taglibSrc) %>" style="height: <%= height %>px; width: <%= width %>px;" />
+						</c:when>
+						<c:otherwise>
+							<img alt="" class="avatar" src="<%= HtmlUtil.escape(taglibSrc) %>" style="width: 65px;" />
+						</c:otherwise>
+					</c:choose>
 				</span>
 			</c:otherwise>
 		</c:choose>
