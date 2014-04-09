@@ -6971,8 +6971,8 @@ public class PortalImpl implements Portal {
 			redirect = PATH_MAIN + "/portal/status";
 		}
 
-		if (redirect != null && redirect.equals(request.getRequestURI())) {
-			_log.warn("Unable to redirect to: "+redirect+ ", recursive loop");
+		if (Validator.equals(redirect, request.getRequestURI())) {
+			_log.warn("Unable to redirect to not found page: " + redirect);
 
 			redirect = null;
 		}
