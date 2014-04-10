@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -67,6 +67,10 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 
 	public java.lang.Object getHref() {
 		return _href;
+	}
+
+	public java.lang.String getIconSrc() {
+		return _iconSrc;
 	}
 
 	public java.lang.String getIconCssClass() {
@@ -167,6 +171,12 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		setScopedAttribute("href", href);
 	}
 
+	public void setIconSrc(java.lang.String iconSrc) {
+		_iconSrc = iconSrc;
+
+		setScopedAttribute("iconSrc", iconSrc);
+	}
+
 	public void setIconCssClass(java.lang.String iconCssClass) {
 		_iconCssClass = iconCssClass;
 
@@ -244,6 +254,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		_data = null;
 		_dropdown = false;
 		_href = "javascript:void(0);";
+		_iconSrc = null;
 		_iconCssClass = null;
 		_id = null;
 		_label = null;
@@ -278,6 +289,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		setNamespacedAttribute(request, "data", _data);
 		setNamespacedAttribute(request, "dropdown", _dropdown);
 		setNamespacedAttribute(request, "href", _href);
+		setNamespacedAttribute(request, "iconSrc", _iconSrc);
 		setNamespacedAttribute(request, "iconCssClass", _iconCssClass);
 		setNamespacedAttribute(request, "id", _id);
 		setNamespacedAttribute(request, "label", _label);
@@ -308,6 +320,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 	private java.lang.Object _data = null;
 	private boolean _dropdown = false;
 	private java.lang.Object _href = "javascript:void(0);";
+	private java.lang.String _iconSrc = null;
 	private java.lang.String _iconCssClass = null;
 	private java.lang.String _id = null;
 	private java.lang.String _label = null;
