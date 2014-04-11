@@ -35,6 +35,11 @@
 		}
 	}
 
+	.avatar {
+		height: auto;
+		width: 65px;
+	}
+
 	.user-details {
 		margin-top: 1em;
 	}
