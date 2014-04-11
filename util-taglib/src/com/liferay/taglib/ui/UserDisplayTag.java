@@ -77,6 +77,13 @@ public class UserDisplayTag extends TagSupport {
 			request.setAttribute(
 				"liferay-ui:user-display:displayStyle",
 				String.valueOf(_displayStyle));
+
+			if (Validator.isNull(_imageCssClass)) {
+				_imageCssClass = "img-circle";
+			}
+
+			request.setAttribute(
+				"liferay-ui:user-display:imageCssClass", _imageCssClass);
 			request.setAttribute("liferay-ui:user-display:url", _url);
 
 			PortalIncludeUtil.include(pageContext, getStartPage());
@@ -99,6 +106,10 @@ public class UserDisplayTag extends TagSupport {
 
 	public void setEndPage(String endPage) {
 		_endPage = endPage;
+	}
+
+	public void setImageCssClass(String imageCssClass) {
+		_imageCssClass = imageCssClass;
 	}
 
 	public void setStartPage(String startPage) {
@@ -143,6 +154,7 @@ public class UserDisplayTag extends TagSupport {
 
 	private int _displayStyle = 1;
 	private String _endPage;
+	private String _imageCssClass;
 	private String _startPage;
 	private String _url;
 	private long _userId;
