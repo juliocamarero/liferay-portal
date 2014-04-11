@@ -15,15 +15,15 @@
 --%>
 
 <%
-List<AssetRendererFactory> availableAssetFactories =
-		ListUtil.filter(
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(company.getCompanyId()),
-			new PredicateFilter() {
-				public boolean filter(Object object) {
-					AssetRendererFactory factory = (AssetRendererFactory)object;
-					return factory.isCategorizable();
-				}
-			});
+List<AssetRendererFactory> availableAssetFactories = ListUtil.filter(
+	AssetRendererFactoryRegistryUtil.getAssetRendererFactories(company.getCompanyId()),
+	new PredicateFilter() {
+		public boolean filter(Object object) {
+			AssetRendererFactory assetRendererFactory = (AssetRendererFactory)object;
+
+			return assetRendererFactory.isCategorizable();
+		}
+	});
 
 boolean required = false;
 
@@ -50,16 +50,9 @@ if (ArrayUtil.isEmpty(requiredClassNameIds)) {
 }
 %>
 
-<aui:input cssClass="vocabulary-checkbox"
-		   helpMessage="multi-valued-help"
-		   label="allow-multiple-categories"
-		   name="multiValued"
-		   type="checkbox"
-		   value="<%= (vocabulary != null) ? vocabulary.isMultiValued() : true %>"
-/>
+<aui:input cssClass="vocabulary-checkbox" helpMessage="multi-valued-help" label="allow-multiple-categories" name="multiValued" type="checkbox" value="<%= (vocabulary != null) ? vocabulary.isMultiValued() : true %>" />
 
 <liferay-ui:panel collapsible="<%= true %>" defaultState="closed" extended="<%= false %>" id="vocabularyExtraFieldsPanelContainer" persistState="<%= true %>" title="associated-asset-types">
-
 	<aui:fieldset id="extraFields">
 
 		<%
@@ -72,19 +65,13 @@ if (ArrayUtil.isEmpty(requiredClassNameIds)) {
 			<div class="lfr-form-row lfr-form-row-inline">
 				<div class="row-fields">
 					<aui:select label="choose-asset-type" name="classNameId0">
-						<aui:option label="all-asset-types"
-									selected="<%= true %>"
-									value="<%= AssetCategoryConstants.ALL_CLASS_NAME_IDS %>"
-						/>
+						<aui:option label="all-asset-types" selected="<%= true %>" value="<%= AssetCategoryConstants.ALL_CLASS_NAME_IDS %>" />
 
 						<%
-						for (AssetRendererFactory factory : availableAssetFactories) {
+						for (AssetRendererFactory assetRendererFactory : availableAssetFactories) {
 						%>
 
-							<aui:option label="<%= ResourceActionsUtil.getModelResource(locale, factory.getClassName()) %>"
-										selected="<%= false %>"
-										value="<%= factory.getClassNameId() %>"
-							/>
+							<aui:option label="<%= ResourceActionsUtil.getModelResource(locale, assetRendererFactory.getClassName()) %>" selected="<%= false %>" value="<%= assetRendererFactory.getClassNameId() %>" />
 
 						<%
 						}
@@ -92,12 +79,7 @@ if (ArrayUtil.isEmpty(requiredClassNameIds)) {
 
 					</aui:select>
 
-					<aui:input cssClass="vocabulary-checkbox"
-							   label="required"
-							   name="required0"
-							   type="checkbox"
-							   value="<%= required %>"
-					/>
+					<aui:input cssClass="vocabulary-checkbox" label="required" name="required0" type="checkbox" value="<%= required %>" />
 				</div>
 			</div>
 
@@ -117,23 +99,18 @@ if (ArrayUtil.isEmpty(requiredClassNameIds)) {
 				<div class="lfr-form-row lfr-form-row-inline">
 					<div class="row-fields">
 						<aui:select label="choose-asset-type" name='<%= "classNameId" + index %>'>
-							<aui:option label="all-asset-types"
-										value="<%= AssetCategoryConstants.ALL_CLASS_NAME_IDS %>"
-							/>
+							<aui:option label="all-asset-types" value="<%= AssetCategoryConstants.ALL_CLASS_NAME_IDS %>" />
 
 							<%
-							for (AssetRendererFactory factory : availableAssetFactories) {
+							for (AssetRendererFactory assetRendererFactory : availableAssetFactories) {
 								boolean selected = false;
 
-								if (factory.getClassNameId() == selectedClassNameIds[index]) {
+								if (assetRendererFactory.getClassNameId() == selectedClassNameIds[index]) {
 									selected = true;
 								}
 							%>
 
-								<aui:option label="<%= ResourceActionsUtil.getModelResource(locale, factory.getClassName()) %>"
-											selected="<%= selected %>"
-											value="<%= factory.getClassNameId() %>"
-								/>
+								<aui:option label="<%= ResourceActionsUtil.getModelResource(locale, factory.getClassName()) %>" selected="<%= selected %>" value="<%= factory.getClassNameId() %>" />
 
 							<%
 							}
@@ -141,11 +118,7 @@ if (ArrayUtil.isEmpty(requiredClassNameIds)) {
 
 						</aui:select>
 
-						<aui:input cssClass="vocabulary-checkbox"
-								   label="required"
-								   name='<%= "required" + index %>'
-								   type="checkbox"
-								   value="<%= requiredIndex %>" />
+						<aui:input cssClass="vocabulary-checkbox" label="required" name='<%= "required" + index %>' type="checkbox" value="<%= requiredIndex %>" />
 					</div>
 				</div>
 
