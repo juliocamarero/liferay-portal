@@ -14,11 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/taglib/init.jsp" %>
-
-<%
-InputAssetLinksDisplayContext displayContext = new InputAssetLinksDisplayContext(pageContext);
-%>
+<%@ include file="/html/taglib/ui/input_asset_links/init.jsp" %>
 
 <liferay-ui:icon-menu
 	cssClass="select-existing-selector"
@@ -35,9 +31,9 @@ InputAssetLinksDisplayContext displayContext = new InputAssetLinksDisplayContext
 		<liferay-ui:icon
 			cssClass="asset-selector"
 			data='<%= (Map<String, Object>)entry.get("data") %>'
-			id='<%= entry.get("id").toString() %>'
-			message='<%= entry.get("message").toString() %>'
-			src='<%= entry.get("src").toString() %>'
+			id='<%= (String)entry.get("id") %>'
+			message='<%= (String)entry.get("message") %>'
+			src='<%= (String)entry.get("src") %>'
 			url="javascript:;"
 		/>
 
@@ -120,7 +116,7 @@ InputAssetLinksDisplayContext displayContext = new InputAssetLinksDisplayContext
 					uri: event.currentTarget.attr('data-href')
 				},
 				function(event) {
-					var searchContainerName = '<%= portletResponse.getNamespace() %>assetLinksSearchContainer';
+					var searchContainerName = '<portlet:namespace/>assetLinksSearchContainer';
 
 					searchContainer = Liferay.SearchContainer.get(searchContainerName);
 
@@ -137,7 +133,7 @@ InputAssetLinksDisplayContext displayContext = new InputAssetLinksDisplayContext
 </aui:script>
 
 <aui:script use="liferay-search-container">
-	var searchContainer = Liferay.SearchContainer.get('<%= portletResponse.getNamespace() %>assetLinksSearchContainer');
+	var searchContainer = Liferay.SearchContainer.get('<portlet:namespace/>assetLinksSearchContainer');
 
 	searchContainer.get('contentBox').delegate(
 		'click',
