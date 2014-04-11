@@ -5485,13 +5485,13 @@ public class JournalArticleLocalServiceImpl
 		Map<String, Serializable> attributes =
 			new HashMap<String, Serializable>();
 
+		attributes.put(Field.ARTICLE_ID, articleId);
 		attributes.put(Field.CLASS_NAME_ID, classNameId);
 		attributes.put(Field.CONTENT, content);
 		attributes.put(Field.DESCRIPTION, description);
 		attributes.put(Field.STATUS, status);
 		attributes.put(Field.TITLE, title);
 		attributes.put(Field.TYPE, type);
-		attributes.put("articleId", articleId);
 		attributes.put("ddmStructureKey", ddmStructureKey);
 		attributes.put("ddmTemplateKey", ddmTemplateKey);
 		attributes.put("params", params);

@@ -36,8 +36,8 @@ public class JournalSearcher extends BaseSearcher {
 
 	public JournalSearcher() {
 		setDefaultSelectedFieldNames(
-			Field.COMPANY_ID, Field.DEFAULT_LANGUAGE_ID, Field.ENTRY_CLASS_NAME,
-			Field.ENTRY_CLASS_PK, Field.GROUP_ID, Field.JOURNAL_ARTICLE_ID,
+			Field.ARTICLE_ID, Field.COMPANY_ID, Field.DEFAULT_LANGUAGE_ID,
+			Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK, Field.GROUP_ID,
 			Field.VERSION, Field.UID);
 		setDefaultSelectedLocalizedFieldNames(
 			Field.CONTENT, Field.DESCRIPTION, Field.TITLE);
