@@ -84,6 +84,12 @@ public class UserDisplayTag extends TagSupport {
 
 			request.setAttribute(
 				"liferay-ui:user-display:imageCssClass", _imageCssClass);
+			request.setAttribute(
+				"liferay-ui:user-display:showUserDetails",
+				String.valueOf(_showUserDetails));
+			request.setAttribute(
+				"liferay-ui:user-display:showUserName",
+				String.valueOf(_showUserName));
 			request.setAttribute("liferay-ui:user-display:url", _url);
 
 			PortalIncludeUtil.include(pageContext, getStartPage());
@@ -110,6 +116,14 @@ public class UserDisplayTag extends TagSupport {
 
 	public void setImageCssClass(String imageCssClass) {
 		_imageCssClass = imageCssClass;
+	}
+
+	public void setShowUserDetails(boolean showUserDetails) {
+		_showUserDetails = showUserDetails;
+	}
+
+	public void setShowUserName(boolean showUserName) {
+		_showUserName = showUserName;
 	}
 
 	public void setStartPage(String startPage) {
@@ -155,6 +169,8 @@ public class UserDisplayTag extends TagSupport {
 	private int _displayStyle = 1;
 	private String _endPage;
 	private String _imageCssClass;
+	private boolean _showUserDetails = true;
+	private boolean _showUserName = true;
 	private String _startPage;
 	private String _url;
 	private long _userId;
