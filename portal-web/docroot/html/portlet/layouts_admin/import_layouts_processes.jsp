@@ -65,9 +65,7 @@ OrderByComparator orderByComparator = BackgroundTaskComparatorFactoryUtil.getBac
 		>
 			<liferay-ui:user-display
 				displayStyle="3"
-				height="30"
 				userId="<%= backgroundTask.getUserId() %>"
-				width="30"
 			/>
 		</liferay-ui:search-container-column-text>
 

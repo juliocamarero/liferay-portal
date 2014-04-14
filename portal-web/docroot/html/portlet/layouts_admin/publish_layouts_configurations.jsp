@@ -70,9 +70,7 @@ int exportImportConfigurationType = localPublishing ? ExportImportConfigurationC
 		>
 			<liferay-ui:user-display
 				displayStyle="3"
-				height="30"
 				userId="<%= exportImportConfiguration.getUserId() %>"
-				width="30"
 			/>
 		</liferay-ui:search-container-column-text>
 
