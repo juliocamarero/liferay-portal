@@ -28,10 +28,6 @@
 			display: inline-block;
 			vertical-align: middle;
 		}
-
-		.user-name, .user-details{
-			display: none;
-		}
 	}
 
 	.avatar {

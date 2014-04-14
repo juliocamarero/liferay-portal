@@ -40,9 +40,13 @@ if (Validator.isNull(url) && (userDisplay != null)) {
 			<img alt="" class="avatar <%= imageCssClass %>" src="<%= HtmlUtil.escape(taglibSrc) %>" />
 		</span>
 
-		<span class="user-name">
-			<%= (userDisplay != null) ? HtmlUtil.escape(userDisplay.getFullName()) : HtmlUtil.escape(userName) %>
-		</span>
+		<c:if test="<%= showUserName %>">
+			<span class="user-name">
+				<%= (userDisplay != null) ? HtmlUtil.escape(userDisplay.getFullName()) : HtmlUtil.escape(userName) %>
+			</span>
+		</c:if>
 	</aui:a>
 
-	<div class="user-details">
+	<c:if test="<%= showUserDetails %>">
+		<div class="user-details">
+	</c:if>
