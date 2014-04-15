@@ -294,6 +294,9 @@ public class LayoutSetPrototypePropagationTest
 		Assert.assertEquals(
 			initialLayoutTemplateId,
 			LayoutTestUtil.getLayoutTemplateId(layout));
+
+		_layout = propagateChanges(_layout);
+
 		Assert.assertTrue(SitesUtil.isLayoutModifiedSinceLastMerge(_layout));
 		Assert.assertEquals(
 			"1_column", LayoutTestUtil.getLayoutTemplateId(_layout));
