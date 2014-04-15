@@ -265,17 +265,7 @@ public class LayoutSetPrototypePropagationTest
 
 		propagateChanges(group);
 
-		layout = LayoutLocalServiceUtil.getLayout(layout.getPlid());
-
-		layout.setLayoutPrototypeLinkEnabled(true);
-
-		LayoutLocalServiceUtil.updateLayout(layout);
-
-		_layout = LayoutLocalServiceUtil.getLayout(_layout.getPlid());
-
-		_layout.setLayoutPrototypeLinkEnabled(true);
-
-		LayoutLocalServiceUtil.updateLayout(_layout);
+		setLinkEnabled(true);
 
 		layout = LayoutTestUtil.updateLayoutTemplateId(layout, "1_column");
 
