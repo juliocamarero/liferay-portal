@@ -2638,7 +2638,8 @@ public class JournalArticleLocalServiceImpl
 			long groupId, String articleId, int status)
 		throws PortalException, SystemException {
 
-		return getEarliestOrLatestArticle(groupId, articleId, status, false);
+		return getFirstArticle(
+			groupId, articleId, status, new ArticleVersionComparator(false));
 	}
 
 	@Override
@@ -2781,7 +2782,8 @@ public class JournalArticleLocalServiceImpl
 			long groupId, String articleId, int status)
 		throws PortalException, SystemException {
 
-		return getEarliestOrLatestArticle(groupId, articleId, status, true);
+		return getFirstArticle(
+			groupId, articleId, status, new ArticleVersionComparator());
 	}
 
 	/**
@@ -6252,32 +6254,20 @@ public class JournalArticleLocalServiceImpl
 		return dateInterval;
 	}
 
-	protected JournalArticle getEarliestOrLatestArticle(
-			long groupId, String articleId, int status, boolean latest)
+	protected JournalArticle getFirstArticle(
+			long groupId, String articleId, int status,
+			OrderByComparator orderByComparator)
 		throws PortalException, SystemException {
 
-		List<JournalArticle> articles = null;
-
-		OrderByComparator orderByComparator = new ArticleVersionComparator(
-			latest);
-
 		if (status == WorkflowConstants.STATUS_ANY) {
-			articles = journalArticlePersistence.findByG_A_NotST(
-				groupId, articleId, WorkflowConstants.STATUS_IN_TRASH, 0, 1,
+			return journalArticlePersistence.findByG_A_NotST_First(
+				groupId, articleId, WorkflowConstants.STATUS_IN_TRASH,
 				orderByComparator);
 		}
 		else {
-			articles = journalArticlePersistence.findByG_A_ST(
-				groupId, articleId, status, 0, 1, orderByComparator);
+			return journalArticlePersistence.findByG_A_ST_First(
+				groupId, articleId, status, orderByComparator);
 		}
-
-		if (articles.isEmpty()) {
-			throw new NoSuchArticleException(
-				"No JournalArticle exists with the key {groupId=" + groupId +
-					", articleId=" + articleId + ", status=" + status + "}");
-		}
-
-		return articles.get(0);
 	}
 
 	protected String getUniqueUrlTitle(
