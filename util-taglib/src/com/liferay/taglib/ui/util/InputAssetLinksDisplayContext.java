@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -107,21 +108,24 @@ public class InputAssetLinksDisplayContext {
 	}
 
 	public List<AssetRendererFactory> getAssetRendererFactories() {
-		List<AssetRendererFactory> assetRendererFactories =
-			new ArrayList<AssetRendererFactory>();
+		List<AssetRendererFactory> assetRendererFactories = ListUtil.filter(
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
+				_company.getCompanyId()),
+				new PredicateFilter() {
 
-		for (AssetRendererFactory assetRendererFactory :
-				AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
-					_company.getCompanyId())) {
+					public boolean filter(Object object) {
+						AssetRendererFactory assetRendererFactory =
+							(AssetRendererFactory)object;
 
-			if (assetRendererFactory.isLinkable() &&
-				assetRendererFactory.isSelectable()) {
+						return assetRendererFactory.isLinkable() &&
+							assetRendererFactory.isSelectable();
+					}
 
-				assetRendererFactories.add(assetRendererFactory);
-			}
-		}
+				});
 
-		return assetRendererFactories;
+		return ListUtil.sort(
+			assetRendererFactories,
+			new AssetRendererFactoryTypeNameComparator(_locale));
 	}
 
 	public String getAssetType(AssetEntry entry) {
@@ -165,22 +169,8 @@ public class InputAssetLinksDisplayContext {
 		List<Map<String, Object>> entries =
 			new ArrayList<Map<String, Object>>();
 
-		List<AssetRendererFactory> assetRendererFactories =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
-				_company.getCompanyId());
-
-		assetRendererFactories = ListUtil.sort(
-			assetRendererFactories,
-			new AssetRendererFactoryTypeNameComparator(_locale));
-
 		for (AssetRendererFactory assetRendererFactory :
-				assetRendererFactories) {
-
-			if (!assetRendererFactory.isLinkable() ||
-				!assetRendererFactory.isSelectable()) {
-
-				continue;
-			}
+				getAssetRendererFactories()) {
 
 			if (assetRendererFactory.isSupportsClassTypes()) {
 				entries.addAll(_getAvailableClassTypes(assetRendererFactory));
