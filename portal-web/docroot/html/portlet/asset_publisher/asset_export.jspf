@@ -21,7 +21,9 @@ exportAssetURL.setWindowState(LiferayWindowState.EXCLUSIVE);
 
 List<String> extensions = ListUtil.toList(assetPublisherDisplayContext.getExtensions());
 
-if (assetRenderer.getClassName().equals(DLFileEntry.class.getName())) {
+String assetRendererClassName = assetRenderer.getClassName();
+
+if (assetRendererClassName.equals(DLFileEntry.class.getName())) {
 	DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getDLFileEntry(assetEntry.getClassPK());
 
 	String dlFileEntryExtension = dlFileEntry.getExtension();
