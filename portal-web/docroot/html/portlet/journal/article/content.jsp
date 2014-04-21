@@ -153,6 +153,26 @@ if (Validator.isNotNull(content)) {
 	<portlet:param name="templateId" value="<%= templateId %>" />
 </portlet:renderURL>
 
+<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editStructureURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_structure" />
+	<portlet:param name="closeRedirect" value="<%= currentURL %>" />
+	<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
+	<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL %>" />
+	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+	<portlet:param name="classNameId" value="<%= String.valueOf(PortalUtil.getClassNameId(DDMStructure.class)) %>" />
+	<portlet:param name="classPK" value="<%= String.valueOf(ddmStructure.getStructureId()) %>" />
+</liferay-portlet:renderURL>
+
+<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editTemplateURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template" />
+	<portlet:param name="closeRedirect" value="<%= currentURL %>" />
+	<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
+	<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL %>" />
+	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+	<portlet:param name="classNameId" value="<%= String.valueOf(classNameId) %>" />
+	<portlet:param name="templateId" value="<%= (ddmTemplate != null) ? String.valueOf(ddmTemplate.getTemplateId()) : StringPool.BLANK %>" />
+</liferay-portlet:renderURL>
+
 <div class="journal-article-body" id="<portlet:namespace />journalArticleBody">
 	<div class="journal-article-body-content">
 		<liferay-ui:error exception="<%= ArticleContentException.class %>" message="please-enter-valid-content" />
@@ -221,10 +241,11 @@ if (Validator.isNotNull(content)) {
 									<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
 										<liferay-ui:icon
 											iconCssClass="icon-search"
+											id="selectStructure"
 											label="<%= true %>"
 											linkCssClass="btn"
 											message="select"
-											url='<%= "javascript:" + renderResponse.getNamespace() + "openDDMStructureSelector();" %>'
+											url="javascript:;"
 										/>
 									</c:if>
 								</div>
@@ -255,10 +276,11 @@ if (Validator.isNotNull(content)) {
 									<c:if test="<%= ddmStructure != null %>">
 										<liferay-ui:icon
 											iconCssClass="icon-search"
+											id="selectTemplate"
 											label="<%= true %>"
 											linkCssClass="btn"
 											message="select"
-											url='<%= "javascript:" + renderResponse.getNamespace() + "openDDMTemplateSelector();" %>'
+											url="javascript:;"
 										/>
 									</c:if>
 								</div>
@@ -279,15 +301,15 @@ if (Validator.isNotNull(content)) {
 							<span for="<portlet:namespace />defaultLanguageId"><liferay-ui:message key="web-content-default-language" /></span>:
 
 							<span class="lfr-translation-manager-selector nobr">
-								<span class="article-default-language lfr-token lfr-token-primary" id="<portlet:namespace />textLanguageId">
+								<span class="article-default-language lfr-token lfr-token-primary" id="<portlet:namespace />defaultLanguage">
 									<img alt="<liferay-ui:message key="default-language" />" src='<%= HtmlUtil.escapeAttribute(themeDisplay.getPathThemeImages() + "/language/" + defaultLanguageId + ".png") %>' />
 
 									<%= LocaleUtil.fromLanguageId(defaultLanguageId).getDisplayName(locale) %>
 								</span>
 
-								<a href="javascript:;" id="<portlet:namespace />changeLanguageId"><liferay-ui:message key="change" /></a>
+								<a href="javascript:;" id="<portlet:namespace />changeDefaultLanguage"><liferay-ui:message key="change" /></a>
 
-								<aui:select cssClass="hide" hideLabel="<%= true %>" id="defaultLocale" inlineField="<%= true %>" label="default-language" name="defaultLanguageId">
+								<aui:select cssClass="hide" hideLabel="<%= true %>" id="defaultLanguageSelector" inlineField="<%= true %>" label="default-language" name="defaultLanguageId">
 
 									<%
 									Locale[] locales = LanguageUtil.getAvailableLocales(themeDisplay.getSiteGroupId());
@@ -342,7 +364,7 @@ if (Validator.isNotNull(content)) {
 							</c:if>
 						</c:when>
 						<c:otherwise>
-							<aui:input id="defaultLocale" name="defaultLanguageId" type="hidden" value="<%= defaultLanguageId %>" />
+							<aui:input id="defaultLanguageSelector" name="defaultLanguageId" type="hidden" value="<%= defaultLanguageId %>" />
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -441,280 +463,50 @@ if (Validator.isNotNull(content)) {
 	</c:if>
 </div>
 
-<aui:script>
-	function <portlet:namespace />initEditor() {
-		return "<%= UnicodeFormatter.toString(content) %>";
-	}
+<aui:script use="liferay-journal-content">
+	var journalContent = new Liferay.Portlet.JournalContent(
+		{
+			changeDefaultLanguage: A.one('#<portlet:namespace />changeDefaultLanguage'),
 
-	Liferay.provide(
-		window,
-		'<portlet:namespace />postProcessTranslation',
-		function(formDate, cmd, newVersion, newLanguageId, newLanguage, newStatusMessage) {
-			var A = AUI();
-
-			document.<portlet:namespace />fm1.<portlet:namespace />formDate.value = formDate;
-			document.<portlet:namespace />fm1.<portlet:namespace />version.value = newVersion;
-
-			var taglibWorkflowStatus = A.one('#<portlet:namespace />journalArticleWrapper .taglib-workflow-status');
-
-			var statusNode = taglibWorkflowStatus.one('.workflow-status strong');
-
-			statusNode.html(newStatusMessage);
-
-			var versionNode = taglibWorkflowStatus.one('.workflow-version strong');
-
-			versionNode.html(newVersion);
-
-			var availableTranslationContainer = A.one('#<portlet:namespace />availableTranslationContainer');
-
-			var translationLink = availableTranslationContainer.one('.journal-article-translation-' + newLanguageId);
-
-			if (cmd == '<%= Constants.DELETE_TRANSLATION %>') {
-				var availableLocales = A.one('#<portlet:namespace />availableLocales' + newLanguageId);
-
-				if (availableLocales) {
-					availableLocales.remove();
-				}
-
-				if (translationLink) {
-					translationLink.remove();
-				}
-
-				A.one('#<portlet:namespace />languageId' + newLanguageId).ancestor('li').show();
-
-				var availableLocales = availableTranslationContainer.all('a.lfr-token');
-
-				if (availableLocales.size() === 0) {
-					availableTranslationContainer.removeClass('contains-translations');
-
-					A.one('#<portlet:namespace />availableTranslationsLinks').hide();
-					A.one('#<portlet:namespace />translationsMessage').hide();
-				}
-			}
-			else if (!translationLink) {
-				var availableTranslationsLinks = A.one('#<portlet:namespace />availableTranslationsLinks');
-				var translationsMessage = A.one('#<portlet:namespace />translationsMessage');
-
-				statusNode.replaceClass('workflow-status-approved', 'workflow-status-draft');
-
-				statusNode.html('<%= UnicodeLanguageUtil.get(pageContext, "draft") %>');
-
-				availableTranslationContainer.addClass('contains-translations');
-
-				availableTranslationsLinks.show();
-				translationsMessage.show();
-
-				var TPL_TRANSLATION = '<a class="journal-article-translation-{newLanguageId} lfr-token" href="javascript:;"><img alt="" src="<%= themeDisplay.getPathThemeImages() %>/language/{newLanguageId}.png" />{newLanguage}</a>';
-
-				var translationLinkTpl = A.Lang.sub(
-					TPL_TRANSLATION,
-					{
-						newLanguageId: newLanguageId,
-						newLanguage: newLanguage
-					}
-				);
-
-				translationLink = A.Node.create(translationLinkTpl);
-
-				var editTranslationURL = '<%= editArticleRenderPopUpURL %>&<portlet:namespace />toLanguageId=' + newLanguageId;
-
-				translationLink.on(
-					'click',
-					function(event) {
-						Liferay.Util.openWindow(
-							{
-								id: '<portlet:namespace />' + newLanguageId,
-								title: '<%= UnicodeLanguageUtil.get(pageContext, "web-content-translation") %>',
-								uri: editTranslationURL
-							}
-						);
-					}
-				);
-
-				availableTranslationsLinks.append(translationLink);
-
-				A.one('#<portlet:namespace />languageId' + newLanguageId).ancestor('li').hide();
-
-				var languageInput = A.Node.create('<input name="<portlet:namespace />available_locales" type="hidden" value="' + newLanguageId + '" />');
-
-				A.one('#<portlet:namespace />fm1').append(languageInput);
-			}
-		},
-		['aui-base']
-	);
-
-	Liferay.Util.disableToggleBoxes('<portlet:namespace />autoArticleIdCheckbox','<portlet:namespace />newArticleId', true);
-</aui:script>
-
-<aui:script>
-	function <portlet:namespace />openDDMStructureSelector() {
-		Liferay.Util.openDDMPortlet(
-			{
-				basePortletURL: '<%= PortletURLFactoryUtil.create(request, PortletKeys.DYNAMIC_DATA_MAPPING, themeDisplay.getPlid(), PortletRequest.RENDER_PHASE) %>',
-				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey() : 0 %>,
-				dialog: {
-					destroyOnHide: true
-				},
-				eventName: '<portlet:namespace />selectStructure',
-				groupId: <%= groupId %>,
-				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
-				showGlobalScope: true,
-				struts_action: '/dynamic_data_mapping/select_structure',
-				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
-			},
-			function(event) {
-				if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-structure-will-change-the-available-input-fields-and-available-templates") %>') && (document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureId.value != event.ddmstructureid)) {
-					document.<portlet:namespace />fm1.<portlet:namespace />ddmStructureId.value = event.ddmstructureid;
-					document.<portlet:namespace />fm1.<portlet:namespace />structureId.value = event.ddmstructurekey;
-					document.<portlet:namespace />fm1.<portlet:namespace />templateId.value = "";
-
-					submitForm(document.<portlet:namespace />fm1, null, false, false);
-				}
-			}
-		);
-	}
-
-	function <portlet:namespace />openDDMTemplateSelector() {
-		Liferay.Util.openDDMPortlet(
-			{
+			ddm: {
 				basePortletURL: '<%= PortletURLFactoryUtil.create(request, PortletKeys.DYNAMIC_DATA_MAPPING, themeDisplay.getPlid(), PortletRequest.RENDER_PHASE) %>',
 				classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
 				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey() : 0 %>,
-				dialog: {
-					destroyOnHide: true
-				},
-				eventName: '<portlet:namespace />selectTemplate',
 				groupId: <%= groupId %>,
 				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
-				showGlobalScope: true,
-				struts_action: '/dynamic_data_mapping/select_template',
-				templateId: <%= (ddmTemplate != null) ? ddmTemplate.getTemplateId() : 0 %>,
-				title: '<%= UnicodeLanguageUtil.get(pageContext, "templates") %>'
+				templateId: <%= (ddmTemplate != null) ? ddmTemplate.getTemplateId() : 0 %>
 			},
-			function(event) {
-				if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-template-will-delete-all-unsaved-content") %>')) {
-					document.<portlet:namespace />fm1.<portlet:namespace />ddmTemplateId.value = event.ddmtemplateid;
 
-					submitForm(document.<portlet:namespace />fm1, null, false, false);
-				}
-			}
-		);
-	}
-</aui:script>
+			defaultLanguage: A.one('#<portlet:namespace />defaultLanguage'),
+			defaultLanguageSelector: A.one('#<portlet:namespace />defaultLanguageSelector'),
+			editStructure: A.one('#<portlet:namespace />editDDMTemplate'),
+			editStructureURL: '<%= editStructureURL %>',
+			editTemplate: A.one('#<portlet:namespace />editDDMStructure'),
+			editTemplateURL: '<%= editTemplateURL %>',
+			editTranslationURL: '<%= editArticleRenderPopUpURL %>',
 
-<aui:script use="aui-base,aui-dialog-iframe-deprecated,liferay-portlet-journal">
-	var changeLink = A.one('#<portlet:namespace />changeLanguageId');
-	var languageSelector = A.one('#<portlet:namespace />defaultLocale');
-	var textLanguageId = A.one('#<portlet:namespace />textLanguageId');
+			namespace: '<portlet:namespace />',
 
-	if (changeLink) {
-		changeLink.on(
-			'click',
-			function(event) {
-				if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "changing-the-default-language-will-delete-all-unsaved-content") %>')) {
-					languageSelector.show();
-					languageSelector.focus();
+			selectStructure: A.one('#<portlet:namespace />selectStructure'),
+			selectTemplate: A.one('#<portlet:namespace />selectTemplate'),
 
-					changeLink.hide();
-					textLanguageId.hide();
-				}
-			}
-		);
-	}
+			strings: {
+				changeDefaultLanguage: '<%= UnicodeLanguageUtil.get(pageContext, "changing-the-default-language-will-delete-all-unsaved-content") %>',
+				draft: '<%= UnicodeLanguageUtil.get(pageContext, "draft") %>',
+				editStructure: '<%= UnicodeLanguageUtil.get(pageContext, "editing-the-current-structure-will-delete-all-unsaved-content") %>',
+				editTemplate: '<%= UnicodeLanguageUtil.get(pageContext, "editing-the-current-template-will-delete-all-unsaved-content") %>',
+				selectStructure: '<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-structure-will-change-the-available-input-fields-and-available-templates") %>',
+				selectTemplate: '<%= UnicodeLanguageUtil.get(pageContext, "selecting-a-new-template-will-delete-all-unsaved-content") %>',
+				structures: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>',
+				templates: '<%= UnicodeLanguageUtil.get(pageContext, "templates") %>',
+				webContentTranslation: '<%= UnicodeLanguageUtil.get(pageContext, "web-content-translation") %>'
+			},
 
-	Liferay.Portlet.Journal.PROXY = {};
-	Liferay.Portlet.Journal.PROXY.instanceIdKey = '<%= instanceIdKey %>';
-	Liferay.Portlet.Journal.PROXY.pathThemeCss = '<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>';
-	Liferay.Portlet.Journal.PROXY.portletNamespace = '<portlet:namespace />';
-
-	window.<portlet:namespace />journalPortlet = new Liferay.Portlet.Journal(
-		{
-			articleId: '<%= (article != null) ? HtmlUtil.escape(articleId) : StringPool.BLANK %>',
-			namespace: '<portlet:namespace />'
+			updateDefaultLanguageURL: '<%= updateDefaultLanguageURL %>'
 		}
 	);
 
-	var defaultLocaleSelector = A.one('#<portlet:namespace/>defaultLocale');
-
-	if (defaultLocaleSelector) {
-		defaultLocaleSelector.on(
-			'change',
-			function(event) {
-				var defaultLanguageId = defaultLocaleSelector.get('value');
-
-				var url = '<%= updateDefaultLanguageURL %>' + '&<portlet:namespace />defaultLanguageId=' + defaultLanguageId;
-
-				window.location.href = url;
-			}
-		);
-	}
-
-	var editDDMTemplate = A.one('#<portlet:namespace />editDDMTemplate');
-
-	if (editDDMTemplate) {
-		var windowId = A.guid();
-
-		editDDMTemplate.on(
-			'click',
-			function(event) {
-				if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "editing-the-current-template-will-delete-all-unsaved-content") %>')) {
-					Liferay.Util.openWindow(
-						{
-							id: windowId,
-							title: '<%= UnicodeLanguageUtil.get(pageContext, "templates") %>',
-
-							<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editTemplateURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-								<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template" />
-								<portlet:param name="closeRedirect" value="<%= currentURL %>" />
-								<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
-								<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL %>" />
-								<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-								<portlet:param name="classNameId" value="<%= String.valueOf(classNameId) %>" />
-								<portlet:param name="templateId" value="<%= (ddmTemplate != null) ? String.valueOf(ddmTemplate.getTemplateId()) : StringPool.BLANK %>" />
-							</liferay-portlet:renderURL>
-
-							uri: '<%= editTemplateURL %>'
-						}
-					);
-				}
-			}
-		);
-	}
-
-	<c:if test="<%= (ddmStructure != null) && DDMStructurePermission.contains(permissionChecker, ddmStructure, PortletKeys.JOURNAL, ActionKeys.UPDATE) %>">
-		var editDDMStructure = A.one('#<portlet:namespace />editDDMStructure');
-
-		if (editDDMStructure) {
-			var windowId = A.guid();
-
-			editDDMStructure.on(
-				'click',
-				function(event) {
-					if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "editing-the-current-structure-will-delete-all-unsaved-content") %>')) {
-						Liferay.Util.openWindow(
-							{
-								id: windowId,
-								refreshWindow: window,
-								title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>',
-
-								<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editStructureURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-									<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_structure" />
-									<portlet:param name="closeRedirect" value="<%= currentURL %>" />
-									<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
-									<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL %>" />
-									<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-									<portlet:param name="classNameId" value="<%= String.valueOf(PortalUtil.getClassNameId(DDMStructure.class)) %>" />
-									<portlet:param name="classPK" value="<%= String.valueOf(ddmStructure.getStructureId()) %>" />
-								</liferay-portlet:renderURL>
-
-								uri: '<%= editStructureURL %>'
-							}
-						);
-					}
-				}
-			);
-		}
-	</c:if>
+	Liferay.Util.disableToggleBoxes('<portlet:namespace />autoArticleIdCheckbox','<portlet:namespace />newArticleId', true);
 </aui:script>
 
 <%!
