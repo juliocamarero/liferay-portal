@@ -275,100 +275,75 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 	headerNames.add("locked");
 	headerNames.add(StringPool.BLANK);
 
-	if (Validator.isNull(displayTerms.getKeywords())) {
-		SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, "cur2", SearchContainer.DEFAULT_DELTA, portletURL, headerNames, "there-are-no-documents-in-this-folder");
+	PortletURL iteratorURL = renderResponse.createRenderURL();
 
-		int total = DLAppServiceUtil.getFileEntriesCount(groupId, folderId);
+	iteratorURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
+	iteratorURL.setParameter("groupId", String.valueOf(groupId));
+	iteratorURL.setParameter("folderId", String.valueOf(folderId));
 
-		searchContainer.setTotal(total);
+	fileEntrySearchContainer = new FileEntrySearch(renderRequest, displayTerms, (FileEntrySearchTerms)fileEntrySearchContainer.getSearchTerms(), "cur2", SearchContainer.DEFAULT_DELTA, iteratorURL, headerNames, "there-are-no-documents-in-this-folder");
 
-		List results = DLAppServiceUtil.getFileEntries(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd());
+	try {
+		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
-		searchContainer.setResults(results);
+		searchContext.setAttribute("groupId", groupId);
+		searchContext.setAttribute("paginationType", "regular");
+		searchContext.setEnd(entryEnd);
+		searchContext.setFolderIds(folderIdsArray);
+		searchContext.setGroupIds(new long[] {groupId});
+		searchContext.setKeywords(keywords);
+		searchContext.setStart(entryStart);
 
-		List resultRows = searchContainer.getResultRows();
+		searchContext.setScopeStrict(false);
+
+		Hits hits = DLAppServiceUtil.search(repositoryId, searchContext);
+
+		fileEntrySearchContainer.setTotal(hits.getLength());
+
+		List results = new ArrayList();
+
+		Document[] docs = hits.getDocs();
+
+		if (docs != null) {
+			for (Document doc : docs) {
+				long fileEntryId = GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK));
+
+				FileEntry fileEntry = null;
+
+				try {
+					fileEntry = DLAppLocalServiceUtil.getFileEntry(fileEntryId);
+				}
+				catch (Exception e) {
+					if (_log.isWarnEnabled()) {
+						_log.warn("Documents and Media search index is stale and contains file entry {" + fileEntryId + "}");
+					}
+
+					continue;
+				}
+
+				results.add(fileEntry);
+			}
+
+			if (docs.length == 0) {
+				request.removeAttribute(WebKeys.DOCUMENT_LIBRARY_FOLDER);
+			}
+		}
+
+		fileEntrySearchContainer.setResults(results);
+
+		List resultRows = fileEntrySearchContainer.getResultRows();
 	%>
 
 		<%@ include file="/html/portlet/dynamic_data_mapping/select_document_library_search_results.jspf" %>
 
-		<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
-
 	<%
 	}
-	else {
-		PortletURL iteratorURL = renderResponse.createRenderURL();
-
-		iteratorURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
-		iteratorURL.setParameter("groupId", String.valueOf(groupId));
-		iteratorURL.setParameter("folderId", String.valueOf(folderId));
-
-		fileEntrySearchContainer = new FileEntrySearch(renderRequest, displayTerms, (FileEntrySearchTerms)fileEntrySearchContainer.getSearchTerms(), "cur2", SearchContainer.DEFAULT_DELTA, iteratorURL, headerNames, "there-are-no-documents-in-this-folder");
-
-		try {
-			SearchContext searchContext = SearchContextFactory.getInstance(request);
-
-			searchContext.setAttribute("groupId", groupId);
-			searchContext.setAttribute("paginationType", "regular");
-			searchContext.setEnd(entryEnd);
-			searchContext.setFolderIds(folderIdsArray);
-			searchContext.setGroupIds(new long[] {groupId});
-			searchContext.setKeywords(keywords);
-			searchContext.setStart(entryStart);
-
-			searchContext.setScopeStrict(false);
-
-			Hits hits = DLAppServiceUtil.search(repositoryId, searchContext);
-
-			fileEntrySearchContainer.setTotal(hits.getLength());
-
-			List results = new ArrayList();
-
-			Document[] docs = hits.getDocs();
-
-			if (docs != null) {
-				for (Document doc : docs) {
-					long fileEntryId = GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK));
-
-					FileEntry fileEntry = null;
-
-					try {
-						fileEntry = DLAppLocalServiceUtil.getFileEntry(fileEntryId);
-					}
-					catch (Exception e) {
-						if (_log.isWarnEnabled()) {
-							_log.warn("Documents and Media search index is stale and contains file entry {" + fileEntryId + "}");
-						}
-
-						continue;
-					}
-
-					results.add(fileEntry);
-				}
-
-				if (docs.length == 0) {
-					request.removeAttribute(WebKeys.DOCUMENT_LIBRARY_FOLDER);
-				}
-			}
-
-			fileEntrySearchContainer.setResults(results);
-
-			List resultRows = fileEntrySearchContainer.getResultRows();
-	%>
-
-			<%@ include file="/html/portlet/dynamic_data_mapping/select_document_library_search_results.jspf" %>
-
-	<%
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
-	%>
-
-		<liferay-ui:search-iterator searchContainer="<%= fileEntrySearchContainer %>" />
-
-	<%
+	catch (Exception e) {
+		_log.error(e, e);
 	}
 	%>
+
+	<liferay-ui:search-iterator searchContainer="<%= fileEntrySearchContainer %>" />
 
 </aui:form>
 
