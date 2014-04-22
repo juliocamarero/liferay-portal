@@ -82,10 +82,99 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 	displayTerms.setSelectedGroupId(groupId);
 	%>
 
-	<liferay-ui:search-form
-		page="/html/portlet/dynamic_data_mapping/file_entry_search.jsp"
-		searchContainer="<%= fileEntrySearchContainer %>"
-	/>
+	<aui:nav-bar>
+		<aui:nav>
+			<aui:nav-item
+				dropdown="<%= true %>"
+				iconCssClass="icon-plus"
+				label="add"
+			>
+				<c:if test="<%= DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.ADD_FOLDER) %>">
+					<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_LIBRARY %>" var="addFolderURL">
+						<portlet:param name="struts_action" value="/document_library/edit_folder" />
+						<portlet:param name="redirect" value="<%= currentURL %>" />
+						<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
+						<portlet:param name="parentFolderId" value="<%= String.valueOf(folderId) %>" />
+					</liferay-portlet:renderURL>
+
+					<%
+					AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFolder.class.getName());
+					%>
+
+					<aui:nav-item
+						href="<%= addFolderURL %>"
+						iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
+						label='<%= (folder != null) ? "subfolder" : "folder" %>'
+					/>
+				</c:if>
+
+				<c:if test="<%= DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.ADD_DOCUMENT) %>">
+
+					<%
+					List<DLFileEntryType> fileEntryTypes = Collections.emptyList();
+
+					if ((folder == null) || folder.isSupportsMetadata()) {
+						fileEntryTypes = DLFileEntryTypeLocalServiceUtil.getFolderFileEntryTypes(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), folderId, true);
+					}
+					%>
+
+					<c:if test="<%= fileEntryTypes.isEmpty() %>">
+						<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_LIBRARY %>" var="editFileEntryURL">
+							<portlet:param name="struts_action" value="/document_library/edit_file_entry" />
+							<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD %>" />
+							<portlet:param name="redirect" value="<%= currentURL %>" />
+							<portlet:param name="backURL" value="<%= currentURL %>" />
+							<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
+							<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
+						</liferay-portlet:renderURL>
+
+						<%
+						AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFileEntry.class.getName());
+						%>
+
+						<aui:nav-item
+							href="<%= editFileEntryURL %>"
+							iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
+							label="basic-document"
+						/>
+					</c:if>
+
+					<%
+					for (DLFileEntryType fileEntryType : fileEntryTypes) {
+					%>
+
+						<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_LIBRARY %>" var="addFileEntryTypeURL">
+							<portlet:param name="struts_action" value="/document_library/edit_file_entry" />
+							<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD %>" />
+							<portlet:param name="redirect" value="<%= currentURL %>" />
+							<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
+							<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
+							<portlet:param name="fileEntryTypeId" value="<%= String.valueOf(fileEntryType.getFileEntryTypeId()) %>" />
+						</liferay-portlet:renderURL>
+
+						<%
+						AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFileEntry.class.getName());
+						%>
+
+						<aui:nav-item
+							href="<%= addFileEntryTypeURL %>"
+							iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
+							label="<%= HtmlUtil.escape(fileEntryType.getName(locale)) %>"
+						/>
+
+					<%
+					}
+					%>
+
+				</c:if>
+			</aui:nav-item>
+		</aui:nav>
+
+		<aui:nav-bar-search cssClass="pull-right"
+			file="/html/portlet/dynamic_data_mapping/file_entry_search.jsp"
+			searchContainer="<%= fileEntrySearchContainer %>"
+		/>
+	</aui:nav-bar>
 
 	<c:if test="<%= Validator.isNull(displayTerms.getKeywords()) %>">
 		<liferay-ui:header
@@ -93,97 +182,6 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 		/>
 
 		<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
-
-		<div class="helper-clearfix">
-			<aui:nav-bar>
-				<aui:nav>
-					<aui:nav-item
-						dropdown="<%= true %>"
-						iconCssClass="icon-plus"
-						label="add"
-					>
-						<c:if test="<%= DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.ADD_FOLDER) %>">
-							<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_LIBRARY %>" var="addFolderURL">
-								<portlet:param name="struts_action" value="/document_library/edit_folder" />
-								<portlet:param name="redirect" value="<%= currentURL %>" />
-								<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
-								<portlet:param name="parentFolderId" value="<%= String.valueOf(folderId) %>" />
-							</liferay-portlet:renderURL>
-
-							<%
-							AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFolder.class.getName());
-							%>
-
-							<aui:nav-item
-								href="<%= addFolderURL %>"
-								iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
-								label='<%= (folder != null) ? "subfolder" : "folder" %>'
-							/>
-						</c:if>
-
-						<c:if test="<%= DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.ADD_DOCUMENT) %>">
-
-							<%
-							List<DLFileEntryType> fileEntryTypes = Collections.emptyList();
-
-							if ((folder == null) || folder.isSupportsMetadata()) {
-								fileEntryTypes = DLFileEntryTypeLocalServiceUtil.getFolderFileEntryTypes(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), folderId, true);
-							}
-							%>
-
-							<c:if test="<%= fileEntryTypes.isEmpty() %>">
-								<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_LIBRARY %>" var="editFileEntryURL">
-									<portlet:param name="struts_action" value="/document_library/edit_file_entry" />
-									<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD %>" />
-									<portlet:param name="redirect" value="<%= currentURL %>" />
-									<portlet:param name="backURL" value="<%= currentURL %>" />
-									<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
-									<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
-								</liferay-portlet:renderURL>
-
-								<%
-								AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFileEntry.class.getName());
-								%>
-
-								<aui:nav-item
-									href="<%= editFileEntryURL %>"
-									iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
-									label="basic-document"
-								/>
-							</c:if>
-
-							<%
-							for (DLFileEntryType fileEntryType : fileEntryTypes) {
-							%>
-
-								<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_LIBRARY %>" var="addFileEntryTypeURL">
-									<portlet:param name="struts_action" value="/document_library/edit_file_entry" />
-									<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD %>" />
-									<portlet:param name="redirect" value="<%= currentURL %>" />
-									<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
-									<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
-									<portlet:param name="fileEntryTypeId" value="<%= String.valueOf(fileEntryType.getFileEntryTypeId()) %>" />
-								</liferay-portlet:renderURL>
-
-								<%
-								AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFileEntry.class.getName());
-								%>
-
-								<aui:nav-item
-									href="<%= addFileEntryTypeURL %>"
-									iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
-									label="<%= HtmlUtil.escape(fileEntryType.getName(locale)) %>"
-								/>
-
-							<%
-							}
-							%>
-
-						</c:if>
-					</aui:nav-item>
-				</aui:nav>
-			</aui:nav-bar>
-		</div>
 
 		<%
 		List<String> headerNames = new ArrayList<String>();
