@@ -18,7 +18,6 @@
 
 <%@ page import="com.liferay.portal.kernel.repository.RepositoryException" %><%@
 page import="com.liferay.portal.kernel.repository.model.Folder" %><%@
-page import="com.liferay.portal.kernel.search.Document" %><%@
 page import="com.liferay.portlet.documentlibrary.DLPortletInstanceSettings" %><%@
 page import="com.liferay.portlet.documentlibrary.NoSuchFolderException" %><%@
 page import="com.liferay.portlet.documentlibrary.context.DLActionsDisplayContext" %><%@

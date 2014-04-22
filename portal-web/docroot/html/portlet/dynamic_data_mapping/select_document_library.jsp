@@ -300,41 +300,14 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 
 		fileEntrySearchContainer.setTotal(hits.getLength());
 
-		List results = new ArrayList();
-
-		Document[] docs = hits.getDocs();
-
-		if (docs != null) {
-			for (Document doc : docs) {
-				long fileEntryId = GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK));
-
-				FileEntry fileEntry = null;
-
-				try {
-					fileEntry = DLAppLocalServiceUtil.getFileEntry(fileEntryId);
-				}
-				catch (Exception e) {
-					if (_log.isWarnEnabled()) {
-						_log.warn("Documents and Media search index is stale and contains file entry {" + fileEntryId + "}");
-					}
-
-					continue;
-				}
-
-				results.add(fileEntry);
-			}
-
-			if (docs.length == 0) {
-				request.removeAttribute(WebKeys.DOCUMENT_LIBRARY_FOLDER);
-			}
-		}
+		List<FileEntry> results = DLUtil.getFileEntries(hits);
 
 		fileEntrySearchContainer.setResults(results);
 
 		List resultRows = fileEntrySearchContainer.getResultRows();
 
 		for (int i = 0; i < results.size(); i++) {
-			FileEntry fileEntry = (FileEntry)results.get(i);
+			FileEntry fileEntry = results.get(i);
 
 			ResultRow row = new ResultRow(fileEntry, fileEntry.getFileEntryId(), i);
 
