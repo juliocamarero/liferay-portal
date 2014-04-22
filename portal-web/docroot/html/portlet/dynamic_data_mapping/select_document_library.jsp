@@ -183,72 +183,60 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 
 		<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
 
-		<%
-		List<String> headerNames = new ArrayList<String>();
+		<liferay-ui:search-container
+			emptyResultsMessage="there-are-no-folders"
+			iteratorURL="<%= portletURL %>"
+		>
+			<liferay-ui:search-container-results
+				results="<%= DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd()) %>"
+				total="<%= DLAppServiceUtil.getFoldersCount(groupId, folderId) %>"
+			/>
 
-		headerNames.add("folder");
-		headerNames.add("num-of-folders");
-		headerNames.add("num-of-documents");
+			<liferay-ui:search-container-row
+				className="com.liferay.portal.kernel.repository.model.Folder"
+				keyProperty="folderId"
+				modelVar="curFolder"
+			>
+				<portlet:renderURL var="rowURL">
+					<portlet:param name="struts_action" value="/dynamic_data_mapping/select_document_library" />
+					<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+					<portlet:param name="folderId" value="<%= String.valueOf(curFolder.getFolderId()) %>" />
+				</portlet:renderURL>
 
-		SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, "cur1", SearchContainer.DEFAULT_DELTA, portletURL, headerNames, "there-are-no-folders");
+				<liferay-ui:search-container-column-text
+					href="<%= rowURL %>"
+					name="folder"
+				>
+					<img align="left" alt="<%= LanguageUtil.get(locale, "folder") %>" border="0" src="<%= HtmlUtil.escapeAttribute(themeDisplay.getPathThemeImages()) %>/common/folder.png" />
+					<%= HtmlUtil.escape(curFolder.getName()) %>
+				</liferay-ui:search-container-column-text>
 
-		int total = DLAppServiceUtil.getFoldersCount(groupId, folderId);
+				<%
+				List<Long> subfolderIds = DLAppServiceUtil.getSubfolderIds(curFolder.getRepositoryId(), curFolder.getFolderId(), false);
 
-		searchContainer.setTotal(total);
+				int foldersCount = subfolderIds.size();
 
-		List results = DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd());
+				subfolderIds.clear();
+				subfolderIds.add(curFolder.getFolderId());
 
-		searchContainer.setResults(results);
+				int fileEntriesCount = DLAppServiceUtil.getFoldersFileEntriesCount(curFolder.getRepositoryId(), subfolderIds, WorkflowConstants.STATUS_APPROVED);
+				%>
 
-		List resultRows = searchContainer.getResultRows();
+				<liferay-ui:search-container-column-text
+					href="<%= rowURL %>"
+					name="num-of-folders"
+					value="<%= String.valueOf(foldersCount) %>"
+				/>
 
-		for (int i = 0; i < results.size(); i++) {
-			Folder curFolder = (Folder)results.get(i);
+				<liferay-ui:search-container-column-text
+					href="<%= rowURL %>"
+					name="num-of-documents"
+					value="<%= String.valueOf(fileEntriesCount) %>"
+				/>
+			</liferay-ui:search-container-row>
 
-			ResultRow row = new ResultRow(curFolder, curFolder.getFolderId(), i);
-
-			PortletURL rowURL = renderResponse.createRenderURL();
-
-			rowURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
-			rowURL.setParameter("groupId", String.valueOf(groupId));
-			rowURL.setParameter("folderId", String.valueOf(curFolder.getFolderId()));
-
-			// Name
-
-			StringBundler sb = new StringBundler(6);
-
-			sb.append("<img align=\"left\" alt=\"");
-			sb.append(LanguageUtil.get(locale, "folder"));
-			sb.append("\" border=\"0\" src=\"");
-			sb.append(HtmlUtil.escapeAttribute(themeDisplay.getPathThemeImages()));
-			sb.append("/common/folder.png\">");
-			sb.append(HtmlUtil.escape(curFolder.getName()));
-
-			row.addText(sb.toString(), rowURL);
-
-			// Statistics
-
-			List<Long> subfolderIds = DLAppServiceUtil.getSubfolderIds(curFolder.getRepositoryId(), curFolder.getFolderId(), false);
-
-			int foldersCount = subfolderIds.size();
-
-			subfolderIds.clear();
-			subfolderIds.add(curFolder.getFolderId());
-
-			int fileEntriesCount = DLAppServiceUtil.getFoldersFileEntriesCount(curFolder.getRepositoryId(), subfolderIds, WorkflowConstants.STATUS_APPROVED);
-
-			row.addText(String.valueOf(foldersCount), rowURL);
-			row.addText(String.valueOf(fileEntriesCount), rowURL);
-
-			// Add result row
-
-			resultRows.add(row);
-		}
-		%>
-
-		<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
-
-		<br />
+			<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+		</liferay-ui:search-container>
 	</c:if>
 
 	<c:choose>
