@@ -249,27 +249,18 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 		</liferay-ui:search-container>
 	</c:if>
 
-	<c:choose>
-		<c:when test="<%= Validator.isNull(displayTerms.getKeywords()) %>">
-			<liferay-ui:header
-				title="documents"
-			/>
-		</c:when>
-		<c:otherwise>
+	<%
+	PortletURL backURL = renderResponse.createRenderURL();
 
-			<%
-			PortletURL backURL = renderResponse.createRenderURL();
+	backURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
+	backURL.setParameter("groupId", String.valueOf(groupId));
+	%>
 
-			backURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
-			backURL.setParameter("groupId", String.valueOf(groupId));
-			%>
-
-			<liferay-ui:header
-				backURL="<%= backURL.toString() %>"
-				title="documents"
-			/>
-		</c:otherwise>
-	</c:choose>
+	<liferay-ui:header
+		backURL="<%= backURL.toString() %>"
+		showBackURL="<%= Validator.isNotNull(displayTerms.getKeywords()) %>"
+		title="documents"
+	/>
 
 	<%
 	List<String> headerNames = new ArrayList<String>();
