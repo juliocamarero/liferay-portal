@@ -207,8 +207,18 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 					href="<%= rowURL %>"
 					name="folder"
 				>
-					<img align="left" alt="<%= LanguageUtil.get(locale, "folder") %>" border="0" src="<%= HtmlUtil.escapeAttribute(themeDisplay.getPathThemeImages()) %>/common/folder.png" />
-					<%= HtmlUtil.escape(curFolder.getName()) %>
+
+					<%
+					AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFolder.class.getName());
+
+					AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(curFolder.getFolderId());
+					%>
+
+					<liferay-ui:icon
+						iconCssClass="<%= assetRenderer.getIconCssClass() %>"
+						label="<%= true %>"
+						message="<%= HtmlUtil.escape(curFolder.getName()) %>"
+					/>
 				</liferay-ui:search-container-column-text>
 
 				<%
