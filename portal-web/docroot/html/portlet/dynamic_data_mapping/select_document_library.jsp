@@ -332,11 +332,66 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 		fileEntrySearchContainer.setResults(results);
 
 		List resultRows = fileEntrySearchContainer.getResultRows();
-	%>
 
-		<%@ include file="/html/portlet/dynamic_data_mapping/select_document_library_search_results.jspf" %>
+		for (int i = 0; i < results.size(); i++) {
+			FileEntry fileEntry = (FileEntry)results.get(i);
 
-	<%
+			ResultRow row = new ResultRow(fileEntry, fileEntry.getFileEntryId(), i);
+
+			String rowHREF = DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, true);
+
+			// Title
+
+			StringBundler sb = new StringBundler(13);
+
+			sb.append("<img alt=\"\" align=\"left\" border=\"0\" src=\"");
+
+			DLFileShortcut fileShortcut = null;
+
+			sb.append(DLUtil.getThumbnailSrc(fileEntry, fileShortcut, themeDisplay));
+			sb.append("\" style=\"");
+			sb.append(DLUtil.getThumbnailStyle());
+			sb.append("\">");
+			sb.append(HtmlUtil.escape(fileEntry.getTitle()));
+
+			row.addText(sb.toString(), rowHREF);
+
+			// Statistics
+
+			row.addText(TextFormatter.formatKB(fileEntry.getSize(), locale) + "k", rowHREF);
+
+			if (PropsValues.DL_FILE_ENTRY_BUFFERED_INCREMENT_ENABLED) {
+				row.addText(String.valueOf(fileEntry.getReadCount()), rowHREF);
+			}
+
+			// Locked
+
+			row.addText(LanguageUtil.get(pageContext, fileEntry.isCheckedOut() ? "yes" : "no"), rowHREF);
+
+			// Action
+
+			sb.setIndex(0);
+
+			sb.append("Liferay.Util.getOpener().");
+			sb.append(renderResponse.getNamespace());
+			sb.append("selectDocumentLibrary('");
+			sb.append(DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, false));
+			sb.append("', '");
+			sb.append(HtmlUtil.escapeJS(fileEntry.getUuid()));
+			sb.append("', '");
+			sb.append(fileEntry.getGroupId());
+			sb.append("', '");
+			sb.append(HtmlUtil.escapeJS(fileEntry.getTitle()));
+			sb.append("', '");
+			sb.append(fileEntry.getVersion());
+			sb.append("'); Liferay.Util.getWindow().hide();");
+
+			row.addButton("right", SearchEntry.DEFAULT_VALIGN, LanguageUtil.get(pageContext, "choose"), sb.toString());
+
+			// Add result row
+
+			resultRows.add(row);
+		}
 	}
 	catch (Exception e) {
 		_log.error(e, e);
