@@ -17,6 +17,8 @@
 <%@ include file="/html/portlet/document_library_display/init.jsp" %>
 
 <%
+String eventName = ParamUtil.getString(request, "eventName");
+
 long groupId = ParamUtil.getLong(request, FileEntryDisplayTerms.SELECTED_GROUP_ID);
 
 if (groupId == 0) {
@@ -336,27 +338,23 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 			<liferay-ui:search-container-column-text>
 
 				<%
-				StringBundler sb = new StringBundler();
+				Map<String, Object> data = new HashMap<String, Object>();
 
-				sb.append("Liferay.Util.getOpener().");
-				sb.append(renderResponse.getNamespace());
-				sb.append("selectDocumentLibrary('");
-				sb.append(DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, false));
-				sb.append("', '");
-				sb.append(HtmlUtil.escapeJS(fileEntry.getUuid()));
-				sb.append("', '");
-				sb.append(fileEntry.getGroupId());
-				sb.append("', '");
-				sb.append(HtmlUtil.escapeJS(fileEntry.getTitle()));
-				sb.append("', '");
-				sb.append(fileEntry.getVersion());
-				sb.append("'); Liferay.Util.getWindow().hide();");
+				data.put("url", DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, false));
+				data.put("uuid", fileEntry.getUuid());
+				data.put("groupid", fileEntry.getGroupId());
+				data.put("title", fileEntry.getTitle());
+				data.put("version", fileEntry.getVersion());
 				%>
 
-				<aui:button cssClass="selector-button" onClick="<%= sb.toString() %>" value="choose" />
+				<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:search-iterator />
 	</liferay-ui:search-container>
 </aui:form>
+
+<aui:script use="aui-base">
+	Liferay.Util.selectEntityHandler('#<portlet:namespace />selectDocumentFm', '<%= HtmlUtil.escapeJS(eventName) %>');
+</aui:script>
