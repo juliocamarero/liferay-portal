@@ -191,7 +191,7 @@ if (feed != null) {
 				</aui:select>
 
 				<aui:field-wrapper label="structure">
-					<aui:input name="structureId" type="hidden" value="<%= structureId %>" />
+					<aui:input name="structureId" required="<%= true %>" type="hidden" value="<%= structureId %>" />
 
 					<div class="input-append">
 						<liferay-ui:input-resource url="<%= ddmStructureName %>" />
