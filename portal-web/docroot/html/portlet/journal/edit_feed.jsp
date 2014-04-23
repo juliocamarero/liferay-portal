@@ -28,22 +28,57 @@ String newFeedId = ParamUtil.getString(request, "newFeedId");
 
 String structureId = BeanParamUtil.getString(feed, request, "structureId");
 
-DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(JournalArticle.class), structureId, true);
+DDMStructure ddmStructure = null;
 
-String ddmStructureName = ddmStructure.getName(locale);
+String ddmStructureName = StringPool.BLANK;
+
+if (Validator.isNotNull(structureId)) {
+	try {
+		ddmStructure = DDMStructureLocalServiceUtil.getStructure(themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(JournalArticle.class), structureId, true);
+
+		ddmStructureName = ddmStructure.getName(locale);
+	}
+	catch (NoSuchStructureException nsse) {
+	}
+}
 
 List<DDMTemplate> ddmTemplates = new ArrayList<DDMTemplate>();
 
-ddmTemplates.addAll(DDMTemplateLocalServiceUtil.getTemplates(themeDisplay.getCompanyGroupId(), PortalUtil.getClassNameId(DDMStructure.class), ddmStructure.getStructureId()));
-ddmTemplates.addAll(DDMTemplateLocalServiceUtil.getTemplates(themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(DDMStructure.class), ddmStructure.getStructureId()));
+if (ddmStructure != null) {
+	ddmTemplates.addAll(DDMTemplateLocalServiceUtil.getTemplates(themeDisplay.getCompanyGroupId(), PortalUtil.getClassNameId(DDMStructure.class), ddmStructure.getStructureId()));
+	ddmTemplates.addAll(DDMTemplateLocalServiceUtil.getTemplates(themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(DDMStructure.class), ddmStructure.getStructureId()));
+}
 
 String templateId = BeanParamUtil.getString(feed, request, "templateId");
+
+if ((ddmStructure == null) && Validator.isNotNull(templateId)) {
+	DDMTemplate ddmTemplate = null;
+
+	try {
+		ddmTemplate = DDMTemplateLocalServiceUtil.getTemplate(themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(DDMStructure.class), templateId, true);
+	}
+	catch (NoSuchTemplateException nste) {
+	}
+
+	if (ddmTemplate != null) {
+		try {
+			ddmStructure = DDMStructureLocalServiceUtil.getStructure(ddmTemplate.getClassPK());
+
+			structureId = ddmStructure.getStructureKey();
+			ddmStructureName = ddmStructure.getName(locale);
+
+			ddmTemplates = DDMTemplateLocalServiceUtil.getTemplates(themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(DDMStructure.class), ddmTemplate.getClassPK());
+		}
+		catch (NoSuchStructureException nsse) {
+		}
+	}
+}
 
 String rendererTemplateId = BeanParamUtil.getString(feed, request, "rendererTemplateId");
 
 String contentField = BeanParamUtil.getString(feed, request, "contentField");
 
-if (Validator.isNull(contentField)) {
+if (Validator.isNull(contentField) || ((ddmStructure == null) && !contentField.equals(JournalFeedConstants.WEB_CONTENT_DESCRIPTION) && !contentField.equals(JournalFeedConstants.RENDERED_WEB_CONTENT))) {
 	contentField = JournalFeedConstants.WEB_CONTENT_DESCRIPTION;
 }
 
@@ -163,7 +198,7 @@ if (feed != null) {
 
 						<aui:button name="selectStructureButton" onClick='<%= renderResponse.getNamespace() + "openStructureSelector();" %>' value="select" />
 
-						<aui:button name="removeStructureButton" onClick='<%= renderResponse.getNamespace() + "removeStructure();" %>' value="remove" />
+						<aui:button disabled="<%= Validator.isNull(structureId) %>" name="removeStructureButton" onClick='<%= renderResponse.getNamespace() + "removeStructure();" %>' value="remove" />
 					</div>
 				</aui:field-wrapper>
 
@@ -210,7 +245,7 @@ if (feed != null) {
 					<optgroup label='<liferay-ui:message key="<%= JournalFeedConstants.RENDERED_WEB_CONTENT %>" />'>
 						<aui:option data-contentField="<%= JournalFeedConstants.RENDERED_WEB_CONTENT %>" label="use-default-template" selected="<%= contentField.equals(JournalFeedConstants.RENDERED_WEB_CONTENT) %>" value="" />
 
-						<c:if test="<%= ddmTemplates.size() > 1 %>">
+						<c:if test="<%= (ddmStructure != null) && (ddmTemplates.size() > 1) %>">
 
 							<%
 							for (DDMTemplate curTemplate : ddmTemplates) {
@@ -225,32 +260,34 @@ if (feed != null) {
 						</c:if>
 					</optgroup>
 
-					<optgroup label="<liferay-ui:message key="structure-fields" />">
+					<c:if test="<%= ddmStructure != null %>">
+						<optgroup label="<liferay-ui:message key="structure-fields" />">
 
-						<%
-						Document doc = SAXReaderUtil.read(ddmStructure.getXsd());
+							<%
+							Document doc = SAXReaderUtil.read(ddmStructure.getXsd());
 
-						XPath xpathSelector = SAXReaderUtil.createXPath("//dynamic-element");
+							XPath xpathSelector = SAXReaderUtil.createXPath("//dynamic-element");
 
-						List<Node> nodes = xpathSelector.selectNodes(doc);
+							List<Node> nodes = xpathSelector.selectNodes(doc);
 
-						for (Node node : nodes) {
-							Element el = (Element)node;
+							for (Node node : nodes) {
+								Element el = (Element)node;
 
-							String elName = el.attributeValue("name");
-							String elType = StringUtil.replace(el.attributeValue("type"), StringPool.UNDERLINE, StringPool.DASH);
+								String elName = el.attributeValue("name");
+								String elType = StringUtil.replace(el.attributeValue("type"), StringPool.UNDERLINE, StringPool.DASH);
 
-							if (!elType.equals("boolean") && !elType.equals("list") && !elType.equals("multi-list")) {
-						%>
+								if (!elType.equals("boolean") && !elType.equals("list") && !elType.equals("multi-list")) {
+							%>
 
-								<aui:option label='<%= TextFormatter.format(elName, TextFormatter.J) + "(" + LanguageUtil.get(pageContext, elType) + ")" %>' selected="<%= contentField.equals(elName) %>" value="<%= elName %>" />
+									<aui:option label='<%= TextFormatter.format(elName, TextFormatter.J) + "(" + LanguageUtil.get(pageContext, elType) + ")" %>' selected="<%= contentField.equals(elName) %>" value="<%= elName %>" />
 
-						<%
+							<%
+								}
 							}
-						}
-						%>
+							%>
 
-					</optgroup>
+						</optgroup>
+					</c:if>
 				</aui:select>
 
 				<aui:select name="feedType">
@@ -317,7 +354,7 @@ if (feed != null) {
 		Liferay.Util.openDDMPortlet(
 			{
 				basePortletURL: '<%= PortletURLFactoryUtil.create(request, PortletKeys.DYNAMIC_DATA_MAPPING, themeDisplay.getPlid(), PortletRequest.RENDER_PHASE) %>',
-				classPK: <%= ddmStructure.getPrimaryKey() %>,
+				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey(): 0 %>,
 				dialog: {
 					destroyOnHide: true
 				},
