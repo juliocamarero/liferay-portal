@@ -453,6 +453,22 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		return layout;
 	}
 
+	@Override
+	public Layout addLayout(
+			long userId, long groupId, boolean privateLayout,
+			long parentLayoutId, Map<Locale, String> nameMap,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			String type, boolean hidden, Map<Locale, String> friendlyURLMap,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return addLayout(
+			userId, groupId, privateLayout, parentLayoutId, nameMap, titleMap,
+			descriptionMap, new HashMap<Locale, String>(),
+			new HashMap<Locale, String>(), type, StringPool.BLANK, hidden,
+			friendlyURLMap, serviceContext);
+	}
+
 	/**
 	 * Adds a layout with single entry maps for name, title, and description to
 	 * the default locale.
