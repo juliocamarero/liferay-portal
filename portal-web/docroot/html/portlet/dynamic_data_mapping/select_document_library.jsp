@@ -72,7 +72,7 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("folderId", String.valueOf(folderId));
 %>
 
-<aui:form method="post" name="fm">
+<aui:form method="post" name="selectDocumentFm">
 
 	<%
 	FileEntrySearch fileEntrySearchContainer = new FileEntrySearch(renderRequest, portletURL);
@@ -263,27 +263,19 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 	/>
 
 	<%
-	List<String> headerNames = new ArrayList<String>();
-
-	headerNames.add("document");
-	headerNames.add("size");
-
-	if (PropsValues.DL_FILE_ENTRY_BUFFERED_INCREMENT_ENABLED) {
-		headerNames.add("downloads");
-	}
-
-	headerNames.add("locked");
-	headerNames.add(StringPool.BLANK);
-
 	PortletURL iteratorURL = renderResponse.createRenderURL();
 
 	iteratorURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
 	iteratorURL.setParameter("groupId", String.valueOf(groupId));
 	iteratorURL.setParameter("folderId", String.valueOf(folderId));
+	%>
 
-	fileEntrySearchContainer = new FileEntrySearch(renderRequest, displayTerms, (FileEntrySearchTerms)fileEntrySearchContainer.getSearchTerms(), "cur2", SearchContainer.DEFAULT_DELTA, iteratorURL, headerNames, "there-are-no-documents-in-this-folder");
+	<liferay-ui:search-container
+		emptyResultsMessage="there-are-no-documents-in-this-folder"
+		iteratorURL="<%= iteratorURL %>"
+	>
 
-	try {
+		<%
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
 		searchContext.setAttribute("groupId", groupId);
@@ -297,84 +289,74 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 		searchContext.setScopeStrict(false);
 
 		Hits hits = DLAppServiceUtil.search(repositoryId, searchContext);
+		%>
 
-		fileEntrySearchContainer.setTotal(hits.getLength());
+		<liferay-ui:search-container-results
+			results="<%= DLUtil.getFileEntries(hits) %>"
+		/>
 
-		List<FileEntry> results = DLUtil.getFileEntries(hits);
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.kernel.repository.model.FileEntry"
+			keyProperty="fileEntryId"
+			modelVar="fileEntry"
+		>
 
-		fileEntrySearchContainer.setResults(results);
-
-		List resultRows = fileEntrySearchContainer.getResultRows();
-
-		for (int i = 0; i < results.size(); i++) {
-			FileEntry fileEntry = results.get(i);
-
-			ResultRow row = new ResultRow(fileEntry, fileEntry.getFileEntryId(), i);
-
+			<%
 			String rowHREF = DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, true);
+			%>
 
-			// Title
+			<liferay-ui:search-container-column-text
+				href="<%= rowHREF %>"
+				name="document"
+			>
+				<img alt="" align="left" border="0" src="<%= DLUtil.getThumbnailSrc(fileEntry, null, themeDisplay) %>" style="<%= DLUtil.getThumbnailStyle() %>" />
+				<%= HtmlUtil.escape(fileEntry.getTitle()) %>
+			</liferay-ui:search-container-column-text>
 
-			StringBundler sb = new StringBundler(13);
+			<liferay-ui:search-container-column-text
+				href="<%= rowHREF %>"
+				name="size"
+				value='<%= TextFormatter.formatKB(fileEntry.getSize(), locale) + "k" %>'
+			/>
 
-			sb.append("<img alt=\"\" align=\"left\" border=\"0\" src=\"");
+			<c:if test="<%= PropsValues.DL_FILE_ENTRY_BUFFERED_INCREMENT_ENABLED %>">
+				<liferay-ui:search-container-column-text
+					href="<%= rowHREF %>"
+					name="downloads"
+					value="<%= String.valueOf(fileEntry.getReadCount()) %>"
+				/>
+			</c:if>
 
-			DLFileShortcut fileShortcut = null;
+			<liferay-ui:search-container-column-text
+				href="<%= rowHREF %>"
+				name="locked"
+				value='<%= fileEntry.isCheckedOut() ? "yes" : "no" %>'
+			/>
 
-			sb.append(DLUtil.getThumbnailSrc(fileEntry, fileShortcut, themeDisplay));
-			sb.append("\" style=\"");
-			sb.append(DLUtil.getThumbnailStyle());
-			sb.append("\">");
-			sb.append(HtmlUtil.escape(fileEntry.getTitle()));
+			<liferay-ui:search-container-column-text>
 
-			row.addText(sb.toString(), rowHREF);
+				<%
+				StringBundler sb = new StringBundler();
 
-			// Statistics
+				sb.append("Liferay.Util.getOpener().");
+				sb.append(renderResponse.getNamespace());
+				sb.append("selectDocumentLibrary('");
+				sb.append(DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, false));
+				sb.append("', '");
+				sb.append(HtmlUtil.escapeJS(fileEntry.getUuid()));
+				sb.append("', '");
+				sb.append(fileEntry.getGroupId());
+				sb.append("', '");
+				sb.append(HtmlUtil.escapeJS(fileEntry.getTitle()));
+				sb.append("', '");
+				sb.append(fileEntry.getVersion());
+				sb.append("'); Liferay.Util.getWindow().hide();");
+				%>
 
-			row.addText(TextFormatter.formatKB(fileEntry.getSize(), locale) + "k", rowHREF);
+				<aui:button cssClass="selector-button" onClick="<%= sb.toString() %>" value="choose" />
+			</liferay-ui:search-container-column-text>
+		</liferay-ui:search-container-row>
 
-			if (PropsValues.DL_FILE_ENTRY_BUFFERED_INCREMENT_ENABLED) {
-				row.addText(String.valueOf(fileEntry.getReadCount()), rowHREF);
-			}
-
-			// Locked
-
-			row.addText(LanguageUtil.get(pageContext, fileEntry.isCheckedOut() ? "yes" : "no"), rowHREF);
-
-			// Action
-
-			sb.setIndex(0);
-
-			sb.append("Liferay.Util.getOpener().");
-			sb.append(renderResponse.getNamespace());
-			sb.append("selectDocumentLibrary('");
-			sb.append(DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, false));
-			sb.append("', '");
-			sb.append(HtmlUtil.escapeJS(fileEntry.getUuid()));
-			sb.append("', '");
-			sb.append(fileEntry.getGroupId());
-			sb.append("', '");
-			sb.append(HtmlUtil.escapeJS(fileEntry.getTitle()));
-			sb.append("', '");
-			sb.append(fileEntry.getVersion());
-			sb.append("'); Liferay.Util.getWindow().hide();");
-
-			row.addButton("right", SearchEntry.DEFAULT_VALIGN, LanguageUtil.get(pageContext, "choose"), sb.toString());
-
-			// Add result row
-
-			resultRows.add(row);
-		}
-	}
-	catch (Exception e) {
-		_log.error(e, e);
-	}
-	%>
-
-	<liferay-ui:search-iterator searchContainer="<%= fileEntrySearchContainer %>" />
-
+		<liferay-ui:search-iterator />
+	</liferay-ui:search-container>
 </aui:form>
-
-<%!
-private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.dynamic_data_mapping.select_document_library_jsp");
-%>

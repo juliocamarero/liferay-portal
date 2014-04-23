@@ -34,8 +34,7 @@ page import="com.liferay.portlet.documentlibrary.service.permission.DLFileEntryP
 page import="com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission" %><%@
 page import="com.liferay.portlet.documentlibrarydisplay.context.DLDisplayConfigurationDisplayContext" %><%@
 page import="com.liferay.portlet.journal.search.FileEntryDisplayTerms" %><%@
-page import="com.liferay.portlet.journal.search.FileEntrySearch" %><%@
-page import="com.liferay.portlet.journal.search.FileEntrySearchTerms" %>
+page import="com.liferay.portlet.journal.search.FileEntrySearch" %>
 
 <%
 String portletResource = ParamUtil.getString(request, "portletResource");
