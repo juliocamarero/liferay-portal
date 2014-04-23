@@ -2737,8 +2737,8 @@ public class JournalArticleLocalServiceUtil {
 		long groupId, java.util.List<java.lang.Long> folderIds,
 		long classNameId, java.lang.String articleId, java.lang.String title,
 		java.lang.String description, java.lang.String content,
-		java.lang.String type, java.lang.String status,
-		java.lang.String ddmStructureKey, java.lang.String ddmTemplateKey,
+		java.lang.String type, int status, java.lang.String ddmStructureKey,
+		java.lang.String ddmTemplateKey,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andSearch, int start, int end,
 		com.liferay.portal.kernel.search.Sort sort)
@@ -2972,8 +2972,8 @@ public class JournalArticleLocalServiceUtil {
 		long companyId, long groupId, java.util.List<java.lang.Long> folderIds,
 		long classNameId, java.lang.String articleId, java.lang.String title,
 		java.lang.String description, java.lang.String content,
-		java.lang.String type, java.lang.String status,
-		java.lang.String ddmStructureKey, java.lang.String ddmTemplateKey,
+		java.lang.String type, int status, java.lang.String ddmStructureKey,
+		java.lang.String ddmTemplateKey,
 		java.util.LinkedHashMap<java.lang.String, java.lang.Object> params,
 		boolean andSearch, int start, int end,
 		com.liferay.portal.kernel.search.Sort sort)
