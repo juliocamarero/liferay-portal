@@ -285,10 +285,10 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 		searchContext.setEnd(entryEnd);
 		searchContext.setFolderIds(folderIdsArray);
 		searchContext.setGroupIds(new long[] {groupId});
+		searchContext.setIncludeFolders(false);
 		searchContext.setKeywords(keywords);
-		searchContext.setStart(entryStart);
-
 		searchContext.setScopeStrict(false);
+		searchContext.setStart(entryStart);
 
 		Hits hits = DLAppServiceUtil.search(repositoryId, searchContext);
 		%>
