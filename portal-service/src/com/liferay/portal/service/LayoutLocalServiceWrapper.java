@@ -504,6 +504,22 @@ public class LayoutLocalServiceWrapper implements LayoutLocalService,
 			serviceContext);
 	}
 
+	@Override
+	public com.liferay.portal.model.Layout addLayout(long userId, long groupId,
+		boolean privateLayout, long parentLayoutId,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		java.lang.String type, boolean hidden,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutLocalService.addLayout(userId, groupId, privateLayout,
+			parentLayoutId, nameMap, titleMap, descriptionMap, type, hidden,
+			friendlyURLMap, serviceContext);
+	}
+
 	/**
 	* Adds a layout with single entry maps for name, title, and description to
 	* the default locale.
