@@ -44,6 +44,36 @@ portletURL.setParameter("struts_action", "/journal/view_feeds");
 	/>
 
 	<%
+	boolean showAddFeedButtonButton = JournalPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_FEED);
+	boolean showPermissionsButton = JournalPermission.contains(permissionChecker, scopeGroupId, ActionKeys.PERMISSIONS);
+	%>
+
+	<c:if test="<%= showAddFeedButtonButton || showPermissionsButton %>">
+		<aui:button-row>
+			<c:if test="<%= showAddFeedButtonButton %>">
+				<portlet:renderURL var="editFeedURL">
+					<portlet:param name="struts_action" value="/journal/edit_feed" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+				</portlet:renderURL>
+
+				<aui:button href="<%= editFeedURL %>" value="add-feed" />
+			</c:if>
+
+			<c:if test="<%= showPermissionsButton %>">
+				<liferay-security:permissionsURL
+					modelResource="com.liferay.portlet.journal"
+					modelResourceDescription="<%= HtmlUtil.escape(themeDisplay.getScopeGroupName()) %>"
+					resourcePrimKey="<%= String.valueOf(scopeGroupId) %>"
+					var="permissionsURL"
+					windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+				/>
+
+				<aui:button href="<%= permissionsURL %>" useDialog="<%= true %>" value="permissions" />
+			</c:if>
+		</aui:button-row>
+	</c:if>
+
+	<%
 	FeedSearchTerms searchTerms = (FeedSearchTerms)searchContainer.getSearchTerms();
 	%>
 
