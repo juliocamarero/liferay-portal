@@ -221,23 +221,26 @@ if (!portletName.equals(PortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinke
 	}
 }
 
-if ((total == 0) && (assetPublisherDisplayContext.getPortletDisplayDDMTemplateId() == 0)) {
+if (total == 0) {
 	if (!hasAddPortletURLs && !((assetCategoryId > 0) || Validator.isNotNull(assetTagName))) {
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.TRUE);
 	}
+
+	if (assetPublisherDisplayContext.getPortletDisplayDDMTemplateId() == 0) {
 %>
 
-	<div class="alert alert-info">
-		<c:choose>
-			<c:when test="<%= !portletName.equals(PortletKeys.RELATED_ASSETS) %>">
-				<liferay-ui:message key="there-are-no-results" />
-			</c:when>
-			<c:otherwise>
-				<liferay-ui:message key="there-are-no-related-assets" />
-			</c:otherwise>
-		</c:choose>
-	</div>
+		<div class="alert alert-info">
+			<c:choose>
+				<c:when test="<%= !portletName.equals(PortletKeys.RELATED_ASSETS) %>">
+					<liferay-ui:message key="there-are-no-results" />
+				</c:when>
+				<c:otherwise>
+					<liferay-ui:message key="there-are-no-related-assets" />
+				</c:otherwise>
+			</c:choose>
+		</div>
 
 <%
+	}
 }
 %>
