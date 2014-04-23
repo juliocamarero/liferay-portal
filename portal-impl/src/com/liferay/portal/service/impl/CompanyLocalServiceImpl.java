@@ -72,8 +72,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.VirtualHost;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.service.base.CompanyLocalServiceBaseImpl;
-import com.liferay.portal.service.persistence.GroupActionableDynamicQuery;
-import com.liferay.portal.service.persistence.OrganizationActionableDynamicQuery;
 import com.liferay.portal.util.Portal;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PortalUtil;
@@ -1596,13 +1594,50 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		}
 	}
 
-	protected class DeleteGroupActionableDynamicQuery
-		extends GroupActionableDynamicQuery {
+	protected class DeleteGroupActionableDynamicQuery {
 
-		public DeleteGroupActionableDynamicQuery() throws SystemException {
+		protected DeleteGroupActionableDynamicQuery() throws SystemException {
+			_actionableDynamicQuery =
+				groupLocalService.getActionableDynamicQuery();
+
+			_actionableDynamicQuery.setAddCriteriaMethod(
+				new ActionableDynamicQuery.AddCriteriaMethod() {
+
+					@Override
+					public void addCriteria(DynamicQuery dynamicQuery) {
+						Property parentGroupIdProperty =
+							PropertyFactoryUtil.forName("parentGroupId");
+
+						dynamicQuery.add(
+							parentGroupIdProperty.eq(_parentGroupId));
+
+						Property siteProperty = PropertyFactoryUtil.forName(
+							"site");
+
+						dynamicQuery.add(siteProperty.eq(Boolean.TRUE));
+					}
+
+				});
+			_actionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.PerformActionMethod() {
+
+					@Override
+					public void performAction(Object object)
+						throws PortalException, SystemException {
+
+						Group group = (Group)object;
+
+						if (!PortalUtil.isSystemGroup(group.getName()) &&
+							!group.isCompany()) {
+
+							deleteGroup(group);
+						}
+					}
+
+				});
 		}
 
-		public void deleteGroup(Group group)
+		protected void deleteGroup(Group group)
 			throws PortalException, SystemException {
 
 			DeleteGroupActionableDynamicQuery
@@ -1621,47 +1656,60 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			LiveUsers.deleteGroup(group.getCompanyId(), group.getGroupId());
 		}
 
-		public void setParentGroupId(long parentGroupId) {
+		protected void performActions()
+			throws PortalException, SystemException {
+
+			_actionableDynamicQuery.performActions();
+		}
+
+		protected void setCompanyId(long companyId) {
+			_actionableDynamicQuery.setCompanyId(companyId);
+		}
+
+		protected void setParentGroupId(long parentGroupId) {
 			_parentGroupId = parentGroupId;
 		}
 
-		@Override
-		protected void addCriteria(DynamicQuery dynamicQuery) {
-			Property parentGroupIdProperty = PropertyFactoryUtil.forName(
-				"parentGroupId");
-
-			dynamicQuery.add(parentGroupIdProperty.eq(_parentGroupId));
-
-			Property siteProperty = PropertyFactoryUtil.forName("site");
-
-			dynamicQuery.add(siteProperty.eq(Boolean.TRUE));
-		}
-
-		@Override
-		protected void performAction(Object object)
-			throws PortalException, SystemException {
-
-			Group group = (Group)object;
-
-			if (!PortalUtil.isSystemGroup(group.getName()) &&
-				!group.isCompany()) {
-
-				deleteGroup(group);
-			}
-		}
-
+		private ActionableDynamicQuery _actionableDynamicQuery;
 		private long _parentGroupId = GroupConstants.DEFAULT_PARENT_GROUP_ID;
-
 	}
 
-	protected class DeleteOrganizationActionableDynamicQuery
-		extends OrganizationActionableDynamicQuery {
+	protected class DeleteOrganizationActionableDynamicQuery {
 
-		public DeleteOrganizationActionableDynamicQuery()
+		protected DeleteOrganizationActionableDynamicQuery()
 			throws SystemException {
+
+			_actionableDynamicQuery =
+				organizationLocalService.getActionableDynamicQuery();
+
+			_actionableDynamicQuery.setAddCriteriaMethod(
+				new ActionableDynamicQuery.AddCriteriaMethod() {
+
+					@Override
+					public void addCriteria(DynamicQuery dynamicQuery) {
+						Property property = PropertyFactoryUtil.forName(
+							"parentOrganizationId");
+
+						dynamicQuery.add(property.eq(_parentOrganizationId));
+					}
+
+				});
+			_actionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.PerformActionMethod() {
+
+					@Override
+					public void performAction(Object object)
+						throws PortalException, SystemException {
+
+						Organization organization = (Organization)object;
+
+						deleteOrganization(organization);
+					}
+
+				});
 		}
 
-		public void deleteOrganization(Organization organization)
+		protected void deleteOrganization(Organization organization)
 			throws PortalException, SystemException {
 
 			DeleteOrganizationActionableDynamicQuery
@@ -1678,27 +1726,21 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			organizationLocalService.deleteOrganization(organization);
 		}
 
+		protected void performActions()
+			throws PortalException, SystemException {
+
+			_actionableDynamicQuery.performActions();
+		}
+
+		protected void setCompanyId(long companyId) {
+			_actionableDynamicQuery.setCompanyId(companyId);
+		}
+
 		public void setParentOrganizationId(long parentOrganizationId) {
 			_parentOrganizationId = parentOrganizationId;
 		}
 
-		@Override
-		protected void addCriteria(DynamicQuery dynamicQuery) {
-			Property property = PropertyFactoryUtil.forName(
-				"parentOrganizationId");
-
-			dynamicQuery.add(property.eq(_parentOrganizationId));
-		}
-
-		@Override
-		protected void performAction(Object object)
-			throws PortalException, SystemException {
-
-			Organization organization = (Organization)object;
-
-			deleteOrganization(organization);
-		}
-
+		private ActionableDynamicQuery _actionableDynamicQuery;
 		private long _parentOrganizationId =
 			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID;
 

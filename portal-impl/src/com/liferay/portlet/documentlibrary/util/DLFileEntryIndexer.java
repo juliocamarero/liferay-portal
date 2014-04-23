@@ -65,9 +65,8 @@ import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryMetadataLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryActionableDynamicQuery;
-import com.liferay.portlet.documentlibrary.service.persistence.DLFolderActionableDynamicQuery;
 import com.liferay.portlet.dynamicdatamapping.StructureFieldException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
@@ -592,34 +591,42 @@ public class DLFileEntryIndexer extends BaseIndexer {
 			long companyId, final long groupId, final long dataRepositoryId)
 		throws PortalException, SystemException {
 
-		ActionableDynamicQuery actionableDynamicQuery =
-			new DLFileEntryActionableDynamicQuery() {
+		final ActionableDynamicQuery actionableDynamicQuery =
+			DLFileEntryLocalServiceUtil.getActionableDynamicQuery();
 
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				Property property = PropertyFactoryUtil.forName("folderId");
+		actionableDynamicQuery.setAddCriteriaMethod(
+			new ActionableDynamicQuery.AddCriteriaMethod() {
 
-				long folderId = DLFolderConstants.getFolderId(
-					groupId, dataRepositoryId);
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					Property property = PropertyFactoryUtil.forName("folderId");
 
-				dynamicQuery.add(property.eq(folderId));
-			}
+					long folderId = DLFolderConstants.getFolderId(
+						groupId, dataRepositoryId);
 
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				DLFileEntry dlFileEntry = (DLFileEntry)object;
-
-				Document document = getDocument(dlFileEntry);
-
-				if (document != null) {
-					addDocument(document);
+					dynamicQuery.add(property.eq(folderId));
 				}
-			}
 
-		};
-
+			});
 		actionableDynamicQuery.setCompanyId(companyId);
 		actionableDynamicQuery.setGroupId(groupId);
+		actionableDynamicQuery.setPerformActionMethod(
+			new ActionableDynamicQuery.PerformActionMethod() {
+
+				@Override
+				public void performAction(Object object)
+					throws PortalException {
+
+					DLFileEntry dlFileEntry = (DLFileEntry)object;
+
+					Document document = getDocument(dlFileEntry);
+
+					if (document != null) {
+						actionableDynamicQuery.addDocument(document);
+					}
+				}
+
+			});
 		actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
 		actionableDynamicQuery.performActions();
@@ -629,27 +636,31 @@ public class DLFileEntryIndexer extends BaseIndexer {
 		throws PortalException, SystemException {
 
 		ActionableDynamicQuery actionableDynamicQuery =
-			new DLFolderActionableDynamicQuery() {
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				DLFolder dlFolder = (DLFolder)object;
-
-				String portletId = PortletKeys.DOCUMENT_LIBRARY;
-				long groupId = dlFolder.getGroupId();
-				long folderId = dlFolder.getFolderId();
-
-				String[] newIds = {
-					String.valueOf(companyId), portletId,
-					String.valueOf(groupId), String.valueOf(folderId)
-				};
-
-				reindex(newIds);
-			}
-
-		};
+			DLFolderLocalServiceUtil.getActionableDynamicQuery();
 
 		actionableDynamicQuery.setCompanyId(companyId);
+		actionableDynamicQuery.setPerformActionMethod(
+			new ActionableDynamicQuery.PerformActionMethod() {
+
+				@Override
+				public void performAction(Object object)
+					throws PortalException {
+
+					DLFolder dlFolder = (DLFolder)object;
+
+					String portletId = PortletKeys.DOCUMENT_LIBRARY;
+					long groupId = dlFolder.getGroupId();
+					long folderId = dlFolder.getFolderId();
+
+					String[] newIds = {
+						String.valueOf(companyId), portletId,
+						String.valueOf(groupId), String.valueOf(folderId)
+					};
+
+					reindex(newIds);
+				}
+
+			});
 
 		actionableDynamicQuery.performActions();
 	}

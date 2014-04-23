@@ -40,6 +40,20 @@ import java.util.concurrent.Callable;
 public abstract class BaseActionableDynamicQuery
 	implements ActionableDynamicQuery {
 
+	public static final TransactionAttribute
+		REQUIRES_NEW_TRANSACTION_ATTRIBUTE;
+
+	static {
+		TransactionAttribute.Builder builder =
+			new TransactionAttribute.Builder();
+
+		builder.propagation(Propagation.REQUIRES_NEW);
+		builder.rollbackForClasses(
+			PortalException.class, SystemException.class);
+
+		REQUIRES_NEW_TRANSACTION_ATTRIBUTE = builder.build();
+	}
+
 	@Override
 	public void addDocument(Document document) throws PortalException {
 		if (_documents == null) {
@@ -351,20 +365,6 @@ public abstract class BaseActionableDynamicQuery
 		if (_performActionMethod != null) {
 			_performActionMethod.performAction(object);
 		}
-	}
-
-	protected static final TransactionAttribute
-		REQUIRES_NEW_TRANSACTION_ATTRIBUTE;
-
-	static {
-		TransactionAttribute.Builder builder =
-			new TransactionAttribute.Builder();
-
-		builder.propagation(Propagation.REQUIRES_NEW);
-		builder.rollbackForClasses(
-			PortalException.class, SystemException.class);
-
-		REQUIRES_NEW_TRANSACTION_ATTRIBUTE = builder.build();
 	}
 
 	private AddCriteriaMethod _addCriteriaMethod;
