@@ -45,7 +45,12 @@ boolean showPermissionsButton = JournalPermission.contains(permissionChecker, sc
 <c:if test="<%= showAddFeedButtonButton || showPermissionsButton %>">
 	<aui:button-row>
 		<c:if test="<%= showAddFeedButtonButton %>">
-			<aui:button onClick='<%= renderResponse.getNamespace() + "addFeed();" %>' value="add-feed" />
+			<portlet:renderURL var="editFeedURL">
+				<portlet:param name="struts_action" value="/journal/edit_feed" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+			</portlet:renderURL>
+
+			<aui:button href="<%= editFeedURL %>" value="add-feed" />
 		</c:if>
 
 		<c:if test="<%= showPermissionsButton %>">
@@ -61,20 +66,3 @@ boolean showPermissionsButton = JournalPermission.contains(permissionChecker, sc
 		</c:if>
 	</aui:button-row>
 </c:if>
-
-<aui:script>
-	function <portlet:namespace />addFeed() {
-		var url = '<portlet:renderURL><portlet:param name="struts_action" value="/journal/edit_feed" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>';
-
-		if (document.<portlet:namespace />fm.<portlet:namespace /><%= displayTerms.ADVANCED_SEARCH %>.value == 'false') {
-			url += '&<portlet:namespace /><%= displayTerms.NAME %>=' + document.<portlet:namespace />fm.<portlet:namespace /><%= displayTerms.KEYWORDS %>.value;
-
-			submitForm(document.hrefFm, url);
-		}
-		else {
-			document.<portlet:namespace />fm.method = 'post';
-
-			submitForm(document.<portlet:namespace />fm, url);
-		}
-	}
-</aui:script>
