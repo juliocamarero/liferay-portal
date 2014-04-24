@@ -228,6 +228,11 @@ public class AssetVocabularyLocalServiceImpl
 	public void deleteVocabulary(AssetVocabulary vocabulary)
 		throws PortalException, SystemException {
 
+		// Categories
+
+		assetCategoryLocalService.deleteVocabularyCategories(
+			vocabulary.getVocabularyId());
+
 		// Vocabulary
 
 		assetVocabularyPersistence.remove(vocabulary);
@@ -237,11 +242,6 @@ public class AssetVocabularyLocalServiceImpl
 		resourceLocalService.deleteResource(
 			vocabulary.getCompanyId(), AssetVocabulary.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL, vocabulary.getVocabularyId());
-
-		// Categories
-
-		assetCategoryLocalService.deleteVocabularyCategories(
-			vocabulary.getVocabularyId());
 	}
 
 	@Override
