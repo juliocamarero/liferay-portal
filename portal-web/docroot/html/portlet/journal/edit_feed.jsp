@@ -367,7 +367,7 @@ if (feed != null) {
 				groupId: <%= themeDisplay.getSiteGroupId() %>,
 				refererPortletName: '<%= PortletKeys.JOURNAL %>',
 				refererWebDAVToken: '<%= portlet.getWebDAVStorageToken() %>',
-				showGlobalScope: true,
+				showAncestorScopes: true,
 				struts_action: '/dynamic_data_mapping/select_structure',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "structures") %>'
 			},
