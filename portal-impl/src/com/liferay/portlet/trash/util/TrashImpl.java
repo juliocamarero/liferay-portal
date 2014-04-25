@@ -458,10 +458,11 @@ public class TrashImpl implements Trash {
 	}
 
 	@Override
-	public boolean isTrashEnabled(long groupId)
+	public boolean isTrashEnabled(Group group)
 		throws PortalException, SystemException {
 
-		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		UnicodeProperties typeSettingsProperties =
+			group.getParentLiveGroupTypeSettingsProperties();
 
 		boolean companyTrashEnabled = PrefsPropsUtil.getBoolean(
 			group.getCompanyId(), PropsKeys.TRASH_ENABLED);
@@ -470,11 +471,16 @@ public class TrashImpl implements Trash {
 			return false;
 		}
 
-		UnicodeProperties typeSettingsProperties =
-			group.getParentLiveGroupTypeSettingsProperties();
-
 		return GetterUtil.getBoolean(
 			typeSettingsProperties.getProperty("trashEnabled"), true);
+	}
+
+	@Override
+	public boolean isTrashEnabled(long groupId)
+		throws PortalException, SystemException {
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		return isTrashEnabled(group);
 	}
 
 	protected void addBreadcrumbEntries(
