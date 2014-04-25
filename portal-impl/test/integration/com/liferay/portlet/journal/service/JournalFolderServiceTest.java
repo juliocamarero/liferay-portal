@@ -105,7 +105,8 @@ public class JournalFolderServiceTest {
 		JournalFolderLocalServiceUtil.updateFolder(
 			TestPropsValues.getUserId(), folder.getFolderId(),
 			folder.getParentFolderId(), folder.getName(),
-			folder.getDescription(), ddmStructureIds, true, false,
+			folder.getDescription(), ddmStructureIds,
+			JournalFolderConstants.RESTRICTION_TYPE_DEFINED, false,
 			serviceContext);
 
 		String xml = DDMStructureTestUtil.getSampleStructuredContent(
@@ -183,7 +184,8 @@ public class JournalFolderServiceTest {
 		JournalFolderLocalServiceUtil.updateFolder(
 			TestPropsValues.getUserId(), folder2.getFolderId(),
 			folder2.getParentFolderId(), folder2.getName(),
-			folder2.getDescription(), ddmStructureIds, true, false,
+			folder2.getDescription(), ddmStructureIds,
+			JournalFolderConstants.RESTRICTION_TYPE_DEFINED, false,
 			serviceContext);
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
@@ -244,7 +246,8 @@ public class JournalFolderServiceTest {
 		JournalFolderLocalServiceUtil.updateFolder(
 			TestPropsValues.getUserId(), folder.getFolderId(),
 			folder.getParentFolderId(), folder.getName(),
-			folder.getDescription(), ddmStructureIds, true, false,
+			folder.getDescription(), ddmStructureIds,
+			JournalFolderConstants.RESTRICTION_TYPE_DEFINED, false,
 			serviceContext);
 
 		try {
@@ -313,7 +316,8 @@ public class JournalFolderServiceTest {
 		JournalFolderLocalServiceUtil.updateFolder(
 			TestPropsValues.getUserId(), folder3.getFolderId(),
 			folder3.getParentFolderId(), folder3.getName(),
-			folder3.getDescription(), ddmStructureIds, true, false,
+			folder3.getDescription(), ddmStructureIds,
+			JournalFolderConstants.RESTRICTION_TYPE_DEFINED, false,
 			serviceContext);
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
@@ -377,7 +381,8 @@ public class JournalFolderServiceTest {
 		JournalFolderLocalServiceUtil.updateFolder(
 			TestPropsValues.getUserId(), folder2.getFolderId(),
 			folder2.getParentFolderId(), folder2.getName(),
-			folder2.getDescription(), ddmStructureIds, true, false,
+			folder2.getDescription(), ddmStructureIds,
+			JournalFolderConstants.RESTRICTION_TYPE_DEFINED, false,
 			serviceContext);
 
 		try {
@@ -456,7 +461,8 @@ public class JournalFolderServiceTest {
 			JournalFolderLocalServiceUtil.updateFolder(
 				TestPropsValues.getUserId(), folder.getFolderId(),
 				folder.getParentFolderId(), folder.getName(),
-				folder.getDescription(), ddmStructureIds, true, false,
+				folder.getDescription(), ddmStructureIds,
+				JournalFolderConstants.RESTRICTION_TYPE_DEFINED, false,
 				serviceContext);
 
 			Assert.fail();
@@ -476,7 +482,8 @@ public class JournalFolderServiceTest {
 			JournalFolderLocalServiceUtil.updateFolder(
 				TestPropsValues.getUserId(), folder.getFolderId(),
 				folder.getParentFolderId(), folder.getName(),
-				folder.getDescription(), ddmStructureIds, true, false,
+				folder.getDescription(), ddmStructureIds,
+				JournalFolderConstants.RESTRICTION_TYPE_DEFINED, false,
 				serviceContext);
 
 			Assert.fail();

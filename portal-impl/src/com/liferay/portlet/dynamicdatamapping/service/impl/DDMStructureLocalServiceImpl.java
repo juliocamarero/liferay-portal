@@ -722,18 +722,21 @@ public class DDMStructureLocalServiceImpl
 
 	@Override
 	public List<DDMStructure> getJournalFolderStructures(
-			long[] groupIds, long journalFolderId, boolean inherited)
+			long[] groupIds, long journalFolderId, int restrictionType)
 		throws PortalException, SystemException {
 
-		if (!inherited) {
+		if (restrictionType ==
+				JournalFolderConstants.RESTRICTION_TYPE_DEFINED) {
+
 			return journalFolderPersistence.getDDMStructures(journalFolderId);
 		}
 
 		List<DDMStructure> structures = null;
 
 		journalFolderId =
-			journalFolderLocalService.getOverridedDDMStructuresFolderId(
-				journalFolderId);
+			journalFolderLocalService.getInheritedDDMStructuresFolderId(
+				journalFolderId,
+				JournalFolderConstants.RESTRICTION_TYPE_DEFINED);
 
 		if (journalFolderId !=
 				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {

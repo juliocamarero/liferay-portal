@@ -153,7 +153,7 @@ if (workflowEnabled) {
 		<c:if test="<%= rootFolder || (folder != null) %>">
 
 			<%
-			List<DDMStructure> ddmStructures = DDMStructureLocalServiceUtil.getJournalFolderStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), folderId, false);
+			List<DDMStructure> ddmStructures = DDMStructureLocalServiceUtil.getJournalFolderStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), folderId, JournalFolderConstants.RESTRICTION_TYPE_DEFINED);
 
 			String headerNames = null;
 
@@ -167,46 +167,24 @@ if (workflowEnabled) {
 
 			<aui:field-wrapper helpMessage='<%= rootFolder ? "" : "structure-restrictions-help" %>' label='<%= rootFolder ? "" : (workflowEnabled ? "structure-restrictions-and-workflow" : "structure-restrictions") %>'>
 				<c:if test="<%= !rootFolder %>">
-					<aui:input checked="<%= !folder.isOverrideDDMStructures() %>" id="useDDMStructures" label='<%= workflowEnabled ? "use-structure-restrictions-and-workflow-of-the-parent-folder" : "use-structure-restrictions-of-the-parent-folder" %>' name="overrideDDMStructures" type="radio" value="<%= false %>" />
 
-					<aui:input checked="<%= folder.isOverrideDDMStructures() %>" id="overrideDDMStructures" label='<%= workflowEnabled ? "define-specific-structure-restrictions-and-workflow-for-this-folder" : "define-specific-structure-restrictions-for-this-folder" %>' name="overrideDDMStructures" type="radio" value="<%= true %>" />
-				</c:if>
+					<%
+					long inheritedParentDDMStructuresFolderId = JournalFolderLocalServiceUtil.getInheritedDDMStructuresFolderId(folder.getFolderId(), JournalFolderConstants.RESTRICTION_TYPE_INHERIT);
 
-				<div id="<portlet:namespace />overrideParentSettings">
-					<c:if test="<%= workflowEnabled %>">
-						<div class='<%= (rootFolder || ddmStructures.isEmpty()) ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />defaultWorkflow">
-							<aui:select label="default-workflow-for-all-structures" name='<%= "workflowDefinition" + JournalArticleConstants.FILE_ENTRY_TYPE_ID_ALL %>'>
+					JournalFolder inheritedParentDDMStructuresFolder = JournalFolderLocalServiceUtil.fetchFolder(inheritedParentDDMStructuresFolderId);
 
-								<aui:option label="no-workflow" value="" />
+					String inheritedParentDDMStructuresFolderName = LanguageUtil.get(locale, "home");
 
-								<%
-								WorkflowDefinitionLink workflowDefinitionLink = null;
+					if (inheritedParentDDMStructuresFolder != null) {
+						inheritedParentDDMStructuresFolderName = inheritedParentDDMStructuresFolder.getName();
+					}
+					%>
 
-								try {
-									workflowDefinitionLink = WorkflowDefinitionLinkLocalServiceUtil.getWorkflowDefinitionLink(company.getCompanyId(), scopeGroupId, JournalFolder.class.getName(), folderId, JournalArticleConstants.FILE_ENTRY_TYPE_ID_ALL, true);
-								}
-								catch (NoSuchWorkflowDefinitionLinkException nswdle) {
-								}
+					<aui:input checked="<%= folder.getRestrictionType() == JournalFolderConstants.RESTRICTION_TYPE_INHERIT %>" id="restrictionTypeInherit" label='<%= workflowEnabled ? LanguageUtil.format(locale, "use-structure-restrictions-and-workflow-of-the-parent-folder-x", inheritedParentDDMStructuresFolderName) : LanguageUtil.format(locale, "use-structure-restrictions-of-the-parent-folder", inheritedParentDDMStructuresFolderName) %>' name="restrictionType" type="radio" value="<%= JournalFolderConstants.RESTRICTION_TYPE_INHERIT %>" />
 
-								for (WorkflowDefinition workflowDefinition : workflowDefinitions) {
-									boolean selected = false;
+					<aui:input checked="<%= folder.getRestrictionType() == JournalFolderConstants.RESTRICTION_TYPE_DEFINED %>" id="restrictionTypeDefined" label='<%= workflowEnabled ? LanguageUtil.format(locale, "define-specific-structure-restrictions-and-workflow-for-this-folder-x", folder.getName()) : LanguageUtil.format(locale, "define-specific-structure-restrictions-for-this-folder-x", folder.getName()) %>' name="restrictionType" type="radio" value="<%= JournalFolderConstants.RESTRICTION_TYPE_DEFINED %>" />
 
-									if ((workflowDefinitionLink != null) && workflowDefinitionLink.getWorkflowDefinitionName().equals(workflowDefinition.getName()) && (workflowDefinitionLink.getWorkflowDefinitionVersion() == workflowDefinition.getVersion())) {
-										selected = true;
-									}
-								%>
-
-									<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= workflowDefinition.getName() + StringPool.AT + workflowDefinition.getVersion() %>" />
-
-								<%
-								}
-								%>
-
-							</aui:select>
-						</div>
-					</c:if>
-
-					<c:if test="<%= !rootFolder %>">
+					<div class='<%= (folder.getRestrictionType() == JournalFolderConstants.RESTRICTION_TYPE_DEFINED) ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />restrictionTypeDefinedDiv">
 						<liferay-ui:search-container
 							headerNames="<%= headerNames %>"
 							total="<%= ddmStructures.size() %>"
@@ -275,8 +253,43 @@ if (workflowEnabled) {
 							message="choose-structure"
 							url='<%= "javascript:" + renderResponse.getNamespace() + "openDDMStructureSelector();" %>'
 						/>
-					</c:if>
-				</div>
+					</div>
+				</c:if>
+
+				<c:if test="<%= workflowEnabled %>">
+					<aui:input checked="<%= folder.getRestrictionType() == JournalFolderConstants.RESTRICTION_TYPE_WORKFLOW %>" id="restrictionTypeWorkflow" label="default-workflow-for-all-inherited-structures" name="restrictionType" type="radio" value="<%= JournalFolderConstants.RESTRICTION_TYPE_WORKFLOW %>" />
+
+					<div class='<%= (rootFolder || (folder.getRestrictionType() == JournalFolderConstants.RESTRICTION_TYPE_WORKFLOW)) ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />restrictionTypeWorkflowDiv">
+						<aui:select label="" name='<%= "workflowDefinition" + JournalArticleConstants.FILE_ENTRY_TYPE_ID_ALL %>'>
+
+							<aui:option label="no-workflow" value="" />
+
+							<%
+							WorkflowDefinitionLink workflowDefinitionLink = null;
+
+							try {
+								workflowDefinitionLink = WorkflowDefinitionLinkLocalServiceUtil.getWorkflowDefinitionLink(company.getCompanyId(), scopeGroupId, JournalFolder.class.getName(), folderId, JournalArticleConstants.FILE_ENTRY_TYPE_ID_ALL, true);
+							}
+							catch (NoSuchWorkflowDefinitionLinkException nswdle) {
+							}
+
+							for (WorkflowDefinition workflowDefinition : workflowDefinitions) {
+								boolean selected = false;
+
+								if ((workflowDefinitionLink != null) && workflowDefinitionLink.getWorkflowDefinitionName().equals(workflowDefinition.getName()) && (workflowDefinitionLink.getWorkflowDefinitionVersion() == workflowDefinition.getVersion())) {
+									selected = true;
+								}
+							%>
+
+								<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= workflowDefinition.getName() + StringPool.AT + workflowDefinition.getVersion() %>" />
+
+							<%
+							}
+							%>
+
+						</aui:select>
+					</div>
+				</c:if>
 			</aui:field-wrapper>
 		</c:if>
 
@@ -348,10 +361,6 @@ if (workflowEnabled) {
 
 			<c:choose>
 				<c:when test="<%= workflowEnabled %>">
-					var defaultWorkflow = A.one('#<portlet:namespace />defaultWorkflow');
-
-					defaultWorkflow.hide();
-
 					var workflowDefinitions = '<%= UnicodeFormatter.toString(workflowDefinitionsBuffer) %>';
 
 					workflowDefinitions = workflowDefinitions.replace(/LIFERAY_WORKFLOW_DEFINITION_DDM_STRUCTURE/g, "workflowDefinition" + ddmStructureId);
@@ -368,8 +377,9 @@ if (workflowEnabled) {
 		['liferay-search-container']
 	);
 
-	Liferay.Util.toggleRadio('<portlet:namespace />overrideDDMStructures', '<portlet:namespace />overrideParentSettings', '');
-	Liferay.Util.toggleRadio('<portlet:namespace />useDDMStructures', '', '<portlet:namespace />overrideParentSettings');
+	Liferay.Util.toggleRadio('<portlet:namespace />restrictionTypeInherit', '', ['<portlet:namespace />restrictionTypeDefinedDiv', '<portlet:namespace />restrictionTypeWorkflowDiv']);
+	Liferay.Util.toggleRadio('<portlet:namespace />restrictionTypeDefined', '<portlet:namespace />restrictionTypeDefinedDiv', '<portlet:namespace />restrictionTypeWorkflowDiv');
+	Liferay.Util.toggleRadio('<portlet:namespace />restrictionTypeWorkflow', '<portlet:namespace />restrictionTypeWorkflowDiv', '<portlet:namespace />restrictionTypeDefinedDiv');
 </aui:script>
 
 <aui:script use="liferay-search-container">
@@ -385,14 +395,6 @@ if (workflowEnabled) {
 			var tr = link.ancestor('tr');
 
 			searchContainer.deleteRow(tr, link.attr('data-rowId'));
-
-			var ddmStructuresCount = searchContainer.getSize();
-
-			if (ddmStructuresCount == 0) {
-				var defaultWorkflow = A.one('#<portlet:namespace />defaultWorkflow');
-
-				defaultWorkflow.show();
-			}
 		},
 		'.modify-link'
 	);
