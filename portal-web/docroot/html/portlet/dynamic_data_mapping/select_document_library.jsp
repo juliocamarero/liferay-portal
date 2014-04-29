@@ -311,7 +311,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 				href="<%= rowHREF %>"
 				name="document"
 			>
-				<img alt="" align="left" border="0" src="<%= DLUtil.getThumbnailSrc(fileEntry, null, themeDisplay) %>" style="<%= DLUtil.getThumbnailStyle() %>" />
+				<img align="left" alt="" border="0" src="<%= DLUtil.getThumbnailSrc(fileEntry, null, themeDisplay) %>" style="<%= DLUtil.getThumbnailStyle() %>" />
 				<%= HtmlUtil.escape(fileEntry.getTitle()) %>
 			</liferay-ui:search-container-column-text>
 
