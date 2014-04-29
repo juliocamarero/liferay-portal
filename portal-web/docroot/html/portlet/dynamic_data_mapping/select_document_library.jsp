@@ -309,8 +309,18 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 				href="<%= rowHREF %>"
 				name="document"
 			>
-				<img alt="" align="left" border="0" src="<%= DLUtil.getThumbnailSrc(fileEntry, null, themeDisplay) %>" style="<%= DLUtil.getThumbnailStyle() %>" />
-				<%= HtmlUtil.escape(fileEntry.getTitle()) %>
+
+				<%
+				AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFileEntry.class.getName());
+
+				AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(fileEntry.getFileEntryId());
+				%>
+
+				<liferay-ui:icon
+					iconCssClass="<%= assetRenderer.getIconCssClass() %>"
+					label="<%= true %>"
+					message="<%= HtmlUtil.escape(fileEntry.getTitle()) %>"
+				/>
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
