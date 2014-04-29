@@ -113,11 +113,14 @@ ArticleDisplayTerms displayTerms = (ArticleDisplayTerms)searchContainer.getDispl
 
 			<c:if test="<%= portletName.equals(PortletKeys.JOURNAL) %>">
 				<aui:select inlineField="<%= true %>" name="<%= displayTerms.STATUS %>" value="<%= displayTerms.getStatus() %>">
-					<aui:option value=""></aui:option>
-					<aui:option label="draft" />
-					<aui:option label="pending" />
-					<aui:option label="approved" />
-					<aui:option label="expired" />
+					<aui:option label="any" value="<%= WorkflowConstants.STATUS_ANY %>" />
+					<aui:option label="draft" value="<%= WorkflowConstants.STATUS_DRAFT %>" />
+					<c:if test="<%= WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), scopeGroupId, JournalArticle.class.getName()) %>">
+						<aui:option label="pending" value="<%= WorkflowConstants.STATUS_PENDING %>" />
+						<aui:option label="scheduled" value="<%= WorkflowConstants.STATUS_SCHEDULED %>" />
+					</c:if>
+					<aui:option label="approved" value="<%= WorkflowConstants.STATUS_APPROVED %>" />
+					<aui:option label="expired" value="<%= WorkflowConstants.STATUS_EXPIRED %>" />
 				</aui:select>
 			</c:if>
 		</aui:fieldset>

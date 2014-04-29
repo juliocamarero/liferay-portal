@@ -31,7 +31,7 @@ double version = ParamUtil.getDouble(request, "version");
 			type = null;
 		}
 
-		String status = "approved";
+		int status = WorkflowConstants.STATUS_APPROVED;
 
 		PortletURL portletURL = renderResponse.createRenderURL();
 
