@@ -70,6 +70,7 @@ String eventName = ParamUtil.getString(request, "eventName");
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/document_selector/view");
+portletURL.setParameter("eventName", eventName);
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("folderId", String.valueOf(folderId));
 %>
@@ -201,6 +202,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 			>
 				<portlet:renderURL var="rowURL">
 					<portlet:param name="struts_action" value="/document_selector/view" />
+					<portlet:param name="eventName" value="<%= eventName %>" />
 					<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 					<portlet:param name="folderId" value="<%= String.valueOf(curFolder.getFolderId()) %>" />
 				</portlet:renderURL>
@@ -255,6 +257,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 	PortletURL backURL = renderResponse.createRenderURL();
 
 	backURL.setParameter("struts_action", "/document_selector/view");
+	backURL.setParameter("eventName", eventName);
 	backURL.setParameter("groupId", String.valueOf(groupId));
 	%>
 
@@ -268,6 +271,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 	PortletURL iteratorURL = renderResponse.createRenderURL();
 
 	iteratorURL.setParameter("struts_action", "/document_selector/view");
+	iteratorURL.setParameter("eventName", eventName);
 	iteratorURL.setParameter("groupId", String.valueOf(groupId));
 	iteratorURL.setParameter("folderId", String.valueOf(folderId));
 	%>
