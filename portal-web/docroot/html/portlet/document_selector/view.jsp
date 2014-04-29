@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/document_library_display/init.jsp" %>
+<%@ include file="/html/portlet/document_selector/init.jsp" %>
 
 <%
 long groupId = ParamUtil.getLong(request, FileEntryDisplayTerms.SELECTED_GROUP_ID);
@@ -69,7 +69,7 @@ String eventName = ParamUtil.getString(request, "eventName");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
+portletURL.setParameter("struts_action", "/document_selector/view");
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("folderId", String.valueOf(folderId));
 %>
@@ -173,7 +173,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 		</aui:nav>
 
 		<aui:nav-bar-search cssClass="pull-right"
-			file="/html/portlet/dynamic_data_mapping/file_entry_search.jsp"
+			file="/html/portlet/document_selector/search.jsp"
 			searchContainer="<%= fileEntrySearchContainer %>"
 		/>
 	</aui:nav-bar>
@@ -200,7 +200,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 				modelVar="curFolder"
 			>
 				<portlet:renderURL var="rowURL">
-					<portlet:param name="struts_action" value="/dynamic_data_mapping/select_document_library" />
+					<portlet:param name="struts_action" value="/document_selector/view" />
 					<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 					<portlet:param name="folderId" value="<%= String.valueOf(curFolder.getFolderId()) %>" />
 				</portlet:renderURL>
@@ -254,7 +254,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 	<%
 	PortletURL backURL = renderResponse.createRenderURL();
 
-	backURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
+	backURL.setParameter("struts_action", "/document_selector/view");
 	backURL.setParameter("groupId", String.valueOf(groupId));
 	%>
 
@@ -267,7 +267,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 	<%
 	PortletURL iteratorURL = renderResponse.createRenderURL();
 
-	iteratorURL.setParameter("struts_action", "/dynamic_data_mapping/select_document_library");
+	iteratorURL.setParameter("struts_action", "/document_selector/view");
 	iteratorURL.setParameter("groupId", String.valueOf(groupId));
 	iteratorURL.setParameter("folderId", String.valueOf(folderId));
 	%>
