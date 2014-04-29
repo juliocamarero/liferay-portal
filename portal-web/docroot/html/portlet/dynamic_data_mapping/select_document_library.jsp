@@ -167,13 +167,11 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 
 								<%
 								AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFileEntry.class.getName());
-
-								AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(folderId);
 								%>
 
 								<aui:nav-item
 									href="<%= addFileEntryTypeURL %>"
-									iconCssClass="<%= assetRenderer.getIconCssClass() %>"
+									iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
 									label="<%= HtmlUtil.escape(fileEntryType.getName(locale)) %>"
 								/>
 
