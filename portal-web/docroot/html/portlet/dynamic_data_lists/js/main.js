@@ -67,6 +67,7 @@ AUI.add(
 						portletURL.setParameter('eventName', 'selectDocumentLibrary');
 						portletURL.setParameter('groupId', themeDisplay.getScopeGroupId());
 						portletURL.setParameter('struts_action', '/document_selector/view');
+						portletURL.setParameter('refererPortletName', '167');
 						portletURL.setPortletId('200');
 						portletURL.setWindowState('pop_up');
 
