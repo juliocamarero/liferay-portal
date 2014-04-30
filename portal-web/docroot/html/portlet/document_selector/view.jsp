@@ -74,34 +74,41 @@ portletURL.setParameter("eventName", eventName);
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("folderId", String.valueOf(folderId));
 
-Group selectedGroup = GroupLocalServiceUtil.fetchGroup(groupId);
+boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector");
 %>
 
-<liferay-ui:icon-menu direction="down" extended="<%= false %>" icon="<%= StringPool.BLANK %>" message="<%= HtmlUtil.escape(selectedGroup.getDescriptiveName()) %>" showWhenSingleIcon="<%= true %>" triggerCssClass="btn">
+<c:if test="<%= showGroupsSelector %>">
 
 	<%
-	String refererPortletName = ParamUtil.getString(request, "refererPortletName");
-
-	PortletURL selectGroupURL = renderResponse.createRenderURL();
-
-	selectGroupURL.setParameter("struts_action", "/document_selector/view");
-	selectGroupURL.setParameter("eventName", eventName);
-
-	for (Group group : PortalUtil.getBrowsableScopeGroups(themeDisplay.getUserId(), themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), refererPortletName)) {
-		selectGroupURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+	Group selectedGroup = GroupLocalServiceUtil.fetchGroup(groupId);
 	%>
 
-		<liferay-ui:icon
-			message="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
-			src="<%= group.getIconURL(themeDisplay) %>"
-			url="<%= selectGroupURL.toString() %>"
-		/>
+	<liferay-ui:icon-menu direction="down" extended="<%= false %>" icon="<%= StringPool.BLANK %>" message="<%= HtmlUtil.escape(selectedGroup.getDescriptiveName()) %>" showWhenSingleIcon="<%= true %>" triggerCssClass="btn">
 
-	<%
-	}
-	%>
+		<%
+		String refererPortletName = ParamUtil.getString(request, "refererPortletName");
 
-</liferay-ui:icon-menu>
+		PortletURL selectGroupURL = renderResponse.createRenderURL();
+
+		selectGroupURL.setParameter("struts_action", "/document_selector/view");
+		selectGroupURL.setParameter("eventName", eventName);
+
+		for (Group group : PortalUtil.getBrowsableScopeGroups(themeDisplay.getUserId(), themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), refererPortletName)) {
+			selectGroupURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+		%>
+
+			<liferay-ui:icon
+				message="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
+				src="<%= group.getIconURL(themeDisplay) %>"
+				url="<%= selectGroupURL.toString() %>"
+			/>
+
+		<%
+		}
+		%>
+
+	</liferay-ui:icon-menu>
+</c:if>
 
 <aui:form method="post" name="selectDocumentFm">
 
