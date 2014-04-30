@@ -310,7 +310,7 @@ if (workflowEnabled) {
 
 <liferay-util:buffer var="workflowDefinitionsBuffer">
 	<c:if test="<%= workflowEnabled %>">
-		<aui:select label="" name="LIFERAY_WORKFLOW_DEFINITION_DDM_STRUCTURE">
+		<aui:select label="" name="LIFERAY_WORKFLOW_DEFINITION_DDM_STRUCTURE" title="workflow-definition">
 			<aui:option label="no-workflow" value="" />
 
 			<%
