@@ -322,7 +322,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 			<liferay-ui:search-container-column-text
 				href="<%= rowHREF %>"
 				name="size"
-				value='<%= TextFormatter.formatKB(fileEntry.getSize(), locale) + "k" %>'
+				value="<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>"
 			/>
 
 			<c:if test="<%= PropsValues.DL_FILE_ENTRY_BUFFERED_INCREMENT_ENABLED %>">
