@@ -861,16 +861,23 @@ create database lportal2 character set utf8;</echo>
 				<available file="${previous.changelog.dir}/git-commit-portal" />
 			</and>
 			<then>
+				<loadfile
+					property="previous.git.commit.plugins.rev.parse"
+					srcfile="${previous.changelog.dir}/git-commit-plugins"
+				/>
+
+				<loadfile
+					property="previous.git.commit.portal.rev.parse"
+					srcfile="${previous.changelog.dir}/git-commit-portal"
+				/>
+
 				<copy
 					file="${previous.changelog.dir}/git-build-log.html"
 					tofile="${changelog.dir}/git-build-log.html"
 				/>
 
 				<if>
-					<resourcecontains
-						resource="${previous.changelog.dir}/git-commit-plugins"
-						substring="${previous.git.commit.plugins.rev.parse}"
-					/>
+					<equals arg1="${git.commit.plugins.rev.parse}" arg2="${previous.git.commit.plugins.rev.parse}" />
 					<then>
 						<property
 							name="git.log.content.plugins"
@@ -890,10 +897,7 @@ create database lportal2 character set utf8;</echo>
 				</if>
 
 				<if>
-					<resourcecontains
-						resource="${previous.changelog.dir}/git-commit-portal"
-						substring="${previous.git.commit.portal.rev.parse}"
-					/>
+					<equals arg1="${git.commit.portal.rev.parse}" arg2="${previous.git.commit.portal.rev.parse}" />
 					<then>
 						<property
 							name="git.log.content.portal"
