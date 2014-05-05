@@ -195,6 +195,26 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public String getIconCssClass() {
+		String iconCss = "icon-globe";
+
+		if (isCompany()) {
+			iconCss = "icon-globe";
+		}
+		else if (isLayout()) {
+			iconCss = "icon-page";
+		}
+		else if (isOrganization()) {
+			iconCss = "icon-globe";
+		}
+		else if (isUser()) {
+			iconCss = "icon-user";
+		}
+
+		return iconCss;
+	}
+
+	@Override
 	public String getIconURL(ThemeDisplay themeDisplay) {
 		String iconURL = themeDisplay.getPathThemeImages() + "/common/";
 
