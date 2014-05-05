@@ -543,6 +543,7 @@
 		<column name="site" type="boolean" />
 		<column name="remoteStagingGroupCount" type="int" />
 		<column name="active" type="boolean" />
+		<column name="trashEntriesMaxAge" type="int" />
 
 		<!-- Relationships -->
 
