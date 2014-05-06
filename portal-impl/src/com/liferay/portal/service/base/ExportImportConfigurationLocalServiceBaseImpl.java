@@ -40,6 +40,7 @@ import com.liferay.portal.service.persistence.UserFinder;
 import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.util.PortalUtil;
 
+import com.liferay.portlet.trash.service.persistence.TrashEntryFinder;
 import com.liferay.portlet.trash.service.persistence.TrashEntryPersistence;
 
 import java.io.Serializable;
@@ -454,6 +455,24 @@ public abstract class ExportImportConfigurationLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the trash entry finder.
+	 *
+	 * @return the trash entry finder
+	 */
+	public TrashEntryFinder getTrashEntryFinder() {
+		return trashEntryFinder;
+	}
+
+	/**
+	 * Sets the trash entry finder.
+	 *
+	 * @param trashEntryFinder the trash entry finder
+	 */
+	public void setTrashEntryFinder(TrashEntryFinder trashEntryFinder) {
+		this.trashEntryFinder = trashEntryFinder;
+	}
+
+	/**
 	 * Returns the user local service.
 	 *
 	 * @return the user local service
@@ -603,6 +622,8 @@ public abstract class ExportImportConfigurationLocalServiceBaseImpl
 	protected com.liferay.portlet.trash.service.TrashEntryService trashEntryService;
 	@BeanReference(type = TrashEntryPersistence.class)
 	protected TrashEntryPersistence trashEntryPersistence;
+	@BeanReference(type = TrashEntryFinder.class)
+	protected TrashEntryFinder trashEntryFinder;
 	@BeanReference(type = com.liferay.portal.service.UserLocalService.class)
 	protected com.liferay.portal.service.UserLocalService userLocalService;
 	@BeanReference(type = com.liferay.portal.service.UserService.class)

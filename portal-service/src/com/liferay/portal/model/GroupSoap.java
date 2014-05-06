@@ -50,6 +50,7 @@ public class GroupSoap implements Serializable {
 		soapModel.setSite(model.getSite());
 		soapModel.setRemoteStagingGroupCount(model.getRemoteStagingGroupCount());
 		soapModel.setActive(model.getActive());
+		soapModel.setTrashEntriesMaxAge(model.getTrashEntriesMaxAge());
 
 		return soapModel;
 	}
@@ -274,6 +275,14 @@ public class GroupSoap implements Serializable {
 		_active = active;
 	}
 
+	public int getTrashEntriesMaxAge() {
+		return _trashEntriesMaxAge;
+	}
+
+	public void setTrashEntriesMaxAge(int trashEntriesMaxAge) {
+		_trashEntriesMaxAge = trashEntriesMaxAge;
+	}
+
 	private long _mvccVersion;
 	private String _uuid;
 	private long _groupId;
@@ -294,4 +303,5 @@ public class GroupSoap implements Serializable {
 	private boolean _site;
 	private int _remoteStagingGroupCount;
 	private boolean _active;
+	private int _trashEntriesMaxAge;
 }

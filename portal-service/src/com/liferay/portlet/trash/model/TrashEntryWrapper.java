@@ -63,6 +63,7 @@ public class TrashEntryWrapper implements TrashEntry, ModelWrapper<TrashEntry> {
 		attributes.put("systemEventSetKey", getSystemEventSetKey());
 		attributes.put("typeSettings", getTypeSettings());
 		attributes.put("status", getStatus());
+		attributes.put("createTimestamp", getCreateTimestamp());
 
 		return attributes;
 	}
@@ -133,6 +134,12 @@ public class TrashEntryWrapper implements TrashEntry, ModelWrapper<TrashEntry> {
 
 		if (status != null) {
 			setStatus(status);
+		}
+
+		Integer createTimestamp = (Integer)attributes.get("createTimestamp");
+
+		if (createTimestamp != null) {
+			setCreateTimestamp(createTimestamp);
 		}
 	}
 
@@ -411,6 +418,26 @@ public class TrashEntryWrapper implements TrashEntry, ModelWrapper<TrashEntry> {
 	@Override
 	public void setStatus(int status) {
 		_trashEntry.setStatus(status);
+	}
+
+	/**
+	* Returns the create timestamp of this trash entry.
+	*
+	* @return the create timestamp of this trash entry
+	*/
+	@Override
+	public int getCreateTimestamp() {
+		return _trashEntry.getCreateTimestamp();
+	}
+
+	/**
+	* Sets the create timestamp of this trash entry.
+	*
+	* @param createTimestamp the create timestamp of this trash entry
+	*/
+	@Override
+	public void setCreateTimestamp(int createTimestamp) {
+		_trashEntry.setCreateTimestamp(createTimestamp);
 	}
 
 	@Override

@@ -21,6 +21,11 @@ import aQute.bnd.annotation.ProviderType;
  */
 @ProviderType
 public interface TrashEntryFinder {
+	public java.util.List<com.liferay.portlet.trash.model.TrashEntry> findCleanableEntries(
+		long trashEntryId, long companyId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public java.util.List<java.lang.Object[]> findTrashEntryWithGroup(
 		long trashEntryId, int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException,

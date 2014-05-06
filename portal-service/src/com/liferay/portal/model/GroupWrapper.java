@@ -70,6 +70,7 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 		attributes.put("site", getSite());
 		attributes.put("remoteStagingGroupCount", getRemoteStagingGroupCount());
 		attributes.put("active", getActive());
+		attributes.put("trashEntriesMaxAge", getTrashEntriesMaxAge());
 
 		return attributes;
 	}
@@ -196,6 +197,13 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 
 		if (active != null) {
 			setActive(active);
+		}
+
+		Integer trashEntriesMaxAge = (Integer)attributes.get(
+				"trashEntriesMaxAge");
+
+		if (trashEntriesMaxAge != null) {
+			setTrashEntriesMaxAge(trashEntriesMaxAge);
 		}
 	}
 
@@ -684,6 +692,26 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	@Override
 	public void setActive(boolean active) {
 		_group.setActive(active);
+	}
+
+	/**
+	* Returns the trash entries max age of this group.
+	*
+	* @return the trash entries max age of this group
+	*/
+	@Override
+	public int getTrashEntriesMaxAge() {
+		return _group.getTrashEntriesMaxAge();
+	}
+
+	/**
+	* Sets the trash entries max age of this group.
+	*
+	* @param trashEntriesMaxAge the trash entries max age of this group
+	*/
+	@Override
+	public void setTrashEntriesMaxAge(int trashEntriesMaxAge) {
+		_group.setTrashEntriesMaxAge(trashEntriesMaxAge);
 	}
 
 	@Override

@@ -818,7 +818,8 @@ create table Group_ (
 	friendlyURL VARCHAR(255) null,
 	site BOOLEAN,
 	remoteStagingGroupCount INTEGER,
-	active_ BOOLEAN
+	active_ BOOLEAN,
+	trashEntriesMaxAge INTEGER
 );
 
 create table Groups_Orgs (
@@ -2185,7 +2186,8 @@ create table TrashEntry (
 	classPK LONG,
 	systemEventSetKey LONG,
 	typeSettings TEXT null,
-	status INTEGER
+	status INTEGER,
+	createTimestamp INTEGER
 );
 
 create table TrashVersion (
