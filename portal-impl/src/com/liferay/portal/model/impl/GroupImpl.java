@@ -25,6 +25,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -966,6 +968,39 @@ public class GroupImpl extends GroupBaseImpl {
 	@Override
 	public void setTypeSettingsProperties(
 		UnicodeProperties typeSettingsProperties) {
+
+		String trashEntriesMaxAgeString = typeSettingsProperties.get(
+			"trashEntriesMaxAge");
+
+		boolean isTrashEnabled = PropsValues.TRASH_ENABLED;
+
+		String trashEntriesMaxAgeDefault = String.valueOf(
+			PropsValues.TRASH_ENTRIES_MAX_AGE);
+
+		try {
+			isTrashEnabled = PrefsPropsUtil.getBoolean(
+				getCompanyId(), PropsKeys.TRASH_ENABLED);
+			trashEntriesMaxAgeDefault = String.valueOf(
+				PrefsPropsUtil.getInteger(getCompanyId(),
+				PropsKeys.TRASH_ENTRIES_MAX_AGE));
+		}
+		catch (SystemException e) {
+
+			// Ignore
+
+		}
+
+		if (isTrashEnabled &&
+			(trashEntriesMaxAgeString != null) &&
+			!trashEntriesMaxAgeString.equals(trashEntriesMaxAgeDefault)) {
+
+			int trashEntriesMaxAge = Integer.valueOf(trashEntriesMaxAgeString);
+
+			setTrashEntriesMaxAge(trashEntriesMaxAge);
+		}
+		else {
+			setTrashEntriesMaxAge(-1);
+		}
 
 		_typeSettingsProperties = typeSettingsProperties;
 
