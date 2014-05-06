@@ -150,6 +150,8 @@ public class TrashEntryPersistenceTest {
 
 		newTrashEntry.setStatus(RandomTestUtil.nextInt());
 
+		newTrashEntry.setCreateTimestamp(RandomTestUtil.nextInt());
+
 		_persistence.update(newTrashEntry);
 
 		TrashEntry existingTrashEntry = _persistence.findByPrimaryKey(newTrashEntry.getPrimaryKey());
@@ -177,6 +179,8 @@ public class TrashEntryPersistenceTest {
 			newTrashEntry.getTypeSettings());
 		Assert.assertEquals(existingTrashEntry.getStatus(),
 			newTrashEntry.getStatus());
+		Assert.assertEquals(existingTrashEntry.getCreateTimestamp(),
+			newTrashEntry.getCreateTimestamp());
 	}
 
 	@Test
@@ -280,7 +284,7 @@ public class TrashEntryPersistenceTest {
 			true, "groupId", true, "companyId", true, "userId", true,
 			"userName", true, "createDate", true, "classNameId", true,
 			"classPK", true, "systemEventSetKey", true, "typeSettings", true,
-			"status", true);
+			"status", true, "createTimestamp", true);
 	}
 
 	@Test
@@ -437,6 +441,8 @@ public class TrashEntryPersistenceTest {
 		trashEntry.setTypeSettings(RandomTestUtil.randomString());
 
 		trashEntry.setStatus(RandomTestUtil.nextInt());
+
+		trashEntry.setCreateTimestamp(RandomTestUtil.nextInt());
 
 		_persistence.update(trashEntry);
 

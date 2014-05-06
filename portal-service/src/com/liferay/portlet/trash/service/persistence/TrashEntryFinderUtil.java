@@ -24,6 +24,14 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  */
 @ProviderType
 public class TrashEntryFinderUtil {
+	public static java.util.List<com.liferay.portlet.trash.model.TrashEntry> findCleanableEntries(
+		long trashEntryId, long companyId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getFinder()
+				   .findCleanableEntries(trashEntryId, companyId, start, end);
+	}
+
 	public static java.util.List<java.lang.Object[]> findTrashEntryWithGroup(
 		long trashEntryId, int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException,

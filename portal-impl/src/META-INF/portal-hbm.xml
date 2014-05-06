@@ -402,6 +402,7 @@
 		<property name="site" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="remoteStagingGroupCount" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="active" type="com.liferay.portal.dao.orm.hibernate.BooleanType" column="active_" />
+		<property name="trashEntriesMaxAge" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
 	<class name="com.liferay.portal.model.impl.ImageImpl" table="Image" dynamic-update="true">
 		<cache usage="read-write" />
@@ -2786,6 +2787,7 @@
 		<property name="systemEventSetKey" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="typeSettings" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="status" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="createTimestamp" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
 	<class name="com.liferay.portlet.trash.model.impl.TrashVersionImpl" table="TrashVersion">
 		<cache usage="read-write" />

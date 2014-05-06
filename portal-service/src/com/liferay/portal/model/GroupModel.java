@@ -397,6 +397,20 @@ public interface GroupModel extends AttachedModel, BaseModel<Group>, MVCCModel {
 	 */
 	public void setActive(boolean active);
 
+	/**
+	 * Returns the trash entries max age of this group.
+	 *
+	 * @return the trash entries max age of this group
+	 */
+	public int getTrashEntriesMaxAge();
+
+	/**
+	 * Sets the trash entries max age of this group.
+	 *
+	 * @param trashEntriesMaxAge the trash entries max age of this group
+	 */
+	public void setTrashEntriesMaxAge(int trashEntriesMaxAge);
+
 	@Override
 	public boolean isNew();
 
