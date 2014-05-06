@@ -54,6 +54,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -359,6 +360,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		group.setFriendlyURL(friendlyURL);
 		group.setSite(site);
 		group.setActive(active);
+
+		group.setTrashEntriesMaxAge(
+			PrefsPropsUtil.getInteger(
+				group.getCompanyId(), PropsKeys.TRASH_ENTRIES_MAX_AGE));
 
 		if ((serviceContext != null) && (classNameId == groupClassNameId) &&
 			!user.isDefaultUser()) {
