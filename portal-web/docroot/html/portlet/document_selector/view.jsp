@@ -317,9 +317,18 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 	>
 
 		<%
+		String type = ParamUtil.getString(request, "type");
+
+		String[] mimeTypes = null;
+
+		if (type.equals("image")) {
+			mimeTypes = PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_IMAGE_MIME_TYPES);
+		}
+
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
 		searchContext.setAttribute("groupId", groupId);
+		searchContext.setAttribute("mimeTypes", mimeTypes);
 		searchContext.setAttribute("paginationType", "regular");
 		searchContext.setEnd(entryEnd);
 		searchContext.setFolderIds(folderIdsArray);
