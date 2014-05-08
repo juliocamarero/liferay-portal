@@ -30,7 +30,7 @@ long layoutSetPrototypeId = layoutSetPrototype.getLayoutSetPrototypeId();
 Group group = layoutSetPrototype.getGroup();
 %>
 
-<liferay-ui:icon-menu>
+<liferay-ui:icon-menu direction="down" extended="<%= false %>" icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>" triggerCssClass="btn">
 	<c:if test="<%= LayoutSetPrototypePermissionUtil.contains(permissionChecker, layoutSetPrototypeId, ActionKeys.UPDATE) %>">
 
 		<%
@@ -43,7 +43,7 @@ Group group = layoutSetPrototype.getGroup();
 
 		<c:if test="<%= siteAdministrationURL != null %>">
 			<liferay-ui:icon
-				image="edit"
+				iconCssClass="icon-edit"
 				message="manage"
 				method="get"
 				url="<%= siteAdministrationURL.toString() %>"
@@ -58,7 +58,7 @@ Group group = layoutSetPrototype.getGroup();
 			</liferay-portlet:actionURL>
 
 			<liferay-ui:icon
-				image="view"
+				iconCssClass="icon-search"
 				message="view-pages"
 				target="_blank"
 				url="<%= viewPagesURL %>"
@@ -76,7 +76,8 @@ Group group = layoutSetPrototype.getGroup();
 		/>
 
 		<liferay-ui:icon
-			image="permissions"
+			iconCssClass="icon-lock"
+			message="permissions"
 			method="get"
 			url="<%= permissionsURL %>"
 			useDialog="<%= true %>"
@@ -107,7 +108,8 @@ Group group = layoutSetPrototype.getGroup();
 
 		<liferay-ui:icon
 			cssClass="export-layoutset-prototype layoutset-prototype-action"
-			image="export"
+			iconCssClass="icon-arrow-down"
+			message="export"
 			method="get"
 			url="<%= exportPagesURL %>"
 		/>
@@ -121,7 +123,7 @@ Group group = layoutSetPrototype.getGroup();
 
 		<liferay-ui:icon
 			cssClass="import-layoutset-prototype layoutset-prototype-action"
-			image="../aui/arrow-up"
+			iconCssClass="icon-arrow-up"
 			message="import"
 			method="get"
 			url="<%= importPagesURL %>"
