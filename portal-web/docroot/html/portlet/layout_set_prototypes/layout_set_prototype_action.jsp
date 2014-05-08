@@ -84,19 +84,6 @@ Group group = layoutSetPrototype.getGroup();
 		/>
 	</c:if>
 
-	<c:if test="<%= LayoutSetPrototypePermissionUtil.contains(permissionChecker, layoutSetPrototypeId, ActionKeys.DELETE) %>">
-		<portlet:actionURL var="deleteURL">
-			<portlet:param name="struts_action" value="/layout_set_prototypes/edit_layout_set_prototype" />
-			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
-			<portlet:param name="layoutSetPrototypeIds" value="<%= String.valueOf(layoutSetPrototypeId) %>" />
-		</portlet:actionURL>
-
-		<liferay-ui:icon-delete
-			url="<%= deleteURL %>"
-		/>
-	</c:if>
-
 	<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.EXPORT_IMPORT_LAYOUTS) %>">
 		<portlet:renderURL var="exportPagesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/layouts_admin/export_layouts" />
@@ -127,6 +114,19 @@ Group group = layoutSetPrototype.getGroup();
 			message="import"
 			method="get"
 			url="<%= importPagesURL %>"
+		/>
+	</c:if>
+
+	<c:if test="<%= LayoutSetPrototypePermissionUtil.contains(permissionChecker, layoutSetPrototypeId, ActionKeys.DELETE) %>">
+		<portlet:actionURL var="deleteURL">
+			<portlet:param name="struts_action" value="/layout_set_prototypes/edit_layout_set_prototype" />
+			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+			<portlet:param name="redirect" value="<%= redirect %>" />
+			<portlet:param name="layoutSetPrototypeIds" value="<%= String.valueOf(layoutSetPrototypeId) %>" />
+		</portlet:actionURL>
+
+		<liferay-ui:icon-delete
+			url="<%= deleteURL %>"
 		/>
 	</c:if>
 </liferay-ui:icon-menu>
