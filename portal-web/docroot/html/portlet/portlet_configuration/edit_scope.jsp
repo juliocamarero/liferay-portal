@@ -110,8 +110,8 @@ for (Layout scopeGroupLayout : LayoutLocalServiceUtil.getScopeGroupLayouts(layou
 				</liferay-portlet:actionURL>
 
 				<liferay-ui:icon
+					iconCssClass="icon-plus"
 					id="scopeCurLayout"
-					image="add"
 					message='<%= HtmlUtil.escape(layout.getName(locale)) + " (" + LanguageUtil.get(pageContext, "create-new") + ")" %>'
 					method="post"
 					url="<%= createNewScopeURL %>"

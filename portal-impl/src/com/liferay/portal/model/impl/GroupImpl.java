@@ -216,22 +216,22 @@ public class GroupImpl extends GroupBaseImpl {
 
 	@Override
 	public String getIconURL(ThemeDisplay themeDisplay) {
-		String iconURL = themeDisplay.getPathThemeImages() + "/common/";
+		String iconURL = StringPool.BLANK;
 
 		if (isCompany()) {
-			iconURL = iconURL.concat("global.png");
+			iconURL = "../aui/globe";
 		}
 		else if (isLayout()) {
-			iconURL = iconURL.concat("page.png");
+			iconURL = "../aui/page";
 		}
 		else if (isOrganization()) {
-			iconURL = iconURL.concat("organization_icon.png");
+			iconURL = "../aui/globe";
 		}
 		else if (isUser()) {
-			iconURL = iconURL.concat("user_icon.png");
+			iconURL = "../aui/user";
 		}
 		else {
-			iconURL = iconURL.concat("site_icon.png");
+			iconURL = "../aui/globe";
 		}
 
 		return iconURL;
