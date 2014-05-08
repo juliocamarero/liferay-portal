@@ -145,7 +145,7 @@
 		</div>
 	</c:if>
 
-	<c:if test="<%= (usersCount + organizationsCount +  userGroupsCount) <= 0 %>">
+	<c:if test="<%= (usersCount + organizationsCount + userGroupsCount) <= 0 %>">
 		0
 	</c:if>
 </liferay-ui:search-container-column-text>

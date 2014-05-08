@@ -175,9 +175,9 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 						%>
 
 						<liferay-ui:icon
-							iconCssClass="icon-plus"
 							cssClass="highlited scope-selector"
 							data="<%= data %>"
+							iconCssClass="icon-plus"
 							id="selectGroup"
 							message='<%= LanguageUtil.get(pageContext, "pages") + StringPool.TRIPLE_PERIOD %>'
 							method="get"
@@ -226,9 +226,9 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 						%>
 
 						<liferay-ui:icon
-							iconCssClass="icon-plus"
 							cssClass="highlited scope-selector"
 							data="<%= data %>"
+							iconCssClass="icon-plus"
 							id="selectManageableGroup"
 							message='<%= LanguageUtil.get(pageContext, "other-site") + StringPool.TRIPLE_PERIOD %>'
 							method="get"

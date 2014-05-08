@@ -130,8 +130,8 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 						<c:choose>
 							<c:when test="<%= subscribed %>">
 								<liferay-ui:icon
-									iconCssClass="icon-remove-sign"
 									cssClass="subscribe-link"
+									iconCssClass="icon-remove-sign"
 									label="<%= true %>"
 									message="unsubscribe-from-comments"
 									url="<%= subscriptionURL %>"
@@ -139,8 +139,8 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 							</c:when>
 							<c:otherwise>
 								<liferay-ui:icon
-									iconCssClass="icon-ok-sign"
 									cssClass="subscribe-link"
+									iconCssClass="icon-ok-sign"
 									label="<%= true %>"
 									message="subscribe-to-comments"
 									url="<%= subscriptionURL %>"
