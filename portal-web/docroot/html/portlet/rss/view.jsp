@@ -58,11 +58,6 @@ for (int i = 0; i < urls.length; i++) {
 </c:if>
 
 <aui:script use="aui-base">
-	var minusAlt = '<%= UnicodeLanguageUtil.get(pageContext, "collapse") %>';
-	var minusImage = '01_minus.png';
-	var plusAlt = '<%= UnicodeLanguageUtil.get(pageContext, "expand") %>';
-	var plusImage = '01_plus.png';
-
 	A.all('.<portlet:namespace />entry-expander').on(
 		'click',
 		function(event) {
@@ -70,22 +65,16 @@ for (int i = 0; i < urls.length; i++) {
 			var feedContent = expander.get('parentNode').one('.feed-entry-content');
 
 			if (feedContent) {
-				var altText = expander.attr('alt');
-				var src = expander.attr('src');
-
-				if (src.indexOf('minus.png') > -1) {
-					altText = altText.replace(minusAlt, plusAlt);
-					src = src.replace(minusImage, plusImage);
+				if (expander.hasClass('icon-collapse-alt')) {
+					expander.addClass('icon-expand-alt');
+					expander.removeClass('icon-collapse-alt');
 				}
 				else {
-					altText = altText.replace(plusAlt, minusAlt);
-					src = src.replace(plusImage, minusImage);
+					expander.addClass('icon-collapse-alt');
+					expander.removeClass('icon-expand-alt');
 				}
 
 				feedContent.toggle();
-
-				expander.attr('alt', altText);
-				expander.attr('src', src);
 			}
 		}
 	);
