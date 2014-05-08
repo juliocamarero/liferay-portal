@@ -69,7 +69,7 @@ String tabs1 = (String)request.getAttribute("view.jsp-tabs1");
 				</portlet:actionURL>
 
 				<liferay-ui:icon
-					iconCssClass="icon-minus-sign"
+					iconCssClass="icon-external-link-sign"
 					message="leave"
 					url="<%= leaveURL %>"
 				/>
@@ -126,7 +126,7 @@ String tabs1 = (String)request.getAttribute("view.jsp-tabs1");
 						</portlet:actionURL>
 
 						<liferay-ui:icon
-							iconCssClass="icon-minus-sign"
+							iconCssClass="icon-external-link-sign"
 							message="leave"
 							url="<%= leaveURL %>"
 						/>
