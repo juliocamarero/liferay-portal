@@ -15,7 +15,6 @@
 --%>
 
 <liferay-ui:search-container-column-text
-	buffer="buffer"
 	href="<%= rowURL %>"
 	name="name"
 	orderable="<%= true %>"
@@ -29,10 +28,18 @@
 			String title = LanguageUtil.format(pageContext, "belongs-to-an-organization-of-type-x", organization.getType());
 			%>
 
-			<img alt="<%= title %>" class="site-icon" src="<%= curGroup.getIconURL(themeDisplay) %>" title="<%= title %>" />
+			<liferay-ui:icon
+				alt="<%= title %>"
+				iconCssClass="<%= curGroup.getIconCssClass() %>"
+				label="<%= true %>"
+				message="<%= title %>"
+			/>
 		</c:when>
 		<c:otherwise>
-			<img alt="<%= LanguageUtil.get(locale, "icon") %>" class="site-icon" src="<%= curGroup.getIconURL(themeDisplay) %>" />
+			<liferay-ui:icon
+				alt='<%= LanguageUtil.get(locale, "icon") %>'
+				iconCssClass="<%= curGroup.getIconCssClass() %>"
+			/>
 		</c:otherwise>
 	</c:choose>
 
