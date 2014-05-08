@@ -495,7 +495,7 @@ String toLanguageId = (String)request.getAttribute("edit_article.jsp-toLanguageI
 				refererPortletName: '<%= PortletKeys.JOURNAL_CONTENT %>',
 				showAncestorScopes: true,
 				struts_action: '/dynamic_data_mapping/select_template',
-				templateId: <%= (ddmTemplate != null) ? String.valueOf(ddmTemplate.getTemplateId()) : StringPool.BLANK %>,
+				templateId: <%= (ddmTemplate != null) ? ddmTemplate.getTemplateId() : 0 %>,
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "templates") %>'
 			},
 			function(event) {
