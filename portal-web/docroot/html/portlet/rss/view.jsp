@@ -27,29 +27,33 @@ String title = StringPool.BLANK;
 	</p>
 </c:if>
 
-<%
-for (int i = 0; i < urls.length; i++) {
-	url = urls[i];
+<div id="<portlet:namespace />feedsContainer">
 
-	if (i < titles.length) {
-		title = titles[i];
+	<%
+	for (int i = 0; i < urls.length; i++) {
+		url = urls[i];
+
+		if (i < titles.length) {
+			title = titles[i];
+		}
+		else {
+			title = StringPool.BLANK;
+		}
+
+		boolean last = false;
+
+		if (i == (urls.length - 1)) {
+			last = true;
+		}
+	%>
+
+		<%@ include file="/html/portlet/rss/feed.jspf" %>
+
+	<%
 	}
-	else {
-		title = StringPool.BLANK;
-	}
+	%>
 
-	boolean last = false;
-
-	if (i == (urls.length - 1)) {
-		last = true;
-	}
-%>
-
-	<%@ include file="/html/portlet/rss/feed.jspf" %>
-
-<%
-}
-%>
+</div>
 
 <c:if test="<%= Validator.isNotNull(footerArticleId) %>">
 	<p>
@@ -58,7 +62,9 @@ for (int i = 0; i < urls.length; i++) {
 </c:if>
 
 <aui:script use="aui-base">
-	A.all('.<portlet:namespace />entry-expander').on(
+	var feedsContainer = A.one('#<portlet:namespace />feedsContainer');
+
+	feedsContainer.delegate(
 		'click',
 		function(event) {
 			var expander = event.currentTarget;
@@ -76,6 +82,7 @@ for (int i = 0; i < urls.length; i++) {
 
 				feedContent.toggle();
 			}
-		}
+		},
+		'.entry-expander'
 	);
 </aui:script>
