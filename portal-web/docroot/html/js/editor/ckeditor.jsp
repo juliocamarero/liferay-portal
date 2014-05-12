@@ -324,20 +324,20 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 
 		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/document_selector/view" />
-			<portlet:param name="eventName" value="selectDocument" />
+			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
 			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 		</liferay-portlet:renderURL>
 
 		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserFlashBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/document_selector/view" />
-			<portlet:param name="eventName" value="selectDocument" />
+			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
 			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 			<portlet:param name="type" value="flash" />
 		</liferay-portlet:renderURL>
 
 		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserImageBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/document_selector/view" />
-			<portlet:param name="eventName" value="selectDocument" />
+			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
 			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 			<portlet:param name="type" value="image" />
 		</liferay-portlet:renderURL>
@@ -363,9 +363,9 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 		);
 
 		Liferay.on(
-			'selectDocument',
+			'<%= name %>selectDocument',
 			function(event) {
-				window.CKEDITOR.tools.callFunction(2, event.url);
+				window.CKEDITOR.tools.callFunction(event.ckeditorfuncnum, event.url);
 			}
 		);
 
