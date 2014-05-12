@@ -272,13 +272,11 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 				%>
 
 				<liferay-ui:search-container-column-text
-					href="<%= rowURL %>"
 					name="num-of-folders"
 					value="<%= String.valueOf(foldersCount) %>"
 				/>
 
 				<liferay-ui:search-container-column-text
-					href="<%= rowURL %>"
 					name="num-of-documents"
 					value="<%= String.valueOf(fileEntriesCount) %>"
 				/>
@@ -317,9 +315,18 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 	>
 
 		<%
+		String type = ParamUtil.getString(request, "type");
+
+		String[] mimeTypes = null;
+
+		if (type.equals("image")) {
+			mimeTypes = PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_IMAGE_MIME_TYPES);
+		}
+
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
 		searchContext.setAttribute("groupId", groupId);
+		searchContext.setAttribute("mimeTypes", mimeTypes);
 		searchContext.setAttribute("paginationType", "regular");
 		searchContext.setEnd(entryEnd);
 		searchContext.setFolderIds(folderIdsArray);
@@ -330,6 +337,14 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 		searchContext.setStart(entryStart);
 
 		Hits hits = DLAppServiceUtil.search(repositoryId, searchContext);
+
+		Map<String, String> params = new HashMap<String, String>();
+
+		for (String param : request.getParameterMap().keySet()) {
+			String[] values = request.getParameterValues(param);
+
+			params.put(param, StringUtil.merge(values));
+		}
 		%>
 
 		<liferay-ui:search-container-results
@@ -341,13 +356,7 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 			keyProperty="fileEntryId"
 			modelVar="fileEntry"
 		>
-
-			<%
-			String rowHREF = DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, true);
-			%>
-
 			<liferay-ui:search-container-column-text
-				href="<%= rowHREF %>"
 				name="document"
 			>
 				<img align="left" alt="" border="0" src="<%= DLUtil.getThumbnailSrc(fileEntry, null, themeDisplay) %>" style="<%= DLUtil.getThumbnailStyle() %>" />
@@ -355,21 +364,18 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
-				href="<%= rowHREF %>"
 				name="size"
 				value="<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>"
 			/>
 
 			<c:if test="<%= PropsValues.DL_FILE_ENTRY_BUFFERED_INCREMENT_ENABLED %>">
 				<liferay-ui:search-container-column-text
-					href="<%= rowHREF %>"
 					name="downloads"
 					value="<%= String.valueOf(fileEntry.getReadCount()) %>"
 				/>
 			</c:if>
 
 			<liferay-ui:search-container-column-text
-				href="<%= rowHREF %>"
 				name="locked"
 				value='<%= fileEntry.isCheckedOut() ? "yes" : "no" %>'
 			/>
@@ -377,7 +383,7 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 			<liferay-ui:search-container-column-text>
 
 				<%
-				Map<String, Object> data = new HashMap<String, Object>();
+				Map<String, Object> data = new HashMap<String, Object>(params);
 
 				data.put("groupid", fileEntry.getGroupId());
 				data.put("title", fileEntry.getTitle());

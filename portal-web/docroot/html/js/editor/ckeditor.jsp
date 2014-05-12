@@ -47,7 +47,6 @@ Map<String, String> configParamsMap = (Map<String, String>)request.getAttribute(
 Map<String, String> fileBrowserParamsMap = (Map<String, String>)request.getAttribute("liferay-ui:input-editor:fileBrowserParams");
 
 String configParams = marshallParams(configParamsMap);
-String fileBrowserParams = marshallParams(fileBrowserParamsMap);
 
 String contentsLanguageId = (String)request.getAttribute("liferay-ui:input-editor:contentsLanguageId");
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
@@ -323,20 +322,25 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			window['<%= name %>'].instanceReady = true;
 		}
 
-		<%
-		StringBundler sb = new StringBundler(8);
+		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="struts_action" value="/document_selector/view" />
+			<portlet:param name="eventName" value="selectDocument" />
+			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+		</liferay-portlet:renderURL>
 
-		sb.append(mainPath);
-		sb.append("/portal/fckeditor?p_p_id=");
-		sb.append(HttpUtil.encodeURL(portletId));
-		sb.append("&doAsUserId=");
-		sb.append(HttpUtil.encodeURL(doAsUserId));
-		sb.append("&doAsGroupId=");
-		sb.append(HttpUtil.encodeURL(String.valueOf(doAsGroupId)));
-		sb.append(fileBrowserParams);
+		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserFlashBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="struts_action" value="/document_selector/view" />
+			<portlet:param name="eventName" value="selectDocument" />
+			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+			<portlet:param name="type" value="flash" />
+		</liferay-portlet:renderURL>
 
-		String connectorURL = HttpUtil.encodeURL(sb.toString());
-		%>
+		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserImageBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="struts_action" value="/document_selector/view" />
+			<portlet:param name="eventName" value="selectDocument" />
+			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+			<portlet:param name="type" value="image" />
+		</liferay-portlet:renderURL>
 
 		<c:choose>
 			<c:when test="<%= inlineEdit %>">
@@ -350,9 +354,18 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			'<%= name %>',
 			{
 				customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/<%= HtmlUtil.escapeJS(ckEditorConfigFileName) %>?p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&contentsLanguageId=<%= HttpUtil.encodeURL(Validator.isNotNull(contentsLanguageId) ? contentsLanguageId : LocaleUtil.toLanguageId(locale)) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&inlineEdit=<%= inlineEdit %><%= configParams %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&name=<%= name %>&resizable=<%= resizable %>',
-				filebrowserBrowseUrl: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/editor/filemanager/browser/liferay/browser.html?Connector=<%= connectorURL %><%= fileBrowserParams %>',
+				filebrowserBrowseUrl: '<%= filebrowserBrowseUrl %>',
+				filebrowserFlashBrowseUrl: '<%= filebrowserFlashBrowseUrl %>',
+				filebrowserImageBrowseUrl: '<%= filebrowserImageBrowseUrl %>',
 				filebrowserUploadUrl: null,
 				toolbar: getToolbarSet('<%= TextFormatter.format(HtmlUtil.escapeJS(toolbarSet), TextFormatter.M) %>')
+			}
+		);
+
+		Liferay.on(
+			'selectDocument',
+			function(event) {
+				window.CKEDITOR.tools.callFunction(2, event.url);
 			}
 		);
 
