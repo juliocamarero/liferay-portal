@@ -326,12 +326,14 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			<portlet:param name="struts_action" value="/document_selector/view" />
 			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
 			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+			<portlet:param name="showGroupsSelector" value="true" />
 		</liferay-portlet:renderURL>
 
 		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserFlashBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/document_selector/view" />
 			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
 			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+			<portlet:param name="showGroupsSelector" value="true" />
 			<portlet:param name="type" value="flash" />
 		</liferay-portlet:renderURL>
 
@@ -339,6 +341,7 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			<portlet:param name="struts_action" value="/document_selector/view" />
 			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
 			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+			<portlet:param name="showGroupsSelector" value="true" />
 			<portlet:param name="type" value="image" />
 		</liferay-portlet:renderURL>
 
