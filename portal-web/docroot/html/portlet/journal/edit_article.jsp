@@ -122,7 +122,6 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 
 String[] mainSections = PropsValues.JOURNAL_ARTICLE_FORM_ADD;
 
-
 if (Validator.isNotNull(toLanguageId)) {
 	mainSections = PropsValues.JOURNAL_ARTICLE_FORM_TRANSLATE;
 }
