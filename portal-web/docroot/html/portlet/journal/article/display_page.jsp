@@ -27,7 +27,7 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 <c:choose>
 	<c:when test="<%= group.isLayout() %>">
 		<div class="alert alert-info">
-			<liferay-ui:message key="when-the-scope-of-the-web-content-is-a-page-the-display-page-is-not-allowed" />
+			<liferay-ui:message key="display-page-cannot-be-set-when-the-scope-of-the-web-content-is-a-page" />
 		</div>
 	</c:when>
 	<c:otherwise>
