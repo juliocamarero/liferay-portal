@@ -39,6 +39,8 @@ import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
+import com.liferay.portlet.asset.model.ClassType;
+import com.liferay.portlet.asset.model.ClassTypeReader;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryServiceUtil;
 import com.liferay.portlet.asset.service.AssetLinkLocalServiceUtil;
@@ -102,25 +104,26 @@ public class InputAssetLinksDisplayContext {
 	}
 
 	public List<AssetRendererFactory> getAssetRendererFactories() {
-		List<AssetRendererFactory> assetRendererFactories = ListUtil.filter(
+		List<AssetRendererFactory> assetRendererFactories =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
-				_themeDisplay.getCompanyId()),
-				new PredicateFilter<AssetRendererFactory>() {
+				_themeDisplay.getCompanyId());
 
-					@Override
-					public boolean filter(
-						AssetRendererFactory assetRendererFactory) {
+		assetRendererFactories = ListUtil.filter(
+			assetRendererFactories,
+			new PredicateFilter<AssetRendererFactory>() {
 
-						if (assetRendererFactory.isLinkable() &&
-							assetRendererFactory.isSelectable()) {
+			@Override
+			public boolean filter(AssetRendererFactory assetRendererFactory) {
+				if (assetRendererFactory.isLinkable() &&
+					assetRendererFactory.isSelectable()) {
 
-							return true;
-						}
+					return true;
+				}
 
-						return false;
-					}
+				return false;
+			}
 
-				});
+		});
 
 		return ListUtil.sort(
 			assetRendererFactories,
@@ -342,8 +345,11 @@ public class InputAssetLinksDisplayContext {
 
 		long groupId = _getAssetBrowserGroupId(assetRendererFactory);
 
-		Map<Long, String> classTypes =
-			assetRendererFactory.getClassTypes(
+		ClassTypeReader classTypeReader =
+			assetRendererFactory.getClassTypeReader();
+
+		List<ClassType> classTypes =
+			classTypeReader.getAvailableClassTypes(
 				PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId),
 				_themeDisplay.getLocale());
 
@@ -354,7 +360,7 @@ public class InputAssetLinksDisplayContext {
 		List<Map<String, Object>> selectorEntries =
 			new ArrayList<Map<String, Object>>();
 
-		for (Map.Entry<Long, String> classType : classTypes.entrySet()) {
+		for (ClassType classType : classTypes) {
 			Map<String, Object> selectorEntry = new HashMap<String, Object>();
 
 			selectorEntry.put(
@@ -377,8 +383,7 @@ public class InputAssetLinksDisplayContext {
 	}
 
 	private Map<String, Object> _getSelectorEntryData(
-			AssetRendererFactory assetRendererFactory,
-			Map.Entry<Long, String> classType)
+			AssetRendererFactory assetRendererFactory, ClassType classType)
 		throws Exception {
 
 		Map<String, Object> selectorEntryData = new HashMap<String, Object>();
@@ -387,14 +392,14 @@ public class InputAssetLinksDisplayContext {
 			assetRendererFactory);
 
 		portletURL.setParameter(
-			"subtypeSelectionId", String.valueOf(classType.getKey()));
+			"subtypeSelectionId", String.valueOf(classType.getClassTypeId()));
 
 		selectorEntryData.put("href", portletURL.toString());
 
 		selectorEntryData.put(
 			"title", LanguageUtil.format(
-				_pageContext, "select-x", classType.getValue(), false));
-		selectorEntryData.put("type", classType.getValue());
+				_pageContext, "select-x", classType.getName(), false));
+		selectorEntryData.put("type", classType.getName());
 
 		return selectorEntryData;
 	}
@@ -414,14 +419,13 @@ public class InputAssetLinksDisplayContext {
 	}
 
 	private String _getSelectorEntryId(
-		AssetRendererFactory assetRendererFactory,
-		Map.Entry<Long, String> classType) {
+		AssetRendererFactory assetRendererFactory, ClassType classType) {
 
 		String selectorEntryId = String.valueOf(
 			_getAssetBrowserGroupId(assetRendererFactory));
 
 		selectorEntryId += FriendlyURLNormalizerUtil.normalize(
-			classType.getValue());
+			classType.getName());
 
 		return selectorEntryId;
 	}
@@ -432,8 +436,8 @@ public class InputAssetLinksDisplayContext {
 		return assetRendererFactory.getTypeName(_themeDisplay.getLocale());
 	}
 
-	private String _getSelectorEntryMessage(Map.Entry<Long, String> classType) {
-		return classType.getValue();
+	private String _getSelectorEntryMessage(ClassType classType) {
+		return classType.getName();
 	}
 
 	private String _getSelectorEntrySrc(
