@@ -181,6 +181,10 @@ public class DummyIndexer implements Indexer {
 	}
 
 	@Override
+	public void reindexPermissions(String className, long classPK) {
+	}
+
+	@Override
 	public Hits search(SearchContext searchContext) {
 		return null;
 	}
