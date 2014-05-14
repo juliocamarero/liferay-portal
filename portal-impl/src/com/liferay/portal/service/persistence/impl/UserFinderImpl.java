@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.dao.orm.Type;
 import com.liferay.portal.kernel.dao.orm.WildcardMode;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.EntityNameOrderByComparator;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -777,7 +778,8 @@ public class UserFinderImpl
 
 			if (obc != null) {
 				sb.append(" ORDER BY ");
-				sb.append(obc.toString());
+				sb.append(
+					new EntityNameOrderByComparator(obc, "User_").getOrderBy());
 			}
 
 			sql = sb.toString();
@@ -786,7 +788,7 @@ public class UserFinderImpl
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
-			q.addScalar("userId", Type.LONG);
+			q.addEntity("User_", UserImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
@@ -904,7 +906,7 @@ public class UserFinderImpl
 
 		SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
-		q.addScalar("userId", Type.LONG);
+		q.addEntity("User_", UserImpl.class);
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
@@ -922,7 +924,15 @@ public class UserFinderImpl
 			qPos.add(status);
 		}
 
-		return q.list(true);
+		List<User> users = q.list(true);
+
+		List<Long> userIds = new ArrayList<Long>(users.size());
+
+		for (User user : users) {
+			userIds.add(user.getUserId());
+		}
+
+		return userIds;
 	}
 
 	protected String getJoin(LinkedHashMap<String, Object> params) {
