@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
@@ -44,6 +45,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -469,24 +472,49 @@ public class JournalArticleIndexer extends BaseIndexer {
 		return new Summary(snippetLocale, title, content, portletURL);
 	}
 
-	@Override
-	protected void doReindex(Object obj) throws Exception {
-		JournalArticle article = (JournalArticle)obj;
+	protected void doReindex(JournalArticle article, boolean reindexAllVersions)
+		throws Exception {
+
+		boolean articleIsIndexable = true;
 
 		if (!article.isIndexable() ||
 			(PortalUtil.getClassNameId(DDMStructure.class) ==
 				article.getClassNameId())) {
+
+			articleIsIndexable = false;
 
 			Document document = getDocument(article);
 
 			SearchEngineUtil.deleteDocument(
 				getSearchEngineId(), article.getCompanyId(),
 				document.get(Field.UID));
-
-			return;
 		}
 
-		reindexArticleVersions(article);
+		if (reindexAllVersions) {
+			reindexArticleVersions(article);
+		}
+		else if (articleIsIndexable) {
+			SearchEngineUtil.updateDocuments(
+				getSearchEngineId(), article.getCompanyId(),
+				getArticleVersionsToReindex(article));
+		}
+	}
+
+	@Override
+	protected void doReindex(Object obj) throws Exception {
+		JournalArticle article = (JournalArticle)obj;
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		boolean reindexAllVersions = false;
+
+		if (serviceContext != null) {
+			reindexAllVersions = GetterUtil.get(
+				serviceContext.removeAttribute("reindexAllVersions"), false);
+		}
+
+		doReindex(article, reindexAllVersions);
 	}
 
 	@Override
@@ -532,7 +560,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 				ddmStructureKeys);
 
 		for (JournalArticle article : articles) {
-			doReindex(article);
+			doReindex(article, true);
 		}
 	}
 
@@ -581,6 +609,54 @@ public class JournalArticleIndexer extends BaseIndexer {
 			Document document = getDocument(curArticle);
 
 			documents.add(document);
+		}
+
+		return documents;
+	}
+
+	protected Collection<Document> getArticleVersionsToReindex(
+			JournalArticle article)
+		throws PortalException, SystemException {
+
+		Collection<Document> documents = new ArrayList<Document>();
+
+		documents.add(getDocument(article));
+
+		if (article.isDraft() || article.isScheduled()) {
+			return documents;
+		}
+
+		JournalArticle currentlyPublishedInDBButNotInIndexes =
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+					article.getResourcePrimKey());
+
+		if (article.isApproved()) {
+			if (article.getVersion() ==
+					currentlyPublishedInDBButNotInIndexes.getVersion()) {
+
+				JournalArticle previouslyPublished =
+					JournalArticleLocalServiceUtil.
+						fetchPreviousLatestIndexableArticle(
+							article.getResourcePrimKey());
+
+				if (previouslyPublished != null) {
+					Document documentWithHeadSetToFalse = getDocument(
+						previouslyPublished);
+
+					documents.add(documentWithHeadSetToFalse);
+				}
+			}
+		}
+		else {
+			if ((currentlyPublishedInDBButNotInIndexes != null) &&
+				(article.getVersion() >
+					currentlyPublishedInDBButNotInIndexes.getVersion())) {
+
+					Document documentWithHeadSetToTrue = getDocument(
+						currentlyPublishedInDBButNotInIndexes);
+
+					documents.add(documentWithHeadSetToTrue);
+			}
 		}
 
 		return documents;
