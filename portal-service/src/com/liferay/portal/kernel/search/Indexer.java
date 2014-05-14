@@ -39,6 +39,8 @@ public interface Indexer {
 
 	public void delete(Object obj) throws SearchException;
 
+	public void delete(Object obj, boolean propagate) throws SearchException;
+
 	public String[] getClassNames();
 
 	public int getDatabaseCount() throws Exception;
@@ -106,7 +108,12 @@ public interface Indexer {
 
 	public void reindex(Object obj) throws SearchException;
 
+	public void reindex(Object obj, boolean propagate) throws SearchException;
+
 	public void reindex(String className, long classPK) throws SearchException;
+
+	public void reindex(String className, long classPK, boolean propagate)
+		throws SearchException;
 
 	public void reindex(String[] ids) throws SearchException;
 

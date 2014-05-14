@@ -42,6 +42,10 @@ public class DummyIndexer implements Indexer {
 	}
 
 	@Override
+	public void delete(Object obj, boolean propagate) {
+	}
+
+	@Override
 	public String[] getClassNames() {
 		return new String[0];
 	}
@@ -169,7 +173,15 @@ public class DummyIndexer implements Indexer {
 	}
 
 	@Override
+	public void reindex(Object obj, boolean propagate) {
+	}
+
+	@Override
 	public void reindex(String className, long classPK) {
+	}
+
+	@Override
+	public void reindex(String className, long classPK, boolean propagate) {
 	}
 
 	@Override
