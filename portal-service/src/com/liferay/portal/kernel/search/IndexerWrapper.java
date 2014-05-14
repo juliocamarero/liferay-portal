@@ -211,6 +211,13 @@ public class IndexerWrapper implements Indexer {
 	}
 
 	@Override
+	public void reindexPermissions(String className, long classPK)
+		throws SearchException {
+
+		_indexer.reindexPermissions(className, classPK);
+	}
+
+	@Override
 	public Hits search(SearchContext searchContext) throws SearchException {
 		return _indexer.search(searchContext);
 	}
