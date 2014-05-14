@@ -1423,21 +1423,29 @@ public class JournalArticleLocalServiceImpl
 	public JournalArticle fetchLatestIndexableArticle(long resourcePrimKey)
 		throws SystemException {
 
-		OrderByComparator orderByComparator = new ArticleVersionComparator();
-
-		int[] statuses = new int[] {
-			WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_IN_TRASH
-		};
-
-		List<JournalArticle> articles =
-			journalArticlePersistence.findByR_I_S(
-				resourcePrimKey, true, statuses, 0, 1, orderByComparator);
+		List<JournalArticle> articles = fetchLatestIndexableArticles(
+			resourcePrimKey, 1);
 
 		if (articles.isEmpty()) {
 			return null;
 		}
 
 		return articles.get(0);
+	}
+
+	@Override
+	public List<JournalArticle> fetchLatestIndexableArticles(
+			long resourcePrimKey, int numArticles)
+		throws SystemException {
+
+		OrderByComparator orderByComparator = new ArticleVersionComparator();
+
+		int[] statuses = new int[] {
+			WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_IN_TRASH
+		};
+
+		return journalArticlePersistence.findByR_I_S(
+			resourcePrimKey, true, statuses, 0, numArticles, orderByComparator);
 	}
 
 	/**
