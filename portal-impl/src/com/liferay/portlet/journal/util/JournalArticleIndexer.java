@@ -389,14 +389,14 @@ public class JournalArticleIndexer extends BaseIndexer {
 		document.addKeyword("ddmTemplateKey", article.getTemplateId());
 		document.addDate("displayDate", article.getDisplayDate());
 
-		JournalArticle latestPublishedArticle =
+		JournalArticle latestApprovedArticle =
 			JournalArticleLocalServiceUtil.fetchLatestArticle(
 				article.getGroupId(), article.getArticleId(),
 				WorkflowConstants.STATUS_APPROVED);
 
-		if ((latestPublishedArticle != null) &&
-			latestPublishedArticle.isIndexable() &&
-			(article.getId() == latestPublishedArticle.getId())) {
+		if ((latestApprovedArticle != null) &&
+			latestApprovedArticle.isIndexable() &&
+			(article.getId() == latestApprovedArticle.getId())) {
 
 			document.addKeyword("head", true);
 		}
