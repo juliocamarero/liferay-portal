@@ -430,12 +430,17 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void reindex(Object obj) throws SearchException {
+		reindex(obj, true);
+	}
+
+	@Override
+	public void reindex(Object obj, boolean allVersions) throws SearchException {
 		try {
 			if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled()) {
 				return;
 			}
 
-			doReindex(obj);
+			doReindex(obj, allVersions);
 		}
 		catch (SearchException se) {
 			throw se;
@@ -447,12 +452,19 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void reindex(String className, long classPK) throws SearchException {
+		reindex(className, classPK, true);
+	}
+
+	@Override
+	public void reindex(String className, long classPK, boolean allVersions)
+		throws SearchException {
+
 		try {
 			if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled()) {
 				return;
 			}
 
-			doReindex(className, classPK);
+			doReindex(className, classPK, allVersions);
 		}
 		catch (NoSuchModelException nsme) {
 			_log.error("Unable to index " + className + " " + classPK, nsme);
@@ -1436,8 +1448,18 @@ public abstract class BaseIndexer implements Indexer {
 
 	protected abstract void doReindex(Object obj) throws Exception;
 
+	protected void doReindex(Object obj, boolean allVersions) throws Exception {
+		doReindex(obj);
+	}
+
 	protected abstract void doReindex(String className, long classPK)
 		throws Exception;
+
+	protected void doReindex(
+		String className, long classPK, boolean allVersions) throws Exception {
+
+		doReindex(className, classPK);
+	}
 
 	protected abstract void doReindex(String[] ids) throws Exception;
 
