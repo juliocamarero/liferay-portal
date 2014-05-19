@@ -92,8 +92,6 @@ import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.model.JournalStructure;
 import com.liferay.portlet.journal.model.JournalStructureAdapter;
 import com.liferay.portlet.journal.model.JournalStructureConstants;
-import com.liferay.portlet.journal.model.JournalTemplate;
-import com.liferay.portlet.journal.model.JournalTemplateAdapter;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
@@ -1471,20 +1469,6 @@ public class JournalUtil {
 		}
 
 		return Collections.unmodifiableList(structures);
-	}
-
-	public static List<JournalTemplate> toJournalTemplates(
-		List<DDMTemplate> ddmTemplates) {
-
-		List<JournalTemplate> templates = new ArrayList<JournalTemplate>();
-
-		for (DDMTemplate ddmTemplate : ddmTemplates) {
-			JournalTemplate template = new JournalTemplateAdapter(ddmTemplate);
-
-			templates.add(template);
-		}
-
-		return Collections.unmodifiableList(templates);
 	}
 
 	public static String transform(
