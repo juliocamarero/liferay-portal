@@ -89,8 +89,6 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleDisplay;
 import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
-import com.liferay.portlet.journal.model.JournalStructure;
-import com.liferay.portlet.journal.model.JournalStructureAdapter;
 import com.liferay.portlet.journal.model.JournalStructureConstants;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
@@ -1044,27 +1042,6 @@ public class JournalUtil {
 		return restrictionType;
 	}
 
-	public static long[] getStructureClassPKs(
-			long[] groupIds, String structureId)
-		throws SystemException {
-
-		List<Long> classPKs = new ArrayList<Long>();
-
-		for (long groupId : groupIds) {
-			@SuppressWarnings("deprecation")
-			JournalStructure structure =
-				com.liferay.portlet.journal.service.
-					JournalStructureLocalServiceUtil.fetchStructure(
-						groupId, structureId);
-
-			if (structure != null) {
-				classPKs.add(structure.getId());
-			}
-		}
-
-		return ArrayUtil.toLongArray(classPKs);
-	}
-
 	public static String getTemplateScript(
 		DDMTemplate ddmTemplate, Map<String, String> tokens, String languageId,
 		boolean transform) {
@@ -1453,22 +1430,6 @@ public class JournalUtil {
 				break;
 			}
 		}
-	}
-
-	public static List<JournalStructure> toJournalStructures(
-			List<DDMStructure> ddmStructures)
-		throws SystemException {
-
-		List<JournalStructure> structures = new ArrayList<JournalStructure>();
-
-		for (DDMStructure ddmStructure : ddmStructures) {
-			JournalStructure structure = new JournalStructureAdapter(
-				ddmStructure);
-
-			structures.add(structure);
-		}
-
-		return Collections.unmodifiableList(structures);
 	}
 
 	public static String transform(
