@@ -14,22 +14,15 @@
 
 package com.liferay.portlet.journal.service;
 
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.util.GroupTestUtil;
-import com.liferay.portal.util.TestPropsValues;
 import com.liferay.portlet.dynamicdatamapping.util.DDMXMLUtil;
-import com.liferay.portlet.journal.model.JournalStructure;
 
 import java.io.InputStream;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 import org.junit.Before;
 
@@ -45,26 +38,6 @@ public class BaseJournalServiceTestCase {
 
 		companyId = group.getCompanyId();
 		groupId = group.getGroupId();
-	}
-
-	protected JournalStructure addStructure(
-			long groupId, String structureId, String xsd)
-		throws Exception {
-
-		return addStructure(groupId, structureId, "Test Structure", xsd);
-	}
-
-	protected JournalStructure addStructure(
-			long groupId, String structureId, String name, String xsd)
-		throws Exception {
-
-		Map<Locale, String> nameMap = new HashMap<Locale, String>();
-
-		nameMap.put(LocaleUtil.US, name);
-
-		return JournalStructureLocalServiceUtil.addStructure(
-			TestPropsValues.getUserId(), groupId, structureId, false, null,
-			nameMap, null, xsd, getServiceContext());
 	}
 
 	protected String generateId() throws Exception {
