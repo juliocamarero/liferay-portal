@@ -83,6 +83,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.ServiceContextUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -3051,6 +3052,17 @@ public class JournalArticleLocalServiceImpl
 			journalArticlePersistence.update(article);
 		}
 
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			serviceContext = new ServiceContext();
+
+			ServiceContextThreadLocal.pushServiceContext(serviceContext);
+		}
+
+		serviceContext.setAttribute("reindexAllVersions", true);
+
 		return getArticle(groupId, articleId);
 	}
 
@@ -3220,6 +3232,17 @@ public class JournalArticleLocalServiceImpl
 				article.getCompanyId(), article.getGroupId(),
 				JournalArticle.class.getName(), article.getId());
 		}
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			serviceContext = new ServiceContext();
+
+			ServiceContextThreadLocal.pushServiceContext(serviceContext);
+		}
+
+		serviceContext.setAttribute("reindexAllVersions", true);
 
 		return article;
 	}
@@ -3407,6 +3430,16 @@ public class JournalArticleLocalServiceImpl
 			article.getResourcePrimKey(),
 			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
 			extraDataJSONObject.toString(), 0);
+
+		serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			serviceContext = new ServiceContext();
+
+			ServiceContextThreadLocal.pushServiceContext(serviceContext);
+		}
+
+		serviceContext.setAttribute("reindexAllVersions", true);
 
 		return article;
 	}
@@ -5417,6 +5450,18 @@ public class JournalArticleLocalServiceImpl
 
 					journalArticlePersistence.update(currentArticle);
 				}
+
+				ServiceContext serviceContext =
+					ServiceContextThreadLocal.getServiceContext();
+
+				if (serviceContext == null) {
+					serviceContext = new ServiceContext();
+
+					ServiceContextThreadLocal.pushServiceContext(
+						serviceContext);
+				}
+
+				serviceContext.setAttribute("reindexAllVersions", true);
 			}
 			else {
 				article.setStatus(WorkflowConstants.STATUS_EXPIRED);
