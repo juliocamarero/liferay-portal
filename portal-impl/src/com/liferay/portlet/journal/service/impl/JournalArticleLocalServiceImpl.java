@@ -3295,6 +3295,15 @@ public class JournalArticleLocalServiceImpl
 			journalArticlePersistence.update(article);
 		}
 
+		ServiceContext sc = ServiceContextThreadLocal.getServiceContext();
+
+		if (sc == null) {
+			sc = new ServiceContext();
+			ServiceContextThreadLocal.pushServiceContext(sc);
+		}
+
+		sc.setAttribute("reindexAllVersions", true);
+
 		return getArticle(groupId, articleId);
 	}
 
@@ -3461,20 +3470,20 @@ public class JournalArticleLocalServiceImpl
 			SocialActivityConstants.TYPE_MOVE_TO_TRASH,
 			extraDataJSONObject.toString(), 0);
 
-		if (!articleVersions.isEmpty()) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				JournalArticle.class);
-
-			for (JournalArticle articleVersion : articleVersions) {
-				indexer.reindex(articleVersion);
-			}
-		}
-
 		if (oldStatus == WorkflowConstants.STATUS_PENDING) {
 			workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
 				article.getCompanyId(), article.getGroupId(),
 				JournalArticle.class.getName(), article.getId());
 		}
+
+		ServiceContext sc = ServiceContextThreadLocal.getServiceContext();
+
+		if (sc == null) {
+			sc = new ServiceContext();
+			ServiceContextThreadLocal.pushServiceContext(sc);
+		}
+
+		sc.setAttribute("reindexAllVersions", true);
 
 		return article;
 	}
@@ -3666,14 +3675,14 @@ public class JournalArticleLocalServiceImpl
 			SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
 			extraDataJSONObject.toString(), 0);
 
-		if (!articleVersions.isEmpty()) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				JournalArticle.class);
+		ServiceContext sc = ServiceContextThreadLocal.getServiceContext();
 
-			for (JournalArticle articleVersion : articleVersions) {
-				indexer.reindex(articleVersion);
-			}
+		if (sc == null) {
+			sc = new ServiceContext();
+			ServiceContextThreadLocal.pushServiceContext(sc);
 		}
+
+		sc.setAttribute("reindexAllVersions", true);
 
 		return article;
 	}
@@ -5724,6 +5733,10 @@ public class JournalArticleLocalServiceImpl
 
 					journalArticlePersistence.update(currentArticle);
 				}
+
+				ServiceContext sc =
+					ServiceContextThreadLocal.getServiceContext();
+				sc.setAttribute("reindexAllVersions", true);
 			}
 			else {
 				article.setStatus(WorkflowConstants.STATUS_EXPIRED);
