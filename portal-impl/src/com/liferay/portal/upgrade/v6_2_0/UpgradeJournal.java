@@ -36,7 +36,6 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateConstants;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalStructure;
-import com.liferay.portlet.journal.model.JournalTemplate;
 import com.liferay.portlet.journal.util.JournalConverterUtil;
 
 import java.sql.Connection;
@@ -496,7 +495,8 @@ public class UpgradeJournal extends BaseUpgradePortletPreferences {
 					cacheable, smallImage, smallImageId, smallImageURL);
 
 				updateResourcePermission(
-					companyId, JournalTemplate.class.getName(),
+					companyId,
+					"com.liferay.portlet.journal.model.JournalTemplate",
 					DDMTemplate.class.getName(), id_, ddmTemplateId);
 			}
 		}
