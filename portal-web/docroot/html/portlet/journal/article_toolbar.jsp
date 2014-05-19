@@ -184,6 +184,35 @@ long classNameId = BeanParamUtil.getLong(article, request, "classNameId");
 		}
 	);
 
+	<c:if test="<%= JournalArticleServiceUtil.getArticlesCountByArticleId(article.getGroupId(), article.getArticleId()) > 1 %>">
+		<portlet:renderURL var="compareVersionURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="struts_action" value="/journal/compare_versions" />
+			<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
+			<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
+		</portlet:renderURL>
+
+		toolbarButtonGroup.push(
+			{
+				icon: 'icon-file',
+				label: '<%= UnicodeLanguageUtil.get(pageContext, "compare-versions") %>',
+				on: {
+					click: function(event) {
+						Liferay.Util.openWindow(
+							{
+								dialog: {
+									width: 820
+								},
+								id: '<portlet:namespace />compareVersions',
+								title: '<%= UnicodeLanguageUtil.get(pageContext, "compare-versions") %>',
+								uri: '<%= compareVersionURL %>'
+							}
+						);
+					}
+				}
+			}
+		);
+	</c:if>
+
 	new A.Toolbar(
 		{
 			boundingBox: '#<portlet:namespace />articleToolbar',

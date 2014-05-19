@@ -16,7 +16,6 @@ package com.liferay.portlet.journal.action;
 
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.struts.PortletAction;
@@ -125,35 +124,11 @@ public class CompareVersionsAction extends PortletAction {
 		long groupId = ParamUtil.getLong(renderRequest, "groupId");
 		String articleId = ParamUtil.getString(renderRequest, "articleId");
 
-		String sourceArticleId = ParamUtil.getString(
+		double sourceVersion = ParamUtil.getDouble(
 			renderRequest, "sourceVersion");
 
-		int index = sourceArticleId.lastIndexOf(
-			EditArticleAction.VERSION_SEPARATOR);
-
-		if (index != -1) {
-			sourceArticleId =
-				sourceArticleId.substring(
-					index + EditArticleAction.VERSION_SEPARATOR.length(),
-					sourceArticleId.length());
-		}
-
-		double sourceVersion = GetterUtil.getDouble(sourceArticleId);
-
-		String targetArticleId = ParamUtil.getString(
+		double targetVersion = ParamUtil.getDouble(
 			renderRequest, "targetVersion");
-
-		index = targetArticleId.lastIndexOf(
-			EditArticleAction.VERSION_SEPARATOR);
-
-		if (index != -1) {
-			targetArticleId =
-				targetArticleId.substring(
-					index + EditArticleAction.VERSION_SEPARATOR.length(),
-					targetArticleId.length());
-		}
-
-		double targetVersion = GetterUtil.getDouble(targetArticleId);
 
 		if ((sourceVersion == 0) && (targetVersion == 0)) {
 			List<JournalArticle> articles =
