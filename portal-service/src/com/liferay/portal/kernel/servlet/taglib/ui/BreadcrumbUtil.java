@@ -36,13 +36,6 @@ public class BreadcrumbUtil {
 		return _breadcrumb;
 	}
 
-	public static BreadcrumbEntry getScopeGroupBreadcrumbEntry(
-			ThemeDisplay themeDisplay)
-		throws Exception {
-
-		return getBreadcrumb().getScopeGroupBreadcrumbEntry(themeDisplay);
-	}
-
 	public static BreadcrumbEntry getGuestGroupBreadcrumbEntry(
 			ThemeDisplay themeDisplay)
 		throws Exception {
@@ -68,6 +61,13 @@ public class BreadcrumbUtil {
 		HttpServletRequest request) {
 
 		return getBreadcrumb().getPortletBreadcrumbEntries(request);
+	}
+
+	public static BreadcrumbEntry getScopeGroupBreadcrumbEntry(
+			ThemeDisplay themeDisplay)
+		throws Exception {
+
+		return getBreadcrumb().getScopeGroupBreadcrumbEntry(themeDisplay);
 	}
 
 	public void setBreadcrumb(Breadcrumb breadcrumb) {
