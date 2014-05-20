@@ -460,7 +460,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 			assetSearcher.setAssetEntryQuery(assetEntryQuery);
 
-			return searcher.search(searchContext);
+			return assetSearcher.search(searchContext);
 		}
 		catch (Exception e) {
 			throw new SystemException(e);
