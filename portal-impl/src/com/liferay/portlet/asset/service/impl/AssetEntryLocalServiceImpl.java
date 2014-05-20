@@ -408,37 +408,9 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			long classTypeId, String keywords, int status, int start, int end)
 		throws SystemException {
 
-		try {
-			SearchContext searchContext = new SearchContext();
-
-			searchContext.setAttribute("paginationType", "regular");
-			searchContext.setAttribute("status", status);
-
-			if (classTypeId > 0) {
-				searchContext.setClassTypeIds(new long[] {classTypeId});
-			}
-
-			searchContext.setCompanyId(companyId);
-			searchContext.setEnd(end);
-			searchContext.setEntryClassNames(
-				getClassNames(companyId, className));
-			searchContext.setGroupIds(groupIds);
-			searchContext.setKeywords(keywords);
-			searchContext.setStart(start);
-			searchContext.setUserId(userId);
-
-			QueryConfig queryConfig = searchContext.getQueryConfig();
-
-			queryConfig.setHighlightEnabled(false);
-			queryConfig.setScoreEnabled(false);
-
-			Indexer searcher = AssetSearcher.getInstance();
-
-			return searcher.search(searchContext);
-		}
-		catch (Exception e) {
-			throw new SystemException(e);
-		}
+		return search(
+			companyId, groupIds, userId, className, classTypeId, null, null,
+			null, null, null, status, false, start, end);
 	}
 
 	@Override
