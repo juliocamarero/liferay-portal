@@ -320,7 +320,22 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 		deleteDocument(article.getCompanyId(), article.getId());
 
-		reindexArticleVersions(article);
+		if (!article.isDraft() &&
+			!article.isExpired() &&
+			!article.isScheduled())
+		{
+			JournalArticle currentHead =
+					JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+						article.getResourcePrimKey());
+
+			if ((currentHead != null) &&
+				(article.getVersion() > currentHead.getVersion())) {
+
+				SearchEngineUtil.updateDocument(
+					getSearchEngineId(), article.getCompanyId(), getDocument(
+						currentHead));
+			}
+		}
 	}
 
 	@Override
