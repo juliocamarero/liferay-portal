@@ -146,8 +146,8 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 		</liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
 
-	<liferay-util:buffer var="formButton">
-		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+	<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+		<liferay-util:buffer var="formButton">
 			<c:choose>
 				<c:when test='<%= tabs2.equals("current") %>'>
 
@@ -181,8 +181,8 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 					</aui:button-row>
 				</c:otherwise>
 			</c:choose>
-		</c:if>
-	</liferay-util:buffer>
+		</liferay-util:buffer>
+	</c:if>
 
 	<c:choose>
 		<c:when test='<%= tabs1.equals("summary") && (total > 0) %>'>
