@@ -1305,7 +1305,6 @@ public class JournalArticleLocalServiceImpl
 	 *         found or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
-	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle expireArticle(
 			long userId, long groupId, String articleId, double version,
@@ -5744,11 +5743,6 @@ public class JournalArticleLocalServiceImpl
 			displayDate, WorkflowConstants.STATUS_SCHEDULED);
 
 		for (JournalArticle article : articles) {
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-				JournalArticle.class);
-
-			indexer.reindex(article);
-
 			ServiceContext serviceContext = new ServiceContext();
 
 			serviceContext.setCommand(Constants.UPDATE);
