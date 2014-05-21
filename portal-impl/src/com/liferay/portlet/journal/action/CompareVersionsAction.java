@@ -16,7 +16,6 @@ package com.liferay.portlet.journal.action;
 
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.struts.PortletAction;
@@ -35,8 +34,12 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.portlet.PortletConfig;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -73,6 +76,44 @@ public class CompareVersionsAction extends PortletAction {
 		return actionMapping.findForward("portlet.journal.compare_versions");
 	}
 
+	@Override
+	public void serveResource(
+			ActionMapping actionMapping, ActionForm actionForm,
+			PortletConfig portletConfig, ResourceRequest resourceRequest,
+			ResourceResponse resourceResponse)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long groupId = ParamUtil.getLong(resourceRequest, "groupId");
+		String articleId = ParamUtil.getString(resourceRequest, "articleId");
+
+		double sourceVersion = ParamUtil.getDouble(
+			resourceRequest, "sourceVersion");
+
+		double targetVersion = ParamUtil.getDouble(
+			resourceRequest, "targetVersion");
+
+		String languageId = ParamUtil.getString(resourceRequest, "languageId");
+
+		String diffHtmlResults = JournalUtil.diffHtml(
+			groupId, articleId, sourceVersion, targetVersion, languageId,
+			new PortletRequestModel(resourceRequest, resourceResponse),
+			themeDisplay);
+
+		resourceRequest.setAttribute(
+			WebKeys.DIFF_HTML_RESULTS, diffHtmlResults);
+
+		PortletContext portletContext = portletConfig.getPortletContext();
+
+		PortletRequestDispatcher portletRequestDispatcher =
+			portletContext.getRequestDispatcher(
+				"/html/taglib/ui/diff_version_comparator/diff_html.jsp");
+
+		portletRequestDispatcher.include(resourceRequest, resourceResponse);
+	}
+
 	protected void compareVersions(
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws Exception {
@@ -83,44 +124,24 @@ public class CompareVersionsAction extends PortletAction {
 		long groupId = ParamUtil.getLong(renderRequest, "groupId");
 		String articleId = ParamUtil.getString(renderRequest, "articleId");
 
-		String sourceArticleId = ParamUtil.getString(
+		double sourceVersion = ParamUtil.getDouble(
 			renderRequest, "sourceVersion");
 
-		int index = sourceArticleId.lastIndexOf(
-			EditArticleAction.VERSION_SEPARATOR);
-
-		if (index != -1) {
-			sourceArticleId =
-				sourceArticleId.substring(
-					index + EditArticleAction.VERSION_SEPARATOR.length(),
-					sourceArticleId.length());
-		}
-
-		double sourceVersion = GetterUtil.getDouble(sourceArticleId);
-
-		String targetArticleId = ParamUtil.getString(
+		double targetVersion = ParamUtil.getDouble(
 			renderRequest, "targetVersion");
-
-		index = targetArticleId.lastIndexOf(
-			EditArticleAction.VERSION_SEPARATOR);
-
-		if (index != -1) {
-			targetArticleId =
-				targetArticleId.substring(
-					index + EditArticleAction.VERSION_SEPARATOR.length(),
-					targetArticleId.length());
-		}
-
-		double targetVersion = GetterUtil.getDouble(targetArticleId);
 
 		if ((sourceVersion == 0) && (targetVersion == 0)) {
 			List<JournalArticle> articles =
 				JournalArticleServiceUtil.getArticlesByArticleId(
-					groupId, articleId, 0, 2,
+					groupId, articleId, 0, 1,
 					new ArticleVersionComparator(false));
 
 			sourceVersion = articles.get(0).getVersion();
-			targetVersion = articles.get(1).getVersion();
+
+			articles = JournalArticleServiceUtil.getArticlesByArticleId(
+				groupId, articleId, 0, 1, new ArticleVersionComparator(true));
+
+			targetVersion = articles.get(0).getVersion();
 		}
 
 		if (sourceVersion > targetVersion) {
