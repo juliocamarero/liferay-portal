@@ -146,41 +146,43 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 		</liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
 
-	<liferay-util:buffer var="formButton">
-		<c:choose>
-			<c:when test='<%= tabs2.equals("current") %>'>
+	<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+		<liferay-util:buffer var="formButton">
+			<c:choose>
+				<c:when test='<%= tabs2.equals("current") %>'>
 
-				<%
-				viewOrganizationsURL.setParameter("tabs2", "available");
-				%>
+					<%
+					viewOrganizationsURL.setParameter("tabs2", "available");
+					%>
 
-				<liferay-ui:icon
-					image="../aui/globe"
-					label="<%= true %>"
-					message="assign-organizations"
-					url="<%= viewOrganizationsURL.toString() %>"
-				/>
+					<liferay-ui:icon
+						image="../aui/globe"
+						label="<%= true %>"
+						message="assign-organizations"
+						url="<%= viewOrganizationsURL.toString() %>"
+					/>
 
-				<%
-				viewOrganizationsURL.setParameter("tabs2", "current");
-				%>
+					<%
+					viewOrganizationsURL.setParameter("tabs2", "current");
+					%>
 
-			</c:when>
-			<c:otherwise>
+				</c:when>
+				<c:otherwise>
 
-				<%
-				portletURL.setParameter("tabs2", "current");
-				portletURL.setParameter("cur", String.valueOf(cur));
+					<%
+					portletURL.setParameter("tabs2", "current");
+					portletURL.setParameter("cur", String.valueOf(cur));
 
-				String taglibOnClick = renderResponse.getNamespace() + "updateGroupOrganizations('" + portletURL.toString() + "');";
-				%>
+					String taglibOnClick = renderResponse.getNamespace() + "updateGroupOrganizations('" + portletURL.toString() + "');";
+					%>
 
-				<aui:button-row>
-					<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value="save" />
-				</aui:button-row>
-			</c:otherwise>
-		</c:choose>
-	</liferay-util:buffer>
+					<aui:button-row>
+						<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value="save" />
+					</aui:button-row>
+				</c:otherwise>
+			</c:choose>
+		</liferay-util:buffer>
+	</c:if>
 
 	<c:choose>
 		<c:when test='<%= tabs1.equals("summary") && (total > 0) %>'>

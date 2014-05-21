@@ -135,41 +135,43 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 		</c:if>
 	</liferay-ui:search-container-row>
 
-	<liferay-util:buffer var="formButton">
-		<c:choose>
-			<c:when test='<%= tabs2.equals("current") %>'>
+	<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+		<liferay-util:buffer var="formButton">
+			<c:choose>
+				<c:when test='<%= tabs2.equals("current") %>'>
 
-				<%
-				viewUserGroupsURL.setParameter("tabs2", "available");
-				%>
+					<%
+					viewUserGroupsURL.setParameter("tabs2", "available");
+					%>
 
-				<liferay-ui:icon
-					image="../aui/globe"
-					label="<%= true %>"
-					message="assign-user-groups"
-					url="<%= viewUserGroupsURL.toString() %>"
-				/>
+					<liferay-ui:icon
+						image="../aui/globe"
+						label="<%= true %>"
+						message="assign-user-groups"
+						url="<%= viewUserGroupsURL.toString() %>"
+					/>
 
-				<%
-				viewUserGroupsURL.setParameter("tabs2", "current");
-				%>
+					<%
+					viewUserGroupsURL.setParameter("tabs2", "current");
+					%>
 
-			</c:when>
-			<c:otherwise>
+				</c:when>
+				<c:otherwise>
 
-				<%
-				portletURL.setParameter("tabs2", "current");
-				portletURL.setParameter("cur", String.valueOf(cur));
+					<%
+					portletURL.setParameter("tabs2", "current");
+					portletURL.setParameter("cur", String.valueOf(cur));
 
-				String taglibOnClick = renderResponse.getNamespace() + "updateGroupUserGroups('" + portletURL.toString() + "');";
-				%>
+					String taglibOnClick = renderResponse.getNamespace() + "updateGroupUserGroups('" + portletURL.toString() + "');";
+					%>
 
-				<aui:button-row>
-					<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value="save" />
-				</aui:button-row>
-			</c:otherwise>
-		</c:choose>
-	</liferay-util:buffer>
+					<aui:button-row>
+						<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value="save" />
+					</aui:button-row>
+				</c:otherwise>
+			</c:choose>
+		</liferay-util:buffer>
+	</c:if>
 
 	<c:choose>
 		<c:when test='<%= tabs1.equals("summary") && (total > 0) %>'>
