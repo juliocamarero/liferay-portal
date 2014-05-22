@@ -5373,12 +5373,6 @@ public class JournalArticleLocalServiceImpl
 				if (article.getClassNameId() ==
 						JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
 
-					if ((oldStatus != WorkflowConstants.STATUS_APPROVED) &&
-						publishDate.before(now)) {
-
-						publishDate = now;
-					}
-
 					visible = true;
 
 					if (neverExpire) {
