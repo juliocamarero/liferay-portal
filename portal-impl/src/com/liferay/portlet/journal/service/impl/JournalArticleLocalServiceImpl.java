@@ -5802,9 +5802,11 @@ public class JournalArticleLocalServiceImpl
 		throws PortalException {
 
 		for (Element el : root.elements()) {
-			checkStructureField(el, contentDocument);
+			if (el.getName().equals("dynamic-element")) {
+				checkStructureField(el, contentDocument);
 
-			checkStructure(contentDocument, el);
+				checkStructure(contentDocument, el);
+			}
 		}
 	}
 
