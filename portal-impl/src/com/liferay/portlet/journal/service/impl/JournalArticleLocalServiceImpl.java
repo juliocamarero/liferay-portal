@@ -5666,6 +5666,15 @@ public class JournalArticleLocalServiceImpl
 		return searchContext;
 	}
 
+	protected void checkArticleMatchesStructure(
+			JournalArticle article, DDMStructure structure)
+		throws DocumentException, PortalException {
+
+		Document xsdDocument = SAXReaderUtil.read(structure.getXsd());
+
+		checkStructure(article.getDocument(), xsdDocument.getRootElement());
+	}
+
 	protected void checkArticlesByDisplayDate(Date displayDate)
 		throws PortalException, SystemException {
 
@@ -5802,28 +5811,10 @@ public class JournalArticleLocalServiceImpl
 	protected void checkStructure(JournalArticle article)
 		throws PortalException, SystemException {
 
-		Group companyGroup = groupLocalService.getCompanyGroup(
-			article.getCompanyId());
-
-		DDMStructure structure = null;
+		DDMStructure structure = getArticleStructure(article);
 
 		try {
-			structure = ddmStructurePersistence.findByG_C_S(
-				PortalUtil.getSiteGroupId(article.getGroupId()),
-				classNameLocalService.getClassNameId(JournalArticle.class),
-				article.getStructureId());
-		}
-		catch (NoSuchStructureException nsse) {
-			structure = ddmStructurePersistence.findByG_C_S(
-				companyGroup.getGroupId(),
-				classNameLocalService.getClassNameId(JournalArticle.class),
-				article.getStructureId());
-		}
-
-		try {
-			Document xsdDocument = SAXReaderUtil.read(structure.getXsd());
-
-			checkStructure(article.getDocument(), xsdDocument.getRootElement());
+			checkArticleMatchesStructure(article, structure);
 		}
 		catch (DocumentException de) {
 			throw new SystemException(de);
@@ -6194,6 +6185,30 @@ public class JournalArticleLocalServiceImpl
 				dynamicContent.setText(StringPool.BLANK);
 			}
 		}
+	}
+
+	protected DDMStructure getArticleStructure(JournalArticle article)
+		throws NoSuchStructureException, PortalException, SystemException {
+
+		Group companyGroup = groupLocalService.getCompanyGroup(
+			article.getCompanyId());
+
+		DDMStructure structure = null;
+
+		try {
+			structure = ddmStructurePersistence.findByG_C_S(
+				PortalUtil.getSiteGroupId(article.getGroupId()),
+				classNameLocalService.getClassNameId(JournalArticle.class),
+				article.getStructureId());
+		}
+		catch (NoSuchStructureException nsse) {
+			structure = ddmStructurePersistence.findByG_C_S(
+				companyGroup.getGroupId(),
+				classNameLocalService.getClassNameId(JournalArticle.class),
+				article.getStructureId());
+		}
+
+		return structure;
 	}
 
 	protected List<ObjectValuePair<Long, Integer>> getArticleVersionStatuses(
