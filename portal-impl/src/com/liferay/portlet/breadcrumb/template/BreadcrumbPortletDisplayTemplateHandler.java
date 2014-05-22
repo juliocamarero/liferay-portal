@@ -80,9 +80,11 @@ public class BreadcrumbPortletDisplayTemplateHandler
 			"breadcrumb-entries", List.class,
 			PortletDisplayTemplateConstants.ENTRIES, "breadcrumb-entry",
 			BreadcrumbEntry.class, "curEntry", "getTitle()");
+
 		fieldsTemplateVariableGroup.addVariable(
 			"breadcrumb-entry", BreadcrumbEntry.class,
 			PortletDisplayTemplateConstants.ENTRY, "getTitle()");
+
 		fieldsTemplateVariableGroup.addVariable(
 			"breadcrumb-util", BreadcrumbUtil.class, "breadcrumbUtil");
 
