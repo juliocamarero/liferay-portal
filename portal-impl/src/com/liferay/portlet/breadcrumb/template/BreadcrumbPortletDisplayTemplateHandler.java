@@ -63,19 +63,19 @@ public class BreadcrumbPortletDisplayTemplateHandler
 		Map<String, TemplateVariableGroup> templateVariableGroups =
 			super.getTemplateVariableGroups(classPK, language, locale);
 
-		TemplateVariableGroup fieldsGroup = templateVariableGroups.get(
-			"fields");
+		TemplateVariableGroup fieldsTemplateVariableGroup =
+			templateVariableGroups.get("fields");
 
-		fieldsGroup.addCollectionVariable(
+		fieldsTemplateVariableGroup.addCollectionVariable(
 			"breadcrumb-entries", List.class,
 			PortletDisplayTemplateConstants.ENTRIES, "breadcrumb-entry",
 			BreadcrumbEntry.class, "curEntry", "getTitle()");
 
-		fieldsGroup.addVariable(
+		fieldsTemplateVariableGroup.addVariable(
 			"breadcrumb-entry", BreadcrumbEntry.class,
 			PortletDisplayTemplateConstants.ENTRY, "getTitle()");
 
-		fieldsGroup.addVariable(
+		fieldsTemplateVariableGroup.addVariable(
 			"breadcrumb-util", BreadcrumbUtil.class, "breadcrumbUtil");
 
 		return templateVariableGroups;
