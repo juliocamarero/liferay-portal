@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -127,20 +128,13 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isAssociatedToAssetRendererFactory(long classNameId) {
-		long[] selectedClassNameIds = getSelectedClassNameIds();
+		if (isSettingAssociatedToAssetRendererFactory(
+				"selectedClassNameIds", classNameId)) {
 
-		if (selectedClassNameIds.length == 0) {
-			return false;
+			return true;
 		}
 
-		if ((selectedClassNameIds[0] !=
-				AssetCategoryConstants.ALL_CLASS_NAME_IDS) &&
-			!ArrayUtil.contains(selectedClassNameIds, classNameId)) {
-
-			return false;
-		}
-
-		return true;
+		return false;
 	}
 
 	@Override
@@ -148,25 +142,30 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 			long classNameId, final long[] categoryIds)
 		throws SystemException {
 
-		long[] requiredClassNameIds = getRequiredClassNameIds();
-
-		if ((requiredClassNameIds.length > 0) &&
-			((requiredClassNameIds[0] ==
-				AssetCategoryConstants.ALL_CLASS_NAME_IDS) ||
-			 ArrayUtil.contains(requiredClassNameIds, classNameId))) {
+		if (isSettingAssociatedToAssetRendererFactory(
+				"requiredClassNameIds", classNameId)) {
 
 			PredicateFilter<AssetCategory> predicateFilter =
 				new PredicateFilter<AssetCategory>() {
 
-					@Override
-					public boolean filter(AssetCategory assetCategory) {
-						return ArrayUtil.contains(
-							categoryIds, assetCategory.getCategoryId());
+				@Override
+				public boolean filter(AssetCategory assetCategory) {
+					if (ArrayUtil.contains(
+							categoryIds, assetCategory.getCategoryId())) {
+
+						return true;
 					}
+
+					return false;
+				}
 
 				};
 
-			return !ListUtil.exists(getCategories(), predicateFilter);
+			if (ListUtil.exists(getCategories(), predicateFilter)) {
+				return false;
+			}
+
+			return true;
 		}
 
 		return false;
@@ -174,17 +173,21 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isMultiValued() {
-		if (_settingsProperties == null) {
-			_settingsProperties = getSettingsProperties();
-		}
+		UnicodeProperties settingsProperties = getSettingsProperties();
 
 		return GetterUtil.getBoolean(
-			_settingsProperties.getProperty("multiValued"), true);
+			settingsProperties.getProperty("multiValued"), true);
 	}
 
 	@Override
 	public boolean isRequired(long classNameId) {
-		return ArrayUtil.contains(getRequiredClassNameIds(), classNameId);
+		if (isSettingAssociatedToAssetRendererFactory(
+				"requiredClassNameIds", classNameId)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -199,6 +202,27 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 		_settingsProperties = settingsProperties;
 
 		super.setSettings(settingsProperties.toString());
+	}
+
+	protected boolean isSettingAssociatedToAssetRendererFactory(
+		String settingName, long classNameId) {
+
+		UnicodeProperties settingsProperties = getSettingsProperties();
+
+		String[] settingValueIds = StringUtil.split(
+			settingsProperties.getProperty(settingName), StringPool.COMMA);
+
+		if (settingValueIds.length == 0) {
+			return false;
+		}
+
+		if (ArrayUtil.contains(
+				settingValueIds, AssetCategoryConstants.ALL_CLASS_NAME_IDS)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private UnicodeProperties _settingsProperties;

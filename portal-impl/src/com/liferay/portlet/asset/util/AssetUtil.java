@@ -260,11 +260,16 @@ public class AssetUtil {
 		PredicateFilter<AssetVocabulary> predicateFilter =
 			new PredicateFilter<AssetVocabulary>() {
 
-				@Override
-				public boolean filter(AssetVocabulary vocabulary) {
-					return vocabulary.isAssociatedToAssetRendererFactory(
-						classNameId);
+			@Override
+			public boolean filter(AssetVocabulary vocabulary) {
+				if (vocabulary.isAssociatedToAssetRendererFactory(
+						classNameId)) {
+
+					return true;
 				}
+
+				return false;
+			}
 
 			};
 
