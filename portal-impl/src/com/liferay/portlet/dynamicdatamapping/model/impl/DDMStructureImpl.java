@@ -40,7 +40,6 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.model.CacheField;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
@@ -445,17 +444,8 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 		});
 
 		if (hasAmbiguousStructures) {
-			Group structureGroup = GroupLocalServiceUtil.getGroup(getGroupId());
-
-			StringBundler sb = new StringBundler(5);
-
-			sb.append(getName(locale));
-			sb.append(StringPool.SPACE);
-			sb.append(StringPool.OPEN_PARENTHESIS);
-			sb.append(structureGroup.getDescriptiveName(locale));
-			sb.append(StringPool.CLOSE_PARENTHESIS);
-
-			return sb.toString();
+			return PortalUtil.getUnambiguousName(
+				getName(locale), getGroupId(), locale);
 		}
 
 		return getName(locale);

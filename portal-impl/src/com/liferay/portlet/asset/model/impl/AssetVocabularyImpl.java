@@ -21,13 +21,10 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetVocabulary;
@@ -140,18 +137,8 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 			});
 
 		if (hasAmbiguousVocabularies) {
-			Group vocabularyGroup = GroupLocalServiceUtil.getGroup(
-				getGroupId());
-
-			StringBundler sb = new StringBundler(5);
-
-			sb.append(getTitle(locale));
-			sb.append(StringPool.SPACE);
-			sb.append(StringPool.OPEN_PARENTHESIS);
-			sb.append(vocabularyGroup.getDescriptiveName(locale));
-			sb.append(StringPool.CLOSE_PARENTHESIS);
-
-			return sb.toString();
+			return PortalUtil.getUnambiguousName(
+				getTitle(locale), getGroupId(), locale);
 		}
 
 		return getTitle(locale);
