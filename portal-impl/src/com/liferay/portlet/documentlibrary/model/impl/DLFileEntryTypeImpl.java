@@ -19,10 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
@@ -88,17 +85,8 @@ public class DLFileEntryTypeImpl extends DLFileEntryTypeBaseImpl {
 		});
 
 		if (hasAmbiguousFileEntryTypes) {
-			Group structureGroup = GroupLocalServiceUtil.getGroup(getGroupId());
-
-			StringBundler sb = new StringBundler(5);
-
-			sb.append(getName(locale));
-			sb.append(StringPool.SPACE);
-			sb.append(StringPool.OPEN_PARENTHESIS);
-			sb.append(structureGroup.getDescriptiveName(locale));
-			sb.append(StringPool.CLOSE_PARENTHESIS);
-
-			return sb.toString();
+			return PortalUtil.getUnambiguousName(
+				getName(locale), getGroupId(), locale);
 		}
 
 		return getName(locale);
