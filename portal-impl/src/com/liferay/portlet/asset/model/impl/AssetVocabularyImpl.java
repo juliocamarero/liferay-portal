@@ -128,8 +128,13 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isAssociatedToAssetRendererFactory(long classNameId) {
-		return isSettingAssociatedToAssetRendererFactory(
-			"selectedClassNameIds", classNameId);
+		if (isSettingAssociatedToAssetRendererFactory(
+				"selectedClassNameIds", classNameId)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -145,13 +150,22 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 					@Override
 					public boolean filter(AssetCategory assetCategory) {
-						return ArrayUtil.contains(
-							categoryIds, assetCategory.getCategoryId());
+						if (ArrayUtil.contains(
+								categoryIds, assetCategory.getCategoryId())) {
+
+							return true;
+						}
+
+						return false;
 					}
 
 				};
 
-			return !ListUtil.exists(getCategories(), predicateFilter);
+			if (ListUtil.exists(getCategories(), predicateFilter)) {
+				return false;
+			}
+
+			return true;
 		}
 
 		return false;
@@ -169,8 +183,13 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isRequired(long classNameId) {
-		return isSettingAssociatedToAssetRendererFactory(
-			"requiredClassNameIds", classNameId);
+		if (isSettingAssociatedToAssetRendererFactory(
+				"requiredClassNameIds", classNameId)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -201,8 +220,13 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 			return false;
 		}
 
-		return ArrayUtil.contains(
-			settingValueIds, AssetCategoryConstants.ALL_CLASS_NAME_IDS);
+		if (ArrayUtil.contains(
+				settingValueIds, AssetCategoryConstants.ALL_CLASS_NAME_IDS)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private UnicodeProperties _settingsProperties;
