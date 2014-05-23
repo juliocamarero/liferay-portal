@@ -15,19 +15,26 @@
 package com.liferay.portlet.asset.model.impl;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
+import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Brian Wing Shun Chan
@@ -101,6 +108,53 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 		}
 
 		return value;
+	}
+
+	@Override
+	public String getUnambiguousTitle(
+			List<AssetVocabulary> vocabularies, long groupId,
+			final Locale locale)
+		throws PortalException, SystemException {
+
+		if (getGroupId() == groupId ) {
+			return getTitle(locale);
+		}
+
+		boolean hasAmbiguousVocabularies = ListUtil.exists(
+			vocabularies, new PredicateFilter<AssetVocabulary>() {
+
+				@Override
+				public boolean filter(AssetVocabulary curVocabulary) {
+					String curVocabularyTitle = curVocabulary.getTitle(locale);
+
+					if (curVocabularyTitle.equals(getTitle(locale)) &&
+						(curVocabulary.getVocabularyId() !=
+							getVocabularyId())) {
+
+						return true;
+					}
+
+					return false;
+				}
+
+			});
+
+		if (hasAmbiguousVocabularies) {
+			Group vocabularyGroup = GroupLocalServiceUtil.getGroup(
+				getGroupId());
+
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(getTitle(locale));
+			sb.append(StringPool.SPACE);
+			sb.append(StringPool.OPEN_PARENTHESIS);
+			sb.append(vocabularyGroup.getDescriptiveName(locale));
+			sb.append(StringPool.CLOSE_PARENTHESIS);
+
+			return sb.toString();
+		}
+
+		return getTitle(locale);
 	}
 
 	@Override
