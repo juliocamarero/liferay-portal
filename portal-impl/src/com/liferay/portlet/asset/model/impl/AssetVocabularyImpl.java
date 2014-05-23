@@ -148,16 +148,16 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 			PredicateFilter<AssetCategory> predicateFilter =
 				new PredicateFilter<AssetCategory>() {
 
-					@Override
-					public boolean filter(AssetCategory assetCategory) {
-						if (ArrayUtil.contains(
-								categoryIds, assetCategory.getCategoryId())) {
+				@Override
+				public boolean filter(AssetCategory assetCategory) {
+					if (ArrayUtil.contains(
+							categoryIds, assetCategory.getCategoryId())) {
 
-							return true;
-						}
-
-						return false;
+						return true;
 					}
+
+					return false;
+				}
 
 				};
 
