@@ -173,12 +173,10 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isMultiValued() {
-		if (_settingsProperties == null) {
-			_settingsProperties = getSettingsProperties();
-		}
+		UnicodeProperties settingsProperties = getSettingsProperties();
 
 		return GetterUtil.getBoolean(
-			_settingsProperties.getProperty("multiValued"), true);
+			settingsProperties.getProperty("multiValued"), true);
 	}
 
 	@Override
@@ -209,12 +207,10 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	protected boolean isSettingAssociatedToAssetRendererFactory(
 		String settingName, long classNameId) {
 
-		if (_settingsProperties == null) {
-			_settingsProperties = getSettingsProperties();
-		}
+		UnicodeProperties settingsProperties = getSettingsProperties();
 
 		String[] settingValueIds = StringUtil.split(
-			_settingsProperties.getProperty(settingName), StringPool.COMMA);
+			settingsProperties.getProperty(settingName), StringPool.COMMA);
 
 		if (settingValueIds.length == 0) {
 			return false;
