@@ -23,7 +23,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -38,6 +40,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.model.CacheField;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
@@ -412,6 +415,50 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 			localizedTransientFieldsMap.get(locale);
 
 		return fieldsMap;
+	}
+
+	@Override
+	public String getUnambiguousName(
+			List<DDMStructure> structures, long groupId, final Locale locale)
+		throws PortalException, SystemException {
+
+		if (getGroupId() == groupId ) {
+			return getName(locale);
+		}
+
+		boolean hasAmbiguousStructures = ListUtil.exists(
+			structures, new PredicateFilter<DDMStructure>() {
+
+			@Override
+			public boolean filter(DDMStructure curStructure) {
+				String curStructureName = curStructure.getName(locale);
+
+				if (curStructureName.equals(getName(locale)) &&
+					(curStructure.getStructureId() != getStructureId())) {
+
+					return true;
+				}
+
+				return false;
+			}
+
+		});
+
+		if (hasAmbiguousStructures) {
+			Group structureGroup = GroupLocalServiceUtil.getGroup(getGroupId());
+
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(getName(locale));
+			sb.append(StringPool.SPACE);
+			sb.append(StringPool.OPEN_PARENTHESIS);
+			sb.append(structureGroup.getDescriptiveName(locale));
+			sb.append(StringPool.CLOSE_PARENTHESIS);
+
+			return sb.toString();
+		}
+
+		return getName(locale);
 	}
 
 	/**
