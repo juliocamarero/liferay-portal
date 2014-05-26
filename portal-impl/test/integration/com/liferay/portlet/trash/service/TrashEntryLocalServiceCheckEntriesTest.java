@@ -33,18 +33,18 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.service.StagingLocalServiceUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
-import com.liferay.portal.util.GroupTestUtil;
-import com.liferay.portal.util.LayoutTestUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portal.util.TestPropsValues;
+import com.liferay.portal.util.test.GroupTestUtil;
+import com.liferay.portal.util.test.LayoutTestUtil;
+import com.liferay.portal.util.test.ServiceContextTestUtil;
+import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.util.DLAppTestUtil;
+import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.impl.TrashEntryLocalServiceImpl;
 
@@ -225,7 +225,8 @@ public class TrashEntryLocalServiceCheckEntriesTest  extends PowerMockito {
 		Group group = setTrashEntriesMaxAge(createGroups(1).get(0), 2);
 
 		StagingLocalServiceUtil.enableLocalStaging(
-			_userId, group, false, false, ServiceTestUtil.getServiceContext());
+			_userId, group, false, false,
+			ServiceContextTestUtil.getServiceContext());
 
 		group = GroupLocalServiceUtil.getGroup(group.getGroupId());
 
@@ -237,7 +238,8 @@ public class TrashEntryLocalServiceCheckEntriesTest  extends PowerMockito {
 		Group group = setTrashEntriesMaxAge(createGroups(1).get(0), 2);
 
 		StagingLocalServiceUtil.enableLocalStaging(
-			_userId, group, false, false, ServiceTestUtil.getServiceContext());
+			_userId, group, false, false,
+			ServiceContextTestUtil.getServiceContext());
 
 		Thread.sleep(2000);
 
@@ -253,7 +255,8 @@ public class TrashEntryLocalServiceCheckEntriesTest  extends PowerMockito {
 		Group group = setTrashEnableForGroup(createGroups(1).get(0), false);
 
 		StagingLocalServiceUtil.enableLocalStaging(
-			_userId, group, false, false, ServiceTestUtil.getServiceContext());
+			_userId, group, false, false,
+			ServiceContextTestUtil.getServiceContext());
 
 		group = GroupLocalServiceUtil.getGroup(group.getGroupId());
 		Group stagingGroup = group.getStagingGroup();
