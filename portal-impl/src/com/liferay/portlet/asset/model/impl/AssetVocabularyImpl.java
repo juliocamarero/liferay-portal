@@ -177,7 +177,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 			long classNameId, final long[] categoryIds)
 		throws SystemException {
 
-		if (!isClassNameIdSpecified(classNameId, getRequiredClassNameIds())) {
+		if (!isRequired(classNameId)) {
 			return false;
 		}
 
