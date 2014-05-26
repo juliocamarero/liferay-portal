@@ -39,7 +39,7 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 	}
 
 	public AssetVocabularySettingsProperties(String properties) {
-		super(true);
+		this();
 		fastLoad(properties);
 	}
 
