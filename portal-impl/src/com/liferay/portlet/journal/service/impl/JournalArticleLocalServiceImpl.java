@@ -5804,7 +5804,7 @@ public class JournalArticleLocalServiceImpl
 	protected void checkStructure(JournalArticle article)
 		throws PortalException, SystemException {
 
-		DDMStructure structure = getArticleStructure(article);
+		DDMStructure structure = article.getDDMStructure();
 
 		try {
 			checkStructure(article, structure);
@@ -6187,30 +6187,6 @@ public class JournalArticleLocalServiceImpl
 				dynamicContent.setText(StringPool.BLANK);
 			}
 		}
-	}
-
-	protected DDMStructure getArticleStructure(JournalArticle article)
-		throws NoSuchStructureException, PortalException, SystemException {
-
-		Group companyGroup = groupLocalService.getCompanyGroup(
-			article.getCompanyId());
-
-		DDMStructure structure = null;
-
-		try {
-			structure = ddmStructurePersistence.findByG_C_S(
-				PortalUtil.getSiteGroupId(article.getGroupId()),
-				classNameLocalService.getClassNameId(JournalArticle.class),
-				article.getStructureId());
-		}
-		catch (NoSuchStructureException nsse) {
-			structure = ddmStructurePersistence.findByG_C_S(
-				companyGroup.getGroupId(),
-				classNameLocalService.getClassNameId(JournalArticle.class),
-				article.getStructureId());
-		}
-
-		return structure;
 	}
 
 	protected List<ObjectValuePair<Long, Integer>> getArticleVersionStatuses(
