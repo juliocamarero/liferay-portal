@@ -5666,15 +5666,6 @@ public class JournalArticleLocalServiceImpl
 		return searchContext;
 	}
 
-	protected void checkArticleMatchesStructure(
-			JournalArticle article, DDMStructure structure)
-		throws DocumentException, PortalException {
-
-		Document xsdDocument = SAXReaderUtil.read(structure.getXsd());
-
-		checkStructure(article.getDocument(), xsdDocument.getRootElement());
-	}
-
 	protected void checkArticlesByDisplayDate(Date displayDate)
 		throws PortalException, SystemException {
 
@@ -5816,7 +5807,7 @@ public class JournalArticleLocalServiceImpl
 		DDMStructure structure = getArticleStructure(article);
 
 		try {
-			checkArticleMatchesStructure(article, structure);
+			checkStructure(article, structure);
 		}
 		catch (DocumentException de) {
 			throw new SystemException(de);
@@ -5834,6 +5825,15 @@ public class JournalArticleLocalServiceImpl
 								"structure: " + sxsde.getMessage());
 			}
 		}
+	}
+
+	protected void checkStructure(
+			JournalArticle article, DDMStructure structure)
+		throws DocumentException, PortalException {
+
+		Document xsdDocument = SAXReaderUtil.read(structure.getXsd());
+
+		checkStructure(article.getDocument(), xsdDocument.getRootElement());
 	}
 
 	protected void checkStructureField(Element el, Document contentDocument)

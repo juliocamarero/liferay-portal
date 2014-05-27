@@ -37,12 +37,12 @@ import com.liferay.portal.util.test.RandomTestUtil;
 import com.liferay.portal.util.test.ServiceContextTestUtil;
 import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portlet.dynamicdatamapping.StorageFieldRequiredException;
+import com.liferay.portlet.dynamicdatamapping.StructureXsdException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
 import com.liferay.portlet.dynamicdatamapping.util.test.DDMTemplateTestUtil;
-import com.liferay.portlet.journal.StructureXsdException;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalFolder;
@@ -147,7 +147,6 @@ public class JournalArticleServiceTest {
 
 	@Test
 	public void testCheckArticleMatchesStructureSuccess() throws Exception {
-
 		Group group = GroupTestUtil.addGroup();
 
 		JournalFolder parentFolder = JournalTestUtil.addFolder(
@@ -492,14 +491,14 @@ public class JournalArticleServiceTest {
 		new JournalArticleLocalServiceImpl() {
 
 			@Override
-			public void checkArticleMatchesStructure(
+			public void checkStructure(
 					JournalArticle article, DDMStructure structure)
 				throws DocumentException, PortalException {
 
-				super.checkArticleMatchesStructure(article, structure);
+				super.checkStructure(article, structure);
 			}
 
-		}.checkArticleMatchesStructure(article, ddmStructure);
+		}.checkStructure(article, ddmStructure);
 	}
 
 	protected int countArticlesByKeyword(String keyword, int status)
