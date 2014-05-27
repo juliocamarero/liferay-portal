@@ -30,10 +30,6 @@ long[] selectedClassNameIds = null;
 if (vocabulary != null) {
 	selectedClassNameIds = vocabulary.getSelectedClassNameIds();
 }
-
-if (ArrayUtil.isEmpty(selectedClassNameIds)) {
-	selectedClassNameIds = new long[] {0};
-}
 %>
 
 <aui:input cssClass="vocabulary-checkbox" helpMessage="multi-valued-help" label="allow-multiple-categories" name="multiValued" type="checkbox" value="<%= (vocabulary != null) ? vocabulary.isMultiValued() : true %>" />
@@ -44,7 +40,7 @@ if (ArrayUtil.isEmpty(selectedClassNameIds)) {
 		<%
 		List<String> indexes = new ArrayList<String>();
 
-		if (_isDefaultClassNameIds(selectedClassNameIds)) {
+		if (selectedClassNameIds == null) {
 			indexes.add("0");
 		%>
 
@@ -124,14 +120,3 @@ if (ArrayUtil.isEmpty(selectedClassNameIds)) {
 
 	extraFields.setData('autoFieldsInstance', autoFields);
 </aui:script>
-
-<%!
-private boolean _isDefaultClassNameIds(long[] classNameIds) {
-	if ((classNameIds.length == 1) && (classNameIds[0] == 0)) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-%>
