@@ -262,7 +262,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 	>
 
 		<%
-		String[] mimeTypes = null;
+		String[] mimeTypes = DocumentSelectorUtil.getMimeTypes(request);
 
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
 

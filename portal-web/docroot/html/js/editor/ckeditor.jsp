@@ -322,28 +322,20 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			window['<%= name %>'].instanceReady = true;
 		}
 
-		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" varImpl="filebrowserBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/document_selector/view" />
 			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
 			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 			<portlet:param name="showGroupsSelector" value="true" />
 		</liferay-portlet:renderURL>
 
-		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserFlashBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-			<portlet:param name="struts_action" value="/document_selector/view" />
-			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
-			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
-			<portlet:param name="showGroupsSelector" value="true" />
-			<portlet:param name="type" value="flash" />
-		</liferay-portlet:renderURL>
-
-		<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_SELECTOR %>" var="filebrowserImageBrowseUrl" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-			<portlet:param name="struts_action" value="/document_selector/view" />
-			<portlet:param name="eventName" value='<%= name + "selectDocument" %>' />
-			<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
-			<portlet:param name="showGroupsSelector" value="true" />
-			<portlet:param name="type" value="image" />
-		</liferay-portlet:renderURL>
+		<%
+		if (fileBrowserParamsMap != null) {
+			for (Map.Entry<String, String> entry : fileBrowserParamsMap.entrySet()) {
+				filebrowserBrowseUrl.setParameter(entry.getKey(), entry.getValue());
+			}
+		}
+		%>
 
 		<c:choose>
 			<c:when test="<%= inlineEdit %>">
@@ -358,8 +350,9 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			{
 				customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/<%= HtmlUtil.escapeJS(ckEditorConfigFileName) %>?p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&contentsLanguageId=<%= HttpUtil.encodeURL(Validator.isNotNull(contentsLanguageId) ? contentsLanguageId : LocaleUtil.toLanguageId(locale)) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&inlineEdit=<%= inlineEdit %><%= configParams %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&name=<%= name %>&resizable=<%= resizable %>',
 				filebrowserBrowseUrl: '<%= filebrowserBrowseUrl %>',
-				filebrowserFlashBrowseUrl: '<%= filebrowserFlashBrowseUrl %>',
-				filebrowserImageBrowseUrl: '<%= filebrowserImageBrowseUrl %>',
+				filebrowserImageBrowseUrl: '<%= filebrowserBrowseUrl %>&Type=image',
+				filebrowserImageBrowseLinkUrl: '<%= filebrowserBrowseUrl %>',
+				filebrowserFlashBrowseUrl: '<%= filebrowserBrowseUrl %>&Type=flash',
 				filebrowserUploadUrl: null,
 				toolbar: getToolbarSet('<%= TextFormatter.format(HtmlUtil.escapeJS(toolbarSet), TextFormatter.M) %>')
 			}
