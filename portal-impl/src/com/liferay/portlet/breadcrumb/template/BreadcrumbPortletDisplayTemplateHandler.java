@@ -26,6 +26,7 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateConstants;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -39,6 +40,15 @@ public class BreadcrumbPortletDisplayTemplateHandler
 	@Override
 	public String getClassName() {
 		return Layout.class.getName();
+	}
+
+	@Override
+	public Map<String, Object> getCustomVariables() {
+		Map<String, Object> customVariables = new HashMap<String, Object>(1);
+
+		customVariables.put("breadcrumbUtil", BreadcrumbUtil.class);
+
+		return customVariables;
 	}
 
 	@Override
@@ -70,9 +80,11 @@ public class BreadcrumbPortletDisplayTemplateHandler
 			"breadcrumb-entries", List.class,
 			PortletDisplayTemplateConstants.ENTRIES, "breadcrumb-entry",
 			BreadcrumbEntry.class, "curEntry", "getTitle()");
+
 		fieldsTemplateVariableGroup.addVariable(
 			"breadcrumb-entry", BreadcrumbEntry.class,
 			PortletDisplayTemplateConstants.ENTRY, "getTitle()");
+
 		fieldsTemplateVariableGroup.addVariable(
 			"breadcrumb-util", BreadcrumbUtil.class, "breadcrumbUtil");
 
