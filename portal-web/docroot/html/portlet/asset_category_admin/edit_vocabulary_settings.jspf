@@ -25,26 +25,14 @@ List<AssetRendererFactory> availableAssetFactories = ListUtil.filter(
 
 	});
 
-boolean required = false;
-
 long[] selectedClassNameIds = null;
-long[] requiredClassNameIds = null;
 
 if (vocabulary != null) {
 	selectedClassNameIds = vocabulary.getSelectedClassNameIds();
-	requiredClassNameIds = vocabulary.getRequiredClassNameIds();
-
-	if ((requiredClassNameIds != null) && _isDefaultClassNameIds(requiredClassNameIds)) {
-		required = true;
-	}
 }
 
 if (ArrayUtil.isEmpty(selectedClassNameIds)) {
 	selectedClassNameIds = new long[] {0};
-}
-
-if (ArrayUtil.isEmpty(requiredClassNameIds)) {
-	requiredClassNameIds = new long[] {0};
 }
 %>
 
@@ -77,7 +65,7 @@ if (ArrayUtil.isEmpty(requiredClassNameIds)) {
 
 					</aui:select>
 
-					<aui:input cssClass="vocabulary-checkbox" label="required" name="required0" type="checkbox" value="<%= required %>" />
+					<aui:input cssClass="vocabulary-checkbox" label="required" name="required0" type="checkbox" value="<%= false %>" />
 				</div>
 			</div>
 
@@ -86,12 +74,6 @@ if (ArrayUtil.isEmpty(requiredClassNameIds)) {
 		else {
 			for (int index = 0; index < selectedClassNameIds.length; index++) {
 				indexes.add(String.valueOf(index));
-
-				boolean requiredIndex = false;
-
-				if (ArrayUtil.contains(requiredClassNameIds, selectedClassNameIds[index])) {
-					requiredIndex = true;
-				}
 		%>
 
 				<div class="lfr-form-row lfr-form-row-inline">
@@ -116,7 +98,7 @@ if (ArrayUtil.isEmpty(requiredClassNameIds)) {
 
 						</aui:select>
 
-						<aui:input cssClass="vocabulary-checkbox" label="required" name='<%= "required" + index %>' type="checkbox" value="<%= requiredIndex %>" />
+						<aui:input cssClass="vocabulary-checkbox" label="required" name='<%= "required" + index %>' type="checkbox" value="<%= vocabulary.isRequired(selectedClassNameIds[index]) %>" />
 					</div>
 				</div>
 
