@@ -61,6 +61,7 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -4896,6 +4897,24 @@ public class JournalArticleLocalServiceImpl
 				journalArticleResourceLocalService.getArticleResource(
 					article.getResourcePrimKey());
 
+			AssetEntry oldAssetEntry =
+				assetEntryLocalService.fetchEntry(
+					JournalArticle.class.getName(),
+					article.getResourcePrimKey());
+
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			if (serviceContext == null) {
+				serviceContext = new ServiceContext();
+
+				ServiceContextThreadLocal.pushServiceContext(serviceContext);
+			}
+
+			serviceContext.setAttribute(
+				"reindexAllVersions", categoriesOrTagsHaveChanges(
+					oldAssetEntry, assetCategoryIds, assetTagNames));
+
 			assetEntry = assetEntryLocalService.updateEntry(
 				userId, article.getGroupId(), article.getCreateDate(),
 				article.getModifiedDate(), JournalArticle.class.getName(),
@@ -5017,6 +5036,8 @@ public class JournalArticleLocalServiceImpl
 				article.getGroupId(), article.getArticleId(),
 				article.getVersion())) {
 
+			boolean reindexAllVersions = false;
+
 			if (status == WorkflowConstants.STATUS_APPROVED) {
 				JournalArticle previousApprovedArticle =
 					JournalArticleLocalServiceUtil.getPreviousApprovedArticle(
@@ -5028,6 +5049,8 @@ public class JournalArticleLocalServiceImpl
 					updateUrlTitles(
 						article.getGroupId(), article.getArticleId(),
 						article.getUrlTitle());
+
+					reindexAllVersions = true;
 				}
 
 				// Asset
@@ -5055,6 +5078,16 @@ public class JournalArticleLocalServiceImpl
 						long[] assetLinkEntryIds = StringUtil.split(
 							ListUtil.toString(
 								assetLinks, AssetLink.ENTRY_ID2_ACCESSOR), 0L);
+
+						if (!reindexAllVersions) {
+							AssetEntry oldAssetEntry =
+								assetEntryLocalService.fetchEntry(
+									JournalArticle.class.getName(),
+									article.getResourcePrimKey());
+
+							reindexAllVersions = categoriesOrTagsHaveChanges(
+								oldAssetEntry, assetCategoryIds, assetTagNames);
+						}
 
 						AssetEntry assetEntry =
 							assetEntryLocalService.updateEntry(
@@ -5137,6 +5170,19 @@ public class JournalArticleLocalServiceImpl
 			else if (oldStatus == WorkflowConstants.STATUS_APPROVED) {
 				updatePreviousApprovedArticle(article);
 			}
+
+			ServiceContext serviceContextThreadLocal =
+				ServiceContextThreadLocal.getServiceContext();
+
+			if (serviceContextThreadLocal == null) {
+				serviceContextThreadLocal = new ServiceContext();
+
+				ServiceContextThreadLocal.pushServiceContext(
+					serviceContextThreadLocal);
+			}
+
+			serviceContextThreadLocal.setAttribute(
+				"reindexAllVersions", reindexAllVersions);
 		}
 
 		if ((article.getClassNameId() ==
@@ -5393,6 +5439,53 @@ public class JournalArticleLocalServiceImpl
 		searchContext.setUserId(userId);
 
 		return searchContext;
+	}
+
+	protected boolean categoriesOrTagsHaveChanges(
+			AssetEntry oldAssetEntry, long[] assetCategoryIds,
+			String[] assetTagNames)
+		throws PortalException, SystemException {
+
+		long[] oldAssetCategoryIds = new long[0];
+
+		String[] oldAssetTagNames = new String[0];
+
+		if (oldAssetEntry != null) {
+			oldAssetCategoryIds = oldAssetEntry.getCategoryIds();
+
+			oldAssetTagNames = oldAssetEntry.getTagNames();
+		}
+
+		if (assetCategoryIds == null) {
+			assetCategoryIds = new long[0];
+		}
+
+		if (assetTagNames == null) {
+			assetTagNames = new String[0];
+		}
+
+		if ((oldAssetTagNames.length != assetTagNames.length) ||
+			(oldAssetCategoryIds.length!= assetCategoryIds.length)) {
+				return true;
+		}
+		else if ((assetTagNames.length == 0) &&
+				 (assetCategoryIds.length == 0)) {
+
+			return false;
+		}
+
+		Set<Long> newCategoriesSet = SetUtil.fromArray(assetCategoryIds);
+		Set<Long> oldCategoriesSet = SetUtil.fromArray(oldAssetCategoryIds);
+
+		if (newCategoriesSet.equals(oldCategoriesSet)) {
+			Set<String> newTagsSet = SetUtil.fromArray(assetTagNames);
+			Set<String> oldTagsSet = SetUtil.fromArray(oldAssetTagNames);
+
+			return !newTagsSet.equals(oldTagsSet);
+		}
+		else {
+			return true;
+		}
 	}
 
 	protected void checkArticlesByDisplayDate(Date displayDate)
