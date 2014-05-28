@@ -38,7 +38,7 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 	Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{entryId=");
 		sb.append(entryId);
@@ -62,6 +62,8 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 		sb.append(typeSettings);
 		sb.append(", status=");
 		sb.append(status);
+		sb.append(", createTimestamp=");
+		sb.append(createTimestamp);
 		sb.append("}");
 
 		return sb.toString();
@@ -102,6 +104,7 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 		}
 
 		trashEntryImpl.setStatus(status);
+		trashEntryImpl.setCreateTimestamp(createTimestamp);
 
 		trashEntryImpl.resetOriginalValues();
 
@@ -121,6 +124,7 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 		systemEventSetKey = objectInput.readLong();
 		typeSettings = objectInput.readUTF();
 		status = objectInput.readInt();
+		createTimestamp = objectInput.readInt();
 	}
 
 	@Override
@@ -151,6 +155,7 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 		}
 
 		objectOutput.writeInt(status);
+		objectOutput.writeInt(createTimestamp);
 	}
 
 	public long entryId;
@@ -164,4 +169,5 @@ public class TrashEntryCacheModel implements CacheModel<TrashEntry>,
 	public long systemEventSetKey;
 	public String typeSettings;
 	public int status;
+	public int createTimestamp;
 }

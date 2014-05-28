@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<custom-sql>
+	<sql id="com.liferay.portlet.trash.service.persistence.TrashEntryFinder.findCleanableEntries">
+		<![CDATA[
+			SELECT {te.*}
+		    FROM
+		        TrashEntry as te
+		    INNER JOIN Group_ as g1
+		        ON te.groupId = g1.groupId
+		    LEFT JOIN Group_ as gb
+		        ON ( gb.groupId = g1.groupId AND gb.site = [$TRUE$] )
+		            OR ( gb.groupId = g1.liveGroupId AND gb.site = [$TRUE$] AND gb.parentGroupId = 0 )
+		            OR ( gb.groupId = g1.parentGroupId AND gb.site = [$TRUE$] AND gb.liveGroupId = 0 )
+		    LEFT JOIN Group_ as ga2
+		        ON ( g1.parentGroupId = ga2.groupId AND g1.site = [$FALSE$] )
+		    LEFT JOIN Group_ as ga
+		        ON ( ga2.liveGroupId = ga.groupId AND ga.site = [$TRUE$] )
+			WHERE
+			(
+			    (
+			        (gb.groupId IS NOT NULL)
+			        AND
+			        (
+			            (( te.createTimestamp + gb.trashEntriesMaxAge ) < ? AND ( gb.trashEntriesMaxAge <> -1 ))
+			            OR
+			            (( te.createTimestamp + ? ) < ? OR ( gb.trashEntriesMaxAge = -1 ))
+			        )
+			    )
+			    OR (
+			        (ga.groupId IS NOT NULL)
+			        AND
+			        (
+			            (( te.createTimestamp + ga.trashEntriesMaxAge )  < ? AND  ( ga.trashEntriesMaxAge <> -1 ))
+			            OR
+			            (( te.createTimestamp + ? ) < ? OR ( ga.trashEntriesMaxAge = -1 ))
+			        )
+			    )
+			)
+			AND
+				( te.companyId = ? )
+			AND
+			    ( te.entryId > ? )
+			ORDER BY te.entryId ASC
+		]]>
+	</sql>
+	<sql id="com.liferay.portlet.trash.service.persistence.TrashEntryFinder.findTrashEntryWithGroup">
+		<![CDATA[
+			SELECT
+				{te.*}, {g.*}
+			FROM
+				TrashEntry as te INNER JOIN Group_ as g ON te.groupId = g.groupId
+			WHERE
+				te.entryId > ?
+			ORDER BY te.entryId ASC
+		]]>
+	</sql>
+</custom-sql>

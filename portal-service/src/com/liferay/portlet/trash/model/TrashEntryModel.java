@@ -249,6 +249,20 @@ public interface TrashEntryModel extends AttachedModel, BaseModel<TrashEntry> {
 	 */
 	public void setStatus(int status);
 
+	/**
+	 * Returns the create timestamp of this trash entry.
+	 *
+	 * @return the create timestamp of this trash entry
+	 */
+	public int getCreateTimestamp();
+
+	/**
+	 * Sets the create timestamp of this trash entry.
+	 *
+	 * @param createTimestamp the create timestamp of this trash entry
+	 */
+	public void setCreateTimestamp(int createTimestamp);
+
 	@Override
 	public boolean isNew();
 

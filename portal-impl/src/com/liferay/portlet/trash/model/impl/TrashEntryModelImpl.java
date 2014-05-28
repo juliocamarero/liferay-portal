@@ -80,9 +80,10 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 			{ "classPK", Types.BIGINT },
 			{ "systemEventSetKey", Types.BIGINT },
 			{ "typeSettings", Types.CLOB },
-			{ "status", Types.INTEGER }
+			{ "status", Types.INTEGER },
+			{ "createTimestamp", Types.INTEGER }
 		};
-	public static final String TABLE_SQL_CREATE = "create table TrashEntry (entryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,classNameId LONG,classPK LONG,systemEventSetKey LONG,typeSettings TEXT null,status INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table TrashEntry (entryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,classNameId LONG,classPK LONG,systemEventSetKey LONG,typeSettings TEXT null,status INTEGER,createTimestamp INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table TrashEntry";
 	public static final String ORDER_BY_JPQL = " ORDER BY trashEntry.createDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY TrashEntry.createDate DESC";
@@ -128,6 +129,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		model.setSystemEventSetKey(soapModel.getSystemEventSetKey());
 		model.setTypeSettings(soapModel.getTypeSettings());
 		model.setStatus(soapModel.getStatus());
+		model.setCreateTimestamp(soapModel.getCreateTimestamp());
 
 		return model;
 	}
@@ -203,6 +205,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		attributes.put("systemEventSetKey", getSystemEventSetKey());
 		attributes.put("typeSettings", getTypeSettings());
 		attributes.put("status", getStatus());
+		attributes.put("createTimestamp", getCreateTimestamp());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -276,6 +279,12 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 
 		if (status != null) {
 			setStatus(status);
+		}
+
+		Integer createTimestamp = (Integer)attributes.get("createTimestamp");
+
+		if (createTimestamp != null) {
+			setCreateTimestamp(createTimestamp);
 		}
 	}
 
@@ -504,6 +513,17 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		_status = status;
 	}
 
+	@JSON
+	@Override
+	public int getCreateTimestamp() {
+		return _createTimestamp;
+	}
+
+	@Override
+	public void setCreateTimestamp(int createTimestamp) {
+		_createTimestamp = createTimestamp;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -546,6 +566,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		trashEntryImpl.setSystemEventSetKey(getSystemEventSetKey());
 		trashEntryImpl.setTypeSettings(getTypeSettings());
 		trashEntryImpl.setStatus(getStatus());
+		trashEntryImpl.setCreateTimestamp(getCreateTimestamp());
 
 		trashEntryImpl.resetOriginalValues();
 
@@ -674,12 +695,14 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 
 		trashEntryCacheModel.status = getStatus();
 
+		trashEntryCacheModel.createTimestamp = getCreateTimestamp();
+
 		return trashEntryCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{entryId=");
 		sb.append(getEntryId());
@@ -703,6 +726,8 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 		sb.append(getTypeSettings());
 		sb.append(", status=");
 		sb.append(getStatus());
+		sb.append(", createTimestamp=");
+		sb.append(getCreateTimestamp());
 		sb.append("}");
 
 		return sb.toString();
@@ -710,7 +735,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(40);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portlet.trash.model.TrashEntry");
@@ -760,6 +785,10 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 			"<column><column-name>status</column-name><column-value><![CDATA[");
 		sb.append(getStatus());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>createTimestamp</column-name><column-value><![CDATA[");
+		sb.append(getCreateTimestamp());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -790,6 +819,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 	private long _systemEventSetKey;
 	private String _typeSettings;
 	private int _status;
+	private int _createTimestamp;
 	private long _columnBitmask;
 	private TrashEntry _escapedModel;
 }

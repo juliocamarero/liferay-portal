@@ -85,9 +85,10 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			{ "friendlyURL", Types.VARCHAR },
 			{ "site", Types.BOOLEAN },
 			{ "remoteStagingGroupCount", Types.INTEGER },
-			{ "active_", Types.BOOLEAN }
+			{ "active_", Types.BOOLEAN },
+			{ "trashEntriesMaxAge", Types.INTEGER }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Group_ (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,groupId LONG not null primary key,companyId LONG,creatorUserId LONG,classNameId LONG,classPK LONG,parentGroupId LONG,liveGroupId LONG,treePath STRING null,name VARCHAR(150) null,description STRING null,type_ INTEGER,typeSettings TEXT null,manualMembership BOOLEAN,membershipRestriction INTEGER,friendlyURL VARCHAR(255) null,site BOOLEAN,remoteStagingGroupCount INTEGER,active_ BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table Group_ (mvccVersion LONG default 0,uuid_ VARCHAR(75) null,groupId LONG not null primary key,companyId LONG,creatorUserId LONG,classNameId LONG,classPK LONG,parentGroupId LONG,liveGroupId LONG,treePath STRING null,name VARCHAR(150) null,description STRING null,type_ INTEGER,typeSettings TEXT null,manualMembership BOOLEAN,membershipRestriction INTEGER,friendlyURL VARCHAR(255) null,site BOOLEAN,remoteStagingGroupCount INTEGER,active_ BOOLEAN,trashEntriesMaxAge INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table Group_";
 	public static final String ORDER_BY_JPQL = " ORDER BY group_.name ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Group_.name ASC";
@@ -149,6 +150,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		model.setSite(soapModel.getSite());
 		model.setRemoteStagingGroupCount(soapModel.getRemoteStagingGroupCount());
 		model.setActive(soapModel.getActive());
+		model.setTrashEntriesMaxAge(soapModel.getTrashEntriesMaxAge());
 
 		return model;
 	}
@@ -265,6 +267,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		attributes.put("site", getSite());
 		attributes.put("remoteStagingGroupCount", getRemoteStagingGroupCount());
 		attributes.put("active", getActive());
+		attributes.put("trashEntriesMaxAge", getTrashEntriesMaxAge());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -394,6 +397,13 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 		if (active != null) {
 			setActive(active);
+		}
+
+		Integer trashEntriesMaxAge = (Integer)attributes.get(
+				"trashEntriesMaxAge");
+
+		if (trashEntriesMaxAge != null) {
+			setTrashEntriesMaxAge(trashEntriesMaxAge);
 		}
 	}
 
@@ -834,6 +844,17 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		return _originalActive;
 	}
 
+	@JSON
+	@Override
+	public int getTrashEntriesMaxAge() {
+		return _trashEntriesMaxAge;
+	}
+
+	@Override
+	public void setTrashEntriesMaxAge(int trashEntriesMaxAge) {
+		_trashEntriesMaxAge = trashEntriesMaxAge;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -885,6 +906,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		groupImpl.setSite(getSite());
 		groupImpl.setRemoteStagingGroupCount(getRemoteStagingGroupCount());
 		groupImpl.setActive(getActive());
+		groupImpl.setTrashEntriesMaxAge(getTrashEntriesMaxAge());
 
 		groupImpl.resetOriginalValues();
 
@@ -1070,12 +1092,14 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 		groupCacheModel.active = getActive();
 
+		groupCacheModel.trashEntriesMaxAge = getTrashEntriesMaxAge();
+
 		return groupCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(41);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("{mvccVersion=");
 		sb.append(getMvccVersion());
@@ -1117,6 +1141,8 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 		sb.append(getRemoteStagingGroupCount());
 		sb.append(", active=");
 		sb.append(getActive());
+		sb.append(", trashEntriesMaxAge=");
+		sb.append(getTrashEntriesMaxAge());
 		sb.append("}");
 
 		return sb.toString();
@@ -1124,7 +1150,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(64);
+		StringBundler sb = new StringBundler(67);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.portal.model.Group");
@@ -1210,6 +1236,10 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			"<column><column-name>active</column-name><column-value><![CDATA[");
 		sb.append(getActive());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>trashEntriesMaxAge</column-name><column-value><![CDATA[");
+		sb.append(getTrashEntriesMaxAge());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1259,6 +1289,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	private boolean _active;
 	private boolean _originalActive;
 	private boolean _setOriginalActive;
+	private int _trashEntriesMaxAge;
 	private long _columnBitmask;
 	private Group _escapedModel;
 }

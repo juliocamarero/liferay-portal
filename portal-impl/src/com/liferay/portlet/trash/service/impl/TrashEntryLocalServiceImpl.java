@@ -14,10 +14,10 @@
 
 package com.liferay.portlet.trash.service.impl;
 
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.BaseActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexable;
@@ -27,22 +27,29 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.transaction.Propagation;
+import com.liferay.portal.kernel.transaction.TransactionAttribute;
+import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.SystemEvent;
 import com.liferay.portal.model.User;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.model.TrashVersion;
 import com.liferay.portlet.trash.service.base.TrashEntryLocalServiceBaseImpl;
+import com.liferay.portlet.trash.service.persistence.TrashEntryFinderUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Provides the local service for accessing, adding, checking, and deleting
@@ -51,6 +58,17 @@ import java.util.List;
  * @author Zsolt Berentey
  */
 public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
+
+	static {
+		TransactionAttribute.Builder builder =
+			new TransactionAttribute.Builder();
+
+		builder.propagation(Propagation.REQUIRES_NEW);
+		builder.rollbackForClasses(
+			PortalException.class, SystemException.class);
+
+		_requiresNewTransactionAttribute = builder.build();
+	}
 
 	/**
 	 * Moves an entry to trash.
@@ -130,43 +148,89 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 	@Override
 	public void checkEntries() throws PortalException, SystemException {
-
-		ActionableDynamicQuery actionableDynamicQuery =
-			groupLocalService.getActionableDynamicQuery();
-
-		actionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.PerformActionMethod() {
-
-				@Override
-				public void performAction(Object object)
-					throws PortalException, SystemException {
-
-					Group group = (Group)object;
-
-					if (!TrashUtil.isTrashEnabled(group.getGroupId())) {
-						return;
-					}
-
-					Date date = getMaxAge(group);
-
-					List<TrashEntry> entries =
-						trashEntryPersistence.findByG_LtCD(
-							group.getGroupId(), date);
-
-					for (TrashEntry entry : entries) {
-						TrashHandler trashHandler =
-							TrashHandlerRegistryUtil.getTrashHandler(
-								entry.getClassName());
-
-						trashHandler.deleteTrashEntry(entry.getClassPK());
+		Callable<Boolean> callable = new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				if (_companies == null ) {
+					_companies = companyLocalService.getCompanies();
+				}
+				else {
+					if (_lastEntryId == 0L) {
+						_companyIndex++;
+						_counter = 0L;
 					}
 				}
 
-			});
-		actionableDynamicQuery.setTransactionAttribute(
-			BaseActionableDynamicQuery.REQUIRES_NEW_TRANSACTION_ATTRIBUTE);
+				if (_companies.size() <= _companyIndex) {
+					return false;
+				}
 
-		actionableDynamicQuery.performActions();
+				Company company = _companies.get(_companyIndex);
+
+				List<TrashEntry> list =
+					TrashEntryFinderUtil.findCleanableEntries(
+						_lastEntryId, company.getCompanyId(), 0, _READ_COUNT);
+
+				if (list.isEmpty()) {
+					_lastEntryId = 0L;
+					return true;
+				}
+
+				long maxCleanCount = PropsValues.TRASH_ENTRIES_MAX_CLEAN_COUNT;
+
+				for (TrashEntry entry : list) {
+					_lastEntryId = entry.getEntryId();
+
+					TrashHandler trashHandler =
+						TrashHandlerRegistryUtil.getTrashHandler(
+							entry.getClassName());
+
+					trashHandler.deleteTrashEntry(entry.getClassPK());
+
+					if (_log.isTraceEnabled()) {
+						_log.trace(String.format("%s / %d cleaned",
+						entry.getClassName(), entry.getClassPK()));
+					}
+
+					_counter++;
+
+					if ((_counter >= maxCleanCount) && (maxCleanCount != -1)) {
+						if (_log.isDebugEnabled()) {
+							_log.debug("Maximum clean count reached");
+						}
+
+						_lastEntryId = 0L;
+						return true;
+					}
+				}
+
+				return true;
+			}
+
+			private List<Company> _companies = null;
+			private int _companyIndex = 0;
+			private long _counter = 0L;
+			private long _lastEntryId = 0L;
+		};
+
+		try {
+			boolean loop = true;
+			while (loop) {
+				loop = TransactionInvokerUtil.invoke(
+					_transactionAttribute, callable);
+			}
+		}
+		catch (Throwable t) {
+			if (t instanceof PortalException) {
+				throw (PortalException)t;
+			}
+
+			if (t instanceof SystemException) {
+				throw (SystemException)t;
+			}
+
+			throw new SystemException(t);
+		}
 	}
 
 	/**
@@ -445,5 +509,15 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 		return calendar.getTime();
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		TrashEntryLocalServiceImpl.class);
+
+	private static int _READ_COUNT = 10000;
+
+	private static TransactionAttribute _requiresNewTransactionAttribute;
+
+	private TransactionAttribute _transactionAttribute =
+		_requiresNewTransactionAttribute;
 
 }

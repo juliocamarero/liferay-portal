@@ -27,6 +27,7 @@
 		<column name="systemEventSetKey" type="long" />
 		<column name="typeSettings" type="String" />
 		<column name="status" type="int" />
+		<column name="createTimestamp" type="int" />
 
 		<!-- Order -->
 
@@ -57,6 +58,7 @@
 
 		<!-- References -->
 
+		<reference package-path="com.liferay.portal" entity="Company" />
 		<reference package-path="com.liferay.portal" entity="Group" />
 		<reference package-path="com.liferay.portal" entity="SystemEvent" />
 	</entity>

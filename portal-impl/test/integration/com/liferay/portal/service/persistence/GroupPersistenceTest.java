@@ -168,6 +168,8 @@ public class GroupPersistenceTest {
 
 		newGroup.setActive(RandomTestUtil.randomBoolean());
 
+		newGroup.setTrashEntriesMaxAge(RandomTestUtil.nextInt());
+
 		_persistence.update(newGroup);
 
 		Group existingGroup = _persistence.findByPrimaryKey(newGroup.getPrimaryKey());
@@ -204,6 +206,8 @@ public class GroupPersistenceTest {
 		Assert.assertEquals(existingGroup.getRemoteStagingGroupCount(),
 			newGroup.getRemoteStagingGroupCount());
 		Assert.assertEquals(existingGroup.getActive(), newGroup.getActive());
+		Assert.assertEquals(existingGroup.getTrashEntriesMaxAge(),
+			newGroup.getTrashEntriesMaxAge());
 	}
 
 	@Test
@@ -478,7 +482,7 @@ public class GroupPersistenceTest {
 			"name", true, "description", true, "type", true, "typeSettings",
 			true, "manualMembership", true, "membershipRestriction", true,
 			"friendlyURL", true, "site", true, "remoteStagingGroupCount", true,
-			"active", true);
+			"active", true, "trashEntriesMaxAge", true);
 	}
 
 	@Test
@@ -690,6 +694,8 @@ public class GroupPersistenceTest {
 		group.setRemoteStagingGroupCount(RandomTestUtil.nextInt());
 
 		group.setActive(RandomTestUtil.randomBoolean());
+
+		group.setTrashEntriesMaxAge(RandomTestUtil.nextInt());
 
 		_persistence.update(group);
 

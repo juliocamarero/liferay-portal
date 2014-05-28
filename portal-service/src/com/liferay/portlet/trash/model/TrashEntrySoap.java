@@ -42,6 +42,7 @@ public class TrashEntrySoap implements Serializable {
 		soapModel.setSystemEventSetKey(model.getSystemEventSetKey());
 		soapModel.setTypeSettings(model.getTypeSettings());
 		soapModel.setStatus(model.getStatus());
+		soapModel.setCreateTimestamp(model.getCreateTimestamp());
 
 		return soapModel;
 	}
@@ -182,6 +183,14 @@ public class TrashEntrySoap implements Serializable {
 		_status = status;
 	}
 
+	public int getCreateTimestamp() {
+		return _createTimestamp;
+	}
+
+	public void setCreateTimestamp(int createTimestamp) {
+		_createTimestamp = createTimestamp;
+	}
+
 	private long _entryId;
 	private long _groupId;
 	private long _companyId;
@@ -193,4 +202,5 @@ public class TrashEntrySoap implements Serializable {
 	private long _systemEventSetKey;
 	private String _typeSettings;
 	private int _status;
+	private int _createTimestamp;
 }

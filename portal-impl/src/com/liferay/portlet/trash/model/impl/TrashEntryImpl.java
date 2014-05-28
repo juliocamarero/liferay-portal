@@ -17,10 +17,19 @@ package com.liferay.portlet.trash.model.impl;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portlet.trash.model.TrashEntry;
 
+import java.util.Date;
+
 /**
  * @author Zsolt Berentey
+ * @author Sampsa Sohlman
  */
 public class TrashEntryImpl extends TrashEntryBaseImpl {
+
+	public TrashEntryImpl() {
+		super();
+
+		setCreateDate(new Date());
+	}
 
 	@Override
 	public TrashEntry getRootEntry() {
@@ -78,6 +87,13 @@ public class TrashEntryImpl extends TrashEntryBaseImpl {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void setCreateDate(Date createDate) {
+		int creationTimeStampMinute = (int) (createDate.getTime() / 60000L);
+		setCreateTimestamp(creationTimeStampMinute);
+		super.setCreateDate(createDate);
 	}
 
 	@Override
