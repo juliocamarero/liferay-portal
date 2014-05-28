@@ -75,9 +75,28 @@
 			<liferay-util:include page="<%= trashRenderer.renderActions(renderRequest, renderResponse) %>" />
 		</c:when>
 		<c:otherwise>
-			<liferay-ui:app-view-toolbar>
-				<aui:button-row cssClass="edit-toolbar" id='<%= renderResponse.getNamespace() + "entryToolbar" %>' />
-			</liferay-ui:app-view-toolbar>
+			<div class="edit-toolbar" id="<portlet:namespace />entryToolbar">
+				<div class="btn-group">
+					<c:choose>
+						<c:when test="<%= entry != null %>">
+							<aui:button icon="icon-undo" name="restoreEntryButton" value="restore" />
+
+							<c:if test="<%= trashHandler.isDeletable() %>">
+								<aui:button icon="icon-remove" name="removeEntryButton" value="delete" />
+							</c:if>
+						</c:when>
+						<c:otherwise>
+							<c:if test="<%= trashHandler.isMovable() %>">
+								<aui:button icon="icon-undo" name="moveEntryButton" value="restore" />
+							</c:if>
+
+							<c:if test="<%= trashHandler.isDeletable() %>">
+								<aui:button icon="icon-remove" name="removeEntryButton" value="delete" />
+							</c:if>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
 		</c:otherwise>
 	</c:choose>
 
@@ -272,11 +291,7 @@
 </div>
 
 <c:if test="<%= Validator.isNull(trashRenderer.renderActions(renderRequest, renderResponse)) %>">
-	<aui:script use="aui-base,aui-toolbar">
-		var buttonRow = A.one('#<portlet:namespace />entryToolbar');
-
-		var entryToolbarGroup = [];
-
+	<aui:script use="aui-base">
 		<c:choose>
 			<c:when test="<%= entry != null %>">
 				<portlet:actionURL var="restoreEntryURL">
@@ -286,15 +301,12 @@
 					<portlet:param name="trashEntryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
 				</portlet:actionURL>
 
-				entryToolbarGroup.push(
-					{
-						icon: 'icon-backward',
-						label: '<%= UnicodeLanguageUtil.get(pageContext, "restore") %>',
-						on: {
-							click: function(event) {
-								Liferay.fire('<portlet:namespace />checkEntry', {trashEntryId: <%= entry.getEntryId() %>, uri: '<%= restoreEntryURL.toString() %>'});
-							}
-						}
+				var restoreEntryButton = A.one('#<portlet:namespace />restoreEntryButton');
+
+				restoreEntryButton.on(
+					'click',
+					function(event) {
+						Liferay.fire('<portlet:namespace />checkEntry', {trashEntryId: <%= entry.getEntryId() %>, uri: '<%= restoreEntryURL.toString() %>'});
 					}
 				);
 
@@ -306,16 +318,13 @@
 						<portlet:param name="trashEntryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
 					</portlet:actionURL>
 
-					entryToolbarGroup.push(
-						{
-							icon: 'icon-remove',
-							label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>',
-							on: {
-								click: function(event) {
-									if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
-										submitForm(document.hrefFm, '<%= deleteEntryURL.toString() %>');
-									}
-								}
+					var removeEntryButton = A.one('#<portlet:namespace />removeEntryButton');
+
+					removeEntryButton.on(
+						'click',
+						function(event) {
+							if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
+								submitForm(document.hrefFm, '<%= deleteEntryURL.toString() %>');
 							}
 						}
 					);
@@ -331,15 +340,12 @@
 						<portlet:param name="containerModelClassName" value="<%= trashHandler.getContainerModelClassName() %>" />
 					</portlet:renderURL>
 
-					entryToolbarGroup.push(
-						{
-							icon: 'icon-backward',
-							label: '<%= UnicodeLanguageUtil.get(pageContext, "restore") %>',
-							on: {
-								click: function(event) {
-									<portlet:namespace />restoreDialog('<%= moveURL %>');
-								}
-							}
+					var moveEntryButton = A.one('#<portlet:namespace />moveEntryButton');
+
+					moveEntryButton.on(
+						'click',
+						function(event) {
+							<portlet:namespace />restoreDialog('<%= moveURL %>');
 						}
 					);
 				</c:if>
@@ -353,30 +359,18 @@
 						<portlet:param name="classPK" value="<%= String.valueOf(trashRenderer.getClassPK()) %>" />
 					</portlet:actionURL>
 
-					entryToolbarGroup.push(
-						{
-							icon: 'icon-remove',
-							label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>',
-							on: {
-								click: function(event) {
-									if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
-										submitForm(document.hrefFm, '<%= deleteEntryURL.toString() %>');
-									}
-								}
+					var removeEntryButton = A.one('#<portlet:namespace />removeEntryButton');
+
+					removeEntryButton.on(
+						'click',
+						function(event) {
+							if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
+								submitForm(document.hrefFm, '<%= deleteEntryURL.toString() %>');
 							}
 						}
 					);
 				</c:if>
 			</c:otherwise>
 		</c:choose>
-
-		var entryToolbar = new A.Toolbar(
-			{
-				boundingBox: buttonRow,
-				children: [entryToolbarGroup]
-			}
-		).render();
-
-		buttonRow.setData('entryToolbar', entryToolbar);
 	</aui:script>
 </c:if>
