@@ -16,15 +16,18 @@ package com.liferay.portlet.asset.util;
 
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class AssetVocabularySettingsProperties extends UnicodeProperties {
+
+	public static final long[] DEFAULT_SELECTED_CLASSNAME_IDS =
+		new long[] {AssetCategoryConstants.ALL_CLASS_NAME_IDS};
 
 	public AssetVocabularySettingsProperties() {
 		super(true);
@@ -38,11 +41,19 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 	public long[] getAssetRendererFactoryClassNameIds() {
 		String propertyValue = getProperty(KEY_SELECTED_CLASSNAMES);
 
+		if (Validator.isNull(propertyValue)) {
+			return DEFAULT_SELECTED_CLASSNAME_IDS;
+		}
+
 		return StringUtil.split(propertyValue, 0L);
 	}
 
 	public long[] getRequiredAssetRendererFactoryClassNameIds() {
 		String propertyValue = getProperty(KEY_REQUIRED_CLASSNAMES);
+
+		if (Validator.isNull(propertyValue)) {
+			return new long[0];
+		}
 
 		return StringUtil.split(propertyValue, 0L);
 	}
