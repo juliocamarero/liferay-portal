@@ -132,7 +132,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL"
 
 						<c:if test="<%= i == 0 %>">
 							<div class="taglib-asset-categories-summary">
-								<span class="asset-vocabulary">
+								<span>
 									<%= HtmlUtil.escape(assetVocabulary.getTitle(locale)) %>:
 								</span>
 						</c:if>
