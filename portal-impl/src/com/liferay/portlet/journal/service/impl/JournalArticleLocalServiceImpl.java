@@ -61,6 +61,7 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -4934,13 +4935,14 @@ public class JournalArticleLocalServiceImpl
 	 * @return the updated web content article
 	 * @throws PortalException if a portal exception occurred
 	 */
-	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle updateStatus(
 			long userId, JournalArticle article, int status, String articleURL,
 			ServiceContext serviceContext,
 			Map<String, Serializable> workflowContext)
 		throws PortalException {
+
+		boolean propagateReindex = false;
 
 		// Article
 
@@ -4988,7 +4990,7 @@ public class JournalArticleLocalServiceImpl
 				article.getVersion())) {
 
 			if (status == WorkflowConstants.STATUS_APPROVED) {
-				updateUrlTitles(
+				propagateReindex = updateUrlTitles(
 					article.getGroupId(), article.getArticleId(),
 					article.getUrlTitle());
 
@@ -5016,6 +5018,16 @@ public class JournalArticleLocalServiceImpl
 						long[] assetLinkEntryIds = StringUtil.split(
 							ListUtil.toString(
 								assetLinks, AssetLink.ENTRY_ID2_ACCESSOR), 0L);
+
+						if (!propagateReindex) {
+							AssetEntry oldAssetEntry =
+								assetEntryLocalService.fetchEntry(
+									JournalArticle.class.getName(),
+									article.getResourcePrimKey());
+
+							propagateReindex = categoriesOrTagsHaveChanges(
+								oldAssetEntry, assetCategoryIds, assetTagNames);
+						}
 
 						AssetEntry assetEntry =
 							assetEntryLocalService.updateEntry(
@@ -5138,6 +5150,11 @@ public class JournalArticleLocalServiceImpl
 				(String)workflowContext.get(WorkflowConstants.CONTEXT_URL),
 				serviceContext);
 		}
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			JournalArticle.class);
+
+		indexer.reindex(article, propagateReindex);
 
 		return article;
 	}
@@ -5348,6 +5365,53 @@ public class JournalArticleLocalServiceImpl
 		searchContext.setUserId(userId);
 
 		return searchContext;
+	}
+
+	protected boolean categoriesOrTagsHaveChanges(
+			AssetEntry oldAssetEntry, long[] assetCategoryIds,
+			String[] assetTagNames)
+		throws PortalException {
+
+		long[] oldAssetCategoryIds = new long[0];
+
+		String[] oldAssetTagNames = new String[0];
+
+		if (oldAssetEntry != null) {
+			oldAssetCategoryIds = oldAssetEntry.getCategoryIds();
+
+			oldAssetTagNames = oldAssetEntry.getTagNames();
+		}
+
+		if (assetCategoryIds == null) {
+			assetCategoryIds = new long[0];
+		}
+
+		if (assetTagNames == null) {
+			assetTagNames = new String[0];
+		}
+
+		if ((oldAssetTagNames.length != assetTagNames.length) ||
+			(oldAssetCategoryIds.length!= assetCategoryIds.length)) {
+				return true;
+		}
+		else if ((assetTagNames.length == 0) &&
+				 (assetCategoryIds.length == 0)) {
+
+			return false;
+		}
+
+		Set<Long> newCategoriesSet = SetUtil.fromArray(assetCategoryIds);
+		Set<Long> oldCategoriesSet = SetUtil.fromArray(oldAssetCategoryIds);
+
+		if (newCategoriesSet.equals(oldCategoriesSet)) {
+			Set<String> newTagsSet = SetUtil.fromArray(assetTagNames);
+			Set<String> oldTagsSet = SetUtil.fromArray(oldAssetTagNames);
+
+			return !newTagsSet.equals(oldTagsSet);
+		}
+		else {
+			return true;
+		}
 	}
 
 	protected void checkArticlesByDisplayDate(Date displayDate)
@@ -6657,7 +6721,7 @@ public class JournalArticleLocalServiceImpl
 		}
 	}
 
-	protected void updateUrlTitles(
+	protected boolean updateUrlTitles(
 			long groupId, String articleId, String urlTitle)
 		throws PortalException {
 
@@ -6665,19 +6729,25 @@ public class JournalArticleLocalServiceImpl
 			groupId, articleId, new ArticleVersionComparator(false));
 
 		if (firstArticle.getUrlTitle().equals(urlTitle)) {
-			return;
+			return false;
 		}
 
 		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
 			groupId, articleId);
+
+		boolean updated = false;
 
 		for (JournalArticle article : articles) {
 			if (!article.getUrlTitle().equals(urlTitle)) {
 				article.setUrlTitle(urlTitle);
 
 				journalArticlePersistence.update(article);
+
+				updated = true;
 			}
 		}
+
+		return updated;
 	}
 
 	protected void validate(
