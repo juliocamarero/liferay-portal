@@ -22,34 +22,6 @@
 		clear: both;
 	}
 
-	.article-toolbar {
-		margin-bottom: 1em;
-
-		.icon-delete {
-			background-image: url(@theme_image_path@/common/delete.png);
-		}
-
-		.icon-download {
-			background-image: url(@theme_image_path@/common/download.png);
-		}
-
-		.icon-expire {
-			background-image: url(@theme_image_path@/common/time.png);
-		}
-
-		.icon-permissions {
-			background-image: url(@theme_image_path@/common/permissions.png);
-		}
-
-		.icon-preview {
-			background-image: url(@theme_image_path@/common/preview.png);
-		}
-
-		.icon-history {
-			background-image: url(@theme_image_path@/common/history.png);
-		}
-	}
-
 	.form-section h3 {
 		border-bottom: 1px solid #666;
 	}
@@ -466,7 +438,7 @@
 }
 
 .active-area-proxy {
-	background: #FFFFE0 url(@theme_image_path@/portlet/pop_up.png) no-repeat 10px 50%;
+	background-color: #FFFFE0;
 	font-size: 1.2em;
-	padding: 0.3em 0.3em 0.3em 2em;
+	padding: 0.3em;
 }
