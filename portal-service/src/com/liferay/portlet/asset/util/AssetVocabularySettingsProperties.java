@@ -69,12 +69,9 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 		Set<Long> selectedClassNameIds = new LinkedHashSet<Long>();
 		Set<Long> requiredClassNameIds = new LinkedHashSet<Long>();
 
-		for (int index : indexes) {
-			long classNameId = ParamUtil.getLong(
-				actionRequest, "classNameId" + index);
-
-			boolean required = ParamUtil.getBoolean(
-				actionRequest, "required" + index);
+		for (int i = 0; i < classNameIds.length; ++i) {
+			long classNameId = classNameIds[i];
+			boolean required = areRequired[i];
 
 			if (classNameId == AssetCategoryConstants.ALL_CLASS_NAME_IDS) {
 				selectedClassNameIds.clear();
@@ -96,10 +93,10 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 			}
 		}
 
-		settingsProperties.setProperty(
-			"selectedClassNameIds", StringUtil.merge(selectedClassNameIds));
-		settingsProperties.setProperty(
-			"requiredClassNameIds", StringUtil.merge(requiredClassNameIds));
+		setProperty(
+			KEY_SELECTED_CLASSNAMES, StringUtil.merge(selectedClassNameIds));
+		setProperty(
+			KEY_REQUIRED_CLASSNAMES, StringUtil.merge(requiredClassNameIds));
 	}
 
 	public void setMultiValued(boolean multiValued) {
