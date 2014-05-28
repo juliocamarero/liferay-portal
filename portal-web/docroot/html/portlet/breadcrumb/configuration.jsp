@@ -63,13 +63,6 @@ TemplateHandler templateHandler = TemplateHandlerRegistryUtil.getTemplateHandler
 		</aui:form>
 	</aui:col>
 	<aui:col width="<%= 50 %>">
-
-		<%
-		List<BreadcrumbEntry> breadcrumbEntries = PortalUtil.getPortletBreadcrumbs(request);
-
-		breadcrumbEntries.clear();
-		%>
-
 		<liferay-portlet:preview
 			portletName="<%= portletResource %>"
 			queryString="struts_action=/breadcrumb/view"
