@@ -44,11 +44,12 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 
 	public AssetVocabularySettingsProperties(String properties) {
 		this();
+
 		fastLoad(properties);
 	}
 
 	public long[] getAssetRendererFactoryClassNameIds() {
-		String propertyValue = getProperty(KEY_SELECTED_CLASSNAMES);
+		String propertyValue = getProperty(SELECTED_CLASS_NAME_IDS);
 
 		if (Validator.isNull(propertyValue)) {
 			return DEFAULT_SELECTED_CLASSNAME_IDS;
@@ -58,7 +59,7 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 	}
 
 	public long[] getRequiredAssetRendererFactoryClassNameIds() {
-		String propertyValue = getProperty(KEY_REQUIRED_CLASSNAMES);
+		String propertyValue = getProperty(REQUIRED_CLASS_NAME_IDS);
 
 		if (Validator.isNull(propertyValue)) {
 			return new long[0];
@@ -78,7 +79,7 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 	}
 
 	public boolean isMultiValued() {
-		String propertyValue = getProperty(KEY_MULTIVALUED);
+		String propertyValue = getProperty(MULTI_VALUED);
 
 		return GetterUtil.getBoolean(propertyValue, true);
 	}
@@ -114,13 +115,13 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 		}
 
 		setProperty(
-			KEY_SELECTED_CLASSNAMES, StringUtil.merge(selectedClassNameIds));
+			SELECTED_CLASS_NAME_IDS, StringUtil.merge(selectedClassNameIds));
 		setProperty(
-			KEY_REQUIRED_CLASSNAMES, StringUtil.merge(requiredClassNameIds));
+			REQUIRED_CLASS_NAME_IDS, StringUtil.merge(requiredClassNameIds));
 	}
 
 	public void setMultiValued(boolean multiValued) {
-		setProperty(KEY_MULTIVALUED, String.valueOf(multiValued));
+		setProperty(MULTI_VALUED, String.valueOf(multiValued));
 	}
 
 	protected boolean isClassNameIdSpecified(
@@ -140,12 +141,12 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 		return true;
 	}
 
-	private static final String KEY_MULTIVALUED = "multiValued";
+	private static final String MULTI_VALUED = "multiValued";
 
-	private static final String KEY_REQUIRED_CLASSNAMES =
+	private static final String REQUIRED_CLASS_NAME_IDS =
 		"requiredClassNameIds";
 
-	private static final String KEY_SELECTED_CLASSNAMES =
+	private static final String SELECTED_CLASS_NAME_IDS =
 		"selectedClassNameIds";
 
 }
