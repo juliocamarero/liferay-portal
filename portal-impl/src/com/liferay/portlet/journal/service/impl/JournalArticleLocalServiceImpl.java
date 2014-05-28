@@ -61,6 +61,7 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -83,6 +84,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.ServiceContextUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -5149,6 +5151,18 @@ public class JournalArticleLocalServiceImpl
 				journalArticleResourceLocalService.getArticleResource(
 					article.getResourcePrimKey());
 
+			AssetEntry oldAssetEntry =
+					assetEntryLocalService.fetchEntry(
+						JournalArticle.class.getName(),
+						article.getResourcePrimKey());
+
+			boolean tagsOrCategoriesChanged = checkCategoryTagsChanges(
+					oldAssetEntry, assetCategoryIds,
+				assetTagNames);
+
+			ServiceContext sc = ServiceContextThreadLocal.getServiceContext();
+			sc.setAttribute("reindexAllVersions", tagsOrCategoriesChanged);
+
 			assetEntry = assetEntryLocalService.updateEntry(
 				userId, article.getGroupId(), article.getCreateDate(),
 				article.getModifiedDate(), JournalArticle.class.getName(),
@@ -5272,6 +5286,8 @@ public class JournalArticleLocalServiceImpl
 				article.getGroupId(), article.getArticleId(),
 				article.getVersion())) {
 
+			boolean reindexAllVersions = false;
+
 			if (status == WorkflowConstants.STATUS_APPROVED) {
 				JournalArticle previous =
 					JournalArticleLocalServiceUtil.getPreviousApprovedArticle(
@@ -5281,6 +5297,8 @@ public class JournalArticleLocalServiceImpl
 					updateUrlTitles(
 						article.getGroupId(), article.getArticleId(),
 						article.getUrlTitle());
+
+					reindexAllVersions = true;
 				}
 
 				// Asset
@@ -5308,6 +5326,20 @@ public class JournalArticleLocalServiceImpl
 						long[] assetLinkEntryIds = StringUtil.split(
 							ListUtil.toString(
 								assetLinks, AssetLink.ENTRY_ID2_ACCESSOR), 0L);
+
+						if (!reindexAllVersions) {
+							AssetEntry oldAssetEntry =
+									assetEntryLocalService.fetchEntry(
+										JournalArticle.class.getName(),
+										article.getResourcePrimKey());
+
+							boolean tagsOrCategoriesChanged =
+								checkCategoryTagsChanges(
+									oldAssetEntry, assetCategoryIds,
+									assetTagNames);
+
+							reindexAllVersions = tagsOrCategoriesChanged;
+						}
 
 						AssetEntry assetEntry =
 							assetEntryLocalService.updateEntry(
@@ -5390,6 +5422,9 @@ public class JournalArticleLocalServiceImpl
 			else if (oldStatus == WorkflowConstants.STATUS_APPROVED) {
 				updatePreviousApprovedArticle(article);
 			}
+
+			ServiceContext sc = ServiceContextThreadLocal.getServiceContext();
+			sc.setAttribute("reindexAllVersions", reindexAllVersions);
 		}
 
 		if ((article.getClassNameId() ==
@@ -5776,6 +5811,57 @@ public class JournalArticleLocalServiceImpl
 			sendEmail(
 				article, articleURL, preferences, "review",
 				new ServiceContext());
+		}
+	}
+
+	protected boolean checkCategoryTagsChanges(
+			AssetEntry oldAssetEntry, long[] assetCategoryIds,
+			String[] assetTagNames)
+		throws PortalException, SystemException {
+
+		long[] oldAssetCategoryIds;
+
+		String[] oldAssetTagNames;
+
+		if (oldAssetEntry == null) {
+			oldAssetCategoryIds = new long[0];
+
+			oldAssetTagNames = new String[0];
+		}
+		else {
+			oldAssetCategoryIds = oldAssetEntry.getCategoryIds();
+
+			oldAssetTagNames = oldAssetEntry.getTagNames();
+		}
+		
+		if(assetCategoryIds == null) {
+			assetCategoryIds = new long[0];
+		}
+		
+		if(assetTagNames == null) {
+			assetTagNames = new String[0];
+		}
+
+		if ((oldAssetTagNames.length != assetTagNames.length) ||
+			(oldAssetCategoryIds.length!= assetCategoryIds.length)) {
+				return true;
+		}
+		else if (assetTagNames.length == 0 && assetCategoryIds.length == 0)
+		{
+			return false;
+		}
+
+		Set<String> newTagsSet = SetUtil.fromArray(assetTagNames);
+		Set<String> oldTagsSet = SetUtil.fromArray(oldAssetTagNames);
+
+		if (!newTagsSet.equals(oldTagsSet)) {
+			return true;
+		}
+		else {
+			Set<Long> newCategoriesSet = SetUtil.fromArray(assetCategoryIds);
+			Set<Long> oldCategoriesSet = SetUtil.fromArray(oldAssetCategoryIds);
+
+			return !newCategoriesSet.equals(oldCategoriesSet);
 		}
 	}
 
