@@ -55,20 +55,11 @@ Collections.sort(customAttributesDisplays, new CustomAttributesDisplayComparator
 		</portlet:renderURL>
 
 		<liferay-ui:search-container-column-text
-			buffer="buffer"
 			href="<%= rowURL %>"
 			name="resource"
 		>
-
-			<%
-			buffer.append("<img alt=\"");
-			buffer.append(LanguageUtil.get(locale, "icon"));
-			buffer.append("\" class=\"custom-attribute-icon\" src=\"");
-			buffer.append(customAttributesDisplay.getIconPath(themeDisplay));
-			buffer.append("\">");
-			buffer.append(ResourceActionsUtil.getModelResource(locale, customAttributesDisplay.getClassName()));
-			%>
-
+			<i class="<%= customAttributesDisplay.getIconCssClass() %>"></i>
+			<%= ResourceActionsUtil.getModelResource(locale, customAttributesDisplay.getClassName()) %>
 		</liferay-ui:search-container-column-text>
 
 		<liferay-ui:search-container-column-text
