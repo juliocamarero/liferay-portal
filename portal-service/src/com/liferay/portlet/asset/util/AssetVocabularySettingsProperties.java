@@ -16,6 +16,7 @@ package com.liferay.portlet.asset.util;
 
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
@@ -60,6 +61,45 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 		String propertyValue = getProperty(KEY_MULTIVALUED);
 
 		return GetterUtil.getBoolean(propertyValue, true);
+	}
+
+	public void setAssetRendererFactories(
+		long[] classNameIds, boolean[] areRequired) {
+
+		Set<Long> selectedClassNameIds = new LinkedHashSet<Long>();
+		Set<Long> requiredClassNameIds = new LinkedHashSet<Long>();
+
+		for (int index : indexes) {
+			long classNameId = ParamUtil.getLong(
+				actionRequest, "classNameId" + index);
+
+			boolean required = ParamUtil.getBoolean(
+				actionRequest, "required" + index);
+
+			if (classNameId == AssetCategoryConstants.ALL_CLASS_NAME_IDS) {
+				selectedClassNameIds.clear();
+				selectedClassNameIds.add(classNameId);
+
+				if (required) {
+					requiredClassNameIds.clear();
+					requiredClassNameIds.add(classNameId);
+				}
+
+				break;
+			}
+			else {
+				selectedClassNameIds.add(classNameId);
+
+				if (required) {
+					requiredClassNameIds.add(classNameId);
+				}
+			}
+		}
+
+		settingsProperties.setProperty(
+			"selectedClassNameIds", StringUtil.merge(selectedClassNameIds));
+		settingsProperties.setProperty(
+			"requiredClassNameIds", StringUtil.merge(requiredClassNameIds));
 	}
 
 	public void setMultiValued(boolean multiValued) {
