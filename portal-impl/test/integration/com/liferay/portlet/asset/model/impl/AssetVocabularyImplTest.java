@@ -58,11 +58,11 @@ public class AssetVocabularyImplTest {
 		AssetCategory category2 = AssetTestUtil.addCategory(
 			_group.getGroupId(), _vocabulary.getVocabularyId());
 
-		long[] selectedCategories =
+		long[] selectedCategoryIds =
 			new long[]{category1.getCategoryId(), category2.getCategoryId()};
 
 		Assert.assertTrue(
-			_vocabulary.hasMoreThanOneCategorySelected(selectedCategories));
+			_vocabulary.hasMoreThanOneCategorySelected(selectedCategoryIds));
 	}
 
 	@Test
@@ -75,10 +75,10 @@ public class AssetVocabularyImplTest {
 		AssetTestUtil.addCategory(
 			_group.getGroupId(), _vocabulary.getVocabularyId());
 
-		long[] selectedCategories = new long[]{};
+		long[] selectedCategoryIds = new long[]{};
 
 		Assert.assertFalse(
-			_vocabulary.hasMoreThanOneCategorySelected(selectedCategories));
+			_vocabulary.hasMoreThanOneCategorySelected(selectedCategoryIds));
 	}
 
 	@Test
@@ -91,10 +91,10 @@ public class AssetVocabularyImplTest {
 		AssetTestUtil.addCategory(
 			_group.getGroupId(), _vocabulary.getVocabularyId());
 
-		long[] selectedCategories = new long[]{category1.getCategoryId()};
+		long[] selectedCategoryIds = new long[]{category1.getCategoryId()};
 
 		Assert.assertFalse(
-			_vocabulary.hasMoreThanOneCategorySelected(selectedCategories));
+			_vocabulary.hasMoreThanOneCategorySelected(selectedCategoryIds));
 	}
 
 	@Test
@@ -115,11 +115,11 @@ public class AssetVocabularyImplTest {
 		AssetCategory category22 = AssetTestUtil.addCategory(
 			_group.getGroupId(), vocabulary2.getVocabularyId());
 
-		long[] selectedCategories =
+		long[] selectedCategoryIds =
 			new long[]{category21.getCategoryId(), category22.getCategoryId()};
 
 		Assert.assertFalse(
-			_vocabulary.hasMoreThanOneCategorySelected(selectedCategories));
+			_vocabulary.hasMoreThanOneCategorySelected(selectedCategoryIds));
 	}
 
 	@Test
@@ -148,10 +148,10 @@ public class AssetVocabularyImplTest {
 		AssetCategory category = AssetTestUtil.addCategory(
 			_group.getGroupId(), _vocabulary.getVocabularyId());
 
-		long[] selectedCategories = new long[]{category.getCategoryId()};
+		long[] selectedCategoryIds = new long[]{category.getCategoryId()};
 
 		Assert.assertFalse(
-			_vocabulary.isMissingRequiredCategory(1, selectedCategories));
+			_vocabulary.isMissingRequiredCategory(1, selectedCategoryIds));
 	}
 
 	@Test
@@ -160,10 +160,10 @@ public class AssetVocabularyImplTest {
 
 		_vocabulary = _addVocabularyAssociatedToAsset(1, true);
 
-		long[] selectedCategories = new long[]{1};
+		long[] selectedCategoryIds = new long[]{1};
 
 		Assert.assertTrue(
-			_vocabulary.isMissingRequiredCategory(1, selectedCategories));
+			_vocabulary.isMissingRequiredCategory(1, selectedCategoryIds));
 	}
 
 	@Test
@@ -172,13 +172,13 @@ public class AssetVocabularyImplTest {
 
 		_vocabulary = _addVocabularyAssociatedToAsset(1, false);
 
-		AssetCategory category = AssetTestUtil.addCategory(
+		AssetTestUtil.addCategory(
 			_group.getGroupId(), _vocabulary.getVocabularyId());
 
-		long[] selectedCategories = new long[]{1};
+		long[] selectedCategoryIds = new long[]{1};
 
 		Assert.assertFalse(
-			_vocabulary.isMissingRequiredCategory(1, selectedCategories));
+			_vocabulary.isMissingRequiredCategory(1, selectedCategoryIds));
 	}
 
 	@Test
@@ -187,13 +187,13 @@ public class AssetVocabularyImplTest {
 
 		_vocabulary = _addVocabularyAssociatedToAsset(1, true);
 
-		AssetCategory category = AssetTestUtil.addCategory(
+		AssetTestUtil.addCategory(
 			_group.getGroupId(), _vocabulary.getVocabularyId());
 
-		long[] selectedCategories = new long[]{1};
+		long[] selectedCategoryIds = new long[]{1};
 
 		Assert.assertTrue(
-			_vocabulary.isMissingRequiredCategory(1, selectedCategories));
+			_vocabulary.isMissingRequiredCategory(1, selectedCategoryIds));
 	}
 
 	@Test
@@ -239,14 +239,14 @@ public class AssetVocabularyImplTest {
 	}
 
 	private AssetVocabulary _addVocabularyAssociatedToAsset(
-			long className, boolean isRequired)
+			long classNameId, boolean isRequired)
 		throws Exception {
 
-		long[] classNames = new long[]{className};
+		long[] classNameIds = new long[]{classNameId};
 		boolean[] required = new boolean[]{isRequired};
 
 		return AssetTestUtil.addVocabularyAssociatedToAssets(
-			_group.getGroupId(), true, classNames, required);
+			_group.getGroupId(), true, classNameIds, required);
 	}
 
 	private Group _group;
