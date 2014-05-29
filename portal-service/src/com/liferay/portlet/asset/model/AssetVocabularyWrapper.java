@@ -19,6 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelWrapper;
+import com.liferay.portlet.asset.util.AssetVocabularySettingsModelHelper;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -814,7 +815,7 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 	}
 
 	@Override
-	public com.liferay.portlet.asset.util.AssetVocabularySettingsProperties getSettingsProperties() {
+	public AssetVocabularySettingsModelHelper getSettingsProperties() {
 		return _assetVocabulary.getSettingsProperties();
 	}
 
@@ -859,7 +860,7 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 
 	@Override
 	public void setSettingsProperties(
-		com.liferay.portlet.asset.util.AssetVocabularySettingsProperties settingsProperties) {
+		AssetVocabularySettingsModelHelper settingsProperties) {
 		_assetVocabulary.setSettingsProperties(settingsProperties);
 	}
 
