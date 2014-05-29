@@ -186,7 +186,7 @@ public class BreadcrumbUtil {
 		}
 
 		List<BreadcrumbEntry> breadcrumbEntries =
-			new ArrayList<BreadcrumbEntry>();
+			new ArrayList<BreadcrumbEntry>(portletBreadcrumbEntries.size());
 
 		for (int i = 0; i < portletBreadcrumbEntries.size(); i++) {
 			BreadcrumbEntry portletBreadcrumbEntry =
