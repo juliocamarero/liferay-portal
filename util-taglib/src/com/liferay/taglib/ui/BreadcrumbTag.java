@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.taglib.aui.AUIUtil;
@@ -141,25 +140,14 @@ public class BreadcrumbTag extends IncludeTag {
 		throws Exception {
 
 		List<BreadcrumbEntry> breadcrumbEntries =
-			BreadcrumbUtil.getPortletBreadcrumbEntries(request);
+			BreadcrumbUtil.getPortletBreadcrumbEntries(
+				request, _showCurrentPortlet);
 
 		for (BreadcrumbEntry breadcrumbEntry : breadcrumbEntries) {
 			if (!_showCurrentGroup) {
 				String siteGroupName = themeDisplay.getSiteGroupName();
 
 				if (siteGroupName.equals(breadcrumbEntry.getTitle())) {
-					continue;
-				}
-			}
-
-			if (!_showCurrentPortlet) {
-				PortletDisplay portletDisplay =
-					themeDisplay.getPortletDisplay();
-
-				String portletTitle = PortalUtil.getPortletTitle(
-					portletDisplay.getId(), themeDisplay.getUser());
-
-				if (portletTitle.equals(breadcrumbEntry.getTitle())) {
 					continue;
 				}
 			}

@@ -33,6 +33,7 @@ import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
@@ -59,6 +60,8 @@ public class BreadcrumbUtil {
 	public static final int ENTRY_TYPE_PARENT_GROUP = 4;
 
 	public static final int ENTRY_TYPE_PORTLET = 5;
+
+	public static final int ENTRY_TYPE_PORTLET_EXCEPT_CURRENT = 6;
 
 	public static List<BreadcrumbEntry> getBreadcrumbEntries(
 			HttpServletRequest request, int[] types)
@@ -97,8 +100,15 @@ public class BreadcrumbUtil {
 			entries.addAll(getLayoutBreadcrumbEntries(themeDisplay));
 		}
 
-		if (hasAll || ArrayUtil.contains(types, ENTRY_TYPE_PORTLET)) {
-			entries.addAll(getPortletBreadcrumbEntries(request));
+		boolean includePortletExceptCurrent = ArrayUtil.contains(
+			types, ENTRY_TYPE_PORTLET_EXCEPT_CURRENT);
+
+		if (hasAll || includePortletExceptCurrent ||
+			ArrayUtil.contains(types, ENTRY_TYPE_PORTLET)) {
+
+			entries.addAll(
+				getPortletBreadcrumbEntries(
+					request, !includePortletExceptCurrent));
 		}
 
 		return entries;
@@ -176,7 +186,19 @@ public class BreadcrumbUtil {
 	}
 
 	public static List<BreadcrumbEntry> getPortletBreadcrumbEntries(
-		HttpServletRequest request) {
+		HttpServletRequest request, boolean includeCurrentPortletEntries) {
+
+		String currentPortletTitle = null;
+
+		if (!includeCurrentPortletEntries) {
+			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+			currentPortletTitle = PortalUtil.getPortletTitle(
+				portletDisplay.getId(), themeDisplay.getUser());
+		}
 
 		List<BreadcrumbEntry> portletBreadcrumbEntries =
 			PortalUtil.getPortletBreadcrumbs(request);
@@ -191,6 +213,12 @@ public class BreadcrumbUtil {
 		for (int i = 0; i < portletBreadcrumbEntries.size(); i++) {
 			BreadcrumbEntry portletBreadcrumbEntry =
 				portletBreadcrumbEntries.get(i);
+
+			if (!includeCurrentPortletEntries &&
+				currentPortletTitle.equals(portletBreadcrumbEntry.getTitle())) {
+
+				continue;
+			}
 
 			BreadcrumbEntry breadcrumbEntry = new BreadcrumbEntry();
 
