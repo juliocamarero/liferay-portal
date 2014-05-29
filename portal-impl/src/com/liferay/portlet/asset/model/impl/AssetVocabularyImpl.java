@@ -51,7 +51,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 		AssetVocabularySettingsProperties settingsProperties =
 			getSettingsProperties();
 
-		return settingsProperties.getRequiredAssetRendererFactoryClassNameIds();
+		return settingsProperties.getRequiredClassNameIds();
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 		AssetVocabularySettingsProperties settingsProperties =
 			getSettingsProperties();
 
-		return settingsProperties.getAssetRendererFactoryClassNameIds();
+		return settingsProperties.getClassNameIds();
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 		AssetVocabularySettingsProperties settingsProperties =
 			getSettingsProperties();
 
-		return settingsProperties.hasAssetRendererFactory(classNameId);
+		return settingsProperties.hasClassNameId(classNameId);
 	}
 
 	@Override
@@ -208,7 +208,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 		AssetVocabularySettingsProperties settingsProperties =
 			getSettingsProperties();
 
-		return settingsProperties.isAssetRendererFactoryRequired(classNameId);
+		return settingsProperties.isClassNameIdRequired(classNameId);
 	}
 
 	@Override

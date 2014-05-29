@@ -25,22 +25,22 @@ import org.junit.Test;
 public class AssetVocabularySettingsPropertiesTest {
 
 	@Test
-	public void testHasAssetRendererFactoryAll() {
+	public void testHasClassNameIdAll() {
 		_settingProperties = getSettingProperties(
 			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, true);
 
-		Assert.assertTrue(_settingProperties.hasAssetRendererFactory(1));
+		Assert.assertTrue(_settingProperties.hasClassNameId(1));
 
-		Assert.assertTrue(_settingProperties.hasAssetRendererFactory(2));
+		Assert.assertTrue(_settingProperties.hasClassNameId(2));
 	}
 
 	@Test
-	public void testHasAssetRendererFactoryClassName() {
+	public void testHasClassNameIdClassName() {
 		_settingProperties = getSettingProperties(true, 1, true);
 
-		Assert.assertTrue(_settingProperties.hasAssetRendererFactory(1));
+		Assert.assertTrue(_settingProperties.hasClassNameId(1));
 
-		Assert.assertFalse(_settingProperties.hasAssetRendererFactory(2));
+		Assert.assertFalse(_settingProperties.hasClassNameId(2));
 	}
 
 	@Test
@@ -58,57 +58,51 @@ public class AssetVocabularySettingsPropertiesTest {
 	}
 
 	@Test
-	public void testIsRequiredAllIsNotRequired() {
+	public void testIsClassNameIdRequiredAllIsNotRequired() {
 		_settingProperties = getSettingProperties(
 			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, false);
 
-		Assert.assertFalse(
-			_settingProperties.isAssetRendererFactoryRequired(1));
+		Assert.assertFalse(_settingProperties.isClassNameIdRequired(1));
 
-		Assert.assertFalse(
-			_settingProperties.isAssetRendererFactoryRequired(2));
+		Assert.assertFalse(_settingProperties.isClassNameIdRequired(2));
 	}
 
 	@Test
-	public void testIsRequiredAllIsRequired() {
+	public void testIsClassNameIdRequiredAllIsRequired() {
 		_settingProperties = getSettingProperties(
 			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, true);
 
-		Assert.assertTrue(_settingProperties.isAssetRendererFactoryRequired(1));
+		Assert.assertTrue(_settingProperties.isClassNameIdRequired(1));
 
-		Assert.assertTrue(_settingProperties.isAssetRendererFactoryRequired(2));
+		Assert.assertTrue(_settingProperties.isClassNameIdRequired(2));
 	}
 
 	@Test
-	public void testIsRequiredClassNameIsNotRequired() {
+	public void testIsClassNameIdRequiredClassNameIsNotRequired() {
 		_settingProperties = getSettingProperties(true, 1, false);
 
-		Assert.assertFalse(
-			_settingProperties.isAssetRendererFactoryRequired(1));
+		Assert.assertFalse(_settingProperties.isClassNameIdRequired(1));
 
-		Assert.assertFalse(
-			_settingProperties.isAssetRendererFactoryRequired(2));
+		Assert.assertFalse(_settingProperties.isClassNameIdRequired(2));
 	}
 
 	@Test
-	public void testIsRequiredClassNameIsRequired() {
+	public void testIsClassNameIdRequiredClassNameIsRequired() {
 		_settingProperties = getSettingProperties(true, 1, true);
 
-		Assert.assertTrue(_settingProperties.isAssetRendererFactoryRequired(1));
+		Assert.assertTrue(_settingProperties.isClassNameIdRequired(1));
 
-		Assert.assertFalse(
-			_settingProperties.isAssetRendererFactoryRequired(2));
+		Assert.assertFalse(_settingProperties.isClassNameIdRequired(2));
 	}
 
 	@Test
-	public void testIsRequiredClassNameOnOverwrite() {
+	public void testIsClassNameIdRequiredOnOverwrite() {
 		_settingProperties = getSettingProperties(true, 1, true);
 
-		_settingProperties.setAssetRendererFactories(
-			new long[] {1}, new boolean[] {false});
+		_settingProperties.setClassNameIds(
+			new long[]{1}, new boolean[]{false});
 
-		Assert.assertFalse(
-			_settingProperties.isAssetRendererFactoryRequired(1));
+		Assert.assertFalse(_settingProperties.isClassNameIdRequired(1));
 	}
 
 	protected AssetVocabularySettingsProperties getSettingProperties(
@@ -128,7 +122,7 @@ public class AssetVocabularySettingsPropertiesTest {
 
 		settingsProperties.setMultiValued(multiValued);
 
-		settingsProperties.setAssetRendererFactories(classNameIds, required);
+		settingsProperties.setClassNameIds(classNameIds, required);
 
 		return settingsProperties;
 	}
