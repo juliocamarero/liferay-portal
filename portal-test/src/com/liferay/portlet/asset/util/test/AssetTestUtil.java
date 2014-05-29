@@ -27,7 +27,7 @@ import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetVocabularyServiceUtil;
-import com.liferay.portlet.asset.util.AssetVocabularySettingsProperties;
+import com.liferay.portlet.asset.util.AssetVocabularySettingsModelHelper;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -114,11 +114,10 @@ public class AssetTestUtil {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(groupId, userId);
 
-		AssetVocabularySettingsProperties settingsProperties =
-			new AssetVocabularySettingsProperties();
+		AssetVocabularySettingsModelHelper settingsProperties =
+			new AssetVocabularySettingsModelHelper();
 
 		settingsProperties.setMultiValued(multiValued);
-
 		settingsProperties.setClassNameIds(assetClassNameIds, assetsRequired);
 
 		AssetVocabulary vocabulary = AssetVocabularyServiceUtil.addVocabulary(
