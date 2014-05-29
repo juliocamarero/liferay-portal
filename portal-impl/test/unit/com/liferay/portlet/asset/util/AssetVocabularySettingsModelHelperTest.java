@@ -42,20 +42,6 @@ public class AssetVocabularySettingsModelHelperTest {
 	}
 
 	@Test
-	public void testIsMultiValuedFalse() {
-		_settingProperties = getSettingProperties(false, 1, true);
-
-		Assert.assertFalse(_settingProperties.isMultiValued());
-	}
-
-	@Test
-	public void testIsMultiValuedTrue() {
-		_settingProperties = getSettingProperties(true, 1, true);
-
-		Assert.assertTrue(_settingProperties.isMultiValued());
-	}
-
-	@Test
 	public void testIsClassNameIdRequiredAllIsNotRequired() {
 		_settingProperties = getSettingProperties(
 			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, false);
@@ -93,10 +79,23 @@ public class AssetVocabularySettingsModelHelperTest {
 	public void testIsClassNameIdRequiredOnOverwrite() {
 		_settingProperties = getSettingProperties(true, 1, true);
 
-		_settingProperties.setClassNameIds(
-			new long[]{1}, new boolean[]{false});
+		_settingProperties.setClassNameIds(new long[]{1}, new boolean[]{false});
 
 		Assert.assertFalse(_settingProperties.isClassNameIdRequired(1));
+	}
+
+	@Test
+	public void testIsMultiValuedFalse() {
+		_settingProperties = getSettingProperties(false, 1, true);
+
+		Assert.assertFalse(_settingProperties.isMultiValued());
+	}
+
+	@Test
+	public void testIsMultiValuedTrue() {
+		_settingProperties = getSettingProperties(true, 1, true);
+
+		Assert.assertTrue(_settingProperties.isMultiValued());
 	}
 
 	protected AssetVocabularySettingsModelHelper getSettingProperties(
