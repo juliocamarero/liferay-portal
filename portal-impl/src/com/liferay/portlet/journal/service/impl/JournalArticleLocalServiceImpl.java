@@ -6255,8 +6255,6 @@ public class JournalArticleLocalServiceImpl
 	protected Locale getDefaultLocale(
 		String content, ServiceContext serviceContext) {
 
-		Locale locale = LocaleUtil.getSiteDefault();
-
 		String defaultLanguageId = ParamUtil.getString(
 			serviceContext, "defaultLanguageId");
 
@@ -6265,10 +6263,10 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		if (Validator.isNotNull(defaultLanguageId)) {
-			locale = LocaleUtil.fromLanguageId(defaultLanguageId);
+			return LocaleUtil.fromLanguageId(defaultLanguageId);
 		}
 
-		return locale;
+		return LocaleUtil.getSiteDefault();
 	}
 
 	protected JournalArticle getFirstArticle(
