@@ -17,7 +17,6 @@ package com.liferay.portlet.asset.model;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.model.PersistedModel;
-import com.liferay.portlet.asset.util.AssetVocabularySettingsModelHelper;
 
 /**
  * The extended model interface for the AssetVocabulary service. Represents a row in the &quot;AssetVocabulary&quot; database table, with each column mapped to a property of this class.
@@ -42,7 +41,12 @@ public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {
 
 	public long[] getSelectedClassNameIds();
 
-	public AssetVocabularySettingsModelHelper getSettingsProperties();
+	/**
+	* @deprecated As of 7.0.0, with no direct replacement because the settings
+	object shouldn't be manipulated outside of the model layer
+	*/
+	@java.lang.Deprecated()
+	public com.liferay.portal.kernel.util.UnicodeProperties getSettingsProperties();
 
 	public java.lang.String getUnambiguousTitle(
 		java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> vocabularies,
@@ -63,6 +67,11 @@ public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {
 
 	public boolean isRequired(long classNameId);
 
+	/**
+	* @deprecated As of 7.0.0, with no direct replacement because the settings
+	object shouldn't be manipulated outside of the model layer
+	*/
+	@java.lang.Deprecated()
 	public void setSettingsProperties(
-		AssetVocabularySettingsModelHelper settingsProperties);
+		com.liferay.portal.kernel.util.UnicodeProperties settingsProperties);
 }
