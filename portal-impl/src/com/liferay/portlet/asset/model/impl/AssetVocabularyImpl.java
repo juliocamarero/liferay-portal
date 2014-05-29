@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -72,8 +73,13 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement because the settings
+	 * object shouldn't be manipulated outside of the model layer
+	 */
+	@Deprecated
 	@Override
-	public AssetVocabularySettingsModelHelper getSettingsProperties() {
+	public UnicodeProperties getSettingsProperties() {
 		if (_settingsProperties == null) {
 			_settingsProperties = new AssetVocabularySettingsModelHelper(
 				super.getSettings());
@@ -218,9 +224,13 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 		super.setSettings(settings);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement because the settings
+	 * object shouldn't be manipulated outside of the model layer
+	 */
+	@Deprecated
 	@Override
-	public void setSettingsProperties(
-		AssetVocabularySettingsModelHelper settingsProperties) {
+	public void setSettingsProperties(UnicodeProperties settingsProperties) {
 
 		_settingsProperties = settingsProperties;
 
