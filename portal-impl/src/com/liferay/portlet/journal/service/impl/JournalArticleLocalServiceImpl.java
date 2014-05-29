@@ -5838,16 +5838,16 @@ public class JournalArticleLocalServiceImpl
 
 		String fieldName = ddmFormField.getName();
 
-		boolean fieldWasFound = false;
+		boolean fieldFound = false;
 
 		for (Element childElement : contentElement.elements()) {
 			if (fieldName.equals(
 					childElement.attributeValue("name", StringPool.BLANK))) {
 
-				fieldWasFound = true;
+				fieldFound = true;
 
-				for (DDMFormField childDDMFormField
-					: ddmFormField.getNestedDDMFormFields()) {
+				for (DDMFormField childDDMFormField :
+						ddmFormField.getNestedDDMFormFields()) {
 
 					checkStructureField(childDDMFormField, childElement);
 				}
@@ -5856,7 +5856,7 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 
-		if (!fieldWasFound) {
+		if (!fieldFound) {
 			String contentElementType = contentElement.attributeValue(
 				"type", StringPool.BLANK);
 

@@ -44,20 +44,20 @@ public class DDMFormXSDSerializerImpl implements DDMFormXSDSerializer {
 	public DDMForm deserialize(String serializedDDMForm)
 		throws PortalException {
 
-		DDMForm ddmForm = new DDMForm();
-
 		try {
+			DDMForm ddmForm = new DDMForm();
+
 			Document document = SAXReaderUtil.read(serializedDDMForm);
 
 			setDDMFormAvailableLocales(document.getRootElement(), ddmForm);
 			setDDMFormDefaultLocale(document.getRootElement(), ddmForm);
 			setDDMFormFields(document.getRootElement(), ddmForm);
+
+			return ddmForm;
 		}
 		catch (DocumentException de) {
 			throw new PortalException(de);
 		}
-
-		return ddmForm;
 	}
 
 	protected void addOptionValueLabels(
