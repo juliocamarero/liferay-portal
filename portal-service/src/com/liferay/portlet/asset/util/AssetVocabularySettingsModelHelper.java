@@ -24,16 +24,16 @@ import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class AssetVocabularySettingsProperties extends UnicodeProperties {
+public class AssetVocabularySettingsModelHelper extends UnicodeProperties {
 
 	public static final long[] DEFAULT_SELECTED_CLASSNAME_IDS =
 		new long[] {AssetCategoryConstants.ALL_CLASS_NAME_IDS};
 
-	public AssetVocabularySettingsProperties() {
+	public AssetVocabularySettingsModelHelper() {
 		super(true);
 	}
 
-	public AssetVocabularySettingsProperties(String properties) {
+	public AssetVocabularySettingsModelHelper(String properties) {
 		this();
 
 		fastLoad(properties);
