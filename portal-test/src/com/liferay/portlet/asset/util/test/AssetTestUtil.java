@@ -119,8 +119,7 @@ public class AssetTestUtil {
 
 		settingsProperties.setMultiValued(multiValued);
 
-		settingsProperties.setAssetRendererFactories(
-			assetClassNameIds, assetsRequired);
+		settingsProperties.setClassNameIds(assetClassNameIds, assetsRequired);
 
 		AssetVocabulary vocabulary = AssetVocabularyServiceUtil.addVocabulary(
 			RandomTestUtil.randomString(), titleMap, descriptionMap,
