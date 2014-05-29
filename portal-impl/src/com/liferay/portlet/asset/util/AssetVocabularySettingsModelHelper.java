@@ -24,6 +24,15 @@ import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * <p>
+ * This class is intended to handle the settings associated to one asset
+ * vocabulary model instead of handling the properties using generic
+ * UnicodeProperties class.
+ * </p>
+ *
+ * @author José Manuel Navarro
+ */
 public class AssetVocabularySettingsModelHelper extends UnicodeProperties {
 
 	public static final long[] DEFAULT_SELECTED_CLASSNAME_IDS =
