@@ -113,7 +113,7 @@ public class EditVocabularyAction extends PortletAction {
 				actionRequest, "required" + index);
 		}
 
-		settingsProperties.setAssetRendererFactories(classNameIds, areRequired);
+		settingsProperties.setClassNameIds(classNameIds, areRequired);
 
 		return settingsProperties;
 	}

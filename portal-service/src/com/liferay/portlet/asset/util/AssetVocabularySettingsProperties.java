@@ -39,7 +39,7 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 		fastLoad(properties);
 	}
 
-	public long[] getAssetRendererFactoryClassNameIds() {
+	public long[] getClassNameIds() {
 		String propertyValue = getProperty(SELECTED_CLASS_NAME_IDS);
 
 		if (Validator.isNull(propertyValue)) {
@@ -49,7 +49,7 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 		return StringUtil.split(propertyValue, 0L);
 	}
 
-	public long[] getRequiredAssetRendererFactoryClassNameIds() {
+	public long[] getRequiredClassNameIds() {
 		String propertyValue = getProperty(REQUIRED_CLASS_NAME_IDS);
 
 		if (Validator.isNull(propertyValue)) {
@@ -59,14 +59,12 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 		return StringUtil.split(propertyValue, 0L);
 	}
 
-	public boolean hasAssetRendererFactory(long classNameId) {
-		return isClassNameIdSpecified(
-			classNameId, getAssetRendererFactoryClassNameIds());
+	public boolean hasClassNameId(long classNameId) {
+		return isClassNameIdSpecified(classNameId, getClassNameIds());
 	}
 
-	public boolean isAssetRendererFactoryRequired(long classNameId) {
-		return isClassNameIdSpecified(
-			classNameId, getRequiredAssetRendererFactoryClassNameIds());
+	public boolean isClassNameIdRequired(long classNameId) {
+		return isClassNameIdSpecified(classNameId, getRequiredClassNameIds());
 	}
 
 	public boolean isMultiValued() {
@@ -75,8 +73,7 @@ public class AssetVocabularySettingsProperties extends UnicodeProperties {
 		return GetterUtil.getBoolean(propertyValue, true);
 	}
 
-	public void setAssetRendererFactories(
-		long[] classNameIds, boolean[] areRequired) {
+	public void setClassNameIds(long[] classNameIds, boolean[] areRequired) {
 
 		Set<Long> selectedClassNameIds = new LinkedHashSet<Long>();
 		Set<Long> requiredClassNameIds = new LinkedHashSet<Long>();
