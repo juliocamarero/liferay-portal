@@ -30,7 +30,6 @@ public class AssetVocabularySettingsPropertiesTest {
 			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, true);
 
 		Assert.assertTrue(_settingProperties.hasClassNameId(1));
-
 		Assert.assertTrue(_settingProperties.hasClassNameId(2));
 	}
 
@@ -39,7 +38,6 @@ public class AssetVocabularySettingsPropertiesTest {
 		_settingProperties = getSettingProperties(true, 1, true);
 
 		Assert.assertTrue(_settingProperties.hasClassNameId(1));
-
 		Assert.assertFalse(_settingProperties.hasClassNameId(2));
 	}
 
@@ -63,7 +61,6 @@ public class AssetVocabularySettingsPropertiesTest {
 			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, false);
 
 		Assert.assertFalse(_settingProperties.isClassNameIdRequired(1));
-
 		Assert.assertFalse(_settingProperties.isClassNameIdRequired(2));
 	}
 
@@ -73,7 +70,6 @@ public class AssetVocabularySettingsPropertiesTest {
 			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, true);
 
 		Assert.assertTrue(_settingProperties.isClassNameIdRequired(1));
-
 		Assert.assertTrue(_settingProperties.isClassNameIdRequired(2));
 	}
 
@@ -82,7 +78,6 @@ public class AssetVocabularySettingsPropertiesTest {
 		_settingProperties = getSettingProperties(true, 1, false);
 
 		Assert.assertFalse(_settingProperties.isClassNameIdRequired(1));
-
 		Assert.assertFalse(_settingProperties.isClassNameIdRequired(2));
 	}
 
@@ -91,7 +86,6 @@ public class AssetVocabularySettingsPropertiesTest {
 		_settingProperties = getSettingProperties(true, 1, true);
 
 		Assert.assertTrue(_settingProperties.isClassNameIdRequired(1));
-
 		Assert.assertFalse(_settingProperties.isClassNameIdRequired(2));
 	}
 
@@ -120,9 +114,8 @@ public class AssetVocabularySettingsPropertiesTest {
 		AssetVocabularySettingsProperties settingsProperties =
 			new AssetVocabularySettingsProperties();
 
-		settingsProperties.setMultiValued(multiValued);
-
 		settingsProperties.setClassNameIds(classNameIds, required);
+		settingsProperties.setMultiValued(multiValued);
 
 		return settingsProperties;
 	}
