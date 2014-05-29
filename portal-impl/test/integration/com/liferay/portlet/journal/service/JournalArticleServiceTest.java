@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.ClassNameServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -486,7 +485,7 @@ public class JournalArticleServiceTest {
 
 	protected void checkArticleMatchesStructure(
 			JournalArticle article, DDMStructure ddmStructure)
-		throws DocumentException, PortalException {
+		throws PortalException {
 
 		new JournalArticleLocalServiceImpl() {
 
