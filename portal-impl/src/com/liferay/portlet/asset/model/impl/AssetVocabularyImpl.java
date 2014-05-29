@@ -50,7 +50,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Override
 	public long[] getRequiredClassNameIds() {
 		AssetVocabularySettingsModelHelper settingsProperties =
-			getSettingsProperties();
+			getSettingsModelHelper();
 
 		return settingsProperties.getRequiredClassNameIds();
 	}
@@ -58,7 +58,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Override
 	public long[] getSelectedClassNameIds() {
 		AssetVocabularySettingsModelHelper settingsProperties =
-			getSettingsProperties();
+			getSettingsModelHelper();
 
 		return settingsProperties.getClassNameIds();
 	}
@@ -80,12 +80,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Deprecated
 	@Override
 	public UnicodeProperties getSettingsProperties() {
-		if (_settingsProperties == null) {
-			_settingsProperties = new AssetVocabularySettingsModelHelper(
-				super.getSettings());
-		}
-
-		return _settingsProperties;
+		return getSettingsModelHelper();
 	}
 
 	@Override
@@ -173,7 +168,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Override
 	public boolean isAssociatedToAssetRendererFactory(long classNameId) {
 		AssetVocabularySettingsModelHelper settingsProperties =
-			getSettingsProperties();
+			getSettingsModelHelper();
 
 		return settingsProperties.hasClassNameId(classNameId);
 	}
@@ -204,7 +199,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Override
 	public boolean isMultiValued() {
 		AssetVocabularySettingsModelHelper settingsProperties =
-			getSettingsProperties();
+			getSettingsModelHelper();
 
 		return settingsProperties.isMultiValued();
 	}
@@ -212,7 +207,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Override
 	public boolean isRequired(long classNameId) {
 		AssetVocabularySettingsModelHelper settingsProperties =
-			getSettingsProperties();
+			getSettingsModelHelper();
 
 		return settingsProperties.isClassNameIdRequired(classNameId);
 	}
@@ -231,10 +226,24 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Deprecated
 	@Override
 	public void setSettingsProperties(UnicodeProperties settingsProperties) {
-
-		_settingsProperties = settingsProperties;
-
 		super.setSettings(settingsProperties.toString());
+
+		if (settingsProperties instanceof AssetVocabularySettingsModelHelper) {
+			_settingsProperties =
+				(AssetVocabularySettingsModelHelper)settingsProperties;
+		}
+		else {
+			_settingsProperties = getSettingsModelHelper();
+		}
+	}
+
+	protected AssetVocabularySettingsModelHelper getSettingsModelHelper() {
+		if (_settingsProperties == null) {
+			_settingsProperties = new AssetVocabularySettingsModelHelper(
+				super.getSettings());
+		}
+
+		return _settingsProperties;
 	}
 
 	private AssetVocabularySettingsModelHelper _settingsProperties;
