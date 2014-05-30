@@ -54,10 +54,6 @@ public class BreadcrumbTag extends IncludeTag {
 		_showCurrentGroup = showCurrentGroup;
 	}
 
-	public void setShowCurrentPortlet(boolean showCurrentPortlet) {
-		_showCurrentPortlet = showCurrentPortlet;
-	}
-
 	public void setShowGuestGroup(boolean showGuestGroup) {
 		_showGuestGroup = showGuestGroup;
 	}
@@ -152,18 +148,6 @@ public class BreadcrumbTag extends IncludeTag {
 				}
 			}
 
-			if (!_showCurrentPortlet) {
-				PortletDisplay portletDisplay =
-					themeDisplay.getPortletDisplay();
-
-				String portletTitle = PortalUtil.getPortletTitle(
-					portletDisplay.getId(), themeDisplay.getUser());
-
-				if (portletTitle.equals(breadcrumbEntry.getTitle())) {
-					continue;
-				}
-			}
-
 			sb.append("<li>");
 
 			if (Validator.isNotNull(breadcrumbEntry.getURL())) {
@@ -207,7 +191,6 @@ public class BreadcrumbTag extends IncludeTag {
 	protected void cleanUp() {
 		_displayStyle = _DISPLAY_STYLE;
 		_showCurrentGroup = true;
-		_showCurrentPortlet = true;
 		_showGuestGroup = _SHOW_GUEST_GROUP;
 		_showLayout = true;
 		_showParentGroups = null;
@@ -347,9 +330,6 @@ public class BreadcrumbTag extends IncludeTag {
 			"liferay-ui:breadcrumb:showCurrentGroup",
 			String.valueOf(_showCurrentGroup));
 		request.setAttribute(
-			"liferay-ui:breadcrumb:showCurrentPortlet",
-			String.valueOf(_showCurrentPortlet));
-		request.setAttribute(
 			"liferay-ui:breadcrumb:showGuestGroup",
 			String.valueOf(_showGuestGroup));
 		request.setAttribute(
@@ -380,7 +360,6 @@ public class BreadcrumbTag extends IncludeTag {
 
 	private String _displayStyle = _DISPLAY_STYLE;
 	private boolean _showCurrentGroup = true;
-	private boolean _showCurrentPortlet = true;
 	private boolean _showGuestGroup = _SHOW_GUEST_GROUP;
 	private boolean _showLayout = true;
 	private Boolean _showParentGroups = null;
