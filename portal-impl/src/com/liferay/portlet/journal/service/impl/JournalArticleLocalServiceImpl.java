@@ -126,6 +126,7 @@ import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.impl.JournalArticleDisplayImpl;
 import com.liferay.portlet.journal.model.impl.JournalArticleModelImpl;
 import com.liferay.portlet.journal.model.impl.JournalFolderModelImpl;
+import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.base.JournalArticleLocalServiceBaseImpl;
 import com.liferay.portlet.journal.social.JournalActivityKeys;
 import com.liferay.portlet.journal.util.JournalUtil;
@@ -5273,9 +5274,15 @@ public class JournalArticleLocalServiceImpl
 				article.getVersion())) {
 
 			if (status == WorkflowConstants.STATUS_APPROVED) {
-				updateUrlTitles(
-					article.getGroupId(), article.getArticleId(),
-					article.getUrlTitle());
+				JournalArticle previous =
+					JournalArticleLocalServiceUtil.getPreviousApprovedArticle(
+						article);
+
+				if (!previous.getUrlTitle().equals(article.getUrlTitle())) {
+					updateUrlTitles(
+						article.getGroupId(), article.getArticleId(),
+						article.getUrlTitle());
+				}
 
 				// Asset
 
@@ -5291,6 +5298,7 @@ public class JournalArticleLocalServiceImpl
 					if (draftAssetEntry != null) {
 						long[] assetCategoryIds =
 							draftAssetEntry.getCategoryIds();
+
 						String[] assetTagNames = draftAssetEntry.getTagNames();
 
 						List<AssetLink> assetLinks =
