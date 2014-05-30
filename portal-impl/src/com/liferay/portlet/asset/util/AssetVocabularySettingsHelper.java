@@ -33,19 +33,21 @@ import java.util.Set;
  *
  * @author José Manuel Navarro
  */
-public class AssetVocabularySettingsHelper extends UnicodeProperties {
+public class AssetVocabularySettingsHelper {
 
 	public static final long[] DEFAULT_SELECTED_CLASSNAME_IDS =
 		new long[] {AssetCategoryConstants.ALL_CLASS_NAME_IDS};
 
 	public AssetVocabularySettingsHelper() {
-		super(true);
+		super();
+
+		_properties = new UnicodeProperties(true);
 	}
 
 	public AssetVocabularySettingsHelper(String properties) {
 		this();
 
-		fastLoad(properties);
+		_properties.fastLoad(properties);
 	}
 
 	public long[] getClassNameIds() {
@@ -145,5 +147,7 @@ public class AssetVocabularySettingsHelper extends UnicodeProperties {
 
 	private static final String SELECTED_CLASS_NAME_IDS =
 		"selectedClassNameIds";
+
+	private UnicodeProperties _properties;
 
 }
