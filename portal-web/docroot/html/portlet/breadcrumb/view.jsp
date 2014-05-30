@@ -24,33 +24,32 @@ long portletDisplayTemplateId = PortletDisplayTemplateUtil.getPortletDisplayTemp
 	<c:when test="<%= portletDisplayTemplateId > 0 %>">
 
 		<%
-			List<Integer> breadcrumbEntryTypes = new ArrayList<Integer>();
+		List<Integer> breadcrumbEntryTypes = new ArrayList<Integer>();
 
-			if (showCurrentGroup) {
-				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_CURRENT_GROUP);
-			}
+		if (showCurrentGroup) {
+			breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_CURRENT_GROUP);
+		}
 
-			if (showGuestGroup) {
-				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_GUEST_GROUP);
-			}
+		if (showGuestGroup) {
+			breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_GUEST_GROUP);
+		}
 
-			if (showLayout) {
-				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_LAYOUT);
-			}
+		if (showLayout) {
+			breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_LAYOUT);
+		}
 
-			if (showParentGroups) {
-				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_PARENT_GROUP);
-			}
+		if (showParentGroups) {
+			breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_PARENT_GROUP);
+		}
 
-			if (showPortletBreadcrumb) {
-				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_PORTLET);
-			}
+		if (showPortletBreadcrumb) {
+			breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_PORTLET);
+		}
 
-			List<BreadcrumbEntry> breadcrumbEntries = BreadcrumbUtil.getBreadcrumbEntries(request, ArrayUtil.toIntArray(breadcrumbEntryTypes));
+		List<BreadcrumbEntry> breadcrumbEntries = BreadcrumbUtil.getBreadcrumbEntries(request, ArrayUtil.toIntArray(breadcrumbEntryTypes));
 		%>
 
 		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayTemplateId, breadcrumbEntries) %>
-
 	</c:when>
 	<c:otherwise>
 		<liferay-ui:breadcrumb
