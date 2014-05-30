@@ -60,6 +60,10 @@ public class AssetVocabularySettingsHelper {
 		return StringUtil.split(propertyValue, 0L);
 	}
 
+	public String getProperty(String key) {
+		return _properties.getProperty(key);
+	}
+
 	public long[] getRequiredClassNameIds() {
 		String propertyValue = getProperty(REQUIRED_CLASS_NAME_IDS);
 
@@ -121,6 +125,15 @@ public class AssetVocabularySettingsHelper {
 
 	public void setMultiValued(boolean multiValued) {
 		setProperty(MULTI_VALUED, String.valueOf(multiValued));
+	}
+
+	public void setProperty(String key, Object value) {
+		_properties.setProperty(key, value.toString());
+	}
+
+	@Override
+	public String toString() {
+		return _properties.toString();
 	}
 
 	protected boolean isClassNameIdSpecified(
