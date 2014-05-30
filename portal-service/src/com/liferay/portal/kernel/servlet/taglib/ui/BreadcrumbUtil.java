@@ -15,9 +15,11 @@
 package com.liferay.portal.kernel.servlet.taglib.ui;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Account;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
@@ -31,6 +33,7 @@ import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
@@ -45,6 +48,71 @@ import javax.servlet.http.HttpSession;
  * @author José Manuel Navarro
  */
 public class BreadcrumbUtil {
+
+	public static final int ENTRY_TYPE_ANY = 0;
+
+	public static final int ENTRY_TYPE_CURRENT_GROUP = 1;
+
+	public static final int ENTRY_TYPE_GUEST_GROUP = 2;
+
+	public static final int ENTRY_TYPE_LAYOUT = 3;
+
+	public static final int ENTRY_TYPE_PARENT_GROUP = 4;
+
+	public static final int ENTRY_TYPE_PORTLET = 5;
+
+	public static final int ENTRY_TYPE_PORTLET_EXCEPT_CURRENT = 6;
+
+	public static List<BreadcrumbEntry> getBreadcrumbEntries(
+			HttpServletRequest request, int[] types)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		List<BreadcrumbEntry> entries = new ArrayList<BreadcrumbEntry>();
+
+		BreadcrumbEntry entry;
+
+		boolean hasAll = ArrayUtil.contains(types, ENTRY_TYPE_ANY);
+
+		if (hasAll || ArrayUtil.contains(types, ENTRY_TYPE_GUEST_GROUP)) {
+			entry = getGuestGroupBreadcrumbEntry(themeDisplay);
+
+			if (entry != null) {
+				entries.add(entry);
+			}
+		}
+
+		if (hasAll || ArrayUtil.contains(types, ENTRY_TYPE_PARENT_GROUP)) {
+			entries.addAll(getParentGroupBreadcrumbEntries(themeDisplay));
+		}
+
+		if (hasAll || ArrayUtil.contains(types, ENTRY_TYPE_CURRENT_GROUP)) {
+			entry = getScopeGroupBreadcrumbEntry(themeDisplay);
+
+			if (entry != null) {
+				entries.add(entry);
+			}
+		}
+
+		if (hasAll || ArrayUtil.contains(types, ENTRY_TYPE_LAYOUT)) {
+			entries.addAll(getLayoutBreadcrumbEntries(themeDisplay));
+		}
+
+		boolean includePortletExceptCurrent = ArrayUtil.contains(
+			types, ENTRY_TYPE_PORTLET_EXCEPT_CURRENT);
+
+		if (hasAll || includePortletExceptCurrent ||
+			ArrayUtil.contains(types, ENTRY_TYPE_PORTLET)) {
+
+			entries.addAll(
+				getPortletBreadcrumbEntries(
+					request, !includePortletExceptCurrent));
+		}
+
+		return entries;
+	}
 
 	public static BreadcrumbEntry getGuestGroupBreadcrumbEntry(
 			ThemeDisplay themeDisplay)
@@ -118,7 +186,19 @@ public class BreadcrumbUtil {
 	}
 
 	public static List<BreadcrumbEntry> getPortletBreadcrumbEntries(
-		HttpServletRequest request) {
+		HttpServletRequest request, boolean includeCurrentPortletEntries) {
+
+		String currentPortletTitle = null;
+
+		if (!includeCurrentPortletEntries) {
+			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+			currentPortletTitle = PortalUtil.getPortletTitle(
+				portletDisplay.getId(), themeDisplay.getUser());
+		}
 
 		List<BreadcrumbEntry> portletBreadcrumbEntries =
 			PortalUtil.getPortletBreadcrumbs(request);
@@ -128,11 +208,17 @@ public class BreadcrumbUtil {
 		}
 
 		List<BreadcrumbEntry> breadcrumbEntries =
-			new ArrayList<BreadcrumbEntry>();
+			new ArrayList<BreadcrumbEntry>(portletBreadcrumbEntries.size());
 
 		for (int i = 0; i < portletBreadcrumbEntries.size(); i++) {
 			BreadcrumbEntry portletBreadcrumbEntry =
 				portletBreadcrumbEntries.get(i);
+
+			if (!includeCurrentPortletEntries &&
+				currentPortletTitle.equals(portletBreadcrumbEntry.getTitle())) {
+
+				continue;
+			}
 
 			BreadcrumbEntry breadcrumbEntry = new BreadcrumbEntry();
 
