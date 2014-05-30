@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
@@ -139,8 +138,8 @@ public class EditVocabularyAction extends PortletAction {
 			// Add vocabulary
 
 			vocabulary = AssetVocabularyServiceUtil.addVocabulary(
-				StringPool.BLANK, titleMap, descriptionMap,
-				settingsValue, serviceContext);
+				StringPool.BLANK, titleMap, descriptionMap, settingsValue,
+				serviceContext);
 		}
 		else {
 
