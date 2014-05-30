@@ -564,6 +564,24 @@ public class JournalArticleIndexer extends BaseIndexer {
 		}
 	}
 
+	@Override
+	protected void doReindexPermissions(String className, long classPK)
+		throws Exception {
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.fetchJournalArticle(classPK);
+
+		if (article == null) {
+			article =
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+					classPK);
+		}
+
+		if (article != null) {
+			doReindex(article, true);
+		}
+	}
+
 	protected String extractDDMContent(
 			JournalArticle article, String languageId)
 		throws Exception {
