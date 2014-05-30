@@ -19,7 +19,6 @@
 <liferay-ui:breadcrumb
 	displayStyle="<%= displayStyle %>"
 	showCurrentGroup="<%= showCurrentGroup %>"
-	showCurrentPortlet="<%= showCurrentPortlet %>"
 	showGuestGroup="<%= showGuestGroup %>"
 	showLayout="<%= showLayout %>"
 	showParentGroups="<%= showParentGroups %>"
