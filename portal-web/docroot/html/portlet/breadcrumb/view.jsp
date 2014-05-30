@@ -22,7 +22,35 @@ long portletDisplayTemplateId = PortletDisplayTemplateUtil.getPortletDisplayTemp
 
 <c:choose>
 	<c:when test="<%= portletDisplayTemplateId > 0 %>">
-		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayTemplateId, BreadcrumbUtil.getBreadcrumbEntries(request, new int[]{BreadcrumbUtil.ENTRY_TYPE_ANY})) %>
+
+		<%
+			List<Integer> breadcrumbEntryTypes = new ArrayList<Integer>();
+
+			if (showCurrentGroup) {
+				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_CURRENT_GROUP);
+			}
+
+			if (showGuestGroup) {
+				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_GUEST_GROUP);
+			}
+
+			if (showLayout) {
+				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_LAYOUT);
+			}
+
+			if (showParentGroups) {
+				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_PARENT_GROUP);
+			}
+
+			if (showPortletBreadcrumb) {
+				breadcrumbEntryTypes.add(BreadcrumbUtil.ENTRY_TYPE_PORTLET);
+			}
+
+			List<BreadcrumbEntry> breadcrumbEntries = BreadcrumbUtil.getBreadcrumbEntries(request, ArrayUtil.toIntArray(breadcrumbEntryTypes));
+		%>
+
+		<%= PortletDisplayTemplateUtil.renderDDMTemplate(pageContext, portletDisplayTemplateId, breadcrumbEntries) %>
+
 	</c:when>
 	<c:otherwise>
 		<liferay-ui:breadcrumb
