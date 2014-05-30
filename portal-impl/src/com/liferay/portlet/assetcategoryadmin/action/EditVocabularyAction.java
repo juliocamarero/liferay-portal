@@ -86,16 +86,15 @@ public class EditVocabularyAction extends PortletAction {
 				renderRequest, "portlet.asset_category_admin.edit_vocabulary"));
 	}
 
-	protected UnicodeProperties getSettingsProperties(
-		ActionRequest actionRequest) {
+	protected String getSettingsValue(ActionRequest actionRequest) {
 
-		AssetVocabularySettingsHelper settingsProperties =
+		AssetVocabularySettingsHelper settingsHelper =
 			new AssetVocabularySettingsHelper();
 
 		boolean multiValued = ParamUtil.getBoolean(
 			actionRequest, "multiValued");
 
-		settingsProperties.setMultiValued(multiValued);
+		settingsHelper.setMultiValued(multiValued);
 
 		int[] indexes = StringUtil.split(
 			ParamUtil.getString(actionRequest, "indexes"), 0);
@@ -113,9 +112,9 @@ public class EditVocabularyAction extends PortletAction {
 				actionRequest, "required" + index);
 		}
 
-		settingsProperties.setClassNameIds(classNameIds, areRequired);
+		settingsHelper.setClassNameIds(classNameIds, areRequired);
 
-		return settingsProperties;
+		return settingsHelper.toString();
 	}
 
 	protected JSONObject updateVocabulary(ActionRequest actionRequest)
@@ -128,8 +127,7 @@ public class EditVocabularyAction extends PortletAction {
 		Map<Locale, String> descriptionMap =
 			LocalizationUtil.getLocalizationMap(actionRequest, "description");
 
-		UnicodeProperties settingsProperties = getSettingsProperties(
-			actionRequest);
+		String settingsValue = getSettingsValue(actionRequest);
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			AssetVocabulary.class.getName(), actionRequest);
@@ -142,7 +140,7 @@ public class EditVocabularyAction extends PortletAction {
 
 			vocabulary = AssetVocabularyServiceUtil.addVocabulary(
 				StringPool.BLANK, titleMap, descriptionMap,
-				settingsProperties.toString(), serviceContext);
+				settingsValue, serviceContext);
 		}
 		else {
 
@@ -150,7 +148,7 @@ public class EditVocabularyAction extends PortletAction {
 
 			vocabulary = AssetVocabularyServiceUtil.updateVocabulary(
 				vocabularyId, StringPool.BLANK, titleMap, descriptionMap,
-				settingsProperties.toString(), serviceContext);
+				settingsValue, serviceContext);
 		}
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();

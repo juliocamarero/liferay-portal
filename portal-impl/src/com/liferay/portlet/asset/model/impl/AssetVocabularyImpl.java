@@ -78,7 +78,13 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Deprecated
 	@Override
 	public UnicodeProperties getSettingsProperties() {
-		return getSettingsHelper();
+		AssetVocabularySettingsHelper settingsHelper = getSettingsHelper();
+
+		UnicodeProperties properties = new UnicodeProperties(true);
+
+		properties.fastLoad(settingsHelper.toString());
+
+		return properties;
 	}
 
 	@Override
@@ -223,13 +229,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	public void setSettingsProperties(UnicodeProperties settingsProperties) {
 		super.setSettings(settingsProperties.toString());
 
-		if (settingsHelper instanceof AssetVocabularySettingsHelper) {
-			_settingsHelper =
-				(AssetVocabularySettingsHelper)settingsHelper;
-		}
-		else {
-			_settingsHelper = getSettingsModelHelper();
-		}
+		_settingsHelper = getSettingsHelper();
 	}
 
 	protected AssetVocabularySettingsHelper getSettingsHelper() {
