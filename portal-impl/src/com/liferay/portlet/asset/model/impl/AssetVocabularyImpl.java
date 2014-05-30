@@ -49,27 +49,25 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public long[] getRequiredClassNameIds() {
-		AssetVocabularySettingsHelper settingsProperties =
-			getSettingsModelHelper();
+		AssetVocabularySettingsHelper settingsHelper = getSettingsHelper();
 
-		return settingsProperties.getRequiredClassNameIds();
+		return settingsHelper.getRequiredClassNameIds();
 	}
 
 	@Override
 	public long[] getSelectedClassNameIds() {
-		AssetVocabularySettingsHelper settingsProperties =
-			getSettingsModelHelper();
+		AssetVocabularySettingsHelper settingsHelper = getSettingsHelper();
 
-		return settingsProperties.getClassNameIds();
+		return settingsHelper.getClassNameIds();
 	}
 
 	@Override
 	public String getSettings() {
-		if (_settingsProperties == null) {
+		if (_settingsHelper == null) {
 			return super.getSettings();
 		}
 		else {
-			return _settingsProperties.toString();
+			return _settingsHelper.toString();
 		}
 	}
 
@@ -80,7 +78,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Deprecated
 	@Override
 	public UnicodeProperties getSettingsProperties() {
-		return getSettingsModelHelper();
+		return getSettingsHelper();
 	}
 
 	@Override
@@ -167,10 +165,9 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isAssociatedToAssetRendererFactory(long classNameId) {
-		AssetVocabularySettingsHelper settingsProperties =
-			getSettingsModelHelper();
+		AssetVocabularySettingsHelper settingsHelper = getSettingsHelper();
 
-		return settingsProperties.hasClassNameId(classNameId);
+		return settingsHelper.hasClassNameId(classNameId);
 	}
 
 	@Override
@@ -198,23 +195,21 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isMultiValued() {
-		AssetVocabularySettingsHelper settingsProperties =
-			getSettingsModelHelper();
+		AssetVocabularySettingsHelper settingsHelper = getSettingsHelper();
 
-		return settingsProperties.isMultiValued();
+		return settingsHelper.isMultiValued();
 	}
 
 	@Override
 	public boolean isRequired(long classNameId) {
-		AssetVocabularySettingsHelper settingsProperties =
-			getSettingsModelHelper();
+		AssetVocabularySettingsHelper settingsHelper = getSettingsHelper();
 
-		return settingsProperties.isClassNameIdRequired(classNameId);
+		return settingsHelper.isClassNameIdRequired(classNameId);
 	}
 
 	@Override
 	public void setSettings(String settings) {
-		_settingsProperties = null;
+		_settingsHelper = null;
 
 		super.setSettings(settings);
 	}
@@ -228,24 +223,24 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	public void setSettingsProperties(UnicodeProperties settingsProperties) {
 		super.setSettings(settingsProperties.toString());
 
-		if (settingsProperties instanceof AssetVocabularySettingsHelper) {
-			_settingsProperties =
-				(AssetVocabularySettingsHelper)settingsProperties;
+		if (settingsHelper instanceof AssetVocabularySettingsHelper) {
+			_settingsHelper =
+				(AssetVocabularySettingsHelper)settingsHelper;
 		}
 		else {
-			_settingsProperties = getSettingsModelHelper();
+			_settingsHelper = getSettingsModelHelper();
 		}
 	}
 
-	protected AssetVocabularySettingsHelper getSettingsModelHelper() {
-		if (_settingsProperties == null) {
-			_settingsProperties = new AssetVocabularySettingsHelper(
+	protected AssetVocabularySettingsHelper getSettingsHelper() {
+		if (_settingsHelper == null) {
+			_settingsHelper = new AssetVocabularySettingsHelper(
 				super.getSettings());
 		}
 
-		return _settingsProperties;
+		return _settingsHelper;
 	}
 
-	private AssetVocabularySettingsHelper _settingsProperties;
+	private AssetVocabularySettingsHelper _settingsHelper;
 
 }
