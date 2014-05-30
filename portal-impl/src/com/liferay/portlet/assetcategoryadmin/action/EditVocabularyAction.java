@@ -86,14 +86,8 @@ public class EditVocabularyAction extends PortletAction {
 	}
 
 	protected String getSettingsValue(ActionRequest actionRequest) {
-
-		AssetVocabularySettingsHelper settingsHelper =
-			new AssetVocabularySettingsHelper();
-
 		boolean multiValued = ParamUtil.getBoolean(
 			actionRequest, "multiValued");
-
-		settingsHelper.setMultiValued(multiValued);
 
 		int[] indexes = StringUtil.split(
 			ParamUtil.getString(actionRequest, "indexes"), 0);
@@ -111,7 +105,11 @@ public class EditVocabularyAction extends PortletAction {
 				actionRequest, "required" + index);
 		}
 
+		AssetVocabularySettingsHelper settingsHelper =
+			new AssetVocabularySettingsHelper();
+
 		settingsHelper.setClassNameIds(classNameIds, areRequired);
+		settingsHelper.setMultiValued(multiValued);
 
 		return settingsHelper.toString();
 	}
