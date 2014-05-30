@@ -24,6 +24,6 @@ page import="com.liferay.portlet.asset.service.AssetCategoryPropertyServiceUtil"
 page import="com.liferay.portlet.asset.service.permission.AssetCategoryPermission" %><%@
 page import="com.liferay.portlet.asset.service.permission.AssetPermission" %><%@
 page import="com.liferay.portlet.asset.service.permission.AssetVocabularyPermission" %><%@
-page import="com.liferay.portlet.asset.util.AssetVocabularySettingsModelHelper" %>
+page import="com.liferay.portlet.asset.util.AssetVocabularySettingsHelper" %>
 
 <%@ include file="/html/portlet/asset_category_admin/init-ext.jsp" %>

@@ -22,7 +22,7 @@ import org.junit.Test;
 /**
  * @author José Manuel Navarro
  */
-public class AssetVocabularySettingsModelHelperTest {
+public class AssetVocabularySettingsHelperTest {
 
 	@Test
 	public void testHasClassNameIdAll() {
@@ -98,7 +98,7 @@ public class AssetVocabularySettingsModelHelperTest {
 		Assert.assertTrue(_settingProperties.isMultiValued());
 	}
 
-	protected AssetVocabularySettingsModelHelper getSettingProperties(
+	protected AssetVocabularySettingsHelper getSettingProperties(
 		boolean multiValued, long classNameId, boolean isRequired) {
 
 		long[] classNameIds = new long[]{classNameId};
@@ -107,11 +107,11 @@ public class AssetVocabularySettingsModelHelperTest {
 		return getSettingProperties(multiValued, classNameIds, required);
 	}
 
-	protected AssetVocabularySettingsModelHelper getSettingProperties(
+	protected AssetVocabularySettingsHelper getSettingProperties(
 		boolean multiValued, long[] classNameIds, boolean[] required) {
 
-		AssetVocabularySettingsModelHelper settingsProperties =
-			new AssetVocabularySettingsModelHelper();
+		AssetVocabularySettingsHelper settingsProperties =
+			new AssetVocabularySettingsHelper();
 
 		settingsProperties.setClassNameIds(classNameIds, required);
 		settingsProperties.setMultiValued(multiValued);
@@ -119,6 +119,6 @@ public class AssetVocabularySettingsModelHelperTest {
 		return settingsProperties;
 	}
 
-	private AssetVocabularySettingsModelHelper _settingProperties;
+	private AssetVocabularySettingsHelper _settingProperties;
 
 }

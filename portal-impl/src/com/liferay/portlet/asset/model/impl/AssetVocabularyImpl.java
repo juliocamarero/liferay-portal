@@ -27,7 +27,7 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
-import com.liferay.portlet.asset.util.AssetVocabularySettingsModelHelper;
+import com.liferay.portlet.asset.util.AssetVocabularySettingsHelper;
 
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +49,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public long[] getRequiredClassNameIds() {
-		AssetVocabularySettingsModelHelper settingsProperties =
+		AssetVocabularySettingsHelper settingsProperties =
 			getSettingsModelHelper();
 
 		return settingsProperties.getRequiredClassNameIds();
@@ -57,7 +57,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public long[] getSelectedClassNameIds() {
-		AssetVocabularySettingsModelHelper settingsProperties =
+		AssetVocabularySettingsHelper settingsProperties =
 			getSettingsModelHelper();
 
 		return settingsProperties.getClassNameIds();
@@ -167,7 +167,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isAssociatedToAssetRendererFactory(long classNameId) {
-		AssetVocabularySettingsModelHelper settingsProperties =
+		AssetVocabularySettingsHelper settingsProperties =
 			getSettingsModelHelper();
 
 		return settingsProperties.hasClassNameId(classNameId);
@@ -198,7 +198,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isMultiValued() {
-		AssetVocabularySettingsModelHelper settingsProperties =
+		AssetVocabularySettingsHelper settingsProperties =
 			getSettingsModelHelper();
 
 		return settingsProperties.isMultiValued();
@@ -206,7 +206,7 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public boolean isRequired(long classNameId) {
-		AssetVocabularySettingsModelHelper settingsProperties =
+		AssetVocabularySettingsHelper settingsProperties =
 			getSettingsModelHelper();
 
 		return settingsProperties.isClassNameIdRequired(classNameId);
@@ -228,24 +228,24 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	public void setSettingsProperties(UnicodeProperties settingsProperties) {
 		super.setSettings(settingsProperties.toString());
 
-		if (settingsProperties instanceof AssetVocabularySettingsModelHelper) {
+		if (settingsProperties instanceof AssetVocabularySettingsHelper) {
 			_settingsProperties =
-				(AssetVocabularySettingsModelHelper)settingsProperties;
+				(AssetVocabularySettingsHelper)settingsProperties;
 		}
 		else {
 			_settingsProperties = getSettingsModelHelper();
 		}
 	}
 
-	protected AssetVocabularySettingsModelHelper getSettingsModelHelper() {
+	protected AssetVocabularySettingsHelper getSettingsModelHelper() {
 		if (_settingsProperties == null) {
-			_settingsProperties = new AssetVocabularySettingsModelHelper(
+			_settingsProperties = new AssetVocabularySettingsHelper(
 				super.getSettings());
 		}
 
 		return _settingsProperties;
 	}
 
-	private AssetVocabularySettingsModelHelper _settingsProperties;
+	private AssetVocabularySettingsHelper _settingsProperties;
 
 }

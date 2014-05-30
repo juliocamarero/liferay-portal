@@ -27,7 +27,7 @@ import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetVocabularyServiceUtil;
-import com.liferay.portlet.asset.util.AssetVocabularySettingsModelHelper;
+import com.liferay.portlet.asset.util.AssetVocabularySettingsHelper;
 
 import java.util.Locale;
 import java.util.Map;
@@ -89,8 +89,8 @@ public class EditVocabularyAction extends PortletAction {
 	protected UnicodeProperties getSettingsProperties(
 		ActionRequest actionRequest) {
 
-		AssetVocabularySettingsModelHelper settingsProperties =
-			new AssetVocabularySettingsModelHelper();
+		AssetVocabularySettingsHelper settingsProperties =
+			new AssetVocabularySettingsHelper();
 
 		boolean multiValued = ParamUtil.getBoolean(
 			actionRequest, "multiValued");

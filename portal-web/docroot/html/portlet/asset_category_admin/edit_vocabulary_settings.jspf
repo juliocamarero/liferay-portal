@@ -1,5 +1,5 @@
 <%@ page
-		import="com.liferay.portlet.asset.util.AssetVocabularySettingsModelHelper" %>
+		import="com.liferay.portlet.asset.util.AssetVocabularySettingsHelper" %>
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -33,7 +33,7 @@ if (vocabulary != null) {
 	selectedClassNameIds = vocabulary.getSelectedClassNameIds();
 }
 else {
-	selectedClassNameIds = AssetVocabularySettingsModelHelper.DEFAULT_SELECTED_CLASSNAME_IDS;
+	selectedClassNameIds = AssetVocabularySettingsHelper.DEFAULT_SELECTED_CLASSNAME_IDS;
 }
 %>
 

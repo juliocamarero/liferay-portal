@@ -33,16 +33,16 @@ import java.util.Set;
  *
  * @author José Manuel Navarro
  */
-public class AssetVocabularySettingsModelHelper extends UnicodeProperties {
+public class AssetVocabularySettingsHelper extends UnicodeProperties {
 
 	public static final long[] DEFAULT_SELECTED_CLASSNAME_IDS =
 		new long[] {AssetCategoryConstants.ALL_CLASS_NAME_IDS};
 
-	public AssetVocabularySettingsModelHelper() {
+	public AssetVocabularySettingsHelper() {
 		super(true);
 	}
 
-	public AssetVocabularySettingsModelHelper(String properties) {
+	public AssetVocabularySettingsHelper(String properties) {
 		this();
 
 		fastLoad(properties);
