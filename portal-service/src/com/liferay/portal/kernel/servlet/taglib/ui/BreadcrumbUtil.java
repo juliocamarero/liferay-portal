@@ -183,6 +183,23 @@ public class BreadcrumbUtil {
 	public static List<BreadcrumbEntry> getPortletBreadcrumbEntries(
 		HttpServletRequest request) {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		String name = WebKeys.PORTLET_BREADCRUMBS;
+
+		String portletName = portletDisplay.getPortletName();
+
+		if (Validator.isNotNull(portletDisplay.getId()) &&
+			!portletName.equals(PortletKeys.BREADCRUMB) &&
+			!portletDisplay.isFocused()) {
+
+			name = name.concat(
+				StringPool.UNDERLINE.concat(portletDisplay.getId()));
+		}
+
 		List<BreadcrumbEntry> portletBreadcrumbEntries =
 			(List<BreadcrumbEntry>)request.getAttribute(name);
 
@@ -367,29 +384,6 @@ public class BreadcrumbUtil {
 		}
 
 		return null;
-	}
-
-	private static List<BreadcrumbEntry> _getPortletBreadcrumbs(
-		HttpServletRequest request) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-		String name = WebKeys.PORTLET_BREADCRUMBS;
-
-		String portletName = portletDisplay.getPortletName();
-
-		if (Validator.isNotNull(portletDisplay.getId()) &&
-			!portletName.equals(PortletKeys.BREADCRUMB) &&
-			!portletDisplay.isFocused()) {
-
-			name = name.concat(
-				StringPool.UNDERLINE.concat(portletDisplay.getId()));
-		}
-
-		return (List<BreadcrumbEntry>)request.getAttribute(name);
 	}
 
 }
