@@ -132,14 +132,11 @@ public class AssetVocabularySettingsHelper {
 			return false;
 		}
 
-		if ((classNameIds[0] !=
-				AssetCategoryConstants.ALL_CLASS_NAMES_ID) &&
-			!ArrayUtil.contains(classNameIds, classNameId)) {
-
-			return false;
+		if (classNameIds[0] == AssetCategoryConstants.ALL_CLASS_NAMES_ID) {
+			return true;
 		}
 
-		return true;
+		return ArrayUtil.contains(classNameIds, classNameId);
 	}
 
 	private static final String _KEY_MULTI_VALUED = "multiValued";
