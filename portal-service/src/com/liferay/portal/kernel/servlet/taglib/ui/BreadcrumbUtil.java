@@ -207,18 +207,9 @@ public class BreadcrumbUtil {
 			return Collections.emptyList();
 		}
 
-		List<BreadcrumbEntry> breadcrumbEntries =
-			new ArrayList<BreadcrumbEntry>(portletBreadcrumbEntries.size());
-
 		for (int i = 0; i < portletBreadcrumbEntries.size(); i++) {
 			BreadcrumbEntry portletBreadcrumbEntry =
 				portletBreadcrumbEntries.get(i);
-
-			BreadcrumbEntry breadcrumbEntry = new BreadcrumbEntry();
-
-			breadcrumbEntry.setBaseModel(portletBreadcrumbEntry.getBaseModel());
-			breadcrumbEntry.setData(portletBreadcrumbEntry.getData());
-			breadcrumbEntry.setTitle(portletBreadcrumbEntry.getTitle());
 
 			String url = portletBreadcrumbEntry.getURL();
 
@@ -231,13 +222,11 @@ public class BreadcrumbUtil {
 					url = PortalUtil.getURLWithSessionId(url, session.getId());
 				}
 
-				breadcrumbEntry.setURL(url);
+				portletBreadcrumbEntry.setURL(url);
 			}
-
-			breadcrumbEntries.add(breadcrumbEntry);
 		}
 
-		return breadcrumbEntries;
+		return portletBreadcrumbEntries;
 	}
 
 	public static BreadcrumbEntry getScopeGroupBreadcrumbEntry(
