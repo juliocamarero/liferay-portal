@@ -28,6 +28,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.test.MainServletExecutionTestListener;
 import com.liferay.portal.test.Sync;
@@ -73,6 +74,9 @@ public class JournalIndexerTest {
 	@Before
 	public void setUp() throws Exception {
 		FinderCacheUtil.clearCache();
+
+		ServiceContextThreadLocal.pushServiceContext(
+				ServiceContextTestUtil.getServiceContext());
 
 		_group = GroupTestUtil.addGroup();
 	}
