@@ -207,22 +207,20 @@ public class BreadcrumbUtil {
 			return Collections.emptyList();
 		}
 
-		for (int i = 0; i < portletBreadcrumbEntries.size(); i++) {
+		for (int i = 0; i < portletBreadcrumbEntries.size() - 1; i++) {
 			BreadcrumbEntry portletBreadcrumbEntry =
 				portletBreadcrumbEntries.get(i);
 
 			String url = portletBreadcrumbEntry.getURL();
 
-			if (Validator.isNotNull(url) &&
-				((i + 1) < portletBreadcrumbEntries.size())) {
-
+			if (Validator.isNotNull(url)) {
 				if (!CookieKeys.hasSessionId(request)) {
 					HttpSession session = request.getSession();
 
 					url = PortalUtil.getURLWithSessionId(url, session.getId());
-				}
 
-				portletBreadcrumbEntry.setURL(url);
+					portletBreadcrumbEntry.setURL(url);
+				}
 			}
 		}
 
