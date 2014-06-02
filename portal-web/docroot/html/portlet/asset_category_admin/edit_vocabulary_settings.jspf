@@ -50,7 +50,7 @@ else {
 			<div class="lfr-form-row lfr-form-row-inline">
 				<div class="row-fields">
 					<aui:select label="choose-asset-type" name='<%= "classNameId" + index %>'>
-						<aui:option label="all-asset-types" value="<%= AssetCategoryConstants.ALL_CLASS_NAME_IDS %>" />
+						<aui:option label="all-asset-types" value="<%= AssetCategoryConstants.ALL_CLASS_NAMES_ID %>" />
 
 						<%
 						for (AssetRendererFactory assetRendererFactory : availableAssetFactories) {

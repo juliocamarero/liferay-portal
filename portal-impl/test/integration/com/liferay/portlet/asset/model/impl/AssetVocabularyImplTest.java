@@ -96,7 +96,7 @@ public class AssetVocabularyImplTest {
 	@Test
 	public void testIsAssociatedToAssetRendererFactory() throws Exception {
 		AssetVocabulary vocabulary = addVocabulary(
-			AssetCategoryConstants.ALL_CLASS_NAME_IDS, true);
+			AssetCategoryConstants.ALL_CLASS_NAMES_ID, true);
 
 		Assert.assertTrue(vocabulary.isAssociatedToAssetRendererFactory(1));
 
@@ -136,13 +136,13 @@ public class AssetVocabularyImplTest {
 	@Test
 	public void testIsRequired() throws Exception {
 		AssetVocabulary vocabulary = addVocabulary(
-			AssetCategoryConstants.ALL_CLASS_NAME_IDS, false);
+			AssetCategoryConstants.ALL_CLASS_NAMES_ID, false);
 
 		Assert.assertFalse(vocabulary.isRequired(1));
 		Assert.assertFalse(vocabulary.isRequired(2));
 
 		vocabulary = addVocabulary(
-			AssetCategoryConstants.ALL_CLASS_NAME_IDS, true);
+			AssetCategoryConstants.ALL_CLASS_NAMES_ID, true);
 
 		Assert.assertTrue(vocabulary.isRequired(1));
 		Assert.assertTrue(vocabulary.isRequired(2));

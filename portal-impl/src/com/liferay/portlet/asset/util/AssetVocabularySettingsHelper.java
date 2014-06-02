@@ -30,7 +30,7 @@ import java.util.Set;
 public class AssetVocabularySettingsHelper {
 
 	public static final long[] DEFAULT_SELECTED_CLASSNAME_IDS =
-		{AssetCategoryConstants.ALL_CLASS_NAME_IDS};
+		{AssetCategoryConstants.ALL_CLASS_NAMES_ID};
 
 	public AssetVocabularySettingsHelper() {
 		super();
@@ -45,7 +45,7 @@ public class AssetVocabularySettingsHelper {
 	}
 
 	public long[] getClassNameIds() {
-		String value = _properties.getProperty(_KEY_SELECTED_CLASS_NAME_IDS);
+		String value = _properties.getProperty(_KEY_SELECTED_CLASS_NAME_AND_TYPE_IDS);
 
 		if (Validator.isNull(value)) {
 			return DEFAULT_SELECTED_CLASSNAME_IDS;
@@ -55,7 +55,7 @@ public class AssetVocabularySettingsHelper {
 	}
 
 	public long[] getRequiredClassNameIds() {
-		String value = _properties.getProperty(_KEY_REQUIRED_CLASS_NAME_IDS);
+		String value = _properties.getProperty(_KEY_REQUIRED_CLASS_NAME_AND_TYPE_IDS);
 
 		if (Validator.isNull(value)) {
 			return new long[0];
@@ -86,7 +86,7 @@ public class AssetVocabularySettingsHelper {
 			long classNameId = classNameIds[i];
 			boolean required = requireds[i];
 
-			if (classNameId == AssetCategoryConstants.ALL_CLASS_NAME_IDS) {
+			if (classNameId == AssetCategoryConstants.ALL_CLASS_NAMES_ID) {
 				if (required) {
 					requiredClassNameIds.clear();
 
@@ -109,10 +109,10 @@ public class AssetVocabularySettingsHelper {
 		}
 
 		_properties.setProperty(
-			_KEY_REQUIRED_CLASS_NAME_IDS,
+			_KEY_REQUIRED_CLASS_NAME_AND_TYPE_IDS,
 			StringUtil.merge(requiredClassNameIds));
 		_properties.setProperty(
-			_KEY_SELECTED_CLASS_NAME_IDS,
+			_KEY_SELECTED_CLASS_NAME_AND_TYPE_IDS,
 			StringUtil.merge(selectedClassNameIds));
 	}
 
@@ -133,7 +133,7 @@ public class AssetVocabularySettingsHelper {
 		}
 
 		if ((classNameIds[0] !=
-				AssetCategoryConstants.ALL_CLASS_NAME_IDS) &&
+				AssetCategoryConstants.ALL_CLASS_NAMES_ID) &&
 			!ArrayUtil.contains(classNameIds, classNameId)) {
 
 			return false;
@@ -144,10 +144,10 @@ public class AssetVocabularySettingsHelper {
 
 	private static final String _KEY_MULTI_VALUED = "multiValued";
 
-	private static final String _KEY_REQUIRED_CLASS_NAME_IDS =
+	private static final String _KEY_REQUIRED_CLASS_NAME_AND_TYPE_IDS =
 		"requiredClassNameIds";
 
-	private static final String _KEY_SELECTED_CLASS_NAME_IDS =
+	private static final String _KEY_SELECTED_CLASS_NAME_AND_TYPE_IDS =
 		"selectedClassNameIds";
 
 	private UnicodeProperties _properties;

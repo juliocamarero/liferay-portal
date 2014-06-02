@@ -28,7 +28,7 @@ public class AssetVocabularySettingsHelperTest {
 	public void testHasClassNameId() {
 		AssetVocabularySettingsHelper vocabularySettingsHelper =
 			getVocabularySettingsHelper(
-				true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, true);
+				true, AssetCategoryConstants.ALL_CLASS_NAMES_ID, true);
 
 		Assert.assertTrue(vocabularySettingsHelper.hasClassNameId(1));
 		Assert.assertTrue(vocabularySettingsHelper.hasClassNameId(2));
@@ -39,13 +39,13 @@ public class AssetVocabularySettingsHelperTest {
 		Assert.assertFalse(vocabularySettingsHelper.hasClassNameId(2));
 
 		vocabularySettingsHelper = getVocabularySettingsHelper(
-			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, false);
+			true, AssetCategoryConstants.ALL_CLASS_NAMES_ID, false);
 
 		Assert.assertFalse(vocabularySettingsHelper.isClassNameIdRequired(1));
 		Assert.assertFalse(vocabularySettingsHelper.isClassNameIdRequired(2));
 
 		vocabularySettingsHelper = getVocabularySettingsHelper(
-			true, AssetCategoryConstants.ALL_CLASS_NAME_IDS, true);
+			true, AssetCategoryConstants.ALL_CLASS_NAMES_ID, true);
 
 		Assert.assertTrue(vocabularySettingsHelper.isClassNameIdRequired(1));
 		Assert.assertTrue(vocabularySettingsHelper.isClassNameIdRequired(2));
