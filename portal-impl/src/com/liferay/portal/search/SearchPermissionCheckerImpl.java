@@ -466,7 +466,8 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		Indexer indexer = IndexerRegistryUtil.getIndexer(resourceName);
 
 		if (indexer != null) {
-			indexer.reindex(resourceName, GetterUtil.getLong(resourceClassPK));
+			indexer.reindexPermissions(
+				resourceName, GetterUtil.getLong(resourceClassPK));
 		}
 	}
 

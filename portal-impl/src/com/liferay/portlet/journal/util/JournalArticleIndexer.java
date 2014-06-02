@@ -45,6 +45,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -320,7 +322,22 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 		deleteDocument(article.getCompanyId(), article.getId());
 
-		reindexArticleVersions(article);
+		if (!article.isDraft() &&
+			!article.isExpired() &&
+			!article.isScheduled())
+		{
+			JournalArticle currentHead =
+					JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+						article.getResourcePrimKey());
+
+			if ((currentHead != null) &&
+				(article.getVersion() > currentHead.getVersion())) {
+
+				SearchEngineUtil.updateDocument(
+					getSearchEngineId(), article.getCompanyId(), getDocument(
+						currentHead));
+			}
+		}
 	}
 
 	@Override
@@ -461,6 +478,18 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void doReindex(Object obj) throws Exception {
 		JournalArticle article = (JournalArticle)obj;
 
+		ServiceContext sc = ServiceContextThreadLocal.getServiceContext();
+		Boolean reindexAllVersions = (Boolean)sc.getAttribute(
+			"reindexAllVersions");
+
+		if (reindexAllVersions!= null && reindexAllVersions) {
+			sc.removeAttribute("reindexAllVersions");
+
+			reindexArticleVersions(article);
+
+			return;
+		}
+
 		if (!article.isIndexable() ||
 			(PortalUtil.getClassNameId(DDMStructure.class) ==
 				article.getClassNameId())) {
@@ -474,19 +503,14 @@ public class JournalArticleIndexer extends BaseIndexer {
 			return;
 		}
 
-		reindexArticleVersions(article);
+		SearchEngineUtil.updateDocuments(
+			getSearchEngineId(), article.getCompanyId(),
+			getArticleVersionsToReindex(article));
 	}
 
 	@Override
 	protected void doReindex(String className, long classPK) throws Exception {
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.fetchJournalArticle(classPK);
-
-		if (article == null) {
-			article =
-				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
-					classPK);
-		}
+		JournalArticle article = getJournalArticle(classPK);
 
 		if (article != null) {
 			doReindex(article);
@@ -520,7 +544,18 @@ public class JournalArticleIndexer extends BaseIndexer {
 				ddmStructureKeys);
 
 		for (JournalArticle article : articles) {
-			doReindex(article);
+			reindexArticleVersions(article);
+		}
+	}
+
+	@Override
+	protected void doReindexPermissions(String className, long classPK)
+		throws Exception {
+
+		JournalArticle article = getJournalArticle(classPK);
+
+		if (article != null) {
+			reindexArticleVersions(article);
 		}
 	}
 
@@ -555,20 +590,37 @@ public class JournalArticleIndexer extends BaseIndexer {
 			ddmStructure, fields, LocaleUtil.fromLanguageId(languageId));
 	}
 
-	protected Collection<Document> getArticleVersions(JournalArticle article)
+	protected Collection<Document> getArticleVersionsToReindex(
+			JournalArticle article)
 		throws PortalException, SystemException {
 
 		Collection<Document> documents = new ArrayList<Document>();
 
-		List<JournalArticle> articles =
-			JournalArticleLocalServiceUtil.
-				getIndexableArticlesByResourcePrimKey(
-					article.getResourcePrimKey());
+		documents.add(getDocument(article));
 
-		for (JournalArticle curArticle : articles) {
-			Document document = getDocument(curArticle);
+		if (article.isApproved()) {
+			List<JournalArticle> latestIndexableArticles =
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticles(
+					article.getResourcePrimKey(), 2);
 
-			documents.add(document);
+			if (latestIndexableArticles.size() > 1) {
+				JournalArticle previousHead = latestIndexableArticles.get(1);
+				JournalArticle currentHead = latestIndexableArticles.get(0);
+
+				if (article.getId() == currentHead.getId()) {
+					documents.add(getDocument(previousHead));
+		}
+			}
+		}
+		else if (!article.isDraft() && !article.isScheduled()) {
+			JournalArticle currentHead =
+					JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+						article.getResourcePrimKey());
+
+			if ((currentHead != null) &&
+				(article.getVersion() > currentHead.getVersion())) {
+					documents.add(getDocument(currentHead));
+			}
 		}
 
 		return documents;
@@ -614,6 +666,21 @@ public class JournalArticleIndexer extends BaseIndexer {
 		}
 
 		return content;
+	}
+
+	protected JournalArticle getJournalArticle(long classPK)
+		throws SystemException {
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.fetchJournalArticle(classPK);
+
+		if (article == null) {
+			article =
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+			classPK);
+		}
+
+		return article;
 	}
 
 	protected String[] getLanguageIds(
@@ -677,9 +744,33 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void reindexArticleVersions(JournalArticle article)
 		throws PortalException, SystemException {
 
+		Collection<String> deleteDocumentsUids = new ArrayList<String>();
+		Collection<Document> updateDocuments = new ArrayList<Document>();
+
+		List<JournalArticle> articles =
+			JournalArticleLocalServiceUtil.getArticles(
+				article.getGroupId(), article.getArticleId());
+
+		for (JournalArticle curArticle : articles) {
+			Document document = getDocument(curArticle);
+
+			if (!curArticle.isIndexable() ||
+				(PortalUtil.getClassNameId(DDMStructure.class) ==
+						curArticle.getClassNameId())) {
+
+					deleteDocumentsUids.add(document.get(Field.UID));
+			}
+			else {
+				updateDocuments.add(document);
+			}
+		}
+
+		SearchEngineUtil.deleteDocuments(
+				getSearchEngineId(), article.getCompanyId(),
+				deleteDocumentsUids);
+
 		SearchEngineUtil.updateDocuments(
-			getSearchEngineId(), article.getCompanyId(),
-			getArticleVersions(article));
+			getSearchEngineId(), article.getCompanyId(), updateDocuments);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
