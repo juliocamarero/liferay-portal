@@ -60,7 +60,7 @@ public class AssetVocabularyImplTest {
 	}
 
 	@Test
-	public void testhasMoreThanOneCategorySelected() throws Exception {
+	public void testHasMoreThanOneCategorySelected() throws Exception {
 		AssetVocabulary vocabulary1 = addVocabulary(1, true);
 
 		AssetCategory category11 = AssetTestUtil.addCategory(
