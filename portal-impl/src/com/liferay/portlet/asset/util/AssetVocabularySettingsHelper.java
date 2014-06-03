@@ -65,6 +65,12 @@ public class AssetVocabularySettingsHelper {
 		return getClassNameIds(classNameAndTypeIds);
 	}
 
+	public long[] getClassTypeIds() {
+		String[] classNameAndTypeIds = getClassNameAndTypeIds();
+
+		return getClassTypeIds(classNameAndTypeIds);
+	}
+
 	public String[] getRequiredClassNameAndTypeIds() {
 		String propertyValue = _properties.getProperty(
 			_KEY_REQUIRED_CLASS_NAME_AND_TYPE_IDS);
@@ -82,10 +88,28 @@ public class AssetVocabularySettingsHelper {
 		return getClassNameIds(classNameAndTypeIds);
 	}
 
+	public long[] getRequiredClassTypeIds() {
+		String[] classNameAndTypeIds = getRequiredClassNameAndTypeIds();
+
+		return getClassTypeIds(classNameAndTypeIds);
+	}
+
+	public boolean hasClassNameAndTypeId(long classNameId, long classTypeId) {
+		return isClassNameAndTypeIdSpecified(
+			classNameId, classTypeId, getClassNameAndTypeIds());
+	}
+
 	public boolean hasClassNameId(long classNameId) {
 		return isClassNameAndTypeIdSpecified(
 			classNameId, AssetCategoryConstants.ALL_CLASS_TYPES_ID,
 			getClassNameAndTypeIds());
+	}
+
+	public boolean isClassNameAndTypeIdRequired(
+		long classNameId, long classTypeId) {
+
+		return isClassNameAndTypeIdSpecified(
+			classNameId, classTypeId, getRequiredClassNameAndTypeIds());
 	}
 
 	public boolean isClassNameIdRequired(long classNameId) {
@@ -186,6 +210,24 @@ public class AssetVocabularySettingsHelper {
 		return classNameIds;
 	}
 
+	protected long getClassTypeId(String classNameAndTypeId) {
+		String[] parts = StringUtil.split(classNameAndTypeId, CharPool.COLON);
+
+		return Long.valueOf(parts[1]);
+	}
+
+	protected long[] getClassTypeIds(String[] classNameAndTypeIds) {
+		long[] classTypeIds = new long[classNameAndTypeIds.length];
+
+		for (int i = 0; i < classNameAndTypeIds.length; i++) {
+			long classTypeId = getClassTypeId(classNameAndTypeIds[i]);
+
+			classTypeIds[i] = classTypeId;
+		}
+
+		return classTypeIds;
+	}
+
 	protected boolean isClassNameAndTypeIdSpecified(
 		long classNameId, long classTypeId, String[] classNameAndTypeIds) {
 
@@ -194,7 +236,7 @@ public class AssetVocabularySettingsHelper {
 		}
 
 		if (classNameAndTypeIds[0].equals(
-			AssetCategoryConstants.ALL_CLASS_NAMES_AND_TYPES_ID)) {
+				AssetCategoryConstants.ALL_CLASS_NAMES_AND_TYPES_ID)) {
 
 			return true;
 		}
@@ -209,7 +251,14 @@ public class AssetVocabularySettingsHelper {
 			String classNameAndType = getClassNameAndTypeId(
 				classNameId, classTypeId);
 
-			return ArrayUtil.contains(classNameAndTypeIds, classNameAndType);
+			if (ArrayUtil.contains(classNameAndTypeIds, classNameAndType)) {
+				return true;
+			}
+
+			String allClassTypesId = getClassNameAndTypeId(
+				classNameId, AssetCategoryConstants.ALL_CLASS_TYPES_ID);
+
+			return ArrayUtil.contains(classNameAndTypeIds, allClassTypesId);
 		}
 	}
 
