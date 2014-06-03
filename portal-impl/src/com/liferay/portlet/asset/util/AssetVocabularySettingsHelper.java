@@ -34,7 +34,7 @@ import java.util.Set;
 public class AssetVocabularySettingsHelper {
 
 	public static final String[] DEFAULT_SELECTED_CLASSNAME_AND_TYPE_ID =
-		{AssetCategoryConstants.ALL_CLASS_NAMES_AND_TYPES_ID};
+		{AssetCategoryConstants.ALL_CLASS_NAME_AND_TYPE_IDS};
 
 	public AssetVocabularySettingsHelper() {
 		super();
@@ -101,7 +101,7 @@ public class AssetVocabularySettingsHelper {
 
 	public boolean hasClassNameId(long classNameId) {
 		return isClassNameAndTypeIdSpecified(
-			classNameId, AssetCategoryConstants.ALL_CLASS_TYPES_ID,
+			classNameId, AssetCategoryConstants.ALL_CLASS_TYPE_IDS,
 			getClassNameAndTypeIds());
 	}
 
@@ -114,7 +114,7 @@ public class AssetVocabularySettingsHelper {
 
 	public boolean isClassNameIdRequired(long classNameId) {
 		return isClassNameAndTypeIdSpecified(
-			classNameId, AssetCategoryConstants.ALL_CLASS_TYPES_ID,
+			classNameId, AssetCategoryConstants.ALL_CLASS_TYPE_IDS,
 			getRequiredClassNameAndTypeIds());
 	}
 
@@ -139,7 +139,7 @@ public class AssetVocabularySettingsHelper {
 				classNameId, classTypeId);
 
 			if (classNameAndTypeId.equals(
-					AssetCategoryConstants.ALL_CLASS_NAMES_AND_TYPES_ID)) {
+					AssetCategoryConstants.ALL_CLASS_NAME_AND_TYPE_IDS)) {
 
 				if (required) {
 					requiredClassNameIds.clear();
@@ -173,7 +173,7 @@ public class AssetVocabularySettingsHelper {
 	public void setClassNameIds(long[] classNameIds, boolean[] requireds) {
 		long[] classTypeIds = new long[classNameIds.length];
 
-		Arrays.fill(classTypeIds, AssetCategoryConstants.ALL_CLASS_TYPES_ID);
+		Arrays.fill(classTypeIds, AssetCategoryConstants.ALL_CLASS_TYPE_IDS);
 
 		setClassNameAndTypeIds(classNameIds, classTypeIds, requireds);
 	}
@@ -236,12 +236,12 @@ public class AssetVocabularySettingsHelper {
 		}
 
 		if (classNameAndTypeIds[0].equals(
-				AssetCategoryConstants.ALL_CLASS_NAMES_AND_TYPES_ID)) {
+				AssetCategoryConstants.ALL_CLASS_NAME_AND_TYPE_IDS)) {
 
 			return true;
 		}
 
-		if (classTypeId == AssetCategoryConstants.ALL_CLASS_TYPES_ID) {
+		if (classTypeId == AssetCategoryConstants.ALL_CLASS_TYPE_IDS) {
 			PrefixPredicateFilter prefixPredicateFilter =
 				new PrefixPredicateFilter(classNameId + StringPool.COLON, true);
 
@@ -256,7 +256,7 @@ public class AssetVocabularySettingsHelper {
 			}
 
 			String allClassTypesId = getClassNameAndTypeId(
-				classNameId, AssetCategoryConstants.ALL_CLASS_TYPES_ID);
+				classNameId, AssetCategoryConstants.ALL_CLASS_TYPE_IDS);
 
 			return ArrayUtil.contains(classNameAndTypeIds, allClassTypesId);
 		}
