@@ -32,8 +32,8 @@ import java.util.Set;
  */
 public class AssetVocabularySettingsHelper {
 
-	public static final long[] DEFAULT_SELECTED_CLASSNAME_IDS =
-		{AssetCategoryConstants.ALL_CLASS_NAMES_ID};
+	public static final String[] DEFAULT_SELECTED_CLASSNAME_AND_TYPE_ID =
+		{AssetCategoryConstants.ALL_CLASS_NAMES_AND_TYPES_ID};
 
 	public AssetVocabularySettingsHelper() {
 		super();
@@ -47,26 +47,38 @@ public class AssetVocabularySettingsHelper {
 		_properties.fastLoad(propertiesString);
 	}
 
-	public long[] getClassNameIds() {
+	public String[] getClassNameAndTypeIds() {
 		String propertyValue = _properties.getProperty(
 			_KEY_SELECTED_CLASS_NAME_AND_TYPE_IDS);
 
 		if (Validator.isNull(propertyValue)) {
-			return DEFAULT_SELECTED_CLASSNAME_IDS;
+			return DEFAULT_SELECTED_CLASSNAME_AND_TYPE_ID;
 		}
 
-		return getClassNameIds(StringUtil.split(propertyValue));
+		return StringUtil.split(propertyValue);
 	}
 
-	public long[] getRequiredClassNameIds() {
+	public long[] getClassNameIds() {
+		String[] classNameAndTypeIds = getClassNameAndTypeIds();
+
+		return getClassNameIds(classNameAndTypeIds);
+	}
+
+	public String[] getRequiredClassNameAndTypeIds() {
 		String propertyValue = _properties.getProperty(
 			_KEY_REQUIRED_CLASS_NAME_AND_TYPE_IDS);
 
 		if (Validator.isNull(propertyValue)) {
-			return new long[0];
+			return new String[0];
 		}
 
-		return getClassNameIds(StringUtil.split(propertyValue));
+		return StringUtil.split(propertyValue);
+	}
+
+	public long[] getRequiredClassNameIds() {
+		String[] classNameAndTypeIds = getRequiredClassNameAndTypeIds();
+
+		return getClassNameIds(classNameAndTypeIds);
 	}
 
 	public boolean hasClassNameId(long classNameId) {
