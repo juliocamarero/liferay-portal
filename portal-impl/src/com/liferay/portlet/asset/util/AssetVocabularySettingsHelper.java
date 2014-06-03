@@ -83,14 +83,6 @@ public class AssetVocabularySettingsHelper {
 		return GetterUtil.getBoolean(value, true);
 	}
 
-	public void setClassNameIds(long[] classNameIds, boolean[] requireds) {
-		long[] classTypeIds = new long[classNameIds.length];
-
-		Arrays.fill(classTypeIds, AssetCategoryConstants.ALL_CLASS_TYPES_ID);
-
-		setClassNameAndTypeIds(classNameIds, classTypeIds, requireds);
-	}
-
 	public void setClassNameAndTypeIds(
 		long[] classNameIds, long[] classTypeIds, boolean[] requireds) {
 
@@ -137,6 +129,14 @@ public class AssetVocabularySettingsHelper {
 			StringUtil.merge(selectedClassNameIds));
 	}
 
+	public void setClassNameIds(long[] classNameIds, boolean[] requireds) {
+		long[] classTypeIds = new long[classNameIds.length];
+
+		Arrays.fill(classTypeIds, AssetCategoryConstants.ALL_CLASS_TYPES_ID);
+
+		setClassNameAndTypeIds(classNameIds, classTypeIds, requireds);
+	}
+
 	public void setMultiValued(boolean multiValued) {
 		_properties.setProperty(_KEY_MULTI_VALUED, String.valueOf(multiValued));
 	}
@@ -144,20 +144,6 @@ public class AssetVocabularySettingsHelper {
 	@Override
 	public String toString() {
 		return _properties.toString();
-	}
-
-	protected boolean isClassNameIdSpecified(
-		long classNameId, long[] classNameIds) {
-
-		if (classNameIds.length == 0) {
-			return false;
-		}
-
-		if (classNameIds[0] == AssetCategoryConstants.ALL_CLASS_NAMES_ID) {
-			return true;
-		}
-
-		return ArrayUtil.contains(classNameIds, classNameId);
 	}
 
 	protected String getClassNameAndTypeId(long classNameId, long classTypeId) {
@@ -181,6 +167,20 @@ public class AssetVocabularySettingsHelper {
 		}
 
 		return classNameIds;
+	}
+
+	protected boolean isClassNameIdSpecified(
+		long classNameId, long[] classNameIds) {
+
+		if (classNameIds.length == 0) {
+			return false;
+		}
+
+		if (classNameIds[0] == AssetCategoryConstants.ALL_CLASS_NAMES_ID) {
+			return true;
+		}
+
+		return ArrayUtil.contains(classNameIds, classNameId);
 	}
 
 	private static final String _KEY_MULTI_VALUED = "multiValued";
