@@ -36,7 +36,7 @@ Contact selContact = (Contact)request.getAttribute("user.selContact");
 			<div class="social-network">
 				<aui:input label="twitter" name="twitterSn" />
 
-				<i class="icon-twitter"></i>
+				<i class="icon-twitter-sign"></i>
 			</div>
 		</aui:fieldset>
 	</c:when>

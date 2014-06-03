@@ -26,9 +26,9 @@
 			<td>
 				<c:if test="<%= portletDisplay.isShowCloseIcon() %>">
 					<liferay-ui:icon
-						alt="close"
 						cssClass="close-note"
 						iconCssClass="icon-remove"
+						message="close"
 						url="<%= portletDisplay.getURLClose() %>"
 					/>
 				</c:if>
