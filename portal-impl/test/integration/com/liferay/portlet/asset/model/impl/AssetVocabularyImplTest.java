@@ -127,10 +127,10 @@ public class AssetVocabularyImplTest {
 			_group.getGroupId(), vocabulary.getVocabularyId());
 
 		Assert.assertTrue(
-			vocabulary.isMissingRequiredCategory(1, new long[] {1}));
+			vocabulary.isMissingRequiredCategory(1, new long[]{1}));
 		Assert.assertFalse(
 			vocabulary.isMissingRequiredCategory(
-				1, new long[] {category.getCategoryId()}));
+				1, new long[]{category.getCategoryId()}));
 	}
 
 	@Test
