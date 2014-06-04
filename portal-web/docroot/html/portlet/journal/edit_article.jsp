@@ -353,6 +353,24 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 	</aui:form>
 </div>
 
+<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<portlet:param name="struts_action" value="/journal/preview_article_content" />
+
+	<c:if test="<%= (article != null) %>">
+		<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
+		<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
+		<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
+		<portlet:param name="ddmTemplateKey" value="<%= (ddmTemplate != null) ? ddmTemplate.getTemplateKey() : article.getTemplateId() %>" />
+	</c:if>
+</liferay-portlet:renderURL>
+
+<liferay-security:permissionsURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+	modelResource="<%= JournalArticle.class.getName() %>"
+	modelResourceDescription="<%= article.getTitle(locale) %>"
+	resourcePrimKey="<%= String.valueOf(article.getResourcePrimKey()) %>"
+	var="permissionsURL"
+/>
+
 <portlet:renderURL var="editArticleURL">
 	<portlet:param name="redirect" value="<%= redirect %>" />
 	<portlet:param name="struts_action" value="/journal/edit_article" />
@@ -370,14 +388,6 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 				id: '<%= (article != null) ? HtmlUtil.escape(articleId) : StringPool.BLANK %>',
 
 				<c:if test="<%= (article != null) && !article.isNew() %>">
-					<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-						<portlet:param name="struts_action" value="/journal/preview_article_content" />
-						<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
-						<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
-						<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
-						<portlet:param name="ddmTemplateKey" value="<%= (ddmTemplate != null) ? ddmTemplate.getTemplateKey() : article.getTemplateId() %>" />
-					</liferay-portlet:renderURL>
-
 					<liferay-security:permissionsURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 						modelResource="<%= JournalArticle.class.getName() %>"
 						modelResourceDescription="<%= article.getTitle(locale) %>"
@@ -389,7 +399,7 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 					previewUrl: '<%= HtmlUtil.escapeJS(previewArticleContentURL.toString()) %>',
 				</c:if>
 
-				title: '<%= ((article != null) && !article.isNew()) ? HtmlUtil.escapeJS(article.getTitle(locale)) : StringPool.BLANK %>'
+				title: '<%= (article != null) ? HtmlUtil.escapeJS(article.getTitle(locale)) : StringPool.BLANK %>'
 			},
 
 			<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
@@ -402,14 +412,6 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 </aui:script>
 
 <c:if test='<%= (article != null) && SessionMessages.contains(renderRequest, "previewRequested") %>'>
-	<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-		<portlet:param name="struts_action" value="/journal/preview_article_content" />
-		<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
-		<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
-		<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
-		<portlet:param name="ddmTemplateKey" value="<%= (ddmTemplate != null) ? ddmTemplate.getTemplateKey() : article.getTemplateId() %>" />
-	</liferay-portlet:renderURL>
-
 	<aui:script use="liferay-journal-preview">
 		Liferay.fire(
 			'previewArticle',
