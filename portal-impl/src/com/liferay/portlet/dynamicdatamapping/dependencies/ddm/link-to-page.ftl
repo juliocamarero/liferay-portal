@@ -2,6 +2,10 @@
 
 <#assign layoutLocalService = serviceLocator.findService("com.liferay.portal.service.LayoutLocalService")>
 
+<#function getLayoutJSON layout="">
+	<#return escapeAttribute("{ \"layoutId\": ${layout.getLayoutId()}, \"groupId\": ${layout.getGroupId()}, \"privateLayout\": ${layout.isPrivateLayout()?string} }")>
+</#function>
+
 <#macro getLayoutsOptions
 	groupId
 	parentLayoutId
@@ -19,7 +23,7 @@
 		</#if>
 
 		<#list layouts as curLayout>
-			<#assign curLayoutJSON = escapeAttribute("{ \"layoutId\": ${curLayout.getLayoutId()}, \"groupId\": ${groupId}, \"privateLayout\": ${privateLayout?string} }")>
+			<#assign curLayoutJSON = getLayoutJSON(curLayout)>
 
 			<#assign selected = (selectedPlid == curLayout.getPlid())>
 
@@ -73,7 +77,7 @@
 		<#if (validator.isNotNull(selectedLayout) && !layoutPermission.contains(permissionChecker, selectedLayout, "VIEW"))>
 			<optgroup label="${languageUtil.get(requestedLocale, "current")}">
 
-				<#assign selectedLayoutJSON = escapeAttribute("{ \"layoutId\": ${selectedLayout.getLayoutId()}, \"groupId\": ${scopeGroupId}, \"privateLayout\": ${selectedLayout?string} }")>
+				<#assign selectedLayoutJSON = getLayoutJSON(selectedLayout)>
 
 				<@aui.option selected=true useModelValue=false value=selectedLayoutJSON>
 					${escape(selectedLayout.getName(requestedLocale))}
