@@ -305,17 +305,18 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(searchContainer
 	</div>
 </c:if>
 
-<%
-for (int i = 0; i < results.size(); i++) {
-	Object result = results.get(i);
-%>
+<c:choose>
+	<c:when test='<%= !displayStyle.equals("list") %>'>
 
-	<%@ include file="/html/portlet/journal/cast_result.jspf" %>
+		<%
+		for (int i = 0; i < results.size(); i++) {
+			Object result = results.get(i);
+		%>
 
-	<c:choose>
-		<c:when test="<%= curArticle != null %>">
+			<%@ include file="/html/portlet/journal/cast_result.jspf" %>
+
 			<c:choose>
-				<c:when test='<%= !displayStyle.equals("list") %>'>
+				<c:when test="<%= curArticle != null %>">
 
 					<%
 					PortletURL tempRowURL = liferayPortletResponse.createRenderURL();
@@ -342,7 +343,56 @@ for (int i = 0; i < results.size(); i++) {
 						</c:otherwise>
 					</c:choose>
 				</c:when>
-				<c:otherwise>
+				<c:when test="<%= curFolder != null %>">
+
+					<%
+					String folderImage = "folder_empty_article";
+
+					if (JournalFolderServiceUtil.getFoldersAndArticlesCount(scopeGroupId, curFolder.getFolderId()) > 0) {
+						folderImage = "folder_full_article";
+					}
+
+					PortletURL tempRowURL = liferayPortletResponse.createRenderURL();
+
+					tempRowURL.setParameter("struts_action", "/journal/view");
+					tempRowURL.setParameter("redirect", currentURL);
+					tempRowURL.setParameter("groupId", String.valueOf(curFolder.getGroupId()));
+					tempRowURL.setParameter("folderId", String.valueOf(curFolder.getFolderId()));
+
+					request.setAttribute("view_entries.jsp-folder", curFolder);
+
+					request.setAttribute("view_entries.jsp-folderImage", folderImage);
+
+					request.setAttribute("view_entries.jsp-tempRowURL", tempRowURL);
+					%>
+
+					<c:choose>
+						<c:when test='<%= displayStyle.equals("icon") %>'>
+							<liferay-util:include page="/html/portlet/journal/view_folder_icon.jsp" />
+						</c:when>
+						<c:otherwise>
+							<liferay-util:include page="/html/portlet/journal/view_folder_descriptive.jsp" />
+						</c:otherwise>
+					</c:choose>
+				</c:when>
+			</c:choose>
+
+		<%
+		}
+		%>
+
+	</c:when>
+	<c:otherwise>
+
+		<%
+		for (int i = 0; i < results.size(); i++) {
+			Object result = results.get(i);
+		%>
+
+			<%@ include file="/html/portlet/journal/cast_result.jspf" %>
+
+			<c:choose>
+				<c:when test="<%= curArticle != null %>">
 					<liferay-util:buffer var="articleTitle">
 
 						<%
@@ -440,44 +490,8 @@ for (int i = 0; i < results.size(); i++) {
 					resultRows.add(row);
 					%>
 
-				</c:otherwise>
-			</c:choose>
-		</c:when>
-		<c:when test="<%= curFolder != null %>">
-			<c:choose>
-				<c:when test='<%= !displayStyle.equals("list") %>'>
-
-					<%
-					String folderImage = "folder_empty_article";
-
-					if (JournalFolderServiceUtil.getFoldersAndArticlesCount(scopeGroupId, curFolder.getFolderId()) > 0) {
-						folderImage = "folder_full_article";
-					}
-
-					PortletURL tempRowURL = liferayPortletResponse.createRenderURL();
-
-					tempRowURL.setParameter("struts_action", "/journal/view");
-					tempRowURL.setParameter("redirect", currentURL);
-					tempRowURL.setParameter("groupId", String.valueOf(curFolder.getGroupId()));
-					tempRowURL.setParameter("folderId", String.valueOf(curFolder.getFolderId()));
-
-					request.setAttribute("view_entries.jsp-folder", curFolder);
-
-					request.setAttribute("view_entries.jsp-folderImage", folderImage);
-
-					request.setAttribute("view_entries.jsp-tempRowURL", tempRowURL);
-					%>
-
-					<c:choose>
-						<c:when test='<%= displayStyle.equals("icon") %>'>
-							<liferay-util:include page="/html/portlet/journal/view_folder_icon.jsp" />
-						</c:when>
-						<c:otherwise>
-							<liferay-util:include page="/html/portlet/journal/view_folder_descriptive.jsp" />
-						</c:otherwise>
-					</c:choose>
 				</c:when>
-				<c:otherwise>
+				<c:when test="<%= curFolder != null %>">
 					<liferay-util:buffer var="folderTitle">
 
 						<%
@@ -533,19 +547,16 @@ for (int i = 0; i < results.size(); i++) {
 
 					resultRows.add(row);
 					%>
-
-				</c:otherwise>
+				</c:when>
 			</c:choose>
-		</c:when>
-	</c:choose>
 
-<%
-}
-%>
+		<%
+		}
+		%>
 
-<c:if test='<%= displayStyle.equals("list") %>'>
-	<liferay-ui:search-iterator paginate="<%= false %>" searchContainer="<%= searchContainer %>" />
-</c:if>
+		<liferay-ui:search-iterator paginate="<%= false %>" searchContainer="<%= searchContainer %>" />
+	</c:otherwise>
+</c:choose>
 
 <aui:script>
 	Liferay.fire(
