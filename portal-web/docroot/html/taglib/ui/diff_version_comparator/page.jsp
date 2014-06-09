@@ -140,7 +140,7 @@ if (Validator.isNotNull(languageId)) {
 					</div>
 				</c:if>
 
-				<c:if test="<%= (availableLocales != null) && !availableLocales.isEmpty() %>">
+				<c:if test="<%= (availableLocales != null) && !availableLocales.isEmpty() && (availableLocales.size() > 1) %>">
 					<div class="language-selector">
 						<aui:select label="" name="languageId" title="language">
 
