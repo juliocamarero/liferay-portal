@@ -562,7 +562,7 @@
 				<name>includeHiddenField</name>
 				<inputType>boolean</inputType>
 				<outputType>boolean</outputType>
-				<defaultValue>true</defaultValue>
+				<defaultValue>false</defaultValue>
 			</attribute>
 			<attribute>
 				<name>inlineField</name>
