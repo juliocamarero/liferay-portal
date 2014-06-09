@@ -244,6 +244,8 @@
 			border-bottom-color: #E5E5E5;
 
 			&.selected {
+				background-color: #F0F0F0;
+
 				.version-title {
 					color: #555;
 				}
