@@ -4,14 +4,11 @@
 <#assign layoutService = serviceLocator.findService("com.liferay.portal.service.LayoutService")>
 
 <#macro getLayoutOption
-	groupId
-	parentLayoutId
-	privateLayout
-	selected
 	layout
 	level = 0
+	selected = false
 >
-	<#assign curLayoutJSON = escapeAttribute("{ \"layoutId\": ${layout.getLayoutId()}, \"groupId\": ${groupId}, \"privateLayout\": ${privateLayout?string} }")>
+	<#assign curLayoutJSON = escapeAttribute("{ \"layoutId\": ${layout.getLayoutId()}, \"groupId\": ${layout.getGroupId()}, \"privateLayout\": ${layout.isPrivateLayout()?string} }")>
 
 	<@aui.option selected=selected useModelValue=false value=curLayoutJSON>
 		<#list 0..level as i>
@@ -38,12 +35,9 @@
 
 		<#list layouts as curLayout>
 			<@getLayoutOption
-				groupId = groupId
-				parentLayoutId = parentLayoutId
-				privateLayout = privateLayout
-				selected = (selectedPlid == curLayout.getPlid())
 				layout = curLayout
 				level = level
+				selected = (selectedPlid == curLayout.getPlid())
 			/>
 
 			<@getLayoutsOptions
@@ -86,12 +80,9 @@
 		<#if (selectedLayout?? && !layoutPermission.contains(permissionChecker, selectedLayout, "VIEW"))>
 			<optgroup label="${languageUtil.get(requestedLocale, "current")}">
 				<@getLayoutOption
-					groupId = scopeGroupId
-					parentLayoutId = 0
-					privateLayout = selectedLayout.isPrivateLayout()
-					selected = true
 					layout = selectedLayout
 					level = 0
+					selected = true
 				/>
 			</optgroup>
 		</#if>
