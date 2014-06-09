@@ -41,6 +41,7 @@ import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.WorkflowDefinitionLink;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -1174,6 +1175,16 @@ public class JournalFolderLocalServiceImpl
 
 				// Indexer
 
+				ServiceContext sc =
+					ServiceContextThreadLocal.getServiceContext();
+
+				if (sc == null) {
+					sc = new ServiceContext();
+					ServiceContextThreadLocal.pushServiceContext(sc);
+				}
+
+				sc.setAttribute("reindexAllVersions", true);
+
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 					JournalArticle.class);
 
@@ -1297,6 +1308,16 @@ public class JournalFolderLocalServiceImpl
 				}
 
 				// Indexer
+
+				ServiceContext sc = 
+						ServiceContextThreadLocal.getServiceContext();
+
+				if (sc == null) {
+					sc = new ServiceContext();
+					ServiceContextThreadLocal.pushServiceContext(sc);
+				}
+
+				sc.setAttribute("reindexAllVersions", true);
 
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 					JournalArticle.class);

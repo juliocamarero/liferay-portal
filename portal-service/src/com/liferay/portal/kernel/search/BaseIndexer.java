@@ -513,6 +513,28 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	@Override
+	public void reindexPermissions(String className, long classPK)
+		throws SearchException {
+
+		try {
+			if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled()) {
+				return;
+			}
+
+			doReindexPermissions(className, classPK);
+		}
+		catch (NoSuchModelException nsme) {
+			_log.error("Unable to index " + className + " " + classPK, nsme);
+		}
+		catch (SearchException se) {
+			throw se;
+		}
+		catch (Exception e) {
+			throw new SearchException(e);
+		}
+	}
+
+	@Override
 	public Hits search(SearchContext searchContext) throws SearchException {
 		try {
 			Hits hits = null;
@@ -1451,6 +1473,12 @@ public abstract class BaseIndexer implements Indexer {
 
 	protected void doReindexDDMStructures(List<Long> structureIds)
 		throws Exception {
+	}
+
+	protected void doReindexPermissions(String className, long classPK)
+		throws Exception {
+
+		doReindex(className, classPK);
 	}
 
 	protected Hits doSearch(SearchContext searchContext)

@@ -113,6 +113,9 @@ public interface Indexer {
 	public void reindexDDMStructures(List<Long> ddmStructureIds)
 		throws SearchException;
 
+	public void reindexPermissions(String className, long classPK)
+		throws SearchException;
+
 	public Hits search(SearchContext searchContext) throws SearchException;
 
 	public Hits search(
