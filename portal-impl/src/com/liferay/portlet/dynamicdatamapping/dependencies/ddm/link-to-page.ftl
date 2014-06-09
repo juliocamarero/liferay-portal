@@ -2,6 +2,10 @@
 
 <#assign layoutLocalService = serviceLocator.findService("com.liferay.portal.service.LayoutLocalService")>
 
+<#function getLayoutJSON layout="">
+	<#return escapeAttribute("{ \"layoutId\": ${layout.getLayoutId()}, \"groupId\": ${layout.getGroupId()}, \"privateLayout\": ${layout.isPrivateLayout()?string} }")>
+</#function>
+
 <#macro getLayoutsOptions
 	groupId
 	parentLayoutId
@@ -9,7 +13,9 @@
 	selectedPlid
 	level = 0
 >
-	<#assign layouts = layoutLocalService.getLayouts(groupId, privateLayout, parentLayoutId)>
+	<#assign layoutService = serviceLocator.findService("com.liferay.portal.service.LayoutService")>
+
+	<#assign layouts = layoutService.getLayouts(groupId, privateLayout, parentLayoutId)>
 
 	<#if (layouts?size > 0)>
 		<#if (level == 0)>
@@ -17,7 +23,7 @@
 		</#if>
 
 		<#list layouts as curLayout>
-			<#assign curLayoutJSON = escapeAttribute("{ \"layoutId\": ${curLayout.getLayoutId()}, \"groupId\": ${groupId}, \"privateLayout\": ${privateLayout?string} }")>
+			<#assign curLayoutJSON = getLayoutJSON(curLayout)>
 
 			<#assign selected = (selectedPlid == curLayout.getPlid())>
 
@@ -62,12 +68,24 @@
 
 		<#assign selectedLayout = layoutLocalService.fetchLayout(selectedLayoutGroupId, fieldLayoutJSONObject.getBoolean("privateLayout"), fieldLayoutJSONObject.getLong("layoutId"))!"">
 
-		<#if (selectedLayout?? && selectedLayout != "")>
+		<#if (validator.isNotNull(selectedLayout))>
 			<#assign selectedPlid = selectedLayout.getPlid()>
 		</#if>
 	</#if>
 
 	<@aui.select helpMessage=escape(fieldStructure.tip) name=namespacedFieldName label=escape(label) required=required>
+		<#if (validator.isNotNull(selectedLayout) && !layoutPermission.contains(permissionChecker, selectedLayout, "VIEW"))>
+			<optgroup label="${languageUtil.get(requestedLocale, "current")}">
+
+				<#assign selectedLayoutJSON = getLayoutJSON(selectedLayout)>
+
+				<@aui.option selected=true useModelValue=false value=selectedLayoutJSON>
+					${escape(selectedLayout.getName(requestedLocale))}
+				</@>
+
+			</optgroup>
+		</#if>
+
 		<@getLayoutsOptions
 			groupId = scopeGroupId
 			parentLayoutId = 0
