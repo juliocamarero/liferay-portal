@@ -140,7 +140,7 @@ if (Validator.isNotNull(languageId)) {
 					</div>
 				</c:if>
 
-				<c:if test="<%= (availableLocales != null) && !availableLocales.isEmpty() && (availableLocales.size() > 1) %>">
+				<c:if test="<%= (availableLocales != null) && (availableLocales.size() > 1) %>">
 					<div class="language-selector">
 						<aui:select label="" name="languageId" title="language">
 
@@ -209,6 +209,7 @@ if (Validator.isNotNull(languageId)) {
 						<liferay-ui:diff-html diffHtmlResults="<%= diffHtmlResults %>" />
 					</div>
 				</div>
+
 				<div class="legend-info">
 					<liferay-ui:icon
 						cssClass="legend-item"
