@@ -59,11 +59,7 @@ public class ListUtilTest {
 
 				@Override
 				public boolean filter(String string) {
-					if (string.equals("b")) {
-						return true;
-					}
-
-					return false;
+					return string.equals("b");
 				}
 
 			};
@@ -75,11 +71,7 @@ public class ListUtilTest {
 
 				@Override
 				public boolean filter(String string) {
-					if (string.equals("z")) {
-						return true;
-					}
-
-					return false;
+					return string.equals("z");
 				}
 
 			};
@@ -134,11 +126,7 @@ public class ListUtilTest {
 
 				@Override
 				public boolean filter(String string) {
-					if (string.length() == 2) {
-						return true;
-					}
-
-					return false;
+					return string.length() == 2;
 				}
 
 			};
@@ -150,11 +138,7 @@ public class ListUtilTest {
 
 				@Override
 				public boolean filter(String string) {
-					if (string.equals("z")) {
-						return true;
-					}
-
-					return false;
+					return string.equals("z");
 				}
 
 			};
@@ -183,19 +167,14 @@ public class ListUtilTest {
 	public void testFilterWithoutOutputList() {
 		List<String> expectedOutputList = new ArrayList<String>();
 
-		expectedOutputList.add("a");
-		expectedOutputList.add("c");
+		expectedOutputList.add("b");
 
 		PredicateFilter<String> predicateFilter =
 			new PredicateFilter<String>() {
 
 				@Override
 				public boolean filter(String string) {
-					if (!string.equals("b")) {
-						return true;
-					}
-
-					return false;
+					return string.equals("b");
 				}
 
 			};
@@ -217,8 +196,7 @@ public class ListUtilTest {
 		List<String> expectedOutputList = new ArrayList<String>();
 
 		expectedOutputList.add("0");
-		expectedOutputList.add("a");
-		expectedOutputList.add("c");
+		expectedOutputList.add("b");
 
 		List<String> inputList = new ArrayList<String>();
 
@@ -235,11 +213,7 @@ public class ListUtilTest {
 
 				@Override
 				public boolean filter(String string) {
-					if (!string.equals("b")) {
-						return true;
-					}
-
-					return false;
+					return string.equals("b");
 				}
 
 			};
