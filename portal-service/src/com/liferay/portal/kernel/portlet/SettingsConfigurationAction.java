@@ -121,6 +121,8 @@ public class SettingsConfigurationAction
 		UnicodeProperties properties = PropertiesParamUtil.getProperties(
 			actionRequest, _parameterNamePrefix);
 
+		recoverCheckboxValues(actionRequest, properties);
+
 		Settings settings = getSettings(actionRequest);
 
 		ModifiableSettings modifiableSettings =
@@ -297,6 +299,26 @@ public class SettingsConfigurationAction
 
 		throw new IllegalArgumentException(
 			"Invalid settings scope " + settingsScope);
+	}
+
+	protected void recoverCheckboxValues(
+		PortletRequest portletRequest, UnicodeProperties unicodeProperties) {
+
+		String checkboxNames = ParamUtil.getString(
+			portletRequest, "checkboxNames");
+
+		if (Validator.isNotNull(checkboxNames)) {
+			for (String param : StringUtil.split(checkboxNames)) {
+				if (param.startsWith(_parameterNamePrefix)) {
+					String key = param.substring(
+						_parameterNamePrefix.length(), param.length() - 2);
+
+					boolean value = ParamUtil.getBoolean(portletRequest, param);
+
+					unicodeProperties.setProperty(key, String.valueOf(value));
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
