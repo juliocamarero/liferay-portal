@@ -53,9 +53,19 @@
 
 <c:choose>
 	<c:when test='<%= (model != null) && type.equals("assetCategories") %>'>
+
+		<%
+		long classTypePK = 0;
+		Object dynamicValue = dynamicAttributes.get("classTypePK");
+		if (dynamicValue != null) {
+			classTypePK = Long.valueOf(dynamicValue.toString());
+		}
+		%>
+
 		<liferay-ui:asset-categories-selector
 			className="<%= model.getName() %>"
 			classPK="<%= _getClassPK(bean, classPK) %>"
+			classTypePK="<%= classTypePK %>"
 			contentCallback='<%= portletResponse.getNamespace() + "getSuggestionsContent" %>'
 		/>
 	</c:when>
