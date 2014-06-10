@@ -130,6 +130,18 @@ public class Transformer {
 		}
 	}
 
+	public String doTransform(
+			ThemeDisplay themeDisplay, Map<String, String> tokens,
+			String viewMode, String languageId, Document document,
+			PortletRequestModel portletRequestModel, String script,
+			String langType)
+		throws Exception {
+
+		return transform(
+			themeDisplay, tokens, viewMode, languageId, document,
+			portletRequestModel, script, langType, true);
+	}
+
 	public String transform(
 			ThemeDisplay themeDisplay, Map<String, Object> contextObjects,
 			String script, String langType)
@@ -190,13 +202,25 @@ public class Transformer {
 			template.put("groupId", scopeGroupId);
 			template.put("journalTemplatesPath", templatesPath);
 
-			mergeTemplate(template, unsyncStringWriter);
+			mergeTemplate(template, unsyncStringWriter, false);
 		}
 		catch (Exception e) {
 			throw new TransformException("Unhandled exception", e);
 		}
 
 		return unsyncStringWriter.toString();
+	}
+
+	public String transform(
+			ThemeDisplay themeDisplay, Map<String, String> tokens,
+			String viewMode, String languageId, Document document,
+			PortletRequestModel portletRequestModel, String script,
+			String langType)
+		throws Exception {
+
+		return transform(
+			themeDisplay, tokens, viewMode, languageId, document,
+			portletRequestModel, script, langType, false);
 	}
 
 	protected Company getCompany(ThemeDisplay themeDisplay, long companyId)
@@ -435,7 +459,8 @@ public class Transformer {
 	}
 
 	protected void mergeTemplate(
-			Template template, UnsyncStringWriter unsyncStringWriter)
+			Template template, UnsyncStringWriter unsyncStringWriter,
+			boolean propagateException)
 		throws Exception {
 
 		VelocityTaglib velocityTaglib = (VelocityTaglib)template.get(
@@ -445,7 +470,12 @@ public class Transformer {
 			velocityTaglib.setTemplate(template);
 		}
 
-		template.processTemplate(unsyncStringWriter);
+		if (propagateException) {
+			template.doProcessTemplate(unsyncStringWriter);
+		}
+		else {
+			template.processTemplate(unsyncStringWriter);
+		}
 	}
 
 	protected void prepareTemplate(ThemeDisplay themeDisplay, Template template)
@@ -462,7 +492,7 @@ public class Transformer {
 			ThemeDisplay themeDisplay, Map<String, String> tokens,
 			String viewMode, String languageId, Document document,
 			PortletRequestModel portletRequestModel, String script,
-			String langType)
+			String langType, boolean propagateException)
 		throws Exception {
 
 		// Setup listeners
@@ -625,7 +655,7 @@ public class Transformer {
 				template.put("groupId", articleGroupId);
 				template.put("journalTemplatesPath", templatesPath);
 
-				mergeTemplate(template, unsyncStringWriter);
+				mergeTemplate(template, unsyncStringWriter, propagateException);
 			}
 			catch (Exception e) {
 				if (e instanceof DocumentException) {
