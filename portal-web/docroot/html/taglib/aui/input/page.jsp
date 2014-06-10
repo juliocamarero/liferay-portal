@@ -91,7 +91,7 @@
 	<c:when test='<%= type.equals("checkbox") %>'>
 
 		<%
-		String valueString = String.valueOf(checked);
+		String valueString = StringPool.BLANK;
 
 		if (value != null) {
 			valueString = value.toString();
@@ -105,10 +105,8 @@
 			checked = GetterUtil.getBoolean(valueString);
 		}
 
-		String defaultValueString = String.valueOf(checked);
-
-		if (Validator.isNotNull(valueString) && !StringUtil.equalsIgnoreCase(valueString, "false") && !StringUtil.equalsIgnoreCase(valueString, "true")) {
-			defaultValueString = valueString;
+		if (StringUtil.equalsIgnoreCase(valueString, "false") || StringUtil.equalsIgnoreCase(valueString, "true")) {
+			valueString = StringPool.BLANK;
 		}
 		%>
 
@@ -116,7 +114,7 @@
 			<input id="<%= namespace + id %>" name="<%= namespace + name %>" type="hidden" value="<%= HtmlUtil.escapeAttribute(valueString) %>" />
 		</c:if>
 
-		<input <%= checked ? "checked" : StringPool.BLANK %> class="<%= fieldCssClass %>" <%= disabled ? "disabled" : StringPool.BLANK %> id="<%= namespace + id %>Checkbox" name="<%= namespace + name + (includeHiddenField ? "Checkbox" : StringPool.BLANK) %>" <%= Validator.isNotNull(onChange) ? "onChange=\"" + onChange + "\"" : StringPool.BLANK %> onClick="<%= (includeHiddenField ? "Liferay.Util.updateCheckboxValue(this);" : StringPool.BLANK) + onClick %>" <%= Validator.isNotNull(title) ? "title=\"" + LanguageUtil.get(locale, title) + "\"" : StringPool.BLANK %> type="checkbox" value="<%= HtmlUtil.escapeAttribute(defaultValueString) %>" <%= AUIUtil.buildData(data) %> <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %> />
+		<input <%= checked ? "checked" : StringPool.BLANK %> class="<%= fieldCssClass %>" <%= disabled ? "disabled" : StringPool.BLANK %> id="<%= namespace + id %>Checkbox" name="<%= namespace + name + (includeHiddenField ? "Checkbox" : StringPool.BLANK) %>" <%= Validator.isNotNull(onChange) ? "onChange=\"" + onChange + "\"" : StringPool.BLANK %> onClick="<%= (includeHiddenField ? "Liferay.Util.updateCheckboxValue(this);" : StringPool.BLANK) + onClick %>" <%= Validator.isNotNull(title) ? "title=\"" + LanguageUtil.get(locale, title) + "\"" : StringPool.BLANK %> type="checkbox" <%= Validator.isNotNull(valueString) ? ("value=" + HtmlUtil.escapeAttribute(valueString)) : StringPool.BLANK %> <%= AUIUtil.buildData(data) %> <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %> />
 	</c:when>
 	<c:when test='<%= type.equals("radio") %>'>
 
