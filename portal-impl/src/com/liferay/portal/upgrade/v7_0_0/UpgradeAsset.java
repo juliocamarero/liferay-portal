@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.upgrade.v7_0_0.util.AssetEntryTable;
@@ -30,10 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Gergely Mathe
@@ -42,50 +38,8 @@ public class UpgradeAsset extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		doUpgradeAssetEntry();
-		doUpgradeAllAssetVocabularies();
-	}
-
-	protected void doUpgradeAllAssetVocabularies() throws Exception {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet result = null;
-
-		try {
-			connection = DataAccess.getUpgradeOptimizedConnection();
-
-			statement = connection.prepareStatement(
-				"SELECT vocabularyId, settings_ FROM AssetVocabulary");
-
-			result = statement.executeQuery();
-
-			while (result.next()) {
-				Long key = result.getLong("vocabularyId");
-				String settings = result.getString("settings_");
-
-				String newSettings = doUpgradeVocabularySettings(settings);
-
-				runSQL(
-					"UPDATE AssetVocabulary SET settings_ = '" + newSettings +
-						"' WHERE vocabularyId = " + key);
-			}
-		}
-		finally {
-			DataAccess.cleanUp(connection, statement, result);
-		}
-	}
-
-	protected void doUpgradeAssetEntry() throws Exception {
-		try {
-			runSQL("alter_column_type AssetEntry description TEXT null");
-			runSQL("alter_column_type AssetEntry summary TEXT null");
-		}
-		catch (SQLException sqle) {
-			upgradeTable(
-				AssetEntryTable.TABLE_NAME, AssetEntryTable.TABLE_COLUMNS,
-				AssetEntryTable.TABLE_SQL_CREATE,
-				AssetEntryTable.TABLE_SQL_ADD_INDEXES);
-		}
+		upgradeAssetEntryTable();
+		upgradeAssetVocabularies();
 	}
 
 	protected String doUpgradeVocabularySettings(String settings) {
@@ -120,6 +74,48 @@ public class UpgradeAsset extends UpgradeProcess {
 			classNameIds, classTypeIds, requireds);
 
 		return newProperties.toString();
+	}
+
+	protected void upgradeAssetEntryTable() throws Exception {
+		try {
+			runSQL("alter_column_type AssetEntry description TEXT null");
+			runSQL("alter_column_type AssetEntry summary TEXT null");
+		}
+		catch (SQLException sqle) {
+			upgradeTable(
+				AssetEntryTable.TABLE_NAME, AssetEntryTable.TABLE_COLUMNS,
+				AssetEntryTable.TABLE_SQL_CREATE,
+				AssetEntryTable.TABLE_SQL_ADD_INDEXES);
+		}
+	}
+
+	protected void upgradeAssetVocabularies() throws Exception {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		try {
+			connection = DataAccess.getUpgradeOptimizedConnection();
+
+			statement = connection.prepareStatement(
+				"SELECT vocabularyId, settings_ FROM AssetVocabulary");
+
+			result = statement.executeQuery();
+
+			while (result.next()) {
+				Long key = result.getLong("vocabularyId");
+				String settings = result.getString("settings_");
+
+				String newSettings = doUpgradeVocabularySettings(settings);
+
+				runSQL(
+					"UPDATE AssetVocabulary SET settings_ = '" + newSettings +
+						"' WHERE vocabularyId = " + key);
+			}
+		}
+		finally {
+			DataAccess.cleanUp(connection, statement, result);
+		}
 	}
 
 }
