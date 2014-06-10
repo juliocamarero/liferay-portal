@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.util;
 
+import com.liferay.portal.CompareVersionsException;
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -475,7 +476,7 @@ public class JournalUtil {
 		if (!JournalArticleLocalServiceUtil.isRenderable(
 				sourceArticle, portletRequestModel, themeDisplay)) {
 
-			return null;
+			throw new CompareVersionsException(sourceVersion);
 		}
 
 		JournalArticleDisplay sourceArticleDisplay =
@@ -490,7 +491,7 @@ public class JournalUtil {
 		if (!JournalArticleLocalServiceUtil.isRenderable(
 				targetArticle, portletRequestModel, themeDisplay)) {
 
-			return null;
+			throw new CompareVersionsException(targetVersion);
 		}
 
 		JournalArticleDisplay targetArticleDisplay =
@@ -953,9 +954,9 @@ public class JournalUtil {
 			WebKeys.THEME_DISPLAY);
 
 		PortletURL portletURL = PortletURLFactoryUtil.create(
-			portletRequest, PortletKeys.JOURNAL,
-			PortalUtil.getControlPanelPlid(themeDisplay.getCompanyId()),
-			PortletRequest.RENDER_PHASE);
+				portletRequest, PortletKeys.JOURNAL,
+				PortalUtil.getControlPanelPlid(themeDisplay.getCompanyId()),
+				PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter("struts_action", "/journal/view");
 		portletURL.setParameter("folderId", String.valueOf(folderId));
@@ -1465,8 +1466,8 @@ public class JournalUtil {
 		throws Exception {
 
 		return _transformer.transform(
-			themeDisplay, tokens, viewMode, languageId, document,
-			portletRequestModel, script, langType);
+				themeDisplay, tokens, viewMode, languageId, document,
+				portletRequestModel, script, langType);
 	}
 
 	private static void _addElementOptions(
