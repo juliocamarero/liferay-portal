@@ -89,7 +89,7 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 
 	private String _className;
 	private long _classPK;
-	private long _classTypePK;
+	private long _classTypePK = AssetCategoryConstants.ALL_CLASS_TYPE_IDS;
 	private String _contentCallback;
 	private String _curCategoryIds;
 	private String _hiddenInput = "assetCategoryIds";
