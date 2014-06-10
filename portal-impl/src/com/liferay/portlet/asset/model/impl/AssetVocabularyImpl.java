@@ -197,20 +197,6 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 			classNameId, AssetCategoryConstants.ALL_CLASS_TYPE_IDS);
 	}
 
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #isMissingRequiredCategory(long, long, final long[])}
-	 */
-	@Deprecated
-	@Override
-	public boolean isMissingRequiredCategory(
-			long classNameId, final long[] categoryIds)
-		throws SystemException {
-
-		return isMissingRequiredCategory(
-			classNameId, AssetCategoryConstants.ALL_CLASS_TYPE_IDS,
-			categoryIds);
-	}
-
 	@Override
 	public boolean isMissingRequiredCategory(
 			long classNameId, long classTypeId, final long[] categoryIds)
