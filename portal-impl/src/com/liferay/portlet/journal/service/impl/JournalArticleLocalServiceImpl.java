@@ -1855,37 +1855,17 @@ public class JournalArticleLocalServiceImpl
 
 		boolean cacheable = true;
 
-		Map<String, String> tokens = JournalUtil.getTokens(
-			article.getGroupId(), portletRequestModel, themeDisplay);
-
-		if ((themeDisplay == null) && (portletRequestModel == null)) {
-			tokens.put("company_id", String.valueOf(article.getCompanyId()));
-
-			Group companyGroup = groupLocalService.getCompanyGroup(
-				article.getCompanyId());
-
-			tokens.put(
-				"article_group_id", String.valueOf(article.getGroupId()));
-			tokens.put(
-				"company_group_id", String.valueOf(companyGroup.getGroupId()));
-
-			// Deprecated tokens
-
-			tokens.put("group_id", String.valueOf(article.getGroupId()));
-		}
-
-		tokens.put(
-			"article_resource_pk",
-			String.valueOf(article.getResourcePrimKey()));
-
 		String defaultDDMTemplateKey = article.getTemplateId();
 
 		if (Validator.isNull(ddmTemplateKey)) {
 			ddmTemplateKey = defaultDDMTemplateKey;
 		}
 
-		tokens.put("structure_id", article.getStructureId());
-		tokens.put("template_id", ddmTemplateKey);
+		Map<String, String> tokens = JournalUtil.getTokens(
+			article.getGroupId(), portletRequestModel, themeDisplay);
+
+		addTokens(
+			article, ddmTemplateKey, portletRequestModel, themeDisplay, tokens);
 
 		Document document = article.getDocument();
 
@@ -3278,30 +3258,9 @@ public class JournalArticleLocalServiceImpl
 		Map<String, String> tokens = JournalUtil.getTokens(
 			article.getGroupId(), portletRequestModel, themeDisplay);
 
-		if ((themeDisplay == null) && (portletRequestModel == null)) {
-			tokens.put("company_id", String.valueOf(article.getCompanyId()));
-
-			Group companyGroup = groupLocalService.getCompanyGroup(
-				article.getCompanyId());
-
-			tokens.put(
-				"article_group_id", String.valueOf(article.getGroupId()));
-			tokens.put(
-				"company_group_id", String.valueOf(companyGroup.getGroupId()));
-
-			// Deprecated tokens
-
-			tokens.put("group_id", String.valueOf(article.getGroupId()));
-		}
-
-		tokens.put(
-			"article_resource_pk",
-			String.valueOf(article.getResourcePrimKey()));
-
-		String ddmTemplateKey = article.getTemplateId();
-
-		tokens.put("structure_id", article.getStructureId());
-		tokens.put("template_id", ddmTemplateKey);
+		addTokens(
+			article, article.getTemplateId(), portletRequestModel, themeDisplay,
+			tokens);
 
 		Document document = article.getDocument();
 
@@ -3358,7 +3317,7 @@ public class JournalArticleLocalServiceImpl
 			DDMTemplate ddmTemplate = ddmTemplateLocalService.getTemplate(
 				PortalUtil.getSiteGroupId(article.getGroupId()),
 				classNameLocalService.getClassNameId(DDMStructure.class),
-				ddmTemplateKey, true);
+				article.getTemplateId(), true);
 
 			Group companyGroup = groupLocalService.getCompanyGroup(
 				article.getCompanyId());
@@ -5666,6 +5625,36 @@ public class JournalArticleLocalServiceImpl
 
 			journalArticlePersistence.update(article);
 		}
+	}
+
+	protected void addTokens(
+			JournalArticle article, String ddmTemplateKey,
+			PortletRequestModel portletRequestModel, ThemeDisplay themeDisplay,
+			Map<String, String> tokens)
+		throws PortalException {
+
+		if ((themeDisplay == null) && (portletRequestModel == null)) {
+			tokens.put("company_id", String.valueOf(article.getCompanyId()));
+
+			Group companyGroup = groupLocalService.getCompanyGroup(
+				article.getCompanyId());
+
+			tokens.put(
+				"article_group_id", String.valueOf(article.getGroupId()));
+			tokens.put(
+				"company_group_id", String.valueOf(companyGroup.getGroupId()));
+
+			// Deprecated tokens
+
+			tokens.put("group_id", String.valueOf(article.getGroupId()));
+		}
+
+		tokens.put(
+			"article_resource_pk",
+			String.valueOf(article.getResourcePrimKey()));
+
+		tokens.put("structure_id", article.getStructureId());
+		tokens.put("template_id", ddmTemplateKey);
 	}
 
 	protected String buildArticleURL(
