@@ -130,6 +130,155 @@ public class Transformer {
 		}
 	}
 
+	public String doTransform(
+			ThemeDisplay themeDisplay, Map<String, String> tokens,
+			String viewMode, String languageId, Document document,
+			PortletRequestModel portletRequestModel, String script,
+			String langType)
+		throws Exception {
+
+		// Setup listeners
+
+		if (Validator.isNull(viewMode)) {
+			viewMode = Constants.VIEW;
+		}
+
+		for (TransformerListener transformerListener : _transformerListeners) {
+
+			// Modify XML
+
+			if (transformerListener != null) {
+				document = transformerListener.onXml(
+					document, languageId, tokens);
+			}
+
+			// Modify script
+
+			if (transformerListener != null) {
+				script = transformerListener.onScript(
+					script, document, languageId, tokens);
+			}
+		}
+
+		// Transform
+
+		String output = null;
+
+		if (Validator.isNull(langType)) {
+			output = LocalizationUtil.getLocalization(
+				document.asXML(), languageId);
+		}
+		else {
+			long companyId = 0;
+			long companyGroupId = 0;
+			long articleGroupId = 0;
+
+			if (tokens != null) {
+				companyId = GetterUtil.getLong(tokens.get("company_id"));
+				companyGroupId = GetterUtil.getLong(
+					tokens.get("company_group_id"));
+				articleGroupId = GetterUtil.getLong(
+					tokens.get("article_group_id"));
+			}
+
+			long scopeGroupId = 0;
+			long siteGroupId = 0;
+
+			if (themeDisplay != null) {
+				companyId = themeDisplay.getCompanyId();
+				companyGroupId = themeDisplay.getCompanyGroupId();
+				scopeGroupId = themeDisplay.getScopeGroupId();
+				siteGroupId = themeDisplay.getSiteGroupId();
+			}
+
+			String templateId = tokens.get("template_id");
+
+			templateId = getTemplateId(
+				templateId, companyId, companyGroupId, articleGroupId);
+
+			Template template = getTemplate(
+				templateId, tokens, languageId, document, script, langType);
+
+			UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
+
+			if (document != null) {
+				Element rootElement = document.getRootElement();
+
+				List<TemplateNode> templateNodes = getTemplateNodes(
+					themeDisplay, rootElement);
+
+				if (templateNodes != null) {
+					for (TemplateNode templateNode : templateNodes) {
+						template.put(templateNode.getName(), templateNode);
+					}
+				}
+
+				if (portletRequestModel != null) {
+					template.put("request", portletRequestModel.toMap());
+
+					if (langType.equals(TemplateConstants.LANG_TYPE_XSL)) {
+						Document requestDocument = SAXReaderUtil.read(
+							portletRequestModel.toXML());
+
+						Element requestElement =
+							requestDocument.getRootElement();
+
+						template.put("xmlRequest", requestElement.asXML());
+					}
+				}
+				else {
+					Element requestElement = rootElement.element("request");
+
+					template.put(
+						"request", insertRequestVariables(requestElement));
+
+					if (langType.equals(TemplateConstants.LANG_TYPE_XSL)) {
+						template.put("xmlRequest", requestElement.asXML());
+					}
+				}
+			}
+
+			template.put("articleGroupId", articleGroupId);
+			template.put("company", getCompany(themeDisplay, companyId));
+			template.put("companyId", companyId);
+			template.put("device", getDevice(themeDisplay));
+
+			String templatesPath = getTemplatesPath(companyId, articleGroupId);
+
+			Locale locale = LocaleUtil.fromLanguageId(languageId);
+
+			template.put("locale", locale);
+
+			template.put(
+				"permissionChecker",
+				PermissionThreadLocal.getPermissionChecker());
+			template.put(
+				"randomNamespace",
+				StringUtil.randomId() + StringPool.UNDERLINE);
+			template.put("scopeGroupId", scopeGroupId);
+			template.put("siteGroupId", siteGroupId);
+			template.put("templatesPath", templatesPath);
+			template.put("viewMode", viewMode);
+
+			// Deprecated variables
+
+			template.put("groupId", articleGroupId);
+			template.put("journalTemplatesPath", templatesPath);
+
+			doMergeTemplate(template, unsyncStringWriter);
+
+			output = unsyncStringWriter.toString();
+		}
+
+		// Postprocess output
+
+		for (TransformerListener transformerListener : _transformerListeners) {
+			output = transformerListener.onOutput(output, languageId, tokens);
+		}
+
+		return output;
+	}
+
 	public String transform(
 			ThemeDisplay themeDisplay, Map<String, Object> contextObjects,
 			String script, String langType)
@@ -409,6 +558,20 @@ public class Transformer {
 		}
 
 		return output;
+	}
+
+	protected void doMergeTemplate(
+			Template template, UnsyncStringWriter unsyncStringWriter)
+		throws Exception {
+
+		VelocityTaglib velocityTaglib = (VelocityTaglib)template.get(
+			PortletDisplayTemplateConstants.TAGLIB_LIFERAY);
+
+		if (velocityTaglib != null) {
+			velocityTaglib.setTemplate(template);
+		}
+
+		template.doProcessTemplate(unsyncStringWriter);
 	}
 
 	protected Company getCompany(ThemeDisplay themeDisplay, long companyId)
