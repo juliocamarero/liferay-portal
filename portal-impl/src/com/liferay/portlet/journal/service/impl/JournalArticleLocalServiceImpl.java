@@ -3269,6 +3269,118 @@ public class JournalArticleLocalServiceImpl
 		}
 	}
 
+	@Override
+	public boolean isRenderable(
+			JournalArticle article, PortletRequestModel portletRequestModel,
+			ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		Map<String, String> tokens = JournalUtil.getTokens(
+			article.getGroupId(), portletRequestModel, themeDisplay);
+
+		if ((themeDisplay == null) && (portletRequestModel == null)) {
+			tokens.put("company_id", String.valueOf(article.getCompanyId()));
+
+			Group companyGroup = groupLocalService.getCompanyGroup(
+				article.getCompanyId());
+
+			tokens.put(
+				"article_group_id", String.valueOf(article.getGroupId()));
+			tokens.put(
+				"company_group_id", String.valueOf(companyGroup.getGroupId()));
+
+			// Deprecated tokens
+
+			tokens.put("group_id", String.valueOf(article.getGroupId()));
+		}
+
+		tokens.put(
+			"article_resource_pk",
+			String.valueOf(article.getResourcePrimKey()));
+
+		String ddmTemplateKey = article.getTemplateId();
+
+		tokens.put("structure_id", article.getStructureId());
+		tokens.put("template_id", ddmTemplateKey);
+
+		Document document = article.getDocument();
+
+		document = document.clone();
+
+		Element rootElement = document.getRootElement();
+
+		List<Element> pages = rootElement.elements("page");
+
+		if (!pages.isEmpty()) {
+			String targetPage = null;
+
+			Map<String, String[]> parameters =
+				portletRequestModel.getParameters();
+
+			if (parameters != null) {
+				String[] values = parameters.get("targetPage");
+
+				if ((values != null) && (values.length > 0)) {
+					targetPage = values[0];
+				}
+			}
+
+			Element pageElement = null;
+
+			if (Validator.isNotNull(targetPage)) {
+				targetPage = HtmlUtil.escapeXPathAttribute(targetPage);
+
+				XPath xPathSelector = SAXReaderUtil.createXPath(
+					"/root/page[@id = " + targetPage + "]");
+
+				pageElement = (Element)xPathSelector.selectSingleNode(document);
+			}
+
+			if (pageElement != null) {
+				document = SAXReaderUtil.createDocument(pageElement);
+
+				rootElement = document.getRootElement();
+			}
+			else {
+				pageElement = pages.get(0);
+
+				document = SAXReaderUtil.createDocument(pageElement);
+
+				rootElement = document.getRootElement();
+			}
+		}
+
+		JournalUtil.addAllReservedEls(
+			rootElement, tokens, article, article.getDefaultLanguageId(),
+			themeDisplay);
+
+		try {
+			DDMTemplate ddmTemplate = ddmTemplateLocalService.getTemplate(
+				PortalUtil.getSiteGroupId(article.getGroupId()),
+				classNameLocalService.getClassNameId(DDMStructure.class),
+				ddmTemplateKey, true);
+
+			Group companyGroup = groupLocalService.getCompanyGroup(
+				article.getCompanyId());
+
+			if (companyGroup.getGroupId() == ddmTemplate.getGroupId()) {
+				tokens.put(
+					"company_group_id",
+					String.valueOf(companyGroup.getGroupId()));
+			}
+
+			JournalUtil.doTransform(
+				themeDisplay, tokens, Constants.VIEW,
+				article.getDefaultLanguageId(), document, portletRequestModel,
+				ddmTemplate.getScript(), ddmTemplate.getLanguage());
+		}
+		catch (Exception e) {
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Moves the web content article matching the group and article ID to a new
 	 * folder.
