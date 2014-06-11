@@ -53,11 +53,23 @@
 
 <c:choose>
 	<c:when test='<%= (model != null) && type.equals("assetCategories") %>'>
-		<liferay-ui:asset-categories-selector
-			className="<%= model.getName() %>"
-			classPK="<%= _getClassPK(bean, classPK) %>"
-			contentCallback='<%= portletResponse.getNamespace() + "getSuggestionsContent" %>'
-		/>
+		<c:choose>
+			<c:when test='<%= dynamicAttributes.containsKey("classTypePK") %>'>
+				<liferay-ui:asset-categories-selector
+					className="<%= model.getName() %>"
+					classPK="<%= _getClassPK(bean, classPK) %>"
+					classTypePK='<%= Long.valueOf(dynamicAttributes.get("classTypePK").toString()) %>'
+					contentCallback='<%= portletResponse.getNamespace() + "getSuggestionsContent" %>'
+				/>
+			</c:when>
+			<c:otherwise>
+				<liferay-ui:asset-categories-selector
+					className="<%= model.getName() %>"
+					classPK="<%= _getClassPK(bean, classPK) %>"
+					contentCallback='<%= portletResponse.getNamespace() + "getSuggestionsContent" %>'
+				/>
+			</c:otherwise>
+		</c:choose>
 	</c:when>
 	<c:when test='<%= (model != null) && type.equals("assetTags") %>'>
 		<liferay-ui:asset-tags-selector
