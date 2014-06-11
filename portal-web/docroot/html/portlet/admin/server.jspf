@@ -102,13 +102,6 @@ serverURL.setParameter("tabs3", tabs3);
 						</div>
 
 						<%
-						List<String> headerNames = new ArrayList<String>();
-
-						headerNames.add("category");
-						headerNames.add("level");
-
-						SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, serverURL, headerNames, null);
-
 						Map currentLoggerNames = new TreeMap();
 
 						Enumeration enu = LogManager.getCurrentLoggers();
@@ -121,9 +114,9 @@ serverURL.setParameter("tabs3", tabs3);
 							}
 						}
 
-						List results = ListUtil.fromCollection(currentLoggerNames.entrySet());
+						List currentLoggerNamesList = ListUtil.fromCollection(currentLoggerNames.entrySet());
 
-						Iterator itr = results.iterator();
+						Iterator itr = currentLoggerNamesList.iterator();
 
 						while (itr.hasNext()) {
 							Map.Entry entry = (Map.Entry)itr.next();
@@ -137,64 +130,58 @@ serverURL.setParameter("tabs3", tabs3);
 								itr.remove();
 							}
 						}
-
-						searchContainer.setTotal(results.size());
-
-						results = ListUtil.subList(results, searchContainer.getStart(), searchContainer.getEnd());
-
-						searchContainer.setResults(results);
-
-						List resultRows = searchContainer.getResultRows();
-
-						for (int i = 0; i < results.size(); i++) {
-							Map.Entry entry = (Map.Entry)results.get(i);
-
-							String name = (String)entry.getKey();
-							Logger logger = (Logger)entry.getValue();
-
-							Level level = logger.getLevel();
-
-							ResultRow row = new ResultRow(entry, name, i);
-
-							// Name
-
-							row.addText(HtmlUtil.escape(name));
-
-							// Logger
-
-							StringBundler sb = new StringBundler(Levels.ALL_LEVELS.length * 6 + 7);
-
-							sb.append("<select name=\"");
-							sb.append(renderResponse.getNamespace());
-							sb.append("logLevel");
-							sb.append(HtmlUtil.escapeAttribute(name));
-							sb.append("\">");
-
-							for (int j = 0; j < Levels.ALL_LEVELS.length; j++) {
-								sb.append("<option ");
-
-								if (level.equals(Levels.ALL_LEVELS[j])) {
-									sb.append("selected");
-								}
-
-								sb.append(" value=\"");
-								sb.append(Levels.ALL_LEVELS[j]);
-								sb.append("\">");
-								sb.append(Levels.ALL_LEVELS[j]);
-								sb.append("</option>");
-							}
-
-							sb.append("</select>");
-
-							row.addText(sb.toString());
-
-							// Add result row
-
-							resultRows.add(row);
-						}
 						%>
 
-						<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+						<liferay-ui:search-container
+							iteratorURL="<%= serverURL %>"
+							total="<%= currentLoggerNamesList.size() %>"
+						>
+							<liferay-ui:search-container-results
+								results="<%= ListUtil.subList(currentLoggerNamesList, searchContainer.getStart(), searchContainer.getEnd()) %>"
+							/>
+
+							<liferay-ui:search-container-row
+								className="java.util.Map.Entry"
+								modelVar="entry"
+							>
+
+								<%
+								String name = (String)entry.getKey();
+								%>
+
+								<liferay-ui:search-container-column-text
+									name="category"
+									value="<%= HtmlUtil.escape(name) %>"
+								/>
+
+								<liferay-ui:search-container-column-text
+									name="level"
+								>
+
+									<%
+									Logger logger = (Logger)entry.getValue();
+
+									Level level = logger.getLevel();
+									%>
+
+									<select name="<%= renderResponse.getNamespace() + "logLevel" + HtmlUtil.escapeAttribute(name) %>">
+
+										<%
+										for (int j = 0; j < Levels.ALL_LEVELS.length; j++) {
+										%>
+
+											<option <%= level.equals(Levels.ALL_LEVELS[j]) ? "selected" : StringPool.BLANK %> value="<%= Levels.ALL_LEVELS[j] %>"><%= Levels.ALL_LEVELS[j] %></option>
+
+										<%
+										}
+										%>
+
+									</select>
+								</liferay-ui:search-container-column-text>
+							</liferay-ui:search-container-row>
+
+							<liferay-ui:search-iterator/>
+						</liferay-ui:search-container>
 
 						<aui:button-row>
 
@@ -219,26 +206,6 @@ serverURL.setParameter("tabs3", tabs3);
 				</div>
 
 				<%
-				List<String> headerNames = new ArrayList<String>();
-
-				headerNames.add("property");
-				headerNames.add("value");
-
-				if (tabs3.equals("portal-properties")) {
-					headerNames.add("source");
-				}
-
-				String emptyResultsMessage = null;
-
-				if (tabs3.equals("portal-properties")) {
-					emptyResultsMessage = "no-portal-properties-were-found-that-matched-the-keywords";
-				}
-				else {
-					emptyResultsMessage = "no-system-properties-were-found-that-matched-the-keywords";
-				}
-
-				SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, serverURL, headerNames, emptyResultsMessage);
-
 				Map<String, String> filteredProperties = new TreeMap<String, String>();
 
 				Properties properties = null;
@@ -259,15 +226,7 @@ serverURL.setParameter("tabs3", tabs3);
 					}
 				}
 
-				List results = ListUtil.fromCollection(filteredProperties.entrySet());
-
-				searchContainer.setTotal(results.size());
-
-				results = ListUtil.subList(results, searchContainer.getStart(), searchContainer.getEnd());
-
-				searchContainer.setResults(results);
-
-				List resultRows = searchContainer.getResultRows();
+				List filteredPropertiesList = ListUtil.fromCollection(filteredProperties.entrySet());
 
 				PortletPreferences serverPortletPreferences = PrefsPropsUtil.getPreferences();
 
@@ -276,102 +235,79 @@ serverURL.setParameter("tabs3", tabs3);
 				PortletPreferences companyPortletPreferences = PrefsPropsUtil.getPreferences(company.getCompanyId());
 
 				Map<String, String[]> companyPortletPreferencesMap = companyPortletPreferences.getMap();
-
-				for (int i = 0; i < results.size(); i++) {
-					Map.Entry entry = (Map.Entry)results.get(i);
-
-					String property = (String)entry.getKey();
-					String value = (String)entry.getValue();
-
-					boolean overriddenPropertyValue = false;
-
-					if (tabs3.equals("portal-properties")) {
-						if (serverPortletPreferencesMap.containsKey(property)) {
-							value = serverPortletPreferences.getValue(property, StringPool.BLANK);
-
-							overriddenPropertyValue = true;
-						}
-
-						if (companyPortletPreferencesMap.containsKey(property)) {
-							value = companyPortletPreferences.getValue(property, StringPool.BLANK);
-
-							overriddenPropertyValue = true;
-						}
-					}
-
-					ResultRow row = new ResultRow(entry, property, i);
-
-					// Property
-
-					row.addText(HtmlUtil.escape(StringUtil.shorten(property, 80)));
-
-					// Value
-
-					if (Validator.isNotNull(value)) {
-						if (value.length() > 80) {
-							StringBundler sb = new StringBundler(5);
-
-							sb.append("<span onmouseover=\"Liferay.Portal.ToolTip.show(this, '");
-							sb.append(HtmlUtil.escape(value));
-							sb.append("')\">");
-							sb.append(HtmlUtil.escape(StringUtil.shorten(value, 80)));
-							sb.append("</span>");
-
-							row.addText(sb.toString());
-						}
-						else {
-							row.addText(HtmlUtil.escape(StringUtil.shorten(value, 80)));
-						}
-					}
-					else {
-						row.addText(StringPool.BLANK);
-					}
-
-					// Source
-
-					if (tabs3.equals("portal-properties")) {
-						StringBundler sb = new StringBundler(5);
-
-						sb.append("<span onmouseover=\"Liferay.Portal.ToolTip.show(this, '");
-
-						if (overriddenPropertyValue) {
-							sb.append(LanguageUtil.get(pageContext, "the-value-of-this-property-was-overridden-using-the-control-panel-and-is-stored-in-the-database"));
-						}
-						else {
-							sb.append(LanguageUtil.get(pageContext, "the-value-of-this-property-is-read-from-a-portal.properties-file-or-one-of-its-extension-files"));
-						}
-
-						sb.append("')\"><img alt=\"");
-
-						if (overriddenPropertyValue) {
-							sb.append(LanguageUtil.get(pageContext, "the-value-of-this-property-was-overridden-using-the-control-panel-and-is-stored-in-the-database"));
-						}
-						else {
-							sb.append(LanguageUtil.get(pageContext, "the-value-of-this-property-is-read-from-a-portal.properties-file-or-one-of-its-extension-files"));
-						}
-
-						sb.append("\" src=\"");
-						sb.append(themeDisplay.getPathThemeImages());
-
-						if (overriddenPropertyValue) {
-							sb.append("/common/saved_in_database.png");
-						}
-						else {
-							sb.append("/common/page.png");
-						}
-
-						sb.append("\" /></span>");
-
-						row.addText(sb.toString());
-					}
-
-					// Add result row
-
-					resultRows.add(row);
-				}
 				%>
 
-				<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+				<liferay-ui:search-container
+					emptyResultsMessage='<%= tabs3.equals("portal-properties") ? "no-portal-properties-were-found-that-matched-the-keywords" : "no-system-properties-were-found-that-matched-the-keywords" %>'
+					iteratorURL="<%= serverURL %>"
+					total="<%= filteredPropertiesList.size() %>"
+				>
+					<liferay-ui:search-container-results
+						results="<%= ListUtil.subList(filteredPropertiesList, searchContainer.getStart(), searchContainer.getEnd()) %>"
+					/>
+
+					<liferay-ui:search-container-row
+						className="java.util.Map.Entry"
+						modelVar="entry"
+					>
+
+						<%
+						String property = (String)entry.getKey();
+						String value = (String)entry.getValue();
+
+						boolean overriddenPropertyValue = false;
+
+						if (tabs3.equals("portal-properties")) {
+							if (serverPortletPreferencesMap.containsKey(property)) {
+								value = serverPortletPreferences.getValue(property, StringPool.BLANK);
+
+								overriddenPropertyValue = true;
+							}
+
+							if (companyPortletPreferencesMap.containsKey(property)) {
+								value = companyPortletPreferences.getValue(property, StringPool.BLANK);
+
+								overriddenPropertyValue = true;
+							}
+						}
+						%>
+
+						<liferay-ui:search-container-column-text
+							name="property"
+							value="<%= HtmlUtil.escape(StringUtil.shorten(property, 80)) %>"
+						/>
+
+						<liferay-ui:search-container-column-text
+							name="value"
+						>
+							<c:if test="<%= Validator.isNotNull(value) %>">
+								<c:choose>
+									<c:when test="<%= value.length() > 80 %>">
+										<span onmouseover="Liferay.Portal.ToolTip.show(this, '<%= HtmlUtil.escape(value) %>');">
+											<%= HtmlUtil.escape(StringUtil.shorten(value, 80)) %>
+										</span>
+									</c:when>
+									<c:otherwise>
+										<%= HtmlUtil.escape(value) %>
+									</c:otherwise>
+								</c:choose>
+							</c:if>
+						</liferay-ui:search-container-column-text>
+
+						<c:if test='<%= tabs3.equals("portal-properties") %>'>
+							<liferay-ui:search-container-column-text
+								name="source"
+							>
+								<liferay-ui:icon
+									iconCssClass='<%= overriddenPropertyValue ? "icon-hdd" : "icon-file-alt" %>'
+									message='<%= LanguageUtil.get(pageContext, overriddenPropertyValue ? "the-value-of-this-property-was-overridden-using-the-control-panel-and-is-stored-in-the-database" : "the-value-of-this-property-is-read-from-a-portal.properties-file-or-one-of-its-extension-files") %>'
+								/>
+							</liferay-ui:search-container-column-text>
+						</c:if>
+					</liferay-ui:search-container-row>
+
+					<liferay-ui:search-iterator/>
+				</liferay-ui:search-container>
 			</c:when>
 			<c:when test='<%= tabs2.equals("captcha") %>'>
 				<liferay-ui:error key="reCaptchaPrivateKey" message="the-recaptcha-private-key-is-not-valid" />
