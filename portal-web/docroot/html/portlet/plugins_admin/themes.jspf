@@ -63,15 +63,9 @@ List themes = ThemeLocalServiceUtil.getThemes(company.getCompanyId());
 		<liferay-ui:search-container-column-text
 			name="themes"
 		>
-			<c:if test="<%= showEditPluginHREF %>">
-				<a href="<%= rowURL.toString() %>">
-			</c:if>
-
-			<img alt="<%= LanguageUtil.get(locale, "thumbnail") %>" class="plugin-thumbnail" src="<%= curTheme.getStaticResourcePath() + HtmlUtil.escapeAttribute(curTheme.getImagesPath()) %>/thumbnail.png" />
-
-			<c:if test="<%= showEditPluginHREF %>">
-				</a>
-			</c:if>
+			<aui:a href="<%= showEditPluginHREF ? rowURL.toString() : null %>">
+				<img alt="<%= LanguageUtil.get(locale, "thumbnail") %>" class="plugin-thumbnail" src="<%= curTheme.getStaticResourcePath() + HtmlUtil.escapeAttribute(curTheme.getImagesPath()) %>/thumbnail.png" />
+			</aui:a>
 
 			<br />
 

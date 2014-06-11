@@ -68,15 +68,9 @@ portlets = ListUtil.sort(portlets, new PortletTitleComparator(application, local
 			href="<%= rowURL %>"
 			name="portlet"
 		>
-			<c:if test="<%= showEditPluginHREF %>">
-				<a href="<%= rowURL.toString() %>">
-			</c:if>
-
-			<%= title %>
-
-			<c:if test="<%= showEditPluginHREF %>">
-				</a>
-			</c:if>
+			<aui:a href="<%= showEditPluginHREF ? rowURL.toString() : null %>">
+				<%= title %>
+			</aui:a>
 
 			<br />
 			<liferay-ui:message key="package" />:

@@ -63,17 +63,11 @@ List layoutTemplates = LayoutTemplateLocalServiceUtil.getLayoutTemplates();
 		<liferay-ui:search-container-column-text
 			name="layout-template"
 		>
-			<c:if test="<%= showEditPluginHREF %>">
-				<a href="<%= rowURL.toString() %>">
-			</c:if>
+			<aui:a href="<%= showEditPluginHREF ? rowURL.toString() : null %>">
+				<img alt="<%= LanguageUtil.get(locale, "thumbnail") %>" class="plugin-thumbnail" src="<%= layoutTemplate.getStaticResourcePath() + HtmlUtil.escapeAttribute(layoutTemplate.getThumbnailPath()) %>" />
 
-			<img alt="<%= LanguageUtil.get(locale, "thumbnail") %>" class="plugin-thumbnail" src="<%= layoutTemplate.getStaticResourcePath() + HtmlUtil.escapeAttribute(layoutTemplate.getThumbnailPath()) %>" />
-
-			<%= HtmlUtil.escape(layoutTemplate.getName(locale)) %>
-
-			<c:if test="<%= showEditPluginHREF %>">
-				</a>
-			</c:if>
+				<%= HtmlUtil.escape(layoutTemplate.getName(locale)) %>
+			</aui:a>
 
 			<br />
 
