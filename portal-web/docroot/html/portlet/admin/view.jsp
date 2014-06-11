@@ -82,7 +82,7 @@
 
 			<c:choose>
 				<c:when test='<%= tabs1.equals("server") %>'>
-					<%@ include file="/html/portlet/admin/server.jspf" %>
+					<liferay-util:include page="/html/portlet/admin/server.jsp" />
 
 					<aui:script use="liferay-admin">
 						new Liferay.Portlet.Admin(
