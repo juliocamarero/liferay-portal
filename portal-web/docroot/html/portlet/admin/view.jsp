@@ -20,32 +20,6 @@
 	<c:when test="<%= permissionChecker.isOmniadmin() %>">
 
 		<%
-		String tabs1 = ParamUtil.getString(request, "tabs1", "server");
-
-		boolean showTabs1 = false;
-
-		if (portletName.equals(PortletKeys.ADMIN_INSTANCE)) {
-			tabs1 = "instances";
-		}
-		else if (portletName.equals(PortletKeys.ADMIN_PLUGINS)) {
-			tabs1 = "plugins";
-		}
-		else if (portletName.equals(PortletKeys.ADMIN_SERVER)) {
-			tabs1 = "server";
-		}
-		else if (portletName.equals(PortletKeys.ADMIN)) {
-			showTabs1 = true;
-		}
-
-		String tabs2 = ParamUtil.getString(request, "tabs2");
-		String tabs3 = ParamUtil.getString(request, "tabs3");
-
-		if (tabs1.equals("plugins")) {
-			if (!tabs2.equals("portlet-plugins") && !tabs2.equals("theme-plugins") && !tabs2.equals("layout-template-plugins") && !tabs2.equals("hook-plugins") && !tabs2.equals("web-plugins")) {
-				tabs2 = "portlet-plugins";
-			}
-		}
-
 		int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 		int delta = ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PARAM);
 

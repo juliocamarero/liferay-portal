@@ -14,21 +14,16 @@
  */
 --%>
 
+<%@ include file="/html/portlet/admin/init.jsp" %>
+
 <%= ReleaseInfo.getReleaseInfo() %><br />
 
 <%
-String keywords = ParamUtil.getString(request, "keywords");
-
 long uptimeDiff = System.currentTimeMillis() - PortalUtil.getUptime().getTime();
 long days = uptimeDiff / Time.DAY;
 long hours = (uptimeDiff / Time.HOUR) % 24;
 long minutes = (uptimeDiff / Time.MINUTE) % 60;
 long seconds = (uptimeDiff / Time.SECOND) % 60;
-
-NumberFormat numberFormat = NumberFormat.getInstance();
-
-numberFormat.setMaximumIntegerDigits(2);
-numberFormat.setMinimumIntegerDigits(2);
 
 PortletURL serverURL = renderResponse.createRenderURL();
 
