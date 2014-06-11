@@ -83,7 +83,7 @@ SocialInteractionsConfiguration socialInteractionsConfiguration = SocialInteract
 </div>
 
 <aui:script use="aui-base,liferay-util-list-fields">
-	Liferay.Util.toggleBoxes('<portlet:namespace />socialInteractionsSocialRelationTypesEnabledCheckbox','<portlet:namespace />socialRelations');
+	Liferay.Util.toggleBoxes('<portlet:namespace />socialInteractionsSocialRelationTypesEnabled','<portlet:namespace />socialRelations');
 
 	Liferay.Util.toggleRadio('<portlet:namespace />socialInteractionsAnyUser', '', '<portlet:namespace />socialInteractionsUsersWrapper');
 	Liferay.Util.toggleRadio('<portlet:namespace />socialInteractionsChooseUsers', '<portlet:namespace />socialInteractionsUsersWrapper', '');
