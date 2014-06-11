@@ -61,10 +61,5 @@
 </aui:fieldset>
 
 <aui:button-row>
-
-	<%
-	String taglibUpdateMail = renderResponse.getNamespace() + "saveServer('updateMail');";
-	%>
-
-	<aui:button onClick="<%= taglibUpdateMail %>" value="save" />
+	<aui:button cssClass="save-server-button" data-cmd="updateMail" value="save" />
 </aui:button-row>

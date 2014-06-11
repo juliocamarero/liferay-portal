@@ -28,10 +28,5 @@
 </aui:fieldset>
 
 <aui:button-row>
-
-	<%
-	String taglibUpdateCaptcha = renderResponse.getNamespace() + "saveServer('updateCaptcha');";
-	%>
-
-	<aui:button onClick="<%= taglibUpdateCaptcha %>" value="save" />
+	<aui:button cssClass="save-server-button" data-cmd="updateCaptcha" value="save" />
 </aui:button-row>

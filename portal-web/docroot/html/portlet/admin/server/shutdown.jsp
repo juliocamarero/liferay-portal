@@ -19,14 +19,9 @@
 <liferay-ui:error key="shutdownMinutes" message="please-enter-the-number-of-minutes" />
 
 <aui:button-row>
-
-	<%
-	String taglibShutdown = renderResponse.getNamespace() + "saveServer('shutdown');";
-	%>
-
 	<c:choose>
 		<c:when test="<%= ShutdownUtil.isInProcess() %>">
-			<aui:button onClick="<%= taglibShutdown %>" value="cancel-shutdown" />
+			<aui:button cssClass="save-server-button" data-cmd="shutdown" value="cancel-shutdown" />
 		</c:when>
 		<c:otherwise>
 			<aui:fieldset>
@@ -39,7 +34,7 @@
 				<aui:input cssClass="lfr-textarea-container" label="custom-message" name="message" type="textarea" />
 			</aui:fieldset>
 
-			<aui:button onClick="<%= taglibShutdown %>" value="shutdown" />
+			<aui:button cssClass="save-server-button" data-cmd="shutdown" value="shutdown" />
 		</c:otherwise>
 	</c:choose>
 </aui:button-row>

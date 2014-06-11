@@ -98,10 +98,10 @@ for (String convertProcessClassName : PropsValues.CONVERT_PROCESSES) {
 					<aui:button-row>
 
 						<%
-						String taglibConvertProcess = renderResponse.getNamespace() + "saveServer('convertProcess." + convertProcess.getClass().getName() + "');";
+						String cmd = "convertProcess." + convertProcess.getClass().getName();
 						%>
 
-						<aui:button onClick="<%= taglibConvertProcess %>" value="execute" />
+						<aui:button cssClass="save-server-button" data-cmd="<%= cmd %>" value="execute" />
 					</aui:button-row>
 				</liferay-ui:panel>
 			</liferay-ui:panel-container>

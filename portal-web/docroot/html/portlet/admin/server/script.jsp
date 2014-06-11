@@ -57,10 +57,5 @@ String scriptOutput = (String)SessionMessages.get(renderRequest, "scriptOutput")
 </c:if>
 
 <aui:button-row>
-
-	<%
-	String taglibRunScript = renderResponse.getNamespace() + "saveServer('runScript');";
-	%>
-
-	<aui:button onClick="<%= taglibRunScript %>" value="execute" />
+	<aui:button cssClass="save-server-button" data-cmd="runScript" value="execute" />
 </aui:button-row>

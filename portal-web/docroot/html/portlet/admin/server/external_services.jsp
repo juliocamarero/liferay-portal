@@ -142,12 +142,7 @@
 </aui:fieldset>
 
 <aui:button-row>
-
-	<%
-	String taglibUpdateExternalServices = renderResponse.getNamespace() + "saveServer('updateExternalServices');";
-	%>
-
-	<aui:button onClick="<%= taglibUpdateExternalServices %>" value="save" />
+	<aui:button cssClass="save-server-button" data-cmd="updateExternalServices" value="save" />
 </aui:button-row>
 
 <%!

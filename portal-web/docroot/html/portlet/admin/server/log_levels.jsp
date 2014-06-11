@@ -48,12 +48,7 @@ serverURL.setParameter("tabs3", tabs3);
 		</aui:fieldset>
 
 		<aui:button-row>
-
-			<%
-			String taglibAddLogLevel = renderResponse.getNamespace() + "saveServer('addLogLevel');";
-			%>
-
-			<aui:button onClick="<%= taglibAddLogLevel %>" value="save" />
+			<aui:button cssClass="save-server-button" data-cmd="addLogLevel" value="save" />
 		</aui:button-row>
 	</c:when>
 	<c:otherwise>
@@ -144,12 +139,7 @@ serverURL.setParameter("tabs3", tabs3);
 		</liferay-ui:search-container>
 
 		<aui:button-row>
-
-			<%
-			String taglibUpdateLogLevels = renderResponse.getNamespace() + "saveServer('updateLogLevels');";
-			%>
-
-			<aui:button onClick="<%= taglibUpdateLogLevels %>" value="save" />
+			<aui:button cssClass="save-server-button" data-cmd="updateLogLevels" value="save" />
 		</aui:button-row>
 	</c:otherwise>
 </c:choose>

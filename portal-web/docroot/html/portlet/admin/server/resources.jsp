@@ -84,12 +84,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="run-the-garbage-collector-to-free-up-memory" />
 			</td>
 			<td>
-
-				<%
-				String taglibGC = renderResponse.getNamespace() + "saveServer('gc');";
-				%>
-
-				<aui:button onClick="<%= taglibGC %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="gc" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -97,12 +92,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="clear-content-cached-by-this-vm" />
 			</td>
 			<td>
-
-				<%
-				String taglibCacheSingle = renderResponse.getNamespace() + "saveServer('cacheSingle');";
-				%>
-
-				<aui:button onClick="<%= taglibCacheSingle %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="cacheSingle" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -110,12 +100,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="clear-content-cached-across-the-cluster" />
 			</td>
 			<td>
-
-				<%
-				String taglibCacheMulti = renderResponse.getNamespace() + "saveServer('cacheMulti');";
-				%>
-
-				<aui:button onClick="<%= taglibCacheMulti %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="cacheMulti" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -123,12 +108,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="clear-the-database-cache" />
 			</td>
 			<td>
-
-				<%
-				String taglibCacheDb = renderResponse.getNamespace() + "saveServer('cacheDb');";
-				%>
-
-				<aui:button onClick="<%= taglibCacheDb %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="cacheDb" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -136,12 +116,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="clear-the-direct-servlet-cache" />
 			</td>
 			<td>
-
-				<%
-				String taglibCacheServlet = renderResponse.getNamespace() + "saveServer('cacheServlet');";
-				%>
-
-				<aui:button onClick="<%= taglibCacheServlet %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="cacheServlet" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -149,12 +124,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="reindex-all-search-indexes" />
 			</td>
 			<td>
-
-				<%
-				String taglibReindex = renderResponse.getNamespace() + "saveServer('reindex');";
-				%>
-
-				<aui:button onClick="<%= taglibReindex %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="reindex" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -162,12 +132,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="reindex-all-spell-check-indexes" />
 			</td>
 			<td>
-
-				<%
-				String taglibReindexDictionaries = renderResponse.getNamespace() + "saveServer('reindexDictionaries');";
-				%>
-
-				<aui:button onClick="<%= taglibReindexDictionaries %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="reindexDictionaries" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -175,12 +140,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="reset-preview-and-thumbnail-files-for-documents-and-media-portlet" />
 			</td>
 			<td>
-
-				<%
-				String taglibDLPreviews = renderResponse.getNamespace() + "saveServer('dlPreviews');";
-				%>
-
-				<aui:button onClick="<%= taglibDLPreviews %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="dlPreviews" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -188,12 +148,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="generate-thread-dump" />
 			</td>
 			<td>
-
-				<%
-				String taglibThreadDump = renderResponse.getNamespace() + "saveServer('threadDump');";
-				%>
-
-				<aui:button onClick="<%= taglibThreadDump %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="threadDump" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -201,12 +156,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="verify-database-tables-of-all-plugins" />
 			</td>
 			<td>
-
-				<%
-				String taglibVerifyPluginTables = renderResponse.getNamespace() + "saveServer('verifyPluginTables');";
-				%>
-
-				<aui:button onClick="<%= taglibVerifyPluginTables %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="verifyPluginTables" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -214,12 +164,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="verify-membership-policies" />
 			</td>
 			<td>
-
-				<%
-				String taglibVerifyMembershipPolicies = renderResponse.getNamespace() + "saveServer('verifyMembershipPolicies');";
-				%>
-
-				<aui:button onClick="<%= taglibVerifyMembershipPolicies %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="verifyMembershipPolicies" value="execute" />
 			</td>
 		</tr>
 		<tr>
@@ -227,12 +172,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 				<liferay-ui:message key="clean-up-permissions" /> <liferay-ui:icon-help message="clean-up-permissions-help" />
 			</td>
 			<td>
-
-				<%
-				String taglibCleanUpPermissions = renderResponse.getNamespace() + "saveServer('cleanUpPermissions');";
-				%>
-
-				<aui:button onClick="<%= taglibCleanUpPermissions %>" value="execute" />
+				<aui:button cssClass="save-server-button" data-cmd="cleanUpPermissions" value="execute" />
 			</td>
 		</tr>
 		</table>

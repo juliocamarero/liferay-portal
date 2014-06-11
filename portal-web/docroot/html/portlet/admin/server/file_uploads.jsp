@@ -77,10 +77,5 @@
 </aui:fieldset>
 
 <aui:button-row>
-
-	<%
-	String taglibUpdateFileUploads = renderResponse.getNamespace() + "saveServer('updateFileUploads');";
-	%>
-
-	<aui:button onClick="<%= taglibUpdateFileUploads %>" value="save" />
+	<aui:button cssClass="save-server-button" data-cmd="updateFileUploads" value="save" />
 </aui:button-row>
