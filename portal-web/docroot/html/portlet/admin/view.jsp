@@ -96,6 +96,12 @@
 					document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = event.currentTarget.attr('data-cmd');
 					document.<portlet:namespace />fm.<portlet:namespace />redirect.value = '<portlet:renderURL><portlet:param name="struts_action" value="/admin/view" /><portlet:param name="tabs1" value="<%= tabs1 %>" /><portlet:param name="tabs2" value="<%= tabs2 %>" /><portlet:param name="tabs3" value="<%= tabs3 %>" /><portlet:param name="<%= SearchContainer.DEFAULT_CUR_PARAM %>" value="<%= String.valueOf(cur) %>" /><portlet:param name="<%= SearchContainer.DEFAULT_DELTA_PARAM %>" value="<%= String.valueOf(delta) %>" /></portlet:renderURL>';
 
+					var portletId = event.currentTarget.attr('data-portletid');
+
+					if (portletId) {
+						document.<portlet:namespace />fm.<portlet:namespace />portletId.value = portletId;
+					}
+
 					submitForm(document.<portlet:namespace />fm, '<portlet:actionURL><portlet:param name="struts_action" value="/admin/edit_server" /></portlet:actionURL>');
 				},
 				'.save-server-button'

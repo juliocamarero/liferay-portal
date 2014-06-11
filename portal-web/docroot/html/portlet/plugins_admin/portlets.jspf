@@ -116,10 +116,13 @@ portlets = ListUtil.sort(portlets, new PortletTitleComparator(application, local
 				<c:if test="<%= !indexerClasses.isEmpty() %>">
 
 					<%
-					String taglibOnClick = renderResponse.getNamespace() + "reindexPortlet('" + HtmlUtil.escapeJS(portlet.getPortletId()) + "');";
+					Map<String, String> data = new HashMap<String, String>();
+
+					data.put(Constants.CMD, "reindex");
+					data.put("portletid", HtmlUtil.escapeJS(portlet.getPortletId()));
 					%>
 
-					<aui:button cssClass="save-server-button" data-cmd="reindex" onclick="<%= taglibOnClick %>" value="reindex" />
+					<aui:button cssClass="save-server-button" data="<%= data %>" value="reindex" />
 				</c:if>
 			</liferay-ui:search-container-column-text>
 		</c:if>
@@ -127,11 +130,3 @@ portlets = ListUtil.sort(portlets, new PortletTitleComparator(application, local
 
 	<liferay-ui:search-iterator/>
 </liferay-ui:search-container>
-
-<c:if test="<%= showReindexButton %>">
-	<aui:script>
-		function <portlet:namespace />reindexPortlet(portletId) {
-			document.<portlet:namespace />fm.<portlet:namespace />portletId.value = portletId;
-		}
-	</aui:script>
-</c:if>
