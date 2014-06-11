@@ -25,10 +25,12 @@ public class VerifyRegion extends VerifyProcess {
 	}
 
 	protected void updateRegions() throws Exception {
-		runSQL("update Region set regionCode = 'BB' where regionId = 4004");
 		runSQL(
-			"update Region set name = 'Monza e Brianza', regionCode = 'MB'" +
-				"where regionId = 8060");
+			"update Region set regionCode = 'BB' where regionId = 4004 and " +
+				"regionCode = 'BR'");
+		runSQL(
+			"update Region set name = 'Monza e Brianza', regionCode = 'MB' " +
+				"where regionId = 8060 and regionCode = 'MZ'");
 	}
 
 }
