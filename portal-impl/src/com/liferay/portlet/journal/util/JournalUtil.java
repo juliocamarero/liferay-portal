@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.templateparser.TransformerListener;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -472,6 +473,15 @@ public class JournalUtil {
 			JournalArticleLocalServiceUtil.getArticle(
 				groupId, articleId, sourceVersion);
 
+		if (!JournalArticleLocalServiceUtil.isRenderable(
+				sourceArticle, portletRequestModel, themeDisplay)) {
+
+			SessionMessages.add(
+				themeDisplay.getRequest(), "version", sourceVersion);
+
+			return null;
+		}
+
 		JournalArticleDisplay sourceArticleDisplay =
 			JournalArticleLocalServiceUtil.getArticleDisplay(
 				sourceArticle, null, Constants.VIEW, languageId, 1,
@@ -481,6 +491,15 @@ public class JournalUtil {
 			JournalArticleLocalServiceUtil.getArticle(
 				groupId, articleId, targetVersion);
 
+		if (!JournalArticleLocalServiceUtil.isRenderable(
+				targetArticle, portletRequestModel, themeDisplay)) {
+
+			SessionMessages.add(
+				themeDisplay.getRequest(), "version", targetVersion);
+
+			return null;
+		}
+
 		JournalArticleDisplay targetArticleDisplay =
 			JournalArticleLocalServiceUtil.getArticleDisplay(
 				targetArticle, null, Constants.VIEW, languageId, 1,
@@ -489,6 +508,18 @@ public class JournalUtil {
 		return DiffHtmlUtil.diff(
 			new UnsyncStringReader(sourceArticleDisplay.getContent()),
 			new UnsyncStringReader(targetArticleDisplay.getContent()));
+	}
+
+	public static String doTransform(
+			ThemeDisplay themeDisplay, Map<String, String> tokens,
+			String viewMode, String languageId, Document document,
+			PortletRequestModel portletRequestModel, String script,
+			String langType)
+		throws Exception {
+
+		return _transformer.doTransform(
+			themeDisplay, tokens, viewMode, languageId, document,
+			portletRequestModel, script, langType);
 	}
 
 	public static String formatVM(String vm) {
@@ -929,9 +960,9 @@ public class JournalUtil {
 			WebKeys.THEME_DISPLAY);
 
 		PortletURL portletURL = PortletURLFactoryUtil.create(
-			portletRequest, PortletKeys.JOURNAL,
-			PortalUtil.getControlPanelPlid(themeDisplay.getCompanyId()),
-			PortletRequest.RENDER_PHASE);
+				portletRequest, PortletKeys.JOURNAL,
+				PortalUtil.getControlPanelPlid(themeDisplay.getCompanyId()),
+				PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter("struts_action", "/journal/view");
 		portletURL.setParameter("folderId", String.valueOf(folderId));
@@ -1441,8 +1472,8 @@ public class JournalUtil {
 		throws Exception {
 
 		return _transformer.transform(
-			themeDisplay, tokens, viewMode, languageId, document,
-			portletRequestModel, script, langType);
+				themeDisplay, tokens, viewMode, languageId, document,
+				portletRequestModel, script, langType);
 	}
 
 	private static void _addElementOptions(

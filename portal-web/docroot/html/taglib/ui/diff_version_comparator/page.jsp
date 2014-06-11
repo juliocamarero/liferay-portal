@@ -206,7 +206,28 @@ if (Validator.isNotNull(languageId)) {
 
 				<div class="diff-container">
 					<div id="<portlet:namespace />diffContainerHtmlResults">
-						<liferay-ui:diff-html diffHtmlResults="<%= diffHtmlResults %>" />
+						<c:choose>
+							<c:when test="<%= Validator.isNotNull(diffHtmlResults) %>">
+								<liferay-ui:diff-html diffHtmlResults="<%= diffHtmlResults %>" />
+							</c:when>
+							<c:otherwise>
+
+								<%
+								double version = GetterUtil.getDouble(SessionMessages.get(request, "version"));
+								%>
+
+								<div class="alert alert-info">
+									<c:choose>
+										<c:when test="<%= version > 0 %>">
+											<liferay-ui:message arguments="<%= new Object[] {version} %>" key="the-version-x-is-not-comparable" />
+										</c:when>
+										<c:otherwise>
+											<liferay-ui:message key="those-versions-are-not-comparables" />
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 
