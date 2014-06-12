@@ -519,14 +519,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 	@Override
 	protected void doReindex(String className, long classPK) throws Exception {
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.fetchJournalArticle(classPK);
-
-		if (article == null) {
-			article =
-				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
-					classPK);
-		}
+		JournalArticle article = getJournalArticle(classPK);
 
 		if (article != null) {
 			doReindex(article);
@@ -568,14 +561,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void doReindexPermissions(String className, long classPK)
 		throws Exception {
 
-		JournalArticle article =
-			JournalArticleLocalServiceUtil.fetchJournalArticle(classPK);
-
-		if (article == null) {
-			article =
-				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
-					classPK);
-		}
+		JournalArticle article = getJournalArticle(classPK);
 
 		if (article != null) {
 			doReindex(article, true);
@@ -720,6 +706,21 @@ public class JournalArticleIndexer extends BaseIndexer {
 		}
 
 		return content;
+	}
+
+	protected JournalArticle getJournalArticle(long classPK)
+		throws SystemException {
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.fetchJournalArticle(classPK);
+
+		if (article == null) {
+			article =
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+					classPK);
+		}
+
+		return article;
 	}
 
 	protected String[] getLanguageIds(
