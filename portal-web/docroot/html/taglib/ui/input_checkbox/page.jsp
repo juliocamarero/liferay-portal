@@ -21,7 +21,6 @@ String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:
 String param = (String)request.getAttribute("liferay-ui:input-checkbox:param");
 String id = (String)request.getAttribute("liferay-ui:input-checkbox:id");
 Boolean defaultValue = (Boolean)request.getAttribute("liferay-ui:input-checkbox:defaultValue");
-String onClick = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-checkbox:onClick"));
 boolean disabled = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-checkbox:disabled"));
 
 boolean value = ParamUtil.getBoolean(request, param, defaultValue.booleanValue());
