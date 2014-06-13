@@ -117,8 +117,13 @@ String portletURLString = portletURL.toString();
 			<liferay-ui:search-container-column-text
 				href="<%= rowURL %>"
 				name="title"
-				value="<%= HtmlUtil.escape(role.getTitle(locale)) %>"
-			/>
+			>
+				<liferay-ui:icon
+					iconCssClass="<%= RolesAdminUtil.getIconCssClass(role) %>"
+					label="<%= true %>"
+					message="<%= HtmlUtil.escape(role.getTitle(locale)) %>"
+				/>
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
 				href="<%= rowURL %>"

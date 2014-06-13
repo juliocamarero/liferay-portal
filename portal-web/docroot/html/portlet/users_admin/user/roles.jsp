@@ -68,13 +68,15 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "roles"
 		keyProperty="roleId"
 		modelVar="role"
 	>
-		<liferay-util:param name="className" value="<%= RolesAdminUtil.getCssClassName(role) %>" />
-		<liferay-util:param name="classHoverName" value="<%= RolesAdminUtil.getCssClassName(role) %>" />
-
 		<liferay-ui:search-container-column-text
 			name="title"
-			value="<%= HtmlUtil.escape(role.getTitle(locale)) %>"
-		/>
+		>
+			<liferay-ui:icon
+				iconCssClass="<%= RolesAdminUtil.getIconCssClass(role) %>"
+				label="<%= true %>"
+				message="<%= HtmlUtil.escape(role.getTitle(locale)) %>"
+			/>
+		</liferay-ui:search-container-column-text>
 
 		<c:if test="<%= !portletName.equals(PortletKeys.MY_ACCOUNT) && !RoleMembershipPolicyUtil.isRoleRequired(selUser.getUserId(), role.getRoleId()) %>">
 			<liferay-ui:search-container-column-text>
@@ -160,13 +162,16 @@ for (Group group : allGroups) {
 		List<Role> groupRoles = RoleLocalServiceUtil.getGroupRoles(group.getGroupId());
 		%>
 
-		<liferay-util:param name="className" value="<%= RolesAdminUtil.getCssClassName(groupRoles.get(0)) %>" />
-		<liferay-util:param name="classHoverName" value="<%= RolesAdminUtil.getCssClassName(groupRoles.get(0)) %>" />
-
 		<liferay-ui:search-container-column-text
 			name="title"
 			value="<%= HtmlUtil.escape(ListUtil.toString(groupRoles, Role.NAME_ACCESSOR)) %>"
-		/>
+		>
+			<liferay-ui:icon
+				iconCssClass="<%= RolesAdminUtil.getIconCssClass(groupRoles.get(0)) %>"
+				label="<%= true %>"
+				message="<%= HtmlUtil.escape(ListUtil.toString(groupRoles, Role.NAME_ACCESSOR)) %>"
+			/>
+		</liferay-ui:search-container-column-text>
 
 		<liferay-ui:search-container-column-text
 			name="group"
@@ -200,13 +205,15 @@ for (Group group : allGroups) {
 			keyProperty="roleId"
 			modelVar="userGroupRole"
 		>
-			<liferay-util:param name="className" value="<%= RolesAdminUtil.getCssClassName(userGroupRole.getRole()) %>" />
-			<liferay-util:param name="classHoverName" value="<%= RolesAdminUtil.getCssClassName(userGroupRole.getRole()) %>" />
-
 			<liferay-ui:search-container-column-text
 				name="title"
-				value="<%= HtmlUtil.escape(userGroupRole.getRole().getTitle(locale)) %>"
-			/>
+			>
+				<liferay-ui:icon
+					iconCssClass="<%= RolesAdminUtil.getIconCssClass(userGroupRole.getRole()) %>"
+					label="<%= true %>"
+					message="<%= HtmlUtil.escape(userGroupRole.getRole().getTitle(locale)) %>"
+				/>
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
 				name="organization"
@@ -344,13 +351,15 @@ for (Group group : allGroups) {
 				keyProperty="roleId"
 				modelVar="userGroupRole"
 			>
-				<liferay-util:param name="className" value="<%= RolesAdminUtil.getCssClassName(userGroupRole.getRole()) %>" />
-				<liferay-util:param name="classHoverName" value="<%= RolesAdminUtil.getCssClassName(userGroupRole.getRole()) %>" />
-
 				<liferay-ui:search-container-column-text
 					name="title"
-					value="<%= HtmlUtil.escape(userGroupRole.getRole().getTitle(locale)) %>"
-				/>
+				>
+					<liferay-ui:icon
+						iconCssClass="<%= RolesAdminUtil.getIconCssClass(userGroupRole.getRole()) %>"
+						label="<%= true %>"
+						message="<%= HtmlUtil.escape(userGroupRole.getRole().getTitle(locale)) %>"
+					/>
+				</liferay-ui:search-container-column-text>
 
 				<liferay-ui:search-container-column-text
 					name="site"
@@ -489,13 +498,15 @@ for (Group group : allGroups) {
 			keyProperty="roleId"
 			modelVar="userGroupGroupRole"
 		>
-			<liferay-util:param name="className" value="<%= RolesAdminUtil.getCssClassName(userGroupGroupRole.getRole()) %>" />
-			<liferay-util:param name="classHoverName" value="<%= RolesAdminUtil.getCssClassName(userGroupGroupRole.getRole()) %>" />
-
 			<liferay-ui:search-container-column-text
 				name="title"
-				value="<%= HtmlUtil.escape(userGroupGroupRole.getRole().getTitle(locale)) %>"
-			/>
+			>
+				<liferay-ui:icon
+					iconCssClass="<%= RolesAdminUtil.getIconCssClass(userGroupGroupRole.getRole()) %>"
+					label="<%= true %>"
+					message="<%= HtmlUtil.escape(userGroupGroupRole.getRole().getTitle(locale)) %>"
+				/>
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
 				name="site"
