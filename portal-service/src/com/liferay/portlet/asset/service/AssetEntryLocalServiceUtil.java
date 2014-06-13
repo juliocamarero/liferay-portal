@@ -738,6 +738,17 @@ public class AssetEntryLocalServiceUtil {
 	}
 
 	public static void validate(long groupId, java.lang.String className,
+		long classTypeId, long[] categoryIds, java.lang.String[] tagNames)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.validate(groupId, className, classTypeId, categoryIds, tagNames);
+	}
+
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link #validate(long, String, long, long[], String[])}
+	*/
+	@Deprecated
+	public static void validate(long groupId, java.lang.String className,
 		long[] categoryIds, java.lang.String[] tagNames)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().validate(groupId, className, categoryIds, tagNames);
