@@ -23,4 +23,6 @@ public interface RolesAdmin {
 
 	public String getCssClassName(Role role);
 
+	public String getIconCssClass(Role role);
+
 }

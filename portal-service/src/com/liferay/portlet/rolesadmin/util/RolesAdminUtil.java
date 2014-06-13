@@ -26,6 +26,10 @@ public class RolesAdminUtil {
 		return getRolesAdmin().getCssClassName(role);
 	}
 
+	public static String getIconCssClass(Role role) {
+		return getRolesAdmin().getIconCssClass(role);
+	}
+
 	public static RolesAdmin getRolesAdmin() {
 		PortalRuntimePermission.checkGetBeanProperty(RolesAdminUtil.class);
 

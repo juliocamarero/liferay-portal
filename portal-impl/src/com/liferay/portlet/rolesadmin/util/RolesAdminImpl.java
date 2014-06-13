@@ -51,4 +51,30 @@ public class RolesAdminImpl implements RolesAdmin {
 		return "lfr-role " + cssClassName;
 	}
 
+	@Override
+	public String getIconCssClass(Role role) {
+		String iconCssClass = StringPool.BLANK;
+
+		String roleName = role.getName();
+		int roleType = role.getType();
+
+		if (roleName.equals(RoleConstants.GUEST)) {
+			iconCssClass = "icon-user guest";
+		}
+		else if (roleType == RoleConstants.TYPE_ORGANIZATION) {
+			iconCssClass = "icon-globe";
+		}
+		else if (roleType == RoleConstants.TYPE_REGULAR) {
+			iconCssClass = "icon-user";
+		}
+		else if (roleType == RoleConstants.TYPE_SITE) {
+			iconCssClass = "icon-globe";
+		}
+		else if (role.isTeam()) {
+			iconCssClass = "icon-group";
+		}
+
+		return iconCssClass;
+	}
+
 }
