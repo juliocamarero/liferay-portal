@@ -98,6 +98,7 @@ portletURL.setParameter("eventName", eventName);
 					<%
 					Map<String, Object> data = new HashMap<String, Object>();
 
+					data.put("iconcssclass", RolesAdminUtil.getIconCssClass(role));
 					data.put("roleid", role.getRoleId());
 					data.put("roletitle", role.getTitle(locale));
 					data.put("searchcontainername", "roles");

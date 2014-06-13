@@ -116,7 +116,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "roles"
 						uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_regular_role" /><portlet:param name="p_u_i_d" value='<%= (selUser == null) ? "0" : String.valueOf(selUser.getUserId()) %>' /></portlet:renderURL>'
 					},
 					function(event) {
-						<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupdescriptivename, event.groupid);
+						<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupdescriptivename, event.groupid, event.iconcssclass);
 					}
 				);
 			}
@@ -320,7 +320,7 @@ for (Group group : allGroups) {
 						uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_organization_role" /><portlet:param name="step" value="1" /><portlet:param name="organizationIds" value="<%= StringUtil.merge(organizationIds) %>" /><portlet:param name="p_u_i_d" value='<%= (selUser == null) ? "0" : String.valueOf(selUser.getUserId()) %>' /></portlet:renderURL>'
 					},
 					function(event) {
-						<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupdescriptivename, event.groupid);
+						<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupdescriptivename, event.groupid, event.iconcssclass);
 					}
 				);
 			}
@@ -465,7 +465,7 @@ for (Group group : allGroups) {
 								uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_site_role" /><portlet:param name="step" value="1" /><portlet:param name="p_u_i_d" value='<%= (selUser == null) ? "0" : String.valueOf(selUser.getUserId()) %>' /></portlet:renderURL>'
 							},
 							function(event) {
-								<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupdescriptivename, event.groupid);
+								<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupdescriptivename, event.groupid, event.iconcssclass);
 							}
 						);
 					}
@@ -544,7 +544,7 @@ for (Group group : allGroups) {
 	Liferay.provide(
 		window,
 		'<portlet:namespace />selectRole',
-		function(roleId, name, searchContainer, groupName, groupId) {
+		function(roleId, name, searchContainer, groupName, groupId, iconCssClass) {
 			var A = AUI();
 
 			var searchContainerName = '<portlet:namespace />' + searchContainer + 'SearchContainer';
@@ -553,7 +553,7 @@ for (Group group : allGroups) {
 
 			var rowColumns = [];
 
-			rowColumns.push(name);
+			rowColumns.push('<i class="' + iconCssClass + '"></i> ' + name);
 
 			if (groupName) {
 				rowColumns.push(groupName);
