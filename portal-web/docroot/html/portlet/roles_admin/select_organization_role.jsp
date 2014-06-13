@@ -249,6 +249,7 @@ if (step == 1) {
 							<%
 							Map<String, Object> data = new HashMap<String, Object>();
 
+							data.put("iconcssclass", RolesAdminUtil.getIconCssClass(role));
 							data.put("groupdescriptivename", organization.getGroup().getDescriptiveName(locale));
 							data.put("groupid", organization.getGroupId());
 							data.put("roleid", role.getRoleId());

@@ -270,7 +270,7 @@ for (long defaultTeamId : defaultTeamIds) {
 
 					var rowColumns = [];
 
-					rowColumns.push(A.Escape.html(event.roletitle));
+					rowColumns.push('<i class="' + event.iconcssclass + '"></i> ' + A.Escape.html(event.roletitle));
 
 					if (event.groupid) {
 						rowColumns.push('<a class="modify-link" data-rowId="' + event.roleid + '" href="javascript:;"><%= UnicodeFormatter.toString(removeRoleIcon) %></a>');
