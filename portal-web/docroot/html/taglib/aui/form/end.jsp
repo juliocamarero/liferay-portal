@@ -16,6 +16,10 @@
 
 <%@ include file="/html/taglib/aui/form/init.jsp" %>
 
+<c:if test="<%= (checkboxNames != null) && !checkboxNames.isEmpty() %>">
+	<input id="<%= namespace + name %>checkboxNames" name="<%= namespace %>checkboxNames" type="hidden" value="<%= StringUtil.merge(checkboxNames) %>" />
+</c:if>
+
 	<c:if test="<%= Validator.isNotNull(onSubmit) %>">
 		</fieldset>
 	</c:if>
