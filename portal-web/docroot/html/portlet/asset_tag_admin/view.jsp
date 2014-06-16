@@ -24,7 +24,12 @@
 		<aui:nav-bar>
 			<aui:nav cssClass="navbar-nav">
 				<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_TAG) %>">
-					<aui:nav-item id="addTagButton" label="add-tag" />
+					<portlet:renderURL var="editTagURL">
+						<portlet:param name="struts_action" value="/asset_tag_admin/edit_tag" />
+						<portlet:param name="redirect" value="<%= currentURL %>" />
+					</portlet:renderURL>
+
+					<aui:nav-item href="<%= editTagURL %>" iconCssClass="icon-plus" label="add-tag" />
 				</c:if>
 
 				<c:if test="<%= PropsValues.ASSET_TAG_PERMISSIONS_ENABLED && AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) %>">
