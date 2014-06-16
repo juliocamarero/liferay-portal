@@ -99,6 +99,7 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 				<%
 				Map<String, Object> data = new HashMap<String, Object>(params);
 
+				data.put("ckeditorfuncnum", DocumentSelectorUtil.getCKEditorFuncNum(request));
 				data.put("groupid", fileEntry.getGroupId());
 				data.put("title", fileEntry.getTitle());
 				data.put("url", attachmentURLPrefix + fileEntry.getTitle());
