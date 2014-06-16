@@ -17,68 +17,55 @@
 <%@ include file="/html/portlet/asset_tag_admin/init.jsp" %>
 
 <%
-long tagId = ParamUtil.getLong(request, "tagId");
+ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
-AssetTag tag = AssetTagServiceUtil.getTag(tagId);
-
-List<AssetTagProperty> tagProperties = AssetTagPropertyServiceUtil.getTagProperties(tag.getTagId());
+AssetTag tag = (AssetTag)row.getObject();
 %>
 
-<div class="view-tag">
-	<liferay-ui:header
-		localizeTitle="<%= false %>"
-		title="<%= tag.getName() %>"
-	/>
+<liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
+	<c:if test="<%= AssetTagPermission.contains(permissionChecker, tag, ActionKeys.UPDATE) %>">
+		<portlet:renderURL var="editURL">
+			<portlet:param name="struts_action" value="/asset_tag_admin/edit_tag" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="tagId" value="<%= String.valueOf(tag.getTagId()) %>" />
+		</portlet:renderURL>
 
-	<c:if test="<%= tag != null %>">
-		<c:if test="<%= AssetTagPermission.contains(permissionChecker, tag, ActionKeys.UPDATE) %>">
-			<aui:button id="editTagButton" value="edit" />
-		</c:if>
-
-		<c:if test="<%= AssetTagPermission.contains(permissionChecker, tag, ActionKeys.DELETE) %>">
-			<aui:button id="deleteTagButton" value="delete" />
-		</c:if>
-
-		<c:if test="<%= PropsValues.ASSET_TAG_PERMISSIONS_ENABLED && AssetTagPermission.contains(permissionChecker, tag, ActionKeys.PERMISSIONS) %>">
-			<liferay-security:permissionsURL
-				modelResource="<%= AssetTag.class.getName() %>"
-				modelResourceDescription="<%= tag.getName() %>"
-				resourcePrimKey="<%= String.valueOf(tag.getTagId()) %>"
-				var="permissionsURL"
-				windowState="<%= LiferayWindowState.POP_UP.toString() %>"
-			/>
-
-			<aui:button data-url="<%= permissionsURL %>" id="updateTagPermissions" value="permissions" />
-		</c:if>
+		<liferay-ui:icon
+			iconCssClass="icon-edit"
+			label="<%= true %>"
+			message="edit"
+			url="<%= editURL %>"
+		/>
 	</c:if>
 
-	<div class="tag-field">
-		<c:choose>
-			<c:when test="<%= tag.getAssetCount() > 0 %>">
-				<label><liferay-ui:message key="count" />:</label> <liferay-ui:message key="used-in-x-assets" arguments="<%= tag.getAssetCount() %>" />
-			</c:when>
-			<c:otherwise>
-				<div class="alert alert-info">
-					<liferay-ui:message key="this-tag-is-not-used" />
-				</div>
-			</c:otherwise>
-		</c:choose>
-	</div>
+	<c:if test="<%= AssetTagPermission.contains(permissionChecker, tag, ActionKeys.DELETE) %>">
+		<portlet:actionURL var="deleteURL">
+			<portlet:param name="struts_action" value="/asset_tag_admin/edit_tag" />
+			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="tagId" value="<%= String.valueOf(tag.getTagId()) %>" />
+		</portlet:actionURL>
 
-	<c:if test="<%= !tagProperties.isEmpty() %>">
-		<div class="tag-field">
-			<label><liferay-ui:message key="properties" />:</label>
-
-			<%
-			for (AssetTagProperty tagProperty : tagProperties) {
-			%>
-
-				<span class="property-key"><%= tagProperty.getKey() %></span>: <span class="property-value"><%= tagProperty.getValue() %></span><br />
-
-			<%
-			}
-			%>
-
-		</div>
+		<liferay-ui:icon-delete
+			url="<%= deleteURL %>"
+		/>
 	</c:if>
-</div>
+
+	<c:if test="<%= PropsValues.ASSET_TAG_PERMISSIONS_ENABLED && AssetTagPermission.contains(permissionChecker, tag, ActionKeys.PERMISSIONS) %>">
+		<liferay-security:permissionsURL
+			modelResource="<%= AssetTag.class.getName() %>"
+			modelResourceDescription="<%= tag.getName() %>"
+			resourcePrimKey="<%= String.valueOf(tag.getTagId()) %>"
+			var="permissionsURL"
+			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+		/>
+
+		<liferay-ui:icon
+			iconCssClass="icon-lock"
+			message="permissions"
+			method="get"
+			url="<%= permissionsURL %>"
+			useDialog="<%= true %>"
+		/>
+	</c:if>
+</liferay-ui:icon-menu>
