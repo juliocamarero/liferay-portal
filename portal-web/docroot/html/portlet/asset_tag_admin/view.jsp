@@ -148,4 +148,16 @@
 		},
 		'input[type=checkbox]'
 	);
+
+	A.one('#<portlet:namespace />deleteSelectedTags').on(
+		'click',
+		function() {
+			if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
+				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '<%= Constants.DELETE %>';
+				document.<portlet:namespace />fm.<portlet:namespace />deleteTagIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
+
+				submitForm(document.<portlet:namespace />fm);
+			}
+		}
+	);
 </aui:script>
