@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.assettagadmin.action;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -52,6 +53,9 @@ public class EditTagAction extends PortletAction {
 			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
 				updateTag(actionRequest);
 			}
+			else if (cmd.equals(Constants.DELETE)) {
+				deleteTag(actionRequest);
+			}
 			else if (cmd.equals(Constants.MERGE)) {
 				mergeTag(actionRequest);
 			}
@@ -63,6 +67,26 @@ public class EditTagAction extends PortletAction {
 		}
 
 		sendRedirect(actionRequest, actionResponse);
+	}
+
+	protected void deleteTag(ActionRequest actionRequest)
+		throws PortalException {
+
+		long[] deleteTagIds = null;
+
+		long tagId = ParamUtil.getLong(actionRequest, "tagId");
+
+		if (tagId > 0) {
+			deleteTagIds = new long[] {tagId};
+		}
+		else {
+			deleteTagIds = StringUtil.split(
+				ParamUtil.getString(actionRequest, "deleteTagIds"), 0L);
+		}
+
+		for (long deleteTagId : deleteTagIds) {
+			AssetTagServiceUtil.deleteTag(deleteTagId);
+		}
 	}
 
 	protected String[] getTagProperties(ActionRequest actionRequest) {
