@@ -14,8 +14,7 @@
 
 package com.liferay.portlet.assettagadmin.action;
 
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -50,23 +49,23 @@ public class EditTagAction extends PortletAction {
 			ActionResponse actionResponse)
 		throws Exception {
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
 		try {
 			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
-				jsonObject = updateTag(actionRequest);
+				updateTag(actionRequest);
 			}
 			else if (cmd.equals(Constants.MERGE)) {
-				jsonObject = mergeTag(actionRequest);
+				mergeTag(actionRequest);
 			}
 		}
 		catch (Exception e) {
-			jsonObject.putException(e);
+			SessionErrors.add(actionRequest, e.getClass());
+
+			setForward(actionRequest, "portlet.asset_tag_admin.error");
 		}
 
-		writeJSON(actionRequest, actionResponse, jsonObject);
+		sendRedirect(actionRequest, actionResponse);
 	}
 
 	@Override
@@ -108,24 +107,14 @@ public class EditTagAction extends PortletAction {
 		return tagProperties;
 	}
 
-	protected JSONObject mergeTag(ActionRequest actionRequest)
-		throws Exception {
-
+	protected void mergeTag(ActionRequest actionRequest) throws Exception {
 		long fromTagId = ParamUtil.getLong(actionRequest, "fromTagId");
 		long toTagId = ParamUtil.getLong(actionRequest, "toTagId");
 
 		AssetTagServiceUtil.mergeTags(fromTagId, toTagId, false);
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		jsonObject.put("tagId", toTagId);
-
-		return jsonObject;
 	}
 
-	protected JSONObject updateTag(ActionRequest actionRequest)
-		throws Exception {
-
+	protected void updateTag(ActionRequest actionRequest) throws Exception {
 		long tagId = ParamUtil.getLong(actionRequest, "tagId");
 
 		String name = ParamUtil.getString(actionRequest, "name");
@@ -135,28 +124,19 @@ public class EditTagAction extends PortletAction {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			AssetTag.class.getName(), actionRequest);
 
-		AssetTag tag = null;
-
 		if (tagId <= 0) {
 
 			// Add tag
 
-			tag = AssetTagServiceUtil.addTag(
-				name, tagProperties, serviceContext);
+			AssetTagServiceUtil.addTag(name, tagProperties, serviceContext);
 		}
 		else {
 
 			// Update tag
 
-			tag = AssetTagServiceUtil.updateTag(
+			AssetTagServiceUtil.updateTag(
 				tagId, name, tagProperties, serviceContext);
 		}
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		jsonObject.put("tagId", tag.getTagId());
-
-		return jsonObject;
 	}
 
 }
