@@ -160,4 +160,21 @@
 			}
 		}
 	);
+
+	A.one('#<portlet:namespace />mergeSelectedTags').on(
+		'click',
+		function() {
+			if (A.all('input[name=<portlet:namespace />rowIds]:checked').size() > 1) {
+				<portlet:renderURL var="mergeURL">
+					<portlet:param name="struts_action" value="/asset_tag_admin/merge" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+				</portlet:renderURL>
+
+				location.href = '<%= mergeURL %>' + '&<portlet:namespace />mergeTagIds=' + Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
+			}
+			else {
+				alert('<liferay-ui:message arguments="<%= 2 %>" key="please-choose-at-least-x-tags" />');
+			}
+		}
+	);
 </aui:script>

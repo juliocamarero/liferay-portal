@@ -132,10 +132,20 @@ public class EditTagAction extends PortletAction {
 	}
 
 	protected void mergeTag(ActionRequest actionRequest) throws Exception {
-		long fromTagId = ParamUtil.getLong(actionRequest, "fromTagId");
-		long toTagId = ParamUtil.getLong(actionRequest, "toTagId");
+		long[] mergeTagIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "mergeTagIds"), 0L);
+		boolean overrideTagsProperties = ParamUtil.getBoolean(
+			actionRequest, "overrideTagsProperties");
+		long targetTagId = ParamUtil.getLong(actionRequest, "targetTagId");
 
-		AssetTagServiceUtil.mergeTags(fromTagId, toTagId, false);
+		for (long mergeTagId : mergeTagIds) {
+			if (targetTagId == mergeTagId) {
+				continue;
+			}
+
+			AssetTagServiceUtil.mergeTags(
+				mergeTagId, targetTagId, overrideTagsProperties);
+		}
 	}
 
 	protected void updateTag(ActionRequest actionRequest) throws Exception {
