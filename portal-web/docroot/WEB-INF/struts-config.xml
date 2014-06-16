@@ -295,6 +295,7 @@
 
 		<action path="/asset_tag_admin/edit_tag" type="com.liferay.portlet.assettagadmin.action.EditTagAction">
 			<forward name="portlet.asset_tag_admin.edit_tag" path="portlet.asset_tag_admin.edit_tag" />
+			<forward name="portlet.asset_tag_admin.error" path="portlet.asset_tag_admin.error" />
 		</action>
 
 		<action path="/asset_tag_admin/view" forward="portlet.asset_tag_admin.view" />
