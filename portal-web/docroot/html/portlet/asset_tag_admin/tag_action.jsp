@@ -38,19 +38,6 @@ AssetTag tag = (AssetTag)row.getObject();
 		/>
 	</c:if>
 
-	<c:if test="<%= AssetTagPermission.contains(permissionChecker, tag, ActionKeys.DELETE) %>">
-		<portlet:actionURL var="deleteURL">
-			<portlet:param name="struts_action" value="/asset_tag_admin/edit_tag" />
-			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
-			<portlet:param name="tagId" value="<%= String.valueOf(tag.getTagId()) %>" />
-		</portlet:actionURL>
-
-		<liferay-ui:icon-delete
-			url="<%= deleteURL %>"
-		/>
-	</c:if>
-
 	<c:if test="<%= PropsValues.ASSET_TAG_PERMISSIONS_ENABLED && AssetTagPermission.contains(permissionChecker, tag, ActionKeys.PERMISSIONS) %>">
 		<liferay-security:permissionsURL
 			modelResource="<%= AssetTag.class.getName() %>"
@@ -66,6 +53,19 @@ AssetTag tag = (AssetTag)row.getObject();
 			method="get"
 			url="<%= permissionsURL %>"
 			useDialog="<%= true %>"
+		/>
+	</c:if>
+
+	<c:if test="<%= AssetTagPermission.contains(permissionChecker, tag, ActionKeys.DELETE) %>">
+		<portlet:actionURL var="deleteURL">
+			<portlet:param name="struts_action" value="/asset_tag_admin/edit_tag" />
+			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="tagId" value="<%= String.valueOf(tag.getTagId()) %>" />
+		</portlet:actionURL>
+
+		<liferay-ui:icon-delete
+			url="<%= deleteURL %>"
 		/>
 	</c:if>
 </liferay-ui:icon-menu>
