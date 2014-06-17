@@ -56,6 +56,6 @@ long[] mergeTagIds = StringUtil.split(ParamUtil.getString(renderRequest, "mergeT
 	<aui:button-row>
 		<aui:button type="submit" />
 
-		<aui:button type="cancel" />
+		<aui:button href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
