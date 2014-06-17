@@ -30,8 +30,11 @@ import com.liferay.portlet.asset.service.AssetTagServiceUtil;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 /**
@@ -67,6 +70,19 @@ public class EditTagAction extends PortletAction {
 		}
 
 		sendRedirect(actionRequest, actionResponse);
+	}
+
+	@Override
+	public ActionForward render(
+			ActionMapping actionMapping, ActionForm actionForm,
+			PortletConfig portletConfig, RenderRequest renderRequest,
+			RenderResponse renderResponse)
+		throws Exception {
+
+		ActionUtil.getTag(renderRequest);
+
+		return actionMapping.findForward(
+			getForward(renderRequest, "portlet.asset_tag_admin.edit_tag"));
 	}
 
 	protected void deleteTag(ActionRequest actionRequest)
