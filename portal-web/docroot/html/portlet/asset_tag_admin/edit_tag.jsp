@@ -129,7 +129,7 @@ else {
 				<aui:button-row>
 					<aui:button type="submit" />
 
-					<aui:button type="cancel" />
+					<aui:button href="<%= redirect %>" type="cancel" />
 				</aui:button-row>
 			</div>
 		</div>
