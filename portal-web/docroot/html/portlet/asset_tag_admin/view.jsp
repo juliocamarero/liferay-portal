@@ -53,7 +53,7 @@
 
 			<aui:nav-bar-search cssClass="pull-right">
 				<div class="col-xs-12 form-search">
-					<liferay-ui:input-search id="tagsAdminSearchInput" name="tagsAdminSearchInput" showButton="<%= false %>" />
+					<liferay-ui:input-search />
 				</div>
 			</aui:nav-bar-search>
 		</aui:nav-bar>
@@ -142,7 +142,7 @@
 	A.one('#<portlet:namespace /><%= searchContainerReference.getId() %>SearchContainer').delegate(
 		'click',
 		function() {
-			var hide = (Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace /><%= RowChecker.ALL_ROW_IDS %>Checkbox').length == 0);
+			var hide = (Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace /><%= RowChecker.ALL_ROW_IDS %>').length == 0);
 
 			A.one('#<portlet:namespace />tagsActionsButton').toggle(!hide);
 		},
