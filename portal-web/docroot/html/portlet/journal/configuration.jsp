@@ -98,7 +98,7 @@ String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAd
 			/>
 		</liferay-ui:section>
 
-		<c:if test="<%= WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), scopeGroupId, JournalFolder.class.getName()) %>">
+		<c:if test="<%= WorkflowDefinitionLinkLocalServiceUtil.getWorkflowDefinitionLinksCount(themeDisplay.getCompanyId(), scopeGroupId, JournalFolder.class.getName()) > 0 %>">
 			<liferay-ui:section>
 				<liferay-ui:email-notification-settings
 					emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleApprovalDeniedBody", "preferences", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_APPROVAL_DENIED_BODY)) %>'
