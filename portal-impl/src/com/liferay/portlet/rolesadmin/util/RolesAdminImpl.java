@@ -25,6 +25,10 @@ import com.liferay.portal.model.RoleConstants;
 @DoPrivileged
 public class RolesAdminImpl implements RolesAdmin {
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public String getCssClassName(Role role) {
 		String cssClassName = StringPool.BLANK;
