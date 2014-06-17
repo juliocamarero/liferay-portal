@@ -224,3 +224,24 @@ Some content (such as web content) needs the `PortletRequest` and
 `PortletResponse` parameters in order to be rendered.
 
 ---------------------------------------
+
+### aui:input taglib for type checkbox does not create a hidden input anymore
+- **Date:** 2014-Jun-16
+- **JIRA Ticket:** LPS-44228
+
+#### What changed?
+Whenever the aui:input taglib is used to generate an input of type checkbox, only an input tag will be generated, instead of the checkbox and hidden field it was generating before.
+
+#### Who is affected?
+Anyone trying to grab the previously generated fields. Mostly affects JavaScript code trying to add some additional actions when clicking on the checkboxes.
+
+#### How should I update my code?
+- Remove the `Checkbox` suffix when querying for the node in any of its forms; `A.one(...)`, `$(...)` ...
+- Remove any action trying to set the value of the checkbox on the previously generated hidden field
+
+#### Why was this change made?
+This change:
+- Makes generated forms more standard and interoperable since it falls back to the checkboxes default behaviour.
+- Allows the form to be submitted properly even when JavaScript is disabled.
+
+---------------------------------------
