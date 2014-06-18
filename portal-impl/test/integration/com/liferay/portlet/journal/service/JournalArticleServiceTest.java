@@ -47,6 +47,7 @@ import com.liferay.portlet.journal.service.impl.JournalArticleLocalServiceImpl;
 import com.liferay.portlet.journal.util.test.JournalTestUtil;
 
 import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -498,7 +499,8 @@ public class JournalArticleServiceTest {
 	public void testSearchArticlesMatchAnyFieldsByKeyword() throws Exception {
 		List<JournalArticle> expectedArticles = createArticlesWithKeyword(2);
 
-		int count = countArticles(false, _keyword, WorkflowConstants.STATUS_ANY);
+		int count = countArticles(
+			false, _keyword, WorkflowConstants.STATUS_ANY);
 
 		Assert.assertEquals(2, count);
 
@@ -509,9 +511,9 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesMatchAnyFieldsByKeywordAndStatus() 
+	public void testSearchArticlesMatchAnyFieldsByKeywordAndStatus()
 		throws Exception {
-		
+
 		List<JournalArticle> initialArticles = createArticlesWithKeyword(2);
 
 		updateArticleStatus(
@@ -532,9 +534,9 @@ public class JournalArticleServiceTest {
 	public void testSearchArticlesMatchAnyFieldsByStatus() throws Exception {
 		int count = countArticles(
 			false, null, WorkflowConstants.STATUS_APPROVED);
-		
+
 		Assert.assertEquals(1, count);
-		
+
 		List<JournalArticle> articles = searchArticles(
 			false, null, WorkflowConstants.STATUS_APPROVED);
 
