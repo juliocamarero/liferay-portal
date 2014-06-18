@@ -43,29 +43,28 @@ public class DocumentSelectorUtil {
 	}
 
 	public static String[] getMimeTypes(HttpServletRequest request) {
-		HttpServletRequest originalRequest =
+		HttpServletRequest originalServletRequest =
 			PortalUtil.getOriginalServletRequest(request);
 
-		String type = ParamUtil.getString(originalRequest, "Type");
+		String type = ParamUtil.getString(originalServletRequest, "Type");
 
-		Set<String> mimeTypes = _getMimeTypes(type);
+		Set<String> mimeTypes = null;
 
-		return ArrayUtil.toStringArray(mimeTypes.toArray());
-	}
-
-	private static Set<String> _getMimeTypes(String type) {
 		if (StringUtil.equalsIgnoreCase(type, "audio")) {
-			return AudioProcessorUtil.getAudioMimeTypes();
+			mimeTypes = AudioProcessorUtil.getAudioMimeTypes();
 		}
 		else if (StringUtil.equalsIgnoreCase(type, "image")) {
-			return ImageProcessorUtil.getImageMimeTypes();
+			mimeTypes = ImageProcessorUtil.getImageMimeTypes();
 		}
 		else if (StringUtil.equalsIgnoreCase(type, "video")) {
-			return VideoProcessorUtil.getVideoMimeTypes();
+			mimeTypes = VideoProcessorUtil.getVideoMimeTypes();
 		}
-		else {
-			return Collections.emptySet();
+
+		if (mimeTypes == null) {
+			return null;
 		}
+
+		return ArrayUtil.toStringArray(mimeTypes.toArray());
 	}
 
 }
