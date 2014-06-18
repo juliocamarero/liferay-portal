@@ -415,7 +415,7 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesByAnyStatus() throws Exception {
+	public void testSearchArticlesByStatusAny() throws Exception {
 		int count = countArticles(true, null, WorkflowConstants.STATUS_ANY);
 
 		Assert.assertEquals(1, count);
@@ -480,7 +480,7 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesMatchAnyFieldsByAnyStatus() throws Exception {
+	public void testSearchArticlesMatchAnyFieldsByStatusAny() throws Exception {
 		int count = countArticles(false, null, WorkflowConstants.STATUS_ANY);
 
 		Assert.assertEquals(1, count);
