@@ -415,22 +415,6 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesByStatusAny() throws Exception {
-		int count = countArticles(true, null, WorkflowConstants.STATUS_ANY);
-
-		Assert.assertEquals(1, count);
-
-		List<JournalArticle> articles = searchArticles(
-			true, null, WorkflowConstants.STATUS_ANY);
-
-		List<JournalArticle> initialArticles = new ArrayList<JournalArticle>(1);
-
-		initialArticles.add(_article);
-
-		Assert.assertEquals(initialArticles, articles);
-	}
-
-	@Test
 	public void testSearchArticlesByKeyword() throws Exception {
 		List<JournalArticle> expectedArticles = createArticlesWithKeyword(2);
 
@@ -480,15 +464,13 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesMatchesAnyFieldByStatusAny()
-		throws Exception {
-
-		int count = countArticles(false, null, WorkflowConstants.STATUS_ANY);
+	public void testSearchArticlesByStatusAny() throws Exception {
+		int count = countArticles(true, null, WorkflowConstants.STATUS_ANY);
 
 		Assert.assertEquals(1, count);
 
 		List<JournalArticle> articles = searchArticles(
-			false, null, WorkflowConstants.STATUS_ANY);
+			true, null, WorkflowConstants.STATUS_ANY);
 
 		List<JournalArticle> initialArticles = new ArrayList<JournalArticle>(1);
 
@@ -541,6 +523,24 @@ public class JournalArticleServiceTest {
 
 		List<JournalArticle> articles = searchArticles(
 			false, null, WorkflowConstants.STATUS_APPROVED);
+
+		List<JournalArticle> initialArticles = new ArrayList<JournalArticle>(1);
+
+		initialArticles.add(_article);
+
+		Assert.assertEquals(initialArticles, articles);
+	}
+
+	@Test
+	public void testSearchArticlesMatchesAnyFieldByStatusAny()
+		throws Exception {
+
+		int count = countArticles(false, null, WorkflowConstants.STATUS_ANY);
+
+		Assert.assertEquals(1, count);
+
+		List<JournalArticle> articles = searchArticles(
+			false, null, WorkflowConstants.STATUS_ANY);
 
 		List<JournalArticle> initialArticles = new ArrayList<JournalArticle>(1);
 
