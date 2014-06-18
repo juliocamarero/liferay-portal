@@ -19,6 +19,6 @@ package com.liferay.portal.kernel.search;
  */
 public enum IndexableType {
 
-	DELETE, REINDEX
+	DELETE, REINDEX, REINDEX_ALL
 
 }
