@@ -19,11 +19,21 @@
 <%
 long groupId = ParamUtil.getLong(request, "groupId");
 
+String eventName = ParamUtil.getString(request, "eventName");
+
 Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 
 request.setAttribute(WebKeys.GROUP, group);
 
-String eventName = ParamUtil.getString(request, "eventName");
+String tabNames = "";
+
+if (group.getPublicLayoutsPageCount() > 0) {
+	tabNames += "public-pages,";
+}
+
+if (group.getPrivateLayoutsPageCount() > 0) {
+	tabNames += "private-pages";
+}
 
 boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector");
 %>
@@ -32,19 +42,7 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 	<liferay-util:include page="/html/portlet/document_selector/group_selector.jsp" />
 </c:if>
 
-<%
-String tabs1Names = "";
-
-if (group.getPublicLayoutsPageCount() > 0) {
-	tabs1Names += "public-pages,";
-}
-
-if (group.getPrivateLayoutsPageCount() > 0) {
-	tabs1Names += "private-pages";
-}
-%>
-
-<liferay-ui:tabs names="<%= tabs1Names %>" refresh="false">
+<liferay-ui:tabs names="<%= tabNames %>" refresh="false">
 	<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
 		<liferay-ui:section>
 			<div>
