@@ -1539,7 +1539,8 @@ public class JournalArticleFinderImpl
 		sql = StringUtil.replace(
 			sql, "[$AND_OR_CONNECTOR$] )", StringPool.CLOSE_PARENTHESIS);
 
-		sql = StringUtil.replace(sql, " AND (  )", StringPool.BLANK);
+		sql = StringUtil.replace(
+			sql, " AND (" + StringPool.DOUBLE_SPACE + ")", StringPool.BLANK);
 
 		return sql;
 	}
