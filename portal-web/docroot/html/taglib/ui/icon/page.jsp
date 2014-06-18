@@ -61,7 +61,16 @@ boolean urlIsNotNull = Validator.isNotNull(url);
 		<li class="<%= cssClass %>" role="presentation">
 			<c:choose>
 				<c:when test="<%= urlIsNotNull %>">
-					<aui:a ariaRole="menuitem" cssClass='<%= linkCssClass + " taglib-icon" %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" target="<%= target %>">
+
+					<%
+					String tagOnClick = StringPool.BLANK;
+
+					if (forcePost) {
+						tagOnClick = "event.preventDefault(); submitForm(document.hrefFm, '" + url + "')";
+					}
+					%>
+
+					<aui:a ariaRole="menuitem" cssClass='<%= linkCssClass + " taglib-icon" %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick='<%= Validator.isNotNull(tagOnClick) ? tagOnClick : "" %>' target="<%= target %>">
 						<%= linkContent %>
 					</aui:a>
 				</c:when>
@@ -75,7 +84,16 @@ boolean urlIsNotNull = Validator.isNotNull(url);
 		<li class="<%= cssClass %>" role="presentation">
 			<c:choose>
 				<c:when test="<%= urlIsNotNull %>">
-					<aui:a ariaRole="menuitem" cssClass='<%= linkCssClass + " taglib-icon" %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick='<%= Validator.isNotNull(onClick) ? onClick : "" %>' target="<%= target %>">
+
+					<%
+					String tagOnClick = onClick;
+
+					if (forcePost) {
+						tagOnClick = "event.preventDefault(); " + onClick + StringPool.SEMICOLON + " submitForm(document.hrefFm, '" + url + "')";
+					}
+					%>
+
+					<aui:a ariaRole="menuitem" cssClass='<%= linkCssClass + " taglib-icon" %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick='<%= Validator.isNotNull(tagOnClick) ? tagOnClick : "" %>' target="<%= target %>">
 						<%= linkContent %>
 					</aui:a>
 				</c:when>
@@ -93,7 +111,16 @@ boolean urlIsNotNull = Validator.isNotNull(url);
 		>
 			<c:choose>
 				<c:when test="<%= urlIsNotNull %>">
-					<aui:a ariaRole="<%= ariaRole %>" cssClass='<%= linkCssClass + " taglib-icon" %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick='<%= Validator.isNotNull(onClick) ? onClick : "" %>' target="<%= target %>">
+
+					<%
+					String tagOnClick = onClick;
+
+					if (forcePost) {
+						tagOnClick = "event.preventDefault(); " + onClick + StringPool.SEMICOLON + " submitForm(document.hrefFm, '" + url + "')";
+					}
+					%>
+
+					<aui:a ariaRole="<%= ariaRole %>" cssClass='<%= linkCssClass + " taglib-icon" %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick='<%= Validator.isNotNull(tagOnClick) ? tagOnClick : "" %>' target="<%= target %>">
 						<%= linkContent %>
 					</aui:a>
 				</c:when>
