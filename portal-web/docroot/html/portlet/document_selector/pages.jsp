@@ -158,7 +158,9 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 			button.attr('data-url', url);
 		}
 
-		Liferay.Util.toggleDisabled(button, disabled);
+		button.set('disabled', disabled);
+
+		button.toggleClass('disabled', disabled);
 
 		selectPageMessage.one('.selected-page-message').html(messageText);
 
