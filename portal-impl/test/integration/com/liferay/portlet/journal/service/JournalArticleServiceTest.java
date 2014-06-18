@@ -47,7 +47,6 @@ import com.liferay.portlet.journal.service.impl.JournalArticleLocalServiceImpl;
 import com.liferay.portlet.journal.util.test.JournalTestUtil;
 
 import java.io.InputStream;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -415,16 +414,31 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
+	public void testSearchArticlesByAnyStatus() throws Exception {
+		int count = countArticles(true, null, WorkflowConstants.STATUS_ANY);
+
+		Assert.assertEquals(1, count);
+
+		List<JournalArticle> articles = searchArticles(
+			true, null, WorkflowConstants.STATUS_ANY);
+
+		List<JournalArticle> initialArticles = new ArrayList<JournalArticle>(1);
+
+		initialArticles.add(_article);
+
+		Assert.assertEquals(initialArticles, articles);
+	}
+
+	@Test
 	public void testSearchArticlesByKeyword() throws Exception {
 		List<JournalArticle> expectedArticles = createArticlesWithKeyword(2);
 
-		int count = countArticlesByKeyword(
-			_keyword, WorkflowConstants.STATUS_ANY);
+		int count = countArticles(true, _keyword, WorkflowConstants.STATUS_ANY);
 
 		Assert.assertEquals(2, count);
 
-		List<JournalArticle> articles = searchArticlesByKeyword(
-			_keyword, WorkflowConstants.STATUS_ANY);
+		List<JournalArticle> articles = searchArticles(
+			true, _keyword, WorkflowConstants.STATUS_ANY);
 
 		Assert.assertEquals(expectedArticles, articles);
 	}
@@ -436,13 +450,97 @@ public class JournalArticleServiceTest {
 		updateArticleStatus(
 			initialArticles.get(0), WorkflowConstants.STATUS_DRAFT);
 
-		int count = countArticlesByKeyword(
-			_keyword, WorkflowConstants.STATUS_APPROVED);
+		int count = countArticles(
+			true, _keyword, WorkflowConstants.STATUS_APPROVED);
 
 		Assert.assertEquals(2, count);
 
-		List<JournalArticle> articles = searchArticlesByKeyword(
-			_keyword, WorkflowConstants.STATUS_APPROVED);
+		List<JournalArticle> articles = searchArticles(
+			true, _keyword, WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(initialArticles, articles);
+	}
+
+	@Test
+	public void testSearchArticlesByStatus() throws Exception {
+		int count = countArticles(
+			true, null, WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(1, count);
+
+		List<JournalArticle> articles = searchArticles(
+			true, null, WorkflowConstants.STATUS_APPROVED);
+
+		List<JournalArticle> initialArticles = new ArrayList<JournalArticle>(1);
+
+		initialArticles.add(_article);
+
+		Assert.assertEquals(initialArticles, articles);
+	}
+
+	@Test
+	public void testSearchArticlesMatchAnyFieldsByAnyStatus() throws Exception {
+		int count = countArticles(false, null, WorkflowConstants.STATUS_ANY);
+
+		Assert.assertEquals(1, count);
+
+		List<JournalArticle> articles = searchArticles(
+			false, null, WorkflowConstants.STATUS_ANY);
+
+		List<JournalArticle> initialArticles = new ArrayList<JournalArticle>(1);
+
+		initialArticles.add(_article);
+
+		Assert.assertEquals(initialArticles, articles);
+	}
+
+	@Test
+	public void testSearchArticlesMatchAnyFieldsByKeyword() throws Exception {
+		List<JournalArticle> expectedArticles = createArticlesWithKeyword(2);
+
+		int count = countArticles(false, _keyword, WorkflowConstants.STATUS_ANY);
+
+		Assert.assertEquals(2, count);
+
+		List<JournalArticle> articles = searchArticles(
+			false, _keyword, WorkflowConstants.STATUS_ANY);
+
+		Assert.assertEquals(expectedArticles, articles);
+	}
+
+	@Test
+	public void testSearchArticlesMatchAnyFieldsByKeywordAndStatus() 
+		throws Exception {
+		
+		List<JournalArticle> initialArticles = createArticlesWithKeyword(2);
+
+		updateArticleStatus(
+			initialArticles.get(0), WorkflowConstants.STATUS_DRAFT);
+
+		int count = countArticles(
+			false, _keyword, WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(2, count);
+
+		List<JournalArticle> articles = searchArticles(
+			false, _keyword, WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(initialArticles, articles);
+	}
+
+	@Test
+	public void testSearchArticlesMatchAnyFieldsByStatus() throws Exception {
+		int count = countArticles(
+			false, null, WorkflowConstants.STATUS_APPROVED);
+		
+		Assert.assertEquals(1, count);
+		
+		List<JournalArticle> articles = searchArticles(
+			false, null, WorkflowConstants.STATUS_APPROVED);
+
+		List<JournalArticle> initialArticles = new ArrayList<JournalArticle>(1);
+
+		initialArticles.add(_article);
 
 		Assert.assertEquals(initialArticles, articles);
 	}
@@ -491,7 +589,7 @@ public class JournalArticleServiceTest {
 		}.checkStructure(article, ddmStructure);
 	}
 
-	protected int countArticlesByKeyword(String keyword, int status)
+	protected int countArticles(boolean andOperator, String keyword, int status)
 		throws Exception {
 
 		List<Long> folderIds = new ArrayList<Long>(1);
@@ -501,7 +599,8 @@ public class JournalArticleServiceTest {
 		return JournalArticleLocalServiceUtil.searchCount(
 			TestPropsValues.getCompanyId(), _group.getGroupId(), folderIds,
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, null,
-			null, keyword, "general", "", "", null, null, status, null, true);
+			null, keyword, "general", "", "", null, null, status, null,
+			andOperator);
 	}
 
 	protected List<JournalArticle> createArticlesWithKeyword(int count)
@@ -509,8 +608,8 @@ public class JournalArticleServiceTest {
 
 		_keyword = RandomTestUtil.randomString();
 
-		List<JournalArticle> articles = searchArticlesByKeyword(
-			_keyword, WorkflowConstants.STATUS_ANY);
+		List<JournalArticle> articles = searchArticles(
+			false, _keyword, WorkflowConstants.STATUS_ANY);
 
 		if (articles.isEmpty()) {
 			return addArticles(count, _keyword);
@@ -546,8 +645,8 @@ public class JournalArticleServiceTest {
 		return StringUtil.read(inputStream);
 	}
 
-	protected List<JournalArticle> searchArticlesByKeyword(
-			String keyword, int status)
+	protected List<JournalArticle> searchArticles(
+			boolean andOperator, String content, int status)
 		throws Exception {
 
 		List<Long> folderIds = new ArrayList<Long>(1);
@@ -557,8 +656,8 @@ public class JournalArticleServiceTest {
 		return JournalArticleLocalServiceUtil.search(
 			TestPropsValues.getCompanyId(), _group.getGroupId(), folderIds,
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, null,
-			null, keyword, "general", "", "", null, null, status, null, false,
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+			null, content, "general", "", "", null, null, status, null,
+			andOperator, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	protected void testAddArticleRequiredFields(
