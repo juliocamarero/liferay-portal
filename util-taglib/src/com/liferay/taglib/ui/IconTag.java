@@ -413,6 +413,24 @@ public class IconTag extends IncludeTag {
 			(_url.startsWith(Http.HTTP_WITH_SLASH) ||
 				_url.startsWith(Http.HTTPS_WITH_SLASH));
 
+		String onClick = StringPool.BLANK;
+
+		if (Validator.isNotNull(_onClick)) {
+			onClick = _onClick + StringPool.SEMICOLON;
+		}
+
+		if (forcePost) {
+			StringBundler sb = new StringBundler(8);
+
+			sb.append("event.preventDefault();");
+			sb.append(onClick);
+			sb.append("submitForm(document.hrefFm, '");
+			sb.append(_url);
+			sb.append("')");
+
+			onClick = sb.toString();
+		}
+
 		boolean auiImage = (_image != null) && _image.startsWith(_AUI_PATH);
 
 		if (Validator.isNull(_src)) {
@@ -463,7 +481,7 @@ public class IconTag extends IncludeTag {
 			String.valueOf(_localizeMessage));
 		request.setAttribute("liferay-ui:icon:message", _message);
 		request.setAttribute("liferay-ui:icon:method", _method);
-		request.setAttribute("liferay-ui:icon:onClick", _onClick);
+		request.setAttribute("liferay-ui:icon:onClick", onClick);
 		request.setAttribute("liferay-ui:icon:src", _src);
 		request.setAttribute("liferay-ui:icon:srcHover", _srcHover);
 		request.setAttribute("liferay-ui:icon:target", _target);
