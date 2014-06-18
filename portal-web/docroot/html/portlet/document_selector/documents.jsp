@@ -348,7 +348,6 @@ portletURL.setParameter("showGroupsSelector", String.valueOf(showGroupsSelector)
 				<%
 				Map<String, Object> data = new HashMap<String, Object>();
 
-				data.put("ckeditorfuncnum", ckEditorFuncNum);
 				data.put("groupid", fileEntry.getGroupId());
 				data.put("title", fileEntry.getTitle());
 				data.put("url", DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, false));
