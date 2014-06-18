@@ -591,7 +591,7 @@ public class JournalArticleServiceTest {
 		}.checkStructure(article, ddmStructure);
 	}
 
-	protected int countArticles(boolean andOperator, String keyword, int status)
+	protected int countArticles(boolean andOperator, String content, int status)
 		throws Exception {
 
 		List<Long> folderIds = new ArrayList<Long>(1);
@@ -601,7 +601,7 @@ public class JournalArticleServiceTest {
 		return JournalArticleLocalServiceUtil.searchCount(
 			TestPropsValues.getCompanyId(), _group.getGroupId(), folderIds,
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, null,
-			null, keyword, "general", "", "", null, null, status, null,
+			null, content, "general", "", "", null, null, status, null,
 			andOperator);
 	}
 
