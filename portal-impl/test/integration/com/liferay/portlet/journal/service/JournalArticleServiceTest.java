@@ -480,7 +480,9 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesMatchAnyFieldsByStatusAny() throws Exception {
+	public void testSearchArticlesMatchesAnyFieldByStatusAny()
+		throws Exception {
+
 		int count = countArticles(false, null, WorkflowConstants.STATUS_ANY);
 
 		Assert.assertEquals(1, count);
@@ -496,7 +498,7 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesMatchAnyFieldsByKeyword() throws Exception {
+	public void testSearchArticlesMatchesAnyFieldByKeyword() throws Exception {
 		List<JournalArticle> expectedArticles = createArticlesWithKeyword(2);
 
 		int count = countArticles(
@@ -511,7 +513,7 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesMatchAnyFieldsByKeywordAndStatus()
+	public void testSearchArticlesMatchesAnyFieldByKeywordAndStatus()
 		throws Exception {
 
 		List<JournalArticle> initialArticles = createArticlesWithKeyword(2);
@@ -531,7 +533,7 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
-	public void testSearchArticlesMatchAnyFieldsByStatus() throws Exception {
+	public void testSearchArticlesMatchesAnyFieldByStatus() throws Exception {
 		int count = countArticles(
 			false, null, WorkflowConstants.STATUS_APPROVED);
 
