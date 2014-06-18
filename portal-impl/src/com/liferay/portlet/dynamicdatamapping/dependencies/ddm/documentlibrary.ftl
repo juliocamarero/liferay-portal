@@ -106,7 +106,6 @@
 						},
 						eventName: '${portletNamespace}selectDocumentLibrary',
 						id: '${portletNamespace}selectDocumentLibrary',
-						title: '${languageUtil.get(locale, "select-document")}',
 						uri: portletURL.toString()
 					},
 					function(event) {

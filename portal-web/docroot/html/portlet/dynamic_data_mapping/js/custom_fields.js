@@ -122,7 +122,7 @@ AUI.add(
 								},
 								eventName: 'selectDocumentLibrary',
 								id: 'selectDocumentLibrary',
-								title: Liferay.Language.get('select-document'),
+								title: Liferay.Language.get('javax.portlet.title.20'),
 								uri: portletURL.toString()
 							},
 							function(event) {
