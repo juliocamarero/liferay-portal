@@ -18,6 +18,7 @@
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId");
+
 String ckEditorFuncNum = DocumentSelectorUtil.getCKEditorFuncNum(request);
 String eventName = ParamUtil.getString(request, "eventName");
 
@@ -26,9 +27,9 @@ String attachmentURLPrefix = ParamUtil.getString(request, "attachmentURLPrefix")
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("struts_action", "/document_selector/view");
-portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("ckEditorFuncNum", ckEditorFuncNum);
 portletURL.setParameter("eventName", eventName);
+portletURL.setParameter("groupId", String.valueOf(groupId));
 
 long wikiPageResourcePrimKey = ParamUtil.getLong(request, "wikiPageResourcePrimKey");
 
