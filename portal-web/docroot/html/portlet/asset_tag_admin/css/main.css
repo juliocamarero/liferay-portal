@@ -56,8 +56,6 @@
 
 	.merge-tags-container {
 		.merge-tag {
-			@include border-radius(5px);
-
 			background-color: #009AE5;
 			color: #FFF;
 		}
