@@ -152,7 +152,7 @@
 	A.one('#<portlet:namespace />deleteSelectedTags').on(
 		'click',
 		function() {
-			if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this") %>')) {
+			if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
 				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '<%= Constants.DELETE %>';
 				document.<portlet:namespace />fm.<portlet:namespace />deleteTagIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
 
