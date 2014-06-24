@@ -17,14 +17,13 @@
 <%@ include file="/html/portlet/asset_publisher/init.jsp" %>
 
 <%
-
 String redirect = null;
-
-List results = (List)request.getAttribute("view.jsp-results");
 
 if (AssetUtil.isDefaultAssetPublisher(layout, portletDisplay.getId(), portletResource)) {
 	redirect = ParamUtil.getString(PortalUtil.getOriginalServletRequest(request), "redirect");
 }
+
+List results = (List)request.getAttribute("view.jsp-results");
 
 if (Validator.isNull(redirect) && results.isEmpty()) {
 	PortletURL portletURL = renderResponse.createRenderURL();
