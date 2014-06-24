@@ -56,12 +56,12 @@ public class BaseATag extends com.liferay.taglib.util.IncludeTag {
 		return _label;
 	}
 
-	public boolean getLocalizeLabel() {
-		return _localizeLabel;
-	}
-
 	public java.lang.String getLang() {
 		return _lang;
+	}
+
+	public boolean getLocalizeLabel() {
+		return _localizeLabel;
 	}
 
 	public java.lang.String getOnClick() {
@@ -112,16 +112,16 @@ public class BaseATag extends com.liferay.taglib.util.IncludeTag {
 		setScopedAttribute("label", label);
 	}
 
-	public void setLocalizeLabel(boolean localizeLabel) {
-		_localizeLabel = localizeLabel;
-
-		setScopedAttribute("localizeLabel", localizeLabel);
-	}
-
 	public void setLang(java.lang.String lang) {
 		_lang = lang;
 
 		setScopedAttribute("lang", lang);
+	}
+
+	public void setLocalizeLabel(boolean localizeLabel) {
+		_localizeLabel = localizeLabel;
+
+		setScopedAttribute("localizeLabel", localizeLabel);
 	}
 
 	public void setOnClick(java.lang.String onClick) {
@@ -150,8 +150,8 @@ public class BaseATag extends com.liferay.taglib.util.IncludeTag {
 		_href = null;
 		_id = null;
 		_label = null;
-		_localizeLabel = true;
 		_lang = null;
+		_localizeLabel = true;
 		_onClick = null;
 		_target = null;
 		_title = null;
@@ -181,8 +181,8 @@ public class BaseATag extends com.liferay.taglib.util.IncludeTag {
 	private java.lang.String _href = null;
 	private java.lang.String _id = null;
 	private java.lang.String _label = null;
-	private boolean _localizeLabel = true;
 	private java.lang.String _lang = null;
+	private boolean _localizeLabel = true;
 	private java.lang.String _onClick = null;
 	private java.lang.String _target = null;
 	private java.lang.String _title = null;
