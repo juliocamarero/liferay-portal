@@ -519,8 +519,6 @@ public class IconTag extends IncludeTag {
 			return _label;
 		}
 
-		_label = false;
-
 		IntegerWrapper iconListIconCount = (IntegerWrapper)request.getAttribute(
 			"liferay-ui:icon-list:icon-count");
 
@@ -544,6 +542,8 @@ public class IconTag extends IncludeTag {
 
 			return true;
 		}
+
+		_label = false;
 
 		return false;
 	}
