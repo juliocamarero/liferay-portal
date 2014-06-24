@@ -41,15 +41,15 @@
 				<outputType>java.lang.String</outputType>
 			</attribute>
 			<attribute>
+				<name>lang</name>
+				<inputType>java.lang.String</inputType>
+				<outputType>java.lang.String</outputType>
+			</attribute>
+			<attribute>
 				<name>localizeLabel</name>
 				<inputType>boolean</inputType>
 				<outputType>boolean</outputType>
 				<defaultValue>true</defaultValue>
-			</attribute>
-			<attribute>
-				<name>lang</name>
-				<inputType>java.lang.String</inputType>
-				<outputType>java.lang.String</outputType>
 			</attribute>
 			<attribute>
 				<name>onClick</name>
