@@ -121,8 +121,20 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	@Override
+	public String getContainerModelClassName(long classPK)
+		throws PortalException {
+
+		return getContainerModelClassName();
+	}
+
+	@Override
 	public String getContainerModelName() {
 		return StringPool.BLANK;
+	}
+
+	@Override
+	public String getContainerModelName(long classPK) throws PortalException {
+		return getContainerModelName();
 	}
 
 	@Override
@@ -247,6 +259,13 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	@Override
+	public String getTrashContainerModelName(long classPK)
+		throws PortalException {
+
+		return getTrashContainerModelName();
+	}
+
+	@Override
 	@SuppressWarnings("unused")
 	public int getTrashContainerModelsCount(long classPK)
 		throws PortalException {
@@ -310,6 +329,11 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		}
 
 		return hasPermission(permissionChecker, classPK, actionId);
+	}
+
+	@Override
+	public boolean isBaseModel() {
+		return false;
 	}
 
 	@Override
