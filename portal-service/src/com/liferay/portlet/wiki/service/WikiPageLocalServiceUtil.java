@@ -404,6 +404,15 @@ public class WikiPageLocalServiceUtil {
 			.changeParent(userId, nodeId, title, newParentTitle, serviceContext);
 	}
 
+	public static void changeParentAndRestoreFromTrash(long userId,
+		long nodeId, java.lang.String title, java.lang.String newParentTitle,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.changeParentAndRestoreFromTrash(userId, nodeId, title,
+			newParentTitle, serviceContext);
+	}
+
 	public static void copyPageAttachments(long userId, long templateNodeId,
 		java.lang.String templateTitle, long nodeId, java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -500,6 +509,27 @@ public class WikiPageLocalServiceUtil {
 	public static java.util.List<com.liferay.portlet.wiki.model.WikiPage> getChildren(
 		long nodeId, boolean head, java.lang.String parentTitle) {
 		return getService().getChildren(nodeId, head, parentTitle);
+	}
+
+	public static java.util.List<com.liferay.portlet.wiki.model.WikiPage> getChildren(
+		long nodeId, boolean head, java.lang.String parentTitle, int status) {
+		return getService().getChildren(nodeId, head, parentTitle, status);
+	}
+
+	public static java.util.List<com.liferay.portlet.wiki.model.WikiPage> getChildren(
+		long nodeId, boolean head, java.lang.String parentTitle, int start,
+		int end) {
+		return getService().getChildren(nodeId, head, parentTitle, start, end);
+	}
+
+	public static int getChildrenCount(long nodeId, boolean head,
+		java.lang.String parentTitle) {
+		return getService().getChildrenCount(nodeId, head, parentTitle);
+	}
+
+	public static int getChildrenCount(long nodeId, boolean head,
+		java.lang.String parentTitle, int status) {
+		return getService().getChildrenCount(nodeId, head, parentTitle, status);
 	}
 
 	public static com.liferay.portlet.wiki.model.WikiPage getDraftPage(
