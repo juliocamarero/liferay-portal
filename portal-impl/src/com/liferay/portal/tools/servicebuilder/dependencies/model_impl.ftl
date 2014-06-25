@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
@@ -716,6 +717,10 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		public String getContainerModelName() {
 			<#if entity.hasColumn("name")>
 				return String.valueOf(getName());
+			<#elseif entity.hasColumn("title")>
+				<#assign titleColumn = entity.getColumn("title")>
+
+				return String.valueOf(getTitle(<#if titleColumn.isLocalized()>LocaleThreadLocal.getThemeDisplayLocale()</#if>));
 			<#else>
 				return String.valueOf(getContainerModelId());
 			</#if>
