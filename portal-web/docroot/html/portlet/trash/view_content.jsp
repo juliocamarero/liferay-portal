@@ -51,7 +51,7 @@
 	PortletURL containerModelURL = renderResponse.createRenderURL();
 
 	containerModelURL.setParameter("redirect", redirect);
-	containerModelURL.setParameter("className", trashHandler.getContainerModelClassName());
+	containerModelURL.setParameter("className", trashHandler.getContainerModelClassName(classPK));
 
 	TrashUtil.addBaseModelBreadcrumbEntries(request, className, classPK, containerModelURL);
 	%>
@@ -149,7 +149,7 @@
 										<portlet:param name="redirect" value="<%= redirect %>" />
 										<portlet:param name="className" value="<%= trashRenderer.getClassName() %>" />
 										<portlet:param name="classPK" value="<%= String.valueOf(trashRenderer.getClassPK()) %>" />
-										<portlet:param name="containerModelClassName" value="<%= trashHandler.getContainerModelClassName() %>" />
+										<portlet:param name="containerModelClassName" value="<%= trashHandler.getContainerModelClassName(classPK) %>" />
 									</portlet:renderURL>
 
 									A.one('#<portlet:namespace />moveEntryButton').on(
@@ -254,10 +254,12 @@
 									value="<%= String.valueOf(curBaseModelsCount) %>"
 								/>
 
-								<liferay-ui:search-container-column-text
-									name='<%= LanguageUtil.format(request, "num-of-x", curTrashHandler.getTrashContainerModelName()) %>'
-									value="<%= String.valueOf(curContainerModelsCount) %>"
-								/>
+								<c:if test="<%= !trashHandler.isBaseModel() %>">
+									<liferay-ui:search-container-column-text
+										name='<%= LanguageUtil.format(request, "num-of-x", curTrashHandler.getTrashContainerModelName()) %>'
+										value="<%= String.valueOf(curContainerModelsCount) %>"
+									/>
+								</c:if>
 
 								<liferay-ui:search-container-column-jsp
 									align="right"
