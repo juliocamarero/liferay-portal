@@ -478,7 +478,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 	@Override
 	protected void doReindex(Object obj) throws Exception {
-		doReindex(obj, true);
+		doReindex(obj, false);
 	}
 
 	@Override
@@ -502,7 +502,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 	@Override
 	protected void doReindex(String className, long classPK) throws Exception {
-		doReindex(className, classPK, true);
+		doReindex(className, classPK, false);
 	}
 
 	@Override
