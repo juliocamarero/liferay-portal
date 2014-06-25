@@ -115,6 +115,10 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return null;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getContainerModel(long)}
+	 */
+	@Deprecated
 	@Override
 	public String getContainerModelClassName() {
 		return getContainerModelClassName(0);
