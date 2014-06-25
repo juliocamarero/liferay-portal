@@ -34,6 +34,9 @@ String ddmTemplateKey = ParamUtil.getString(renderRequest, "ddmTemplateKey");
 
 if (Validator.isNull(articleId)) {
 	articleId = GetterUtil.getString(portletPreferences.getValue("articleId", StringPool.BLANK));
+}
+
+if (Validator.isNull(ddmTemplateKey)) {
 	ddmTemplateKey = GetterUtil.getString(portletPreferences.getValue("ddmTemplateKey", StringPool.BLANK));
 }
 
