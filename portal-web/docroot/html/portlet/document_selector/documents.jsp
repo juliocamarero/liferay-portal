@@ -37,6 +37,7 @@ String ckEditorFuncNum = DocumentSelectorUtil.getCKEditorFuncNum(request);
 String eventName = ParamUtil.getString(request, "eventName");
 boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector");
 String[] tabs1Names = StringUtil.split(ParamUtil.getString(renderRequest, "tabs1Names", "documents,pages"));
+String type = DocumentSelectorUtil.getType(request);
 
 long repositoryId = groupId;
 
@@ -52,6 +53,7 @@ if (folder != null) {
 	breadcrumbURL.setParameter("eventName", eventName);
 	breadcrumbURL.setParameter("showGroupsSelector", String.valueOf(showGroupsSelector));
 	breadcrumbURL.setParameter("tabs1Names", StringUtil.merge(tabs1Names));
+	breadcrumbURL.setParameter("type", type);
 
 	PortalUtil.addPortletBreadcrumbEntry(request, themeDisplay.translate("home"), breadcrumbURL.toString());
 
@@ -69,6 +71,7 @@ portletURL.setParameter("ckEditorFuncNum", ckEditorFuncNum);
 portletURL.setParameter("eventName", eventName);
 portletURL.setParameter("showGroupsSelector", String.valueOf(showGroupsSelector));
 portletURL.setParameter("tabs1Names", StringUtil.merge(tabs1Names));
+portletURL.setParameter("type", type);
 %>
 
 <c:if test="<%= showGroupsSelector %>">
@@ -208,6 +211,7 @@ portletURL.setParameter("tabs1Names", StringUtil.merge(tabs1Names));
 					<portlet:param name="eventName" value="<%= eventName %>" />
 					<portlet:param name="showGroupsSelector" value="<%= String.valueOf(showGroupsSelector) %>" />
 					<portlet:param name="tabs1Names" value="<%= StringUtil.merge(tabs1Names) %>" />
+					<portlet:param name="type" value="<%= type %>" />
 				</portlet:renderURL>
 
 				<liferay-ui:search-container-column-text
@@ -263,6 +267,7 @@ portletURL.setParameter("tabs1Names", StringUtil.merge(tabs1Names));
 	backURL.setParameter("eventName", eventName);
 	backURL.setParameter("showGroupsSelector", String.valueOf(showGroupsSelector));
 	backURL.setParameter("tabs1Names", StringUtil.merge(tabs1Names));
+	backURL.setParameter("type", type);
 	%>
 
 	<liferay-ui:header
@@ -281,6 +286,7 @@ portletURL.setParameter("tabs1Names", StringUtil.merge(tabs1Names));
 	iteratorURL.setParameter("eventName", eventName);
 	iteratorURL.setParameter("showGroupsSelector", String.valueOf(showGroupsSelector));
 	iteratorURL.setParameter("tabs1Names", StringUtil.merge(tabs1Names));
+	iteratorURL.setParameter("type", type);
 	%>
 
 	<liferay-ui:search-container
