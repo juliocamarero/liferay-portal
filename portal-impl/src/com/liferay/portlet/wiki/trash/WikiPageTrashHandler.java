@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ContainerModel;
@@ -40,6 +41,7 @@ import com.liferay.portlet.trash.RestoreEntryException;
 import com.liferay.portlet.trash.TrashEntryConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.wiki.NoSuchPageException;
+import com.liferay.portlet.wiki.NoSuchPageResourceException;
 import com.liferay.portlet.wiki.asset.WikiPageAssetRenderer;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
@@ -137,17 +139,26 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	public String getContainerModelClassName(long classPK)
 		throws PortalException {
 
+		WikiPage page = null;
+
 		try {
-			WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
-
-			if (Validator.isNotNull(page.getParentTitle())) {
-				return WikiPage.class.getName();
-			}
+			page = WikiPageLocalServiceUtil.getPage(classPK);
 		}
-		catch (NoSuchPageException nspe) {
+		catch (NoSuchPageResourceException nspre) {
+			page = WikiPageLocalServiceUtil.getPageByPageId(classPK);
 		}
 
-		return getContainerModelClassName();
+		while (page.isInTrashImplicitly() &&
+			   Validator.isNotNull(page.getParentTitle())) {
+
+			page = page.getParentPage();
+		}
+
+		if (page.isInTrashExplicitly()) {
+			return WikiPage.class.getName();
+		}
+
+		return WikiNode.class.getName();
 	}
 
 	@Override
@@ -205,7 +216,7 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 		WikiPage page = WikiPageLocalServiceUtil.getLatestPage(
 			classPK, WorkflowConstants.STATUS_ANY, false);
 
-		return page.getNode();
+		return getParentContainerModel(page);
 	}
 
 	@Override
@@ -214,7 +225,15 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 
 		if (Validator.isNotNull(page.getParentTitle())) {
 			try {
-				return page.getParentPage();
+				WikiPage parentPage = page.getParentPage();
+
+				while (parentPage.isInTrashImplicitly()) {
+					parentPage = parentPage.getParentPage();
+				}
+
+				if (parentPage.isInTrashExplicitly()) {
+					return parentPage;
+				}
 			}
 			catch (Exception e) {
 			}
@@ -363,7 +382,7 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 
 		if (trashActionId.equals(TrashActionKeys.MOVE)) {
 			WikiPage page = WikiPageLocalServiceUtil.fetchLatestPage(
-				classPK, WorkflowConstants.STATUS_APPROVED, true);
+				classPK, WorkflowConstants.STATUS_ANY, true);
 
 			if (page != null) {
 				WikiPagePermission.check(
@@ -372,6 +391,10 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 
 				return WikiNodePermission.contains(
 					permissionChecker, page.getNodeId(), ActionKeys.ADD_PAGE);
+			}
+			else {
+				return WikiNodePermission.contains(
+					permissionChecker, classPK, ActionKeys.ADD_PAGE);
 			}
 		}
 
@@ -435,8 +458,14 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 		WikiPage parentPage = WikiPageLocalServiceUtil.getPage(
 			containerModelId);
 
+		String parentPageTitle = parentPage.getTitle();
+
+		if (parentPage.isInTrash()) {
+			parentPageTitle = StringPool.BLANK;
+		}
+
 		WikiPageLocalServiceUtil.changeParentAndRestoreFromTrash(
-			userId, page.getNodeId(), page.getTitle(), parentPage.getTitle(),
+			userId, page.getNodeId(), page.getTitle(), parentPageTitle,
 			serviceContext);
 	}
 
