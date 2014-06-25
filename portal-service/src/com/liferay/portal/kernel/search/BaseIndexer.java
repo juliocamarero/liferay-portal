@@ -124,7 +124,7 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void delete(Object obj) throws SearchException {
-		delete(obj, true);
+		delete(obj, false);
 	}
 
 	@Override
@@ -435,7 +435,7 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void reindex(Object obj) throws SearchException {
-		reindex(obj, true);
+		reindex(obj, false);
 	}
 
 	@Override
@@ -457,7 +457,7 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void reindex(String className, long classPK) throws SearchException {
-		reindex(className, classPK, true);
+		reindex(className, classPK, false);
 	}
 
 	@Override

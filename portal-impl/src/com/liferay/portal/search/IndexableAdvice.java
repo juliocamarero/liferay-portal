@@ -116,7 +116,7 @@ public class IndexableAdvice
 
 			@Override
 			public boolean propagate() {
-				return true;
+				return false;
 			}
 
 		};
