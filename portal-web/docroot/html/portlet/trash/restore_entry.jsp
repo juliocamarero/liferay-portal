@@ -40,38 +40,22 @@ if (entry != null) {
 	classPK = entry.getClassPK();
 }
 
-String duplicateEntryId = ParamUtil.getString(request, "duplicateEntryId");
-String oldName = ParamUtil.getString(request, "oldName");
-
+boolean multipleConflicts = ParamUtil.getBoolean(request, "multipleConflicts");
 String overrideMessage = ParamUtil.getString(request, "overrideMessage");
 String renameMessage = ParamUtil.getString(request, "renameMessage");
 %>
 
-<div class="alert alert-block" id="<portlet:namespace />messageContainer">
-	<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(oldName)} %>" key="an-entry-with-name-x-already-exists" translateArguments="<%= false %>" />
-</div>
-
 <portlet:actionURL var="restoreActionURL">
-	<portlet:param name="struts_action" value="<%= restoreEntryAction %>" />
+	<portlet:param name="struts_action" value='<%= restoreEntryAction %>' />
 </portlet:actionURL>
 
 <aui:form action="<%= restoreActionURL %>" enctype="multipart/form-data" method="post" name="restoreTrashEntryFm" onSubmit="event.preventDefault();">
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
-	<aui:input name="trashEntryId" type="hidden" value="<%= trashEntryId %>" />
-	<aui:input name="duplicateEntryId" type="hidden" value="<%= duplicateEntryId %>" />
-	<aui:input name="oldName" type="hidden" value="<%= oldName %>" />
-
-	<aui:fieldset>
-		<aui:input checked="<%= true %>" id="override" label="<%= HtmlUtil.escape(overrideMessage) %>" name="<%= Constants.CMD %>" type="radio" value="<%= Constants.OVERRIDE %>" />
-
-		<aui:input id="rename" label="<%= HtmlUtil.escape(renameMessage) %>" name="<%= Constants.CMD %>" type="radio" value="<%= Constants.RENAME %>" />
-
-		<aui:input cssClass="new-file-name" label="" name="newName" title="<%= HtmlUtil.escapeAttribute(renameMessage) %>" value="<%= TrashUtil.getNewName(themeDisplay, className, classPK, oldName) %>" />
-	</aui:fieldset>
-
-	<aui:button-row>
-		<aui:button cssClass="btn-cancel" type="cancel" />
-
-		<aui:button type="submit" />
-	</aui:button-row>
+	<c:choose>
+		<c:when test="<%= multipleConflicts %>">
+			<%@ include file="/html/portlet/trash/multiple_conflict_resolutor.jspf" %>
+		</c:when>
+		<c:otherwise>
+			<%@ include file="/html/portlet/trash/single_conflict_resolutor.jspf" %>
+		</c:otherwise>
+	</c:choose>
 </aui:form>
