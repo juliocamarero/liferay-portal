@@ -121,10 +121,8 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	@Override
-	public String getContainerModelClassName(long classPK)
-		throws PortalException {
-
-		return getContainerModelClassName();
+	public String getContainerModelClassName(long classPK) {
+		return StringPool.BLANK;
 	}
 
 	@Override
