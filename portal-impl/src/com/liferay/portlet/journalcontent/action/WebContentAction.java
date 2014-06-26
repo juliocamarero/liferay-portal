@@ -69,6 +69,9 @@ public class WebContentAction extends PortletAction {
 		if (Validator.isNull(articleId)) {
 			articleId = GetterUtil.getString(
 				portletPreferences.getValue("articleId", null));
+		}
+
+		if (Validator.isNull(ddmTemplateKey)) {
 			ddmTemplateKey = GetterUtil.getString(
 				portletPreferences.getValue("ddmTemplateKey", null));
 		}
@@ -127,6 +130,9 @@ public class WebContentAction extends PortletAction {
 			if (Validator.isNull(articleId)) {
 				articleId = GetterUtil.getString(
 					portletPreferences.getValue("articleId", null));
+			}
+
+			if (Validator.isNull(ddmTemplateKey)) {
 				ddmTemplateKey = GetterUtil.getString(
 					portletPreferences.getValue("ddmTemplateKey", null));
 			}

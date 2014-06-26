@@ -64,17 +64,17 @@ public class ViewAction extends WebContentAction {
 		}
 
 		String articleId = ParamUtil.getString(renderRequest, "articleId");
-		String ddmTemplateKey = null;
+		String ddmTemplateKey = ParamUtil.getString(
+			renderRequest, "ddmTemplateKey");
 
 		if (Validator.isNull(articleId)) {
 			articleId = GetterUtil.getString(
 				portletPreferences.getValue("articleId", null));
+		}
+
+		if (Validator.isNull(ddmTemplateKey)) {
 			ddmTemplateKey = GetterUtil.getString(
 				portletPreferences.getValue("ddmTemplateKey", null));
-		}
-		else {
-			ddmTemplateKey = ParamUtil.getString(
-				renderRequest, "ddmTemplateKey");
 		}
 
 		JournalArticle article = null;
