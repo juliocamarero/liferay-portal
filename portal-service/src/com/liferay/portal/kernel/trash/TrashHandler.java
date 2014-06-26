@@ -194,8 +194,6 @@ public interface TrashHandler {
 	 */
 	public String getContainerModelName();
 
-	public String getContainerModelName(long classPK) throws PortalException;
-
 	/**
 	 * Returns a range of all the container models that are children of the
 	 * parent container model identified by the container model ID. These
@@ -424,9 +422,6 @@ public interface TrashHandler {
 	 */
 	public String getTrashContainerModelName();
 
-	public String getTrashContainerModelName(long classPK)
-		throws PortalException;
-
 	/**
 	 * Returns the number of container models that are children of the parent
 	 * container model identified by the primary key.
@@ -511,8 +506,6 @@ public interface TrashHandler {
 			PermissionChecker permissionChecker, long groupId, long classPK,
 			String trashActionId)
 		throws PortalException;
-
-	public boolean isBaseModel();
 
 	/**
 	 * Returns <code>true</code> if the entity is a container model.
