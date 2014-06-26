@@ -35,6 +35,13 @@ public class RestoreEntryException extends PortalException {
 		_type = type;
 	}
 
+	public RestoreEntryException(int type, long trashEntryId) {
+		super();
+
+		_trashEntryId = trashEntryId;
+		_type = type;
+	}
+
 	public RestoreEntryException(String msg) {
 		super(msg);
 	}
