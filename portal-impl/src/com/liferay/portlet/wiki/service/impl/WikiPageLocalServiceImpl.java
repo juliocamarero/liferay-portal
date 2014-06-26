@@ -469,7 +469,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		}
 
 		String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
-		String trashtitle = page.getTitle();
+		String trashTitle = page.getTitle();
 
 		page.setTitle(originalTitle);
 		page.setStatus(WorkflowConstants.STATUS_APPROVED);
@@ -478,13 +478,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		changeParent(
 			userId, nodeId, originalTitle, newParentTitle, serviceContext);
-
-		// Index
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			WikiPage.class);
-
-		indexer.reindex(page);
 
 		//TrashVersion
 
@@ -496,15 +489,22 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			trashVersionLocalService.deleteTrashVersion(trashVersion);
 		}
 
+		// Index
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			WikiPage.class);
+
+		indexer.reindex(page);
+
 		// Child pages
 
 		restoreDependentChildPagesFromTrash(
-			page, originalTitle, trashtitle, trashEntry.getEntryId());
+			page, originalTitle, trashTitle, trashEntry.getEntryId());
 
 		// RedirectPages pages
 
 		restoreDependentRedirectPagesFromTrash(
-			page, originalTitle, trashtitle, trashEntry.getEntryId());
+			page, originalTitle, trashTitle, trashEntry.getEntryId());
 	}
 
 	@Override
