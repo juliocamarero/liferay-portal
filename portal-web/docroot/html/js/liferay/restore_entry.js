@@ -80,6 +80,7 @@ AUI.add(
 									duplicateEntryId: responseData.duplicateEntryId,
 									oldName: responseData.oldName,
 									overrideMessage: instance.get('overrideMessage'),
+									multipleConflicts: responseData.multipleConflicts,
 									renameMessage: instance.get('renameMessage'),
 									trashEntryId: responseData.trashEntryId
 								}

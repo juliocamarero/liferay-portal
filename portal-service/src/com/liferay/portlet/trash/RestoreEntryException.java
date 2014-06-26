@@ -63,8 +63,16 @@ public class RestoreEntryException extends PortalException {
 		return _type;
 	}
 
+	public boolean isMultipleConflicts() {
+		return _multipleConflicts;
+	}
+
 	public void setDuplicateEntryId(long duplicateEntryId) {
 		_duplicateEntryId = duplicateEntryId;
+	}
+
+	public void setMultipleConflicts(boolean multipleConflicts) {
+		_multipleConflicts = multipleConflicts;
 	}
 
 	public void setOldName(String oldName) {
@@ -80,6 +88,7 @@ public class RestoreEntryException extends PortalException {
 	}
 
 	private long _duplicateEntryId;
+	private boolean _multipleConflicts;
 	private String _oldName;
 	private long _trashEntryId;
 	private int _type;
