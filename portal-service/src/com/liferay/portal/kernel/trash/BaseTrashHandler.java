@@ -156,6 +156,12 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return "deleted-in-x";
 	}
 
+	public long getDestinationContainerModelId(
+		long classPK, long destinationContainerModelId) {
+
+		return destinationContainerModelId;
+	}
+
 	@Override
 	@SuppressWarnings("unused")
 	public ContainerModel getParentContainerModel(long classPK)
