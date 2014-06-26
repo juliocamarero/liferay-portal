@@ -268,7 +268,7 @@ public class JournalArticleLocalServiceImpl
 	 * @return the web content article
 	 * @throws PortalException if a portal exception occurred
 	 */
-	@Indexable(type = IndexableType.REINDEX)
+	@Indexable(type = IndexableType.REINDEX, propagate = false)
 	@Override
 	public JournalArticle addArticle(
 			long userId, long groupId, long folderId, long classNameId,
@@ -4380,7 +4380,7 @@ public class JournalArticleLocalServiceImpl
 	 *         content article could not be found, or if a portal exception
 	 *         occurred
 	 */
-	@Indexable(type = IndexableType.REINDEX)
+	@Indexable(type = IndexableType.REINDEX, propagate = false)
 	@Override
 	public JournalArticle updateArticle(
 			long userId, long groupId, long folderId, String articleId,
@@ -4898,7 +4898,7 @@ public class JournalArticleLocalServiceImpl
 	 * @throws PortalException if a matching web content article could not be
 	 *         found
 	 */
-	@Indexable(type = IndexableType.REINDEX)
+	@Indexable(type = IndexableType.REINDEX, propagate = false)
 	@Override
 	public JournalArticle updateContent(
 			long groupId, String articleId, double version, String content)
