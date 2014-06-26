@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -308,13 +307,9 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			className);
 
-		while (destinationContainerModelId == 0) {
-			ContainerModel parentContainerModel =
-				trashHandler.getParentContainerModel(classPK);
-
-			destinationContainerModelId =
-				parentContainerModel.getContainerModelId();
-		}
+		destinationContainerModelId =
+			trashHandler.getDestinationContainerModelId(
+				classPK, destinationContainerModelId);
 
 		if (!trashHandler.hasTrashPermission(
 				permissionChecker, serviceContext.getScopeGroupId(),
