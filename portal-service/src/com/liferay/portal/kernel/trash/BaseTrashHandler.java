@@ -117,7 +117,7 @@ public abstract class BaseTrashHandler implements TrashHandler {
 
 	@Override
 	public String getContainerModelClassName() {
-		return StringPool.BLANK;
+		return getContainerModelClassName(0);
 	}
 
 	@Override
