@@ -872,6 +872,18 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
+	public List<WikiPage> getDependentPages(long nodeId, long resourcePrimKey)
+		throws PortalException {
+
+		List<WikiPage> pages = new ArrayList<WikiPage>();
+
+		pages.addAll(getTrashedChildPages(nodeId, resourcePrimKey));
+		pages.addAll(getTrashedRedirectPages(nodeId, resourcePrimKey));
+
+		return pages;
+	}
+
+	@Override
 	public WikiPage getDraftPage(long nodeId, String title)
 		throws PortalException {
 
@@ -1747,14 +1759,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (trashVersion != null) {
 			String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
 
-			WikiPageResource pageResource =
-				wikiPageResourcePersistence.findByPrimaryKey(
-					page.getResourcePrimKey());
-
-			pageResource.setTitle(originalTitle);
-
-			wikiPageResourcePersistence.update(pageResource);
-
 			page.setTitle(originalTitle);
 
 			wikiPagePersistence.update(page);
@@ -2534,6 +2538,50 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		catch (Exception e) {
 			return null;
 		}
+	}
+
+	protected List<WikiPage> getTrashedChildPages(
+			long nodeId, long resourcePrimKey)
+		throws PortalException {
+
+		WikiPage page = getPage(resourcePrimKey);
+
+		List<WikiPage> pages = new ArrayList<WikiPage>();
+
+		List<WikiPage> children = wikiPagePersistence.findByN_H_P_S(
+			page.getNodeId(), true, page.getTitle(),
+			WorkflowConstants.STATUS_IN_TRASH);
+
+		pages.addAll(children);
+
+		for (WikiPage childPage : children) {
+			pages.addAll(
+				getDependentPages(nodeId, childPage.getResourcePrimKey()));
+		}
+
+		return pages;
+	}
+
+	protected List<WikiPage> getTrashedRedirectPages(
+			long nodeId, long resourcePrimKey)
+		throws PortalException {
+
+		WikiPage page = getPage(resourcePrimKey);
+
+		List<WikiPage> pages = new ArrayList<WikiPage>();
+
+		List<WikiPage> redirectPages = wikiPagePersistence.findByN_H_R_S(
+			page.getNodeId(), true, page.getTitle(),
+			WorkflowConstants.STATUS_IN_TRASH);
+
+		pages.addAll(redirectPages);
+
+		for (WikiPage redirectPage : redirectPages) {
+			pages.addAll(
+				getDependentPages(nodeId, redirectPage.getResourcePrimKey()));
+		}
+
+		return redirectPages;
 	}
 
 	protected boolean isLinkedTo(WikiPage page, String targetTitle)
