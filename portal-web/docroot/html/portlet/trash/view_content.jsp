@@ -254,12 +254,10 @@
 									value="<%= String.valueOf(curBaseModelsCount) %>"
 								/>
 
-								<c:if test="<%= !trashHandler.isBaseModel() %>">
-									<liferay-ui:search-container-column-text
-										name='<%= LanguageUtil.format(request, "num-of-x", curTrashHandler.getTrashContainerModelName()) %>'
-										value="<%= String.valueOf(curContainerModelsCount) %>"
-									/>
-								</c:if>
+								<liferay-ui:search-container-column-text
+									name='<%= LanguageUtil.format(request, "num-of-x", curTrashHandler.getTrashContainerModelName()) %>'
+									value="<%= String.valueOf(curContainerModelsCount) %>"
+								/>
 
 								<liferay-ui:search-container-column-jsp
 									align="right"
