@@ -1144,7 +1144,7 @@ public class JournalFolderLocalServiceImpl
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 					JournalArticle.class);
 
-				indexer.reindex(article);
+				indexer.reindex(article, true);
 			}
 			else if (object instanceof JournalFolder) {
 
@@ -1268,7 +1268,7 @@ public class JournalFolderLocalServiceImpl
 				Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 					JournalArticle.class);
 
-				indexer.reindex(article);
+				indexer.reindex(article, true);
 			}
 			else if (object instanceof JournalFolder) {
 

@@ -84,8 +84,11 @@ public class IndexableAdvice
 			if (indexable.type() == IndexableType.DELETE) {
 				indexer.delete(result);
 			}
+			else if (indexable.type() == IndexableType.REINDEX_ALL) {
+				indexer.reindex(result, true);
+			}
 			else {
-				indexer.reindex(result);
+				indexer.reindex(result, false);
 			}
 		}
 		else {

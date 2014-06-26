@@ -474,6 +474,13 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 	@Override
 	protected void doReindex(Object obj) throws Exception {
+		doReindex(obj, false);
+	}
+
+	@Override
+	protected void doReindex(Object obj, boolean reindexAllVersions)
+		throws Exception {
+
 		JournalArticle article = (JournalArticle)obj;
 
 		if (!article.isIndexable() ||
@@ -489,11 +496,18 @@ public class JournalArticleIndexer extends BaseIndexer {
 			return;
 		}
 
-		reindexArticleVersions(article);
+		reindexArticleVersions(article, reindexAllVersions);
 	}
 
 	@Override
 	protected void doReindex(String className, long classPK) throws Exception {
+		doReindex(className, classPK, false);
+	}
+
+	@Override
+	protected void doReindex(
+		String className, long classPK, boolean allVersions) throws Exception {
+
 		JournalArticle article =
 			JournalArticleLocalServiceUtil.fetchJournalArticle(classPK);
 
@@ -504,7 +518,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 		}
 
 		if (article != null) {
-			doReindex(article);
+			doReindex(article, allVersions);
 		}
 	}
 
@@ -535,7 +549,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 				ddmStructureKeys);
 
 		for (JournalArticle article : articles) {
-			doReindex(article);
+			doReindex(article, true);
 		}
 	}
 
@@ -584,6 +598,45 @@ public class JournalArticleIndexer extends BaseIndexer {
 			Document document = getDocument(curArticle);
 
 			documents.add(document);
+		}
+
+		return documents;
+	}
+
+	protected Collection<Document> getArticleVersionsToReindex(
+			JournalArticle article)
+		throws PortalException {
+
+		Collection<Document> documents = new ArrayList<Document>();
+
+		documents.add(getDocument(article));
+
+		if (article.isDraft() || article.isScheduled()) {
+			return documents;
+		}
+
+		JournalArticle latestIndexableArticle =
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+					article.getResourcePrimKey());
+
+		if (article.isApproved()) {
+			if (article.getVersion() == latestIndexableArticle.getVersion()) {
+				JournalArticle previouslyIndexableArticle =
+					JournalArticleLocalServiceUtil.
+						fetchPreviousIndexableArticle(
+							article.getResourcePrimKey());
+
+				if (previouslyIndexableArticle != null) {
+					documents.add(getDocument(previouslyIndexableArticle));
+				}
+			}
+		}
+		else {
+			if ((latestIndexableArticle != null) &&
+				(article.getVersion() > latestIndexableArticle.getVersion())) {
+
+					documents.add(getDocument(latestIndexableArticle));
+			}
 		}
 
 		return documents;
@@ -687,12 +740,21 @@ public class JournalArticleIndexer extends BaseIndexer {
 		actionableDynamicQuery.performActions();
 	}
 
-	protected void reindexArticleVersions(JournalArticle article)
+	protected void reindexArticleVersions(
+			JournalArticle article, boolean reindexAllVersions)
 		throws PortalException {
 
+		Collection<Document> documents;
+
+		if (reindexAllVersions) {
+			documents = getArticleVersions(article);
+		}
+		else {
+			documents = getArticleVersionsToReindex(article);
+		}
+
 		SearchEngineUtil.updateDocuments(
-			getSearchEngineId(), article.getCompanyId(),
-			getArticleVersions(article));
+			getSearchEngineId(), article.getCompanyId(), documents);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

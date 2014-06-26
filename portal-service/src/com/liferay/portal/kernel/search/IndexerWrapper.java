@@ -194,8 +194,22 @@ public class IndexerWrapper implements Indexer {
 	}
 
 	@Override
+	public void reindex(Object obj, boolean allVersions)
+		throws SearchException {
+
+		_indexer.reindex(obj, allVersions);
+	}
+
+	@Override
 	public void reindex(String className, long classPK) throws SearchException {
 		_indexer.reindex(className, classPK);
+	}
+
+	@Override
+	public void reindex(String className, long classPK, boolean allVersions)
+		throws SearchException {
+
+		_indexer.reindex(className, classPK, allVersions);
 	}
 
 	@Override

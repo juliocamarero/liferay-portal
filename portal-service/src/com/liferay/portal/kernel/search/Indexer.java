@@ -106,7 +106,12 @@ public interface Indexer {
 
 	public void reindex(Object obj) throws SearchException;
 
+	public void reindex(Object obj, boolean allVersions) throws SearchException;
+
 	public void reindex(String className, long classPK) throws SearchException;
+
+	public void reindex(String className, long classPK, boolean allVersions)
+		throws SearchException;
 
 	public void reindex(String[] ids) throws SearchException;
 
