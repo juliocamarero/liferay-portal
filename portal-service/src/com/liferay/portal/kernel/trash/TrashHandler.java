@@ -265,6 +265,9 @@ public interface TrashHandler {
 	 */
 	public String getDeleteMessage();
 
+	public long getDestinationContainerModelId(
+		long classPK, long destinationContainerModelId);
+
 	/**
 	 * Returns the parent container model of the model entity with the primary
 	 * key.
