@@ -14,6 +14,9 @@
 
 package com.liferay.portal.security.pacl;
 
+import com.liferay.portal.deploy.hot.IndexerPostProcessorRegistry;
+import com.liferay.portal.deploy.hot.SchedulerEntryRegistry;
+import com.liferay.portal.deploy.hot.ServiceWrapperRegistry;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.test.LiferayIntegrationJUnitTestRunner;
@@ -67,6 +70,10 @@ public class PACLIntegrationJUnitTestRunner
 		ServiceTestUtil.initServices();
 		ServiceTestUtil.initPermissions();
 
+		_indexerPostProcessorRegistry = new IndexerPostProcessorRegistry();
+		_schedulerEntryRegistry = new SchedulerEntryRegistry();
+		_serviceWrapperRegistry = new ServiceWrapperRegistry();
+
 		_initialized = true;
 	}
 
@@ -94,7 +101,10 @@ public class PACLIntegrationJUnitTestRunner
 	private static final String _PACKAGE_PATH =
 		"com.liferay.portal.security.pacl.test.";
 
+	private static IndexerPostProcessorRegistry _indexerPostProcessorRegistry;
 	private static boolean _initialized = false;
+	private static SchedulerEntryRegistry _schedulerEntryRegistry;
+	private static ServiceWrapperRegistry _serviceWrapperRegistry;
 
 	private static class PACLClassLoader extends URLClassLoader {
 

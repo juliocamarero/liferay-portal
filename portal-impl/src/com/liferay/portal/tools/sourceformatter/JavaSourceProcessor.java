@@ -1052,7 +1052,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			fileNames = getPluginJavaFiles();
 		}
 
-		_fitOnSingleLineExceptions = getExclusions(
+		_fitOnSingleLineExclusions = getExclusions(
 			"fit.on.single.line.exludes");
 		_hibernateSQLQueryExclusions = getExclusions(
 			"hibernate.sql.query.excludes");
@@ -2066,7 +2066,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					}
 
 					if (!isExcluded(
-							_fitOnSingleLineExceptions, fileName, lineCount)) {
+							_fitOnSingleLineExclusions, fileName, lineCount)) {
 
 						combinedLines = getCombinedLines(
 							trimmedLine, previousLine, lineLeadingTabCount,
@@ -2228,6 +2228,12 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		if (pos == -1) {
 			pos = line.indexOf(StringPool.OPEN_CURLY_BRACE);
 		}
+
+		if (pos != -1) {
+			line = line.substring(0, pos);
+		}
+
+		pos = line.indexOf(StringPool.LESS_THAN);
 
 		if (pos != -1) {
 			line = line.substring(0, pos);
@@ -3099,7 +3105,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 	private Pattern _catchExceptionPattern = Pattern.compile(
 		"\n(\t+)catch \\((.+Exception) (.+)\\) \\{\n");
 	private boolean _checkUnprocessedExceptions;
-	private List<String> _fitOnSingleLineExceptions;
+	private List<String> _fitOnSingleLineExclusions;
 	private List<String> _hibernateSQLQueryExclusions;
 	private Pattern _incorrectCloseCurlyBracePattern = Pattern.compile(
 		"\n(.+)\n\n(\t+)}\n");
