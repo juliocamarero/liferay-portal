@@ -23,10 +23,16 @@ public class TrashActionKeys {
 
 	public static final String MOVE = "MOVE";
 
+	public static final String MULTIPLE_OVERWRITE = "MULTIPLE_OVERWRITE";
+
+	public static final String MULTIPLE_RENAME = "MULTIPLE_RENAME";
+
 	public static final String OVERWRITE = "OVERWRITE";
 
 	public static final String RENAME = "RENAME";
 
 	public static final String RESTORE = "RESTORE";
+
+	public static final String SKIP = "SKIP";
 
 }
