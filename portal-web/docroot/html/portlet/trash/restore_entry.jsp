@@ -40,16 +40,22 @@ if (entry != null) {
 	classPK = entry.getClassPK();
 }
 
+String duplicateEntryId = ParamUtil.getString(request, "duplicateEntryId");
 boolean multipleConflicts = ParamUtil.getBoolean(request, "multipleConflicts");
+String oldName = ParamUtil.getString(request, "oldName");
 String overrideMessage = ParamUtil.getString(request, "overrideMessage");
 String renameMessage = ParamUtil.getString(request, "renameMessage");
 %>
 
 <portlet:actionURL var="restoreActionURL">
-	<portlet:param name="struts_action" value='<%= restoreEntryAction %>' />
+	<portlet:param name="struts_action" value="<%= restoreEntryAction %>" />
 </portlet:actionURL>
 
 <aui:form action="<%= restoreActionURL %>" enctype="multipart/form-data" method="post" name="restoreTrashEntryFm" onSubmit="event.preventDefault();">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" />
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="trashEntryId" type="hidden" value="<%= trashEntryId %>" />
+
 	<c:choose>
 		<c:when test="<%= multipleConflicts %>">
 			<%@ include file="/html/portlet/trash/multiple_conflict_resolutor.jspf" %>
