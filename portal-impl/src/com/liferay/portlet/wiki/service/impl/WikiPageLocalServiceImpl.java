@@ -444,7 +444,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void changeParentAndRestoreFromTrash(
+	public void movePageFromTrash(
 			long userId, long nodeId, String title, String newParentTitle,
 			ServiceContext serviceContext)
 		throws PortalException {
