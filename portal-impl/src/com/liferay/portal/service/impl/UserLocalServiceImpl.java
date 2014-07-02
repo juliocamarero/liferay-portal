@@ -6270,10 +6270,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				user.getCompanyId(), firstName, middleName, lastName);
 		}
 
-		if (Validator.isNotNull(smsSn)) {
-			throw new UserSmsException.MustNotBeNull();
-		}
-		else if (!Validator.isEmailAddress(smsSn)) {
+		if (Validator.isNotNull(smsSn) && !Validator.isEmailAddress(smsSn)) {
 			throw new UserSmsException.MustBeEmailAddress(smsSn);
 		}
 	}

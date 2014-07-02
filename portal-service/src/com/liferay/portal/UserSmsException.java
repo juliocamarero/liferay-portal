@@ -69,12 +69,4 @@ public class UserSmsException extends PortalException {
 
 	}
 
-	public static class MustNotBeNull extends UserSmsException {
-
-		public MustNotBeNull() {
-			super("SMS must not be null");
-		}
-
-	}
-
 }
