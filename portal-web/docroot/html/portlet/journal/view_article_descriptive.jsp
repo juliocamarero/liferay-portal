@@ -58,7 +58,7 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 	latestApprovedVersionAuthor="<%= (latestApprovedArticleVersion != null) ? String.valueOf(latestApprovedArticleVersion.getUserName()) : null %>"
 	modifiedDate="<%= article.getModifiedDate() %>"
 	reviewDate="<%= article.getReviewDate() %>"
-	rowCheckerId="<%= String.valueOf(article.getArticleId()) %>"
+	rowCheckerId="<%= HtmlUtil.escape(article.getArticleId()) %>"
 	rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"
 	showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE) %>"
 	status="<%= article.getStatus() %>"

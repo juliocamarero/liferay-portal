@@ -29,7 +29,7 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 	description="<%= HtmlUtil.escape(article.getDescription(locale)) %>"
 	displayStyle="icon"
 	groupId="<%= article.getGroupId() %>"
-	rowCheckerId="<%= String.valueOf(article.getArticleId()) %>"
+	rowCheckerId="<%= HtmlUtil.escape(article.getArticleId()) %>"
 	rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"
 	showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE) %>"
 	status="<%= article.getStatus() %>"

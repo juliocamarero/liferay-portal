@@ -234,7 +234,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 								description="<%= (summary != null) ? summary.getContent() : article.getDescription(locale) %>"
 								mbMessages="<%= searchResult.getMBMessages() %>"
 								queryTerms="<%= hits.getQueryTerms() %>"
-								rowCheckerId="<%= String.valueOf(article.getArticleId()) %>"
+								rowCheckerId="<%= HtmlUtil.escape(article.getArticleId()) %>"
 								rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"
 								showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE) %>"
 								status="<%= article.getStatus() %>"
@@ -333,7 +333,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 								cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 								description="<%= curArticle.getDescription(locale) %>"
 								queryTerms="<%= queryTerms %>"
-								rowCheckerId="<%= String.valueOf(curArticle.getArticleId()) %>"
+								rowCheckerId="<%= HtmlUtil.escape(curArticle.getArticleId()) %>"
 								rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"
 								showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.UPDATE) %>"
 								status="<%= curArticle.getStatus() %>"
