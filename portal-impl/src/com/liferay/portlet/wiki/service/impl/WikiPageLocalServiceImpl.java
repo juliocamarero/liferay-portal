@@ -444,6 +444,70 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
+	public void changeParentAndRestoreFromTrash(
+			long userId, long nodeId, String title, String newParentTitle,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		WikiPage page = getPage(nodeId, title);
+
+		TrashEntry trashEntry = null;
+
+		WikiPage trashEntryPage = page.getParentPage();
+
+		while (trashEntry == null) {
+			trashEntry = trashEntryLocalService.fetchEntry(
+				WikiPage.class.getName(), trashEntryPage.getResourcePrimKey());
+
+			if (trashEntry == null) {
+				trashEntryPage = trashEntryPage.getParentPage();
+
+				if (trashEntryPage == null) {
+					throw new NoSuchPageException();
+				}
+			}
+		}
+
+		String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
+		String trashTitle = page.getTitle();
+
+		page.setTitle(originalTitle);
+		page.setStatus(WorkflowConstants.STATUS_APPROVED);
+
+		wikiPagePersistence.update(page);
+
+		changeParent(
+			userId, nodeId, originalTitle, newParentTitle, serviceContext);
+
+		//TrashVersion
+
+		TrashVersion trashVersion = trashVersionLocalService.fetchVersion(
+			trashEntry.getEntryId(), WikiPage.class.getName(),
+			page.getPageId());
+
+		if (trashVersion != null) {
+			trashVersionLocalService.deleteTrashVersion(trashVersion);
+		}
+
+		// Index
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			WikiPage.class);
+
+		indexer.reindex(page);
+
+		// Child pages
+
+		restoreDependentChildPagesFromTrash(
+			page, originalTitle, trashTitle, trashEntry.getEntryId());
+
+		// RedirectPages pages
+
+		restoreDependentRedirectPagesFromTrash(
+			page, originalTitle, trashTitle, trashEntry.getEntryId());
+	}
+
+	@Override
 	public void copyPageAttachments(
 			long userId, long templateNodeId, String templateTitle, long nodeId,
 			String title)
@@ -834,8 +898,39 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	public List<WikiPage> getChildren(
 		long nodeId, boolean head, String parentTitle) {
 
-		return wikiPagePersistence.findByN_H_P_S(
+		return getChildren(
 			nodeId, head, parentTitle, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public List<WikiPage> getChildren(
+		long nodeId, boolean head, String parentTitle, int status) {
+
+		return wikiPagePersistence.findByN_H_P_S(
+			nodeId, head, parentTitle, status);
+	}
+
+	@Override
+	public List<WikiPage> getChildren(
+		long nodeId, boolean head, String parentTitle, int start, int end) {
+
+		return wikiPagePersistence.findByN_H_P_S(
+			nodeId, head, parentTitle, WorkflowConstants.STATUS_APPROVED, start,
+			end);
+	}
+
+	@Override
+	public int getChildrenCount(long nodeId, boolean head, String parentTitle) {
+		return getChildrenCount(
+			nodeId, head, parentTitle, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public int getChildrenCount(
+		long nodeId, boolean head, String parentTitle, int status) {
+
+		return wikiPagePersistence.countByN_H_P_S(
+			nodeId, head, parentTitle, status);
 	}
 
 	@Override

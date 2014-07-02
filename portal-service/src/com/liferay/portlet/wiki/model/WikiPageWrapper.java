@@ -916,6 +916,56 @@ public class WikiPageWrapper implements WikiPage, ModelWrapper<WikiPage> {
 		return _wikiPage.isScheduled();
 	}
 
+	/**
+	* Returns the container model ID of this wiki page.
+	*
+	* @return the container model ID of this wiki page
+	*/
+	@Override
+	public long getContainerModelId() {
+		return _wikiPage.getContainerModelId();
+	}
+
+	/**
+	* Sets the container model ID of this wiki page.
+	*
+	* @param containerModelId the container model ID of this wiki page
+	*/
+	@Override
+	public void setContainerModelId(long containerModelId) {
+		_wikiPage.setContainerModelId(containerModelId);
+	}
+
+	/**
+	* Returns the container name of this wiki page.
+	*
+	* @return the container name of this wiki page
+	*/
+	@Override
+	public java.lang.String getContainerModelName() {
+		return _wikiPage.getContainerModelName();
+	}
+
+	/**
+	* Returns the parent container model ID of this wiki page.
+	*
+	* @return the parent container model ID of this wiki page
+	*/
+	@Override
+	public long getParentContainerModelId() {
+		return _wikiPage.getParentContainerModelId();
+	}
+
+	/**
+	* Sets the parent container model ID of this wiki page.
+	*
+	* @param parentContainerModelId the parent container model ID of this wiki page
+	*/
+	@Override
+	public void setParentContainerModelId(long parentContainerModelId) {
+		_wikiPage.setParentContainerModelId(parentContainerModelId);
+	}
+
 	@Override
 	public boolean isNew() {
 		return _wikiPage.isNew();
