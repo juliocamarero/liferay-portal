@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ip.geocoder.model;
+package com.liferay.ip.geocoder;
 
 import com.maxmind.geoip.Location;
 

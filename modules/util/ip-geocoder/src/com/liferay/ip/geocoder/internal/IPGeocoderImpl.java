@@ -14,8 +14,8 @@
 
 package com.liferay.ip.geocoder.internal;
 
-import com.liferay.ip.geocoder.model.IPInfo;
-import com.liferay.ip.geocoder.service.IPGeocoderService;
+import com.liferay.ip.geocoder.IPGeocoder;
+import com.liferay.ip.geocoder.IPInfo;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -45,17 +45,16 @@ import org.tukaani.xz.XZInputStream;
  * @author Julio Camarero
  */
 @Component(
-	name = IPGeocoderServiceImpl.SERVICE_NAME,
-	service = IPGeocoderService.class,
-	configurationPolicy = ConfigurationPolicy.OPTIONAL,
-	property = {
+	name = IPGeocoderImpl.SERVICE_NAME,
+	service = IPGeocoder.class,
+	configurationPolicy = ConfigurationPolicy.OPTIONAL, property = {
 		"ip.geocoderservice.file.location=",
 		"ip.geocoderservice.file.url=http://cdn.files.liferay.com/mirrors/" +
 			"geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.xz"
 	})
-public class IPGeocoderServiceImpl implements IPGeocoderService {
+public class IPGeocoderImpl implements IPGeocoder {
 
-	public static final String SERVICE_NAME = "IPGeocoderService";
+	public static final String SERVICE_NAME = "IPGeocoder";
 
 	@Activate
 	public void activate(final Map<String, String> properties) {
@@ -146,7 +145,7 @@ public class IPGeocoderServiceImpl implements IPGeocoderService {
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
-		IPGeocoderServiceImpl.class);
+		IPGeocoderImpl.class);
 
 	private static String GEO_DATA_TAR_FILE_NAME =
 		"/liferay/GeoIP/GeoIPCity.dat.xz";
