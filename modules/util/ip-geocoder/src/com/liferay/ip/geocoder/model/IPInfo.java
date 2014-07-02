@@ -24,15 +24,6 @@ public class IPInfo {
 	public IPInfo() {
 	}
 
-	/**
-	 * @deprecated As of 6.2.0
-	 */
-	public IPInfo(String ipAddress, float latitude, float longitude) {
-		_ipAddress = ipAddress;
-		_latitude = latitude;
-		_longitude = longitude;
-	}
-
 	public IPInfo(String ipAddress, Location location) {
 		_ipAddress = ipAddress;
 
