@@ -181,7 +181,11 @@ public interface TrashHandler {
 
 	/**
 	 * Returns the parent container model's class name.
+	 *
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #getContainerModelClassName(long)}
 	 */
+	@Deprecated
 	public String getContainerModelClassName();
 
 	public String getContainerModelClassName(long classPK);
