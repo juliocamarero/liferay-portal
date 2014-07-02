@@ -56,7 +56,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 
 		if (advancedSearch) {
 			if (folder != null) {
-				message = LanguageUtil.format(request, "advanced-search-in-x", folder.getName(), false);
+				message = LanguageUtil.format(request, "advanced-search-in-x", HtmlUtil.escape(folder.getName()), false);
 			}
 			else {
 				message = LanguageUtil.get(request, "advanced-search-everywhere");
@@ -64,7 +64,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 		}
 		else {
 			if (folder != null) {
-				message = LanguageUtil.format(request, "searched-for-x-in-x", new Object[] {HtmlUtil.escape(keywords), folder.getName()}, false);
+				message = LanguageUtil.format(request, "searched-for-x-in-x", new Object[] {HtmlUtil.escape(keywords), HtmlUtil.escape(folder.getName())}, false);
 			}
 			else {
 				message = LanguageUtil.format(request, "searched-for-x-everywhere", HtmlUtil.escape(keywords), false);
@@ -239,7 +239,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 								showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE) %>"
 								status="<%= article.getStatus() %>"
 								thumbnailSrc='<%= Validator.isNotNull(article.getArticleImageURL(themeDisplay)) ? article.getArticleImageURL(themeDisplay) : themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>'
-								title="<%= (summary != null) ? summary.getTitle() : article.getTitle(locale) %>"
+								title="<%= (summary != null) ? summary.getTitle() : HtmlUtil.escape(article.getTitle(locale)) %>"
 								url="<%= rowURL.toString() %>"
 								versions="<%= versions %>"
 							/>
@@ -274,7 +274,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 								rowCheckerName="<%= JournalFolder.class.getSimpleName() %>"
 								showCheckbox="<%= JournalFolderPermission.contains(permissionChecker, curFolder, ActionKeys.DELETE) || JournalFolderPermission.contains(permissionChecker, curFolder, ActionKeys.UPDATE) %>"
 								thumbnailSrc='<%= themeDisplay.getPathThemeImages() + "/file_system/large/" + folderImage + ".png" %>'
-								title="<%= (summary != null) ? summary.getTitle() : curFolder.getName() %>"
+								title="<%= (summary != null) ? summary.getTitle() : HtmlUtil.escape(curFolder.getName()) %>"
 								url="<%= rowURL.toString() %>"
 							/>
 						</c:when>
@@ -338,7 +338,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 								showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.UPDATE) %>"
 								status="<%= curArticle.getStatus() %>"
 								thumbnailSrc='<%= Validator.isNotNull(articleImageURL) ? articleImageURL : themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>'
-								title="<%= curArticle.getTitle(locale) %>"
+								title="<%= HtmlUtil.escape(curArticle.getTitle(locale)) %>"
 								url="<%= rowURL.toString() %>"
 							/>
 						</c:when>
