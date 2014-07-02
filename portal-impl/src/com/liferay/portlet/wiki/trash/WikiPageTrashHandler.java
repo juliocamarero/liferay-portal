@@ -452,7 +452,7 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 		WikiPage parentPage = WikiPageLocalServiceUtil.getPage(
 			containerModelId);
 
-		WikiPageLocalServiceUtil.changeParentAndRestoreFromTrash(
+		WikiPageLocalServiceUtil.movePageFromTrash(
 			userId, page.getNodeId(), page.getTitle(), parentPage.getTitle(),
 			serviceContext);
 	}
@@ -476,7 +476,7 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 		catch (Exception e) {
 		}
 
-		WikiPageLocalServiceUtil.changeParentAndRestoreFromTrash(
+		WikiPageLocalServiceUtil.movePageFromTrash(
 			userId, page.getNodeId(), page.getTitle(), parentPageTitle,
 			serviceContext);
 	}
