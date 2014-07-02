@@ -49,7 +49,7 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 	author="<%= article.getUserName() %>"
 	classTypeName="<%= ddmStructure.getName(locale) %>"
 	createDate="<%= createDate %>"
-	description="<%= article.getDescription(locale) %>"
+	description="<%= HtmlUtil.escape(article.getDescription(locale)) %>"
 	displayDate="<%= article.getDisplayDate() %>"
 	displayStyle="descriptive"
 	expirationDate="<%= article.getExpirationDate() %>"
@@ -65,7 +65,7 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 	thumbnailDivStyle="height: 146px; width: 146px;"
 	thumbnailSrc='<%= Validator.isNotNull(articleImageURL) ? articleImageURL : themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>'
 	thumbnailStyle="max-height: 128px; max-width: 128px;"
-	title="<%= article.getTitle(locale) %>"
+	title="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
 	url="<%= tempRowURL.toString() %>"
 	version="<%= String.valueOf(article.getVersion()) %>"
 />
