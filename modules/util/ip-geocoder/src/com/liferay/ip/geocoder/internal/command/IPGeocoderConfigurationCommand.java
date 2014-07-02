@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.ip.geocoder.internal;
+package com.liferay.ip.geocoder.internal.command;
 
+import com.liferay.ip.geocoder.internal.IPGeocoderImpl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -40,7 +41,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 	},
 	service = Object.class
 )
-public class IPGeocoderServiceAdmin {
+public class IPGeocoderConfigurationCommand {
 
 	@Activate
 	public void activate() {
@@ -69,7 +70,7 @@ public class IPGeocoderServiceAdmin {
 		}
 
 		Configuration configuration = _configurationAdmin.getConfiguration(
-			IPGeocoderServiceImpl.SERVICE_NAME);
+			IPGeocoderImpl.SERVICE_NAME);
 
 		Dictionary<String, Object> properties = configuration.getProperties();
 
@@ -83,7 +84,7 @@ public class IPGeocoderServiceAdmin {
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
-		IPGeocoderServiceAdmin.class);
+		IPGeocoderConfigurationCommand.class);
 
 	private ConfigurationAdmin _configurationAdmin;
 

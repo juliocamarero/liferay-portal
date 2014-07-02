@@ -12,14 +12,12 @@
  * details.
  */
 
-package com.liferay.ip.geocoder.service;
-
-import com.liferay.ip.geocoder.model.IPInfo;
+package com.liferay.ip.geocoder;
 
 /**
  * @author Julio Camarero
  */
-public interface IPGeocoderService {
+public interface IPGeocoder {
 
 	public IPInfo getIPInfo(String ipAddress);
 
