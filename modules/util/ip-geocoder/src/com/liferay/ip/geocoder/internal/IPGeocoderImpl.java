@@ -66,6 +66,7 @@ public class IPGeocoderImpl implements IPGeocoder {
 		_lookupService = null;
 	}
 
+	@Override
 	public IPInfo getIPInfo(String ipAddress) {
 		if (_lookupService != null) {
 			Location location = _lookupService.getLocation(ipAddress);
