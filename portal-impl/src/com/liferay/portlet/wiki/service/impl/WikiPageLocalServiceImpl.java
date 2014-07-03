@@ -1603,6 +1603,14 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
 		String trashTitle = page.getTitle();
 
+		WikiPageResource pageResource =
+			wikiPageResourcePersistence.findByPrimaryKey(
+				page.getResourcePrimKey());
+
+		pageResource.setTitle(originalTitle);
+
+		wikiPageResourcePersistence.update(pageResource);
+
 		page.setTitle(originalTitle);
 		page.setStatus(WorkflowConstants.STATUS_APPROVED);
 
@@ -1610,6 +1618,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		changeParent(
 			userId, nodeId, originalTitle, newParentTitle, serviceContext);
+
+		page = getPage(page.getResourcePrimKey());
 
 		//TrashVersion
 
@@ -1786,6 +1796,14 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		if (trashVersion != null) {
 			String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
+
+			WikiPageResource pageResource =
+				wikiPageResourcePersistence.findByPrimaryKey(
+					page.getResourcePrimKey());
+
+			pageResource.setTitle(originalTitle);
+
+			wikiPageResourcePersistence.update(pageResource);
 
 			page.setTitle(originalTitle);
 
