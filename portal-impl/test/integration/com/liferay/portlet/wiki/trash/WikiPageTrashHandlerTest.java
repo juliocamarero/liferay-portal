@@ -770,7 +770,7 @@ public class WikiPageTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Test
-	public void testRestoreParentPageWithExplicitlyTrashedRrdirectPageFromTrash()
+	public void testRestoreParentPageWithExplicitlyTrashedRedirectPageFromTrash()
 		throws Exception {
 
 		WikiPage[] pages = WikiTestUtil.addTrashedParentPageWithRedirectPage(
