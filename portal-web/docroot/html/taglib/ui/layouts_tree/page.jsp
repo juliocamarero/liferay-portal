@@ -79,12 +79,10 @@ if (saveState) {
 
 		if (Validator.isNotNull(checkedLayoutIds)) {
 			for (long checkedLayoutId : StringUtil.split(checkedLayoutIds, 0L)) {
-				try {
-					Layout checkedLayout = LayoutLocalServiceUtil.getLayout(groupId, privateLayout, checkedLayoutId);
+				Layout checkedLayout = LayoutLocalServiceUtil.fetchLayout(groupId, privateLayout, checkedLayoutId);
 
+				if (checkedLayout != null) {
 					checkedNodesJSONArray.put(String.valueOf(checkedLayout.getPlid()));
-				}
-				catch (NoSuchLayoutException nsle) {
 				}
 			}
 		}
