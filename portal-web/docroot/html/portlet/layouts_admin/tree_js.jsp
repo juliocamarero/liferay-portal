@@ -18,4 +18,29 @@
 
 <%@ include file="/html/portlet/layouts_admin/init_attributes.jspf" %>
 
-<liferay-ui:layouts-tree />
+<%
+String treeId = ParamUtil.getString(request, "treeId");
+boolean checkContentDisplayPage = ParamUtil.getBoolean(request, "checkContentDisplayPage", false);
+boolean defaultStateChecked = ParamUtil.getBoolean(request, "defaultStateChecked", false);
+boolean draggableTree = ParamUtil.getBoolean(request, "draggableTree", true);
+boolean expandFirstNode = ParamUtil.getBoolean(request, "expandFirstNode", true);
+boolean saveState = ParamUtil.getBoolean(request, "saveState", true);
+boolean selectableTree = ParamUtil.getBoolean(request, "selectableTree");
+String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
+%>
+
+<liferay-ui:layouts-tree
+	checkContentDisplayPage="<%= checkContentDisplayPage %>"
+	defaultStateChecked="<%= defaultStateChecked %>"
+	draggableTree="<%= draggableTree %>"
+	expandFirstNode="<%= expandFirstNode %>"
+	groupId="<%= groupId %>"
+	portletURL="<%= portletURL %>"
+	privateLayout="<%= privateLayout %>"
+	rootNodeName="<%= rootNodeName %>"
+	saveState="<%= saveState %>"
+	selPlid="<%= selPlid %>"
+	selectableTree="<%= selectableTree %>"
+	selectedLayoutIds="<%= selectedLayoutIds %>"
+	treeId="<%= treeId %>"
+/>

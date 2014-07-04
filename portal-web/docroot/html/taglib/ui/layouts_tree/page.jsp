@@ -14,24 +14,22 @@
  */
 --%>
 
-<%@ include file="/html/portlet/layouts_admin/init.jsp" %>
-
-<%@ include file="/html/portlet/layouts_admin/init_attributes.jspf" %>
+<%@ include file="/html/taglib/ui/layouts_tree/init.jsp" %>
 
 <%
-String cmd = ParamUtil.getString(request, Constants.CMD);
-
-boolean incomplete = ParamUtil.getBoolean(request, "incomplete", true);
-
-String treeLoading = PortalUtil.generateRandomKey(request, "treeLoading");
-
-String treeId = ParamUtil.getString(request, "treeId");
-boolean checkContentDisplayPage = ParamUtil.getBoolean(request, "checkContentDisplayPage", false);
-boolean defaultStateChecked = ParamUtil.getBoolean(request, "defaultStateChecked", false);
-boolean draggableTree = ParamUtil.getBoolean(request, "draggableTree", true);
-boolean expandFirstNode = ParamUtil.getBoolean(request, "expandFirstNode", true);
-boolean saveState = ParamUtil.getBoolean(request, "saveState", true);
-boolean selectableTree = ParamUtil.getBoolean(request, "selectableTree");
+boolean checkContentDisplayPage = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:checkContentDisplayPage"));
+boolean defaultStateChecked = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:defaultStateChecked"));
+boolean draggableTree = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:draggableTree"));
+boolean expandFirstNode = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:expandFirstNode"));
+long groupId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:layouts-tree:groupId"));
+PortletURL portletURL = (PortletURL)request.getAttribute("liferay-ui:layouts-tree:portletURL");
+boolean privateLayout = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:privateLayout"));
+String rootNodeName = (String)request.getAttribute("liferay-ui:layouts-tree:rootNodeName");
+boolean saveState = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:saveState"));
+boolean selectableTree = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:selectableTree"));
+String selectedLayoutIds = (String)request.getAttribute("liferay-ui:layouts-tree:selectedLayoutIds");
+long selPlid = GetterUtil.getLong((String)request.getAttribute("liferay-ui:layouts-tree:selPlid"));
+String treeId = (String)request.getAttribute("liferay-ui:layouts-tree:treeId");
 
 String modules = "liferay-layouts-tree";
 
@@ -71,11 +69,7 @@ if (saveState) {
 		<%
 		JSONArray checkedNodesJSONArray = JSONFactoryUtil.createJSONArray();
 
-		String checkedLayoutIds = SessionTreeJSClicks.getOpenNodes(request, treeId + "SelectedNode");
-
-		if (cmd.equals(Constants.UPDATE)) {
-			checkedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
-		}
+		String checkedLayoutIds = GetterUtil.getString(selectedLayoutIds, SessionTreeJSClicks.getOpenNodes(request, treeId + "SelectedNode"));
 
 		if (Validator.isNotNull(checkedLayoutIds)) {
 			for (long checkedLayoutId : StringUtil.split(checkedLayoutIds, 0L)) {
