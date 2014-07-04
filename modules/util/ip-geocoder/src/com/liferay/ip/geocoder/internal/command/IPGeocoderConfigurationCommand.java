@@ -15,13 +15,13 @@
 package com.liferay.ip.geocoder.internal.command;
 
 import com.liferay.ip.geocoder.internal.IPGeocoderImpl;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import java.io.IOException;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+
+import org.apache.log4j.Logger;
 
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -62,8 +62,8 @@ public class IPGeocoderConfigurationCommand {
 
 	protected void updateConfig(String key, String value) throws IOException {
 		if (_configurationAdmin == null) {
-			if (_log.isInfoEnabled()) {
-				_log.info("Configuration Admin Service is not available");
+			if (_logger.isInfoEnabled()) {
+				_logger.info("Configuration Admin Service is not available");
 			}
 
 			return;
@@ -83,7 +83,7 @@ public class IPGeocoderConfigurationCommand {
 		configuration.update(properties);
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(
+	private static Logger _logger = Logger.getLogger(
 		IPGeocoderConfigurationCommand.class);
 
 	private ConfigurationAdmin _configurationAdmin;

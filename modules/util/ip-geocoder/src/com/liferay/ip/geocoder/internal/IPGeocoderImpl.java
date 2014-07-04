@@ -16,21 +16,24 @@ package com.liferay.ip.geocoder.internal;
 
 import com.liferay.ip.geocoder.IPGeocoder;
 import com.liferay.ip.geocoder.IPInfo;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
-import com.liferay.portal.kernel.util.SystemProperties;
-import com.liferay.portal.kernel.util.Validator;
 
 import com.maxmind.geoip.Location;
 import com.maxmind.geoip.LookupService;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import java.net.URL;
+import java.net.URLConnection;
 
 import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -47,7 +50,8 @@ import org.tukaani.xz.XZInputStream;
 @Component(
 	name = IPGeocoderImpl.SERVICE_NAME,
 	service = IPGeocoder.class,
-	configurationPolicy = ConfigurationPolicy.OPTIONAL, property = {
+	configurationPolicy = ConfigurationPolicy.OPTIONAL,
+	property = {
 		"ip.geocoderservice.file.location=",
 		"ip.geocoderservice.file.url=http://cdn.files.liferay.com/mirrors/" +
 			"geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.xz"
@@ -90,31 +94,35 @@ public class IPGeocoderImpl implements IPGeocoder {
 	}
 
 	protected String getIPGeocoderFile(
-			String path, String url, boolean forceDownload)
+			String path, String fileUrl, boolean forceDownload)
 		throws IOException {
 
 		File file = new File(path);
 
 		if (!file.exists() || forceDownload) {
 			synchronized (this) {
-				if (_log.isInfoEnabled()) {
-					_log.info("Downloading Geolocation Data from " + url);
+				if (_logger.isInfoEnabled()) {
+					_logger.info(
+						"Downloading Geolocation Data from " + fileUrl);
 				}
 
-				byte[] bytes = HttpUtil.URLtoByteArray(url);
+				URL url = new URL(fileUrl);
 
-				String tmpDir = SystemProperties.get(SystemProperties.TMP_DIR);
+				URLConnection con = url.openConnection();
+
+				String tmpDir = System.getProperty(TMP_DIR);
 
 				File tarFile = new File(tmpDir + GEO_DATA_TAR_FILE_NAME);
 
-				FileUtil.write(tarFile, bytes);
+				write(tarFile, con.getInputStream());
 
-				FileUtil.write(
-					file, new XZInputStream(new FileInputStream(tarFile)));
+				write(file, new XZInputStream(new FileInputStream(tarFile)));
 			}
 		}
 
-		return FileUtil.getAbsolutePath(file);
+		String absolutePath = file.getAbsolutePath();
+
+		return absolutePath.replace('\\', '/');
 	}
 
 	private void _init(Map<String, String> properties) {
@@ -125,10 +133,9 @@ public class IPGeocoderImpl implements IPGeocoder {
 		String fileLocation = properties.get(
 			"ip.geocoderservice.file.location");
 
-		if (Validator.isNull(fileLocation)) {
+		if ((fileLocation == null) || (fileLocation.equals(""))) {
 			fileLocation =
-				SystemProperties.get(SystemProperties.TMP_DIR) +
-					"/liferay/GeoIP/GeoIPCity.dat";
+				System.getProperty(TMP_DIR) + "/liferay/GeoIP/GeoIPCity.dat";
 		}
 
 		String fileURL = properties.get("ip.geocoderservice.file.url");
@@ -141,12 +148,51 @@ public class IPGeocoderImpl implements IPGeocoder {
 				ipGeocoderFile, LookupService.GEOIP_MEMORY_CACHE);
 		}
 		catch (IOException ioe) {
-			_log.error(ioe.getMessage());
+			_logger.error(ioe.getMessage());
 		}
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(
-		IPGeocoderImpl.class);
+	private void mkdirsParentFile(File file) {
+		File parentFile = file.getParentFile();
+
+		if (parentFile == null) {
+			return;
+		}
+
+		try {
+			if (!parentFile.exists()) {
+				parentFile.mkdirs();
+			}
+		}
+		catch (SecurityException se) {
+
+			// We may have the permission to write a specific file without
+			// having the permission to check if the parent file exists
+
+		}
+	}
+
+	private void write(File file, InputStream is) throws IOException {
+		mkdirsParentFile(file);
+
+		BufferedInputStream bis = new BufferedInputStream(is);
+
+		BufferedOutputStream bos = new BufferedOutputStream(
+			new FileOutputStream(file));
+
+		int i;
+
+		while ((i = bis.read()) != -1) {
+			bos.write(i);
+		}
+
+		bos.flush();
+		bis.close();
+	}
+
+	private static final String TMP_DIR = "java.io.tmpdir";
+
+	private static Logger _logger = Logger.getLogger(IPGeocoderImpl.class);
 
 	private static String GEO_DATA_TAR_FILE_NAME =
 		"/liferay/GeoIP/GeoIPCity.dat.xz";
