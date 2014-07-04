@@ -47,7 +47,7 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 	assetTagClassName="<%= JournalArticle.class.getName() %>"
 	assetTagClassPK="<%= article.getResourcePrimKey() %>"
 	author="<%= article.getUserName() %>"
-	classTypeName="<%= ddmStructure.getName(locale) %>"
+	classTypeName="<%= HtmlUtil.escape(ddmStructure.getName(locale)) %>"
 	createDate="<%= createDate %>"
 	description="<%= HtmlUtil.escape(article.getDescription(locale)) %>"
 	displayDate="<%= article.getDisplayDate() %>"

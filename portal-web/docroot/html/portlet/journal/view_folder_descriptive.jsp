@@ -28,7 +28,7 @@ PortletURL tempRowURL = (PortletURL)request.getAttribute("view_entries.jsp-tempR
 	actionJsp="/html/portlet/journal/folder_action.jsp"
 	author="<%= folder.getUserName() %>"
 	createDate="<%= folder.getCreateDate() %>"
-	description="<%= folder.getDescription() %>"
+	description="<%= HtmlUtil.escape(folder.getDescription()) %>"
 	displayStyle="descriptive"
 	folder="<%= true %>"
 	modifiedDate="<%= folder.getModifiedDate() %>"
