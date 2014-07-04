@@ -2483,6 +2483,11 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>layouts-tree</name>
+		<tag-class>com.liferay.taglib.ui.LayoutsTreeTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	<tag>
 		<name>logo-selector</name>
 		<tag-class>com.liferay.taglib.ui.LogoSelectorTag</tag-class>
 		<body-content>JSP</body-content>
