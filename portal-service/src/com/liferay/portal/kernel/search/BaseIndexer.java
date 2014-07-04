@@ -124,8 +124,13 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void delete(Object obj) throws SearchException {
+		delete(obj, true);
+	}
+
+	@Override
+	public void delete(Object obj, boolean propagate) throws SearchException {
 		try {
-			doDelete(obj);
+			doDelete(obj, propagate);
 		}
 		catch (SearchException se) {
 			throw se;
@@ -430,12 +435,17 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void reindex(Object obj) throws SearchException {
+		reindex(obj, true);
+	}
+
+	@Override
+	public void reindex(Object obj, boolean propagate) throws SearchException {
 		try {
 			if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled()) {
 				return;
 			}
 
-			doReindex(obj);
+			doReindex(obj, propagate);
 		}
 		catch (SearchException se) {
 			throw se;
@@ -447,6 +457,13 @@ public abstract class BaseIndexer implements Indexer {
 
 	@Override
 	public void reindex(String className, long classPK) throws SearchException {
+		reindex(className, classPK, true);
+	}
+
+	@Override
+	public void reindex(String className, long classPK, boolean propagate)
+		throws SearchException {
+
 		try {
 			if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled() ||
 				(classPK <= 0)) {
@@ -454,7 +471,7 @@ public abstract class BaseIndexer implements Indexer {
 				return;
 			}
 
-			doReindex(className, classPK);
+			doReindex(className, classPK, propagate);
 		}
 		catch (NoSuchModelException nsme) {
 			if (_log.isWarnEnabled()) {
@@ -1426,6 +1443,10 @@ public abstract class BaseIndexer implements Indexer {
 
 	protected abstract void doDelete(Object obj) throws Exception;
 
+	protected void doDelete(Object obj, boolean propagate) throws Exception {
+		doDelete(obj);
+	}
+
 	protected abstract Document doGetDocument(Object obj) throws Exception;
 
 	protected String doGetSortField(String orderByCol) {
@@ -1440,8 +1461,18 @@ public abstract class BaseIndexer implements Indexer {
 
 	protected abstract void doReindex(Object obj) throws Exception;
 
+	protected void doReindex(Object obj, boolean propagate) throws Exception {
+		doReindex(obj);
+	}
+
 	protected abstract void doReindex(String className, long classPK)
 		throws Exception;
+
+	protected void doReindex(String className, long classPK, boolean propagate)
+		throws Exception {
+
+		doReindex(className, classPK);
+	}
 
 	protected abstract void doReindex(String[] ids) throws Exception;
 

@@ -50,6 +50,11 @@ public class IndexerWrapper implements Indexer {
 	}
 
 	@Override
+	public void delete(Object obj, boolean propagate) throws SearchException {
+		_indexer.delete(obj, propagate);
+	}
+
+	@Override
 	public String[] getClassNames() {
 		return _indexer.getClassNames();
 	}
@@ -194,8 +199,20 @@ public class IndexerWrapper implements Indexer {
 	}
 
 	@Override
+	public void reindex(Object obj, boolean propagate) throws SearchException {
+		_indexer.reindex(obj, propagate);
+	}
+
+	@Override
 	public void reindex(String className, long classPK) throws SearchException {
 		_indexer.reindex(className, classPK);
+	}
+
+	@Override
+	public void reindex(String className, long classPK, boolean propagate)
+		throws SearchException {
+
+		_indexer.reindex(className, classPK, propagate);
 	}
 
 	@Override

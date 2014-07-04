@@ -82,10 +82,10 @@ public class IndexableAdvice
 
 		if (indexer != null) {
 			if (indexable.type() == IndexableType.DELETE) {
-				indexer.delete(result);
+				indexer.delete(result, indexable.propagate());
 			}
 			else {
-				indexer.reindex(result);
+				indexer.reindex(result, indexable.propagate());
 			}
 		}
 		else {
@@ -112,6 +112,11 @@ public class IndexableAdvice
 			@Override
 			public IndexableType type() {
 				return null;
+			}
+
+			@Override
+			public boolean propagate() {
+				return true;
 			}
 
 		};
