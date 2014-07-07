@@ -20,6 +20,7 @@
 page import="com.liferay.portlet.asset.NoSuchCategoryException" %><%@
 page import="com.liferay.portlet.asset.NoSuchVocabularyException" %><%@
 page import="com.liferay.portlet.asset.model.AssetCategoryConstants" %><%@
+page import="com.liferay.portlet.asset.model.AssetCategoryDisplay" %><%@
 page import="com.liferay.portlet.asset.model.AssetCategoryProperty" %><%@
 page import="com.liferay.portlet.asset.model.AssetVocabularyDisplay" %><%@
 page import="com.liferay.portlet.asset.model.ClassType" %><%@
