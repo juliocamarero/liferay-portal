@@ -16,4 +16,15 @@
 
 <%@ include file="/html/portlet/asset_category_admin/init.jsp" %>
 
-<liferay-util:include page="/html/portlet/asset_category_admin/view_vocabularies.jsp" />
+<%
+long vocabularyId = ParamUtil.getLong(request, "vocabularyId");
+%>
+
+<c:choose>
+	<c:when test="<%= vocabularyId > 0 %>">
+		<liferay-util:include page="/html/portlet/asset_category_admin/view_categories.jsp" />
+	</c:when>
+	<c:otherwise>
+		<liferay-util:include page="/html/portlet/asset_category_admin/view_vocabularies.jsp" />
+	</c:otherwise>
+</c:choose>
