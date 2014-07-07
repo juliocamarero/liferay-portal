@@ -585,25 +585,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 			ddmStructure, fields, LocaleUtil.fromLanguageId(languageId));
 	}
 
-	protected Collection<Document> getArticleVersions(JournalArticle article)
-		throws PortalException {
-
-		Collection<Document> documents = new ArrayList<Document>();
-
-		List<JournalArticle> articles =
-			JournalArticleLocalServiceUtil.
-				getIndexableArticlesByResourcePrimKey(
-					article.getResourcePrimKey());
-
-		for (JournalArticle curArticle : articles) {
-			Document document = getDocument(curArticle);
-
-			documents.add(document);
-		}
-
-		return documents;
-	}
-
 	protected Collection<Document> getArticleIndexableVersions(
 			JournalArticle article)
 		throws PortalException {
@@ -635,6 +616,25 @@ public class JournalArticleIndexer extends BaseIndexer {
 		}
 		else {
 			documents.add(getDocument(latestIndexableArticle));
+		}
+
+		return documents;
+	}
+
+	protected Collection<Document> getArticleVersions(JournalArticle article)
+		throws PortalException {
+
+		Collection<Document> documents = new ArrayList<Document>();
+
+		List<JournalArticle> articles =
+			JournalArticleLocalServiceUtil.
+				getIndexableArticlesByResourcePrimKey(
+					article.getResourcePrimKey());
+
+		for (JournalArticle curArticle : articles) {
+			Document document = getDocument(curArticle);
+
+			documents.add(document);
 		}
 
 		return documents;
