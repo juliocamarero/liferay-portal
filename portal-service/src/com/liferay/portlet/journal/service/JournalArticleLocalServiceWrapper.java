@@ -769,6 +769,12 @@ public class JournalArticleLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portlet.journal.model.JournalArticle fetchPreviousIndexableArticle(
+		long resourcePrimKey) {
+		return _journalArticleLocalService.fetchPreviousIndexableArticle(resourcePrimKey);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
 		return _journalArticleLocalService.getActionableDynamicQuery();
 	}
