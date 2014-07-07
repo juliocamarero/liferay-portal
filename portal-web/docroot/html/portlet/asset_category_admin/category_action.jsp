@@ -19,44 +19,45 @@
 <%
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
-AssetVocabulary vocabulary = (AssetVocabulary)row.getObject();
+AssetCategory category = (AssetCategory)row.getObject();
 %>
 
 <liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
-	<c:if test="<%= AssetVocabularyPermission.contains(permissionChecker, vocabulary, ActionKeys.UPDATE) %>">
-		<portlet:renderURL var="editVocabularyURL">
-			<portlet:param name="struts_action" value="/asset_category_admin/edit_vocabulary" />
+	<c:if test="<%= AssetCategoryPermission.contains(permissionChecker, category, ActionKeys.UPDATE) %>">
+		<portlet:renderURL var="editCategoryURL">
+			<portlet:param name="struts_action" value="/asset_category_admin/edit_category" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
-			<portlet:param name="vocabularyId" value="<%= String.valueOf(vocabulary.getVocabularyId()) %>" />
+			<portlet:param name="categoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
 		</portlet:renderURL>
 
 		<liferay-ui:icon
 			iconCssClass="icon-edit"
 			message="edit"
-			url="<%= editVocabularyURL %>"
+			url="<%= editCategoryURL %>"
 		/>
 	</c:if>
 
-	<c:if test="<%= AssetPermission.contains(permissionChecker, vocabulary.getGroupId(), ActionKeys.ADD_CATEGORY) %>">
-		<portlet:renderURL var="addCategoryURL">
+	<c:if test="<%= AssetCategoryPermission.contains(permissionChecker, category, ActionKeys.ADD_CATEGORY) %>">
+		<portlet:renderURL var="addSubcategoryCategoryURL">
 			<portlet:param name="struts_action" value="/asset_category_admin/edit_category" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
-			<portlet:param name="vocabularyId" value="<%= String.valueOf(vocabulary.getVocabularyId()) %>" />
+			<portlet:param name="vocabularyId" value="<%= String.valueOf(category.getVocabularyId()) %>" />
+			<portlet:param name="parentCategoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
 		</portlet:renderURL>
 
 		<liferay-ui:icon
 			iconCssClass="icon-plus"
-			message="add-category"
-			url="<%= addCategoryURL %>"
+			message="add-subcategory"
+			url="<%= addSubcategoryCategoryURL %>"
 		/>
 	</c:if>
 
-	<c:if test="<%= AssetVocabularyPermission.contains(permissionChecker, vocabulary, ActionKeys.PERMISSIONS) %>">
+	<c:if test="<%= AssetCategoryPermission.contains(permissionChecker, category, ActionKeys.PERMISSIONS) %>">
 		<liferay-security:permissionsURL
-			modelResource="<%= AssetVocabulary.class.getName() %>"
-			modelResourceDescription="<%= vocabulary.getTitle(locale) %>"
-			resourcePrimKey="<%= String.valueOf(vocabulary.getVocabularyId()) %>"
-			var="permissionsVocabularyURL"
+			modelResource="<%= AssetCategory.class.getName() %>"
+			modelResourceDescription="<%= category.getTitle(locale) %>"
+			resourcePrimKey="<%= String.valueOf(category.getCategoryId()) %>"
+			var="permissionsCategoryURL"
 			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 		/>
 
@@ -64,21 +65,21 @@ AssetVocabulary vocabulary = (AssetVocabulary)row.getObject();
 			iconCssClass="icon-lock"
 			message="permissions"
 			method="get"
-			url="<%= permissionsVocabularyURL %>"
+			url="<%= permissionsCategoryURL %>"
 			useDialog="<%= true %>"
 		/>
 	</c:if>
 
-	<c:if test="<%= AssetVocabularyPermission.contains(permissionChecker, vocabulary, ActionKeys.DELETE) %>">
-		<portlet:actionURL var="deleteVocabularyURL">
-			<portlet:param name="struts_action" value="/asset_category_admin/edit_vocabulary" />
+	<c:if test="<%= AssetCategoryPermission.contains(permissionChecker, category, ActionKeys.DELETE) %>">
+		<portlet:actionURL var="deleteCategoryURL">
+			<portlet:param name="struts_action" value="/asset_category_admin/edit_category" />
 			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
-			<portlet:param name="vocabularyId" value="<%= String.valueOf(vocabulary.getVocabularyId()) %>" />
+			<portlet:param name="categoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
 		</portlet:actionURL>
 
 		<liferay-ui:icon-delete
-			url="<%= deleteVocabularyURL %>"
+			url="<%= deleteCategoryURL %>"
 		/>
 	</c:if>
 </liferay-ui:icon-menu>
