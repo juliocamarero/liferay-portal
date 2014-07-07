@@ -17,37 +17,55 @@
 <%@ include file="/html/portlet/asset_category_admin/init.jsp" %>
 
 <%
+long vocabularyId = ParamUtil.getLong(request, "vocabularyId");
+
+long categoryId = ParamUtil.getLong(request, "categoryId");
+
 String keywords = ParamUtil.getString(request, "keywords");
+
+PortletURL portletURL = renderResponse.createRenderURL();
+
+portletURL.setParameter("struts_action", "/asset_category_admin/view");
+portletURL.setParameter("redirect", currentURL);
+portletURL.setParameter("vocabularyId", String.valueOf(vocabularyId));
+portletURL.setParameter("categoryId", String.valueOf(categoryId));
+
+String title = StringPool.BLANK;
+
+if (categoryId > 0) {
+	AssetCategory category = AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
+
+	title = category.getTitle(locale);
+}
+else {
+	AssetVocabulary vocabulary = AssetVocabularyLocalServiceUtil.fetchAssetVocabulary(vocabularyId);
+
+	title = vocabulary.getTitle(locale);
+}
 %>
 
+<liferay-ui:header
+	title="<%= title %>"
+/>
+
 <aui:form name="fm">
-	<aui:input name="deleteVocabularyIds" type="hidden" />
+	<aui:input name="deleteCategoryIds" type="hidden" />
 
 	<aui:nav-bar>
 		<aui:nav cssClass="navbar-nav">
-			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_VOCABULARY) %>">
-				<portlet:renderURL var="addVocabularyURL">
-					<portlet:param name="struts_action" value="/asset_category_admin/edit_vocabulary" />
+			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_CATEGORY) %>">
+				<portlet:renderURL var="addCategoryURL">
+					<portlet:param name="struts_action" value="/asset_category_admin/edit_category" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
+					<portlet:param name="vocabularyId" value="<%= String.valueOf(vocabularyId) %>" />
+					<portlet:param name="parentCategoryId" value="<%= String.valueOf(categoryId) %>" />
 				</portlet:renderURL>
 
-				<aui:nav-item href="<%= addVocabularyURL %>" iconCssClass="icon-plus" label="add-vocabulary" />
+				<aui:nav-item href="<%= addCategoryURL %>" iconCssClass="icon-plus" label="add-category" />
 			</c:if>
 
-			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) %>">
-				<liferay-security:permissionsURL
-					modelResource="com.liferay.portlet.asset"
-					modelResourceDescription="<%= themeDisplay.getScopeGroupName() %>"
-					resourcePrimKey="<%= String.valueOf(themeDisplay.getSiteGroupId()) %>"
-					var="permissionsURL"
-					windowState="<%= LiferayWindowState.POP_UP.toString() %>"
-				/>
-
-				<aui:nav-item href="<%= permissionsURL %>" iconCssClass="icon-lock" label="permissions" useDialog="<%= true %>" />
-			</c:if>
-
-			<aui:nav-item cssClass="hide" dropdown="<%= true %>" id="vocabulariesActionsButton" label="actions">
-				<aui:nav-item cssClass="item-remove" iconCssClass="icon-remove" id="deleteSelectedVocabularies" label="delete" />
+			<aui:nav-item cssClass="hide" dropdown="<%= true %>" id="categoriesActionsButton" label="actions">
+				<aui:nav-item cssClass="item-remove" iconCssClass="icon-remove" id="deleteSelectedCategories" label="delete" />
 			</aui:nav-item>
 		</aui:nav>
 
@@ -59,57 +77,45 @@ String keywords = ParamUtil.getString(request, "keywords");
 	</aui:nav-bar>
 
 	<liferay-ui:search-container
-		emptyResultsMessage="there-are-no-vocabularies"
+		emptyResultsMessage="there-are-no-categories"
+		iteratorURL="<%= portletURL %>"
 		rowChecker="<%= new RowChecker(renderResponse) %>"
 	>
 
 		<%
-		AssetVocabularyDisplay assetVocabularyDisplay = AssetVocabularyServiceUtil.searchVocabulariesDisplay(scopeGroupId, keywords, searchContainer.getStart(), searchContainer.getEnd(), true);
+		AssetCategoryDisplay assetCategoryDisplay = AssetCategoryServiceUtil.searchCategoriesDisplay(scopeGroupId, keywords, categoryId, vocabularyId, searchContainer.getStart(), searchContainer.getEnd());
 		%>
 
 		<liferay-ui:search-container-results
-			results="<%= assetVocabularyDisplay.getVocabularies() %>"
+			results="<%= assetCategoryDisplay.getCategories() %>"
 		/>
 
 		<liferay-ui:search-container-row
-			className="com.liferay.portlet.asset.model.AssetVocabulary"
-			keyProperty="vocabularyId"
-			modelVar="vocabulary"
+			className="com.liferay.portlet.asset.model.AssetCategory"
+			keyProperty="categoryId"
+			modelVar="category"
 		>
 			<portlet:renderURL var="rowURL">
 				<portlet:param name="struts_action" value="/asset_category_admin/view" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
-				<portlet:param name="vocabularyId" value="<%= String.valueOf(vocabulary.getVocabularyId()) %>" />
+				<portlet:param name="vocabularyId" value="<%= String.valueOf(category.getVocabularyId()) %>" />
+				<portlet:param name="categoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
 			</portlet:renderURL>
 
 			<liferay-ui:search-container-column-text
-				href="<%= (AssetCategoryServiceUtil.getVocabularyCategoriesCount(scopeGroupId, vocabulary.getVocabularyId()) > 0) ? rowURL : null %>"
-				name="vocabulary"
-				value="<%= vocabulary.getTitle(locale) %>"
+				href="<%= (AssetCategoryServiceUtil.getVocabularyCategoriesCount(scopeGroupId, category.getCategoryId(), vocabularyId) > 0) ? rowURL : null %>"
+				name="category"
+				value="<%= category.getTitle(locale) %>"
 			/>
 
 			<liferay-ui:search-container-column-text
 				name="description"
-				value="<%= vocabulary.getDescription(locale) %>"
-			/>
-
-			<liferay-ui:search-container-column-text
-				cssClass="text-left"
-				name="number-of-categories"
-			>
-				<span class="badge">
-					<%= String.valueOf(vocabulary.getCategoriesCount()) %>
-				</span>
-			</liferay-ui:search-container-column-text>
-
-			<liferay-ui:search-container-column-text
-				name="asset-type"
-				value="<%= StringPool.BLANK %>"
+				value="<%= category.getDescription(locale) %>"
 			/>
 
 			<liferay-ui:search-container-column-jsp
 				cssClass="entry-action"
-				path="/html/portlet/asset_category_admin/vocabulary_action.jsp"
+				path="/html/portlet/asset_category_admin/category_action.jsp"
 			/>
 		</liferay-ui:search-container-row>
 
@@ -123,22 +129,22 @@ String keywords = ParamUtil.getString(request, "keywords");
 		function() {
 			var hide = (Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace /><%= RowChecker.ALL_ROW_IDS %>').length == 0);
 
-			A.one('#<portlet:namespace />vocabulariesActionsButton').toggle(!hide);
+			A.one('#<portlet:namespace />categoriesActionsButton').toggle(!hide);
 		},
 		'input[type=checkbox]'
 	);
 
-	A.one('#<portlet:namespace />deleteSelectedVocabularies').on(
+	A.one('#<portlet:namespace />deleteSelectedCategories').on(
 		'click',
 		function() {
 			if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
 				<portlet:actionURL var="deleteURL">
-					<portlet:param name="struts_action" value="/asset_category_admin/edit_vocabulary" />
+					<portlet:param name="struts_action" value="/asset_category_admin/edit_category" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.DELETE %>" />
 				</portlet:actionURL>
 
-				document.<portlet:namespace />fm.<portlet:namespace />deleteVocabularyIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
+				document.<portlet:namespace />fm.<portlet:namespace />deleteCategoryIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
 
 				submitForm(document.<portlet:namespace />fm, '<%= deleteURL %>');
 			}
