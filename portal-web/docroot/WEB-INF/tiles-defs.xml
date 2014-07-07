@@ -188,6 +188,10 @@
 		<put name="portlet_content" value="/portlet/asset_category_admin/edit_vocabulary.jsp" />
 	</definition>
 
+	<definition name="portlet.asset_category_admin.error" extends="portlet.asset_category_admin">
+		<put name="portlet_content" value="/portlet/asset_category_admin/error.jsp" />
+	</definition>
+
 	<definition name="portlet.asset_category_admin.view" extends="portlet.asset_category_admin">
 		<put name="portlet_content" value="/portlet/asset_category_admin/view.jsp" />
 	</definition>
