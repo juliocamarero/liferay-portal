@@ -468,7 +468,7 @@ public class JournalArticleLocalServiceImpl
 		else {
 			updateStatus(
 				userId, article, WorkflowConstants.STATUS_APPROVED, null,
-				serviceContext, new HashMap<String, Serializable>());
+				serviceContext, new HashMap<String, Serializable>(), false);
 		}
 
 		return journalArticlePersistence.findByPrimaryKey(article.getId());
@@ -3110,7 +3110,7 @@ public class JournalArticleLocalServiceImpl
 
 			updateStatus(
 				userId, article, status, null, serviceContext,
-				new HashMap<String, Serializable>());
+				new HashMap<String, Serializable>(), false);
 
 			// Trash
 
@@ -3381,7 +3381,7 @@ public class JournalArticleLocalServiceImpl
 
 		updateStatus(
 			userId, article, trashEntry.getStatus(), null, serviceContext,
-			new HashMap<String, Serializable>());
+			new HashMap<String, Serializable>(), false);
 
 		// Trash
 
@@ -4600,7 +4600,7 @@ public class JournalArticleLocalServiceImpl
 		if (expired && imported) {
 			updateStatus(
 				userId, article, article.getStatus(), articleURL,
-				serviceContext, new HashMap<String, Serializable>());
+				serviceContext, new HashMap<String, Serializable>(), false);
 		}
 
 		if (serviceContext.getWorkflowAction() ==
@@ -4942,6 +4942,17 @@ public class JournalArticleLocalServiceImpl
 			Map<String, Serializable> workflowContext)
 		throws PortalException {
 
+		return updateStatus(
+			userId, article, status, articleURL, serviceContext,
+			workflowContext, true);
+	}
+
+	public JournalArticle updateStatus(
+			long userId, JournalArticle article, int status, String articleURL,
+			ServiceContext serviceContext,
+			Map<String, Serializable> workflowContext, boolean reindex)
+		throws PortalException {
+
 		boolean propagateReindex = false;
 
 		// Article
@@ -5019,7 +5030,7 @@ public class JournalArticleLocalServiceImpl
 							ListUtil.toString(
 								assetLinks, AssetLink.ENTRY_ID2_ACCESSOR), 0L);
 
-						if (!propagateReindex) {
+						if (!propagateReindex && reindex) {
 							AssetEntry oldAssetEntry =
 								assetEntryLocalService.fetchEntry(
 									JournalArticle.class.getName(),
@@ -5151,10 +5162,12 @@ public class JournalArticleLocalServiceImpl
 				serviceContext);
 		}
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			JournalArticle.class);
+		if (reindex) {
+			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				JournalArticle.class);
 
-		indexer.reindex(article, propagateReindex);
+			indexer.reindex(article, propagateReindex);
+		}
 
 		return article;
 	}
