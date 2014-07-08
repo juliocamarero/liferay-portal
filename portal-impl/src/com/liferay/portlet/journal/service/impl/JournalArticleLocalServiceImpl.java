@@ -1435,7 +1435,8 @@ public class JournalArticleLocalServiceImpl
 
 	@Override
 	public JournalArticle fetchPreviousIndexableArticle(long resourcePrimKey) {
-		OrderByComparator orderByComparator = new ArticleVersionComparator();
+		OrderByComparator<JournalArticle> orderByComparator =
+			new ArticleVersionComparator();
 
 		int[] statuses = new int[] {
 			WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_IN_TRASH
