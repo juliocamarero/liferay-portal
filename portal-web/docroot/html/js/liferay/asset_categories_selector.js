@@ -79,7 +79,7 @@ AUI.add(
 
 							return value;
 						},
-						value: ''
+						value: []
 					},
 
 					curEntryIds: {
@@ -92,7 +92,7 @@ AUI.add(
 
 							return value;
 						},
-						value: ''
+						value: []
 					},
 
 					labelNode: {
