@@ -52,6 +52,21 @@ AssetCategory category = (AssetCategory)row.getObject();
 		/>
 	</c:if>
 
+	<c:if test="<%= AssetCategoryPermission.contains(permissionChecker, category, ActionKeys.UPDATE) %>">
+		<portlet:renderURL var="moveCategoryURL">
+			<portlet:param name="struts_action" value="/asset_category_admin/move_category" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="vocabularyId" value="<%= String.valueOf(category.getVocabularyId()) %>" />
+			<portlet:param name="categoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
+		</portlet:renderURL>
+
+		<liferay-ui:icon
+			iconCssClass="icon-move"
+			message="move"
+			url="<%= moveCategoryURL %>"
+		/>
+	</c:if>
+
 	<c:if test="<%= AssetCategoryPermission.contains(permissionChecker, category, ActionKeys.PERMISSIONS) %>">
 		<liferay-security:permissionsURL
 			modelResource="<%= AssetCategory.class.getName() %>"

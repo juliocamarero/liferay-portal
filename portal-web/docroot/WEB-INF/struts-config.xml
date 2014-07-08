@@ -245,6 +245,8 @@
 			<forward name="portlet.asset_category_admin.error" path="portlet.asset_category_admin.error" />
 		</action>
 
+		<action path="/asset_category_admin/move_category" forward="portlet.asset_category_admin.move_category" />
+
 		<action path="/asset_category_admin/view" forward="portlet.asset_category_admin.view" />
 
 		<action path="/asset_category_admin/view_category" forward="portlet.asset_category_admin.view_category" />
