@@ -104,8 +104,54 @@ String keywords = ParamUtil.getString(request, "keywords");
 
 			<liferay-ui:search-container-column-text
 				name="asset-type"
-				value="<%= StringPool.BLANK %>"
-			/>
+			>
+
+				<%
+				long[] selectedClassNameIds = vocabulary.getSelectedClassNameIds();
+				long[] selectedClassTypePKs = vocabulary.getSelectedClassTypePKs();
+
+				for (int i = 0; i < selectedClassNameIds.length; i++) {
+					long classNameId = selectedClassNameIds[i];
+					long classTypePK = selectedClassTypePKs[i];
+
+					String name = LanguageUtil.get(request, "all-asset-types");
+
+					if (classNameId != AssetCategoryConstants.ALL_CLASS_NAME_ID) {
+						if (classTypePK != -1) {
+							AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassNameId(classNameId);
+
+							ClassTypeReader classTypeReader = assetRendererFactory.getClassTypeReader();
+
+							ClassType classType = classTypeReader.getClassType(classTypePK, locale);
+
+							name = classType.getName();
+						}
+						else {
+							name = ResourceActionsUtil.getModelResource(locale, PortalUtil.getClassName(classNameId));
+						}
+					}
+
+					StringBundler sb = new StringBundler();
+
+					sb.append(name);
+
+					if (vocabulary.isRequired(classNameId, classTypePK)) {
+						sb.append(StringPool.SPACE);
+						sb.append(StringPool.STAR);
+					}
+
+					if ((i + 1) < selectedClassNameIds.length) {
+						sb.append(StringPool.COMMA);
+					}
+				%>
+
+					<%= sb.toString() %>
+
+				<%
+				}
+				%>
+
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-jsp
 				cssClass="entry-action"
