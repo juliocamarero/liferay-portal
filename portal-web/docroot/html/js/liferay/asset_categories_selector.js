@@ -95,6 +95,11 @@ AUI.add(
 						value: []
 					},
 
+					label: {
+						validator: '_isValidString',
+						value: Liferay.Language.get('select')
+					},
+
 					labelNode: {
 						setter: function(value) {
 							return A.one(value) || A.Attribute.INVALID_VALUE;
@@ -562,7 +567,7 @@ AUI.add(
 								children: [
 									{
 										icon: 'icon-search',
-										label: Liferay.Language.get('select'),
+										label: instance.get('label'),
 										on: {
 											click: A.bind('_showSelectPopup', instance)
 										},
