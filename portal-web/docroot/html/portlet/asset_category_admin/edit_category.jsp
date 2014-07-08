@@ -80,6 +80,7 @@ else {
 
 <aui:form action="<%= editCategoryURL %>" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= category == null ? Constants.ADD : Constants.UPDATE %>" />
+	<aui:input name="vocabularyId" type="hidden" value="<%= vocabularyId %>" />
 
 	<aui:model-context bean="<%= category %>" model="<%= AssetCategory.class %>" />
 
@@ -90,27 +91,6 @@ else {
 		<aui:input autoFocus="<%= true %>" label="name" name="title" />
 
 		<aui:input name="description" />
-
-		<c:choose>
-			<c:when test="<%= parentCategoryId == 0 %>">
-				<aui:select label="to-vocabulary" name="vocabularyId">
-
-					<%
-					for (AssetVocabulary vocabulary : vocabularies) {
-					%>
-
-						<aui:option label="<%= HtmlUtil.escape(vocabulary.getTitle(locale)) %>" selected="<%= vocabulary.getVocabularyId() == vocabularyId %>" value="<%= vocabulary.getVocabularyId() %>" />
-
-					<%
-					}
-					%>
-
-				</aui:select>
-			</c:when>
-			<c:otherwise>
-				<aui:input name="vocabularyId" type="hidden" value="<%= vocabularyId %>" />
-			</c:otherwise>
-		</c:choose>
 
 		<liferay-ui:panel-container extended="<%= false %>" id="assetCategoryPanelContainer" persistState="<%= true %>">
 			<c:if test="<%= category == null %>">
