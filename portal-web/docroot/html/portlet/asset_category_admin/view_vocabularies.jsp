@@ -104,8 +104,47 @@ String keywords = ParamUtil.getString(request, "keywords");
 
 			<liferay-ui:search-container-column-text
 				name="asset-type"
-				value="<%= StringPool.BLANK %>"
-			/>
+			>
+
+				<%
+				long[] selectedClassNameIds = vocabulary.getSelectedClassNameIds();
+				long[] selectedClassTypePKs = vocabulary.getSelectedClassTypePKs();
+
+				for (int i = 0; i < selectedClassNameIds.length; i++) {
+					long classNameId = selectedClassNameIds[i];
+					long classTypePK = selectedClassTypePKs[i];
+				%>
+
+					<c:choose>
+						<c:when test="<%= classNameId == AssetCategoryConstants.ALL_CLASS_NAME_ID %>">
+							<liferay-ui:message key="all-asset-types" />
+						</c:when>
+						<c:otherwise>
+							<c:choose>
+								<c:when test="<%= classTypePK != -1 %>">
+
+									<%
+									AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassNameId(classNameId);
+
+									ClassTypeReader classTypeReader = assetRendererFactory.getClassTypeReader();
+
+									ClassType classType = classTypeReader.getClassType(classTypePK, locale);
+									%>
+
+									<%= classType.getName() + (((i + 1) < selectedClassNameIds.length) ? StringPool.COMMA : StringPool.BLANK) %>
+								</c:when>
+								<c:otherwise>
+									<%= ResourceActionsUtil.getModelResource(locale, PortalUtil.getClassName(classNameId)) + (((i + 1) < selectedClassNameIds.length) ? StringPool.COMMA : StringPool.BLANK) %>
+								</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+					</c:choose>
+
+				<%
+				}
+				%>
+
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-jsp
 				cssClass="entry-action"
