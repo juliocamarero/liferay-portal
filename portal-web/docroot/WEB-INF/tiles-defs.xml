@@ -192,6 +192,10 @@
 		<put name="portlet_content" value="/portlet/asset_category_admin/error.jsp" />
 	</definition>
 
+	<definition name="portlet.asset_category_admin.move_category" extends="portlet.asset_category_admin">
+		<put name="portlet_content" value="/portlet/asset_category_admin/move_category.jsp" />
+	</definition>
+
 	<definition name="portlet.asset_category_admin.view" extends="portlet.asset_category_admin">
 		<put name="portlet_content" value="/portlet/asset_category_admin/view.jsp" />
 	</definition>
