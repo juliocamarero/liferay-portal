@@ -27,6 +27,7 @@ AssetCategory category = (AssetCategory)row.getObject();
 		<portlet:renderURL var="editCategoryURL">
 			<portlet:param name="struts_action" value="/asset_category_admin/edit_category" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="vocabularyId" value="<%= String.valueOf(category.getVocabularyId()) %>" />
 			<portlet:param name="categoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
 		</portlet:renderURL>
 
