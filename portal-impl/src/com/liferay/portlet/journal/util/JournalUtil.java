@@ -559,6 +559,33 @@ public class JournalUtil {
 		return sb.toString();
 	}
 
+	public static Layout getArticleLayout(JournalArticle journalArticle) {
+		if (Validator.isNull(journalArticle)) {
+			return null;
+		}
+
+		return getArticleLayout(
+			journalArticle.getLayoutUuid(), journalArticle.getGroupId());
+	}
+
+	public static Layout getArticleLayout(String layoutUuid, long groupId) {
+		if (Validator.isNull(layoutUuid)) {
+			return null;
+		}
+
+		// The target page and the article must belong to the same group
+
+		Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+			layoutUuid, groupId, false);
+
+		if (layout == null) {
+			layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+				layoutUuid, groupId, false);
+		}
+
+		return layout;
+	}
+
 	public static OrderByComparator<JournalArticle> getArticleOrderByComparator(
 		String orderByCol, String orderByType) {
 
@@ -1002,15 +1029,13 @@ public class JournalUtil {
 			JournalArticle article, ThemeDisplay themeDisplay)
 		throws Exception {
 
-		if ((article != null) && Validator.isNotNull(article.getLayoutUuid())) {
-			Layout layout =
-				LayoutLocalServiceUtil.getLayoutByUuidAndCompanyId(
-					article.getLayoutUuid(), themeDisplay.getCompanyId());
+		Layout layout = getArticleLayout(article);
 
+		if (layout != null) {
 			return layout.getPlid();
 		}
 
-		Layout layout = LayoutLocalServiceUtil.fetchFirstLayout(
+		layout = LayoutLocalServiceUtil.fetchFirstLayout(
 			themeDisplay.getScopeGroupId(), false,
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
