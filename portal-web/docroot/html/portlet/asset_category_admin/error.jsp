@@ -16,15 +16,8 @@
 
 <%@ include file="/html/portlet/asset_category_admin/init.jsp" %>
 
-<%
-long vocabularyId = ParamUtil.getLong(request, "vocabularyId");
-%>
+<liferay-ui:error-header />
 
-<c:choose>
-	<c:when test="<%= vocabularyId > 0 %>">
-		<liferay-util:include page="/html/portlet/asset_category_admin/view_categories.jsp" />
-	</c:when>
-	<c:otherwise>
-		<liferay-util:include page="/html/portlet/asset_category_admin/view_vocabularies.jsp" />
-	</c:otherwise>
-</c:choose>
+<liferay-ui:error exception="<%= NoSuchCategoryException.class %>" message="the-category-could-not-be-found" />
+<liferay-ui:error exception="<%= NoSuchVocabularyException.class %>" message="the-vocabulary-could-not-be-found" />
+<liferay-ui:error exception="<%= PrincipalException.class %>" message="you-do-not-have-the-required-permissions" />
