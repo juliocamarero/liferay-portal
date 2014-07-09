@@ -43,7 +43,7 @@ List<AssetVocabulary> vocabularies = AssetVocabularyServiceUtil.getGroupVocabula
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.MOVE %>" />
 	<aui:input name="categoryId" type="hidden" value="<%= categoryId %>" />
 
-	<aui:select label="to-vocabulary" name="vocabularyId">
+	<aui:select label="vocabulary" name="vocabularyId">
 
 		<%
 		for (AssetVocabulary vocabulary : vocabularies) {
@@ -57,7 +57,7 @@ List<AssetVocabulary> vocabularies = AssetVocabularyServiceUtil.getGroupVocabula
 
 	</aui:select>
 
-	<span><liferay-ui:message key="and-to-category" /></span>
+	<label><liferay-ui:message key="parent-category" /></label>
 
 	<div class="lfr-tags-selector-content">
 		<aui:input name="parentCategoryId" type="hidden" />
@@ -67,6 +67,26 @@ List<AssetVocabulary> vocabularies = AssetVocabularyServiceUtil.getGroupVocabula
 		%>
 
 			<div class="<%= (curVocabulary.getVocabularyId() == vocabularyId) ? StringPool.BLANK : "hide" %> asset-category-selector" id="<portlet:namespace />assetCategoriesSelector<%= curVocabulary.getVocabularyId() %>"></div>
+
+			<aui:script use="liferay-asset-categories-selector">
+				new Liferay.AssetCategoriesSelector(
+					{
+						contentBox: '#<portlet:namespace />assetCategoriesSelector<%= curVocabulary.getVocabularyId() %>',
+
+						<c:if test="<%= ((curVocabulary.getVocabularyId() == vocabularyId) && (parentCategory != null)) %>">
+							curEntries: '<%= parentCategory.getTitle(locale) %>',
+							curEntryIds: '<%= parentCategory.getCategoryId() %>',
+						</c:if>
+
+						hiddenInput: '#<portlet:namespace />parentCategoryId',
+						singleSelect: <%= true %>,
+						instanceVar: '<portlet:namespace />',
+						label: '<%= UnicodeLanguageUtil.format(request, "select-x", curVocabulary.getTitle(locale), false) %>',
+						vocabularyGroupIds: '<%= scopeGroupId %>',
+						vocabularyIds: '<%= curVocabulary.getVocabularyId() %>'
+					}
+				).render();
+			</aui:script>
 
 		<%
 		}
@@ -82,34 +102,6 @@ List<AssetVocabulary> vocabularies = AssetVocabularyServiceUtil.getGroupVocabula
 </aui:form>
 
 <aui:script use="liferay-asset-categories-selector">
-	var assetCategoriesSelector;
-
-	<%
-	for (AssetVocabulary curVocabulary : vocabularies) {
-	%>
-
-		assetCategoriesSelector = new Liferay.AssetCategoriesSelector(
-			{
-				contentBox: '#<portlet:namespace />assetCategoriesSelector<%= curVocabulary.getVocabularyId() %>',
-
-				<c:if test="<%= ((curVocabulary.getVocabularyId() == vocabularyId) && (parentCategory != null)) %>">
-					curEntries: '<%= parentCategory.getTitle(locale) %>',
-					curEntryIds: '<%= parentCategory.getCategoryId() %>',
-				</c:if>
-
-				hiddenInput: '#<portlet:namespace />parentCategoryId',
-				singleSelect: <%= true %>,
-				instanceVar: '<portlet:namespace />',
-				label: '<%= UnicodeLanguageUtil.format(request, "select-x", curVocabulary.getTitle(locale), false) %>',
-				vocabularyGroupIds: '<%= scopeGroupId %>',
-				vocabularyIds: '<%= curVocabulary.getVocabularyId() %>'
-			}
-		).render();
-
-	<%
-	}
-	%>
-
 	var parentCategoryId = A.one('#<portlet:namespace />parentCategoryId');
 
 	var previousSelector = A.one('#<portlet:namespace />assetCategoriesSelector<%= vocabularyId %>');
