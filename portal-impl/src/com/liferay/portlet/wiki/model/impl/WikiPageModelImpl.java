@@ -892,6 +892,30 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	}
 
 	@Override
+	public long getContainerModelId() {
+		return getResourcePrimKey();
+	}
+
+	@Override
+	public void setContainerModelId(long containerModelId) {
+		_resourcePrimKey = containerModelId;
+	}
+
+	@Override
+	public String getContainerModelName() {
+		return String.valueOf(getContainerModelId());
+	}
+
+	@Override
+	public long getParentContainerModelId() {
+		return 0;
+	}
+
+	@Override
+	public void setParentContainerModelId(long parentContainerModelId) {
+	}
+
+	@Override
 	public StagedModelType getStagedModelType() {
 		return new StagedModelType(PortalUtil.getClassNameId(
 				WikiPage.class.getName()));
