@@ -53,6 +53,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.Portal;
 import com.liferay.portal.util.PortalUtil;
@@ -1576,77 +1577,30 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void movePageFromTrash(
+	public WikiPage movePageFromTrash(
 			long userId, long nodeId, String title, String newParentTitle,
 			ServiceContext serviceContext)
 		throws PortalException {
 
 		WikiPage page = getPage(nodeId, title);
 
-		TrashEntry trashEntry = null;
-
-		WikiPage trashEntryPage = page.getParentPage();
-
-		while (trashEntry == null) {
-			trashEntry = trashEntryLocalService.fetchEntry(
-				WikiPage.class.getName(), trashEntryPage.getResourcePrimKey());
-
-			if (trashEntry == null) {
-				trashEntryPage = trashEntryPage.getParentPage();
-
-				if (trashEntryPage == null) {
-					throw new NoSuchPageException();
-				}
-			}
+		if (page.isInTrashExplicitly()) {
+			restorePageFromTrash(userId, page);
 		}
+		else if (page.isInTrashImplicitly()) {
+			TrashEntry trashEntry = page.getTrashEntry();
 
-		String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
-		String trashTitle = page.getTitle();
-
-		WikiPageResource pageResource =
-			wikiPageResourcePersistence.findByPrimaryKey(
-				page.getResourcePrimKey());
-
-		pageResource.setTitle(originalTitle);
-
-		wikiPageResourcePersistence.update(pageResource);
-
-		page.setTitle(originalTitle);
-		page.setStatus(WorkflowConstants.STATUS_APPROVED);
-
-		wikiPagePersistence.update(page);
+			restoreDependentFromTrash(page, trashEntry.getEntryId());
+		}
+		else {
+			throw new PrincipalException();
+		}
 
 		changeParent(
-			userId, nodeId, originalTitle, newParentTitle, serviceContext);
+			userId, nodeId, TrashUtil.getOriginalTitle(page.getTitle()),
+			newParentTitle, serviceContext);
 
-		page = getPage(page.getResourcePrimKey());
-
-		//TrashVersion
-
-		TrashVersion trashVersion = trashVersionLocalService.fetchVersion(
-			trashEntry.getEntryId(), WikiPage.class.getName(),
-			page.getPageId());
-
-		if (trashVersion != null) {
-			trashVersionLocalService.deleteTrashVersion(trashVersion);
-		}
-
-		// Index
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			WikiPage.class);
-
-		indexer.reindex(page);
-
-		// Child pages
-
-		restoreDependentChildPagesFromTrash(
-			page, originalTitle, trashTitle, trashEntry.getEntryId());
-
-		// RedirectPages pages
-
-		restoreDependentRedirectPagesFromTrash(
-			page, originalTitle, trashTitle, trashEntry.getEntryId());
+		return getPage(page.getResourcePrimKey());
 	}
 
 	@Override
