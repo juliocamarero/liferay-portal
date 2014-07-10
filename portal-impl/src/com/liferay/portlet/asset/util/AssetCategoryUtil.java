@@ -67,6 +67,9 @@ public class AssetCategoryUtil {
 		}
 
 		portletURL.setParameter(
+			"struts_action", "/asset_category_admin/view_categories");
+
+		portletURL.setParameter(
 			"vocabularyId", String.valueOf(vocabulary.getVocabularyId()));
 
 		PortalUtil.addPortletBreadcrumbEntry(
