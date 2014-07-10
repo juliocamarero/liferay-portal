@@ -101,11 +101,9 @@ if (saveState) {
 
 	var TreeViewType = Liferay.LayoutsTree;
 
-	<c:choose>
-		<c:when test="<%= draggableTree %>">
-			TreeViewType = Liferay.LayoutsTreeDD;
-		</c:when>
-	</c:choose>
+	<c:if test="<%= draggableTree %>">
+		TreeViewType = Liferay.LayoutsTreeDD;
+	</c:if>
 
 	var layoutsTree = new TreeViewType(
 		{
