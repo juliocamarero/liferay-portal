@@ -21,6 +21,10 @@ long vocabularyId = ParamUtil.getLong(request, "vocabularyId");
 
 long categoryId = ParamUtil.getLong(request, "categoryId");
 
+AssetVocabulary vocabulary = AssetVocabularyLocalServiceUtil.fetchAssetVocabulary(vocabularyId);
+
+AssetCategory category = AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
+
 String keywords = ParamUtil.getString(request, "keywords");
 
 PortletURL portletURL = renderResponse.createRenderURL();
@@ -32,16 +36,14 @@ portletURL.setParameter("categoryId", String.valueOf(categoryId));
 
 String title = StringPool.BLANK;
 
-if (categoryId > 0) {
-	AssetCategory category = AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
-
+if (category != null) {
 	title = category.getTitle(locale);
 }
 else {
-	AssetVocabulary vocabulary = AssetVocabularyLocalServiceUtil.fetchAssetVocabulary(vocabularyId);
-
 	title = vocabulary.getTitle(locale);
 }
+
+AssetCategoryUtil.addPortletBreadcrumbEntry(vocabulary, category, request, renderResponse);
 %>
 
 <liferay-ui:header
@@ -76,6 +78,13 @@ else {
 		</aui:nav-bar-search>
 	</aui:nav-bar>
 
+	<liferay-ui:breadcrumb
+		showCurrentGroup="<%= false %>"
+		showGuestGroup="<%= false %>"
+		showLayout="<%= false %>"
+		showParentGroups="<%= false %>"
+	/>
+
 	<liferay-ui:search-container
 		emptyResultsMessage="there-are-no-categories"
 		iteratorURL="<%= portletURL %>"
@@ -93,24 +102,24 @@ else {
 		<liferay-ui:search-container-row
 			className="com.liferay.portlet.asset.model.AssetCategory"
 			keyProperty="categoryId"
-			modelVar="category"
+			modelVar="curCategory"
 		>
 			<portlet:renderURL var="rowURL">
 				<portlet:param name="struts_action" value="/asset_category_admin/view" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
-				<portlet:param name="vocabularyId" value="<%= String.valueOf(category.getVocabularyId()) %>" />
-				<portlet:param name="categoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
+				<portlet:param name="vocabularyId" value="<%= String.valueOf(curCategory.getVocabularyId()) %>" />
+				<portlet:param name="categoryId" value="<%= String.valueOf(curCategory.getCategoryId()) %>" />
 			</portlet:renderURL>
 
 			<liferay-ui:search-container-column-text
-				href="<%= (AssetCategoryServiceUtil.getVocabularyCategoriesCount(scopeGroupId, category.getCategoryId(), vocabularyId) > 0) ? rowURL : null %>"
+				href="<%= (AssetCategoryServiceUtil.getVocabularyCategoriesCount(scopeGroupId, curCategory.getCategoryId(), vocabularyId) > 0) ? rowURL : null %>"
 				name="category"
-				value="<%= category.getTitle(locale) %>"
+				value="<%= curCategory.getTitle(locale) %>"
 			/>
 
 			<liferay-ui:search-container-column-text
 				name="description"
-				value="<%= category.getDescription(locale) %>"
+				value="<%= curCategory.getDescription(locale) %>"
 			/>
 
 			<liferay-ui:search-container-column-jsp

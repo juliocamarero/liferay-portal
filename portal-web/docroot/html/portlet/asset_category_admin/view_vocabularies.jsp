@@ -18,6 +18,8 @@
 
 <%
 String keywords = ParamUtil.getString(request, "keywords");
+
+PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "vocabularies"), null);
 %>
 
 <aui:form name="fm">
@@ -57,6 +59,13 @@ String keywords = ParamUtil.getString(request, "keywords");
 			</div>
 		</aui:nav-bar-search>
 	</aui:nav-bar>
+
+	<liferay-ui:breadcrumb
+		showCurrentGroup="<%= false %>"
+		showGuestGroup="<%= false %>"
+		showLayout="<%= false %>"
+		showParentGroups="<%= false %>"
+	/>
 
 	<liferay-ui:search-container
 		emptyResultsMessage="there-are-no-vocabularies"
