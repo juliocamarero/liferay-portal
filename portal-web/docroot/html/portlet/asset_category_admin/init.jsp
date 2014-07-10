@@ -17,8 +17,12 @@
 <%@ include file="/html/portlet/init.jsp" %>
 
 <%@ page import="com.liferay.portal.kernel.util.PredicateFilter" %><%@
+page import="com.liferay.portlet.asset.AssetCategoryNameException" %><%@
+page import="com.liferay.portlet.asset.DuplicateCategoryException" %><%@
+page import="com.liferay.portlet.asset.DuplicateVocabularyException" %><%@
 page import="com.liferay.portlet.asset.NoSuchCategoryException" %><%@
 page import="com.liferay.portlet.asset.NoSuchVocabularyException" %><%@
+page import="com.liferay.portlet.asset.VocabularyNameException" %><%@
 page import="com.liferay.portlet.asset.model.AssetCategoryConstants" %><%@
 page import="com.liferay.portlet.asset.model.AssetCategoryDisplay" %><%@
 page import="com.liferay.portlet.asset.model.AssetCategoryProperty" %><%@

@@ -15,15 +15,20 @@
 package com.liferay.portlet.assetcategoryadmin.action;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.sanitizer.SanitizerException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
+import com.liferay.portlet.asset.DuplicateVocabularyException;
+import com.liferay.portlet.asset.NoSuchVocabularyException;
+import com.liferay.portlet.asset.VocabularyNameException;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetVocabularyServiceUtil;
@@ -69,9 +74,28 @@ public class EditVocabularyAction extends PortletAction {
 			sendRedirect(actionRequest, actionResponse);
 		}
 		catch (Exception e) {
-			SessionErrors.add(actionRequest, e.getClass());
+			if (e instanceof NoSuchVocabularyException ||
+				e instanceof PrincipalException) {
 
-			setForward(actionRequest, "portlet.asset_category_admin.error");
+				SessionErrors.add(actionRequest, e.getClass());
+
+				setForward(actionRequest, "portlet.asset_category_admin.error");
+			}
+			else if (e instanceof DuplicateVocabularyException ||
+					 e instanceof VocabularyNameException) {
+
+				SessionErrors.add(actionRequest, e.getClass());
+			}
+			else {
+				Throwable cause = e.getCause();
+
+				if (cause instanceof SanitizerException) {
+					SessionErrors.add(actionRequest, SanitizerException.class);
+				}
+				else {
+					throw e;
+				}
+			}
 		}
 	}
 

@@ -15,15 +15,20 @@
 package com.liferay.portlet.assetcategoryadmin.action;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.sanitizer.SanitizerException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.struts.PortletAction;
+import com.liferay.portlet.asset.AssetCategoryNameException;
+import com.liferay.portlet.asset.DuplicateCategoryException;
+import com.liferay.portlet.asset.NoSuchCategoryException;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.service.AssetCategoryServiceUtil;
@@ -70,9 +75,28 @@ public class EditCategoryAction extends PortletAction {
 			sendRedirect(actionRequest, actionResponse);
 		}
 		catch (Exception e) {
-			SessionErrors.add(actionRequest, e.getClass());
+			if (e instanceof NoSuchCategoryException ||
+				e instanceof PrincipalException) {
 
-			setForward(actionRequest, "portlet.asset_category_admin.error");
+				SessionErrors.add(actionRequest, e.getClass());
+
+				setForward(actionRequest, "portlet.asset_category_admin.error");
+			}
+			else if (e instanceof AssetCategoryNameException ||
+					 e instanceof DuplicateCategoryException) {
+
+				SessionErrors.add(actionRequest, e.getClass());
+			}
+			else {
+				Throwable cause = e.getCause();
+
+				if (cause instanceof SanitizerException) {
+					SessionErrors.add(actionRequest, SanitizerException.class);
+				}
+				else {
+					throw e;
+				}
+			}
 		}
 	}
 
