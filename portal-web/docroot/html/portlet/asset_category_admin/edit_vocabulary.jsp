@@ -37,6 +37,9 @@ long vocabularyId = BeanParamUtil.getLong(vocabulary, request, "vocabularyId");
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= vocabulary == null ? Constants.ADD : Constants.UPDATE %>" />
 	<aui:input name="vocabularyId" type="hidden" value="<%= vocabularyId %>" />
 
+	<liferay-ui:error exception="<%= DuplicateVocabularyException.class %>" message="please-enter-a-unique-name" />
+	<liferay-ui:error exception="<%= VocabularyNameException.class %>" message="please-enter-a-valid-name" />
+
 	<aui:model-context bean="<%= vocabulary %>" model="<%= AssetVocabulary.class %>" />
 
 	<aui:fieldset>
