@@ -14,7 +14,12 @@
 
 package com.liferay.taglib.ui;
 
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.taglib.util.IncludeTag;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.portlet.PortletURL;
 
@@ -109,6 +114,26 @@ public class LayoutsTreeTag extends IncludeTag {
 		return _CLEAN_UP_SET_ATTRIBUTES;
 	}
 
+	protected String getModules() {
+		List<String> modules = new ArrayList<String>();
+
+		modules.add("liferay-layouts-tree");
+
+		if (_selectableTree) {
+			modules.add("liferay-layouts-tree-selectable");
+		}
+
+		if (_checkContentDisplayPage) {
+			modules.add("liferay-layouts-tree-check-content-display-page");
+		}
+
+		if (_saveState) {
+			modules.add("liferay-layouts-tree-state");
+		}
+
+		return StringUtil.merge(modules);
+	}
+
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
@@ -125,6 +150,7 @@ public class LayoutsTreeTag extends IncludeTag {
 			String.valueOf(_expandFirstNode));
 		request.setAttribute(
 			"liferay-ui:layouts-tree:groupId", String.valueOf(_groupId));
+		request.setAttribute("liferay-ui:layouts-tree:modules", getModules());
 		request.setAttribute("liferay-ui:layouts-tree:portletURL", _portletURL);
 		request.setAttribute(
 			"liferay-ui:layouts-tree:privateLayout",

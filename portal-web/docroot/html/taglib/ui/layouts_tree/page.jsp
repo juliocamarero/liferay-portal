@@ -22,6 +22,7 @@ boolean defaultStateChecked = GetterUtil.getBoolean((String)request.getAttribute
 boolean draggableTree = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:draggableTree"));
 boolean expandFirstNode = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:expandFirstNode"));
 long groupId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:layouts-tree:groupId"));
+String modules = (String)request.getAttribute("liferay-ui:layouts-tree:modules");
 PortletURL portletURL = (PortletURL)request.getAttribute("liferay-ui:layouts-tree:portletURL");
 boolean privateLayout = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:privateLayout"));
 String rootNodeName = (String)request.getAttribute("liferay-ui:layouts-tree:rootNodeName");
@@ -30,20 +31,6 @@ boolean selectableTree = GetterUtil.getBoolean((String)request.getAttribute("lif
 String selectedLayoutIds = (String)request.getAttribute("liferay-ui:layouts-tree:selectedLayoutIds");
 long selPlid = GetterUtil.getLong((String)request.getAttribute("liferay-ui:layouts-tree:selPlid"));
 String treeId = (String)request.getAttribute("liferay-ui:layouts-tree:treeId");
-
-String modules = "liferay-layouts-tree";
-
-if (selectableTree) {
-	modules += ",liferay-layouts-tree-selectable";
-}
-
-if (checkContentDisplayPage) {
-	modules += ",liferay-layouts-tree-check-content-display-page";
-}
-
-if (saveState) {
-	modules += ",liferay-layouts-tree-state";
-}
 %>
 
 <aui:script use="<%= modules %>">
