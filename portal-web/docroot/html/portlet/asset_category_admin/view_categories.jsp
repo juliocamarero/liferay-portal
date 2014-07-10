@@ -29,7 +29,7 @@ String keywords = ParamUtil.getString(request, "keywords");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/asset_category_admin/view");
+portletURL.setParameter("struts_action", "/asset_category_admin/view_categories");
 portletURL.setParameter("redirect", currentURL);
 portletURL.setParameter("vocabularyId", String.valueOf(vocabularyId));
 portletURL.setParameter("categoryId", String.valueOf(categoryId));
@@ -105,7 +105,7 @@ AssetCategoryUtil.addPortletBreadcrumbEntry(vocabulary, category, request, rende
 			modelVar="curCategory"
 		>
 			<portlet:renderURL var="rowURL">
-				<portlet:param name="struts_action" value="/asset_category_admin/view" />
+				<portlet:param name="struts_action" value="/asset_category_admin/view_categories" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
 				<portlet:param name="vocabularyId" value="<%= String.valueOf(curCategory.getVocabularyId()) %>" />
 				<portlet:param name="categoryId" value="<%= String.valueOf(curCategory.getCategoryId()) %>" />

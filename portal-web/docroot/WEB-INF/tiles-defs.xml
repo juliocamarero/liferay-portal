@@ -200,6 +200,10 @@
 		<put name="portlet_content" value="/portlet/asset_category_admin/view.jsp" />
 	</definition>
 
+	<definition name="portlet.asset_category_admin.view_categories" extends="portlet.asset_category_admin">
+		<put name="portlet_content" value="/portlet/asset_category_admin/view_categories.jsp" />
+	</definition>
+
 	<definition name="portlet.asset_category_admin.view_category" extends="portlet.asset_category_admin">
 		<put name="portlet_content" value="/portlet/asset_category_admin/view_category.jsp" />
 	</definition>
