@@ -20,9 +20,7 @@
 String articleId = StringPool.BLANK;
 
 if (selLayout != null) {
-	UnicodeProperties typeSettingsProperties = selLayout.getTypeSettingsProperties();
-
-	articleId = typeSettingsProperties.getProperty("article-id", StringPool.BLANK);
+	articleId = selLayout.getTypeSettingsProperty("article-id", StringPool.BLANK);
 }
 %>
 
