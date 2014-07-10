@@ -129,7 +129,7 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	* @return the web content article
 	* @throws PortalException if a portal exception occurred
 	*/
-	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX, propagate = false)
 	public com.liferay.portlet.journal.model.JournalArticle addArticle(
 		long userId, long groupId, long folderId, long classNameId,
 		long classPK, java.lang.String articleId, boolean autoArticleId,
@@ -647,6 +647,10 @@ public interface JournalArticleLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portlet.journal.model.JournalArticle fetchLatestIndexableArticle(
+		long resourcePrimKey);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.journal.model.JournalArticle fetchPreviousIndexableArticle(
 		long resourcePrimKey);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -2687,7 +2691,7 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	content article could not be found, or if a portal exception
 	occurred
 	*/
-	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX, propagate = false)
 	public com.liferay.portlet.journal.model.JournalArticle updateArticle(
 		long userId, long groupId, long folderId, java.lang.String articleId,
 		double version,
@@ -2783,7 +2787,7 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	* @throws PortalException if a matching web content article could not be
 	found
 	*/
-	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
+	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX, propagate = false)
 	public com.liferay.portlet.journal.model.JournalArticle updateContent(
 		long groupId, java.lang.String articleId, double version,
 		java.lang.String content)
@@ -2821,7 +2825,6 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	* @return the updated web content article
 	* @throws PortalException if a portal exception occurred
 	*/
-	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
 	public com.liferay.portlet.journal.model.JournalArticle updateStatus(
 		long userId, com.liferay.portlet.journal.model.JournalArticle article,
 		int status, java.lang.String articleURL,

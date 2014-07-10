@@ -28,6 +28,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Indexable {
 
+	public boolean propagate() default true;
+
 	public IndexableType type();
 
 }

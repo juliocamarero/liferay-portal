@@ -61,6 +61,7 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -268,7 +269,7 @@ public class JournalArticleLocalServiceImpl
 	 * @return the web content article
 	 * @throws PortalException if a portal exception occurred
 	 */
-	@Indexable(type = IndexableType.REINDEX)
+	@Indexable(type = IndexableType.REINDEX, propagate = false)
 	@Override
 	public JournalArticle addArticle(
 			long userId, long groupId, long folderId, long classNameId,
@@ -467,7 +468,7 @@ public class JournalArticleLocalServiceImpl
 		else {
 			updateStatus(
 				userId, article, WorkflowConstants.STATUS_APPROVED, null,
-				serviceContext, new HashMap<String, Serializable>());
+				serviceContext, new HashMap<String, Serializable>(), false);
 		}
 
 		return journalArticlePersistence.findByPrimaryKey(article.getId());
@@ -1424,6 +1425,26 @@ public class JournalArticleLocalServiceImpl
 		List<JournalArticle> articles =
 			journalArticlePersistence.findByR_I_S(
 				resourcePrimKey, true, statuses, 0, 1, orderByComparator);
+
+		if (articles.isEmpty()) {
+			return null;
+		}
+
+		return articles.get(0);
+	}
+
+	@Override
+	public JournalArticle fetchPreviousIndexableArticle(long resourcePrimKey) {
+		OrderByComparator<JournalArticle> orderByComparator =
+			new ArticleVersionComparator();
+
+		int[] statuses = new int[] {
+			WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_IN_TRASH
+		};
+
+		List<JournalArticle> articles =
+			journalArticlePersistence.findByR_I_S(
+				resourcePrimKey, true, statuses, 1, 2, orderByComparator);
 
 		if (articles.isEmpty()) {
 			return null;
@@ -3090,7 +3111,7 @@ public class JournalArticleLocalServiceImpl
 
 			updateStatus(
 				userId, article, status, null, serviceContext,
-				new HashMap<String, Serializable>());
+				new HashMap<String, Serializable>(), false);
 
 			// Trash
 
@@ -3361,7 +3382,7 @@ public class JournalArticleLocalServiceImpl
 
 		updateStatus(
 			userId, article, trashEntry.getStatus(), null, serviceContext,
-			new HashMap<String, Serializable>());
+			new HashMap<String, Serializable>(), false);
 
 		// Trash
 
@@ -4359,7 +4380,7 @@ public class JournalArticleLocalServiceImpl
 	 *         content article could not be found, or if a portal exception
 	 *         occurred
 	 */
-	@Indexable(type = IndexableType.REINDEX)
+	@Indexable(type = IndexableType.REINDEX, propagate = false)
 	@Override
 	public JournalArticle updateArticle(
 			long userId, long groupId, long folderId, String articleId,
@@ -4580,7 +4601,7 @@ public class JournalArticleLocalServiceImpl
 		if (expired && imported) {
 			updateStatus(
 				userId, article, article.getStatus(), articleURL,
-				serviceContext, new HashMap<String, Serializable>());
+				serviceContext, new HashMap<String, Serializable>(), false);
 		}
 
 		if (serviceContext.getWorkflowAction() ==
@@ -4877,7 +4898,7 @@ public class JournalArticleLocalServiceImpl
 	 * @throws PortalException if a matching web content article could not be
 	 *         found
 	 */
-	@Indexable(type = IndexableType.REINDEX)
+	@Indexable(type = IndexableType.REINDEX, propagate = false)
 	@Override
 	public JournalArticle updateContent(
 			long groupId, String articleId, double version, String content)
@@ -4915,7 +4936,6 @@ public class JournalArticleLocalServiceImpl
 	 * @return the updated web content article
 	 * @throws PortalException if a portal exception occurred
 	 */
-	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle updateStatus(
 			long userId, JournalArticle article, int status, String articleURL,
@@ -4923,204 +4943,9 @@ public class JournalArticleLocalServiceImpl
 			Map<String, Serializable> workflowContext)
 		throws PortalException {
 
-		// Article
-
-		User user = userPersistence.findByPrimaryKey(userId);
-		Date now = new Date();
-
-		if ((status == WorkflowConstants.STATUS_APPROVED) &&
-			(article.getClassNameId() ==
-				JournalArticleConstants.CLASSNAME_ID_DEFAULT) &&
-			(article.getDisplayDate() != null) &&
-			now.before(article.getDisplayDate())) {
-
-			status = WorkflowConstants.STATUS_SCHEDULED;
-		}
-
-		int oldStatus = article.getStatus();
-
-		article.setModifiedDate(serviceContext.getModifiedDate(now));
-
-		boolean neverExpire = false;
-
-		if (status == WorkflowConstants.STATUS_APPROVED) {
-			Date expirationDate = article.getExpirationDate();
-
-			if ((expirationDate != null) && expirationDate.before(now)) {
-				neverExpire = true;
-
-				article.setExpirationDate(null);
-			}
-		}
-
-		if (status == WorkflowConstants.STATUS_EXPIRED) {
-			article.setExpirationDate(now);
-		}
-
-		article.setStatus(status);
-		article.setStatusByUserId(user.getUserId());
-		article.setStatusByUserName(user.getFullName());
-		article.setStatusDate(serviceContext.getModifiedDate(now));
-
-		journalArticlePersistence.update(article);
-
-		if (hasModifiedLatestApprovedVersion(
-				article.getGroupId(), article.getArticleId(),
-				article.getVersion())) {
-
-			if (status == WorkflowConstants.STATUS_APPROVED) {
-				updateUrlTitles(
-					article.getGroupId(), article.getArticleId(),
-					article.getUrlTitle());
-
-				// Asset
-
-				if ((oldStatus != WorkflowConstants.STATUS_APPROVED) &&
-					(article.getVersion() !=
-						JournalArticleConstants.VERSION_DEFAULT)) {
-
-					AssetEntry draftAssetEntry =
-						assetEntryLocalService.fetchEntry(
-							JournalArticle.class.getName(),
-							article.getPrimaryKey());
-
-					if (draftAssetEntry != null) {
-						long[] assetCategoryIds =
-							draftAssetEntry.getCategoryIds();
-						String[] assetTagNames = draftAssetEntry.getTagNames();
-
-						List<AssetLink> assetLinks =
-							assetLinkLocalService.getDirectLinks(
-								draftAssetEntry.getEntryId(),
-								AssetLinkConstants.TYPE_RELATED);
-
-						long[] assetLinkEntryIds = StringUtil.split(
-							ListUtil.toString(
-								assetLinks, AssetLink.ENTRY_ID2_ACCESSOR), 0L);
-
-						AssetEntry assetEntry =
-							assetEntryLocalService.updateEntry(
-								userId, article.getGroupId(),
-								article.getCreateDate(),
-								article.getModifiedDate(),
-								JournalArticle.class.getName(),
-								article.getResourcePrimKey(), article.getUuid(),
-								getClassTypeId(article), assetCategoryIds,
-								assetTagNames, false, null, null, null,
-								ContentTypes.TEXT_HTML, article.getTitle(),
-								article.getDescription(),
-								article.getDescription(), null,
-								article.getLayoutUuid(), 0, 0, null, false);
-
-						assetLinkLocalService.updateLinks(
-							userId, assetEntry.getEntryId(), assetLinkEntryIds,
-							AssetLinkConstants.TYPE_RELATED);
-
-						assetEntryLocalService.deleteEntry(
-							JournalArticle.class.getName(),
-							article.getPrimaryKey());
-					}
-				}
-
-				if (article.getClassNameId() ==
-						JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
-
-					// Get the earliest display date and latest expiration date
-					// among all article versions
-
-					Date[] dateInterval = getDateInterval(
-						article.getGroupId(), article.getArticleId(),
-						article.getDisplayDate(), article.getExpirationDate());
-
-					Date publishDate = dateInterval[0];
-
-					Date expirationDate = dateInterval[1];
-
-					if (neverExpire) {
-						expirationDate = null;
-					}
-
-					assetEntryLocalService.updateEntry(
-						JournalArticle.class.getName(),
-						article.getResourcePrimKey(), publishDate,
-						expirationDate, true);
-				}
-
-				// Social
-
-				JSONObject extraDataJSONObject =
-					JSONFactoryUtil.createJSONObject();
-
-				extraDataJSONObject.put("title", article.getTitle());
-
-				if (serviceContext.isCommandUpdate()) {
-					socialActivityLocalService.addActivity(
-						user.getUserId(), article.getGroupId(),
-						JournalArticle.class.getName(),
-						article.getResourcePrimKey(),
-						JournalActivityKeys.UPDATE_ARTICLE,
-						extraDataJSONObject.toString(), 0);
-				}
-				else {
-					socialActivityLocalService.addUniqueActivity(
-						user.getUserId(), article.getGroupId(),
-						JournalArticle.class.getName(),
-						article.getResourcePrimKey(),
-						JournalActivityKeys.ADD_ARTICLE,
-						extraDataJSONObject.toString(), 0);
-				}
-			}
-			else if (oldStatus == WorkflowConstants.STATUS_APPROVED) {
-				updatePreviousApprovedArticle(article);
-			}
-		}
-
-		if ((article.getClassNameId() ==
-				JournalArticleConstants.CLASSNAME_ID_DEFAULT) &&
-			(oldStatus != WorkflowConstants.STATUS_IN_TRASH) &&
-			(status != WorkflowConstants.STATUS_IN_TRASH)) {
-
-			// Email
-
-			if ((oldStatus == WorkflowConstants.STATUS_PENDING) &&
-				((status == WorkflowConstants.STATUS_APPROVED) ||
-				 (status == WorkflowConstants.STATUS_DENIED))) {
-
-				String msg = "granted";
-
-				if (status == WorkflowConstants.STATUS_DENIED) {
-					msg = "denied";
-				}
-
-				try {
-					PortletPreferences preferences =
-						ServiceContextUtil.getPortletPreferences(
-							serviceContext);
-
-					articleURL = buildArticleURL(
-						articleURL, article.getGroupId(), article.getFolderId(),
-						article.getArticleId());
-
-					sendEmail(
-						article, articleURL, preferences, msg, serviceContext);
-				}
-				catch (Exception e) {
-					_log.error(
-						"Unable to send email to notify the change of status " +
-							" to " + msg + " for article " + article.getId() +
-								": " + e.getMessage());
-				}
-			}
-
-			// Subscriptions
-
-			notifySubscribers(
-				article,
-				(String)workflowContext.get(WorkflowConstants.CONTEXT_URL),
-				serviceContext);
-		}
-
-		return article;
+		return updateStatus(
+			userId, article, status, articleURL, serviceContext,
+			workflowContext, true);
 	}
 
 	/**
@@ -5329,6 +5154,53 @@ public class JournalArticleLocalServiceImpl
 		searchContext.setUserId(userId);
 
 		return searchContext;
+	}
+
+	protected boolean categoriesOrTagsHaveChanges(
+			AssetEntry oldAssetEntry, long[] assetCategoryIds,
+			String[] assetTagNames)
+		throws PortalException {
+
+		long[] oldAssetCategoryIds = new long[0];
+
+		String[] oldAssetTagNames = new String[0];
+
+		if (oldAssetEntry != null) {
+			oldAssetCategoryIds = oldAssetEntry.getCategoryIds();
+
+			oldAssetTagNames = oldAssetEntry.getTagNames();
+		}
+
+		if (assetCategoryIds == null) {
+			assetCategoryIds = new long[0];
+		}
+
+		if (assetTagNames == null) {
+			assetTagNames = new String[0];
+		}
+
+		if ((oldAssetTagNames.length != assetTagNames.length) ||
+			(oldAssetCategoryIds.length!= assetCategoryIds.length)) {
+				return true;
+		}
+		else if ((assetTagNames.length == 0) &&
+				 (assetCategoryIds.length == 0)) {
+
+			return false;
+		}
+
+		Set<Long> newCategoriesSet = SetUtil.fromArray(assetCategoryIds);
+		Set<Long> oldCategoriesSet = SetUtil.fromArray(oldAssetCategoryIds);
+
+		if (newCategoriesSet.equals(oldCategoriesSet)) {
+			Set<String> newTagsSet = SetUtil.fromArray(assetTagNames);
+			Set<String> oldTagsSet = SetUtil.fromArray(oldAssetTagNames);
+
+			return !newTagsSet.equals(oldTagsSet);
+		}
+		else {
+			return true;
+		}
 	}
 
 	protected void checkArticlesByDisplayDate(Date displayDate)
@@ -6638,7 +6510,232 @@ public class JournalArticleLocalServiceImpl
 		}
 	}
 
-	protected void updateUrlTitles(
+	protected JournalArticle updateStatus(
+			long userId, JournalArticle article, int status, String articleURL,
+			ServiceContext serviceContext,
+			Map<String, Serializable> workflowContext, boolean reindex)
+		throws PortalException {
+
+		boolean propagateReindex = false;
+
+		// Article
+
+		User user = userPersistence.findByPrimaryKey(userId);
+		Date now = new Date();
+
+		if ((status == WorkflowConstants.STATUS_APPROVED) &&
+			(article.getClassNameId() ==
+				JournalArticleConstants.CLASSNAME_ID_DEFAULT) &&
+			(article.getDisplayDate() != null) &&
+			now.before(article.getDisplayDate())) {
+
+			status = WorkflowConstants.STATUS_SCHEDULED;
+		}
+
+		int oldStatus = article.getStatus();
+
+		article.setModifiedDate(serviceContext.getModifiedDate(now));
+
+		boolean neverExpire = false;
+
+		if (status == WorkflowConstants.STATUS_APPROVED) {
+			Date expirationDate = article.getExpirationDate();
+
+			if ((expirationDate != null) && expirationDate.before(now)) {
+				neverExpire = true;
+
+				article.setExpirationDate(null);
+			}
+		}
+
+		if (status == WorkflowConstants.STATUS_EXPIRED) {
+			article.setExpirationDate(now);
+		}
+
+		article.setStatus(status);
+		article.setStatusByUserId(user.getUserId());
+		article.setStatusByUserName(user.getFullName());
+		article.setStatusDate(serviceContext.getModifiedDate(now));
+
+		journalArticlePersistence.update(article);
+
+		if (hasModifiedLatestApprovedVersion(
+				article.getGroupId(), article.getArticleId(),
+				article.getVersion())) {
+
+			if (status == WorkflowConstants.STATUS_APPROVED) {
+				propagateReindex = updateUrlTitles(
+					article.getGroupId(), article.getArticleId(),
+					article.getUrlTitle());
+
+				// Asset
+
+				if ((oldStatus != WorkflowConstants.STATUS_APPROVED) &&
+					(article.getVersion() !=
+						JournalArticleConstants.VERSION_DEFAULT)) {
+
+					AssetEntry draftAssetEntry =
+						assetEntryLocalService.fetchEntry(
+							JournalArticle.class.getName(),
+							article.getPrimaryKey());
+
+					if (draftAssetEntry != null) {
+						long[] assetCategoryIds =
+							draftAssetEntry.getCategoryIds();
+						String[] assetTagNames = draftAssetEntry.getTagNames();
+
+						List<AssetLink> assetLinks =
+							assetLinkLocalService.getDirectLinks(
+								draftAssetEntry.getEntryId(),
+								AssetLinkConstants.TYPE_RELATED);
+
+						long[] assetLinkEntryIds = StringUtil.split(
+							ListUtil.toString(
+								assetLinks, AssetLink.ENTRY_ID2_ACCESSOR), 0L);
+
+						if (!propagateReindex && reindex) {
+							AssetEntry oldAssetEntry =
+								assetEntryLocalService.fetchEntry(
+									JournalArticle.class.getName(),
+									article.getResourcePrimKey());
+
+							propagateReindex = categoriesOrTagsHaveChanges(
+								oldAssetEntry, assetCategoryIds, assetTagNames);
+						}
+
+						AssetEntry assetEntry =
+							assetEntryLocalService.updateEntry(
+								userId, article.getGroupId(),
+								article.getCreateDate(),
+								article.getModifiedDate(),
+								JournalArticle.class.getName(),
+								article.getResourcePrimKey(), article.getUuid(),
+								getClassTypeId(article), assetCategoryIds,
+								assetTagNames, false, null, null, null,
+								ContentTypes.TEXT_HTML, article.getTitle(),
+								article.getDescription(),
+								article.getDescription(), null,
+								article.getLayoutUuid(), 0, 0, null, false);
+
+						assetLinkLocalService.updateLinks(
+							userId, assetEntry.getEntryId(), assetLinkEntryIds,
+							AssetLinkConstants.TYPE_RELATED);
+
+						assetEntryLocalService.deleteEntry(
+							JournalArticle.class.getName(),
+							article.getPrimaryKey());
+					}
+				}
+
+				if (article.getClassNameId() ==
+						JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
+
+					// Get the earliest display date and latest expiration date
+					// among all article versions
+
+					Date[] dateInterval = getDateInterval(
+						article.getGroupId(), article.getArticleId(),
+						article.getDisplayDate(), article.getExpirationDate());
+
+					Date publishDate = dateInterval[0];
+
+					Date expirationDate = dateInterval[1];
+
+					if (neverExpire) {
+						expirationDate = null;
+					}
+
+					assetEntryLocalService.updateEntry(
+						JournalArticle.class.getName(),
+						article.getResourcePrimKey(), publishDate,
+						expirationDate, true);
+				}
+
+				// Social
+
+				JSONObject extraDataJSONObject =
+					JSONFactoryUtil.createJSONObject();
+
+				extraDataJSONObject.put("title", article.getTitle());
+
+				if (serviceContext.isCommandUpdate()) {
+					socialActivityLocalService.addActivity(
+						user.getUserId(), article.getGroupId(),
+						JournalArticle.class.getName(),
+						article.getResourcePrimKey(),
+						JournalActivityKeys.UPDATE_ARTICLE,
+						extraDataJSONObject.toString(), 0);
+				}
+				else {
+					socialActivityLocalService.addUniqueActivity(
+						user.getUserId(), article.getGroupId(),
+						JournalArticle.class.getName(),
+						article.getResourcePrimKey(),
+						JournalActivityKeys.ADD_ARTICLE,
+						extraDataJSONObject.toString(), 0);
+				}
+			}
+			else if (oldStatus == WorkflowConstants.STATUS_APPROVED) {
+				updatePreviousApprovedArticle(article);
+			}
+		}
+
+		if ((article.getClassNameId() ==
+				JournalArticleConstants.CLASSNAME_ID_DEFAULT) &&
+			(oldStatus != WorkflowConstants.STATUS_IN_TRASH) &&
+			(status != WorkflowConstants.STATUS_IN_TRASH)) {
+
+			// Email
+
+			if ((oldStatus == WorkflowConstants.STATUS_PENDING) &&
+				((status == WorkflowConstants.STATUS_APPROVED) ||
+				 (status == WorkflowConstants.STATUS_DENIED))) {
+
+				String msg = "granted";
+
+				if (status == WorkflowConstants.STATUS_DENIED) {
+					msg = "denied";
+				}
+
+				try {
+					PortletPreferences preferences =
+						ServiceContextUtil.getPortletPreferences(
+							serviceContext);
+
+					articleURL = buildArticleURL(
+						articleURL, article.getGroupId(), article.getFolderId(),
+						article.getArticleId());
+
+					sendEmail(
+						article, articleURL, preferences, msg, serviceContext);
+				}
+				catch (Exception e) {
+					_log.error(
+						"Unable to send email to notify the change of status " +
+							" to " + msg + " for article " + article.getId() +
+								": " + e.getMessage());
+				}
+			}
+
+			// Subscriptions
+
+			notifySubscribers(
+				article,
+				(String)workflowContext.get(WorkflowConstants.CONTEXT_URL),
+				serviceContext);
+		}
+
+		if (reindex) {
+			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				JournalArticle.class);
+
+			indexer.reindex(article, propagateReindex);
+		}
+
+		return article;
+	}
+
+	protected boolean updateUrlTitles(
 			long groupId, String articleId, String urlTitle)
 		throws PortalException {
 
@@ -6646,19 +6743,25 @@ public class JournalArticleLocalServiceImpl
 			groupId, articleId, new ArticleVersionComparator(false));
 
 		if (firstArticle.getUrlTitle().equals(urlTitle)) {
-			return;
+			return false;
 		}
 
 		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
 			groupId, articleId);
+
+		boolean updated = false;
 
 		for (JournalArticle article : articles) {
 			if (!article.getUrlTitle().equals(urlTitle)) {
 				article.setUrlTitle(urlTitle);
 
 				journalArticlePersistence.update(article);
+
+				updated = true;
 			}
 		}
+
+		return updated;
 	}
 
 	protected void validate(
