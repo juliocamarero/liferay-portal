@@ -737,6 +737,11 @@ public class JournalArticleLocalServiceUtil {
 		return getService().fetchLatestIndexableArticle(resourcePrimKey);
 	}
 
+	public static com.liferay.portlet.journal.model.JournalArticle fetchPreviousIndexableArticle(
+		long resourcePrimKey) {
+		return getService().fetchPreviousIndexableArticle(resourcePrimKey);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
 		return getService().getActionableDynamicQuery();
 	}
