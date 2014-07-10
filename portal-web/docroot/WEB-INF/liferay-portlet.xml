@@ -1479,7 +1479,6 @@
 		<control-panel-entry-weight>21.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
-		<single-page-application>false</single-page-application>
 		<private-request-attributes>false</private-request-attributes>
 		<private-session-attributes>false</private-session-attributes>
 		<render-weight>50</render-weight>
