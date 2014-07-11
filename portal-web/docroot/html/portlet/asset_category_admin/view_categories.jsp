@@ -21,9 +21,13 @@ long vocabularyId = ParamUtil.getLong(request, "vocabularyId");
 
 long categoryId = ParamUtil.getLong(request, "categoryId");
 
-AssetVocabulary vocabulary = AssetVocabularyLocalServiceUtil.fetchAssetVocabulary(vocabularyId);
+AssetVocabulary vocabulary = AssetVocabularyLocalServiceUtil.getVocabulary(vocabularyId);
 
-AssetCategory category = AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
+AssetCategory category = null;
+
+if (categoryId > 0) {
+	category = AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
+}
 
 String keywords = ParamUtil.getString(request, "keywords");
 

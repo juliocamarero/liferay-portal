@@ -66,7 +66,7 @@ List<AssetVocabulary> vocabularies = AssetVocabularyServiceUtil.getGroupVocabula
 		for (AssetVocabulary curVocabulary : vocabularies) {
 		%>
 
-			<div class="<%= (curVocabulary.getVocabularyId() == vocabularyId) ? StringPool.BLANK : "hide" %> asset-category-selector" id="<portlet:namespace />assetCategoriesSelector<%= curVocabulary.getVocabularyId() %>"></div>
+			<div class="asset-category-selector <%= (curVocabulary.getVocabularyId() == vocabularyId) ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />assetCategoriesSelector<%= curVocabulary.getVocabularyId() %>"></div>
 
 			<aui:script use="liferay-asset-categories-selector">
 				new Liferay.AssetCategoriesSelector(
@@ -128,7 +128,7 @@ List<AssetVocabulary> vocabularies = AssetVocabularyServiceUtil.getGroupVocabula
 				submitForm(document.<portlet:namespace />fm);
 			}
 			else {
-				alert('<liferay-ui:message key="the-category-x-and-parent-category-should-not-be-the-same" arguments="<%= category.getTitle(locale) %>" />');
+				alert('<liferay-ui:message arguments="<%= category.getTitle(locale) %>" key="the-category-x-and-parent-category-should-not-be-the-same" />');
 			}
 		}
 	);

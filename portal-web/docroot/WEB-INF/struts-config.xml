@@ -251,8 +251,6 @@
 
 		<action path="/asset_category_admin/view_categories" forward="portlet.asset_category_admin.view_categories" />
 
-		<action path="/asset_category_admin/view_category" forward="portlet.asset_category_admin.view_category" />
-
 		<!-- Asset Publisher -->
 
 		<action path="/asset_publisher/add_asset_redirect" forward="portlet.asset_publisher.add_asset_redirect" />

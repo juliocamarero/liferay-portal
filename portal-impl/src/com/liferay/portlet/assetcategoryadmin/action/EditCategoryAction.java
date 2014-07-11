@@ -15,7 +15,6 @@
 package com.liferay.portlet.assetcategoryadmin.action;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.sanitizer.SanitizerException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -88,14 +87,7 @@ public class EditCategoryAction extends PortletAction {
 				SessionErrors.add(actionRequest, e.getClass());
 			}
 			else {
-				Throwable cause = e.getCause();
-
-				if (cause instanceof SanitizerException) {
-					SessionErrors.add(actionRequest, SanitizerException.class);
-				}
-				else {
-					throw e;
-				}
+				throw e;
 			}
 		}
 	}
