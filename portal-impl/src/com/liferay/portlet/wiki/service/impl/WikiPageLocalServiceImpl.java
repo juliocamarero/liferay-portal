@@ -401,7 +401,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void changeParent(
+	public WikiPage changeParent(
 			long userId, long nodeId, String title, String newParentTitle,
 			ServiceContext serviceContext)
 		throws PortalException {
@@ -428,7 +428,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		populateServiceContext(serviceContext, page);
 
-		updatePage(
+		page = updatePage(
 			userId, nodeId, title, version, content, summary, minorEdit, format,
 			newParentTitle, redirectTitle, serviceContext);
 
@@ -442,6 +442,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				wikiPagePersistence.update(oldPage);
 			}
 		}
+
+		return page;
 	}
 
 	@Override
@@ -1587,20 +1589,15 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (page.isInTrashExplicitly()) {
 			restorePageFromTrash(userId, page);
 		}
-		else if (page.isInTrashImplicitly()) {
+		else {
 			TrashEntry trashEntry = page.getTrashEntry();
 
 			restoreDependentFromTrash(page, trashEntry.getEntryId());
 		}
-		else {
-			throw new PrincipalException();
-		}
 
-		changeParent(
+		return changeParent(
 			userId, nodeId, TrashUtil.getOriginalTitle(page.getTitle()),
 			newParentTitle, serviceContext);
-
-		return getPage(page.getResourcePrimKey());
 	}
 
 	@Override
