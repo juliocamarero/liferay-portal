@@ -53,6 +53,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.Portal;
 import com.liferay.portal.util.PortalUtil;
@@ -834,8 +835,39 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	public List<WikiPage> getChildren(
 		long nodeId, boolean head, String parentTitle) {
 
-		return wikiPagePersistence.findByN_H_P_S(
+		return getChildren(
 			nodeId, head, parentTitle, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public List<WikiPage> getChildren(
+		long nodeId, boolean head, String parentTitle, int status) {
+
+		return wikiPagePersistence.findByN_H_P_S(
+			nodeId, head, parentTitle, status);
+	}
+
+	@Override
+	public List<WikiPage> getChildren(
+		long nodeId, boolean head, String parentTitle, int start, int end) {
+
+		return wikiPagePersistence.findByN_H_P_S(
+			nodeId, head, parentTitle, WorkflowConstants.STATUS_APPROVED, start,
+			end);
+	}
+
+	@Override
+	public int getChildrenCount(long nodeId, boolean head, String parentTitle) {
+		return getChildrenCount(
+			nodeId, head, parentTitle, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public int getChildrenCount(
+		long nodeId, boolean head, String parentTitle, int status) {
+
+		return wikiPagePersistence.countByN_H_P_S(
+			nodeId, head, parentTitle, status);
 	}
 
 	@Override
@@ -1545,6 +1577,33 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
+	public WikiPage movePageFromTrash(
+			long userId, long nodeId, String title, String newParentTitle,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		WikiPage page = getPage(nodeId, title);
+
+		if (page.isInTrashExplicitly()) {
+			restorePageFromTrash(userId, page);
+		}
+		else if (page.isInTrashImplicitly()) {
+			TrashEntry trashEntry = page.getTrashEntry();
+
+			restoreDependentFromTrash(page, trashEntry.getEntryId());
+		}
+		else {
+			throw new PrincipalException();
+		}
+
+		changeParent(
+			userId, nodeId, TrashUtil.getOriginalTitle(page.getTitle()),
+			newParentTitle, serviceContext);
+
+		return getPage(page.getResourcePrimKey());
+	}
+
+	@Override
 	public WikiPage movePageToTrash(long userId, long nodeId, String title)
 		throws PortalException {
 
@@ -1691,6 +1750,14 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		if (trashVersion != null) {
 			String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
+
+			WikiPageResource pageResource =
+				wikiPageResourcePersistence.findByPrimaryKey(
+					page.getResourcePrimKey());
+
+			pageResource.setTitle(originalTitle);
+
+			wikiPageResourcePersistence.update(pageResource);
 
 			page.setTitle(originalTitle);
 

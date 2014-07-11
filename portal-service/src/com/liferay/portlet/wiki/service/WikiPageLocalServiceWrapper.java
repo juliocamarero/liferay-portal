@@ -432,6 +432,34 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 	}
 
 	@Override
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getChildren(
+		long nodeId, boolean head, java.lang.String parentTitle, int start,
+		int end) {
+		return _wikiPageLocalService.getChildren(nodeId, head, parentTitle,
+			start, end);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getChildren(
+		long nodeId, boolean head, java.lang.String parentTitle, int status) {
+		return _wikiPageLocalService.getChildren(nodeId, head, parentTitle,
+			status);
+	}
+
+	@Override
+	public int getChildrenCount(long nodeId, boolean head,
+		java.lang.String parentTitle) {
+		return _wikiPageLocalService.getChildrenCount(nodeId, head, parentTitle);
+	}
+
+	@Override
+	public int getChildrenCount(long nodeId, boolean head,
+		java.lang.String parentTitle, int status) {
+		return _wikiPageLocalService.getChildrenCount(nodeId, head,
+			parentTitle, status);
+	}
+
+	@Override
 	public com.liferay.portlet.wiki.model.WikiPage getDraftPage(long nodeId,
 		java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -837,6 +865,16 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _wikiPageLocalService.movePageAttachmentToTrash(userId, nodeId,
 			title, fileName);
+	}
+
+	@Override
+	public com.liferay.portlet.wiki.model.WikiPage movePageFromTrash(
+		long userId, long nodeId, java.lang.String title,
+		java.lang.String newParentTitle,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _wikiPageLocalService.movePageFromTrash(userId, nodeId, title,
+			newParentTitle, serviceContext);
 	}
 
 	@Override

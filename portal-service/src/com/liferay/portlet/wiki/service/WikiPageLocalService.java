@@ -314,6 +314,23 @@ public interface WikiPageLocalService extends BaseLocalService,
 		long nodeId, boolean head, java.lang.String parentTitle);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getChildren(
+		long nodeId, boolean head, java.lang.String parentTitle, int start,
+		int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getChildren(
+		long nodeId, boolean head, java.lang.String parentTitle, int status);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getChildrenCount(long nodeId, boolean head,
+		java.lang.String parentTitle);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getChildrenCount(long nodeId, boolean head,
+		java.lang.String parentTitle, int status);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portlet.wiki.model.WikiPage getDraftPage(long nodeId,
 		java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException;
@@ -591,6 +608,12 @@ public interface WikiPageLocalService extends BaseLocalService,
 	public com.liferay.portal.kernel.repository.model.FileEntry movePageAttachmentToTrash(
 		long userId, long nodeId, java.lang.String title,
 		java.lang.String fileName)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public com.liferay.portlet.wiki.model.WikiPage movePageFromTrash(
+		long userId, long nodeId, java.lang.String title,
+		java.lang.String newParentTitle,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public com.liferay.portlet.wiki.model.WikiPage movePageToTrash(
