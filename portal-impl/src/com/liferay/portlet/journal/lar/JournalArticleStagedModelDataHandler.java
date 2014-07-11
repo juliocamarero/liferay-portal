@@ -56,7 +56,6 @@ import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.JournalArticleImageLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
-import com.liferay.portlet.journal.util.JournalUtil;
 
 import java.io.File;
 
@@ -308,7 +307,7 @@ public class JournalArticleStagedModelDataHandler
 			portletDataContext, article, ddmTemplate,
 			PortletDataContext.REFERENCE_TYPE_STRONG);
 
-		Layout layout = JournalUtil.getArticleLayout(article);
+		Layout layout = article.getLayout();
 
 		if (layout != null) {
 			portletDataContext.addReferenceElement(

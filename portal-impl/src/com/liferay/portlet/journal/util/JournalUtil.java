@@ -559,15 +559,6 @@ public class JournalUtil {
 		return sb.toString();
 	}
 
-	public static Layout getArticleLayout(JournalArticle journalArticle) {
-		if (Validator.isNull(journalArticle)) {
-			return null;
-		}
-
-		return getArticleLayout(
-			journalArticle.getLayoutUuid(), journalArticle.getGroupId());
-	}
-
 	public static Layout getArticleLayout(String layoutUuid, long groupId) {
 		if (Validator.isNull(layoutUuid)) {
 			return null;
@@ -1029,13 +1020,15 @@ public class JournalUtil {
 			JournalArticle article, ThemeDisplay themeDisplay)
 		throws Exception {
 
-		Layout layout = getArticleLayout(article);
+		if (article != null) {
+			Layout layout = article.getLayout();
 
-		if (layout != null) {
-			return layout.getPlid();
+			if (layout != null) {
+				return layout.getPlid();
+			}
 		}
 
-		layout = LayoutLocalServiceUtil.fetchFirstLayout(
+		Layout layout = LayoutLocalServiceUtil.fetchFirstLayout(
 			themeDisplay.getScopeGroupId(), false,
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 

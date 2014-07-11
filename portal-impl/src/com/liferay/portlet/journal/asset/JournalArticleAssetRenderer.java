@@ -44,7 +44,6 @@ import com.liferay.portlet.journal.model.JournalArticleDisplay;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
-import com.liferay.portlet.journal.util.JournalUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -284,10 +283,10 @@ public class JournalArticleAssetRenderer
 			(ThemeDisplay)liferayPortletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		Layout layout = themeDisplay.getLayout();
+		Layout layout = _article.getLayout();
 
-		if (Validator.isNotNull(_article.getLayoutUuid())) {
-			layout = JournalUtil.getArticleLayout(_article);
+		if (layout == null) {
+			layout = themeDisplay.getLayout();
 		}
 
 		String portletId = (String)liferayPortletRequest.getAttribute(
