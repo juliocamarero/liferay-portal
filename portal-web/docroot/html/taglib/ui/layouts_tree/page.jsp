@@ -18,6 +18,7 @@
 
 <%
 boolean checkContentDisplayPage = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:checkContentDisplayPage"));
+String checkedNodes = (String)request.getAttribute("liferay-ui:layouts-tree:checkedNodes");
 boolean defaultStateChecked = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:defaultStateChecked"));
 boolean draggableTree = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:draggableTree"));
 boolean expandFirstNode = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:expandFirstNode"));
@@ -28,7 +29,6 @@ boolean privateLayout = GetterUtil.getBoolean((String)request.getAttribute("life
 String rootNodeName = (String)request.getAttribute("liferay-ui:layouts-tree:rootNodeName");
 boolean saveState = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:saveState"));
 boolean selectableTree = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:selectableTree"));
-String selectedLayoutIds = (String)request.getAttribute("liferay-ui:layouts-tree:selectedLayoutIds");
 long selPlid = GetterUtil.getLong((String)request.getAttribute("liferay-ui:layouts-tree:selPlid"));
 String treeId = (String)request.getAttribute("liferay-ui:layouts-tree:treeId");
 %>
@@ -52,27 +52,10 @@ String treeId = (String)request.getAttribute("liferay-ui:layouts-tree:treeId");
 	</c:if>
 
 	<c:if test="<%= saveState %>">
-
-		<%
-		JSONArray checkedNodesJSONArray = JSONFactoryUtil.createJSONArray();
-
-		String checkedLayoutIds = GetterUtil.getString(selectedLayoutIds, SessionTreeJSClicks.getOpenNodes(request, treeId + "SelectedNode"));
-
-		if (Validator.isNotNull(checkedLayoutIds)) {
-			for (long checkedLayoutId : StringUtil.split(checkedLayoutIds, 0L)) {
-				Layout checkedLayout = LayoutLocalServiceUtil.fetchLayout(groupId, privateLayout, checkedLayoutId);
-
-				if (checkedLayout != null) {
-					checkedNodesJSONArray.put(String.valueOf(checkedLayout.getPlid()));
-				}
-			}
-		}
-		%>
-
 		plugins.push(
 			{
 				cfg: {
-					checkedNodes: <%= checkedNodesJSONArray.toString() %>,
+					checkedNodes: <%= checkedNodes %>,
 					rootNodeExpanded: <%= GetterUtil.getBoolean(SessionClicks.get(request, treeId + "RootNode", null), true) %>
 				},
 				fn: A.Plugin.LayoutsTreeState

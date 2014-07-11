@@ -14,8 +14,15 @@
 
 package com.liferay.taglib.ui;
 
-import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.taglib.ui.util.SessionTreeJSClicks;
 import com.liferay.taglib.util.IncludeTag;
 
 import java.util.ArrayList;
@@ -104,14 +111,29 @@ public class LayoutsTreeTag extends IncludeTag {
 		_treeId = null;
 	}
 
-	@Override
-	protected String getPage() {
-		return _PAGE;
-	}
+	protected String getCheckedNodes() {
+		JSONArray checkedNodesJSONArray = JSONFactoryUtil.createJSONArray();
 
-	@Override
-	protected boolean isCleanUpSetAttributes() {
-		return _CLEAN_UP_SET_ATTRIBUTES;
+		String checkedLayoutIds = GetterUtil.getString(
+			_selectedLayoutIds,
+			SessionTreeJSClicks.getOpenNodes(
+				request, _treeId + "SelectedNode"));
+
+		if (Validator.isNull(checkedLayoutIds)) {
+			return checkedNodesJSONArray.toString();
+		}
+
+		for (long checkedLayoutId : StringUtil.split(checkedLayoutIds, 0L)) {
+			Layout checkedLayout = LayoutLocalServiceUtil.fetchLayout(
+				_groupId, _privateLayout, checkedLayoutId);
+
+			if (checkedLayout != null) {
+				checkedNodesJSONArray.put(
+					String.valueOf(checkedLayout.getPlid()));
+			}
+		}
+
+		return checkedNodesJSONArray.toString();
 	}
 
 	protected String getModules() {
@@ -135,7 +157,19 @@ public class LayoutsTreeTag extends IncludeTag {
 	}
 
 	@Override
+	protected String getPage() {
+		return _PAGE;
+	}
+
+	@Override
+	protected boolean isCleanUpSetAttributes() {
+		return _CLEAN_UP_SET_ATTRIBUTES;
+	}
+
+	@Override
 	protected void setAttributes(HttpServletRequest request) {
+		request.setAttribute(
+			"liferay-ui:layouts-tree:checkedNodes", getCheckedNodes());
 		request.setAttribute(
 			"liferay-ui:layouts-tree:checkContentDisplayPage",
 			String.valueOf(_checkContentDisplayPage));
