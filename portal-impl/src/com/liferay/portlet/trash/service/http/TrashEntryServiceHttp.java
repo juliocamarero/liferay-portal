@@ -254,12 +254,46 @@ public class TrashEntryServiceHttp {
 		}
 	}
 
+	public static com.liferay.portlet.trash.model.TrashEntry restoreEntries(
+		HttpPrincipal httpPrincipal, long entryId,
+		com.liferay.portal.theme.ThemeDisplay themeDisplay,
+		java.lang.String action)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		try {
+			MethodKey methodKey = new MethodKey(TrashEntryServiceUtil.class,
+					"restoreEntries", _restoreEntriesParameterTypes7);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, entryId,
+					themeDisplay, action);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (com.liferay.portlet.trash.model.TrashEntry)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static com.liferay.portlet.trash.model.TrashEntry restoreEntry(
 		HttpPrincipal httpPrincipal, long entryId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(TrashEntryServiceUtil.class,
-					"restoreEntry", _restoreEntryParameterTypes7);
+					"restoreEntry", _restoreEntryParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, entryId);
 
@@ -291,7 +325,7 @@ public class TrashEntryServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(TrashEntryServiceUtil.class,
-					"restoreEntry", _restoreEntryParameterTypes8);
+					"restoreEntry", _restoreEntryParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, entryId,
 					overrideClassPK, name);
@@ -323,7 +357,7 @@ public class TrashEntryServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(TrashEntryServiceUtil.class,
-					"restoreEntry", _restoreEntryParameterTypes9);
+					"restoreEntry", _restoreEntryParameterTypes10);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					className, classPK);
@@ -356,7 +390,7 @@ public class TrashEntryServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(TrashEntryServiceUtil.class,
-					"restoreEntry", _restoreEntryParameterTypes10);
+					"restoreEntry", _restoreEntryParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					className, classPK, overrideClassPK, name);
@@ -407,16 +441,20 @@ public class TrashEntryServiceHttp {
 			java.lang.String.class, long.class, long.class,
 			com.liferay.portal.service.ServiceContext.class
 		};
-	private static final Class<?>[] _restoreEntryParameterTypes7 = new Class[] {
-			long.class
+	private static final Class<?>[] _restoreEntriesParameterTypes7 = new Class[] {
+			long.class, com.liferay.portal.theme.ThemeDisplay.class,
+			java.lang.String.class
 		};
 	private static final Class<?>[] _restoreEntryParameterTypes8 = new Class[] {
-			long.class, long.class, java.lang.String.class
+			long.class
 		};
 	private static final Class<?>[] _restoreEntryParameterTypes9 = new Class[] {
-			java.lang.String.class, long.class
+			long.class, long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _restoreEntryParameterTypes10 = new Class[] {
+			java.lang.String.class, long.class
+		};
+	private static final Class<?>[] _restoreEntryParameterTypes11 = new Class[] {
 			java.lang.String.class, long.class, long.class,
 			java.lang.String.class
 		};

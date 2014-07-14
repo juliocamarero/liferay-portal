@@ -416,6 +416,12 @@ public class WikiPageLocalServiceUtil {
 		return getService().getChildrenCount(nodeId, head, parentTitle, status);
 	}
 
+	public static java.util.List<com.liferay.portlet.wiki.model.WikiPage> getDependentPages(
+		long nodeId, long resourcePrimKey)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getDependentPages(nodeId, resourcePrimKey);
+	}
+
 	public static com.liferay.portlet.wiki.model.WikiPage getDraftPage(
 		long nodeId, java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException {

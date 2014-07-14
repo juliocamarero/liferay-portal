@@ -446,6 +446,13 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 	}
 
 	@Override
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getDependentPages(
+		long nodeId, long resourcePrimKey)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _wikiPageLocalService.getDependentPages(nodeId, resourcePrimKey);
+	}
+
+	@Override
 	public com.liferay.portlet.wiki.model.WikiPage getDraftPage(long nodeId,
 		java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException {
