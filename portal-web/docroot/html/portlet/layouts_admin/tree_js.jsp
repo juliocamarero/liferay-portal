@@ -16,8 +16,6 @@
 
 <%@ include file="/html/portlet/layouts_admin/init.jsp" %>
 
-<%@ include file="/html/portlet/layouts_admin/init_attributes.jspf" %>
-
 <%
 String treeId = ParamUtil.getString(request, "treeId");
 boolean checkContentDisplayPage = ParamUtil.getBoolean(request, "checkContentDisplayPage", false);
@@ -34,12 +32,12 @@ String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
 	defaultStateChecked="<%= defaultStateChecked %>"
 	draggableTree="<%= draggableTree %>"
 	expandFirstNode="<%= expandFirstNode %>"
-	groupId="<%= groupId %>"
-	portletURL="<%= portletURL %>"
-	privateLayout="<%= privateLayout %>"
-	rootNodeName="<%= rootNodeName %>"
+	groupId="<%= layoutDisplayContext.getGroupId() %>"
+	portletURL="<%= layoutDisplayContext.getRedirectURL() %>"
+	privateLayout="<%= layoutDisplayContext.isPrivateLayout() %>"
+	rootNodeName="<%= layoutDisplayContext.getRootNodeName() %>"
 	saveState="<%= saveState %>"
-	selPlid="<%= selPlid %>"
+	selPlid="<%= layoutDisplayContext.getSelPlid() %>"
 	selectableTree="<%= selectableTree %>"
 	selectedLayoutIds="<%= selectedLayoutIds %>"
 	treeId="<%= treeId %>"
