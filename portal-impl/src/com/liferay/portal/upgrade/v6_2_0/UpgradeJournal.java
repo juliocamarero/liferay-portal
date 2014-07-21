@@ -428,23 +428,25 @@ public class UpgradeJournal extends BaseUpgradePortletPreferences {
 				Long insertedDdmStructureId =
 					_ddmStructureIds.get(groupId + "#" + structureId);
 				
-				if (insertedDdmStructureId == null) {
-					long ddmStructureId = increment();
-	
-					addDDMStructure(
-						uuid_, ddmStructureId, groupId, companyId, userId, userName,
-						createDate, modifiedDate, parentStructureId, structureId,
-						name, description, xsd);
-	
-					updateResourcePermission(
-						companyId,
-						"com.liferay.portlet.journal.model.JournalStructure",
-						DDMStructure.class.getName(), id_, ddmStructureId);
-	
-					_ddmStructureIds.put(
-						groupId + "#" + structureId, ddmStructureId);
-					_ddmStructurePKs.put(id_, ddmStructureId);
+				if (insertedDdmStructureId != null) {
+					continue;
 				}
+
+				long ddmStructureId = increment();
+
+				addDDMStructure(
+					uuid_, ddmStructureId, groupId, companyId, userId, userName,
+					createDate, modifiedDate, parentStructureId, structureId,
+					name, description, xsd);
+
+				updateResourcePermission(
+					companyId,
+					"com.liferay.portlet.journal.model.JournalStructure",
+					DDMStructure.class.getName(), id_, ddmStructureId);
+
+				_ddmStructureIds.put(
+					groupId + "#" + structureId, ddmStructureId);
+				_ddmStructurePKs.put(id_, ddmStructureId);
 			}
 		}
 		finally {
