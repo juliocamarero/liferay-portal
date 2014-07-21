@@ -14,7 +14,6 @@
 
 package com.liferay.portal.security.pacl.test;
 
-import com.liferay.portal.kernel.format.PhoneNumberFormatUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.test.ExecutionTestListeners;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -87,13 +86,6 @@ public class HookTest {
 	@Test
 	public void testPortalProperties1() throws Exception {
 		Assert.assertFalse(LanguageUtil.isBetaLocale(LocaleUtil.US));
-	}
-
-	@Test
-	public void testPortalProperties2() throws Exception {
-		String phoneNumber = PhoneNumberFormatUtil.format("123");
-
-		Assert.assertTrue(phoneNumber.startsWith("(TEST"));
 	}
 
 	@Test
