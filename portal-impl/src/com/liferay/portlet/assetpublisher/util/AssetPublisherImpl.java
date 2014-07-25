@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.assetpublisher.util;
 
+import com.liferay.portal.kernel.bean.ClassLoaderBeanHandler;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -37,6 +38,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -84,6 +86,8 @@ import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
+
+import java.lang.reflect.InvocationHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -790,6 +794,19 @@ public class AssetPublisherImpl implements AssetPublisher {
 
 	@Override
 	public String getClassName(AssetRendererFactory assetRendererFactory) {
+		if (ProxyUtil.isProxyClass(assetRendererFactory.getClass())) {
+			InvocationHandler invocationHandler =
+				ProxyUtil.getInvocationHandler(assetRendererFactory);
+
+			if (invocationHandler instanceof ClassLoaderBeanHandler) {
+				ClassLoaderBeanHandler classLoaderBeanHandler =
+					(ClassLoaderBeanHandler)invocationHandler;
+
+				assetRendererFactory =
+					(AssetRendererFactory)classLoaderBeanHandler.getBean();
+			}
+		}
+
 		Class<?> clazz = assetRendererFactory.getClass();
 
 		String className = clazz.getName();
