@@ -189,6 +189,14 @@ public class TrashEntryServiceWrapper implements TrashEntryService,
 	}
 
 	@Override
+	public com.liferay.portlet.trash.model.TrashEntry restoreEntries(
+		long entryId, com.liferay.portal.theme.ThemeDisplay themeDisplay,
+		java.lang.String action)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _trashEntryService.restoreEntries(entryId, themeDisplay, action);
+	}
+
+	@Override
 	public com.liferay.portlet.trash.model.TrashEntry restoreEntry(
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException {

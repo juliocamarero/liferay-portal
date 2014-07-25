@@ -1,0 +1,104 @@
+<%--
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<%
+TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
+
+List<TrashedModel> dependentTrashedModels = trashHandler.getRestorableEntries(classPK);
+
+List<TrashedModel> conflictiveTrashedModels = trashHandler.getConflictiveEntries(dependentTrashedModels);
+%>
+
+<div class="alert alert-warning" id="<portlet:namespace />messageContainer">
+	<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(oldName)} %>" key="one-or-more-conflicts-have-been-detected-while-restoring-x-please-select-one-of-the-options-to-continue-the-process" translateArguments="<%= false %>" />
+</div>
+
+<div id="<portlet:namespace/>multiple-restore-container">
+	<liferay-ui:search-container
+		deltaConfigurable="false"
+		total="<%= trashHandler.getRestorableDependentsCount(classPK) %>"
+	>
+		<liferay-ui:search-container-results results="<%= dependentTrashedModels %>" />
+
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.model.TrashedModel"
+			modelVar="trashedModel"
+		>
+
+			<%
+			long trashEntryClassPK = trashedModel.getTrashEntryClassPK();
+			%>
+
+			<liferay-ui:search-container-column-text name="restorable-entries">
+
+				<%
+				TrashRenderer curTrashRenderer = trashHandler.getTrashRenderer(trashEntryClassPK);
+				%>
+
+				<c:choose>
+					<c:when test="<%= conflictiveTrashedModels.contains(trashedModel) %>">
+						<div class="alert alert-warning">
+							<aui:icon
+								cssClass="icon-warning-sign"
+								label='<%= LanguageUtil.format(request, "x-could-not-be-restored-will-be-auto-renamed-as-x", new String[]{curTrashRenderer.getTitle(locale), TrashUtil.getNewName(themeDisplay, className, classPK, curTrashRenderer.getTitle(locale))}) %>'
+							/>
+						</div>
+					</c:when>
+					<c:otherwise>
+						<aui:icon
+							cssClass="icon-ok"
+							label='<%= LanguageUtil.format(request, "x-could-be-restored", new String[]{curTrashRenderer.getTitle(locale)}) %>'
+						/>
+					</c:otherwise>
+				</c:choose>
+
+			</liferay-ui:search-container-column-text>
+			</liferay-ui:search-container-row>
+		<liferay-ui:search-iterator paginate="<%= false %>" />
+	</liferay-ui:search-container>
+</div>
+
+<aui:button-row>
+	<aui:button cssClass="btn-cancel" type="cancel" />
+
+	<aui:button name="btn-rename" onClick='<%= renderResponse.getNamespace() + "renameAll();" %>' type="submit" value="rename-conflicts-and-restore" />
+
+	<aui:button name="btn-overwrite" onClick='<%= renderResponse.getNamespace() + "overwriteAll();" %>' value="overwrite-conflicts-and-restore" />
+
+	<aui:button name="btn-skip" onClick='<%= renderResponse.getNamespace() + "skipAll();" %>' value="skip-conflicts-and-restore" />
+</aui:button-row>
+
+<aui:script>
+	var form = document.<portlet:namespace />restoreTrashEntryFm;
+
+	function <portlet:namespace/>skipAll() {
+		form.<portlet:namespace /><%= Constants.CMD %>.value = '<%= Constants.SKIP %>';
+
+		submitForm(form);
+	}
+
+	function <portlet:namespace/>overwriteAll() {
+		form.<portlet:namespace /><%= Constants.CMD %>.value = '<%= Constants.MULTIPLE_OVERWRITE %>';
+
+		submitForm(form);
+	}
+
+	function <portlet:namespace/>renameAll() {
+		form.<portlet:namespace /><%= Constants.CMD %>.value = '<%= Constants.MULTIPLE_RENAME %>';
+
+		submitForm(form);
+	}
+</aui:script>

@@ -152,6 +152,13 @@ public interface TrashHandler {
 			TrashEntry trashEntry, long containerModelId, String newName)
 		throws PortalException;
 
+	public void checkRestorableEntry(
+			TrashEntry trashEntry, long containerModelId, String newName,
+			boolean checkDependents)
+		throws PortalException;
+
+	public void deleteDuplicatedEntries(long classPK) throws PortalException;
+
 	/**
 	 * Deletes the model entity with the primary key.
 	 *
@@ -161,12 +168,11 @@ public interface TrashHandler {
 	 */
 	public void deleteTrashEntry(long classPK) throws PortalException;
 
-	/**
-	 * Returns the class name handled by this trash handler.
-	 *
-	 * @return the class name handled by this trash handler
-	 */
 	public String getClassName();
+
+	public List<TrashedModel> getConflictiveEntries(
+			List<TrashedModel> trashedModels)
+		throws PortalException;
 
 	/**
 	 * Returns the container model with the primary key.
@@ -306,6 +312,12 @@ public interface TrashHandler {
 	public List<ContainerModel> getParentContainerModels(long classPK)
 		throws PortalException;
 
+	public int getRestorableDependentsCount(long classPK)
+		throws PortalException;
+
+	public List<TrashedModel> getRestorableEntries(long classPK)
+		throws PortalException;
+
 	public String getRestoreContainedModelLink(
 			PortletRequest portletRequest, long classPK)
 		throws PortalException;
@@ -352,6 +364,8 @@ public interface TrashHandler {
 	public String getSubcontainerModelName();
 
 	public String getSystemEventClassName();
+
+	public String getTitle(long classPK) throws PortalException;
 
 	/**
 	 * Returns the name of the contained model.
@@ -657,5 +671,8 @@ public interface TrashHandler {
 	 *         be found
 	 */
 	public void updateTitle(long classPK, String title) throws PortalException;
+
+	public void updateTrashTitle(long classPK, String title)
+		throws PortalException;
 
 }

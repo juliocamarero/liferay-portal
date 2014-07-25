@@ -109,6 +109,26 @@ public abstract class BaseTrashHandler implements TrashHandler {
 
 	@Override
 	@SuppressWarnings("unused")
+	public void checkRestorableEntry(
+			TrashEntry trashEntry, long containerModelId, String newName,
+			boolean checkDependents)
+		throws PortalException {
+	}
+
+	@Override
+	public void deleteDuplicatedEntries(long classPK) throws PortalException {
+	}
+
+	@Override
+	public List<TrashedModel> getConflictiveEntries(
+			List<TrashedModel> trashedModels)
+		throws PortalException {
+
+		return Collections.emptyList();
+	}
+
+	@Override
+	@SuppressWarnings("unused")
 	public ContainerModel getContainerModel(long containerModelId)
 		throws PortalException {
 
@@ -195,6 +215,20 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	@Override
+	public int getRestorableDependentsCount(long classPK)
+		throws PortalException {
+
+		return 0;
+	}
+
+	@Override
+	public List<TrashedModel> getRestorableEntries(long classPK)
+		throws PortalException {
+
+		return Collections.emptyList();
+	}
+
+	@Override
 	@SuppressWarnings("unused")
 	public String getRestoreContainedModelLink(
 			PortletRequest portletRequest, long classPK)
@@ -233,6 +267,11 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	@Override
 	public String getSystemEventClassName() {
 		return getClassName();
+	}
+
+	@Override
+	public String getTitle(long classPK) throws PortalException {
+		return StringPool.BLANK;
 	}
 
 	@Override
@@ -388,6 +427,11 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	@Override
 	@SuppressWarnings("unused")
 	public void updateTitle(long classPK, String title) throws PortalException {
+	}
+
+	@Override
+	public void updateTrashTitle(long classPK, String name)
+		throws PortalException {
 	}
 
 	protected AssetRendererFactory getAssetRendererFactory() {

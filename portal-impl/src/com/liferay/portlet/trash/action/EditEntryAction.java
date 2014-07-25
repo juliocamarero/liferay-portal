@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
@@ -87,6 +88,15 @@ public class EditEntryAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.MOVE)) {
 				entryOVPs = moveEntry(actionRequest);
+			}
+			else if (cmd.equals(Constants.SKIP)) {
+				entryOVPs = restoreSkipEntries(actionRequest);
+			}
+			else if (cmd.equals(Constants.MULTIPLE_OVERWRITE)) {
+				entryOVPs = restoreOverwriteEntries(actionRequest);
+			}
+			else if (cmd.equals(Constants.MULTIPLE_RENAME)) {
+				entryOVPs = restoreRenameEntries(actionRequest);
 			}
 			else if (cmd.equals(Constants.RENAME)) {
 				entryOVPs = restoreRename(actionRequest);
@@ -351,6 +361,51 @@ public class EditEntryAction extends PortletAction {
 
 		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
 			trashEntryId, 0, newName);
+
+		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
+	}
+
+	private List<ObjectValuePair<String, Long>> restoreOverwriteEntries(
+			ActionRequest actionRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
+
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntries(
+			trashEntryId, themeDisplay, TrashActionKeys.MULTIPLE_OVERWRITE);
+
+		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
+	}
+
+	private List<ObjectValuePair<String, Long>> restoreRenameEntries(
+			ActionRequest actionRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
+
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntries(
+			trashEntryId, themeDisplay, TrashActionKeys.MULTIPLE_RENAME);
+
+		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
+	}
+
+	private List<ObjectValuePair<String, Long>> restoreSkipEntries(
+			ActionRequest actionRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
+
+		TrashEntry entry = TrashEntryServiceUtil.restoreEntries(
+			trashEntryId, themeDisplay, TrashActionKeys.SKIP);
 
 		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
 	}

@@ -26,10 +26,12 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.trash.TrashEntryConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -37,6 +39,7 @@ import com.liferay.portlet.trash.model.TrashEntryList;
 import com.liferay.portlet.trash.model.TrashEntrySoap;
 import com.liferay.portlet.trash.model.impl.TrashEntryImpl;
 import com.liferay.portlet.trash.service.base.TrashEntryServiceBaseImpl;
+import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -339,6 +342,93 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 
 		trashHandler.moveTrashEntry(
 			getUserId(), classPK, destinationContainerModelId, serviceContext);
+	}
+
+	@Override
+	public TrashEntry restoreEntries(
+			long entryId, ThemeDisplay themeDisplay, String action)
+		throws PortalException {
+
+		PermissionChecker permissionChecker = getPermissionChecker();
+
+		TrashEntry entry = trashEntryPersistence.findByPrimaryKey(entryId);
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			entry.getClassName());
+
+		if (!trashHandler.hasTrashPermission(
+				permissionChecker, 0, entry.getClassPK(),
+				TrashActionKeys.RESTORE)) {
+
+			throw new TrashPermissionException(
+				TrashPermissionException.RESTORE);
+		}
+
+		List<TrashedModel> restorableEntries =
+			trashHandler.getRestorableEntries(entry.getClassPK());
+
+		List<TrashedModel> conflictiveTrashedModels =
+			trashHandler.getConflictiveEntries(restorableEntries);
+
+		if (action.equals(TrashActionKeys.MULTIPLE_RENAME)) {
+			for (TrashedModel restorableEntry : restorableEntries) {
+				long entryClassPK = restorableEntry.getTrashEntryClassPK();
+
+				if (!trashHandler.hasTrashPermission(
+						permissionChecker, 0, entryClassPK,
+					TrashActionKeys.RENAME)) {
+
+					throw new TrashPermissionException(
+						TrashPermissionException.RESTORE_RENAME);
+				}
+
+				String name = trashHandler.getTitle(entryClassPK);
+
+				String newName = TrashUtil.getOriginalTitle(name);
+
+				if (conflictiveTrashedModels.contains(restorableEntry)) {
+					newName = TrashUtil.getNewName(
+						themeDisplay, trashHandler.getClassName(), entryClassPK,
+						newName);
+				}
+
+				trashHandler.checkRestorableEntry(
+					entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, newName,
+					false);
+
+				trashHandler.updateTitle(
+					restorableEntry.getTrashEntryClassPK(), newName);
+			}
+		}
+		else if (action.equals(TrashActionKeys.MULTIPLE_OVERWRITE)) {
+			trashHandler.deleteDuplicatedEntries(entry.getClassPK());
+
+			for (TrashedModel restorableEntry : restorableEntries) {
+				long entryClassPK = restorableEntry.getTrashEntryClassPK();
+
+				if (!trashHandler.hasTrashPermission(
+						permissionChecker, 0, entryClassPK,
+					TrashActionKeys.OVERWRITE)) {
+
+					throw new TrashPermissionException(
+						TrashPermissionException.RESTORE_OVERWRITE);
+				}
+
+				trashHandler.checkRestorableEntry(
+					entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, null,
+					false);
+			}
+		}
+		else if (action.equals(TrashActionKeys.SKIP)) {
+			for (TrashedModel trashedModel : conflictiveTrashedModels) {
+				trashHandler.deleteTrashEntry(
+					trashedModel.getTrashEntryClassPK());
+			}
+		}
+
+		trashHandler.restoreTrashEntry(getUserId(), entry.getClassPK());
+
+		return entry;
 	}
 
 	@Override

@@ -190,6 +190,13 @@ public class TrashEntryServiceUtil {
 			serviceContext);
 	}
 
+	public static com.liferay.portlet.trash.model.TrashEntry restoreEntries(
+		long entryId, com.liferay.portal.theme.ThemeDisplay themeDisplay,
+		java.lang.String action)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().restoreEntries(entryId, themeDisplay, action);
+	}
+
 	public static com.liferay.portlet.trash.model.TrashEntry restoreEntry(
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException {

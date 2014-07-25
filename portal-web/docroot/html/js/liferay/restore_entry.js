@@ -80,6 +80,7 @@ AUI.add(
 									duplicateEntryId: responseData.duplicateEntryId,
 									oldName: responseData.oldName,
 									overrideMessage: instance.get('overrideMessage'),
+									multipleConflicts: responseData.multipleConflicts,
 									renameMessage: instance.get('renameMessage'),
 									trashEntryId: responseData.trashEntryId
 								}
@@ -181,14 +182,18 @@ AUI.add(
 						var rename = instance.byId('rename');
 						var newName = instance.byId('newName');
 
-						rename.on('click', Liferay.Util.focusFormField, Liferay.Util, newName);
+						if (rename) {
+							rename.on('click', Liferay.Util.focusFormField, Liferay.Util, newName);
+						}
 
-						newName.on(
-							'focus',
-							function(event) {
-								rename.attr('checked', true);
-							}
-						);
+						if (newName) {
+							newName.on(
+								'focus',
+								function(event) {
+									rename.attr('checked', true);
+								}
+							);
+						}
 					},
 
 					_onRestoreTrashEntryFmSubmit: function(event, form) {

@@ -187,6 +187,11 @@ public interface TrashEntryService extends BaseService {
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	public com.liferay.portlet.trash.model.TrashEntry restoreEntries(
+		long entryId, com.liferay.portal.theme.ThemeDisplay themeDisplay,
+		java.lang.String action)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
 	public com.liferay.portlet.trash.model.TrashEntry restoreEntry(
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException;
