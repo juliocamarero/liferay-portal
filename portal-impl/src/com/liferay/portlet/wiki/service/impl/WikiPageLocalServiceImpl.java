@@ -1418,8 +1418,22 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		moveDependentToTrash(page, trashEntryId, false);
 	}
 
+
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #renamePage(long, long,
+	 *             String, String, boolean, ServiceContext)}
+	 **/
 	@Override
 	public void movePage(
+			long userId, long nodeId, String title, String newTitle,
+			boolean strict, ServiceContext serviceContext)
+		throws PortalException {
+
+		renamePage(userId, nodeId, title, newTitle, strict, serviceContext);
+	}
+
+	@Override
+	public void renamePage(
 			long userId, long nodeId, String title, String newTitle,
 			boolean strict, ServiceContext serviceContext)
 		throws PortalException {
@@ -1458,13 +1472,27 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			page.getRedirectTitle(), serviceContext);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #renamePage(
+	 *             long, long, String, String, ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public void movePage(
 			long userId, long nodeId, String title, String newTitle,
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		movePage(userId, nodeId, title, newTitle, true, serviceContext);
+		renamePage(userId, nodeId, title, newTitle, true, serviceContext);
+	}
+
+	@Override
+	public void renamePage(
+			long userId, long nodeId, String title, String newTitle,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		renamePage(userId, nodeId, title, newTitle, true, serviceContext);
 	}
 
 	@Override
@@ -2058,7 +2086,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 				WikiPage oldPage = getPage(resourcePrimKey, true);
 
-				page = doMovePage(
+				page = doRenamePage(
 					userId, page.getNodeId(), oldPage.getTitle(),
 					page.getTitle(), serviceContext);
 			}
@@ -2228,7 +2256,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		PortletFileRepositoryUtil.deletePortletFileEntry(fileEntryId);
 	}
 
-	protected WikiPage doMovePage(
+	protected WikiPage doRenamePage(
 			long userId, long nodeId, String title, String newTitle,
 			ServiceContext serviceContext)
 		throws PortalException {
