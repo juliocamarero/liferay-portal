@@ -45,7 +45,7 @@ String newTitle = ParamUtil.get(request, "newTitle", StringPool.BLANK);
 	<aui:input name="workflowAction" type="hidden" value="<%= WorkflowConstants.ACTION_PUBLISH %>" />
 
 	<liferay-ui:tabs
-		names="rename,change-parent"
+		names="rename,change-parent,change-node"
 		refresh="<%= false %>"
 	>
 
@@ -66,6 +66,9 @@ String newTitle = ParamUtil.get(request, "newTitle", StringPool.BLANK);
 		</liferay-ui:section>
 		<liferay-ui:section>
 			<%@ include file="/html/portlet/wiki/change_page_parent.jspf" %>
+		</liferay-ui:section>
+		<liferay-ui:section>
+			<%@ include file="/html/portlet/wiki/change_page_node.jspf" %>
 		</liferay-ui:section>
 	</liferay-ui:tabs>
 </aui:form>
