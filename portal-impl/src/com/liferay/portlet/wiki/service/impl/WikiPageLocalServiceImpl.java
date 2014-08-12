@@ -1418,7 +1418,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		moveDependentToTrash(page, trashEntryId, false);
 	}
 
-
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link #renamePage(long, long,
 	 *             String, String, boolean, ServiceContext)}
@@ -1432,46 +1431,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		renamePage(userId, nodeId, title, newTitle, strict, serviceContext);
 	}
 
-	@Override
-	public void renamePage(
-			long userId, long nodeId, String title, String newTitle,
-			boolean strict, ServiceContext serviceContext)
-		throws PortalException {
-
-		validateTitle(newTitle);
-
-		// Check if the new title already exists
-
-		if (StringUtil.equalsIgnoreCase(title, newTitle)) {
-			throw new DuplicatePageException(newTitle);
-		}
-
-		if (isUsedTitle(nodeId, newTitle)) {
-			WikiPage page = getPage(nodeId, newTitle);
-
-			// Support moving back to a previously moved title
-
-			if (((page.getVersion() == WikiPageConstants.VERSION_DEFAULT) &&
-				 (page.getContent().length() < 200)) ||
-				!strict) {
-
-				deletePage(nodeId, newTitle);
-			}
-			else {
-				throw new DuplicatePageException(newTitle);
-			}
-		}
-
-		WikiPage page = getPage(nodeId, title);
-
-		serviceContext.setCommand(Constants.RENAME);
-
-		updatePage(
-			userId, page, newTitle, page.getContent(), page.getSummary(),
-			page.getMinorEdit(), page.getFormat(), page.getParentTitle(),
-			page.getRedirectTitle(), serviceContext);
-	}
-
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link #renamePage(
 	 *             long, long, String, String, ServiceContext)}
@@ -1479,15 +1438,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	@Deprecated
 	@Override
 	public void movePage(
-			long userId, long nodeId, String title, String newTitle,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		renamePage(userId, nodeId, title, newTitle, true, serviceContext);
-	}
-
-	@Override
-	public void renamePage(
 			long userId, long nodeId, String title, String newTitle,
 			ServiceContext serviceContext)
 		throws PortalException {
@@ -1681,6 +1631,55 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		}
 
 		return page;
+	}
+
+	@Override
+	public void renamePage(
+			long userId, long nodeId, String title, String newTitle,
+			boolean strict, ServiceContext serviceContext)
+		throws PortalException {
+
+		validateTitle(newTitle);
+
+		// Check if the new title already exists
+
+		if (StringUtil.equalsIgnoreCase(title, newTitle)) {
+			throw new DuplicatePageException(newTitle);
+		}
+
+		if (isUsedTitle(nodeId, newTitle)) {
+			WikiPage page = getPage(nodeId, newTitle);
+
+			// Support moving back to a previously moved title
+
+			if (((page.getVersion() == WikiPageConstants.VERSION_DEFAULT) &&
+				 (page.getContent().length() < 200)) ||
+				!strict) {
+
+				deletePage(nodeId, newTitle);
+			}
+			else {
+				throw new DuplicatePageException(newTitle);
+			}
+		}
+
+		WikiPage page = getPage(nodeId, title);
+
+		serviceContext.setCommand(Constants.RENAME);
+
+		updatePage(
+			userId, page, newTitle, page.getContent(), page.getSummary(),
+			page.getMinorEdit(), page.getFormat(), page.getParentTitle(),
+			page.getRedirectTitle(), serviceContext);
+	}
+
+	@Override
+	public void renamePage(
+			long userId, long nodeId, String title, String newTitle,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		renamePage(userId, nodeId, title, newTitle, true, serviceContext);
 	}
 
 	@Override
@@ -2828,24 +2827,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		}
 	}
 
-	protected void startWorkflowInstance(
-			long userId, WikiPage page, ServiceContext serviceContext)
-		throws PortalException {
-
-		Map<String, Serializable> workflowContext =
-			new HashMap<String, Serializable>();
-
-		workflowContext.put(
-			WorkflowConstants.CONTEXT_COMMAND, serviceContext.getCommand());
-		workflowContext.put(
-			WorkflowConstants.CONTEXT_URL, getPageURL(page, serviceContext));
-
-		WorkflowHandlerRegistryUtil.startWorkflowInstance(
-			page.getCompanyId(), page.getGroupId(), userId,
-			WikiPage.class.getName(), page.getPageId(), page, serviceContext,
-			workflowContext);
-	}
-
 	protected void restoreDependentRedirectPagesFromTrash
 			(WikiPage page, String title, String trashTitle, long trashEntryId)
 		throws PortalException {
@@ -2863,6 +2844,24 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				restoreDependentFromTrash(curPage, trashEntryId);
 			}
 		}
+	}
+
+	protected void startWorkflowInstance(
+			long userId, WikiPage page, ServiceContext serviceContext)
+		throws PortalException {
+
+		Map<String, Serializable> workflowContext =
+			new HashMap<String, Serializable>();
+
+		workflowContext.put(
+			WorkflowConstants.CONTEXT_COMMAND, serviceContext.getCommand());
+		workflowContext.put(
+			WorkflowConstants.CONTEXT_URL, getPageURL(page, serviceContext));
+
+		WorkflowHandlerRegistryUtil.startWorkflowInstance(
+			page.getCompanyId(), page.getGroupId(), userId,
+			WikiPage.class.getName(), page.getPageId(), page, serviceContext,
+			workflowContext);
 	}
 
 	protected WikiPage updatePage(
