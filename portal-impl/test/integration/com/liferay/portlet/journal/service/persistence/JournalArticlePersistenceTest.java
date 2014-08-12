@@ -46,7 +46,6 @@ import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -82,15 +81,6 @@ public class JournalArticlePersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<JournalArticle> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<JournalArticle> iterator = _journalArticles.iterator();
@@ -99,10 +89,6 @@ public class JournalArticlePersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<JournalArticle> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

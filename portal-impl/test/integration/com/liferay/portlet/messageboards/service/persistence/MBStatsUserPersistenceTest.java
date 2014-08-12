@@ -43,7 +43,6 @@ import com.liferay.portlet.messageboards.service.MBStatsUserLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -79,15 +78,6 @@ public class MBStatsUserPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<MBStatsUser> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<MBStatsUser> iterator = _mbStatsUsers.iterator();
@@ -96,10 +86,6 @@ public class MBStatsUserPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<MBStatsUser> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

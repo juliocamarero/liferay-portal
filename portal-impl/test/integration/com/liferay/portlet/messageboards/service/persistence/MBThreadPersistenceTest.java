@@ -46,7 +46,6 @@ import com.liferay.portlet.messageboards.service.MBThreadLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -82,15 +81,6 @@ public class MBThreadPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<MBThread> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<MBThread> iterator = _mbThreads.iterator();
@@ -99,10 +89,6 @@ public class MBThreadPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<MBThread> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 
