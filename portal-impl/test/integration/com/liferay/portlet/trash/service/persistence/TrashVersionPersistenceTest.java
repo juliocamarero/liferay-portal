@@ -42,7 +42,6 @@ import com.liferay.portlet.trash.service.TrashVersionLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -78,15 +77,6 @@ public class TrashVersionPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<TrashVersion> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<TrashVersion> iterator = _trashVersions.iterator();
@@ -95,10 +85,6 @@ public class TrashVersionPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<TrashVersion> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

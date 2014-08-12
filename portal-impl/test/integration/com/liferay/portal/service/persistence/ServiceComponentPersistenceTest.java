@@ -43,7 +43,6 @@ import com.liferay.portal.util.test.RandomTestUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -79,15 +78,6 @@ public class ServiceComponentPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<ServiceComponent> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<ServiceComponent> iterator = _serviceComponents.iterator();
@@ -96,10 +86,6 @@ public class ServiceComponentPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<ServiceComponent> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

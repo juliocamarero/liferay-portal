@@ -42,7 +42,6 @@ import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -78,15 +77,6 @@ public class SocialActivityPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<SocialActivity> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<SocialActivity> iterator = _socialActivities.iterator();
@@ -95,10 +85,6 @@ public class SocialActivityPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<SocialActivity> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

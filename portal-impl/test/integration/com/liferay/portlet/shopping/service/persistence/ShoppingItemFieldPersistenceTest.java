@@ -40,7 +40,6 @@ import com.liferay.portlet.shopping.service.ShoppingItemFieldLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -76,15 +75,6 @@ public class ShoppingItemFieldPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<ShoppingItemField> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<ShoppingItemField> iterator = _shoppingItemFields.iterator();
@@ -93,10 +83,6 @@ public class ShoppingItemFieldPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<ShoppingItemField> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

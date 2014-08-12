@@ -45,7 +45,6 @@ import com.liferay.portlet.dynamicdatalists.service.DDLRecordSetLocalServiceUtil
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -81,15 +80,6 @@ public class DDLRecordSetPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<DDLRecordSet> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<DDLRecordSet> iterator = _ddlRecordSets.iterator();
@@ -98,10 +88,6 @@ public class DDLRecordSetPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<DDLRecordSet> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

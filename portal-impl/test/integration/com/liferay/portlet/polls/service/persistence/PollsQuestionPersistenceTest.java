@@ -45,7 +45,6 @@ import com.liferay.portlet.polls.service.PollsQuestionLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -81,15 +80,6 @@ public class PollsQuestionPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<PollsQuestion> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<PollsQuestion> iterator = _pollsQuestions.iterator();
@@ -98,10 +88,6 @@ public class PollsQuestionPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<PollsQuestion> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

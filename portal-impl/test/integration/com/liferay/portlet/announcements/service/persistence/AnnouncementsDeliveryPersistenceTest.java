@@ -44,7 +44,6 @@ import com.liferay.portlet.announcements.service.AnnouncementsDeliveryLocalServi
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -80,15 +79,6 @@ public class AnnouncementsDeliveryPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<AnnouncementsDelivery> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<AnnouncementsDelivery> iterator = _announcementsDeliveries.iterator();
@@ -97,10 +87,6 @@ public class AnnouncementsDeliveryPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<AnnouncementsDelivery> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 
