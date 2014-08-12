@@ -43,7 +43,6 @@ import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -79,15 +78,6 @@ public class TrashEntryPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<TrashEntry> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<TrashEntry> iterator = _trashEntries.iterator();
@@ -96,10 +86,6 @@ public class TrashEntryPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<TrashEntry> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

@@ -44,7 +44,6 @@ import com.liferay.portlet.social.service.SocialActivityAchievementLocalServiceU
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -80,15 +79,6 @@ public class SocialActivityAchievementPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<SocialActivityAchievement> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<SocialActivityAchievement> iterator = _socialActivityAchievements.iterator();
@@ -97,10 +87,6 @@ public class SocialActivityAchievementPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<SocialActivityAchievement> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

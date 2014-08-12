@@ -46,7 +46,6 @@ import com.liferay.portlet.shopping.service.ShoppingOrderLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -82,15 +81,6 @@ public class ShoppingOrderPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<ShoppingOrder> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<ShoppingOrder> iterator = _shoppingOrders.iterator();
@@ -99,10 +89,6 @@ public class ShoppingOrderPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<ShoppingOrder> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

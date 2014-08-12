@@ -45,7 +45,6 @@ import com.liferay.portlet.messageboards.service.MBBanLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -81,15 +80,6 @@ public class MBBanPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<MBBan> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<MBBan> iterator = _mbBans.iterator();
@@ -98,10 +88,6 @@ public class MBBanPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<MBBan> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 

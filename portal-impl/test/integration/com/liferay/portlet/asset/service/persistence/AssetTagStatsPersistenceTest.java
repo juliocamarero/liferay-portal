@@ -42,7 +42,6 @@ import com.liferay.portlet.asset.service.AssetTagStatsLocalServiceUtil;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -78,15 +77,6 @@ public class AssetTagStatsPersistenceTest {
 		TemplateManagerUtil.init();
 	}
 
-	@Before
-	public void setUp() {
-		_modelListeners = _persistence.getListeners();
-
-		for (ModelListener<AssetTagStats> modelListener : _modelListeners) {
-			_persistence.unregisterListener(modelListener);
-		}
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		Iterator<AssetTagStats> iterator = _assetTagStatses.iterator();
@@ -95,10 +85,6 @@ public class AssetTagStatsPersistenceTest {
 			_persistence.remove(iterator.next());
 
 			iterator.remove();
-		}
-
-		for (ModelListener<AssetTagStats> modelListener : _modelListeners) {
-			_persistence.registerListener(modelListener);
 		}
 	}
 
