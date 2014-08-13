@@ -49,7 +49,9 @@
 						String nodeName = currentNode.getName();
 					%>
 
-						<aui:option label="<%= nodeName %>" value="<%= currentNode.getNodeId() %>" />
+						<c:if test="<%= !nodeName.equals(pageNode.getName()) %>">
+							<aui:option label="<%= nodeName %>" value="<%= currentNode.getNodeId() %>" />
+						</c:if>
 
 					<%
 					}
