@@ -43,13 +43,16 @@
 			</c:when>
 			<c:otherwise>
 				<aui:select label="new-node" name="newNodeId">
+					<aui:option disabled="true" label="select-a-node" selected="<%= true %>" value="" />
 
 					<%
 					for (WikiNode currentNode : nodes) {
 						String nodeName = currentNode.getName();
 					%>
 
-						<aui:option label="<%= nodeName %>" value="<%= currentNode.getNodeId() %>" />
+						<c:if test="<%= !nodeName.equals(pageNode.getName()) %>">
+							<aui:option label="<%= nodeName %>" value="<%= currentNode.getNodeId() %>" />
+						</c:if>
 
 					<%
 					}
