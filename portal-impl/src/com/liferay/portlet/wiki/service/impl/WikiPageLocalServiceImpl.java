@@ -2273,6 +2273,50 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		}
 	}
 
+	protected void changeChildPagesNode(
+			long userId, long nodeId, String title, long newNodeId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		List<WikiPage> childPages = wikiPagePersistence.findByN_P(
+			nodeId, title);
+
+		for (WikiPage childPage : childPages) {
+			childPage = doChangeNode(
+				userId, nodeId, childPage.getTitle(), newNodeId,
+				serviceContext);
+
+			// Indexer
+
+			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				WikiPage.class);
+
+			indexer.reindex(childPage);
+		}
+	}
+
+	protected void changeRedirectPagesNode(
+			long userId, long nodeId, String title, long newNodeId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		List<WikiPage> redirectPages = wikiPagePersistence.findByN_R(
+			nodeId, title);
+
+		for (WikiPage redirectPage : redirectPages) {
+			redirectPage = doChangeNode(
+				userId, nodeId, redirectPage.getTitle(), newNodeId,
+				serviceContext);
+
+			// Indexer
+
+			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				WikiPage.class);
+
+			indexer.reindex(redirectPage);
+		}
+	}
+
 	protected void clearPageCache(WikiPage page) {
 		if (!WikiCacheThreadLocal.isClearCache()) {
 			return;
@@ -2297,13 +2341,20 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		List<WikiPage> versionPages = wikiPagePersistence.findByN_T(
 			nodeId, title);
 
-		WikiPage page = versionPages.get(versionPages.size() - 1);
+		WikiPage page = fetchLatestPage(
+			newNodeId, title, WorkflowConstants.STATUS_ANY, false);
+
+		if (page == null) {
+			page = getLatestPage(
+				nodeId, title, WorkflowConstants.STATUS_ANY, false);
+		}
 
 		if (versionPages.isEmpty()) {
 			return page;
 		}
 
 		for (WikiPage versionPage : versionPages) {
+			versionPage.setParentTitle(page.getParentTitle());
 			versionPage.setNodeId(newNodeId);
 
 			wikiPagePersistence.update(versionPage);
@@ -2319,6 +2370,15 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		pageResource.setNodeId(newNodeId);
 
 		wikiPageResourcePersistence.update(pageResource);
+
+		// Child pages
+
+		changeChildPagesNode(userId, nodeId, title, newNodeId, serviceContext);
+
+		// Redirect pages
+
+		changeRedirectPagesNode(
+			userId, nodeId, title, newNodeId, serviceContext);
 
 		// Asset
 
@@ -2340,7 +2400,13 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		List<WikiPage> versionPages = wikiPagePersistence.findByN_T(
 			nodeId, title);
 
-		WikiPage page = versionPages.get(versionPages.size() - 1);
+		WikiPage page = fetchLatestPage(
+			nodeId, newTitle, WorkflowConstants.STATUS_ANY, false);
+
+		if (page == null) {
+			page = getLatestPage(
+				nodeId, title, WorkflowConstants.STATUS_ANY, false);
+		}
 
 		if (versionPages.isEmpty()) {
 			return page;
@@ -2349,10 +2415,10 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		for (WikiPage versionPage : versionPages) {
 			versionPage.setTitle(newTitle);
 
-			if (Validator.isNotNull(page.getRedirectTitle())) {
-				page.setRedirectTitle(StringPool.BLANK);
+			if (Validator.isNotNull(versionPage.getRedirectTitle())) {
+				versionPage.setRedirectTitle(StringPool.BLANK);
 
-				page.setSummary(StringPool.BLANK);
+				versionPage.setSummary(StringPool.BLANK);
 			}
 
 			wikiPagePersistence.update(versionPage);
