@@ -758,6 +758,7 @@ create index IX_546F2D5C on WikiPage (nodeId, status);
 create index IX_E745EA26 on WikiPage (nodeId, title, head);
 create index IX_BEA33AB8 on WikiPage (nodeId, title, status);
 create unique index IX_3D4AF476 on WikiPage (nodeId, title, version);
+create index IX_60FD5652 on WikiPage (nodeId, version);
 create index IX_E1F55FB on WikiPage (resourcePrimKey, nodeId, head);
 create index IX_94D1054D on WikiPage (resourcePrimKey, nodeId, status);
 create unique index IX_2CD67C81 on WikiPage (resourcePrimKey, nodeId, version);
