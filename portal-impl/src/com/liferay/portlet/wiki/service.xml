@@ -157,6 +157,10 @@
 			<finder-column name="nodeId" />
 			<finder-column name="status" />
 		</finder>
+		<finder name="N_V" return-type="Collection">
+			<finder-column name="nodeId" />
+			<finder-column name="version" />
+		</finder>
 		<finder name="R_N_V" return-type="WikiPage" unique="true">
 			<finder-column name="resourcePrimKey" />
 			<finder-column name="nodeId" />
