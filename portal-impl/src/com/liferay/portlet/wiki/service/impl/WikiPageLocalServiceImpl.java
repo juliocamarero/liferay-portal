@@ -2297,13 +2297,15 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		wikiPagePersistence.update(page);
 
-		WikiPageResource redirectPageResource =
-			wikiPageResourcePersistence.findByPrimaryKey(
-				page.getResourcePrimKey());
+		if (page.getVersion() == WikiPageConstants.VERSION_DEFAULT) {
+			WikiPageResource redirectPageResource =
+				wikiPageResourcePersistence.findByPrimaryKey(
+					page.getResourcePrimKey());
 
-		redirectPageResource.setNodeId(newNodeId);
+			redirectPageResource.setNodeId(newNodeId);
 
-		wikiPageResourcePersistence.update(redirectPageResource);
+			wikiPageResourcePersistence.update(redirectPageResource);
+		}
 
 		// Asset
 
