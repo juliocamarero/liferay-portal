@@ -54,9 +54,7 @@ public class VerifyWiki extends VerifyProcess {
 					QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 				for (WikiPage pageVersion : pageVersions) {
-					Date date = pageVersion.getCreateDate();
-
-					if (!createDate.equals(date)) {
+					if (!createDate.equals(pageVersion.getCreateDate())) {
 						pageVersion.setCreateDate(createDate);
 
 						WikiPageLocalServiceUtil.updateWikiPage(pageVersion);

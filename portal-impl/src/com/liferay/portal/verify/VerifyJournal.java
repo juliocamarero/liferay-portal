@@ -199,9 +199,7 @@ public class VerifyJournal extends VerifyProcess {
 						firstArticle.getGroupId(), firstArticle.getArticleId());
 
 				for (JournalArticle articleVersion : articleVersions) {
-					Date date = articleVersion.getCreateDate();
-
-					if (!createDate.equals(date)) {
+					if (!createDate.equals(articleVersion.getCreateDate())) {
 						articleVersion.setCreateDate(createDate);
 
 						JournalArticleLocalServiceUtil.updateJournalArticle(
