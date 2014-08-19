@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.ResourceLocalServiceUtil;
@@ -98,6 +99,8 @@ public class VerifyJournal extends VerifyProcess {
 	protected void updateURLTitle(
 			long groupId, String articleId, String urlTitle)
 		throws Exception {
+		
+		urlTitle = GetterUtil.getString(urlTitle);
 
 		String normalizedURLTitle = FriendlyURLNormalizerUtil.normalize(
 			urlTitle, _friendlyURLPattern);
