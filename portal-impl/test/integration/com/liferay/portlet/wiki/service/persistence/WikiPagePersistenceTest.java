@@ -397,6 +397,19 @@ public class WikiPagePersistenceTest {
 	}
 
 	@Test
+	public void testCountByN_V() {
+		try {
+			_persistence.countByN_V(RandomTestUtil.nextLong(),
+				RandomTestUtil.nextDouble());
+
+			_persistence.countByN_V(0L, 0D);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
 	public void testCountByR_N_V() {
 		try {
 			_persistence.countByR_N_V(RandomTestUtil.nextLong(),

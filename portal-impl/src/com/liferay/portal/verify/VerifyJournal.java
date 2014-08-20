@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.Company;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.ResourceLocalServiceUtil;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
@@ -37,11 +39,13 @@ import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil;
+import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -60,6 +64,7 @@ public class VerifyJournal extends VerifyProcess {
 	@Override
 	protected void doVerify() throws Exception {
 		updateFolderAssets();
+		verifyCreateDate();
 		verifyOracleNewLine();
 		verifyPermissionsAndAssets();
 		verifySearch();
@@ -175,6 +180,33 @@ public class VerifyJournal extends VerifyProcess {
 		}
 		finally {
 			DataAccess.cleanUp(con, ps, rs);
+		}
+	}
+
+	protected void verifyCreateDate() throws Exception {
+		List<Company> companies = CompanyLocalServiceUtil.getCompanies();
+
+		for (Company company : companies) {
+			List<JournalArticle> firstArticles = JournalArticleUtil.findByC_V(
+				company.getCompanyId(),
+				JournalArticleConstants.VERSION_DEFAULT);
+
+			for (JournalArticle firstArticle : firstArticles) {
+				Date createDate = firstArticle.getCreateDate();
+
+				List<JournalArticle> articleVersions =
+					JournalArticleLocalServiceUtil.getArticles(
+						firstArticle.getGroupId(), firstArticle.getArticleId());
+
+				for (JournalArticle articleVersion : articleVersions) {
+					if (!createDate.equals(articleVersion.getCreateDate())) {
+						articleVersion.setCreateDate(createDate);
+
+						JournalArticleLocalServiceUtil.updateJournalArticle(
+							articleVersion);
+					}
+				}
+			}
 		}
 	}
 
