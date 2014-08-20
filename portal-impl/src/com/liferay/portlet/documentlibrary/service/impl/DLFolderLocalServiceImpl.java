@@ -739,12 +739,10 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 
 			dlFolderPersistence.update(dlFolder);
 
-			// Update children and current folder three path
+			// Update tree path
 
-			updateDlFileEntryTreePath(dlFolder);
-
-			updateDlFolderTreePath(dlFolder);
-
+			updateDlFileEntriesTreePath(dlFolder);
+			updateDlFoldersTreePath(dlFolder);
 			updateFileShortcutsTreePath(dlFolder);
 
 			return dlFolder;
@@ -1146,7 +1144,7 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 		return parentFolderId;
 	}
 
-	protected void updateDlFileEntryTreePath(DLFolder dlFolder)
+	protected void updateDlFileEntriesTreePath(DLFolder dlFolder)
 		throws PortalException {
 
 		List<DLFileEntry> dlFileEntries = dlFileEntryPersistence.findByC_T(
@@ -1165,7 +1163,7 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 		}
 	}
 
-	protected void updateDlFolderTreePath(DLFolder dlFolder)
+	protected void updateDlFoldersTreePath(DLFolder dlFolder)
 		throws PortalException {
 
 		List<DLFolder> dlFolders = dlFolderPersistence.findByC_T(

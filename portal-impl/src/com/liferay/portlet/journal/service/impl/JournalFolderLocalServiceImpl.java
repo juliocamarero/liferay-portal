@@ -486,11 +486,10 @@ public class JournalFolderLocalServiceImpl
 
 		journalFolderPersistence.update(folder);
 
-		// Update children and current folder three path
+		// Update tree path
 
-		updateJournalArticleTreePath(folder);
-
-		updateJournalFolderTreePath(folder);
+		updateJournalArticlesTreePath(folder);
+		updateJournalFoldersTreePath(folder);
 
 		return folder;
 	}
@@ -1326,7 +1325,7 @@ public class JournalFolderLocalServiceImpl
 		}
 	}
 
-	protected void updateJournalArticleTreePath(JournalFolder journalFolder)
+	protected void updateJournalArticlesTreePath(JournalFolder journalFolder)
 		throws PortalException {
 
 		List<JournalArticle> journalArticles =
@@ -1346,7 +1345,7 @@ public class JournalFolderLocalServiceImpl
 		}
 	}
 
-	protected void updateJournalFolderTreePath(JournalFolder journalFolder)
+	protected void updateJournalFoldersTreePath(JournalFolder journalFolder)
 		throws PortalException {
 
 		List<JournalFolder> journalFolders =

@@ -336,11 +336,10 @@ public class BookmarksFolderLocalServiceImpl
 
 		bookmarksFolderPersistence.update(folder);
 
-		// Update children and current folder three path
+		// Update tree path
 
-		updateBookmarksEntryTreePath(folder);
-
-		updateBookmarksFolderTreePath(folder);
+		updateBookmarksEntriesTreePath(folder);
+		updateBookmarksFoldersTreePath(folder);
 
 		return folder;
 	}
@@ -904,7 +903,8 @@ public class BookmarksFolderLocalServiceImpl
 		}
 	}
 
-	protected void updateBookmarksEntryTreePath(BookmarksFolder bookmarksFolder)
+	protected void updateBookmarksEntriesTreePath(
+			BookmarksFolder bookmarksFolder)
 		throws PortalException {
 
 		List<BookmarksEntry> bookmarksEntries =
@@ -924,7 +924,7 @@ public class BookmarksFolderLocalServiceImpl
 		}
 	}
 
-	protected void updateBookmarksFolderTreePath(
+	protected void updateBookmarksFoldersTreePath(
 			BookmarksFolder bookmarksFolder)
 		throws PortalException {
 
