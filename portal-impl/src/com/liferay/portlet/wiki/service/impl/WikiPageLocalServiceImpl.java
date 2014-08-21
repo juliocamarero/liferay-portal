@@ -74,6 +74,7 @@ import com.liferay.portlet.trash.model.TrashVersion;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.portlet.wiki.DuplicatePageException;
 import com.liferay.portlet.wiki.NoSuchPageException;
+import com.liferay.portlet.wiki.NodeChangeException;
 import com.liferay.portlet.wiki.PageContentException;
 import com.liferay.portlet.wiki.PageTitleException;
 import com.liferay.portlet.wiki.PageVersionException;
@@ -413,9 +414,13 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			return;
 		}
 
-		WikiPage oldPage = getPage(nodeId, title);
+		checkNodeChange(nodeId, title, newNodeId);
 
 		serviceContext.setCommand(Constants.MOVE);
+
+		WikiPage oldPage = getPage(nodeId, title);
+
+		oldPage.setParentTitle(StringPool.BLANK);
 
 		updatePage(
 			userId, oldPage, newNodeId, oldPage.getTitle(),
@@ -2316,6 +2321,57 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 			indexer.reindex(redirectPage);
 		}
+	}
+
+	protected void checkDuplicationOnNodeChange(
+			long nodeId, String title, long newNodeId)
+		throws PortalException {
+
+		WikiPage page = fetchPage(newNodeId, title);
+
+		if (page != null) {
+			WikiNode node = page.getNode();
+
+			throw new NodeChangeException(
+				node.getName(), page. getTitle(),
+				NodeChangeException.DUPLICATE_PAGE);
+		}
+
+		// Child pages
+
+		List<WikiPage> childPages = wikiPagePersistence.findByN_P(
+			nodeId, title);
+
+		for (WikiPage childPage : childPages) {
+			checkDuplicationOnNodeChange(
+				nodeId, childPage.getTitle(), newNodeId);
+		}
+
+		// Redirect pages
+
+		List<WikiPage> redirectPages = wikiPagePersistence.findByN_R(
+			nodeId, title);
+
+		for (WikiPage redirectPage : redirectPages) {
+			checkDuplicationOnNodeChange(
+				nodeId, redirectPage.getTitle(), newNodeId);
+		}
+	}
+
+	protected void checkNodeChange(long nodeId, String title, long newNodeId)
+		throws PortalException {
+
+		WikiPage page = getPage(nodeId, title);
+
+		if (Validator.isNotNull(page.getRedirectTitle())) {
+			WikiNode node = page.getNode();
+
+			throw new NodeChangeException(
+				node.getName(), page. getTitle(),
+				NodeChangeException.REDIRECT_PAGE);
+		}
+
+		checkDuplicationOnNodeChange(nodeId, title, newNodeId);
 	}
 
 	protected void clearPageCache(WikiPage page) {

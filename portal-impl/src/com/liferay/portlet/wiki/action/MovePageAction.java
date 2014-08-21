@@ -25,6 +25,7 @@ import com.liferay.portal.struts.PortletAction;
 import com.liferay.portlet.wiki.DuplicatePageException;
 import com.liferay.portlet.wiki.NoSuchNodeException;
 import com.liferay.portlet.wiki.NoSuchPageException;
+import com.liferay.portlet.wiki.NodeChangeException;
 import com.liferay.portlet.wiki.PageContentException;
 import com.liferay.portlet.wiki.PageTitleException;
 import com.liferay.portlet.wiki.model.WikiPage;
@@ -83,6 +84,9 @@ public class MovePageAction extends PortletAction {
 					 e instanceof PageTitleException) {
 
 				SessionErrors.add(actionRequest, e.getClass());
+			}
+			else if (e instanceof NodeChangeException) {
+				SessionErrors.add(actionRequest, e.getClass(), e);
 			}
 			else {
 				throw e;
