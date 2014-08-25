@@ -2405,10 +2405,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				nodeId, title, WorkflowConstants.STATUS_ANY, false);
 		}
 
-		if (versionPages.isEmpty()) {
-			return page;
-		}
-
 		for (WikiPage versionPage : versionPages) {
 			versionPage.setParentTitle(page.getParentTitle());
 			versionPage.setNodeId(newNodeId);
@@ -2462,10 +2458,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (page == null) {
 			page = getLatestPage(
 				nodeId, title, WorkflowConstants.STATUS_ANY, false);
-		}
-
-		if (versionPages.isEmpty()) {
-			return page;
 		}
 
 		for (WikiPage versionPage : versionPages) {

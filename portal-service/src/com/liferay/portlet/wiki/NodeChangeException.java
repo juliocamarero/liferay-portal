@@ -27,26 +27,10 @@ public class NodeChangeException extends PortalException {
 
 	public static final int REDIRECT_PAGE = 2;
 
-	public NodeChangeException() {
-		super();
-	}
-
-	public NodeChangeException(String msg) {
-		super(msg);
-	}
-
 	public NodeChangeException(String nodeName, String pageTitle, int type) {
 		_pageTitle = pageTitle;
 		_nodeName = nodeName;
 		_type = type;
-	}
-
-	public NodeChangeException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public NodeChangeException(Throwable cause) {
-		super(cause);
 	}
 
 	public String getNodeName() {
