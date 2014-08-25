@@ -486,10 +486,7 @@ public class JournalFolderLocalServiceImpl
 
 		journalFolderPersistence.update(folder);
 
-		// Update tree path
-
-		updateJournalArticlesTreePath(folder);
-		updateJournalFoldersTreePath(folder);
+		updateTreePath(folder);
 
 		return folder;
 	}
@@ -1325,43 +1322,41 @@ public class JournalFolderLocalServiceImpl
 		}
 	}
 
-	protected void updateJournalArticlesTreePath(JournalFolder journalFolder)
-		throws PortalException {
+	protected void updateTreePath(JournalFolder folder) throws PortalException {
 
-		List<JournalArticle> journalArticles =
+		// Articles
+
+		List<JournalArticle> articles =
 			journalArticlePersistence.findByC_T(
-				journalFolder.getCompanyId(),
-				CustomSQLUtil.keywords(journalFolder.getTreePath())[0]);
+				folder.getCompanyId(),
+				CustomSQLUtil.keywords(folder.getTreePath())[0]);
 
 		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			JournalArticle.class);
 
-		for (JournalArticle journalArticle : journalArticles) {
-			journalArticle.setTreePath(journalArticle.buildTreePath());
+		for (JournalArticle article : articles) {
+			article.setTreePath(article.buildTreePath());
 
-			journalArticlePersistence.update(journalArticle);
+			journalArticlePersistence.update(article);
 
-			indexer.reindex(journalArticle);
+			indexer.reindex(article);
 		}
-	}
 
-	protected void updateJournalFoldersTreePath(JournalFolder journalFolder)
-		throws PortalException {
+		// Subfolders
 
-		List<JournalFolder> journalFolders =
+		List<JournalFolder> folders =
 			journalFolderPersistence.findByC_T(
-				journalFolder.getCompanyId(),
-				CustomSQLUtil.keywords(journalFolder.getTreePath())[0]);
+				folder.getCompanyId(),
+				CustomSQLUtil.keywords(folder.getTreePath())[0]);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			JournalFolder.class);
+		indexer = IndexerRegistryUtil.nullSafeGetIndexer(JournalFolder.class);
 
-		for (JournalFolder curJournalFolder : journalFolders) {
-			curJournalFolder.setTreePath(curJournalFolder.buildTreePath());
+		for (JournalFolder curFolder : folders) {
+			curFolder.setTreePath(curFolder.buildTreePath());
 
-			journalFolderPersistence.update(curJournalFolder);
+			journalFolderPersistence.update(curFolder);
 
-			indexer.reindex(curJournalFolder);
+			indexer.reindex(curFolder);
 		}
 	}
 

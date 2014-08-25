@@ -336,10 +336,7 @@ public class BookmarksFolderLocalServiceImpl
 
 		bookmarksFolderPersistence.update(folder);
 
-		// Update tree path
-
-		updateBookmarksEntriesTreePath(folder);
-		updateBookmarksFoldersTreePath(folder);
+		updateTreePath(folder);
 
 		return folder;
 	}
@@ -903,45 +900,42 @@ public class BookmarksFolderLocalServiceImpl
 		}
 	}
 
-	protected void updateBookmarksEntriesTreePath(
-			BookmarksFolder bookmarksFolder)
+	protected void updateTreePath(BookmarksFolder folder)
 		throws PortalException {
 
-		List<BookmarksEntry> bookmarksEntries =
+		// Entries
+
+		List<BookmarksEntry> entries =
 			bookmarksEntryPersistence.findByC_T(
-				bookmarksFolder.getCompanyId(),
-				CustomSQLUtil.keywords(bookmarksFolder.getTreePath())[0]);
+				folder.getCompanyId(),
+				CustomSQLUtil.keywords(folder.getTreePath())[0]);
 
 		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			BookmarksEntry.class);
 
-		for (BookmarksEntry bookmarksEntry : bookmarksEntries) {
-			bookmarksEntry.setTreePath(bookmarksEntry.buildTreePath());
+		for (BookmarksEntry entry : entries) {
+			entry.setTreePath(entry.buildTreePath());
 
-			bookmarksEntryPersistence.update(bookmarksEntry);
+			bookmarksEntryPersistence.update(entry);
 
-			indexer.reindex(bookmarksEntry);
+			indexer.reindex(entry);
 		}
-	}
 
-	protected void updateBookmarksFoldersTreePath(
-			BookmarksFolder bookmarksFolder)
-		throws PortalException {
+		// Subfolders
 
-		List<BookmarksFolder> bookmarksFolders =
+		List<BookmarksFolder> folders =
 			bookmarksFolderPersistence.findByC_T(
-				bookmarksFolder.getCompanyId(),
-				CustomSQLUtil.keywords(bookmarksFolder.getTreePath())[0]);
+				folder.getCompanyId(),
+				CustomSQLUtil.keywords(folder.getTreePath())[0]);
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			BookmarksFolder.class);
+		indexer = IndexerRegistryUtil.nullSafeGetIndexer(BookmarksFolder.class);
 
-		for (BookmarksFolder curBookmarksFolder : bookmarksFolders) {
-			curBookmarksFolder.setTreePath(curBookmarksFolder.buildTreePath());
+		for (BookmarksFolder curFolder : folders) {
+			curFolder.setTreePath(curFolder.buildTreePath());
 
-			bookmarksFolderPersistence.update(curBookmarksFolder);
+			bookmarksFolderPersistence.update(curFolder);
 
-			indexer.reindex(curBookmarksFolder);
+			indexer.reindex(curFolder);
 		}
 	}
 
