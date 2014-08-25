@@ -38,30 +38,30 @@ public class VerifyWiki extends VerifyProcess {
 	}
 
 	protected void verifyCreateDate() throws Exception {
-		List<WikiPageResource> pageResources =
+		List<WikiPageResource> wikiPageResources =
 			WikiPageResourceLocalServiceUtil.getWikiPageResources(
 				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		for (WikiPageResource pageResource : pageResources) {
-			List<WikiPage> pageVersions =
+		for (WikiPageResource pageResource : wikiPageResources) {
+			List<WikiPage> wikiPages =
 				WikiPageLocalServiceUtil.getPages(
 					pageResource.getNodeId(), pageResource.getTitle(),
 					QueryUtil.ALL_POS, QueryUtil.ALL_POS,
 					new PageVersionComparator(true));
 
-			if (pageVersions.size() < 2) {
+			if (wikiPages.size() <= 1) {
 				continue;
 			}
 
-			WikiPage firstPageVersion = pageVersions.get(0);
+			WikiPage firstPage = wikiPages.get(0);
 
-			Date createDate = firstPageVersion.getCreateDate();
+			Date createDate = firstPage.getCreateDate();
 
-			for (WikiPage pageVersion : pageVersions) {
-				if (!createDate.equals(pageVersion.getCreateDate())) {
-					pageVersion.setCreateDate(createDate);
+			for (WikiPage wikiPage : wikiPages) {
+				if (!createDate.equals(wikiPage.getCreateDate())) {
+					wikiPage.setCreateDate(createDate);
 
-					WikiPageLocalServiceUtil.updateWikiPage(pageVersion);
+					WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
 				}
 			}
 		}

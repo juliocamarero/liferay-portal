@@ -185,31 +185,33 @@ public class VerifyJournal extends VerifyProcess {
 	}
 
 	protected void verifyCreateDate() throws Exception {
-		List<JournalArticleResource> articleResources =
+		List<JournalArticleResource> journalArticleResources =
 			JournalArticleResourceLocalServiceUtil.getJournalArticleResources(
 				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		for (JournalArticleResource articleResource : articleResources) {
-			List<JournalArticle> articleVersions =
+		for (JournalArticleResource journalArticleResource :
+				journalArticleResources) {
+
+			List<JournalArticle> journalArticles =
 				JournalArticleLocalServiceUtil.getArticles(
-					articleResource.getGroupId(),
-					articleResource.getArticleId(), QueryUtil.ALL_POS,
+					journalArticleResource.getGroupId(),
+					journalArticleResource.getArticleId(), QueryUtil.ALL_POS,
 					QueryUtil.ALL_POS, new ArticleVersionComparator(true));
 
-			if (articleVersions.size() < 2) {
+			if (journalArticles.size() <= 1) {
 				continue;
 			}
 
-			JournalArticle firstArticleVersion = articleVersions.get(0);
+			JournalArticle firstArticle = journalArticles.get(0);
 
-			Date createDate = firstArticleVersion.getCreateDate();
+			Date createDate = firstArticle.getCreateDate();
 
-			for (JournalArticle articleVersion : articleVersions) {
-				if (!createDate.equals(articleVersion.getCreateDate())) {
-					articleVersion.setCreateDate(createDate);
+			for (JournalArticle journalArticle : journalArticles) {
+				if (!createDate.equals(journalArticle.getCreateDate())) {
+					journalArticle.setCreateDate(createDate);
 
 					JournalArticleLocalServiceUtil.updateJournalArticle(
-						articleVersion);
+						journalArticle);
 				}
 			}
 		}
