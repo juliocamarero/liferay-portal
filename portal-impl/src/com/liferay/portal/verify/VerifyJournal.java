@@ -99,8 +99,6 @@ public class VerifyJournal extends VerifyProcess {
 	protected void updateURLTitle(
 			long groupId, String articleId, String urlTitle)
 		throws Exception {
-		
-		urlTitle = GetterUtil.getString(urlTitle);
 
 		String normalizedURLTitle = FriendlyURLNormalizerUtil.normalize(
 			urlTitle, _friendlyURLPattern);
@@ -383,7 +381,8 @@ public class VerifyJournal extends VerifyProcess {
 			while (rs.next()) {
 				long groupId = rs.getLong("groupId");
 				String articleId = rs.getString("articleId");
-				String urlTitle = rs.getString("urlTitle");
+				String urlTitle = GetterUtil.getString(
+					rs.getString("urlTitle"));
 
 				updateURLTitle(groupId, articleId, urlTitle);
 			}
