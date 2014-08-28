@@ -1513,7 +1513,6 @@ public class SitesImpl implements Sites {
 		long lastImportDate = GetterUtil.getLong(
 			prototypeTypeSettingsProperties.get("last-import-date"));
 
-
 		if (lastMergeTime >= modifiedDate.getTime()) {
 			if (lastImportDate > 0) {
 				if (lastMergeTime >= lastImportDate) {
