@@ -1434,7 +1434,9 @@ public class JournalArticleFinderImpl
 			return StringPool.BLANK;
 		}
 
-		StringBundler sb = new StringBundler(groupIds.length * 3 - 1);
+		StringBundler sb = new StringBundler(groupIds.length * 3 + 2);
+
+		sb.append("(");
 
 		for (int i = 0; i < groupIds.length; i++) {
 			sb.append(table);
@@ -1445,6 +1447,7 @@ public class JournalArticleFinderImpl
 			}
 		}
 
+		sb.append(")");
 		sb.append(" AND ");
 
 		return sb.toString();
