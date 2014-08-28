@@ -14,6 +14,7 @@
 
 package com.liferay.portal.verify;
 
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -38,31 +39,49 @@ public class VerifyWiki extends VerifyProcess {
 	}
 
 	protected void verifyCreateDate() throws Exception {
-		List<WikiPageResource> wikiPageResources =
-			WikiPageResourceLocalServiceUtil.getWikiPageResources(
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		ActionableDynamicQuery actionableDynamicQuery =
+			WikiPageResourceLocalServiceUtil.getActionableDynamicQuery();
 
-		for (WikiPageResource pageResource : wikiPageResources) {
-			List<WikiPage> wikiPages =
-				WikiPageLocalServiceUtil.getPages(
-					pageResource.getNodeId(), pageResource.getTitle(),
-					QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-					new PageVersionComparator(true));
+		actionableDynamicQuery.setPerformActionMethod(
+			new ActionableDynamicQuery.PerformActionMethod() {
 
-			if (wikiPages.size() <= 1) {
-				continue;
-			}
+				@Override
+				public void performAction(Object object) {
+					WikiPageResource wikiPageResource =
+						(WikiPageResource)object;
 
-			WikiPage firstPage = wikiPages.get(0);
-
-			Date createDate = firstPage.getCreateDate();
-
-			for (WikiPage wikiPage : wikiPages) {
-				if (!createDate.equals(wikiPage.getCreateDate())) {
-					wikiPage.setCreateDate(createDate);
-
-					WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
+					verifyCreateDate(wikiPageResource);
 				}
+
+			});
+
+		actionableDynamicQuery.performActions();
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Create dates verified for pages");
+		}
+	}
+
+	protected void verifyCreateDate(WikiPageResource wikiPageResource) {
+		List<WikiPage> wikiPages =
+			WikiPageLocalServiceUtil.getPages(
+				wikiPageResource.getNodeId(), wikiPageResource.getTitle(),
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+				new PageVersionComparator(true));
+
+		if (wikiPages.size() <= 1) {
+			return;
+		}
+
+		WikiPage firstPage = wikiPages.get(0);
+
+		Date createDate = firstPage.getCreateDate();
+
+		for (WikiPage wikiPage : wikiPages) {
+			if (!createDate.equals(wikiPage.getCreateDate())) {
+				wikiPage.setCreateDate(createDate);
+
+				WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
 			}
 		}
 	}
