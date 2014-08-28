@@ -825,7 +825,8 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 			new QueryDefinition<JournalArticle>(status, start, end, obc);
 
 		return journalArticleFinder.filterFindByG_C_S(
-			groupId, classNameId, ddmStructureKey, queryDefinition);
+			new long[] {groupId}, classNameId, ddmStructureKey,
+			queryDefinition);
 	}
 
 	/**
@@ -858,12 +859,21 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 		long groupId, String ddmStructureKey, int start, int end,
 		OrderByComparator<JournalArticle> obc) {
 
+		return getArticlesByStructureId(
+			new long[] {groupId}, ddmStructureKey, start, end,
+			obc);
+	}
+
+	public List<JournalArticle> getArticlesByStructureId(
+		long[] groupIds, String ddmStructureKey, int start, int end,
+		OrderByComparator<JournalArticle> obc) {
+
 		QueryDefinition<JournalArticle> queryDefinition =
 			new QueryDefinition<JournalArticle>(
 				WorkflowConstants.STATUS_ANY, start, end, obc);
 
 		return journalArticleFinder.filterFindByG_C_S(
-			groupId, JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			groupIds, JournalArticleConstants.CLASSNAME_ID_DEFAULT,
 			ddmStructureKey, queryDefinition);
 	}
 
