@@ -537,6 +537,15 @@ public class LayoutStagedModelDataHandler
 			_log.debug(sb.toString());
 		}
 
+		if (layout.getLayoutPrototypeUuid() != null) {
+			UnicodeProperties prototypeTypeSettingsProperties =
+				layout.getTypeSettingsProperties();
+
+			prototypeTypeSettingsProperties.put(
+					"last-import-date", String.valueOf(
+						System.currentTimeMillis()));
+		}
+
 		importedLayout.setCompanyId(portletDataContext.getCompanyId());
 		importedLayout.setParentLayoutId(parentLayoutId);
 		importedLayout.setName(layout.getName());
