@@ -63,33 +63,6 @@ public class VerifyJournal extends VerifyProcess {
 
 	public static final int NUM_OF_ARTICLES = 5;
 
-	public void verifyCreateDate(
-		JournalArticleResource journalArticleResource) {
-
-		List<JournalArticle> journalArticles =
-			JournalArticleLocalServiceUtil.getArticles(
-				journalArticleResource.getGroupId(),
-				journalArticleResource.getArticleId(), QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS, new ArticleVersionComparator(true));
-
-		if (journalArticles.size() <= 1) {
-			return;
-		}
-
-		JournalArticle firstArticle = journalArticles.get(0);
-
-		Date createDate = firstArticle.getCreateDate();
-
-		for (JournalArticle journalArticle : journalArticles) {
-			if (!createDate.equals(journalArticle.getCreateDate())) {
-				journalArticle.setCreateDate(createDate);
-
-				JournalArticleLocalServiceUtil.updateJournalArticle(
-					journalArticle);
-			}
-		}
-	}
-
 	@Override
 	protected void doVerify() throws Exception {
 		updateFolderAssets();
@@ -233,6 +206,33 @@ public class VerifyJournal extends VerifyProcess {
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Create dates verified for articles");
+		}
+	}
+
+	protected void verifyCreateDate(
+		JournalArticleResource journalArticleResource) {
+
+		List<JournalArticle> journalArticles =
+			JournalArticleLocalServiceUtil.getArticles(
+				journalArticleResource.getGroupId(),
+				journalArticleResource.getArticleId(), QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, new ArticleVersionComparator(true));
+
+		if (journalArticles.size() <= 1) {
+			return;
+		}
+
+		JournalArticle firstArticle = journalArticles.get(0);
+
+		Date createDate = firstArticle.getCreateDate();
+
+		for (JournalArticle journalArticle : journalArticles) {
+			if (!createDate.equals(journalArticle.getCreateDate())) {
+				journalArticle.setCreateDate(createDate);
+
+				JournalArticleLocalServiceUtil.updateJournalArticle(
+					journalArticle);
+			}
 		}
 	}
 
