@@ -773,8 +773,15 @@ public class JournalArticleFinderImpl
 			String sql = CustomSQLUtil.get(
 				COUNT_BY_G_C_S, queryDefinition, "JournalArticle");
 
-			sql = StringUtil.replace(
-				sql, "[$GROUP_ID$]", getGroupIds(groupIds, "JournalArticle"));
+			if (ArrayUtil.isEmpty(groupIds)) {
+				sql = StringUtil.replace(
+					sql, "([$GROUP_ID$]) AND", StringPool.BLANK);
+			}
+			else {
+				sql = StringUtil.replace(
+					sql, "([$GROUP_ID$])",
+					getGroupIds(groupIds, "JournalArticle"));
+			}
 
 			if (ddmStructureKey.equals(
 					String.valueOf(
@@ -1134,8 +1141,15 @@ public class JournalArticleFinderImpl
 			sql = CustomSQLUtil.replaceOrderBy(
 				sql, queryDefinition.getOrderByComparator("JournalArticle"));
 
-			sql = StringUtil.replace(
-				sql, "[$GROUP_ID$]", getGroupIds(groupIds, "JournalArticle"));
+			if (ArrayUtil.isEmpty(groupIds)) {
+				sql = StringUtil.replace(
+					sql, "([$GROUP_ID$]) AND", StringPool.BLANK);
+			}
+			else {
+				sql = StringUtil.replace(
+					sql, "([$GROUP_ID$])",
+					getGroupIds(groupIds, "JournalArticle"));
+			}
 
 			if (ddmStructureKey.equals(
 					String.valueOf(
@@ -1434,7 +1448,7 @@ public class JournalArticleFinderImpl
 			return StringPool.BLANK;
 		}
 
-		StringBundler sb = new StringBundler(groupIds.length * 3 + 2);
+		StringBundler sb = new StringBundler(groupIds.length * 3 + 1);
 
 		sb.append("(");
 
@@ -1448,7 +1462,6 @@ public class JournalArticleFinderImpl
 		}
 
 		sb.append(")");
-		sb.append(" AND ");
 
 		return sb.toString();
 	}
