@@ -161,7 +161,7 @@ int totalVar = 0;
 				groupIds= new long[] {siteGroup.getGroupId()};
 			}
 			else {
-				Set<Group> groups = new LinkedHashSet<Group>();
+				List<Group> groups = new ArrayList<Group>();
 
 				groups.add(siteGroup);
 
