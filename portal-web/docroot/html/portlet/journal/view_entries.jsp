@@ -145,7 +145,7 @@ int totalVar = 0;
 	<c:when test="<%= Validator.isNotNull(displayTerms.getStructureId()) %>">
 
 		<%
-		long[] groupIds;
+		long[] groupIds = null;
 
 		Group siteGroup = GroupLocalServiceUtil.getGroup(displayTerms.getGroupId());
 
@@ -169,15 +169,13 @@ int totalVar = 0;
 					groups.addAll(siteGroup.getDescendants(true));
 				}
 
-				long[] tempGroupIds = new long[groups.size()];
+				groupIds = new long[groups.size()];
 
 				int i = 0;
 
 				for (Group group : groups) {
-					tempGroupIds[i++] = group.getGroupId();
+					groupIds[i++] = group.getGroupId();
 				}
-
-				groupIds = tempGroupIds;
 			}
 		}
 

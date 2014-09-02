@@ -711,7 +711,7 @@ public class JournalArticleFinderImpl
 			session = openSession();
 
 			String sql = CustomSQLUtil.get(
-				COUNT_BY_G_F, queryDefinition, "JournalArticle");
+				COUNT_BY_G_F, queryDefinition, JournalArticleImpl.TABLE_NAME);
 
 			sql = replaceStatusJoin(sql, queryDefinition);
 
@@ -771,7 +771,7 @@ public class JournalArticleFinderImpl
 			session = openSession();
 
 			String sql = CustomSQLUtil.get(
-				COUNT_BY_G_C_S, queryDefinition, "JournalArticle");
+				COUNT_BY_G_C_S, queryDefinition, JournalArticleImpl.TABLE_NAME);
 
 			if (ArrayUtil.isEmpty(groupIds)) {
 				sql = StringUtil.replace(
@@ -780,7 +780,7 @@ public class JournalArticleFinderImpl
 			else {
 				sql = StringUtil.replace(
 					sql, "([$GROUP_ID$])",
-					getGroupIds(groupIds, "JournalArticle"));
+					getGroupIds(groupIds, JournalArticleImpl.TABLE_NAME));
 			}
 
 			if (ddmStructureKey.equals(
@@ -1078,12 +1078,14 @@ public class JournalArticleFinderImpl
 			session = openSession();
 
 			String sql = CustomSQLUtil.get(
-				FIND_BY_G_F, queryDefinition, "JournalArticle");
+				FIND_BY_G_F, queryDefinition, JournalArticleImpl.TABLE_NAME);
 
 			sql = replaceStatusJoin(sql, queryDefinition);
 
 			sql = CustomSQLUtil.replaceOrderBy(
-				sql, queryDefinition.getOrderByComparator("JournalArticle"));
+				sql,
+				queryDefinition.getOrderByComparator(
+					JournalArticleImpl.TABLE_NAME));
 
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
@@ -1134,12 +1136,14 @@ public class JournalArticleFinderImpl
 			session = openSession();
 
 			String sql = CustomSQLUtil.get(
-				FIND_BY_G_C_S, queryDefinition, "JournalArticle");
+				FIND_BY_G_C_S, queryDefinition, JournalArticleImpl.TABLE_NAME);
 
 			sql = replaceStatusJoin(sql, queryDefinition);
 
 			sql = CustomSQLUtil.replaceOrderBy(
-				sql, queryDefinition.getOrderByComparator("JournalArticle"));
+				sql,
+				queryDefinition.getOrderByComparator(
+					JournalArticleImpl.TABLE_NAME));
 
 			if (ArrayUtil.isEmpty(groupIds)) {
 				sql = StringUtil.replace(
@@ -1148,7 +1152,7 @@ public class JournalArticleFinderImpl
 			else {
 				sql = StringUtil.replace(
 					sql, "([$GROUP_ID$])",
-					getGroupIds(groupIds, "JournalArticle"));
+					getGroupIds(groupIds, JournalArticleImpl.TABLE_NAME));
 			}
 
 			if (ddmStructureKey.equals(
@@ -1206,12 +1210,15 @@ public class JournalArticleFinderImpl
 			session = openSession();
 
 			String sql = CustomSQLUtil.get(
-				FIND_BY_G_U_F_C, queryDefinition, "JournalArticle");
+				FIND_BY_G_U_F_C, queryDefinition,
+				JournalArticleImpl.TABLE_NAME);
 
 			sql = replaceStatusJoin(sql, queryDefinition);
 
 			sql = CustomSQLUtil.replaceOrderBy(
-				sql, queryDefinition.getOrderByComparator("JournalArticle"));
+				sql,
+				queryDefinition.getOrderByComparator(
+					JournalArticleImpl.TABLE_NAME));
 
 			if (folderIds.isEmpty()) {
 				sql = StringUtil.replace(
@@ -1348,7 +1355,9 @@ public class JournalArticleFinderImpl
 
 			sql = CustomSQLUtil.replaceAndOperator(sql, andOperator);
 			sql = CustomSQLUtil.replaceOrderBy(
-				sql, queryDefinition.getOrderByComparator("JournalArticle"));
+				sql,
+				queryDefinition.getOrderByComparator(
+					JournalArticleImpl.TABLE_NAME));
 
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
@@ -1444,24 +1453,24 @@ public class JournalArticleFinderImpl
 	}
 
 	protected String getGroupIds(long[] groupIds, String table) {
-		if (groupIds.length == 0) {
+		if (ArrayUtil.isEmpty(groupIds)) {
 			return StringPool.BLANK;
 		}
 
 		StringBundler sb = new StringBundler(groupIds.length * 3 + 1);
 
-		sb.append("(");
+		sb.append(StringPool.OPEN_PARENTHESIS);
 
 		for (int i = 0; i < groupIds.length; i++) {
 			sb.append(table);
 			sb.append(".groupId = ?");
 
 			if ((i + 1) < groupIds.length) {
-				sb.append(" OR ");
+				sb.append(WHERE_OR);
 			}
 		}
 
-		sb.append(")");
+		sb.append(StringPool.CLOSE_PARENTHESIS);
 
 		return sb.toString();
 	}
