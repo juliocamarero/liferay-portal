@@ -84,10 +84,10 @@
 
 	function clearUpload() {
 		clearFileButtonNode.hide();
-		previewFileButtonNode.hide();
 		progressNode.hide();
 
-		if (viewer) {
+		if (previewFileButtonNode && viewer) {
+			previewFileButtonNode.hide();
 			viewer.hide();
 		}
 
@@ -136,15 +136,13 @@
 					try {
 						data = A.JSON.parse(event.data);
 
+						clearUpload();
+
 						if (data.status) {
 							notice.html(data.message);
 							notice.show();
-
-							clearUpload();
 						}
 						else {
-							clearUpload()
-
 							fieldNode.val(A.JSON.stringify(data));
 							titleNode.val(event.file.get('name'));
 
