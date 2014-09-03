@@ -81,6 +81,12 @@ public abstract class ConvertProcess {
 		_paramValues = values;
 	}
 
+	/**
+	 * @throws ConvertException
+	 */
+	public void validate() throws ConvertException {
+	}
+
 	protected abstract void doConvert() throws Exception;
 
 	private static Log _log = LogFactoryUtil.getLog(ConvertProcess.class);

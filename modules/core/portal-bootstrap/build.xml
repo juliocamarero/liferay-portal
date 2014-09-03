@@ -3,7 +3,7 @@
 
 <project>
 	<property name="import.shared" value="registry-impl" />
-	<property name="osgi.ide.dependencies" value="bnd.jar,spring-beans.jar,spring-context.jar,spring-core.jar" />
+	<property name="osgi.ide.dependencies" value="spring-beans.jar,spring-context.jar,spring-core.jar" />
 	<property name="osgi.runtime.dependencies" value="org.eclipse.osgi.jar,registry-impl.jar" />
 
 	<import file="../../../tools/sdk/build-common-osgi-plugin.xml" />

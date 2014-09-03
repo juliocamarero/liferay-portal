@@ -267,6 +267,21 @@ public interface DLFileVersionModel extends BaseModel<DLFileVersion>,
 	public void setTreePath(String treePath);
 
 	/**
+	 * Returns the file name of this document library file version.
+	 *
+	 * @return the file name of this document library file version
+	 */
+	@AutoEscape
+	public String getFileName();
+
+	/**
+	 * Sets the file name of this document library file version.
+	 *
+	 * @param fileName the file name of this document library file version
+	 */
+	public void setFileName(String fileName);
+
+	/**
 	 * Returns the extension of this document library file version.
 	 *
 	 * @return the extension of this document library file version

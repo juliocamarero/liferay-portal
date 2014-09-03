@@ -328,6 +328,7 @@
 		<struts-path>my_sites</struts-path>
 		<parent-struts-path>sites_admin</parent-struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
+		<asset-renderer-factory>com.liferay.portal.asset.LayoutAssetRendererFactory</asset-renderer-factory>
 		<asset-renderer-factory>com.liferay.portal.asset.LayoutRevisionAssetRendererFactory</asset-renderer-factory>
 		<workflow-handler>com.liferay.portal.workflow.LayoutRevisionWorkflowHandler</workflow-handler>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
@@ -658,19 +659,6 @@
 		<render-weight>50</render-weight>
 		<header-portlet-css>/html/portlet/recent_documents/css/main.css</header-portlet-css>
 		<css-class-wrapper>portlet-recent-documents</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>67</portlet-name>
-		<icon>/html/icons/default.png</icon>
-		<struts-path>amazon_rankings</struts-path>
-		<configuration-action-class>com.liferay.portlet.amazonrankings.action.ConfigurationActionImpl</configuration-action-class>
-		<preferences-owned-by-group>true</preferences-owned-by-group>
-		<use-default-template>false</use-default-template>
-		<remoteable>true</remoteable>
-		<private-request-attributes>false</private-request-attributes>
-		<private-session-attributes>false</private-session-attributes>
-		<render-weight>0</render-weight>
-		<css-class-wrapper>portlet-amazon-rankings</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>70</portlet-name>

@@ -84,9 +84,9 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.ModelListener;
+import com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalogUtil;
 import com.liferay.portal.repository.util.ExternalRepositoryFactory;
 import com.liferay.portal.repository.util.ExternalRepositoryFactoryImpl;
-import com.liferay.portal.repository.util.ExternalRepositoryFactoryUtil;
 import com.liferay.portal.security.auth.AuthFailure;
 import com.liferay.portal.security.auth.AuthToken;
 import com.liferay.portal.security.auth.AuthTokenWhitelistUtil;
@@ -130,6 +130,7 @@ import com.liferay.portlet.documentlibrary.store.Store;
 import com.liferay.portlet.documentlibrary.store.StoreFactory;
 import com.liferay.portlet.documentlibrary.util.DLProcessor;
 import com.liferay.portlet.documentlibrary.util.DLProcessorRegistryUtil;
+import com.liferay.portlet.dynamicdatamapping.render.DDMFormFieldRenderer;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceRegistration;
@@ -559,6 +560,9 @@ public class HookHotDeployListener
 		initCustomJspDir(
 			servletContext, servletContextName, portletClassLoader,
 			hotDeployEvent.getPluginPackage(), rootElement);
+
+		initDynamicDataMappingFormFieldRenderers(
+			servletContextName, portletClassLoader, rootElement);
 
 		initIndexerPostProcessors(
 			servletContextName, portletClassLoader, rootElement);
@@ -1025,6 +1029,34 @@ public class HookHotDeployListener
 
 		initCustomJspBag(
 			servletContextName, pluginPackage.getName(), customJspBag);
+	}
+
+	protected void initDynamicDataMappingFormFieldRenderers(
+		String servletContextName, ClassLoader portletClassLoader,
+		Element parentElement) throws Exception {
+
+		List<Element> ddmFormFieldRenderersElements = parentElement.elements(
+			"dynamic-data-mapping-form-field-renderer");
+
+		if (ddmFormFieldRenderersElements.isEmpty()) {
+			return;
+		}
+
+		for (Element ddmFormFieldRendererElement :
+				ddmFormFieldRenderersElements) {
+
+			String ddmFormFieldRendererClassName =
+				ddmFormFieldRendererElement.getText();
+
+			DDMFormFieldRenderer ddmFormFieldRenderer =
+				(DDMFormFieldRenderer)newInstance(
+					portletClassLoader, DDMFormFieldRenderer.class,
+					ddmFormFieldRendererClassName);
+
+			registerService(
+				servletContextName, ddmFormFieldRendererClassName,
+				DDMFormFieldRenderer.class, ddmFormFieldRenderer);
+		}
 	}
 
 	protected void initEvent(
@@ -2551,16 +2583,17 @@ public class HookHotDeployListener
 			String className,
 			ExternalRepositoryFactory externalRepositoryFactory) {
 
-			ExternalRepositoryFactoryUtil.registerExternalRepositoryFactory(
-				className, externalRepositoryFactory);
+			RepositoryClassDefinitionCatalogUtil.
+				registerLegacyExternalRepositoryFactory(
+					className, externalRepositoryFactory);
 
 			_classNames.add(className);
 		}
 
 		public void unregisterRepositoryFactories() {
 			for (String className : _classNames) {
-				ExternalRepositoryFactoryUtil.
-					unregisterExternalRepositoryFactory(className);
+				RepositoryClassDefinitionCatalogUtil.
+					unregisterLegacyExternalRepositoryFactory(className);
 			}
 
 			_classNames.clear();

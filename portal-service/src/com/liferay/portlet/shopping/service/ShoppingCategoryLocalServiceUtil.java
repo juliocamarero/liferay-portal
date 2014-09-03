@@ -269,6 +269,11 @@ public class ShoppingCategoryLocalServiceUtil {
 		return getService().getCategory(categoryId);
 	}
 
+	public static com.liferay.portlet.shopping.model.ShoppingCategory getCategory(
+		long groupId, java.lang.String categoryName) {
+		return getService().getCategory(groupId, categoryName);
+	}
+
 	public static java.util.List<com.liferay.portlet.shopping.model.ShoppingCategory> getParentCategories(
 		com.liferay.portlet.shopping.model.ShoppingCategory category)
 		throws com.liferay.portal.kernel.exception.PortalException {

@@ -128,6 +128,11 @@ public class FileVersionProxyBean
 	}
 
 	@Override
+	public String getFileName() {
+		return _fileVersion.getFileName();
+	}
+
+	@Override
 	public long getFileVersionId() {
 		return _fileVersion.getFileVersionId();
 	}

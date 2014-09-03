@@ -287,6 +287,10 @@ public class PluginsEnvironmentBuilder {
 
 		File libDir = new File(projectDir, "lib");
 
+		if (!libDir.exists()) {
+			libDir = new File(projectDir, "docroot/WEB-INF/lib");
+		}
+
 		writeEclipseFiles(libDir, projectDir, dependencyJars);
 
 		List<String> importSharedJars = getImportSharedJars(projectDir);
@@ -431,6 +435,7 @@ public class PluginsEnvironmentBuilder {
 			globalJars.add("portlet.jar");
 
 			portalJars.addAll(dependencyJars);
+			portalJars.add("bnd.jar");
 			portalJars.add("commons-logging.jar");
 			portalJars.add("log4j.jar");
 

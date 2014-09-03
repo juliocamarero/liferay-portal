@@ -15,8 +15,8 @@
 --%>
 
 <%@ taglib uri="/META-INF/aui.tld" prefix="aui" %>
-<%@ taglib uri="/META-INF/liferay-portlet_2_0.tld" prefix="portlet" %>
 <%@ taglib uri="/META-INF/liferay-portlet-ext.tld" prefix="liferay-portlet" %>
+<%@ taglib uri="/META-INF/liferay-portlet_2_0.tld" prefix="portlet" %>
 <%@ taglib uri="/META-INF/liferay-theme.tld" prefix="liferay-theme" %>
 <%@ taglib uri="/META-INF/liferay-ui.tld" prefix="liferay-ui" %>
 
@@ -34,7 +34,7 @@ page import="com.liferay.portlet.asset.model.AssetTag" %><%@
 page import="com.liferay.portlet.asset.model.AssetTagProperty" %><%@
 page import="com.liferay.portlet.asset.service.AssetTagLocalServiceUtil" %><%@
 page import="com.liferay.portlet.asset.service.AssetTagPropertyLocalServiceUtil" %><%@
-page import="com.liferay.xsl.content.util.XSLContentUtil" %>
+page import="com.liferay.xsl.content.web.util.XSLContentUtil" %>
 
 <%@ page import="java.net.URL" %>
 

@@ -1893,6 +1893,66 @@ public interface DLFileEntryPersistence extends BasePersistence<DLFileEntry> {
 	public int countByG_F_N(long groupId, long folderId, java.lang.String name);
 
 	/**
+	* Returns the document library file entry where groupId = &#63; and folderId = &#63; and fileName = &#63; or throws a {@link com.liferay.portlet.documentlibrary.NoSuchFileEntryException} if it could not be found.
+	*
+	* @param groupId the group ID
+	* @param folderId the folder ID
+	* @param fileName the file name
+	* @return the matching document library file entry
+	* @throws com.liferay.portlet.documentlibrary.NoSuchFileEntryException if a matching document library file entry could not be found
+	*/
+	public com.liferay.portlet.documentlibrary.model.DLFileEntry findByG_F_FN(
+		long groupId, long folderId, java.lang.String fileName)
+		throws com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
+
+	/**
+	* Returns the document library file entry where groupId = &#63; and folderId = &#63; and fileName = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param groupId the group ID
+	* @param folderId the folder ID
+	* @param fileName the file name
+	* @return the matching document library file entry, or <code>null</code> if a matching document library file entry could not be found
+	*/
+	public com.liferay.portlet.documentlibrary.model.DLFileEntry fetchByG_F_FN(
+		long groupId, long folderId, java.lang.String fileName);
+
+	/**
+	* Returns the document library file entry where groupId = &#63; and folderId = &#63; and fileName = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param groupId the group ID
+	* @param folderId the folder ID
+	* @param fileName the file name
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching document library file entry, or <code>null</code> if a matching document library file entry could not be found
+	*/
+	public com.liferay.portlet.documentlibrary.model.DLFileEntry fetchByG_F_FN(
+		long groupId, long folderId, java.lang.String fileName,
+		boolean retrieveFromCache);
+
+	/**
+	* Removes the document library file entry where groupId = &#63; and folderId = &#63; and fileName = &#63; from the database.
+	*
+	* @param groupId the group ID
+	* @param folderId the folder ID
+	* @param fileName the file name
+	* @return the document library file entry that was removed
+	*/
+	public com.liferay.portlet.documentlibrary.model.DLFileEntry removeByG_F_FN(
+		long groupId, long folderId, java.lang.String fileName)
+		throws com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
+
+	/**
+	* Returns the number of document library file entries where groupId = &#63; and folderId = &#63; and fileName = &#63;.
+	*
+	* @param groupId the group ID
+	* @param folderId the folder ID
+	* @param fileName the file name
+	* @return the number of matching document library file entries
+	*/
+	public int countByG_F_FN(long groupId, long folderId,
+		java.lang.String fileName);
+
+	/**
 	* Returns the document library file entry where groupId = &#63; and folderId = &#63; and title = &#63; or throws a {@link com.liferay.portlet.documentlibrary.NoSuchFileEntryException} if it could not be found.
 	*
 	* @param groupId the group ID

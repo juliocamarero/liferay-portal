@@ -35,10 +35,13 @@ if (!_alloyEditorConfigFileNames.contains(alloyEditorConfigFileName)) {
 	alloyEditorConfigFileName = "alloyconfig.jsp";
 }
 
+String alloyEditorMode = ParamUtil.getString(request, "alloyEditorMode");
+
 Map<String, String> configParamsMap = (Map<String, String>)request.getAttribute("liferay-ui:input-editor:configParams");
 
 String configParams = marshallParams(configParamsMap);
 
+String contents = (String)request.getAttribute("liferay-ui:input-editor:contents");
 String contentsLanguageId = (String)request.getAttribute("liferay-ui:input-editor:contentsLanguageId");
 String cssClasses = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClasses"));
 String editorImpl = (String)request.getAttribute("liferay-ui:input-editor:editorImpl");
@@ -64,8 +67,15 @@ if (Validator.isNotNull(onFocusMethod)) {
 	onFocusMethod = namespace + onFocusMethod;
 }
 
+String placeholder = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:placeholder"));
 boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:resizable"));
 boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:skipEditorLoading"));
+
+String toolbarSet = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:toolbarSet"));
+
+if (alloyEditorMode.equals("text")) {
+	toolbarSet = "none";
+}
 %>
 
 <c:if test="<%= !skipEditorLoading %>">
@@ -107,6 +117,8 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 	CKEDITOR.env.isCompatible = true;
 </script>
 
+<div class="alloy-editor-placeholder" data-placeholder="<%= LanguageUtil.get(request, placeholder) %>" id="<%= name %>" name="<%= name %>"><%= contents %></div>
+
 <aui:script use="aui-base">
 	window['<%= name %>'] = {
 		destroy: function() {
@@ -137,14 +149,23 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		},
 
 		getHTML: function() {
-			return window['<%= name %>'].getCkData();
+			<c:choose>
+				<c:when test='<%= alloyEditorMode.equals("text") %>'>
+					var editorElement = CKEDITOR.instances['<%= name %>'].element.$;
+
+					return editorElement.childElementCount ? editorElement.children[0].innerText : '';
+				</c:when>
+				<c:otherwise>
+					return window['<%= name %>'].getCkData();
+				</c:otherwise>
+			</c:choose>
 		},
 
 		getText: function() {
 			return window['<%= name %>'].getCkData();
 		},
 
-		instanceReady: false,
+		instanceReady: true,
 
 		<c:if test="<%= Validator.isNotNull(onBlurMethod) %>">
 			onBlurCallback: function() {
@@ -181,13 +202,26 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 	CKEDITOR.inline(
 		'<%= name %>',
 		{
-			customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/alloyeditor/<%= HtmlUtil.escapeJS(alloyEditorConfigFileName) %>?p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&contentsLanguageId=<%= HttpUtil.encodeURL(contentsLanguageId) %>&colorSchemeCssClass=<%= HttpUtil.encodeURL(themeDisplay.getColorScheme().getCssClass()) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&inlineEdit=<%= inlineEdit %><%= configParams %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&name=<%= name %>&resizable=<%= resizable %>'
+			customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/alloyeditor/<%= HtmlUtil.escapeJS(alloyEditorConfigFileName) %>?p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&contentsLanguageId=<%= HttpUtil.encodeURL(contentsLanguageId) %>&colorSchemeCssClass=<%= HttpUtil.encodeURL(themeDisplay.getColorScheme().getCssClass()) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&inlineEdit=<%= inlineEdit %><%= configParams %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&name=<%= name %>&resizable=<%= resizable %>&toolbarSet=<%= HttpUtil.encodeURL(toolbarSet) %>'
 		}
 	);
 
 	if (window['<%= name %>Config']) {
 		window['<%= name %>Config']();
 	}
+
+	<c:if test='<%= alloyEditorMode.equals("text") %>'>
+		var alloyEditor = CKEDITOR.instances['<%= name %>'];
+
+		alloyEditor.on(
+			'key',
+			function(event) {
+				if (event.data.keyCode === 13) {
+					event.cancel();
+				}
+			}
+		);
+	</c:if>
 
 	var destroyInstance = function(event) {
 		if (event.portletId === '<%= portletId %>') {

@@ -145,6 +145,8 @@ public class DLFileVersionPersistenceTest {
 
 		newDLFileVersion.setTreePath(RandomTestUtil.randomString());
 
+		newDLFileVersion.setFileName(RandomTestUtil.randomString());
+
 		newDLFileVersion.setExtension(RandomTestUtil.randomString());
 
 		newDLFileVersion.setMimeType(RandomTestUtil.randomString());
@@ -203,6 +205,8 @@ public class DLFileVersionPersistenceTest {
 			newDLFileVersion.getFileEntryId());
 		Assert.assertEquals(existingDLFileVersion.getTreePath(),
 			newDLFileVersion.getTreePath());
+		Assert.assertEquals(existingDLFileVersion.getFileName(),
+			newDLFileVersion.getFileName());
 		Assert.assertEquals(existingDLFileVersion.getExtension(),
 			newDLFileVersion.getExtension());
 		Assert.assertEquals(existingDLFileVersion.getMimeType(),
@@ -423,11 +427,12 @@ public class DLFileVersionPersistenceTest {
 			true, "fileVersionId", true, "groupId", true, "companyId", true,
 			"userId", true, "userName", true, "createDate", true,
 			"modifiedDate", true, "repositoryId", true, "folderId", true,
-			"fileEntryId", true, "treePath", true, "extension", true,
-			"mimeType", true, "title", true, "description", true, "changeLog",
-			true, "extraSettings", true, "fileEntryTypeId", true, "version",
-			true, "size", true, "checksum", true, "status", true,
-			"statusByUserId", true, "statusByUserName", true, "statusDate", true);
+			"fileEntryId", true, "treePath", true, "fileName", true,
+			"extension", true, "mimeType", true, "title", true, "description",
+			true, "changeLog", true, "extraSettings", true, "fileEntryTypeId",
+			true, "version", true, "size", true, "checksum", true, "status",
+			true, "statusByUserId", true, "statusByUserName", true,
+			"statusDate", true);
 	}
 
 	@Test
@@ -677,6 +682,8 @@ public class DLFileVersionPersistenceTest {
 		dlFileVersion.setFileEntryId(RandomTestUtil.nextLong());
 
 		dlFileVersion.setTreePath(RandomTestUtil.randomString());
+
+		dlFileVersion.setFileName(RandomTestUtil.randomString());
 
 		dlFileVersion.setExtension(RandomTestUtil.randomString());
 

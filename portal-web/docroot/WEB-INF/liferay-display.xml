@@ -46,7 +46,6 @@
 	</category>
 	<category name="category.entertainment" />
 	<category name="category.finance">
-		<portlet id="16" />
 		<portlet id="61" />
 	</category>
 	<category name="category.hidden">
@@ -110,7 +109,6 @@
 	</category>
 	<category name="category.shopping">
 		<portlet id="34" />
-		<portlet id="67" />
 	</category>
 	<category name="category.social">
 		<portlet id="121" />

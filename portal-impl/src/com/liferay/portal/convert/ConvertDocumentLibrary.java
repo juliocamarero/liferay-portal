@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Image;
 import com.liferay.portal.service.ImageLocalServiceUtil;
@@ -58,6 +59,7 @@ import java.util.List;
 /**
  * @author Minhchau Dang
  * @author Alexander Chow
+ * @author László Csontos
  */
 public class ConvertDocumentLibrary extends ConvertProcess {
 
@@ -94,12 +96,67 @@ public class ConvertDocumentLibrary extends ConvertProcess {
 	}
 
 	@Override
+	public void validate() throws FileSystemStoreRootDirException {
+		String sourceStoreClassName = getSourceStoreClassName();
+
+		if (!sourceStoreClassName.endsWith(_FILE_SYSTEM_STORE_SUFFIX)) {
+			return;
+		}
+
+		String targetStoreClassName = getTargetStoreClassName();
+
+		if (!targetStoreClassName.endsWith(_FILE_SYSTEM_STORE_SUFFIX)) {
+			return;
+		}
+
+		if (Validator.isBlank(
+				PropsValues.DL_STORE_ADVANCED_FILE_SYSTEM_ROOT_DIR)) {
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Property \"" +
+						PropsKeys.DL_STORE_ADVANCED_FILE_SYSTEM_ROOT_DIR +
+							" is not set");
+			}
+
+			throw new FileSystemStoreRootDirException();
+		}
+
+		if (Validator.isBlank(PropsValues.DL_STORE_FILE_SYSTEM_ROOT_DIR)) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Property \"" +
+						PropsKeys.DL_STORE_FILE_SYSTEM_ROOT_DIR +
+							" is not set");
+			}
+
+			throw new FileSystemStoreRootDirException();
+		}
+
+		if (PropsValues.DL_STORE_ADVANCED_FILE_SYSTEM_ROOT_DIR.equals(
+				PropsValues.DL_STORE_FILE_SYSTEM_ROOT_DIR)) {
+
+			if (_log.isWarnEnabled()) {
+				StringBundler sb = new StringBundler(5);
+
+				sb.append("Both properties \"");
+				sb.append(PropsKeys.DL_STORE_ADVANCED_FILE_SYSTEM_ROOT_DIR);
+				sb.append("\" and \"");
+				sb.append(PropsKeys.DL_STORE_FILE_SYSTEM_ROOT_DIR);
+				sb.append("\" have the same value");
+
+				_log.warn(sb.toString());
+			}
+
+			throw new FileSystemStoreRootDirException();
+		}
+	}
+
+	@Override
 	protected void doConvert() throws Exception {
 		_sourceStore = StoreFactory.getInstance();
 
-		String[] values = getParameterValues();
-
-		String targetStoreClassName = values[0];
+		String targetStoreClassName = getTargetStoreClassName();
 
 		_targetStore = (Store)InstanceFactory.newInstance(
 			ClassLoaderUtil.getPortalClassLoader(), targetStoreClassName);
@@ -122,6 +179,18 @@ public class ConvertDocumentLibrary extends ConvertProcess {
 
 		return ListUtil.sort(
 			dlFileVersions, new FileVersionVersionComparator(true));
+	}
+
+	protected String getSourceStoreClassName() {
+		Store sourceStore = StoreFactory.getInstance();
+
+		return sourceStore.getClass().getName();
+	}
+
+	protected String getTargetStoreClassName() {
+		String[] values = getParameterValues();
+
+		return values[0];
 	}
 
 	protected void migrateDL() throws PortalException {
@@ -323,6 +392,8 @@ public class ConvertDocumentLibrary extends ConvertProcess {
 
 		actionableDynamicQuery.performActions();
 	}
+
+	private static final String _FILE_SYSTEM_STORE_SUFFIX = "FileSystemStore";
 
 	private static final String[] _HOOKS = new String[] {
 		AdvancedFileSystemStore.class.getName(), CMISStore.class.getName(),

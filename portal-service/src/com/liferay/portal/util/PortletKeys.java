@@ -65,8 +65,6 @@ public class PortletKeys {
 
 	public static final String CONTROL_PANEL_MENU = "160";
 
-	public static final String DICTIONARY = "23";
-
 	public static final String DIRECTORY = "11";
 
 	public static final String DOCKBAR = "145";

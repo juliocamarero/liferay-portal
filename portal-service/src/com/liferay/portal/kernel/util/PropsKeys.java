@@ -67,12 +67,6 @@ public interface PropsKeys {
 
 	public static final String AIM_PASSWORD = "aim.password";
 
-	public static final String AMAZON_ACCESS_KEY_ID = "amazon.access.key.id";
-
-	public static final String AMAZON_ASSOCIATE_TAG = "amazon.associate.tag";
-
-	public static final String AMAZON_SECRET_ACCESS_KEY = "amazon.secret.access.key";
-
 	public static final String ANNOUNCEMENTS_EMAIL_BODY = "announcements.email.body";
 
 	public static final String ANNOUNCEMENTS_EMAIL_FROM_ADDRESS = "announcements.email.from.address";
@@ -818,6 +812,8 @@ public interface PropsKeys {
 	public static final String DL_REPOSITORY_IMPL = "dl.repository.impl";
 
 	public static final String DL_SHOW_LIFERAY_SYNC_MESSAGE = "dl.show.liferay.sync.message";
+
+	public static final String DL_STORE_ADVANCED_FILE_SYSTEM_ROOT_DIR = "dl.store.advanced.file.system.root.dir";
 
 	public static final String DL_STORE_ANTIVIRUS_ENABLED = "dl.store.antivirus.enabled";
 

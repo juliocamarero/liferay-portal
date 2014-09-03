@@ -1624,6 +1624,7 @@
 		<property name="folderId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="treePath" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="fileName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="extension" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="mimeType" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
@@ -1717,6 +1718,7 @@
 		<property name="folderId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="fileEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="treePath" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="fileName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="extension" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="mimeType" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="title" type="com.liferay.portal.dao.orm.hibernate.StringType" />

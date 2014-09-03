@@ -172,6 +172,11 @@ public class LiferayFileVersion extends LiferayModel implements FileVersion {
 	}
 
 	@Override
+	public String getFileName() {
+		return _dlFileVersion.getFileName();
+	}
+
+	@Override
 	public long getFileVersionId() {
 		return _dlFileVersion.getFileVersionId();
 	}

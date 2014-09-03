@@ -84,7 +84,7 @@ public class EntityCacheImpl
 
 	@Override
 	public void clearLocalCache() {
-		if (_localCacheAvailable) {
+		if (_LOCAL_CACHE_AVAILABLE) {
 			_localCache.remove();
 		}
 	}
@@ -122,7 +122,7 @@ public class EntityCacheImpl
 
 		Serializable localCacheKey = null;
 
-		if (_localCacheAvailable) {
+		if (_LOCAL_CACHE_AVAILABLE) {
 			localCache = _localCache.get();
 
 			localCacheKey = _encodeLocalCacheKey(clazz, primaryKey);
@@ -142,7 +142,7 @@ public class EntityCacheImpl
 				result = StringPool.BLANK;
 			}
 
-			if (_localCacheAvailable) {
+			if (_LOCAL_CACHE_AVAILABLE) {
 				localCache.put(localCacheKey, result);
 			}
 		}
@@ -185,7 +185,7 @@ public class EntityCacheImpl
 
 		Serializable localCacheKey = null;
 
-		if (_localCacheAvailable) {
+		if (_LOCAL_CACHE_AVAILABLE) {
 			localCache = _localCache.get();
 
 			localCacheKey = _encodeLocalCacheKey(clazz, primaryKey);
@@ -230,7 +230,7 @@ public class EntityCacheImpl
 				}
 			}
 
-			if (_localCacheAvailable) {
+			if (_LOCAL_CACHE_AVAILABLE) {
 				localCache.put(localCacheKey, result);
 			}
 		}
@@ -273,7 +273,7 @@ public class EntityCacheImpl
 
 		result = ((BaseModel<?>)result).toCacheModel();
 
-		if (_localCacheAvailable) {
+		if (_LOCAL_CACHE_AVAILABLE) {
 			Map<Serializable, Serializable> localCache = _localCache.get();
 
 			Serializable localCacheKey = _encodeLocalCacheKey(
@@ -314,7 +314,7 @@ public class EntityCacheImpl
 			return;
 		}
 
-		if (_localCacheAvailable) {
+		if (_LOCAL_CACHE_AVAILABLE) {
 			Map<Serializable, Serializable> localCache = _localCache.get();
 
 			Serializable localCacheKey = _encodeLocalCacheKey(
@@ -411,24 +411,31 @@ public class EntityCacheImpl
 	private static final String _GROUP_KEY_PREFIX = CACHE_NAME.concat(
 		StringPool.PERIOD);
 
-	private static Log _log = LogFactoryUtil.getLog(EntityCacheImpl.class);
-
-	private static ThreadLocal<LRUMap> _localCache;
-	private static boolean _localCacheAvailable;
+	private static final boolean _LOCAL_CACHE_AVAILABLE;
 
 	static {
 		if (PropsValues.VALUE_OBJECT_ENTITY_THREAD_LOCAL_CACHE_MAX_SIZE > 0) {
+			_LOCAL_CACHE_AVAILABLE = true;
+
 			_localCache = new AutoResetThreadLocal<LRUMap>(
 				EntityCacheImpl.class + "._localCache",
 				new LRUMap(
 					PropsValues.
 						VALUE_OBJECT_ENTITY_THREAD_LOCAL_CACHE_MAX_SIZE));
-			_localCacheAvailable = true;
+		}
+		else {
+			_LOCAL_CACHE_AVAILABLE = false;
+
+			_localCache = null;
 		}
 	}
 
+	private static final ThreadLocal<LRUMap> _localCache;
+
+	private static Log _log = LogFactoryUtil.getLog(EntityCacheImpl.class);
+
 	private MultiVMPool _multiVMPool;
-	private ConcurrentMap<String, PortalCache<Serializable, Serializable>>
+	private final ConcurrentMap<String, PortalCache<Serializable, Serializable>>
 		_portalCaches =
 			new ConcurrentHashMap
 				<String, PortalCache<Serializable, Serializable>>();
