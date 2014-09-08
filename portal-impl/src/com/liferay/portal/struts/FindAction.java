@@ -161,8 +161,8 @@ public abstract class FindAction extends Action {
 				noSuchEntryRedirect);
 
 			if (Validator.isNotNull(noSuchEntryRedirect) &&
-				((e instanceof NoSuchLayoutException) ||
-				 (e instanceof PrincipalException))) {
+				(e instanceof NoSuchLayoutException ||
+				 e instanceof PrincipalException)) {
 
 				response.sendRedirect(noSuchEntryRedirect);
 			}
