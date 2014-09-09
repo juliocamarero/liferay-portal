@@ -34,7 +34,6 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -99,11 +98,11 @@ public abstract class FindAction extends Action {
 				}
 			}
 
-			GroupPermissionUtil.check(
-				themeDisplay.getPermissionChecker(), groupId, ActionKeys.VIEW);
+			Layout layout = LayoutLocalServiceUtil.getLayout(plid);
 
 			LayoutPermissionUtil.check(
-				themeDisplay.getPermissionChecker(), plid, ActionKeys.VIEW);
+				themeDisplay.getPermissionChecker(), layout, true,
+				ActionKeys.VIEW);
 
 			Object[] plidAndPortletId = getPlidAndPortletId(
 				themeDisplay, groupId, plid, _portletIds);
