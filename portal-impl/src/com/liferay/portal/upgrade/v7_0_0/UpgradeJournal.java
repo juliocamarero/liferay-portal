@@ -118,15 +118,15 @@ public class UpgradeJournal extends UpgradeProcess {
 			name, localizedName, localizedDescription, getContent(fileName),
 			cacheable);
 
-		long liveGroupId = getStagingGroupId(groupId);
+		long stagingGroupId = getStagingGroupId(groupId);
 
-		if (liveGroupId > 0) {
+		if (stagingGroupId > 0) {
 			ddmStructureId = addDDMStructure(
-				ddmStructureUUID, increment(), liveGroupId, companyId, name,
+				ddmStructureUUID, increment(), stagingGroupId, companyId, name,
 				localizedName, localizedDescription, xsd);
 
 			addDDMTemplate(
-				ddmTemplateUUID, increment(), liveGroupId, companyId,
+				ddmTemplateUUID, increment(), stagingGroupId, companyId,
 				ddmStructureId, name, localizedName, localizedDescription,
 				getContent(fileName), cacheable);
 		}
