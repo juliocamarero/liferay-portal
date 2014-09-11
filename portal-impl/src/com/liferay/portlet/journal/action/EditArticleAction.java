@@ -16,6 +16,8 @@ package com.liferay.portlet.journal.action;
 
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -577,6 +579,26 @@ public class EditArticleAction extends PortletAction {
 		String layoutUuid = ParamUtil.getString(
 			uploadPortletRequest, "layoutUuid");
 
+		if (_log.isDebugEnabled()) {
+			_log.debug("Command: " + cmd);
+			_log.debug("GroupId: " + groupId);
+			_log.debug("ClassNameId: " + classNameId);
+			_log.debug("ClassPK: " + classPK);
+			_log.debug("ArticleId: " + articleId);
+			_log.debug("Version: " + version);
+			_log.debug("AutoArticleId: " + autoArticleId);
+			_log.debug("DefaultLanguageId: " + defaultLanguageId);
+			_log.debug("ToLanguageId: " + toLanguageId);
+			_log.debug("Title: " + title);
+			_log.debug("Description: " + description);
+			_log.debug("Content: " + content);
+			_log.debug("Type: " + type);
+			_log.debug("StructureId: " + structureId);
+			_log.debug("TemplateId: " + templateId);
+			_log.debug("LayoutUuid: " + layoutUuid);
+			_log.debug("FolderId: " + folderId);
+		}
+
 		Layout targetLayout = JournalUtil.getArticleLayout(layoutUuid, groupId);
 
 		if (targetLayout == null) {
@@ -778,5 +800,7 @@ public class EditArticleAction extends PortletAction {
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			portletResource, articleId, true);
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(EditArticleAction.class);
 
 }
