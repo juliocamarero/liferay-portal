@@ -23,7 +23,6 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalFolder;
-import com.liferay.portlet.journal.model.JournalFolderConstants;
 import com.liferay.portlet.journal.service.base.JournalFolderServiceBaseImpl;
 import com.liferay.portlet.journal.service.permission.JournalFolderPermission;
 
