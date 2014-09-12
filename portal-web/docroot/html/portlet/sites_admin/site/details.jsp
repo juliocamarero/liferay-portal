@@ -122,13 +122,13 @@ else if (group != null) {
 <aui:fieldset>
 	<c:choose>
 		<c:when test="<%= ((liveGroup != null) && (liveGroup.isCompany() || PortalUtil.isSystemGroup(liveGroup.getName()))) %>">
-			<aui:input name="name" type="hidden" />
+			<aui:input name="title" type="hidden" />
 		</c:when>
 		<c:when test="<%= (liveGroup != null) && liveGroup.isOrganization() %>">
-			<aui:input helpMessage="the-name-of-this-site-cannot-be-edited-because-it-belongs-to-an-organization" name="name" type="resource" value="<%= liveGroup.getDescriptiveName(locale) %>" />
+			<aui:input helpMessage="the-name-of-this-site-cannot-be-edited-because-it-belongs-to-an-organization" name="title" type="resource" value="<%= liveGroup.getDescriptiveName(locale) %>" />
 		</c:when>
 		<c:otherwise>
-			<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" name="name" />
+			<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" name="title" />
 		</c:otherwise>
 	</c:choose>
 
