@@ -145,12 +145,11 @@ public class JournalArticleFinderImpl
 
 	@Override
 	public int countByG_U_F_C(
-		long groupId, long userId, List<Long> folderIds, long classNameId,
-		boolean includeOwner, QueryDefinition<JournalArticle> queryDefinition) {
+		long groupId, List<Long> folderIds, long classNameId,
+		QueryDefinition<JournalArticle> queryDefinition) {
 
 		return doCountByG_U_F_C(
-			groupId, userId, folderIds, classNameId, includeOwner,
-			queryDefinition, false);
+			groupId, folderIds, classNameId, queryDefinition, false);
 	}
 
 	@Override
@@ -267,12 +266,11 @@ public class JournalArticleFinderImpl
 
 	@Override
 	public int filterCountByG_U_F_C(
-		long groupId, long userId, List<Long> folderIds, long classNameId,
-		boolean includeOwner, QueryDefinition<JournalArticle> queryDefinition) {
+		long groupId, List<Long> folderIds, long classNameId,
+		QueryDefinition<JournalArticle> queryDefinition) {
 
 		return doCountByG_U_F_C(
-			groupId, userId, folderIds, classNameId, includeOwner,
-			queryDefinition, true);
+			groupId, folderIds, classNameId, queryDefinition, true);
 	}
 
 	@Override
@@ -391,12 +389,11 @@ public class JournalArticleFinderImpl
 
 	@Override
 	public List<JournalArticle> filterFindByG_U_F_C(
-		long groupId, long userId, List<Long> folderIds, long classNameId,
-		boolean includeOwner, QueryDefinition<JournalArticle> queryDefinition) {
+		long groupId, List<Long> folderIds, long classNameId,
+		QueryDefinition<JournalArticle> queryDefinition) {
 
 		return doFindByG_U_F_C(
-			groupId, userId, folderIds, classNameId, includeOwner,
-			queryDefinition, true);
+			groupId, folderIds, classNameId, queryDefinition, true);
 	}
 
 	@Override
@@ -634,12 +631,11 @@ public class JournalArticleFinderImpl
 
 	@Override
 	public List<JournalArticle> findByG_U_F_C(
-		long groupId, long userId, List<Long> folderIds, long classNameId,
-		boolean includeOwner, QueryDefinition<JournalArticle> queryDefinition) {
+		long groupId, List<Long> folderIds, long classNameId,
+		QueryDefinition<JournalArticle> queryDefinition) {
 
 		return doFindByG_U_F_C(
-			groupId, userId, folderIds, classNameId, includeOwner,
-			queryDefinition, false);
+			groupId, folderIds, classNameId, queryDefinition, false);
 	}
 
 	@Override
@@ -833,8 +829,8 @@ public class JournalArticleFinderImpl
 	}
 
 	protected int doCountByG_U_F_C(
-		long groupId, long userId, List<Long> folderIds, long classNameId,
-		boolean includeOwner, QueryDefinition<JournalArticle> queryDefinition,
+		long groupId, List<Long> folderIds, long classNameId,
+		QueryDefinition<JournalArticle> queryDefinition,
 		boolean inlineSQLHelper) {
 
 		Session session = null;
@@ -857,21 +853,6 @@ public class JournalArticleFinderImpl
 					getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME));
 			}
 
-			String ownerClause = StringPool.BLANK;
-
-			if (userId > 0) {
-				if (includeOwner) {
-					ownerClause =
-						"((JournalArticle.userId = ?) AND " +
-							"(JournalArticle.status!= ?)) OR";
-				}
-				else {
-					ownerClause = "(JournalArticle.userId = ?) AND";
-				}
-			}
-
-			sql = StringUtil.replace(sql, "[$OWNER$] OR", ownerClause);
-
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
 					sql, JournalArticle.class.getName(),
@@ -887,10 +868,10 @@ public class JournalArticleFinderImpl
 			qPos.add(groupId);
 			qPos.add(classNameId);
 
-			if (userId > 0) {
-				qPos.add(userId);
+			if (queryDefinition.getUserId() > 0) {
+				qPos.add(queryDefinition.getUserId());
 
-				if (includeOwner) {
+				if (queryDefinition.isIncludeOwner()) {
 					qPos.add(WorkflowConstants.STATUS_IN_TRASH);
 				}
 			}
@@ -1204,8 +1185,8 @@ public class JournalArticleFinderImpl
 	}
 
 	protected List<JournalArticle> doFindByG_U_F_C(
-		long groupId, long userId, List<Long> folderIds, long classNameId,
-		boolean includeOwner, QueryDefinition<JournalArticle> queryDefinition,
+		long groupId, List<Long> folderIds, long classNameId,
+		QueryDefinition<JournalArticle> queryDefinition,
 		boolean inlineSQLHelper) {
 
 		Session session = null;
@@ -1231,21 +1212,6 @@ public class JournalArticleFinderImpl
 					getFolderIds(folderIds, JournalArticleImpl.TABLE_NAME));
 			}
 
-			String ownerClause = StringPool.BLANK;
-
-			if (userId > 0) {
-				if (includeOwner) {
-					ownerClause =
-						"((JournalArticle.userId = ?) AND " +
-							"(JournalArticle.status != ?)) OR";
-				}
-				else {
-					ownerClause = "(JournalArticle.userId = ?) AND";
-				}
-			}
-
-			sql = StringUtil.replace(sql, "[$OWNER$] OR", ownerClause);
-
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
 					sql, JournalArticle.class.getName(),
@@ -1262,10 +1228,10 @@ public class JournalArticleFinderImpl
 			qPos.add(groupId);
 			qPos.add(classNameId);
 
-			if (userId > 0) {
-				qPos.add(userId);
+			if (queryDefinition.getUserId() > 0) {
+				qPos.add(queryDefinition.getUserId());
 
-				if (includeOwner) {
+				if (queryDefinition.isIncludeOwner()) {
 					qPos.add(WorkflowConstants.STATUS_IN_TRASH);
 				}
 			}
