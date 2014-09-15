@@ -30,8 +30,10 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.TempFileUtil;
 import com.liferay.portal.kernel.util.UnicodeFormatter;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Image;
@@ -42,6 +44,8 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.documentlibrary.action.EditFileEntryAction;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
@@ -57,7 +61,6 @@ import com.liferay.portlet.dynamicdatamapping.util.comparator.StructureModifiedD
 import com.liferay.portlet.dynamicdatamapping.util.comparator.TemplateIdComparator;
 import com.liferay.portlet.dynamicdatamapping.util.comparator.TemplateModifiedDateComparator;
 
-import java.io.File;
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -595,9 +598,7 @@ public class DDMImpl implements DDM {
 					fieldValue = String.valueOf(fieldValueDate.getTime());
 				}
 			}
-			else if (fieldDataType.equals(FieldConstants.IMAGE) &&
-					 Validator.isNull(fieldValue)) {
-
+			else if (fieldDataType.equals(FieldConstants.IMAGE)) {
 				HttpServletRequest request = serviceContext.getRequest();
 
 				if (!(request instanceof UploadRequest)) {
@@ -642,15 +643,38 @@ public class DDMImpl implements DDM {
 			UploadRequest uploadRequest, String fieldNameValue)
 		throws Exception {
 
-		File file = uploadRequest.getFile(fieldNameValue + "File");
+		ThemeDisplay themeDisplay = (ThemeDisplay)uploadRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+		
+		String json = ParamUtil.getString(uploadRequest, fieldNameValue);
 
-		byte[] bytes = FileUtil.getBytes(file);
-
-		if (ArrayUtil.isNotEmpty(bytes)) {
-			return bytes;
+		if (Validator.isNull(json)) {
+			return null;
 		}
 
-		String url = uploadRequest.getParameter(fieldNameValue + "URL");
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(json);
+
+		if (jsonObject.has("name")) {
+			String name = jsonObject.getString("name");
+			
+			FileEntry tempFileEntry = TempFileUtil.getTempFile(
+				themeDisplay.getScopeGroupId(), themeDisplay.getUserId(),
+				name, EditFileEntryAction.TEMP_FOLDER_NAME);
+
+			return FileUtil.getBytes(tempFileEntry.getContentStream());
+		}
+		else if (jsonObject.has("uuid")) {
+			String uuid = jsonObject.getString("uuid");
+			long groupId = jsonObject.getLong("groupId");
+
+			FileEntry fileEntry =
+				DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
+					uuid, groupId);
+
+			return FileUtil.getBytes(fileEntry.getContentStream());
+		}
+
+		String url = jsonObject.getString("data");
 
 		long imageId = GetterUtil.getLong(
 			HttpUtil.getParameter(url, "img_id", false));
