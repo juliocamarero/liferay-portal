@@ -485,8 +485,7 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	}
 
 	@Override
-	public com.liferay.portal.model.Group getParentGroup()
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public com.liferay.portal.model.Group getParentGroup() {
 		return _group.getParentGroup();
 	}
 
@@ -572,6 +571,17 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	public java.lang.String getScopeLabel(
 		com.liferay.portal.theme.ThemeDisplay themeDisplay) {
 		return _group.getScopeLabel(themeDisplay);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.model.Group> getSharingContentGroups() {
+		return _group.getSharingContentGroups();
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.model.Group> getSharingContentGroups(
+		boolean includeGroup) {
+		return _group.getSharingContentGroups(includeGroup);
 	}
 
 	/**
@@ -796,6 +806,11 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	@Override
 	public boolean isRoot() {
 		return _group.isRoot();
+	}
+
+	@Override
+	public boolean isSharingContent() {
+		return _group.isSharingContent();
 	}
 
 	@Override
