@@ -56,7 +56,7 @@ containerURL.setParameter("className", className);
 containerURL.setParameter("classPK", String.valueOf(classPK));
 containerURL.setParameter("containerModelClassName", containerModelClassName);
 
-TrashUtil.addContainerModelBreadcrumbEntries(request, renderResponse, containerModelClassName, containerModelId, containerURL);
+TrashUtil.addContainerModelBreadcrumbEntries(request, liferayPortletResponse, containerModelClassName, containerModelId, containerURL);
 %>
 
 <div class="alert alert-block">
