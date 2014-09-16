@@ -82,8 +82,7 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public long getOrganizationId();
 
-	public com.liferay.portal.model.Group getParentGroup()
-		throws com.liferay.portal.kernel.exception.PortalException;
+	public com.liferay.portal.model.Group getParentGroup();
 
 	public com.liferay.portal.kernel.util.UnicodeProperties getParentLiveGroupTypeSettingsProperties();
 
@@ -106,6 +105,11 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public java.lang.String getScopeLabel(
 		com.liferay.portal.theme.ThemeDisplay themeDisplay);
+
+	public java.util.List<com.liferay.portal.model.Group> getSharingContentGroups();
+
+	public java.util.List<com.liferay.portal.model.Group> getSharingContentGroups(
+		boolean includeGroup);
 
 	public com.liferay.portal.model.Group getStagingGroup();
 
@@ -165,6 +169,8 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 	public boolean isRegularSite();
 
 	public boolean isRoot();
+
+	public boolean isSharingContent();
 
 	public boolean isShowSite(
 		com.liferay.portal.security.permission.PermissionChecker permissionChecker,
