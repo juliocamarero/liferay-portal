@@ -194,6 +194,15 @@ Group selGroup = layoutsAdminDisplayContext.getSelGroup();
 					selectedLayoutIds="<%= selectedLayoutIds %>"
 					treeId="layoutsTree"
 				/>
+
+				<portlet:renderURL var="addPageSetURL">
+					<portlet:param name="struts_action" value="/layouts_admin/add_pages_set" />
+					<portlet:param name="parentGroupId" value="<%= String.valueOf(group.getGroupId()) %>" />
+				</portlet:renderURL>
+
+				<aui:button-row>
+					<aui:button href="<%= addPageSetURL %>" type="submit" value="add-new-pages-set" />
+				</aui:button-row>
 			</div>
 		</c:if>
 
