@@ -19,6 +19,10 @@
 <%
 Group group = layoutsAdminDisplayContext.getGroup();
 
+if (group.isSharingContent()) {
+	group = group.getParentGroup();
+}
+
 SitesUtil.addPortletBreadcrumbEntries(group, layoutsAdminDisplayContext.getPagesName(), layoutsAdminDisplayContext.getRedirectURL(), request, renderResponse);
 %>
 
@@ -183,17 +187,26 @@ Group selGroup = layoutsAdminDisplayContext.getSelGroup();
 
 				<%
 				String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
+
+				for (Group curGroup : group.getSharingContentGroups(true)) {
+					PortletURL editLayoutURL = layoutsAdminDisplayContext.getEditLayoutURL();
+
+					editLayoutURL.setParameter("groupId", String.valueOf(curGroup.getGroupId()));
 				%>
 
-				<liferay-ui:layouts-tree
-					groupId="<%= layoutsAdminDisplayContext.getGroupId() %>"
-					portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
-					privateLayout="<%= layoutsAdminDisplayContext.isPrivateLayout() %>"
-					rootNodeName="<%= layoutsAdminDisplayContext.getRootNodeName() %>"
-					selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
-					selectedLayoutIds="<%= selectedLayoutIds %>"
-					treeId="layoutsTree"
-				/>
+					<liferay-ui:layouts-tree
+						groupId="<%= curGroup.getGroupId() %>"
+						portletURL="<%= editLayoutURL %>"
+						privateLayout="<%= Boolean.FALSE %>"
+						rootNodeName="<%= curGroup.getName() %>"
+						selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
+						selectedLayoutIds="<%= selectedLayoutIds %>"
+						treeId="layoutsTree"
+					/>
+
+				<%
+				}
+				%>
 
 				<portlet:renderURL var="addPageSetURL">
 					<portlet:param name="struts_action" value="/layouts_admin/add_pages_set" />
