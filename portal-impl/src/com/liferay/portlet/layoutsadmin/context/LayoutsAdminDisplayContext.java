@@ -70,28 +70,14 @@ public class LayoutsAdminDisplayContext {
 			privateLayout = true;
 		}
 
-		Layout selLayout = getSelLayout();
-
-		if (selLayout != null) {
-			privateLayout = selLayout.isPrivateLayout();
-		}
-
 		Group liveGroup = getLiveGroup();
 
 		if (liveGroup.isUser() && !isPublicLayoutsModifiable() &&
 			isPrivateLayoutsModifiable() && !privateLayout) {
 
-			privateLayout = true;
 			tabs1 = "my-dashboard";
 		}
 
-		Group selGroup = getSelGroup();
-
-		if (selGroup.isLayoutSetPrototype()) {
-			privateLayout = true;
-		}
-
-		_privateLayout = privateLayout;
 		_tabs1 = tabs1;
 
 		String portletName = getPortletName();
@@ -169,8 +155,7 @@ public class LayoutsAdminDisplayContext {
 			WebKeys.THEME_DISPLAY);
 
 		_layoutDescriptions = LayoutListUtil.getLayoutDescriptions(
-			getGroupId(), isPrivateLayout(), getRootNodeName(),
-			themeDisplay.getLocale());
+			getGroupId(), false, getRootNodeName(), themeDisplay.getLocale());
 
 		return _layoutDescriptions;
 	}
@@ -219,28 +204,15 @@ public class LayoutsAdminDisplayContext {
 			return _pagesName;
 		}
 
+		_pagesName = "pages";
+
 		Group liveGroup = getLiveGroup();
 
-		if (liveGroup.isLayoutPrototype() || liveGroup.isLayoutSetPrototype() ||
-			liveGroup.isUserGroup()) {
+		if (!liveGroup.isLayoutPrototype() &&
+			!liveGroup.isLayoutSetPrototype() &&
+			!liveGroup.isUserGroup() && liveGroup.isUser()) {
 
-			_pagesName = "pages";
-		}
-		else if (isPrivateLayout()) {
-			if (liveGroup.isUser()) {
-				_pagesName = "my-dashboard";
-			}
-			else {
-				_pagesName = "private-pages";
-			}
-		}
-		else {
-			if (liveGroup.isUser()) {
-				_pagesName = "my-profile";
-			}
-			else {
-				_pagesName = "public-pages";
-			}
+			_pagesName = "my-profile";
 		}
 
 		return _pagesName;
@@ -288,7 +260,7 @@ public class LayoutsAdminDisplayContext {
 		Group liveGroup = getLiveGroup();
 
 		_rootNodeName = liveGroup.getLayoutRootNodeName(
-			isPrivateLayout(), themeDisplay.getLocale());
+			false, themeDisplay.getLocale());
 
 		return _rootNodeName;
 	}
@@ -315,7 +287,7 @@ public class LayoutsAdminDisplayContext {
 		}
 
 		_selLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-			getGroupId(), isPrivateLayout());
+			getGroupId(), false);
 
 		return _selLayoutSet;
 	}
@@ -396,10 +368,6 @@ public class LayoutsAdminDisplayContext {
 		return _userGroup;
 	}
 
-	public boolean isPrivateLayout() {
-		return _privateLayout;
-	}
-
 	protected String getPortletName() {
 		PortletConfig portletConfig = (PortletConfig)_request.getAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG);
@@ -457,7 +425,6 @@ public class LayoutsAdminDisplayContext {
 	private final LiferayPortletResponse _liferayPortletResponse;
 	private Organization _organization;
 	private String _pagesName;
-	private final boolean _privateLayout;
 	private String _redirect;
 	private final HttpServletRequest _request;
 	private String _rootNodeName;
