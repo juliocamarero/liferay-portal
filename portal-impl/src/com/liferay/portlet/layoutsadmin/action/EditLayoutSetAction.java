@@ -14,7 +14,9 @@
 
 package com.liferay.portlet.layoutsadmin.action;
 
+import com.liferay.portal.GroupFriendlyURLException;
 import com.liferay.portal.ImageTypeException;
+import com.liferay.portal.LayoutSetVirtualHostException;
 import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -103,6 +105,8 @@ public class EditLayoutSetAction extends EditLayoutsAction {
 		}
 		catch (Exception e) {
 			if (e instanceof PrincipalException ||
+				e instanceof GroupFriendlyURLException ||
+				e instanceof LayoutSetVirtualHostException ||
 				e instanceof SystemException) {
 
 				SessionErrors.add(actionRequest, e.getClass());
@@ -208,6 +212,10 @@ public class EditLayoutSetAction extends EditLayoutsAction {
 		updateSettings(
 			actionRequest, liveGroupId, stagingGroupId,
 			layoutSet.getSettingsProperties());
+
+		updateSiteURL(actionRequest, liveGroupId);
+
+		updateRobots(actionRequest, liveGroupId);
 	}
 
 	protected void updateLogo(
@@ -233,8 +241,7 @@ public class EditLayoutSetAction extends EditLayoutsAction {
 			groupId = stagingGroupId;
 		}
 
-		LayoutSetServiceUtil.updateLogo(
-			groupId, false, !deleteLogo, logoBytes);
+		LayoutSetServiceUtil.updateLogo(groupId, false, !deleteLogo, logoBytes);
 	}
 
 	protected void updateLookAndFeel(
@@ -294,6 +301,24 @@ public class EditLayoutSetAction extends EditLayoutsAction {
 		GroupServiceUtil.updateGroup(liveGroupId, liveGroup.getTypeSettings());
 	}
 
+	protected void updateRobots(ActionRequest actionRequest, long liveGroupId)
+		throws Exception {
+
+		Group liveGroup = GroupLocalServiceUtil.getGroup(liveGroupId);
+
+		UnicodeProperties typeSettingsProperties =
+			liveGroup.getTypeSettingsProperties();
+
+		String robots = ParamUtil.getString(
+			actionRequest, "robots",
+			liveGroup.getTypeSettingsProperty("robots.txt"));
+
+		typeSettingsProperties.setProperty("robots.txt", robots);
+
+		GroupServiceUtil.updateGroup(
+			liveGroupId, typeSettingsProperties.toString());
+	}
+
 	protected void updateSettings(
 			ActionRequest actionRequest, long liveGroupId, long stagingGroupId,
 			UnicodeProperties settingsProperties)
@@ -313,6 +338,55 @@ public class EditLayoutSetAction extends EditLayoutsAction {
 
 		LayoutSetServiceUtil.updateSettings(
 			groupId, false, settingsProperties.toString());
+	}
+
+	protected void updateSiteURL(ActionRequest actionRequest, long liveGroupId)
+		throws Exception {
+
+		Group liveGroup = GroupLocalServiceUtil.getGroup(liveGroupId);
+
+		String friendlyURL = ParamUtil.getString(
+			actionRequest, "friendlyURL", liveGroup.getFriendlyURL());
+
+		liveGroup = GroupServiceUtil.updateFriendlyURL(
+			liveGroupId, friendlyURL);
+
+		// Virtual hosts
+
+		LayoutSet layoutSet = liveGroup.getPublicLayoutSet();
+
+		String virtualHost = ParamUtil.getString(
+			actionRequest, "virtualHost", layoutSet.getVirtualHostname());
+
+		LayoutSetServiceUtil.updateVirtualHost(
+			liveGroup.getGroupId(), false, virtualHost);
+
+		// Staging
+
+		String oldFriendlyURL = liveGroup.getFriendlyURL();
+		String oldStagingFriendlyURL = null;
+
+		if (liveGroup.hasStagingGroup()) {
+			Group stagingGroup = liveGroup.getStagingGroup();
+
+			oldStagingFriendlyURL = stagingGroup.getFriendlyURL();
+
+			friendlyURL = ParamUtil.getString(
+				actionRequest, "stagingFriendlyURL",
+				stagingGroup.getFriendlyURL());
+
+			GroupServiceUtil.updateFriendlyURL(
+				stagingGroup.getGroupId(), friendlyURL);
+
+			LayoutSet stagingLayoutSet = stagingGroup.getPublicLayoutSet();
+
+			virtualHost = ParamUtil.getString(
+				actionRequest, "stagingVirtualHost",
+				stagingLayoutSet.getVirtualHostname());
+
+			LayoutSetServiceUtil.updateVirtualHost(
+				stagingGroup.getGroupId(), false, virtualHost);
+		}
 	}
 
 }
