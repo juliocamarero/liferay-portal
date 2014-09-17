@@ -40,7 +40,7 @@ if (!company.isSiteLogo()) {
 	mainSections = ArrayUtil.remove(mainSections, "logo");
 }
 
-if (group.isGuest()) {
+if (group.isGuest() || group.isSharingContent()) {
 	mainSections = ArrayUtil.remove(mainSections, "advanced");
 }
 
