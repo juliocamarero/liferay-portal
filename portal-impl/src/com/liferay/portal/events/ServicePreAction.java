@@ -662,6 +662,10 @@ public class ServicePreAction extends Action {
 
 		long scopeGroupId = PortalUtil.getScopeGroupId(request);
 
+		if (group.isSharingContent()) {
+			scopeGroupId = group.getParentGroupId();
+		}
+
 		if ((scopeGroupId <= 0) && (doAsGroupId > 0)) {
 			scopeGroupId = doAsGroupId;
 		}
@@ -1954,10 +1958,10 @@ public class ServicePreAction extends Action {
 			UnicodeProperties typeSettingsProperties =
 				layoutGroup.getTypeSettingsProperties();
 
-			boolean mergeGuestPublicPages = GetterUtil.getBoolean(
-				typeSettingsProperties.getProperty("mergeGuestPublicPages"));
+			boolean mergeGuestPages = GetterUtil.getBoolean(
+				typeSettingsProperties.getProperty("mergeGuestPages"));
 
-			if (!mergeGuestPublicPages) {
+			if (!mergeGuestPages) {
 				return layouts;
 			}
 
@@ -2003,11 +2007,10 @@ public class ServicePreAction extends Action {
 				UnicodeProperties typeSettingsProperties =
 					previousGroup.getTypeSettingsProperties();
 
-				boolean mergeGuestPublicPages = GetterUtil.getBoolean(
-					typeSettingsProperties.getProperty(
-						"mergeGuestPublicPages"));
+				boolean mergeGuestPages = GetterUtil.getBoolean(
+					typeSettingsProperties.getProperty("mergeGuestPages"));
 
-				if (!mergeGuestPublicPages) {
+				if (!mergeGuestPages) {
 					return layouts;
 				}
 

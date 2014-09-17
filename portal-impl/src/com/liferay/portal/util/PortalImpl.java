@@ -4852,6 +4852,10 @@ public class PortalImpl implements Portal {
 				scopeGroupId = doAsGroupId;
 			}
 
+			if (group.isSharingContent()) {
+				scopeGroupId = group.getParentGroupId();
+			}
+
 			if ((portletId != null) && (group != null) &&
 				(group.isStaged() || group.isStagingGroup())) {
 
