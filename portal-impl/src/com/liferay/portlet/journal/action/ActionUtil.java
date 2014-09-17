@@ -212,10 +212,22 @@ public class ActionUtil {
 			try {
 				ddmStructure = DDMStructureServiceUtil.getStructure(
 					groupId, PortalUtil.getClassNameId(JournalArticle.class),
-					structureId, true);
+					structureId);
 			}
 			catch (NoSuchStructureException nsse1) {
-				return;
+				if (groupId == themeDisplay.getCompanyGroupId()) {
+					return;
+				}
+
+				try {
+					ddmStructure = DDMStructureServiceUtil.getStructure(
+						themeDisplay.getCompanyGroupId(),
+						PortalUtil.getClassNameId(JournalArticle.class),
+						structureId);
+				}
+				catch (NoSuchStructureException nsse2) {
+					return;
+				}
 			}
 
 			article = JournalArticleServiceUtil.getArticle(
