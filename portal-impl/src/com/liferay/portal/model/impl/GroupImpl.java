@@ -497,6 +497,31 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public List<Group> getSharingContentGroups() {
+		return getSharingContentGroups(false);
+	}
+
+	@Override
+	public List<Group> getSharingContentGroups(boolean includeGroup) {
+		List<Group> sharingContentGroups = new ArrayList<Group>();
+
+		if (includeGroup) {
+			sharingContentGroups.add(this);
+		}
+
+		List<Group> groups = GroupLocalServiceUtil.getGroups(
+			getCompanyId(), getGroupId(), false);
+
+		for (Group group : groups) {
+			if (group.isSharingContent()) {
+				sharingContentGroups.add(group);
+			}
+		}
+
+		return sharingContentGroups;
+	}
+
+	@Override
 	public Group getStagingGroup() {
 		if (isStagingGroup()) {
 			return null;
