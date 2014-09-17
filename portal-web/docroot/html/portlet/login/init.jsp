@@ -26,7 +26,6 @@ page import="com.liferay.portal.ContactLastNameException" %><%@
 page import="com.liferay.portal.CookieNotSupportedException" %><%@
 page import="com.liferay.portal.DuplicateOpenIdException" %><%@
 page import="com.liferay.portal.EmailAddressException" %><%@
-page import="com.liferay.portal.GroupFriendlyURLException" %><%@
 page import="com.liferay.portal.NoSuchCountryException" %><%@
 page import="com.liferay.portal.NoSuchListTypeException" %><%@
 page import="com.liferay.portal.NoSuchRegionException" %><%@
