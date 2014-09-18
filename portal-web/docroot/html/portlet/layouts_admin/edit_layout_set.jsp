@@ -143,12 +143,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 		submitForm(document.<portlet:namespace />fm);
 	}
 
-	function <portlet:namespace />updateRobots() {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'robots';
-
-		submitForm(document.<portlet:namespace />fm);
-	}
-
 	Liferay.provide(
 		window,
 		'<portlet:namespace />removePage',
