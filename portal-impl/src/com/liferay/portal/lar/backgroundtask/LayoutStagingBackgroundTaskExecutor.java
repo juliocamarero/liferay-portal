@@ -145,17 +145,15 @@ public class LayoutStagingBackgroundTaskExecutor
 		UnicodeProperties typeSettingsProperties =
 			sourceGroup.getTypeSettingsProperties();
 
-		boolean branchingPrivate = GetterUtil.getBoolean(
-			typeSettingsProperties.getProperty("branchingPrivate"));
-		boolean branchingPublic = GetterUtil.getBoolean(
-			typeSettingsProperties.getProperty("branchingPublic"));
+		boolean branching = GetterUtil.getBoolean(
+			typeSettingsProperties.getProperty("branching"));
 
 		ServiceContext serviceContext = new ServiceContext();
 
 		serviceContext.setUserId(userId);
 
 		StagingLocalServiceUtil.checkDefaultLayoutSetBranches(
-			userId, sourceGroup, branchingPublic, branchingPrivate, false,
+			userId, sourceGroup, branching, false, false,
 			serviceContext);
 	}
 

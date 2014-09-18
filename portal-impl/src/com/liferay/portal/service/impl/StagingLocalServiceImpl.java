@@ -123,21 +123,6 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		else if (layoutSetBranch != null) {
 			clearLastPublishDate(targetGroupId, false);
 		}
-
-		layoutSetBranch = layoutSetBranchLocalService.fetchLayoutSetBranch(
-			targetGroupId, true, LayoutSetBranchConstants.MASTER_BRANCH_NAME);
-
-		if (branchingPrivate && (layoutSetBranch == null)) {
-			addDefaultLayoutSetBranch(
-				userId, targetGroupId, liveGroup.getDescriptiveName(), true,
-				serviceContext);
-		}
-		else if (!branchingPrivate && (layoutSetBranch != null)) {
-			deleteLayoutSetBranches(targetGroupId, true);
-		}
-		else if (layoutSetBranch != null) {
-			clearLastPublishDate(targetGroupId, false);
-		}
 	}
 
 	@Override
@@ -202,8 +187,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			disableRemoteStaging(remoteURL, remoteGroupId);
 		}
 
-		typeSettingsProperties.remove("branchingPrivate");
-		typeSettingsProperties.remove("branchingPublic");
+		typeSettingsProperties.remove("branching");
 		typeSettingsProperties.remove("remoteAddress");
 		typeSettingsProperties.remove("remoteGroupId");
 		typeSettingsProperties.remove("remotePathContext");
@@ -269,9 +253,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			liveGroup.getTypeSettingsProperties();
 
 		typeSettingsProperties.setProperty(
-			"branchingPrivate", String.valueOf(branchingPrivate));
-		typeSettingsProperties.setProperty(
-			"branchingPublic", String.valueOf(branchingPublic));
+			"branching", String.valueOf(branchingPublic));
 		typeSettingsProperties.setProperty("staged", Boolean.TRUE.toString());
 		typeSettingsProperties.setProperty(
 			"stagedRemotely", String.valueOf(false));
@@ -355,9 +337,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			serviceContext);
 
 		typeSettingsProperties.setProperty(
-			"branchingPrivate", String.valueOf(branchingPrivate));
-		typeSettingsProperties.setProperty(
-			"branchingPublic", String.valueOf(branchingPublic));
+			"branching", String.valueOf(branchingPublic));
 		typeSettingsProperties.setProperty("remoteAddress", remoteAddress);
 		typeSettingsProperties.setProperty(
 			"remoteGroupId", String.valueOf(remoteGroupId));

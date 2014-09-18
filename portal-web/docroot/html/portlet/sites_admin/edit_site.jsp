@@ -262,20 +262,15 @@ if (!portletName.equals(PortletKeys.SITE_SETTINGS)) {
 	var applicationAdapter = A.one('#<portlet:namespace />customJspServletContextName');
 
 	if (applicationAdapter) {
-		var publicPages = A.one('#<portlet:namespace />publicLayoutSetPrototypeId');
-		var privatePages = A.one('#<portlet:namespace />privateLayoutSetPrototypeId');
+		var pages = A.one('#<portlet:namespace />layoutSetPrototypeId');
 
 		var toggleCompatibleSiteTemplates = function(event) {
 			var siteTemplate = applicationAdapter.val();
 
 			var options = A.all([]);
 
-			if (publicPages) {
-				options = options.concat(publicPages.all('option[data-servletContextName]'));
-			}
-
-			if (privatePages) {
-				options = options.concat(privatePages.all('option[data-servletContextName]'));
+			if (pages) {
+				options = options.concat(pages.all('option[data-servletContextName]'));
 			}
 
 			options.attr('disabled', false);

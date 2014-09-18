@@ -1828,10 +1828,7 @@ public class StagingImpl implements Staging {
 
 		int stagingType = getStagingType(portletRequest, liveGroup);
 
-		boolean branchingPublic = getBoolean(
-			portletRequest, liveGroup, "branchingPublic");
-		boolean branchingPrivate = getBoolean(
-			portletRequest, liveGroup, "branchingPrivate");
+		boolean branching = getBoolean(portletRequest, liveGroup, "branching");
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -1844,8 +1841,7 @@ public class StagingImpl implements Staging {
 		}
 		else if (stagingType == StagingConstants.TYPE_LOCAL_STAGING) {
 			StagingLocalServiceUtil.enableLocalStaging(
-				userId, liveGroup, branchingPublic, branchingPrivate,
-				serviceContext);
+				userId, liveGroup, branching, false, serviceContext);
 		}
 		else if (stagingType == StagingConstants.TYPE_REMOTE_STAGING) {
 			String remoteAddress = getString(
@@ -1863,9 +1859,9 @@ public class StagingImpl implements Staging {
 				portletRequest, liveGroup, "remoteGroupId");
 
 			StagingLocalServiceUtil.enableRemoteStaging(
-				userId, liveGroup, branchingPublic, branchingPrivate,
-				remoteAddress, remotePort, remotePathContext, secureConnection,
-				remoteGroupId, serviceContext);
+				userId, liveGroup, branching, false, remoteAddress, remotePort,
+				remotePathContext, secureConnection, remoteGroupId,
+				serviceContext);
 		}
 	}
 
