@@ -320,14 +320,14 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
-	public Group getParentGroup() throws PortalException {
+	public Group getParentGroup() {
 		long parentGroupId = getParentGroupId();
 
 		if (parentGroupId <= 0) {
 			return null;
 		}
 
-		return GroupLocalServiceUtil.getGroup(parentGroupId);
+		return GroupLocalServiceUtil.fetchGroup(parentGroupId);
 	}
 
 	@Override
@@ -494,6 +494,31 @@ public class GroupImpl extends GroupBaseImpl {
 		}
 
 		return label;
+	}
+
+	@Override
+	public List<Group> getSharingContentGroups() {
+		return getSharingContentGroups(false);
+	}
+
+	@Override
+	public List<Group> getSharingContentGroups(boolean includeGroup) {
+		List<Group> sharingContentGroups = new ArrayList<Group>();
+
+		if (includeGroup) {
+			sharingContentGroups.add(this);
+		}
+
+		List<Group> groups = GroupLocalServiceUtil.getGroups(
+			getCompanyId(), getGroupId(), false);
+
+		for (Group group : groups) {
+			if (group.isSharingContent()) {
+				sharingContentGroups.add(group);
+			}
+		}
+
+		return sharingContentGroups;
 	}
 
 	@Override
@@ -782,6 +807,13 @@ public class GroupImpl extends GroupBaseImpl {
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean isSharingContent() {
+		UnicodeProperties typeSettings = getTypeSettingsProperties();
+
+		return GetterUtil.getBoolean(typeSettings.getProperty("sharedContent"));
 	}
 
 	@Override

@@ -14,20 +14,14 @@
  */
 --%>
 
-<%@ include file="/html/portlet/sites_admin/init.jsp" %>
+<%@ include file="/html/portlet/layouts_admin/init.jsp" %>
 
 <%
-Group group = (Group)request.getAttribute("site.group");
-Group liveGroup = (Group)request.getAttribute("site.liveGroup");
-Long liveGroupId = (Long)request.getAttribute("site.liveGroupId");
-Group stagingGroup = (Group)request.getAttribute("site.stagingGroup");
-Long stagingGroupId = (Long)request.getAttribute("site.stagingGroupId");
+Group liveGroup = layoutsAdminDisplayContext.getLiveGroup();
 
-LayoutSet publicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId, false);
-LayoutSet privateLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId, true);
+LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(layoutsAdminDisplayContext.getLiveGroupId(), false);
 
-String publicVirtualHost = ParamUtil.getString(request, "publicVirtualHost", BeanParamUtil.getString(publicLayoutSet, request, "virtualHostname"));
-String privateVirtualHost = ParamUtil.getString(request, "privateVirtualHost", BeanParamUtil.getString(privateLayoutSet, request, "virtualHostname"));
+String virtualHost = ParamUtil.getString(request, "virtualHost", BeanParamUtil.getString(layoutSet, request, "virtualHostname"));
 %>
 
 <liferay-ui:error-marker key="errorSection" value="siteUrl" />
@@ -105,9 +99,9 @@ String privateVirtualHost = ParamUtil.getString(request, "privateVirtualHost", B
 </liferay-ui:error>
 
 <aui:fieldset label="friendly-url">
-	<liferay-ui:message key="enter-the-friendly-url-that-will-be-used-by-both-public-and-private-pages" />
+	<liferay-ui:message key="enter-the-friendly-url-that-will-be-used" />
 
-	<liferay-ui:message arguments="<%= new Object[] {themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic(), themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPrivateGroup()} %>" key="the-friendly-url-is-appended-to-x-for-public-pages-and-x-for-private-pages" translateArguments="<%= false %>" />
+	<liferay-ui:message arguments="<%= new Object[] {themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic()} %>" key="the-friendly-url-is-appended-to-x" translateArguments="<%= false %>" />
 
 	<%
 	String taglibLabel = "site-friendly-url";
@@ -120,68 +114,26 @@ String privateVirtualHost = ParamUtil.getString(request, "privateVirtualHost", B
 	<aui:input label="<%= taglibLabel %>" name="friendlyURL" />
 
 	<c:if test="<%= liveGroup.hasStagingGroup() %>">
-		<aui:input bean="<%= stagingGroup %>" field="friendlyURL" fieldParam="stagingFriendlyURL" label="staging-friendly-url" model="<%= Group.class %>" name="stagingFriendlyURL" />
+		<aui:input bean="<%= layoutsAdminDisplayContext.getStagingGroup() %>" field="friendlyURL" fieldParam="stagingFriendlyURL" label="staging-friendly-url" model="<%= Group.class %>" name="stagingFriendlyURL" />
 	</c:if>
 </aui:fieldset>
 
 <aui:fieldset label="virtual-hosts">
-	<liferay-ui:message key="enter-the-public-and-private-virtual-host-that-will-map-to-the-public-and-private-friendly-url" />
+	<liferay-ui:message key="enter-the-virtual-host-that-will-map-to-the-friendly-url" />
 
-	<liferay-ui:message arguments="<%= new Object[] {HttpUtil.getProtocol(request), themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic()} %>" key="for-example,-if-the-public-virtual-host-is-www.helloworld.com-and-the-friendly-url-is-/helloworld" translateArguments="<%= false %>" />
+	<liferay-ui:message arguments="<%= new Object[] {HttpUtil.getProtocol(request), themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic()} %>" key="for-example,-if-the-virtual-host-is-www.helloworld.com-and-the-friendly-url-is-/helloworld" translateArguments="<%= false %>" />
 
-	<aui:input label="public-pages" name="publicVirtualHost" type="text" value="<%= publicVirtualHost %>" />
-
-	<aui:input label="private-pages" name="privateVirtualHost" type="text" value="<%= privateVirtualHost %>">
-		<aui:validator errorMessage="please-enter-a-unique-virtual-host" name="custom">
-			function(val, fieldNode, ruleValue) {
-				return (!val || val != A.one('#<portlet:namespace />publicVirtualHost').val());
-			}
-		</aui:validator>
-	</aui:input>
+	<aui:input label="pages" name="virtualHost" type="text" value="<%= virtualHost %>" />
 
 	<c:if test="<%= liveGroup.hasStagingGroup() %>">
 
 		<%
-		LayoutSet stagingPublicLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(stagingGroupId, false);
+		LayoutSet stagingLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(layoutsAdminDisplayContext.getStagingGroupId(), false);
 
-		String stagingPublicVirtualHost = ParamUtil.getString(request, "stagingPublicVirtualHost", stagingPublicLayoutSet.getVirtualHostname());
+		String stagingVirtualHost = ParamUtil.getString(request, "stagingVirtualHost", stagingLayoutSet.getVirtualHostname());
 		%>
 
-		<aui:input label="staging-public-pages" name="stagingPublicVirtualHost" type="text" value="<%= stagingPublicVirtualHost %>" />
-
-		<%
-		LayoutSet stagingPrivateLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(stagingGroupId, true);
-
-		String stagingPrivateVirtualHost = ParamUtil.getString(request, "stagingPrivateVirtualHost", stagingPrivateLayoutSet.getVirtualHostname());
-		%>
-
-		<aui:input label="staging-private-pages" name="stagingPrivateVirtualHost" type="text" value="<%= stagingPrivateVirtualHost %>">
-			<aui:validator errorMessage="please-enter-a-unique-virtual-host" name="custom">
-				function(val, fieldNode, ruleValue) {
-					return (!val || val != A.one('#<portlet:namespace />stagingPublicVirtualHost').val());
-				}
-			</aui:validator>
-		</aui:input>
-	</c:if>
-</aui:fieldset>
-
-<aui:fieldset label="documents-and-media">
-	<c:if test="<%= (group != null) && !group.isCompany() %>">
-
-		<%
-		UnicodeProperties typeSettingsProperties = null;
-
-		if (liveGroup != null) {
-			typeSettingsProperties = liveGroup.getTypeSettingsProperties();
-		}
-		else {
-			typeSettingsProperties = group.getTypeSettingsProperties();
-		}
-
-		boolean directoryIndexingEnabled = PropertiesParamUtil.getBoolean(typeSettingsProperties, request, "directoryIndexingEnabled");
-		%>
-
-		<aui:input helpMessage='<%= LanguageUtil.format(request, "directory-indexing-help", new Object[] {HtmlUtil.escape(group.getDescriptiveName(themeDisplay.getLocale())), themeDisplay.getPortalURL() + "/documents" + group.getFriendlyURL()}, false) %>' label="directory-indexing-enabled" name="TypeSettingsProperties--directoryIndexingEnabled--" type="checkbox" value="<%= directoryIndexingEnabled %>" />
+		<aui:input label="staging-pages" name="stagingVirtualHost" type="text" value="<%= stagingVirtualHost %>" />
 	</c:if>
 </aui:fieldset>
 

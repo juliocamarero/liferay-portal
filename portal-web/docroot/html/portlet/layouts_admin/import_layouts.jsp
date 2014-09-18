@@ -18,7 +18,6 @@
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId");
-boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 boolean validate = ParamUtil.getBoolean(request, "validate", true);
 
 String[] tempFileEntryNames = LayoutServiceUtil.getTempFileEntryNames(groupId, ExportImportHelper.TEMP_FOLDER_NAME);
@@ -30,7 +29,7 @@ String[] tempFileEntryNames = LayoutServiceUtil.getTempFileEntryNames(groupId, E
 
 <liferay-ui:header
 	backURL="<%= backURL %>"
-	title='<%= privateLayout ? LanguageUtil.get(request, "import-private-pages") : LanguageUtil.get(request, "import-public-pages") %>'
+	title="import-pages"
 />
 
 <liferay-ui:tabs

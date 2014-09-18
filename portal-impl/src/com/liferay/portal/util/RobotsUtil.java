@@ -52,9 +52,8 @@ public class RobotsUtil {
 		Group group = layoutSet.getGroup();
 
 		return GetterUtil.get(
-			group.getTypeSettingsProperty(
-				layoutSet.isPrivateLayout() + "-robots.txt"),
-				getDefaultRobots(PortalUtil.getVirtualHostname(layoutSet)));
+			group.getTypeSettingsProperty("robots.txt"),
+			getDefaultRobots(PortalUtil.getVirtualHostname(layoutSet)));
 	}
 
 }

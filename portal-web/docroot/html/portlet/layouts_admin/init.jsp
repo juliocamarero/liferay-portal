@@ -16,7 +16,9 @@
 
 <%@ include file="/html/portlet/init.jsp" %>
 
-<%@ page import="com.liferay.portal.DuplicateLockException" %><%@
+<%@ page import="com.liferay.portal.DuplicateGroupException" %><%@
+page import="com.liferay.portal.DuplicateLockException" %><%@
+page import="com.liferay.portal.GroupNameException" %><%@
 page import="com.liferay.portal.ImageTypeException" %><%@
 page import="com.liferay.portal.LARFileException" %><%@
 page import="com.liferay.portal.LARFileNameException" %><%@
@@ -27,6 +29,7 @@ page import="com.liferay.portal.LayoutFriendlyURLsException" %><%@
 page import="com.liferay.portal.LayoutImportException" %><%@
 page import="com.liferay.portal.LayoutNameException" %><%@
 page import="com.liferay.portal.LayoutPrototypeException" %><%@
+page import="com.liferay.portal.LayoutSetVirtualHostException" %><%@
 page import="com.liferay.portal.LayoutTypeException" %><%@
 page import="com.liferay.portal.NoSuchGroupException" %><%@
 page import="com.liferay.portal.NoSuchLayoutSetBranchException" %><%@
@@ -54,6 +57,7 @@ page import="com.liferay.portal.lar.backgroundtask.LayoutStagingBackgroundTaskEx
 page import="com.liferay.portal.security.auth.AuthException" %><%@
 page import="com.liferay.portal.security.auth.RemoteAuthException" %><%@
 page import="com.liferay.portal.theme.NavItem" %><%@
+page import="com.liferay.portal.util.RobotsUtil" %><%@
 page import="com.liferay.portlet.backgroundtask.util.comparator.BackgroundTaskComparatorFactoryUtil" %><%@
 page import="com.liferay.portlet.dynamicdatalists.RecordSetDuplicateRecordSetKeyException" %><%@
 page import="com.liferay.portlet.dynamicdatamapping.StructureDuplicateStructureKeyException" %><%@

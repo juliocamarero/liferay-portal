@@ -25,8 +25,6 @@ if (Validator.isNull(cmd)) {
 	cmd = ParamUtil.getString(request, "originalCmd", Constants.PUBLISH_TO_LIVE);
 }
 
-String tabs1 = ParamUtil.getString(request, "tabs1", "public-pages");
-
 String closeRedirect = ParamUtil.getString(request, "closeRedirect");
 
 String publishConfigurationButtons = ParamUtil.getString(request, "publishConfigurationButtons", "custom");
@@ -96,15 +94,11 @@ Layout selLayout = null;
 
 try {
 	selLayout = LayoutLocalServiceUtil.getLayout(selPlid);
-
-	if (selLayout.isPrivateLayout()) {
-		tabs1 = "private-pages";
-	}
 }
 catch (NoSuchLayoutException nsle) {
 }
 
-treeId = treeId + privateLayout + layoutSetBranchId;
+treeId = treeId + layoutSetBranchId;
 
 long[] selectedLayoutIds = GetterUtil.getLongValues(StringUtil.split(SessionTreeJSClicks.getOpenNodes(request, treeId + "SelectedNode"), ','));
 
@@ -120,7 +114,6 @@ portletURL.setParameter("struts_action", "/layouts_admin/publish_layouts");
 portletURL.setParameter("closeRedirect", closeRedirect);
 portletURL.setParameter("groupId", String.valueOf(liveGroupId));
 portletURL.setParameter("stagingGroupId", String.valueOf(stagingGroupId));
-portletURL.setParameter("privateLayout", String.valueOf(privateLayout));
 
 PortletURL renderURL = renderResponse.createRenderURL();
 
@@ -138,7 +131,6 @@ renderURL.setParameter("closeRedirect", closeRedirect);
 renderURL.setParameter("groupId", String.valueOf(stagingGroupId));
 renderURL.setParameter("layoutSetBranchId", String.valueOf(layoutSetBranchId));
 renderURL.setParameter("layoutSetBranchName", layoutSetBranchName);
-renderURL.setParameter("privateLayout", String.valueOf(privateLayout));
 
 response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 %>
@@ -204,7 +196,6 @@ else {
 				<aui:form action='<%= (cmd.equals(Constants.PUBLISH_TO_LIVE) || cmd.equals(Constants.PUBLISH_TO_REMOTE)) ? portletURL.toString() : updatePublishConfigurationURL + "&etag=0&strip=0" %>' cssClass="lfr-export-dialog" method="post" name="exportPagesFm" onSubmit='<%= (cmd.equals(Constants.PUBLISH_TO_LIVE) || cmd.equals(Constants.PUBLISH_TO_REMOTE)) ? "event.preventDefault(); " + renderResponse.getNamespace() + "publishPages();" : StringPool.BLANK %>' >
 					<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= cmd %>" />
 					<aui:input name="originalCmd" type="hidden" value="<%= cmd %>" />
-					<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 					<aui:input name="redirect" type="hidden" value="<%= renderURL.toString() %>" />
 					<aui:input name="exportImportConfigurationId" type="hidden" value="<%= exportImportConfigurationId %>" />
 					<aui:input name="groupId" type="hidden" value="<%= stagingGroupId %>" />
@@ -320,7 +311,6 @@ else {
 										<liferay-util:param name="<%= Constants.CMD %>" value="<%= Constants.PUBLISH %>" />
 										<liferay-util:param name="groupId" value="<%= String.valueOf(stagingGroupId) %>" />
 										<liferay-util:param name="layoutSetBranchId" value="<%= String.valueOf(layoutSetBranchId) %>" />
-										<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 										<liferay-util:param name="treeId" value="<%= treeId %>" />
 										<liferay-util:param name="selectedLayoutIds" value="<%= StringUtil.merge(selectedLayoutIds) %>" />
 									</liferay-util:include>
@@ -362,7 +352,6 @@ else {
 				<liferay-util:include page="/html/portlet/layouts_admin/publish_layouts_configurations.jsp">
 					<liferay-util:param name="groupId" value="<%= String.valueOf(stagingGroupId) %>" />
 					<liferay-util:param name="localPublishing" value="<%= String.valueOf(localPublishing) %>" />
-					<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 				</liferay-util:include>
 			</div>
 		</liferay-ui:section>
@@ -392,7 +381,6 @@ else {
 
 			<liferay-util:include page="/html/portlet/layouts_admin/scheduled_publishing_events.jsp">
 				<liferay-util:param name="groupId" value="<%= String.valueOf(targetGroupId) %>" />
-				<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 				<liferay-util:param name="destinationName" value="<%= localPublishing ? DestinationNames.LAYOUTS_LOCAL_PUBLISHER : DestinationNames.LAYOUTS_REMOTE_PUBLISHER %>" />
 			</liferay-util:include>
 		</liferay-ui:section>
@@ -445,7 +433,6 @@ else {
 		<portlet:param name="layoutSetBranchName" value="<%= layoutSetBranchName %>" />
 		<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
 		<portlet:param name="localPublishing" value="<%= String.valueOf(localPublishing) %>" />
-		<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 	</liferay-portlet:resourceURL>
 
 	new Liferay.ExportImport(

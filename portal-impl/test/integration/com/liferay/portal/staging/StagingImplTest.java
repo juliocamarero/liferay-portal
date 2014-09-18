@@ -163,10 +163,7 @@ public class StagingImplTest {
 
 		Assert.assertTrue(
 			GetterUtil.getBoolean(
-				typeSettingsProperties.getProperty("branchingPrivate")));
-		Assert.assertTrue(
-			GetterUtil.getBoolean(
-				typeSettingsProperties.getProperty("branchingPublic")));
+				typeSettingsProperties.getProperty("branching")));
 
 		Group stagingGroup = _group.getStagingGroup();
 

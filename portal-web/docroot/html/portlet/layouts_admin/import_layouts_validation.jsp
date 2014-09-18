@@ -18,12 +18,11 @@
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId");
-boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 %>
 
 <aui:form cssClass="lfr-export-dialog" method="post" name="fm1">
 	<c:choose>
-		<c:when test="<%= (layout.getGroupId() == groupId) && (layout.isPrivateLayout() == privateLayout) %>">
+		<c:when test="<%= layout.getGroupId() == groupId %>">
 			<liferay-ui:message key="import-from-within-the-target-site-can-cause-conflicts" />
 		</c:when>
 		<c:otherwise>
@@ -74,7 +73,7 @@ boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 								tempFolderName: '<%= ExportImportHelper.TEMP_FOLDER_NAME %>'
 							}
 						},
-						uploadFile: '<liferay-portlet:actionURL doAsUserId="<%= user.getUserId() %>"><portlet:param name="struts_action" value="/layouts_admin/import_layouts" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD_TEMP %>" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /><portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" /></liferay-portlet:actionURL>&ticketKey=<%= ticket.getKey() %><liferay-ui:input-permissions-params modelName="<%= Group.class.getName() %>" />'
+						uploadFile: '<liferay-portlet:actionURL doAsUserId="<%= user.getUserId() %>"><portlet:param name="struts_action" value="/layouts_admin/import_layouts" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD_TEMP %>" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /></liferay-portlet:actionURL>&ticketKey=<%= ticket.getKey() %><liferay-ui:input-permissions-params modelName="<%= Group.class.getName() %>" />'
 					}
 				);
 
@@ -129,7 +128,6 @@ boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 					<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" var="importPagesURL">
 						<portlet:param name="struts_action" value="/layouts_admin/import_layouts" />
 						<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-						<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 						<portlet:param name="validate" value="<%= String.valueOf(Boolean.FALSE) %>" />
 					</liferay-portlet:resourceURL>
 

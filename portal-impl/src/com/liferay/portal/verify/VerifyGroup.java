@@ -87,8 +87,7 @@ public class VerifyGroup extends VerifyProcess {
 		}
 
 		return GetterUtil.get(
-			layoutSet.getSettingsProperty(
-				layoutSet.isPrivateLayout() + "-robots.txt"),
+			layoutSet.getSettingsProperty("robots.txt"),
 			RobotsUtil.getDefaultRobots(virtualHostname));
 	}
 
@@ -239,19 +238,15 @@ public class VerifyGroup extends VerifyProcess {
 		List<Group> groups = GroupLocalServiceUtil.getLiveGroups();
 
 		for (Group group : groups) {
-			LayoutSet privateLayoutSet = group.getPrivateLayoutSet();
 			LayoutSet publicLayoutSet = group.getPublicLayoutSet();
 
-			String privateLayoutSetRobots = getRobots(privateLayoutSet);
 			String publicLayoutSetRobots = getRobots(publicLayoutSet);
 
 			UnicodeProperties typeSettingsProperties =
 				group.getTypeSettingsProperties();
 
 			typeSettingsProperties.setProperty(
-				"true-robots.txt", privateLayoutSetRobots);
-			typeSettingsProperties.setProperty(
-				"false-robots.txt", publicLayoutSetRobots);
+				"robots.txt", publicLayoutSetRobots);
 
 			GroupLocalServiceUtil.updateGroup(
 				group.getGroupId(), typeSettingsProperties.toString());
