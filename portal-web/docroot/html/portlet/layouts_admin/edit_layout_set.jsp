@@ -44,6 +44,10 @@ if (group.isGuest() || group.isSharingContent()) {
 	mainSections = ArrayUtil.remove(mainSections, "advanced");
 }
 
+if (group.isSharingContent()) {
+	mainSections = ArrayUtil.remove(mainSections, "site-template");
+}
+
 String[][] categorySections = {mainSections};
 
 boolean hasExportImportLayoutsPermission = GroupPermissionUtil.contains(permissionChecker, liveGroup, ActionKeys.EXPORT_IMPORT_LAYOUTS);
