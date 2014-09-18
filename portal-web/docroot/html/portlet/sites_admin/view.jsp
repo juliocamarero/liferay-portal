@@ -49,19 +49,6 @@ String searchURLString = searchURL.toString();
 	<aui:input name="redirect" type="hidden" value="<%= portletURLString %>" />
 	<aui:input name="toolbarItem" type="hidden" value="<%= toolbarItem %>" />
 
-	<liferay-ui:error exception="<%= NoSuchLayoutSetException.class %>">
-
-		<%
-		NoSuchLayoutSetException nslse = (NoSuchLayoutSetException)errorException;
-
-		PKParser pkParser = new PKParser(nslse.getMessage());
-
-		Group group = GroupLocalServiceUtil.getGroup(pkParser.getLong("groupId"));
-		%>
-
-		<liferay-ui:message arguments="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>" key="site-x-does-not-have-any-private-pages" translateArguments="<%= false %>" />
-	</liferay-ui:error>
-
 	<liferay-ui:error exception="<%= RequiredGroupException.class %>">
 
 		<%

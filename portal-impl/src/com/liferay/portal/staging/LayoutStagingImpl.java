@@ -123,16 +123,8 @@ public class LayoutStagingImpl implements LayoutStaging {
 			return false;
 		}
 
-		boolean branchingEnabled = false;
-
-		if (privateLayout) {
-			branchingEnabled = GetterUtil.getBoolean(
-				typeSettingsProperties.getProperty("branchingPrivate"));
-		}
-		else {
-			branchingEnabled = GetterUtil.getBoolean(
-				typeSettingsProperties.getProperty("branchingPublic"));
-		}
+		boolean branchingEnabled = GetterUtil.getBoolean(
+			typeSettingsProperties.getProperty("branching"));
 
 		if (!branchingEnabled || !group.isStaged() ||
 			(!group.isStagedRemotely() && !isStagingGroup)) {
