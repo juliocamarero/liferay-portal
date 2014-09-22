@@ -72,8 +72,7 @@ public class ViewAction extends WebContentAction {
 		JournalArticle article = null;
 		JournalArticleDisplay articleDisplay = null;
 
-		if ((articleGroupId > 0) &&
-			(articleGroupId == themeDisplay.getScopeGroupId()) &&
+		if ((articleGroupId == themeDisplay.getScopeGroupId()) &&
 			Validator.isNotNull(articleId)) {
 
 			String viewMode = ParamUtil.getString(renderRequest, "viewMode");
