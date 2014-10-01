@@ -52,16 +52,7 @@ public class TabsTag extends IncludeTag {
 			request.removeAttribute("liferay-ui:tabs:refresh");
 			request.removeAttribute("liferay-ui:tabs:type");
 			request.removeAttribute("liferay-ui:tabs:url");
-			request.removeAttribute("liferay-ui:tabs:url0");
-			request.removeAttribute("liferay-ui:tabs:url1");
-			request.removeAttribute("liferay-ui:tabs:url2");
-			request.removeAttribute("liferay-ui:tabs:url3");
-			request.removeAttribute("liferay-ui:tabs:url4");
-			request.removeAttribute("liferay-ui:tabs:url5");
-			request.removeAttribute("liferay-ui:tabs:url6");
-			request.removeAttribute("liferay-ui:tabs:url7");
-			request.removeAttribute("liferay-ui:tabs:url8");
-			request.removeAttribute("liferay-ui:tabs:url9");
+			request.removeAttribute("liferay-ui:tabs:urls");
 			request.removeAttribute("liferay-ui:tabs:value");
 			request.removeAttribute("liferay-ui:tabs:values");
 
@@ -97,6 +88,7 @@ public class TabsTag extends IncludeTag {
 				_url7 = null;
 				_url8 = null;
 				_url9 = null;
+				_urls = null;
 				_value = null;
 			}
 		}
@@ -126,49 +118,69 @@ public class TabsTag extends IncludeTag {
 			}
 
 			request.setAttribute("liferay-ui:tabs:values", _tabsValues);
-
 			request.setAttribute("liferay-ui:tabs:type", _type);
 			request.setAttribute("liferay-ui:tabs:url", _url);
 
-			if (_url0 != null) {
-				request.setAttribute("liferay-ui:tabs:url0", _url0);
+			if (_urls == null) {
+				String[] urlsArray = new String[10];
+				boolean urlsArrayInitialized = false;
+
+				if (_url0 != null) {
+					urlsArray[0] = _url0;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url1 != null) {
+					urlsArray[1] = _url1;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url2 != null) {
+					urlsArray[2] = _url2;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url3 != null) {
+					urlsArray[3] = _url3;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url4 != null) {
+					urlsArray[4] = _url4;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url5 != null) {
+					urlsArray[5] = _url5;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url6 != null) {
+					urlsArray[6] = _url6;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url7 != null) {
+					urlsArray[7] = _url7;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url8 != null) {
+					urlsArray[8] = _url8;
+					urlsArrayInitialized = true;
+				}
+
+				if (_url9 != null) {
+					urlsArray[9] = _url9;
+					urlsArrayInitialized = true;
+				}
+
+				if (urlsArrayInitialized) {
+					_urls = urlsArray;
+				}
 			}
 
-			if (_url1 != null) {
-				request.setAttribute("liferay-ui:tabs:url1", _url1);
-			}
-
-			if (_url2 != null) {
-				request.setAttribute("liferay-ui:tabs:url2", _url2);
-			}
-
-			if (_url3 != null) {
-				request.setAttribute("liferay-ui:tabs:url3", _url3);
-			}
-
-			if (_url4 != null) {
-				request.setAttribute("liferay-ui:tabs:url4", _url4);
-			}
-
-			if (_url5 != null) {
-				request.setAttribute("liferay-ui:tabs:url5", _url5);
-			}
-
-			if (_url6 != null) {
-				request.setAttribute("liferay-ui:tabs:url6", _url6);
-			}
-
-			if (_url7 != null) {
-				request.setAttribute("liferay-ui:tabs:url7", _url7);
-			}
-
-			if (_url8 != null) {
-				request.setAttribute("liferay-ui:tabs:url8", _url8);
-			}
-
-			if (_url9 != null) {
-				request.setAttribute("liferay-ui:tabs:url9", _url9);
-			}
+			request.setAttribute("liferay-ui:tabs:urls", _urls);
 
 			if (_value == null) {
 				if (_tabsValues.length > 0) {
@@ -339,6 +351,10 @@ public class TabsTag extends IncludeTag {
 		_url9 = url9;
 	}
 
+	public void setUrls(String[] urls) {
+		_urls = urls;
+	}
+
 	public void setValue(String value) {
 		_value = value;
 	}
@@ -382,16 +398,17 @@ public class TabsTag extends IncludeTag {
 	private String[] _tabsValues;
 	private String _type;
 	private String _url;
-	private String _url0;
-	private String _url1;
-	private String _url2;
-	private String _url3;
-	private String _url4;
-	private String _url5;
-	private String _url6;
-	private String _url7;
-	private String _url8;
-	private String _url9;
+	private String _url0 = null;
+	private String _url1 = null;
+	private String _url2 = null;
+	private String _url3 = null;
+	private String _url4 = null;
+	private String _url5 = null;
+	private String _url6 = null;
+	private String _url7 = null;
+	private String _url8 = null;
+	private String _url9 = null;
+	private String[] _urls;
 	private String _value;
 
 }
