@@ -705,7 +705,7 @@ public abstract class PortletResponseImpl implements LiferayPortletResponse {
 
 		try {
 			if (Validator.isNotNull(linkToLayoutUuid) &&
-					includeLinkToLayoutUuid) {
+				includeLinkToLayoutUuid) {
 
 				portletURLImpl.setWindowState(LiferayWindowState.MAXIMIZED);
 			}
