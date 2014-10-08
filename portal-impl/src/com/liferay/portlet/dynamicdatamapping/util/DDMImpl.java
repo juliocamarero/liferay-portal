@@ -46,6 +46,7 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
 import com.liferay.portlet.dynamicdatamapping.io.DDMFormValuesJSONDeserializerUtil;
+import com.liferay.portlet.dynamicdatamapping.model.DDMForm;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
@@ -465,6 +466,28 @@ public class DDMImpl implements DDM {
 		return field;
 	}
 
+	protected DDMFormValues getDDMFormValues(
+			DDMForm ddmForm, String serializedDDMFormValues)
+		throws PortalException {
+
+		DDMFormValues ddmFormValues =
+			DDMFormValuesJSONDeserializerUtil.deserialize(
+				serializedDDMFormValues);
+
+		ddmFormValues.setDDMForm(ddmForm);
+
+		DDMFormValuesTransformer ddmFormValuesTransformer =
+			new DDMFormValuesTransformer(ddmFormValues);
+
+		ddmFormValuesTransformer.addTransformer(
+			DDMImpl.TYPE_DDM_DOCUMENTLIBRARY,
+			new TempDLFormFieldValueTransformer());
+
+		ddmFormValuesTransformer.transform();
+
+		return ddmFormValues;
+	}
+
 	protected DDMStructure getDDMStructure(
 			long ddmStructureId, long ddmTemplateId)
 		throws PortalException {
@@ -557,9 +580,8 @@ public class DDMImpl implements DDM {
 		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
 			ddmStructureId);
 
-		DDMFormValues ddmFormValues =
-			DDMFormValuesJSONDeserializerUtil.deserialize(
-				serializedDDMFormValues);
+		DDMFormValues ddmFormValues = getDDMFormValues(
+			ddmStructure.getDDMForm(), serializedDDMFormValues);
 
 		return DDMFormValuesToFieldsConverterUtil.convert(
 			ddmStructure, ddmFormValues);
