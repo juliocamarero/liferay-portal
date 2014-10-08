@@ -107,7 +107,6 @@ import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.model.LocalizedValue;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
-import com.liferay.portlet.dynamicdatamapping.util.DDMUtil;
 import com.liferay.portlet.dynamicdatamapping.util.DDMXMLUtil;
 import com.liferay.portlet.journal.ArticleContentException;
 import com.liferay.portlet.journal.ArticleDisplayDateException;
@@ -130,6 +129,7 @@ import com.liferay.portlet.journal.model.JournalFolder;
 import com.liferay.portlet.journal.model.impl.JournalArticleDisplayImpl;
 import com.liferay.portlet.journal.service.base.JournalArticleLocalServiceBaseImpl;
 import com.liferay.portlet.journal.social.JournalActivityKeys;
+import com.liferay.portlet.journal.util.JournalConverterUtil;
 import com.liferay.portlet.journal.util.JournalUtil;
 import com.liferay.portlet.journal.util.comparator.ArticleIDComparator;
 import com.liferay.portlet.journal.util.comparator.ArticleVersionComparator;
@@ -6654,6 +6654,17 @@ public class JournalArticleLocalServiceImpl
 		return ddmStructure.getStructureId();
 	}
 
+	protected Fields getDDMFields(DDMStructure ddmStructure, String content)
+		throws PortalException {
+
+		try {
+			return JournalConverterUtil.getDDMFields(ddmStructure, content);
+		}
+		catch (Exception e) {
+			throw new PortalException(e);
+		}
+	}
+
 	protected JournalArticle getFirstArticle(
 			long groupId, String articleId, int status,
 			OrderByComparator<JournalArticle> orderByComparator)
@@ -7206,7 +7217,8 @@ public class JournalArticleLocalServiceImpl
 			classNameLocalService.getClassNameId(JournalArticle.class),
 			ddmStructureKey, true);
 
-		validateDDMStructureFields(ddmStructure, classNameId, serviceContext);
+		validateDDMStructureFields(
+			ddmStructure, classNameId, content, serviceContext);
 
 		if (Validator.isNotNull(ddmTemplateKey)) {
 			DDMTemplate ddmTemplate = ddmTemplateLocalService.getTemplate(
@@ -7333,12 +7345,11 @@ public class JournalArticleLocalServiceImpl
 	}
 
 	protected void validateDDMStructureFields(
-			DDMStructure ddmStructure, long classNameId,
+			DDMStructure ddmStructure, long classNameId, String content,
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		Fields fields = DDMUtil.getFields(
-			ddmStructure.getStructureId(), serviceContext);
+		Fields fields = getDDMFields(ddmStructure, content);
 
 		for (com.liferay.portlet.dynamicdatamapping.storage.Field field :
 				fields) {
