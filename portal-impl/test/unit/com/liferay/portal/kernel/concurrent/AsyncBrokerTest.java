@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.test.JDKLoggerTestUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.AdviseWith;
+import com.liferay.portal.test.aspects.ReflectionUtilAdvice;
 import com.liferay.portal.test.runners.AspectJMockingNewClassLoaderJUnitTestRunner;
 
 import java.lang.reflect.Field;
@@ -31,10 +32,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -216,6 +213,10 @@ public class AsyncBrokerTest {
 	public void testPhantomReferenceResurrectionNotSupported()
 		throws ClassNotFoundException {
 
+		Throwable throwable = new Throwable();
+
+		ReflectionUtilAdvice.setDeclaredFieldThrowable(throwable);
+
 		CaptureHandler captureHandler = JDKLoggerTestUtil.configureJDKLogger(
 			AsyncBroker.class.getName(), Level.WARNING);
 
@@ -235,7 +236,7 @@ public class AsyncBrokerTest {
 					"because the JVM does not support phantom reference " +
 						"resurrection",
 				logRecord.getMessage());
-			Assert.assertSame(_exception, logRecord.getThrown());
+			Assert.assertSame(throwable, logRecord.getThrown());
 		}
 		finally {
 			captureHandler.close();
@@ -244,10 +245,12 @@ public class AsyncBrokerTest {
 
 	@Test
 	public void testPost() throws Exception {
+		ReflectionUtilAdvice.setDeclaredFieldThrowable(new Throwable());
+
 		AsyncBroker<String, String> asyncBroker =
 			new AsyncBroker<String, String>();
 
-		ReflectionUtilAdvice.setEnabled(false);
+		ReflectionUtilAdvice.setDeclaredFieldThrowable(null);
 
 		Map<String, DefaultNoticeableFuture<String>> defaultNoticeableFutures =
 			ReflectionTestUtil.getFieldValue(
@@ -272,6 +275,27 @@ public class AsyncBrokerTest {
 	}
 
 	@Test
+	public void testTake() {
+		AsyncBroker<String, String> asyncBroker =
+			new AsyncBroker<String, String>();
+
+		Map<String, DefaultNoticeableFuture<String>> defaultNoticeableFutures =
+			ReflectionTestUtil.getFieldValue(
+				asyncBroker, "_defaultNoticeableFutures");
+
+		Assert.assertTrue(defaultNoticeableFutures.isEmpty());
+		Assert.assertNull(asyncBroker.take(_key));
+
+		NoticeableFuture<String> noticeableFuture = asyncBroker.post(_key);
+
+		Assert.assertEquals(1, defaultNoticeableFutures.size());
+		Assert.assertSame(noticeableFuture, defaultNoticeableFutures.get(_key));
+		Assert.assertSame(noticeableFuture, asyncBroker.take(_key));
+		Assert.assertTrue(defaultNoticeableFutures.isEmpty());
+		Assert.assertNull(asyncBroker.take(_key));
+	}
+
+	@Test
 	public void testTakeWithException() throws Exception {
 		AsyncBroker<String, String> asyncBroker =
 			new AsyncBroker<String, String>();
@@ -279,6 +303,8 @@ public class AsyncBrokerTest {
 		Map<String, DefaultNoticeableFuture<String>> defaultNoticeableFutures =
 			ReflectionTestUtil.getFieldValue(
 				asyncBroker, "_defaultNoticeableFutures");
+
+		Assert.assertTrue(defaultNoticeableFutures.isEmpty());
 
 		Exception exception = new Exception();
 
@@ -298,6 +324,9 @@ public class AsyncBrokerTest {
 		catch (ExecutionException ee) {
 			Assert.assertSame(exception, ee.getCause());
 		}
+
+		Assert.assertTrue(defaultNoticeableFutures.isEmpty());
+		Assert.assertFalse(asyncBroker.takeWithException(_key, exception));
 	}
 
 	@Test
@@ -309,6 +338,7 @@ public class AsyncBrokerTest {
 			ReflectionTestUtil.getFieldValue(
 				asyncBroker, "_defaultNoticeableFutures");
 
+		Assert.assertTrue(defaultNoticeableFutures.isEmpty());
 		Assert.assertFalse(asyncBroker.takeWithResult(_key, _value));
 
 		NoticeableFuture<String> noticeableFuture = asyncBroker.post(_key);
@@ -318,38 +348,11 @@ public class AsyncBrokerTest {
 		Assert.assertTrue(asyncBroker.takeWithResult(_key, _value));
 		Assert.assertEquals(_value, noticeableFuture.get());
 		Assert.assertTrue(defaultNoticeableFutures.isEmpty());
-	}
-
-	@Aspect
-	public static class ReflectionUtilAdvice {
-
-		public static void setEnabled(boolean enabled) {
-			_enabled = enabled;
-		}
-
-		@Around(
-			"execution(public static java.lang.reflect.Field " +
-				"com.liferay.portal.kernel.util.ReflectionUtil." +
-					"getDeclaredField(Class, String))")
-		public Object getDeclaredField(ProceedingJoinPoint proceedingJoinPoint)
-			throws Throwable {
-
-			if (!_enabled) {
-				return proceedingJoinPoint.proceed();
-			}
-
-			throw _exception;
-		}
-
-		private static boolean _enabled = true;
-
+		Assert.assertFalse(asyncBroker.takeWithResult(_key, _value));
 	}
 
 	private static final String _THREAD_ENABLED_KEY =
 		FinalizeManager.class.getName() + ".thread.enabled";
-
-	private static final Exception _exception = new Exception(
-		"Forced Exception");
 
 	private final String _key = "testKey";
 	private final String _value = "testValue";

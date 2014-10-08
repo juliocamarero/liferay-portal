@@ -12,23 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.kernel.cache;
+package com.liferay.portal.fabric.netty.rpc;
+
+import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 
 import java.io.Serializable;
 
-import java.util.Properties;
-
 /**
- * @author Tina Tian
+ * @author Shuyang Zhou
  */
-public interface ListenerFactory {
+public interface RPCCallable<T extends Serializable> extends Serializable {
 
-	public BootstrapLoader createBootstrapLoader(Properties properties);
-
-	public CacheListener<? extends Serializable, ?> createCacheListener(
-		Properties properties);
-
-	public CacheManagerListener createCacheManagerListener(
-		Properties properties);
+	public NoticeableFuture<T> call() throws Throwable;
 
 }

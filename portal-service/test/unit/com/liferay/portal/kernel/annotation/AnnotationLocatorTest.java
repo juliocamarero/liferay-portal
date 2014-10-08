@@ -455,7 +455,6 @@ public class AnnotationLocatorTest {
 	}
 
 	private Method _method(final int value) {
-
 		return new Method() {
 
 			@Override
@@ -469,7 +468,6 @@ public class AnnotationLocatorTest {
 			}
 
 		};
-
 	}
 
 	private void _methodListLocate(
@@ -762,9 +760,9 @@ public class AnnotationLocatorTest {
 	@Type(value = 5)
 	private class OriginClass implements OriginInterface2, OriginInterface1 {
 
-		@Override
 		@Method(value = 5)
 		@Mix(value = 5)
+		@Override
 		public void originMethod1() {
 		}
 
@@ -800,8 +798,8 @@ public class AnnotationLocatorTest {
 		public void originMethod2() {
 		}
 
-		@Override
 		@Method(value = 2)
+		@Override
 		public void superMethod1() {
 		}
 
@@ -849,9 +847,9 @@ public class AnnotationLocatorTest {
 		public void superMethod2() {
 		}
 
-		@Override
 		@Method(value = 1)
 		@Mix(value = 1)
+		@Override
 		public void testMethod1() {
 		}
 
@@ -873,8 +871,8 @@ public class AnnotationLocatorTest {
 	@Mix(value = 3)
 	private interface TestInterface2 extends TestInterface1, SuperInterface2 {
 
-		@Override
 		@Method(value = 3)
+		@Override
 		public void superMethod1();
 
 		@Method(value = 3)
