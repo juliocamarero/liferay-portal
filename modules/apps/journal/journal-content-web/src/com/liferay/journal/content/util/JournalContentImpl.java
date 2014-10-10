@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journalcontent.util;
+package com.liferay.journal.content.util;
 
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
@@ -34,6 +34,7 @@ import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 
 import javax.portlet.RenderRequest;
 
+import com.liferay.portlet.journalcontent.util.JournalContent;
 import org.apache.commons.lang.time.StopWatch;
 
 /**
