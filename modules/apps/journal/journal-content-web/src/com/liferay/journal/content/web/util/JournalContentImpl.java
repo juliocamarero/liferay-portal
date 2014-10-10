@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.journal.content.util;
+package com.liferay.journal.content.web.util;
 
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
