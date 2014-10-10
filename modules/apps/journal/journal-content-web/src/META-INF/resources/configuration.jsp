@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/modules/apps/journal/journal-content-web/src/META-INF/resources/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 JournalArticle article = journalContentDisplayContext.getArticle();
