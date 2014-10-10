@@ -24,4 +24,4 @@ page import="com.liferay.portlet.journalcontent.context.JournalContentDisplayCon
 JournalContentDisplayContext journalContentDisplayContext = new JournalContentDisplayContext(request, portletPreferences);
 %>
 
-<%@ include file="/html/portlet/journal_content/init-ext.jsp" %>
+<%@ include file="/modules/apps/journal/journal-content-web/src/META-INF/resources/init-ext.jsp" %>
