@@ -12,26 +12,26 @@
  * details.
  */
 
-package com.liferay.portlet.journal;
+package com.liferay.journal.content.web;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.expando.model.BaseCustomAttributesDisplay;
-import com.liferay.portlet.journal.model.JournalFolder;
+import com.liferay.portlet.journal.model.JournalArticle;
 
 /**
- * @author Eudaldo Alonso
+ * @author Jorge Ferrer
  */
-public class JournalFolderCustomAttributesDisplay
+public class JournalArticleCustomAttributesDisplay
 	extends BaseCustomAttributesDisplay {
 
 	@Override
 	public String getClassName() {
-		return JournalFolder.class.getName();
+		return JournalArticle.class.getName();
 	}
 
 	@Override
 	public String getIconPath(ThemeDisplay themeDisplay) {
-		return themeDisplay.getPathThemeImages() + "/common/folder.png";
+		return themeDisplay.getPathThemeImages() + "/common/history.png";
 	}
 
 }
