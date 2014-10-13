@@ -570,21 +570,6 @@ public interface JournalArticleModel extends AttachedModel,
 	public void setContent(String content);
 
 	/**
-	 * Returns the type of this journal article.
-	 *
-	 * @return the type of this journal article
-	 */
-	@AutoEscape
-	public String getType();
-
-	/**
-	 * Sets the type of this journal article.
-	 *
-	 * @param type the type of this journal article
-	 */
-	public void setType(String type);
-
-	/**
 	 * Returns the structure ID of this journal article.
 	 *
 	 * @return the structure ID of this journal article
@@ -988,19 +973,20 @@ public interface JournalArticleModel extends AttachedModel,
 	public Object clone();
 
 	@Override
-	public int compareTo(JournalArticle journalArticle);
+	public int compareTo(
+		com.liferay.portlet.journal.model.JournalArticle journalArticle);
 
 	@Override
 	public int hashCode();
 
 	@Override
-	public CacheModel<JournalArticle> toCacheModel();
+	public CacheModel<com.liferay.portlet.journal.model.JournalArticle> toCacheModel();
 
 	@Override
-	public JournalArticle toEscapedModel();
+	public com.liferay.portlet.journal.model.JournalArticle toEscapedModel();
 
 	@Override
-	public JournalArticle toUnescapedModel();
+	public com.liferay.portlet.journal.model.JournalArticle toUnescapedModel();
 
 	@Override
 	public String toString();
