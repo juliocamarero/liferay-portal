@@ -29,10 +29,13 @@ import com.liferay.portal.RequiredGroupException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.MultiSessionMessages;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.staging.StagingConstants;
 import com.liferay.portal.kernel.staging.StagingUtil;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -73,6 +76,8 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.TeamLocalServiceUtil;
+import com.liferay.portal.spring.transaction.TransactionAttributeBuilder;
+import com.liferay.portal.spring.transaction.TransactionalCallableUtil;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -85,6 +90,7 @@ import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -97,6 +103,8 @@ import javax.portlet.RenderResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import org.springframework.transaction.interceptor.TransactionAttribute;
 
 /**
  * @author Brian Wing Shun Chan
@@ -129,7 +137,11 @@ public class EditGroupAction extends PortletAction {
 				String oldStagingFriendlyURL = getStagingGroupFriendlyURL(
 					group);
 
-				group = updateGroup(actionRequest);
+				Callable<Group> groupCallable = new GroupCallable(
+					actionRequest);
+
+				group = TransactionalCallableUtil.call(
+					_transactionAttribute, groupCallable);
 
 				Layout layout = themeDisplay.getLayout();
 
@@ -239,6 +251,11 @@ public class EditGroupAction extends PortletAction {
 			else {
 				throw e;
 			}
+		}
+		catch (Throwable t) {
+			_log.error(t);
+
+			setForward(actionRequest, "portlet.sites_admin.error");
 		}
 	}
 
@@ -883,5 +900,26 @@ public class EditGroupAction extends PortletAction {
 	}
 
 	private static final int _LAYOUT_SET_VISIBILITY_PRIVATE = 1;
+
+	private static Log _log = LogFactoryUtil.getLog(EditGroupAction.class);
+
+	private TransactionAttribute _transactionAttribute =
+		TransactionAttributeBuilder.build(
+			Propagation.REQUIRED, new Class<?>[]{Exception.class});
+
+	private class GroupCallable implements Callable<Group> {
+
+		@Override
+		public Group call() throws Exception {
+			return updateGroup(_actionRequest);
+		}
+
+		private GroupCallable(ActionRequest actionRequest) {
+			_actionRequest = actionRequest;
+		}
+
+		private ActionRequest _actionRequest;
+
+	}
 
 }
