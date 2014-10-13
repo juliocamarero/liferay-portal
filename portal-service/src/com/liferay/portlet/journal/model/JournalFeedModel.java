@@ -253,21 +253,6 @@ public interface JournalFeedModel extends BaseModel<JournalFeed>,
 	public void setDescription(String description);
 
 	/**
-	 * Returns the type of this journal feed.
-	 *
-	 * @return the type of this journal feed
-	 */
-	@AutoEscape
-	public String getType();
-
-	/**
-	 * Sets the type of this journal feed.
-	 *
-	 * @param type the type of this journal feed
-	 */
-	public void setType(String type);
-
-	/**
 	 * Returns the structure ID of this journal feed.
 	 *
 	 * @return the structure ID of this journal feed
@@ -465,19 +450,20 @@ public interface JournalFeedModel extends BaseModel<JournalFeed>,
 	public Object clone();
 
 	@Override
-	public int compareTo(JournalFeed journalFeed);
+	public int compareTo(
+		com.liferay.portlet.journal.model.JournalFeed journalFeed);
 
 	@Override
 	public int hashCode();
 
 	@Override
-	public CacheModel<JournalFeed> toCacheModel();
+	public CacheModel<com.liferay.portlet.journal.model.JournalFeed> toCacheModel();
 
 	@Override
-	public JournalFeed toEscapedModel();
+	public com.liferay.portlet.journal.model.JournalFeed toEscapedModel();
 
 	@Override
-	public JournalFeed toUnescapedModel();
+	public com.liferay.portlet.journal.model.JournalFeed toUnescapedModel();
 
 	@Override
 	public String toString();
