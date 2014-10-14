@@ -38,7 +38,7 @@
 		<column name="description" type="String" localized="true" />
 		<column name="content" type="String" />
 		<column name="type" type="String" />
-		<column name="structureKey" type="String" db-name="structureId"/>
+		<column name="structureKey" type="String" />
 		<column name="templateId" type="String" />
 		<column name="layoutUuid" type="String" />
 		<column name="displayDate" type="Date" />
