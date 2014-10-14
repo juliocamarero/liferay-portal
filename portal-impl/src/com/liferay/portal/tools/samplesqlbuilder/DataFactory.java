@@ -1561,7 +1561,7 @@ public class DataFactory {
 
 		journalArticleModel.setContent(_journalArticleContent);
 		journalArticleModel.setType("general");
-		journalArticleModel.setStructureId(
+		journalArticleModel.setStructureKey(
 			_defaultJournalDDMStructureModel.getStructureKey());
 		journalArticleModel.setTemplateId(
 			_defaultJournalDDMTemplateModel.getTemplateKey());
