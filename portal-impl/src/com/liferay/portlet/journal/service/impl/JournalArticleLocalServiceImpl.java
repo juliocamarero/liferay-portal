@@ -3034,7 +3034,7 @@ public class JournalArticleLocalServiceImpl
 	public List<JournalArticle> getStructureArticles(
 		String[] ddmStructureKeys) {
 
-		return journalArticlePersistence.findByStructureId(ddmStructureKeys);
+		return journalArticlePersistence.findByStructureKey(ddmStructureKeys);
 	}
 
 	/**
