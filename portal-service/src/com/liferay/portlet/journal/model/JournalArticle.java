@@ -100,6 +100,16 @@ public interface JournalArticle extends JournalArticleModel, PersistedModel,
 	public java.lang.String getSmallImageType()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link #getStructureKey()}
+	*/
+	public java.lang.String getStructureId();
+
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link #setStructureKey()}
+	*/
+	public void setStructureId(java.lang.String structureKey);
+
 	public boolean hasApprovedVersion();
 
 	/**

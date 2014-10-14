@@ -162,7 +162,7 @@ public class JournalArticlePersistenceTest {
 
 		newJournalArticle.setType(RandomTestUtil.randomString());
 
-		newJournalArticle.setStructureId(RandomTestUtil.randomString());
+		newJournalArticle.setStructureKey(RandomTestUtil.randomString());
 
 		newJournalArticle.setTemplateId(RandomTestUtil.randomString());
 
@@ -236,8 +236,8 @@ public class JournalArticlePersistenceTest {
 			newJournalArticle.getContent());
 		Assert.assertEquals(existingJournalArticle.getType(),
 			newJournalArticle.getType());
-		Assert.assertEquals(existingJournalArticle.getStructureId(),
-			newJournalArticle.getStructureId());
+		Assert.assertEquals(existingJournalArticle.getStructureKey(),
+			newJournalArticle.getStructureKey());
 		Assert.assertEquals(existingJournalArticle.getTemplateId(),
 			newJournalArticle.getTemplateId());
 		Assert.assertEquals(existingJournalArticle.getLayoutUuid(),
@@ -351,13 +351,13 @@ public class JournalArticlePersistenceTest {
 	}
 
 	@Test
-	public void testCountByStructureId() {
+	public void testCountByStructureKey() {
 		try {
-			_persistence.countByStructureId(StringPool.BLANK);
+			_persistence.countByStructureKey(StringPool.BLANK);
 
-			_persistence.countByStructureId(StringPool.NULL);
+			_persistence.countByStructureKey(StringPool.NULL);
 
-			_persistence.countByStructureId((String)null);
+			_persistence.countByStructureKey((String)null);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
@@ -365,9 +365,9 @@ public class JournalArticlePersistenceTest {
 	}
 
 	@Test
-	public void testCountByStructureIdArrayable() {
+	public void testCountByStructureKeyArrayable() {
 		try {
-			_persistence.countByStructureId(new String[] {
+			_persistence.countByStructureKey(new String[] {
 					RandomTestUtil.randomString(), StringPool.BLANK,
 					StringPool.NULL, null, null
 				});
@@ -897,7 +897,7 @@ public class JournalArticlePersistenceTest {
 			true, "modifiedDate", true, "folderId", true, "classNameId", true,
 			"classPK", true, "treePath", true, "articleId", true, "version",
 			true, "title", true, "urlTitle", true, "description", true,
-			"content", true, "type", true, "structureId", true, "templateId",
+			"content", true, "type", true, "structureKey", true, "templateId",
 			true, "layoutUuid", true, "displayDate", true, "expirationDate",
 			true, "reviewDate", true, "indexable", true, "smallImage", true,
 			"smallImageId", true, "smallImageURL", true, "status", true,
@@ -1120,8 +1120,8 @@ public class JournalArticlePersistenceTest {
 		Assert.assertEquals(existingJournalArticleModelImpl.getClassNameId(),
 			existingJournalArticleModelImpl.getOriginalClassNameId());
 		Assert.assertTrue(Validator.equals(
-				existingJournalArticleModelImpl.getStructureId(),
-				existingJournalArticleModelImpl.getOriginalStructureId()));
+				existingJournalArticleModelImpl.getStructureKey(),
+				existingJournalArticleModelImpl.getOriginalStructureKey()));
 
 		Assert.assertEquals(existingJournalArticleModelImpl.getGroupId(),
 			existingJournalArticleModelImpl.getOriginalGroupId());
@@ -1175,7 +1175,7 @@ public class JournalArticlePersistenceTest {
 
 		journalArticle.setType(RandomTestUtil.randomString());
 
-		journalArticle.setStructureId(RandomTestUtil.randomString());
+		journalArticle.setStructureKey(RandomTestUtil.randomString());
 
 		journalArticle.setTemplateId(RandomTestUtil.randomString());
 

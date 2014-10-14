@@ -74,7 +74,7 @@ public class JournalArticleWrapper implements JournalArticle,
 		attributes.put("description", getDescription());
 		attributes.put("content", getContent());
 		attributes.put("type", getType());
-		attributes.put("structureId", getStructureId());
+		attributes.put("structureKey", getStructureKey());
 		attributes.put("templateId", getTemplateId());
 		attributes.put("layoutUuid", getLayoutUuid());
 		attributes.put("displayDate", getDisplayDate());
@@ -214,10 +214,10 @@ public class JournalArticleWrapper implements JournalArticle,
 			setType(type);
 		}
 
-		String structureId = (String)attributes.get("structureId");
+		String structureKey = (String)attributes.get("structureKey");
 
-		if (structureId != null) {
-			setStructureId(structureId);
+		if (structureKey != null) {
+			setStructureKey(structureKey);
 		}
 
 		String templateId = (String)attributes.get("templateId");
@@ -766,13 +766,21 @@ public class JournalArticleWrapper implements JournalArticle,
 	}
 
 	/**
-	* Returns the structure ID of this journal article.
-	*
-	* @return the structure ID of this journal article
+	* @deprecated As of 7.0.0, replaced by {@link #getStructureKey()}
 	*/
 	@Override
 	public java.lang.String getStructureId() {
 		return _journalArticle.getStructureId();
+	}
+
+	/**
+	* Returns the structure key of this journal article.
+	*
+	* @return the structure key of this journal article
+	*/
+	@Override
+	public java.lang.String getStructureKey() {
+		return _journalArticle.getStructureKey();
 	}
 
 	/**
@@ -1528,13 +1536,21 @@ public class JournalArticleWrapper implements JournalArticle,
 	}
 
 	/**
-	* Sets the structure ID of this journal article.
-	*
-	* @param structureId the structure ID of this journal article
+	* @deprecated As of 7.0.0, replaced by {@link #setStructureKey()}
 	*/
 	@Override
-	public void setStructureId(java.lang.String structureId) {
-		_journalArticle.setStructureId(structureId);
+	public void setStructureId(java.lang.String structureKey) {
+		_journalArticle.setStructureId(structureKey);
+	}
+
+	/**
+	* Sets the structure key of this journal article.
+	*
+	* @param structureKey the structure key of this journal article
+	*/
+	@Override
+	public void setStructureKey(java.lang.String structureKey) {
+		_journalArticle.setStructureKey(structureKey);
 	}
 
 	/**
