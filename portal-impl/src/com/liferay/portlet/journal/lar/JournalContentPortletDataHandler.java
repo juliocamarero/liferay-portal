@@ -164,7 +164,7 @@ public class JournalContentPortletDataHandler
 		StagedModelDataHandlerUtil.exportReferenceStagedModel(
 			portletDataContext, portletId, article);
 
-		String defaultTemplateId = article.getTemplateId();
+		String defaultTemplateId = article.getTemplateKey();
 		String preferenceTemplateId = portletPreferences.getValue(
 			"ddmTemplateKey", null);
 
