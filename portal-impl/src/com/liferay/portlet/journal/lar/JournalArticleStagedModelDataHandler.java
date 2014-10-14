@@ -300,7 +300,7 @@ public class JournalArticleStagedModelDataHandler
 		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
 			article.getGroupId(),
 			PortalUtil.getClassNameId(JournalArticle.class),
-			article.getStructureId(), true);
+			article.getStructureKey(), true);
 
 		StagedModelDataHandlerUtil.exportReferenceStagedModel(
 			portletDataContext, article, ddmStructure,
@@ -531,8 +531,8 @@ public class JournalArticleStagedModelDataHandler
 				DDMStructure.class + ".ddmStructureKey");
 
 		String parentDDMStructureKey = MapUtil.getString(
-			ddmStructureKeys, article.getStructureId(),
-			article.getStructureId());
+			ddmStructureKeys, article.getStructureKey(),
+			article.getStructureKey());
 
 		Map<String, Long> ddmStructureIds =
 			(Map<String, Long>)portletDataContext.getNewPrimaryKeysMap(
