@@ -927,12 +927,20 @@ public class EditLayoutsAction extends PortletAction {
 
 				Layout copyLayout = null;
 
+				String layoutTemplateId = null;
+
 				if (copyLayoutId > 0) {
 					try {
 						copyLayout = LayoutLocalServiceUtil.getLayout(
 							groupId, privateLayout, copyLayoutId);
 
 						if (copyLayout.isTypePortlet()) {
+							LayoutTypePortlet copyLayoutTypePortlet =
+								(LayoutTypePortlet)copyLayout.getLayoutType();
+
+							layoutTemplateId =
+								copyLayoutTypePortlet.getLayoutTemplateId();
+
 							typeSettingsProperties =
 								copyLayout.getTypeSettingsProperties();
 						}
@@ -950,9 +958,11 @@ public class EditLayoutsAction extends PortletAction {
 				LayoutTypePortlet layoutTypePortlet =
 					(LayoutTypePortlet)layout.getLayoutType();
 
-				String layoutTemplateId = ParamUtil.getString(
-					uploadPortletRequest, "layoutTemplateId",
-					PropsValues.DEFAULT_LAYOUT_TEMPLATE_ID);
+				if (Validator.isNull(layoutTemplateId)) {
+					layoutTemplateId = ParamUtil.getString(
+						uploadPortletRequest, "layoutTemplateId",
+						PropsValues.DEFAULT_LAYOUT_TEMPLATE_ID);
+				}
 
 				layoutTypePortlet.setLayoutTemplateId(
 					themeDisplay.getUserId(), layoutTemplateId);
