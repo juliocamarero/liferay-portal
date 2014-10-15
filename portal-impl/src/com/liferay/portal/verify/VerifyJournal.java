@@ -479,7 +479,7 @@ public class VerifyJournal extends VerifyProcess {
 			}
 
 			article.setStructureKey(StringPool.BLANK);
-			article.setTemplateId(StringPool.BLANK);
+			article.setTemplateKey(StringPool.BLANK);
 
 			JournalArticleLocalServiceUtil.updateJournalArticle(article);
 		}

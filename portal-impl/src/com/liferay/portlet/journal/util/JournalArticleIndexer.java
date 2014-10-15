@@ -412,7 +412,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 		document.addKeyword(Field.VERSION, article.getVersion());
 
 		document.addKeyword("ddmStructureKey", article.getStructureKey());
-		document.addKeyword("ddmTemplateKey", article.getTemplateId());
+		document.addKeyword("ddmTemplateKey", article.getTemplateKey());
 		document.addDate("displayDate", article.getDisplayDate());
 		document.addKeyword("head", isHead(article));
 

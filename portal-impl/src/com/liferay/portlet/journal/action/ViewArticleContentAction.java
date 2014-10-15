@@ -96,7 +96,7 @@ public class ViewArticleContentAction extends Action {
 				String type = ParamUtil.getString(uploadServletRequest, "type");
 				String structureKey = ParamUtil.getString(
 					uploadServletRequest, "structureId");
-				String templateId = ParamUtil.getString(
+				String templateKey = ParamUtil.getString(
 					uploadServletRequest, "templateId");
 
 				Date now = new Date();
@@ -140,18 +140,18 @@ public class ViewArticleContentAction extends Action {
 				article.setContent(xml);
 				article.setType(type);
 				article.setStructureKey(structureKey);
-				article.setTemplateId(templateId);
+				article.setTemplateKey(templateKey);
 				article.setDisplayDate(displayDate);
 
 				output = JournalArticleLocalServiceUtil.getArticleContent(
-					article, templateId, null, languageId, themeDisplay);
+					article, templateKey, null, languageId, themeDisplay);
 			}
 			else if (cmd.equals(Constants.VIEW)) {
 				JournalArticle article = JournalArticleServiceUtil.getArticle(
 					groupId, articleId, version);
 
 				output = JournalArticleLocalServiceUtil.getArticleContent(
-					article, article.getTemplateId(), null, languageId,
+					article, article.getTemplateKey(), null, languageId,
 					themeDisplay);
 			}
 			else {

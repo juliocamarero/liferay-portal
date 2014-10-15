@@ -384,7 +384,7 @@ public class JournalArticleLocalServiceImpl
 		article.setContent(content);
 		article.setType(type);
 		article.setStructureKey(ddmStructureKey);
-		article.setTemplateId(ddmTemplateKey);
+		article.setTemplateKey(ddmTemplateKey);
 		article.setLayoutUuid(layoutUuid);
 		article.setDisplayDate(displayDate);
 		article.setExpirationDate(expirationDate);
@@ -809,7 +809,7 @@ public class JournalArticleLocalServiceImpl
 
 		newArticle.setType(oldArticle.getType());
 		newArticle.setStructureKey(oldArticle.getStructureKey());
-		newArticle.setTemplateId(oldArticle.getTemplateId());
+		newArticle.setTemplateKey(oldArticle.getTemplateKey());
 		newArticle.setLayoutUuid(oldArticle.getLayoutUuid());
 		newArticle.setDisplayDate(oldArticle.getDisplayDate());
 		newArticle.setExpirationDate(oldArticle.getExpirationDate());
@@ -4844,7 +4844,7 @@ public class JournalArticleLocalServiceImpl
 		return journalArticleLocalService.updateArticle(
 			userId, groupId, folderId, articleId, version, titleMap,
 			descriptionMap, content, article.getType(),
-			article.getStructureKey(), article.getTemplateId(), layoutUuid,
+			article.getStructureKey(), article.getTemplateKey(), layoutUuid,
 			displayDateMonth, displayDateDay, displayDateYear, displayDateHour,
 			displayDateMinute, expirationDateMonth, expirationDateDay,
 			expirationDateYear, expirationDateHour, expirationDateMinute,
@@ -5080,7 +5080,7 @@ public class JournalArticleLocalServiceImpl
 		article.setContent(content);
 		article.setType(type);
 		article.setStructureKey(ddmStructureKey);
-		article.setTemplateId(ddmTemplateKey);
+		article.setTemplateKey(ddmTemplateKey);
 		article.setLayoutUuid(layoutUuid);
 		article.setDisplayDate(displayDate);
 		article.setExpirationDate(expirationDate);
@@ -5309,7 +5309,7 @@ public class JournalArticleLocalServiceImpl
 			article.setDescriptionMap(oldArticle.getDescriptionMap());
 			article.setType(oldArticle.getType());
 			article.setStructureKey(oldArticle.getStructureKey());
-			article.setTemplateId(oldArticle.getTemplateId());
+			article.setTemplateKey(oldArticle.getTemplateKey());
 			article.setLayoutUuid(oldArticle.getLayoutUuid());
 			article.setDisplayDate(oldArticle.getDisplayDate());
 			article.setExpirationDate(oldArticle.getExpirationDate());
@@ -5760,7 +5760,7 @@ public class JournalArticleLocalServiceImpl
 			groupId, classNameId, oldDDMTemplateKey);
 
 		for (JournalArticle article : articles) {
-			article.setTemplateId(newDDMTemplateKey);
+			article.setTemplateKey(newDDMTemplateKey);
 
 			journalArticlePersistence.update(article);
 		}
@@ -5947,7 +5947,7 @@ public class JournalArticleLocalServiceImpl
 
 			JournalContentUtil.clearCache(
 				article.getGroupId(), article.getArticleId(),
-				article.getTemplateId());
+				article.getTemplateKey());
 
 			companyIds.add(article.getCompanyId());
 		}
@@ -6517,7 +6517,7 @@ public class JournalArticleLocalServiceImpl
 			"article_resource_pk",
 			String.valueOf(article.getResourcePrimKey()));
 
-		String defaultDDMTemplateKey = article.getTemplateId();
+		String defaultDDMTemplateKey = article.getTemplateKey();
 
 		if (Validator.isNull(ddmTemplateKey)) {
 			ddmTemplateKey = defaultDDMTemplateKey;
