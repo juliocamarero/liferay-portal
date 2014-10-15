@@ -1114,7 +1114,7 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public long[] getAncestorSiteGroupIds(long groupId) throws PortalException {
+	public long[] getAncestorSiteGroupIds(long groupId) {
 		int i = 0;
 
 		Set<Group> groups = doGetAncestorSiteGroups(groupId, false);
@@ -5073,12 +5073,16 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public long getSiteGroupId(long groupId) throws PortalException {
+	public long getSiteGroupId(long groupId) {
 		if (groupId <= 0) {
 			return 0;
 		}
 
-		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+
+		if (group == null) {
+			return 0;
+		}
 
 		long siteGroupId = groupId;
 
@@ -7480,14 +7484,17 @@ public class PortalImpl implements Portal {
 	}
 
 	protected Set<Group> doGetAncestorSiteGroups(
-			long groupId, boolean checkContentSharingWithChildrenEnabled)
-		throws PortalException {
+		long groupId, boolean checkContentSharingWithChildrenEnabled) {
 
 		Set<Group> groups = new LinkedHashSet<Group>();
 
 		long siteGroupId = getSiteGroupId(groupId);
 
-		Group siteGroup = GroupLocalServiceUtil.getGroup(siteGroupId);
+		Group siteGroup = GroupLocalServiceUtil.fetchGroup(siteGroupId);
+
+		if (siteGroup == null) {
+			return groups;
+		}
 
 		for (Group group : siteGroup.getAncestors()) {
 			if (checkContentSharingWithChildrenEnabled &&
@@ -7501,7 +7508,7 @@ public class PortalImpl implements Portal {
 
 		if (!siteGroup.isCompany()) {
 			groups.add(
-				GroupLocalServiceUtil.getCompanyGroup(
+				GroupLocalServiceUtil.fetchCompanyGroup(
 					siteGroup.getCompanyId()));
 		}
 

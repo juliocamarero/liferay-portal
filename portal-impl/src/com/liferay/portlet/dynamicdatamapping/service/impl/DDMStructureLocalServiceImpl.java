@@ -553,13 +553,11 @@ public class DDMStructureLocalServiceImpl
 	 *         search
 	 * @return the matching structure, or <code>null</code> if a matching
 	 *         structure could not be found
-	 * @throws PortalException if a portal exception occurred
 	 */
 	@Override
 	public DDMStructure fetchStructure(
-			long groupId, long classNameId, String structureKey,
-			boolean includeAncestorStructures)
-		throws PortalException {
+		long groupId, long classNameId, String structureKey,
+		boolean includeAncestorStructures) {
 
 		structureKey = getStructureKey(structureKey);
 
