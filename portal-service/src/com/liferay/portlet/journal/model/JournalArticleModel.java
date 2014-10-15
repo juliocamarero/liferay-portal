@@ -585,18 +585,19 @@ public interface JournalArticleModel extends AttachedModel,
 	public void setType(String type);
 
 	/**
-	 * Returns the structure ID of this journal article.
+	 * Returns the structure key of this journal article.
 	 *
-	 * @return the structure ID of this journal article
+	 * @return the structure key of this journal article
 	 */
-	public String getStructureId();
+	@AutoEscape
+	public String getStructureKey();
 
 	/**
-	 * Sets the structure ID of this journal article.
+	 * Sets the structure key of this journal article.
 	 *
-	 * @param structureId the structure ID of this journal article
+	 * @param structureKey the structure key of this journal article
 	 */
-	public void setStructureId(String structureId);
+	public void setStructureKey(String structureKey);
 
 	/**
 	 * Returns the template ID of this journal article.

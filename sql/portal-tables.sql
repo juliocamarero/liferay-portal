@@ -874,7 +874,7 @@ create table JournalArticle (
 	description TEXT null,
 	content TEXT null,
 	type_ VARCHAR(75) null,
-	structureId VARCHAR(75) null,
+	structureKey VARCHAR(75) null,
 	templateId VARCHAR(75) null,
 	layoutUuid VARCHAR(75) null,
 	displayDate DATE null,
