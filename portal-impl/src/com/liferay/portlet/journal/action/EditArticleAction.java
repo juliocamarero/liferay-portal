@@ -495,12 +495,12 @@ public class EditArticleAction extends PortletAction {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			JournalArticle.class.getName(), uploadPortletRequest);
 
-		String structureId = ParamUtil.getString(
+		String structureKey = ParamUtil.getString(
 			uploadPortletRequest, "structureId");
 
 		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
 			PortalUtil.getSiteGroupId(groupId),
-			PortalUtil.getClassNameId(JournalArticle.class), structureId, true);
+			PortalUtil.getClassNameId(JournalArticle.class), structureKey, true);
 
 		String languageId = defaultLanguageId;
 
@@ -523,7 +523,7 @@ public class EditArticleAction extends PortletAction {
 		}
 
 		String type = ParamUtil.getString(uploadPortletRequest, "type");
-		String templateId = ParamUtil.getString(
+		String templateKey = ParamUtil.getString(
 			uploadPortletRequest, "templateId");
 		String layoutUuid = ParamUtil.getString(
 			uploadPortletRequest, "layoutUuid");
@@ -620,7 +620,7 @@ public class EditArticleAction extends PortletAction {
 			article = JournalArticleServiceUtil.addArticle(
 				groupId, folderId, classNameId, classPK, articleId,
 				autoArticleId, titleMap, descriptionMap, content, type,
-				structureId, templateId, layoutUuid, displayDateMonth,
+				structureKey, templateKey, layoutUuid, displayDateMonth,
 				displayDateDay, displayDateYear, displayDateHour,
 				displayDateMinute, expirationDateMonth, expirationDateDay,
 				expirationDateYear, expirationDateHour, expirationDateMinute,
@@ -651,7 +651,7 @@ public class EditArticleAction extends PortletAction {
 
 				article = JournalArticleServiceUtil.updateArticle(
 					groupId, folderId, articleId, version, titleMap,
-					descriptionMap, content, type, structureId, templateId,
+					descriptionMap, content, type, structureKey, templateKey,
 					layoutUuid, displayDateMonth, displayDateDay,
 					displayDateYear, displayDateHour, displayDateMinute,
 					expirationDateMonth, expirationDateDay, expirationDateYear,
