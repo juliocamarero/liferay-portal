@@ -103,9 +103,9 @@ public class GetArticlesAction extends Action {
 		String description = null;
 		String content = null;
 		String type = ParamUtil.getString(request, "type");
-		String[] structureIds = StringUtil.split(
+		String[] structureKeys = StringUtil.split(
 			ParamUtil.getString(request, "structureId"));
-		String[] templateIds = StringUtil.split(
+		String[] templateKeys = StringUtil.split(
 			ParamUtil.getString(request, "templateId"));
 
 		Date displayDateGT = null;
@@ -165,7 +165,7 @@ public class GetArticlesAction extends Action {
 
 		return JournalArticleServiceUtil.search(
 			companyId, groupId, folderIds, 0, articleId, version, title,
-			description, content, type, structureIds, templateIds,
+			description, content, type, structureKeys, templateKeys,
 			displayDateGT, displayDateLT, status, reviewDate, andOperator,
 			start, end, obc);
 	}
