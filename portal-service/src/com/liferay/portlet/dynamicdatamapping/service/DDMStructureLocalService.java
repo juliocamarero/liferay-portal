@@ -485,13 +485,11 @@ public interface DDMStructureLocalService extends BaseLocalService,
 	search
 	* @return the matching structure, or <code>null</code> if a matching
 	structure could not be found
-	* @throws PortalException if a portal exception occurred
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portlet.dynamicdatamapping.model.DDMStructure fetchStructure(
 		long groupId, long classNameId, java.lang.String structureKey,
-		boolean includeAncestorStructures)
-		throws com.liferay.portal.kernel.exception.PortalException;
+		boolean includeAncestorStructures);
 
 	/**
 	* Returns the structure with the ID.
