@@ -149,7 +149,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	public static final long RESOURCEPRIMKEY_COLUMN_BITMASK = 512L;
 	public static final long SMALLIMAGEID_COLUMN_BITMASK = 1024L;
 	public static final long STATUS_COLUMN_BITMASK = 2048L;
-	public static final long STRUCTUREID_COLUMN_BITMASK = 4096L;
+	public static final long STRUCTUREKEY_COLUMN_BITMASK = 4096L;
 	public static final long TEMPLATEID_COLUMN_BITMASK = 8192L;
 	public static final long URLTITLE_COLUMN_BITMASK = 16384L;
 	public static final long USERID_COLUMN_BITMASK = 32768L;
@@ -189,7 +189,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 		model.setDescription(soapModel.getDescription());
 		model.setContent(soapModel.getContent());
 		model.setType(soapModel.getType());
-		model.setStructureId(soapModel.getStructureId());
+		model.setStructureKey(soapModel.getStructureKey());
 		model.setTemplateId(soapModel.getTemplateId());
 		model.setLayoutUuid(soapModel.getLayoutUuid());
 		model.setDisplayDate(soapModel.getDisplayDate());
@@ -287,7 +287,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 		attributes.put("description", getDescription());
 		attributes.put("content", getContent());
 		attributes.put("type", getType());
-		attributes.put("structureId", getStructureId());
+		attributes.put("structureKey", getStructureKey());
 		attributes.put("templateId", getTemplateId());
 		attributes.put("layoutUuid", getLayoutUuid());
 		attributes.put("displayDate", getDisplayDate());
@@ -430,10 +430,10 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 			setType(type);
 		}
 
-		String structureId = (String)attributes.get("structureId");
+		String structureKey = (String)attributes.get("structureKey");
 
-		if (structureId != null) {
-			setStructureId(structureId);
+		if (structureKey != null) {
+			setStructureKey(structureKey);
 		}
 
 		String templateId = (String)attributes.get("templateId");
@@ -1117,28 +1117,28 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@JSON
 	@Override
-	public String getStructureId() {
-		if (_structureId == null) {
+	public String getStructureKey() {
+		if (_structureKey == null) {
 			return StringPool.BLANK;
 		}
 		else {
-			return _structureId;
+			return _structureKey;
 		}
 	}
 
 	@Override
-	public void setStructureId(String structureId) {
-		_columnBitmask |= STRUCTUREID_COLUMN_BITMASK;
+	public void setStructureKey(String structureKey) {
+		_columnBitmask |= STRUCTUREKEY_COLUMN_BITMASK;
 
-		if (_originalStructureId == null) {
-			_originalStructureId = _structureId;
+		if (_originalStructureKey == null) {
+			_originalStructureKey = _structureKey;
 		}
 
-		_structureId = structureId;
+		_structureKey = structureKey;
 	}
 
-	public String getOriginalStructureId() {
-		return GetterUtil.getString(_originalStructureId);
+	public String getOriginalStructureKey() {
+		return GetterUtil.getString(_originalStructureKey);
 	}
 
 	@JSON
@@ -1760,7 +1760,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 		journalArticleImpl.setDescription(getDescription());
 		journalArticleImpl.setContent(getContent());
 		journalArticleImpl.setType(getType());
-		journalArticleImpl.setStructureId(getStructureId());
+		journalArticleImpl.setStructureKey(getStructureKey());
 		journalArticleImpl.setTemplateId(getTemplateId());
 		journalArticleImpl.setLayoutUuid(getLayoutUuid());
 		journalArticleImpl.setDisplayDate(getDisplayDate());
@@ -1888,7 +1888,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 		journalArticleModelImpl._originalUrlTitle = journalArticleModelImpl._urlTitle;
 
-		journalArticleModelImpl._originalStructureId = journalArticleModelImpl._structureId;
+		journalArticleModelImpl._originalStructureKey = journalArticleModelImpl._structureKey;
 
 		journalArticleModelImpl._originalTemplateId = journalArticleModelImpl._templateId;
 
@@ -2027,12 +2027,12 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 			journalArticleCacheModel.type = null;
 		}
 
-		journalArticleCacheModel.structureId = getStructureId();
+		journalArticleCacheModel.structureKey = getStructureKey();
 
-		String structureId = journalArticleCacheModel.structureId;
+		String structureKey = journalArticleCacheModel.structureKey;
 
-		if ((structureId != null) && (structureId.length() == 0)) {
-			journalArticleCacheModel.structureId = null;
+		if ((structureKey != null) && (structureKey.length() == 0)) {
+			journalArticleCacheModel.structureKey = null;
 		}
 
 		journalArticleCacheModel.templateId = getTemplateId();
@@ -2164,8 +2164,8 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 		sb.append(getContent());
 		sb.append(", type=");
 		sb.append(getType());
-		sb.append(", structureId=");
-		sb.append(getStructureId());
+		sb.append(", structureKey=");
+		sb.append(getStructureKey());
 		sb.append(", templateId=");
 		sb.append(getTemplateId());
 		sb.append(", layoutUuid=");
@@ -2286,8 +2286,8 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 		sb.append(getType());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>structureId</column-name><column-value><![CDATA[");
-		sb.append(getStructureId());
+			"<column><column-name>structureKey</column-name><column-value><![CDATA[");
+		sb.append(getStructureKey());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>templateId</column-name><column-value><![CDATA[");
@@ -2392,8 +2392,8 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	private String _descriptionCurrentLanguageId;
 	private String _content;
 	private String _type;
-	private String _structureId;
-	private String _originalStructureId;
+	private String _structureKey;
+	private String _originalStructureKey;
 	private String _templateId;
 	private String _originalTemplateId;
 	private String _layoutUuid;

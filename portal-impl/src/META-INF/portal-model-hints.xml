@@ -1937,9 +1937,7 @@
 			<hint-collection name="CLOB" />
 		</field>
 		<field name="type" type="String" />
-		<field name="structureId" type="String">
-			<hint name="auto-escape">false</hint>
-		</field>
+		<field name="structureKey" type="String" />
 		<field name="templateId" type="String">
 			<hint name="auto-escape">false</hint>
 		</field>
