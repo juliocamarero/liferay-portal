@@ -207,7 +207,7 @@ public class VerifyJournal extends VerifyProcess {
 			ps = con.prepareStatement(
 				"select id_ from JournalArticle where (content like " +
 					"'%document_library%' or content like '%link_to_layout%')" +
-						" and structureId != ''");
+						" and structureKey != ''");
 
 			rs = ps.executeQuery();
 
