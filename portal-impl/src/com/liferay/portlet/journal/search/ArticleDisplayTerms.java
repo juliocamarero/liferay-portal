@@ -76,8 +76,8 @@ public class ArticleDisplayTerms extends DisplayTerms {
 		folderId = ParamUtil.getLong(portletRequest, FOLDER_ID);
 		navigation = ParamUtil.getString(portletRequest, NAVIGATION);
 		status = ParamUtil.getInteger(portletRequest, STATUS);
-		structureId = ParamUtil.getString(portletRequest, STRUCTURE_ID);
-		templateId = ParamUtil.getString(portletRequest, TEMPLATE_ID);
+		structureKey = ParamUtil.getString(portletRequest, STRUCTURE_ID);
+		templateKey = ParamUtil.getString(portletRequest, TEMPLATE_ID);
 		title = ParamUtil.getString(portletRequest, TITLE);
 		type = ParamUtil.getString(portletRequest, TYPE);
 		version = ParamUtil.getDouble(portletRequest, VERSION);
@@ -133,12 +133,26 @@ public class ArticleDisplayTerms extends DisplayTerms {
 		return status;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getStructureKey()}
+	 */
 	public String getStructureId() {
-		return structureId;
+		return structureKey;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getTemplateKey()}
+	 */
 	public String getTemplateId() {
-		return templateId;
+		return templateKey;
+	}
+
+	public String getStructureKey() {
+		return structureKey;
+	}
+
+	public String getTemplateKey() {
+		return templateKey;
 	}
 
 	public String getTitle() {
@@ -192,14 +206,14 @@ public class ArticleDisplayTerms extends DisplayTerms {
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		if (Validator.isNotNull(structureId) && !structureId.equals("0")) {
+		if (Validator.isNotNull(structureKey) && !structureKey.equals("0")) {
 			DDMStructure ddmStructure = null;
 
 			try {
 				ddmStructure = DDMStructureLocalServiceUtil.fetchStructure(
 					themeDisplay.getSiteGroupId(),
 					PortalUtil.getClassNameId(JournalArticle.class),
-					structureId);
+					structureKey);
 			}
 			catch (SystemException se) {
 			}
@@ -209,14 +223,14 @@ public class ArticleDisplayTerms extends DisplayTerms {
 			}
 		}
 
-		if (Validator.isNotNull(templateId) && !templateId.equals("0")) {
+		if (Validator.isNotNull(templateKey) && !templateKey.equals("0")) {
 			DDMTemplate ddmTemplate = null;
 
 			try {
 				ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
 					themeDisplay.getSiteGroupId(),
 					PortalUtil.getClassNameId(JournalArticle.class),
-					templateId);
+					templateKey);
 			}
 			catch (SystemException se) {
 			}
@@ -243,8 +257,8 @@ public class ArticleDisplayTerms extends DisplayTerms {
 	protected long groupId;
 	protected String navigation;
 	protected int status;
-	protected String structureId;
-	protected String templateId;
+	protected String structureKey;
+	protected String templateKey;
 	protected String title;
 	protected String type;
 	protected double version;
