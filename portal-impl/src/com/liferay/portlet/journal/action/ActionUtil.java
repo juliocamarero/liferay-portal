@@ -186,7 +186,7 @@ public class ActionUtil {
 		long classNameId = ParamUtil.getLong(request, "classNameId");
 		long classPK = ParamUtil.getLong(request, "classPK");
 		String articleId = ParamUtil.getString(request, "articleId");
-		String structureId = ParamUtil.getString(request, "structureId");
+		String structureKey = ParamUtil.getString(request, "structureId");
 		int status = ParamUtil.getInteger(
 			request, "status", WorkflowConstants.STATUS_ANY);
 
@@ -214,7 +214,7 @@ public class ActionUtil {
 			try {
 				ddmStructure = DDMStructureServiceUtil.getStructure(
 					groupId, PortalUtil.getClassNameId(JournalArticle.class),
-					structureId, true);
+					structureKey, true);
 			}
 			catch (NoSuchStructureException nsse1) {
 				return;
@@ -386,10 +386,10 @@ public class ActionUtil {
 
 		long groupId = ParamUtil.getLong(request, "groupId");
 		long classNameId = ParamUtil.getLong(request, "classNameId");
-		String structureId = ParamUtil.getString(request, "structureId");
+		String structureKey = ParamUtil.getString(request, "structureId");
 
 		DDMStructure ddmStructure = DDMStructureServiceUtil.getStructure(
-			groupId, classNameId, structureId);
+			groupId, classNameId, structureKey);
 
 		request.setAttribute(WebKeys.JOURNAL_STRUCTURE, ddmStructure);
 	}

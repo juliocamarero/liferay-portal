@@ -34,8 +34,8 @@ public class ArticleSearchTerms extends ArticleDisplayTerms {
 		content = DAOParamUtil.getString(portletRequest, CONTENT);
 		description = DAOParamUtil.getString(portletRequest, DESCRIPTION);
 		status = ParamUtil.getInteger(portletRequest, STATUS);
-		structureId = DAOParamUtil.getString(portletRequest, STRUCTURE_ID);
-		templateId = DAOParamUtil.getString(portletRequest, TEMPLATE_ID);
+		structureKey = DAOParamUtil.getString(portletRequest, STRUCTURE_ID);
+		templateKey = DAOParamUtil.getString(portletRequest, TEMPLATE_ID);
 		title = DAOParamUtil.getString(portletRequest, TITLE);
 		type = DAOParamUtil.getString(portletRequest, TYPE);
 		version = ParamUtil.getDouble(portletRequest, VERSION);
@@ -74,8 +74,8 @@ public class ArticleSearchTerms extends ArticleDisplayTerms {
 		this.status = status;
 	}
 
-	public void setStructureId(String structureId) {
-		this.structureId = structureId;
+	public void setStructureKey(String structureKey) {
+		this.structureKey = structureKey;
 	}
 
 	public void setType(String type) {

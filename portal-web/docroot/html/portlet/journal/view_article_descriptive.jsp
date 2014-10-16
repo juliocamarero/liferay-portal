@@ -35,7 +35,7 @@ if (article.getVersion() > JournalArticleConstants.VERSION_DEFAULT) {
 	}
 }
 
-DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(JournalArticle.class), article.getStructureId(), true);
+DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(JournalArticle.class), article.getStructureKey(), true);
 
 String articleImageURL = article.getArticleImageURL(themeDisplay);
 %>
