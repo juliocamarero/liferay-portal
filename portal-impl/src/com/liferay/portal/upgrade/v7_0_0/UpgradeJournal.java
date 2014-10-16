@@ -388,6 +388,14 @@ public class UpgradeJournal extends UpgradeProcess {
 
 		try {
 			runSQL("alter_column_type JournalArticle description TEXT null");
+
+			runSQL(
+				"alter_column_name JournalArticle structureId structureKey " +
+					"TEXT null");
+
+			runSQL(
+				"alter_column_name JournalArticle templateId templateKey " +
+					"TEXT null");
 		}
 		catch (SQLException sqle) {
 			upgradeTable(
