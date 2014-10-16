@@ -171,10 +171,10 @@ public class JournalContentPortletLayoutListener
 
 		Set<String> portletIds = getRuntimePortletIds(article.getContent());
 
-		if (Validator.isNotNull(article.getTemplateId())) {
+		if (Validator.isNotNull(article.getTemplateKey())) {
 			DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.getTemplate(
 				scopeGroupId, PortalUtil.getClassNameId(DDMStructure.class),
-				article.getTemplateId(), true);
+				article.getTemplateKey(), true);
 
 			portletIds.addAll(getRuntimePortletIds(ddmTemplate.getScript()));
 		}

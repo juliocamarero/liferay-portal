@@ -83,10 +83,10 @@ public class JournalArticleCacheModel implements CacheModel<JournalArticle>,
 		sb.append(content);
 		sb.append(", type=");
 		sb.append(type);
-		sb.append(", structureId=");
-		sb.append(structureId);
-		sb.append(", templateId=");
-		sb.append(templateId);
+		sb.append(", structureKey=");
+		sb.append(structureKey);
+		sb.append(", templateKey=");
+		sb.append(templateKey);
 		sb.append(", layoutUuid=");
 		sb.append(layoutUuid);
 		sb.append(", displayDate=");
@@ -209,18 +209,18 @@ public class JournalArticleCacheModel implements CacheModel<JournalArticle>,
 			journalArticleImpl.setType(type);
 		}
 
-		if (structureId == null) {
-			journalArticleImpl.setStructureId(StringPool.BLANK);
+		if (structureKey == null) {
+			journalArticleImpl.setStructureKey(StringPool.BLANK);
 		}
 		else {
-			journalArticleImpl.setStructureId(structureId);
+			journalArticleImpl.setStructureKey(structureKey);
 		}
 
-		if (templateId == null) {
-			journalArticleImpl.setTemplateId(StringPool.BLANK);
+		if (templateKey == null) {
+			journalArticleImpl.setTemplateKey(StringPool.BLANK);
 		}
 		else {
-			journalArticleImpl.setTemplateId(templateId);
+			journalArticleImpl.setTemplateKey(templateKey);
 		}
 
 		if (layoutUuid == null) {
@@ -311,8 +311,8 @@ public class JournalArticleCacheModel implements CacheModel<JournalArticle>,
 		description = objectInput.readUTF();
 		content = objectInput.readUTF();
 		type = objectInput.readUTF();
-		structureId = objectInput.readUTF();
-		templateId = objectInput.readUTF();
+		structureKey = objectInput.readUTF();
+		templateKey = objectInput.readUTF();
 		layoutUuid = objectInput.readUTF();
 		displayDate = objectInput.readLong();
 		expirationDate = objectInput.readLong();
@@ -410,18 +410,18 @@ public class JournalArticleCacheModel implements CacheModel<JournalArticle>,
 			objectOutput.writeUTF(type);
 		}
 
-		if (structureId == null) {
+		if (structureKey == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
 		}
 		else {
-			objectOutput.writeUTF(structureId);
+			objectOutput.writeUTF(structureKey);
 		}
 
-		if (templateId == null) {
+		if (templateKey == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
 		}
 		else {
-			objectOutput.writeUTF(templateId);
+			objectOutput.writeUTF(templateKey);
 		}
 
 		if (layoutUuid == null) {
@@ -481,8 +481,8 @@ public class JournalArticleCacheModel implements CacheModel<JournalArticle>,
 	public String description;
 	public String content;
 	public String type;
-	public String structureId;
-	public String templateId;
+	public String structureKey;
+	public String templateKey;
 	public String layoutUuid;
 	public long displayDate;
 	public long expirationDate;

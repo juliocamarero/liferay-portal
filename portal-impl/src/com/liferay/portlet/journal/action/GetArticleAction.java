@@ -143,16 +143,16 @@ public class GetArticleAction extends Action {
 
 		// XSL template
 
-		String templateId = article.getTemplateId();
+		String templateKey = article.getTemplateKey();
 
-		if (Validator.isNull(templateId)) {
+		if (Validator.isNull(templateKey)) {
 			return;
 		}
 
 		try {
 			DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.getTemplate(
 				article.getGroupId(),
-				PortalUtil.getClassNameId(DDMStructure.class), templateId,
+				PortalUtil.getClassNameId(DDMStructure.class), templateKey,
 				true);
 
 			if (Validator.equals(
@@ -162,7 +162,7 @@ public class GetArticleAction extends Action {
 				url =
 					themeDisplay.getPathMain() +
 						"/journal/get_template?groupId=" +
-							article.getGroupId() + "&templateId=" + templateId;
+							article.getGroupId() + "&templateId=" + templateKey;
 
 				arguments.clear();
 

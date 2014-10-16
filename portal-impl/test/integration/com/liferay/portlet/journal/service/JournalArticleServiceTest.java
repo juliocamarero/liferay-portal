@@ -152,7 +152,7 @@ public class JournalArticleServiceTest {
 			JournalArticle.class);
 
 		DDMStructure ddmStructure = DDMStructureServiceUtil.getStructure(
-			group.getGroupId(), classNameId, article.getStructureId());
+			group.getGroupId(), classNameId, article.getStructureKey());
 
 		checkArticleMatchesStructure(article, ddmStructure);
 	}

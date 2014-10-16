@@ -54,8 +54,8 @@ public class JournalArticleSoap implements Serializable {
 		soapModel.setDescription(model.getDescription());
 		soapModel.setContent(model.getContent());
 		soapModel.setType(model.getType());
-		soapModel.setStructureId(model.getStructureId());
-		soapModel.setTemplateId(model.getTemplateId());
+		soapModel.setStructureKey(model.getStructureKey());
+		soapModel.setTemplateKey(model.getTemplateKey());
 		soapModel.setLayoutUuid(model.getLayoutUuid());
 		soapModel.setDisplayDate(model.getDisplayDate());
 		soapModel.setExpirationDate(model.getExpirationDate());
@@ -280,20 +280,20 @@ public class JournalArticleSoap implements Serializable {
 		_type = type;
 	}
 
-	public String getStructureId() {
-		return _structureId;
+	public String getStructureKey() {
+		return _structureKey;
 	}
 
-	public void setStructureId(String structureId) {
-		_structureId = structureId;
+	public void setStructureKey(String structureKey) {
+		_structureKey = structureKey;
 	}
 
-	public String getTemplateId() {
-		return _templateId;
+	public String getTemplateKey() {
+		return _templateKey;
 	}
 
-	public void setTemplateId(String templateId) {
-		_templateId = templateId;
+	public void setTemplateKey(String templateKey) {
+		_templateKey = templateKey;
 	}
 
 	public String getLayoutUuid() {
@@ -420,8 +420,8 @@ public class JournalArticleSoap implements Serializable {
 	private String _description;
 	private String _content;
 	private String _type;
-	private String _structureId;
-	private String _templateId;
+	private String _structureKey;
+	private String _templateKey;
 	private String _layoutUuid;
 	private Date _displayDate;
 	private Date _expirationDate;
