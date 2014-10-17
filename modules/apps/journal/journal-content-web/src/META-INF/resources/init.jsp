@@ -18,7 +18,7 @@
 
 <%@ page import="com.liferay.portlet.dynamicdatamapping.service.DDMStructureServiceUtil" %><%@
 page import="com.liferay.portlet.journal.service.permission.JournalArticlePermission" %><%@
-page import="com.liferay.portlet.journalcontent.context.JournalContentDisplayContext" %>
+page import="com.liferay.journal.content.web.context.JournalContentDisplayContext" %>
 
 <%
 JournalContentDisplayContext journalContentDisplayContext = new JournalContentDisplayContext(request, portletPreferences);
