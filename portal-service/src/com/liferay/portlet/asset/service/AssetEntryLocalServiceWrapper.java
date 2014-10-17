@@ -606,6 +606,12 @@ public class AssetEntryLocalServiceWrapper implements AssetEntryLocalService,
 		_assetEntryLocalService.reindex(entries);
 	}
 
+	@Override
+	public void removeNonSearchableEntries(
+		java.util.List<com.liferay.portlet.asset.model.AssetEntry> entries) {
+		_assetEntryLocalService.removeNonSearchableEntries(entries);
+	}
+
 	/**
 	* @deprecated As of 6.2.0, replaced by {@link #search(long, long[], long,
 	String, String, int, int, int)}

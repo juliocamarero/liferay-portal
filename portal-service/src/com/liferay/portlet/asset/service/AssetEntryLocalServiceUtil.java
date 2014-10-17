@@ -533,6 +533,11 @@ public class AssetEntryLocalServiceUtil {
 		getService().reindex(entries);
 	}
 
+	public static void removeNonSearchableEntries(
+		java.util.List<com.liferay.portlet.asset.model.AssetEntry> entries) {
+		getService().removeNonSearchableEntries(entries);
+	}
+
 	/**
 	* @deprecated As of 6.2.0, replaced by {@link #search(long, long[], long,
 	String, String, int, int, int)}
