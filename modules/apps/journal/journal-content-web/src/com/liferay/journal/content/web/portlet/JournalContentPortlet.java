@@ -15,9 +15,28 @@
 package com.liferay.journal.content.web.portlet;
 
 import com.liferay.journal.content.web.portlet.upgrade.JournalContentUpgrade;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PrefsParamUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.model.JournalArticleDisplay;
+import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journalcontent.util.JournalContentUtil;
+
+import java.io.IOException;
 
 import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+import javax.portlet.PortletPreferences;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -30,10 +49,6 @@ import org.osgi.service.component.annotations.Reference;
 	property = {
 		"com.liferay.portlet.add-default-resource=true",
 		"com.liferay.portlet.css-class-wrapper=portlet-journal-content",
-		"com.liferay.portlet.configuration-action-class=com.liferay.journal.content.web.portlet.action.ConfigurationActionImpl",
-		"com.liferay.portlet.custom-attributes-display=com.liferay.journal.content.web.JournalArticleCustomAttributesDisplay",
-		"com.liferay.portlet.custom-attributes-display=com.liferay.journal.content.web.JournalFolderCustomAttributesDisplay",
-		"com.liferay.portlet.ddm-display=com.liferay.portlet.journal.ddm.JournalContentDDMDisplay",
 		"com.liferay.portlet.display-category=category.cms",
 		"com.liferay.portlet.icon=/icons/journal_content.png",
 		"com.liferay.portlet.instanceable=true",
@@ -41,16 +56,12 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.friendly-url-mapping=journal_content",
 		"com.liferay.portlet.friendly-url-routes=com/liferay/journal/content/web/portlet/route/journal-content-friendly-url-routes.xml",
 		"com.liferay.portlet.layout-cacheable=true",
-		"com.liferay.portlet.portlet-data-handler-class=com.liferay.journal.content.web.lar.JournalContentPortletDataHandler",
-		"com.liferay.portlet.portlet-layout-listener-class=com.liferay.portlet.journal.content.web.JournalContentPortletLayoutListener",
 		"com.liferay.portlet.preferences-owned-by-group=true",
 		"com.liferay.portlet.private-request-attributes=false",
 		"com.liferay.portlet.private-session-attributes=false",
 		"com.liferay.portlet.scopeable=true",
 		"com.liferay.portlet.render-weight=50",
 		"com.liferay.portlet.struts-path=journal_content",
-		"com.liferay.portlet.social-activity-interpreter-class=com.liferay.journal.content.web.social.JournalArticleActivityInterpreter",
-		"com.liferay.portlet.social-activity-interpreter-class=com.liferay.journal.content.web.social.JournalFolderActivityInterpreter",
 		"com.liferay.portlet.use-default-template=false",
 		"javax.portlet.display-name=Web Content Display",
 		"javax.portlet.expiration-cache=0",
@@ -69,6 +80,82 @@ public class JournalContentPortlet extends MVCPortlet {
 	@Reference(unbind = "-")
 	protected void setInvitationUpgrade(
 		JournalContentUpgrade journalContentUpgrade) {
+	}
+
+	@Override
+	public void doView(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		PortletPreferences portletPreferences = renderRequest.getPreferences();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long articleGroupId = ParamUtil.getLong(
+			renderRequest, "articleGroupId");
+
+		if (articleGroupId <= 0) {
+			articleGroupId = GetterUtil.getLong(
+				portletPreferences.getValue(
+					"groupId", String.valueOf(themeDisplay.getScopeGroupId())));
+		}
+
+		String articleId = PrefsParamUtil.getString(
+			portletPreferences, renderRequest, "articleId");
+		String ddmTemplateKey = PrefsParamUtil.getString(
+			portletPreferences, renderRequest, "ddmTemplateKey");
+
+		JournalArticle article = null;
+		JournalArticleDisplay articleDisplay = null;
+
+		if ((articleGroupId > 0) && Validator.isNotNull(articleId)) {
+			String viewMode = ParamUtil.getString(renderRequest, "viewMode");
+			String languageId = LanguageUtil.getLanguageId(renderRequest);
+			int page = ParamUtil.getInteger(renderRequest, "page", 1);
+
+			article = JournalArticleLocalServiceUtil.fetchLatestArticle(
+				articleGroupId, articleId, WorkflowConstants.STATUS_APPROVED);
+
+			try {
+				if (article == null) {
+					article = JournalArticleLocalServiceUtil.getLatestArticle(
+						articleGroupId, articleId,
+						WorkflowConstants.STATUS_ANY);
+				}
+
+				double version = article.getVersion();
+
+				articleDisplay = JournalContentUtil.getDisplay(
+					articleGroupId, articleId, version, ddmTemplateKey,
+					viewMode, languageId, page,
+					new PortletRequestModel(renderRequest, renderResponse),
+					themeDisplay);
+			}
+			catch (Exception e) {
+				renderRequest.removeAttribute(WebKeys.JOURNAL_ARTICLE);
+
+				articleDisplay = JournalContentUtil.getDisplay(
+					articleGroupId, articleId, ddmTemplateKey, viewMode,
+					languageId, page,
+					new PortletRequestModel(renderRequest, renderResponse),
+					themeDisplay);
+			}
+		}
+
+		if (article != null) {
+			renderRequest.setAttribute(WebKeys.JOURNAL_ARTICLE, article);
+		}
+
+		if (articleDisplay != null) {
+			renderRequest.setAttribute(
+				WebKeys.JOURNAL_ARTICLE_DISPLAY, articleDisplay);
+		}
+		else {
+			renderRequest.removeAttribute(WebKeys.JOURNAL_ARTICLE_DISPLAY);
+		}
+
+		super.doView(renderRequest, renderResponse);
 	}
 
 }
