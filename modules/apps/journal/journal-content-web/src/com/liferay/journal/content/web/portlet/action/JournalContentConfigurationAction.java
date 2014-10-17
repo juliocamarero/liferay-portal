@@ -37,7 +37,8 @@ import javax.portlet.PortletRequest;
  * @author Douglas Wong
  * @author Raymond Augé
  */
-public class ConfigurationActionImpl extends DefaultConfigurationAction {
+public class JournalContentConfigurationAction
+	extends DefaultConfigurationAction {
 
 	@Override
 	public void processAction(
