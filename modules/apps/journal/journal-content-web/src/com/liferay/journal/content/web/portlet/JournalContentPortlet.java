@@ -49,6 +49,10 @@ import org.osgi.service.component.annotations.Reference;
 	property = {
 		"com.liferay.portlet.add-default-resource=true",
 		"com.liferay.portlet.css-class-wrapper=portlet-journal-content",
+		"com.liferay.portlet.configuration-action-class=com.liferay.journal.content.web.portlet.action.ConfigurationActionImpl",
+		"com.liferay.portlet.custom-attributes-display=com.liferay.journal.content.web.JournalArticleCustomAttributesDisplay",
+		"com.liferay.portlet.custom-attributes-display=com.liferay.journal.content.web.JournalFolderCustomAttributesDisplay",
+		"com.liferay.portlet.ddm-display=com.liferay.portlet.journal.ddm.JournalContentDDMDisplay",
 		"com.liferay.portlet.display-category=category.cms",
 		"com.liferay.portlet.icon=/icons/journal_content.png",
 		"com.liferay.portlet.instanceable=true",
@@ -56,13 +60,14 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.friendly-url-mapping=journal_content",
 		"com.liferay.portlet.friendly-url-routes=com/liferay/journal/content/web/portlet/route/journal-content-friendly-url-routes.xml",
 		"com.liferay.portlet.layout-cacheable=true",
+		"com.liferay.portlet.portlet-layout-listener-class=com.liferay.journal.content.web.JournalContentPortletLayoutListener",
 		"com.liferay.portlet.preferences-owned-by-group=true",
 		"com.liferay.portlet.private-request-attributes=false",
 		"com.liferay.portlet.private-session-attributes=false",
 		"com.liferay.portlet.scopeable=true",
 		"com.liferay.portlet.render-weight=50",
 		"com.liferay.portlet.struts-path=journal_content",
-		"com.liferay.portlet.use-default-template=false",
+		"com.liferay.portlet.use-default-template=true",
 		"javax.portlet.display-name=Web Content Display",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.config-template=/configuration.jsp",
@@ -76,11 +81,6 @@ import org.osgi.service.component.annotations.Reference;
 	service = Portlet.class
 )
 public class JournalContentPortlet extends MVCPortlet {
-
-	@Reference(unbind = "-")
-	protected void setInvitationUpgrade(
-		JournalContentUpgrade journalContentUpgrade) {
-	}
 
 	@Override
 	public void doView(
@@ -156,6 +156,11 @@ public class JournalContentPortlet extends MVCPortlet {
 		}
 
 		super.doView(renderRequest, renderResponse);
+	}
+
+	@Reference(unbind = "-")
+	protected void setInvitationUpgrade(
+		JournalContentUpgrade journalContentUpgrade) {
 	}
 
 }
