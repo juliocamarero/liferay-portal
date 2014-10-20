@@ -517,9 +517,8 @@ public class DDMTemplateLocalServiceImpl
 	 */
 	@Override
 	public DDMTemplate fetchTemplate(
-			long groupId, long classNameId, String templateKey,
-			boolean includeAncestorTemplates)
-		throws PortalException {
+		long groupId, long classNameId, String templateKey,
+		boolean includeAncestorTemplates) {
 
 		templateKey = StringUtil.toUpperCase(templateKey.trim());
 

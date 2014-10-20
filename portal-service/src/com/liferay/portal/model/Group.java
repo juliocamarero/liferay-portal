@@ -34,8 +34,7 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 	 */
 	public void clearStagingGroup();
 
-	public java.util.List<com.liferay.portal.model.Group> getAncestors()
-		throws com.liferay.portal.kernel.exception.PortalException;
+	public java.util.List<com.liferay.portal.model.Group> getAncestors();
 
 	public java.util.List<com.liferay.portal.model.Group> getChildren(
 		boolean site);
@@ -82,8 +81,7 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public long getOrganizationId();
 
-	public com.liferay.portal.model.Group getParentGroup()
-		throws com.liferay.portal.kernel.exception.PortalException;
+	public com.liferay.portal.model.Group getParentGroup();
 
 	public com.liferay.portal.kernel.util.UnicodeProperties getParentLiveGroupTypeSettingsProperties();
 

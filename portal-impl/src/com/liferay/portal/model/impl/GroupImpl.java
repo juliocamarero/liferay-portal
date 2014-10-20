@@ -104,7 +104,7 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
-	public List<Group> getAncestors() throws PortalException {
+	public List<Group> getAncestors() {
 		Group group = null;
 
 		if (isStagingGroup()) {
@@ -320,14 +320,14 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
-	public Group getParentGroup() throws PortalException {
+	public Group getParentGroup() {
 		long parentGroupId = getParentGroupId();
 
 		if (parentGroupId <= 0) {
 			return null;
 		}
 
-		return GroupLocalServiceUtil.getGroup(parentGroupId);
+		return GroupLocalServiceUtil.fetchGroup(parentGroupId);
 	}
 
 	@Override
