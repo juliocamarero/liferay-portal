@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.search.DisplayInformationProvider;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -97,14 +98,20 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.init-param.config-template=/configuration.jsp",
 		"javax.portlet.init-param.template-path=/",
 		"javax.portlet.init-param.view-template=/view.jsp",
+		"javax.portlet.name=com_liferay_journal_content_web_portlet_JournalContentPortlet",
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=guest,power-user,user",
 		"javax.portlet.supports.mime-type=text/html",
 		"javax.portlet.supports.mime-type=application/vnd.wap.xhtml+xml"
 	},
-	service = Portlet.class
+	service = {
+		Portlet.class,
+		DisplayInformationProvider.class
+	}
 )
-public class JournalContentPortlet extends MVCPortlet {
+public class JournalContentPortlet
+	extends MVCPortlet
+	implements DisplayInformationProvider {
 
 	@Override
 	public void doView(
@@ -305,5 +312,15 @@ public class JournalContentPortlet extends MVCPortlet {
 
 	private static Log _log = LogFactoryUtil.getLog(
 		JournalContentPortlet.class);
+
+	@Override
+	public String getClassName() {
+		return JournalArticle.class.getName();
+	}
+
+	@Override
+	public String getClassPK(PortletPreferences portletPreferences) {
+		return portletPreferences.getValue("articleId", StringPool.BLANK);
+	}
 
 }
