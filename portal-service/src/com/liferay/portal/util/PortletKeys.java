@@ -101,8 +101,6 @@ public class PortletKeys {
 
 	public static final String JOURNAL = "15";
 
-	public static final String JOURNAL_CONTENT = "56";
-
 	public static final String JOURNAL_CONTENT_LIST = "62";
 
 	public static final String JOURNAL_CONTENT_SEARCH = "77";
