@@ -105,8 +105,7 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.supports.mime-type=application/vnd.wap.xhtml+xml"
 	},
 	service = {
-		Portlet.class,
-		DisplayInformationProvider.class
+		Portlet.class, DisplayInformationProvider.class
 	}
 )
 public class JournalContentPortlet
@@ -226,6 +225,16 @@ public class JournalContentPortlet
 		}
 	}
 
+	@Override
+	public String getClassName() {
+		return JournalArticle.class.getName();
+	}
+
+	@Override
+	public String getClassPK(PortletPreferences portletPreferences) {
+		return portletPreferences.getValue("articleId", StringPool.BLANK);
+	}
+
 	protected void getFile(
 			long groupId, String articleId, String targetExtension,
 			String[] allowedExtensions, String languageId,
@@ -312,15 +321,5 @@ public class JournalContentPortlet
 
 	private static Log _log = LogFactoryUtil.getLog(
 		JournalContentPortlet.class);
-
-	@Override
-	public String getClassName() {
-		return JournalArticle.class.getName();
-	}
-
-	@Override
-	public String getClassPK(PortletPreferences portletPreferences) {
-		return portletPreferences.getValue("articleId", StringPool.BLANK);
-	}
 
 }
