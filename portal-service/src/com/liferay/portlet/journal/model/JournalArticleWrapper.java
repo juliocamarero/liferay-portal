@@ -74,8 +74,8 @@ public class JournalArticleWrapper implements JournalArticle,
 		attributes.put("description", getDescription());
 		attributes.put("content", getContent());
 		attributes.put("type", getType());
-		attributes.put("structureId", getStructureId());
-		attributes.put("templateId", getTemplateId());
+		attributes.put("structureKey", getStructureKey());
+		attributes.put("templateKey", getTemplateKey());
 		attributes.put("layoutUuid", getLayoutUuid());
 		attributes.put("displayDate", getDisplayDate());
 		attributes.put("expirationDate", getExpirationDate());
@@ -214,16 +214,16 @@ public class JournalArticleWrapper implements JournalArticle,
 			setType(type);
 		}
 
-		String structureId = (String)attributes.get("structureId");
+		String structureKey = (String)attributes.get("structureKey");
 
-		if (structureId != null) {
-			setStructureId(structureId);
+		if (structureKey != null) {
+			setStructureKey(structureKey);
 		}
 
-		String templateId = (String)attributes.get("templateId");
+		String templateKey = (String)attributes.get("templateKey");
 
-		if (templateId != null) {
-			setTemplateId(templateId);
+		if (templateKey != null) {
+			setTemplateKey(templateKey);
 		}
 
 		String layoutUuid = (String)attributes.get("layoutUuid");
@@ -766,9 +766,7 @@ public class JournalArticleWrapper implements JournalArticle,
 	}
 
 	/**
-	* Returns the structure ID of this journal article.
-	*
-	* @return the structure ID of this journal article
+	* @deprecated As of 7.0.0, replaced by {@link #getStructureKey()}
 	*/
 	@Override
 	public java.lang.String getStructureId() {
@@ -776,13 +774,31 @@ public class JournalArticleWrapper implements JournalArticle,
 	}
 
 	/**
-	* Returns the template ID of this journal article.
+	* Returns the structure key of this journal article.
 	*
-	* @return the template ID of this journal article
+	* @return the structure key of this journal article
+	*/
+	@Override
+	public java.lang.String getStructureKey() {
+		return _journalArticle.getStructureKey();
+	}
+
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link #getTemplateKey()}
 	*/
 	@Override
 	public java.lang.String getTemplateId() {
 		return _journalArticle.getTemplateId();
+	}
+
+	/**
+	* Returns the template key of this journal article.
+	*
+	* @return the template key of this journal article
+	*/
+	@Override
+	public java.lang.String getTemplateKey() {
+		return _journalArticle.getTemplateKey();
 	}
 
 	/**
@@ -1528,23 +1544,39 @@ public class JournalArticleWrapper implements JournalArticle,
 	}
 
 	/**
-	* Sets the structure ID of this journal article.
-	*
-	* @param structureId the structure ID of this journal article
+	* @deprecated As of 7.0.0, replaced by {@link #setStructureKey()}
 	*/
 	@Override
-	public void setStructureId(java.lang.String structureId) {
-		_journalArticle.setStructureId(structureId);
+	public void setStructureId(java.lang.String structureKey) {
+		_journalArticle.setStructureId(structureKey);
 	}
 
 	/**
-	* Sets the template ID of this journal article.
+	* Sets the structure key of this journal article.
 	*
-	* @param templateId the template ID of this journal article
+	* @param structureKey the structure key of this journal article
 	*/
 	@Override
-	public void setTemplateId(java.lang.String templateId) {
-		_journalArticle.setTemplateId(templateId);
+	public void setStructureKey(java.lang.String structureKey) {
+		_journalArticle.setStructureKey(structureKey);
+	}
+
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link #setTemplateKey()}
+	*/
+	@Override
+	public void setTemplateId(java.lang.String templateKey) {
+		_journalArticle.setTemplateId(templateKey);
+	}
+
+	/**
+	* Sets the template key of this journal article.
+	*
+	* @param templateKey the template key of this journal article
+	*/
+	@Override
+	public void setTemplateKey(java.lang.String templateKey) {
+		_journalArticle.setTemplateKey(templateKey);
 	}
 
 	/**
