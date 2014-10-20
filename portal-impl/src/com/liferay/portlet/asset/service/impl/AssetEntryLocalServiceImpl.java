@@ -389,6 +389,28 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 	}
 
 	@Override
+	public void removeNonSearchableEntries(List<AssetEntry> entries) {
+		List<AssetEntry> nonSearchableEntries = new ArrayList<AssetEntry>();
+
+		for (AssetEntry entry : entries) {
+			if (entry.getClassNameId() ==
+					classNameLocalService.getClassNameId(
+							JournalArticle.class)) {
+
+				JournalArticle journalArticle =
+					journalArticleLocalService.fetchLatestArticle(
+						entry.getClassPK());
+
+				if ((journalArticle != null) && !journalArticle.isIndexable()) {
+					nonSearchableEntries.add(entry);
+				}
+			}
+		}
+
+		entries.removeAll(nonSearchableEntries);
+	}
+
+	@Override
 	public Hits search(
 		long companyId, long[] groupIds, long userId, String className,
 		long classTypeId, String keywords, int status, int start, int end) {

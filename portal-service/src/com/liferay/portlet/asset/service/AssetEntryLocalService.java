@@ -423,6 +423,9 @@ public interface AssetEntryLocalService extends BaseLocalService,
 		java.util.List<com.liferay.portlet.asset.model.AssetEntry> entries)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	public void removeNonSearchableEntries(
+		java.util.List<com.liferay.portlet.asset.model.AssetEntry> entries);
+
 	/**
 	* @deprecated As of 6.2.0, replaced by {@link #search(long, long[], long,
 	String, String, int, int, int)}
