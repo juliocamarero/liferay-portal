@@ -73,7 +73,7 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.configuration-action-class=com.liferay.journal.content.web.portlet.action.ConfigurationActionImpl",
 		"com.liferay.portlet.custom-attributes-display=com.liferay.journal.content.web.JournalArticleCustomAttributesDisplay",
 		"com.liferay.portlet.custom-attributes-display=com.liferay.journal.content.web.JournalFolderCustomAttributesDisplay",
-		"com.liferay.portlet.ddm-display=com.liferay.portlet.journal.ddm.JournalContentDDMDisplay",
+		"com.liferay.portlet.ddm-display=com.liferay.journal.content.web.portlet.action.JournalContentDDMDisplay",
 		"com.liferay.portlet.display-category=category.cms",
 		"com.liferay.portlet.icon=/icons/journal_content.png",
 		"com.liferay.portlet.instanceable=true",
