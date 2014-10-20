@@ -182,7 +182,7 @@ public class JournalContentPortlet extends MVCPortlet {
 		super.doView(renderRequest, renderResponse);
 	}
 
-	public void exportAction(
+	public void exportArticle(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
