@@ -405,8 +405,7 @@ public interface DDMTemplateLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portlet.dynamicdatamapping.model.DDMTemplate fetchTemplate(
 		long groupId, long classNameId, java.lang.String templateKey,
-		boolean includeAncestorTemplates)
-		throws com.liferay.portal.kernel.exception.PortalException;
+		boolean includeAncestorTemplates);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery();

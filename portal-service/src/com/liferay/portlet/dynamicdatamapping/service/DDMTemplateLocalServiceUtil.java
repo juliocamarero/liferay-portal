@@ -451,8 +451,7 @@ public class DDMTemplateLocalServiceUtil {
 	*/
 	public static com.liferay.portlet.dynamicdatamapping.model.DDMTemplate fetchTemplate(
 		long groupId, long classNameId, java.lang.String templateKey,
-		boolean includeAncestorTemplates)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		boolean includeAncestorTemplates) {
 		return getService()
 				   .fetchTemplate(groupId, classNameId, templateKey,
 			includeAncestorTemplates);
