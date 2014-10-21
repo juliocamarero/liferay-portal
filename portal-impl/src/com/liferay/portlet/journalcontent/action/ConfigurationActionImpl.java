@@ -45,8 +45,6 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			ActionResponse actionResponse)
 		throws Exception {
 
-		super.processAction(portletConfig, actionRequest, actionResponse);
-
 		String articleId = getArticleId(actionRequest);
 
 		setPreference(actionRequest, "articleId", articleId);
@@ -55,6 +53,8 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 
 		setPreference(
 			actionRequest, "articleGroupId", String.valueOf(articleGroupId));
+
+		super.processAction(portletConfig, actionRequest, actionResponse);
 	}
 
 	protected long getArticleGroupId(PortletRequest portletRequest) {
