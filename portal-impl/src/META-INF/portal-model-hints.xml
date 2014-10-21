@@ -2006,13 +2006,9 @@
 			<hint-collection name="TEXTAREA" />
 		</field>
 		<field name="type" type="String" />
-		<field name="structureId" type="String">
-			<hint name="auto-escape">false</hint>
-		</field>
-		<field name="templateId" type="String">
-			<hint name="auto-escape">false</hint>
-		</field>
-		<field name="rendererTemplateId" type="String" />
+		<field name="DDMStructureKey" type="String" />
+		<field name="DDMTemplateKey" type="String" />
+		<field name="DDMRendererTemplateKey" type="String" />
 		<field name="delta" type="int">
 			<hint name="display-width">50</hint>
 		</field>

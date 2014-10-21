@@ -59,8 +59,8 @@ public class JournalFeedServiceHttp {
 		HttpPrincipal httpPrincipal, long groupId, java.lang.String feedId,
 		boolean autoFeedId, java.lang.String name,
 		java.lang.String description, java.lang.String type,
-		java.lang.String structureId, java.lang.String templateId,
-		java.lang.String rendererTemplateId, int delta,
+		java.lang.String ddmStructureKey, java.lang.String ddmTemplateKey,
+		java.lang.String ddmRendererTemplateKey, int delta,
 		java.lang.String orderByCol, java.lang.String orderByType,
 		java.lang.String targetLayoutFriendlyUrl,
 		java.lang.String targetPortletId, java.lang.String contentField,
@@ -72,10 +72,11 @@ public class JournalFeedServiceHttp {
 					"addFeed", _addFeedParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					feedId, autoFeedId, name, description, type, structureId,
-					templateId, rendererTemplateId, delta, orderByCol,
-					orderByType, targetLayoutFriendlyUrl, targetPortletId,
-					contentField, feedType, feedVersion, serviceContext);
+					feedId, autoFeedId, name, description, type,
+					ddmStructureKey, ddmTemplateKey, ddmRendererTemplateKey,
+					delta, orderByCol, orderByType, targetLayoutFriendlyUrl,
+					targetPortletId, contentField, feedType, feedVersion,
+					serviceContext);
 
 			Object returnObj = null;
 
@@ -278,9 +279,10 @@ public class JournalFeedServiceHttp {
 	public static com.liferay.portlet.journal.model.JournalFeed updateFeed(
 		HttpPrincipal httpPrincipal, long groupId, java.lang.String feedId,
 		java.lang.String name, java.lang.String description,
-		java.lang.String type, java.lang.String structureId,
-		java.lang.String templateId, java.lang.String rendererTemplateId,
-		int delta, java.lang.String orderByCol, java.lang.String orderByType,
+		java.lang.String type, java.lang.String ddmStructureKey,
+		java.lang.String ddmTemplateKey,
+		java.lang.String ddmRendererTemplateKey, int delta,
+		java.lang.String orderByCol, java.lang.String orderByType,
 		java.lang.String targetLayoutFriendlyUrl,
 		java.lang.String targetPortletId, java.lang.String contentField,
 		java.lang.String feedType, double feedVersion,
@@ -291,10 +293,10 @@ public class JournalFeedServiceHttp {
 					"updateFeed", _updateFeedParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					feedId, name, description, type, structureId, templateId,
-					rendererTemplateId, delta, orderByCol, orderByType,
-					targetLayoutFriendlyUrl, targetPortletId, contentField,
-					feedType, feedVersion, serviceContext);
+					feedId, name, description, type, ddmStructureKey,
+					ddmTemplateKey, ddmRendererTemplateKey, delta, orderByCol,
+					orderByType, targetLayoutFriendlyUrl, targetPortletId,
+					contentField, feedType, feedVersion, serviceContext);
 
 			Object returnObj = null;
 
