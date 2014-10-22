@@ -255,7 +255,7 @@ if (ddmFields != null) {
 			'ddm.classNameId': '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
 			'ddm.classPK': <%= ddmStructure.getPrimaryKey() %>,
 			'ddm.groupId': <%= groupId %>,
-			'ddm.refererPortletName': '<%= PortletKeys.JOURNAL_CONTENT %>',
+			'ddm.refererPortletName': '<%= PortletKeys.JOURNAL %>',
 			'ddm.templateId': <%= (ddmTemplate != null) ? ddmTemplate.getTemplateId() : 0 %>,
 			editStructure: '#<portlet:namespace />editDDMStructure',
 			editTemplate: '#<portlet:namespace />editDDMTemplate',
