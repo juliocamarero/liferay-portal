@@ -130,16 +130,16 @@ public class Transformer {
 		}
 	}
 
-	public String doTransform(
+	public String transform(
 			ThemeDisplay themeDisplay, Map<String, String> tokens,
 			String viewMode, String languageId, Document document,
 			PortletRequestModel portletRequestModel, String script,
-			String langType)
+			String langType, boolean propagateException)
 		throws Exception {
 
 		return doTransform(
 			themeDisplay, tokens, viewMode, languageId, document,
-			portletRequestModel, script, langType, true);
+			portletRequestModel, script, langType, propagateException);
 	}
 
 	public String transform(
