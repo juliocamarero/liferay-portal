@@ -510,7 +510,7 @@ public class JournalUtil {
 			String langType)
 		throws Exception {
 
-		return _transformer.doTransform(
+		return _transformer.transform(
 			themeDisplay, tokens, viewMode, languageId, document,
 			portletRequestModel, script, langType);
 	}
