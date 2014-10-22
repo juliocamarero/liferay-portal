@@ -1512,9 +1512,9 @@ public class JournalUtil {
 			String langType)
 		throws Exception {
 
-		return _transformer.transform(
+		return transform(
 			themeDisplay, tokens, viewMode, languageId, document,
-			portletRequestModel, script, langType);
+			portletRequestModel, script, langType, false);
 	}
 
 	private static void _addElementOptions(
