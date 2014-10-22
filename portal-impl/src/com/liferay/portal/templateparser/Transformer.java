@@ -137,7 +137,7 @@ public class Transformer {
 			String langType)
 		throws Exception {
 
-		return transform(
+		return doTransform(
 			themeDisplay, tokens, viewMode, languageId, document,
 			portletRequestModel, script, langType, true);
 	}
@@ -224,7 +224,7 @@ public class Transformer {
 			String langType)
 		throws Exception {
 
-		return transform(
+		return doTransform(
 			themeDisplay, tokens, viewMode, languageId, document,
 			portletRequestModel, script, langType, false);
 	}
@@ -500,7 +500,7 @@ public class Transformer {
 		template.prepare(themeDisplay.getRequest());
 	}
 
-	protected String transform(
+	protected String doTransform(
 			ThemeDisplay themeDisplay, Map<String, String> tokens,
 			String viewMode, String languageId, Document document,
 			PortletRequestModel portletRequestModel, String script,
