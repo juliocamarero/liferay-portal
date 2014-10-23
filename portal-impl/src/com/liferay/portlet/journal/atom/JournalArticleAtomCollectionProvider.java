@@ -137,8 +137,8 @@ public class JournalArticleAtomCollectionProvider
 		String keywords = null;
 		Double version = null;
 		String type = atomRequestContext.getParameter("type", "general");
-		String structureId = null;
-		String templateId = null;
+		String ddmStructureKey = null;
+		String ddmTemplateKey = null;
 		Date displayDateGT = null;
 		Date displayDateLT = new Date();
 		int status = WorkflowConstants.STATUS_APPROVED;
@@ -148,7 +148,7 @@ public class JournalArticleAtomCollectionProvider
 
 		int count = JournalArticleServiceUtil.searchCount(
 			companyId, groupId, folderIds, classNameId, keywords, version, type,
-			structureId, templateId, displayDateGT, displayDateLT, status,
+			ddmStructureKey, ddmTemplateKey, displayDateGT, displayDateLT, status,
 			reviewDate);
 
 		AtomPager atomPager = new AtomPager(atomRequestContext, count);
@@ -157,7 +157,7 @@ public class JournalArticleAtomCollectionProvider
 
 		journalArticles = JournalArticleServiceUtil.search(
 			companyId, groupId, folderIds, classNameId, keywords, version, type,
-			structureId, templateId, displayDateGT, displayDateLT, status,
+			ddmStructureKey, ddmTemplateKey, displayDateGT, displayDateLT, status,
 			reviewDate, atomPager.getStart(), atomPager.getEnd() + 1, obc);
 
 		return journalArticles;
@@ -185,8 +185,8 @@ public class JournalArticleAtomCollectionProvider
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
 
 		String type = atomRequestContext.getParameter("type", "general");
-		String structureId = null;
-		String templateId = null;
+		String ddmStructureKey = null;
+		String ddmTemplateKey = null;
 		String layoutUuid = null;
 
 		Calendar cal = Calendar.getInstance();
@@ -222,7 +222,7 @@ public class JournalArticleAtomCollectionProvider
 
 		JournalArticle journalArticle = JournalArticleServiceUtil.addArticle(
 			groupId, folderId, classNameId, classPK, articleId, autoArticleId,
-			titleMap, descriptionMap, content, type, structureId, templateId,
+			titleMap, descriptionMap, content, type, ddmStructureKey, ddmTemplateKey,
 			layoutUuid, displayDateMonth, displayDateDay, displayDateYear,
 			displayDateHour, displayDateMinute, expirationDateMonth,
 			expirationDateDay, expirationDateYear, expirationDateHour,

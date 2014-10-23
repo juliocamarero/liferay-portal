@@ -43,9 +43,10 @@ public class JournalFeedServiceUtil {
 	public static com.liferay.portlet.journal.model.JournalFeed addFeed(
 		long groupId, java.lang.String feedId, boolean autoFeedId,
 		java.lang.String name, java.lang.String description,
-		java.lang.String type, java.lang.String structureId,
-		java.lang.String templateId, java.lang.String rendererTemplateId,
-		int delta, java.lang.String orderByCol, java.lang.String orderByType,
+		java.lang.String type, java.lang.String ddmStructureKey,
+		java.lang.String ddmTemplateKey,
+		java.lang.String ddmRendererTemplateKey, int delta,
+		java.lang.String orderByCol, java.lang.String orderByType,
 		java.lang.String targetLayoutFriendlyUrl,
 		java.lang.String targetPortletId, java.lang.String contentField,
 		java.lang.String feedType, double feedVersion,
@@ -53,9 +54,9 @@ public class JournalFeedServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addFeed(groupId, feedId, autoFeedId, name, description,
-			type, structureId, templateId, rendererTemplateId, delta,
-			orderByCol, orderByType, targetLayoutFriendlyUrl, targetPortletId,
-			contentField, feedType, feedVersion, serviceContext);
+			type, ddmStructureKey, ddmTemplateKey, ddmRendererTemplateKey,
+			delta, orderByCol, orderByType, targetLayoutFriendlyUrl,
+			targetPortletId, contentField, feedType, feedVersion, serviceContext);
 	}
 
 	public static void deleteFeed(long feedId)
@@ -119,8 +120,8 @@ public class JournalFeedServiceUtil {
 	public static com.liferay.portlet.journal.model.JournalFeed updateFeed(
 		long groupId, java.lang.String feedId, java.lang.String name,
 		java.lang.String description, java.lang.String type,
-		java.lang.String structureId, java.lang.String templateId,
-		java.lang.String rendererTemplateId, int delta,
+		java.lang.String ddmStructureKey, java.lang.String ddmTemplateKey,
+		java.lang.String ddmRendererTemplateKey, int delta,
 		java.lang.String orderByCol, java.lang.String orderByType,
 		java.lang.String targetLayoutFriendlyUrl,
 		java.lang.String targetPortletId, java.lang.String contentField,
@@ -129,8 +130,8 @@ public class JournalFeedServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateFeed(groupId, feedId, name, description, type,
-			structureId, templateId, rendererTemplateId, delta, orderByCol,
-			orderByType, targetLayoutFriendlyUrl, targetPortletId,
+			ddmStructureKey, ddmTemplateKey, ddmRendererTemplateKey, delta,
+			orderByCol, orderByType, targetLayoutFriendlyUrl, targetPortletId,
 			contentField, feedType, feedVersion, serviceContext);
 	}
 

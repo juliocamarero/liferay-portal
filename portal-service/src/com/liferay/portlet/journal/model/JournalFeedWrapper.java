@@ -66,9 +66,9 @@ public class JournalFeedWrapper implements JournalFeed,
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 		attributes.put("type", getType());
-		attributes.put("structureId", getStructureId());
-		attributes.put("templateId", getTemplateId());
-		attributes.put("rendererTemplateId", getRendererTemplateId());
+		attributes.put("DDMStructureKey", getDDMStructureKey());
+		attributes.put("DDMTemplateKey", getDDMTemplateKey());
+		attributes.put("DDMRendererTemplateKey", getDDMRendererTemplateKey());
 		attributes.put("delta", getDelta());
 		attributes.put("orderByCol", getOrderByCol());
 		attributes.put("orderByType", getOrderByType());
@@ -155,22 +155,23 @@ public class JournalFeedWrapper implements JournalFeed,
 			setType(type);
 		}
 
-		String structureId = (String)attributes.get("structureId");
+		String DDMStructureKey = (String)attributes.get("DDMStructureKey");
 
-		if (structureId != null) {
-			setStructureId(structureId);
+		if (DDMStructureKey != null) {
+			setDDMStructureKey(DDMStructureKey);
 		}
 
-		String templateId = (String)attributes.get("templateId");
+		String DDMTemplateKey = (String)attributes.get("DDMTemplateKey");
 
-		if (templateId != null) {
-			setTemplateId(templateId);
+		if (DDMTemplateKey != null) {
+			setDDMTemplateKey(DDMTemplateKey);
 		}
 
-		String rendererTemplateId = (String)attributes.get("rendererTemplateId");
+		String DDMRendererTemplateKey = (String)attributes.get(
+				"DDMRendererTemplateKey");
 
-		if (rendererTemplateId != null) {
-			setRendererTemplateId(rendererTemplateId);
+		if (DDMRendererTemplateKey != null) {
+			setDDMRendererTemplateKey(DDMRendererTemplateKey);
 		}
 
 		Integer delta = (Integer)attributes.get("delta");
@@ -262,6 +263,36 @@ public class JournalFeedWrapper implements JournalFeed,
 	@Override
 	public java.util.Date getCreateDate() {
 		return _journalFeed.getCreateDate();
+	}
+
+	/**
+	* Returns the d d m renderer template key of this journal feed.
+	*
+	* @return the d d m renderer template key of this journal feed
+	*/
+	@Override
+	public java.lang.String getDDMRendererTemplateKey() {
+		return _journalFeed.getDDMRendererTemplateKey();
+	}
+
+	/**
+	* Returns the d d m structure key of this journal feed.
+	*
+	* @return the d d m structure key of this journal feed
+	*/
+	@Override
+	public java.lang.String getDDMStructureKey() {
+		return _journalFeed.getDDMStructureKey();
+	}
+
+	/**
+	* Returns the d d m template key of this journal feed.
+	*
+	* @return the d d m template key of this journal feed
+	*/
+	@Override
+	public java.lang.String getDDMTemplateKey() {
+		return _journalFeed.getDDMTemplateKey();
 	}
 
 	/**
@@ -395,9 +426,7 @@ public class JournalFeedWrapper implements JournalFeed,
 	}
 
 	/**
-	* Returns the renderer template ID of this journal feed.
-	*
-	* @return the renderer template ID of this journal feed
+	* @deprecated As of 7.0.0, replaced by {@link #getDDMRendererTemplateKey()}
 	*/
 	@Override
 	public java.lang.String getRendererTemplateId() {
@@ -405,9 +434,7 @@ public class JournalFeedWrapper implements JournalFeed,
 	}
 
 	/**
-	* Returns the structure ID of this journal feed.
-	*
-	* @return the structure ID of this journal feed
+	* @deprecated As of 7.0.0, replaced by {@link #getDDMStructureKey()}
 	*/
 	@Override
 	public java.lang.String getStructureId() {
@@ -435,9 +462,7 @@ public class JournalFeedWrapper implements JournalFeed,
 	}
 
 	/**
-	* Returns the template ID of this journal feed.
-	*
-	* @return the template ID of this journal feed
+	* @deprecated As of 7.0.0, replaced by {@link #getDDMTemplateKey()}
 	*/
 	@Override
 	public java.lang.String getTemplateId() {
@@ -552,6 +577,37 @@ public class JournalFeedWrapper implements JournalFeed,
 	@Override
 	public void setCreateDate(java.util.Date createDate) {
 		_journalFeed.setCreateDate(createDate);
+	}
+
+	/**
+	* Sets the d d m renderer template key of this journal feed.
+	*
+	* @param DDMRendererTemplateKey the d d m renderer template key of this journal feed
+	*/
+	@Override
+	public void setDDMRendererTemplateKey(
+		java.lang.String DDMRendererTemplateKey) {
+		_journalFeed.setDDMRendererTemplateKey(DDMRendererTemplateKey);
+	}
+
+	/**
+	* Sets the d d m structure key of this journal feed.
+	*
+	* @param DDMStructureKey the d d m structure key of this journal feed
+	*/
+	@Override
+	public void setDDMStructureKey(java.lang.String DDMStructureKey) {
+		_journalFeed.setDDMStructureKey(DDMStructureKey);
+	}
+
+	/**
+	* Sets the d d m template key of this journal feed.
+	*
+	* @param DDMTemplateKey the d d m template key of this journal feed
+	*/
+	@Override
+	public void setDDMTemplateKey(java.lang.String DDMTemplateKey) {
+		_journalFeed.setDDMTemplateKey(DDMTemplateKey);
 	}
 
 	/**
@@ -703,23 +759,19 @@ public class JournalFeedWrapper implements JournalFeed,
 	}
 
 	/**
-	* Sets the renderer template ID of this journal feed.
-	*
-	* @param rendererTemplateId the renderer template ID of this journal feed
+	* @deprecated As of 7.0.0, replaced by {@link #setRendererTemplateKey()}
 	*/
 	@Override
-	public void setRendererTemplateId(java.lang.String rendererTemplateId) {
-		_journalFeed.setRendererTemplateId(rendererTemplateId);
+	public void setRendererTemplateId(java.lang.String rendererTemplateKey) {
+		_journalFeed.setRendererTemplateId(rendererTemplateKey);
 	}
 
 	/**
-	* Sets the structure ID of this journal feed.
-	*
-	* @param structureId the structure ID of this journal feed
+	* @deprecated As of 7.0.0, replaced by {@link #setDDMStructureKey()}
 	*/
 	@Override
-	public void setStructureId(java.lang.String structureId) {
-		_journalFeed.setStructureId(structureId);
+	public void setStructureId(java.lang.String structureKey) {
+		_journalFeed.setStructureId(structureKey);
 	}
 
 	/**
@@ -744,13 +796,11 @@ public class JournalFeedWrapper implements JournalFeed,
 	}
 
 	/**
-	* Sets the template ID of this journal feed.
-	*
-	* @param templateId the template ID of this journal feed
+	* @deprecated As of 7.0.0, replaced by {@link #setDDMTemplateKey()}
 	*/
 	@Override
-	public void setTemplateId(java.lang.String templateId) {
-		_journalFeed.setTemplateId(templateId);
+	public void setTemplateId(java.lang.String templateKey) {
+		_journalFeed.setTemplateId(templateKey);
 	}
 
 	/**

@@ -83,9 +83,9 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 			{ "name", Types.VARCHAR },
 			{ "description", Types.VARCHAR },
 			{ "type_", Types.VARCHAR },
-			{ "structureId", Types.VARCHAR },
-			{ "templateId", Types.VARCHAR },
-			{ "rendererTemplateId", Types.VARCHAR },
+			{ "DDMStructureKey", Types.VARCHAR },
+			{ "DDMTemplateKey", Types.VARCHAR },
+			{ "DDMRendererTemplateKey", Types.VARCHAR },
 			{ "delta", Types.INTEGER },
 			{ "orderByCol", Types.VARCHAR },
 			{ "orderByType", Types.VARCHAR },
@@ -95,7 +95,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 			{ "feedFormat", Types.VARCHAR },
 			{ "feedVersion", Types.DOUBLE }
 		};
-	public static final String TABLE_SQL_CREATE = "create table JournalFeed (uuid_ VARCHAR(75) null,id_ LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,feedId VARCHAR(75) null,name VARCHAR(75) null,description STRING null,type_ VARCHAR(75) null,structureId VARCHAR(75) null,templateId VARCHAR(75) null,rendererTemplateId VARCHAR(75) null,delta INTEGER,orderByCol VARCHAR(75) null,orderByType VARCHAR(75) null,targetLayoutFriendlyUrl VARCHAR(255) null,targetPortletId VARCHAR(75) null,contentField VARCHAR(75) null,feedFormat VARCHAR(75) null,feedVersion DOUBLE)";
+	public static final String TABLE_SQL_CREATE = "create table JournalFeed (uuid_ VARCHAR(75) null,id_ LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,feedId VARCHAR(75) null,name VARCHAR(75) null,description STRING null,type_ VARCHAR(75) null,DDMStructureKey VARCHAR(75) null,DDMTemplateKey VARCHAR(75) null,DDMRendererTemplateKey VARCHAR(75) null,delta INTEGER,orderByCol VARCHAR(75) null,orderByType VARCHAR(75) null,targetLayoutFriendlyUrl VARCHAR(255) null,targetPortletId VARCHAR(75) null,contentField VARCHAR(75) null,feedFormat VARCHAR(75) null,feedVersion DOUBLE)";
 	public static final String TABLE_SQL_DROP = "drop table JournalFeed";
 	public static final String ORDER_BY_JPQL = " ORDER BY journalFeed.feedId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY JournalFeed.feedId ASC";
@@ -141,9 +141,9 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 		model.setName(soapModel.getName());
 		model.setDescription(soapModel.getDescription());
 		model.setType(soapModel.getType());
-		model.setStructureId(soapModel.getStructureId());
-		model.setTemplateId(soapModel.getTemplateId());
-		model.setRendererTemplateId(soapModel.getRendererTemplateId());
+		model.setDDMStructureKey(soapModel.getDDMStructureKey());
+		model.setDDMTemplateKey(soapModel.getDDMTemplateKey());
+		model.setDDMRendererTemplateKey(soapModel.getDDMRendererTemplateKey());
 		model.setDelta(soapModel.getDelta());
 		model.setOrderByCol(soapModel.getOrderByCol());
 		model.setOrderByType(soapModel.getOrderByType());
@@ -228,9 +228,9 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 		attributes.put("type", getType());
-		attributes.put("structureId", getStructureId());
-		attributes.put("templateId", getTemplateId());
-		attributes.put("rendererTemplateId", getRendererTemplateId());
+		attributes.put("DDMStructureKey", getDDMStructureKey());
+		attributes.put("DDMTemplateKey", getDDMTemplateKey());
+		attributes.put("DDMRendererTemplateKey", getDDMRendererTemplateKey());
 		attributes.put("delta", getDelta());
 		attributes.put("orderByCol", getOrderByCol());
 		attributes.put("orderByType", getOrderByType());
@@ -320,22 +320,23 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 			setType(type);
 		}
 
-		String structureId = (String)attributes.get("structureId");
+		String DDMStructureKey = (String)attributes.get("DDMStructureKey");
 
-		if (structureId != null) {
-			setStructureId(structureId);
+		if (DDMStructureKey != null) {
+			setDDMStructureKey(DDMStructureKey);
 		}
 
-		String templateId = (String)attributes.get("templateId");
+		String DDMTemplateKey = (String)attributes.get("DDMTemplateKey");
 
-		if (templateId != null) {
-			setTemplateId(templateId);
+		if (DDMTemplateKey != null) {
+			setDDMTemplateKey(DDMTemplateKey);
 		}
 
-		String rendererTemplateId = (String)attributes.get("rendererTemplateId");
+		String DDMRendererTemplateKey = (String)attributes.get(
+				"DDMRendererTemplateKey");
 
-		if (rendererTemplateId != null) {
-			setRendererTemplateId(rendererTemplateId);
+		if (DDMRendererTemplateKey != null) {
+			setDDMRendererTemplateKey(DDMRendererTemplateKey);
 		}
 
 		Integer delta = (Integer)attributes.get("delta");
@@ -610,50 +611,50 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@JSON
 	@Override
-	public String getStructureId() {
-		if (_structureId == null) {
+	public String getDDMStructureKey() {
+		if (_DDMStructureKey == null) {
 			return StringPool.BLANK;
 		}
 		else {
-			return _structureId;
+			return _DDMStructureKey;
 		}
 	}
 
 	@Override
-	public void setStructureId(String structureId) {
-		_structureId = structureId;
+	public void setDDMStructureKey(String DDMStructureKey) {
+		_DDMStructureKey = DDMStructureKey;
 	}
 
 	@JSON
 	@Override
-	public String getTemplateId() {
-		if (_templateId == null) {
+	public String getDDMTemplateKey() {
+		if (_DDMTemplateKey == null) {
 			return StringPool.BLANK;
 		}
 		else {
-			return _templateId;
+			return _DDMTemplateKey;
 		}
 	}
 
 	@Override
-	public void setTemplateId(String templateId) {
-		_templateId = templateId;
+	public void setDDMTemplateKey(String DDMTemplateKey) {
+		_DDMTemplateKey = DDMTemplateKey;
 	}
 
 	@JSON
 	@Override
-	public String getRendererTemplateId() {
-		if (_rendererTemplateId == null) {
+	public String getDDMRendererTemplateKey() {
+		if (_DDMRendererTemplateKey == null) {
 			return StringPool.BLANK;
 		}
 		else {
-			return _rendererTemplateId;
+			return _DDMRendererTemplateKey;
 		}
 	}
 
 	@Override
-	public void setRendererTemplateId(String rendererTemplateId) {
-		_rendererTemplateId = rendererTemplateId;
+	public void setDDMRendererTemplateKey(String DDMRendererTemplateKey) {
+		_DDMRendererTemplateKey = DDMRendererTemplateKey;
 	}
 
 	@JSON
@@ -823,9 +824,9 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 		journalFeedImpl.setName(getName());
 		journalFeedImpl.setDescription(getDescription());
 		journalFeedImpl.setType(getType());
-		journalFeedImpl.setStructureId(getStructureId());
-		journalFeedImpl.setTemplateId(getTemplateId());
-		journalFeedImpl.setRendererTemplateId(getRendererTemplateId());
+		journalFeedImpl.setDDMStructureKey(getDDMStructureKey());
+		journalFeedImpl.setDDMTemplateKey(getDDMTemplateKey());
+		journalFeedImpl.setDDMRendererTemplateKey(getDDMRendererTemplateKey());
 		journalFeedImpl.setDelta(getDelta());
 		journalFeedImpl.setOrderByCol(getOrderByCol());
 		journalFeedImpl.setOrderByType(getOrderByType());
@@ -987,28 +988,29 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 			journalFeedCacheModel.type = null;
 		}
 
-		journalFeedCacheModel.structureId = getStructureId();
+		journalFeedCacheModel.DDMStructureKey = getDDMStructureKey();
 
-		String structureId = journalFeedCacheModel.structureId;
+		String DDMStructureKey = journalFeedCacheModel.DDMStructureKey;
 
-		if ((structureId != null) && (structureId.length() == 0)) {
-			journalFeedCacheModel.structureId = null;
+		if ((DDMStructureKey != null) && (DDMStructureKey.length() == 0)) {
+			journalFeedCacheModel.DDMStructureKey = null;
 		}
 
-		journalFeedCacheModel.templateId = getTemplateId();
+		journalFeedCacheModel.DDMTemplateKey = getDDMTemplateKey();
 
-		String templateId = journalFeedCacheModel.templateId;
+		String DDMTemplateKey = journalFeedCacheModel.DDMTemplateKey;
 
-		if ((templateId != null) && (templateId.length() == 0)) {
-			journalFeedCacheModel.templateId = null;
+		if ((DDMTemplateKey != null) && (DDMTemplateKey.length() == 0)) {
+			journalFeedCacheModel.DDMTemplateKey = null;
 		}
 
-		journalFeedCacheModel.rendererTemplateId = getRendererTemplateId();
+		journalFeedCacheModel.DDMRendererTemplateKey = getDDMRendererTemplateKey();
 
-		String rendererTemplateId = journalFeedCacheModel.rendererTemplateId;
+		String DDMRendererTemplateKey = journalFeedCacheModel.DDMRendererTemplateKey;
 
-		if ((rendererTemplateId != null) && (rendererTemplateId.length() == 0)) {
-			journalFeedCacheModel.rendererTemplateId = null;
+		if ((DDMRendererTemplateKey != null) &&
+				(DDMRendererTemplateKey.length() == 0)) {
+			journalFeedCacheModel.DDMRendererTemplateKey = null;
 		}
 
 		journalFeedCacheModel.delta = getDelta();
@@ -1095,12 +1097,12 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 		sb.append(getDescription());
 		sb.append(", type=");
 		sb.append(getType());
-		sb.append(", structureId=");
-		sb.append(getStructureId());
-		sb.append(", templateId=");
-		sb.append(getTemplateId());
-		sb.append(", rendererTemplateId=");
-		sb.append(getRendererTemplateId());
+		sb.append(", DDMStructureKey=");
+		sb.append(getDDMStructureKey());
+		sb.append(", DDMTemplateKey=");
+		sb.append(getDDMTemplateKey());
+		sb.append(", DDMRendererTemplateKey=");
+		sb.append(getDDMRendererTemplateKey());
 		sb.append(", delta=");
 		sb.append(getDelta());
 		sb.append(", orderByCol=");
@@ -1179,16 +1181,16 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 		sb.append(getType());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>structureId</column-name><column-value><![CDATA[");
-		sb.append(getStructureId());
+			"<column><column-name>DDMStructureKey</column-name><column-value><![CDATA[");
+		sb.append(getDDMStructureKey());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>templateId</column-name><column-value><![CDATA[");
-		sb.append(getTemplateId());
+			"<column><column-name>DDMTemplateKey</column-name><column-value><![CDATA[");
+		sb.append(getDDMTemplateKey());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>rendererTemplateId</column-name><column-value><![CDATA[");
-		sb.append(getRendererTemplateId());
+			"<column><column-name>DDMRendererTemplateKey</column-name><column-value><![CDATA[");
+		sb.append(getDDMRendererTemplateKey());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>delta</column-name><column-value><![CDATA[");
@@ -1250,9 +1252,9 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	private String _name;
 	private String _description;
 	private String _type;
-	private String _structureId;
-	private String _templateId;
-	private String _rendererTemplateId;
+	private String _DDMStructureKey;
+	private String _DDMTemplateKey;
+	private String _DDMRendererTemplateKey;
 	private int _delta;
 	private String _orderByCol;
 	private String _orderByType;
