@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -64,7 +65,20 @@ public class LayoutsAdminDisplayContext {
 		_groupDisplayContextHelper = new GroupDisplayContextHelper(request);
 
 		boolean privateLayout = false;
-		String tabs1 = ParamUtil.getString(request, "tabs1", "public-pages");
+		String tabs1 = ParamUtil.getString(request, "tabs1");
+
+		ThemeDisplay themeDisplay = (ThemeDisplay) _request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		if (Validator.isNull(tabs1)) {
+			tabs1 = "public-pages";
+
+			LayoutSet layoutSet = themeDisplay.getLayoutSet();
+
+			if (layoutSet.isPrivateLayout()) {
+				tabs1 = "private-pages";
+			}
+		}
 
 		if (tabs1.equals("my-dashboard") || tabs1.equals("private-pages")) {
 			privateLayout = true;
@@ -98,9 +112,6 @@ public class LayoutsAdminDisplayContext {
 
 		if (portletName.equals(PortletKeys.LAYOUTS_ADMIN) ||
 			portletName.equals(PortletKeys.MY_ACCOUNT)) {
-
-			ThemeDisplay themeDisplay = (ThemeDisplay) _request.getAttribute(
-				WebKeys.THEME_DISPLAY);
 
 			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
