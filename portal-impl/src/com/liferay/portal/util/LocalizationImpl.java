@@ -600,12 +600,13 @@ public class LocalizationImpl implements Localization {
 		PortletPreferences preferences, String key, String languageId,
 		boolean useDefault) {
 
-		String localizedKey = getPreferencesKey(key, languageId);
+		String localizedKey = getLocalizedName(key, languageId);
 
 		String value = preferences.getValue(localizedKey, StringPool.BLANK);
 
 		if (useDefault && Validator.isNull(value)) {
-			value = preferences.getValue(key, StringPool.BLANK);
+			value = preferences.getValue(
+				_getDefaultLocalizedName(key), StringPool.BLANK);
 		}
 
 		return value;
@@ -623,12 +624,13 @@ public class LocalizationImpl implements Localization {
 		PortletPreferences preferences, String key, String languageId,
 		boolean useDefault) {
 
-		String localizedKey = getPreferencesKey(key, languageId);
+		String localizedKey = getLocalizedName(key, languageId);
 
 		String[] values = preferences.getValues(localizedKey, new String[0]);
 
 		if (useDefault && ArrayUtil.isEmpty(values)) {
-			values = preferences.getValues(key, new String[0]);
+			values = preferences.getValues(
+				_getDefaultLocalizedName(key), new String[0]);
 		}
 
 		return values;
@@ -645,12 +647,13 @@ public class LocalizationImpl implements Localization {
 	public String getSettingsValue(
 		Settings settings, String key, String languageId, boolean useDefault) {
 
-		String localizedKey = getPreferencesKey(key, languageId);
+		String localizedKey = getLocalizedName(key, languageId);
 
 		String value = settings.getValue(localizedKey, StringPool.BLANK);
 
 		if (useDefault && Validator.isNull(value)) {
-			value = settings.getValue(key, StringPool.BLANK);
+			value = settings.getValue(
+				_getDefaultLocalizedName(key), StringPool.BLANK);
 		}
 
 		return value;
@@ -667,12 +670,13 @@ public class LocalizationImpl implements Localization {
 	public String[] getSettingsValues(
 		Settings settings, String key, String languageId, boolean useDefault) {
 
-		String localizedKey = getPreferencesKey(key, languageId);
+		String localizedKey = getLocalizedName(key, languageId);
 
 		String[] values = settings.getValues(localizedKey, new String[0]);
 
 		if (useDefault && ArrayUtil.isEmpty(values)) {
-			values = settings.getValues(key, new String[0]);
+			values = settings.getValues(
+				_getDefaultLocalizedName(key), new String[0]);
 		}
 
 		return values;
@@ -836,7 +840,7 @@ public class LocalizationImpl implements Localization {
 			String value)
 		throws Exception {
 
-		preferences.setValue(getPreferencesKey(key, languageId), value);
+		preferences.setValue(getLocalizedName(key, languageId), value);
 	}
 
 	@Override
@@ -845,7 +849,7 @@ public class LocalizationImpl implements Localization {
 			String[] values)
 		throws Exception {
 
-		preferences.setValues(getPreferencesKey(key, languageId), values);
+		preferences.setValues(getLocalizedName(key, languageId), values);
 	}
 
 	@Override
@@ -1098,6 +1102,13 @@ public class LocalizationImpl implements Localization {
 		}
 
 		return value;
+	}
+
+	private String _getDefaultLocalizedName(String name) {
+		String defaultLanguageId = LocaleUtil.toLanguageId(
+			LocaleUtil.getDefault());
+
+		return getLocalizedName(name, defaultLanguageId);
 	}
 
 	private String _getLocalization(
