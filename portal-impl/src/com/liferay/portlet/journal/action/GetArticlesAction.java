@@ -103,9 +103,9 @@ public class GetArticlesAction extends Action {
 		String description = null;
 		String content = null;
 		String[] ddmStructureKeys = StringUtil.split(
-			ParamUtil.getString(request, "structureId"));
+			ParamUtil.getString(request, "ddmStructureKey"));
 		String[] ddmTemplateKeys = StringUtil.split(
-			ParamUtil.getString(request, "templateId"));
+			ParamUtil.getString(request, "ddmTemplateKey"));
 
 		Date displayDateGT = null;
 

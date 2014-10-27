@@ -20,7 +20,7 @@
 long articleResourcePrimKey = GetterUtil.getLong((String)request.getAttribute("liferay-ui:journal-article:articleResourcePrimKey"));
 long groupId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:journal-article:groupId"));
 String articleId = GetterUtil.getString((String)request.getAttribute("liferay-ui:journal-article:articleId"));
-String ddmTemplateKey = GetterUtil.getString((String)request.getAttribute("liferay-ui:journal-article:templateId"));
+String ddmTemplateKey = GetterUtil.getString((String)request.getAttribute("liferay-ui:journal-article:ddmTemplateKey"));
 String languageId = GetterUtil.getString((String)request.getAttribute("liferay-ui:journal-article:languageId"), LanguageUtil.getLanguageId(request));
 int articlePage = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:journal-article:articlePage"));
 

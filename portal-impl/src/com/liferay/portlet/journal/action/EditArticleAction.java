@@ -494,7 +494,7 @@ public class EditArticleAction extends PortletAction {
 			JournalArticle.class.getName(), uploadPortletRequest);
 
 		String ddmStructureKey = ParamUtil.getString(
-			uploadPortletRequest, "structureId");
+			uploadPortletRequest, "ddmStructureKey");
 
 		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
 			PortalUtil.getSiteGroupId(groupId),
@@ -521,7 +521,7 @@ public class EditArticleAction extends PortletAction {
 		}
 
 		String ddmTemplateKey = ParamUtil.getString(
-			uploadPortletRequest, "templateId");
+			uploadPortletRequest, "ddmTemplateKey");
 		String layoutUuid = ParamUtil.getString(
 			uploadPortletRequest, "layoutUuid");
 
