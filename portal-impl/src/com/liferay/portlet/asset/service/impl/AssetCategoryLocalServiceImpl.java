@@ -347,9 +347,7 @@ public class AssetCategoryLocalServiceImpl
 				QueryUtil.ALL_POS, QueryUtil.ALL_POS,
 				new AssetCategoryLeftCategoryIdComparator(false));
 
-		for (AssetCategory category : categories) {
-			assetCategoryLocalService.deleteCategory(category);
-		}
+		assetCategoryLocalService.deleteCategories(categories);
 	}
 
 	@Override
