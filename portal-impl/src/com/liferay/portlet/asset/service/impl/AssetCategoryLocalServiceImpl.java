@@ -218,17 +218,7 @@ public class AssetCategoryLocalServiceImpl
 			category.getCategoryId(), groupPermissions, guestPermissions);
 	}
 
-	public void deleteCategories(long[] categoryIds) throws PortalException {
-		List<AssetCategory> categories = new ArrayList<AssetCategory>();
-
-		for (long categoryId : categoryIds) {
-			categories.add(
-				assetCategoryPersistence.findByPrimaryKey(categoryId));
-		}
-
-		deleteCategories(categories);
-	}
-
+	@Override
 	public void deleteCategories(List<AssetCategory> categories)
 		throws PortalException {
 
@@ -258,6 +248,18 @@ public class AssetCategoryLocalServiceImpl
 
 			deleteCategory(category, true);
 		}
+	}
+
+	@Override
+	public void deleteCategories(long[] categoryIds) throws PortalException {
+		List<AssetCategory> categories = new ArrayList<AssetCategory>();
+
+		for (long categoryId : categoryIds) {
+			categories.add(
+				assetCategoryPersistence.findByPrimaryKey(categoryId));
+		}
+
+		deleteCategories(categories);
 	}
 
 	@Override
