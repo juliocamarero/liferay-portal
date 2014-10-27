@@ -228,7 +228,7 @@ public class AssetCategoryLocalServiceImpl
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public AssetCategory deleteCategory(
-			AssetCategory category, boolean childCategory)
+			AssetCategory category, boolean skipRebuildTree)
 		throws PortalException {
 
 		// Categories
@@ -241,7 +241,7 @@ public class AssetCategoryLocalServiceImpl
 			deleteCategory(curCategory, true);
 		}
 
-		if (!categories.isEmpty() && !childCategory) {
+		if (!categories.isEmpty() && !skipRebuildTree) {
 			final long groupId = category.getGroupId();
 
 			TransactionCommitCallbackRegistryUtil.registerCallback(
