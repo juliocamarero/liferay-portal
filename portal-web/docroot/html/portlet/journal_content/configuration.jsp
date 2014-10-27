@@ -34,61 +34,6 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 	</span>
 </div>
 
-<c:if test="<%= article != null %>">
-
-	<%
-	List<DDMTemplate> ddmTemplates = journalContentDisplayContext.getDDMTemplates();
-	%>
-
-	<c:if test="<%= !ddmTemplates.isEmpty() %>">
-		<aui:fieldset>
-			<liferay-ui:message key="override-default-template" />
-
-			<liferay-ui:table-iterator
-				list="<%= ddmTemplates %>"
-				listType="com.liferay.portlet.dynamicdatamapping.model.DDMTemplate"
-				rowLength="3"
-				rowPadding="30"
-			>
-
-				<%
-				boolean templateChecked = false;
-
-				if (ddmTemplateKey.equals(tableIteratorObj.getTemplateKey())) {
-					templateChecked = true;
-				}
-
-				if ((tableIteratorPos.intValue() == 0) && Validator.isNull(ddmTemplateKey)) {
-					templateChecked = true;
-				}
-				%>
-
-				<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editTemplateURL">
-					<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template" />
-					<portlet:param name="redirect" value="<%= currentURL %>" />
-					<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL_CONTENT %>" />
-					<portlet:param name="groupId" value="<%= String.valueOf(tableIteratorObj.getGroupId()) %>" />
-					<portlet:param name="templateId" value="<%= String.valueOf(tableIteratorObj.getTemplateId()) %>" />
-				</liferay-portlet:renderURL>
-
-				<liferay-util:buffer var="linkContent">
-					<aui:a href="<%= editTemplateURL %>" id="tableIteratorObjName"><%= HtmlUtil.escape(tableIteratorObj.getName(locale)) %></aui:a>
-				</liferay-util:buffer>
-
-				<aui:input checked="<%= templateChecked %>" label="<%= linkContent %>" name="overideTemplateId" onChange='<%= "if (this.checked) {document." + renderResponse.getNamespace() + "fm." + renderResponse.getNamespace() + "ddmTemplateKey.value = this.value;}" %>' type="radio" value="<%= tableIteratorObj.getTemplateKey() %>" />
-
-				<c:if test="<%= tableIteratorObj.isSmallImage() %>">
-					<br />
-
-					<img alt="" hspace="0" src="<%= HtmlUtil.escapeAttribute(tableIteratorObj.getTemplateImageURL(themeDisplay)) %>" vspace="0" />
-				</c:if>
-			</liferay-ui:table-iterator>
-
-			<br />
-		</aui:fieldset>
-	</c:if>
-</c:if>
-
 <aui:button name="webContentSelector" value="select-web-content" />
 
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
@@ -105,6 +50,46 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 	<aui:fieldset>
 		<aui:input name="portletId" type="resource" value="<%= journalContentDisplayContext.getPortletResource() %>" />
 	</aui:fieldset>
+
+	<c:if test="<%= article != null %>">
+
+		<%
+		List<DDMTemplate> ddmTemplates = journalContentDisplayContext.getDDMTemplates();
+		%>
+
+		<c:if test="<%= !ddmTemplates.isEmpty() %>">
+			<aui:fieldset id="templateContent">
+				<aui:select inlineField="<%= true %>" label="display-template" name="ddmTemplateKeySelect">
+
+					<%
+					for (DDMTemplate ddmTemplate : ddmTemplates) {
+					%>
+
+						<aui:option label="<%= ddmTemplate.getName(locale) %>" selected="<%= ddmTemplateKey.equals(ddmTemplate.getTemplateKey()) %>" value="<%= ddmTemplate.getTemplateKey() %>" />
+
+					<%
+					}
+					%>
+
+				</aui:select>
+
+				<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editTemplateURL">
+					<portlet:param name="struts_action" value="/dynamic_data_mapping/view_template" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+					<portlet:param name="refererPortletName" value="<%= PortletKeys.JOURNAL_CONTENT %>" />
+					<portlet:param name="classNameId" value="<%= String.valueOf(PortalUtil.getClassNameId(DDMStructure.class)) %>" />
+					<portlet:param name="classPK" value="<%= article.getDDMStructureKey() %>" />
+				</liferay-portlet:renderURL>
+
+				<liferay-ui:icon
+					iconCssClass="icon-cog"
+					label="<%= true %>"
+					message='<%= LanguageUtil.format(locale, "manage-display-templates-for-x", article.getTitle(locale)) %>'
+					url="<%= editTemplateURL %>"
+				/>
+			</aui:fieldset>
+		</c:if>
+	</c:if>
 
 	<aui:fieldset>
 		<aui:field-wrapper>
@@ -130,7 +115,7 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 
 			<aui:input name="preferences--enableRatings--" type="checkbox" value="<%= journalContentDisplayContext.isEnableRatings() %>" />
 
-			<c:if test="<%= PropsValues.JOURNAL_ARTICLE_COMMENTS_ENABLED %>">
+			<c:if test="<%= journalContentDisplayContext.isCommentsEnabled() %>">
 				<aui:input name="preferences--enableComments--" type="checkbox" value="<%= journalContentDisplayContext.isEnableComments() %>" />
 
 				<aui:input name="preferences--enableCommentRatings--" type="checkbox" value="<%= journalContentDisplayContext.isEnableCommentRatings() %>" />
@@ -187,6 +172,15 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 					displayArticleId.addClass('modified');
 				}
 			);
+		}
+	);
+
+	var ddmTemplateKeySelectInput = A.one('#<portlet:namespace />ddmTemplateKeySelect');
+
+	ddmTemplateKeySelectInput.on(
+		'change',
+		function(event) {
+			document.<portlet:namespace />fm.<portlet:namespace />ddmTemplateKey.value = ddmTemplateKeySelectInput.val();
 		}
 	);
 
