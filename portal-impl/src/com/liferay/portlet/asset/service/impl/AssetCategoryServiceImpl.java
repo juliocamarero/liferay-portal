@@ -84,11 +84,6 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 			getUserId(), title, vocabularyId, serviceContext);
 	}
 
-	/**
-	 * @deprecated As of 6.2.0, Replaced by {@link #deleteCategories(long[],
-	 *             ServiceContext)}
-	 */
-	@Deprecated
 	@Override
 	public void deleteCategories(long[] categoryIds) throws PortalException {
 		deleteCategories(categoryIds, null);
