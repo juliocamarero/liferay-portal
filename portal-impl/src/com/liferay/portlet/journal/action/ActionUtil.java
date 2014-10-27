@@ -186,7 +186,8 @@ public class ActionUtil {
 		long classNameId = ParamUtil.getLong(request, "classNameId");
 		long classPK = ParamUtil.getLong(request, "classPK");
 		String articleId = ParamUtil.getString(request, "articleId");
-		String ddmStructureKey = ParamUtil.getString(request, "structureId");
+		String ddmStructureKey = ParamUtil.getString(
+			request, "ddmStructureKey");
 		int status = ParamUtil.getInteger(
 			request, "status", WorkflowConstants.STATUS_ANY);
 
@@ -386,7 +387,8 @@ public class ActionUtil {
 
 		long groupId = ParamUtil.getLong(request, "groupId");
 		long classNameId = ParamUtil.getLong(request, "classNameId");
-		String ddmStructureKey = ParamUtil.getString(request, "structureId");
+		String ddmStructureKey = ParamUtil.getString(
+			request, "ddmStructureKey");
 
 		DDMStructure ddmStructure = DDMStructureServiceUtil.getStructure(
 			groupId, classNameId, ddmStructureKey);
@@ -412,7 +414,7 @@ public class ActionUtil {
 		throws Exception {
 
 		long groupId = ParamUtil.getLong(request, "groupId");
-		String ddmTemplateKey = ParamUtil.getString(request, "templateId");
+		String ddmTemplateKey = ParamUtil.getString(request, "ddmTemplateKey");
 
 		DDMTemplate ddmTemplate = null;
 

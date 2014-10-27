@@ -132,9 +132,9 @@ AUI.add(
 
 						var form = instance._getPrincipalForm();
 
-						var structureId = instance._getByName(form, 'structureId');
+						var ddmStructureKey = instance._getByName(form, 'ddmStructureKey');
 
-						return structureId && structureId.val();
+						return ddmStructureKey && ddmStructureKey.val();
 					},
 
 					_hasTemplate: function() {
