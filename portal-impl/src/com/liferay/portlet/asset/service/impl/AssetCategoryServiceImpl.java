@@ -94,6 +94,10 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 		deleteCategories(categoryIds, null);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, Replaced by {@link #deleteCategories(long[])}
+	 */
+	@Deprecated
 	@Override
 	public List<AssetCategory> deleteCategories(
 			long[] categoryIds, ServiceContext serviceContext)
