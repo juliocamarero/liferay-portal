@@ -86,7 +86,12 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 
 	@Override
 	public void deleteCategories(long[] categoryIds) throws PortalException {
-		deleteCategories(categoryIds, null);
+		for (long categoryId : categoryIds) {
+			AssetCategoryPermission.check(
+				getPermissionChecker(), categoryId, ActionKeys.DELETE);
+		}
+
+		assetCategoryLocalService.deleteCategories(categoryIds);
 	}
 
 	/**

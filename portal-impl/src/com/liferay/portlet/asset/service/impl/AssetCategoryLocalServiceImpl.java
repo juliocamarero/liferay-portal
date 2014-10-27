@@ -55,6 +55,7 @@ import com.liferay.portlet.asset.util.comparator.AssetCategoryLeftCategoryIdComp
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -215,6 +216,48 @@ public class AssetCategoryLocalServiceImpl
 			category.getCompanyId(), category.getGroupId(),
 			category.getUserId(), AssetCategory.class.getName(),
 			category.getCategoryId(), groupPermissions, guestPermissions);
+	}
+
+	public void deleteCategories(long[] categoryIds) throws PortalException {
+		List<AssetCategory> categories = new ArrayList<AssetCategory>();
+
+		for (long categoryId : categoryIds) {
+			categories.add(
+				assetCategoryPersistence.findByPrimaryKey(categoryId));
+		}
+
+		deleteCategories(categories);
+	}
+
+	public void deleteCategories(List<AssetCategory> categories)
+		throws PortalException {
+
+		List<Long> rebuildTreeGroupIds = new ArrayList<Long>();
+
+		for (AssetCategory category : categories) {
+			if (!rebuildTreeGroupIds.contains(category.getGroupId()) &&
+				(getChildCategoriesCount(category.getCategoryId()) > 0)) {
+
+				final long groupId = category.getGroupId();
+
+				TransactionCommitCallbackRegistryUtil.registerCallback(
+					new Callable<Void>() {
+
+						@Override
+						public Void call() throws Exception {
+							assetCategoryLocalService.rebuildTree(
+								groupId, true);
+
+							return null;
+						}
+
+					});
+
+				rebuildTreeGroupIds.add(groupId);
+			}
+
+			deleteCategory(category, true);
+		}
 	}
 
 	@Override
