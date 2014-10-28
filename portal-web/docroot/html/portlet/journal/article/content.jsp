@@ -184,6 +184,8 @@ if (ddmFields != null) {
 					<aui:validator name="required" />
 				</c:if>
 			</aui:input>
+
+			<aui:input label="summary" name="description" wrapperCssClass="article-content-description" />
 		</div>
 
 		<div class="journal-article-container" id="<portlet:namespace />journalArticleContainer">
