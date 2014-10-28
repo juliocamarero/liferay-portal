@@ -36,6 +36,9 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 	/>
 </liferay-util:buffer>
 
+<aui:input name="addSiteGroupIds" type="hidden" />
+<aui:input name="deleteSiteGroupIds" type="hidden" />
+
 <h3><liferay-ui:message key="sites" /></h3>
 
 <liferay-ui:search-container
@@ -93,6 +96,9 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 	/>
 
 	<aui:script use="liferay-search-container">
+		var <portlet:namespace />addSiteGroupIds = [];
+		var <portlet:namespace />deleteSiteGroupIds = [];
+
 		var Util = Liferay.Util;
 
 		var handleOnSelect = A.one('#<portlet:namespace />selectSiteLink').on(
@@ -126,6 +132,19 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 
 						searchContainer.addRow(rowColumns, event.groupid);
 						searchContainer.updateDataStore();
+
+						<portlet:namespace />addSiteGroupIds.push(event.groupid);
+
+						for (var i = 0; i < <portlet:namespace />deleteSiteGroupIds.length; i++) {
+							if (<portlet:namespace />deleteSiteGroupIds[i] == event.groupid) {
+								<portlet:namespace />deleteSiteGroupIds.splice(i, 1);
+
+								break;
+							}
+						}
+
+						document.<portlet:namespace />fm.<portlet:namespace />addSiteGroupIds.value = <portlet:namespace />addSiteGroupIds.join(',');
+						document.<portlet:namespace />fm.<portlet:namespace />deleteSiteGroupIds.value = <portlet:namespace />deleteSiteGroupIds.join(',');
 					}
 				);
 			}
@@ -152,6 +171,19 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 				}
 
 				searchContainer.deleteRow(tr, rowId);
+
+				for (var i = 0; i < <portlet:namespace />addSiteGroupIds.length; i++) {
+					if (<portlet:namespace />addSiteGroupIds[i] == rowId) {
+						<portlet:namespace />addSiteGroupIds.splice(i, 1);
+
+						break;
+					}
+				}
+
+				<portlet:namespace />deleteSiteGroupIds.push(rowId);
+
+				document.<portlet:namespace />fm.<portlet:namespace />addSiteGroupIds.value = <portlet:namespace />addSiteGroupIds.join(',');
+				document.<portlet:namespace />fm.<portlet:namespace />deleteSiteGroupIds.value = <portlet:namespace />deleteSiteGroupIds.join(',');
 			},
 			'.modify-link'
 		);
