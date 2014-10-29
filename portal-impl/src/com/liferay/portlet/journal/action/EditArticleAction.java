@@ -635,9 +635,6 @@ public class EditArticleAction extends PortletAction {
 			String tempOldUrlTitle = article.getUrlTitle();
 
 			if (cmd.equals(Constants.PREVIEW) || cmd.equals(Constants.UPDATE)) {
-				titleMap.put(defaultLocale, title);
-				descriptionMap.put(defaultLocale, description);
-
 				article = JournalArticleServiceUtil.updateArticle(
 					groupId, folderId, articleId, version, titleMap,
 					descriptionMap, content, ddmStructureKey, ddmTemplateKey,
