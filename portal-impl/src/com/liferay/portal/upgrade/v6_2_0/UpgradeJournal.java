@@ -511,7 +511,7 @@ public class UpgradeJournal extends BaseUpgradePortletPreferences {
 				preferences.setValue("ddmTemplateKey", templateId);
 			}
 		}
-		else if (portletId.startsWith(PortletKeys.JOURNAL_CONTENT_LIST)) {
+		else if (portletId.startsWith("62")) {
 			String structureId = preferences.getValue(
 				"structureId", StringPool.BLANK);
 
