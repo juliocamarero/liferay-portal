@@ -501,7 +501,7 @@ public class UpgradeJournal extends BaseUpgradePortletPreferences {
 			updatePreferencesClassPKs(
 				preferences, "classTypeIdsJournalArticleAssetRendererFactory");
 		}
-		else if (portletId.startsWith(PortletKeys.JOURNAL_CONTENT)) {
+		else if (portletId.startsWith("56")) {
 			String templateId = preferences.getValue(
 				"templateId", StringPool.BLANK);
 

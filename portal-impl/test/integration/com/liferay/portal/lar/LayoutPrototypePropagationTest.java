@@ -43,10 +43,9 @@ public class LayoutPrototypePropagationTest
 
 		journalArticle = globalJournalArticle;
 
-		journalContentPortletId =
-			addJournalContentPortletToLayout(
-				TestPropsValues.getUserId(), layoutPrototypeLayout,
-				journalArticle, "column-1");
+		rssPortletId = addRSSPortletToLayout(
+			TestPropsValues.getUserId(), layoutPrototypeLayout,
+			journalArticle, "column-1");
 
 		layout = LayoutTestUtil.addLayout(
 			group.getGroupId(), RandomTestUtil.randomString(), true,

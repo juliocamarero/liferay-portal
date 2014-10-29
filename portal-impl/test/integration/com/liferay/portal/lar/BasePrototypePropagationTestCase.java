@@ -103,7 +103,7 @@ public abstract class BasePrototypePropagationTestCase {
 		doTestPortletPreferencesPropagation(true);
 	}
 
-	protected String addJournalContentPortletToLayout(
+	protected String addRSSPortletToLayout(
 			long userId, Layout layout, JournalArticle journalArticle,
 			String columnId)
 		throws Exception {
@@ -111,16 +111,16 @@ public abstract class BasePrototypePropagationTestCase {
 		Map<String, String[]> parameterMap = new HashMap<String, String[]>();
 
 		parameterMap.put(
-			"articleId", new String[] {journalArticle.getArticleId()});
+			"headerArticleValues",
+			new String[] {
+				String.valueOf(journalArticle.getGroupId()),
+				journalArticle.getArticleId()
+			});
 		parameterMap.put(
-			"groupId",
-			new String[] {String.valueOf(journalArticle.getGroupId())});
-		parameterMap.put(
-			"showAvailableLocales", new String[] {Boolean.TRUE.toString()});
+			"showFeedTitle", new String[] {Boolean.TRUE.toString()});
 
 		return LayoutTestUtil.addPortletToLayout(
-			userId, layout, PortletKeys.JOURNAL_CONTENT, columnId,
-			parameterMap);
+			userId, layout, PortletKeys.RSS, columnId, parameterMap);
 	}
 
 	protected abstract void doSetUp() throws Exception;
@@ -138,7 +138,7 @@ public abstract class BasePrototypePropagationTestCase {
 		LayoutTestUtil.updateLayoutColumnCustomizable(
 			prototypeLayout, "column-1", true);
 
-		addJournalContentPortletToLayout(
+		addRSSPortletToLayout(
 			TestPropsValues.getUserId(), prototypeLayout, globalJournalArticle,
 			"column-1");
 
@@ -198,32 +198,33 @@ public abstract class BasePrototypePropagationTestCase {
 
 		MergeLayoutPrototypesThreadLocal.clearMergeComplete();
 
-		Map<String, String> portletPreferencesMap =
-			new HashMap<String, String>();
+		Map<String, String[]> portletPreferencesMap =
+			new HashMap<String, String[]>();
 
-		portletPreferencesMap.put("articleId", StringPool.BLANK);
 		portletPreferencesMap.put(
-			"showAvailableLocales", Boolean.FALSE.toString());
+			"headerArticleValues", new String[] {"0", StringPool.BLANK});
+		portletPreferencesMap.put(
+			"showFeedTitle", new String[] {Boolean.FALSE.toString()});
 
 		if (globalScope) {
-			portletPreferencesMap.put("groupId", String.valueOf(globalGroupId));
-			portletPreferencesMap.put("lfrScopeType", "company");
+			portletPreferencesMap.put(
+				"headerArticleValues",
+				new String[] {String.valueOf(globalGroupId), StringPool.BLANK});
+			portletPreferencesMap.put("lfrScopeType", new String[] {"company"});
 		}
 
 		LayoutTestUtil.updateLayoutPortletPreferences(
-			prototypeLayout, journalContentPortletId, portletPreferencesMap);
+			prototypeLayout, rssPortletId, portletPreferencesMap);
 
 		layout = propagateChanges(layout);
 
 		PortletPreferences portletPreferences =
-			LayoutTestUtil.getPortletPreferences(
-				layout, journalContentPortletId);
+			LayoutTestUtil.getPortletPreferences(layout, rssPortletId);
 
 		if (linkEnabled) {
 			if (globalScope) {
 				Assert.assertEquals(
-					StringPool.BLANK,
-					portletPreferences.getValue("articleId", StringPool.BLANK));
+					StringPool.BLANK, getArticleId(portletPreferences));
 			}
 			else {
 
@@ -231,19 +232,26 @@ public abstract class BasePrototypePropagationTestCase {
 
 				Assert.assertEquals(
 					journalArticle.getArticleId(),
-					portletPreferences.getValue("articleId", StringPool.BLANK));
+					getArticleId(portletPreferences));
 			}
 
 			Assert.assertEquals(
 				Boolean.FALSE.toString(),
 				portletPreferences.getValue(
-					"showAvailableLocales", StringPool.BLANK));
+					"showFeedTitle", StringPool.BLANK));
 		}
 		else {
 			Assert.assertEquals(
 				journalArticle.getArticleId(),
-				portletPreferences.getValue("articleId", StringPool.BLANK));
+				getArticleId(portletPreferences));
 		}
+	}
+
+	protected String getArticleId(PortletPreferences portletPreferences) {
+		String[] headerArticleValues = portletPreferences.getValues(
+			"headerArticleValues", new String[] {"0", StringPool.BLANK});
+
+		return headerArticleValues[1];
 	}
 
 	protected Layout propagateChanges(Layout layout) throws Exception {
@@ -270,7 +278,7 @@ public abstract class BasePrototypePropagationTestCase {
 	protected Group group;
 	protected String initialLayoutTemplateId = "2_2_columns";
 	protected JournalArticle journalArticle;
-	protected String journalContentPortletId;
+	protected String rssPortletId;
 	protected Layout layout;
 	protected LayoutPrototype layoutPrototype;
 	protected Layout layoutPrototypeLayout;
