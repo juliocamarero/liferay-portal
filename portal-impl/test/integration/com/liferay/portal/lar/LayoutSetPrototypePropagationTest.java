@@ -296,7 +296,7 @@ public class LayoutSetPrototypePropagationTest
 	@Test
 	public void testResetPortletPreferences() throws Exception {
 		LayoutTestUtil.updateLayoutPortletPreference(
-			prototypeLayout, journalContentPortletId, "showAvailableLocales",
+			prototypeLayout, rssPortletId, "showFeedTitle",
 			Boolean.FALSE.toString());
 
 		SitesUtil.resetPrototype(layout);
@@ -307,14 +307,13 @@ public class LayoutSetPrototypePropagationTest
 		setLinkEnabled(true);
 
 		layout = LayoutTestUtil.updateLayoutPortletPreference(
-			layout, journalContentPortletId, "showAvailableLocales",
-			Boolean.TRUE.toString());
+			layout, rssPortletId, "showFeedTitle", Boolean.TRUE.toString());
 
 		Assert.assertTrue(SitesUtil.isLayoutModifiedSinceLastMerge(layout));
 		Assert.assertFalse(SitesUtil.isLayoutModifiedSinceLastMerge(_layout));
 
 		_layout = LayoutTestUtil.updateLayoutPortletPreference(
-			_layout, _journalContentPortletId, "showAvailableLocales",
+			_layout, _rssPortletId, "showFeedTitle",
 			Boolean.TRUE.toString());
 
 		layout = LayoutLocalServiceUtil.getLayout(layout.getPlid());
@@ -326,25 +325,24 @@ public class LayoutSetPrototypePropagationTest
 		Assert.assertFalse(SitesUtil.isLayoutModifiedSinceLastMerge(layout));
 
 		PortletPreferences layoutPortletPreferences =
-			LayoutTestUtil.getPortletPreferences(
-				layout, journalContentPortletId);
+			LayoutTestUtil.getPortletPreferences(layout, rssPortletId);
 
 		Assert.assertEquals(
 			Boolean.FALSE.toString(),
 			layoutPortletPreferences.getValue(
-				"showAvailableLocales", StringPool.BLANK));
+				"showFeedTitle", StringPool.BLANK));
 
 		_layout = propagateChanges(_layout);
 
 		Assert.assertTrue(SitesUtil.isLayoutModifiedSinceLastMerge(_layout));
 
 		layoutPortletPreferences = LayoutTestUtil.getPortletPreferences(
-			_layout, _journalContentPortletId);
+			_layout, _rssPortletId);
 
 		Assert.assertEquals(
 			Boolean.TRUE.toString(),
 			layoutPortletPreferences.getValue(
-				"showAvailableLocales", StringPool.BLANK));
+				"showFeedTitle", StringPool.BLANK));
 	}
 
 	@Override
@@ -368,7 +366,7 @@ public class LayoutSetPrototypePropagationTest
 			_layoutSetPrototypeGroup.getGroupId(), "Test Article",
 			"Test Content");
 
-		journalContentPortletId = addJournalContentPortletToLayout(
+		rssPortletId = addRSSPortletToLayout(
 			TestPropsValues.getUserId(), prototypeLayout,
 			_layoutSetPrototypeJournalArticle, "column-1");
 
@@ -379,7 +377,7 @@ public class LayoutSetPrototypePropagationTest
 		LayoutTestUtil.updateLayoutTemplateId(
 			_prototypeLayout, initialLayoutTemplateId);
 
-		_journalContentPortletId = addJournalContentPortletToLayout(
+		_rssPortletId = addRSSPortletToLayout(
 			TestPropsValues.getUserId(), _prototypeLayout,
 			_layoutSetPrototypeJournalArticle, "column-1");
 
@@ -649,7 +647,7 @@ public class LayoutSetPrototypePropagationTest
 
 	private int _initialLayoutCount;
 	private int _initialPrototypeLayoutCount;
-	private String _journalContentPortletId;
+	private String _rssPortletId;
 	private Layout _layout;
 	private LayoutSetPrototype _layoutSetPrototype;
 	private Group _layoutSetPrototypeGroup;

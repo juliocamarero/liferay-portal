@@ -327,14 +327,17 @@ public class LayoutTestUtil {
 
 	public static Layout updateLayoutPortletPreferences(
 			Layout layout, String portletId,
-			Map<String, String> portletPreferences)
+			Map<String, String[]> portletPreferences)
 		throws Exception {
 
 		PortletPreferences layoutPortletPreferences =
 			LayoutTestUtil.getPortletPreferences(layout, portletId);
 
-		for (Map.Entry<String, String> entry : portletPreferences.entrySet()) {
-			layoutPortletPreferences.setValue(entry.getKey(), entry.getValue());
+		for (Map.Entry<String, String[]> entry :
+				portletPreferences.entrySet()) {
+
+			layoutPortletPreferences.setValues(
+				entry.getKey(), entry.getValue());
 		}
 
 		layoutPortletPreferences.store();
