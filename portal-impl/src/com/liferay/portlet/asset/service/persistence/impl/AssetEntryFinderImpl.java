@@ -300,11 +300,45 @@ public class AssetEntryFinderImpl
 		}
 		else {
 			if (Validator.isNotNull(entryQuery.getTitle())) {
-				sb.append(" AND (AssetEntry.title LIKE ?)");
+				if ((Validator.isNull(entryQuery.getDescription()) &&
+					 Validator.isNull(entryQuery.getUserName())) ||
+					entryQuery.isAndOperator()) {
+
+					sb.append(" AND (AssetEntry.title LIKE ?)");
+				}
+				else {
+					sb.append(" AND ((AssetEntry.title LIKE ?)");
+				}
 			}
 
 			if (Validator.isNotNull(entryQuery.getDescription())) {
-				sb.append(" AND (AssetEntry.description LIKE ?)");
+				if ((Validator.isNull(entryQuery.getTitle()) &&
+					 Validator.isNull(entryQuery.getUserName())) ||
+					entryQuery.isAndOperator()) {
+
+					sb.append(" AND (AssetEntry.description LIKE ?)");
+				}
+				else if (Validator.isNull(entryQuery.getTitle())) {
+					sb.append(" AND ((AssetEntry.description LIKE ?)");
+				}
+				else if (Validator.isNotNull(entryQuery.getUserName())) {
+					sb.append(" OR (AssetEntry.description LIKE ?)");
+				}
+				else {
+					sb.append(" OR (AssetEntry.description LIKE ?))");
+				}
+			}
+
+			if (Validator.isNotNull(entryQuery.getUserName())) {
+				if ((Validator.isNull(entryQuery.getTitle()) &&
+					 Validator.isNull(entryQuery.getDescription())) ||
+					entryQuery.isAndOperator()) {
+
+					sb.append(" AND (AssetEntry.userName LIKE ?)");
+				}
+				else {
+					sb.append(" OR (AssetEntry.userName LIKE ?))");
+				}
 			}
 		}
 
@@ -434,16 +468,28 @@ public class AssetEntryFinderImpl
 		}
 
 		if (Validator.isNotNull(entryQuery.getKeywords())) {
-			qPos.add(entryQuery.getKeywords() + CharPool.PERCENT);
-			qPos.add(entryQuery.getKeywords() + CharPool.PERCENT);
+			qPos.add(
+				CharPool.PERCENT + entryQuery.getKeywords() + CharPool.PERCENT);
+			qPos.add(
+				CharPool.PERCENT + entryQuery.getKeywords() + CharPool.PERCENT);
 		}
 		else {
 			if (Validator.isNotNull(entryQuery.getTitle())) {
-				qPos.add(entryQuery.getTitle() + CharPool.PERCENT);
+				qPos.add(
+					CharPool.PERCENT + entryQuery.getTitle() +
+						CharPool.PERCENT);
 			}
 
 			if (Validator.isNotNull(entryQuery.getDescription())) {
-				qPos.add(entryQuery.getDescription() + CharPool.PERCENT);
+				qPos.add(
+					CharPool.PERCENT + entryQuery.getDescription() +
+						CharPool.PERCENT);
+			}
+
+			if (Validator.isNotNull(entryQuery.getUserName())) {
+				qPos.add(
+					CharPool.PERCENT + entryQuery.getUserName() +
+						CharPool.PERCENT);
 			}
 		}
 
