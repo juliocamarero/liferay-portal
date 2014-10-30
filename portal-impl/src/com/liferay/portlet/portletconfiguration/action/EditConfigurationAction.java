@@ -69,6 +69,16 @@ public class EditConfigurationAction extends PortletAction {
 
 		actionRequest = ActionUtil.getWrappedActionRequest(actionRequest, null);
 
+		ConfigurationAction configurationAction = getConfigurationAction(
+			portlet);
+
+		if (configurationAction == null) {
+			return;
+		}
+
+		configurationAction.processAction(
+			portletConfig, actionRequest, actionResponse);
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -81,16 +91,6 @@ public class EditConfigurationAction extends PortletAction {
 			portletLayoutListener.onSetup(
 				portlet.getPortletId(), layout.getPlid());
 		}
-
-		ConfigurationAction configurationAction = getConfigurationAction(
-			portlet);
-
-		if (configurationAction == null) {
-			return;
-		}
-
-		configurationAction.processAction(
-			portletConfig, actionRequest, actionResponse);
 	}
 
 	@Override
