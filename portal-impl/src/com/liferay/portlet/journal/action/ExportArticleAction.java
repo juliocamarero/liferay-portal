@@ -14,32 +14,20 @@
 
 package com.liferay.portlet.journal.action;
 
-import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.struts.ActionConstants;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.portlet.documentlibrary.util.DLUtil;
-import com.liferay.portlet.documentlibrary.util.DocumentConversionUtil;
-import com.liferay.portlet.journal.model.JournalArticleDisplay;
-import com.liferay.portlet.journal.util.JournalContentUtil;
+import com.liferay.portlet.journal.util.ExportArticleUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.portlet.ActionRequest;
@@ -88,94 +76,22 @@ public class ExportArticleAction extends PortletAction {
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(
 				actionResponse);
 
-			getFile(
+			Tuple tuple = ExportArticleUtil.getFile(
 				groupId, articleId, targetExtension, allowedExtensions,
-				languageId, portletRequestModel, themeDisplay, request,
-				response);
+				languageId, portletRequestModel, themeDisplay);
+
+			String fileName = (String)tuple.getObject(0);
+
+			String contentType = MimeTypesUtil.getContentType(fileName);
+
+			ServletResponseUtil.sendFile(
+				request, response, fileName, (InputStream)tuple.getObject(1),
+				contentType);
 
 			setForward(actionRequest, ActionConstants.COMMON_NULL);
 		}
 		catch (Exception e) {
 			PortalUtil.sendError(e, actionRequest, actionResponse);
-		}
-	}
-
-	protected void getFile(
-			long groupId, String articleId, String targetExtension,
-			String[] allowedExtensions, String languageId,
-			PortletRequestModel portletRequestModel, ThemeDisplay themeDisplay,
-			HttpServletRequest request, HttpServletResponse response)
-		throws Exception {
-
-		try {
-			JournalArticleDisplay articleDisplay =
-				JournalContentUtil.getDisplay(
-					groupId, articleId, null, "export", languageId, 1,
-					portletRequestModel, themeDisplay);
-
-			int pages = articleDisplay.getNumberOfPages();
-
-			StringBundler sb = new StringBundler(pages + 12);
-
-			sb.append("<html>");
-
-			sb.append("<head>");
-			sb.append("<meta content=\"");
-			sb.append(ContentTypes.TEXT_HTML_UTF8);
-			sb.append("\" http-equiv=\"content-type\" />");
-			sb.append("<base href=\"");
-			sb.append(themeDisplay.getPortalURL());
-			sb.append("\" />");
-			sb.append("</head>");
-
-			sb.append("<body>");
-
-			sb.append(articleDisplay.getContent());
-
-			for (int i = 2; i <= pages; i++) {
-				articleDisplay = JournalContentUtil.getDisplay(
-					groupId, articleId, "export", languageId, i, themeDisplay);
-
-				sb.append(articleDisplay.getContent());
-			}
-
-			sb.append("</body>");
-			sb.append("</html>");
-
-			InputStream is = new UnsyncByteArrayInputStream(
-				sb.toString().getBytes(StringPool.UTF8));
-
-			String title = articleDisplay.getTitle();
-			String sourceExtension = "html";
-
-			String fileName = title.concat(StringPool.PERIOD).concat(
-				sourceExtension);
-
-			if (Validator.isNotNull(targetExtension) &&
-				ArrayUtil.contains(allowedExtensions, targetExtension)) {
-
-				String id = DLUtil.getTempFileId(
-					articleDisplay.getId(),
-					String.valueOf(articleDisplay.getVersion()), languageId);
-
-				File convertedFile = DocumentConversionUtil.convert(
-					id, is, sourceExtension, targetExtension);
-
-				if (convertedFile != null) {
-					fileName = title.concat(StringPool.PERIOD).concat(
-						targetExtension);
-
-					is = new FileInputStream(convertedFile);
-				}
-			}
-
-			String contentType = MimeTypesUtil.getContentType(fileName);
-
-			ServletResponseUtil.sendFile(
-				request, response, fileName, is, contentType);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
 		}
 	}
 
@@ -185,7 +101,5 @@ public class ExportArticleAction extends PortletAction {
 	}
 
 	private static final boolean _CHECK_METHOD_ON_PROCESS_ACTION = false;
-
-	private static Log _log = LogFactoryUtil.getLog(ExportArticleAction.class);
 
 }
