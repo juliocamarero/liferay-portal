@@ -354,9 +354,8 @@ public class VerifyJournal extends VerifyProcess {
 			return;
 		}
 
-		AssetEntry assetEntry =
-			AssetEntryLocalServiceUtil.fetchEntry(
-				articleResource.getGroupId(), articleResource.getUuid());
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
+			articleResource.getGroupId(), articleResource.getUuid());
 
 		if (assetEntry == null) {
 			return;
