@@ -609,6 +609,10 @@ public class LocalizationImpl implements Localization {
 				_getDefaultLocalizedName(key), StringPool.BLANK);
 		}
 
+		if (useDefault && Validator.isNull(value)) {
+			value = preferences.getValue(key, StringPool.BLANK);
+		}
+
 		return value;
 	}
 
@@ -631,6 +635,10 @@ public class LocalizationImpl implements Localization {
 		if (useDefault && ArrayUtil.isEmpty(values)) {
 			values = preferences.getValues(
 				_getDefaultLocalizedName(key), new String[0]);
+		}
+
+		if (useDefault && ArrayUtil.isEmpty(values)) {
+			values = preferences.getValues(key, new String[0]);
 		}
 
 		return values;
@@ -656,6 +664,10 @@ public class LocalizationImpl implements Localization {
 				_getDefaultLocalizedName(key), StringPool.BLANK);
 		}
 
+		if (useDefault && Validator.isNull(value)) {
+			value = settings.getValue(key, StringPool.BLANK);
+		}
+
 		return value;
 	}
 
@@ -677,6 +689,10 @@ public class LocalizationImpl implements Localization {
 		if (useDefault && ArrayUtil.isEmpty(values)) {
 			values = settings.getValues(
 				_getDefaultLocalizedName(key), new String[0]);
+		}
+
+		if (useDefault && ArrayUtil.isEmpty(values)) {
+			values = settings.getValues(key, new String[0]);
 		}
 
 		return values;
