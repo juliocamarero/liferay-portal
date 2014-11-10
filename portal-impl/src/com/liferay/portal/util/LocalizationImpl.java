@@ -535,7 +535,7 @@ public class LocalizationImpl implements Localization {
 		for (Locale locale : locales) {
 			String languageId = LocaleUtil.toLanguageId(locale);
 
-			String localizedKey = getPreferencesKey(parameter, languageId);
+			String localizedKey = getLocalizedName(parameter, languageId);
 
 			String prefixedLocalizedKey = localizedKey;
 
