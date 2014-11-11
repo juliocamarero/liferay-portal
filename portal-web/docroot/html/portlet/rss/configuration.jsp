@@ -56,24 +56,22 @@ configurationRenderURL.setParameter("portletResource", portletResource);
 				<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="rssFeedsSettingsPanel" persistState="<%= true %>" title="feeds">
 					<liferay-ui:error exception="<%= ValidatorException.class %>">
 
-					<%
-					ValidatorException ve = (ValidatorException)errorException;
-					%>
+						<liferay-ui:message key="the-following-are-invalid-urls" />
 
-					<liferay-ui:message key="the-following-are-invalid-urls" />
+						<%
+						ValidatorException ve = (ValidatorException)errorException;
 
-					<%
-					Enumeration enu = ve.getFailedKeys();
+						Enumeration enu = ve.getFailedKeys();
 
-					while (enu.hasMoreElements()) {
-						String url = (String)enu.nextElement();
-					%>
+						while (enu.hasMoreElements()) {
+							String url = (String)enu.nextElement();
+						%>
 
-						<strong><%= HtmlUtil.escape(url) %></strong><%= (enu.hasMoreElements()) ? ", " : "." %>
+							<strong><%= HtmlUtil.escape(url) %></strong><%= (enu.hasMoreElements()) ? ", " : "." %>
 
-					<%
-					}
-					%>
+						<%
+						}
+						%>
 
 					</liferay-ui:error>
 
