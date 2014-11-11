@@ -16,48 +16,60 @@
 
 <%@ include file="/html/portlet/rss/init.jsp" %>
 
+<%
+long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayTemplateDDMTemplateId(rssDisplayContext.getDisplayStyleGroupId(), rssDisplayContext.getDisplayStyle());
+
+List<RSSFeed> rssFeeds = rssDisplayContext.getRSSFeeds();
+%>
+
 <div id="<portlet:namespace />feedsContainer">
 
-	<%
-	List<RSSFeed> rssFeeds = rssDisplayContext.getRSSFeeds();
+	<c:choose>
+		<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
+			<%= PortletDisplayTemplateUtil.renderDDMTemplate(request, response, portletDisplayDDMTemplateId, rssFeeds) %>
+		</c:when>
+		<c:otherwise>
 
-	for (int i = 0; i < rssFeeds.size(); i++) {
-		RSSFeed rssFeed = rssFeeds.get(i);
+			<%
+			for (int i = 0; i < rssFeeds.size(); i++) {
+				RSSFeed rssFeed = rssFeeds.get(i);
 
-		boolean last = false;
+				boolean last = false;
 
-		if (i == (rssFeeds.size() - 1)) {
-			last = true;
-		}
+				if (i == (rssFeeds.size() - 1)) {
+					last = true;
+				}
 
-		SyndFeed feed = rssFeed.getFeed();
-	%>
+				SyndFeed feed = rssFeed.getFeed();
+			%>
 
-		<c:choose>
-			<c:when test="<%= Validator.isNotNull(rssFeed.getUrl()) && (feed != null) %>">
-				<liferay-ui:rss-feed
-					entriesPerFeed="<%= rssDisplayContext.getEntriesPerFeed() %>"
-					expandedEntriesPerFeed="<%= rssDisplayContext.getExpandedEntriesPerFeed() %>"
-					last="<%= last %>"
-					rssFeed="<%= rssFeed %>"
-					showFeedDescription="<%= rssDisplayContext.isShowFeedDescription() %>"
-					showFeedImage="<%= rssDisplayContext.isShowFeedImage() %>"
-					showFeedItemAuthor="<%= rssDisplayContext.isShowFeedItemAuthor() %>"
-					showFeedPublishedDate="<%= rssDisplayContext.isShowFeedPublishedDate() %>"
-					showFeedTitle="<%= rssDisplayContext.isShowFeedTitle() %>"
-				/>
-			</c:when>
-			<c:otherwise>
-				<div class="alert alert-danger">
-					<liferay-ui:message arguments="<%= HtmlUtil.escape(rssFeed.getUrl()) %>" key="cannot-be-found" translateArguments="false" />
-				</div>
-			</c:otherwise>
-		</c:choose>
+				<c:choose>
+					<c:when test="<%= Validator.isNotNull(rssFeed.getUrl()) && (feed != null) %>">
+						<liferay-ui:rss-feed
+							entriesPerFeed="<%= rssDisplayContext.getEntriesPerFeed() %>"
+							expandedEntriesPerFeed="<%= rssDisplayContext.getExpandedEntriesPerFeed() %>"
+							last="<%= last %>"
+							rssFeed="<%= rssFeed %>"
+							showFeedDescription="<%= rssDisplayContext.isShowFeedDescription() %>"
+							showFeedImage="<%= rssDisplayContext.isShowFeedImage() %>"
+							showFeedItemAuthor="<%= rssDisplayContext.isShowFeedItemAuthor() %>"
+							showFeedPublishedDate="<%= rssDisplayContext.isShowFeedPublishedDate() %>"
+							showFeedTitle="<%= rssDisplayContext.isShowFeedTitle() %>"
+						/>
+					</c:when>
+					<c:otherwise>
+						<div class="alert alert-danger">
+							<liferay-ui:message arguments="<%= HtmlUtil.escape(rssFeed.getUrl()) %>" key="cannot-be-found" translateArguments="<%= false %>" />
+						</div>
+					</c:otherwise>
+				</c:choose>
 
-	<%
-	}
-	%>
+			<%
+			}
+			%>
 
+		</c:otherwise>
+	</c:choose>
 </div>
 
 <aui:script use="aui-base">
