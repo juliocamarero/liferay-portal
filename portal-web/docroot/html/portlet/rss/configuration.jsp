@@ -205,18 +205,6 @@ configurationRenderURL.setParameter("portletResource", portletResource);
 			</aui:button-row>
 
 			<aui:script use="aui-base,liferay-auto-fields">
-				var subscriptionsTable = A.one('#<portlet:namespace />subscriptions');
-
-				if (subscriptionsTable) {
-					subscriptionsTable.delegate(
-						'click',
-						function(event) {
-							event.currentTarget.get('parentNode.parentNode').remove();
-						},
-						'.remove-subscription'
-					);
-				}
-
 				new Liferay.AutoFields(
 					{
 						contentBox: 'fieldset.subscriptions',
