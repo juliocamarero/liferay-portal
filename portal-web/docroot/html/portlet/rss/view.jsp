@@ -57,11 +57,11 @@ List<RSSFeed> rssFeeds = rssDisplayContext.getRSSFeeds();
 							showFeedTitle="<%= rssDisplayContext.isShowFeedTitle() %>"
 						/>
 					</c:when>
-					<c:otherwise>
+					<c:when test="<%= portletDisplay.isShowConfigurationIcon() %>">
 						<div class="alert alert-danger">
 							<liferay-ui:message arguments="<%= HtmlUtil.escape(rssFeed.getUrl()) %>" key="cannot-be-found" translateArguments="<%= false %>" />
 						</div>
-					</c:otherwise>
+					</c:when>
 				</c:choose>
 
 			<%
