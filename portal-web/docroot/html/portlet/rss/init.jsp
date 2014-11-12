@@ -17,18 +17,12 @@
 <%@ include file="/html/portlet/init.jsp" %>
 
 <%@ page import="com.liferay.portlet.rss.context.RSSDisplayContext" %><%@
-page import="com.liferay.portlet.rss.context.RSSFeed" %><%@
-page import="com.liferay.portlet.rss.context.RSSFeedEntryDisplayContext" %><%@
-page import="com.liferay.portlet.rss.util.RSSUtil" %>
+page import="com.liferay.portlet.rss.context.RSSFeed" %>
 
-<%@ page import="com.sun.syndication.feed.synd.SyndEntry" %><%@
-page import="com.sun.syndication.feed.synd.SyndFeed" %><%@
-page import="com.sun.syndication.feed.synd.SyndImage" %>
+<%@ page import="com.sun.syndication.feed.synd.SyndFeed" %>
 
 <%
 RSSDisplayContext rssDisplayContext = new RSSDisplayContext(request, portletPreferences);
-
-Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
 %>
 
 <%@ include file="/html/portlet/rss/init-ext.jsp" %>

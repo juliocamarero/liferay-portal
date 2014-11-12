@@ -29,9 +29,30 @@
 		if (i == (rssFeeds.size() - 1)) {
 			last = true;
 		}
+
+		SyndFeed feed = rssFeed.getFeed();
 	%>
 
-		<%@ include file="/html/portlet/rss/feed.jspf" %>
+		<c:choose>
+			<c:when test="<%= Validator.isNotNull(rssFeed.getUrl()) && (feed != null) %>">
+				<liferay-ui:rss-feed
+					entriesPerFeed="<%= rssDisplayContext.getEntriesPerFeed() %>"
+					expandedEntriesPerFeed="<%= rssDisplayContext.getExpandedEntriesPerFeed() %>"
+					last="<%= last %>"
+					rssFeed="<%= rssFeed %>"
+					showFeedDescription="<%= rssDisplayContext.isShowFeedDescription() %>"
+					showFeedImage="<%= rssDisplayContext.isShowFeedImage() %>"
+					showFeedItemAuthor="<%= rssDisplayContext.isShowFeedItemAuthor() %>"
+					showFeedPublishedDate="<%= rssDisplayContext.isShowFeedPublishedDate() %>"
+					showFeedTitle="<%= rssDisplayContext.isShowFeedTitle() %>"
+				/>
+			</c:when>
+			<c:otherwise>
+				<div class="alert alert-danger">
+					<liferay-ui:message arguments="<%= HtmlUtil.escape(rssFeed.getUrl()) %>" key="cannot-be-found" translateArguments="false" />
+				</div>
+			</c:otherwise>
+		</c:choose>
 
 	<%
 	}
