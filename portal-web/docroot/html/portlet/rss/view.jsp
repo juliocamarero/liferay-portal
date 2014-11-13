@@ -17,60 +17,57 @@
 <%@ include file="/html/portlet/rss/init.jsp" %>
 
 <%
-String url = ParamUtil.getString(request, "url");
-String title = StringPool.BLANK;
+long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayTemplateDDMTemplateId(rssDisplayContext.getDisplayStyleGroupId(), rssDisplayContext.getDisplayStyle());
+
+List<RSSFeed> rssFeeds = rssDisplayContext.getRSSFeeds();
 %>
 
 <div id="<portlet:namespace />feedsContainer">
 
-	<%
-	for (int i = 0; i < urls.length; i++) {
-		url = urls[i];
+	<c:choose>
+		<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
+			<%= PortletDisplayTemplateUtil.renderDDMTemplate(request, response, portletDisplayDDMTemplateId, rssFeeds) %>
+		</c:when>
+		<c:otherwise>
 
-		if (i < titles.length) {
-			title = titles[i];
-		}
-		else {
-			title = StringPool.BLANK;
-		}
+			<%
+			for (int i = 0; i < rssFeeds.size(); i++) {
+				RSSFeed rssFeed = rssFeeds.get(i);
 
-		boolean last = false;
+				boolean last = false;
 
-		if (i == (urls.length - 1)) {
-			last = true;
-		}
-	%>
-
-		<%@ include file="/html/portlet/rss/feed.jspf" %>
-
-	<%
-	}
-	%>
-
-</div>
-
-<aui:script use="aui-base">
-	var feedsContainer = A.one('#<portlet:namespace />feedsContainer');
-
-	feedsContainer.delegate(
-		'click',
-		function(event) {
-			var expander = event.currentTarget;
-			var feedContent = expander.get('parentNode').one('.feed-entry-content');
-
-			if (feedContent) {
-				if (expander.hasClass('icon-collapse-alt')) {
-					expander.addClass('icon-expand-alt');
-					expander.removeClass('icon-collapse-alt');
-				}
-				else {
-					expander.addClass('icon-collapse-alt');
-					expander.removeClass('icon-expand-alt');
+				if (i == (rssFeeds.size() - 1)) {
+					last = true;
 				}
 
-				feedContent.toggle();
+				SyndFeed feed = rssFeed.getFeed();
+			%>
+
+				<c:choose>
+					<c:when test="<%= Validator.isNotNull(rssFeed.getUrl()) && (feed != null) %>">
+						<liferay-ui:rss-feed
+							entriesPerFeed="<%= rssDisplayContext.getEntriesPerFeed() %>"
+							expandedEntriesPerFeed="<%= rssDisplayContext.getExpandedEntriesPerFeed() %>"
+							last="<%= last %>"
+							rssFeed="<%= rssFeed %>"
+							showFeedDescription="<%= rssDisplayContext.isShowFeedDescription() %>"
+							showFeedImage="<%= rssDisplayContext.isShowFeedImage() %>"
+							showFeedItemAuthor="<%= rssDisplayContext.isShowFeedItemAuthor() %>"
+							showFeedPublishedDate="<%= rssDisplayContext.isShowFeedPublishedDate() %>"
+							showFeedTitle="<%= rssDisplayContext.isShowFeedTitle() %>"
+						/>
+					</c:when>
+					<c:when test="<%= portletDisplay.isShowConfigurationIcon() %>">
+						<div class="alert alert-danger">
+							<liferay-ui:message arguments="<%= HtmlUtil.escape(rssFeed.getUrl()) %>" key="cannot-be-found" translateArguments="<%= false %>" />
+						</div>
+					</c:when>
+				</c:choose>
+
+			<%
 			}
-		},
-		'.entry-expander'
-	);
-</aui:script>
+			%>
+
+		</c:otherwise>
+	</c:choose>
+</div>

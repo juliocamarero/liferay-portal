@@ -3326,6 +3326,56 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>rss-feed</name>
+		<tag-class>com.liferay.taglib.ui.RSSFeedTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>entriesPerFeed</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>expandedEntriesPerFeed</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>last</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rssFeed</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>showFeedDescription</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>showFeedImage</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>showFeedItemAuthor</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>showFeedPublishedDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>showFeedTitle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>rss-settings</name>
 		<tag-class>com.liferay.taglib.ui.RSSSettingsTag</tag-class>
 		<body-content>JSP</body-content>
