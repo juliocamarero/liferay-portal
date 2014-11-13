@@ -12,15 +12,15 @@
  * details.
  */
 
-package com.liferay.portlet.rss.util;
+package com.liferay.portlet.rss;
 
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.webcache.WebCacheException;
 import com.liferay.portal.kernel.webcache.WebCacheItem;
-import com.liferay.portal.security.lang.DoPrivilegedBean;
-import com.liferay.portal.util.HttpImpl;
-import com.liferay.portal.util.PropsValues;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
@@ -61,35 +61,23 @@ public class RSSWebCacheItem implements WebCacheItem {
 
 			channel = FeedParser.parse(builder, reader);*/
 
-			HttpImpl httpImpl = null;
-
-			Object httpObject = HttpUtil.getHttp();
-
-			if (httpObject instanceof DoPrivilegedBean) {
-				DoPrivilegedBean doPrivilegedBean =
-					(DoPrivilegedBean)httpObject;
-
-				httpImpl = (HttpImpl)doPrivilegedBean.getActualBean();
-			}
-			else {
-				httpImpl = (HttpImpl)httpObject;
-			}
-
-			HostConfiguration hostConfiguration = httpImpl.getHostConfiguration(
+			HostConfiguration hostConfiguration = HttpUtil.getHostConfiguration(
 				_url);
 
-			HttpClient httpClient = httpImpl.getClient(hostConfiguration);
+			HttpClient httpClient = HttpUtil.getClient(hostConfiguration);
 
-			httpImpl.proxifyState(httpClient.getState(), hostConfiguration);
+			HttpUtil.proxifyState(httpClient.getState(), hostConfiguration);
 
 			HttpClientParams httpClientParams = httpClient.getParams();
 
-			httpClientParams.setConnectionManagerTimeout(
-				PropsValues.RSS_CONNECTION_TIMEOUT);
-			httpClientParams.setSoTimeout(PropsValues.RSS_CONNECTION_TIMEOUT);
+			int timeout = GetterUtil.getInteger(
+				PropsUtil.get(PropsKeys.RSS_CONNECTION_TIMEOUT));
+
+			httpClientParams.setConnectionManagerTimeout(timeout);
+			httpClientParams.setSoTimeout(timeout);
 
 			GetMethod getMethod = new GetMethod(
-				httpImpl.encodeParameters(_url));
+				HttpUtil.encodeParameters(_url));
 
 			httpClient.executeMethod(hostConfiguration, getMethod);
 

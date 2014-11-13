@@ -12,13 +12,14 @@
  * details.
  */
 
-package com.liferay.portlet.rss.context;
+package com.liferay.portlet.rss;
 
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpUtil;
-import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.webcache.WebCacheItem;
+import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.feed.synd.SyndImage;
@@ -101,10 +102,10 @@ public class RSSFeed {
 		}
 
 		try {
-			ObjectValuePair ovp = com.liferay.portlet.rss.util.RSSUtil.getFeed(
-				_url);
+			WebCacheItem wci = new RSSWebCacheItem(_url);
 
-			_feed = (SyndFeed)ovp.getValue();
+			_feed = (SyndFeed)WebCachePoolUtil.get(
+				RSSFeed.class.getName() + StringPool.PERIOD + _url, wci);
 		}
 		catch (Exception e) {
 		}

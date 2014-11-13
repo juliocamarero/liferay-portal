@@ -16,7 +16,7 @@
 
 <%@ include file="/html/taglib/init.jsp" %>
 
-<%@ page import="com.liferay.portlet.rss.context.RSSFeed" %><%@
+<%@ page import="com.liferay.portlet.rss.RSSFeed" %><%@
 page import="com.liferay.portlet.rss.context.RSSFeedEntryDisplayContext" %><%@
 page import="com.liferay.portlet.rss.util.RSSUtil" %>
 

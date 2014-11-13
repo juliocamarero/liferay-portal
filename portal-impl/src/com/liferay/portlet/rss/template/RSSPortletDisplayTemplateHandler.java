@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.rss.context.RSSFeed;
+import com.liferay.portlet.rss.RSSFeed;
 
 import java.util.Locale;
 
