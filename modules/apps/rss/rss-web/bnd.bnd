@@ -3,6 +3,7 @@ Bundle-SymbolicName: com.liferay.rss.web
 Bundle-Version: 1.0.0
 Import-Package:\
 	${bnd.jsp.support.imports},\
+	com.liferay.portlet.portletdisplaytemplate.util,\
 	*
 Include-Resource:\
 	classes,\
