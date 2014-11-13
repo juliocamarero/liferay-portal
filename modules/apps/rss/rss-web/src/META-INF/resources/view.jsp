@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/rss/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 long portletDisplayDDMTemplateId = PortletDisplayTemplateUtil.getPortletDisplayTemplateDDMTemplateId(rssDisplayContext.getDisplayStyleGroupId(), rssDisplayContext.getDisplayStyle());
@@ -41,7 +41,7 @@ List<RSSFeed> rssFeeds = rssDisplayContext.getRSSFeeds();
 			SyndFeed syndFeed = rssFeed.getSyndFeed();
 		%>
 
-			<%@ include file="/html/portlet/rss/feed.jspf" %>
+			<%@ include file="/feed.jspf" %>
 
 		<%
 		}
