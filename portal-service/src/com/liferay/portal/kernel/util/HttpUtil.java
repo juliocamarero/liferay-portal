@@ -29,6 +29,10 @@ import javax.portlet.RenderRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -100,6 +104,10 @@ public class HttpUtil {
 		return getHttp().fixPath(path, leading, trailing);
 	}
 
+	public static HttpClient getClient(HostConfiguration hostConfiguration) {
+		return getHttp().getClient(hostConfiguration);
+	}
+
 	public static String getCompleteURL(HttpServletRequest request) {
 		return getHttp().getCompleteURL(request);
 	}
@@ -110,6 +118,12 @@ public class HttpUtil {
 
 	public static String getDomain(String url) {
 		return getHttp().getDomain(url);
+	}
+
+	public static HostConfiguration getHostConfiguration(String location)
+		throws IOException {
+
+		return getHttp().getHostConfiguration(location);
 	}
 
 	public static Http getHttp() {
@@ -228,6 +242,12 @@ public class HttpUtil {
 
 	public static String protocolize(String url, RenderRequest renderRequest) {
 		return getHttp().protocolize(url, renderRequest);
+	}
+
+	public static void proxifyState(
+		HttpState httpState, HostConfiguration hostConfiguration) {
+
+		getHttp().proxifyState(httpState, hostConfiguration);
 	}
 
 	public static String removeDomain(String url) {

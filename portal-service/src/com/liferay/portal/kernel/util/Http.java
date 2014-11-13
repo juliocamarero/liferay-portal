@@ -30,6 +30,10 @@ import javax.portlet.RenderRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Hugo Huijser
@@ -86,11 +90,16 @@ public interface Http {
 
 	public String fixPath(String path, boolean leading, boolean trailing);
 
+	public HttpClient getClient(HostConfiguration hostConfiguration);
+
 	public String getCompleteURL(HttpServletRequest request);
 
 	public Cookie[] getCookies();
 
 	public String getDomain(String url);
+
+	public HostConfiguration getHostConfiguration(String location)
+		throws IOException;
 
 	public String getIpAddress(String url);
 
@@ -144,6 +153,9 @@ public interface Http {
 	public String protocolize(String url, int port, boolean secure);
 
 	public String protocolize(String url, RenderRequest renderRequest);
+
+	public void proxifyState(
+		HttpState httpState, HostConfiguration hostConfiguration);
 
 	public String removeDomain(String url);
 

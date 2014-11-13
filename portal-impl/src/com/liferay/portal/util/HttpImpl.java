@@ -373,6 +373,7 @@ public class HttpImpl implements Http {
 		return path;
 	}
 
+	@Override
 	public HttpClient getClient(HostConfiguration hostConfiguration) {
 		if (isProxyHost(hostConfiguration.getHost())) {
 			return _proxyHttpClient;
@@ -456,6 +457,7 @@ public class HttpImpl implements Http {
 		return getHostConfiguration(location);
 	}
 
+	@Override
 	public HostConfiguration getHostConfiguration(String location)
 		throws IOException {
 
@@ -872,6 +874,7 @@ public class HttpImpl implements Http {
 		return protocolize(url, renderRequest.isSecure());
 	}
 
+	@Override
 	public void proxifyState(
 		HttpState httpState, HostConfiguration hostConfiguration) {
 
