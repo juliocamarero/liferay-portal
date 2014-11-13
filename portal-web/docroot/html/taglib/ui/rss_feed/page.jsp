@@ -75,14 +75,8 @@ boolean showFeedTitle = GetterUtil.getBoolean(request.getAttribute("liferay-ui:r
 			RSSFeedEntryDisplayContext rssFeedEntryDisplayContext = new RSSFeedEntryDisplayContext(entry, request, rssFeed);
 		%>
 
-			<div class="feed-entry">
-				<div class="feed-entry-title">
-					<i class="entry-expander feed-entry-expander <%= (themeDisplay.isStateMaximized() || (j < expandedEntriesPerFeed)) ? "icon-collapse-alt" : "icon-expand-alt" %>"></i>
-
-					<aui:a href="<%= RSSUtil.escapeJavaScriptLink(rssFeedEntryDisplayContext.getEntryLink()) %>" target="_blank"><%= HtmlUtil.escape(entry.getTitle()) %></aui:a>
-				</div>
-
-				<div class="feed-entry-content <%= (themeDisplay.isStateMaximized() || (j < expandedEntriesPerFeed)) ? "" : "hide" %>">
+			<liferay-ui:panel cssClass="feed-entry" title="<%= HtmlUtil.escape(entry.getTitle()) %>" extended="<%= (themeDisplay.isStateMaximized() || (j < expandedEntriesPerFeed)) %>">
+				<div class="feed-entry-content">
 					<c:if test="<%= showFeedItemAuthor && Validator.isNotNull(entry.getAuthor()) %>">
 						<div class="feed-entry-author">
 							<%= HtmlUtil.escape(entry.getAuthor()) %>
@@ -106,8 +100,12 @@ boolean showFeedTitle = GetterUtil.getBoolean(request.getAttribute("liferay-ui:r
 					</c:if>
 
 					<%= rssFeedEntryDisplayContext.getSanitizedContent() %>
+
+					<br />
+
+					<aui:a href="<%= RSSUtil.escapeJavaScriptLink(rssFeedEntryDisplayContext.getEntryLink()) %>"><liferay-ui:message key="read-more" /></aui:a>
 				</div>
-			</div>
+			</liferay-ui:panel>
 
 		<%
 		}
