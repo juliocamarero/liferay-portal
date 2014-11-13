@@ -20,7 +20,7 @@
 int entriesPerFeed = GetterUtil.getInteger(request.getAttribute("liferay-ui:rss-feed:entriesPerFeed"));
 int expandedEntriesPerFeed = GetterUtil.getInteger(request.getAttribute("liferay-ui:rss-feed:expandedEntriesPerFeed"));
 boolean last = GetterUtil.getBoolean(request.getAttribute("liferay-ui:rss-feed:last"));
-RSSFeed rssFeed = (RSSFeed)request.getAttribute("liferay-ui:rss-feed:rssFeed");
+com.liferay.portlet.rss.RSSFeed rssFeed = (com.liferay.portlet.rss.RSSFeed)request.getAttribute("liferay-ui:rss-feed:rssFeed");
 boolean showFeedDescription = GetterUtil.getBoolean(request.getAttribute("liferay-ui:rss-feed:showFeedDescription"));
 boolean showFeedImage = GetterUtil.getBoolean(request.getAttribute("liferay-ui:rss-feed:showFeedImage"));
 boolean showFeedItemAuthor = GetterUtil.getBoolean(request.getAttribute("liferay-ui:rss-feed:showFeedItemAuthor"));
@@ -64,52 +64,56 @@ boolean showFeedTitle = GetterUtil.getBoolean(request.getAttribute("liferay-ui:r
 		</div>
 	</c:if>
 
-	<div class="feed-entries">
+	<%
+	List entries = feed.getEntries();
+	%>
 
-		<%
-		List entries = feed.getEntries();
+	<c:if test="<%= !entries.isEmpty() %>">
+		<liferay-ui:panel-container cssClass="feed-entries" extended="<%= false %>" id="rssFeedsPanelContainer" persistState="<%= false %>">
 
-		for (int j = 0; (j < entries.size()) && (j < entriesPerFeed); j++) {
-			SyndEntry entry = (SyndEntry)entries.get(j);
+			<%
+			for (int j = 0; (j < entries.size()) && (j < entriesPerFeed); j++) {
+				SyndEntry entry = (SyndEntry)entries.get(j);
 
-			RSSFeedEntryDisplayContext rssFeedEntryDisplayContext = new RSSFeedEntryDisplayContext(entry, request, rssFeed);
-		%>
+				RSSFeedEntryDisplayContext rssFeedEntryDisplayContext = new RSSFeedEntryDisplayContext(entry, request, rssFeed);
+			%>
 
-			<liferay-ui:panel cssClass="feed-entry" title="<%= HtmlUtil.escape(entry.getTitle()) %>" extended="<%= (themeDisplay.isStateMaximized() || (j < expandedEntriesPerFeed)) %>">
-				<div class="feed-entry-content">
-					<c:if test="<%= showFeedItemAuthor && Validator.isNotNull(entry.getAuthor()) %>">
-						<div class="feed-entry-author">
-							<%= HtmlUtil.escape(entry.getAuthor()) %>
-						</div>
-					</c:if>
+				<liferay-ui:panel cssClass="feed-entry" extended="<%= (themeDisplay.isStateMaximized() || (j < expandedEntriesPerFeed)) %>" title="<%= HtmlUtil.escape(entry.getTitle()) %>">
+					<div class="feed-entry-content">
+						<c:if test="<%= showFeedItemAuthor && Validator.isNotNull(entry.getAuthor()) %>">
+							<div class="feed-entry-author">
+								<%= HtmlUtil.escape(entry.getAuthor()) %>
+							</div>
+						</c:if>
 
-					<c:if test="<%= entry.getPublishedDate() != null %>">
-						<div class="feed-date">
-							<liferay-ui:icon
-								iconCssClass="icon-calendar"
-								label="<%= true %>"
-								message="<%= dateFormatDateTime.format(entry.getPublishedDate()) %>"
-							/>
-						</div>
-					</c:if>
+						<c:if test="<%= entry.getPublishedDate() != null %>">
+							<div class="feed-date">
+								<liferay-ui:icon
+									iconCssClass="icon-calendar"
+									label="<%= true %>"
+									message="<%= dateFormatDateTime.format(entry.getPublishedDate()) %>"
+								/>
+							</div>
+						</c:if>
 
-					<c:if test="<%= Validator.isNotNull(rssFeedEntryDisplayContext.getEnclosureLink()) %>">
-						<div class="feed-entry-enclosure">
-							<aui:a href="<%= RSSUtil.escapeJavaScriptLink(rssFeedEntryDisplayContext.getEnclosureLink()) %>" target="_blank"><%= HtmlUtil.escape(rssFeedEntryDisplayContext.getEnclosureLinkTitle()) %></aui:a>
-						</div>
-					</c:if>
+						<c:if test="<%= Validator.isNotNull(rssFeedEntryDisplayContext.getEnclosureLink()) %>">
+							<div class="feed-entry-enclosure">
+								<aui:a href="<%= RSSUtil.escapeJavaScriptLink(rssFeedEntryDisplayContext.getEnclosureLink()) %>" target="_blank"><%= HtmlUtil.escape(rssFeedEntryDisplayContext.getEnclosureLinkTitle()) %></aui:a>
+							</div>
+						</c:if>
 
-					<%= rssFeedEntryDisplayContext.getSanitizedContent() %>
+						<%= rssFeedEntryDisplayContext.getSanitizedContent() %>
 
-					<br />
+						<br />
 
-					<aui:a href="<%= RSSUtil.escapeJavaScriptLink(rssFeedEntryDisplayContext.getEntryLink()) %>"><liferay-ui:message key="read-more" /></aui:a>
-				</div>
-			</liferay-ui:panel>
+						<aui:a href="<%= RSSUtil.escapeJavaScriptLink(rssFeedEntryDisplayContext.getEntryLink()) %>"><liferay-ui:message key="read-more" /></aui:a>
+					</div>
+				</liferay-ui:panel>
 
-		<%
-		}
-		%>
+			<%
+			}
+			%>
 
-	</div>
+		</liferay-ui:panel-container>
+	</c:if>
 </div>
