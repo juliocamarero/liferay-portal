@@ -86,9 +86,7 @@ else {
 		</c:if>
 	</liferay-ui:error>
 
-	<liferay-ui:error exception="<%= DuplicateTagException.class %>">
-		<liferay-ui:message key="a-tag-with-that-name-already-exists" />
-	</liferay-ui:error>
+	<liferay-ui:error exception="<%= DuplicateTagException.class %>" message="a-tag-with-that-name-already-exists" />
 
 	<aui:model-context bean="<%= tag %>" model="<%= AssetTag.class %>" />
 
