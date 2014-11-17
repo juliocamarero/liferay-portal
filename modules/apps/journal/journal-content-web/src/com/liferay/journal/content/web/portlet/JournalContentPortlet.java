@@ -58,8 +58,6 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.icon=/icons/journal_content.png",
 		"com.liferay.portlet.instanceable=true",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
-		"com.liferay.portlet.friendly-url-mapping=journal_content",
-		"com.liferay.portlet.friendly-url-routes=com/liferay/journal/content/web/portlet/route/journal-content-friendly-url-routes.xml",
 		"com.liferay.portlet.layout-cacheable=true",
 		"com.liferay.portlet.preferences-owned-by-group=true",
 		"com.liferay.portlet.private-request-attributes=false",
