@@ -108,8 +108,7 @@ public class EditEntryAction extends PortletAction {
 							redirect, namespace, "className",
 							BookmarksEntry.class.getName());
 						redirect = HttpUtil.addNamespacedParameter(
-							redirect, namespace, "classPK",
-							entry.getEntryId());
+							redirect, namespace, "classPK", entry.getEntryId());
 					}
 
 					actionResponse.sendRedirect(redirect);
