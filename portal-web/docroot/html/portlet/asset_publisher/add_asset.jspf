@@ -26,6 +26,7 @@
 			Map.Entry<String, PortletURL> entry = iterator.next();
 
 			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(_getClassName(entry.getKey()));
+
 			String portletId = assetRendererFactory.getPortletId();
 
 			String message = _getMessage(entry.getKey(), addPortletURLs, locale);
@@ -48,6 +49,7 @@
 				<%
 				for (Map.Entry<String, PortletURL> entry : addPortletURLs.entrySet()) {
 					AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(_getClassName(entry.getKey()));
+
 					String portletId = assetRendererFactory.getPortletId();
 
 					String message = _getMessage(entry.getKey(), addPortletURLs, locale);

@@ -223,9 +223,7 @@ public class HttpImpl implements Http {
 	public String addNamespacedParameter(
 		String url, String namespace, String name, String value) {
 
-		String namespacedName = namespace + name;
-
-		return addParameter(url, namespacedName, value);
+		return addParameter(url, namespace + name, value);
 	}
 
 	@Override
