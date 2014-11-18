@@ -75,45 +75,46 @@ public abstract class BaseAssetSearchTestCase {
 	public void setUp() throws Exception {
 		_group1 = GroupTestUtil.addGroup();
 
-		ServiceContext serviceContext =
+		ServiceContext group1ServiceContext =
 			ServiceContextTestUtil.getServiceContext(_group1.getGroupId());
 
 		AssetVocabulary vocabulary =
 			AssetVocabularyLocalServiceUtil.addVocabulary(
 				TestPropsValues.getUserId(), RandomTestUtil.randomString(),
-				serviceContext);
+				group1ServiceContext);
 
 		_vocabularyId = vocabulary.getVocabularyId();
 
 		AssetCategory fashionCategory =
 			AssetCategoryLocalServiceUtil.addCategory(
 				TestPropsValues.getUserId(), "Fashion", _vocabularyId,
-				serviceContext);
+				group1ServiceContext);
 
 		_fashionCategoryId = fashionCategory.getCategoryId();
 
 		AssetCategory foodCategory = AssetCategoryLocalServiceUtil.addCategory(
-			TestPropsValues.getUserId(), "Food", _vocabularyId, serviceContext);
+			TestPropsValues.getUserId(), "Food", _vocabularyId,
+			group1ServiceContext);
 
 		_foodCategoryId = foodCategory.getCategoryId();
 
 		AssetCategory healthCategory =
 			AssetCategoryLocalServiceUtil.addCategory(
 				TestPropsValues.getUserId(), "Health", _vocabularyId,
-				serviceContext);
+				group1ServiceContext);
 
 		_healthCategoryId = healthCategory.getCategoryId();
 
 		AssetCategory sportCategory = AssetCategoryLocalServiceUtil.addCategory(
 			TestPropsValues.getUserId(), "Sport", _vocabularyId,
-			serviceContext);
+			group1ServiceContext);
 
 		_sportCategoryId = sportCategory.getCategoryId();
 
 		AssetCategory travelCategory =
 			AssetCategoryLocalServiceUtil.addCategory(
 				TestPropsValues.getUserId(), "Travel", _vocabularyId,
-				serviceContext);
+				group1ServiceContext);
 
 		_travelCategoryId = travelCategory.getCategoryId();
 
@@ -124,20 +125,32 @@ public abstract class BaseAssetSearchTestCase {
 			_sportCategoryId
 		};
 
-		AssetTagLocalServiceUtil.addTag(
-			TestPropsValues.getUserId(), "liferay", null, serviceContext);
+		_group2 = GroupTestUtil.addGroup();
 
-		AssetTagLocalServiceUtil.addTag(
-			TestPropsValues.getUserId(), "architecture", null, serviceContext);
+		ServiceContext group2ServiceContext =
+			ServiceContextTestUtil.getServiceContext(_group2.getGroupId());
 
-		AssetTagLocalServiceUtil.addTag(
-			TestPropsValues.getUserId(), "modularity", null, serviceContext);
+		ServiceContext[] serviceContexts = new ServiceContext[] {
+			group1ServiceContext, group2ServiceContext};
 
-		AssetTagLocalServiceUtil.addTag(
-			TestPropsValues.getUserId(), "osgi", null, serviceContext);
+		for (ServiceContext serviceContext : serviceContexts) {
+			AssetTagLocalServiceUtil.addTag(
+				TestPropsValues.getUserId(), "liferay", null, serviceContext);
 
-		AssetTagLocalServiceUtil.addTag(
-			TestPropsValues.getUserId(), "services", null, serviceContext);
+			AssetTagLocalServiceUtil.addTag(
+				TestPropsValues.getUserId(), "architecture", null,
+				serviceContext);
+
+			AssetTagLocalServiceUtil.addTag(
+				TestPropsValues.getUserId(), "modularity", null,
+				serviceContext);
+
+			AssetTagLocalServiceUtil.addTag(
+				TestPropsValues.getUserId(), "osgi", null, serviceContext);
+
+			AssetTagLocalServiceUtil.addTag(
+				TestPropsValues.getUserId(), "services", null, serviceContext);
+		}
 
 		_assetTagsNames1 =
 			new String[] {"liferay", "architecture", "modularity", "osgi"};
@@ -1234,6 +1247,9 @@ public abstract class BaseAssetSearchTestCase {
 
 	@DeleteAfterTestRun
 	private Group _group1;
+
+	@DeleteAfterTestRun
+	private Group _group2;
 
 	private long _healthCategoryId;
 	private long _sportCategoryId;
