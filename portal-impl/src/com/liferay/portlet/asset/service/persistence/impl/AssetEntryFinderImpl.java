@@ -293,18 +293,49 @@ public class AssetEntryFinderImpl
 
 		// Keywords
 
-		if (Validator.isNotNull(entryQuery.getKeywords())) {
+		boolean descriptionIsNull = Validator.isNull(
+			entryQuery.getDescription());
+		boolean isAndOperator = entryQuery.isAndOperator();
+		boolean keywordsAreNull = Validator.isNull(entryQuery.getKeywords());
+		boolean titleIsNull = Validator.isNull(entryQuery.getTitle());
+		boolean userNameIsNull = Validator.isNull(entryQuery.getUserName());
+
+		if (!keywordsAreNull) {
 			sb.append(" AND ((AssetEntry.title LIKE ?) OR");
 			sb.append(" (AssetEntry.description LIKE ?))");
 		}
-		else {
-			if (Validator.isNotNull(entryQuery.getTitle())) {
-				sb.append(" AND (AssetEntry.title LIKE ?)");
+		else if (!titleIsNull || !descriptionIsNull || !userNameIsNull) {
+			sb.append("AND (");
+
+			if (!titleIsNull) {
+				sb.append("(AssetEntry.title LIKE ?)");
 			}
 
-			if (Validator.isNotNull(entryQuery.getDescription())) {
-				sb.append(" AND (AssetEntry.description LIKE ?)");
+			if (!descriptionIsNull) {
+				if (titleIsNull) {
+					sb.append("(AssetEntry.description LIKE ?)");
+				}
+				else if (isAndOperator) {
+					sb.append(" AND (AssetEntry.description LIKE ?)");
+				}
+				else {
+					sb.append(" OR (AssetEntry.description LIKE ?)");
+				}
 			}
+
+			if (!userNameIsNull) {
+				if (titleIsNull && descriptionIsNull) {
+					sb.append("(AssetEntry.userName LIKE ?)");
+				}
+				else if (isAndOperator) {
+					sb.append(" AND (AssetEntry.userName LIKE ?)");
+				}
+				else {
+					sb.append(" OR (AssetEntry.userName LIKE ?)");
+				}
+			}
+
+			sb.append(")");
 		}
 
 		// Layout
@@ -432,23 +463,29 @@ public class AssetEntryFinderImpl
 			qPos.add(entryQuery.isVisible());
 		}
 
-		if (Validator.isNotNull(entryQuery.getKeywords())) {
+		if (!keywordsAreNull) {
 			qPos.add(
 				StringUtil.quote(entryQuery.getKeywords(), StringPool.PERCENT));
 			qPos.add(
 				StringUtil.quote(entryQuery.getKeywords(), StringPool.PERCENT));
 		}
 		else {
-			if (Validator.isNotNull(entryQuery.getTitle())) {
+			if (!titleIsNull) {
 				qPos.add(
 					StringUtil.quote(
 						entryQuery.getTitle(), StringPool.PERCENT));
 			}
 
-			if (Validator.isNotNull(entryQuery.getDescription())) {
+			if (!descriptionIsNull) {
 				qPos.add(
 					StringUtil.quote(
 						entryQuery.getDescription(), StringPool.PERCENT));
+			}
+
+			if (!userNameIsNull) {
+				qPos.add(
+					StringUtil.quote(
+						entryQuery.getUserName(), StringPool.PERCENT));
 			}
 		}
 
