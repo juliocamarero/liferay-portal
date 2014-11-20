@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -300,7 +301,9 @@ public class JournalArticleAssetRenderer
 			portletSetup.getValue("portletSetupLinkToLayoutUuid", null));
 
 		if (Validator.isNotNull(_article.getLayoutUuid()) &&
-			Validator.isNull(linkToLayoutUuid)) {
+			Validator.isNull(linkToLayoutUuid) &&
+			(liferayPortletRequest.getWindowState() !=
+				LiferayWindowState.POP_UP)) {
 
 			Group group = themeDisplay.getScopeGroup();
 
