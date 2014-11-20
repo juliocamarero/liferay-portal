@@ -37,6 +37,7 @@ import javax.portlet.PortletPreferences;
 
 import org.apache.commons.collections.map.ReferenceMap;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -58,7 +59,16 @@ public class LocalizationImplTest {
 
 		_cache.setAccessible(true);
 
+		_defaultLocale = LocaleUtil.getDefault();
+
 		_localization = LocalizationUtil.getLocalization();
+	}
+
+	@AfterClass
+	public static void tearDownClass() {
+		LocaleUtil.setDefault(
+			_defaultLocale.getLanguage(), _defaultLocale.getCountry(),
+			_defaultLocale.getVariant());
 	}
 
 	@Before
@@ -390,6 +400,7 @@ public class LocalizationImplTest {
 	}
 
 	private static Field _cache;
+	private static Locale _defaultLocale;
 	private static Localization _localization;
 
 	private String _englishHello = "Hello World";
