@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.test.MainServletTestRule;
@@ -36,6 +37,7 @@ import com.liferay.portal.util.test.RandomTestUtil;
 import com.liferay.portal.util.test.SearchContextTestUtil;
 import com.liferay.portal.util.test.ServiceContextTestUtil;
 import com.liferay.portal.util.test.TestPropsValues;
+import com.liferay.portal.util.test.UserTestUtil;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -48,6 +50,7 @@ import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.text.DateFormat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -919,6 +922,29 @@ public abstract class BaseAssetSearchTestCase {
 			ServiceContext serviceContext)
 		throws Exception;
 
+	protected List<BaseModel<?>> addBaseModels(
+			Group[] groups, String keywords, ServiceContext serviceContext)
+		throws Exception {
+
+		List<BaseModel<?>> baseModels = new ArrayList<>();
+
+		for (Group group : groups) {
+			User user = UserTestUtil.getAdminUser(group.getCompanyId());
+
+			serviceContext.setCompanyId(group.getCompanyId());
+			serviceContext.setScopeGroupId(group.getGroupId());
+			serviceContext.setUserId(user.getUserId());
+
+			BaseModel<?> parentBaseModel = getParentBaseModel(
+				group, serviceContext);
+
+			baseModels.add(
+				addBaseModel(parentBaseModel, keywords, serviceContext));
+		}
+
+		return baseModels;
+	}
+
 	protected BaseModel<?> addBaseModelWithClassType(
 			BaseModel<?> parentBaseModel, String keywords,
 			ServiceContext serviceContext)
@@ -1013,11 +1039,14 @@ public abstract class BaseAssetSearchTestCase {
 			AssetEntryQuery assetEntryQuery, int expectedResults)
 		throws Exception {
 
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(_group1.getGroupId());
+		testAssetCategorization(
+			new Group[] {_group1}, assetEntryQuery, expectedResults);
+	}
 
-		BaseModel<?> parentBaseModel = getParentBaseModel(
-			_group1, serviceContext);
+	protected void testAssetCategorization(
+			Group[] groups, AssetEntryQuery assetEntryQuery,
+			int expectedResults)
+		throws Exception {
 
 		SearchContext searchContext = SearchContextTestUtil.getSearchContext();
 
@@ -1025,15 +1054,18 @@ public abstract class BaseAssetSearchTestCase {
 
 		int initialEntries = searchCount(assetEntryQuery, searchContext);
 
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(groups[0].getGroupId());
+
 		serviceContext.setAssetTagNames(_assetTagsNames1);
 		serviceContext.setAssetCategoryIds(_assetCategoryIds1);
 
-		addBaseModel(parentBaseModel, getSearchKeywords(), serviceContext);
+		addBaseModels(groups, getSearchKeywords(), serviceContext);
 
 		serviceContext.setAssetTagNames(_assetTagsNames2);
 		serviceContext.setAssetCategoryIds(_assetCategoryIds2);
 
-		addBaseModel(parentBaseModel, getSearchKeywords(), serviceContext);
+		addBaseModels(groups, getSearchKeywords(), serviceContext);
 
 		Assert.assertEquals(
 			initialEntries + expectedResults,
