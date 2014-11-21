@@ -843,9 +843,7 @@ public class GroupImpl extends GroupBaseImpl {
 
 	@Override
 	public boolean isSharingContent() {
-		UnicodeProperties typeSettings = getTypeSettingsProperties();
-
-		return GetterUtil.getBoolean(typeSettings.getProperty("sharedContent"));
+		return GetterUtil.getBoolean(getTypeSettingsProperty("sharedContent"));
 	}
 
 	@Override
