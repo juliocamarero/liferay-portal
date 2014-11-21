@@ -261,6 +261,58 @@ public abstract class BaseAssetSearchTestCase {
 	}
 
 	@Test
+	public void testAllAssetTagsMultiGroups1() throws Exception {
+		String[] allTags = {"liferay"};
+
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				new long[] {_group1.getGroupId(), _group2.getGroupId()},
+				getBaseModelClassName(), null, null, allTags, null);
+
+		testAssetCategorization(
+			new Group[] {_group1, _group2}, assetEntryQuery, 4);
+	}
+
+	@Test
+	public void testAllAssetTagsMultiGroups2() throws Exception {
+		String[] allTags = {"liferay", "architecture"};
+
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				new long[] {_group1.getGroupId(), _group2.getGroupId()},
+				getBaseModelClassName(), null, null, allTags, null);
+
+		testAssetCategorization(
+			new Group[] {_group1, _group2}, assetEntryQuery, 4);
+	}
+
+	@Test
+	public void testAllAssetTagsMultiGroups3() throws Exception {
+		String[] allTags = {"liferay", "architecture", "services"};
+
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				new long[] {_group1.getGroupId(), _group2.getGroupId()},
+				getBaseModelClassName(), null, null, allTags, null);
+
+		testAssetCategorization(
+			new Group[] {_group1, _group2}, assetEntryQuery, 2);
+	}
+
+	@Test
+	public void testAllAssetTagsMultiGroups4() throws Exception {
+		String[] allTags = {"liferay", "architecture", "services", "osgi"};
+
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				new long[] {_group1.getGroupId(), _group2.getGroupId()},
+				getBaseModelClassName(), null, null, allTags, null);
+
+		testAssetCategorization(
+			new Group[] {_group1, _group2}, assetEntryQuery, 0);
+	}
+
+	@Test
 	public void testAnyAssetCategories1() throws Exception {
 		long[] anyCategoryIds = {_healthCategoryId};
 
@@ -691,6 +743,58 @@ public abstract class BaseAssetSearchTestCase {
 				null, null);
 
 		testAssetCategorization(assetEntryQuery, 2);
+	}
+
+	@Test
+	public void testNotAllAssetTagsMultiGroups1() throws Exception {
+		String[] notAllTags = {"liferay"};
+
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				new long[] {_group1.getGroupId(), _group2.getGroupId()},
+				getBaseModelClassName(), notAllTags, null, null, null);
+
+		testAssetCategorization(
+			new Group[] {_group1, _group2}, assetEntryQuery, 0);
+	}
+
+	@Test
+	public void testNotAllAssetTagsMultiGroups2() throws Exception {
+		String[] notAllTags = {"liferay", "architecture"};
+
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				new long[] {_group1.getGroupId(), _group2.getGroupId()},
+				getBaseModelClassName(), notAllTags, null, null, null);
+
+		testAssetCategorization(
+			new Group[] {_group1, _group2}, assetEntryQuery, 0);
+	}
+
+	@Test
+	public void testNotAllAssetTagsMultiGroups3() throws Exception {
+		String[] notAllTags = {"liferay", "architecture", "services"};
+
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				new long[] {_group1.getGroupId(), _group2.getGroupId()},
+				getBaseModelClassName(), notAllTags, null, null, null);
+
+		testAssetCategorization(
+			new Group[] {_group1, _group2}, assetEntryQuery, 2);
+	}
+
+	@Test
+	public void testNotAllAssetTagsMultiGroups4() throws Exception {
+		String[] notAllTags = {"liferay", "architecture", "services", "osgi"};
+
+		AssetEntryQuery assetEntryQuery =
+			AssetEntryQueryTestUtil.createAssetEntryQuery(
+				new long[] {_group1.getGroupId(), _group2.getGroupId()},
+				getBaseModelClassName(), notAllTags, null, null, null);
+
+		testAssetCategorization(
+			new Group[] {_group1, _group2}, assetEntryQuery, 4);
 	}
 
 	@Test
