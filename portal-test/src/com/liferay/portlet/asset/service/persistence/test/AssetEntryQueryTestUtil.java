@@ -122,8 +122,12 @@ public class AssetEntryQueryTestUtil {
 		// Tags
 
 		if (ArrayUtil.isNotEmpty(notAllTags)) {
-			assetEntryQuery.setNotAllTagIds(
-				getAssetTagsIds(groupIds, notAllTags));
+			for (String assetTagName : notAllTags) {
+				long[] notAllAssetTagIds = AssetTagLocalServiceUtil.getTagIds(
+					groupIds, assetTagName);
+
+				assetEntryQuery.addNotAllTagIdsArray(notAllAssetTagIds);
+			}
 		}
 
 		if (ArrayUtil.isNotEmpty(notAnyTags)) {
@@ -136,7 +140,12 @@ public class AssetEntryQueryTestUtil {
 		}
 
 		if (ArrayUtil.isNotEmpty(allTags)) {
-			assetEntryQuery.setAllTagIds(getAssetTagsIds(groupIds, allTags));
+			for (String assetTagName : allTags) {
+				long[] allAssetTagIds = AssetTagLocalServiceUtil.getTagIds(
+					groupIds, assetTagName);
+
+				assetEntryQuery.addAllTagIdsArray(allAssetTagIds);
+			}
 		}
 
 		// Group IDs
