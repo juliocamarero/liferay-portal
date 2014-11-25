@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -51,10 +52,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,6 +71,37 @@ import java.util.Set;
  * @see    com.liferay.portal.service.impl.GroupLocalServiceImpl
  */
 public class GroupServiceImpl extends GroupServiceBaseImpl {
+
+	@Override
+	public Group addGroup(
+			long parentGroupId, long liveGroupId, Map<Locale, String> titleMap,
+			Map<Locale, String> descriptionMap, int type,
+			boolean manualMembership, int membershipRestriction,
+			String friendlyURL, boolean site, boolean active,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		if (parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) {
+			PortalPermissionUtil.check(
+				getPermissionChecker(), ActionKeys.ADD_COMMUNITY);
+		}
+		else {
+			GroupPermissionUtil.check(
+				getPermissionChecker(), parentGroupId,
+				ActionKeys.ADD_COMMUNITY);
+		}
+
+		Group group = groupLocalService.addGroup(
+			getUserId(), parentGroupId, null, 0, liveGroupId, titleMap,
+			descriptionMap, type, manualMembership, membershipRestriction,
+			friendlyURL, site, active, serviceContext);
+
+		if (site) {
+			SiteMembershipPolicyUtil.verifyPolicy(group);
+		}
+
+		return group;
+	}
 
 	/**
 	 * Adds a group.
@@ -104,26 +138,20 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			boolean active, ServiceContext serviceContext)
 		throws PortalException {
 
-		if (parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) {
-			PortalPermissionUtil.check(
-				getPermissionChecker(), ActionKeys.ADD_COMMUNITY);
-		}
-		else {
-			GroupPermissionUtil.check(
-				getPermissionChecker(), parentGroupId,
-				ActionKeys.ADD_COMMUNITY);
-		}
+		Locale locale = LocaleUtil.getSiteDefault();
 
-		Group group = groupLocalService.addGroup(
-			getUserId(), parentGroupId, null, 0, liveGroupId, name, description,
-			type, manualMembership, membershipRestriction, friendlyURL, site,
-			active, serviceContext);
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
-		if (site) {
-			SiteMembershipPolicyUtil.verifyPolicy(group);
-		}
+		titleMap.put(locale, name);
 
-		return group;
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+
+		descriptionMap.put(locale, description);
+
+		return addGroup(
+			parentGroupId, liveGroupId, titleMap, descriptionMap, type,
+			manualMembership, membershipRestriction, friendlyURL, site, active,
+			serviceContext);
 	}
 
 	/**
@@ -829,35 +857,11 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		return groupLocalService.updateFriendlyURL(groupId, friendlyURL);
 	}
 
-	/**
-	 * Updates the group.
-	 *
-	 * @param  groupId the primary key of the group
-	 * @param  parentGroupId the primary key of the parent group
-	 * @param  name the group's new name
-	 * @param  description the group's new description (optionally
-	 *         <code>null</code>)
-	 * @param  type the group's new type. For more information see {@link
-	 *         GroupConstants}.
-	 * @param  manualMembership whether manual membership is allowed for the
-	 *         group
-	 * @param  membershipRestriction the group's membership restriction. For
-	 *         more information see {@link GroupConstants}.
-	 * @param  friendlyURL the group's new friendlyURL (optionally
-	 *         <code>null</code>)
-	 * @param  active whether the group is active
-	 * @param  serviceContext the service context to be applied (optionally
-	 *         <code>null</code>). Can set the asset category IDs and asset tag
-	 *         names for the group.
-	 * @return the group
-	 * @throws PortalException if the user did not have permission to update the
-	 *         group, if a group with the primary key could not be found, if the
-	 *         friendly URL was invalid or could one not be created
-	 */
 	@Override
 	public Group updateGroup(
-			long groupId, long parentGroupId, String name, String description,
-			int type, boolean manualMembership, int membershipRestriction,
+			long groupId, long parentGroupId, Map<Locale, String> titleMap,
+			Map<Locale, String> descriptionMap, int type,
+			boolean manualMembership, int membershipRestriction,
 			String friendlyURL, boolean active, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -894,7 +898,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 				oldExpandoBridge.getAttributes();
 
 			group = groupLocalService.updateGroup(
-				groupId, parentGroupId, name, description, type,
+				groupId, parentGroupId, titleMap, descriptionMap, type,
 				manualMembership, membershipRestriction, friendlyURL, active,
 				serviceContext);
 
@@ -906,10 +910,58 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		}
 		else {
 			return groupLocalService.updateGroup(
-				groupId, parentGroupId, name, description, type,
+				groupId, parentGroupId, titleMap, descriptionMap, type,
 				manualMembership, membershipRestriction, friendlyURL, active,
 				serviceContext);
 		}
+	}
+
+	/**
+	 * Updates the group.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  parentGroupId the primary key of the parent group
+	 * @param  name the group's new name
+	 * @param  description the group's new description (optionally
+	 *         <code>null</code>)
+	 * @param  type the group's new type. For more information see {@link
+	 *         GroupConstants}.
+	 * @param  manualMembership whether manual membership is allowed for the
+	 *         group
+	 * @param  membershipRestriction the group's membership restriction. For
+	 *         more information see {@link GroupConstants}.
+	 * @param  friendlyURL the group's new friendlyURL (optionally
+	 *         <code>null</code>)
+	 * @param  active whether the group is active
+	 * @param  serviceContext the service context to be applied (optionally
+	 *         <code>null</code>). Can set the asset category IDs and asset tag
+	 *         names for the group.
+	 * @return the group
+	 * @throws PortalException if the user did not have permission to update the
+	 *         group, if a group with the primary key could not be found, if the
+	 *         friendly URL was invalid or could one not be created
+	 */
+	@Override
+	public Group updateGroup(
+			long groupId, long parentGroupId, String name, String description,
+			int type, boolean manualMembership, int membershipRestriction,
+			String friendlyURL, boolean active, ServiceContext serviceContext)
+		throws PortalException {
+
+		Locale locale = LocaleUtil.getSiteDefault();
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(locale, name);
+
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+
+		descriptionMap.put(locale, description);
+
+		return updateGroup(
+			groupId, parentGroupId, titleMap, descriptionMap, type,
+			manualMembership, membershipRestriction, friendlyURL, active,
+			serviceContext);
 	}
 
 	/**
