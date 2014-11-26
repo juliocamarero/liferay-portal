@@ -311,16 +311,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 				GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION;
 		}
 
-		if (className.equals(Group.class.getName())) {
-			if (!site && (liveGroupId == 0) &&
-				!name.equals(GroupConstants.CONTROL_PANEL)) {
-
-				throw new IllegalArgumentException();
-			}
-		}
-		else if (!className.equals(Company.class.getName()) &&
-				 !className.equals(Organization.class.getName()) &&
-				 className.startsWith("com.liferay.portal.model.")) {
+		if (!className.equals(Group.class.getName()) &&
+			!className.equals(Company.class.getName()) &&
+			!className.equals(Organization.class.getName()) &&
+			className.startsWith("com.liferay.portal.model.")) {
 
 			if (site) {
 				throw new IllegalArgumentException();
