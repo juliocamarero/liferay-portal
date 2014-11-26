@@ -79,6 +79,11 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 	public java.lang.String getIconURL(
 		com.liferay.portal.theme.ThemeDisplay themeDisplay);
 
+	public java.util.List<com.liferay.portal.model.Group> getInheritContentGroups();
+
+	public java.util.List<com.liferay.portal.model.Group> getInheritContentGroups(
+		boolean includeGroup);
+
 	public java.lang.String getLayoutRootNodeName(boolean privateLayout,
 		java.util.Locale locale);
 
