@@ -138,6 +138,64 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 
 		submitForm(form);
 	}
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />removePage',
+		function(box) {
+			var A = AUI();
+
+			var selectEl = A.one(box);
+
+			var currentValue = selectEl.val() || null;
+
+			Liferay.Util.removeItem(box);
+		},
+		['aui-base']
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />updateDisplayOrder',
+		function() {
+			document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'display_order';
+			document.<portlet:namespace />fm.<portlet:namespace />layoutIds.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />layoutIdsBox);
+
+			submitForm(document.<portlet:namespace />fm);
+		},
+		['liferay-util-list-fields']
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />updateStaging',
+		function() {
+			var A = AUI();
+
+			var selectEl = A.one('#<portlet:namespace />stagingType');
+
+			var currentValue = selectEl.val() || null;
+
+			var ok = false;
+
+			if (currentValue == 0) {
+				ok = confirm('<%= UnicodeLanguageUtil.format(request, "are-you-sure-you-want-to-deactivate-staging-for-x", liveGroup.getDescriptiveName(locale), false) %>');
+			}
+			else if (currentValue == 1) {
+				ok = confirm('<%= UnicodeLanguageUtil.format(request, "are-you-sure-you-want-to-activate-local-staging-for-x", liveGroup.getDescriptiveName(locale), false) %>');
+			}
+			else if (currentValue == 2) {
+				ok = confirm('<%= UnicodeLanguageUtil.format(request, "are-you-sure-you-want-to-activate-remote-staging-for-x", liveGroup.getDescriptiveName(locale), false) %>');
+			}
+
+			if (ok) {
+				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'staging';
+
+				submitForm(document.<portlet:namespace />fm);
+			}
+		},
+		['aui-base']
+	);
 </aui:script>
 
 <%!
