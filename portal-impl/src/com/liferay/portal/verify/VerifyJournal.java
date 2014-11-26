@@ -238,7 +238,7 @@ public class VerifyJournal extends VerifyProcess {
 	}
 
 	protected void updateTitle(
-			long groupId, long articleId, String content, String title)
+			long groupId, String articleId, String content, String title)
 		throws Exception {
 
 		try {
@@ -262,7 +262,7 @@ public class VerifyJournal extends VerifyProcess {
 				ps.setString(1, localize(languageId, title, "Title"));
 				ps.setString(2, title);
 				ps.setLong(3, groupId);
-				ps.setLong(4, articleId);
+				ps.setString(4, articleId);
 
 				ps.executeUpdate();
 			}
@@ -708,7 +708,7 @@ public class VerifyJournal extends VerifyProcess {
 
 			while (rs.next()) {
 				long groupId = rs.getLong("groupId");
-				long articleId = rs.getLong("articleId");
+				String articleId = rs.getString("articleId");
 				String content = rs.getString("content");
 				String title = GetterUtil.getString(rs.getString("title"));
 
