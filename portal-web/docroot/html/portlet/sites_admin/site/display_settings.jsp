@@ -38,13 +38,22 @@ else {
 
 boolean inheritLocales = GetterUtil.getBoolean(typeSettingsProperties.getProperty("inheritLocales"), true);
 
-LayoutSet publicLayoutSet = liveGroup.getPublicLayoutSet();
-LayoutSet privateLayoutSet = liveGroup.getPrivateLayoutSet();
-
 boolean disabledLocaleInput = false;
 
-if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayoutSetPrototypeLinkEnabled()) {
-	disabledLocaleInput = true;
+List<Group> sharingContentGroups = new ArrayList<Group>();
+
+sharingContentGroups.add(liveGroup);
+
+sharingContentGroups.addAll(GroupLocalServiceUtil.getGroups(liveGroup.getCompanyId(), liveGroup.getGroupId(), false, true));
+
+for (Group curGroup : sharingContentGroups) {
+	LayoutSet layoutSet = curGroup.getPublicLayoutSet();
+
+	if (layoutSet.isLayoutSetPrototypeLinkEnabled()) {
+		disabledLocaleInput = true;
+
+		break;
+	}
 }
 %>
 

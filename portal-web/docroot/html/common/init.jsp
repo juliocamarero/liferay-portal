@@ -34,6 +34,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <%@ page import="com.liferay.counter.service.CounterLocalServiceUtil" %><%@
+page import="com.liferay.portal.GroupFriendlyURLException" %><%@
 page import="com.liferay.portal.LocaleException" %><%@
 page import="com.liferay.portal.NoSuchLayoutException" %><%@
 page import="com.liferay.portal.NoSuchRoleException" %><%@

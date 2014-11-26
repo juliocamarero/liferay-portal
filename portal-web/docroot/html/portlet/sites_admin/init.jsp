@@ -18,10 +18,8 @@
 
 <%@ page import="com.liferay.portal.DuplicateGroupException" %><%@
 page import="com.liferay.portal.DuplicateTeamException" %><%@
-page import="com.liferay.portal.GroupFriendlyURLException" %><%@
 page import="com.liferay.portal.GroupNameException" %><%@
 page import="com.liferay.portal.GroupParentException" %><%@
-page import="com.liferay.portal.LayoutSetVirtualHostException" %><%@
 page import="com.liferay.portal.MembershipRequestCommentsException" %><%@
 page import="com.liferay.portal.NoSuchGroupException" %><%@
 page import="com.liferay.portal.NoSuchLayoutSetException" %><%@
@@ -40,7 +38,6 @@ page import="com.liferay.portal.security.auth.RemoteAuthException" %><%@
 page import="com.liferay.portal.security.membershippolicy.SiteMembershipPolicyUtil" %><%@
 page import="com.liferay.portal.service.permission.TeamPermissionUtil" %><%@
 page import="com.liferay.portal.util.CustomJspRegistryUtil" %><%@
-page import="com.liferay.portal.util.RobotsUtil" %><%@
 page import="com.liferay.portlet.backgroundtask.util.comparator.BackgroundTaskCreateDateComparator" %><%@
 page import="com.liferay.portlet.rolesadmin.search.GroupRoleChecker" %><%@
 page import="com.liferay.portlet.rolesadmin.search.RoleSearch" %><%@
