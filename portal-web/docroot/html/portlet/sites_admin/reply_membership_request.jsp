@@ -25,8 +25,6 @@ Group group = (Group)request.getAttribute(WebKeys.GROUP);
 
 long groupId = BeanParamUtil.getLong(group, request, "groupId");
 
-String friendlyURL = BeanParamUtil.getString(group, request, "friendlyURL");
-
 ActionUtil.getMembershipRequest(request);
 
 MembershipRequest membershipRequest = (MembershipRequest)request.getAttribute(WebKeys.MEMBERSHIP_REQUEST);
