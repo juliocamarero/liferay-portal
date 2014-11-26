@@ -25,7 +25,6 @@ Group group = layoutsAdminDisplayContext.getGroup();
 Group liveGroup = layoutsAdminDisplayContext.getLiveGroup();
 long groupId = layoutsAdminDisplayContext.getGroupId();
 long liveGroupId = layoutsAdminDisplayContext.getLiveGroupId();
-boolean privateLayout = layoutsAdminDisplayContext.isPrivateLayout();
 UnicodeProperties liveGroupTypeSettings = liveGroup.getTypeSettingsProperties();
 LayoutSet selLayoutSet = layoutsAdminDisplayContext.getSelLayoutSet();
 
@@ -33,22 +32,7 @@ String rootNodeName = layoutsAdminDisplayContext.getRootNodeName();
 
 PortletURL redirectURL = layoutsAdminDisplayContext.getRedirectURL();
 
-int pagesCount = 0;
-
-if (selGroup.isLayoutSetPrototype()) {
-	privateLayout = true;
-}
-
-if (privateLayout) {
-	if (group != null) {
-		pagesCount = group.getPrivateLayoutsPageCount();
-	}
-}
-else {
-	if (group != null) {
-		pagesCount = group.getPublicLayoutsPageCount();
-	}
-}
+int pagesCount = group.getPublicLayoutsPageCount();
 
 String[] mainSections = PropsValues.LAYOUT_SET_FORM_UPDATE;
 
@@ -56,8 +40,12 @@ if (!company.isSiteLogo()) {
 	mainSections = ArrayUtil.remove(mainSections, "logo");
 }
 
-if (group.isGuest()) {
+if (group.isGuest() || group.isInheritContent()) {
 	mainSections = ArrayUtil.remove(mainSections, "advanced");
+}
+
+if (group.isInheritContent()) {
+	mainSections = ArrayUtil.remove(mainSections, "site-template");
 }
 
 String[][] categorySections = {mainSections};
@@ -84,7 +72,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 			<portlet:renderURL var="addPagesURL">
 				<portlet:param name="struts_action" value="/layouts_admin/add_layout" />
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-				<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 			</portlet:renderURL>
 
 			<aui:nav-item href="<%= addPagesURL %>" iconCssClass="icon-plus" label="add-page" />
@@ -95,7 +82,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 				<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 				<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
-				<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 				<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
 			</portlet:renderURL>
 
@@ -105,7 +91,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 				<portlet:param name="struts_action" value="/layouts_admin/import_layouts" />
 				<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.VALIDATE %>" />
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-				<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
 				<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
 			</portlet:renderURL>
 
@@ -136,7 +121,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 	<aui:input name="liveGroupId" type="hidden" value="<%= liveGroupId %>" />
 	<aui:input name="stagingGroupId" type="hidden" value="<%= layoutsAdminDisplayContext.getStagingGroupId() %>" />
 	<aui:input name="selPlid" type="hidden" value="<%= layoutsAdminDisplayContext.getSelPlid() %>" />
-	<aui:input name="privateLayout" type="hidden" value="<%= privateLayout %>" />
 	<aui:input name="layoutSetId" type="hidden" value="<%= selLayoutSet.getLayoutSetId() %>" />
 	<aui:input name="<%= PortletDataHandlerKeys.SELECTED_LAYOUTS %>" type="hidden" />
 
@@ -158,6 +142,64 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 
 		submitForm(form);
 	}
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />removePage',
+		function(box) {
+			var A = AUI();
+
+			var selectEl = A.one(box);
+
+			var currentValue = selectEl.val() || null;
+
+			Liferay.Util.removeItem(box);
+		},
+		['aui-base']
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />updateDisplayOrder',
+		function() {
+			document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'display_order';
+			document.<portlet:namespace />fm.<portlet:namespace />layoutIds.value = Liferay.Util.listSelect(document.<portlet:namespace />fm.<portlet:namespace />layoutIdsBox);
+
+			submitForm(document.<portlet:namespace />fm);
+		},
+		['liferay-util-list-fields']
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />updateStaging',
+		function() {
+			var A = AUI();
+
+			var selectEl = A.one('#<portlet:namespace />stagingType');
+
+			var currentValue = selectEl.val() || null;
+
+			var ok = false;
+
+			if (currentValue == 0) {
+				ok = confirm('<%= UnicodeLanguageUtil.format(request, "are-you-sure-you-want-to-deactivate-staging-for-x", liveGroup.getDescriptiveName(locale), false) %>');
+			}
+			else if (currentValue == 1) {
+				ok = confirm('<%= UnicodeLanguageUtil.format(request, "are-you-sure-you-want-to-activate-local-staging-for-x", liveGroup.getDescriptiveName(locale), false) %>');
+			}
+			else if (currentValue == 2) {
+				ok = confirm('<%= UnicodeLanguageUtil.format(request, "are-you-sure-you-want-to-activate-remote-staging-for-x", liveGroup.getDescriptiveName(locale), false) %>');
+			}
+
+			if (ok) {
+				document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'staging';
+
+				submitForm(document.<portlet:namespace />fm);
+			}
+		},
+		['aui-base']
+	);
 </aui:script>
 
 <%!

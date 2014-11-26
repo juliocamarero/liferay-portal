@@ -265,6 +265,31 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public List<Group> getInheritContentGroups() {
+		return getInheritContentGroups(false);
+	}
+
+	@Override
+	public List<Group> getInheritContentGroups(boolean includeGroup) {
+		List<Group> sharingContentGroups = new ArrayList<Group>();
+
+		if (includeGroup) {
+			sharingContentGroups.add(this);
+		}
+
+		List<Group> groups = GroupLocalServiceUtil.getGroups(
+			getCompanyId(), getGroupId(), false);
+
+		for (Group group : groups) {
+			if (group.isInheritContent()) {
+				sharingContentGroups.add(group);
+			}
+		}
+
+		return sharingContentGroups;
+	}
+
+	@Override
 	public String getLayoutRootNodeName(boolean privateLayout, Locale locale) {
 		String pagesName = null;
 
