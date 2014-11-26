@@ -27,10 +27,13 @@ import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -61,7 +64,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.portlet.PortletPreferences;
@@ -86,7 +92,21 @@ public class VerifyJournal extends VerifyProcess {
 		verifyPermissionsAndAssets();
 		verifySearch();
 		verifyTree();
+		verifyTitle();
 		verifyURLTitle();
+	}
+
+	protected String localize(String languageId, String content, String key)
+		throws Exception {
+
+		Locale locale = LocaleUtil.fromLanguageId(languageId);
+
+		Map<Locale, String> localizationMap = new HashMap<Locale, String>();
+
+		localizationMap.put(locale, content);
+
+		return LocalizationUtil.updateLocalization(
+			localizationMap, StringPool.BLANK, key, languageId);
 	}
 
 	protected void updateDocumentLibraryElements(Element element) {
@@ -214,6 +234,41 @@ public class VerifyJournal extends VerifyProcess {
 			node.setText(
 				dynamicContentElement.getStringValue() + StringPool.AT +
 					groupId);
+		}
+	}
+
+	protected void updateTitle(
+			long groupId, String articleId, String content, String title)
+		throws Exception {
+
+		try {
+			Document document = SAXReaderUtil.read(title);
+
+			Element rootElement = document.getRootElement();
+		}
+		catch (DocumentException de) {
+			String languageId = LocalizationUtil.getDefaultLanguageId(content);
+
+			Connection con = null;
+			PreparedStatement ps = null;
+
+			try {
+				con = DataAccess.getUpgradeOptimizedConnection();
+
+				ps = con.prepareStatement(
+					"update JournalArticle set title = ? where title = ? and " +
+						"groupId = ? and articleId = ?");
+
+				ps.setString(1, localize(languageId, title, "Title"));
+				ps.setString(2, title);
+				ps.setLong(3, groupId);
+				ps.setString(4, articleId);
+
+				ps.executeUpdate();
+			}
+			finally {
+				DataAccess.cleanUp(con, ps);
+			}
 		}
 	}
 
@@ -630,6 +685,34 @@ public class VerifyJournal extends VerifyProcess {
 				String portletId = rs.getString("portletId");
 
 				verifyContentSearch(groupId, portletId);
+			}
+		}
+		finally {
+			DataAccess.cleanUp(con, ps, rs);
+		}
+	}
+
+	protected void verifyTitle() throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement(
+				"select distinct groupId, articleId, title, content from " +
+					"JournalArticle");
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				long groupId = rs.getLong("groupId");
+				String articleId = rs.getString("articleId");
+				String content = rs.getString("content");
+				String title = GetterUtil.getString(rs.getString("title"));
+
+				updateTitle(groupId, articleId, content, title);
 			}
 		}
 		finally {
