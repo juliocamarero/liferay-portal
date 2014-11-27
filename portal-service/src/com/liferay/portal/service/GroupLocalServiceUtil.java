@@ -77,10 +77,15 @@ public class GroupLocalServiceUtil {
 	<code>null</code>). Can set asset category IDs and asset tag
 	names for the group, and whether the group is for staging.
 	* @return the group
-	* @throws PortalException if a creator could not be found, if the group's
-	information was invalid, if a layout could not be found, or if a
-	valid friendly URL could not be created for the group
+	* @throws PortalException if a creator could not be found, if the
+	group's information was invalid, if a layout could not be
+	found, or if a valid friendly URL could not be created for
+	the group
+	* @deprecated As of 7.0.0, replaced by {@link #addGroup(long, long, String,
+	long, long, Map, Map, int, boolean, int, String, boolean,
+	boolean, ServiceContext)}
 	*/
+	@Deprecated
 	public static com.liferay.portal.model.Group addGroup(long userId,
 		long parentGroupId, java.lang.String className, long classPK,
 		long liveGroupId, java.lang.String name, java.lang.String description,
@@ -91,6 +96,21 @@ public class GroupLocalServiceUtil {
 		return getService()
 				   .addGroup(userId, parentGroupId, className, classPK,
 			liveGroupId, name, description, type, manualMembership,
+			membershipRestriction, friendlyURL, site, active, serviceContext);
+	}
+
+	public static com.liferay.portal.model.Group addGroup(long userId,
+		long parentGroupId, java.lang.String className, long classPK,
+		long liveGroupId,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		int type, boolean manualMembership, int membershipRestriction,
+		java.lang.String friendlyURL, boolean site, boolean active,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addGroup(userId, parentGroupId, className, classPK,
+			liveGroupId, titleMap, descriptionMap, type, manualMembership,
 			membershipRestriction, friendlyURL, site, active, serviceContext);
 	}
 
@@ -2399,7 +2419,10 @@ public class GroupLocalServiceUtil {
 	* @throws PortalException if a group with the primary key could not be
 	found or if the friendly URL was invalid or could one not be
 	created
+	* @deprecated As of 7.0.0, replaced by {@link #updateGroup(long, long, Map,
+	Map, int, boolean, int, String, boolean, ServiceContext)}
 	*/
+	@Deprecated
 	public static com.liferay.portal.model.Group updateGroup(long groupId,
 		long parentGroupId, java.lang.String name,
 		java.lang.String description, int type, boolean manualMembership,
@@ -2410,6 +2433,20 @@ public class GroupLocalServiceUtil {
 				   .updateGroup(groupId, parentGroupId, name, description,
 			type, manualMembership, membershipRestriction, friendlyURL, active,
 			serviceContext);
+	}
+
+	public static com.liferay.portal.model.Group updateGroup(long groupId,
+		long parentGroupId,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		int type, boolean manualMembership, int membershipRestriction,
+		java.lang.String friendlyURL, boolean active,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateGroup(groupId, parentGroupId, titleMap,
+			descriptionMap, type, manualMembership, membershipRestriction,
+			friendlyURL, active, serviceContext);
 	}
 
 	/**

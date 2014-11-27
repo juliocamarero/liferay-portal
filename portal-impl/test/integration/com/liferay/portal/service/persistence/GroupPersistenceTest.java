@@ -124,6 +124,8 @@ public class GroupPersistenceTest {
 
 		newGroup.setName(RandomTestUtil.randomString());
 
+		newGroup.setTitle(RandomTestUtil.randomString());
+
 		newGroup.setDescription(RandomTestUtil.randomString());
 
 		newGroup.setType(RandomTestUtil.nextInt());
@@ -163,6 +165,7 @@ public class GroupPersistenceTest {
 			newGroup.getLiveGroupId());
 		Assert.assertEquals(existingGroup.getTreePath(), newGroup.getTreePath());
 		Assert.assertEquals(existingGroup.getName(), newGroup.getName());
+		Assert.assertEquals(existingGroup.getTitle(), newGroup.getTitle());
 		Assert.assertEquals(existingGroup.getDescription(),
 			newGroup.getDescription());
 		Assert.assertEquals(existingGroup.getType(), newGroup.getType());
@@ -449,10 +452,10 @@ public class GroupPersistenceTest {
 			true, "uuid", true, "groupId", true, "companyId", true,
 			"creatorUserId", true, "classNameId", true, "classPK", true,
 			"parentGroupId", true, "liveGroupId", true, "treePath", true,
-			"name", true, "description", true, "type", true, "typeSettings",
-			true, "manualMembership", true, "membershipRestriction", true,
-			"friendlyURL", true, "site", true, "remoteStagingGroupCount", true,
-			"active", true);
+			"name", true, "title", true, "description", true, "type", true,
+			"typeSettings", true, "manualMembership", true,
+			"membershipRestriction", true, "friendlyURL", true, "site", true,
+			"remoteStagingGroupCount", true, "active", true);
 	}
 
 	@Test
@@ -724,6 +727,8 @@ public class GroupPersistenceTest {
 		group.setTreePath(RandomTestUtil.randomString());
 
 		group.setName(RandomTestUtil.randomString());
+
+		group.setTitle(RandomTestUtil.randomString());
 
 		group.setDescription(RandomTestUtil.randomString());
 
