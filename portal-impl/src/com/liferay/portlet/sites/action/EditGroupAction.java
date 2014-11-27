@@ -491,8 +491,8 @@ public class EditGroupAction extends PortletAction {
 			Group.class.getName(), actionRequest);
 
 		GroupServiceUtil.updateGroup(
-			groupId, group.getParentGroupId(), group.getName(),
-			group.getTitleMap(), group.getDescriptionMap(), group.getType(),
+			groupId, group.getParentGroupId(), group.getTitleMap(),
+			group.getDescriptionMap(), group.getType(),
 			group.isManualMembership(), group.getMembershipRestriction(),
 			group.getFriendlyURL(), active, serviceContext);
 	}
@@ -593,7 +593,6 @@ public class EditGroupAction extends PortletAction {
 
 			// Add group
 
-			name = ParamUtil.getString(actionRequest, "name");
 			titleMap = LocalizationUtil.getLocalizationMap(
 				actionRequest, "title");
 			descriptionMap = LocalizationUtil.getLocalizationMap(
@@ -605,10 +604,9 @@ public class EditGroupAction extends PortletAction {
 				actionRequest, "manualMembership");
 
 			liveGroup = GroupServiceUtil.addGroup(
-				parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, name,
-				titleMap, descriptionMap, type, manualMembership,
-				membershipRestriction, friendlyURL, true, active,
-				serviceContext);
+				parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, titleMap,
+				descriptionMap, type, manualMembership, membershipRestriction,
+				friendlyURL, true, active, serviceContext);
 
 			LiveUsers.joinGroup(
 				themeDisplay.getCompanyId(), liveGroup.getGroupId(), userId);
@@ -619,8 +617,6 @@ public class EditGroupAction extends PortletAction {
 
 			liveGroup = GroupLocalServiceUtil.getGroup(liveGroupId);
 
-			name = ParamUtil.getString(
-				actionRequest, "name", liveGroup.getName());
 			titleMap = LocalizationUtil.getLocalizationMap(
 				actionRequest, "title", liveGroup.getTitleMap());
 			descriptionMap = LocalizationUtil.getLocalizationMap(
@@ -636,9 +632,9 @@ public class EditGroupAction extends PortletAction {
 				liveGroup.isManualMembership());
 
 			liveGroup = GroupServiceUtil.updateGroup(
-				liveGroupId, parentGroupId, name, titleMap, descriptionMap,
-				type, manualMembership, membershipRestriction, friendlyURL,
-				active, serviceContext);
+				liveGroupId, parentGroupId, titleMap, descriptionMap, type,
+				manualMembership, membershipRestriction, friendlyURL, active,
+				serviceContext);
 
 			if (type == GroupConstants.TYPE_SITE_OPEN) {
 				List<MembershipRequest> membershipRequests =

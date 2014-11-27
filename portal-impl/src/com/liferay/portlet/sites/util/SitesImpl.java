@@ -101,6 +101,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1409,11 +1410,16 @@ public class SitesImpl implements Sites {
 				targetLayout.isPrivateLayout());
 
 		if (!targetScopeLayout.hasScopeGroup()) {
+			Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+			titleMap.put(
+				LanguageUtil.getLocale(languageId),
+				targetLayout.getName(languageId));
+
 			GroupLocalServiceUtil.addGroup(
 				userId, GroupConstants.DEFAULT_PARENT_GROUP_ID,
 				Layout.class.getName(), targetLayout.getPlid(),
-				GroupConstants.DEFAULT_LIVE_GROUP_ID,
-				targetLayout.getName(languageId), null, 0, true,
+				GroupConstants.DEFAULT_LIVE_GROUP_ID, titleMap, null, 0, true,
 				GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null, false,
 				true, null);
 		}

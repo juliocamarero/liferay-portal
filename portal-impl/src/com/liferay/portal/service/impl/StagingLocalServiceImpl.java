@@ -512,7 +512,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		Group stagingGroup = groupLocalService.addGroup(
 			userId, parentGroupId, liveGroup.getClassName(),
 			liveGroup.getClassPK(), liveGroup.getGroupId(),
-			liveGroup.getDescriptiveName(), liveGroup.getDescription(),
+			liveGroup.getTitleMap(), liveGroup.getDescriptionMap(),
 			liveGroup.getType(), liveGroup.isManualMembership(),
 			liveGroup.getMembershipRestriction(), liveGroup.getFriendlyURL(),
 			false, liveGroup.isActive(), serviceContext);
