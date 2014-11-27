@@ -31,9 +31,9 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.impl.GroupModelImpl;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.test.LiferayIntegrationTestRule;
 import com.liferay.portal.test.PersistenceTestRule;
 import com.liferay.portal.test.TransactionalTestRule;
-import com.liferay.portal.test.runners.LiferayIntegrationJUnitTestRunner;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.test.RandomTestUtil;
 
@@ -41,8 +41,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-
-import org.junit.runner.RunWith;
 
 import java.io.Serializable;
 
@@ -56,10 +54,10 @@ import java.util.Set;
 /**
  * @generated
  */
-@RunWith(LiferayIntegrationJUnitTestRunner.class)
 public class GroupPersistenceTest {
 	@Rule
-	public final AggregateTestRule aggregateTestRule = new AggregateTestRule(PersistenceTestRule.INSTANCE,
+	public final AggregateTestRule aggregateTestRule = new AggregateTestRule(new LiferayIntegrationTestRule(),
+			PersistenceTestRule.INSTANCE,
 			new TransactionalTestRule(Propagation.REQUIRED));
 
 	@After
@@ -142,6 +140,8 @@ public class GroupPersistenceTest {
 
 		newGroup.setRemoteStagingGroupCount(RandomTestUtil.nextInt());
 
+		newGroup.setInheritContent(RandomTestUtil.randomBoolean());
+
 		newGroup.setActive(RandomTestUtil.randomBoolean());
 
 		_groups.add(_persistence.update(newGroup));
@@ -179,6 +179,8 @@ public class GroupPersistenceTest {
 		Assert.assertEquals(existingGroup.getSite(), newGroup.getSite());
 		Assert.assertEquals(existingGroup.getRemoteStagingGroupCount(),
 			newGroup.getRemoteStagingGroupCount());
+		Assert.assertEquals(existingGroup.getInheritContent(),
+			newGroup.getInheritContent());
 		Assert.assertEquals(existingGroup.getActive(), newGroup.getActive());
 	}
 
@@ -414,6 +416,21 @@ public class GroupPersistenceTest {
 	}
 
 	@Test
+	public void testCountByC_P_S_I() {
+		try {
+			_persistence.countByC_P_S_I(RandomTestUtil.nextLong(),
+				RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(),
+				RandomTestUtil.randomBoolean());
+
+			_persistence.countByC_P_S_I(0L, 0L, RandomTestUtil.randomBoolean(),
+				RandomTestUtil.randomBoolean());
+		}
+		catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
 	public void testFindByPrimaryKeyExisting() throws Exception {
 		Group newGroup = addGroup();
 
@@ -454,7 +471,7 @@ public class GroupPersistenceTest {
 			"name", true, "description", true, "type", true, "typeSettings",
 			true, "manualMembership", true, "membershipRestriction", true,
 			"friendlyURL", true, "site", true, "remoteStagingGroupCount", true,
-			"active", true);
+			"inheritContent", true, "active", true);
 	}
 
 	@Test
@@ -742,6 +759,8 @@ public class GroupPersistenceTest {
 		group.setSite(RandomTestUtil.randomBoolean());
 
 		group.setRemoteStagingGroupCount(RandomTestUtil.nextInt());
+
+		group.setInheritContent(RandomTestUtil.randomBoolean());
 
 		group.setActive(RandomTestUtil.randomBoolean());
 
