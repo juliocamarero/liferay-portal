@@ -50,10 +50,10 @@ MembershipRequest membershipRequest = (MembershipRequest)request.getAttribute(We
 
 	<aui:model-context bean="<%= membershipRequest %>" model="<%= MembershipRequest.class %>" />
 
-	<c:if test="<%= Validator.isNotNull(group.getDescription()) %>">
+	<c:if test="<%= Validator.isNotNull(group.getDescription(locale)) %>">
 		<aui:field-wrapper label="description">
 			<p>
-				<%= HtmlUtil.escape(group.getDescription()) %>
+				<%= HtmlUtil.escape(group.getDescription(locale)) %>
 			</p>
 		</aui:field-wrapper>
 	</c:if>

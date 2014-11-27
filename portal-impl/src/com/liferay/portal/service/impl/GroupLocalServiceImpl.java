@@ -1135,7 +1135,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	public String getGroupDescriptiveName(Group group, Locale locale)
 		throws PortalException {
 
-		String name = group.getName();
+		String name = group.getTitle(locale);
 
 		if (group.isCompany() && !group.isCompanyStagingGroup()) {
 			name = LanguageUtil.get(locale, "global");
@@ -3108,8 +3108,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			userId, companyGroup.getGroupId(), null, null,
 			Group.class.getName(), group.getGroupId(), null, 0,
 			assetCategoryIds, assetTagNames, false, null, null, null, null,
-			group.getDescriptiveName(), group.getDescription(), null, null,
-			null, 0, 0, null, false);
+			group.getDescriptiveName(), group.getDescriptionCurrentValue(),
+			null, null, null, 0, 0, null, false);
 	}
 
 	/**
@@ -3651,8 +3651,18 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			}
 
 			boolean containsName = matches(name, names);
-			boolean containsDescription = matches(
-				group.getDescription(), descriptions);
+			boolean containsDescription = false;
+
+			for (Map.Entry<Locale, String> description :
+					group.getDescriptionMap().entrySet()) {
+
+				containsDescription = matches(
+					description.getValue(), descriptions);
+
+				if (containsDescription) {
+					break;
+				}
+			}
 
 			if ((andOperator && (!containsName || !containsDescription)) ||
 				(!andOperator && !containsName && !containsDescription)) {
