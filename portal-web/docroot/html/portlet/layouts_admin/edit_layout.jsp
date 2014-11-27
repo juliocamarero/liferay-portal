@@ -128,9 +128,57 @@ boolean showAddAction = ParamUtil.getBoolean(request, "showAddAction", true);
 			</c:if>
 			<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selLayout, ActionKeys.DELETE) %>">
 				<aui:nav-item iconCssClass="icon-remove" id="deleteLayout" label="delete" />
+
+				<aui:script use="aui-base">
+					A.one('#<portlet:namespace />deleteLayout').on(
+						'click',
+						function() {
+							<portlet:namespace />saveLayout('<%= Constants.DELETE %>');
+						}
+					);
+				</aui:script>
 			</c:if>
 			<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selLayout, ActionKeys.UPDATE) %>">
 				<aui:nav-item iconCssClass="icon-list-alt" id="copyApplications" label="copy-applications" />
+
+				<aui:script use="liferay-util-window">
+					A.one('#<portlet:namespace />copyApplications').on(
+						'click',
+						function() {
+							var content = A.one('#<portlet:namespace />copyPortletsFromPage');
+
+							var popUp = Liferay.Util.Window.getWindow(
+								{
+									dialog: {
+										bodyContent: content.show()
+									},
+									title: '<%= UnicodeLanguageUtil.get(request, "copy-applications") %>'
+								}
+							);
+
+							popUp.show();
+
+							var submitButton = popUp.get('contentBox').one('#<portlet:namespace />copySubmitButton');
+
+							if (submitButton) {
+								submitButton.on(
+									'click',
+									function(event) {
+										popUp.hide();
+
+										var form = A.one('#<portlet:namespace />fm');
+
+										if (form) {
+											form.append(content);
+										}
+
+										<portlet:namespace />saveLayout();
+									}
+								);
+							}
+						}
+					);
+				</aui:script>
 			</c:if>
 		</aui:nav>
 	</aui:nav-bar>
@@ -219,52 +267,6 @@ boolean showAddAction = ParamUtil.getBoolean(request, "showAddAction", true);
 						<liferay-ui:message arguments="<%= HtmlUtil.escape(userGroup.getName()) %>" key="this-page-cannot-be-modified-because-it-belongs-to-the-user-group-x" translateArguments="<%= false %>" />
 					</div>
 				</c:if>
-
-				<aui:script use="liferay-util-window">
-					A.one('#<portlet:namespace />copyApplications').on(
-						'click',
-						function() {
-							var content = A.one('#<portlet:namespace />copyPortletsFromPage');
-
-							var popUp = Liferay.Util.Window.getWindow(
-								{
-									dialog: {
-										bodyContent: content.show()
-									},
-									title: '<%= UnicodeLanguageUtil.get(request, "copy-applications") %>'
-								}
-							);
-
-							popUp.show();
-
-							var submitButton = popUp.get('contentBox').one('#<portlet:namespace />copySubmitButton');
-
-							if (submitButton) {
-								submitButton.on(
-									'click',
-									function(event) {
-										popUp.hide();
-
-										var form = A.one('#<portlet:namespace />fm');
-
-										if (form) {
-											form.append(content);
-										}
-
-										<portlet:namespace />saveLayout();
-									}
-								);
-							}
-						}
-					);
-
-					A.one('#<portlet:namespace />deleteLayout').on(
-						'click',
-						function() {
-							<portlet:namespace />saveLayout('<%= Constants.DELETE %>');
-						}
-					);
-				</aui:script>
 			</c:if>
 
 			<c:if test="<%= !selGroup.hasLocalOrRemoteStagingGroup() || selGroup.isStagingGroup() %>">
