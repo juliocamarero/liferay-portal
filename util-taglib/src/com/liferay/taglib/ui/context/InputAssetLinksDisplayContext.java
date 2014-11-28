@@ -148,12 +148,10 @@ public class InputAssetLinksDisplayContext {
 		return _eventName;
 	}
 
-	public String getGroupDescriptiveName(AssetEntry assetEntry)
-		throws PortalException {
-
+	public String getGroupTitle(AssetEntry assetEntry) throws PortalException {
 		Group group = GroupLocalServiceUtil.getGroup(assetEntry.getGroupId());
 
-		return group.getDescriptiveName(_themeDisplay.getLocale());
+		return group.getTitle(_themeDisplay.getLocale());
 	}
 
 	public String getRandomNamespace() {

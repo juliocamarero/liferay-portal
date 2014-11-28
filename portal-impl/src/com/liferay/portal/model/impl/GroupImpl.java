@@ -176,14 +176,20 @@ public class GroupImpl extends GroupBaseImpl {
 		return new ArrayList<Group>(descendants);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getTitle()}
+	 */
 	@Override
 	public String getDescriptiveName() throws PortalException {
-		return getDescriptiveName(LocaleUtil.getMostRelevantLocale());
+		return getTitle();
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getTitle(Locale)}
+	 */
 	@Override
 	public String getDescriptiveName(Locale locale) throws PortalException {
-		return GroupLocalServiceUtil.getGroupDescriptiveName(this, locale);
+		return getTitle(locale);
 	}
 
 	@Override
@@ -475,7 +481,7 @@ public class GroupImpl extends GroupBaseImpl {
 			sb.append(StringPool.SPACE);
 			sb.append(StringPool.OPEN_PARENTHESIS);
 			sb.append(
-				HtmlUtil.escape(getDescriptiveName(themeDisplay.getLocale())));
+				HtmlUtil.escape(getTitle(themeDisplay.getLocale())));
 			sb.append(StringPool.CLOSE_PARENTHESIS);
 
 			return sb.toString();
@@ -487,7 +493,7 @@ public class GroupImpl extends GroupBaseImpl {
 			sb.append(StringPool.SPACE);
 			sb.append(StringPool.OPEN_PARENTHESIS);
 			sb.append(
-				HtmlUtil.escape(getDescriptiveName(themeDisplay.getLocale())));
+				HtmlUtil.escape(getTitle(themeDisplay.getLocale())));
 			sb.append(StringPool.CLOSE_PARENTHESIS);
 
 			return sb.toString();
@@ -497,7 +503,7 @@ public class GroupImpl extends GroupBaseImpl {
 		}
 		else {
 			return HtmlUtil.escape(
-				getDescriptiveName(themeDisplay.getLocale()));
+				getTitle(themeDisplay.getLocale()));
 		}
 	}
 

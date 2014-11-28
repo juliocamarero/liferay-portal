@@ -450,9 +450,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		descriptionMap.put(locale, description);
 
 		return addGroup(
-			userId, parentGroupId, className, classPK, liveGroupId,
-			titleMap, descriptionMap, type, manualMembership,
-			membershipRestriction, friendlyURL, site, active, serviceContext);
+			userId, parentGroupId, className, classPK, liveGroupId, titleMap,
+			descriptionMap, type, manualMembership, membershipRestriction,
+			friendlyURL, site, active, serviceContext);
 	}
 
 	/**

@@ -83,7 +83,7 @@
 
 		<liferay-ui:search-container-column-text
 			name="scope"
-			value="<%= HtmlUtil.escape(inputAssetLinksDisplayContext.getGroupDescriptiveName(assetLinkEntry)) %>"
+			value="<%= HtmlUtil.escape(inputAssetLinksDisplayContext.getGroupTitle(assetLinkEntry)) %>"
 		/>
 
 		<liferay-ui:search-container-column-text>
