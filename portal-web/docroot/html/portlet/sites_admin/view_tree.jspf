@@ -77,9 +77,9 @@ if (group != null) {
 		<c:if test="<%= group != null %>">
 			<%@ include file="/html/portlet/sites_admin/view_site_info.jspf" %>
 
-			<c:if test="<%= Validator.isNotNull(group.getDescription()) %>">
+			<c:if test="<%= Validator.isNotNull(group.getDescription(locale)) %>">
 				<div class="description">
-					<%= HtmlUtil.escape(group.getDescription()) %>
+					<%= HtmlUtil.escape(group.getDescription(locale)) %>
 				</div>
 			</c:if>
 

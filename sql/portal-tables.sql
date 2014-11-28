@@ -790,6 +790,7 @@ create table Group_ (
 	liveGroupId LONG,
 	treePath STRING null,
 	name VARCHAR(150) null,
+	title STRING null,
 	description STRING null,
 	type_ INTEGER,
 	typeSettings TEXT null,

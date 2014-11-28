@@ -32,6 +32,7 @@ import com.liferay.portal.service.GroupServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.StagingLocalServiceUtil;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -57,10 +58,14 @@ public class GroupTestUtil {
 			return scopeGroup;
 		}
 
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(
+			LocaleUtil.getSiteDefault(), String.valueOf(layout.getPlid()));
+
 		return GroupLocalServiceUtil.addGroup(
 			userId, parentGroupId, Layout.class.getName(), layout.getPlid(),
-			GroupConstants.DEFAULT_LIVE_GROUP_ID,
-			String.valueOf(layout.getPlid()), null, 0, true,
+			GroupConstants.DEFAULT_LIVE_GROUP_ID, titleMap, null, 0, true,
 			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null, false, true,
 			null);
 	}
@@ -85,11 +90,19 @@ public class GroupTestUtil {
 		int membershipRestriction =
 			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION;
 
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+
+		descriptionMap.put(LocaleUtil.getSiteDefault(), description);
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(LocaleUtil.getSiteDefault(), name);
+
 		return GroupLocalServiceUtil.addGroup(
 			userId, parentGroupId, null, 0,
-			GroupConstants.DEFAULT_LIVE_GROUP_ID, name, description, type,
-			manualMembership, membershipRestriction, friendlyURL, site, active,
-			ServiceContextTestUtil.getServiceContext());
+			GroupConstants.DEFAULT_LIVE_GROUP_ID, titleMap, descriptionMap,
+			type, manualMembership, membershipRestriction, friendlyURL, site,
+			active, ServiceContextTestUtil.getServiceContext());
 	}
 
 	public static Group addGroup(long parentGroupId, String name)
@@ -136,9 +149,17 @@ public class GroupTestUtil {
 			serviceContext = ServiceContextTestUtil.getServiceContext();
 		}
 
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+
+		descriptionMap.put(LocaleUtil.getSiteDefault(), description);
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(LocaleUtil.getSiteDefault(), name);
+
 		return GroupServiceUtil.addGroup(
-			parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, name,
-			description, type, manualMembership, membershipRestriction,
+			parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, titleMap,
+			descriptionMap, type, manualMembership, membershipRestriction,
 			friendlyURL, site, active, serviceContext);
 	}
 

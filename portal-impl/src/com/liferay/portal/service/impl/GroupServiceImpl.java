@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -51,10 +52,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -69,39 +72,13 @@ import java.util.Set;
  */
 public class GroupServiceImpl extends GroupServiceBaseImpl {
 
-	/**
-	 * Adds a group.
-	 *
-	 * @param  parentGroupId the primary key of the parent group
-	 * @param  liveGroupId the primary key of the live group
-	 * @param  name the entity's name
-	 * @param  description the group's description (optionally
-	 *         <code>null</code>)
-	 * @param  type the group's type. For more information see {@link
-	 *         GroupConstants}.
-	 * @param  manualMembership whether manual membership is allowed for the
-	 *         group
-	 * @param  membershipRestriction the group's membership restriction. For
-	 *         more information see {@link GroupConstants}.
-	 * @param  friendlyURL the group's friendlyURL (optionally
-	 *         <code>null</code>)
-	 * @param  site whether the group is to be associated with a main site
-	 * @param  active whether the group is active
-	 * @param  serviceContext the service context to be applied (optionally
-	 *         <code>null</code>). Can set the asset category IDs and asset tag
-	 *         names for the group, and can set whether the group is for staging
-	 * @return the group
-	 * @throws PortalException if the user did not have permission to add the
-	 *         group, if a creator could not be found, if the group's
-	 *         information was invalid, if a layout could not be found, or if a
-	 *         valid friendly URL could not be created for the group
-	 */
 	@Override
 	public Group addGroup(
-			long parentGroupId, long liveGroupId, String name,
-			String description, int type, boolean manualMembership,
-			int membershipRestriction, String friendlyURL, boolean site,
-			boolean active, ServiceContext serviceContext)
+			long parentGroupId, long liveGroupId, Map<Locale, String> titleMap,
+			Map<Locale, String> descriptionMap, int type,
+			boolean manualMembership, int membershipRestriction,
+			String friendlyURL, boolean site, boolean active,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		if (parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) {
@@ -115,9 +92,9 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		}
 
 		Group group = groupLocalService.addGroup(
-			getUserId(), parentGroupId, null, 0, liveGroupId, name, description,
-			type, manualMembership, membershipRestriction, friendlyURL, site,
-			active, serviceContext);
+			getUserId(), parentGroupId, null, 0, liveGroupId, titleMap,
+			descriptionMap, type, manualMembership, membershipRestriction,
+			friendlyURL, site, active, serviceContext);
 
 		if (site) {
 			SiteMembershipPolicyUtil.verifyPolicy(group);
@@ -127,59 +104,59 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 	}
 
 	/**
-	 * Adds the group using the group default live group ID.
+	 * Adds a group.
 	 *
 	 * @param      parentGroupId the primary key of the parent group
+	 * @param      liveGroupId the primary key of the live group
 	 * @param      name the entity's name
 	 * @param      description the group's description (optionally
 	 *             <code>null</code>)
 	 * @param      type the group's type. For more information see {@link
 	 *             GroupConstants}.
-	 * @param      friendlyURL the group's friendlyURL
+	 * @param      manualMembership whether manual membership is allowed for the
+	 *             group
+	 * @param      membershipRestriction the group's membership restriction. For
+	 *             more information see {@link GroupConstants}.
+	 * @param      friendlyURL the group's friendlyURL (optionally
+	 *             <code>null</code>)
 	 * @param      site whether the group is to be associated with a main site
 	 * @param      active whether the group is active
 	 * @param      serviceContext the service context to be applied (optionally
-	 *             <code>null</code>). Can set asset category IDs and asset tag
-	 *             names for the group, and can set whether the group is for
+	 *             <code>null</code>). Can set the asset category IDs and asset
+	 *             tag names for the group, and can set whether the group is for
 	 *             staging
 	 * @return     the group
 	 * @throws     PortalException if the user did not have permission to add
 	 *             the group, if a creator could not be found, if the group's
 	 *             information was invalid, if a layout could not be found, or
 	 *             if a valid friendly URL could not be created for the group
-	 * @deprecated As of 6.2.0, replaced by {@link #addGroup(long, long, String,
-	 *             String, int, boolean, int, String, boolean, boolean,
+	 * @deprecated As of 7.0.0, replaced by {@link #addGroup(long, long, Map,
+	 *             Map, int, boolean, int, String, boolean, boolean,
 	 *             ServiceContext)}
 	 */
 	@Deprecated
 	@Override
 	public Group addGroup(
-			long parentGroupId, String name, String description, int type,
-			String friendlyURL, boolean site, boolean active,
-			ServiceContext serviceContext)
+			long parentGroupId, long liveGroupId, String name,
+			String description, int type, boolean manualMembership,
+			int membershipRestriction, String friendlyURL, boolean site,
+			boolean active, ServiceContext serviceContext)
 		throws PortalException {
 
-		return addGroup(
-			parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, name,
-			description, type, true,
-			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, friendlyURL, site,
-			active, serviceContext);
-	}
+		Locale locale = LocaleUtil.getSiteDefault();
 
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #addGroup(long, String,
-	 *             String, int, String, boolean, boolean, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public Group addGroup(
-			String name, String description, int type, String friendlyURL,
-			boolean site, boolean active, ServiceContext serviceContext)
-		throws PortalException {
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(locale, name);
+
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+
+		descriptionMap.put(locale, description);
 
 		return addGroup(
-			GroupConstants.DEFAULT_PARENT_GROUP_ID, name, description, type,
-			friendlyURL, site, active, serviceContext);
+			parentGroupId, liveGroupId, titleMap, descriptionMap, type,
+			manualMembership, membershipRestriction, friendlyURL, site, active,
+			serviceContext);
 	}
 
 	/**
@@ -391,27 +368,6 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 	}
 
 	/**
-	 * Returns a range of all the site groups for which the user has control
-	 * panel access.
-	 *
-	 * @param      portlets the portlets to manage
-	 * @param      max the upper bound of the range of groups to consider (not
-	 *             inclusive)
-	 * @return     the range of site groups for which the user has Control Panel
-	 *             access
-	 * @throws     PortalException if a portal exception occurred
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             #getManageableSiteGroups(Collection, int)}
-	 */
-	@Deprecated
-	@Override
-	public List<Group> getManageableSites(Collection<Portlet> portlets, int max)
-		throws PortalException {
-
-		return getManageableSiteGroups(portlets, max);
-	}
-
-	/**
 	 * Returns the groups associated with the organizations.
 	 *
 	 * @param  organizations the organizations
@@ -499,136 +455,6 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			userId, start, end);
 
 		return filterGroups(groups);
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #getUserSitesGroups(long,
-	 *             String[], boolean, int)}
-	 */
-	@Deprecated
-	@Override
-	public List<Group> getUserPlaces(
-			long userId, String[] classNames, boolean includeControlPanel,
-			int max)
-		throws PortalException {
-
-		return getUserSitesGroups(userId, classNames, includeControlPanel, max);
-	}
-
-	/**
-	 * Returns the user's groups &quot;sites&quot; associated with the group
-	 * entity class names, including the Control Panel group if the user is
-	 * permitted to view the Control Panel.
-	 *
-	 * <ul>
-	 * <li>
-	 * Class name &quot;User&quot; includes the user's layout set
-	 * group.
-	 * </li>
-	 * <li>
-	 * Class name &quot;Organization&quot; includes the user's
-	 * immediate organization groups and inherited organization groups.
-	 * </li>
-	 * <li>
-	 * Class name &quot;Group&quot; includes the user's immediate
-	 * organization groups and site groups.
-	 * </li>
-	 * <li>
-	 * A <code>classNames</code>
-	 * value of <code>null</code> includes the user's layout set group,
-	 * organization groups, inherited organization groups, and site groups.
-	 * </li>
-	 * </ul>
-	 *
-	 * @param      userId the primary key of the user
-	 * @param      classNames the group entity class names (optionally
-	 *             <code>null</code>). For more information see {@link
-	 *             #getUserSitesGroups(long, String[], int)}.
-	 * @param      max the maximum number of groups to return
-	 * @return     the user's groups &quot;sites&quot;
-	 * @throws     PortalException if a portal exception occurred
-	 * @deprecated As of 6.2.0, replaced by {@link #getUserSitesGroups(long,
-	 *             String[], int)}
-	 */
-	@Deprecated
-	@Override
-	public List<Group> getUserPlaces(long userId, String[] classNames, int max)
-		throws PortalException {
-
-		return getUserSitesGroups(userId, classNames, max);
-	}
-
-	/**
-	 * Returns the guest or current user's groups &quot;sites&quot; associated
-	 * with the group entity class names, including the Control Panel group if
-	 * the user is permitted to view the Control Panel.
-	 *
-	 * <ul>
-	 * <li>
-	 * Class name &quot;User&quot; includes the user's layout set
-	 * group.
-	 * </li>
-	 * <li>
-	 * Class name &quot;Organization&quot; includes the user's
-	 * immediate organization groups and inherited organization groups.
-	 * </li>
-	 * <li>
-	 * Class name &quot;Group&quot; includes the user's immediate
-	 * organization groups and site groups.
-	 * </li>
-	 * <li>
-	 * A <code>classNames</code>
-	 * value of <code>null</code> includes the user's layout set group,
-	 * organization groups, inherited organization groups, and site groups.
-	 * </li>
-	 * </ul>
-	 *
-	 * @param      classNames the group entity class names (optionally
-	 *             <code>null</code>). For more information see {@link
-	 *             #getUserSitesGroups(String[], int)}.
-	 * @param      max the maximum number of groups to return
-	 * @return     the user's groups &quot;sites&quot;
-	 * @throws     PortalException if a portal exception occurred
-	 * @deprecated As of 6.2.0, replaced by {@link #getUserSitesGroups(String[],
-	 *             int)}
-	 */
-	@Deprecated
-	@Override
-	public List<Group> getUserPlaces(String[] classNames, int max)
-		throws PortalException {
-
-		return getUserSitesGroups(classNames, max);
-	}
-
-	/**
-	 * Returns the number of the guest or current user's groups
-	 * &quot;sites&quot; associated with the group entity class names, including
-	 * the Control Panel group if the user is permitted to view the Control
-	 * Panel.
-	 *
-	 * @return     the number of user's groups &quot;sites&quot;
-	 * @throws     PortalException if a portal exception occurred
-	 * @deprecated As of 6.2.0, replaced by {@link #getUserSitesGroupsCount()}
-	 */
-	@Deprecated
-	@Override
-	public int getUserPlacesCount() throws PortalException {
-		return getUserSitesGroupsCount();
-	}
-
-	/**
-	 * Returns the guest or current user's layout set group, organization
-	 * groups, inherited organization groups, and site groups.
-	 *
-	 * @return     the user's layout set group, organization groups, and
-	 *             inherited organization groups, and site groups
-	 * @throws     PortalException if a portal exception occurred
-	 * @deprecated As of 6.2.0, replaced by {@link #getUserSitesGroups}
-	 */
-	@Deprecated
-	@Override
-	public List<Group> getUserSites() throws PortalException {
-		return getUserSitesGroups();
 	}
 
 	@Override
@@ -1036,35 +862,11 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		return groupLocalService.updateFriendlyURL(groupId, friendlyURL);
 	}
 
-	/**
-	 * Updates the group.
-	 *
-	 * @param  groupId the primary key of the group
-	 * @param  parentGroupId the primary key of the parent group
-	 * @param  name the group's new name
-	 * @param  description the group's new description (optionally
-	 *         <code>null</code>)
-	 * @param  type the group's new type. For more information see {@link
-	 *         GroupConstants}.
-	 * @param  manualMembership whether manual membership is allowed for the
-	 *         group
-	 * @param  membershipRestriction the group's membership restriction. For
-	 *         more information see {@link GroupConstants}.
-	 * @param  friendlyURL the group's new friendlyURL (optionally
-	 *         <code>null</code>)
-	 * @param  active whether the group is active
-	 * @param  serviceContext the service context to be applied (optionally
-	 *         <code>null</code>). Can set the asset category IDs and asset tag
-	 *         names for the group.
-	 * @return the group
-	 * @throws PortalException if the user did not have permission to update the
-	 *         group, if a group with the primary key could not be found, if the
-	 *         friendly URL was invalid or could one not be created
-	 */
 	@Override
 	public Group updateGroup(
-			long groupId, long parentGroupId, String name, String description,
-			int type, boolean manualMembership, int membershipRestriction,
+			long groupId, long parentGroupId, Map<Locale, String> titleMap,
+			Map<Locale, String> descriptionMap, int type,
+			boolean manualMembership, int membershipRestriction,
 			String friendlyURL, boolean active, ServiceContext serviceContext)
 		throws PortalException {
 
@@ -1101,7 +903,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 				oldExpandoBridge.getAttributes();
 
 			group = groupLocalService.updateGroup(
-				groupId, parentGroupId, name, description, type,
+				groupId, parentGroupId, titleMap, descriptionMap, type,
 				manualMembership, membershipRestriction, friendlyURL, active,
 				serviceContext);
 
@@ -1113,10 +915,62 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		}
 		else {
 			return groupLocalService.updateGroup(
-				groupId, parentGroupId, name, description, type,
+				groupId, parentGroupId, titleMap, descriptionMap, type,
 				manualMembership, membershipRestriction, friendlyURL, active,
 				serviceContext);
 		}
+	}
+
+	/**
+	 * Updates the group.
+	 *
+	 * @param      groupId the primary key of the group
+	 * @param      parentGroupId the primary key of the parent group
+	 * @param      name the group's new name
+	 * @param      description the group's new description (optionally
+	 *             <code>null</code>)
+	 * @param      type the group's new type. For more information see {@link
+	 *             GroupConstants}.
+	 * @param      manualMembership whether manual membership is allowed for the
+	 *             group
+	 * @param      membershipRestriction the group's membership restriction. For
+	 *             more information see {@link GroupConstants}.
+	 * @param      friendlyURL the group's new friendlyURL (optionally
+	 *             <code>null</code>)
+	 * @param      active whether the group is active
+	 * @param      serviceContext the service context to be applied (optionally
+	 *             <code>null</code>). Can set the asset category IDs and asset
+	 *             tag names for the group.
+	 * @return     the group
+	 * @throws     PortalException if the user did not have permission to update
+	 *             the group, if a group with the primary key could not be
+	 *             found, if the friendly URL was invalid or could one not be
+	 *             created
+	 * @deprecated As of 7.0.0, replaced by {@link #updateGroup(long, long, Map,
+	 *             Map, int, boolean, int, String, boolean, ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public Group updateGroup(
+			long groupId, long parentGroupId, String name, String description,
+			int type, boolean manualMembership, int membershipRestriction,
+			String friendlyURL, boolean active, ServiceContext serviceContext)
+		throws PortalException {
+
+		Locale locale = LocaleUtil.getSiteDefault();
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(locale, name);
+
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+
+		descriptionMap.put(locale, description);
+
+		return updateGroup(
+			groupId, parentGroupId, titleMap, descriptionMap, type,
+			manualMembership, membershipRestriction, friendlyURL, active,
+			serviceContext);
 	}
 
 	/**

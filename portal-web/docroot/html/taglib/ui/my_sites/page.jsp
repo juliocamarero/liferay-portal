@@ -40,7 +40,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(classNames, includeControlPanel,
 		portletURL.setWindowState(WindowState.NORMAL);
 
 		for (Group mySiteGroup : mySiteGroups) {
-			String escapedSiteName = HtmlUtil.escape(mySiteGroup.getName());
+			String escapedSiteName = HtmlUtil.escape(mySiteGroup.getTitle(locale));
 
 			boolean showPublicSite = mySiteGroup.isShowSite(permissionChecker, false);
 			boolean showPrivateSite = mySiteGroup.isShowSite(permissionChecker, true);

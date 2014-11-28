@@ -871,13 +871,18 @@ public class LayoutImporter {
 					scopeGroup = scopeLayout.getScopeGroup();
 				}
 				else {
-					String name = String.valueOf(scopeLayout.getPlid());
+					Map<Locale, String> titleMap =
+						new HashMap<Locale, String>();
+
+					titleMap.put(
+						LocaleUtil.getSiteDefault(),
+						String.valueOf(scopeLayout.getPlid()));
 
 					scopeGroup = GroupLocalServiceUtil.addGroup(
 						portletDataContext.getUserId(null),
 						GroupConstants.DEFAULT_PARENT_GROUP_ID,
 						Layout.class.getName(), scopeLayout.getPlid(),
-						GroupConstants.DEFAULT_LIVE_GROUP_ID, name, null, 0,
+						GroupConstants.DEFAULT_LIVE_GROUP_ID, titleMap, null, 0,
 						true, GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION,
 						null, false, true, null);
 				}

@@ -112,11 +112,15 @@ public class PortalImplActualURLTest {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext();
 
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(
+			LocaleUtil.getSiteDefault(), "Test " + RandomTestUtil.nextInt());
+
 		_group = GroupLocalServiceUtil.addGroup(
 			TestPropsValues.getUserId(), GroupConstants.DEFAULT_PARENT_GROUP_ID,
-			StringPool.BLANK, 0, GroupConstants.DEFAULT_LIVE_GROUP_ID,
-			"Test " + RandomTestUtil.nextInt(), StringPool.BLANK,
-			GroupConstants.TYPE_SITE_OPEN, true,
+			StringPool.BLANK, 0, GroupConstants.DEFAULT_LIVE_GROUP_ID, titleMap,
+			null, GroupConstants.TYPE_SITE_OPEN, true,
 			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, StringPool.BLANK,
 			true, true, serviceContext);
 
@@ -148,7 +152,7 @@ public class PortalImplActualURLTest {
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			layout.getTypeSettings());
 
-		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+		titleMap = new HashMap<Locale, String>();
 
 		titleMap.put(LocaleUtil.US, "Test Journal Article");
 
