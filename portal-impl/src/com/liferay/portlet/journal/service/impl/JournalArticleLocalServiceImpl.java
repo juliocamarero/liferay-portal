@@ -354,7 +354,7 @@ public class JournalArticleLocalServiceImpl
 
 		JournalArticle article = journalArticlePersistence.create(id);
 
-		Locale locale = getArticleDefaultLocale(content, serviceContext);
+		Locale locale = getArticleDefaultLocale(content);
 
 		String title = titleMap.get(locale);
 
@@ -4731,7 +4731,7 @@ public class JournalArticleLocalServiceImpl
 	 * @param  serviceContext the service context to be applied. Can set the
 	 *         modification date, expando bridge attributes, asset category IDs,
 	 *         asset tag names, asset link entry IDs, workflow actions, the
-	 *         "defaultLanguageId" and "urlTitle" attributes, and can set
+	 *         and "urlTitle" attributes, and can set
 	 *         whether to add the default command update for the web content
 	 *         article. With respect to social activities, by setting the
 	 *         service context's command to {@link
@@ -4917,7 +4917,7 @@ public class JournalArticleLocalServiceImpl
 	 * @param  serviceContext the service context to be applied. Can set the
 	 *         modification date, expando bridge attributes, asset category IDs,
 	 *         asset tag names, asset link entry IDs, workflow actions, the
-	 *         "defaultLanguageId" and "urlTitle" attributes, and can set
+	 *         and "urlTitle" attributes, and can set
 	 *         whether to add the default command update for the web content
 	 *         article. With respect to social activities, by setting the
 	 *         service context's command to {@link
@@ -5049,7 +5049,7 @@ public class JournalArticleLocalServiceImpl
 			article.setSmallImageId(latestArticle.getSmallImageId());
 		}
 
-		Locale locale = getArticleDefaultLocale(content, serviceContext);
+		Locale locale = getArticleDefaultLocale(content);
 
 		String title = titleMap.get(locale);
 
@@ -5171,7 +5171,7 @@ public class JournalArticleLocalServiceImpl
 	 * @param  serviceContext the service context to be applied. Can set the
 	 *         modification date, expando bridge attributes, asset category IDs,
 	 *         asset tag names, asset link entry IDs, workflow actions, the
-	 *         "defaultLanguageId" and "urlTitle" attributes, and can set
+	 *         and "urlTitle" attributes, and can set
 	 *         whether to add the default command update for the web content
 	 *         article. With respect to social activities, by setting the
 	 *         service context's command to {@link
@@ -5271,7 +5271,7 @@ public class JournalArticleLocalServiceImpl
 
 		User user = userPersistence.findByPrimaryKey(oldArticle.getUserId());
 
-		Locale defaultLocale = getArticleDefaultLocale(content, serviceContext);
+		Locale defaultLocale = getArticleDefaultLocale(content);
 
 		if (incrementVersion) {
 			double newVersion = MathUtil.format(oldVersion + 0.1, 1, 1);
@@ -6478,15 +6478,9 @@ public class JournalArticleLocalServiceImpl
 		}
 	}
 
-	protected Locale getArticleDefaultLocale(
-		String content, ServiceContext serviceContext) {
-
-		String defaultLanguageId = ParamUtil.getString(
-			serviceContext, "defaultLanguageId");
-
-		if (Validator.isNull(defaultLanguageId)) {
-			defaultLanguageId = LocalizationUtil.getDefaultLanguageId(content);
-		}
+	protected Locale getArticleDefaultLocale(String content) {
+		String defaultLanguageId = LocalizationUtil.getDefaultLanguageId(
+			content);
 
 		if (Validator.isNotNull(defaultLanguageId)) {
 			return LocaleUtil.fromLanguageId(defaultLanguageId);
