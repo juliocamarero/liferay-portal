@@ -341,9 +341,5 @@ request.setAttribute("edit_article.jsp-defaultLanguageId", defaultLanguageId);
 </c:if>
 
 <%!
-private String _getSectionJsp(String name) {
-	return TextFormatter.format(name, TextFormatter.N);
-}
-
 private static final String[] _CATEGORY_NAMES = {""};
 %>
