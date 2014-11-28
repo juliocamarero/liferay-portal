@@ -229,7 +229,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		String name = null;
 
 		if (titleMap != null) {
-			name = titleMap.get(LocaleUtil.getSiteDefault());
+			name = titleMap.get(LocaleUtil.getDefault());
 		}
 
 		String friendlyName = name;
@@ -439,7 +439,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		Locale locale = LocaleUtil.getSiteDefault();
+		Locale locale = LocaleUtil.getDefault();
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
@@ -506,7 +506,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
-			titleMap.put(LocaleUtil.getSiteDefault(), name);
+			titleMap.put(LocaleUtil.getDefault(), name);
 
 			groupLocalService.addGroup(
 				defaultUserId, GroupConstants.DEFAULT_PARENT_GROUP_ID,
@@ -574,7 +574,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 				Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
-				titleMap.put(LocaleUtil.getSiteDefault(), name);
+				titleMap.put(LocaleUtil.getDefault(), name);
 
 				group = groupLocalService.addGroup(
 					defaultUserId, GroupConstants.DEFAULT_PARENT_GROUP_ID,
@@ -1140,7 +1140,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	public String getGroupDescriptiveName(Group group, Locale locale)
 		throws PortalException {
 
-		String name = group.getTitle(locale);
+		String name = group.getName();
 
 		if (group.isCompany() && !group.isCompanyStagingGroup()) {
 			name = LanguageUtil.get(locale, "global");
@@ -3113,8 +3113,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			userId, companyGroup.getGroupId(), null, null,
 			Group.class.getName(), group.getGroupId(), null, 0,
 			assetCategoryIds, assetTagNames, false, null, null, null, null,
-			group.getDescriptiveName(), group.getDescriptionCurrentValue(),
-			null, null, null, 0, 0, null, false);
+			group.getTitle(), group.getDescription(), null, null, null, 0, 0,
+			null, false);
 	}
 
 	/**
@@ -3179,7 +3179,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		String name = null;
 
 		if (titleMap != null) {
-			name = titleMap.get(LocaleUtil.getSiteDefault());
+			name = titleMap.get(LocaleUtil.getDefault());
 		}
 
 		if ((classNameId <= 0) || className.equals(Group.class.getName())) {
@@ -3288,7 +3288,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			String friendlyURL, boolean active, ServiceContext serviceContext)
 		throws PortalException {
 
-		Locale locale = LocaleUtil.getSiteDefault();
+		Locale locale = LocaleUtil.getDefault();
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
@@ -3658,19 +3658,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 				continue;
 			}
 
-			boolean containsName = matches(name, names);
-			boolean containsDescription = false;
-
-			for (Map.Entry<Locale, String> description :
-					group.getDescriptionMap().entrySet()) {
-
-				containsDescription = matches(
-					description.getValue(), descriptions);
-
-				if (containsDescription) {
-					break;
-				}
-			}
+			boolean containsName = matches(group.getTitleCurrentValue(), names);
+			boolean containsDescription = matches(
+				group.getDescriptionCurrentValue(), descriptions);
 
 			if ((andOperator && (!containsName || !containsDescription)) ||
 				(!andOperator && !containsName && !containsDescription)) {

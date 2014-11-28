@@ -143,7 +143,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			boolean active, ServiceContext serviceContext)
 		throws PortalException {
 
-		Locale locale = LocaleUtil.getSiteDefault();
+		Locale locale = LocaleUtil.getDefault();
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
@@ -957,7 +957,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			String friendlyURL, boolean active, ServiceContext serviceContext)
 		throws PortalException {
 
-		Locale locale = LocaleUtil.getSiteDefault();
+		Locale locale = LocaleUtil.getDefault();
 
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 
