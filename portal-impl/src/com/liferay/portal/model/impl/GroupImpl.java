@@ -566,6 +566,40 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public String getTitle() {
+		String value = super.getTitle();
+
+		if (Validator.isNull(value)) {
+			try {
+				value = getDescriptiveName();
+			}
+			catch (PortalException pe) {
+				_log.error(pe);
+			}
+		}
+
+		return value;
+	}
+
+	@Override
+	public String getTitle(String languageId) {
+		String value = super.getTitle(languageId);
+
+		if (Validator.isNull(value)) {
+			Locale locale = LanguageUtil.getLocale(languageId);
+
+			try {
+				value = getDescriptiveName(locale);
+			}
+			catch (PortalException pe) {
+				_log.error(pe);
+			}
+		}
+
+		return value;
+	}
+
+	@Override
 	public String getTypeLabel() {
 		return GroupConstants.getTypeLabel(getType());
 	}
