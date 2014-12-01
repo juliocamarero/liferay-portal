@@ -828,16 +828,6 @@ public class JournalArticleFinderImpl
 					sql, "(groupId = ?) AND", StringPool.BLANK);
 			}
 
-			if (ddmStructureKey.equals(
-					String.valueOf(
-						JournalArticleConstants.CLASSNAME_ID_DEFAULT))) {
-
-				sql = StringUtil.replace(
-					sql, "(DDMStructureKey = ?)",
-					"((DDMStructureKey = ?) OR (DDMStructureKey = '') OR " +
-						"(DDMStructureKey IS NULL))");
-			}
-
 			if (inlineSQLHelper) {
 				sql = InlineSQLHelperUtil.replacePermissionCheck(
 					sql, JournalArticle.class.getName(),
@@ -1184,17 +1174,6 @@ public class JournalArticleFinderImpl
 			if (groupId <= 0) {
 				sql = StringUtil.replace(
 					sql, "(JournalArticle.groupId = ?) AND", StringPool.BLANK);
-			}
-
-			if (ddmStructureKey.equals(
-					String.valueOf(
-						JournalArticleConstants.CLASSNAME_ID_DEFAULT))) {
-
-				sql = StringUtil.replace(
-					sql, "(JournalArticle.DDMStructureKey = ?)",
-					"((JournalArticle.DDMStructureKey = ?) OR " +
-						"(JournalArticle.DDMStructureKey = '') OR" +
-							"(JournalArticle.DDMStructureKey IS NULL))");
 			}
 
 			if (inlineSQLHelper) {
