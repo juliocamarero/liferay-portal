@@ -197,7 +197,6 @@ Group selGroup = layoutsAdminDisplayContext.getSelGroup();
 				<liferay-ui:layouts-tree
 					groupId="<%= layoutsAdminDisplayContext.getGroupId() %>"
 					portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
-					privateLayout="<%= layoutsAdminDisplayContext.isPrivateLayout() %>"
 					rootNodeName="<%= layoutsAdminDisplayContext.getRootNodeName() %>"
 					selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
 					selectedLayoutIds="<%= selectedLayoutIds %>"
