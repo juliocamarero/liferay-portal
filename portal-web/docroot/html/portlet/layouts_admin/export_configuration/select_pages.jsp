@@ -53,7 +53,6 @@ Map<String, String[]> parameterMap = (Map<String, String[]>)GetterUtil.getObject
 				groupId="<%= groupId %>"
 				incomplete="<%= false %>"
 				portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
-				privateLayout="<%= Boolean.FALSE %>"
 				rootNodeName="<%= layoutsAdminDisplayContext.getRootNodeName() %>"
 				selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
 				selectableTree="<%= true %>"
