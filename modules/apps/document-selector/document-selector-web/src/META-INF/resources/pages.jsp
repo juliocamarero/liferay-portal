@@ -70,25 +70,6 @@ if (group.getPrivateLayoutsPageCount() > 0) {
 			</div>
 		</liferay-ui:section>
 	</c:if>
-
-	<c:if test="<%= group.getPrivateLayoutsPageCount() > 0 %>">
-		<liferay-ui:section>
-			<div>
-				<liferay-ui:layouts-tree
-					checkContentDisplayPage="<%= checkContentDisplayPage %>"
-					draggableTree="<%= false %>"
-					groupId="<%= groupId %>"
-					portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
-					privateLayout="<%= true %>"
-					rootNodeName="<%= layoutsAdminDisplayContext.getRootNodeName() %>"
-					saveState="<%= false %>"
-					selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
-					selectedLayoutIds="<%= selectedLayoutIds %>"
-					treeId="treeContainerPrivatePages"
-				/>
-			</div>
-		</liferay-ui:section>
-	</c:if>
 </liferay-ui:tabs>
 
 <div class="alert" id="<portlet:namespace />selectPageMessage">
