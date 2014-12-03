@@ -355,16 +355,18 @@ public class EditLayoutsAction extends PortletAction {
 
 	protected void addGroup(ActionRequest actionRequest) throws Exception {
 		long parentGroupId = ParamUtil.getLong(actionRequest, "parentGroupId");
-		String name = ParamUtil.getString(actionRequest, "name");
-		String description = ParamUtil.getString(actionRequest, "description");
+		Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
+			actionRequest, "name");
+		Map<Locale, String> descriptionMap =
+			LocalizationUtil.getLocalizationMap(actionRequest, "description");
 		String friendlyURL = ParamUtil.getString(actionRequest, "friendlyURL");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
 		GroupServiceUtil.addGroup(
-			parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, name,
-			description, GroupConstants.TYPE_SITE_OPEN, true,
+			parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, nameMap,
+			descriptionMap, GroupConstants.TYPE_SITE_OPEN, true,
 			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, friendlyURL, false,
 			true, true, serviceContext);
 	}
