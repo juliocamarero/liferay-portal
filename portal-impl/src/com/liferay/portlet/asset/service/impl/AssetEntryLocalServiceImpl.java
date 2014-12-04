@@ -610,7 +610,9 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			AssetRendererFactoryRegistryUtil.
 				getAssetRendererFactoryByClassNameId(classNameId);
 
-		entry.setListable(assetRendererFactory.isListable(classPK));
+		if (assetRendererFactory != null) {
+			entry.setListable(assetRendererFactory.isListable(classPK));
+		}
 
 		// Categories
 
