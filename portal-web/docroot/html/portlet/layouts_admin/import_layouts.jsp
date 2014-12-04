@@ -18,7 +18,6 @@
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId");
-boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 boolean validate = ParamUtil.getBoolean(request, "validate", true);
 
@@ -34,7 +33,7 @@ String[] tempFileNames = LayoutServiceUtil.getTempFileNames(groupId, ExportImpor
 
 	<liferay-ui:header
 		backURL="<%= backURL %>"
-		title='<%= privateLayout ? LanguageUtil.get(request, "import-private-pages") : LanguageUtil.get(request, "import-public-pages") %>'
+		title="import-pages"
 	/>
 </c:if>
 

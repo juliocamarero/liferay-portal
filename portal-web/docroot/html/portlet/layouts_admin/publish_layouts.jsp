@@ -94,26 +94,16 @@ if (liveGroup.isStaged() || cmd.equals(Constants.PUBLISH_TO_REMOTE)) {
 
 long selPlid = ParamUtil.getLong(request, "selPlid", LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
-Layout selLayout = null;
+Layout selLayout = LayoutLocalServiceUtil.fetchLayout(selPlid);
 
-try {
-	selLayout = LayoutLocalServiceUtil.getLayout(selPlid);
-
-	if (selLayout.isPrivateLayout()) {
-		tabs1 = "private-pages";
-	}
-}
-catch (NoSuchLayoutException nsle) {
-}
-
-treeId = treeId + privateLayout + layoutSetBranchId;
+treeId = treeId + layoutSetBranchId;
 
 long[] selectedLayoutIds = null;
 
 String openNodes = SessionTreeJSClicks.getOpenNodes(request, treeId + "SelectedNode");
 
 if (openNodes == null) {
-	selectedLayoutIds = ExportImportHelperUtil.getAllLayoutIds(stagingGroupId, privateLayout);
+	selectedLayoutIds = ExportImportHelperUtil.getAllLayoutIds(stagingGroupId, false);
 }
 else {
 	selectedLayoutIds = GetterUtil.getLongValues(StringUtil.split(openNodes, ','));
@@ -131,7 +121,7 @@ portletURL.setParameter("struts_action", "/layouts_admin/publish_layouts");
 portletURL.setParameter("closeRedirect", closeRedirect);
 portletURL.setParameter("groupId", String.valueOf(stagingGroupId));
 portletURL.setParameter("stagingGroupId", String.valueOf(stagingGroupId));
-portletURL.setParameter("privateLayout", String.valueOf(privateLayout));
+portletURL.setParameter("privateLayout", Boolean.FALSE.toString());
 
 PortletURL renderURL = renderResponse.createRenderURL();
 
@@ -149,7 +139,7 @@ renderURL.setParameter("closeRedirect", closeRedirect);
 renderURL.setParameter("groupId", String.valueOf(stagingGroupId));
 renderURL.setParameter("layoutSetBranchId", String.valueOf(layoutSetBranchId));
 renderURL.setParameter("layoutSetBranchName", layoutSetBranchName);
-renderURL.setParameter("privateLayout", String.valueOf(privateLayout));
+renderURL.setParameter("privateLayout", Boolean.FALSE.toString());
 
 response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 %>
@@ -338,7 +328,7 @@ else if (!quickPublish) {
 										<liferay-util:param name="<%= Constants.CMD %>" value="<%= Constants.PUBLISH %>" />
 										<liferay-util:param name="groupId" value="<%= String.valueOf(stagingGroupId) %>" />
 										<liferay-util:param name="layoutSetBranchId" value="<%= String.valueOf(layoutSetBranchId) %>" />
-										<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+										<liferay-util:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 										<liferay-util:param name="treeId" value="<%= treeId %>" />
 										<liferay-util:param name="selectedLayoutIds" value="<%= StringUtil.merge(selectedLayoutIds) %>" />
 									</liferay-util:include>
@@ -384,7 +374,7 @@ else if (!quickPublish) {
 				<liferay-util:include page="/html/portlet/layouts_admin/publish_layouts_configurations.jsp">
 					<liferay-util:param name="groupId" value="<%= String.valueOf(stagingGroupId) %>" />
 					<liferay-util:param name="localPublishing" value="<%= String.valueOf(localPublishing) %>" />
-					<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+					<liferay-util:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 				</liferay-util:include>
 			</div>
 		</liferay-ui:section>
@@ -415,7 +405,7 @@ else if (!quickPublish) {
 
 			<liferay-util:include page="/html/portlet/layouts_admin/scheduled_publishing_events.jsp">
 				<liferay-util:param name="groupId" value="<%= String.valueOf(targetGroupId) %>" />
-				<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+				<liferay-util:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 				<liferay-util:param name="destinationName" value="<%= localPublishing ? DestinationNames.LAYOUTS_LOCAL_PUBLISHER : DestinationNames.LAYOUTS_REMOTE_PUBLISHER %>" />
 			</liferay-util:include>
 		</liferay-ui:section>
@@ -455,7 +445,7 @@ else if (!quickPublish) {
 		<portlet:param name="layoutSetBranchName" value="<%= layoutSetBranchName %>" />
 		<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
 		<portlet:param name="localPublishing" value="<%= String.valueOf(localPublishing) %>" />
-		<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+		<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 		<portlet:param name="quickPublish" value="<%= String.valueOf(quickPublish) %>" />
 	</liferay-portlet:resourceURL>
 

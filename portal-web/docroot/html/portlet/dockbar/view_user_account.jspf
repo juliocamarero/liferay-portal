@@ -100,16 +100,6 @@
 						</li>
 					</c:if>
 
-					<c:if test="<%= mySiteGroup.getPrivateLayoutsPageCount() > 0 %>">
-						<li class="my-sites-menu private-site">
-							<a href="<%= HtmlUtil.escapeHREF(mySiteGroup.getDisplayURL(themeDisplay, true)) %>">
-								<span class="site-name"><liferay-ui:message key="my-dashboard" /></span>
-
-								<span class="badge site-type"><liferay-ui:message key="private" /></span>
-							</a>
-						</li>
-					</c:if>
-
 				<%
 				}
 				%>

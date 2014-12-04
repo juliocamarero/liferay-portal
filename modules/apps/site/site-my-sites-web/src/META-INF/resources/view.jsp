@@ -110,9 +110,6 @@ request.setAttribute("view.jsp-tabs1", tabs1);
 			if (group.getPublicLayoutsPageCount() > 0) {
 				rowURL = group.getDisplayURL(themeDisplay, false);
 			}
-			else if (tabs1.equals("my-sites") && (group.getPrivateLayoutsPageCount() > 0)) {
-				rowURL = group.getDisplayURL(themeDisplay, true);
-			}
 			%>
 
 			<liferay-ui:search-container-column-text

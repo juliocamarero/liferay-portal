@@ -33,44 +33,29 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 </c:if>
 
 <%
-String tabs1Names = "";
+boolean checkContentDisplayPage = ParamUtil.getBoolean(request, "checkContentDisplayPage");
+String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
 
-if (group.getPublicLayoutsPageCount() > 0) {
-	tabs1Names += "public-pages,";
-}
-
-if (group.getPrivateLayoutsPageCount() > 0) {
-	tabs1Names += "private-pages";
-}
+LayoutsAdminDisplayContext layoutsAdminDisplayContext = new LayoutsAdminDisplayContext(request, liferayPortletResponse);
 %>
 
-<liferay-ui:tabs names="<%= tabs1Names %>" refresh="<%= false %>">
-
-	<%
-	boolean checkContentDisplayPage = ParamUtil.getBoolean(request, "checkContentDisplayPage");
-	String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
-
-	LayoutsAdminDisplayContext layoutsAdminDisplayContext = new LayoutsAdminDisplayContext(request, liferayPortletResponse);
-	%>
-
-	<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
-		<liferay-ui:section>
-			<div>
-				<liferay-ui:layouts-tree
-					checkContentDisplayPage="<%= checkContentDisplayPage %>"
-					draggableTree="<%= false %>"
-					groupId="<%= groupId %>"
-					portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
-					rootNodeName="<%= layoutsAdminDisplayContext.getRootNodeName() %>"
-					saveState="<%= false %>"
-					selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
-					selectedLayoutIds="<%= selectedLayoutIds %>"
-					treeId="treeContainerPublicPages"
-				/>
-			</div>
-		</liferay-ui:section>
-	</c:if>
-</liferay-ui:tabs>
+<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
+	<liferay-ui:section>
+		<div>
+			<liferay-ui:layouts-tree
+				checkContentDisplayPage="<%= checkContentDisplayPage %>"
+				draggableTree="<%= false %>"
+				groupId="<%= groupId %>"
+				portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
+				rootNodeName="<%= layoutsAdminDisplayContext.getRootNodeName() %>"
+				saveState="<%= false %>"
+				selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
+				selectedLayoutIds="<%= selectedLayoutIds %>"
+				treeId="treeContainerPages"
+			/>
+		</div>
+	</liferay-ui:section>
+</c:if>
 
 <div class="alert" id="<portlet:namespace />selectPageMessage">
 
@@ -172,11 +157,7 @@ if (group.getPrivateLayoutsPageCount() > 0) {
 	};
 
 	<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
-		bindTreeUI('treeContainerPublicPagesOutput');
-	</c:if>
-
-	<c:if test="<%= group.getPrivateLayoutsPageCount() > 0 %>">
-		bindTreeUI('treeContainerPrivatePagesOutput');
+		bindTreeUI('treeContainerPagesOutput');
 	</c:if>
 
 	<%
