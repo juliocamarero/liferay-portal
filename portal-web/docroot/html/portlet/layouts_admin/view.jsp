@@ -77,28 +77,6 @@ Group selGroup = layoutsAdminDisplayContext.getSelGroup();
 		</c:if>
 
 		<%
-		String tabs1URL = String.valueOf(layoutsAdminDisplayContext.getRedirectURL());
-
-		if (liveGroup.isUser()) {
-			PortletURL userTabs1URL = renderResponse.createRenderURL();
-
-			userTabs1URL.setParameter("struts_action", "/my_pages/edit_layouts");
-			userTabs1URL.setParameter("tabs1", layoutsAdminDisplayContext.getTabs1());
-			userTabs1URL.setParameter("backURL", layoutsAdminDisplayContext.getBackURL());
-			userTabs1URL.setParameter("groupId", String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()));
-
-			tabs1URL = userTabs1URL.toString();
-		}
-		%>
-
-		<liferay-ui:tabs
-			names="<%= layoutsAdminDisplayContext.getTabs1Names() %>"
-			param="tabs1"
-			url="<%= tabs1URL %>"
-			value="<%= layoutsAdminDisplayContext.getTabs1() %>"
-		/>
-
-		<%
 		PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, TextFormatter.format(layoutsAdminDisplayContext.getTabs1(), TextFormatter.O)), String.valueOf(layoutsAdminDisplayContext.getRedirectURL()));
 		%>
 
