@@ -132,7 +132,7 @@ request.setAttribute("control_panel.jsp-ppid", ppid);
 												<%@ include file="/html/portal/layout/view/control_panel_site_selector.jspf" %>
 											</h1>
 
-											<c:if test="<%= group.hasPrivateLayouts() || group.hasPublicLayouts() %>">
+											<c:if test="<%= group.hasPublicLayouts() %>">
 												<ul class="visit-links">
 													<li><liferay-ui:message key="visit" />:</li>
 
@@ -141,35 +141,12 @@ request.setAttribute("control_panel.jsp-ppid", ppid);
 
 													portletURL.setParameter("struts_action", "/my_sites/view");
 													portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+													portletURL.setParameter("privateLayout", Boolean.FALSE.toString());
 													portletURL.setPortletMode(PortletMode.VIEW);
 													portletURL.setWindowState(WindowState.NORMAL);
 													%>
 
-													<c:choose>
-														<c:when test="<%= group.hasPrivateLayouts() && group.hasPublicLayouts() %>">
-
-															<%
-															portletURL.setParameter("privateLayout", Boolean.FALSE.toString());
-															%>
-
-															<li><a href="<%= portletURL.toString() %>"><liferay-ui:message key="public-pages" /></a></li>
-															<li class="divider"></li>
-
-															<%
-															portletURL.setParameter("privateLayout", Boolean.TRUE.toString());
-															%>
-
-															<li><a href="<%= portletURL.toString() %>"><liferay-ui:message key="private-pages" /></a></li>
-														</c:when>
-														<c:otherwise>
-
-															<%
-															portletURL.setParameter("privateLayout", group.hasPrivateLayouts() ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
-															%>
-
-															<li><a href="<%= portletURL.toString() %>"><liferay-ui:message key="site-pages" /></a></li>
-														</c:otherwise>
-													</c:choose>
+													<li><a href="<%= portletURL.toString() %>"><liferay-ui:message key="site-pages" /></a></li>
 												</ul>
 											</c:if>
 										</div>

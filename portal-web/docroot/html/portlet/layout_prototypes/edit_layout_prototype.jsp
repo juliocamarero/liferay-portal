@@ -69,7 +69,7 @@ request.setAttribute("edit_layout_prototype.jsp-redirect", redirect);
 				<liferay-portlet:actionURL portletName="<%= PortletKeys.SITE_REDIRECTOR %>" var="viewURL">
 					<portlet:param name="struts_action" value="/my_sites/view" />
 					<portlet:param name="groupId" value="<%= String.valueOf(layoutPrototype.getGroupId()) %>" />
-					<portlet:param name="privateLayout" value="<%= Boolean.TRUE.toString() %>" />
+					<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 				</liferay-portlet:actionURL>
 
 				<liferay-ui:icon

@@ -34,12 +34,12 @@ String defaultRange = null;
 if (type.equals(Constants.EXPORT)) {
 	defaultRange = ExportImportDateUtil.RANGE_ALL;
 
-	dateRange = ExportImportDateUtil.getDateRange(renderRequest, liveGroupId, privateLayout, 0, null, defaultRange);
+	dateRange = ExportImportDateUtil.getDateRange(renderRequest, liveGroupId, false, 0, null, defaultRange);
 }
 else {
 	defaultRange = ExportImportDateUtil.RANGE_FROM_LAST_PUBLISH_DATE;
 
-	dateRange = ExportImportDateUtil.getDateRange(renderRequest, stagingGroupId, privateLayout, 0, null, defaultRange);
+	dateRange = ExportImportDateUtil.getDateRange(renderRequest, stagingGroupId, false, 0, null, defaultRange);
 }
 
 Date startDate = dateRange.getStartDate();

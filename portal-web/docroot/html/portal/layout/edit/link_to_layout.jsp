@@ -17,7 +17,7 @@
 <%@ include file="/html/portal/layout/edit/init.jsp" %>
 
 <aui:input name="TypeSettingsProperties--groupId--" type="hidden" value="<%= (selLayout == null) ? StringPool.BLANK : selLayout.getGroupId() %>" />
-<aui:input name="TypeSettingsProperties--privateLayout--" type="hidden" value="<%= (selLayout == null) ? StringPool.BLANK : selLayout.isPrivateLayout() %>" />
+<aui:input name="TypeSettingsProperties--privateLayout--" type="hidden" value="<%= false %>" />
 
 <%
 long linkToLayoutId = 0;
