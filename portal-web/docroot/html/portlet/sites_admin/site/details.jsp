@@ -70,6 +70,42 @@ if (liveGroup != null) {
 else if (group != null) {
 	typeSettingsProperties = group.getTypeSettingsProperties();
 }
+
+long parentGroupId = ParamUtil.getLong(request, "parentGroupSearchContainerPrimaryKeys", (group != null) ? group.getParentGroupId() : GroupConstants.DEFAULT_PARENT_GROUP_ID);
+
+if (parentGroupId <= 0) {
+	parentGroupId = GroupConstants.DEFAULT_PARENT_GROUP_ID;
+
+	if (group != null) {
+		parentGroupId = liveGroup.getParentGroupId();
+	}
+}
+
+Group parentGroup = null;
+
+if ((group == null) && (parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) && !permissionChecker.isCompanyAdmin()) {
+	List<Group> manageableGroups = new ArrayList<Group>();
+
+	for (Group curGroup : user.getGroups()) {
+		if (GroupPermissionUtil.contains(permissionChecker, curGroup, ActionKeys.MANAGE_SUBGROUPS)) {
+			manageableGroups.add(curGroup);
+		}
+	}
+
+	if (manageableGroups.size() == 1) {
+		Group manageableGroup = manageableGroups.get(0);
+
+		parentGroupId = manageableGroup.getGroupId();
+	}
+}
+
+if (parentGroupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
+	try {
+		parentGroup = GroupLocalServiceUtil.getGroup(parentGroupId);
+	}
+	catch (NoSuchGroupException nsoe) {
+	}
+}
 %>
 
 <liferay-ui:error-marker key="errorSection" value="details" />
@@ -140,6 +176,19 @@ else if (group != null) {
 
 	<c:if test="<%= (group == null) || !group.isCompany() %>">
 		<aui:input name="active" value="<%= true %>" />
+	</c:if>
+
+	<c:if test="<%= ((parentGroupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) && PropsValues.SITES_SHOW_INHERIT_CONTENT) %>">
+
+		<%
+		boolean disabled = false;
+
+		if ((parentGroup != null) && parentGroup.isInheritContent()) {
+			disabled = true;
+		}
+		%>
+
+		<aui:input disabled="<%= disabled %>" helpMessage='<%= disabled ? "you-cannot-set-inherit-content-if-your-parent-is-inherit-content" : StringPool.BLANK %>' name="inheritContent" value="<%= false %>" />
 	</c:if>
 
 	<h3><liferay-ui:message key="membership-options" /></h3>
@@ -449,42 +498,6 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 	</aui:fieldset>
 
 	<%
-	long parentGroupId = ParamUtil.getLong(request, "parentGroupSearchContainerPrimaryKeys", (group != null) ? group.getParentGroupId() : GroupConstants.DEFAULT_PARENT_GROUP_ID);
-
-	if (parentGroupId <= 0) {
-		parentGroupId = GroupConstants.DEFAULT_PARENT_GROUP_ID;
-
-		if (group != null) {
-			parentGroupId = liveGroup.getParentGroupId();
-		}
-	}
-
-	Group parentGroup = null;
-
-	if ((group == null) && (parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) && !permissionChecker.isCompanyAdmin()) {
-		List<Group> manageableGroups = new ArrayList<Group>();
-
-		for (Group curGroup : user.getGroups()) {
-			if (GroupPermissionUtil.contains(permissionChecker, curGroup, ActionKeys.MANAGE_SUBGROUPS)) {
-				manageableGroups.add(curGroup);
-			}
-		}
-
-		if (manageableGroups.size() == 1) {
-			Group manageableGroup = manageableGroups.get(0);
-
-			parentGroupId = manageableGroup.getGroupId();
-		}
-	}
-
-	if (parentGroupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
-		try {
-			parentGroup = GroupLocalServiceUtil.getGroup(parentGroupId);
-		}
-		catch (NoSuchGroupException nsoe) {
-		}
-	}
-
 	List<Group> parentGroups = new ArrayList<Group>();
 
 	if (parentGroup != null) {
