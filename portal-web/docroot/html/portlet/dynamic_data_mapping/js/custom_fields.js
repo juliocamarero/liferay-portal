@@ -348,7 +348,7 @@ AUI.add(
 						var publicOptGroup = Lang.sub(
 							optGroupTemplate,
 							{
-								label: Liferay.Language.get('public-pages'),
+								label: Liferay.Language.get('pages'),
 								options: publicOptions.join(STR_BLANK)
 							}
 						);
@@ -356,7 +356,7 @@ AUI.add(
 						var privateOptGroup = Lang.sub(
 							optGroupTemplate,
 							{
-								label: Liferay.Language.get('private-pages'),
+								label: Liferay.Language.get('pages'),
 								options: privateOptions.join(STR_BLANK)
 							}
 						);

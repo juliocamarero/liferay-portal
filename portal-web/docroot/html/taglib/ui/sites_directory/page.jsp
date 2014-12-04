@@ -107,14 +107,7 @@
 									>
 
 										<%
-										LayoutSet layoutSet = null;
-
-										if (childGroup.hasPublicLayouts()) {
-											layoutSet = childGroup.getPublicLayoutSet();
-										}
-										else {
-											layoutSet = childGroup.getPrivateLayoutSet();
-										}
+										LayoutSet layoutSet = childGroup.getPublicLayoutSet();
 										%>
 
 										<liferay-ui:app-view-entry

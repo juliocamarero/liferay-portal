@@ -109,22 +109,10 @@ Group selGroup = layoutsAdminDisplayContext.getSelGroup();
 					LayoutSetBranch layoutSetBranch = null;
 
 					if (layoutSetBranchId > 0) {
-						try {
-							layoutSetBranch = LayoutSetBranchLocalServiceUtil.getLayoutSetBranch(layoutSetBranchId);
-						}
-						catch (NoSuchLayoutSetBranchException nslsbe) {
-						}
+						layoutSetBranch = LayoutSetBranchLocalServiceUtil.fetchLayoutSetBranch(layoutSetBranchId);
 					}
 
-					if (layoutSetBranch == null) {
-						try {
-							layoutSetBranch = LayoutSetBranchLocalServiceUtil.getMasterLayoutSetBranch(layoutsAdminDisplayContext.getStagingGroupId(), layoutsAdminDisplayContext.isPrivateLayout());
-						}
-						catch (NoSuchLayoutSetBranchException nslsbe) {
-						}
-					}
-
-					List<LayoutSetBranch> layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(layoutsAdminDisplayContext.getStagingGroupId(), layoutsAdminDisplayContext.isPrivateLayout());
+					List<LayoutSetBranch> layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(layoutsAdminDisplayContext.getStagingGroupId(), false);
 					%>
 
 					<c:choose>
@@ -145,7 +133,7 @@ Group selGroup = layoutsAdminDisplayContext.getSelGroup();
 												<portlet:param name="<%= Constants.CMD %>" value="select_layout_set_branch" />
 												<portlet:param name="redirect" value="<%= String.valueOf(layoutsAdminDisplayContext.getRedirectURL()) %>" />
 												<portlet:param name="groupId" value="<%= String.valueOf(curLayoutSetBranch.getGroupId()) %>" />
-												<portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
+												<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 												<portlet:param name="layoutSetBranchId" value="<%= String.valueOf(curLayoutSetBranch.getLayoutSetBranchId()) %>" />
 											</portlet:actionURL>
 
