@@ -1307,8 +1307,19 @@ public class JournalUtil {
 			String defaultImportLanguageId = LocaleUtil.toLanguageId(
 				defaultImportLocale);
 
-			if (!StringUtil.contains(
-					availableLocalesAttribute.getValue(),
+			if (Validator.isNull(availableLocalesAttribute)) {
+
+				newRootElement.addAttribute(
+					"available-locales", defaultImportLanguageId);
+
+				_mergeArticleContentUpdate(
+					oldDocument, newRootElement,
+					LocaleUtil.toLanguageId(defaultImportLocale));
+
+				content = DDMXMLUtil.formatXML(newDocument);
+			}
+			else if (!StringUtil.contains(
+				availableLocalesAttribute.getValue(),
 					defaultImportLanguageId)) {
 
 				availableLocalesAttribute.setValue(
@@ -1325,13 +1336,22 @@ public class JournalUtil {
 			Attribute defaultLocaleAttribute = newRootElement.attribute(
 				"default-locale");
 
-			Locale defaultContentLocale = LocaleUtil.fromLanguageId(
-				defaultLocaleAttribute.getValue());
+			if (Validator.isNull(defaultLocaleAttribute)) {
 
-			if (!LocaleUtil.equals(defaultContentLocale, defaultImportLocale)) {
-				defaultLocaleAttribute.setValue(defaultImportLanguageId);
+				newRootElement.addAttribute(
+					"default-locale", defaultImportLanguageId);
 
 				content = DDMXMLUtil.formatXML(newDocument);
+			}
+			else {
+				Locale contentDefaultLocale = LocaleUtil.fromLanguageId(
+					defaultLocaleAttribute.getValue());
+	
+				if (!LocaleUtil.equals(contentDefaultLocale, defaultImportLocale)) {
+					defaultLocaleAttribute.setValue(defaultImportLanguageId);
+	
+					content = DDMXMLUtil.formatXML(newDocument);
+				}
 			}
 		}
 		catch (Exception e) {
