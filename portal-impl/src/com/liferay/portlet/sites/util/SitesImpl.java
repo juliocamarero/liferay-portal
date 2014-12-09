@@ -1441,9 +1441,6 @@ public class SitesImpl implements Sites {
 		throws Exception {
 
 		updateLayoutSetPrototypeLink(
-			group.getGroupId(), true, privateLayoutSetPrototypeId,
-			privateLayoutSetPrototypeLinkEnabled);
-		updateLayoutSetPrototypeLink(
 			group.getGroupId(), false, publicLayoutSetPrototypeId,
 			publicLayoutSetPrototypeLinkEnabled);
 	}
@@ -1766,10 +1763,10 @@ public class SitesImpl implements Sites {
 		if (file == null) {
 			List<Layout> layoutSetPrototypeLayouts =
 				LayoutLocalServiceUtil.getLayouts(
-					layoutSetPrototype.getGroupId(), true);
+					layoutSetPrototype.getGroupId(), false);
 
 			file = LayoutLocalServiceUtil.exportLayoutsAsFile(
-				layoutSetPrototype.getGroupId(), true,
+				layoutSetPrototype.getGroupId(), false,
 				ExportImportHelperUtil.getLayoutIds(layoutSetPrototypeLayouts),
 				parameterMap, null, null);
 

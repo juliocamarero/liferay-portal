@@ -170,8 +170,6 @@ public class ServicePreAction extends Action {
 		// Paths
 
 		String contextPath = PortalUtil.getPathContext();
-		String friendlyURLPrivateGroupPath =
-			PortalUtil.getPathFriendlyURLPrivateGroup();
 		String friendlyURLPrivateUserPath =
 			PortalUtil.getPathFriendlyURLPrivateUser();
 		String friendlyURLPublicPath = PortalUtil.getPathFriendlyURLPublic();
@@ -185,8 +183,6 @@ public class ServicePreAction extends Action {
 			if (Validator.isNotNull(contextPath)) {
 				String i18nContextPath = contextPath.concat(i18nPath);
 
-				friendlyURLPrivateGroupPath = StringUtil.replaceFirst(
-					friendlyURLPrivateGroupPath, contextPath, i18nContextPath);
 				friendlyURLPrivateUserPath = StringUtil.replaceFirst(
 					friendlyURLPrivateUserPath, contextPath, i18nContextPath);
 				friendlyURLPublicPath = StringUtil.replaceFirst(
@@ -195,8 +191,6 @@ public class ServicePreAction extends Action {
 					mainPath, contextPath, i18nContextPath);
 			}
 			else {
-				friendlyURLPrivateGroupPath = i18nPath.concat(
-					friendlyURLPrivateGroupPath);
 				friendlyURLPrivateUserPath = i18nPath.concat(
 					friendlyURLPrivateUserPath);
 				friendlyURLPublicPath = i18nPath.concat(friendlyURLPublicPath);
@@ -552,15 +546,6 @@ public class ServicePreAction extends Action {
 						logoId = layoutSet.getLiveLogoId();
 					}
 				}
-				else {
-					LayoutSet siblingLayoutSet =
-						LayoutSetLocalServiceUtil.getLayoutSet(
-							layout.getGroupId(), !layout.isPrivateLayout());
-
-					if (siblingLayoutSet.isLogo()) {
-						logoId = siblingLayoutSet.getLogoId();
-					}
-				}
 
 				if (logoId > 0) {
 					sb = new StringBundler(5);
@@ -813,8 +798,7 @@ public class ServicePreAction extends Action {
 		themeDisplay.setPathCms(contextPath.concat("/cms"));
 		themeDisplay.setPathContext(contextPath);
 		themeDisplay.setPathFlash(contextPath.concat("/flash"));
-		themeDisplay.setPathFriendlyURLPrivateGroup(
-			friendlyURLPrivateGroupPath);
+		themeDisplay.setPathFriendlyURLPrivateGroup(friendlyURLPublicPath);
 		themeDisplay.setPathFriendlyURLPrivateUser(friendlyURLPrivateUserPath);
 		themeDisplay.setPathFriendlyURLPublic(friendlyURLPublicPath);
 		themeDisplay.setPathImage(imagePath);
@@ -899,7 +883,7 @@ public class ServicePreAction extends Action {
 
 		// URLs
 
-		String urlControlPanel = friendlyURLPrivateGroupPath.concat(
+		String urlControlPanel = friendlyURLPublicPath.concat(
 			GroupConstants.CONTROL_PANEL_FRIENDLY_URL);
 
 		if (Validator.isNotNull(doAsUserId)) {
@@ -2284,65 +2268,6 @@ public class ServicePreAction extends Action {
 
 	protected void updateUserLayouts(User user) throws Exception {
 		Boolean hasPowerUserRole = null;
-
-		// Private layouts
-
-		boolean addDefaultUserPrivateLayouts = false;
-
-		if (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED &&
-			PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_AUTO_CREATE) {
-
-			addDefaultUserPrivateLayouts = true;
-
-			if (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED) {
-				if (hasPowerUserRole == null) {
-					hasPowerUserRole = hasPowerUserRole(user);
-				}
-
-				if (!hasPowerUserRole.booleanValue()) {
-					addDefaultUserPrivateLayouts = false;
-				}
-			}
-		}
-
-		Boolean hasPrivateLayouts = null;
-
-		if (addDefaultUserPrivateLayouts) {
-			hasPrivateLayouts = LayoutLocalServiceUtil.hasLayouts(
-				user, true, false);
-
-			if (!hasPrivateLayouts) {
-				addDefaultUserPrivateLayouts(user);
-			}
-		}
-
-		boolean deleteDefaultUserPrivateLayouts = false;
-
-		if (!PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED) {
-			deleteDefaultUserPrivateLayouts = true;
-		}
-		else if (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED) {
-			if (hasPowerUserRole == null) {
-				hasPowerUserRole = hasPowerUserRole(user);
-			}
-
-			if (!hasPowerUserRole.booleanValue()) {
-				deleteDefaultUserPrivateLayouts = true;
-			}
-		}
-
-		if (deleteDefaultUserPrivateLayouts) {
-			if (hasPrivateLayouts == null) {
-				hasPrivateLayouts = LayoutLocalServiceUtil.hasLayouts(
-					user, true, false);
-			}
-
-			if (hasPrivateLayouts) {
-				deleteDefaultUserPrivateLayouts(user);
-			}
-		}
-
-		// Public pages
 
 		boolean addDefaultUserPublicLayouts = false;
 

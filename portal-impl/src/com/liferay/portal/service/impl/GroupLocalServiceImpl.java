@@ -728,7 +728,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			if (group.isControlPanel()) {
 				LayoutSet layoutSet = layoutSetLocalService.getLayoutSet(
-					group.getGroupId(), true);
+					group.getGroupId(), false);
 
 				if (layoutSet.getPageCount() == 0) {
 					addControlPanelLayouts(group);
