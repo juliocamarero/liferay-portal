@@ -72,23 +72,10 @@ public class FriendlyURLServlet extends HttpServlet {
 	public void init(ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
 
-		_private = GetterUtil.getBoolean(
-			servletConfig.getInitParameter("private"));
+		_private = false;
 		_user = GetterUtil.getBoolean(servletConfig.getInitParameter("user"));
 
-		if (_private) {
-			if (_user) {
-				_friendlyURLPathPrefix =
-					PortalUtil.getPathFriendlyURLPrivateUser();
-			}
-			else {
-				_friendlyURLPathPrefix =
-					PortalUtil.getPathFriendlyURLPrivateGroup();
-			}
-		}
-		else {
-			_friendlyURLPathPrefix = PortalUtil.getPathFriendlyURLPublic();
-		}
+		_friendlyURLPathPrefix = PortalUtil.getPathFriendlyURLPublic();
 	}
 
 	@Override
@@ -366,7 +353,7 @@ public class FriendlyURLServlet extends HttpServlet {
 		}
 
 		String actualURL = PortalUtil.getActualURL(
-			group.getGroupId(), _private, mainPath, friendlyURL, params,
+			group.getGroupId(), false, mainPath, friendlyURL, params,
 			requestContext);
 
 		return new Object[] {actualURL, Boolean.FALSE};

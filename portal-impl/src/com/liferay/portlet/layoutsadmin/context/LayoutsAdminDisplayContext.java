@@ -93,15 +93,6 @@ public class LayoutsAdminDisplayContext {
 			privateLayout = selLayout.isPrivateLayout();
 		}
 
-		Group liveGroup = getLiveGroup();
-
-		if (liveGroup.isUser() && !isPublicLayoutsModifiable() &&
-			isPrivateLayoutsModifiable() && !privateLayout) {
-
-			privateLayout = true;
-			tabs1 = "my-dashboard";
-		}
-
 		Group selGroup = getSelGroup();
 
 		if (selGroup.isLayoutSetPrototype()) {
@@ -372,16 +363,8 @@ public class LayoutsAdminDisplayContext {
 
 		Group liveGroup = getLiveGroup();
 
-		if (liveGroup.isUser()) {
-			if (isPrivateLayoutsModifiable() && isPublicLayoutsModifiable()) {
-				_tabs1Names = "my-profile,my-dashboard";
-			}
-			else if (isPrivateLayoutsModifiable()) {
-				_tabs1Names = "my-dashboard";
-			}
-			else if (isPublicLayoutsModifiable()) {
-				_tabs1Names = "my-profile";
-			}
+		if (liveGroup.isUser() && isPublicLayoutsModifiable()) {
+			_tabs1Names = "my-profile";
 		}
 		else {
 			_tabs1Names = "public-pages,private-pages";
@@ -429,17 +412,6 @@ public class LayoutsAdminDisplayContext {
 				RoleConstants.POWER_USER, true);
 		}
 		catch (Exception e) {
-		}
-
-		return false;
-	}
-
-	protected boolean isPrivateLayoutsModifiable() {
-		if ((!PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED ||
-			 hasPowerUserRole()) &&
-			PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED) {
-
-			return true;
 		}
 
 		return false;
