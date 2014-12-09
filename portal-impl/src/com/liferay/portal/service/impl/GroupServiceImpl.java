@@ -748,9 +748,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		if ((classNames == null) ||
 			ArrayUtil.contains(classNames, User.class.getName())) {
 
-			if (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED ||
-				PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED) {
-
+			if (PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED) {
 				Group userGroup = user.getGroup();
 
 				userSiteGroups.add(0, userGroup);
