@@ -1349,9 +1349,7 @@ public class PortalImpl implements Portal {
 			groups.add(0, organization.getGroup());
 		}
 
-		if (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED ||
-			PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED) {
-
+		if (PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED) {
 			groups.add(
 				0, GroupLocalServiceUtil.getUserGroup(companyId, userId));
 		}

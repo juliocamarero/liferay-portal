@@ -942,12 +942,6 @@ public class PropsValues {
 
 	public static boolean LAYOUT_TEMPLATE_CACHE_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LAYOUT_TEMPLATE_CACHE_ENABLED));
 
-	public static boolean LAYOUT_USER_PRIVATE_LAYOUTS_AUTO_CREATE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LAYOUT_USER_PRIVATE_LAYOUTS_AUTO_CREATE));
-
-	public static boolean LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED));
-
-	public static boolean LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED));
-
 	public static boolean LAYOUT_USER_PUBLIC_LAYOUTS_AUTO_CREATE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LAYOUT_USER_PUBLIC_LAYOUTS_AUTO_CREATE));
 
 	public static boolean LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED));
@@ -1170,11 +1164,7 @@ public class PropsValues {
 
 	public static final int MY_SITES_MAX_ELEMENTS = GetterUtil.getInteger(PropsUtil.get(PropsKeys.MY_SITES_MAX_ELEMENTS));
 
-	public static boolean MY_SITES_SHOW_PRIVATE_SITES_WITH_NO_LAYOUTS = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.MY_SITES_SHOW_PRIVATE_SITES_WITH_NO_LAYOUTS));
-
 	public static boolean MY_SITES_SHOW_PUBLIC_SITES_WITH_NO_LAYOUTS = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.MY_SITES_SHOW_PUBLIC_SITES_WITH_NO_LAYOUTS));
-
-	public static boolean MY_SITES_SHOW_USER_PRIVATE_SITES_WITH_NO_LAYOUTS = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.MY_SITES_SHOW_USER_PRIVATE_SITES_WITH_NO_LAYOUTS));
 
 	public static boolean MY_SITES_SHOW_USER_PUBLIC_SITES_WITH_NO_LAYOUTS = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.MY_SITES_SHOW_USER_PUBLIC_SITES_WITH_NO_LAYOUTS));
 
@@ -1925,10 +1915,6 @@ public class PropsValues {
 	public static final boolean YUI_COMPRESSOR_JS_VERBOSE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.YUI_COMPRESSOR_JS_VERBOSE));
 
 	static {
-		if (!LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED) {
-			LAYOUT_USER_PRIVATE_LAYOUTS_AUTO_CREATE = false;
-		}
-
 		if (!LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED) {
 			LAYOUT_USER_PUBLIC_LAYOUTS_AUTO_CREATE = false;
 		}

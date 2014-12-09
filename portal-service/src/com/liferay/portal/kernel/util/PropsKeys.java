@@ -1309,12 +1309,6 @@ public interface PropsKeys {
 
 	public static final String LAYOUT_URL_FRIENDLIABLE = "layout.url.friendliable";
 
-	public static final String LAYOUT_USER_PRIVATE_LAYOUTS_AUTO_CREATE = "layout.user.private.layouts.auto.create";
-
-	public static final String LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED = "layout.user.private.layouts.enabled";
-
-	public static final String LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED = "layout.user.private.layouts.power.user.required";
-
 	public static final String LAYOUT_USER_PUBLIC_LAYOUTS_AUTO_CREATE = "layout.user.public.layouts.auto.create";
 
 	public static final String LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED = "layout.user.public.layouts.enabled";
@@ -1721,11 +1715,7 @@ public interface PropsKeys {
 
 	public static final String MY_SITES_MAX_ELEMENTS = "my.sites.max.elements";
 
-	public static final String MY_SITES_SHOW_PRIVATE_SITES_WITH_NO_LAYOUTS = "my.sites.show.private.sites.with.no.layouts";
-
 	public static final String MY_SITES_SHOW_PUBLIC_SITES_WITH_NO_LAYOUTS = "my.sites.show.public.sites.with.no.layouts";
-
-	public static final String MY_SITES_SHOW_USER_PRIVATE_SITES_WITH_NO_LAYOUTS = "my.sites.show.user.private.sites.with.no.layouts";
 
 	public static final String MY_SITES_SHOW_USER_PUBLIC_SITES_WITH_NO_LAYOUTS = "my.sites.show.user.public.sites.with.no.layouts";
 

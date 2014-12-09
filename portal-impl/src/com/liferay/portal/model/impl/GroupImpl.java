@@ -918,42 +918,21 @@ public class GroupImpl extends GroupBaseImpl {
 				RoleConstants.POWER_USER, true);
 
 			if (isSite()) {
-				if (privateSite) {
-					showSite =
-						PropsValues.MY_SITES_SHOW_PRIVATE_SITES_WITH_NO_LAYOUTS;
-				}
-				else {
-					showSite =
-						PropsValues.MY_SITES_SHOW_PUBLIC_SITES_WITH_NO_LAYOUTS;
-				}
+				showSite =
+					PropsValues.MY_SITES_SHOW_PUBLIC_SITES_WITH_NO_LAYOUTS;
 			}
 			else if (isOrganization()) {
 				showSite = false;
 			}
 			else if (isUser()) {
-				if (privateSite) {
-					showSite =
-						PropsValues.
-							MY_SITES_SHOW_USER_PRIVATE_SITES_WITH_NO_LAYOUTS;
+				showSite =
+					PropsValues.MY_SITES_SHOW_USER_PUBLIC_SITES_WITH_NO_LAYOUTS;
 
-					if (PropsValues.
-							LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED &&
-						!hasPowerUserRole) {
+				if (PropsValues.
+						LAYOUT_USER_PUBLIC_LAYOUTS_POWER_USER_REQUIRED &&
+					!hasPowerUserRole) {
 
-						showSite = false;
-					}
-				}
-				else {
-					showSite =
-						PropsValues.
-							MY_SITES_SHOW_USER_PUBLIC_SITES_WITH_NO_LAYOUTS;
-
-					if (PropsValues.
-							LAYOUT_USER_PUBLIC_LAYOUTS_POWER_USER_REQUIRED &&
-						!hasPowerUserRole) {
-
-						showSite = false;
-					}
+					showSite = false;
 				}
 			}
 		}
