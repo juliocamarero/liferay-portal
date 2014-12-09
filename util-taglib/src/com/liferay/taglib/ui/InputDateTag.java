@@ -15,7 +15,7 @@
 package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.taglib.BaseValidationTagSupport;
+import com.liferay.taglib.BaseValidatorTagSupport;
 
 import java.util.Calendar;
 
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Brian Wing Shun Chan
  */
-public class InputDateTag extends BaseValidationTagSupport {
+public class InputDateTag extends BaseValidatorTagSupport {
 
 	@Override
 	public String getInputName() {
