@@ -31,7 +31,7 @@ import javax.servlet.jsp.JspException;
  * @author Jorge Ferrer
  * @author Brian Wing Shun Chan
  */
-public abstract class BaseValidationTagSupport extends IncludeTag {
+public abstract class BaseValidatorTagSupport extends IncludeTag {
 
 	public void addRequiredValidatorTag() {
 		ValidatorTag validatorTag = new ValidatorTagImpl(
