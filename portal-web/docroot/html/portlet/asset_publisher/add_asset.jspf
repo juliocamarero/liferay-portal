@@ -28,10 +28,18 @@
 			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(_getClassName(entry.getKey()));
 
 			String message = _getMessage(entry.getKey(), addPortletURLs, locale);
+
+			long curGroupId = groupId;
+
+			Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+
+			if (!group.isStagedPortlet(assetRendererFactory.getPortletId())) {
+				curGroupId = group.getLiveGroupId();
+			}
 			%>
 
 			<aui:nav-item
-				href="<%= _getURL(groupId, plid, entry.getValue(), assetRendererFactory.getPortletId(), message, defaultAssetPublisher, layout, pageContext, liferayPortletResponse) %>"
+				href="<%= _getURL(curGroupId, plid, entry.getValue(), assetRendererFactory.getPortletId(), message, defaultAssetPublisher, layout, pageContext, liferayPortletResponse) %>"
 				iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
 				iconSrc="<%= assetRendererFactory.getIconPath(liferayPortletRequest) %>"
 				label='<%= LanguageUtil.format(request, (groupIds.length == 1) ? "add-x" : "add-x-in-x", new Object [] {HtmlUtil.escape(message), HtmlUtil.escape((GroupLocalServiceUtil.getGroup(groupId)).getDescriptiveName(locale))}, false) %>'
@@ -48,11 +56,19 @@
 				for (Map.Entry<String, PortletURL> entry : addPortletURLs.entrySet()) {
 					AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(_getClassName(entry.getKey()));
 
+					long curGroupId = groupId;
+
+					Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+
+					if (!group.isStagedPortlet(assetRendererFactory.getPortletId())) {
+						curGroupId = group.getLiveGroupId();
+					}
+
 					String message = _getMessage(entry.getKey(), addPortletURLs, locale);
 				%>
 
 					<aui:nav-item
-						href="<%= _getURL(groupId, plid, entry.getValue(), assetRendererFactory.getPortletId(), message, defaultAssetPublisher, layout, pageContext, liferayPortletResponse) %>"
+						href="<%= _getURL(curGroupId, plid, entry.getValue(), assetRendererFactory.getPortletId(), message, defaultAssetPublisher, layout, pageContext, liferayPortletResponse) %>"
 						iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
 						iconSrc="<%= assetRendererFactory.getIconPath(liferayPortletRequest) %>"
 						label="<%= HtmlUtil.escape(message) %>"
