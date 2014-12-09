@@ -17,7 +17,7 @@
 <%@ include file="/html/portlet/site_map/init.jsp" %>
 
 <%
-List<Layout> rootLayouts = LayoutLocalServiceUtil.getLayouts(layout.getGroupId(), layout.isPrivateLayout(), rootLayoutId);
+List<Layout> rootLayouts = LayoutLocalServiceUtil.getLayouts(layout.getGroupId(), false, rootLayoutId);
 %>
 
 <liferay-ui:ddm-template-renderer displayStyle="<%= displayStyle %>" displayStyleGroupId="<%= displayStyleGroupId %>" entries="<%= rootLayouts %>">

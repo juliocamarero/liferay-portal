@@ -2797,11 +2797,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>privateLayout</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
 			<name>rootNodeName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

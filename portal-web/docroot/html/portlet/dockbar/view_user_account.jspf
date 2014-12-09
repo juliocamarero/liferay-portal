@@ -111,27 +111,6 @@
 						</li>
 					</c:if>
 
-					<c:if test="<%= mySiteGroup.getPrivateLayoutsPageCount() > 0 %>">
-
-						<%
-						PortletURL myDashboardURL = new PortletURLImpl(request, PortletKeys.SITE_REDIRECTOR, plid, PortletRequest.ACTION_PHASE);
-
-						myDashboardURL.setParameter("struts_action", "/my_sites/view");
-						myDashboardURL.setParameter("groupId", String.valueOf(mySiteGroup.getGroupId()));
-						myDashboardURL.setParameter("privateLayout", Boolean.TRUE.toString());
-						myDashboardURL.setPortletMode(PortletMode.VIEW);
-						myDashboardURL.setWindowState(WindowState.NORMAL);
-						%>
-
-						<li class="my-sites-menu private-site">
-							<a href="<%= HtmlUtil.escapeHREF(myDashboardURL.toString()) %>">
-								<span class="site-name"><liferay-ui:message key="my-dashboard" /></span>
-
-								<span class="badge site-type"><liferay-ui:message key="private" /></span>
-							</a>
-						</li>
-					</c:if>
-
 				<%
 				}
 				%>

@@ -69,7 +69,7 @@
 
 				contentHits.setShowListed(showListed);
 
-				contentHits.recordHits(hits, layout.getGroupId(), layout.isPrivateLayout(), searchContainer.getStart(), searchContainer.getEnd());
+				contentHits.recordHits(hits, layout.getGroupId(), false, searchContainer.getStart(), searchContainer.getEnd());
 
 				int total = hits.getLength();
 

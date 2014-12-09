@@ -49,21 +49,6 @@ Group group = layoutSetPrototype.getGroup();
 				url="<%= siteAdministrationURL.toString() %>"
 			/>
 		</c:if>
-
-		<c:if test="<%= group.getPrivateLayoutsPageCount() > 0 %>">
-			<liferay-portlet:actionURL portletName="<%= PortletKeys.SITE_REDIRECTOR %>" var="viewPagesURL">
-				<portlet:param name="struts_action" value="/my_sites/view" />
-				<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
-				<portlet:param name="privateLayout" value="<%= Boolean.TRUE.toString() %>" />
-			</liferay-portlet:actionURL>
-
-			<liferay-ui:icon
-				iconCssClass="icon-search"
-				message="view-pages"
-				target="_blank"
-				url="<%= viewPagesURL %>"
-			/>
-		</c:if>
 	</c:if>
 
 	<c:if test="<%= LayoutSetPrototypePermissionUtil.contains(permissionChecker, layoutSetPrototypeId, ActionKeys.PERMISSIONS) %>">
@@ -89,7 +74,7 @@ Group group = layoutSetPrototype.getGroup();
 			<portlet:param name="struts_action" value="/layouts_admin/export_layouts" />
 			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
-			<portlet:param name="privateLayout" value="<%= Boolean.TRUE.toString() %>" />
+			<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 			<portlet:param name="rootNodeName" value="<%= layoutSetPrototype.getName(locale) %>" />
 		</portlet:renderURL>
 
@@ -104,7 +89,7 @@ Group group = layoutSetPrototype.getGroup();
 		<portlet:renderURL var="importPagesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/layouts_admin/import_layouts" />
 			<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
-			<portlet:param name="privateLayout" value="<%= Boolean.TRUE.toString() %>" />
+			<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 			<portlet:param name="rootNodeName" value="<%= layoutSetPrototype.getName(locale) %>" />
 		</portlet:renderURL>
 

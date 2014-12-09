@@ -134,15 +134,6 @@ request.setAttribute("view.jsp-tabs1", tabs1);
 				rowURL.setParameter("privateLayout", Boolean.FALSE.toString());
 				rowURL.setWindowState(WindowState.NORMAL);
 			}
-			else if (tabs1.equals("my-sites") && (group.getPrivateLayoutsPageCount() > 0)) {
-				rowURL = renderResponse.createActionURL();
-
-				rowURL.setParameter("struts_action", "/sites_admin/page");
-				rowURL.setParameter("redirect", currentURL);
-				rowURL.setParameter("groupId", String.valueOf(group.getGroupId()));
-				rowURL.setParameter("privateLayout", Boolean.TRUE.toString());
-				rowURL.setWindowState(WindowState.NORMAL);
-			}
 			%>
 
 			<liferay-ui:search-container-column-text
