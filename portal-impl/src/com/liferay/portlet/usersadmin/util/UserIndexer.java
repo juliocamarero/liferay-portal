@@ -116,11 +116,10 @@ public class UserIndexer extends BaseIndexer {
 			return;
 		}
 
-		boolean inherited = MapUtil.getBoolean(params, "inherit", false);
-
-		if (inherited) {
+		if (MapUtil.getBoolean(params, "inherit", false)) {
 			if (params.containsKey("usersGroups")) {
-				params.put("inheritedUsersGroups",params.remove("usersGroups"));
+				params.put(
+					"inheritedUsersGroups", params.remove("usersGroups"));
 			}
 
 			if (params.containsKey("usersRoles")) {
@@ -315,7 +314,6 @@ public class UserIndexer extends BaseIndexer {
 		long[] organizationIds = user.getOrganizationIds();
 		long[] roleIds = user.getRoleIds();
 		long[] userGroupIds = user.getUserGroupIds();
-
 		long[] inheritedGroupIds = getInheritedGroupIds(
 			groupIds, organizationIds, userGroupIds);
 
@@ -557,12 +555,12 @@ public class UserIndexer extends BaseIndexer {
 
 			inheritedGroupIds.add(organization.getGroupId());
 
-			long[] organizationSiteIds =
+			long[] organizationGroupIds =
 				OrganizationLocalServiceUtil.getGroupPrimaryKeys(
 					organizationId);
 
-			for (long organizationSiteId : organizationSiteIds) {
-				inheritedGroupIds.add(organizationSiteId);
+			for (long organizationGroupId : organizationGroupIds) {
+				inheritedGroupIds.add(organizationGroupId);
 			}
 		}
 
@@ -572,11 +570,11 @@ public class UserIndexer extends BaseIndexer {
 
 			inheritedGroupIds.add(userGroup.getGroupId());
 
-			long[] userGroupSiteIds =
+			long[] userGroupGroupIds =
 				UserGroupLocalServiceUtil.getGroupPrimaryKeys(userUserGroupId);
 
-			for (long userGroupSiteId : userGroupSiteIds) {
-				inheritedGroupIds.add(userGroupSiteId);
+			for (long userGroupGroupId : userGroupGroupIds) {
+				inheritedGroupIds.add(userGroupGroupId);
 			}
 		}
 
@@ -609,13 +607,11 @@ public class UserIndexer extends BaseIndexer {
 			PasswordPolicyRelLocalServiceUtil.fetchPasswordPolicyRel(
 				User.class.getName(), userId);
 
-		long passwordPolicyId = 0;
-
-		if (passwordPolicyRel != null) {
-			passwordPolicyId = passwordPolicyRel.getPasswordPolicyId();
+		if (passwordPolicyRel == null) {
+			return 0;
 		}
 
-		return passwordPolicyId;
+		return passwordPolicyRel.getPasswordPolicyId();
 	}
 
 	@Override

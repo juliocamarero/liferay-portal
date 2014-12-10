@@ -186,10 +186,7 @@ public class OrganizationImpl extends OrganizationBaseImpl {
 
 	@Override
 	public List<Organization> getDescendants() {
-		List<Organization> organizations =
-			OrganizationLocalServiceUtil.getDescendantOrganizations(this);
-
-		return new ArrayList<Organization>(organizations);
+		return OrganizationLocalServiceUtil.getDescendantOrganizations(this);
 	}
 
 	@Override

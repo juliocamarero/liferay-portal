@@ -14,7 +14,6 @@
 
 package com.liferay.portal.model;
 
-import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
@@ -31,9 +30,8 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 
 	@Override
 	public void onAfterAddAssociation(
-			Object classPK, String associationClassName,
-			Object associationClassPK)
-		throws ModelListenerException {
+		Object classPK, String associationClassName,
+		Object associationClassPK) {
 
 		if (isAssociationReindex()) {
 			reindexUsers(classPK, associationClassName);
@@ -41,7 +39,7 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 	}
 
 	@Override
-	public void onAfterCreate(T model) throws ModelListenerException {
+	public void onAfterCreate(T model) {
 		if (isModelReindex()) {
 			long[] userId = getUserIds(model);
 
@@ -50,7 +48,7 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 	}
 
 	@Override
-	public void onAfterRemove(T model) throws ModelListenerException {
+	public void onAfterRemove(T model) {
 		if (isModelReindex()) {
 			long[] userId = getUserIds(model);
 
@@ -60,9 +58,8 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 
 	@Override
 	public void onAfterRemoveAssociation(
-			Object classPK, String associationClassName,
-			Object associationClassPK)
-		throws ModelListenerException {
+		Object classPK, String associationClassName,
+		Object associationClassPK) {
 
 		if (isAssociationReindex()) {
 			reindexUsers(classPK, associationClassName);
@@ -70,7 +67,7 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 	}
 
 	@Override
-	public void onAfterUpdate(T model) throws ModelListenerException {
+	public void onAfterUpdate(T model) {
 		if (isModelReindex()) {
 			long[] userId = getUserIds(model);
 

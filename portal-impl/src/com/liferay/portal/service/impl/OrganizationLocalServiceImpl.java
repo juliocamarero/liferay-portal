@@ -334,17 +334,19 @@ public class OrganizationLocalServiceImpl
 			indexer.reindex(organization);
 		}
 
-		List<Organization> ancestors = getParentOrganizations(organizationId);
+		List<Organization> ancestorsOrganizations = getParentOrganizations(
+			organizationId);
 
-		long[] ancestorIds = new long[ancestors.size()];
+		long[] ancestorOrganizationIds =
+			new long[ancestorsOrganizations.size()];
 
-		for (int i = 0; i < ancestorIds.length; i++) {
-			Organization ancestor = ancestors.get(i);
+		for (int i = 0; i < ancestorOrganizationIds.length; i++) {
+			Organization ancestor = ancestorsOrganizations.get(i);
 
-			ancestorIds[i] = ancestor.getOrganizationId();
+			ancestorOrganizationIds[i] = ancestor.getOrganizationId();
 		}
 
-		reindexOrganizationUsers(ancestorIds);
+		reindexOrganizationUsers(ancestorOrganizationIds);
 
 		return organization;
 	}
@@ -1937,11 +1939,8 @@ public class OrganizationLocalServiceImpl
 
 		// Indexer
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			Organization.class);
-
 		if (oldParentOrganizationId != parentOrganizationId) {
-			Set<Long> relations = new HashSet<Long>();
+			Set<Long> organizations = new HashSet<Long>();
 
 			if (oldParentOrganizationId !=
 					OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) {
@@ -1949,13 +1948,13 @@ public class OrganizationLocalServiceImpl
 				Organization oldParentOrganization = getOrganization(
 					oldParentOrganizationId);
 
-				for (long ancestorId :
+				for (long ancestorOrganizationId :
 						oldParentOrganization.getAncestorOrganizationIds()) {
 
-					relations.add(ancestorId);
+					organizations.add(ancestorOrganizationId);
 				}
 
-				relations.add(oldParentOrganizationId);
+				organizations.add(oldParentOrganizationId);
 			}
 
 			if (parentOrganizationId !=
@@ -1964,29 +1963,28 @@ public class OrganizationLocalServiceImpl
 				Organization parentOrganization = getOrganization(
 					parentOrganizationId);
 
-				for (long ancestorId :
+				for (long ancestorOrganizationId :
 						parentOrganization.getAncestorOrganizationIds()) {
 
-					relations.add(ancestorId);
+					organizations.add(ancestorOrganizationId);
 				}
 
-				relations.add(parentOrganizationId);
+				organizations.add(parentOrganizationId);
 			}
 
 			long[] organizationIds = rebuildDescendantTreePaths(organization);
 
-			for (long descendantId : organizationIds) {
-				relations.add(descendantId);
+			for (long decendantOrganizationId : organizationIds) {
+				organizations.add(decendantOrganizationId);
 			}
 
-			if (!ArrayUtil.contains(
-					organizationIds, organization.getOrganizationId())) {
+			organizations.add(organization.getOrganizationId());
 
-				relations.add(organization.getOrganizationId());
-			}
-
-			reindexOrganizationUsers(ArrayUtil.toLongArray(relations));
+			reindexOrganizationUsers(ArrayUtil.toLongArray(organizations));
 		}
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			Organization.class);
 
 		indexer.reindex(organization);
 
