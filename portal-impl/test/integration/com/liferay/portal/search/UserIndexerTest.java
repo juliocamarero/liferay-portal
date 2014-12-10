@@ -41,6 +41,7 @@ import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.UserGroupRolePK;
+import com.liferay.portal.test.DeleteAfterTestRun;
 import com.liferay.portal.test.LiferayIntegrationTestRule;
 import com.liferay.portal.test.MainServletTestRule;
 import com.liferay.portal.test.Sync;
@@ -63,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -82,49 +84,60 @@ public class UserIndexerTest extends PowerMockito {
 			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
 
+	@Before
+	public void setUp() throws Exception {
+		_organization = OrganizationTestUtil.addOrganization();
+
+		_childOrganization = OrganizationTestUtil.addOrganization(
+			_organization.getOrganizationId(), RandomTestUtil.randomString(),
+			false);
+
+		_organizations.add(_childOrganization);
+		_organizations.add(_organization);
+
+		_group = GroupTestUtil.addGroup();
+	}
+
 	@Test
 	public void testAddRemoveGroups() throws Exception {
-		Group group = GroupTestUtil.addGroup();
-
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
-		params.put("usersGroups", group.getGroupId());
+		params.put("usersGroups", _group.getGroupId());
 
 		int initialCount = getUsersCount(params);
 
-		User user = UserTestUtil.addGroupUser(group, RoleConstants.SITE_MEMBER);
+		_user1 = UserTestUtil.addGroupUser(_group, RoleConstants.SITE_MEMBER);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		long[] groupIds = ArrayUtil.remove(
-			user.getGroupIds(), group.getGroupId());
+			_user1.getGroupIds(), _group.getGroupId());
 
-		UserTestUtil.updateUser(user, groupIds, null, null, null, null);
+		UserTestUtil.updateUser(_user1, groupIds, null, null, null, null);
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
 
 	@Test
 	public void testAddRemoveOrganizations() throws Exception {
-		Organization organization = OrganizationTestUtil.addOrganization();
-
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
-		params.put("usersOrgs", organization.getOrganizationId());
+		params.put("usersOrgs", _organization.getOrganizationId());
 
 		int initialCount = getUsersCount(params);
 
-		User user = UserTestUtil.addOrganizationUser(
-			organization, RoleConstants.ORGANIZATION_USER);
+		_user1 = UserTestUtil.addOrganizationUser(
+			_organization, RoleConstants.ORGANIZATION_USER);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		long[] organizationIds = ArrayUtil.remove(
-			user.getOrganizationIds(), organization.getOrganizationId());
+			_user1.getOrganizationIds(), _organization.getOrganizationId());
 
-		UserTestUtil.updateUser(user, null, organizationIds, null, null, null);
+		UserTestUtil.updateUser(
+			_user1, null, organizationIds, null, null, null);
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
@@ -135,86 +148,86 @@ public class UserIndexerTest extends PowerMockito {
 
 		serviceContext.setUserId(TestPropsValues.getUserId());
 
-		PasswordPolicy passwordPolicy =
-			PasswordPolicyTestUtil.addPasswordPolicy(serviceContext);
+		_passwordPolicy = PasswordPolicyTestUtil.addPasswordPolicy(
+			serviceContext);
 
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
 		params.put(
-			"usersPasswordPolicies", passwordPolicy.getPasswordPolicyId());
+			"usersPasswordPolicies", _passwordPolicy.getPasswordPolicyId());
 
 		int initialCount = getUsersCount(params);
 
-		User user = UserTestUtil.addUser();
+		_user1 = UserTestUtil.addUser();
 
-		long[] userIds = new long[] {user.getUserId()};
+		long[] userIds = new long[] {_user1.getUserId()};
 
 		UserLocalServiceUtil.addPasswordPolicyUsers(
-			passwordPolicy.getPasswordPolicyId(), userIds);
+			_passwordPolicy.getPasswordPolicyId(), userIds);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		UserLocalServiceUtil.unsetPasswordPolicyUsers(
-			passwordPolicy.getPasswordPolicyId(), userIds);
+			_passwordPolicy.getPasswordPolicyId(), userIds);
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
 
 	@Test
 	public void testAddRemoveRoles() throws Exception {
-		Role role = RoleTestUtil.addRole(RoleConstants.TYPE_REGULAR);
+		_role = RoleTestUtil.addRole(RoleConstants.TYPE_REGULAR);
 
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
-		params.put("usersRoles", role.getRoleId());
+		params.put("usersRoles", _role.getRoleId());
 
 		int initialCount = getUsersCount(params);
 
-		User user = UserTestUtil.addUser();
+		_user1 = UserTestUtil.addUser();
 
-		long[] roleIds = ArrayUtil.append(user.getRoleIds(), role.getRoleId());
+		long[] roleIds = ArrayUtil.append(
+			_user1.getRoleIds(), _role.getRoleId());
 
-		UserTestUtil.updateUser(user, null, null, roleIds, null, null);
+		UserTestUtil.updateUser(_user1, null, null, roleIds, null, null);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
-		roleIds = ArrayUtil.remove(roleIds, role.getRoleId());
+		roleIds = ArrayUtil.remove(roleIds, _role.getRoleId());
 
-		UserTestUtil.updateUser(user, null, null, roleIds, null, null);
+		UserTestUtil.updateUser(_user1, null, null, roleIds, null, null);
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
 
 	@Test
 	public void testAddRemoveTeams() throws Exception {
-		Team team = TeamLocalServiceUtil.addTeam(
+		_team = TeamLocalServiceUtil.addTeam(
 			TestPropsValues.getUserId(), TestPropsValues.getGroupId(),
 			RandomTestUtil.randomString(), null);
 
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
-		params.put("usersTeams", team.getTeamId());
+		params.put("usersTeams", _team.getTeamId());
 
 		int initialCount = getUsersCount(params);
 
-		User user = UserTestUtil.addUser();
+		_user1 = UserTestUtil.addUser();
 
-		UserLocalServiceUtil.addTeamUser(team.getTeamId(), user.getUserId());
+		UserLocalServiceUtil.addTeamUser(_team.getTeamId(), _user1.getUserId());
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
-		UserLocalServiceUtil.deleteTeamUser(team.getTeamId(), user.getUserId());
+		UserLocalServiceUtil.deleteTeamUser(
+			_team.getTeamId(), _user1.getUserId());
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
 
 	@Test
 	public void testAddRemoveUserGroupRole() throws Exception {
-		Group group = GroupTestUtil.addGroup();
-
 		Role role = RoleLocalServiceUtil.getRole(
 			TestPropsValues.getCompanyId(), RoleConstants.SITE_ADMINISTRATOR);
 
@@ -222,118 +235,108 @@ public class UserIndexerTest extends PowerMockito {
 			new LinkedHashMap<String, Object>();
 
 		params.put(
-			"userGroupRole", new Long[] {group.getGroupId(), role.getRoleId()});
+			"userGroupRole",
+			new Long[] {_group.getGroupId(), role.getRoleId()});
 
 		int initialCount = getUsersCount(params);
 
-		User user = UserTestUtil.addGroupAdminUser(group);
+		_user1 = UserTestUtil.addGroupAdminUser(_group);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		UserGroupRole userGroupRole =
 			UserGroupRoleLocalServiceUtil.getUserGroupRole(
 				new UserGroupRolePK(
-					user.getUserId(), group.getGroupId(), role.getRoleId()));
+					_user1.getUserId(), _group.getGroupId(), role.getRoleId()));
 
 		List<UserGroupRole> userGroupRoles =
 			new ArrayList<UserGroupRole> (
 				UserGroupRoleLocalServiceUtil.getUserGroupRoles(
-					user.getUserId(), group.getGroupId()));
+					_user1.getUserId(), _group.getGroupId()));
 
 		userGroupRoles.remove(userGroupRole);
 
-		UserTestUtil.updateUser(user, null, null, null, userGroupRoles, null);
+		UserTestUtil.updateUser(_user1, null, null, null, userGroupRoles, null);
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
 
 	@Test
 	public void testAddRemoveUserGroups() throws Exception {
-		UserGroup userGroup = UserGroupTestUtil.addUserGroup();
+		_userGroup = UserGroupTestUtil.addUserGroup();
 
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
-		params.put("usersUserGroups", userGroup.getUserGroupId());
+		params.put("usersUserGroups", _userGroup.getUserGroupId());
 
 		int initialCount = getUsersCount(params);
 
-		User user = UserTestUtil.addUser();
+		_user1 = UserTestUtil.addUser();
 
 		long[] userGroupIds = ArrayUtil.append(
-			user.getUserGroupIds(), userGroup.getUserGroupId());
+			_user1.getUserGroupIds(), _userGroup.getUserGroupId());
 
-		UserTestUtil.updateUser(user, null, null, null, null, userGroupIds);
+		UserTestUtil.updateUser(_user1, null, null, null, null, userGroupIds);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		userGroupIds = ArrayUtil.remove(
-			userGroupIds, userGroup.getUserGroupId());
+			userGroupIds, _userGroup.getUserGroupId());
 
-		UserTestUtil.updateUser(user, null, null, null, null, userGroupIds);
+		UserTestUtil.updateUser(_user1, null, null, null, null, userGroupIds);
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
 
 	@Test
 	public void testAddRemoveUsersOrganizationTree() throws Exception {
-		Organization parentOrgnaization =
-			OrganizationTestUtil.addOrganization();
-
-		Organization testOrganization = OrganizationTestUtil.addOrganization(
-			parentOrgnaization.getOrganizationId(),
-			RandomTestUtil.randomString(), false);
-
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
-		params.put("usersOrgsTree", testOrganization.getOrganizationId());
+		params.put("usersOrgsTree", _childOrganization.getOrganizationId());
 
 		int initialCount = getUsersCount(params);
 
-		UserTestUtil.addOrganizationUser(
-			parentOrgnaization, RoleConstants.ORGANIZATION_USER);
+		_user1 = UserTestUtil.addOrganizationUser(
+			_organization, RoleConstants.ORGANIZATION_USER);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		OrganizationTestUtil.updateOrganization(
-			testOrganization.getOrganizationId(),
+			_childOrganization.getOrganizationId(),
 			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
-			testOrganization.getName(), false);
+			_childOrganization.getName(), false);
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
 
 	@Test
 	public void testInheritedGroups() throws Exception {
-		Organization organization = OrganizationTestUtil.addOrganization();
-
-		UserGroup userGroup = UserGroupTestUtil.addUserGroup();
-
-		Group group = GroupTestUtil.addGroup();
+		_userGroup = UserGroupTestUtil.addUserGroup();
 
 		GroupLocalServiceUtil.addOrganizationGroup(
-			organization.getOrganizationId(), group);
+			_organization.getOrganizationId(), _group);
 		GroupLocalServiceUtil.addUserGroupGroup(
-			userGroup.getUserGroupId(), group);
+			_userGroup.getUserGroupId(), _group);
 
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
 		params.put("inherit", Boolean.TRUE);
-		params.put("usersGroups", group.getGroupId());
+		params.put("usersGroups", _group.getGroupId());
 
 		int initialCount = getUsersCount(params);
 
 		User organizationUser = UserTestUtil.addOrganizationUser(
-			organization, RoleConstants.ORGANIZATION_USER);
+			_organization, RoleConstants.ORGANIZATION_USER);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		User userGroupUser = UserTestUtil.addUser();
 
 		long[] userGroupIds = ArrayUtil.append(
-			userGroupUser.getUserGroupIds(), userGroup.getUserGroupId());
+			userGroupUser.getUserGroupIds(), _userGroup.getUserGroupId());
 
 		UserTestUtil.updateUser(
 			userGroupUser, null, null, null, null, userGroupIds);
@@ -342,7 +345,7 @@ public class UserIndexerTest extends PowerMockito {
 
 		long[] organizationIds = ArrayUtil.remove(
 			organizationUser.getOrganizationIds(),
-			organization.getOrganizationId());
+			_organization.getOrganizationId());
 
 		UserTestUtil.updateUser(
 			organizationUser, null, organizationIds, null, null, null);
@@ -350,7 +353,7 @@ public class UserIndexerTest extends PowerMockito {
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		userGroupIds = ArrayUtil.remove(
-			userGroupIds, userGroup.getUserGroupId());
+			userGroupIds, _userGroup.getUserGroupId());
 
 		UserTestUtil.updateUser(
 			userGroupUser, null, null, null, null, userGroupIds);
@@ -360,58 +363,51 @@ public class UserIndexerTest extends PowerMockito {
 
 	@Test
 	public void testInheritedRoles() throws Exception {
-		Organization organization = OrganizationTestUtil.addOrganization();
-
-		UserGroup userGroup = UserGroupTestUtil.addUserGroup();
-
-		Group group = GroupTestUtil.addGroup();
+		_userGroup = UserGroupTestUtil.addUserGroup();
 
 		GroupLocalServiceUtil.addOrganizationGroup(
-			organization.getOrganizationId(), group);
+			_organization.getOrganizationId(), _group);
 		GroupLocalServiceUtil.addUserGroupGroup(
-			userGroup.getUserGroupId(), group);
+			_userGroup.getUserGroupId(), _group);
 
-		Role role = RoleTestUtil.addRole(RoleConstants.TYPE_REGULAR);
+		_role = RoleTestUtil.addRole(RoleConstants.TYPE_REGULAR);
 
-		RoleLocalServiceUtil.addGroupRole(group.getGroupId(), role);
+		RoleLocalServiceUtil.addGroupRole(_group.getGroupId(), _role);
 
 		LinkedHashMap<String, Object> params =
 			new LinkedHashMap<String, Object>();
 
 		params.put("inherit", Boolean.TRUE);
-		params.put("usersRoles", role.getRoleId());
+		params.put("usersRoles", _role.getRoleId());
 
 		int initialCount = getUsersCount(params);
 
-		User organizationUser = UserTestUtil.addOrganizationUser(
-			organization, RoleConstants.ORGANIZATION_USER);
+		_user1 = UserTestUtil.addOrganizationUser(
+			_organization, RoleConstants.ORGANIZATION_USER);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
-		User userGroupUser = UserTestUtil.addUser();
+		_user2 = UserTestUtil.addUser();
 
 		long[] userGroupIds = ArrayUtil.append(
-			userGroupUser.getUserGroupIds(), userGroup.getUserGroupId());
+			_user2.getUserGroupIds(), _userGroup.getUserGroupId());
 
-		UserTestUtil.updateUser(
-			userGroupUser, null, null, null, null, userGroupIds);
+		UserTestUtil.updateUser(_user2, null, null, null, null, userGroupIds);
 
 		Assert.assertEquals(initialCount + 2, getUsersCount(params));
 
 		long[] organizationIds = ArrayUtil.remove(
-			organizationUser.getOrganizationIds(),
-			organization.getOrganizationId());
+			_user1.getOrganizationIds(), _organization.getOrganizationId());
 
 		UserTestUtil.updateUser(
-			organizationUser, null, organizationIds, null, null, null);
+			_user1, null, organizationIds, null, null, null);
 
 		Assert.assertEquals(initialCount + 1, getUsersCount(params));
 
 		userGroupIds = ArrayUtil.remove(
-			userGroupIds, userGroup.getUserGroupId());
+			userGroupIds, _userGroup.getUserGroupId());
 
-		UserTestUtil.updateUser(
-			userGroupUser, null, null, null, null, userGroupIds);
+		UserTestUtil.updateUser(_user2, null, null, null, null, userGroupIds);
 
 		Assert.assertEquals(initialCount, getUsersCount(params));
 	}
@@ -431,8 +427,6 @@ public class UserIndexerTest extends PowerMockito {
 		searchContext.setAttributes(attributes);
 
 		searchContext.setCompanyId(TestPropsValues.getCompanyId());
-
-		searchContext.setStart(QueryUtil.ALL_POS);
 		searchContext.setEnd(QueryUtil.ALL_POS);
 
 		if (params != null) {
@@ -442,6 +436,8 @@ public class UserIndexerTest extends PowerMockito {
 				searchContext.setKeywords(keywords);
 			}
 		}
+
+		searchContext.setStart(QueryUtil.ALL_POS);
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
@@ -454,5 +450,34 @@ public class UserIndexerTest extends PowerMockito {
 
 		return hits.getLength();
 	}
+
+	private Organization _childOrganization;
+
+	@DeleteAfterTestRun
+	private Group _group;
+
+	private Organization _organization;
+
+	@DeleteAfterTestRun
+	private final List<Organization> _organizations =
+		new ArrayList<Organization>();
+
+	@DeleteAfterTestRun
+	private PasswordPolicy _passwordPolicy;
+
+	@DeleteAfterTestRun
+	private Role _role;
+
+	@DeleteAfterTestRun
+	private Team _team;
+
+	@DeleteAfterTestRun
+	private User _user1;
+
+	@DeleteAfterTestRun
+	private User _user2;
+
+	@DeleteAfterTestRun
+	private UserGroup _userGroup;
 
 }

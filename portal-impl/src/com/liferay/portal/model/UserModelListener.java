@@ -48,12 +48,9 @@ public class UserModelListener extends UserCollectionReindexListener<User> {
 		throws ModelListenerException {
 
 		try {
-			long userId = ((Long)classPK).longValue();
-
 			if (associationClassName.equals(Group.class.getName())) {
-				long groupId = ((Long)associationClassPK).longValue();
-
-				updateMembershipRequestStatus(userId, groupId);
+				updateMembershipRequestStatus(
+					(Long)classPK, (Long)associationClassPK);
 			}
 
 			super.onAfterAddAssociation(
