@@ -57,6 +57,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.SystemEventConstants;
+import com.liferay.portal.model.TreeModel;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.model.impl.OrganizationImpl;
@@ -1981,19 +1982,13 @@ public class OrganizationLocalServiceImpl
 			if (!ArrayUtil.contains(
 					organizationIds, organization.getOrganizationId())) {
 
-				organizationIds = ArrayUtil.append(
-					organizationIds, organization.getOrganizationId());
-
 				relations.add(organization.getOrganizationId());
 			}
 
-			indexer.reindex(organizationIds);
-
 			reindexOrganizationUsers(ArrayUtil.toLongArray(relations));
 		}
-		else {
-			indexer.reindex(organization);
-		}
+
+		indexer.reindex(organization);
 
 		return organization;
 	}
@@ -2219,17 +2214,41 @@ public class OrganizationLocalServiceImpl
 	protected long[] rebuildDescendantTreePaths(Organization organization)
 		throws PortalException {
 
-		List<Organization> organizations = getDescendantOrganizations(
-			organization);
+		List<TreeModel> treeModels = TreePathUtil.rebuildTree(
+			organization.getCompanyId(), organization.getOrganizationId(),
+			organization.getTreePath(),
+			new TreeModelTasksAdapter<Organization>() {
 
-		long[] organizationIds = new long[organizations.size()];
+				@Override
+				public List<Organization> findTreeModels(
+					long previousId, long companyId, long parentPrimaryKey,
+					int size) {
 
-		for (int i = 0; i < organizations.size(); i++) {
-			Organization curOrganization = organizations.get(i);
+					return organizationPersistence.findByO_C_P(
+						previousId, companyId, parentPrimaryKey,
+						QueryUtil.ALL_POS, size,
+						new OrganizationIdComparator(true));
+				}
 
-			curOrganization.setTreePath(curOrganization.buildTreePath());
+				@Override
+				public void reindexTreeModels(List<TreeModel> treeModels)
+					throws PortalException {
 
-			organizationPersistence.update(curOrganization);
+					Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+						Organization.class);
+
+					for (TreeModel treeModel : treeModels) {
+						indexer.reindex(treeModel);
+					}
+				}
+
+			}
+		);
+
+		long[] organizationIds = new long[treeModels.size()];
+
+		for (int i = 0; i < treeModels.size(); i++) {
+			Organization curOrganization = (Organization)treeModels.get(i);
 
 			organizationIds[i] = curOrganization.getOrganizationId();
 		}
