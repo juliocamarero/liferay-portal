@@ -14,65 +14,32 @@
 
 package com.liferay.portal.model;
 
-import com.liferay.portal.ModelListenerException;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.persistence.GroupUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author Andrew Betts
  */
-public class GroupModelListener extends BaseModelListener<Group> {
+public class GroupModelListener extends UserCollectionReindexListener<Group> {
 
 	@Override
-	public void onAfterAddAssociation(
-			Object classPK, String associationClassName,
-			Object associationClassPK)
-		throws ModelListenerException {
-
-		try {
-			reindexUsers((Long)classPK, associationClassName);
-		}
-		catch (Exception e) {
-			throw new ModelListenerException(e);
-		}
+	protected Set<String> getTableMapperClasses() {
+		return _TABLE_MAPPER_CLASSES;
 	}
 
 	@Override
-	public void onAfterRemoveAssociation(
-			Object classPK, String associationClassName,
-			Object associationClassPK)
-		throws ModelListenerException {
-
-		try {
-			reindexUsers((Long)classPK, associationClassName);
-		}
-		catch (Exception e) {
-			throw new ModelListenerException(e);
-		}
+	protected long[] getUserIds(Object classPK) {
+		return GroupUtil.getUserGroupPrimaryKeys((Long)classPK);
 	}
 
-	protected void reindexUsers(long groupId, String associationClassName) {
-		if (!_TABLE_MAPPER_CLASSES.contains(associationClassName)) {
-			return;
-		}
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			User.class.getName());
-
-		long[] userIds = GroupLocalServiceUtil.getUserPrimaryKeys(groupId);
-
-		indexer.commitCallbackReindex(userIds);
+	@Override
+	protected boolean isAssociationReindex() {
+		return true;
 	}
 
-	private static final List<String> _TABLE_MAPPER_CLASSES =
-		new ArrayList<String>();
-
-	static {
-		_TABLE_MAPPER_CLASSES.add(Role.class.getName());
-	}
+	private static final Set<String> _TABLE_MAPPER_CLASSES =
+		Collections.singleton(Role.class.getName());
 
 }

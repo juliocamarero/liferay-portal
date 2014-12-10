@@ -16,9 +16,8 @@ package com.liferay.portal.model;
 
 import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.model.impl.UserModelImpl;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.exportimport.UserExporterUtil;
@@ -30,9 +29,9 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 
 import java.io.Serializable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Scott Lee
@@ -40,7 +39,7 @@ import java.util.Map;
  * @author Raymond Augé
  * @author Vilmos Papp
  */
-public class UserModelListener extends BaseModelListener<User> {
+public class UserModelListener extends UserCollectionReindexListener<User> {
 
 	@Override
 	public void onAfterAddAssociation(
@@ -57,7 +56,8 @@ public class UserModelListener extends BaseModelListener<User> {
 				updateMembershipRequestStatus(userId, groupId);
 			}
 
-			reindexUsers(userId, associationClassName);
+			super.onAfterAddAssociation(
+				classPK, associationClassName, associationClassPK);
 		}
 		catch (Exception e) {
 			throw new ModelListenerException(e);
@@ -68,22 +68,6 @@ public class UserModelListener extends BaseModelListener<User> {
 	public void onAfterCreate(User user) throws ModelListenerException {
 		try {
 			exportToLDAP(user);
-		}
-		catch (Exception e) {
-			throw new ModelListenerException(e);
-		}
-	}
-
-	@Override
-	public void onAfterRemoveAssociation(
-			Object classPK, String associationClassName,
-			Object associationClassPK)
-		throws ModelListenerException {
-
-		try {
-			long userId = ((Long)classPK).longValue();
-
-			reindexUsers(userId, associationClassName);
 		}
 		catch (Exception e) {
 			throw new ModelListenerException(e);
@@ -128,15 +112,19 @@ public class UserModelListener extends BaseModelListener<User> {
 		UserExporterUtil.exportUser(user, expandoBridgeAttributes);
 	}
 
-	protected void reindexUsers(long userId, String associationClassName) {
-		if (!_TABLE_MAPPER_CLASSES.contains(associationClassName)) {
-			return;
-		}
+	@Override
+	protected Set<String> getTableMapperClasses() {
+		return _TABLE_MAPPER_CLASSES;
+	}
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			User.class.getName());
+	@Override
+	protected long[] getUserIds(Object classPK) {
+		return new long[] { (Long)classPK };
+	}
 
-		indexer.commitCallbackReindex(userId);
+	@Override
+	protected boolean isAssociationReindex() {
+		return true;
 	}
 
 	protected void updateMembershipRequestStatus(long userId, long groupId)
@@ -161,15 +149,11 @@ public class UserModelListener extends BaseModelListener<User> {
 		}
 	}
 
-	private static final List<String> _TABLE_MAPPER_CLASSES =
-		new ArrayList<String>();
-
-	static {
-		_TABLE_MAPPER_CLASSES.add(Group.class.getName());
-		_TABLE_MAPPER_CLASSES.add(Organization.class.getName());
-		_TABLE_MAPPER_CLASSES.add(Role.class.getName());
-		_TABLE_MAPPER_CLASSES.add(Team.class.getName());
-		_TABLE_MAPPER_CLASSES.add(UserGroup.class.getName());
-	}
+	private static final Set<String> _TABLE_MAPPER_CLASSES =
+		SetUtil.fromArray(new String[] {
+			Group.class.getName(), Organization.class.getName(),
+			Role.class.getName(), Team.class.getName(),
+			UserGroup.class.getName()
+		});
 
 }

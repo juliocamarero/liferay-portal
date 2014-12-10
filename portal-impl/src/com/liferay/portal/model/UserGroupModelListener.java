@@ -15,22 +15,19 @@
 package com.liferay.portal.model;
 
 import com.liferay.portal.ModelListenerException;
-
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUtil;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.security.exportimport.UserExporterUtil;
 import com.liferay.portal.security.exportimport.UserImportTransactionThreadLocal;
 import com.liferay.portal.security.exportimport.UserOperation;
-import com.liferay.portal.service.UserGroupLocalServiceUtil;
+import com.liferay.portal.service.persistence.UserGroupUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Marcellus Tavares
  */
-public class UserGroupModelListener extends BaseModelListener<UserGroup> {
+public class UserGroupModelListener
+	extends UserCollectionReindexListener<UserGroup> {
 
 	@Override
 	public void onAfterAddAssociation(
@@ -47,7 +44,8 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 					UserOperation.ADD);
 			}
 
-			reindexUsers(userGroupId, associationClassName);
+			super.onAfterAddAssociation(
+				classPK, associationClassName, associationClassPK);
 		}
 		catch (Exception e) {
 			throw new ModelListenerException(e);
@@ -69,7 +67,8 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 					UserOperation.REMOVE);
 			}
 
-			reindexUsers(userGroupId, associationClassName);
+			super.onAfterRemoveAssociation(
+				classPK, associationClassName, associationClassPK);
 		}
 		catch (Exception e) {
 			throw new ModelListenerException(e);
@@ -87,26 +86,24 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 		UserExporterUtil.exportUser(userId, userGroupId, userOperation);
 	}
 
-	protected void reindexUsers(long userGroupId, String associationClassName) {
-		if (!_TABLE_MAPPER_CLASSES.contains(associationClassName)) {
-			return;
-		}
-
-		long[] userIds = UserGroupLocalServiceUtil.getUserPrimaryKeys(
-			userGroupId);
-
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			User.class.getName());
-
-		indexer.commitCallbackReindex(userIds);
+	@Override
+	protected Set<String> getTableMapperClasses() {
+		return _TABLE_MAPPER_CLASSES;
 	}
 
-	private static final List<String> _TABLE_MAPPER_CLASSES =
-		new ArrayList<String>();
-
-	static {
-		_TABLE_MAPPER_CLASSES.add(Group.class.getName());
-		_TABLE_MAPPER_CLASSES.add(Team.class.getName());
+	@Override
+	protected long[] getUserIds(Object classPK) {
+		return UserGroupUtil.getUserPrimaryKeys((Long)classPK);
 	}
+
+	@Override
+	protected boolean isAssociationReindex() {
+		return true;
+	}
+
+	private static final Set<String> _TABLE_MAPPER_CLASSES =
+		SetUtil.fromArray(new String[] {
+			Group.class.getName(), Team.class.getName()
+		});
 
 }

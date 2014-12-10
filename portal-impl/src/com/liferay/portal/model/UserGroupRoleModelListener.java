@@ -14,42 +14,20 @@
 
 package com.liferay.portal.model;
 
-import com.liferay.portal.ModelListenerException;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-
 /**
  * @author Andrew Betts
  */
 public class UserGroupRoleModelListener
-	extends BaseModelListener<UserGroupRole> {
+	extends UserCollectionReindexListener<UserGroupRole> {
 
 	@Override
-	public void onAfterCreate(UserGroupRole userGroupRole)
-		throws ModelListenerException {
-
-		reindexUsers(userGroupRole.getUserId());
+	protected long[] getUserIds(UserGroupRole model) {
+		return new long[] { model.getUserId() };
 	}
 
 	@Override
-	public void onAfterRemove(UserGroupRole userGroupRole)
-		throws ModelListenerException {
-
-		reindexUsers(userGroupRole.getUserId());
-	}
-
-	@Override
-	public void onAfterUpdate(UserGroupRole userGroupRole)
-		throws ModelListenerException {
-
-		reindexUsers(userGroupRole.getUserId());
-	}
-
-	protected void reindexUsers(final long userId) {
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			User.class.getName());
-
-		indexer.commitCallbackReindex(userId);
+	protected boolean isModelReindex() {
+		return true;
 	}
 
 }
