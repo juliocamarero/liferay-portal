@@ -17,7 +17,7 @@ package com.liferay.portal.model;
 import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.UserGroupLocalServiceUtil;
 
 /**
  * @author Andrew Betts
@@ -47,7 +47,7 @@ public class UserGroupGroupRoleModelListener
 	}
 
 	protected void reindexUsers(UserGroupGroupRole userGroupGroupRole) {
-		long[] userIds = UserLocalServiceUtil.getUserGroupPrimaryKeys(
+		long[] userIds = UserGroupLocalServiceUtil.getUserPrimaryKeys(
 			userGroupGroupRole.getUserGroupId());
 
 		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
