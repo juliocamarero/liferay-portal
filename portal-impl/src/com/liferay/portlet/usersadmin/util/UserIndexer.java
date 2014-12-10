@@ -425,9 +425,9 @@ public class UserIndexer extends BaseIndexer {
 				new HashMap<Long, Collection<Document>>();
 
 			for (long userId : userIds) {
-				User user = UserLocalServiceUtil.getUserById(userId);
+				User user = UserLocalServiceUtil.fetchUser(userId);
 
-				if (user.isDefaultUser()) {
+				if ((user == null) || user.isDefaultUser()) {
 					continue;
 				}
 
