@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -33,14 +32,14 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 		Object classPK, String associationClassName,
 		Object associationClassPK) {
 
-		if (isAssociationReindex()) {
+		if (_reindexAssociation) {
 			reindexUsers(classPK, associationClassName);
 		}
 	}
 
 	@Override
 	public void onAfterCreate(T model) {
-		if (isModelReindex()) {
+		if (_reindexModel) {
 			long[] userId = getUserIds(model);
 
 			reindexUsers(userId);
@@ -49,7 +48,7 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 
 	@Override
 	public void onAfterRemove(T model) {
-		if (isModelReindex()) {
+		if (_reindexModel) {
 			long[] userId = getUserIds(model);
 
 			reindexUsers(userId);
@@ -61,22 +60,27 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 		Object classPK, String associationClassName,
 		Object associationClassPK) {
 
-		if (isAssociationReindex()) {
+		if (_reindexAssociation) {
 			reindexUsers(classPK, associationClassName);
 		}
 	}
 
 	@Override
 	public void onAfterUpdate(T model) {
-		if (isModelReindex()) {
+		if (_reindexModel) {
 			long[] userId = getUserIds(model);
 
 			reindexUsers(userId);
 		}
 	}
 
-	protected Set<String> getTableMapperClasses() {
-		return _TABLE_MAPPER_CLASSES;
+	protected UserCollectionReindexListener(
+		Set<String> tableMapperClasses, boolean reindexAssociation,
+		boolean reindexModel) {
+
+		_tableMapperClasses = tableMapperClasses;
+		_reindexAssociation = reindexAssociation;
+		_reindexModel = reindexModel;
 	}
 
 	protected long[] getUserIds(Object classPK) {
@@ -87,15 +91,7 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 		return new long[0];
 	}
 
-	protected boolean isAssociationReindex() {
-		return false;
-	}
-
-	protected boolean isModelReindex() {
-		return false;
-	}
-
-	protected void reindexUsers(long... userIds) {
+	protected void reindexUsers(final long... userIds) {
 		try {
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				User.class.getName());
@@ -110,9 +106,7 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 	}
 
 	protected void reindexUsers(Object classPK, String associationClassName) {
-		Set<String> tableMapperClasses = getTableMapperClasses();
-
-		if (!tableMapperClasses.contains(associationClassName)) {
+		if (!_tableMapperClasses.contains(associationClassName)) {
 			return;
 		}
 
@@ -121,10 +115,11 @@ public abstract class UserCollectionReindexListener<T extends BaseModel<T>>
 		reindexUsers(userIds);
 	}
 
-	private static final Set<String> _TABLE_MAPPER_CLASSES =
-		Collections.emptySet();
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		UserCollectionReindexListener.class);
+
+	private final boolean _reindexAssociation;
+	private final boolean _reindexModel;
+	private final Set<String> _tableMapperClasses;
 
 }

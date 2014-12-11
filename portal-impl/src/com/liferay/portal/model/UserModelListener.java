@@ -31,7 +31,6 @@ import java.io.Serializable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Scott Lee
@@ -40,6 +39,16 @@ import java.util.Set;
  * @author Vilmos Papp
  */
 public class UserModelListener extends UserCollectionReindexListener<User> {
+
+	public UserModelListener() {
+		super(
+			SetUtil.fromArray(new String[] {
+				Group.class.getName(), Organization.class.getName(),
+				Role.class.getName(), Team.class.getName(),
+				UserGroup.class.getName()
+			}),
+			true, false);
+	}
 
 	@Override
 	public void onAfterAddAssociation(
@@ -110,18 +119,8 @@ public class UserModelListener extends UserCollectionReindexListener<User> {
 	}
 
 	@Override
-	protected Set<String> getTableMapperClasses() {
-		return _TABLE_MAPPER_CLASSES;
-	}
-
-	@Override
 	protected long[] getUserIds(Object classPK) {
 		return new long[] { (Long)classPK };
-	}
-
-	@Override
-	protected boolean isAssociationReindex() {
-		return true;
 	}
 
 	protected void updateMembershipRequestStatus(long userId, long groupId)
@@ -145,12 +144,5 @@ public class UserModelListener extends UserCollectionReindexListener<User> {
 				new ServiceContext());
 		}
 	}
-
-	private static final Set<String> _TABLE_MAPPER_CLASSES =
-		SetUtil.fromArray(new String[] {
-			Group.class.getName(), Organization.class.getName(),
-			Role.class.getName(), Team.class.getName(),
-			UserGroup.class.getName()
-		});
 
 }
