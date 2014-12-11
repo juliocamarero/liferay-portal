@@ -17,7 +17,6 @@ package com.liferay.portal.model;
 import com.liferay.portal.service.persistence.OrganizationUtil;
 
 import java.util.Collections;
-import java.util.Set;
 
 /**
  * @author Andrew Betts
@@ -25,22 +24,13 @@ import java.util.Set;
 public class OrganizationModelListener
 	extends UserCollectionReindexListener<Organization> {
 
-	@Override
-	protected Set<String> getTableMapperClasses() {
-		return _TABLE_MAPPER_CLASSES;
+	public OrganizationModelListener() {
+		super(Collections.singleton(Group.class.getName()), true, false);
 	}
 
 	@Override
 	protected long[] getUserIds(Object classPK) {
 		return OrganizationUtil.getUserPrimaryKeys((Long)classPK);
 	}
-
-	@Override
-	protected boolean isAssociationReindex() {
-		return true;
-	}
-
-	private static final Set<String> _TABLE_MAPPER_CLASSES =
-		Collections.singleton(Group.class.getName());
 
 }

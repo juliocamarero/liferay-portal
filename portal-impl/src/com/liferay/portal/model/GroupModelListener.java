@@ -17,29 +17,19 @@ package com.liferay.portal.model;
 import com.liferay.portal.service.persistence.GroupUtil;
 
 import java.util.Collections;
-import java.util.Set;
 
 /**
  * @author Andrew Betts
  */
 public class GroupModelListener extends UserCollectionReindexListener<Group> {
 
-	@Override
-	protected Set<String> getTableMapperClasses() {
-		return _TABLE_MAPPER_CLASSES;
+	public GroupModelListener() {
+		super(Collections.singleton(Role.class.getName()), true, false);
 	}
 
 	@Override
 	protected long[] getUserIds(Object classPK) {
 		return GroupUtil.getUserGroupPrimaryKeys((Long)classPK);
 	}
-
-	@Override
-	protected boolean isAssociationReindex() {
-		return true;
-	}
-
-	private static final Set<String> _TABLE_MAPPER_CLASSES =
-		Collections.singleton(Role.class.getName());
 
 }

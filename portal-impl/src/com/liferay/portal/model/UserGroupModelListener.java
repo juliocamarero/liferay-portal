@@ -21,13 +21,20 @@ import com.liferay.portal.security.exportimport.UserImportTransactionThreadLocal
 import com.liferay.portal.security.exportimport.UserOperation;
 import com.liferay.portal.service.persistence.UserGroupUtil;
 
-import java.util.Set;
-
 /**
  * @author Marcellus Tavares
  */
 public class UserGroupModelListener
 	extends UserCollectionReindexListener<UserGroup> {
+
+	public UserGroupModelListener() {
+		super(
+			SetUtil.fromArray(
+				new String[] {
+					Group.class.getName(), Team.class.getName()
+				}),
+			true, false);
+	}
 
 	@Override
 	public void onAfterAddAssociation(
@@ -36,12 +43,9 @@ public class UserGroupModelListener
 		throws ModelListenerException {
 
 		try {
-			long userGroupId = ((Long)classPK).longValue();
-
 			if (associationClassName.equals(User.class.getName())) {
 				exportToLDAP(
-					(Long)associationClassPK, (Long)userGroupId,
-					UserOperation.ADD);
+					(Long)associationClassPK, (Long)classPK, UserOperation.ADD);
 			}
 
 			super.onAfterAddAssociation(
@@ -59,11 +63,9 @@ public class UserGroupModelListener
 		throws ModelListenerException {
 
 		try {
-			long userGroupId = ((Long)classPK).longValue();
-
 			if (associationClassName.equals(User.class.getName())) {
 				exportToLDAP(
-					(Long)associationClassPK, (Long)userGroupId,
+					(Long)associationClassPK, (Long)classPK,
 					UserOperation.REMOVE);
 			}
 
@@ -87,23 +89,8 @@ public class UserGroupModelListener
 	}
 
 	@Override
-	protected Set<String> getTableMapperClasses() {
-		return _TABLE_MAPPER_CLASSES;
-	}
-
-	@Override
 	protected long[] getUserIds(Object classPK) {
 		return UserGroupUtil.getUserPrimaryKeys((Long)classPK);
 	}
-
-	@Override
-	protected boolean isAssociationReindex() {
-		return true;
-	}
-
-	private static final Set<String> _TABLE_MAPPER_CLASSES =
-		SetUtil.fromArray(new String[] {
-			Group.class.getName(), Team.class.getName()
-		});
 
 }

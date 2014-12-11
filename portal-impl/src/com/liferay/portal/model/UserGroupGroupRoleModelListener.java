@@ -16,20 +16,21 @@ package com.liferay.portal.model;
 
 import com.liferay.portal.service.persistence.UserGroupUtil;
 
+import java.util.Collections;
+
 /**
  * @author Andrew Betts
  */
 public class UserGroupGroupRoleModelListener
 	extends UserCollectionReindexListener<UserGroupGroupRole> {
 
-	@Override
-	protected long[] getUserIds(UserGroupGroupRole model) {
-		return UserGroupUtil.getUserPrimaryKeys(model.getUserGroupId());
+	public UserGroupGroupRoleModelListener() {
+		super(Collections.<String>emptySet(), false, true);
 	}
 
 	@Override
-	protected boolean isModelReindex() {
-		return true;
+	protected long[] getUserIds(UserGroupGroupRole model) {
+		return UserGroupUtil.getUserPrimaryKeys(model.getUserGroupId());
 	}
 
 }
