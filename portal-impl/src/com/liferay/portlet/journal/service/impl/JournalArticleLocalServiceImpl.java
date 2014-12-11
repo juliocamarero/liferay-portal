@@ -5266,8 +5266,8 @@ public class JournalArticleLocalServiceImpl
 
 		JournalArticle article = null;
 
-		User user = userPersistence.fetchByC_U(oldArticle.getCompanyId(),
-			oldArticle.getUserId());
+		User user = userPersistence.fetchByC_U(
+			oldArticle.getCompanyId(), oldArticle.getUserId());
 
 		if (user == null) {
 			user = userPersistence.fetchByC_DU(oldArticle.getCompanyId(), true);
