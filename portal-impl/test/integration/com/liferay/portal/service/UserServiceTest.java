@@ -723,7 +723,7 @@ public class UserServiceTest {
 
 		@BeforeClass
 		public static void setUp() throws Exception {
-			_group = GroupTestUtil.addGroup(RandomTestUtil.randomString());
+			_group = GroupTestUtil.addGroup();
 
 			for (int i = 0; i < (_PARENT_USERS_COUNT - 1); i++) {
 				_user = UserTestUtil.addUser("parent" + i, _group.getGroupId());
@@ -734,7 +734,7 @@ public class UserServiceTest {
 
 			GroupTestUtil.addGroup(
 				TestPropsValues.getCompanyId(), user.getUserId(),
-				_group.getGroupId(), RandomTestUtil.randomString(), null);
+				_group.getGroupId());
 
 			UserGroup userGroup = UserGroupTestUtil.addUserGroup(
 				_group.getGroupId());
