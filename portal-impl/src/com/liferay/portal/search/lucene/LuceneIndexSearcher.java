@@ -185,6 +185,10 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 				for (int i = 0; i < sorts.length; i++) {
 					Sort sort = sorts[i];
 
+					if (sort == null) {
+						continue;
+					}
+
 					if ((sort.getType() == Sort.STRING_TYPE) &&
 						(searchContext.getLocale() != null)) {
 
