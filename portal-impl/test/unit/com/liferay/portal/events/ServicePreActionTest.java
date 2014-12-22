@@ -71,7 +71,7 @@ public class ServicePreActionTest extends ServicePreAction {
 	public void testInitThemeDisplayPlidSiteLayout() throws Exception {
 		long plid = getThemeDisplayPlid(false, false);
 
-		Object[] defaultLayout = getDefaultSiteLayout(_user);
+		Object[] defaultLayout = getGuestSiteLayout(_user);
 
 		Layout layout = (Layout)defaultLayout[0];
 
@@ -102,7 +102,7 @@ public class ServicePreActionTest extends ServicePreAction {
 		try {
 			long plid = getThemeDisplayPlid(false, true);
 
-			Object[] defaultLayout = getDefaultUserSiteLayout(_user);
+			Object[] defaultLayout = getDefaultUserSitesLayout(_user);
 
 			Layout layout = (Layout) defaultLayout[0];
 
@@ -120,7 +120,7 @@ public class ServicePreActionTest extends ServicePreAction {
 	public void testInitThemeDisplayPlidVirtualLayout() throws Exception {
 		long plid = getThemeDisplayPlid(true, false);
 
-		Object[] defaultLayout = getDefaultVirtualLayout(_request);
+		Object[] defaultLayout = getDefaultVirtualHostLayout(_request);
 
 		Layout layout = (Layout)defaultLayout[0];
 
