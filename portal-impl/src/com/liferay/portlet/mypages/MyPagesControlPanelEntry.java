@@ -20,13 +20,13 @@ import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.BaseControlPanelEntry;
+import com.liferay.portlet.grouppages.GroupPagesControlPanelEntry;
 
 /**
  * @author Jorge Ferrer
  * @author Amos Fong
  */
-public class MyPagesControlPanelEntry extends BaseControlPanelEntry {
+public class MyPagesControlPanelEntry extends GroupPagesControlPanelEntry {
 
 	@Override
 	protected boolean hasAccessPermissionDenied(
