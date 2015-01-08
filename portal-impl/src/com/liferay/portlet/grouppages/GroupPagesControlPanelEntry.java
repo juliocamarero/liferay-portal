@@ -27,6 +27,7 @@ import com.liferay.portlet.BaseControlPanelEntry;
 /**
  * @author Jorge Ferrer
  * @author Sergio González
+ * @author Tibor Lipusz
  */
 public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {
 
@@ -34,6 +35,10 @@ public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {
 	protected boolean hasAccessPermissionDenied(
 			PermissionChecker permissionChecker, Group group, Portlet portlet)
 		throws Exception {
+
+		if (group.isUser()) {
+			return hasMyPagesAccesPermissionDenied(permissionChecker);
+		}
 
 		return group.isCompany();
 	}
