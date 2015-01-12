@@ -37,13 +37,27 @@ public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {
 		throws Exception {
 
 		if (group.isUser()) {
-			return hasMyPagesAccesPermissionDenied(permissionChecker);
+			return hasUserLayoutsAccesPermissionDenied(permissionChecker);
 		}
 
 		return group.isCompany();
 	}
 
-	protected boolean hasMyPagesAccesPermissionDenied(
+	@Override
+	protected boolean hasPermissionImplicitlyGranted(
+			PermissionChecker permissionChecker, Group group, Portlet portlet)
+		throws Exception {
+
+		if (group.isUser()) {
+			return super.hasAccessPermissionExplicitlyGranted(
+				permissionChecker, group, portlet);
+		}
+
+		return GroupPermissionUtil.contains(
+			permissionChecker, group, ActionKeys.MANAGE_LAYOUTS);
+	}
+
+	protected boolean hasUserLayoutsAccesPermissionDenied(
 			PermissionChecker permissionChecker)
 		throws Exception {
 
@@ -65,20 +79,6 @@ public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {
 		}
 
 		return false;
-	}
-
-	@Override
-	protected boolean hasPermissionImplicitlyGranted(
-			PermissionChecker permissionChecker, Group group, Portlet portlet)
-		throws Exception {
-
-		if (group.isUser()) {
-			return super.hasAccessPermissionExplicitlyGranted(
-				permissionChecker, group, portlet);
-		}
-
-		return GroupPermissionUtil.contains(
-			permissionChecker, group, ActionKeys.MANAGE_LAYOUTS);
 	}
 
 }
