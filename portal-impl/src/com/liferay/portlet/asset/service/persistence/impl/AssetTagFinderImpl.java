@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.asset.NoSuchTagException;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.model.AssetTagConstants;
 import com.liferay.portlet.asset.model.impl.AssetTagImpl;
@@ -55,9 +54,6 @@ public class AssetTagFinderImpl
 
 	public static final String COUNT_BY_G_N_P =
 		AssetTagFinder.class.getName() + ".countByG_N_P";
-
-	public static final String FIND_BY_G_N =
-		AssetTagFinder.class.getName() + ".findByG_N";
 
 	public static final String FIND_BY_G_C_N =
 		AssetTagFinder.class.getName() + ".findByG_C_N";
@@ -96,13 +92,6 @@ public class AssetTagFinderImpl
 	}
 
 	@Override
-	public AssetTag filterFindByG_N(long groupId, String name)
-		throws NoSuchTagException {
-
-		return doFindByG_N(groupId, name, true);
-	}
-
-	@Override
 	public List<AssetTag> filterFindByG_C_N(
 		long groupId, long classNameId, String name, int start, int end,
 		OrderByComparator<AssetTag> obc) {
@@ -117,13 +106,6 @@ public class AssetTagFinderImpl
 
 		return doFindByG_N_P(
 			groupIds, name, tagProperties, start, end, obc, true);
-	}
-
-	@Override
-	public AssetTag findByG_N(long groupId, String name)
-		throws NoSuchTagException {
-
-		return doFindByG_N(groupId, name, false);
 	}
 
 	@Override
@@ -341,61 +323,6 @@ public class AssetTagFinderImpl
 		finally {
 			closeSession(session);
 		}
-	}
-
-	protected AssetTag doFindByG_N(
-			long groupId, String name, boolean inlineSQLHelper)
-		throws NoSuchTagException {
-
-		name = StringUtil.toLowerCase(name.trim());
-
-		Session session = null;
-
-		try {
-			session = openSession();
-
-			String sql = CustomSQLUtil.get(FIND_BY_G_N);
-
-			if (inlineSQLHelper) {
-				sql = InlineSQLHelperUtil.replacePermissionCheck(
-					sql, AssetTag.class.getName(), "AssetTag.tagId", groupId);
-			}
-
-			SQLQuery q = session.createSynchronizedSQLQuery(sql);
-
-			q.addEntity("AssetTag", AssetTagImpl.class);
-
-			QueryPos qPos = QueryPos.getInstance(q);
-
-			qPos.add(groupId);
-
-			String lowerCaseName = StringUtil.toLowerCase(name);
-
-			qPos.add(lowerCaseName);
-
-			List<AssetTag> tags = q.list();
-
-			if (!tags.isEmpty()) {
-				return tags.get(0);
-			}
-		}
-		catch (Exception e) {
-			throw new SystemException(e);
-		}
-		finally {
-			closeSession(session);
-		}
-
-		StringBundler sb = new StringBundler(6);
-
-		sb.append("No AssetTag exists with the key ");
-		sb.append("{groupId=");
-		sb.append(groupId);
-		sb.append(", name=");
-		sb.append(name);
-		sb.append("}");
-
-		throw new NoSuchTagException(sb.toString());
 	}
 
 	protected List<AssetTag> doFindByG_C_N(

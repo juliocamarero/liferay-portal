@@ -374,7 +374,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 
 	@Override
 	public AssetTag getTag(long groupId, String name) throws PortalException {
-		return assetTagFinder.findByG_N(groupId, name);
+		return assetTagPersistence.findByG_N(groupId, name);
 	}
 
 	@Override
