@@ -34,18 +34,6 @@
 					<aui:nav-item href="<%= editTagURL %>" iconCssClass="icon-plus" label="add-tag" />
 				</c:if>
 
-				<c:if test="<%= PropsValues.ASSET_TAG_PERMISSIONS_ENABLED && AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) %>">
-					<liferay-security:permissionsURL
-						modelResource="com.liferay.portlet.asset"
-						modelResourceDescription="<%= themeDisplay.getScopeGroupName() %>"
-						resourcePrimKey="<%= String.valueOf(themeDisplay.getSiteGroupId()) %>"
-						var="permissionsURL"
-						windowState="<%= LiferayWindowState.POP_UP.toString() %>"
-					/>
-
-					<aui:nav-item href="<%= permissionsURL %>" iconCssClass="icon-lock" id="tagsPermissionsButton" label="permissions" useDialog="<%= true %>" />
-				</c:if>
-
 				<aui:nav-item cssClass="hide" dropdown="<%= true %>" id="tagsActionsButton" label="actions">
 					<aui:nav-item iconCssClass="icon-random" id="mergeSelectedTags" label="merge" />
 
@@ -109,26 +97,6 @@
 					</c:otherwise>
 				</c:choose>
 			</liferay-ui:search-container-column-text>
-
-			<c:if test="<%= PropsValues.ASSET_TAG_PROPERTIES_ENABLED %>">
-				<liferay-ui:search-container-column-text
-					name="properties"
-				>
-
-					<%
-					List<AssetTagProperty> tagProperties = AssetTagPropertyServiceUtil.getTagProperties(tag.getTagId());
-
-					for (AssetTagProperty tagProperty : tagProperties) {
-					%>
-
-						<span class="property-key"><%= tagProperty.getKey() %></span>: <span class="property-value"><%= tagProperty.getValue() %></span><br />
-
-					<%
-					}
-					%>
-
-				</liferay-ui:search-container-column-text>
-			</c:if>
 
 			<liferay-ui:search-container-column-jsp
 				cssClass="entry-action"
