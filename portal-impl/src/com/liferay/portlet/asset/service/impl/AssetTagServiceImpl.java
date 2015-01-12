@@ -30,6 +30,7 @@ import com.liferay.portlet.asset.model.AssetTagDisplay;
 import com.liferay.portlet.asset.service.base.AssetTagServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetPermission;
 import com.liferay.portlet.asset.service.permission.AssetTagPermission;
+import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.util.Autocomplete;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
@@ -209,8 +210,8 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 	public List<AssetTag> getTags(
 		long[] groupIds, String name, int start, int end) {
 
-		return assetTagFinder.filterFindByG_N_P(
-			groupIds, name, start, end, null);
+		return assetTagPersistence.filterFindByG_LikeN(
+			groupIds, name, start, end, new AssetTagNameComparator());
 	}
 
 	@Override
