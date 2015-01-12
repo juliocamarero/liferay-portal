@@ -42,7 +42,6 @@ import com.liferay.portal.util.test.TestPropsValues;
 import com.liferay.portal.util.test.UserTestUtil;
 import com.liferay.portlet.asset.NoSuchTagException;
 import com.liferay.portlet.asset.model.AssetTag;
-import com.liferay.portlet.asset.model.AssetTagConstants;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.util.test.BlogsTestUtil;
@@ -163,18 +162,14 @@ public class AssetTagFinderTest {
 	@Test
 	public void testFilterCountByG_N_P() throws Exception {
 		String assetTagName = RandomTestUtil.randomString();
-		String[] assetTagProperties = {
-			"key" + AssetTagConstants.PROPERTY_KEY_VALUE_SEPARATOR + "value"
-		};
 
 		int initialScopeGroupAssetTagsCount =
 			AssetTagFinderUtil.filterCountByG_N_P(
-				_scopeGroup.getGroupId(), assetTagName, assetTagProperties);
+				_scopeGroup.getGroupId(), assetTagName);
 		int initialTagsCountSiteGroup = AssetTagFinderUtil.filterCountByG_N_P(
-			_scopeGroup.getParentGroupId(), assetTagName, assetTagProperties);
+			_scopeGroup.getParentGroupId(), assetTagName);
 
-		addAssetTag(
-			_scopeGroup.getParentGroupId(), assetTagName, assetTagProperties);
+		addAssetTag(_scopeGroup.getParentGroupId(), assetTagName);
 
 		User user = UserTestUtil.addUser(null, 0);
 
@@ -189,14 +184,13 @@ public class AssetTagFinderTest {
 
 			int scopeGroupAssetTagsCount =
 				AssetTagFinderUtil.filterCountByG_N_P(
-					_scopeGroup.getGroupId(), assetTagName, assetTagProperties);
+					_scopeGroup.getGroupId(), assetTagName);
 
 			Assert.assertEquals(
 				initialScopeGroupAssetTagsCount, scopeGroupAssetTagsCount);
 
 			int siteGroupAssetTagsCount = AssetTagFinderUtil.filterCountByG_N_P(
-				_scopeGroup.getParentGroupId(), assetTagName,
-				assetTagProperties);
+				_scopeGroup.getParentGroupId(), assetTagName);
 
 			Assert.assertEquals(
 				initialTagsCountSiteGroup + 1, siteGroupAssetTagsCount);
@@ -261,7 +255,7 @@ public class AssetTagFinderTest {
 	public void testFilterFindByG_N() throws Exception {
 		String assetTagName = RandomTestUtil.randomString();
 
-		addAssetTag(_scopeGroup.getParentGroupId(), assetTagName, null);
+		addAssetTag(_scopeGroup.getParentGroupId(), assetTagName);
 
 		User user = UserTestUtil.addUser(null, 0);
 
@@ -299,21 +293,17 @@ public class AssetTagFinderTest {
 	@Test
 	public void testFilterFindByG_N_P() throws Exception {
 		String assetTagName = RandomTestUtil.randomString();
-		String[] assetTagProperties = {
-			"key" + AssetTagConstants.PROPERTY_KEY_VALUE_SEPARATOR + "value"
-		};
 
 		List<AssetTag> initialScopeGroupAssetTags =
 			AssetTagFinderUtil.filterFindByG_N_P(
 				new long[] {_scopeGroup.getGroupId()}, assetTagName,
-				assetTagProperties, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 		List<AssetTag> initialSiteGroupAssetTags =
 			AssetTagFinderUtil.filterFindByG_N_P(
 				new long[] {_scopeGroup.getParentGroupId()}, assetTagName,
-				assetTagProperties, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-		addAssetTag(
-			_scopeGroup.getParentGroupId(), assetTagName, assetTagProperties);
+		addAssetTag(_scopeGroup.getParentGroupId(), assetTagName);
 
 		User user = UserTestUtil.addUser(null, 0);
 
@@ -329,8 +319,7 @@ public class AssetTagFinderTest {
 			List<AssetTag> scopeGroupAssetTags =
 				AssetTagFinderUtil.filterFindByG_N_P(
 					new long[] {_scopeGroup.getGroupId()}, assetTagName,
-					assetTagProperties, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-					null);
+					QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
 			Assert.assertEquals(
 				initialScopeGroupAssetTags.size(), scopeGroupAssetTags.size());
@@ -338,8 +327,7 @@ public class AssetTagFinderTest {
 			List<AssetTag> siteGroupAssetTags =
 				AssetTagFinderUtil.filterFindByG_N_P(
 					new long[] {_scopeGroup.getParentGroupId()}, assetTagName,
-					assetTagProperties, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-					null);
+					QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
 			Assert.assertEquals(
 				initialSiteGroupAssetTags.size() + 1,
@@ -351,14 +339,12 @@ public class AssetTagFinderTest {
 		}
 	}
 
-	protected void addAssetTag(long groupId, String name, String[] properties)
-		throws Exception {
-
+	protected void addAssetTag(long groupId, String name) throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(groupId);
 
 		AssetTagLocalServiceUtil.addTag(
-			TestPropsValues.getUserId(), name, properties, serviceContext);
+			TestPropsValues.getUserId(), name, serviceContext);
 	}
 
 	protected void addBlogsEntry(long groupId, String assetTagName)

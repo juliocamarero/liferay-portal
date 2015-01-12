@@ -51,26 +51,15 @@
 		<liferay-ui:search-container-results>
 
 			<%
-			String keywords = ParamUtil.getString(request, "keywords");
+			String keywords = ParamUtil.getString(request, "keywords", null);
 
-			if (Validator.isNotNull(keywords)) {
-				total = AssetTagServiceUtil.getTagsCount(scopeGroupId, keywords, new String[0]);
+			total = AssetTagServiceUtil.getTagsCount(scopeGroupId, keywords);
 
-				searchContainer.setTotal(total);
+			searchContainer.setTotal(total);
 
-				results = AssetTagServiceUtil.getTags(scopeGroupId, keywords, new String[0], searchContainer.getStart(), searchContainer.getEnd());
+			results = AssetTagServiceUtil.getTags(scopeGroupId, keywords, searchContainer.getStart(), searchContainer.getEnd());
 
-				searchContainer.setResults(results);
-			}
-			else {
-				total = AssetTagServiceUtil.getTagsCount(scopeGroupId, null, new String[0]);
-
-				searchContainer.setTotal(total);
-
-				results = AssetTagServiceUtil.getTags(scopeGroupId, null, new String[0], searchContainer.getStart(), searchContainer.getEnd());
-
-				searchContainer.setResults(results);
-			}
+			searchContainer.setResults(results);
 			%>
 
 		</liferay-ui:search-container-results>
