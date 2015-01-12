@@ -32,6 +32,7 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.service.base.AssetTagLocalServiceBaseImpl;
 import com.liferay.portlet.asset.util.AssetUtil;
+import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.portlet.social.util.SocialCounterPeriodUtil;
 
 import java.util.ArrayList;
@@ -467,7 +468,8 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public List<AssetTag> search(
 		long[] groupIds, String name, int start, int end) {
 
-		return assetTagFinder.findByG_N_P(groupIds, name, start, end, null);
+		return assetTagPersistence.findByG_LikeN(
+			groupIds, name, start, end, new AssetTagNameComparator());
 	}
 
 	@Override
