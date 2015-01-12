@@ -136,7 +136,6 @@
 				COUNT(DISTINCT AssetTag.tagId) AS COUNT_VALUE
 			FROM
 				AssetTag
-			[$JOIN$]
 			WHERE
 				(AssetTag.groupId = ?) AND
 				(AssetTag.name LIKE ? OR ? IS NULL)
@@ -173,7 +172,6 @@
 				DISTINCT {AssetTag.*}
 			FROM
 				AssetTag
-			[$JOIN$]
 			WHERE
 				[$GROUP_ID$]
 				(AssetTag.name LIKE ? OR ? IS NULL)
