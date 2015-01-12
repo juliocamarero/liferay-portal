@@ -68,17 +68,6 @@ public class ServicePreActionTest extends ServicePreAction {
 	}
 
 	@Test
-	public void testInitThemeDisplayPlidGuestSiteLayout() throws Exception {
-		long plid = getThemeDisplayPlid(false, false);
-
-		Object[] defaultLayout = getGuestSiteLayout(_user);
-
-		Layout layout = (Layout)defaultLayout[0];
-
-		Assert.assertEquals(layout.getPlid(), plid);
-	}
-
-	@Test
 	public void testInitThemeDisplayPlidDefaultUserPersonalLayout()
 		throws Exception {
 
@@ -127,6 +116,17 @@ public class ServicePreActionTest extends ServicePreAction {
 		long plid = getThemeDisplayPlid(true, false);
 
 		Object[] defaultLayout = getDefaultVirtualHostLayout(_request);
+
+		Layout layout = (Layout)defaultLayout[0];
+
+		Assert.assertEquals(layout.getPlid(), plid);
+	}
+
+	@Test
+	public void testInitThemeDisplayPlidGuestSiteLayout() throws Exception {
+		long plid = getThemeDisplayPlid(false, false);
+
+		Object[] defaultLayout = getGuestSiteLayout(_user);
 
 		Layout layout = (Layout)defaultLayout[0];
 
