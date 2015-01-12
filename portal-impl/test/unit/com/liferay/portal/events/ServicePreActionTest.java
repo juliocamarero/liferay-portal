@@ -68,7 +68,7 @@ public class ServicePreActionTest extends ServicePreAction {
 	}
 
 	@Test
-	public void testInitThemeDisplayPlidSiteLayout() throws Exception {
+	public void testInitThemeDisplayPlidGuestSiteLayout() throws Exception {
 		long plid = getThemeDisplayPlid(false, false);
 
 		Object[] defaultLayout = getGuestSiteLayout(_user);
@@ -79,7 +79,9 @@ public class ServicePreActionTest extends ServicePreAction {
 	}
 
 	@Test
-	public void testInitThemeDisplayPlidUserPersonalLayout() throws Exception {
+	public void testInitThemeDisplayPlidDefaultUserPersonalLayout()
+		throws Exception {
+
 		long plid = getThemeDisplayPlid(false, true);
 
 		Object[] defaultLayout = getDefaultUserPersonalLayout(_user);
@@ -90,7 +92,9 @@ public class ServicePreActionTest extends ServicePreAction {
 	}
 
 	@Test
-	public void testInitThemeDisplayPlidUserSiteLayout() throws Exception {
+	public void testInitThemeDisplayPlidDefaultUserSitesLayout()
+		throws Exception {
+
 		boolean publicLayoutsAutoCreate =
 			PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_AUTO_CREATE;
 		boolean privateLayoutsAutoCreate =
@@ -117,7 +121,9 @@ public class ServicePreActionTest extends ServicePreAction {
 	}
 
 	@Test
-	public void testInitThemeDisplayPlidVirtualLayout() throws Exception {
+	public void testInitThemeDisplayPlidDefaultVirtualHostLayout()
+		throws Exception {
+
 		long plid = getThemeDisplayPlid(true, false);
 
 		Object[] defaultLayout = getDefaultVirtualHostLayout(_request);
