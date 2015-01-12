@@ -222,18 +222,20 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 	}
 
 	@Override
-	public int getTagsCount(long groupId, long classNameId, String name) {
+	public int getTagsCount(long groupId, String name) {
+		return assetTagPersistence.filterCountByG_LikeN(groupId, name);
+	}
+
+	@Override
+	public int getVisibleTagsCount(
+		long groupId, long classNameId, String name) {
+
 		return assetTagFinder.filterCountByG_C_N(groupId, classNameId, name);
 	}
 
 	@Override
-	public int getTagsCount(long groupId, String name) {
+	public int getVisibleTagsCount(long groupId, String name) {
 		return assetTagFinder.filterCountByG_N(groupId, name);
-	}
-
-	@Override
-	public int getTagsCount(long groupId, String name) {
-		return assetTagPersistence.filterCountByG_LikeN(groupId, name);
 	}
 
 	@Override

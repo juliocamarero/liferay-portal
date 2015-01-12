@@ -97,10 +97,10 @@ private String _buildTagsNavigation(long scopeGroupId, long siteGroupId, String 
 			int count = 0;
 
 			if (classNameId > 0) {
-				count = AssetTagServiceUtil.getTagsCount(scopeGroupId, classNameId, tagName);
+				count = AssetTagServiceUtil.getVisibleTagsCount(scopeGroupId, classNameId, tagName);
 			}
 			else {
-				count = AssetTagServiceUtil.getTagsCount(scopeGroupId, tagName);
+				count = AssetTagServiceUtil.getVisibleTagsCount(scopeGroupId, tagName);
 			}
 
 			if (!showZeroAssetCount && (count == 0)) {
@@ -124,10 +124,10 @@ private String _buildTagsNavigation(long scopeGroupId, long siteGroupId, String 
 		int count = 0;
 
 		if (classNameId > 0) {
-			count = AssetTagServiceUtil.getTagsCount(scopeGroupId, classNameId, tagName);
+			count = AssetTagServiceUtil.getVisibleTagsCount(scopeGroupId, classNameId, tagName);
 		}
 		else {
-			count = AssetTagServiceUtil.getTagsCount(scopeGroupId, tagName);
+			count = AssetTagServiceUtil.getVisibleTagsCount(scopeGroupId, tagName);
 		}
 
 		int popularity = (int)(1 + ((maxCount - (maxCount - (count - minCount))) * multiplier));
