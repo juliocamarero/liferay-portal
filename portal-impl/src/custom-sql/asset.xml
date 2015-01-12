@@ -172,17 +172,6 @@
 				(AssetTag.name LIKE ? OR ? IS NULL)
 		]]>
 	</sql>
-	<sql id="com.liferay.portlet.asset.service.persistence.AssetTagFinder.findByG_N">
-		<![CDATA[
-			SELECT
-				DISTINCT {AssetTag.*}
-			FROM
-				AssetTag
-			WHERE
-				(AssetTag.groupId = ?) AND
-				(AssetTag.name = ?)
-		]]>
-	</sql>
 	<sql id="com.liferay.portlet.asset.service.persistence.AssetTagFinder.findByG_C_N">
 		<![CDATA[
 			SELECT
