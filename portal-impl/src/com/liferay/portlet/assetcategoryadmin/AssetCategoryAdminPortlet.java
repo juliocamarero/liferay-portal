@@ -93,24 +93,7 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		}
 	}
 
-	public void moveCategory(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		long categoryId = ParamUtil.getLong(actionRequest, "categoryId");
-
-		long parentCategoryId = ParamUtil.getLong(
-			actionRequest, "parentCategoryId");
-		long vocabularyId = ParamUtil.getLong(actionRequest, "vocabularyId");
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			AssetCategory.class.getName(), actionRequest);
-
-		AssetCategoryServiceUtil.moveCategory(
-			categoryId, parentCategoryId, vocabularyId, serviceContext);
-	}
-
-	public void updateCategory(
+	public void editCategory(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -146,7 +129,7 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateVocabulary(
+	public void editVocabulary(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -176,6 +159,23 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 				vocabularyId, StringPool.BLANK, titleMap, descriptionMap,
 				getSettings(actionRequest), serviceContext);
 		}
+	}
+
+	public void moveCategory(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long categoryId = ParamUtil.getLong(actionRequest, "categoryId");
+
+		long parentCategoryId = ParamUtil.getLong(
+			actionRequest, "parentCategoryId");
+		long vocabularyId = ParamUtil.getLong(actionRequest, "vocabularyId");
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			AssetCategory.class.getName(), actionRequest);
+
+		AssetCategoryServiceUtil.moveCategory(
+			categoryId, parentCategoryId, vocabularyId, serviceContext);
 	}
 
 	@Override
