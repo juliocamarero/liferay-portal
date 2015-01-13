@@ -21,6 +21,26 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
  */
 public class AssetCategoryAdminPortlet extends MVCPortlet {
 
+	public void deleteVocabulary(ActionRequest actionRequest)
+		throws PortalException {
+
+		long[] deleteVocabularyIds = null;
+
+		long vocabularyId = ParamUtil.getLong(actionRequest, "vocabularyId");
+
+		if (vocabularyId > 0) {
+			deleteVocabularyIds = new long[] {vocabularyId};
+		}
+		else {
+			deleteVocabularyIds = StringUtil.split(
+				ParamUtil.getString(actionRequest, "deleteVocabularyIds"), 0L);
+		}
+
+		for (long deleteVocabularyId : deleteVocabularyIds) {
+			AssetVocabularyServiceUtil.deleteVocabulary(deleteVocabularyId);
+		}
+	}
+
 	@Override
 	public void processAction(
 			ActionMapping actionMapping, ActionForm actionForm,
@@ -73,23 +93,32 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 				renderRequest, "portlet.asset_category_admin.edit_vocabulary"));
 	}
 
-	protected void deleteVocabulary(ActionRequest actionRequest)
-		throws PortalException {
-
-		long[] deleteVocabularyIds = null;
-
+	public void updateVocabulary(ActionRequest actionRequest) throws Exception {
 		long vocabularyId = ParamUtil.getLong(actionRequest, "vocabularyId");
 
-		if (vocabularyId > 0) {
-			deleteVocabularyIds = new long[] {vocabularyId};
+		Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(
+			actionRequest, "title");
+		Map<Locale, String> descriptionMap =
+			LocalizationUtil.getLocalizationMap(actionRequest, "description");
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			AssetVocabulary.class.getName(), actionRequest);
+
+		if (vocabularyId <= 0) {
+
+			// Add vocabulary
+
+			AssetVocabularyServiceUtil.addVocabulary(
+				StringPool.BLANK, titleMap, descriptionMap,
+				getSettings(actionRequest), serviceContext);
 		}
 		else {
-			deleteVocabularyIds = StringUtil.split(
-				ParamUtil.getString(actionRequest, "deleteVocabularyIds"), 0L);
-		}
 
-		for (long deleteVocabularyId : deleteVocabularyIds) {
-			AssetVocabularyServiceUtil.deleteVocabulary(deleteVocabularyId);
+			// Update vocabulary
+
+			AssetVocabularyServiceUtil.updateVocabulary(
+				vocabularyId, StringPool.BLANK, titleMap, descriptionMap,
+				getSettings(actionRequest), serviceContext);
 		}
 	}
 
@@ -128,37 +157,6 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		vocabularySettingsHelper.setMultiValued(multiValued);
 
 		return vocabularySettingsHelper.toString();
-	}
-
-	protected void updateVocabulary(ActionRequest actionRequest)
-		throws Exception {
-
-		long vocabularyId = ParamUtil.getLong(actionRequest, "vocabularyId");
-
-		Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(
-			actionRequest, "title");
-		Map<Locale, String> descriptionMap =
-			LocalizationUtil.getLocalizationMap(actionRequest, "description");
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			AssetVocabulary.class.getName(), actionRequest);
-
-		if (vocabularyId <= 0) {
-
-			// Add vocabulary
-
-			AssetVocabularyServiceUtil.addVocabulary(
-				StringPool.BLANK, titleMap, descriptionMap,
-				getSettings(actionRequest), serviceContext);
-		}
-		else {
-
-			// Update vocabulary
-
-			AssetVocabularyServiceUtil.updateVocabulary(
-				vocabularyId, StringPool.BLANK, titleMap, descriptionMap,
-				getSettings(actionRequest), serviceContext);
-		}
 	}
 
 }
