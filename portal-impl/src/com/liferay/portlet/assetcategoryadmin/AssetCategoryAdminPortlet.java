@@ -20,14 +20,20 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portlet.asset.AssetCategoryNameException;
+import com.liferay.portlet.asset.DuplicateCategoryException;
 import com.liferay.portlet.asset.DuplicateVocabularyException;
+import com.liferay.portlet.asset.NoSuchCategoryException;
 import com.liferay.portlet.asset.NoSuchVocabularyException;
 import com.liferay.portlet.asset.VocabularyNameException;
+import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetVocabulary;
+import com.liferay.portlet.asset.service.AssetCategoryServiceUtil;
 import com.liferay.portlet.asset.service.AssetVocabularyServiceUtil;
 import com.liferay.portlet.asset.util.AssetVocabularySettingsHelper;
 
@@ -47,8 +53,9 @@ import javax.portlet.RenderResponse;
  */
 public class AssetCategoryAdminPortlet extends MVCPortlet {
 
-	public void deleteCategory(ActionRequest actionRequest)
-		throws PortalException {
+	public void deleteCategory(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
 
 		long[] deleteCategoryIds = null;
 
@@ -86,7 +93,10 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		}
 	}
 
-	public void moveCategory(ActionRequest actionRequest) throws Exception {
+	public void moveCategory(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
 		long categoryId = ParamUtil.getLong(actionRequest, "categoryId");
 
 		long parentCategoryId = ParamUtil.getLong(
@@ -100,63 +110,10 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 			categoryId, parentCategoryId, vocabularyId, serviceContext);
 	}
 
-	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+	public void updateCategory(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-		try {
-			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
-				updateCategory(actionRequest);
-			}
-			else if (cmd.equals(Constants.DELETE)) {
-				deleteCategory(actionRequest);
-			}
-			else if (cmd.equals(Constants.MOVE)) {
-				moveCategory(actionRequest);
-			}
-
-			sendRedirect(actionRequest, actionResponse);
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchCategoryException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(actionRequest, e.getClass());
-
-				setForward(actionRequest, "portlet.asset_category_admin.error");
-			}
-			else if (e instanceof AssetCategoryNameException ||
-					 e instanceof DuplicateCategoryException) {
-
-				SessionErrors.add(actionRequest, e.getClass());
-			}
-			else {
-				throw e;
-			}
-		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		ActionUtil.getCategory(renderRequest);
-		ActionUtil.getVocabularies(renderRequest);
-
-		return actionMapping.findForward(
-			getForward(
-				renderRequest, "portlet.asset_category_admin.edit_category"));
-	}
-
-	public void updateCategory(ActionRequest actionRequest) throws Exception {
 		long categoryId = ParamUtil.getLong(actionRequest, "categoryId");
 
 		long parentCategoryId = ParamUtil.getLong(
@@ -227,6 +184,8 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		throws IOException, PortletException {
 
 		if (SessionErrors.contains(
+				renderRequest, NoSuchCategoryException.class.getName()) ||
+			SessionErrors.contains(
 				renderRequest, NoSuchVocabularyException.class.getName()) ||
 			SessionErrors.contains(
 				renderRequest, PrincipalException.class.getName())) {
@@ -305,7 +264,10 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 
 	@Override
 	protected boolean isSessionErrorException(Throwable cause) {
-		if (cause instanceof DuplicateVocabularyException ||
+		if (cause instanceof AssetCategoryNameException ||
+			cause instanceof DuplicateCategoryException ||
+			cause instanceof DuplicateVocabularyException ||
+			cause instanceof NoSuchCategoryException ||
 			cause instanceof NoSuchVocabularyException ||
 			cause instanceof PrincipalException ||
 			cause instanceof VocabularyNameException) {
