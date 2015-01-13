@@ -19,13 +19,11 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-AssetCategory category = (AssetCategory)request.getAttribute(WebKeys.ASSET_CATEGORY);
+long categoryId = ParamUtil.getLong(request, "categoryId");
 
-long categoryId = BeanParamUtil.getLong(category, request, "categoryId");
+AssetCategory category = AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
 
 long parentCategoryId = BeanParamUtil.getLong(category, request, "parentCategoryId");
-
-List<AssetVocabulary> vocabularies = (List<AssetVocabulary>)request.getAttribute(WebKeys.ASSET_VOCABULARIES);
 
 long vocabularyId = ParamUtil.getLong(request, "vocabularyId");
 
