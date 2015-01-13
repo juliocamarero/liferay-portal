@@ -15,14 +15,41 @@
 package com.liferay.portlet.assetcategoryadmin;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.util.LocalizationUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portlet.asset.DuplicateVocabularyException;
+import com.liferay.portlet.asset.NoSuchVocabularyException;
+import com.liferay.portlet.asset.VocabularyNameException;
+import com.liferay.portlet.asset.model.AssetCategoryConstants;
+import com.liferay.portlet.asset.model.AssetVocabulary;
+import com.liferay.portlet.asset.service.AssetVocabularyServiceUtil;
+import com.liferay.portlet.asset.util.AssetVocabularySettingsHelper;
+
+import java.io.IOException;
+
+import java.util.Locale;
+import java.util.Map;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 /**
  * @author Eudaldo Alonso
  */
 public class AssetCategoryAdminPortlet extends MVCPortlet {
 
-	public void deleteVocabulary(ActionRequest actionRequest)
-		throws PortalException {
+	public void deleteVocabulary(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
 
 		long[] deleteVocabularyIds = null;
 
@@ -41,59 +68,10 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		}
 	}
 
-	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+	public void updateVocabulary(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-		try {
-			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
-				updateVocabulary(actionRequest);
-			}
-			else if (cmd.equals(Constants.DELETE)) {
-				deleteVocabulary(actionRequest);
-			}
-
-			sendRedirect(actionRequest, actionResponse);
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchVocabularyException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(actionRequest, e.getClass());
-
-				setForward(actionRequest, "portlet.asset_category_admin.error");
-			}
-			else if (e instanceof DuplicateVocabularyException ||
-					 e instanceof VocabularyNameException) {
-
-				SessionErrors.add(actionRequest, e.getClass());
-			}
-			else {
-				throw e;
-			}
-		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		ActionUtil.getVocabulary(renderRequest);
-
-		return actionMapping.findForward(
-			getForward(
-				renderRequest, "portlet.asset_category_admin.edit_vocabulary"));
-	}
-
-	public void updateVocabulary(ActionRequest actionRequest) throws Exception {
 		long vocabularyId = ParamUtil.getLong(actionRequest, "vocabularyId");
 
 		Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(
@@ -119,6 +97,23 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 			AssetVocabularyServiceUtil.updateVocabulary(
 				vocabularyId, StringPool.BLANK, titleMap, descriptionMap,
 				getSettings(actionRequest), serviceContext);
+		}
+	}
+
+	@Override
+	protected void doDispatch(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		if (SessionErrors.contains(
+				renderRequest, NoSuchVocabularyException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, PrincipalException.class.getName())) {
+
+			include("/error.jsp", renderRequest, renderResponse);
+		}
+		else {
+			super.doDispatch(renderRequest, renderResponse);
 		}
 	}
 
@@ -157,6 +152,19 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		vocabularySettingsHelper.setMultiValued(multiValued);
 
 		return vocabularySettingsHelper.toString();
+	}
+
+	@Override
+	protected boolean isSessionErrorException(Throwable cause) {
+		if (cause instanceof DuplicateVocabularyException ||
+			cause instanceof NoSuchVocabularyException ||
+			cause instanceof PrincipalException ||
+			cause instanceof VocabularyNameException) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
