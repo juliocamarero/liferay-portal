@@ -19,9 +19,9 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-AssetVocabulary vocabulary = (AssetVocabulary)request.getAttribute(WebKeys.ASSET_VOCABULARY);
+long vocabularyId = ParamUtil.getLong(request, "vocabularyId");
 
-long vocabularyId = BeanParamUtil.getLong(vocabulary, request, "vocabularyId");
+AssetVocabulary vocabulary = AssetVocabularyServiceUtil.fetchVocabulary(vocabularyId);
 %>
 
 <liferay-ui:header
