@@ -691,3 +691,26 @@ This method was removed due to there being no working use cases in Portal, and
 its overall lack of functionality.
 
 ---------------------------------------
+
+### Removed *Asset Tag Properties*
+- **Date:** 2015-Jan-13
+- **JIRA Ticket:** LPS-52588
+
+#### What changed?
+
+The *Asset Tag Properties* service have been removed.
+
+#### Who is affected?
+
+This affects any plugins using Asset Tag Properties service.
+
+#### How should I update my code?
+
+If you are using this functionality, you can achieve the same behaviour with
+Asset Categories.
+
+#### Why was this change made?
+
+The Asset Tag Properties were deprecated on 6.2 version.
+
+---------------------------------------
