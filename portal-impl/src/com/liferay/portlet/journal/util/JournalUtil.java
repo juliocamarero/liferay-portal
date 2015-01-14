@@ -1307,23 +1307,29 @@ public class JournalUtil {
 			String defaultImportLanguageId = LocaleUtil.toLanguageId(
 				defaultImportLocale);
 
-			if (Validator.isNull(availableLocalesAttribute)) {
-				newRootElement.addAttribute(
-					"available-locales", defaultImportLanguageId);
+			if (availableLocalesAttribute == null) {
 
-				_mergeArticleContentUpdate(
-					oldDocument, newRootElement,
-					LocaleUtil.toLanguageId(defaultImportLocale));
+				// If this is nonexistent create an empty one and the upcoming
+				// section will append the correct value and call the other
+				// necessary calls
 
-				content = DDMXMLUtil.formatXML(newDocument);
+				availableLocalesAttribute =
+					(Attribute)newRootElement.addAttribute(
+						"available-locales", StringPool.BLANK);
 			}
-			else if (!StringUtil.contains(
-						availableLocalesAttribute.getValue(),
+
+			if (!StringUtil.contains(
+					availableLocalesAttribute.getValue(),
 					defaultImportLanguageId)) {
 
-				availableLocalesAttribute.setValue(
-					availableLocalesAttribute.getValue() + StringPool.COMMA +
-						defaultImportLanguageId);
+				if (Validator.isNull(availableLocalesAttribute.getValue())) {
+					availableLocalesAttribute.setValue(defaultImportLanguageId);
+				}
+				else {
+					availableLocalesAttribute.setValue(
+						availableLocalesAttribute.getValue() +
+							StringPool.COMMA + defaultImportLanguageId);
+				}
 
 				_mergeArticleContentUpdate(
 					oldDocument, newRootElement,
@@ -1335,23 +1341,18 @@ public class JournalUtil {
 			Attribute defaultLocaleAttribute = newRootElement.attribute(
 				"default-locale");
 
-			if (Validator.isNull(defaultLocaleAttribute)) {
-				newRootElement.addAttribute(
-					"default-locale", defaultImportLanguageId);
+			if (defaultLocaleAttribute == null) {
+				defaultLocaleAttribute = (Attribute)newRootElement.addAttribute(
+					"default-locale", StringPool.BLANK);
+			}
+
+			Locale defaultContentLocale = LocaleUtil.fromLanguageId(
+				defaultLocaleAttribute.getValue());
+
+			if (!LocaleUtil.equals(defaultContentLocale, defaultImportLocale)) {
+				defaultLocaleAttribute.setValue(defaultImportLanguageId);
 
 				content = DDMXMLUtil.formatXML(newDocument);
-			}
-			else {
-				Locale contentDefaultLocale = LocaleUtil.fromLanguageId(
-					defaultLocaleAttribute.getValue());
-
-				if (!LocaleUtil.equals(
-						contentDefaultLocale, defaultImportLocale)) {
-
-					defaultLocaleAttribute.setValue(defaultImportLanguageId);
-
-					content = DDMXMLUtil.formatXML(newDocument);
-				}
 			}
 		}
 		catch (Exception e) {
