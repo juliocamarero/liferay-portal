@@ -200,13 +200,13 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "vocabul
 		'click',
 		function() {
 			if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
-				<portlet:actionURL name="deleteVocabulary" var="deleteURL">
+				<portlet:actionURL name="deleteVocabulary" var="deleteVocabularyURL">
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 				</portlet:actionURL>
 
 				form.fm('deleteVocabularyIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 
-				submitForm(form, '<%= deleteURL %>');
+				submitForm(form, '<%= deleteVocabularyURL %>');
 			}
 		}
 	);

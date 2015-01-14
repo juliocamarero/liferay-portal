@@ -164,13 +164,13 @@ AssetCategoryUtil.addPortletBreadcrumbEntry(vocabulary, category, request, rende
 		'click',
 		function() {
 			if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
-				<portlet:actionURL name="deleteCategory" var="deleteURL">
+				<portlet:actionURL name="deleteCategory" var="deleteCategoryURL">
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 				</portlet:actionURL>
 
 				form.fm('deleteCategoryIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 
-				submitForm(form, '<%= deleteURL %>');
+				submitForm(form, '<%= deleteCategoryURL %>');
 			}
 		}
 	);

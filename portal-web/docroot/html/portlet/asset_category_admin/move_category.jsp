@@ -34,11 +34,11 @@ List<AssetVocabulary> vocabularies = AssetVocabularyServiceUtil.getGroupVocabula
 	title='<%= LanguageUtil.format(request, "move-x", category.getTitle(locale)) %>'
 />
 
-<portlet:actionURL name="moveCategory" var="editCategoryURL">
+<portlet:actionURL name="moveCategory" var="moveCategoryURL">
 	<portlet:param name="redirect" value="<%= redirect %>" />
 </portlet:actionURL>
 
-<aui:form action="<%= editCategoryURL %>" name="fm" onSubmit="event.preventDefault();">
+<aui:form action="<%= moveCategoryURL %>" name="fm" onSubmit="event.preventDefault();">
 	<aui:input name="categoryId" type="hidden" value="<%= categoryId %>" />
 
 	<aui:select label="vocabulary" name="vocabularyId">
