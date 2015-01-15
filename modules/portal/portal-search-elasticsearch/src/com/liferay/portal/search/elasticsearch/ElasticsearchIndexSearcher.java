@@ -334,7 +334,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return;
 		}
 
-		Set<String> sortFieldNames = new HashSet<>();
+		Set<String> sortFieldNames = new HashSet<>(sorts.length);
 
 		for (Sort sort : sorts) {
 			if (sort == null) {

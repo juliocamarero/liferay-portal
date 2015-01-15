@@ -79,7 +79,7 @@ public class DocumentImpl implements Document {
 
 		String fieldName = sort.getFieldName();
 
-		if (fieldName.endsWith(_SORTABLE_FIELD_SUFFIX)) {
+		if (isSortableFieldName(fieldName)) {
 			return fieldName;
 		}
 
