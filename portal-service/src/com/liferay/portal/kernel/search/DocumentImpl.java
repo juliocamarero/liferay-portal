@@ -82,19 +82,17 @@ public class DocumentImpl implements Document {
 			return fieldName;
 		}
 
-		String sortFieldName = null;
-
-		if (DocumentImpl.isSortableTextField(fieldName) ||
-			(sort.getType() != Sort.STRING_TYPE)) {
-
-			sortFieldName = DocumentImpl.getSortableFieldName(fieldName);
+		if (DocumentImpl.isSortableTextField(fieldName)) {
+			return DocumentImpl.getSortableFieldName(fieldName);
 		}
 
-		if (Validator.isNull(sortFieldName)) {
-			sortFieldName = scoreFieldName;
+		if (fieldName.startsWith(
+				DDMIndexer.DDM_FIELD_NAMESPACE + StringPool.DOUBLE_UNDERLINE)) {
+
+			return fieldName;
 		}
 
-		return sortFieldName;
+		return scoreFieldName;
 	}
 
 	public static boolean isSortableFieldName(String name) {
