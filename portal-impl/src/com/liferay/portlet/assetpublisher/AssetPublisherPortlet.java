@@ -21,4 +21,61 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
  */
 public class AssetPublisherPortlet extends MVCPortlet {
 
+	@Override
+	public void processAction(
+			ActionMapping actionMapping, ActionForm actionForm,
+			PortletConfig portletConfig, ActionRequest actionRequest,
+			ActionResponse actionResponse)
+		throws Exception {
+
+		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
+		try {
+			if (cmd.equals(Constants.SUBSCRIBE)) {
+				subscribe((LiferayPortletConfig)portletConfig, actionRequest);
+			}
+			else if (cmd.equals(Constants.UNSUBSCRIBE)) {
+				unsubscribe((LiferayPortletConfig)portletConfig, actionRequest);
+			}
+
+			sendRedirect(actionRequest, actionResponse);
+		}
+		catch (Exception e) {
+			if (e instanceof PrincipalException) {
+				SessionErrors.add(actionRequest, e.getClass());
+
+				setForward(actionRequest, "portlet.asset_publisher.error");
+			}
+			else {
+				throw e;
+			}
+		}
+	}
+
+	private void subscribe(
+			LiferayPortletConfig liferayPortletConfig,
+			ActionRequest actionRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		AssetPublisherUtil.subscribe(
+			themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(),
+			themeDisplay.getPlid(), liferayPortletConfig.getPortletId());
+	}
+
+	private void unsubscribe(
+			LiferayPortletConfig liferayPortletConfig,
+			ActionRequest actionRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		AssetPublisherUtil.unsubscribe(
+			themeDisplay.getPermissionChecker(), themeDisplay.getPlid(),
+			liferayPortletConfig.getPortletId());
+	}
+
 }
