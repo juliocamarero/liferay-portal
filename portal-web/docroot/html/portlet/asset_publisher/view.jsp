@@ -109,7 +109,9 @@ boolean hasAddPortletURLs = false;
 	%>
 
 	<c:if test="<%= enableRSS %>">
-		<liferay-portlet:resourceURL varImpl="rssURL" />
+		<liferay-portlet:resourceURL varImpl="rssURL">
+			<portlet:param name="<%= Constants.CMD %>" value="rss" />
+		</liferay-portlet:resourceURL>
 
 		<liferay-ui:rss resourceURL="<%= rssURL %>" />
 	</c:if>

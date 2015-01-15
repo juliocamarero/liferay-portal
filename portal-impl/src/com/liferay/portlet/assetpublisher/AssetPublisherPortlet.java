@@ -16,7 +16,9 @@ package com.liferay.portlet.assetpublisher;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -46,6 +48,12 @@ public class AssetPublisherPortlet extends MVCPortlet {
 	public void serveResource(
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws IOException, PortletException {
+
+		String cmd = ParamUtil.getString(resourceRequest, Constants.CMD);
+
+		if (!cmd.equals("rss")) {
+			super.serveResource(resourceRequest, resourceResponse);
+		}
 
 		if (!PortalUtil.isRSSFeedsEnabled()) {
 			try {
