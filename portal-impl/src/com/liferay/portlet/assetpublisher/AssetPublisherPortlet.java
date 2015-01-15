@@ -16,24 +16,61 @@ package com.liferay.portlet.assetpublisher;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
+import com.liferay.portlet.assetpublisher.util.AssetRSSUtil;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+
+import javax.servlet.ServletException;
 
 /**
  * @author Eudaldo Alonso
  */
 public class AssetPublisherPortlet extends MVCPortlet {
+
+	@Override
+	public void serveResource(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+		throws IOException, PortletException {
+
+		if (!PortalUtil.isRSSFeedsEnabled()) {
+			try {
+				PortalUtil.sendRSSFeedsDisabledError(
+					resourceRequest, resourceResponse);
+			}
+			catch (ServletException e) {
+			}
+
+			return;
+		}
+
+		resourceResponse.setContentType(ContentTypes.TEXT_XML_UTF8);
+
+		try (OutputStream outputStream =
+				resourceResponse.getPortletOutputStream()) {
+
+			byte[] bytes = AssetRSSUtil.getRSS(
+				resourceRequest, resourceResponse);
+
+			outputStream.write(bytes);
+		}
+		catch (Exception e) {
+		}
+	}
 
 	public void subscribe(
 			ActionRequest actionRequest, ActionResponse actionResponse)
