@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.assetpublisher.action;
+package com.liferay.portlet.assetpublisher.util;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
@@ -32,7 +32,6 @@ import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
-import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 import com.liferay.util.RSSUtil;
 
 import com.sun.syndication.feed.synd.SyndContent;
@@ -58,7 +57,7 @@ import javax.portlet.ResourceResponse;
  * @author Brian Wing Shun Chan
  * @author Julio Camarero
  */
-public class RSSAction extends com.liferay.portal.struts.RSSAction {
+public class AssetRSSUtil extends com.liferay.portal.struts.RSSAction {
 
 	protected String exportToRSS(
 			PortletRequest portletRequest, PortletResponse portletResponse,
