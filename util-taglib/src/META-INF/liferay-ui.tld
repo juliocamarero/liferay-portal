@@ -492,6 +492,11 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>asset-metadata</name>
+		<tag-class>com.liferay.taglib.ui.AssetMetadataTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	<tag>
 		<name>asset-tags-error</name>
 		<tag-class>com.liferay.taglib.ui.AssetTagsErrorTag</tag-class>
 		<body-content>JSP</body-content>
