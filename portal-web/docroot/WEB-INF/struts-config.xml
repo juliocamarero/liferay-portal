@@ -757,6 +757,8 @@
 			<forward name="portlet.journal.error" path="portlet.journal.error" />
 		</action>
 
+		<action path="/journal/export_article" type="com.liferay.portlet.journal.action.ExportArticleAction" />
+
 		<action path="/journal/find_folder" type="com.liferay.portlet.journal.action.FindFolderAction" />
 
 		<action path="/journal/get_article" type="com.liferay.portlet.journal.action.GetArticleAction" />
