@@ -461,17 +461,7 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Double value) {
-		addNumber(name, String.valueOf(value), Double.class);
-	}
-
-	@Override
 	public void addNumber(String name, double[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Double.class);
-	}
-
-	@Override
-	public void addNumber(String name, Double[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Double.class);
 	}
 
@@ -481,17 +471,7 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Float value) {
-		addNumber(name, String.valueOf(value), Float.class);
-	}
-
-	@Override
 	public void addNumber(String name, float[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Float.class);
-	}
-
-	@Override
-	public void addNumber(String name, Float[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Float.class);
 	}
 
@@ -506,32 +486,12 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Integer value) {
-		addNumber(name, String.valueOf(value), Integer.class);
-	}
-
-	@Override
-	public void addNumber(String name, Integer[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Integer.class);
-	}
-
-	@Override
 	public void addNumber(String name, long value) {
 		addNumber(name, String.valueOf(value), Long.class);
 	}
 
 	@Override
-	public void addNumber(String name, Long value) {
-		addNumber(name, String.valueOf(value), Long.class);
-	}
-
-	@Override
 	public void addNumber(String name, long[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Long.class);
-	}
-
-	@Override
-	public void addNumber(String name, Long[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Long.class);
 	}
 
