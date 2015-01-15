@@ -15,3 +15,9 @@
 --%>
 
 <%@ include file="/html/taglib/init.jsp" %>
+
+<portlet:defineObjects />
+
+<%
+Format dateFormatDate = FastDateFormatFactoryUtil.getDate(locale, timeZone);
+%>
