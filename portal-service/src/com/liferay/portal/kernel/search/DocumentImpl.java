@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portlet.dynamicdatamapping.util.DDMIndexer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -114,7 +115,7 @@ public class DocumentImpl implements Document {
 			return;
 		}
 
-		addDate(name, new Date[] {value});
+		addDate(name, new Date[]{value});
 	}
 
 	@Override
@@ -532,6 +533,22 @@ public class DocumentImpl implements Document {
 	@Override
 	public void addNumber(String name, Long[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Long.class);
+	}
+
+	@Override
+	public void addNumber(String name, Number value) {
+		addNumber(name, String.valueOf(value), value.getClass());
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void addNumber(String name, Number[] values) {
+		Class<? extends Number[]> clazz = values.getClass();
+
+		Class<? extends Number> componentType =
+			(Class<? extends Number>)clazz.getComponentType();
+
+		addNumber(name, ArrayUtil.toStringArray(values), componentType);
 	}
 
 	@Override
