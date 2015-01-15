@@ -52,7 +52,7 @@ public class AssetPublisherPortlet extends MVCPortlet {
 		}
 	}
 
-	private void subscribe(
+	public void subscribe(
 			LiferayPortletConfig liferayPortletConfig,
 			ActionRequest actionRequest)
 		throws Exception {
@@ -65,7 +65,7 @@ public class AssetPublisherPortlet extends MVCPortlet {
 			themeDisplay.getPlid(), liferayPortletConfig.getPortletId());
 	}
 
-	private void unsubscribe(
+	public void unsubscribe(
 			LiferayPortletConfig liferayPortletConfig,
 			ActionRequest actionRequest)
 		throws Exception {
