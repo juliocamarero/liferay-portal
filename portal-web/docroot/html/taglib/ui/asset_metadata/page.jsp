@@ -28,7 +28,7 @@ AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.get
 AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(classPK);
 %>
 
-<div class="asset-metadata">
+<div class="taglib-asset-metadata">
 
 	<%
 	for (String metadataField : metadataFields) {
