@@ -82,19 +82,19 @@ public class DocumentImpl implements Document {
 			return fieldName;
 		}
 
-		String sortFieldName = null;
-
-		if (DocumentImpl.isSortableTextField(fieldName) ||
-			(sort.getType() != Sort.STRING_TYPE)) {
-
-			sortFieldName = DocumentImpl.getSortableFieldName(fieldName);
+		if (fieldName.startsWith(_DDM_FIELD_PREFIX)) {
+			return fieldName;
 		}
 
-		if (Validator.isNull(sortFieldName)) {
-			sortFieldName = scoreFieldName;
+		if (isSortableTextField(fieldName)) {
+			return getSortableFieldName(fieldName);
 		}
 
-		return sortFieldName;
+		if (sort.getType() == Sort.STRING_TYPE) {
+			return scoreFieldName;
+		}
+
+		return getSortableFieldName(fieldName);
 	}
 
 	public static boolean isSortableFieldName(String name) {
@@ -907,6 +907,9 @@ public class DocumentImpl implements Document {
 
 		sb.append(StringPool.CLOSE_CURLY_BRACE);
 	}
+
+	private static final String _DDM_FIELD_PREFIX =
+		DDMIndexer.DDM_FIELD_NAMESPACE + StringPool.DOUBLE_UNDERLINE;
 
 	private static final String _INDEX_DATE_FORMAT_PATTERN = PropsUtil.get(
 		PropsKeys.INDEX_DATE_FORMAT_PATTERN);
