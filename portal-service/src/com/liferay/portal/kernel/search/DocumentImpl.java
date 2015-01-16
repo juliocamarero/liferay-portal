@@ -115,7 +115,7 @@ public class DocumentImpl implements Document {
 			return;
 		}
 
-		addDate(name, new Date[]{value});
+		addDate(name, new Date[] {value});
 	}
 
 	@Override
