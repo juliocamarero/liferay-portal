@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portlet.dynamicdatamapping.util.DDMIndexer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,23 +79,21 @@ public class DocumentImpl implements Document {
 
 		String fieldName = sort.getFieldName();
 
-		if (fieldName.endsWith(_SORTABLE_FIELD_SUFFIX)) {
+		if (isSortableFieldName(fieldName)) {
 			return fieldName;
 		}
 
-		String sortFieldName = null;
-
-		if (DocumentImpl.isSortableTextField(fieldName) ||
-			(sort.getType() != Sort.STRING_TYPE)) {
-
-			sortFieldName = DocumentImpl.getSortableFieldName(fieldName);
+		if (DocumentImpl.isSortableTextField(fieldName)) {
+			return DocumentImpl.getSortableFieldName(fieldName);
 		}
 
-		if (Validator.isNull(sortFieldName)) {
-			sortFieldName = scoreFieldName;
+		if (fieldName.startsWith(
+				DDMIndexer.DDM_FIELD_NAMESPACE + StringPool.DOUBLE_UNDERLINE)) {
+
+			return fieldName;
 		}
 
-		return sortFieldName;
+		return scoreFieldName;
 	}
 
 	public static boolean isSortableFieldName(String name) {
@@ -462,17 +461,7 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Double value) {
-		addNumber(name, String.valueOf(value), Double.class);
-	}
-
-	@Override
 	public void addNumber(String name, double[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Double.class);
-	}
-
-	@Override
-	public void addNumber(String name, Double[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Double.class);
 	}
 
@@ -482,17 +471,7 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Float value) {
-		addNumber(name, String.valueOf(value), Float.class);
-	}
-
-	@Override
 	public void addNumber(String name, float[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Float.class);
-	}
-
-	@Override
-	public void addNumber(String name, Float[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Float.class);
 	}
 
@@ -507,22 +486,7 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Integer value) {
-		addNumber(name, String.valueOf(value), Integer.class);
-	}
-
-	@Override
-	public void addNumber(String name, Integer[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Integer.class);
-	}
-
-	@Override
 	public void addNumber(String name, long value) {
-		addNumber(name, String.valueOf(value), Long.class);
-	}
-
-	@Override
-	public void addNumber(String name, Long value) {
 		addNumber(name, String.valueOf(value), Long.class);
 	}
 
@@ -532,8 +496,19 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Long[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Long.class);
+	public void addNumber(String name, Number value) {
+		addNumber(name, String.valueOf(value), value.getClass());
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void addNumber(String name, Number[] values) {
+		Class<? extends Number[]> clazz = values.getClass();
+
+		Class<? extends Number> componentType =
+			(Class<? extends Number>)clazz.getComponentType();
+
+		addNumber(name, ArrayUtil.toStringArray(values), componentType);
 	}
 
 	@Override
