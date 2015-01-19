@@ -387,6 +387,31 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>asset-add-button</name>
+		<tag-class>com.liferay.taglib.ui.AssetAddButtonTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>addPortletURLs</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>defaultAssetPublisher</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>groupCount</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>groupId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>asset-categories-error</name>
 		<tag-class>com.liferay.taglib.ui.AssetCategoriesErrorTag</tag-class>
 		<body-content>JSP</body-content>
