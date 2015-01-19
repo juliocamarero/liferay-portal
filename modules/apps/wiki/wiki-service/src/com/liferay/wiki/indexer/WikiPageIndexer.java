@@ -37,7 +37,6 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.model.WikiPage;
 import com.liferay.wiki.service.WikiNodeLocalServiceUtil;
@@ -60,9 +59,7 @@ import javax.portlet.PortletURL;
  */
 public class WikiPageIndexer extends BaseIndexer {
 
-	public static final String[] CLASS_NAMES = {WikiPage.class.getName()};
-
-	public static final String PORTLET_ID = WikiPortletKeys.WIKI;
+	public static final String CLASS_NAME = WikiPage.class.getName();
 
 	public WikiPageIndexer() {
 		setDefaultSelectedFieldNames(
@@ -102,13 +99,8 @@ public class WikiPageIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public String[] getClassNames() {
-		return CLASS_NAMES;
-	}
-
-	@Override
-	public String getPortletId() {
-		return PORTLET_ID;
+	public String getClassName() {
+		return CLASS_NAME;
 	}
 
 	@Override
@@ -169,7 +161,7 @@ public class WikiPageIndexer extends BaseIndexer {
 
 			Document document = new DocumentImpl();
 
-			document.addUID(PORTLET_ID, nodeId, title);
+			document.addUID(CLASS_NAME, nodeId, title);
 
 			SearchEngineUtil.deleteDocument(
 				getSearchEngineId(), companyId, document.get(Field.UID),
@@ -186,9 +178,9 @@ public class WikiPageIndexer extends BaseIndexer {
 	protected Document doGetDocument(Object obj) throws Exception {
 		WikiPage page = (WikiPage)obj;
 
-		Document document = getBaseModelDocument(PORTLET_ID, page);
+		Document document = getBaseModelDocument(CLASS_NAME, page);
 
-		document.addUID(PORTLET_ID, page.getNodeId(), page.getTitle());
+		document.addUID(CLASS_NAME, page.getNodeId(), page.getTitle());
 
 		String content = HtmlUtil.extractText(
 			WikiUtil.convert(page, null, null, null));
@@ -253,11 +245,6 @@ public class WikiPageIndexer extends BaseIndexer {
 		long companyId = GetterUtil.getLong(ids[0]);
 
 		reindexNodes(companyId);
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return PORTLET_ID;
 	}
 
 	protected void reindexNodes(final long companyId) throws PortalException {

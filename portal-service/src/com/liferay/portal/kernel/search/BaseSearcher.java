@@ -34,11 +34,6 @@ public abstract class BaseSearcher extends BaseIndexer {
 	}
 
 	@Override
-	public String getPortletId() {
-		return null;
-	}
-
-	@Override
 	public void postProcessSearchQuery(
 			BooleanQuery searchQuery, SearchContext searchContext)
 		throws Exception {
@@ -100,11 +95,6 @@ public abstract class BaseSearcher extends BaseIndexer {
 	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return null;
 	}
 
 }

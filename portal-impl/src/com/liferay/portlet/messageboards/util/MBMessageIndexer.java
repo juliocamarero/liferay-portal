@@ -40,7 +40,6 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.messageboards.NoSuchDiscussionException;
 import com.liferay.portlet.messageboards.model.MBCategory;
@@ -67,9 +66,7 @@ import javax.portlet.PortletURL;
  */
 public class MBMessageIndexer extends BaseIndexer {
 
-	public static final String[] CLASS_NAMES = {MBMessage.class.getName()};
-
-	public static final String PORTLET_ID = PortletKeys.MESSAGE_BOARDS;
+	public static final String CLASS_NAME = MBMessage.class.getName();
 
 	public MBMessageIndexer() {
 		setDefaultSelectedFieldNames(
@@ -103,13 +100,8 @@ public class MBMessageIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public String[] getClassNames() {
-		return CLASS_NAMES;
-	}
-
-	@Override
-	public String getPortletId() {
-		return PORTLET_ID;
+	public String getClassName() {
+		return CLASS_NAME;
 	}
 
 	@Override
@@ -223,7 +215,7 @@ public class MBMessageIndexer extends BaseIndexer {
 	protected Document doGetDocument(Object obj) throws Exception {
 		MBMessage message = (MBMessage)obj;
 
-		Document document = getBaseModelDocument(PORTLET_ID, message);
+		Document document = getBaseModelDocument(CLASS_NAME, message);
 
 		document.addKeyword(Field.CATEGORY_ID, message.getCategoryId());
 		document.addText(Field.CONTENT, processContent(message));
@@ -326,11 +318,6 @@ public class MBMessageIndexer extends BaseIndexer {
 		reindexCategories(companyId);
 		reindexDiscussions(companyId);
 		reindexRoot(companyId);
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return PORTLET_ID;
 	}
 
 	protected String processContent(MBMessage message) {
