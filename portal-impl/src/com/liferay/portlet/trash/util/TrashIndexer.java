@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -44,9 +43,7 @@ import javax.portlet.PortletURL;
  */
 public class TrashIndexer extends BaseIndexer {
 
-	public static final String[] CLASS_NAMES = {TrashEntry.class.getName()};
-
-	public static final String PORTLET_ID = PortletKeys.TRASH;
+	public static final String CLASS_NAME = TrashEntry.class.getName();
 
 	public TrashIndexer() {
 		setDefaultSelectedFieldNames(
@@ -58,8 +55,8 @@ public class TrashIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public String[] getClassNames() {
-		return CLASS_NAMES;
+	public String getClassName() {
+		return CLASS_NAME;
 	}
 
 	@Override
@@ -120,11 +117,6 @@ public class TrashIndexer extends BaseIndexer {
 		catch (Exception e) {
 			throw new SearchException(e);
 		}
-	}
-
-	@Override
-	public String getPortletId() {
-		return PORTLET_ID;
 	}
 
 	@Override
@@ -197,11 +189,6 @@ public class TrashIndexer extends BaseIndexer {
 
 	@Override
 	protected void doReindex(String[] ids) {
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return PORTLET_ID;
 	}
 
 }
