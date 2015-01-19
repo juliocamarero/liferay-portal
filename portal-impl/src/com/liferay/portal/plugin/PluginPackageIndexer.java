@@ -53,9 +53,7 @@ import javax.portlet.PortletURL;
  */
 public class PluginPackageIndexer extends BaseIndexer {
 
-	public static final String[] CLASS_NAMES = {PluginPackage.class.getName()};
-
-	public static final String PORTLET_ID = "PluginPackageIndexer";
+	public static final String CLASS_NAME = PluginPackage.class.getName();
 
 	public PluginPackageIndexer() {
 		setCommitImmediately(true);
@@ -66,13 +64,8 @@ public class PluginPackageIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public String[] getClassNames() {
-		return CLASS_NAMES;
-	}
-
-	@Override
-	public String getPortletId() {
-		return PORTLET_ID;
+	public String getClassName() {
+		return CLASS_NAME;
 	}
 
 	@Override
@@ -88,7 +81,7 @@ public class PluginPackageIndexer extends BaseIndexer {
 
 		Document document = new DocumentImpl();
 
-		document.addUID(PORTLET_ID, pluginPackage.getModuleId());
+		document.addUID(CLASS_NAME, pluginPackage.getModuleId());
 
 		document.addKeyword(Field.COMPANY_ID, CompanyConstants.SYSTEM);
 
@@ -122,7 +115,6 @@ public class PluginPackageIndexer extends BaseIndexer {
 		document.addKeyword(Field.GROUP_ID, moduleIdObj.getGroupId());
 
 		document.addDate(Field.MODIFIED_DATE, pluginPackage.getModifiedDate());
-		document.addKeyword(Field.PORTLET_ID, PORTLET_ID);
 
 		String[] statusAndInstalledVersion =
 			PluginPackageUtil.getStatusAndInstalledVersion(pluginPackage);
@@ -217,7 +209,7 @@ public class PluginPackageIndexer extends BaseIndexer {
 	@Override
 	protected void doReindex(String[] ids) throws Exception {
 		SearchEngineUtil.deleteEntityDocuments(
-			getSearchEngineId(), CompanyConstants.SYSTEM, PORTLET_ID,
+			getSearchEngineId(), CompanyConstants.SYSTEM, CLASS_NAME,
 			isCommitImmediately());
 
 		Collection<Document> documents = new ArrayList<>();
@@ -233,11 +225,6 @@ public class PluginPackageIndexer extends BaseIndexer {
 		SearchEngineUtil.updateDocuments(
 			getSearchEngineId(), CompanyConstants.SYSTEM, documents,
 			isCommitImmediately());
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return PORTLET_ID;
 	}
 
 	@Override
