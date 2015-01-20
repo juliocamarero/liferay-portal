@@ -78,15 +78,6 @@ public class DirectoryOpenSearchImpl extends HitsOpenSearchImpl {
 		return TITLE + keywords;
 	}
 
-	@Override
-	protected PortletURL getPortletURL(
-			HttpServletRequest request, String portletId, long scopeGroupId)
-		throws Exception {
-
-		return super.getPortletURL(
-			request, PortletKeys.DIRECTORY, scopeGroupId);
-	}
-
 	protected LinkedHashMap<String, Object> getUserParams(
 		long companyId, String keywords) {
 
