@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.lar.xstream.XStreamAliasRegistryUtil;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
@@ -34,6 +35,7 @@ import java.util.List;
 import javax.portlet.PortletPreferences;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Mate Thurzo
@@ -193,6 +195,10 @@ public class AssetCategoryPortletDataHandler extends BasePortletDataHandler {
 		actionableDynamicQuery.setAddCriteriaMethod(null);
 
 		return actionableDynamicQuery;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPortalUtil(PortalUtil portalUtil) {
 	}
 
 }
