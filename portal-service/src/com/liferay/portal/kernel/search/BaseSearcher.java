@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.search;
 
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.Locale;
 
@@ -27,6 +28,11 @@ import javax.portlet.PortletURL;
  * @author László Csontos
  */
 public abstract class BaseSearcher extends BaseIndexer {
+
+	@Override
+	public String getClassName() {
+		return StringPool.BLANK;
+	}
 
 	@Override
 	public IndexerPostProcessor[] getIndexerPostProcessors() {
