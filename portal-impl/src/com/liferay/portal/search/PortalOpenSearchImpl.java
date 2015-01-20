@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.view.ViewPortletProviderUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
@@ -92,7 +93,10 @@ public class PortalOpenSearchImpl extends BaseOpenSearchImpl {
 			for (int i = 0; i < results.getDocs().length; i++) {
 				Document result = results.doc(i);
 
-				String portletId = result.get(Field.PORTLET_ID);
+				String className = result.get(Field.ENTRY_CLASS_NAME);
+
+				String portletId = ViewPortletProviderUtil.getPortletId(
+					className);
 
 				Portlet portlet = PortletLocalServiceUtil.getPortletById(
 					themeDisplay.getCompanyId(), portletId);
@@ -122,8 +126,9 @@ public class PortalOpenSearchImpl extends BaseOpenSearchImpl {
 
 				String title = StringPool.BLANK;
 
-				PortletURL portletURL = getPortletURL(
-					request, portletId, resultScopeGroupId);
+				PortletURL portletURL =
+					ViewPortletProviderUtil.getViewEntityURL(
+						request, className, resultScopeGroupId);
 
 				String url = portletURL.toString();
 
