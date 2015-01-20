@@ -41,6 +41,10 @@ public interface Indexer {
 
 	public String getClassName();
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getSearchClassNames()}
+	 */
+	@Deprecated
 	public String[] getClassNames();
 
 	public int getDatabaseCount() throws Exception;
@@ -61,6 +65,8 @@ public interface Indexer {
 	 */
 	@Deprecated
 	public String getPortletId();
+
+	public String[] getSearchClassNames();
 
 	public String getSearchEngineId();
 
