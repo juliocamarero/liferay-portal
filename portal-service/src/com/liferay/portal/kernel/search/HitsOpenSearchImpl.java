@@ -50,8 +50,6 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 		return null;
 	}
 
-	public abstract String getPortletId();
-
 	public abstract String getSearchPath();
 
 	public Summary getSummary(
