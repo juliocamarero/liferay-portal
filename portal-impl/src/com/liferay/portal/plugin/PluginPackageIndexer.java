@@ -216,7 +216,7 @@ public class PluginPackageIndexer extends BaseIndexer {
 
 	@Override
 	protected void doReindex(String[] ids) throws Exception {
-		SearchEngineUtil.deletePortletDocuments(
+		SearchEngineUtil.deleteEntityDocuments(
 			getSearchEngineId(), CompanyConstants.SYSTEM, PORTLET_ID,
 			isCommitImmediately());
 
