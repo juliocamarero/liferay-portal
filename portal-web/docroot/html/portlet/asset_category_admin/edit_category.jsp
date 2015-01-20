@@ -39,7 +39,11 @@ if (Validator.isNotNull(categoryPropertiesIndexesParam)) {
 	categoryPropertiesIndexes = StringUtil.split(categoryPropertiesIndexesParam, 0);
 
 	for (int categoryPropertiesIndex : categoryPropertiesIndexes) {
-		categoryProperties.add(new AssetCategoryPropertyImpl());
+		long assetCategoryPropertyId = CounterLocalServiceUtil.increment();
+
+		AssetCategoryProperty assetCategoryProperty = AssetCategoryPropertyUtil.create(assetCategoryPropertyId);
+
+		categoryProperties.add(assetCategoryProperty);
 	}
 }
 else {
@@ -56,7 +60,11 @@ else {
 	if (categoryProperties.isEmpty()) {
 		categoryProperties = new ArrayList<AssetCategoryProperty>();
 
-		categoryProperties.add(new AssetCategoryPropertyImpl());
+		long assetCategoryPropertyId = CounterLocalServiceUtil.increment();
+
+		AssetCategoryProperty assetCategoryProperty = AssetCategoryPropertyUtil.create(assetCategoryPropertyId);
+
+		categoryProperties.add(assetCategoryProperty);
 
 		categoryPropertiesIndexes = new int[] {0};
 	}
