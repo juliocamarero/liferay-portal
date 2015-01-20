@@ -141,8 +141,6 @@ public class IndexerRegistryUtil {
 			"indexer.classNames",
 			classNames.toArray(new String[classNames.size()]));
 
-		properties.put("javax.portlet.name", indexer.getPortletId());
-
 		ServiceRegistration<Indexer> serviceRegistration =
 			registry.registerService(Indexer.class, indexer, properties);
 
