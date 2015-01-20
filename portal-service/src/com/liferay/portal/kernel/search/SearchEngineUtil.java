@@ -360,7 +360,7 @@ public class SearchEngineUtil {
 		Set<String> assetEntryClassNames = new HashSet<>();
 
 		for (Indexer indexer : IndexerRegistryUtil.getIndexers()) {
-			for (String className : indexer.getClassNames()) {
+			for (String className : indexer.getSearchClassNames()) {
 				if (!_excludedEntryClassNames.contains(className)) {
 					assetEntryClassNames.add(className);
 				}
