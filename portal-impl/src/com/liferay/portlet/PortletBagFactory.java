@@ -39,7 +39,6 @@ import com.liferay.portal.kernel.search.OpenSearch;
 import com.liferay.portal.kernel.servlet.URLEncoder;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
@@ -593,9 +592,10 @@ public class PortletBagFactory {
 
 			Map<String, Object> properties = new HashMap<>();
 
-			String[] classNames = ArrayUtil.append(
-				indexerInstance.getClassNames(),
-				ClassUtil.getClassName(indexerInstance));
+			String[] classNames = new String[] {
+				indexerInstance.getClassName(),
+				ClassUtil.getClassName(indexerInstance)
+			};
 
 			properties.put("indexer.classNames", classNames);
 
