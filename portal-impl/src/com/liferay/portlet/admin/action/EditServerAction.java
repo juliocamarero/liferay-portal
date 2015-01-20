@@ -426,7 +426,7 @@ public class EditServerAction extends PortletAction {
 
 			for (String searchEngineId : searchEngineIds) {
 				for (long companyId : companyIds) {
-					SearchEngineUtil.deletePortletDocuments(
+					SearchEngineUtil.deleteEntityDocuments(
 						searchEngineId, companyId, portletId, true);
 				}
 			}
