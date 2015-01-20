@@ -50,53 +50,21 @@ public interface Document extends Cloneable, Serializable {
 			String name, InputStream is, String fileExt, int maxStringLength)
 		throws IOException;
 
-	public void addKeyword(String name, boolean value);
-
-	public void addKeyword(String name, Boolean value);
-
 	public void addKeyword(String name, boolean[] values);
-
-	public void addKeyword(String name, Boolean[] values);
-
-	public void addKeyword(String name, double value);
-
-	public void addKeyword(String name, Double value);
 
 	public void addKeyword(String name, double[] values);
 
-	public void addKeyword(String name, Double[] values);
-
-	public void addKeyword(String name, float value);
-
-	public void addKeyword(String name, Float value);
-
 	public void addKeyword(String name, float[] values);
-
-	public void addKeyword(String name, Float[] values);
-
-	public void addKeyword(String name, int value);
 
 	public void addKeyword(String name, int[] values);
 
-	public void addKeyword(String name, Integer value);
-
-	public void addKeyword(String name, Integer[] values);
-
-	public void addKeyword(String name, long value);
-
-	public void addKeyword(String name, Long value);
-
 	public void addKeyword(String name, long[] values);
 
-	public void addKeyword(String name, Long[] values);
+	public void addKeyword(String name, Object value);
 
-	public void addKeyword(String name, short value);
-
-	public void addKeyword(String name, Short value);
+	public void addKeyword(String name, Object[] values);
 
 	public void addKeyword(String name, short[] values);
-
-	public void addKeyword(String name, Short[] values);
 
 	public void addKeyword(String name, String value);
 
@@ -127,19 +95,11 @@ public interface Document extends Cloneable, Serializable {
 	@Deprecated
 	public void addModifiedDate(Date modifiedDate);
 
-	public void addNumber(String name, double value);
-
 	public void addNumber(String name, double[] values);
-
-	public void addNumber(String name, float value);
 
 	public void addNumber(String name, float[] values);
 
-	public void addNumber(String name, int value);
-
 	public void addNumber(String name, int[] values);
-
-	public void addNumber(String name, long value);
 
 	public void addNumber(String name, long[] values);
 

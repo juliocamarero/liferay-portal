@@ -178,41 +178,12 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addKeyword(String name, boolean value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Boolean value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
 	public void addKeyword(String name, boolean[] values) {
 		if (values == null) {
 			return;
 		}
 
 		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, Boolean[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, double value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Double value) {
-		addKeyword(name, String.valueOf(value));
 	}
 
 	@Override
@@ -225,45 +196,12 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addKeyword(String name, Double[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, float value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Float value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
 	public void addKeyword(String name, float[] values) {
 		if (values == null) {
 			return;
 		}
 
 		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, Float[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, int value) {
-		addKeyword(name, String.valueOf(value));
 	}
 
 	@Override
@@ -276,30 +214,6 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addKeyword(String name, Integer value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Integer[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, long value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Long value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
 	public void addKeyword(String name, long[] values) {
 		if (values == null) {
 			return;
@@ -308,36 +222,20 @@ public class DocumentImpl implements Document {
 		addKeyword(name, ArrayUtil.toStringArray(values));
 	}
 
-	@Override
-	public void addKeyword(String name, Long[] values) {
+	public void addKeyword(String name, Object value) {
+		addKeyword(name, String.valueOf(value));
+	}
+
+	public void addKeyword(String name, Object[] values) {
 		if (values == null) {
 			return;
 		}
 
 		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, short value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Short value) {
-		addKeyword(name, String.valueOf(value));
 	}
 
 	@Override
 	public void addKeyword(String name, short[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, Short[] values) {
 		if (values == null) {
 			return;
 		}
@@ -458,18 +356,8 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, double value) {
-		addNumber(name, String.valueOf(value), Double.class);
-	}
-
-	@Override
 	public void addNumber(String name, double[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Double.class);
-	}
-
-	@Override
-	public void addNumber(String name, float value) {
-		addNumber(name, String.valueOf(value), Float.class);
 	}
 
 	@Override
@@ -478,18 +366,8 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, int value) {
-		addNumber(name, String.valueOf(value), Integer.class);
-	}
-
-	@Override
 	public void addNumber(String name, int[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Integer.class);
-	}
-
-	@Override
-	public void addNumber(String name, long value) {
-		addNumber(name, String.valueOf(value), Long.class);
 	}
 
 	@Override
