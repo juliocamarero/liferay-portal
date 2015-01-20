@@ -135,6 +135,15 @@ public abstract class BaseIndexer implements Indexer {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getSearchClassNames()}
+	 */
+	@Deprecated
+	@Override
+	public String[] getClassNames() {
+		return getSearchClassNames();
+	}
+
 	@Override
 	public int getDatabaseCount() throws Exception {
 		return 0;
@@ -221,11 +230,11 @@ public abstract class BaseIndexer implements Indexer {
 
 			if (ArrayUtil.isNotEmpty(fullQueryEntryClassNames)) {
 				searchContext.setAttribute(
-					"relatedEntryClassNames", getClassNames());
+					"relatedEntryClassNames", getSearchClassNames());
 			}
 
 			String[] entryClassNames = ArrayUtil.append(
-				getClassNames(), fullQueryEntryClassNames);
+				getSearchClassNames(), fullQueryEntryClassNames);
 
 			searchContext.setEntryClassNames(entryClassNames);
 
@@ -258,6 +267,11 @@ public abstract class BaseIndexer implements Indexer {
 	@Override
 	public IndexerPostProcessor[] getIndexerPostProcessors() {
 		return _indexerPostProcessors;
+	}
+
+	@Override
+	public String[] getSearchClassNames() {
+		return new String[]{getClassName()};
 	}
 
 	@Override
@@ -1634,9 +1648,7 @@ public abstract class BaseIndexer implements Indexer {
 	}
 
 	protected String getClassName(SearchContext searchContext) {
-		String[] classNames = getClassNames();
-
-		return classNames[0];
+		return getClassName();
 	}
 
 	protected String[] getDefaultSelectedFieldNames() {

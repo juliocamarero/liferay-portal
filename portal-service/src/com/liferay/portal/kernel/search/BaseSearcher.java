@@ -43,7 +43,7 @@ public abstract class BaseSearcher extends BaseIndexer {
 			BooleanQuery searchQuery, SearchContext searchContext)
 		throws Exception {
 
-		String[] classNames = getClassNames();
+		String[] classNames = getSearchClassNames();
 
 		if (ArrayUtil.isEmpty(classNames)) {
 			return;
