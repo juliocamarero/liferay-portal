@@ -20,24 +20,15 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.PortletURLFactoryUtil;
 
 import java.util.Date;
-
-import javax.portlet.PortletMode;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletURL;
-import javax.portlet.WindowState;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -497,48 +488,6 @@ public abstract class BaseOpenSearchImpl implements OpenSearch {
 		query.addAttribute("startPage", String.valueOf(startPage));
 
 		return new Object[] {doc, channel};
-	}
-
-	protected PortletURL getPortletURL(
-			HttpServletRequest request, String portletId)
-		throws Exception {
-
-		return getPortletURL(request, portletId, 0);
-	}
-
-	protected PortletURL getPortletURL(
-			HttpServletRequest request, String portletId, long scopeGroupId)
-		throws Exception {
-
-		Layout layout = (Layout)request.getAttribute(WebKeys.LAYOUT);
-
-		long layoutGroupId = scopeGroupId;
-
-		if (layout != null) {
-			layoutGroupId = layout.getGroupId();
-		}
-
-		long plid = LayoutServiceUtil.getDefaultPlid(
-			layoutGroupId, scopeGroupId, false, portletId);
-
-		if (plid == 0) {
-			plid = LayoutServiceUtil.getDefaultPlid(
-				layoutGroupId, scopeGroupId, true, portletId);
-		}
-
-		if (plid == 0) {
-			if (layout != null) {
-				plid = layout.getPlid();
-			}
-		}
-
-		PortletURL portletURL = PortletURLFactoryUtil.create(
-			request, portletId, plid, PortletRequest.RENDER_PHASE);
-
-		portletURL.setPortletMode(PortletMode.VIEW);
-		portletURL.setWindowState(WindowState.MAXIMIZED);
-
-		return portletURL;
 	}
 
 	private final boolean _enabled;
