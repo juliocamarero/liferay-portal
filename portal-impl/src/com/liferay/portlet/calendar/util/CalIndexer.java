@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portlet.calendar.model.CalEvent;
@@ -35,6 +36,7 @@ import javax.portlet.PortletURL;
 /**
  * @author Brett Swaim
  */
+@OSGiBeanProperties
 public class CalIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = CalEvent.class.getName();
