@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
@@ -40,6 +41,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.Locale;
 
@@ -52,6 +54,9 @@ import javax.portlet.PortletURL;
  * @author Bruno Farache
  * @author Raymond Augé
  */
+@Component(
+	immediate = true, service = Indexer.class
+)
 public class BookmarksEntryIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = BookmarksEntry.class.getName();

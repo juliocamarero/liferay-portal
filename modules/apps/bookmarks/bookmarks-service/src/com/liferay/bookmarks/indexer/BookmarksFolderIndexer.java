@@ -28,14 +28,17 @@ import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.Locale;
 
@@ -47,6 +50,9 @@ import javax.portlet.WindowStateException;
 /**
  * @author Eduardo Garcia
  */
+@Component(
+	immediate = true, service = Indexer.class
+)
 public class BookmarksFolderIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = BookmarksFolder.class.getName();
