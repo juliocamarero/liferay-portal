@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -97,6 +98,7 @@ import javax.portlet.WindowStateException;
  * @author Raymond Augé
  * @author Alexander Chow
  */
+@OSGiBeanProperties
 public class DLFileEntryIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = DLFileEntry.class.getName();
