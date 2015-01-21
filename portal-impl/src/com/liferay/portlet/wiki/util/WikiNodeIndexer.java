@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -42,6 +43,7 @@ import javax.portlet.PortletURL;
 /**
  * @author Eudaldo Alonso
  */
+@OSGiBeanProperties
 public class WikiNodeIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = WikiNode.class.getName();

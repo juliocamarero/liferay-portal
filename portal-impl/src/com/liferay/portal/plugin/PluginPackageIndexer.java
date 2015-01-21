@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.TermQueryFactoryUtil;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -51,6 +52,7 @@ import javax.portlet.PortletURL;
  * @author Bruno Farache
  * @author Raymond Augé
  */
+@OSGiBeanProperties
 public class PluginPackageIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = PluginPackage.class.getName();
