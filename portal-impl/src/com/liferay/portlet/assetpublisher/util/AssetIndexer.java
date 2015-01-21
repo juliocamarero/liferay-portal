@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portlet.asset.model.AssetEntry;
 
 import java.util.Locale;
@@ -32,6 +33,7 @@ import javax.portlet.PortletURL;
  * @author Brian Wing Shun Chan
  * @author Julio Camarero
  */
+@OSGiBeanProperties
 public class AssetIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = AssetEntry.class.getName();

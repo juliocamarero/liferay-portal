@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -43,6 +44,7 @@ import javax.portlet.PortletURL;
 /**
  * @author Mate Thurzo
  */
+@OSGiBeanProperties
 public class ExportImportConfigurationIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME =
