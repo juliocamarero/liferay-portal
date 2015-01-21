@@ -1227,13 +1227,6 @@ Please set the property "jdk.6.home" in build.properties.
 		<ant dir=".." target="deploy-properties" inheritAll="false" />
 	</target>
 
-	<target name="download-nodejs">
-		<ant-execute
-			ant.dir="${project.dir}/tools/sdk"
-			ant.target="download-nodejs"
-		/>
-	</target>
-
 	<target name="format-js">
 		<taskdef classname="com.philmander.jshint.JsHintAntTask" classpath="${project.dir}/tools/ant-jshint-2.0.5.jar" name="jshint" />
 
@@ -1250,6 +1243,22 @@ Please set the property "jdk.6.home" in build.properties.
 			<exclude name="**/VAADIN/**" />
 			<include name="**/*.js" />
 		</jshint>
+	</target>
+
+	<target name="node-execute">
+		<ant-execute
+			ant.build.file="build-node.xml"
+			ant.dir="${project.dir}/tools/sdk"
+			ant.target="node-execute"
+		/>
+	</target>
+
+	<target name="npm-execute">
+		<ant-execute
+			ant.build.file="build-node.xml"
+			ant.dir="${project.dir}/tools/sdk"
+			ant.target="npm-execute"
+		/>
 	</target>
 
 	<target name="war" depends="compile,build-portal-web-dependencies">

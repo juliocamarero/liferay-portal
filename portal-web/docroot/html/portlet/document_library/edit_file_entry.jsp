@@ -24,8 +24,6 @@ String uploadExceptionRedirect = ParamUtil.getString(request, "uploadExceptionRe
 
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 
-String referringPortletResourceRootPortletId = PortletConstants.getRootPortletId(referringPortletResource);
-
 String uploadProgressId = "dlFileEntryUploadProgress";
 
 FileEntry fileEntry = (FileEntry)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FILE_ENTRY);
@@ -36,7 +34,7 @@ long repositoryId = BeanParamUtil.getLong(fileEntry, request, "repositoryId");
 
 if (repositoryId <= 0) {
 
-	// add_asset.jspf only passes in groupId
+	// <liferay-ui:asset_add_button /> only passes in groupId
 
 	repositoryId = BeanParamUtil.getLong(fileEntry, request, "groupId");
 }
@@ -276,7 +274,7 @@ else {
 		<div class="form-group">
 			<aui:input label="folder" name="folderName" type="resource" value="<%= folderName %>" />
 
-			<c:if test="<%= referringPortletResourceRootPortletId.equals(PortletKeys.ASSET_PUBLISHER) && (fileEntryId == 0) %>">
+			<c:if test="<%= dlEditFileEntryDisplayContext.isFolderSelectionVisible() %>">
 				<aui:button name="selectFolderButton" value="select" />
 
 				<%
