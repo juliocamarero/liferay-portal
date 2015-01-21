@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -53,6 +54,7 @@ import javax.portlet.PortletURL;
 /**
  * @author Marcellus Tavares
  */
+@OSGiBeanProperties
 public class DDLIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = DDLRecord.class.getName();

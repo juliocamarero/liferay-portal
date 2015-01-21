@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -60,6 +61,7 @@ import javax.portlet.PortletURL;
  * @author Zsigmond Rab
  * @author Hugo Huijser
  */
+@OSGiBeanProperties
 public class UserIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = User.class.getName();

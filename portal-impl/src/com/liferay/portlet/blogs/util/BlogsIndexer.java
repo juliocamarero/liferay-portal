@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -48,6 +49,7 @@ import javax.portlet.PortletURL;
  * @author Bruno Farache
  * @author Raymond Augé
  */
+@OSGiBeanProperties
 public class BlogsIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = BlogsEntry.class.getName();

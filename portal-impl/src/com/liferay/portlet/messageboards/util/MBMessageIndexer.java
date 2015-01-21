@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -64,6 +65,7 @@ import javax.portlet.PortletURL;
  * @author Bruno Farache
  * @author Raymond Augé
  */
+@OSGiBeanProperties
 public class MBMessageIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = MBMessage.class.getName();

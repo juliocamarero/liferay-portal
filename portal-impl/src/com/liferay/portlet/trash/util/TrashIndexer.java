@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -41,6 +42,7 @@ import javax.portlet.PortletURL;
  * @author Julio Camarero
  * @author Zsolt Berentey
  */
+@OSGiBeanProperties
 public class TrashIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = TrashEntry.class.getName();

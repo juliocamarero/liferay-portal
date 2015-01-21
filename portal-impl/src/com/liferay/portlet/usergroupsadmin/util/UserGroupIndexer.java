@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.UserGroup;
@@ -43,6 +44,7 @@ import javax.portlet.PortletURL;
 /**
  * @author Hugo Huijser
  */
+@OSGiBeanProperties
 public class UserGroupIndexer extends BaseIndexer {
 
 	public static final String CLASS_NAME = UserGroup.class.getName();
