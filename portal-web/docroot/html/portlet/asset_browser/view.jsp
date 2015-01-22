@@ -51,7 +51,7 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 					</liferay-util:include>
 				</aui:nav>
 
-				<aui:nav-bar-search file="/html/portlet/asset_publisher/asset_search.jsp" searchContainer="<%= searchContainer %>" />
+				<aui:nav-bar-search file="/html/portlet/asset_browser/search.jsp" searchContainer="<%= searchContainer %>" />
 			</aui:nav-bar>
 
 			<%

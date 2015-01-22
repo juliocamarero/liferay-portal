@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/asset_publisher/init.jsp" %>
+<%@ include file="/html/portlet/asset_browser/init.jsp" %>
 
 <%
 AssetSearch searchContainer = (AssetSearch)request.getAttribute("liferay-ui:search:searchContainer");
