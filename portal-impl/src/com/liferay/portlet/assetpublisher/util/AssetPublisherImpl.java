@@ -348,6 +348,13 @@ public class AssetPublisherImpl implements AssetPublisher {
 		return assetCategoryIds;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             AssetEntryLocalServiceUtil#getEntries(long[], long[], String,
+	 *             String, String, String, boolean, boolean, int, int,
+	 *             String, String, String, String)}
+	 */
+	@Deprecated
 	@Override
 	public List<AssetEntry> getAssetEntries(
 		long[] groupIds, long[] classNameIds, String keywords, String userName,
@@ -355,12 +362,10 @@ public class AssetPublisherImpl implements AssetPublisher {
 		boolean andOperator, int start, int end, String orderByCol1,
 		String orderByCol2, String orderByType1, String orderByType2) {
 
-		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
+		return AssetEntryLocalServiceUtil.getEntries(
 			groupIds, classNameIds, keywords, userName, title, description,
 			advancedSearch, andOperator, start, end, orderByCol1, orderByCol2,
 			orderByType1, orderByType2);
-
-		return AssetEntryLocalServiceUtil.getEntries(assetEntryQuery);
 	}
 
 	@Override
@@ -608,17 +613,21 @@ public class AssetPublisherImpl implements AssetPublisher {
 			deleteMissingAssetEntries, checkPermission);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             AssetEntryLocalServiceUtil#getEntriesCount(long[], long[],
+	 *             String, String, String, String, boolean, boolean, int, int)}
+	 */
+	@Deprecated
 	@Override
 	public int getAssetEntriesCount(
 		long[] groupIds, long[] classNameIds, String keywords, String userName,
 		String title, String description, boolean advancedSearch,
 		boolean andOperator, int start, int end) {
 
-		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
+		return AssetEntryLocalServiceUtil.getEntriesCount(
 			groupIds, classNameIds, keywords, userName, title, description,
-			advancedSearch, andOperator, start, end, null, null, null, null);
-
-		return AssetEntryLocalServiceUtil.getEntriesCount(assetEntryQuery);
+			advancedSearch, andOperator);
 	}
 
 	/**
