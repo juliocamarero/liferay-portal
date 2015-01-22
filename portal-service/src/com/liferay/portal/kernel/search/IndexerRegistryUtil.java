@@ -87,6 +87,12 @@ public class IndexerRegistryUtil {
 	}
 
 	private Set<String> _aggregrateClassNames(
+		String className, String... moreClassNames) {
+
+		return _aggregrateClassNames(new String[]{className}, moreClassNames);
+	}
+
+	private Set<String> _aggregrateClassNames(
 		String[] classNames, String... moreClassNames) {
 
 		Set<String> set = new HashSet<>();
@@ -134,14 +140,11 @@ public class IndexerRegistryUtil {
 		Map<String, Object> properties = new HashMap<>();
 
 		Set<String> classNames = _aggregrateClassNames(
-			indexer.getClassNames(), ClassUtil.getClassName(indexer),
-			className);
+			indexer.getClassName(), ClassUtil.getClassName(indexer), className);
 
 		properties.put(
 			"indexer.classNames",
 			classNames.toArray(new String[classNames.size()]));
-
-		properties.put("javax.portlet.name", indexer.getPortletId());
 
 		ServiceRegistration<Indexer> serviceRegistration =
 			registry.registerService(Indexer.class, indexer, properties);
@@ -153,7 +156,7 @@ public class IndexerRegistryUtil {
 
 	private void _unregister(Indexer indexer) {
 		Set<String> classNames = _aggregrateClassNames(
-			indexer.getClassNames(), ClassUtil.getClassName(indexer));
+			indexer.getClassName(), ClassUtil.getClassName(indexer));
 
 		for (String className : classNames) {
 			_unregister(className);
@@ -195,7 +198,7 @@ public class IndexerRegistryUtil {
 
 			Set<String> classNames = _aggregrateClassNames(
 				(String[])serviceReference.getProperty("indexer.classNames"),
-				indexer.getClassNames());
+				indexer.getClassName());
 
 			for (String className : classNames) {
 				_indexers.put(className, indexer);
@@ -219,7 +222,7 @@ public class IndexerRegistryUtil {
 
 			Set<String> classNames = _aggregrateClassNames(
 				(String[])serviceReference.getProperty("indexer.classNames"),
-				indexer.getClassNames());
+				indexer.getClassName());
 
 			for (String className : classNames) {
 				_indexers.remove(className);

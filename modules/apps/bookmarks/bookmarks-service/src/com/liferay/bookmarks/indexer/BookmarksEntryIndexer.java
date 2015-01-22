@@ -14,7 +14,6 @@
 
 package com.liferay.bookmarks.indexer;
 
-import com.liferay.bookmarks.constants.BookmarksPortletKeys;
 import com.liferay.bookmarks.model.BookmarksEntry;
 import com.liferay.bookmarks.model.BookmarksFolder;
 import com.liferay.bookmarks.model.BookmarksFolderConstants;
@@ -30,6 +29,7 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
@@ -41,6 +41,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.Locale;
 
@@ -53,11 +54,12 @@ import javax.portlet.PortletURL;
  * @author Bruno Farache
  * @author Raymond Augé
  */
+@Component(
+	immediate = true, service = Indexer.class
+)
 public class BookmarksEntryIndexer extends BaseIndexer {
 
-	public static final String[] CLASS_NAMES = {BookmarksEntry.class.getName()};
-
-	public static final String PORTLET_ID = BookmarksPortletKeys.BOOKMARKS;
+	public static final String CLASS_NAME = BookmarksEntry.class.getName();
 
 	public BookmarksEntryIndexer() {
 		setDefaultSelectedFieldNames(
@@ -68,13 +70,8 @@ public class BookmarksEntryIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public String[] getClassNames() {
-		return CLASS_NAMES;
-	}
-
-	@Override
-	public String getPortletId() {
-		return PORTLET_ID;
+	public String getClassName() {
+		return CLASS_NAME;
 	}
 
 	@Override
@@ -106,7 +103,7 @@ public class BookmarksEntryIndexer extends BaseIndexer {
 	protected Document doGetDocument(Object obj) throws Exception {
 		BookmarksEntry entry = (BookmarksEntry)obj;
 
-		Document document = getBaseModelDocument(PORTLET_ID, entry);
+		Document document = getBaseModelDocument(CLASS_NAME, entry);
 
 		document.addText(Field.DESCRIPTION, entry.getDescription());
 		document.addKeyword(Field.FOLDER_ID, entry.getFolderId());
@@ -160,11 +157,6 @@ public class BookmarksEntryIndexer extends BaseIndexer {
 
 		reindexFolders(companyId);
 		reindexRoot(companyId);
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return PORTLET_ID;
 	}
 
 	protected void reindexEntries(

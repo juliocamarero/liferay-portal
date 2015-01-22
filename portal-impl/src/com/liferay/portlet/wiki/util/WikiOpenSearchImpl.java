@@ -34,11 +34,6 @@ public class WikiOpenSearchImpl extends HitsOpenSearchImpl {
 	}
 
 	@Override
-	public String getPortletId() {
-		return WikiPageIndexer.PORTLET_ID;
-	}
-
-	@Override
 	public String getSearchPath() {
 		return SEARCH_PATH;
 	}

@@ -19,17 +19,15 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.view.ViewPortletProviderUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.Portlet;
-import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.ratings.model.RatingsStats;
 import com.liferay.portlet.ratings.service.RatingsStatsLocalServiceUtil;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.PortletURL;
@@ -49,8 +47,6 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 
 		return null;
 	}
-
-	public abstract String getPortletId();
 
 	public abstract String getSearchPath();
 
@@ -111,15 +107,6 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 
 			Indexer indexer = getIndexer();
 
-			if (indexer == null) {
-				Portlet portlet = PortletLocalServiceUtil.getPortletById(
-					themeDisplay.getCompanyId(), getPortletId());
-
-				List<Indexer> indexers = portlet.getIndexerInstances();
-
-				indexer = indexers.get(0);
-			}
-
 			Hits results = indexer.search(searchContext);
 
 			String[] queryTerms = results.getQueryTerms();
@@ -137,10 +124,10 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 			for (int i = 0; i < results.getDocs().length; i++) {
 				Document result = results.doc(i);
 
-				String portletId = getPortletId();
+				String className = indexer.getClassName();
 
-				if (Validator.isNull(portletId)) {
-					portletId = result.get(Field.PORTLET_ID);
+				if (Validator.isNull(className)) {
+					className = result.get(Field.ENTRY_CLASS_NAME);
 				}
 
 				String snippet = results.snippet(i);
@@ -159,8 +146,9 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 					resultScopeGroupId = themeDisplay.getScopeGroupId();
 				}
 
-				PortletURL portletURL = getPortletURL(
-					request, portletId, resultScopeGroupId);
+				PortletURL portletURL =
+					ViewPortletProviderUtil.getViewEntityURL(
+						request, className, resultScopeGroupId);
 
 				Summary summary = getSummary(
 					indexer, result, themeDisplay.getLocale(), snippet,

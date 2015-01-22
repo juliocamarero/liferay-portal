@@ -27,7 +27,6 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
-import com.liferay.portlet.usersadmin.util.UserIndexer;
 
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -54,11 +53,6 @@ public class DirectoryOpenSearchImpl extends HitsOpenSearchImpl {
 	}
 
 	@Override
-	public String getPortletId() {
-		return UserIndexer.PORTLET_ID;
-	}
-
-	@Override
 	public String getSearchPath() {
 		return SEARCH_PATH;
 	}
@@ -82,15 +76,6 @@ public class DirectoryOpenSearchImpl extends HitsOpenSearchImpl {
 	@Override
 	public String getTitle(String keywords) {
 		return TITLE + keywords;
-	}
-
-	@Override
-	protected PortletURL getPortletURL(
-			HttpServletRequest request, String portletId, long scopeGroupId)
-		throws Exception {
-
-		return super.getPortletURL(
-			request, PortletKeys.DIRECTORY, scopeGroupId);
 	}
 
 	protected LinkedHashMap<String, Object> getUserParams(
