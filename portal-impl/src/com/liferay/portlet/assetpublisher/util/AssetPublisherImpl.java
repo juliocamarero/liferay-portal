@@ -1383,36 +1383,6 @@ public class AssetPublisherImpl implements AssetPublisher {
 			getSubscriptionClassPK(plid, portletId));
 	}
 
-	protected AssetEntryQuery getAssetEntryQuery(
-		long[] groupIds, long[] classNameIds, String keywords, String userName,
-		String title, String description, boolean advancedSearch,
-		boolean andOperator, int start, int end, String orderByCol1,
-		String orderByCol2, String orderByType1, String orderByType2) {
-
-		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
-
-		if (advancedSearch) {
-			assetEntryQuery.setAndOperator(andOperator);
-			assetEntryQuery.setDescription(description);
-			assetEntryQuery.setTitle(title);
-			assetEntryQuery.setUserName(userName);
-		}
-		else {
-			assetEntryQuery.setKeywords(keywords);
-		}
-
-		assetEntryQuery.setClassNameIds(classNameIds);
-		assetEntryQuery.setEnd(end);
-		assetEntryQuery.setGroupIds(groupIds);
-		assetEntryQuery.setOrderByCol1(orderByCol1);
-		assetEntryQuery.setOrderByCol2(orderByCol2);
-		assetEntryQuery.setOrderByType1(orderByType1);
-		assetEntryQuery.setOrderByType2(orderByType2);
-		assetEntryQuery.setStart(start);
-
-		return assetEntryQuery;
-	}
-
 	protected long[] getSiteGroupIds(long[] groupIds) throws PortalException {
 		Set<Long> siteGroupIds = new HashSet<>();
 
