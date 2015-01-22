@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portlet.dynamicdatamapping.util.DDMIndexer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,23 +79,23 @@ public class DocumentImpl implements Document {
 
 		String fieldName = sort.getFieldName();
 
-		if (fieldName.endsWith(_SORTABLE_FIELD_SUFFIX)) {
+		if (isSortableFieldName(fieldName)) {
 			return fieldName;
 		}
 
-		String sortFieldName = null;
-
-		if (DocumentImpl.isSortableTextField(fieldName) ||
-			(sort.getType() != Sort.STRING_TYPE)) {
-
-			sortFieldName = DocumentImpl.getSortableFieldName(fieldName);
+		if (fieldName.startsWith(_DDM_FIELD_PREFIX)) {
+			return fieldName;
 		}
 
-		if (Validator.isNull(sortFieldName)) {
-			sortFieldName = scoreFieldName;
+		if (isSortableTextField(fieldName)) {
+			return getSortableFieldName(fieldName);
 		}
 
-		return sortFieldName;
+		if (sort.getType() == Sort.STRING_TYPE) {
+			return scoreFieldName;
+		}
+
+		return getSortableFieldName(fieldName);
 	}
 
 	public static boolean isSortableFieldName(String name) {
@@ -177,41 +178,12 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addKeyword(String name, boolean value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Boolean value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
 	public void addKeyword(String name, boolean[] values) {
 		if (values == null) {
 			return;
 		}
 
 		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, Boolean[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, double value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Double value) {
-		addKeyword(name, String.valueOf(value));
 	}
 
 	@Override
@@ -224,45 +196,12 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addKeyword(String name, Double[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, float value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Float value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
 	public void addKeyword(String name, float[] values) {
 		if (values == null) {
 			return;
 		}
 
 		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, Float[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, int value) {
-		addKeyword(name, String.valueOf(value));
 	}
 
 	@Override
@@ -275,30 +214,6 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addKeyword(String name, Integer value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Integer[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, long value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Long value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
 	public void addKeyword(String name, long[] values) {
 		if (values == null) {
 			return;
@@ -307,36 +222,20 @@ public class DocumentImpl implements Document {
 		addKeyword(name, ArrayUtil.toStringArray(values));
 	}
 
-	@Override
-	public void addKeyword(String name, Long[] values) {
+	public void addKeyword(String name, Object value) {
+		addKeyword(name, String.valueOf(value));
+	}
+
+	public void addKeyword(String name, Object[] values) {
 		if (values == null) {
 			return;
 		}
 
 		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, short value) {
-		addKeyword(name, String.valueOf(value));
-	}
-
-	@Override
-	public void addKeyword(String name, Short value) {
-		addKeyword(name, String.valueOf(value));
 	}
 
 	@Override
 	public void addKeyword(String name, short[] values) {
-		if (values == null) {
-			return;
-		}
-
-		addKeyword(name, ArrayUtil.toStringArray(values));
-	}
-
-	@Override
-	public void addKeyword(String name, Short[] values) {
 		if (values == null) {
 			return;
 		}
@@ -457,33 +356,8 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, double value) {
-		addNumber(name, String.valueOf(value), Double.class);
-	}
-
-	@Override
-	public void addNumber(String name, Double value) {
-		addNumber(name, String.valueOf(value), Double.class);
-	}
-
-	@Override
 	public void addNumber(String name, double[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Double.class);
-	}
-
-	@Override
-	public void addNumber(String name, Double[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Double.class);
-	}
-
-	@Override
-	public void addNumber(String name, float value) {
-		addNumber(name, String.valueOf(value), Float.class);
-	}
-
-	@Override
-	public void addNumber(String name, Float value) {
-		addNumber(name, String.valueOf(value), Float.class);
 	}
 
 	@Override
@@ -492,38 +366,8 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Float[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Float.class);
-	}
-
-	@Override
-	public void addNumber(String name, int value) {
-		addNumber(name, String.valueOf(value), Integer.class);
-	}
-
-	@Override
 	public void addNumber(String name, int[] values) {
 		addNumber(name, ArrayUtil.toStringArray(values), Integer.class);
-	}
-
-	@Override
-	public void addNumber(String name, Integer value) {
-		addNumber(name, String.valueOf(value), Integer.class);
-	}
-
-	@Override
-	public void addNumber(String name, Integer[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Integer.class);
-	}
-
-	@Override
-	public void addNumber(String name, long value) {
-		addNumber(name, String.valueOf(value), Long.class);
-	}
-
-	@Override
-	public void addNumber(String name, Long value) {
-		addNumber(name, String.valueOf(value), Long.class);
 	}
 
 	@Override
@@ -532,8 +376,19 @@ public class DocumentImpl implements Document {
 	}
 
 	@Override
-	public void addNumber(String name, Long[] values) {
-		addNumber(name, ArrayUtil.toStringArray(values), Long.class);
+	public void addNumber(String name, Number value) {
+		addNumber(name, String.valueOf(value), value.getClass());
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void addNumber(String name, Number[] values) {
+		Class<? extends Number[]> clazz = values.getClass();
+
+		Class<? extends Number> componentType =
+			(Class<? extends Number>)clazz.getComponentType();
+
+		addNumber(name, ArrayUtil.toStringArray(values), componentType);
 	}
 
 	@Override
@@ -907,6 +762,9 @@ public class DocumentImpl implements Document {
 
 		sb.append(StringPool.CLOSE_CURLY_BRACE);
 	}
+
+	private static final String _DDM_FIELD_PREFIX =
+		DDMIndexer.DDM_FIELD_NAMESPACE + StringPool.DOUBLE_UNDERLINE;
 
 	private static final String _INDEX_DATE_FORMAT_PATTERN = PropsUtil.get(
 		PropsKeys.INDEX_DATE_FORMAT_PATTERN);

@@ -87,29 +87,11 @@ public class DDMIndexerImpl implements DDMIndexer {
 					else if (value instanceof Date[]) {
 						document.addDate(name, (Date[])value);
 					}
-					else if (value instanceof Double) {
-						document.addNumber(name, (Double)value);
+					else if (value instanceof Number) {
+						document.addNumber(name, (Number)value);
 					}
-					else if (value instanceof Double[]) {
-						document.addNumber(name, (Double[])value);
-					}
-					else if (value instanceof Integer) {
-						document.addNumber(name, (Integer)value);
-					}
-					else if (value instanceof Integer[]) {
-						document.addNumber(name, (Integer[])value);
-					}
-					else if (value instanceof Long) {
-						document.addNumber(name, (Long)value);
-					}
-					else if (value instanceof Long[]) {
-						document.addNumber(name, (Long[])value);
-					}
-					else if (value instanceof Float) {
-						document.addNumber(name, (Float)value);
-					}
-					else if (value instanceof Float[]) {
-						document.addNumber(name, (Float[])value);
+					else if (value instanceof Number[]) {
+						document.addNumber(name, (Number[])value);
 					}
 					else if (value instanceof Object[]) {
 						String[] valuesString = ArrayUtil.toStringArray(
