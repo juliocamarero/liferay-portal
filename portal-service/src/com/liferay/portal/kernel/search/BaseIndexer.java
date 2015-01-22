@@ -275,7 +275,7 @@ public abstract class BaseIndexer implements Indexer {
 	@Deprecated
 	@Override
 	public String getPortletId() {
-		return getClassName();
+		return StringPool.BLANK;
 	}
 
 	@Override
