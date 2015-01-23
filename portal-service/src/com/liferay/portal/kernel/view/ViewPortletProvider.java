@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,21 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/plugins_admin/init.jsp" %>
+package com.liferay.portal.kernel.view;
 
-<%
-String tabs2 = ParamUtil.getString(request, "tabs2");
+/**
+ * @author Eudaldo Alonso
+ */
+public interface ViewPortletProvider {
 
-PortletURL portletURL = renderResponse.createRenderURL();
+	public String getPortletId();
 
-portletURL.setParameter("struts_action", "/plugins_admin/view");
-portletURL.setParameter("tabs2", tabs2);
-
-PortletURL marketplaceURL = null;
-
-boolean showEditPluginHREF = true;
-%>
-
-<%@ include file="/html/portlet/plugins_admin/plugins.jspf" %>
+}

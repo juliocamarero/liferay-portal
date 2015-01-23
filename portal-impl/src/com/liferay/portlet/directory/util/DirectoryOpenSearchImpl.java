@@ -23,19 +23,15 @@ import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.User;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
-import com.liferay.portlet.usersadmin.util.UserIndexer;
 
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import javax.portlet.PortletURL;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Brian Wing Shun Chan
@@ -51,11 +47,6 @@ public class DirectoryOpenSearchImpl extends HitsOpenSearchImpl {
 	@Override
 	public Indexer getIndexer() {
 		return IndexerRegistryUtil.getIndexer(User.class);
-	}
-
-	@Override
-	public String getPortletId() {
-		return UserIndexer.PORTLET_ID;
 	}
 
 	@Override
@@ -82,15 +73,6 @@ public class DirectoryOpenSearchImpl extends HitsOpenSearchImpl {
 	@Override
 	public String getTitle(String keywords) {
 		return TITLE + keywords;
-	}
-
-	@Override
-	protected PortletURL getPortletURL(
-			HttpServletRequest request, String portletId, long scopeGroupId)
-		throws Exception {
-
-		return super.getPortletURL(
-			request, PortletKeys.DIRECTORY, scopeGroupId);
 	}
 
 	protected LinkedHashMap<String, Object> getUserParams(

@@ -34,6 +34,7 @@ page import="com.liferay.portal.kernel.search.facet.util.FacetFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.search.facet.util.RangeParserUtil" %><%@
 page import="com.liferay.portal.kernel.search.util.SearchUtil" %><%@
 page import="com.liferay.portal.kernel.util.DateFormatFactoryUtil" %><%@
+page import="com.liferay.portal.kernel.view.ViewPortletProviderUtil" %><%@
 page import="com.liferay.portal.kernel.xml.Element" %><%@
 page import="com.liferay.portal.kernel.xml.SAXReaderUtil" %><%@
 page import="com.liferay.portal.security.permission.comparator.ModelResourceComparator" %><%@
@@ -142,38 +143,13 @@ private String _checkViewURL(ThemeDisplay themeDisplay, String viewURL, String c
 	return viewURL;
 }
 
-private PortletURL _getViewFullContentURL(HttpServletRequest request, ThemeDisplay themeDisplay, String portletId, Document document) throws Exception {
-	long groupId = GetterUtil.getLong(document.get(Field.GROUP_ID));
-
-	if (groupId == 0) {
-		Layout layout = themeDisplay.getLayout();
-
-		groupId = layout.getGroupId();
-	}
-
+private PortletURL _getViewFullContentURL(HttpServletRequest request, ThemeDisplay themeDisplay, String className, Document document) throws Exception {
 	long scopeGroupId = GetterUtil.getLong(document.get(Field.SCOPE_GROUP_ID));
 
 	if (scopeGroupId == 0) {
 		scopeGroupId = themeDisplay.getScopeGroupId();
 	}
 
-	long plid = LayoutConstants.DEFAULT_PLID;
-
-	Layout layout = (Layout)request.getAttribute(WebKeys.LAYOUT);
-
-	if (layout != null) {
-		plid = layout.getPlid();
-	}
-
-	if (plid == 0) {
-		plid = LayoutServiceUtil.getDefaultPlid(groupId, scopeGroupId, portletId);
-	}
-
-	PortletURL portletURL = PortletURLFactoryUtil.create(request, portletId, plid, PortletRequest.RENDER_PHASE);
-
-	portletURL.setPortletMode(PortletMode.VIEW);
-	portletURL.setWindowState(WindowState.MAXIMIZED);
-
-	return portletURL;
+	return ViewPortletProviderUtil.getViewEntityURL(request, className, scopeGroupId);
 }
 %>
