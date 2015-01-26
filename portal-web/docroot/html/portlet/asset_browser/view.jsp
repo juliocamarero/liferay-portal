@@ -40,7 +40,7 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 		<aui:input name="typeSelection" type="hidden" value="<%= typeSelection %>" />
 
 		<liferay-ui:search-container
-			searchContainer="<%= new AssetSearch(renderRequest, portletURL) %>"
+			searchContainer="<%= new AssetBrowserSearch(renderRequest, portletURL) %>"
 		>
 			<aui:nav-bar>
 				<aui:nav cssClass="navbar-nav" searchContainer="<%= searchContainer %>">
@@ -55,7 +55,7 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 			</aui:nav-bar>
 
 			<%
-			AssetSearchTerms searchTerms = (AssetSearchTerms)searchContainer.getSearchTerms();
+			AssetBrowserSearchTerms searchTerms = (AssetBrowserSearchTerms)searchContainer.getSearchTerms();
 
 			long[] groupIds = selectedGroupIds;
 
