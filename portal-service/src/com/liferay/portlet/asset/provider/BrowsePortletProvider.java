@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,12 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/init.jsp" %>
+package com.liferay.portlet.asset.provider;
 
-<%@ page import="com.liferay.portlet.assetpublisher.search.AssetSearch" %><%@
-page import="com.liferay.portlet.assetpublisher.search.AssetSearchTerms" %><%@
-page import="com.liferay.portlet.assetpublisher.util.AssetPublisherUtil" %>
-
-<%@ include file="/html/portlet/asset_browser/init-ext.jsp" %>
+/**
+ * @author Eudaldo Alonso
+ */
+public interface BrowsePortletProvider extends PortletProvider {
+}

@@ -31,11 +31,8 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
-import com.liferay.portlet.asset.provider.DisplayPortletProvider;
-import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
+import com.liferay.portlet.asset.provider.AddPortletProvider;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.portlet.trash.util.TrashUtil;
 import com.liferay.registry.collections.ServiceTrackerCollections;
@@ -61,14 +58,19 @@ public abstract class BaseAssetRenderer implements AssetRenderer {
 
 	@Override
 	public String getAddToPagePortletId() throws Exception {
-		DisplayPortletProvider displayPortletProvider =
-			_serviceTrackerMap.getService(getClassName());
+		AddPortletProvider addPortletProvider = _serviceTrackerMap.getService(
+			getClassName());
 
-		if (displayPortletProvider != null) {
-			return displayPortletProvider.getPortletId();
+		if (addPortletProvider == null) {
+			addPortletProvider = _serviceTrackerMap.getService(
+				AddPortletProvider.ANY_CLASSNAME);
+
+			if (addPortletProvider == null) {
+				return StringPool.BLANK;
+			}
 		}
 
-		return PortletKeys.ASSET_PUBLISHER;
+		return addPortletProvider.getPortletId();
 	}
 
 	public AssetRendererFactory getAssetRendererFactory() {
@@ -357,30 +359,21 @@ public abstract class BaseAssetRenderer implements AssetRenderer {
 			ThemeDisplay themeDisplay)
 		throws Exception {
 
-		DisplayPortletProvider displayPortletProvider =
-			_serviceTrackerMap.getService(getClassName());
+		AddPortletProvider addPortletProvider = _serviceTrackerMap.getService(
+			getClassName());
 
-		if (displayPortletProvider != null) {
-			displayPortletProvider.setPortletPreferences(
-				portletPreferences, portletId, getClassName(), getClassPK(),
-				themeDisplay);
+		if (addPortletProvider == null) {
+			addPortletProvider = _serviceTrackerMap.getService(
+				AddPortletProvider.ANY_CLASSNAME);
 
-			return;
+			if (addPortletProvider == null) {
+				return;
+			}
 		}
 
-		portletPreferences.setValue("displayStyle", "full-content");
-		portletPreferences.setValue(
-			"emailAssetEntryAddedEnabled", Boolean.FALSE.toString());
-		portletPreferences.setValue("selectionStyle", "manual");
-		portletPreferences.setValue(
-			"showAddContentButton", Boolean.FALSE.toString());
-
-		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(
-			getClassName(), getClassPK());
-
-		AssetPublisherUtil.addSelection(
-			themeDisplay, portletPreferences, portletId,
-			assetEntry.getEntryId(), -1, assetEntry.getClassName());
+		addPortletProvider.setPortletPreferences(
+			portletPreferences, portletId, getClassName(), getClassPK(),
+			themeDisplay);
 	}
 
 	public void setAssetRendererType(int assetRendererType) {
@@ -442,9 +435,9 @@ public abstract class BaseAssetRenderer implements AssetRenderer {
 
 	private static final DDMFieldReader _nullDDMFieldReader =
 		new NullDDMFieldReader();
-	private static final ServiceTrackerMap<String, DisplayPortletProvider>
+	private static final ServiceTrackerMap<String, AddPortletProvider>
 		_serviceTrackerMap = ServiceTrackerCollections.singleValueMap(
-			DisplayPortletProvider.class, "model.class.name");
+			AddPortletProvider.class, "model.class.name");
 
 	static {
 		_serviceTrackerMap.open();
