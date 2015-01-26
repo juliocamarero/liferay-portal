@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/asset_browser/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId");
@@ -40,35 +40,61 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 		<aui:input name="typeSelection" type="hidden" value="<%= typeSelection %>" />
 
 		<liferay-ui:search-container
-			searchContainer="<%= new AssetSearch(renderRequest, portletURL) %>"
+			searchContainer="<%= new AssetBrowserSearch(renderRequest, portletURL) %>"
 		>
 			<aui:nav-bar>
 				<aui:nav cssClass="navbar-nav" searchContainer="<%= searchContainer %>">
-					<liferay-util:include page="/html/portlet/asset_browser/toolbar.jsp">
+					<liferay-util:include page="/toolbar.jsp" servletContext="<%= application %>">
 						<liferay-util:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 						<liferay-util:param name="typeSelection" value="<%= typeSelection %>" />
 						<liferay-util:param name="subtypeSelectionId" value="<%= String.valueOf(subtypeSelectionId) %>" />
 					</liferay-util:include>
 				</aui:nav>
 
-				<aui:nav-bar-search file="/html/portlet/asset_publisher/asset_search.jsp" searchContainer="<%= searchContainer %>" />
+				<aui:nav-bar-search>
+					<%@ include file="/search.jsp" %>
+				</aui:nav-bar-search>
 			</aui:nav-bar>
 
 			<%
-			AssetSearchTerms searchTerms = (AssetSearchTerms)searchContainer.getSearchTerms();
-
-			long[] groupIds = selectedGroupIds;
+			AssetBrowserSearchTerms searchTerms = (AssetBrowserSearchTerms)searchContainer.getSearchTerms();
 
 			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(typeSelection);
 			%>
 
 			<liferay-ui:search-container-results>
 				<c:choose>
-					<c:when test="<%= PropsValues.ASSET_BROWSER_SEARCH_WITH_DATABASE %>">
-						<%@ include file="/html/portlet/asset_publisher/asset_search_results_database.jspf" %>
+					<c:when test="<%= AssetBrowserWebConfigurationValues.SEARCH_WITH_DATABASE %>">
+
+						<%
+						int assetEntriesTotal = AssetEntryLocalServiceUtil.getEntriesCount(selectedGroupIds, new long[] {assetRendererFactory.getClassNameId()}, searchTerms.getKeywords(), searchTerms.getUserName(), searchTerms.getTitle(), searchTerms.getDescription(), searchTerms.isAdvancedSearch(), searchTerms.isAndOperator());
+
+						searchContainer.setTotal(assetEntriesTotal);
+
+						List<AssetEntry> assetEntries = AssetEntryLocalServiceUtil.getEntries(selectedGroupIds, new long[] {assetRendererFactory.getClassNameId()}, searchTerms.getKeywords(), searchTerms.getUserName(), searchTerms.getTitle(), searchTerms.getDescription(), searchTerms.isAdvancedSearch(), searchTerms.isAndOperator(), searchContainer.getStart(), searchContainer.getEnd(), "modifiedDate", "title", "DESC", "ASC");
+
+						searchContainer.setResults(assetEntries);
+						%>
+
 					</c:when>
 					<c:otherwise>
-						<%@ include file="/html/portlet/asset_publisher/asset_search_results_index.jspf" %>
+
+						<%
+						Hits hits = null;
+
+						if (searchTerms.isAdvancedSearch()) {
+							hits = AssetEntryLocalServiceUtil.search(themeDisplay.getCompanyId(), new long[] {searchTerms.getGroupId()}, themeDisplay.getUserId(), assetRendererFactory.getClassName(), subtypeSelectionId, searchTerms.getUserName(), searchTerms.getTitle(), searchTerms.getDescription(), null, null, WorkflowConstants.STATUS_APPROVED, searchTerms.isAndOperator(), searchContainer.getStart(), searchContainer.getEnd());
+						}
+						else {
+							hits = AssetEntryLocalServiceUtil.search(themeDisplay.getCompanyId(), selectedGroupIds, themeDisplay.getUserId(), assetRendererFactory.getClassName(), subtypeSelectionId, searchTerms.getKeywords(), WorkflowConstants.STATUS_APPROVED, searchContainer.getStart(), searchContainer.getEnd());
+						}
+
+						List<AssetEntry> assetEntries = AssetUtil.getAssetEntries(hits);
+
+						searchContainer.setResults(assetEntries);
+						searchContainer.setTotal(hits.getLength());
+						%>
+
 					</c:otherwise>
 				</c:choose>
 			</liferay-ui:search-container-results>
