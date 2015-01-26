@@ -477,15 +477,11 @@ public class AssetPublisherImpl implements AssetPublisher {
 				}
 			}
 
-			if (assetEntry == null) {
+			if ((assetEntry == null) || !assetEntry.isVisible()) {
 				if (deleteMissingAssetEntries) {
 					missingAssetEntryUuids.add(assetEntryUuid);
 				}
 
-				continue;
-			}
-
-			if (!assetEntry.isVisible()) {
 				continue;
 			}
 
