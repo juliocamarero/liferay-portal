@@ -16,6 +16,8 @@
 
 <%@ include file="/html/portlet/init.jsp" %>
 
+<%@ page import="com.liferay.portlet.usersadmin.search.GroupDisplayTerms" %>
+
 <%
 boolean filterManageableGroups = true;
 

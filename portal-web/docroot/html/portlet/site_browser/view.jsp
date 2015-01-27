@@ -79,7 +79,7 @@ portletURL.setParameter("target", target);
 				</c:if>
 
 				<c:if test='<%= !type.equals("parent-sites") %>'>
-					<aui:nav-bar-search file="/html/portlet/users_admin/group_search.jsp" searchContainer="<%= searchContainer %>" />
+					<aui:nav-bar-search file="/html/portlet/site_browser/search.jsp" searchContainer="<%= searchContainer %>" />
 				</c:if>
 			</aui:nav-bar>
 		</c:if>
