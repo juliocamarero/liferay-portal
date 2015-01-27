@@ -16,8 +16,6 @@
 
 <%@ include file="/html/portlet/init.jsp" %>
 
-<%@ page import="com.liferay.portlet.assetpublisher.util.AssetPublisherUtil" %>
-
 <%
 boolean filterManageableGroups = true;
 
