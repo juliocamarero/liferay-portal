@@ -152,7 +152,9 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 					<c:if test="<%= GroupLocalServiceUtil.getGroupsCount(company.getCompanyId(), Layout.class.getName(), layout.getGroupId()) > 0 %>">
 
 						<%
-						PortletURL layoutSiteBrowserURL = PortletURLFactoryUtil.create(request, PortletKeys.SITE_BROWSER, PortalUtil.getControlPanelPlid(company.getCompanyId()), PortletRequest.RENDER_PHASE);
+						String portletId = PortletProviderUtil.getPortletId(Group.class.getName(), PortletProvider.ACTION_BROWSE);
+
+						PortletURL layoutSiteBrowserURL = PortletURLFactoryUtil.create(request, portletId, PortalUtil.getControlPanelPlid(company.getCompanyId()), PortletRequest.RENDER_PHASE);
 
 						layoutSiteBrowserURL.setParameter("groupId", String.valueOf(layout.getGroupId()));
 						layoutSiteBrowserURL.setParameter("selectedGroupIds", StringUtil.merge(assetPublisherDisplayContext.getGroupIds()));
@@ -201,7 +203,9 @@ List<AssetRendererFactory> classTypesAssetRendererFactories = new ArrayList<Asse
 					<c:if test="<%= !types.isEmpty() %>">
 
 						<%
-						PortletURL siteBrowserURL = PortletURLFactoryUtil.create(request, PortletKeys.SITE_BROWSER, PortalUtil.getControlPanelPlid(company.getCompanyId()), PortletRequest.RENDER_PHASE);
+						String portletId = PortletProviderUtil.getPortletId(Group.class.getName(), PortletProvider.ACTION_BROWSE);
+
+						PortletURL siteBrowserURL = PortletURLFactoryUtil.create(request, portletId, PortalUtil.getControlPanelPlid(company.getCompanyId()), PortletRequest.RENDER_PHASE);
 
 						siteBrowserURL.setParameter("groupId", String.valueOf(layout.getGroupId()));
 						siteBrowserURL.setParameter("selectedGroupIds", StringUtil.merge(assetPublisherDisplayContext.getGroupIds()));
