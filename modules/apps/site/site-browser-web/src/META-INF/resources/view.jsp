@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_browser/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId");
@@ -44,7 +44,6 @@ String target = ParamUtil.getString(request, "target");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/site_browser/view");
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("selectedGroupIds", StringUtil.merge(selectedGroupIds));
 portletURL.setParameter("type", type);
@@ -80,7 +79,9 @@ portletURL.setParameter("target", target);
 				</c:if>
 
 				<c:if test='<%= !type.equals("parent-sites") %>'>
-					<aui:nav-bar-search file="/html/portlet/users_admin/group_search.jsp" searchContainer="<%= searchContainer %>" />
+					<aui:nav-bar-search>
+						<%@ include file="/search.jspf" %>
+					</aui:nav-bar-search>
 				</c:if>
 			</aui:nav-bar>
 		</c:if>
@@ -212,8 +213,7 @@ portletURL.setParameter("target", target);
 				Map<String, Object> data = new HashMap<String, Object>();
 
 				data.put("groupdescriptivename", group.getDescriptiveName(locale));
-				data.put("groupid", group.getGroupId());
-				data.put("scopeid", AssetPublisherUtil.getScopeId(group, scopeGroupId));
+				data.put("selectedgroupid", group.getGroupId());
 				data.put("target", target);
 				%>
 
