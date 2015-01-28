@@ -244,9 +244,8 @@ public class LuceneQuerySuggester extends BaseQuerySuggester {
 			suggestWordQuery, Field.LANGUAGE_ID, languageId, null,
 			BooleanClause.Occur.MUST);
 		addTermQuery(
-			suggestWordQuery, Field.ENTRY_CLASS_NAME,
-			com.liferay.portal.kernel.search.Document.class.getName(), null,
-			BooleanClause.Occur.MUST);
+			suggestWordQuery, Field.SPELL_CHECK_WORD, Boolean.TRUE.toString(),
+			null, BooleanClause.Occur.MUST);
 		addTermQuery(
 			suggestWordQuery, Field.TYPE, typeFieldValue, null,
 			BooleanClause.Occur.MUST);
