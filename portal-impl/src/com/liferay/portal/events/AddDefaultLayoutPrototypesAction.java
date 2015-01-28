@@ -128,7 +128,9 @@ public class AddDefaultLayoutPrototypesAction
 		}
 
 		String portletId = addPortletId(
-			layout, PortletKeys.ASSET_PUBLISHER, "column-2");
+			layout,
+			"com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet",
+			"column-2");
 
 		UnicodeProperties typeSettingsProperties =
 			layout.getTypeSettingsProperties();
