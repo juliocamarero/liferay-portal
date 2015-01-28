@@ -14,7 +14,11 @@
  */
 --%>
 
+<%@ include file="/html/portlet/site_browser/init.jsp" %>
+
 <%
+GroupSearch searchContainer = (GroupSearch)request.getAttribute("liferay-ui:search:searchContainer");
+
 GroupDisplayTerms displayTerms = (GroupDisplayTerms)searchContainer.getDisplayTerms();
 %>
 

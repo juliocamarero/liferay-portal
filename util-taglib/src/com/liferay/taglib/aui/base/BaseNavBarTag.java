@@ -14,6 +14,10 @@
 
 package com.liferay.taglib.aui.base;
 
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.PortletDisplay;
+import com.liferay.portal.theme.ThemeDisplay;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
@@ -29,6 +33,13 @@ public abstract class BaseNavBarTag extends com.liferay.taglib.util.IncludeTag {
 	@Override
 	public int doStartTag() throws JspException {
 		setAttributeNamespace(_ATTRIBUTE_NAMESPACE);
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		setPortletId(portletDisplay.getId());
 
 		return super.doStartTag();
 	}
