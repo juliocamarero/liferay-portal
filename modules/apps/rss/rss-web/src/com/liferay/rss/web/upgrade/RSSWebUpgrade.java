@@ -23,6 +23,7 @@ import java.util.Collections;
 
 import javax.servlet.ServletContext;
 
+import com.liferay.rss.web.constants.RSSPortletKeys;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -50,11 +51,7 @@ public class RSSWebUpgrade {
 
 			@Override
 			protected String[][] getRenamePortletIdsArray() {
-				return new String[][] {
-					new String[] {
-						"39", "com_liferay_rss_web_portlet_RSSPortlet"
-					}
-				};
+				return new String[][] {new String[] {"39", RSSPortletKeys.RSS}};
 			}
 
 		};
