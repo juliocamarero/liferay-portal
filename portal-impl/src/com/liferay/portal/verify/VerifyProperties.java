@@ -286,6 +286,10 @@ public class VerifyProperties extends VerifyProcess {
 		// Asset
 
 		new String[] {
+			"asset.browser.search.with.database", "search.with.database",
+			"com.liferay.asset.browser.web"
+		},
+		new String[] {
 			"asset.categories.navigation.display.templates.config",
 			"display.templates.config",
 			"com.liferay.asset.categories.navigation.web"
@@ -538,7 +542,7 @@ public class VerifyProperties extends VerifyProcess {
 		"com.liferay.portal.servlet.filters.charbufferpool." +
 			"CharBufferPoolFilter",
 		"com.liferay.portal.servlet.filters.validhtml.ValidHtmlFilter",
-		"commons.pool.enabled", "convert.processes",
+		"commons.pool.enabled", "convert.processes", "discussion.thread.view",
 		"dl.file.entry.read.count.enabled",
 		"dynamic.data.lists.template.language.parser[ftl]",
 		"dynamic.data.lists.template.language.parser[vm]",
@@ -753,6 +757,22 @@ public class VerifyProperties extends VerifyProcess {
 		new String[] {
 			"journal.template.velocity.restricted.variables",
 			"velocity.engine.restricted.variables"
+		},
+		new String[] {
+			"passwords.passwordpolicytoolkit.charset.lowercase",
+			"passwords.passwordpolicytoolkit.validator.charset.lowercase"
+		},
+		new String[] {
+			"passwords.passwordpolicytoolkit.charset.numbers",
+			"passwords.passwordpolicytoolkit.validator.charset.numbers"
+		},
+		new String[] {
+			"passwords.passwordpolicytoolkit.charset.symbols",
+			"passwords.passwordpolicytoolkit.validator.charset.symbols"
+		},
+		new String[] {
+			"passwords.passwordpolicytoolkit.charset.uppercase",
+			"passwords.passwordpolicytoolkit.validator.charset.uppercase"
 		},
 		new String[] {
 			"portal.instance.http.port", "portal.instance.http.socket.address"
