@@ -282,10 +282,6 @@ public class JournalContentPortletDataHandler
 		return portletPreferences;
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortalUtil(PortalUtil portalUtil) {
-	}
-
 	@Reference(target = "(original.bean=*)", unbind = "-")
 	protected void setServletContext(ServletContext servletContext) {
 	}

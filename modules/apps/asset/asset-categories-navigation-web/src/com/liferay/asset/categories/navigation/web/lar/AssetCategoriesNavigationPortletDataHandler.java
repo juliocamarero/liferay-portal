@@ -31,8 +31,11 @@ import java.util.Enumeration;
 
 import javax.portlet.PortletPreferences;
 
+import javax.servlet.ServletContext;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Julio Camarero
@@ -71,6 +74,10 @@ public class AssetCategoriesNavigationPortletDataHandler
 
 		return updateImportPortletPreferences(
 			portletDataContext, portletId, portletPreferences);
+	}
+
+	@Reference(target = "(original.bean=*)", unbind = "-")
+	protected void setServletContext(ServletContext servletContext) {
 	}
 
 	protected PortletPreferences updateExportPortletPreferences(
