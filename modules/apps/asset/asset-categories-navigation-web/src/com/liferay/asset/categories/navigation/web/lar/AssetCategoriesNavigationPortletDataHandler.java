@@ -31,6 +31,7 @@ import java.util.Enumeration;
 
 import javax.portlet.PortletPreferences;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -46,7 +47,8 @@ import org.osgi.service.component.annotations.Component;
 public class AssetCategoriesNavigationPortletDataHandler
 	extends DefaultConfigurationPortletDataHandler {
 
-	public AssetCategoriesNavigationPortletDataHandler() {
+	@Activate
+	protected void activate() {
 		setDataLevel(DataLevel.PORTLET_INSTANCE);
 		setPublishToLiveByDefault(true);
 	}

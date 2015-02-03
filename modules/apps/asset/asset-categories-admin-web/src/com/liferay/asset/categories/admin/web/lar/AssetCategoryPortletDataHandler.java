@@ -36,6 +36,7 @@ import java.util.List;
 
 import javax.portlet.PortletPreferences;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -53,7 +54,8 @@ public class AssetCategoryPortletDataHandler extends BasePortletDataHandler {
 
 	public static final String NAMESPACE = "asset_category";
 
-	public AssetCategoryPortletDataHandler() {
+	@Activate
+	protected void activate() {
 		setDataAlwaysStaged(true);
 		setDeletionSystemEventStagedModelTypes(
 			new StagedModelType(AssetCategory.class),
