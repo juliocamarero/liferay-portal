@@ -195,6 +195,8 @@ import com.liferay.portlet.StateAwareResponseImpl;
 import com.liferay.portlet.UserAttributes;
 import com.liferay.portlet.admin.util.OmniadminUtil;
 import com.liferay.portlet.asset.model.AssetTag;
+import com.liferay.portlet.asset.provider.PortletProvider;
+import com.liferay.portlet.asset.provider.PortletProviderUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.calendar.model.CalEvent;
@@ -2758,8 +2760,11 @@ public class PortalImpl implements Portal {
 		if (Validator.isNull(defaultAssetPublisherPortletId)) {
 			String instanceId = PortletConstants.generateInstanceId();
 
+			String portletId = PortletProviderUtil.getPortletId(
+				JournalArticle.class.getName(), PortletProvider.Action.VIEW);
+
 			defaultAssetPublisherPortletId = PortletConstants.assemblePortletId(
-				PortletKeys.ASSET_PUBLISHER, instanceId);
+				portletId, instanceId);
 		}
 
 		HttpServletRequest request = (HttpServletRequest)requestContext.get(
