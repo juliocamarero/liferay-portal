@@ -6038,7 +6038,26 @@ public class JournalArticleLocalServiceImpl
 					" articles");
 		}
 
+		List<JournalArticle> latestArticles = new ArrayList<JournalArticle>();
+
 		for (JournalArticle article : articles) {
+			long groupId = article.getGroupId();
+			String articleId = article.getArticleId();
+			double version = article.getVersion();
+
+			if (!journalArticleLocalService.isLatestVersion(
+					groupId, articleId, version)) {
+
+				article = journalArticleLocalService.getLatestArticle(
+					groupId, articleId);
+			}
+
+			if (!latestArticles.contains(article)) {
+				latestArticles.add(article);
+			}
+		}
+
+		for (JournalArticle article : latestArticles) {
 			String articleURL = StringPool.BLANK;
 
 			long ownerId = article.getGroupId();
