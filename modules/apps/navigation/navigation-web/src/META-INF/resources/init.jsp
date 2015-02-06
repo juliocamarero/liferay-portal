@@ -25,13 +25,15 @@
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 
-<%@ page import="com.liferay.navigation.web.configuration.NavigationWebConfigurationValues" %><%@
+<%@ page import="com.liferay.navigation.web.configuration.NavigationWebConfigurationUtil" %><%@
+page import="com.liferay.navigation.web.configuration.NavigationWebConfigurationValues" %><%@
+page import="com.liferay.portal.kernel.configuration.Filter" %><%@
+page import="com.liferay.portal.kernel.util.ArrayUtil" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PrefsParamUtil" %>
-<%@ page import="com.liferay.navigation.web.configuration.NavigationWebConfigurationUtil" %>
 
 <liferay-theme:defineObjects />
 <portlet:defineObjects />
