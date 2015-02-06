@@ -6032,12 +6032,6 @@ public class JournalArticleLocalServiceImpl
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT, reviewDate,
 			_previousCheckDate);
 
-		if (_log.isDebugEnabled()) {
-			_log.debug(
-				"Sending review notifications for " + articles.size() +
-					" articles");
-		}
-
 		List<JournalArticle> latestArticles = new ArrayList<JournalArticle>();
 
 		for (JournalArticle article : articles) {
@@ -6055,6 +6049,12 @@ public class JournalArticleLocalServiceImpl
 			if (!latestArticles.contains(article)) {
 				latestArticles.add(article);
 			}
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Sending review notifications for " + latestArticles.size() +
+					" articles");
 		}
 
 		for (JournalArticle article : latestArticles) {
