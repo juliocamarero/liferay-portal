@@ -18,7 +18,7 @@
 
 <liferay-ui:navigation
 	bulletStyle="<%= bulletStyle %>"
-	displayStyleDefinition="<%= PropsUtil.getArray("navigation.display.style", new Filter(displayStyle)) %>"
+	displayStyleDefinition='<%= PropsUtil.getArray("navigation.display.style", new Filter(displayStyle)) %>'
 	headerType="<%= headerType %>"
 	includedLayouts="<%= includedLayouts %>"
 	nestedChildren="<%= nestedChildren %>"
