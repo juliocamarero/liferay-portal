@@ -56,6 +56,9 @@ public class AssetPublisherWebUpgrade {
 						"101", AssetPublisherPortletKeys.ASSET_PUBLISHER
 					},
 					new String[] {
+						"173", AssetPublisherPortletKeys.RECENT_CONTENT
+					},
+					new String[] {
 						"175", AssetPublisherPortletKeys.RELATED_ASSETS
 					}
 				};
