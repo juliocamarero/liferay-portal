@@ -60,6 +60,9 @@ public class AssetPublisherWebUpgrade {
 					},
 					new String[] {
 						"175", AssetPublisherPortletKeys.RELATED_ASSETS
+					},
+					new String[] {
+						"193", AssetPublisherPortletKeys.MOST_VIEWED_ASSETS
 					}
 				};
 			}
