@@ -682,6 +682,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>displayStyleGroupId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>showCurrentGroup</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

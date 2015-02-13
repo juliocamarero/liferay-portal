@@ -16,10 +16,20 @@
 
 <%@ include file="/html/taglib/ui/breadcrumb/init.jsp" %>
 
+<%
+List<BreadcrumbEntry> breadcrumbEntries = (List<BreadcrumbEntry>)request.getAttribute("liferay-ui:breadcrumb:breadcrumbEntries");
+String displayStyle = GetterUtil.getString((String)request.getAttribute("liferay-ui:breadcrumb:displayStyle"));
+long displayStyleGroupId = GetterUtil.getLong(request.getAttribute("liferay-ui:breadcrumb:displayStyleGroupId"));
+%>
+
 <div id="<portlet:namespace />breadcrumbs-defaultScreen">
 	<h1 class="hide-accessible"><liferay-ui:message key="breadcrumbs" /></h1>
 
-	<c:if test="<%= Validator.isNotNull(breadcrumbString) %>">
-		<liferay-util:include page='<%= "/html/taglib/ui/breadcrumb/display_style_" + displayStyle + ".jsp" %>' />
+	<c:if test="<%= !breadcrumbEntries.isEmpty() %>">
+		<liferay-ui:ddm-template-renderer
+			displayStyle="<%= displayStyle %>"
+			displayStyleGroupId="<%= displayStyleGroupId %>"
+			entries="<%= breadcrumbEntries %>"
+		/>
 	</c:if>
 </div>
