@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -25,6 +26,9 @@ import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portlet.asset.service.persistence.BaseAssetSearchTestCase;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.util.test.BlogsTestUtil;
+
+import java.util.Locale;
+import java.util.Map;
 
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -70,6 +74,17 @@ public class BlogsEntryAssetSearchTest extends BaseAssetSearchTestCase {
 
 	@Override
 	protected BaseModel<?> addBaseModel(
+			BaseModel<?> parentBaseModel, Map<Locale, String> titleMap,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		return BlogsTestUtil.addEntry(
+			TestPropsValues.getUserId(), titleMap.get(LocaleUtil.getDefault()),
+			true, serviceContext);
+	}
+
+	@Override
+	protected BaseModel<?> addBaseModel(
 			BaseModel<?> parentBaseModel, String keywords,
 			ServiceContext serviceContext)
 		throws Exception {
@@ -86,6 +101,11 @@ public class BlogsEntryAssetSearchTest extends BaseAssetSearchTestCase {
 	@Override
 	protected String getSearchKeywords() {
 		return "title";
+	}
+
+	@Override
+	protected boolean isLocalizableTitle() {
+		return false;
 	}
 
 }
