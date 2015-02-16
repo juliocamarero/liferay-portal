@@ -3326,6 +3326,35 @@ public class JournalArticleLocalServiceImpl
 		return getArticle(groupId, articleId);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public JournalArticle moveArticle(
+			long groupId, String articleId, long newFolderId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		JournalArticle latestArticle = getLatestArticle(groupId, articleId);
+
+		validateDDMStructureId(
+			groupId, newFolderId, latestArticle.getDDMStructureKey());
+
+		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
+			groupId, articleId);
+
+		for (JournalArticle article : articles) {
+			article.setFolderId(newFolderId);
+			article.setTreePath(article.buildTreePath());
+
+			journalArticlePersistence.update(article);
+
+			notifySubscribers(
+					serviceContext.getUserId(), article, article.getUrlTitle(),
+					serviceContext);
+		}
+
+		return getArticle(groupId, articleId);
+	}
+
 	/**
 	 * Moves the web content article from the Recycle Bin to a new folder.
 	 *
