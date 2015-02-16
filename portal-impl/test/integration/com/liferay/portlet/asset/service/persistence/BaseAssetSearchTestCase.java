@@ -56,7 +56,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -954,15 +957,40 @@ public abstract class BaseAssetSearchTestCase {
 			AssetEntryQueryTestUtil.createAssetEntryQuery(
 				_group1.getGroupId(), new String[]{getBaseModelClassName()});
 
-		String[] titles = {
-			"open", "liferay", "social", "osgi", "content", "life"
+		List<Map<Locale, String>> titleMaps = new ArrayList<>();
+
+		String[] defaultTitles = {
+			"open", "liferay", "content", "social", "osgi", "life"
 		};
 
-		String[] orderedTitles = {
+		String[] frenchTitles = {
+			"ouvert", "liferay", "content", "social", "osgi", "vie"
+		};
+
+		for (int i = 0; i < defaultTitles.length; i++) {
+			Map<Locale, String> titleMap = new HashMap<>();
+
+			titleMap.put(LocaleUtil.getDefault(), defaultTitles[i]);
+			titleMap.put(LocaleUtil.FRANCE, frenchTitles[i]);
+
+			titleMaps.add(titleMap);
+		}
+
+		Map<Locale, String[]> orderedTitles = new HashMap<>();
+
+		String[] defaultOrderedTitles = {
 			"content", "life", "liferay", "open", "osgi", "social"
 		};
 
-		testOrderByTitle(assetEntryQuery, "asc", titles, orderedTitles);
+		orderedTitles.put(LocaleUtil.getDefault(), defaultOrderedTitles);
+
+		String[] frenchOrderedTitles = {
+			"content", "liferay", "osgi", "ouvert", "social", "vie"
+		};
+
+		orderedTitles.put(LocaleUtil.FRANCE, frenchOrderedTitles);
+
+		testOrderByTitle(assetEntryQuery, "asc", titleMaps, orderedTitles);
 	}
 
 	@Test
@@ -971,15 +999,40 @@ public abstract class BaseAssetSearchTestCase {
 			AssetEntryQueryTestUtil.createAssetEntryQuery(
 				_group1.getGroupId(), new String[]{getBaseModelClassName()});
 
-		String[] titles = {
-			"open", "liferay", "social", "osgi", "content", "life"
+		List<Map<Locale, String>> titleMaps = new ArrayList<>();
+
+		String[] defaultTitles = {
+			"open", "liferay", "content", "social", "osgi", "life"
 		};
 
-		String[] orderedTitles = {
+		String[] frenchTitles = {
+			"ouvert", "liferay", "content", "social", "osgi", "vie"
+		};
+
+		for (int i = 0; i < defaultTitles.length; i++) {
+			Map<Locale, String> titleMap = new HashMap<>();
+
+			titleMap.put(LocaleUtil.getDefault(), defaultTitles[i]);
+			titleMap.put(LocaleUtil.FRANCE, frenchTitles[i]);
+
+			titleMaps.add(titleMap);
+		}
+
+		Map<Locale, String[]> orderedTitles = new HashMap<>();
+
+		String[] defaultOrderedTitles = {
 			"social", "osgi", "open", "liferay", "life", "content"
 		};
 
-		testOrderByTitle(assetEntryQuery, "desc", titles, orderedTitles);
+		orderedTitles.put(LocaleUtil.getDefault(), defaultOrderedTitles);
+
+		String[] frenchOrderedTitles = {
+			"vie", "social", "osgi", "open", "liferay", "content"
+		};
+
+		orderedTitles.put(LocaleUtil.FRANCE, frenchOrderedTitles);
+
+		testOrderByTitle(assetEntryQuery, "desc", titleMaps, orderedTitles);
 	}
 
 	@Test
@@ -1014,6 +1067,11 @@ public abstract class BaseAssetSearchTestCase {
 
 		testPaginationType(assetEntryQuery, 5);
 	}
+
+	protected abstract BaseModel<?> addBaseModel(
+			BaseModel<?> parentBaseModel, Map<Locale, String> titleMap,
+			ServiceContext serviceContext)
+		throws Exception;
 
 	protected BaseModel<?> addBaseModel(
 			BaseModel<?> parentBaseModel, String keywords, Date expirationDate,
@@ -1323,7 +1381,8 @@ public abstract class BaseAssetSearchTestCase {
 
 	protected void testOrderByTitle(
 			AssetEntryQuery assetEntryQuery, String orderByType,
-			String[] titles, String[] orderedTitles)
+			List<Map<Locale, String>> titleMaps,
+			Map<Locale, String[]> orderedTitlesMap)
 		throws Exception {
 
 		ServiceContext serviceContext =
@@ -1332,25 +1391,36 @@ public abstract class BaseAssetSearchTestCase {
 		BaseModel<?> parentBaseModel = getParentBaseModel(
 			_group1, serviceContext);
 
-		SearchContext searchContext = SearchContextTestUtil.getSearchContext();
-
-		searchContext.setGroupIds(assetEntryQuery.getGroupIds());
-
-		for (String title : titles) {
-			addBaseModel(parentBaseModel, title, serviceContext);
+		for (Map<Locale, String> titleMap : titleMaps) {
+			addBaseModel(parentBaseModel, titleMap, serviceContext);
 		}
 
 		assetEntryQuery.setOrderByCol1("title");
 		assetEntryQuery.setOrderByType1(orderByType);
 
-		AssetEntry[] assetEntries = search(assetEntryQuery, searchContext);
+		SearchContext searchContext = SearchContextTestUtil.getSearchContext();
 
-		for (int i = 0; i < assetEntries.length; i++) {
-			AssetEntry assetEntry = assetEntries[i];
+		searchContext.setGroupIds(assetEntryQuery.getGroupIds());
 
-			String field = assetEntry.getTitle(LocaleUtil.getDefault());
+		AssetEntry[] assetEntries;
 
-			Assert.assertEquals(field, orderedTitles[i]);
+		for (Map.Entry<Locale, String[]> orderedTitles :
+				orderedTitlesMap.entrySet()) {
+
+			Locale locale = orderedTitles.getKey();
+			String[] orderedTitlesValue = orderedTitles.getValue();
+
+			searchContext.setLocale(locale);
+
+			assetEntries = search(assetEntryQuery, searchContext);
+
+			for (int i = 0; i < assetEntries.length; i++) {
+				AssetEntry assetEntry = assetEntries[i];
+
+				String field = assetEntry.getTitle(locale);
+
+				Assert.assertEquals(orderedTitlesValue[i], field);
+			}
 		}
 	}
 
