@@ -115,18 +115,10 @@ public class AddDefaultLayoutSetPrototypesAction
 
 		Layout layout = addLayout(layoutSet, "home", "/home", "2_columns_i");
 
-		String portletId = addPortletId(layout, PortletKeys.SEARCH, "column-2");
-
-		Map<String, String> preferences = new HashMap<>();
-
-		preferences.put("portletSetupShowBorders", Boolean.FALSE.toString());
-
-		updatePortletSetup(layout, portletId, preferences);
-
-		portletId = addPortletId(
+		String portletId = addPortletId(
 			layout, PortletKeys.ASSET_PUBLISHER, "column-2");
 
-		preferences = new HashMap<>();
+		Map<String, String> preferences = new HashMap<>();
 
 		Locale[] locales = LanguageUtil.getAvailableLocales();
 
@@ -193,20 +185,12 @@ public class AddDefaultLayoutSetPrototypesAction
 
 		addPortletId(layout, PortletKeys.MESSAGE_BOARDS, "column-1");
 
-		String portletId = addPortletId(layout, PortletKeys.SEARCH, "column-2");
-
-		Map<String, String> preferences = new HashMap<>();
-
-		preferences.put("portletSetupShowBorders", Boolean.FALSE.toString());
-
-		updatePortletSetup(layout, portletId, preferences);
-
 		addPortletId(layout, PortletKeys.USER_STATISTICS, "column-2");
 
-		portletId = addPortletId(
+		String portletId = addPortletId(
 			layout, PortletKeys.ASSET_PUBLISHER, "column-2");
 
-		preferences = new HashMap<>();
+		Map<String, String> preferences = new HashMap<>();
 
 		preferences.put("anyAssetType", Boolean.FALSE.toString());
 
