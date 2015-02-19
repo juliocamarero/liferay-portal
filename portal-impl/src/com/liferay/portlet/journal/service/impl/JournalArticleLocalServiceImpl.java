@@ -3294,13 +3294,14 @@ public class JournalArticleLocalServiceImpl
 	 * Moves the web content article matching the group and article ID to a new
 	 * folder.
 	 *
-	 * @param  groupId the primary key of the web content article's group
-	 * @param  articleId the primary key of the web content article
-	 * @param  newFolderId the primary key of the web content article's new
-	 *         folder
-	 * @return the updated web content article, which was moved to a new folder
-	 * @throws PortalException if a matching web content article could not be
-	 *         found
+	 * @param      groupId the primary key of the web content article's group
+	 * @param      articleId the primary key of the web content article
+	 * @param      newFolderId the primary key of the web content article's new
+	 *             folder
+	 * @return     the updated web content article, which was moved to a new
+	 *             folder
+	 * @throws     PortalException if a matching web content article could not
+	 *             be found
 	 * @deprecated As of 7.0.0, replaced by {@link #moveArticle(long, String,
 	 *             long, ServiceContext)}
 	 */
