@@ -3348,8 +3348,8 @@ public class JournalArticleLocalServiceImpl
 			journalArticlePersistence.update(article);
 
 			notifySubscribers(
-					serviceContext.getUserId(), article, article.getUrlTitle(),
-					serviceContext);
+				serviceContext.getUserId(), article, article.getUrlTitle(),
+				serviceContext);
 		}
 
 		return getArticle(groupId, articleId);
