@@ -3301,7 +3301,10 @@ public class JournalArticleLocalServiceImpl
 	 * @return the updated web content article, which was moved to a new folder
 	 * @throws PortalException if a matching web content article could not be
 	 *         found
+	 * @deprecated As of 7.0.0, replaced by {@link #moveArticle(long, String,
+	 *             long, ServiceContext)}
 	 */
+	@Deprecated
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public JournalArticle moveArticle(

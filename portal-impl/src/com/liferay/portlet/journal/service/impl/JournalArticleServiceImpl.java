@@ -1235,7 +1235,11 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         one of the versions of the web content article or if any one of
 	 *         the versions of the web content article could not be moved to the
 	 *         folder
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #moveArticle(long, String, long, ServiceContext)}
 	 */
+
+	@Deprecated
 	@Override
 	public void moveArticle(long groupId, String articleId, long newFolderId)
 		throws PortalException {
