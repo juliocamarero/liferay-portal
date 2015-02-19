@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.upgrade.v7_0_0;
+package com.liferay.language.web.upgrade.v1_0_0;
 
 import com.liferay.portal.kernel.upgrade.BaseUpgradePortletPreferences;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -26,7 +26,7 @@ import javax.portlet.ReadOnlyException;
 /**
  * @author Eduardo Garcia
  */
-public class UpgradeLanguagePreferences extends BaseUpgradePortletPreferences {
+public class UpgradePortletPreferences extends BaseUpgradePortletPreferences {
 
 	@Override
 	protected String[] getPortletIds() {
