@@ -1227,18 +1227,17 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 * Moves all versions of the the web content article matching the group and
 	 * article ID to the folder.
 	 *
-	 * @param  groupId the primary key of the web content article's group
-	 * @param  articleId the primary key of the web content article
-	 * @param  newFolderId the primary key of the web content article's new
-	 *         folder
-	 * @throws PortalException if the user did not have permission to update any
-	 *         one of the versions of the web content article or if any one of
-	 *         the versions of the web content article could not be moved to the
-	 *         folder
-	 * @deprecated As of 7.0.0, replaced by {@link
-	 *             #moveArticle(long, String, long, ServiceContext)}
+	 * @param      groupId the primary key of the web content article's group
+	 * @param      articleId the primary key of the web content article
+	 * @param      newFolderId the primary key of the web content article's new
+	 *             folder
+	 * @throws     PortalException if the user did not have permission to update
+	 *             any one of the versions of the web content article or if any
+	 *             one of the versions of the web content article could not be
+	 *             moved to the folder
+	 * @deprecated As of 7.0.0, replaced by {@link #moveArticle(long, String,
+	 *             long, ServiceContext)}
 	 */
-
 	@Deprecated
 	@Override
 	public void moveArticle(long groupId, String articleId, long newFolderId)
@@ -1268,9 +1267,10 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         folder
 	 */
 	@Override
-	public void moveArticle(long groupId, String articleId, long newFolderId,
-				ServiceContext serviceContext)
-			throws PortalException {
+	public void moveArticle(
+			long groupId, String articleId, long newFolderId,
+			ServiceContext serviceContext)
+		throws PortalException {
 
 		JournalFolderPermission.check(
 			getPermissionChecker(), groupId, newFolderId,

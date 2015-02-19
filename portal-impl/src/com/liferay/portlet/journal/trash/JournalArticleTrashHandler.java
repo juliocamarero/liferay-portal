@@ -209,7 +209,7 @@ public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 
 		JournalArticleLocalServiceUtil.moveArticle(
 			article.getGroupId(), article.getArticleId(), containerModelId,
-				serviceContext);
+			serviceContext);
 	}
 
 	@Override
