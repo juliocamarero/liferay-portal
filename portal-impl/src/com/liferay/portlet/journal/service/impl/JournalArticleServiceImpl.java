@@ -1244,20 +1244,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	public void moveArticle(long groupId, String articleId, long newFolderId)
 		throws PortalException {
 
-		JournalFolderPermission.check(
-			getPermissionChecker(), groupId, newFolderId,
-			ActionKeys.ADD_ARTICLE);
-
-		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
-			groupId, articleId);
-
-		for (JournalArticle article : articles) {
-			JournalArticlePermission.check(
-				getPermissionChecker(), article, ActionKeys.UPDATE);
-
-			journalArticleLocalService.moveArticle(
-				groupId, articleId, newFolderId);
-		}
+		moveArticle(groupId, articleId, newFolderId, null);
 	}
 
 	/**

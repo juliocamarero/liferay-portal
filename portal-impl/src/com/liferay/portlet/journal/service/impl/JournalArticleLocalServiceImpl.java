@@ -3311,22 +3311,7 @@ public class JournalArticleLocalServiceImpl
 			long groupId, String articleId, long newFolderId)
 		throws PortalException {
 
-		JournalArticle latestArticle = getLatestArticle(groupId, articleId);
-
-		validateDDMStructureId(
-			groupId, newFolderId, latestArticle.getDDMStructureKey());
-
-		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
-			groupId, articleId);
-
-		for (JournalArticle article : articles) {
-			article.setFolderId(newFolderId);
-			article.setTreePath(article.buildTreePath());
-
-			journalArticlePersistence.update(article);
-		}
-
-		return getArticle(groupId, articleId);
+		return moveArticle(groupId, articleId, newFolderId, null);
 	}
 
 	/**
@@ -3369,9 +3354,11 @@ public class JournalArticleLocalServiceImpl
 
 			journalArticlePersistence.update(article);
 
-			notifySubscribers(
-				serviceContext.getUserId(), article, article.getUrlTitle(),
-				serviceContext);
+			if (serviceContext != null) {
+				notifySubscribers(
+					serviceContext.getUserId(), article, article.getUrlTitle(),
+					serviceContext);
+			}
 		}
 
 		return getArticle(groupId, articleId);
