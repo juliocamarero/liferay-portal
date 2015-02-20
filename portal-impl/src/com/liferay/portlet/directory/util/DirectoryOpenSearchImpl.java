@@ -50,6 +50,11 @@ public class DirectoryOpenSearchImpl extends HitsOpenSearchImpl {
 	public static final String TITLE = "Liferay Directory Search: ";
 
 	@Override
+	public String getClassName() {
+		return User.class.getName();
+	}
+
+	@Override
 	public Indexer getIndexer() {
 		return IndexerRegistryUtil.getIndexer(User.class);
 	}

@@ -31,6 +31,11 @@ public class DLOpenSearchImpl extends HitsOpenSearchImpl {
 	public static final String TITLE = "Liferay Documents and Media Search: ";
 
 	@Override
+	public String getClassName() {
+		return DLFileEntry.class.getName();
+	}
+
+	@Override
 	public Indexer getIndexer() {
 		return IndexerRegistryUtil.getIndexer(DLFileEntry.class);
 	}
