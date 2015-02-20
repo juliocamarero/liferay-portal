@@ -64,6 +64,15 @@ while (itr.hasNext()) {
 	portletTitles.add(PortalUtil.getPortletTitle(portlet, application, locale));
 }
 
+String primarySearch = ParamUtil.getString(request, "primarySearch");
+
+if (Validator.isNotNull(primarySearch)) {
+	portalPreferences.setValue(PortletKeys.SEARCH, "primary-search", primarySearch);
+}
+else {
+	primarySearch = portalPreferences.getValue(PortletKeys.SEARCH, "primary-search", StringPool.BLANK);
+}
+
 if (Validator.isNotNull(primarySearch)) {
 	for (int i = 0; i < portlets.size(); i++) {
 		Portlet portlet = (Portlet)portlets.get(i);

@@ -23,15 +23,6 @@ if (Validator.isNotNull(redirect)) {
 	portletDisplay.setURLBack(redirect);
 }
 
-String primarySearch = ParamUtil.getString(request, "primarySearch");
-
-if (Validator.isNotNull(primarySearch)) {
-	portalPreferences.setValue(PortletKeys.SEARCH, "primary-search", primarySearch);
-}
-else {
-	primarySearch = portalPreferences.getValue(PortletKeys.SEARCH, "primary-search", StringPool.BLANK);
-}
-
 long groupId = ParamUtil.getLong(request, "groupId");
 
 String keywords = ParamUtil.getString(request, "keywords");
