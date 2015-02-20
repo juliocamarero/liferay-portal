@@ -18,10 +18,16 @@ import com.liferay.bookmarks.model.BookmarksEntry;
 import com.liferay.portal.kernel.search.HitsOpenSearchImpl;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.OpenSearch;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@Component(
+	immediate = true, service = OpenSearch.class
+)
 public class BookmarksOpenSearchImpl extends HitsOpenSearchImpl {
 
 	public static final String SEARCH_PATH = "/c/bookmarks/open_search";

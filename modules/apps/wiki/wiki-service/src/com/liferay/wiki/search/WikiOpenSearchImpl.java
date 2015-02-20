@@ -17,11 +17,17 @@ package com.liferay.wiki.search;
 import com.liferay.portal.kernel.search.HitsOpenSearchImpl;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.OpenSearch;
 import com.liferay.wiki.model.WikiPage;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@Component(
+	immediate = true, service = OpenSearch.class
+)
 public class WikiOpenSearchImpl extends HitsOpenSearchImpl {
 
 	public static final String SEARCH_PATH = "/c/wiki/open_search";
