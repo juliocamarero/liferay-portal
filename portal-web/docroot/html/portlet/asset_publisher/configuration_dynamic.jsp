@@ -22,6 +22,8 @@ PortletURL configurationRenderURL = (PortletURL)request.getAttribute("configurat
 String redirect = (String)request.getAttribute("configuration.jsp-redirect");
 String selectScope = (String)request.getAttribute("configuration.jsp-selectScope");
 String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle");
+
+long[] groupIds = assetPublisherDisplayContext.getGroupIds();
 %>
 
 <liferay-ui:tabs
@@ -113,7 +115,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 					for (AssetRendererFactory assetRendererFactory : assetRendererFactories) {
 						ClassTypeReader classTypeReader = assetRendererFactory.getClassTypeReader();
 
-						List<ClassType> classTypes = classTypeReader.getAvailableClassTypes(PortalUtil.getSharedContentSiteGroupIds(company.getCompanyId(), scopeGroupId, user.getUserId()), locale);
+						List<ClassType> classTypes = classTypeReader.getAvailableClassTypes(groupIds, locale);
 
 						if (classTypes.isEmpty()) {
 							continue;
@@ -293,7 +295,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 							String categoryIds = ParamUtil.getString(request, "queryCategoryIds" + queryLogicIndex, queryValues);
 
 							if (Validator.isNotNull(tagNames) || Validator.isNotNull(categoryIds) || (queryLogicIndexes.length == 1)) {
-								request.setAttribute("configuration.jsp-categorizableGroupIds", _getCategorizableGroupIds(assetPublisherDisplayContext.getGroupIds()));
+								request.setAttribute("configuration.jsp-categorizableGroupIds", _getCategorizableGroupIds(groupIds));
 								request.setAttribute("configuration.jsp-index", String.valueOf(index));
 								request.setAttribute("configuration.jsp-queryLogicIndex", String.valueOf(queryLogicIndex));
 
@@ -568,7 +570,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 		<%
 		ClassTypeReader classTypeReader = curRendererFactory.getClassTypeReader();
 
-		List<ClassType> assetAvailableClassTypes = classTypeReader.getAvailableClassTypes(PortalUtil.getSharedContentSiteGroupIds(company.getCompanyId(), scopeGroupId, user.getUserId()), locale);
+		List<ClassType> assetAvailableClassTypes = classTypeReader.getAvailableClassTypes(groupIds, locale);
 
 		if (assetAvailableClassTypes.isEmpty()) {
 			continue;
