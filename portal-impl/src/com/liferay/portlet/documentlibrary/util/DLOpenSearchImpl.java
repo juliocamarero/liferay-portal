@@ -17,11 +17,13 @@ package com.liferay.portlet.documentlibrary.util;
 import com.liferay.portal.kernel.search.HitsOpenSearchImpl;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@OSGiBeanProperties
 public class DLOpenSearchImpl extends HitsOpenSearchImpl {
 
 	public static final String SEARCH_PATH = "/c/document_library/open_search";

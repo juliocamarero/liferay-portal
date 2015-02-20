@@ -17,11 +17,13 @@ package com.liferay.portlet.messageboards.util;
 import com.liferay.portal.kernel.search.HitsOpenSearchImpl;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portlet.messageboards.model.MBMessage;
 
 /**
  * @author Brian Wing Shun Chan
  */
+@OSGiBeanProperties
 public class MBOpenSearchImpl extends HitsOpenSearchImpl {
 
 	public static final String SEARCH_PATH = "/c/message_boards/open_search";
