@@ -35,6 +35,11 @@ public class WikiOpenSearchImpl extends HitsOpenSearchImpl {
 	public static final String TITLE = "Liferay Wiki Search: ";
 
 	@Override
+	public String getClassName() {
+		return WikiPage.class.getName();
+	}
+
+	@Override
 	public Indexer getIndexer() {
 		return IndexerRegistryUtil.getIndexer(WikiPage.class);
 	}

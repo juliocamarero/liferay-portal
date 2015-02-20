@@ -51,6 +51,11 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 	public static final String TITLE = "Liferay Journal Search: ";
 
 	@Override
+	public String getClassName() {
+		return JournalArticle.class.getName();
+	}
+
+	@Override
 	public Indexer getIndexer() {
 		return IndexerRegistryUtil.getIndexer(JournalArticle.class);
 	}
