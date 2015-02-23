@@ -91,9 +91,10 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 	public JournalArticleIndexer() {
 		setDefaultSelectedFieldNames(
-			Field.ARTICLE_ID, Field.COMPANY_ID, Field.DEFAULT_LANGUAGE_ID,
-			Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK, Field.GROUP_ID,
-			Field.VERSION, Field.UID);
+			Field.ASSET_TAG_NAMES, Field.ARTICLE_ID, Field.COMPANY_ID,
+			Field.DEFAULT_LANGUAGE_ID, Field.ENTRY_CLASS_NAME,
+			Field.ENTRY_CLASS_PK, Field.GROUP_ID, Field.MODIFIED_DATE,
+			Field.SCOPE_GROUP_ID, Field.VERSION, Field.UID);
 		setDefaultSelectedLocalizedFieldNames(
 			Field.CONTENT, Field.DESCRIPTION, Field.TITLE);
 		setFilterSearch(true);
