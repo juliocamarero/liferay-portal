@@ -25,35 +25,12 @@ groupParams.put("active", Boolean.FALSE);
 
 int inactiveGroupsCount = GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), null, null, groupParams);
 
-List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(company.getCompanyId(), searchDisplayContext.isIncludeSystemPortlets(), false);
+List<OpenSearch> openSearchInstances = OpenSearchRegistryUtil.getOpenSearchInstances();
 
-portlets = ListUtil.sort(portlets, new PortletTitleComparator(application, locale));
-
-Iterator<Portlet> itr = portlets.iterator();
+Iterator<OpenSearch> itr = openSearchInstances.iterator();
 
 while (itr.hasNext()) {
-	Portlet portlet = itr.next();
-
-	if (Validator.isNull(portlet.getOpenSearchClass())) {
-		itr.remove();
-
-		continue;
-	}
-	else {
-		try {
-			ClassLoader classLoader = ClassLoaderUtil.getPortalClassLoader();
-
-			classLoader.loadClass(portlet.getOpenSearchClass());
-
-			itr.remove();
-
-			continue;
-		}
-		catch (ClassNotFoundException cnfe) {
-		}
-	}
-
-	OpenSearch openSearch = portlet.getOpenSearchInstance();
+	OpenSearch openSearch = itr.next();
 
 	if (!openSearch.isEnabled()) {
 		itr.remove();
@@ -61,7 +38,7 @@ while (itr.hasNext()) {
 		continue;
 	}
 
-	portletTitles.add(PortalUtil.getPortletTitle(portlet, application, locale));
+	portletTitles.add(ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()));
 }
 
 String primarySearch = ParamUtil.getString(request, "primarySearch");
@@ -74,14 +51,14 @@ else {
 }
 
 if (Validator.isNotNull(primarySearch)) {
-	for (int i = 0; i < portlets.size(); i++) {
-		Portlet portlet = (Portlet)portlets.get(i);
+	for (int i = 0; i < openSearchInstances.size(); i++) {
+		OpenSearch openSearch = openSearchInstances.get(i);
 
-		if (primarySearch.equals(portlet.getOpenSearchClass())) {
+		if (primarySearch.equals(openSearch.getClassName())) {
 			if (i != 0) {
-				portlets.remove(i);
+				openSearchInstances.remove(i);
 
-				portlets.add(0, portlet);
+				openSearchInstances.add(0, openSearch);
 			}
 
 			break;
@@ -104,10 +81,8 @@ if (Validator.isNotNull(primarySearch)) {
 <%
 int totalResults = 0;
 
-for (int i = 0; i < portlets.size(); i++) {
-	Portlet portlet = (Portlet)portlets.get(i);
-
-	OpenSearch openSearch = portlet.getOpenSearchInstance();
+for (int i = 0; i < openSearchInstances.size(); i++) {
+	OpenSearch openSearch = openSearchInstances.get(i);
 
 	//List<String> headerNames = new ArrayList<String>();
 
@@ -118,7 +93,7 @@ for (int i = 0; i < portlets.size(); i++) {
 
 	SearchContainer openSearchSearchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM + i, 5, portletURL, null, LanguageUtil.format(request, "no-results-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>", false));
 
-	if (Validator.isNotNull(primarySearch) && primarySearch.equals(portlet.getOpenSearchClass())) {
+	if (Validator.isNotNull(primarySearch) && primarySearch.equals(openSearch.getClassName())) {
 		int delta = ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PARAM + i);
 
 		if (delta > 0) {
@@ -129,7 +104,7 @@ for (int i = 0; i < portlets.size(); i++) {
 		}
 	}
 
-	String portletTitle = PortalUtil.getPortletTitle(portlet, application, locale);
+	String portletTitle = ResourceActionsUtil.getModelResource(locale, openSearch.getClassName());
 
 	boolean filterSearch = false;
 
@@ -197,7 +172,7 @@ for (int i = 0; i < portlets.size(); i++) {
 					}
 				}
 
-				String portletId = portlet.getPortletId();
+				String portletId = StringPool.BLANK;
 
 				if (portletId.equals(PortletKeys.DOCUMENT_LIBRARY) || (portletId.equals(PortletKeys.SEARCH) && entryClassName.equals(DLFileEntryConstants.getClassName()))) {
 					long fileEntryId = GetterUtil.getLong(HttpUtil.getParameter(entryHref, "_20_fileEntryId", false));
@@ -302,7 +277,7 @@ for (int i = 0; i < portlets.size(); i++) {
 				resultRows.add(row);
 			}
 			catch (Exception e) {
-				_log.error("Error retrieving individual search result of type " + portlet.getOpenSearchClass(), e);
+				_log.error("Error retrieving individual search result of type " + openSearch.getClassName(), e);
 
 				openSearchSearchContainerTotal--;
 			}
@@ -311,7 +286,7 @@ for (int i = 0; i < portlets.size(); i++) {
 		openSearchSearchContainer.setTotal(openSearchSearchContainerTotal);
 	}
 	catch (Exception e) {
-		_log.error("Error displaying content of type " + portlet.getOpenSearchClass(), e);
+		_log.error("Error displaying content of type " + openSearch.getClassName(), e);
 	}
 %>
 
@@ -351,7 +326,7 @@ for (int i = 0; i < portlets.size(); i++) {
 		<liferay-ui:search-iterator paginate="<%= false %>" searchContainer="<%= openSearchSearchContainer %>" />
 
 		<c:choose>
-			<c:when test="<%= (openSearchSearchContainer.getTotal() == resultRows.size()) || (Validator.isNotNull(primarySearch) && portlet.getOpenSearchClass().equals(primarySearch)) %>">
+			<c:when test="<%= (openSearchSearchContainer.getTotal() == resultRows.size()) || (Validator.isNotNull(primarySearch) && openSearch.getClassName().equals(primarySearch)) %>">
 				<div class="search-paginator-container">
 					<liferay-ui:search-paginator searchContainer="<%= openSearchSearchContainer %>" type="more" />
 				</div>
@@ -361,7 +336,7 @@ for (int i = 0; i < portlets.size(); i++) {
 					<portlet:renderURL var="moreResultsURL">
 						<portlet:param name="struts_action" value="/search/search" />
 						<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-						<portlet:param name="primarySearch" value="<%= portlet.getOpenSearchClass() %>" />
+						<portlet:param name="primarySearch" value="<%= openSearch.getClassName() %>" />
 						<portlet:param name="keywords" value="<%= HtmlUtil.escape(keywords) %>" />
 						<portlet:param name="format" value="<%= format %>" />
 					</portlet:renderURL>
