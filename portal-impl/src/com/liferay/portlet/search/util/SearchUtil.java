@@ -16,6 +16,8 @@ package com.liferay.portlet.search.util;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.OpenSearch;
+import com.liferay.portal.kernel.search.OpenSearchRegistryUtil;
 import com.liferay.portal.kernel.search.OpenSearchUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Tuple;
@@ -29,6 +31,7 @@ import com.liferay.portal.service.GroupServiceUtil;
 import com.liferay.util.xml.XMLFormatter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.struts.action.Action;
@@ -104,6 +107,41 @@ public class SearchUtil extends Action {
 		}
 
 		return new Tuple(result, total);
+	}
+
+	public static List<OpenSearch> getOpenSearchInstances(
+		String primarySearch) {
+
+		List<OpenSearch> openSearchInstances =
+			OpenSearchRegistryUtil.getOpenSearchInstances();
+
+		Iterator<OpenSearch> itr = openSearchInstances.iterator();
+
+		while (itr.hasNext()) {
+			OpenSearch openSearch = itr.next();
+
+			if (!openSearch.isEnabled()) {
+				itr.remove();
+			}
+		}
+
+		if (Validator.isNotNull(primarySearch)) {
+			for (int i = 0; i < openSearchInstances.size(); i++) {
+				OpenSearch openSearch = openSearchInstances.get(i);
+
+				if (primarySearch.equals(openSearch.getClassName())) {
+					if (i != 0) {
+						openSearchInstances.remove(i);
+
+						openSearchInstances.add(0, openSearch);
+					}
+
+					break;
+				}
+			}
+		}
+
+		return openSearchInstances;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(SearchUtil.class);

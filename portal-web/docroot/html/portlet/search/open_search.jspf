@@ -19,24 +19,6 @@
 </aui:button-row>
 
 <%
-List<String> modelResources = new ArrayList<String>();
-
-List<OpenSearch> openSearchInstances = OpenSearchRegistryUtil.getOpenSearchInstances();
-
-Iterator<OpenSearch> itr = openSearchInstances.iterator();
-
-while (itr.hasNext()) {
-	OpenSearch openSearch = itr.next();
-
-	if (!openSearch.isEnabled()) {
-		itr.remove();
-
-		continue;
-	}
-
-	modelResources.add(ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()));
-}
-
 String primarySearch = ParamUtil.getString(request, "primarySearch");
 
 if (Validator.isNotNull(primarySearch)) {
@@ -46,20 +28,12 @@ else {
 	primarySearch = portalPreferences.getValue(PortletKeys.SEARCH, "primary-search", StringPool.BLANK);
 }
 
-if (Validator.isNotNull(primarySearch)) {
-	for (int i = 0; i < openSearchInstances.size(); i++) {
-		OpenSearch openSearch = openSearchInstances.get(i);
+List<OpenSearch> openSearchInstances = com.liferay.portlet.search.util.SearchUtil.getOpenSearchInstances(primarySearch);
 
-		if (primarySearch.equals(openSearch.getClassName())) {
-			if (i != 0) {
-				openSearchInstances.remove(i);
+List<String> modelResources = new ArrayList<String>();
 
-				openSearchInstances.add(0, openSearch);
-			}
-
-			break;
-		}
-	}
+for (OpenSearch openSearchInstance : openSearchInstances) {
+	modelResources.add(ResourceActionsUtil.getModelResource(locale, openSearchInstance.getClassName()));
 }
 %>
 
@@ -109,7 +83,7 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 		%>
 
 		<liferay-ui:search-container
-			searchContainer='<%= openSearchSearchContainer %>'
+			searchContainer="<%= openSearchSearchContainer %>"
 		>
 			<liferay-ui:search-container-results
 				results="<%= resultRows %>"
@@ -134,8 +108,8 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 				%>
 
 				<c:choose>
-					<c:when test="<%= filterSearch && (searchContainer.getTotal() > searchContainer.getDelta())%>">
-						<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= searchContainer.getDelta()%> <liferay-ui:message key="of-many" />)
+					<c:when test="<%= filterSearch && (searchContainer.getTotal() > searchContainer.getDelta()) %>">
+						<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= searchContainer.getDelta() %> <liferay-ui:message key="of-many" />)
 					</c:when>
 					<c:otherwise>
 						<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= searchContainer.getTotal() %>)
@@ -170,7 +144,7 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 					viewFullContentURL.setWindowState(WindowState.MAXIMIZED);
 					%>
 
-					<a class="entry-title" href="<%= viewFullContentURL.toString()%>">
+					<a class="entry-title" href="<%= viewFullContentURL.toString() %>">
 						<%= SearchUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms) %>
 					</a>
 
