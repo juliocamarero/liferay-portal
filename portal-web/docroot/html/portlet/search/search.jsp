@@ -179,7 +179,3 @@ if (Validator.isNotNull(keywords)) {
 PortalUtil.setPageSubtitle(pageSubtitle, request);
 PortalUtil.setPageKeywords(pageKeywords, request);
 %>
-
-<%!
-private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.search.search_jsp");
-%>
