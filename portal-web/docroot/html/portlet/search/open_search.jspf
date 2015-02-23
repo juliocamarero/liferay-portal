@@ -80,16 +80,6 @@ int totalResults = 0;
 for (int i = 0; i < openSearchInstances.size(); i++) {
 	OpenSearch openSearch = openSearchInstances.get(i);
 
-	boolean filterSearch = false;
-
-	if (openSearch instanceof HitsOpenSearchImpl) {
-		HitsOpenSearchImpl hitsOpenSearchImpl = (HitsOpenSearchImpl)openSearch;
-
-		Indexer hitsOpenSearchImplIndexer = hitsOpenSearchImpl.getIndexer();
-
-		filterSearch = hitsOpenSearchImplIndexer.isFilterSearch();
-	}
-
 	int delta = 5;
 
 	if (Validator.isNotNull(primarySearch) && primarySearch.equals(openSearch.getClassName())) {
@@ -128,6 +118,16 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 			<div class="section-title">
 
 				<%
+				boolean filterSearch = false;
+
+				if (openSearch instanceof HitsOpenSearchImpl) {
+					HitsOpenSearchImpl hitsOpenSearchImpl = (HitsOpenSearchImpl)openSearch;
+
+					Indexer hitsOpenSearchImplIndexer = hitsOpenSearchImpl.getIndexer();
+
+					filterSearch = hitsOpenSearchImplIndexer.isFilterSearch();
+				}
+
 				// When the total is <= to the delta, we know the result is accurate
 				// since we've filtered the entire result set. Otherwise, we simply
 				// indicate that there are possibly many more. (� la Google)
