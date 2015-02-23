@@ -29,8 +29,6 @@ String keywords = ParamUtil.getString(request, "keywords");
 
 String format = ParamUtil.getString(request, "format");
 
-List<String> portletTitles = new ArrayList<String>();
-
 PortletURL portletURL = PortletURLUtil.getCurrent(renderRequest, renderResponse);
 
 request.setAttribute("search.jsp-portletURL", portletURL);
@@ -168,12 +166,7 @@ request.setAttribute("search.jsp-returnToFullPageURL", portletDisplay.getURLBack
 
 <%
 String pageSubtitle = LanguageUtil.get(request, "search-results");
-String pageDescription = LanguageUtil.get(request, "search-results");
 String pageKeywords = LanguageUtil.get(request, "search");
-
-if (!portletTitles.isEmpty()) {
-	pageDescription = LanguageUtil.get(request, "searched") + StringPool.SPACE + StringUtil.merge(portletTitles, StringPool.COMMA_AND_SPACE);
-}
 
 if (Validator.isNotNull(keywords)) {
 	pageKeywords = keywords;
@@ -184,7 +177,6 @@ if (Validator.isNotNull(keywords)) {
 }
 
 PortalUtil.setPageSubtitle(pageSubtitle, request);
-PortalUtil.setPageDescription(pageDescription, request);
 PortalUtil.setPageKeywords(pageKeywords, request);
 %>
 
