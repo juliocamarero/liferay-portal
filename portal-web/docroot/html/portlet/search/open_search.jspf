@@ -182,52 +182,12 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 
 					<br />
 
-					<%
-					String tagsString = element.elementText("tags");
-
-					tagsString = tagsString.replaceAll("[\\[\\]]","");
-
-					String[] tags = StringUtil.split(tagsString);
-
-					String[] tagsQueryTerms = queryTerms;
-
-					if (StringUtil.startsWith(keywords, Field.ASSET_TAG_NAMES + StringPool.COLON)) {
-						tagsQueryTerms = new String[] {StringUtil.replace(keywords, Field.ASSET_TAG_NAMES + StringPool.COLON, StringPool.BLANK)};
-					}
-
-					for (int k = 0; k < tags.length; k++) {
-						String tag = tags[k];
-
-						String newKeywords = tag.trim();
-
-						if (newKeywords.matches(".+\\s.+")) {
-							newKeywords = StringPool.QUOTE + tag + StringPool.QUOTE;
-						}
-
-						PortletURL tagURL = PortletURLUtil.clone(portletURL, renderResponse);
-
-						tagURL.setParameter("keywords", Field.ASSET_TAG_NAMES + StringPool.COLON + newKeywords);
-						tagURL.setParameter("format", format);
-					%>
-
-						<c:if test="<%= k == 0 %>">
-							<div class="entry-tags">
-								<div class="taglib-asset-tags-summary">
-						</c:if>
-
-						<a class="tag" href="<%= tagURL.toString() %>">
-							<%= SearchUtil.highlight(tag, tagsQueryTerms) %>
-						</a>
-
-						<c:if test="<%= (k + 1) == tags.length %>">
-								</div>
-							</div>
-						</c:if>
-
-					<%
-					}
-					%>
-
+					<liferay-ui:asset-tags-summary
+						className="<%= entryClassName %>"
+						classPK="<%= entryClassPK %>"
+						paramName="<%= Field.ASSET_TAG_NAMES %>"
+						portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+					/>
 				</liferay-ui:search-container-column-text>
 			</liferay-ui:search-container-row>
 
