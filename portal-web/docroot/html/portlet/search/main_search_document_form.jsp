@@ -38,8 +38,6 @@ if (assetRendererFactory != null) {
 	assetRenderer = assetRendererFactory.getAssetRenderer(entryClassPK);
 }
 
-String[] queryTerms = (String[])request.getAttribute("search.jsp-queryTerms");
-
 PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL");
 %>
 
