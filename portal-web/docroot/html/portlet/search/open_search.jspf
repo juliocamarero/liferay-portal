@@ -19,7 +19,7 @@
 </aui:button-row>
 
 <%
-List<String> portletTitles = new ArrayList<String>();
+List<String> modelResources = new ArrayList<String>();
 
 LinkedHashMap<String, Object> groupParams = new LinkedHashMap<String, Object>();
 
@@ -40,7 +40,7 @@ while (itr.hasNext()) {
 		continue;
 	}
 
-	portletTitles.add(ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()));
+	modelResources.add(ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()));
 }
 
 String primarySearch = ParamUtil.getString(request, "primarySearch");
@@ -71,11 +71,11 @@ if (Validator.isNotNull(primarySearch)) {
 
 <div class="search-msg">
 	<c:choose>
-		<c:when test="<%= portletTitles.isEmpty() %>">
+		<c:when test="<%= modelResources.isEmpty() %>">
 			<liferay-ui:message key="no-portlets-were-searched" />
 		</c:when>
 		<c:otherwise>
-			<liferay-ui:message key="searched" /> <%= StringUtil.merge(portletTitles, StringPool.COMMA_AND_SPACE) %>
+			<liferay-ui:message key="searched" /> <%= StringUtil.merge(modelResources, StringPool.COMMA_AND_SPACE) %>
 		</c:otherwise>
 	</c:choose>
 </div>
@@ -332,8 +332,8 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 <%
 String pageDescription = LanguageUtil.get(request, "search-results");
 
-if (!portletTitles.isEmpty()) {
-	pageDescription = LanguageUtil.get(request, "searched") + StringPool.SPACE + StringUtil.merge(portletTitles, StringPool.COMMA_AND_SPACE);
+if (!modelResources.isEmpty()) {
+	pageDescription = LanguageUtil.get(request, "searched") + StringPool.SPACE + StringUtil.merge(modelResources, StringPool.COMMA_AND_SPACE);
 }
 
 PortalUtil.setPageDescription(pageDescription, request);
