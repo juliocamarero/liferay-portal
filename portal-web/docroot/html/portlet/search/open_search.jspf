@@ -149,9 +149,7 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 
 				// Summary
 
-				String entryClassName = element.elementText("entryClassName");
 				String entryTitle = element.elementText("title");
-				String entryHref = element.element("link").attributeValue("href");
 				String summary = element.elementText("summary");
 
 				// Group id
@@ -172,36 +170,17 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 					}
 				}
 
-				String portletId = StringPool.BLANK;
+				PortletURL viewFullContentURL = renderResponse.createRenderURL();
 
-				if (portletId.equals(PortletKeys.DOCUMENT_LIBRARY) || (portletId.equals(PortletKeys.SEARCH) && entryClassName.equals(DLFileEntryConstants.getClassName()))) {
-					long fileEntryId = GetterUtil.getLong(HttpUtil.getParameter(entryHref, "_20_fileEntryId", false));
-
-					FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(fileEntryId);
-
-					entryTitle = fileEntry.getTitle();
-
-					if (portletId.equals(PortletKeys.SEARCH)) {
-						entryTitle = PortalUtil.getPortletTitle(PortletKeys.DOCUMENT_LIBRARY, locale) + " " + CharPool.RAQUO + " " + entryTitle;
-					}
-
-					if (searchDisplayContext.isDLLinkToViewURL()) {
-						long dlPlid = PortalUtil.getPlidFromPortletId(fileEntry.getRepositoryId(), PortletKeys.DOCUMENT_LIBRARY);
-
-						PortletURL viewURL = new PortletURLImpl(request, PortletKeys.DOCUMENT_LIBRARY, dlPlid, PortletRequest.RENDER_PHASE);
-
-						viewURL.setParameter("struts_action", "/document_library/view_file_entry");
-						viewURL.setParameter("redirect", currentURL);
-						viewURL.setParameter("fileEntryId", String.valueOf(fileEntry.getFileEntryId()));
-
-						entryHref = viewURL.toString();
-					}
-				}
+				viewFullContentURL.setParameter("struts_action", "/search/view_content");
+				viewFullContentURL.setParameter("redirect", currentURL);
+				viewFullContentURL.setPortletMode(PortletMode.VIEW);
+				viewFullContentURL.setWindowState(WindowState.MAXIMIZED);
 
 				StringBundler rowSB = new StringBundler();
 
 				rowSB.append("<a class=\"entry-title\" href=\"");
-				rowSB.append(entryHref);
+				rowSB.append(viewFullContentURL.toString());
 				rowSB.append("\">");
 				rowSB.append(SearchUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms));
 				rowSB.append("</a>");
