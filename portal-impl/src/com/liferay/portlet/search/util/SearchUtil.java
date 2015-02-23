@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.search.OpenSearch;
 import com.liferay.portal.kernel.search.OpenSearchRegistryUtil;
 import com.liferay.portal.kernel.search.OpenSearchUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
@@ -31,7 +33,6 @@ import com.liferay.portal.service.GroupServiceUtil;
 import com.liferay.util.xml.XMLFormatter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.struts.action.Action;
@@ -112,18 +113,16 @@ public class SearchUtil extends Action {
 	public static List<OpenSearch> getOpenSearchInstances(
 		String primarySearch) {
 
-		List<OpenSearch> openSearchInstances =
-			OpenSearchRegistryUtil.getOpenSearchInstances();
+		List<OpenSearch> openSearchInstances = ListUtil.filter(
+			OpenSearchRegistryUtil.getOpenSearchInstances(),
+			new PredicateFilter<OpenSearch>() {
 
-		Iterator<OpenSearch> itr = openSearchInstances.iterator();
+				@Override
+				public boolean filter(OpenSearch openSearch) {
+					return openSearch.isEnabled();
+				}
 
-		while (itr.hasNext()) {
-			OpenSearch openSearch = itr.next();
-
-			if (!openSearch.isEnabled()) {
-				itr.remove();
-			}
-		}
+			});
 
 		if (Validator.isNotNull(primarySearch)) {
 			for (int i = 0; i < openSearchInstances.size(); i++) {
