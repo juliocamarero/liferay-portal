@@ -297,8 +297,7 @@ page import="com.liferay.util.PKParser" %><%@
 page import="com.liferay.util.RSSUtil" %><%@
 page import="com.liferay.util.State" %><%@
 page import="com.liferay.util.StateUtil" %><%@
-page import="com.liferay.util.log4j.Levels" %><%@
-page import="com.liferay.util.xml.XMLFormatter" %>
+page import="com.liferay.util.log4j.Levels" %>
 
 <%@ page import="java.io.Serializable" %>
 

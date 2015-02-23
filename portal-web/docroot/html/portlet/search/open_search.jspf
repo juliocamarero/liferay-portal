@@ -21,12 +21,6 @@
 <%
 List<String> modelResources = new ArrayList<String>();
 
-LinkedHashMap<String, Object> groupParams = new LinkedHashMap<String, Object>();
-
-groupParams.put("active", Boolean.FALSE);
-
-int inactiveGroupsCount = GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), null, null, groupParams);
-
 List<OpenSearch> openSearchInstances = OpenSearchRegistryUtil.getOpenSearchInstances();
 
 Iterator<OpenSearch> itr = openSearchInstances.iterator();
@@ -86,26 +80,6 @@ int totalResults = 0;
 for (int i = 0; i < openSearchInstances.size(); i++) {
 	OpenSearch openSearch = openSearchInstances.get(i);
 
-	//List<String> headerNames = new ArrayList<String>();
-
-	//headerNames.add("#");
-	//headerNames.add("summary");
-	//headerNames.add("tags");
-	//headerNames.add("score");
-
-	SearchContainer openSearchSearchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM + i, 5, portletURL, null, LanguageUtil.format(request, "no-results-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>", false));
-
-	if (Validator.isNotNull(primarySearch) && primarySearch.equals(openSearch.getClassName())) {
-		int delta = ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PARAM + i);
-
-		if (delta > 0) {
-			openSearchSearchContainer.setDelta(delta);
-		}
-		else {
-			openSearchSearchContainer.setDelta(SearchContainer.DEFAULT_DELTA);
-		}
-	}
-
 	boolean filterSearch = false;
 
 	if (openSearch instanceof HitsOpenSearchImpl) {
@@ -116,165 +90,42 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 		filterSearch = hitsOpenSearchImplIndexer.isFilterSearch();
 	}
 
-	List resultRows = new ArrayList();
+	int delta = 5;
 
-	try {
-		String xml = openSearch.search(request, groupId, themeDisplay.getUserId(), keywords, openSearchSearchContainer.getCur(), openSearchSearchContainer.getDelta(), format);
-
-		xml = XMLFormatter.stripInvalidChars(xml);
-
-		com.liferay.portal.kernel.xml.Document document = SAXReaderUtil.read(xml);
-
-		Element rootElement = document.getRootElement();
-
-		queryTerms = StringUtil.split(rootElement.elementText("queryTerms"), StringPool.COMMA_AND_SPACE);
-
-		List<Element> entries = rootElement.elements("entry");
-
-		int openSearchSearchContainerTotal = GetterUtil.getInteger(rootElement.elementText(OpenSearchUtil.getQName("totalResults", OpenSearchUtil.OS_NAMESPACE)));
-
-		resultRows = openSearchSearchContainer.getResultRows();
-
-		for (int j = 0; j < entries.size(); j++) {
-			try {
-				Element element = entries.get(j);
-
-				ResultRow row = new ResultRow(document, String.valueOf(j), j);
-
-				// Position
-
-				//row.addText(SearchEntry.DEFAULT_ALIGN, "top", openSearchSearchContainer.getStart() + j + 1 + StringPool.PERIOD);
-
-				// Summary
-
-				String entryTitle = element.elementText("title");
-				String summary = element.elementText("summary");
-
-				// Group id
-
-				long entryScopeGroupId = GetterUtil.getLong(element.elementText(OpenSearchUtil.getQName("scopeGroupId", OpenSearchUtil.LIFERAY_NAMESPACE)));
-
-				if (Validator.isNotNull(entryScopeGroupId) && (inactiveGroupsCount > 0)) {
-					Group entryGroup = GroupServiceUtil.getGroup(entryScopeGroupId);
-
-					if (entryGroup.isLayout()) {
-						entryGroup = GroupLocalServiceUtil.getGroup(entryGroup.getParentGroupId());
-					}
-
-					if (!entryGroup.isActive()) {
-						openSearchSearchContainerTotal--;
-
-						continue;
-					}
-				}
-
-				PortletURL viewFullContentURL = renderResponse.createRenderURL();
-
-				viewFullContentURL.setParameter("struts_action", "/search/view_content");
-				viewFullContentURL.setParameter("redirect", currentURL);
-				viewFullContentURL.setPortletMode(PortletMode.VIEW);
-				viewFullContentURL.setWindowState(WindowState.MAXIMIZED);
-
-				StringBundler rowSB = new StringBundler();
-
-				rowSB.append("<a class=\"entry-title\" href=\"");
-				rowSB.append(viewFullContentURL.toString());
-				rowSB.append("\">");
-				rowSB.append(SearchUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms));
-				rowSB.append("</a>");
-
-				if (Validator.isNotNull(summary)) {
-					rowSB.append("<br />");
-					rowSB.append(SearchUtil.highlight(HtmlUtil.escape(summary), queryTerms));
-				}
-
-				rowSB.append("<br />");
-
-				// Tags
-
-				String tagsString = element.elementText("tags");
-
-				tagsString = tagsString.replaceAll("[\\[\\]]","");
-
-				String[] tags = StringUtil.split(tagsString);
-
-				String[] tagsQueryTerms = queryTerms;
-
-				if (StringUtil.startsWith(keywords, Field.ASSET_TAG_NAMES + StringPool.COLON)) {
-					tagsQueryTerms = new String[] {StringUtil.replace(keywords, Field.ASSET_TAG_NAMES + StringPool.COLON, StringPool.BLANK)};
-				}
-
-				for (int k = 0; k < tags.length; k++) {
-					String tag = tags[k];
-
-					String newKeywords = tag.trim();
-
-					if (newKeywords.matches(".+\\s.+")) {
-						newKeywords = StringPool.QUOTE + tag + StringPool.QUOTE;
-					}
-
-					PortletURL tagURL = PortletURLUtil.clone(portletURL, renderResponse);
-
-					tagURL.setParameter("keywords", Field.ASSET_TAG_NAMES + StringPool.COLON + newKeywords);
-					tagURL.setParameter("format", format);
-
-					if (k == 0) {
-						rowSB.append("<div class=\"entry-tags\">");
-						rowSB.append("<div class=\"taglib-asset-tags-summary\">");
-					}
-
-					rowSB.append("<a class=\"tag\" href=\"");
-					rowSB.append(tagURL.toString());
-					rowSB.append("\">");
-					rowSB.append(SearchUtil.highlight(tag, tagsQueryTerms));
-					rowSB.append("</a>");
-
-					if ((k + 1) == tags.length) {
-						rowSB.append("</div>");
-						rowSB.append("</div>");
-					}
-				}
-
-				row.addText(rowSB.toString());
-
-				// Ratings
-
-				//String ratings = element.elementText("ratings");
-
-				//row.addText(ratings);
-
-				// Score
-
-				//String score = element.elementText(OpenSearchUtil.getQName("score", OpenSearchUtil.RELEVANCE_NAMESPACE));
-
-				//row.addText(score);
-
-				// Add result row
-
-				resultRows.add(row);
-			}
-			catch (Exception e) {
-				_log.error("Error retrieving individual search result of type " + openSearch.getClassName(), e);
-
-				openSearchSearchContainerTotal--;
-			}
-		}
-
-		openSearchSearchContainer.setTotal(openSearchSearchContainerTotal);
+	if (Validator.isNotNull(primarySearch) && primarySearch.equals(openSearch.getClassName())) {
+		delta = ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PARAM + i, SearchContainer.DEFAULT_DELTA);
 	}
-	catch (Exception e) {
-		_log.error("Error displaying content of type " + openSearch.getClassName(), e);
-	}
+
+	SearchContainer openSearchSearchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM + i, delta, portletURL, null, LanguageUtil.format(request, "no-results-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>", false));
+
+	String xml = openSearch.search(request, groupId, themeDisplay.getUserId(), keywords, openSearchSearchContainer.getCur(), openSearchSearchContainer.getDelta(), format);
+
+	LinkedHashMap<String, Object> groupParams = new LinkedHashMap<String, Object>();
+
+	groupParams.put("active", Boolean.FALSE);
+
+	int inactiveGroupsCount = GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), null, null, groupParams);
+
+	Tuple tuple = com.liferay.portlet.search.util.SearchUtil.getElements(xml, openSearch.getClassName(), inactiveGroupsCount);
+
+	List<Element> resultRows = (List<Element>)tuple.getObject(0);
+	int totalRows = (Integer)tuple.getObject(1);
 %>
 
 	<c:if test="<%= !resultRows.isEmpty() %>">
 
 		<%
-		totalResults = totalResults + openSearchSearchContainer.getTotal();
+		totalResults = totalResults + totalRows;
 		%>
 
-		<div class="section-title">
-			<c:choose>
+		<liferay-ui:search-container
+			searchContainer='<%= openSearchSearchContainer %>'
+		>
+			<liferay-ui:search-container-results
+				results="<%= resultRows %>"
+				total="<%= totalRows %>"
+			/>
+			<div class="section-title">
 
 				<%
 				// When the total is <= to the delta, we know the result is accurate
@@ -282,39 +133,129 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 				// indicate that there are possibly many more. (� la Google)
 				%>
 
-				<c:when test="<%= filterSearch && (openSearchSearchContainer.getTotal() > openSearchSearchContainer.getDelta())%>">
-					<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= openSearchSearchContainer.getDelta()%> <liferay-ui:message key="of-many" />)
+				<c:choose>
+					<c:when test="<%= filterSearch && (searchContainer.getTotal() > searchContainer.getDelta())%>">
+						<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= searchContainer.getDelta()%> <liferay-ui:message key="of-many" />)
+					</c:when>
+					<c:otherwise>
+						<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= searchContainer.getTotal() %>)
+					</c:otherwise>
+				</c:choose>
+			</div>
+
+			<liferay-ui:search-container-row
+				className="com.liferay.portal.kernel.xml.Element"
+				modelVar="element"
+			>
+				<liferay-ui:search-container-column-text>
+
+					<%
+					String entryTitle = element.elementText("title");
+					String summary = element.elementText("summary");
+					String entryClassName = element.elementText("entryClassName");
+					long entryClassPK = GetterUtil.getLong(element.elementText("entryClassPK"));
+
+					PortletURL viewFullContentURL = renderResponse.createRenderURL();
+
+					viewFullContentURL.setParameter("struts_action", "/search/view_content");
+					viewFullContentURL.setParameter("redirect", currentURL);
+
+					AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(entryClassName, entryClassPK);
+
+					AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entryClassName);
+
+					viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
+					viewFullContentURL.setParameter("type", assetRendererFactory.getType());
+					viewFullContentURL.setPortletMode(PortletMode.VIEW);
+					viewFullContentURL.setWindowState(WindowState.MAXIMIZED);
+					%>
+
+					<a class="entry-title" href="<%= viewFullContentURL.toString()%>">
+						<%= SearchUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms) %>
+					</a>
+
+					<c:if test="<%= Validator.isNotNull(summary) %>">
+						<br />
+
+						<%= SearchUtil.highlight(HtmlUtil.escape(summary), queryTerms) %>
+					</c:if>
+
+					<br />
+
+					<%
+					String tagsString = element.elementText("tags");
+
+					tagsString = tagsString.replaceAll("[\\[\\]]","");
+
+					String[] tags = StringUtil.split(tagsString);
+
+					String[] tagsQueryTerms = queryTerms;
+
+					if (StringUtil.startsWith(keywords, Field.ASSET_TAG_NAMES + StringPool.COLON)) {
+						tagsQueryTerms = new String[] {StringUtil.replace(keywords, Field.ASSET_TAG_NAMES + StringPool.COLON, StringPool.BLANK)};
+					}
+
+					for (int k = 0; k < tags.length; k++) {
+						String tag = tags[k];
+
+						String newKeywords = tag.trim();
+
+						if (newKeywords.matches(".+\\s.+")) {
+							newKeywords = StringPool.QUOTE + tag + StringPool.QUOTE;
+						}
+
+						PortletURL tagURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+						tagURL.setParameter("keywords", Field.ASSET_TAG_NAMES + StringPool.COLON + newKeywords);
+						tagURL.setParameter("format", format);
+					%>
+
+						<c:if test="<%= k == 0 %>">
+							<div class="entry-tags">
+								<div class="taglib-asset-tags-summary">
+						</c:if>
+
+						<a class="tag" href="<%= tagURL.toString() %>">
+							<%= SearchUtil.highlight(tag, tagsQueryTerms) %>
+						</a>
+
+						<c:if test="<%= (k + 1) == tags.length %>">
+								</div>
+							</div>
+						</c:if>
+
+					<%
+					}
+					%>
+
+				</liferay-ui:search-container-column-text>
+			</liferay-ui:search-container-row>
+
+			<liferay-ui:search-iterator paginate="<%= false %>" />
+
+			<c:choose>
+				<c:when test="<%= (searchContainer.getTotal() == resultRows.size()) || (Validator.isNotNull(primarySearch) && openSearch.getClassName().equals(primarySearch)) %>">
+					<div class="search-paginator-container">
+						<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" type="more" />
+					</div>
 				</c:when>
 				<c:otherwise>
-					<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= openSearchSearchContainer.getTotal() %>)
+					<div class="more-results">
+						<portlet:renderURL var="moreResultsURL">
+							<portlet:param name="struts_action" value="/search/search" />
+							<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+							<portlet:param name="primarySearch" value="<%= openSearch.getClassName() %>" />
+							<portlet:param name="keywords" value="<%= HtmlUtil.escape(keywords) %>" />
+							<portlet:param name="format" value="<%= format %>" />
+						</portlet:renderURL>
+
+						<aui:a href="<%= moreResultsURL %>">
+							<liferay-ui:message arguments="<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %>" key="more-x-results" translateArguments="<%= false %>" /> &raquo;
+						</aui:a>
+					</div>
 				</c:otherwise>
 			</c:choose>
-		</div>
-
-		<liferay-ui:search-iterator paginate="<%= false %>" searchContainer="<%= openSearchSearchContainer %>" />
-
-		<c:choose>
-			<c:when test="<%= (openSearchSearchContainer.getTotal() == resultRows.size()) || (Validator.isNotNull(primarySearch) && openSearch.getClassName().equals(primarySearch)) %>">
-				<div class="search-paginator-container">
-					<liferay-ui:search-paginator searchContainer="<%= openSearchSearchContainer %>" type="more" />
-				</div>
-			</c:when>
-			<c:otherwise>
-				<div class="more-results">
-					<portlet:renderURL var="moreResultsURL">
-						<portlet:param name="struts_action" value="/search/search" />
-						<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-						<portlet:param name="primarySearch" value="<%= openSearch.getClassName() %>" />
-						<portlet:param name="keywords" value="<%= HtmlUtil.escape(keywords) %>" />
-						<portlet:param name="format" value="<%= format %>" />
-					</portlet:renderURL>
-
-					<aui:a href="<%= moreResultsURL %>">
-						<liferay-ui:message arguments="<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %>" key="more-x-results" translateArguments="<%= false %>" /> &raquo;
-					</aui:a>
-				</div>
-			</c:otherwise>
-		</c:choose>
+		</liferay-ui:search-container>
 	</c:if>
 
 <%
