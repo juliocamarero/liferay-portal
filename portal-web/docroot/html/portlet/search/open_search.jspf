@@ -106,8 +106,6 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 		}
 	}
 
-	String portletTitle = ResourceActionsUtil.getModelResource(locale, openSearch.getClassName());
-
 	boolean filterSearch = false;
 
 	if (openSearch instanceof HitsOpenSearchImpl) {
@@ -128,8 +126,6 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 		com.liferay.portal.kernel.xml.Document document = SAXReaderUtil.read(xml);
 
 		Element rootElement = document.getRootElement();
-
-		//portletTitle = rootElement.elementText("title");
 
 		queryTerms = StringUtil.split(rootElement.elementText("queryTerms"), StringPool.COMMA_AND_SPACE);
 
@@ -287,10 +283,10 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 				%>
 
 				<c:when test="<%= filterSearch && (openSearchSearchContainer.getTotal() > openSearchSearchContainer.getDelta())%>">
-					<%= portletTitle %> (<%= openSearchSearchContainer.getDelta()%> <liferay-ui:message key="of-many" />)
+					<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= openSearchSearchContainer.getDelta()%> <liferay-ui:message key="of-many" />)
 				</c:when>
 				<c:otherwise>
-					<%= portletTitle %> (<%= openSearchSearchContainer.getTotal() %>)
+					<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %> (<%= openSearchSearchContainer.getTotal() %>)
 				</c:otherwise>
 			</c:choose>
 		</div>
@@ -314,7 +310,7 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 					</portlet:renderURL>
 
 					<aui:a href="<%= moreResultsURL %>">
-						<liferay-ui:message arguments="<%= portletTitle %>" key="more-x-results" translateArguments="<%= false %>" /> &raquo;
+						<liferay-ui:message arguments="<%= ResourceActionsUtil.getModelResource(locale, openSearch.getClassName()) %>" key="more-x-results" translateArguments="<%= false %>" /> &raquo;
 					</aui:a>
 				</div>
 			</c:otherwise>
