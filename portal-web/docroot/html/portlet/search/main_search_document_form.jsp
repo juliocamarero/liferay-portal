@@ -37,8 +37,6 @@ if (assetRendererFactory != null) {
 
 	assetRenderer = assetRendererFactory.getAssetRenderer(entryClassPK);
 }
-
-PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL");
 %>
 
 <span class="asset-entry">
@@ -71,6 +69,11 @@ PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL"
 
 	<c:if test="<%= (assetEntry != null) && (ArrayUtil.isNotEmpty(assetEntry.getCategoryIds()) || ArrayUtil.isNotEmpty(assetEntry.getTagNames())) %>">
 		<div class="asset-entry-content">
+
+			<%
+			PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL");
+			%>
+
 			<liferay-ui:asset-tags-summary
 				className="<%= entryClassName %>"
 				classPK="<%= entryClassPK %>"
