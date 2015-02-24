@@ -37,8 +37,6 @@ AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.get
 
 AssetRenderer assetRenderer = null;
 
-boolean inheritRedirect = false;
-
 if (assetRendererFactory != null) {
 	long resourcePrimKey = GetterUtil.getLong(document.get(Field.ROOT_ENTRY_CLASS_PK));
 
@@ -53,9 +51,7 @@ if (assetRendererFactory != null) {
 	viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
 	viewFullContentURL.setParameter("type", assetRendererFactory.getType());
 
-	if (searchDisplayContext.isViewInContext() || !assetEntry.isVisible()) {
-		inheritRedirect = true;
-
+	if (searchDisplayContext.isViewInContext()) {
 		String viewFullContentURLString = viewFullContentURL.toString();
 
 		viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redirect", currentURL);
@@ -93,7 +89,7 @@ else if (assetRenderer != null) {
 		viewURL = viewFullContentURL.toString();
 	}
 
-	viewURL = searchDisplayContext.checkViewURL(viewURL, currentURL, inheritRedirect);
+	viewURL = searchDisplayContext.checkViewURL(viewURL, currentURL);
 
 	boolean highlightEnabled = (Boolean)request.getAttribute("search.jsp-highlightEnabled");
 	String[] queryTerms = (String[])request.getAttribute("search.jsp-queryTerms");
