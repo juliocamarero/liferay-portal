@@ -125,7 +125,7 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 			for (int i = 0; i < results.getDocs().length; i++) {
 				Document result = results.doc(i);
 
-				String snippet = results.snippet(i);
+				String snippet = result.get(Field.SNIPPET);
 
 				long resultGroupId = GetterUtil.getLong(
 					result.get(Field.GROUP_ID));
