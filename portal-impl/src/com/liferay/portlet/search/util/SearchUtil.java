@@ -16,24 +16,41 @@ package com.liferay.portlet.search.util;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.search.OpenSearch;
 import com.liferay.portal.kernel.search.OpenSearchRegistryUtil;
 import com.liferay.portal.kernel.search.OpenSearchUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.GroupServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.asset.model.AssetRendererFactory;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.asset.util.AssetUtil;
 import com.liferay.util.xml.XMLFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.portlet.PortletMode;
+import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 
 import org.apache.struts.action.Action;
 
@@ -141,6 +158,58 @@ public class SearchUtil extends Action {
 		}
 
 		return openSearchInstances;
+	}
+
+	public static String getSearchResultViewURL(
+			RenderRequest renderRequest, RenderResponse renderResponse,
+			String className, long classPK, boolean viewInContext,
+			String currentURL)
+		throws Exception {
+
+		PortletURL viewContentURL = renderResponse.createRenderURL();
+
+		viewContentURL.setParameter("struts_action", "/search/view_content");
+		viewContentURL.setParameter("redirect", currentURL);
+		viewContentURL.setPortletMode(PortletMode.VIEW);
+		viewContentURL.setWindowState(WindowState.MAXIMIZED);
+
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(
+			className, classPK);
+
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				className);
+
+		if (assetRendererFactory == null) {
+			return viewContentURL.toString();
+		}
+
+		viewContentURL.setParameter(
+			"assetEntryId", String.valueOf(assetEntry.getEntryId()));
+		viewContentURL.setParameter("type", assetRendererFactory.getType());
+
+		if (viewInContext) {
+			String viewFullContentURLString = viewContentURL.toString();
+
+			viewFullContentURLString = HttpUtil.setParameter(
+				viewFullContentURLString, "redirect", currentURL);
+
+			AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
+				classPK);
+
+			String viewURL = assetRenderer.getURLViewInContext(
+				(LiferayPortletRequest)renderRequest,
+				(LiferayPortletResponse)renderResponse,
+				viewFullContentURLString);
+
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
+			return AssetUtil.checkViewURL(
+				assetEntry, viewInContext, viewURL, currentURL, themeDisplay);
+		}
+
+		return viewContentURL.toString();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(SearchUtil.class);

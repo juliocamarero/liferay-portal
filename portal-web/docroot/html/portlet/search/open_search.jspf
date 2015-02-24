@@ -128,23 +128,9 @@ for (int i = 0; i < openSearchInstances.size(); i++) {
 					String summary = element.elementText("summary");
 					String entryClassName = element.elementText("entryClassName");
 					long entryClassPK = GetterUtil.getLong(element.elementText("entryClassPK"));
-
-					PortletURL viewFullContentURL = renderResponse.createRenderURL();
-
-					viewFullContentURL.setParameter("struts_action", "/search/view_content");
-					viewFullContentURL.setParameter("redirect", currentURL);
-
-					AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(entryClassName, entryClassPK);
-
-					AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entryClassName);
-
-					viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
-					viewFullContentURL.setParameter("type", assetRendererFactory.getType());
-					viewFullContentURL.setPortletMode(PortletMode.VIEW);
-					viewFullContentURL.setWindowState(WindowState.MAXIMIZED);
 					%>
 
-					<a class="entry-title" href="<%= viewFullContentURL.toString() %>">
+					<a class="entry-title" href="<%= com.liferay.portlet.search.util.SearchUtil.getSearchResultViewURL(renderRequest, renderResponse, entryClassName, entryClassPK, searchDisplayContext.isViewInContext(), currentURL) %>">
 						<%= SearchUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms) %>
 					</a>
 

@@ -24,15 +24,6 @@ Document document = (Document)row.getObject();
 String className = document.get(Field.ENTRY_CLASS_NAME);
 long classPK = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
 
-PortletURL viewFullContentURL = renderResponse.createRenderURL();
-
-viewFullContentURL.setParameter("struts_action", "/search/view_content");
-viewFullContentURL.setParameter("redirect", currentURL);
-viewFullContentURL.setPortletMode(PortletMode.VIEW);
-viewFullContentURL.setWindowState(WindowState.MAXIMIZED);
-
-String viewURL = null;
-
 AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
 
 AssetRenderer assetRenderer = null;
@@ -44,29 +35,10 @@ if (assetRendererFactory != null) {
 		classPK = resourcePrimKey;
 	}
 
-	AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, classPK);
-
 	assetRenderer = assetRendererFactory.getAssetRenderer(classPK);
-
-	viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
-	viewFullContentURL.setParameter("type", assetRendererFactory.getType());
-
-	if (searchDisplayContext.isViewInContext()) {
-		String viewFullContentURLString = viewFullContentURL.toString();
-
-		viewFullContentURLString = HttpUtil.setParameter(viewFullContentURLString, "redirect", currentURL);
-
-		viewURL = assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString);
-
-		viewURL = AssetUtil.checkViewURL(assetEntry, searchDisplayContext.isViewInContext(), viewURL, currentURL, themeDisplay);
-	}
-	else {
-		viewURL = viewFullContentURL.toString();
-	}
 }
-else {
-	viewURL = viewFullContentURL.toString();
-}
+
+String viewURL = com.liferay.portlet.search.util.SearchUtil.getSearchResultViewURL(renderRequest, renderResponse, className, classPK, searchDisplayContext.isViewInContext(), currentURL);
 
 Indexer indexer = IndexerRegistryUtil.getIndexer(className);
 
@@ -75,20 +47,16 @@ Summary summary = null;
 if (indexer != null) {
 	String snippet = document.get(Field.SNIPPET);
 
-	summary = indexer.getSummary(document, snippet, viewFullContentURL, renderRequest, renderResponse);
+	summary = indexer.getSummary(document, snippet, null, renderRequest, renderResponse);
 }
 else if (assetRenderer != null) {
-	summary = new Summary(locale, assetRenderer.getTitle(locale), assetRenderer.getSearchSummary(locale), viewFullContentURL);
+	summary = new Summary(locale, assetRenderer.getTitle(locale), assetRenderer.getSearchSummary(locale), null);
 }
 %>
 
 <c:if test="<%= summary != null %>">
 
 	<%
-	if ((assetRendererFactory == null) && searchDisplayContext.isViewInContext()) {
-		viewURL = viewFullContentURL.toString();
-	}
-
 	viewURL = searchDisplayContext.checkViewURL(viewURL, currentURL);
 
 	boolean highlightEnabled = (Boolean)request.getAttribute("search.jsp-highlightEnabled");
