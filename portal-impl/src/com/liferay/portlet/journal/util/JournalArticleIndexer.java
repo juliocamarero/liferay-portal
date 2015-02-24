@@ -440,7 +440,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		Locale snippetLocale = getSnippetLocale(document, locale);
@@ -462,16 +462,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 		String content = getDDMContentSummary(
 			document, snippetLocale, portletRequest, portletResponse);
 
-		String articleId = document.get(Field.ARTICLE_ID);
-		String groupId = document.get(Field.GROUP_ID);
-		String version = document.get(Field.VERSION);
-
-		portletURL.setParameter("struts_action", "/journal/edit_article");
-		portletURL.setParameter("groupId", groupId);
-		portletURL.setParameter("articleId", articleId);
-		portletURL.setParameter("version", version);
-
-		return new Summary(snippetLocale, title, content, portletURL);
+		return new Summary(snippetLocale, title, content);
 	}
 
 	protected void doReindex(JournalArticle article, boolean allVersions)

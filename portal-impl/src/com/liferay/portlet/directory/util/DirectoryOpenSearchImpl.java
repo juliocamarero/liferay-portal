@@ -65,22 +65,6 @@ public class DirectoryOpenSearchImpl extends HitsOpenSearchImpl {
 	}
 
 	@Override
-	public Summary getSummary(
-			Indexer indexer, Document document, Locale locale, String snippet,
-			PortletURL portletURL)
-		throws SearchException {
-
-		Summary summary = super.getSummary(
-			indexer, document, locale, snippet, portletURL);
-
-		portletURL = summary.getPortletURL();
-
-		portletURL.setParameter("struts_action", "/directory/view_user");
-
-		return summary;
-	}
-
-	@Override
 	public String getTitle(String keywords) {
 		return TITLE + keywords;
 	}

@@ -258,19 +258,12 @@ public class MBMessageIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		String messageId = document.get(Field.ENTRY_CLASS_PK);
-
-		portletURL.setParameter(
-			"struts_action", "/message_boards/view_message");
-		portletURL.setParameter("messageId", messageId);
 
 		Summary summary = createSummary(document, Field.TITLE, Field.CONTENT);
 
 		summary.setMaxContentLength(200);
-		summary.setPortletURL(portletURL);
 
 		return summary;
 	}

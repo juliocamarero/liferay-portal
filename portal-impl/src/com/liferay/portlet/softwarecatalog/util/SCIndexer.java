@@ -137,19 +137,12 @@ public class SCIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		String productEntryId = document.get(Field.ENTRY_CLASS_PK);
-
-		portletURL.setParameter(
-			"struts_action", "/software_catalog/view_product_entry");
-		portletURL.setParameter("productEntryId", productEntryId);
 
 		Summary summary = createSummary(document, Field.TITLE, Field.CONTENT);
 
 		summary.setMaxContentLength(200);
-		summary.setPortletURL(portletURL);
 
 		return summary;
 	}

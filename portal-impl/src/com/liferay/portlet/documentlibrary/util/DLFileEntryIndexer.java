@@ -460,28 +460,12 @@ public class DLFileEntryIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		LiferayPortletURL liferayPortletURL = (LiferayPortletURL)portletURL;
-
-		liferayPortletURL.setLifecycle(PortletRequest.ACTION_PHASE);
-
-		try {
-			liferayPortletURL.setWindowState(LiferayWindowState.EXCLUSIVE);
-		}
-		catch (WindowStateException wse) {
-		}
-
-		String fileEntryId = document.get(Field.ENTRY_CLASS_PK);
-
-		portletURL.setParameter("struts_action", "/document_library/get_file");
-		portletURL.setParameter("fileEntryId", fileEntryId);
 
 		Summary summary = createSummary(document, Field.TITLE, Field.CONTENT);
 
 		summary.setMaxContentLength(200);
-		summary.setPortletURL(portletURL);
 
 		return summary;
 	}

@@ -202,20 +202,12 @@ public class WikiPageIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		Summary summary = createSummary(document, Field.TITLE, Field.CONTENT);
 
 		summary.setMaxContentLength(200);
-
-		String nodeId = document.get("nodeId");
-
-		portletURL.setParameter("struts_action", "/wiki/view");
-		portletURL.setParameter("nodeId", nodeId);
-		portletURL.setParameter("title", summary.getTitle());
-
-		summary.setPortletURL(portletURL);
 
 		return summary;
 	}

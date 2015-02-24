@@ -119,20 +119,14 @@ public class UserGroupIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		String title = document.get("name");
 
 		String content = null;
 
-		String userGroupId = document.get(Field.USER_GROUP_ID);
-
-		portletURL.setParameter(
-			"struts_action", "/users_admin/edit_user_group");
-		portletURL.setParameter("userGroupId", userGroupId);
-
-		return new Summary(title, content, portletURL);
+		return new Summary(title, content);
 	}
 
 	@Override

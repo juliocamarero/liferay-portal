@@ -197,20 +197,14 @@ public class OrganizationIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		String title = document.get("name");
 
 		String content = null;
 
-		String organizationId = document.get(Field.ORGANIZATION_ID);
-
-		portletURL.setParameter(
-			"struts_action", "/users_admin/edit_organization");
-		portletURL.setParameter("organizationId", organizationId);
-
-		return new Summary(title, content, portletURL);
+		return new Summary(title, content);
 	}
 
 	@Override

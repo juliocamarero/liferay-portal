@@ -295,7 +295,7 @@ public class UserIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		String firstName = document.get("firstName");
@@ -310,12 +310,7 @@ public class UserIndexer extends BaseIndexer {
 
 		String content = null;
 
-		String userId = document.get(Field.USER_ID);
-
-		portletURL.setParameter("struts_action", "/users_admin/edit_user");
-		portletURL.setParameter("p_u_i_d", userId);
-
-		return new Summary(title, content, portletURL);
+		return new Summary(title, content);
 	}
 
 	@Override

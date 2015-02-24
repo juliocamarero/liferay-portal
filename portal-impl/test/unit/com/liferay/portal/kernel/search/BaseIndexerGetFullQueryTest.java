@@ -215,9 +215,9 @@ public class BaseIndexerGetFullQueryTest extends PowerMockito {
 
 		@Override
 		protected Summary doGetSummary(
-			Document document, Locale locale, String snippet,
-			PortletURL portletURL, PortletRequest portletRequest,
-			PortletResponse portletResponse) throws Exception {
+				Document document, Locale locale, String snippet,
+				PortletRequest portletRequest, PortletResponse portletResponse)
+			throws Exception {
 
 			return null;
 		}

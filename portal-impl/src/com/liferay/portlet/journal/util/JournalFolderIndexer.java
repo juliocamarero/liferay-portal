@@ -132,29 +132,13 @@ public class JournalFolderIndexer extends BaseIndexer implements FolderIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet, PortletURL portletURL,
+		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
-
-		LiferayPortletURL liferayPortletURL = (LiferayPortletURL)portletURL;
-
-		liferayPortletURL.setLifecycle(PortletRequest.ACTION_PHASE);
-
-		try {
-			liferayPortletURL.setWindowState(LiferayWindowState.EXCLUSIVE);
-		}
-		catch (WindowStateException wse) {
-		}
-
-		String folderId = document.get(Field.ENTRY_CLASS_PK);
-
-		portletURL.setParameter("struts_action", "/journal/view");
-		portletURL.setParameter("folderId", folderId);
 
 		Summary summary = createSummary(
 			document, Field.TITLE, Field.DESCRIPTION);
 
 		summary.setMaxContentLength(200);
-		summary.setPortletURL(portletURL);
 
 		return summary;
 	}

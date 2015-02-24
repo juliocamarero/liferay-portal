@@ -49,8 +49,7 @@ public class BaseIndexerPostProcessor implements IndexerPostProcessor {
 
 	@Override
 	public void postProcessSummary(
-		Summary summary, Document document, Locale locale, String snippet,
-		PortletURL portletURL) {
+		Summary summary, Document document, Locale locale, String snippet) {
 	}
 
 }
