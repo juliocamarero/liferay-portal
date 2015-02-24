@@ -24,8 +24,6 @@ Document document = (Document)row.getObject();
 String className = document.get(Field.ENTRY_CLASS_NAME);
 long classPK = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
 
-String downloadURL = null;
-
 PortletURL viewFullContentURL = renderResponse.createRenderURL();
 
 viewFullContentURL.setParameter("struts_action", "/search/view_content");
@@ -51,8 +49,6 @@ if (assetRendererFactory != null) {
 	AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, classPK);
 
 	assetRenderer = assetRendererFactory.getAssetRenderer(classPK);
-
-	downloadURL = assetRenderer.getURLDownload(themeDisplay);
 
 	viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
 	viewFullContentURL.setParameter("type", assetRendererFactory.getType());
@@ -125,13 +121,13 @@ else if (assetRenderer != null) {
 				<%= summary.getHighlightedTitle() %>
 			</a>
 
-			<c:if test="<%= Validator.isNotNull(downloadURL) %>">
+			<c:if test="<%= (assetRenderer != null) && Validator.isNotNull(assetRenderer.getURLDownload(themeDisplay)) %>">
 				<liferay-ui:icon
 					iconCssClass="icon-download-alt"
 					label="<%= false %>"
 					message='<%= LanguageUtil.format(request, "download-x", HtmlUtil.escape(summary.getTitle()), false) %>'
 					method="get"
-					url="<%= downloadURL %>"
+					url="<%= assetRenderer.getURLDownload(themeDisplay) %>"
 				/>
 			</c:if>
 		</span>
