@@ -13,7 +13,7 @@
 		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
 	</route>
 	<route>
-		<pattern>/tags/{mergeTagIds:[0-9]+(,[0-9]+)*}/merge</pattern>
+		<pattern>/tags/{mergeTagIds}/merge</pattern>
 		<implicit-parameter name="mvcPath">/merge_tag.jsp</implicit-parameter>
 		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
 	</route>
