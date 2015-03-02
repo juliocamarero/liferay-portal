@@ -137,9 +137,6 @@ public class AssetSearcher extends BaseSearcher {
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
 
-		PermissionChecker permissionChecker =
-			PermissionThreadLocal.getPermissionChecker();
-
 		long[][] allTagIdsArray = _assetEntryQuery.getAllTagIdsArray();
 
 		if (allTagIdsArray.length == 0) {
@@ -152,15 +149,6 @@ public class AssetSearcher extends BaseSearcher {
 		for (long[] allTagIds : allTagIdsArray) {
 			if (allTagIds.length == 0) {
 				continue;
-			}
-
-			long[] filteredAllTagIds = AssetUtil.filterTagIds(
-				permissionChecker, allTagIds);
-
-			if (allTagIds.length != filteredAllTagIds.length) {
-				addImpossibleTerm(contextQuery, Field.ASSET_TAG_IDS);
-
-				return;
 			}
 
 			BooleanQuery tagIdsQuery = BooleanQueryFactoryUtil.create(
@@ -233,21 +221,9 @@ public class AssetSearcher extends BaseSearcher {
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
 
-		PermissionChecker permissionChecker =
-			PermissionThreadLocal.getPermissionChecker();
-
 		long[] anyTagIds = _assetEntryQuery.getAnyTagIds();
 
 		if (anyTagIds.length == 0) {
-			return;
-		}
-
-		long[] filteredAnyTagIds = AssetUtil.filterTagIds(
-			permissionChecker, anyTagIds);
-
-		if (filteredAnyTagIds.length == 0) {
-			addImpossibleTerm(contextQuery, Field.ASSET_TAG_IDS);
-
 			return;
 		}
 
