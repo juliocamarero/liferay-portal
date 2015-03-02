@@ -54,6 +54,7 @@ import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.NoSuchFileException;
 import com.liferay.portlet.documentlibrary.antivirus.AntivirusScannerException;
+import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 
 import java.awt.image.RenderedImage;
 
@@ -125,6 +126,8 @@ public class UploadImageAction extends PortletAction {
 
 					if (fileEntry.getSize() > maxFileSize) {
 						throw new FileSizeException();
+					}else {
+						validateImageSize(actionRequest,fileEntry);
 					}
 				}
 
@@ -417,7 +420,25 @@ public class UploadImageAction extends PortletAction {
 
 		PortletResponseUtil.write(mimeResponse, bytes);
 	}
+	
+	protected void validateImageSize(ActionRequest actionRequest,FileEntry fileEntry)
+			throws Exception {
 
+			String fileName = ParamUtil.getString(actionRequest, "tempImageFileName");
+
+			try {
+				byte[] bytes = FileUtil.getBytes(fileEntry.getContentStream());
+
+				DLStoreUtil.validate(fileName, true, bytes);
+				
+			}
+			catch (NoSuchFileEntryException nsfee) {
+				throw new UploadException(nsfee);
+			}
+			catch (NoSuchRepositoryException nsre) {
+				throw new UploadException(nsre);
+			}
+		}
 	private static final Log _log = LogFactoryUtil.getLog(
 		UploadImageAction.class);
 
