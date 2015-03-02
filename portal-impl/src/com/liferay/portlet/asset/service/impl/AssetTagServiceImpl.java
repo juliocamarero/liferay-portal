@@ -19,23 +19,19 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
-import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.model.AssetTagDisplay;
 import com.liferay.portlet.asset.service.base.AssetTagServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetPermission;
-import com.liferay.portlet.asset.service.permission.AssetTagPermission;
 import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.util.Autocomplete;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -66,18 +62,12 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 
 	@Override
 	public void deleteTag(long tagId) throws PortalException {
-		AssetTagPermission.check(
-			getPermissionChecker(), tagId, ActionKeys.DELETE);
-
 		assetTagLocalService.deleteTag(tagId);
 	}
 
 	@Override
 	public void deleteTags(long[] tagIds) throws PortalException {
 		for (long tagId : tagIds) {
-			AssetTagPermission.check(
-				getPermissionChecker(), tagId, ActionKeys.DELETE);
-
 			assetTagLocalService.deleteTag(tagId);
 		}
 	}
@@ -177,9 +167,6 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 
 	@Override
 	public AssetTag getTag(long tagId) throws PortalException {
-		AssetTagPermission.check(
-			getPermissionChecker(), tagId, ActionKeys.VIEW);
-
 		return assetTagLocalService.getTag(tagId);
 	}
 
@@ -222,7 +209,7 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 	public List<AssetTag> getTags(String className, long classPK)
 		throws PortalException {
 
-		return filterTags(assetTagLocalService.getTags(className, classPK));
+		return assetTagLocalService.getTags(className, classPK);
 	}
 
 	@Override
@@ -248,12 +235,6 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 
 	@Override
 	public void mergeTags(long fromTagId, long toTagId) throws PortalException {
-		AssetTagPermission.check(
-			getPermissionChecker(), fromTagId, ActionKeys.VIEW);
-
-		AssetTagPermission.check(
-			getPermissionChecker(), toTagId, ActionKeys.UPDATE);
-
 		assetTagLocalService.mergeTags(fromTagId, toTagId);
 	}
 
@@ -283,33 +264,8 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 			long tagId, String name, ServiceContext serviceContext)
 		throws PortalException {
 
-		AssetTagPermission.check(
-			getPermissionChecker(), tagId, ActionKeys.UPDATE);
-
 		return assetTagLocalService.updateTag(
 			getUserId(), tagId, name, serviceContext);
-	}
-
-	protected List<AssetTag> filterTags(List<AssetTag> tags)
-		throws PortalException {
-
-		PermissionChecker permissionChecker = getPermissionChecker();
-
-		tags = ListUtil.copy(tags);
-
-		Iterator<AssetTag> itr = tags.iterator();
-
-		while (itr.hasNext()) {
-			AssetTag tag = itr.next();
-
-			if (!AssetTagPermission.contains(
-					permissionChecker, tag, ActionKeys.VIEW)) {
-
-				itr.remove();
-			}
-		}
-
-		return tags;
 	}
 
 }
