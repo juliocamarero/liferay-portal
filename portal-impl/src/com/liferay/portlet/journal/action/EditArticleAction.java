@@ -269,12 +269,14 @@ public class EditArticleAction extends PortletAction {
 					 e instanceof StorageFieldRequiredException) {
 
 				SessionErrors.add(actionRequest, e.getClass());
+				SessionErrors.add(actionRequest, "ignoreRequestValue", false);
 			}
 			else if (e instanceof AssetCategoryException ||
 					 e instanceof AssetTagException ||
 					 e instanceof LocaleException) {
 
 				SessionErrors.add(actionRequest, e.getClass(), e);
+				SessionErrors.add(actionRequest, "ignoreRequestValue", false);
 			}
 			else {
 				throw e;
