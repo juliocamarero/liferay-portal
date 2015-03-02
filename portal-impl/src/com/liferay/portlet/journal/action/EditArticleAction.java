@@ -124,13 +124,6 @@ public class EditArticleAction extends PortletAction {
 					WebKeys.UPLOAD_EXCEPTION);
 
 			if (uploadException != null) {
-				if (uploadException.isExceededLiferayFileItemSizeLimit()) {
-					throw new LiferayFileItemException();
-				}
-				else if (uploadException.isExceededSizeLimit()) {
-					throw new ArticleContentSizeException();
-				}
-
 				throw new PortalException(uploadException.getCause());
 			}
 			else if (Validator.isNull(cmd)) {
@@ -159,6 +152,11 @@ public class EditArticleAction extends PortletAction {
 			}
 			else if (cmd.equals(Constants.UNSUBSCRIBE)) {
 				unsubscribeStructure(actionRequest);
+			}
+			else if (cmd.equals(Constants.CHANGE_STRUCTURE)) {
+				SessionMessages.add(actionRequest, "structureChanged", true);
+
+				return;
 			}
 
 			String redirect = ParamUtil.getString(actionRequest, "redirect");
