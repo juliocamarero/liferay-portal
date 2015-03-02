@@ -76,21 +76,6 @@ public class AssetTagLocalServiceUtil {
 		return getService().addTag(userId, name, serviceContext);
 	}
 
-	public static void addTagResources(
-		com.liferay.portlet.asset.model.AssetTag tag,
-		boolean addGroupPermissions, boolean addGuestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		getService()
-			.addTagResources(tag, addGroupPermissions, addGuestPermissions);
-	}
-
-	public static void addTagResources(
-		com.liferay.portlet.asset.model.AssetTag tag,
-		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		getService().addTagResources(tag, groupPermissions, guestPermissions);
-	}
-
 	/**
 	* Returns the tags matching the group and names, creating new tags with the
 	* names if the group doesn't already have them.
