@@ -46,7 +46,10 @@ public class UpgradeResourcePermission extends UpgradeProcess {
 		}
 		catch (SQLException sqle) {
 			if (_log.isWarnEnabled()) {
-				_log.warn(sqle, sqle);
+				_log.warn(
+					"Unable to remove resource permission " +
+						AssetTag.class.getName(),
+					sqle);
 			}
 		}
 		finally {
