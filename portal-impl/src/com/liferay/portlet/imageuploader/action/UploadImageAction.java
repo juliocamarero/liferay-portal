@@ -17,6 +17,7 @@ package com.liferay.portlet.imageuploader.action;
 import com.liferay.portal.ImageTypeException;
 import com.liferay.portal.NoSuchRepositoryException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.flash.FlashMagicBytesUtil;
 import com.liferay.portal.kernel.image.ImageBag;
 import com.liferay.portal.kernel.image.ImageToolUtil;
@@ -54,11 +55,12 @@ import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.NoSuchFileException;
 import com.liferay.portlet.documentlibrary.antivirus.AntivirusScannerException;
-import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
+import com.liferay.portlet.documentlibrary.util.DLValidatorUtil;
 
 import java.awt.image.RenderedImage;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.portlet.ActionRequest;
@@ -124,11 +126,7 @@ public class UploadImageAction extends PortletAction {
 				if (imageUploaded) {
 					fileEntry = saveTempImageFileEntry(actionRequest);
 
-					if (fileEntry.getSize() > maxFileSize) {
-						throw new FileSizeException();
-					}else {
-						validateImageSize(actionRequest,fileEntry);
-					}
+					validateImageSize(actionRequest, fileEntry, maxFileSize);
 				}
 
 				SessionMessages.add(actionRequest, "imageUploaded", fileEntry);
@@ -420,25 +418,30 @@ public class UploadImageAction extends PortletAction {
 
 		PortletResponseUtil.write(mimeResponse, bytes);
 	}
-	
-	protected void validateImageSize(ActionRequest actionRequest,FileEntry fileEntry)
-			throws Exception {
 
-			String fileName = ParamUtil.getString(actionRequest, "tempImageFileName");
+	protected void validateImageSize(
+			ActionRequest actionRequest, FileEntry fileEntry, long maxFileSize)
+		throws PortalException {
 
-			try {
-				byte[] bytes = FileUtil.getBytes(fileEntry.getContentStream());
-
-				DLStoreUtil.validate(fileName, true, bytes);
-				
-			}
-			catch (NoSuchFileEntryException nsfee) {
-				throw new UploadException(nsfee);
-			}
-			catch (NoSuchRepositoryException nsre) {
-				throw new UploadException(nsre);
-			}
+		if (fileEntry.getSize() > maxFileSize) {
+			throw new FileSizeException();
 		}
+
+		String fileName = ParamUtil.getString(
+			actionRequest, "tempImageFileName");
+
+		byte[] bytes = null;
+
+		try {
+			bytes = FileUtil.getBytes(fileEntry.getContentStream());
+		}
+		catch (IOException ioe) {
+			throw new SystemException(ioe);
+		}
+
+		DLValidatorUtil.validateFileSize(fileName, bytes);
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		UploadImageAction.class);
 
