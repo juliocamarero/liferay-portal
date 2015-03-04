@@ -23,7 +23,7 @@ AssetTag tag = (AssetTag)row.getObject();
 %>
 
 <liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
-	<c:if test="<%= AssetTagPermission.contains(permissionChecker, tag, ActionKeys.UPDATE) %>">
+	<c:if test="<%= AssetPermission.contains(themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(), ActionKeys.ADD_TAG) %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcPath" value="/edit_tag.jsp" />
 			<portlet:param name="tagId" value="<%= String.valueOf(tag.getTagId()) %>" />
@@ -35,9 +35,7 @@ AssetTag tag = (AssetTag)row.getObject();
 			message="edit"
 			url="<%= editURL %>"
 		/>
-	</c:if>
 
-	<c:if test="<%= AssetTagPermission.contains(permissionChecker, tag, ActionKeys.DELETE) %>">
 		<portlet:actionURL name="deleteTag" var="deleteURL">
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="tagId" value="<%= String.valueOf(tag.getTagId()) %>" />

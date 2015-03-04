@@ -88,45 +88,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 
 		assetTagPersistence.update(tag);
 
-		// Resources
-
-		if (serviceContext.isAddGroupPermissions() ||
-			serviceContext.isAddGuestPermissions()) {
-
-			addTagResources(
-				tag, serviceContext.isAddGroupPermissions(),
-				serviceContext.isAddGuestPermissions());
-		}
-		else {
-			addTagResources(
-				tag, serviceContext.getGroupPermissions(),
-				serviceContext.getGuestPermissions());
-		}
-
 		return tag;
-	}
-
-	@Override
-	public void addTagResources(
-			AssetTag tag, boolean addGroupPermissions,
-			boolean addGuestPermissions)
-		throws PortalException {
-
-		resourceLocalService.addResources(
-			tag.getCompanyId(), tag.getGroupId(), tag.getUserId(),
-			AssetTag.class.getName(), tag.getTagId(), false,
-			addGroupPermissions, addGuestPermissions);
-	}
-
-	@Override
-	public void addTagResources(
-			AssetTag tag, String[] groupPermissions, String[] guestPermissions)
-		throws PortalException {
-
-		resourceLocalService.addModelResources(
-			tag.getCompanyId(), tag.getGroupId(), tag.getUserId(),
-			AssetTag.class.getName(), tag.getTagId(), groupPermissions,
-			guestPermissions);
 	}
 
 	/**

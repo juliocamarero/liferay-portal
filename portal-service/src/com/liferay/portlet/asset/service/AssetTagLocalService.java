@@ -72,14 +72,6 @@ public interface AssetTagLocalService extends BaseLocalService,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public void addTagResources(com.liferay.portlet.asset.model.AssetTag tag,
-		boolean addGroupPermissions, boolean addGuestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException;
-
-	public void addTagResources(com.liferay.portlet.asset.model.AssetTag tag,
-		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException;
-
 	/**
 	* Returns the tags matching the group and names, creating new tags with the
 	* names if the group doesn't already have them.
