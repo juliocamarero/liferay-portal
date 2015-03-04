@@ -48,6 +48,8 @@ if (ddmFields != null) {
 
 	availableLocales = availableLocalesSet.toArray(new Locale[availableLocalesSet.size()]);
 }
+
+boolean ignoreRequestValue = GetterUtil.getBoolean(SessionErrors.get(liferayPortletRequest, "ignoreRequestValue"), true);
 %>
 
 <liferay-ui:error-marker key="errorSection" value="content" />
@@ -179,13 +181,13 @@ if (ddmFields != null) {
 		</div>
 
 		<div class="journal-article-general-fields">
-			<aui:input autoFocus="<%= (((article != null) && !article.isNew()) && !PropsValues.JOURNAL_ARTICLE_FORCE_AUTOGENERATE_ID && windowState.equals(WindowState.MAXIMIZED)) || windowState.equals(LiferayWindowState.POP_UP) %>" name="title" wrapperCssClass="article-content-title">
+			<aui:input autoFocus="<%= (((article != null) && !article.isNew()) && !PropsValues.JOURNAL_ARTICLE_FORCE_AUTOGENERATE_ID && windowState.equals(WindowState.MAXIMIZED)) || windowState.equals(LiferayWindowState.POP_UP) %>" ignoreRequestValue="<%= ignoreRequestValue %>" name="title" wrapperCssClass="article-content-title">
 				<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
 					<aui:validator name="required" />
 				</c:if>
 			</aui:input>
 
-			<aui:input label="summary" name="description" wrapperCssClass="article-content-description" />
+			<aui:input ignoreRequestValue="<%= ignoreRequestValue %>" label="summary" name="description" wrapperCssClass="article-content-description" />
 		</div>
 
 		<div class="journal-article-container" id="<portlet:namespace />journalArticleContainer">
