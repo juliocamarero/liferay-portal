@@ -16,6 +16,8 @@ package com.liferay.taglib.ui;
 
 import com.liferay.taglib.util.IncludeTag;
 
+import javax.portlet.PortletURL;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -23,8 +25,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RestoreEntryTag extends IncludeTag {
 
-	public void setDuplicateEntryAction(String duplicateEntryAction) {
-		_duplicateEntryAction = duplicateEntryAction;
+	public void setCheckEntryURL(PortletURL checkEntryURL) {
+		_checkEntryURL = checkEntryURL;
+	}
+
+	public void setDuplicateEntryURL(PortletURL duplicateEntryURL) {
+		_duplicateEntryURL = duplicateEntryURL;
 	}
 
 	public void setOverrideMessage(String overrideMessage) {
@@ -35,16 +41,12 @@ public class RestoreEntryTag extends IncludeTag {
 		_renameMessage = renameMessage;
 	}
 
-	public void setRestoreEntryAction(String restoreEntryAction) {
-		_restoreEntryAction = restoreEntryAction;
-	}
-
 	@Override
 	protected void cleanUp() {
-		_duplicateEntryAction = _DUPLICATE_ENTRY_ACTION;
+		_checkEntryURL = null;
+		_duplicateEntryURL = null;
 		_overrideMessage = _OVERRIDE_MESSAGE;
 		_renameMessage = _RENAME_MESSAGE;
-		_restoreEntryAction = _RESTORE_ENTRY_ACTION;
 	}
 
 	@Override
@@ -60,20 +62,16 @@ public class RestoreEntryTag extends IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"liferay-ui:restore-entry:duplicateEntryAction",
-			_duplicateEntryAction);
+			"liferay-ui:restore-entry:checkEntryURL", _checkEntryURL);
+		request.setAttribute(
+			"liferay-ui:restore-entry:duplicateEntryURL", _duplicateEntryURL);
 		request.setAttribute(
 			"liferay-ui:restore-entry:overrideMessage", _overrideMessage);
 		request.setAttribute(
 			"liferay-ui:restore-entry:renameMessage", _renameMessage);
-		request.setAttribute(
-			"liferay-ui:restore-entry:restoreEntryAction", _restoreEntryAction);
 	}
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
-
-	private static final String _DUPLICATE_ENTRY_ACTION =
-		"/trash/restore_entry";
 
 	private static final String _OVERRIDE_MESSAGE =
 		"overwrite-the-existing-entry-with-the-one-from-the-recycle-bin";
@@ -84,11 +82,9 @@ public class RestoreEntryTag extends IncludeTag {
 	private static final String _RENAME_MESSAGE =
 		"keep-both-entries-and-rename-the-entry-from-the-recycle-bin-as";
 
-	private static final String _RESTORE_ENTRY_ACTION = "/trash/edit_entry";
-
-	private String _duplicateEntryAction = _DUPLICATE_ENTRY_ACTION;
+	private PortletURL _checkEntryURL = null;
+	private PortletURL _duplicateEntryURL = null;
 	private String _overrideMessage = _OVERRIDE_MESSAGE;
 	private String _renameMessage = _RENAME_MESSAGE;
-	private String _restoreEntryAction = _RESTORE_ENTRY_ACTION;
 
 }
