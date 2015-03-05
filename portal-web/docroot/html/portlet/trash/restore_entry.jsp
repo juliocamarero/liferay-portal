@@ -19,8 +19,6 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-String restoreEntryAction = ParamUtil.getString(request, "restoreEntryAction", "/trash/edit_entry");
-
 long trashEntryId = ParamUtil.getLong(request, "trashEntryId");
 
 String className = ParamUtil.getString(request, "className");
@@ -52,9 +50,7 @@ String renameMessage = ParamUtil.getString(request, "renameMessage");
 	<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(oldName)} %>" key="an-entry-with-name-x-already-exists" translateArguments="<%= false %>" />
 </div>
 
-<portlet:actionURL var="restoreActionURL">
-	<portlet:param name="struts_action" value="<%= restoreEntryAction %>" />
-</portlet:actionURL>
+<portlet:actionURL name="restoreEntry" var="restoreActionURL" />
 
 <aui:form action="<%= restoreActionURL %>" enctype="multipart/form-data" method="post" name="restoreTrashEntryFm" onSubmit="event.preventDefault();">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />

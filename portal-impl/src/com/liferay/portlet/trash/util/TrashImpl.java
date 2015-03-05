@@ -445,7 +445,8 @@ public class TrashImpl implements Trash {
 			request, PortletKeys.TRASH, layout.getLayoutId(),
 			PortletRequest.RENDER_PHASE);
 
-		portletURL.setParameter("struts_action", "/trash/view_content");
+		portletURL.setParameter(
+			"mvcPath", "/html/portlet/trash/view_content.jsp");
 		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
 
 		TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
