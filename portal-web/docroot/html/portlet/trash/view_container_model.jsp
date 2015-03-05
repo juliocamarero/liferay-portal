@@ -54,7 +54,7 @@ if (rootContainerModelMovable) {
 
 PortletURL containerURL = renderResponse.createRenderURL();
 
-containerURL.setParameter("struts_action", "/trash/view_container_model");
+containerURL.setParameter("mvcPath", "/html/portlet/trash/view_container_model.jsp");
 containerURL.setParameter("redirect", redirect);
 containerURL.setParameter("backURL", currentURL);
 containerURL.setParameter("className", className);
