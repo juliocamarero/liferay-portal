@@ -7,11 +7,15 @@ AUI.add(
 
 		var RESPONSE_DATA = 'responseData';
 
-		var STR_RESTORE_ENTRY_URL = 'restoreEntryURL';
+		var STR_CHECK_ENTRY_URL = 'checkEntryURL';
 
 		var RestoreEntry = A.Component.create(
 			{
 				ATTRS: {
+					checkEntryURL: {
+						validator: isString
+					},
+
 					duplicateEntryURL: {
 						validator: isString
 					},
@@ -25,10 +29,6 @@ AUI.add(
 					},
 
 					renameMessage:{
-						validator: isString
-					},
-
-					restoreEntryURL: {
 						validator: isString
 					}
 				},
@@ -118,7 +118,7 @@ AUI.add(
 						var uri = event.uri;
 
 						A.io.request(
-							instance.get(STR_RESTORE_ENTRY_URL),
+							instance.get(STR_CHECK_ENTRY_URL),
 							{
 								after: {
 									failure: A.rbind('_afterCheckEntryFailure', instance),
@@ -204,7 +204,7 @@ AUI.add(
 						}
 						else {
 							A.io.request(
-								instance.get(STR_RESTORE_ENTRY_URL),
+								instance.get(STR_CHECK_ENTRY_URL),
 								{
 									after: {
 										failure: A.rbind('_afterPopupCheckEntryFailure', instance),
