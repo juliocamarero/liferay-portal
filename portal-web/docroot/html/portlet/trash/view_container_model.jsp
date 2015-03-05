@@ -30,13 +30,17 @@ TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
 
 TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
 
-ContainerModel containerModel = (ContainerModel)request.getAttribute(WebKeys.TRASH_CONTAINER_MODEL);
+String containerModelClassName = ParamUtil.getString(request, "containerModelClassName", trashHandler.getContainerModelClassName(classPK));
 
-String containerModelClassName = trashHandler.getContainerModelClassName(classPK);
+long containerModelId = ParamUtil.getLong(request, "containerModelId");
 
-long containerModelId = 0;
+TrashHandler containerTrashHandler = TrashHandlerRegistryUtil.getTrashHandler(containerModelClassName);
 
-if (containerModel != null) {
+ContainerModel containerModel = null;
+
+if (containerModelId > 0) {
+	containerModel = containerTrashHandler.getContainerModel(containerModelId);
+
 	containerModelClassName = containerModel.getModelClassName();
 
 	containerModelId = containerModel.getContainerModelId();
