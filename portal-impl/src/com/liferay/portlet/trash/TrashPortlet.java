@@ -14,14 +14,52 @@
 
 package com.liferay.portlet.trash;
 
+import com.liferay.portal.TrashPermissionException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.trash.TrashHandler;
+import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
+import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ObjectValuePair;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.trash.action.ActionUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
+import com.liferay.portlet.trash.util.TrashUtil;
+
+import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 /**
  * @author Eudaldo Alonso
  */
 public class TrashPortlet extends MVCPortlet {
 
-	public void deleteEntries(ActionRequest actionRequest) throws Exception {
+	public void deleteEntries(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
 		if (trashEntryId > 0) {
@@ -47,9 +85,14 @@ public class TrashPortlet extends MVCPortlet {
 		if (Validator.isNotNull(className) && (classPK > 0)) {
 			TrashEntryServiceUtil.deleteEntry(className, classPK);
 		}
+
+		sendRedirect(actionRequest, actionResponse);
 	}
 
-	public void emptyTrash(ActionRequest actionRequest) throws Exception {
+	public void emptyTrash(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -59,8 +102,8 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntryServiceUtil.deleteEntries(groupId);
 	}
 
-	public List<ObjectValuePair<String, Long>> moveEntry(
-			ActionRequest actionRequest)
+	public void moveEntry(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		long containerModelId = ParamUtil.getLong(
@@ -74,124 +117,58 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntryServiceUtil.moveEntry(
 			className, classPK, containerModelId, serviceContext);
 
-		return getEntryOVPs(className, classPK);
+		addRestoreData(actionRequest, getEntryOVPs(className, classPK));
+
+		sendRedirect(actionRequest, actionResponse);
 	}
 
-	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+	public void restoreEntries(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-		try {
-			List<ObjectValuePair<String, Long>> entryOVPs = null;
-
-			if (cmd.equals(Constants.CHECK)) {
-				JSONObject jsonObject = ActionUtil.checkEntry(actionRequest);
-
-				writeJSON(actionRequest, actionResponse, jsonObject);
-
-				return;
-			}
-			else if (cmd.equals(Constants.DELETE)) {
-				deleteEntries(actionRequest);
-			}
-			else if (cmd.equals(Constants.EMPTY_TRASH)) {
-				emptyTrash(actionRequest);
-			}
-			else if (cmd.equals(Constants.MOVE)) {
-				entryOVPs = moveEntry(actionRequest);
-			}
-			else if (cmd.equals(Constants.RENAME)) {
-				entryOVPs = restoreRename(actionRequest);
-			}
-			else if (cmd.equals(Constants.RESTORE)) {
-				entryOVPs = restoreEntries(actionRequest);
-			}
-			else if (cmd.equals(Constants.OVERRIDE)) {
-				entryOVPs = restoreOverride(actionRequest);
-			}
-
-			if (cmd.equals(Constants.RENAME) || cmd.equals(Constants.RESTORE) ||
-				cmd.equals(Constants.OVERRIDE) || cmd.equals(Constants.MOVE)) {
-
-				addRestoreData(actionRequest, entryOVPs);
-			}
-
-			String redirect = PortalUtil.escapeRedirect(
-				ParamUtil.getString(actionRequest, "redirect"));
-
-			sendRedirect(actionRequest, actionResponse, redirect);
-		}
-		catch (Exception e) {
-			if (e instanceof RestoreEntryException) {
-				RestoreEntryException ree = (RestoreEntryException)e;
-
-				SessionErrors.add(actionRequest, ree.getClass(), ree);
-			}
-			else if (e instanceof TrashPermissionException) {
-				TrashPermissionException tpe = (TrashPermissionException)e;
-
-				SessionErrors.add(actionRequest, tpe.getClass(), tpe);
-			}
-			else {
-				SessionErrors.add(actionRequest, e.getClass());
-			}
-
-			WindowState windowState = actionRequest.getWindowState();
-
-			if (windowState.equals(LiferayWindowState.EXCLUSIVE) ||
-				windowState.equals(LiferayWindowState.POP_UP)) {
-
-				sendRedirect(actionRequest, actionResponse);
-			}
-		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		return actionMapping.findForward(
-			getForward(renderRequest, "portlet.trash.view"));
-	}
-
-	public List<ObjectValuePair<String, Long>> restoreEntries(
-			ActionRequest actionRequest)
-		throws Exception {
+		List<ObjectValuePair<String, Long>> entryOVPs = new ArrayList<>();
 
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
 
 		if (trashEntryId > 0) {
 			TrashEntry entry = TrashEntryServiceUtil.restoreEntry(trashEntryId);
 
-			return getEntryOVPs(entry.getClassName(), entry.getClassPK());
+			entryOVPs = getEntryOVPs(entry.getClassName(), entry.getClassPK());
+		}
+		else {
+			long[] restoreEntryIds = StringUtil.split(
+				ParamUtil.getString(actionRequest, "restoreTrashEntryIds"), 0L);
+
+			for (long restoreEntryId : restoreEntryIds) {
+				TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
+					restoreEntryId);
+
+				entryOVPs.addAll(
+					getEntryOVPs(entry.getClassName(), entry.getClassPK()));
+			}
 		}
 
-		long[] restoreEntryIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "restoreTrashEntryIds"), 0L);
+		addRestoreData(actionRequest, entryOVPs);
 
-		List<ObjectValuePair<String, Long>> entryOVPs = new ArrayList<>();
-
-		for (long restoreEntryId : restoreEntryIds) {
-			TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
-				restoreEntryId);
-
-			entryOVPs.addAll(
-				getEntryOVPs(entry.getClassName(), entry.getClassPK()));
-		}
-
-		return entryOVPs;
+		sendRedirect(actionRequest, actionResponse);
 	}
 
-	public List<ObjectValuePair<String, Long>> restoreOverride(
-			ActionRequest actionRequest)
+	public void restoreEntry(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
+		if (cmd.equals(Constants.RENAME)) {
+			restoreRename(actionRequest, actionResponse);
+		}
+		else if (cmd.equals(Constants.OVERRIDE)) {
+			restoreOverride(actionRequest, actionResponse);
+		}
+	}
+
+	public void restoreOverride(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
@@ -202,11 +179,15 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
 			trashEntryId, duplicateEntryId, null);
 
-		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
+		addRestoreData(
+			actionRequest,
+			getEntryOVPs(entry.getClassName(), entry.getClassPK()));
+
+		sendRedirect(actionRequest, actionResponse);
 	}
 
-	public List<ObjectValuePair<String, Long>> restoreRename(
-			ActionRequest actionRequest)
+	public void restoreRename(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
@@ -225,7 +206,33 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntry entry = TrashEntryServiceUtil.restoreEntry(
 			trashEntryId, 0, newName);
 
-		return getEntryOVPs(entry.getClassName(), entry.getClassPK());
+		addRestoreData(
+			actionRequest,
+			getEntryOVPs(entry.getClassName(), entry.getClassPK()));
+
+		sendRedirect(actionRequest, actionResponse);
+	}
+
+	@Override
+	public void serveResource(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+		throws IOException, PortletException {
+
+		String resourceID = GetterUtil.getString(
+			resourceRequest.getResourceID());
+
+		if (resourceID.equals("checkEntry")) {
+			try {
+				JSONObject jsonObject = ActionUtil.checkEntry(resourceRequest);
+
+				writeJSON(resourceRequest, resourceResponse, jsonObject);
+			}
+			catch (PortalException e) {
+			}
+		}
+		else {
+			super.serveResource(resourceRequest, resourceResponse);
+		}
 	}
 
 	protected void addRestoreData(
@@ -292,8 +299,6 @@ public class TrashPortlet extends MVCPortlet {
 			actionRequest,
 			PortalUtil.getPortletId(actionRequest) +
 				SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
-
-		hideDefaultSuccessMessage(actionRequest);
 	}
 
 	protected List<ObjectValuePair<String, Long>> getEntryOVPs(
@@ -307,6 +312,17 @@ public class TrashPortlet extends MVCPortlet {
 		entryOVPs.add(entryOVP);
 
 		return entryOVPs;
+	}
+
+	@Override
+	protected boolean isSessionErrorException(Throwable cause) {
+		if (cause instanceof RestoreEntryException ||
+			cause instanceof TrashPermissionException) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
