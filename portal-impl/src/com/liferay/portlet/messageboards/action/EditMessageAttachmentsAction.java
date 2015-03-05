@@ -119,7 +119,7 @@ public class EditMessageAttachmentsAction extends PortletAction {
 	protected void emptyTrash(ActionRequest actionRequest) throws Exception {
 		long messageId = ParamUtil.getLong(actionRequest, "messageId");
 
-		MBMessageServiceUtil.deleteMessageAttachments(messageId);
+		MBMessageServiceUtil.emptyMessageAttachments(messageId);
 	}
 
 }
