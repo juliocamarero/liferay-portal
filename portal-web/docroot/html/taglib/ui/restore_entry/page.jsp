@@ -24,7 +24,7 @@ String restoreEntryAction = (String)request.getAttribute("liferay-ui:restore-ent
 %>
 
 <aui:script use="liferay-restore-entry">
-	<portlet:actionURL var="restoreEntryURL">
+	<portlet:actionURL var="checkEntryURL">
 		<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.CHECK %>" />
 		<portlet:param name="struts_action" value="<%= restoreEntryAction %>" />
 	</portlet:actionURL>
@@ -37,11 +37,11 @@ String restoreEntryAction = (String)request.getAttribute("liferay-ui:restore-ent
 
 	new Liferay.RestoreEntry(
 		{
+			checkEntryURL: '<%= checkEntryURL %>',
 			duplicateEntryURL: '<%= duplicateEntryURL %>',
 			namespace: '<portlet:namespace />',
 			overrideMessage: '<%= overrideMessage %>',
-			renameMessage: '<%= renameMessage %>',
-			restoreEntryURL: '<%= restoreEntryURL %>'
+			renameMessage: '<%= renameMessage %>'
 		}
 	);
 </aui:script>
