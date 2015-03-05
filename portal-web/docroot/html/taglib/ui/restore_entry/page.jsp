@@ -17,28 +17,38 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
-String duplicateEntryAction = (String)request.getAttribute("liferay-ui:restore-entry:duplicateEntryAction");
+PortletURL checkEntryURL = (PortletURL)request.getAttribute("liferay-ui:restore-entry:checkEntryURL");
+PortletURL duplicateEntryURL = (PortletURL)request.getAttribute("liferay-ui:restore-entry:duplicateEntryURL");
 String overrideMessage = (String)request.getAttribute("liferay-ui:restore-entry:overrideMessage");
 String renameMessage = (String)request.getAttribute("liferay-ui:restore-entry:renameMessage");
-String restoreEntryAction = (String)request.getAttribute("liferay-ui:restore-entry:restoreEntryAction");
 %>
 
 <aui:script use="liferay-restore-entry">
-	<portlet:actionURL var="checkEntryURL">
-		<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.CHECK %>" />
-		<portlet:param name="struts_action" value="<%= restoreEntryAction %>" />
-	</portlet:actionURL>
+	<c:if test="<%= Validator.isNull(checkEntryURL) %>">
+		<liferay-portlet:resourceURL id="checkEntry" plid="<%= PortalUtil.getControlPanelPlid(company.getCompanyId()) %>" portletName="<%= PortletKeys.TRASH %>" varImpl="portletURL" />
 
-	<portlet:renderURL var="duplicateEntryURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-		<portlet:param name="struts_action" value="<%= duplicateEntryAction %>" />
-		<portlet:param name="redirect" value="<%= currentURL %>" />
-		<portlet:param name="restoreEntryAction" value="<%= restoreEntryAction %>" />
-	</portlet:renderURL>
+		<%
+		checkEntryURL = portletURL;
+		%>
+
+	</c:if>
+
+	<c:if test="<%= Validator.isNull(duplicateEntryURL) %>">
+		<liferay-portlet:renderURL plid="<%= PortalUtil.getControlPanelPlid(company.getCompanyId()) %>" portletName="<%= PortletKeys.TRASH %>" varImpl="portletURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+			<portlet:param name="mvcPath" value="/html/portlet/trash/restore_entry.jsp" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+		</liferay-portlet:renderURL>
+
+		<%
+		duplicateEntryURL = portletURL;
+		%>
+
+	</c:if>
 
 	new Liferay.RestoreEntry(
 		{
-			checkEntryURL: '<%= checkEntryURL %>',
-			duplicateEntryURL: '<%= duplicateEntryURL %>',
+			checkEntryURL: '<%= checkEntryURL.toString() %>',
+			duplicateEntryURL: '<%= duplicateEntryURL.toString() %>',
 			namespace: '<portlet:namespace />',
 			overrideMessage: '<%= overrideMessage %>',
 			renameMessage: '<%= renameMessage %>'
