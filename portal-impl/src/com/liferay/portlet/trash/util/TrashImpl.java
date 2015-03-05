@@ -15,7 +15,6 @@
 package com.liferay.portlet.trash.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -94,7 +93,7 @@ public class TrashImpl implements Trash {
 
 		addBreadcrumbEntries(
 			request, liferayPortletResponse, className, classPK, "classPK",
-			containerModelURL);
+			containerModelURL, true);
 	}
 
 	@Override
@@ -128,7 +127,7 @@ public class TrashImpl implements Trash {
 
 		addBreadcrumbEntries(
 			request, liferayPortletResponse, className, classPK,
-			"containerModelId", containerModelURL);
+			"containerModelId", containerModelURL, false);
 	}
 
 	@Override
@@ -507,7 +506,8 @@ public class TrashImpl implements Trash {
 	protected void addBreadcrumbEntries(
 			HttpServletRequest request,
 			LiferayPortletResponse liferayPortletResponse, String className,
-			long classPK, String paramName, PortletURL containerModelURL)
+			long classPK, String paramName, PortletURL containerModelURL,
+			boolean checkInTrashContainers)
 		throws PortalException, PortletException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
@@ -515,12 +515,6 @@ public class TrashImpl implements Trash {
 
 		PortletURL portletURL = PortletURLUtil.clone(
 			containerModelURL, liferayPortletResponse);
-
-		portletURL.setParameter("struts_action", "/trash/view");
-
-		PortalUtil.addPortletBreadcrumbEntry(
-			request, LanguageUtil.get(themeDisplay.getLocale(), "recycle-bin"),
-			portletURL.toString());
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			className);
@@ -535,13 +529,12 @@ public class TrashImpl implements Trash {
 				TrashHandlerRegistryUtil.getTrashHandler(
 					containerModel.getModelClassName());
 
-			if (!containerModelTrashHandler.isInTrash(
+			if (checkInTrashContainers &&
+				!containerModelTrashHandler.isInTrash(
 					containerModel.getContainerModelId())) {
 
 				continue;
 			}
-
-			portletURL.setParameter("struts_action", "/trash/view_content");
 
 			portletURL.setParameter(
 				paramName,

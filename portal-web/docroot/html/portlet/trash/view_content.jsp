@@ -47,8 +47,13 @@
 
 	TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
 
+	PortletURL portletURL = renderResponse.createRenderURL();
+
+	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(locale, "recycle-bin"), portletURL.toString());
+
 	PortletURL containerModelURL = renderResponse.createRenderURL();
 
+	containerModelURL.setParameter("mvcPath", "/html/portlet/trash/view_content.jsp");
 	containerModelURL.setParameter("redirect", redirect);
 	containerModelURL.setParameter("className", trashHandler.getContainerModelClassName(classPK));
 
