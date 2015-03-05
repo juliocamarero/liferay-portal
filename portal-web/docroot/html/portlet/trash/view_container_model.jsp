@@ -142,7 +142,7 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, liferayPortletResponse, co
 
 			<liferay-ui:search-container-column-text
 				name='<%= LanguageUtil.format(request, "num-of-x", curContainerModelTrashHandler.getSubcontainerModelName()) %>'
-				value="<%= String.valueOf(curContainerModelTrashHandler.getContainerModelsCount(classPK, curContainerModelId)) %>"
+				value="<%= String.valueOf(curContainerModelTrashHandler.getContainerModelsCount(curContainerModelId, curContainerModelId)) %>"
 			/>
 
 			<liferay-ui:search-container-column-text>
