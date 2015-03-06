@@ -22,6 +22,8 @@ JournalArticle article = (JournalArticle)request.getAttribute(WebKeys.JOURNAL_AR
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
 
 Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+
+boolean structureChanged = GetterUtil.getBoolean(SessionMessages.get(renderRequest, "structureChanged"));
 %>
 
 <c:choose>
@@ -33,7 +35,16 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 	<c:otherwise>
 
 		<%
-		String layoutUuid = BeanParamUtil.getString(article, request, "layoutUuid");
+		String layoutUuid = ParamUtil.getString(request, "layoutUuid");
+
+		if (structureChanged) {
+			if (article != null) {
+				layoutUuid = article.getLayoutUuid();
+			}
+			else {
+				layoutUuid = StringPool.BLANK;
+			}
+		}
 
 		Layout selLayout = null;
 
@@ -62,7 +73,7 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 		<h3><liferay-ui:message key="display-page" /><liferay-ui:icon-help message="default-display-page-help" /></h3>
 
 		<div id="<portlet:namespace />pagesContainer">
-			<aui:input id="pagesContainerInput" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />
+			<aui:input id="pagesContainerInput" structureChanged="<%= true %>" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />
 
 			<div class="display-page-item-container <%= Validator.isNull(layoutBreadcrumb) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemContainer">
 				<span class="display-page-item">
