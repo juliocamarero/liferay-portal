@@ -25,14 +25,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RestoreEntryTag extends IncludeTag {
 
-	public void setCheckEntryURL(PortletURL checkEntryURL) {
-		_checkEntryURL = checkEntryURL;
-	}
-
-	public void setDuplicateEntryURL(PortletURL duplicateEntryURL) {
-		_duplicateEntryURL = duplicateEntryURL;
-	}
-
 	public void setOverrideMessage(String overrideMessage) {
 		_overrideMessage = overrideMessage;
 	}
@@ -41,12 +33,15 @@ public class RestoreEntryTag extends IncludeTag {
 		_renameMessage = renameMessage;
 	}
 
+	public void setRestoreURL(PortletURL restoreURL) {
+		_restoreURL = restoreURL;
+	}
+
 	@Override
 	protected void cleanUp() {
-		_checkEntryURL = null;
-		_duplicateEntryURL = null;
 		_overrideMessage = _OVERRIDE_MESSAGE;
 		_renameMessage = _RENAME_MESSAGE;
+		_restoreURL = null;
 	}
 
 	@Override
@@ -62,13 +57,11 @@ public class RestoreEntryTag extends IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"liferay-ui:restore-entry:checkEntryURL", _checkEntryURL);
-		request.setAttribute(
-			"liferay-ui:restore-entry:duplicateEntryURL", _duplicateEntryURL);
-		request.setAttribute(
 			"liferay-ui:restore-entry:overrideMessage", _overrideMessage);
 		request.setAttribute(
 			"liferay-ui:restore-entry:renameMessage", _renameMessage);
+		request.setAttribute(
+			"liferay-ui:restore-entry:restoreURL", _restoreURL);
 	}
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
@@ -82,9 +75,8 @@ public class RestoreEntryTag extends IncludeTag {
 	private static final String _RENAME_MESSAGE =
 		"keep-both-entries-and-rename-the-entry-from-the-recycle-bin-as";
 
-	private PortletURL _checkEntryURL = null;
-	private PortletURL _duplicateEntryURL = null;
 	private String _overrideMessage = _OVERRIDE_MESSAGE;
 	private String _renameMessage = _RENAME_MESSAGE;
+	private PortletURL _restoreURL = null;
 
 }
