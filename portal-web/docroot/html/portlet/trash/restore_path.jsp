@@ -65,7 +65,22 @@
 	</div>
 </c:if>
 
-<liferay-ui:restore-entry />
+<portlet:resourceURL id="checkEntry" var="checkEntryURL" />
+
+<portlet:renderURL var="duplicateEntryURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+	<portlet:param name="mvcPath" value="/html/portlet/trash/restore_entry.jsp" />
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+</portlet:renderURL>
+
+<aui:script use="liferay-restore-entry">
+	new Liferay.RestoreEntry(
+		{
+			checkEntryURL: '<%= checkEntryURL.toString() %>',
+			duplicateEntryURL: '<%= duplicateEntryURL.toString() %>',
+			namespace: '<portlet:namespace />'
+		}
+	);
+</aui:script>
 
 <portlet:actionURL name="moveEntry" var="selectContainerURL" />
 
