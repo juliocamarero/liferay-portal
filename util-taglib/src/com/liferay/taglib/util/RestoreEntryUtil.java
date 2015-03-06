@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.trash.action;
+package com.liferay.taglib.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -30,7 +30,7 @@ import javax.portlet.PortletRequest;
 /**
  * @author Eudaldo Alonso
  */
-public class ActionUtil {
+public class RestoreEntryUtil {
 
 	public static JSONObject checkEntry(PortletRequest portletRequest)
 		throws PortalException {

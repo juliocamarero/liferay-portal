@@ -33,10 +33,10 @@ import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.portlet.trash.action.ActionUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
+import com.liferay.taglib.util.RestoreEntryUtil;
 
 import java.io.IOException;
 
@@ -223,7 +223,8 @@ public class TrashPortlet extends MVCPortlet {
 
 		if (resourceID.equals("checkEntry")) {
 			try {
-				JSONObject jsonObject = ActionUtil.checkEntry(resourceRequest);
+				JSONObject jsonObject = RestoreEntryUtil.checkEntry(
+					resourceRequest);
 
 				writeJSON(resourceRequest, resourceResponse, jsonObject);
 			}
