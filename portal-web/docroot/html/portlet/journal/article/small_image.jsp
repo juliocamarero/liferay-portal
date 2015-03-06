@@ -21,7 +21,7 @@ JournalArticle article = (JournalArticle)request.getAttribute(WebKeys.JOURNAL_AR
 
 boolean smallImage = BeanParamUtil.getBoolean(article, request, "smallImage");
 
-boolean structureChanged = GetterUtil.getBoolean(SessionMessages.get(renderRequest, "structureChanged"));
+boolean structureChanged = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changedStructure"));
 %>
 
 <liferay-ui:error-marker key="errorSection" value="small_image" />

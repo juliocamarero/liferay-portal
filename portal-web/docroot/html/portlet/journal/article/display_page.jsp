@@ -23,7 +23,7 @@ long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
 
 Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 
-boolean structureChanged = GetterUtil.getBoolean(SessionMessages.get(renderRequest, "structureChanged"));
+boolean structureChanged = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changedStructure"));
 %>
 
 <c:choose>
@@ -35,15 +35,10 @@ boolean structureChanged = GetterUtil.getBoolean(SessionMessages.get(renderReque
 	<c:otherwise>
 
 		<%
-		String layoutUuid = ParamUtil.getString(request, "layoutUuid");
+		String layoutUuid = BeanParamUtil.getString(article, request, "layoutUuid");
 
-		if (structureChanged) {
-			if (article != null) {
-				layoutUuid = article.getLayoutUuid();
-			}
-			else {
-				layoutUuid = StringPool.BLANK;
-			}
+		if (structureChanged && (article != null)) {
+			layoutUuid = article.getLayoutUuid();
 		}
 
 		Layout selLayout = null;
