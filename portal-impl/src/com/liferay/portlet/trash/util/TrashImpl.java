@@ -48,10 +48,11 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletURLUtil;
+import com.liferay.portlet.asset.provider.PortletProvider;
+import com.liferay.portlet.asset.provider.PortletProviderUtil;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.model.TrashVersion;
@@ -425,11 +426,14 @@ public class TrashImpl implements Trash {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String portletId = PortletProviderUtil.getPortletId(
+			TrashEntry.class.getName(), PortletProvider.Action.VIEW);
+
 		if (!themeDisplay.isSignedIn() ||
 			!isTrashEnabled(themeDisplay.getScopeGroupId()) ||
 			!PortletPermissionUtil.hasControlPanelAccessPermission(
 				themeDisplay.getPermissionChecker(),
-				themeDisplay.getScopeGroupId(), PortletKeys.TRASH)) {
+				themeDisplay.getScopeGroupId(), portletId)) {
 
 			return null;
 		}
@@ -455,7 +459,7 @@ public class TrashImpl implements Trash {
 		Layout layout = themeDisplay.getLayout();
 
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
-			request, PortletKeys.TRASH, layout.getLayoutId(),
+			request, portletId, layout.getLayoutId(),
 			PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter("mvcPath", "/view_content.jsp");
