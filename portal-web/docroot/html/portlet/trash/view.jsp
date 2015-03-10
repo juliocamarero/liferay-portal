@@ -287,7 +287,6 @@ if (Validator.isNotNull(keywords)) {
 
 	<aui:form action="<%= searchURL.toString() %>" method="get" name="fm">
 		<liferay-portlet:renderURLParams varImpl="searchURL" />
-		<aui:input name="<%= Constants.CMD %>" type="hidden" value="" />
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="deleteTrashEntryIds" type="hidden" />
 		<aui:input name="restoreTrashEntryIds" type="hidden" />
