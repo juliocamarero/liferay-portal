@@ -5453,9 +5453,11 @@ public class PortalImpl implements Portal {
 			}
 		}
 
-		uniqueElementIds.add(namespace.concat(uniqueElementId));
+		String key = namespace.concat(uniqueElementId);
+		
+		uniqueElementIds.add(key);
 
-		return uniqueElementId;
+		return key;
 	}
 
 	@Override
