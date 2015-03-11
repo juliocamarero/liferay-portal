@@ -19,16 +19,22 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.AssetTagException;
 import com.liferay.portlet.asset.DuplicateTagException;
 import com.liferay.portlet.asset.NoSuchTagException;
 import com.liferay.portlet.asset.model.AssetTag;
+import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagServiceUtil;
 
 import java.io.IOException;
+
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -120,16 +126,32 @@ public class AssetTagsAdminPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long[] mergeTagIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "mergeTagIds"), 0L);
-		long targetTagId = ParamUtil.getLong(actionRequest, "targetTagId");
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		for (long mergeTagId : mergeTagIds) {
-			if (targetTagId == mergeTagId) {
+		Group siteGroup = themeDisplay.getSiteGroup();
+
+		String mergeTagNamesString = ParamUtil.getString(
+			actionRequest, "mergeTagNames");
+
+		String[] mergeTagNames = StringUtil.split(mergeTagNamesString);
+
+		List<AssetTag> tags = AssetTagLocalServiceUtil.checkTags(
+			themeDisplay.getUserId(), siteGroup, mergeTagNames);
+
+		String targetTagName = ParamUtil.getString(
+			actionRequest, "targetTagName");
+
+		AssetTag targetTag = AssetTagLocalServiceUtil.getTag(
+			siteGroup.getGroupId(), targetTagName);
+
+		for (AssetTag mergeTag : tags) {
+			if (targetTag.getTagId() == mergeTag.getTagId()) {
 				continue;
 			}
 
-			AssetTagServiceUtil.mergeTags(mergeTagId, targetTagId);
+			AssetTagServiceUtil.mergeTags(
+				mergeTag.getTagId(), targetTag.getTagId());
 		}
 	}
 
