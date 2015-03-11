@@ -31,23 +31,3 @@ request.setAttribute("edit_message.jsp-thread", message.getThread());
 %>
 
 <liferay-util:include page="/html/portlet/message_boards/view_thread_message.jsp" />
-
-<c:if test="<%= portletName.equals(PortletKeys.TRASH) %>">
-
-	<%
-	MBThread thread = message.getThread();
-
-	PortletURL viewContentURL = renderResponse.createRenderURL();
-
-	viewContentURL.setParameter("struts_action", "/trash/view_content");
-	viewContentURL.setParameter("redirect", currentURL);
-	viewContentURL.setParameter("className", MBThread.class.getName());
-	viewContentURL.setParameter("classPK", String.valueOf(thread.getPrimaryKey()));
-	viewContentURL.setParameter("showActions", Boolean.FALSE.toString());
-	viewContentURL.setParameter("showEditURL", Boolean.FALSE.toString());
-	%>
-
-	<div class="asset-more">
-		<a href="<%= viewContentURL.toString() %>"><liferay-ui:message key="view-in-context" /> &raquo;</a>
-	</div>
-</c:if>
