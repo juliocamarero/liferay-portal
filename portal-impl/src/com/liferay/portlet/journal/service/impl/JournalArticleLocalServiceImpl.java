@@ -1699,13 +1699,12 @@ public class JournalArticleLocalServiceImpl
 		JournalArticle article = fetchLatestArticleByUrlTitle(
 			groupId, urlTitle, WorkflowConstants.STATUS_APPROVED);
 
-		if (article == null) {
-			return getLatestArticleByUrlTitle(
-				groupId, urlTitle, WorkflowConstants.STATUS_PENDING);
+		if (article != null) {
+			return article;
 		}
 
-		return article;
-	}
+		return getLatestArticleByUrlTitle(
+			groupId, urlTitle, WorkflowConstants.STATUS_PENDING); }
 
 	/**
 	 * Returns the web content from the web content article associated with the
@@ -3262,12 +3261,11 @@ public class JournalArticleLocalServiceImpl
 	public boolean hasArticle(long groupId, String articleId) {
 		JournalArticle article = fetchArticle(groupId, articleId);
 
-		if (article == null) {
-			return false;
-		}
-		else {
+		if (article != null) {
 			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -6930,11 +6928,7 @@ public class JournalArticleLocalServiceImpl
 		JournalArticle article = fetchLatestArticle(
 			groupId, articleId, WorkflowConstants.STATUS_APPROVED);
 
-		if (article == null) {
-			return true;
-		}
-
-		if (version >= article.getVersion()) {
+		if ((article == null) || (article.getVersion() < version)) {
 			return true;
 		}
 
