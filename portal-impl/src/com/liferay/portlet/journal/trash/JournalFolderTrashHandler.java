@@ -273,11 +273,8 @@ public class JournalFolderTrashHandler extends JournalBaseTrashHandler {
 				classPK, containerModelId);
 		}
 		catch (InvalidDDMStructureException iddmse) {
-			RestoreEntryException ree = new RestoreEntryException(iddmse);
-
-			ree.setType(RestoreEntryException.INVALID_CONTAINER);
-
-			throw ree;
+			throw new RestoreEntryException(
+				RestoreEntryException.INVALID_CONTAINER, iddmse);
 		}
 	}
 
