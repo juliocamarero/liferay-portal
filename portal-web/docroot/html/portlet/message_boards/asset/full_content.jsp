@@ -18,6 +18,7 @@
 
 <%
 MBMessage message = (MBMessage)request.getAttribute(WebKeys.MESSAGE_BOARDS_MESSAGE);
+AssetRenderer assetRenderer = (AssetRenderer)request.getAttribute(WebKeys.ASSET_RENDERER);
 
 request.setAttribute("edit_message.jsp-category", message.getCategory());
 request.setAttribute("edit_message.jsp-className", message.getClassName());
@@ -31,3 +32,9 @@ request.setAttribute("edit_message.jsp-thread", message.getThread());
 %>
 
 <liferay-util:include page="/html/portlet/message_boards/view_thread_message.jsp" />
+
+<c:if test="<%= assetRenderer != null %>">
+	<div class="asset-more">
+		<aui:a href="<%= assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, null) %>"><liferay-ui:message key="view-in-context" /> &raquo;</aui:a>
+	</div>
+</c:if>
