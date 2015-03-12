@@ -16,127 +16,132 @@
 
 <%@ include file="/html/portlet/journal_content_search/init.jsp" %>
 
-<c:choose>
-	<c:when test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-		<style type="text/css">
-			.portlet-journal-content-search .search-results {
-				margin-top: 1em;
-			}
-		</style>
+<%
+String redirect = ParamUtil.getString(request, "redirect");
 
-		<%
-		String defaultKeywords = LanguageUtil.get(request, "search") + StringPool.TRIPLE_PERIOD;
+if (Validator.isNotNull(redirect)) {
+	portletDisplay.setURLBack(redirect);
+}
 
-		String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
-		%>
+PortletURL portletURL = PortletURLUtil.getCurrent(renderRequest, renderResponse);
 
-		<portlet:renderURL var="searchURL">
-			<portlet:param name="struts_action" value="/journal_content_search/search" />
-			<portlet:param name="showListed" value="<%= String.valueOf(showListed) %>" />
-			<portlet:param name="targetPortletId" value="<%= targetPortletId %>" />
-		</portlet:renderURL>
+request.setAttribute("search.jsp-portletURL", portletURL);
+request.setAttribute("search.jsp-returnToFullPageURL", portletDisplay.getURLBack());
+%>
 
-		<aui:form action="<%= searchURL %>" method="post" name="fm">
+<style type="text/css">
+	.portlet-journal-content-search .search-results {
+		margin-top: 1em;
+	}
+</style>
 
-			<%
-			PortletURL portletURL = renderResponse.createRenderURL();
+<%
+String defaultKeywords = LanguageUtil.get(request, "search") + StringPool.TRIPLE_PERIOD;
 
-			portletURL.setParameter("struts_action", "/journal_content_search/search");
-			portletURL.setParameter("keywords", keywords);
+String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
+%>
 
-			List<String> headerNames = new ArrayList<String>();
+<portlet:renderURL var="searchURL">
+	<portlet:param name="struts_action" value="/journal_content_search/search" />
+	<portlet:param name="redirect" value="<%= redirect %>" />
+	<portlet:param name="showListed" value="<%= String.valueOf(showListed) %>" />
+	<portlet:param name="targetPortletId" value="<%= targetPortletId %>" />
+</portlet:renderURL>
 
-			headerNames.add("#");
-			headerNames.add("language");
-			headerNames.add("name");
-			headerNames.add("content");
+<aui:form action="<%= searchURL %>" method="post" name="fm">
 
-			SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, portletURL, headerNames, LanguageUtil.format(request, "no-pages-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>", false));
+	<%
+	PortletURL renderURL = renderResponse.createRenderURL();
 
-			try {
-				Indexer indexer = IndexerRegistryUtil.getIndexer(JournalArticle.class);
+		portletURL.setParameter("struts_action", "/journal_content_search/search");
+	renderURL.setParameter("keywords", keywords);
+	renderURL.setParameter("redirect", redirect);
 
-				SearchContext searchContext = SearchContextFactory.getInstance(request);
+	List<String> headerNames = new ArrayList<String>();
 
-				searchContext.setGroupIds(null);
-				searchContext.setKeywords(keywords);
+	headerNames.add("#");
+	headerNames.add("language");
+	headerNames.add("name");
+	headerNames.add("content");
 
-				Hits hits = indexer.search(searchContext);
+	SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, renderURL, headerNames, LanguageUtil.format(request, "no-pages-were-found-that-matched-the-keywords-x", "<strong>" + HtmlUtil.escape(keywords) + "</strong>", false));
 
-				String[] queryTerms = hits.getQueryTerms();
+	try {
+		Indexer indexer = IndexerRegistryUtil.getIndexer(JournalArticle.class);
 
-				ContentHits contentHits = new ContentHits();
+		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
-				contentHits.setShowListed(showListed);
+		searchContext.setGroupIds(null);
+		searchContext.setKeywords(keywords);
 
-				contentHits.recordHits(hits, layout.getGroupId(), layout.isPrivateLayout(), searchContainer.getStart(), searchContainer.getEnd());
+		Hits hits = indexer.search(searchContext);
 
-				int total = hits.getLength();
+		String[] queryTerms = hits.getQueryTerms();
 
-				searchContainer.setTotal(total);
+		ContentHits contentHits = new ContentHits();
 
-				List<Document> results = ListUtil.toList(hits.getDocs());
+		contentHits.setShowListed(showListed);
 
-				List resultRows = searchContainer.getResultRows();
+		contentHits.recordHits(hits, layout.getGroupId(), layout.isPrivateLayout(), searchContainer.getStart(), searchContainer.getEnd());
 
-				for (int i = 0; i < results.size(); i++) {
-					Document doc = results.get(i);
+		int total = hits.getLength();
 
-					Summary summary = indexer.getSummary(doc, StringPool.BLANK, renderRequest, renderResponse);
+		searchContainer.setTotal(total);
 
-					summary.setHighlight(PropsValues.INDEX_SEARCH_HIGHLIGHT_ENABLED);
-					summary.setQueryTerms(queryTerms);
+		List<Document> results = ListUtil.toList(hits.getDocs());
 
-					ResultRow row = new ResultRow(new Object[] {doc, summary}, i, i);
+		List resultRows = searchContainer.getResultRows();
 
-					// Position
+		for (int i = 0; i < results.size(); i++) {
+			Document doc = results.get(i);
 
-					row.addText(searchContainer.getStart() + i + 1 + StringPool.PERIOD);
+			Summary summary = indexer.getSummary(doc, StringPool.BLANK, renderRequest, renderResponse);
 
-					row.addJSP("/html/portlet/journal_content_search/article_language.jsp");
+			summary.setHighlight(PropsValues.INDEX_SEARCH_HIGHLIGHT_ENABLED);
+			summary.setQueryTerms(queryTerms);
 
-					// Title
+			ResultRow row = new ResultRow(new Object[] {doc, summary}, i, i);
 
-					String title = summary.getHighlightedTitle();
+			// Position
 
-					row.addText(title);
+			row.addText(searchContainer.getStart() + i + 1 + StringPool.PERIOD);
 
-					// Content
+			row.addJSP("/html/portlet/journal_content_search/article_language.jsp");
 
-					row.addJSP("/html/portlet/journal_content_search/article_content.jsp");
+			// Title
 
-					// Add result row
+			String title = summary.getHighlightedTitle();
 
-					resultRows.add(row);
-				}
-			%>
+			row.addText(title);
 
-			<div class="form-search">
-				<liferay-ui:input-search name="keywords" placeholder='<%= LanguageUtil.get(locale, "keywords") %>' />
-			</div>
+			// Content
 
-			<div class="search-results">
-				<liferay-ui:search-speed hits="<%= hits %>" searchContainer="<%= searchContainer %>" />
+			row.addJSP("/html/portlet/journal_content_search/article_content.jsp");
 
-				<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
-			</div>
+			// Add result row
 
-			<%
-			}
-			catch (Exception e) {
-				_log.error(e.getMessage());
-			}
-			%>
+			resultRows.add(row);
+		}
+	%>
 
-		</aui:form>
-	</c:when>
-	<c:otherwise>
-		<liferay-ui:journal-content-search
-			showListed="<%= showListed %>"
-			targetPortletId="<%= targetPortletId %>"
-		/>
-	</c:otherwise>
-</c:choose>
+		<div class="form-search">
+			<liferay-ui:input-search name="keywords" placeholder='<%= LanguageUtil.get(locale, "keywords") %>' />
+		</div>
+
+		<div class="search-results">
+			<liferay-ui:search-speed hits="<%= hits %>" searchContainer="<%= searchContainer %>" />
+
+			<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+		</div>
+
+	<%
+	}
+	catch (Exception e) {
+		_log.error(e.getMessage());
+	}
+	%>
+
+</aui:form>
 
 <%!
 private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.journal_content_search.search_jsp");
