@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -47,10 +48,11 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletURLUtil;
+import com.liferay.portlet.asset.provider.PortletProvider;
+import com.liferay.portlet.asset.provider.PortletProviderUtil;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.model.TrashVersion;
@@ -406,17 +408,32 @@ public class TrashImpl implements Trash {
 
 	@Override
 	public PortletURL getViewContentURL(
+			HttpServletRequest request, long trashEntryId)
+		throws PortalException {
+
+		TrashEntry trashEntry = TrashEntryLocalServiceUtil.fetchEntry(
+			trashEntryId);
+
+		return getViewContentURL(
+			request, trashEntry.getClassName(), trashEntry.getClassPK());
+	}
+
+	@Override
+	public PortletURL getViewContentURL(
 			HttpServletRequest request, String className, long classPK)
 		throws PortalException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String portletId = PortletProviderUtil.getPortletId(
+			TrashEntry.class.getName(), PortletProvider.Action.VIEW);
+
 		if (!themeDisplay.isSignedIn() ||
 			!isTrashEnabled(themeDisplay.getScopeGroupId()) ||
 			!PortletPermissionUtil.hasControlPanelAccessPermission(
 				themeDisplay.getPermissionChecker(),
-				themeDisplay.getScopeGroupId(), PortletKeys.TRASH)) {
+				themeDisplay.getScopeGroupId(), portletId)) {
 
 			return null;
 		}
@@ -442,12 +459,13 @@ public class TrashImpl implements Trash {
 		Layout layout = themeDisplay.getLayout();
 
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
-			request, PortletKeys.TRASH, layout.getLayoutId(),
+			request, portletId, layout.getLayoutId(),
 			PortletRequest.RENDER_PHASE);
 
-		portletURL.setParameter(
-			"mvcPath", "/html/portlet/trash/view_content.jsp");
+		portletURL.setParameter("mvcPath", "/view_content.jsp");
 		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
+		portletURL.setParameter(
+			"status", String.valueOf(WorkflowConstants.STATUS_IN_TRASH));
 
 		TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
 			className, classPK);
@@ -465,6 +483,36 @@ public class TrashImpl implements Trash {
 		portletURL.setParameter("showActions", Boolean.FALSE.toString());
 		portletURL.setParameter("showAssetMetadata", Boolean.TRUE.toString());
 		portletURL.setParameter("showEditURL", Boolean.FALSE.toString());
+
+		return portletURL;
+	}
+
+	@Override
+	public PortletURL getViewURL(HttpServletRequest request)
+		throws PortalException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String portletId = PortletProviderUtil.getPortletId(
+			TrashEntry.class.getName(), PortletProvider.Action.VIEW);
+
+		if (!themeDisplay.isSignedIn() ||
+			!isTrashEnabled(themeDisplay.getScopeGroupId()) ||
+			!PortletPermissionUtil.hasControlPanelAccessPermission(
+				themeDisplay.getPermissionChecker(),
+				themeDisplay.getScopeGroupId(), portletId)) {
+
+			return null;
+		}
+
+		Layout layout = themeDisplay.getLayout();
+
+		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
+			request, portletId, layout.getLayoutId(),
+			PortletRequest.RENDER_PHASE);
+
+		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
 
 		return portletURL;
 	}
