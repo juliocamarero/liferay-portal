@@ -128,17 +128,6 @@ public class ValidatorTagImpl
 		_body = body;
 	}
 
-	protected String processCustom(String name) {
-		if (name.equals("custom")) {
-			_custom = true;
-
-			return name.concat(StringPool.UNDERLINE).concat(
-				StringUtil.randomId());
-		}
-
-		return name;
-	}
-
 	private String _body;
 	private boolean _custom;
 
