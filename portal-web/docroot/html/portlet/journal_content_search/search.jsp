@@ -34,7 +34,7 @@ String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
 %>
 
 <portlet:renderURL var="searchURL">
-	<portlet:param name="struts_action" value="/journal_content_search/search" />
+	<portlet:param name="mvcPath" value="/html/portlet/journal_content_search/search.jsp" />
 	<portlet:param name="redirect" value="<%= redirect %>" />
 	<portlet:param name="showListed" value="<%= String.valueOf(showListed) %>" />
 	<portlet:param name="targetPortletId" value="<%= targetPortletId %>" />
@@ -45,7 +45,7 @@ String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
 	<%
 	PortletURL renderURL = renderResponse.createRenderURL();
 
-		portletURL.setParameter("struts_action", "/journal_content_search/search");
+	renderURL.setParameter("mvcPath", "/html/portlet/journal_content_search/search.jsp");
 	renderURL.setParameter("keywords", keywords);
 	renderURL.setParameter("redirect", redirect);
 
