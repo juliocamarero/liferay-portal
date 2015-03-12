@@ -12,33 +12,30 @@
  * details.
  */
 
-package com.liferay.portlet.journalcontentsearch.action;
+package com.liferay.portlet.journalcontentsearch;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.LayoutTypePortlet;
-import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.WebKeys;
 
-import javax.portlet.PortletConfig;
+import java.io.IOException;
+
+import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
 /**
- * @author Alexander Chow
+ * @author Eudaldo Alonso
  */
-public class SearchAction extends PortletAction {
+public class JournalContentSearchPortlet extends MVCPortlet {
 
 	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
+	public void doView(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -48,12 +45,15 @@ public class SearchAction extends PortletAction {
 
 		String portletId = PortalUtil.getPortletId(renderRequest);
 
-		if (!layoutTypePortlet.hasPortletId(portletId)) {
-			renderResponse.setTitle(themeDisplay.translate("search"));
+		try {
+			if (!layoutTypePortlet.hasPortletId(portletId)) {
+				renderResponse.setTitle(themeDisplay.translate("search"));
+			}
+		}
+		catch (PortalException pe) {
 		}
 
-		return actionMapping.findForward(
-			"portlet.journal_content_search.search");
+		super.doView(renderRequest, renderResponse);
 	}
 
 }
