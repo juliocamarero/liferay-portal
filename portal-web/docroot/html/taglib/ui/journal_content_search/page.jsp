@@ -16,4 +16,14 @@
 
 <%@ include file="/html/taglib/init.jsp" %>
 
-<liferay-portlet:runtime portletName="<%= PortletKeys.JOURNAL_CONTENT_SEARCH %> />
+<%
+boolean showListed = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:journal-content-search:showListed"));
+String targetPortletId = (String)request.getAttribute("liferay-ui:journal-content-search:targetPortletId");
+
+PortletPreferences defaultPreferences = PortletPreferencesFactoryUtil.fromDefaultXML(PortletConstants.DEFAULT_PREFERENCES);
+
+defaultPreferences.setValue("showListed", String.valueOf(showListed));
+defaultPreferences.setValue("targetPortletId", targetPortletId);
+%>
+
+<liferay-portlet:runtime defaultPreferences="<%= defaultPreferences.toString() %>" portletName="<%= PortletKeys.JOURNAL_CONTENT_SEARCH %>" />
