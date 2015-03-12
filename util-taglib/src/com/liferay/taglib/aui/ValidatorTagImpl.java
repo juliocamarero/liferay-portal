@@ -15,8 +15,8 @@
 package com.liferay.taglib.aui;
 
 import com.liferay.portal.kernel.servlet.taglib.aui.ValidatorTag;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.util.PortalUtil;
@@ -78,16 +78,17 @@ public class ValidatorTagImpl
 
 		if (_custom) {
 			HttpServletRequest request =
-							(HttpServletRequest)pageContext.getRequest();
-			
-			final String namespace = baseValidatorTagSupport.getInputName();
-			
-			StringBuffer customName = new StringBuffer();
-			customName.append(namespace);
-			customName.append(StringPool.UNDERLINE);
-			customName.append(PortalUtil.getUniqueElementId(request, namespace, name));
+				(HttpServletRequest)pageContext.getRequest();
 
-			name = customName.toString();
+			String namespace = baseValidatorTagSupport.getInputName();
+
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(namespace);
+			sb.append(StringPool.UNDERLINE);
+			sb.append(PortalUtil.getUniqueElementId(request, namespace, name));
+
+			name = sb.toString();
 		}
 
 		ValidatorTag validatorTag = new ValidatorTagImpl(
