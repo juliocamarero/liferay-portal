@@ -19,9 +19,11 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ModelHintsUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.taglib.BaseValidatorTagSupport;
 import com.liferay.taglib.aui.base.BaseValidatorTagImpl;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
 
@@ -75,7 +77,17 @@ public class ValidatorTagImpl
 		_custom = ModelHintsUtil.isCustomValidator(name);
 
 		if (_custom) {
-			name = ModelHintsUtil.buildCustomValidatorName(name);
+			HttpServletRequest request =
+							(HttpServletRequest)pageContext.getRequest();
+			
+			final String namespace = baseValidatorTagSupport.getInputName();
+			
+			StringBuffer customName = new StringBuffer();
+			customName.append(namespace);
+			customName.append(StringPool.UNDERLINE);
+			customName.append(PortalUtil.getUniqueElementId(request, namespace, name));
+
+			name = customName.toString();
 		}
 
 		ValidatorTag validatorTag = new ValidatorTagImpl(
