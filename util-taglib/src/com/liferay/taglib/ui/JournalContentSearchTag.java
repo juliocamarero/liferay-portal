@@ -32,15 +32,10 @@ public class JournalContentSearchTag extends IncludeTag {
 		_targetPortletId = targetPortletId;
 	}
 
-	public void setType(String type) {
-		_type = type;
-	}
-
 	@Override
 	protected void cleanUp() {
 		_showListed = true;
 		_targetPortletId = null;
-		_type = null;
 	}
 
 	@Override
@@ -70,7 +65,6 @@ public class JournalContentSearchTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:journal-content-search:targetPortletId",
 			_targetPortletId);
-		request.setAttribute("liferay-ui:journal-content-search:type", _type);
 	}
 
 	private static final String _END_PAGE =
@@ -81,6 +75,5 @@ public class JournalContentSearchTag extends IncludeTag {
 
 	private boolean _showListed;
 	private String _targetPortletId;
-	private String _type;
 
 }

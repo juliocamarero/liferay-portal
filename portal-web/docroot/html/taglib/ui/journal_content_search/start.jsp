@@ -19,7 +19,6 @@
 <%
 boolean showListed = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:journal-content-search:showListed"));
 String targetPortletId = (String)request.getAttribute("liferay-ui:journal-content-search:targetPortletId");
-String type = (String)request.getAttribute("liferay-ui:journal-content-search:type");
 
 PortletURL portletURL = null;
 
@@ -37,10 +36,6 @@ portletURL.setParameter("showListed", String.valueOf(showListed));
 
 if (Validator.isNotNull(targetPortletId)) {
 	portletURL.setParameter("targetPortletId", targetPortletId);
-}
-
-if (Validator.isNotNull(type)) {
-	portletURL.setParameter("type", type);
 }
 
 portletURL.setPortletMode(PortletMode.VIEW);
