@@ -16,6 +16,4 @@
 
 <%@ include file="/html/taglib/init.jsp" %>
 
-<%
-namespace = PortalUtil.getPortletNamespace(PortletKeys.JOURNAL_CONTENT_SEARCH);
-%>
+<liferay-portlet:runtime portletName="<%= PortletKeys.JOURNAL_CONTENT_SEARCH %> />
