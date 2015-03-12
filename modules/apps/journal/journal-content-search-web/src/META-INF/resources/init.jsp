@@ -32,4 +32,4 @@ if (!showListed) {
 }
 %>
 
-<%@ include file="/html/portlet/journal_content_search/init-ext.jsp" %>
+<%@ include file="/init-ext.jsp" %>

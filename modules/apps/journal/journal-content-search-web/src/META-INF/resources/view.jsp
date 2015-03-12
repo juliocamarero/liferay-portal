@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/journal_content_search/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <portlet:renderURL var="searchURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
 	<portlet:param name="mvcPath" value="/search.jsp" />

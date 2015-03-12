@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/journal_content_search/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
@@ -34,7 +34,7 @@ String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
 %>
 
 <portlet:renderURL var="searchURL">
-	<portlet:param name="mvcPath" value="/html/portlet/journal_content_search/search.jsp" />
+	<portlet:param name="mvcPath" value="/search.jsp" />
 	<portlet:param name="redirect" value="<%= redirect %>" />
 	<portlet:param name="showListed" value="<%= String.valueOf(showListed) %>" />
 	<portlet:param name="targetPortletId" value="<%= targetPortletId %>" />
@@ -45,7 +45,7 @@ String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
 	<%
 	PortletURL renderURL = renderResponse.createRenderURL();
 
-	renderURL.setParameter("mvcPath", "/html/portlet/journal_content_search/search.jsp");
+	renderURL.setParameter("mvcPath", "/search.jsp");
 	renderURL.setParameter("keywords", keywords);
 	renderURL.setParameter("redirect", redirect);
 
@@ -98,7 +98,7 @@ String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
 
 			row.addText(searchContainer.getStart() + i + 1 + StringPool.PERIOD);
 
-			row.addJSP("/html/portlet/journal_content_search/article_language.jsp");
+			row.addJSP("/article_language.jsp");
 
 			// Title
 
@@ -108,7 +108,7 @@ String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
 
 			// Content
 
-			row.addJSP("/html/portlet/journal_content_search/article_content.jsp");
+			row.addJSP("/article_content.jsp");
 
 			// Add result row
 
