@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journalcontentsearch.util;
+package com.liferay.journal.content.search.web.util;
 
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
