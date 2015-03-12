@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.action;
+package com.liferay.journal.web.portlet.action;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.upload.UploadServletRequest;

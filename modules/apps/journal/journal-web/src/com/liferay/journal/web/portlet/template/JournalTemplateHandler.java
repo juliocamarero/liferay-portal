@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.template;
+package com.liferay.journal.web.portlet.template;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.template.TemplateVariableCodeHandler;

@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.portlet.journal.search;
+package com.liferay.journal.web.search;
 
+import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
@@ -23,9 +24,17 @@ import javax.portlet.PortletRequest;
 /**
  * @author Raymond Augé
  */
-public class FeedSearchTerms extends FeedDisplayTerms {
+public class FeedDisplayTerms extends DisplayTerms {
 
-	public FeedSearchTerms(PortletRequest portletRequest) {
+	public static final String DESCRIPTION = "description";
+
+	public static final String FEED_ID = "searchFeedId";
+
+	public static final String GROUP_ID = "groupId";
+
+	public static final String NAME = "name";
+
+	public FeedDisplayTerms(PortletRequest portletRequest) {
 		super(portletRequest);
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
@@ -37,5 +46,26 @@ public class FeedSearchTerms extends FeedDisplayTerms {
 			portletRequest, GROUP_ID, themeDisplay.getScopeGroupId());
 		name = ParamUtil.getString(portletRequest, NAME);
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getFeedId() {
+		return feedId;
+	}
+
+	public long getGroupId() {
+		return groupId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	protected String description;
+	protected String feedId;
+	protected long groupId;
+	protected String name;
 
 }

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.action;
+package com.liferay.journal.web.portlet.action;
 
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.util.LocaleUtil;

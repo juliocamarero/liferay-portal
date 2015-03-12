@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.ddm;
+package com.liferay.journal.web.ddm;
 
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;

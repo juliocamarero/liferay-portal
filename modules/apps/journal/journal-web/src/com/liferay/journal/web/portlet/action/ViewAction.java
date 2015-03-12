@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.action;
+package com.liferay.journal.web.portlet.action;
 
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.security.auth.PrincipalException;

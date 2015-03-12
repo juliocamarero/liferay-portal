@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.context;
+package com.liferay.journal.web.context;
 
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.util.PrefsParamUtil;

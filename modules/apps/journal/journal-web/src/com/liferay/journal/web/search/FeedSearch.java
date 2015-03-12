@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.search;
+package com.liferay.journal.web.search;
 
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portlet.journal.model.JournalFeed;

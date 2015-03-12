@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.webdav;
+package com.liferay.journal.web.webdav;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.webdav.BaseWebDAVStorageImpl;

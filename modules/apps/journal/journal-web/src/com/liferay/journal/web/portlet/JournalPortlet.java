@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal;
+package com.liferay.journal.web.portlet;
 
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.diff.CompareVersionsException;
@@ -63,6 +63,28 @@ import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
 import com.liferay.portlet.dynamicdatamapping.StorageFieldRequiredException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.portlet.journal.ArticleContentException;
+import com.liferay.portlet.journal.ArticleContentSizeException;
+import com.liferay.portlet.journal.ArticleDisplayDateException;
+import com.liferay.portlet.journal.ArticleExpirationDateException;
+import com.liferay.portlet.journal.ArticleIdException;
+import com.liferay.portlet.journal.ArticleSmallImageNameException;
+import com.liferay.portlet.journal.ArticleSmallImageSizeException;
+import com.liferay.portlet.journal.ArticleTitleException;
+import com.liferay.portlet.journal.ArticleVersionException;
+import com.liferay.portlet.journal.DuplicateArticleIdException;
+import com.liferay.portlet.journal.DuplicateFeedIdException;
+import com.liferay.portlet.journal.DuplicateFolderNameException;
+import com.liferay.portlet.journal.FeedContentFieldException;
+import com.liferay.portlet.journal.FeedIdException;
+import com.liferay.portlet.journal.FeedNameException;
+import com.liferay.portlet.journal.FeedTargetLayoutFriendlyUrlException;
+import com.liferay.portlet.journal.FeedTargetPortletIdException;
+import com.liferay.portlet.journal.FolderNameException;
+import com.liferay.portlet.journal.InvalidDDMStructureException;
+import com.liferay.portlet.journal.NoSuchArticleException;
+import com.liferay.portlet.journal.NoSuchFeedException;
+import com.liferay.portlet.journal.NoSuchFolderException;
 import com.liferay.portlet.journal.action.ActionUtil;
 import com.liferay.portlet.journal.asset.JournalArticleAssetRenderer;
 import com.liferay.portlet.journal.model.JournalArticle;

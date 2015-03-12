@@ -12,19 +12,25 @@
  * details.
  */
 
-package com.liferay.portlet.journal.notifications;
+package com.liferay.journal.web.provider;
 
-import com.liferay.portal.kernel.notifications.BaseModelUserNotificationHandler;
+import com.liferay.portal.kernel.provider.EditPortletProvider;
+import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.util.PortletKeys;
 
 /**
- * @author Iván Zaera
+ * @author Eduardo Garcia
  */
-public class JournalUserNotificationHandler
-	extends BaseModelUserNotificationHandler {
+@OSGiBeanProperties(
+	property = {
+		"model.class.name=com.liferay.portlet.journal.model.JournalArticle"
+	}
+)
+public class JournalEditPortletProvider implements EditPortletProvider {
 
-	public JournalUserNotificationHandler() {
-		setPortletId(PortletKeys.JOURNAL);
+	@Override
+	public String getPortletId() {
+		return PortletKeys.JOURNAL;
 	}
 
 }

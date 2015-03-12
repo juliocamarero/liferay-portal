@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.journal.ddm;
+package com.liferay.journal.web.ddm;
 
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.util.PortalUtil;
