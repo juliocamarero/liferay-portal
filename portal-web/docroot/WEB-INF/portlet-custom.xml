@@ -417,7 +417,7 @@
 	<portlet>
 		<portlet-name>77</portlet-name>
 		<display-name>Journal Content Search</display-name>
-		<portlet-class>com.liferay.portlet.StrutsPortlet</portlet-class>
+		<portlet-class>com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet</portlet-class>
 		<init-param>
 			<name>config-template</name>
 			<value>/html/portlet/journal_content_search/configuration.jsp</value>
@@ -427,8 +427,8 @@
 			<value>/html/portlet/journal_content_search/</value>
 		</init-param>
 		<init-param>
-			<name>view-action</name>
-			<value>/journal_content_search/view</value>
+			<name>view-template</name>
+			<value>/html/portlet/journal_content_search/view.jsp</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
