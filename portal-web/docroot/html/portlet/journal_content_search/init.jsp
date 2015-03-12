@@ -21,11 +21,7 @@ page import="com.liferay.portlet.journal.service.JournalContentSearchLocalServic
 page import="com.liferay.portlet.journalcontentsearch.util.ContentHits" %>
 
 <%
-boolean showListedDefault = true;
-
-if (portletName.equals(PortletKeys.JOURNAL_CONTENT_SEARCH)) {
-	showListedDefault = PropsValues.JOURNAL_CONTENT_SEARCH_SHOW_LISTED;
-}
+boolean showListedDefault = PropsValues.JOURNAL_CONTENT_SEARCH_SHOW_LISTED;
 
 boolean showListed = PrefsParamUtil.getBoolean(portletPreferences, request, "showListed", showListedDefault);
 
