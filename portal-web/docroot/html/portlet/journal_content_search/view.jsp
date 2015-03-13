@@ -16,7 +16,34 @@
 
 <%@ include file="/html/portlet/journal_content_search/init.jsp" %>
 
-<liferay-ui:journal-content-search
-	showListed="<%= showListed %>"
-	targetPortletId="<%= targetPortletId %>"
-/>
+<%
+boolean showListed = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:journal-content-search:showListed"));
+String targetPortletId = (String)request.getAttribute("liferay-ui:journal-content-search:targetPortletId");
+
+PortletURL portletURL = null;
+
+if (portletResponse != null) {
+	LiferayPortletResponse liferayPortletResponse = (LiferayPortletResponse)portletResponse;
+
+	portletURL = liferayPortletResponse.createLiferayPortletURL(PortletKeys.JOURNAL_CONTENT_SEARCH, PortletRequest.RENDER_PHASE);
+}
+else {
+	portletURL = new PortletURLImpl(request, PortletKeys.JOURNAL_CONTENT_SEARCH, plid, PortletRequest.RENDER_PHASE);
+}
+
+portletURL.setParameter("struts_action", "/journal_content_search/search");
+portletURL.setParameter("showListed", String.valueOf(showListed));
+
+if (Validator.isNotNull(targetPortletId)) {
+	portletURL.setParameter("targetPortletId", targetPortletId);
+}
+
+portletURL.setPortletMode(PortletMode.VIEW);
+portletURL.setWindowState(WindowState.MAXIMIZED);
+%>
+
+<form action="<%= HtmlUtil.escape(portletURL.toString()) %>" class="form" method="post" name="<%= namespace %>fm" onSubmit="submitForm(this); return false;">
+
+<div class="form-search">
+	<liferay-ui:input-search id='<%= namespace + "keywords_" + StringUtil.randomId() %>' name='<%= namespace + "keywords" %>' placeholder='<%= LanguageUtil.get(locale, "keywords") %>' useNamespace="<%= false %>" />
+</div>
