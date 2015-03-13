@@ -1171,17 +1171,17 @@ public interface PropsKeys {
 
 	public static final String JOURNAL_EMAIL_ARTICLE_APPROVAL_REQUESTED_SUBJECT = "journal.email.article.approval.requested.subject";
 
-	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_BODY = "journal.email.article.moved.in.folder.body";
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_FROM_FOLDER_BODY = "journal.email.article.moved.from.folder.body";
 
-	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_ENABLED = "journal.email.article.moved.in.folder.enabled";
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_FROM_FOLDER_ENABLED = "journal.email.article.moved.from.folder.enabled";
 
-	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_SUBJECT = "journal.email.article.moved.in.folder.subject";
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_FROM_FOLDER_SUBJECT = "journal.email.article.moved.from.folder.subject";
 
-	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_BODY = "journal.email.article.moved.out.of.folder.body";
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_TO_FOLDER_BODY = "journal.email.article.moved.to.folder.body";
 
-	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_ENABLED = "journal.email.article.moved.out.of.folder.enabled";
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_TO_FOLDER_ENABLED = "journal.email.article.moved.to.folder.enabled";
 
-	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_SUBJECT = "journal.email.article.moved.out.of.folder.subject";
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_TO_FOLDER_SUBJECT = "journal.email.article.moved.to.folder.subject";
 
 	public static final String JOURNAL_EMAIL_ARTICLE_REVIEW_BODY = "journal.email.article.review.body";
 

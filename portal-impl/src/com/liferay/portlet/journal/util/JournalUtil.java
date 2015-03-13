@@ -837,70 +837,68 @@ public class JournalUtil {
 			PropsKeys.JOURNAL_EMAIL_ARTICLE_APPROVAL_REQUESTED_SUBJECT);
 	}
 
-	public static Map<Locale, String> getEmailArticleMovedInFolderBodyMap(
+	public static Map<Locale, String> getEmailArticleMovedFromFolderBodyMap(
 		PortletPreferences preferences) {
 
 		return LocalizationUtil.getLocalizationMap(
-			preferences, "emailArticleMovedInFolderBody",
-			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_BODY);
+			preferences, "emailArticleMovedFromFolderBody",
+			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_FROM_FOLDER_BODY);
 	}
 
-	public static boolean getEmailArticleMovedInFolderEnabled(
+	public static boolean getEmailArticleMovedFromFolderEnabled(
 		PortletPreferences preferences) {
 
-		String emailArticleMovedInFolderEnabled = preferences.getValue(
-			"emailArticleMovedInFolderEnabled", StringPool.BLANK);
+		String emailArticleMovedFromFolderEnabled = preferences.getValue(
+			"emailArticleMovedFromFolderEnabled", StringPool.BLANK);
 
-		if (Validator.isNotNull(emailArticleMovedInFolderEnabled)) {
-			return GetterUtil.getBoolean(emailArticleMovedInFolderEnabled);
+		if (Validator.isNotNull(emailArticleMovedFromFolderEnabled)) {
+			return GetterUtil.getBoolean(emailArticleMovedFromFolderEnabled);
 		}
 		else {
 			return GetterUtil.getBoolean(
 				PropsUtil.get(
-					PropsKeys.
-						JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_ENABLED));
+					PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_FROM_FOLDER_ENABLED));
 		}
 	}
 
-	public static Map<Locale, String> getEmailArticleMovedInFolderSubjectMap(
+	public static Map<Locale, String> getEmailArticleMovedFromFolderSubjectMap(
 		PortletPreferences preferences) {
 
 		return LocalizationUtil.getLocalizationMap(
-			preferences, "emailArticleMovedInFolderBody",
-			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_SUBJECT);
+			preferences, "emailArticleMovedFromFolderBody",
+			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_FROM_FOLDER_SUBJECT);
 	}
 
-	public static Map<Locale, String> getEmailArticleMovedOutOfFolderBodyMap(
+	public static Map<Locale, String> getEmailArticleMovedToFolderBodyMap(
 		PortletPreferences preferences) {
 
 		return LocalizationUtil.getLocalizationMap(
-			preferences, "emailArticleMovedOutOfFolderBody",
-			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_BODY);
+			preferences, "emailArticleMovedToFolderBody",
+			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_TO_FOLDER_BODY);
 	}
 
-	public static boolean getEmailArticleMovedOutOfFolderEnabled(
+	public static boolean getEmailArticleMovedToFolderEnabled(
 		PortletPreferences preferences) {
 
-		String emailArticleMovedOutOfFolderEnabled = preferences.getValue(
-			"emailArticleMovedOutOfFolderEnabled", StringPool.BLANK);
+		String emailArticleMovedToFolderEnabled = preferences.getValue(
+			"emailArticleMovedToFolderEnabled", StringPool.BLANK);
 
-		if (Validator.isNotNull(emailArticleMovedOutOfFolderEnabled)) {
-			return GetterUtil.getBoolean(emailArticleMovedOutOfFolderEnabled);
+		if (Validator.isNotNull(emailArticleMovedToFolderEnabled)) {
+			return GetterUtil.getBoolean(emailArticleMovedToFolderEnabled);
 		}
 		else {
 			return GetterUtil.getBoolean(
 				PropsUtil.get(
-					PropsKeys.
-						JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_ENABLED));
+					PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_TO_FOLDER_ENABLED));
 		}
 	}
 
-	public static Map<Locale, String> getEmailArticleMovedOutOfFolderSubjectMap(
+	public static Map<Locale, String> getEmailArticleMovedToFolderSubjectMap(
 		PortletPreferences preferences) {
 
 		return LocalizationUtil.getLocalizationMap(
-			preferences, "emailArticleMovedOutOfFolderBody",
-			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_SUBJECT);
+			preferences, "emailArticleMovedToFolderBody",
+			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_TO_FOLDER_SUBJECT);
 	}
 
 	public static Map<Locale, String> getEmailArticleReviewBodyMap(

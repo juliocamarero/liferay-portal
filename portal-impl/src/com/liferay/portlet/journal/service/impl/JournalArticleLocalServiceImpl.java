@@ -6981,10 +6981,10 @@ public class JournalArticleLocalServiceImpl
 			JournalUtil.getEmailArticleAddedEnabled(preferences)) {
 		}
 		else if (action.equals("move_to") &&
-				 JournalUtil.getEmailArticleMovedInFolderEnabled(preferences)) {
+				 JournalUtil.getEmailArticleMovedToFolderEnabled(preferences)) {
 		}
 		else if (action.equals("move_from") &&
-				 JournalUtil.getEmailArticleMovedOutOfFolderEnabled(
+				 JournalUtil.getEmailArticleMovedFromFolderEnabled(
 					preferences)) {
 		}
 		else if (action.equals("update") &&
@@ -7010,16 +7010,16 @@ public class JournalArticleLocalServiceImpl
 		}
 		else if (action.equals("move_to")) {
 			localizedSubjectMap =
-				JournalUtil.getEmailArticleMovedInFolderSubjectMap(preferences);
-			localizedBodyMap = JournalUtil.getEmailArticleMovedInFolderBodyMap(
+				JournalUtil.getEmailArticleMovedToFolderSubjectMap(preferences);
+			localizedBodyMap = JournalUtil.getEmailArticleMovedToFolderBodyMap(
 				preferences);
 		}
 		else if (action.equals("move_from")) {
 			localizedSubjectMap =
-				JournalUtil.getEmailArticleMovedOutOfFolderSubjectMap(
+				JournalUtil.getEmailArticleMovedFromFolderSubjectMap(
 					preferences);
 			localizedBodyMap =
-				JournalUtil.getEmailArticleMovedOutOfFolderBodyMap(preferences);
+				JournalUtil.getEmailArticleMovedFromFolderBodyMap(preferences);
 		}
 		else if (action.equals("update")) {
 			localizedSubjectMap = JournalUtil.getEmailArticleUpdatedSubjectMap(
