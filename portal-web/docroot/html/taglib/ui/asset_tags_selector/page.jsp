@@ -58,7 +58,7 @@ if (!ignoreRequestValue) {
 <aui:script use="liferay-asset-tags-selector">
 	var assetTagsSelector = new Liferay.AssetTagsSelector(
 		{
-	        allowAddEntry: <%= allowAddEntry %>,
+			allowAddEntry: <%= allowAddEntry %>,
 			allowSuggestions: <%= PropsValues.ASSET_TAG_SUGGESTIONS_ENABLED %>,
 			contentBox: '#<%= namespace + id %>assetTagsSelector',
 
