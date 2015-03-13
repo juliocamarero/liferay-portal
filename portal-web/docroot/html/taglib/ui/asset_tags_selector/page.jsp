@@ -19,18 +19,18 @@
 <portlet:defineObjects />
 
 <%
+String addCallback = GetterUtil.getString((String)request.getAttribute("liferay-ui:asset-tags-selector:addCallback"));
 boolean allowAddEntry = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:asset-tags-selector:allowAddEntry"));
 boolean autoFocus = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:asset-tags-selector:autoFocus"));
 String className = (String)request.getAttribute("liferay-ui:asset-tags-selector:className");
-long classPK = GetterUtil.getLong((String) request.getAttribute("liferay-ui:asset-tags-selector:classPK"));
+long classPK = GetterUtil.getLong((String)request.getAttribute("liferay-ui:asset-tags-selector:classPK"));
 String contentCallback = GetterUtil.getString((String)request.getAttribute("liferay-ui:asset-tags-selector:contentCallback"));
-String curTags = GetterUtil.getString((String) request.getAttribute("liferay-ui:asset-tags-selector:curTags"));
+String curTags = GetterUtil.getString((String)request.getAttribute("liferay-ui:asset-tags-selector:curTags"));
 long[] groupIds = (long[])request.getAttribute("liferay-ui:asset-tags-selector:groupIds");
 String hiddenInput = (String)request.getAttribute("liferay-ui:asset-tags-selector:hiddenInput");
 String id = GetterUtil.getString((String)request.getAttribute("liferay-ui:asset-tags-selector:id"));
 boolean ignoreRequestValue = GetterUtil.getBoolean(request.getAttribute("liferay-ui:asset-tags-selector:ignoreRequestValue"));
-String addCallback = GetterUtil.getString((String)request.getAttribute("liferay-ui:asset-tags-selector:addCallback"));
-String removeCallback = GetterUtil.getString((String) request.getAttribute("liferay-ui:asset-tags-selector:removeCallback"));
+String removeCallback = GetterUtil.getString((String)request.getAttribute("liferay-ui:asset-tags-selector:removeCallback"));
 
 if (Validator.isNotNull(className) && (classPK > 0)) {
 	List<AssetTag> tags = AssetTagServiceUtil.getTags(className, classPK);
@@ -49,10 +49,10 @@ if (!ignoreRequestValue) {
 
 <div class="lfr-tags-selector-content" id="<%= namespace + id %>assetTagsSelector">
 	<aui:input name="<%= hiddenInput %>" type="hidden" />
+
 	<c:if test="<%= allowAddEntry %>">
 		<input class="lfr-tag-selector-input" id="<%= id %>assetTagNames" maxlength="<%= ModelHintsConstants.TEXT_MAX_LENGTH %>" size="15" title="<liferay-ui:message key="add-tags" />" type="text" />
 	</c:if>
-
 </div>
 
 <aui:script use="liferay-asset-tags-selector">
@@ -77,9 +77,11 @@ if (!ignoreRequestValue) {
 			</c:if>
 
 			hiddenInput: '#<%= namespace + hiddenInput %>',
+
 			<c:if test="<%= allowAddEntry %>">
 				input: '#<%= id %>assetTagNames',
 			</c:if>
+
 			instanceVar: '<%= namespace + id %>',
 			portalModelResource: <%= Validator.isNotNull(className) && (ResourceActionsUtil.isPortalModelResource(className) || className.equals(Group.class.getName())) %>
 		}
