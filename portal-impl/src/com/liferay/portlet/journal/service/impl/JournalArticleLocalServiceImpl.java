@@ -1704,7 +1704,8 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		return getLatestArticleByUrlTitle(
-			groupId, urlTitle, WorkflowConstants.STATUS_PENDING); }
+			groupId, urlTitle, WorkflowConstants.STATUS_PENDING);
+	}
 
 	/**
 	 * Returns the web content from the web content article associated with the
@@ -6928,7 +6929,7 @@ public class JournalArticleLocalServiceImpl
 		JournalArticle article = fetchLatestArticle(
 			groupId, articleId, WorkflowConstants.STATUS_APPROVED);
 
-		if ((article == null) || (article.getVersion() < version)) {
+		if ((article == null) || (article.getVersion() <= version)) {
 			return true;
 		}
 
