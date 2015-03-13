@@ -27,15 +27,7 @@ PortletURL portletURL = PortletURLUtil.getCurrent(renderRequest, renderResponse)
 
 request.setAttribute("search.jsp-portletURL", portletURL);
 request.setAttribute("search.jsp-returnToFullPageURL", portletDisplay.getURLBack());
-%>
 
-<style type="text/css">
-	.portlet-journal-content-search .search-results {
-		margin-top: 1em;
-	}
-</style>
-
-<%
 String defaultKeywords = LanguageUtil.get(request, "search") + StringPool.TRIPLE_PERIOD;
 
 String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
