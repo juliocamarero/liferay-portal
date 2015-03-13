@@ -27,10 +27,15 @@ if (Validator.isNull(redirect)) {
 
 long[] mergeTagIds = StringUtil.split(ParamUtil.getString(renderRequest, "mergeTagIds"), 0L);
 
-List mergeTagNames = new ArrayList();
+List<String> mergeTagNames = new ArrayList();
 
 for (long mergeTagId : mergeTagIds) {
-	AssetTag tag = AssetTagLocalServiceUtil.getTag(mergeTagId);
+	AssetTag tag = AssetTagLocalServiceUtil.fetchAssetTag(mergeTagId);
+
+	if (tag == null) {
+		continue;
+	}
+
 	mergeTagNames.add(tag.getName());
 }
 %>
@@ -44,6 +49,7 @@ for (long mergeTagId : mergeTagIds) {
 
 <aui:form action="<%= mergeURL %>" method="post" name="fm" onSubmit="event.preventDefault();">
 	<aui:input name="mvcPath" type="hidden" value="/merge_tag.jsp" />
+	<aui:input name="groupId" type="hidden" value="<%= scopeGroupId %>" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 
 	<div class="merge-tags">
@@ -59,18 +65,16 @@ for (long mergeTagId : mergeTagIds) {
 			id="assetTagsSelector"
 			removeCallback="onRemoveTag"
 		/>
-
 	</div>
 
 	<div class="target-tag-container">
 		<aui:select cssClass="target-tag" label="into-this-tag" name="targetTagName">
 
 			<%
-			for (long mergeTagId : mergeTagIds) {
-				AssetTag tag = AssetTagLocalServiceUtil.getTag(mergeTagId);
+			for (String tagName : mergeTagNames) {
 			%>
 
-				<aui:option label="<%= tag.getName() %>" value="<%= tag.getName() %>" />
+				<aui:option value="<%= tagName %>" />
 
 			<%
 			}
