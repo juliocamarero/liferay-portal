@@ -80,6 +80,26 @@ String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAd
 
 		<liferay-ui:section>
 			<liferay-ui:email-notification-settings
+				emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleMovedFromFolderBody", "preferences", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_MOVED_FROM_FOLDER_BODY)) %>'
+				emailDefinitionTerms="<%= emailDefinitionTerms %>"
+				emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleMovedFromFolderEnabled--", JournalUtil.getEmailArticleMovedFromFolderEnabled(portletPreferences)) %>'
+				emailParam="emailArticleMovedFromFolder"
+				emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleMovedFromFolderSubject", "preferences", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_MOVED_FROM_FOLDER_SUBJECT)) %>'
+			/>
+		</liferay-ui:section>
+
+		<liferay-ui:section>
+			<liferay-ui:email-notification-settings
+				emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleMovedToFolderBody", "preferences", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_MOVED_TO_FOLDER_BODY)) %>'
+				emailDefinitionTerms="<%= emailDefinitionTerms %>"
+				emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleMovedToFolderEnabled--", JournalUtil.getEmailArticleMovedToFolderEnabled(portletPreferences)) %>'
+				emailParam="emailArticleMovedToFolder"
+				emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleMovedToFolderSubject", "preferences", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_MOVED_TO_FOLDER_SUBJECT)) %>'
+			/>
+		</liferay-ui:section>
+
+		<liferay-ui:section>
+			<liferay-ui:email-notification-settings
 				emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleReviewBody", "preferences", ContentUtil.get(PropsValues.JOURNAL_EMAIL_ARTICLE_REVIEW_BODY)) %>'
 				emailDefinitionTerms="<%= emailDefinitionTerms %>"
 				emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleReviewEnabled--", JournalUtil.getEmailArticleReviewEnabled(portletPreferences)) %>'
