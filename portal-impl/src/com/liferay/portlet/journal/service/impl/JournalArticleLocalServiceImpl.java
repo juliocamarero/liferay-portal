@@ -6928,7 +6928,7 @@ public class JournalArticleLocalServiceImpl
 		JournalArticle article = fetchLatestArticle(
 			groupId, articleId, WorkflowConstants.STATUS_APPROVED);
 
-		if ((article == null) || (article.getVersion() < version)) {
+		if ((article == null) || (article.getVersion() <= version)) {
 			return true;
 		}
 
