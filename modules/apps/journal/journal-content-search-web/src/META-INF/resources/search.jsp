@@ -98,7 +98,7 @@ String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
 
 			row.addText(searchContainer.getStart() + i + 1 + StringPool.PERIOD);
 
-			row.addJSP("/article_language.jsp");
+			row.addJSP("/article_language.jsp", application, request, response);
 
 			// Title
 
@@ -108,7 +108,7 @@ String keywords = ParamUtil.getString(request, "keywords", defaultKeywords);
 
 			// Content
 
-			row.addJSP("/article_content.jsp");
+			row.addJSP("/article_content.jsp", application, request, response);
 
 			// Add result row
 
