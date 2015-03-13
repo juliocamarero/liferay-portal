@@ -1171,6 +1171,18 @@ public interface PropsKeys {
 
 	public static final String JOURNAL_EMAIL_ARTICLE_APPROVAL_REQUESTED_SUBJECT = "journal.email.article.approval.requested.subject";
 
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_BODY = "journal.email.article.moved.in.folder.body";
+
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_ENABLED = "journal.email.article.moved.in.folder.enabled";
+
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_SUBJECT = "journal.email.article.moved.in.folder.subject";
+
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_BODY = "journal.email.article.moved.out.of.folder.body";
+
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_ENABLED = "journal.email.article.moved.out.of.folder.enabled";
+
+	public static final String JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_SUBJECT = "journal.email.article.moved.out.of.folder.subject";
+
 	public static final String JOURNAL_EMAIL_ARTICLE_REVIEW_BODY = "journal.email.article.review.body";
 
 	public static final String JOURNAL_EMAIL_ARTICLE_REVIEW_ENABLED = "journal.email.article.review.enabled";

@@ -837,6 +837,72 @@ public class JournalUtil {
 			PropsKeys.JOURNAL_EMAIL_ARTICLE_APPROVAL_REQUESTED_SUBJECT);
 	}
 
+	public static Map<Locale, String> getEmailArticleMovedInFolderBodyMap(
+		PortletPreferences preferences) {
+
+		return LocalizationUtil.getLocalizationMap(
+			preferences, "emailArticleMovedInFolderBody",
+			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_BODY);
+	}
+
+	public static boolean getEmailArticleMovedInFolderEnabled(
+		PortletPreferences preferences) {
+
+		String emailArticleMovedInFolderEnabled = preferences.getValue(
+			"emailArticleMovedInFolderEnabled", StringPool.BLANK);
+
+		if (Validator.isNotNull(emailArticleMovedInFolderEnabled)) {
+			return GetterUtil.getBoolean(emailArticleMovedInFolderEnabled);
+		}
+		else {
+			return GetterUtil.getBoolean(
+				PropsUtil.get(
+					PropsKeys.
+						JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_ENABLED));
+		}
+	}
+
+	public static Map<Locale, String> getEmailArticleMovedInFolderSubjectMap(
+		PortletPreferences preferences) {
+
+		return LocalizationUtil.getLocalizationMap(
+			preferences, "emailArticleMovedInFolderBody",
+			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_IN_FOLDER_SUBJECT);
+	}
+
+	public static Map<Locale, String> getEmailArticleMovedOutOfFolderBodyMap(
+		PortletPreferences preferences) {
+
+		return LocalizationUtil.getLocalizationMap(
+			preferences, "emailArticleMovedOutOfFolderBody",
+			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_BODY);
+	}
+
+	public static boolean getEmailArticleMovedOutOfFolderEnabled(
+		PortletPreferences preferences) {
+
+		String emailArticleMovedOutOfFolderEnabled = preferences.getValue(
+			"emailArticleMovedOutOfFolderEnabled", StringPool.BLANK);
+
+		if (Validator.isNotNull(emailArticleMovedOutOfFolderEnabled)) {
+			return GetterUtil.getBoolean(emailArticleMovedOutOfFolderEnabled);
+		}
+		else {
+			return GetterUtil.getBoolean(
+				PropsUtil.get(
+					PropsKeys.
+						JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_ENABLED));
+		}
+	}
+
+	public static Map<Locale, String> getEmailArticleMovedOutOfFolderSubjectMap(
+		PortletPreferences preferences) {
+
+		return LocalizationUtil.getLocalizationMap(
+			preferences, "emailArticleMovedOutOfFolderBody",
+			PropsKeys.JOURNAL_EMAIL_ARTICLE_MOVED_OUT_OF_FOLDER_SUBJECT);
+	}
+
 	public static Map<Locale, String> getEmailArticleReviewBodyMap(
 		PortletPreferences preferences) {
 
