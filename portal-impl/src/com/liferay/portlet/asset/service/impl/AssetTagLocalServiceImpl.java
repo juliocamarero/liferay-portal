@@ -241,6 +241,11 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	}
 
 	@Override
+	public AssetTag fetchTag(long groupId, String name) throws PortalException {
+		return assetTagPersistence.fetchByG_N(groupId, name);
+	}
+
+	@Override
 	public List<AssetTag> getEntryTags(long entryId) {
 		return assetEntryPersistence.getAssetTags(entryId);
 	}
