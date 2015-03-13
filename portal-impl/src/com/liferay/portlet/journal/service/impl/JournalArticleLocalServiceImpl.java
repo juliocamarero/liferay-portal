@@ -3395,7 +3395,7 @@ public class JournalArticleLocalServiceImpl
 			if (serviceContext != null) {
 				notifySubscribers(
 					serviceContext.getUserId(), article, article.getUrlTitle(),
-					Constants.REMOVE, serviceContext);
+					"move_from", serviceContext);
 			}
 
 			article.setFolderId(newFolderId);
@@ -3406,7 +3406,7 @@ public class JournalArticleLocalServiceImpl
 			if (serviceContext != null) {
 				notifySubscribers(
 					serviceContext.getUserId(), article, article.getUrlTitle(),
-					Constants.MOVE, serviceContext);
+					"move_to", serviceContext);
 			}
 		}
 
@@ -5813,10 +5813,11 @@ public class JournalArticleLocalServiceImpl
 			}
 
 			// Subscriptions
-			String action = Constants.UPDATE;
 
-			if(article.getVersion() == 1.0) {
-				action = Constants.ADD;
+			String action = "update";
+
+			if (article.getVersion() == 1.0) {
+				action = "add";
 			}
 
 			notifySubscribers(
@@ -6976,10 +6977,17 @@ public class JournalArticleLocalServiceImpl
 				defaultPreferences);
 		}
 
-		if ((article.getVersion() == 1.0) &&
+		if (action.equals("add") &&
 			JournalUtil.getEmailArticleAddedEnabled(preferences)) {
 		}
-		else if ((article.getVersion() != 1.0) &&
+		else if (action.equals("move_to") &&
+				 JournalUtil.getEmailArticleMovedInFolderEnabled(preferences)) {
+		}
+		else if (action.equals("move_from") &&
+				 JournalUtil.getEmailArticleMovedOutOfFolderEnabled(
+					preferences)) {
+		}
+		else if (action.equals("update") &&
 				 JournalUtil.getEmailArticleUpdatedEnabled(preferences)) {
 		}
 		else {
@@ -6994,32 +7002,26 @@ public class JournalArticleLocalServiceImpl
 		Map<Locale, String> localizedSubjectMap = null;
 		Map<Locale, String> localizedBodyMap = null;
 
-		if (article.getVersion() == 1.0) {
-			switch (action){
-				case Constants.MOVE:
-					localizedSubjectMap =
-						JournalUtil.getEmailArticleMovedInFolderSubjectMap(
-								preferences);
-					localizedBodyMap =
-						JournalUtil.getEmailArticleMovedInFolderBodyMap(
-								preferences);
-					break;
-				case Constants.REMOVE:
-					localizedSubjectMap =
-						JournalUtil.getEmailArticleMovedOutOfFolderSubjectMap(
-								preferences);
-					localizedBodyMap =
-						JournalUtil.getEmailArticleMovedOutOfFolderBodyMap(
-								preferences);
-					break;
-				default:
-					localizedSubjectMap = JournalUtil.getEmailArticleAddedSubjectMap(
-						preferences);
-					localizedBodyMap = JournalUtil.getEmailArticleAddedBodyMap(
-						preferences);
-			}
+		if (action.equals("add")) {
+			localizedSubjectMap = JournalUtil.getEmailArticleAddedSubjectMap(
+				preferences);
+			localizedBodyMap = JournalUtil.getEmailArticleAddedBodyMap(
+				preferences);
 		}
-		else {
+		else if (action.equals("move_to")) {
+			localizedSubjectMap =
+				JournalUtil.getEmailArticleMovedInFolderSubjectMap(preferences);
+			localizedBodyMap = JournalUtil.getEmailArticleMovedInFolderBodyMap(
+				preferences);
+		}
+		else if (action.equals("move_from")) {
+			localizedSubjectMap =
+				JournalUtil.getEmailArticleMovedOutOfFolderSubjectMap(
+					preferences);
+			localizedBodyMap =
+				JournalUtil.getEmailArticleMovedOutOfFolderBodyMap(preferences);
+		}
+		else if (action.equals("update")) {
 			localizedSubjectMap = JournalUtil.getEmailArticleUpdatedSubjectMap(
 				preferences);
 			localizedBodyMap = JournalUtil.getEmailArticleUpdatedBodyMap(
@@ -7065,10 +7067,14 @@ public class JournalArticleLocalServiceImpl
 		subscriptionSender.setContextAttribute(
 			"[$ARTICLE_DIFFS$]", DiffHtmlUtil.replaceStyles(articleDiffs),
 			false);
+
+		JournalFolder folder = article.getFolder();
+
 		subscriptionSender.setContextAttributes(
 			"[$ARTICLE_ID$]", article.getArticleId(), "[$ARTICLE_TITLE$]",
 			articleTitle, "[$ARTICLE_URL$]", articleURL, "[$ARTICLE_VERSION$]",
-			article.getVersion());
+			article.getVersion(), "[$FOLDER_NAME$]", folder.getName());
+
 		subscriptionSender.setContextCreatorUserPrefix("ARTICLE");
 		subscriptionSender.setCreatorUserId(article.getUserId());
 		subscriptionSender.setCurrentUserId(userId);
@@ -7094,11 +7100,6 @@ public class JournalArticleLocalServiceImpl
 		subscriptionSender.setReplyToAddress(fromAddress);
 		subscriptionSender.setScopeGroupId(article.getGroupId());
 		subscriptionSender.setServiceContext(serviceContext);
-
-		JournalFolder folder = article.getFolder();
-
-		subscriptionSender.setContextAttribute(
-			"[$FOLDER_NAME$]", folder.getName(), false);
 
 		subscriptionSender.addPersistedSubscribers(
 			JournalFolder.class.getName(), article.getGroupId());
