@@ -39,6 +39,8 @@ public interface AssetRenderer extends Renderer {
 
 	public static final String TEMPLATE_FULL_CONTENT = "full_content";
 
+	public static final String TEMPLATE_PREVIEW = "preview";
+
 	/**
 	 * @deprecated As of 7.0.0, with no direct replacement
 	 */
