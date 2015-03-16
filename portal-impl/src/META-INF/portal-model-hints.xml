@@ -314,15 +314,15 @@
 			<hint name="max-length">4000</hint>
 		</field>
 		<field name="description" type="String" localized="true">
-			<hint-collection name="TEXTAREA" />
+			<hint-collection name="CLOB" />
 			<hint name="display-width">300</hint>
 		</field>
 		<field name="keywords" type="String" localized="true">
-			<hint-collection name="TEXTAREA" />
+			<hint-collection name="CLOB" />
 			<hint name="display-width">300</hint>
 		</field>
 		<field name="robots" type="String" localized="true">
-			<hint-collection name="TEXTAREA" />
+			<hint-collection name="CLOB" />
 			<hint name="display-width">300</hint>
 		</field>
 		<field name="type" type="String" />
@@ -426,10 +426,14 @@
 			<hint-collection name="TEXTAREA" />
 		</field>
 		<field name="description" type="String" localized="true">
-			<hint-collection name="TEXTAREA" />
+			<hint-collection name="CLOB" />
 		</field>
-		<field name="keywords" type="String" localized="true" />
-		<field name="robots" type="String" localized="true" />
+		<field name="keywords" type="String" localized="true">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="robots" type="String" localized="true">
+			<hint-collection name="CLOB" />
+		</field>
 		<field name="typeSettings" type="String">
 			<hint-collection name="CLOB" />
 		</field>
