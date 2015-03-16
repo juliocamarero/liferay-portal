@@ -67,6 +67,10 @@ public interface AssetRenderer extends Renderer {
 
 	public String getNewName(String oldName, String token);
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public String getPreviewPath(
 			PortletRequest portletRequest, PortletResponse portletResponse)
 		throws Exception;
