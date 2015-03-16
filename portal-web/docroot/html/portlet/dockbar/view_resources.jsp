@@ -180,14 +180,15 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, classPK);
 			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
 			AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(classPK);
-
-			request.setAttribute("add_panel.jsp-assetEntry", assetEntry);
-			request.setAttribute("add_panel.jsp-assetRendererFactory", assetRendererFactory);
-			request.setAttribute("add_panel.jsp-assetRenderer", assetRenderer);
 			%>
 
 			<div id="<portlet:namespace />preview">
-				<liferay-util:include page="<%= assetRenderer.getPreviewPath(liferayPortletRequest, liferayPortletResponse) %>" portletId="<%= assetRendererFactory.getPortletId() %>" servletContext="<%= application %>" />
+				<liferay-ui:asset-display
+		 			assetEntry="<%= assetEntry %>"
+					assetRenderer="<%= assetRenderer %>"
+					assetRendererFactory="<%= assetRendererFactory %>"
+					template="<%= AssetRenderer.TEMPLATE_PREVIEW %>"
+				/>
 			</div>
 		</c:if>
 	</c:when>
