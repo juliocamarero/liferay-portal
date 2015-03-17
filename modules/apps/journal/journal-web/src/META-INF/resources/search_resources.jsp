@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/journal/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
@@ -203,7 +203,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 							<%
 							PortletURL rowURL = liferayPortletResponse.createRenderURL();
 
-							rowURL.setParameter("mvcPath", "/html/portlet/journal/edit_article.jsp");
+							rowURL.setParameter("mvcPath", "/edit_article.jsp");
 							rowURL.setParameter("redirect", currentURL);
 							rowURL.setParameter("groupId", String.valueOf(article.getGroupId()));
 							rowURL.setParameter("folderId", String.valueOf(article.getFolderId()));
@@ -217,7 +217,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 							%>
 
 							<liferay-ui:app-view-search-entry
-								actionJsp="/html/portlet/journal/article_action.jsp"
+								actionJsp="/article_action.jsp"
 								containerName="<%= JournalUtil.getAbsolutePath(liferayPortletRequest, article.getFolderId()) %>"
 								cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 								description="<%= (summary != null) ? summary.getContent() : article.getDescription(locale) %>"
@@ -253,7 +253,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 							%>
 
 							<liferay-ui:app-view-search-entry
-								actionJsp="/html/portlet/journal/folder_action.jsp"
+								actionJsp="/folder_action.jsp"
 								containerName="<%= JournalUtil.getAbsolutePath(liferayPortletRequest, curFolder.getParentFolderId()) %>"
 								cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 								description="<%= (summary != null) ? summary.getContent() : HtmlUtil.escape(curFolder.getDescription()) %>"
@@ -285,7 +285,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 				List results = null;
 				%>
 
-				<%@ include file="/html/portlet/journal/article_search_results_database.jspf" %>
+				<%@ include file="/article_search_results_database.jspf" %>
 
 				<%
 				emptySearchResults = results.isEmpty();
@@ -296,7 +296,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 					Object result = results.get(i);
 				%>
 
-					<%@ include file="/html/portlet/journal/cast_result.jspf" %>
+					<%@ include file="/cast_result.jspf" %>
 
 					<c:choose>
 						<c:when test="<%= (curArticle != null) && JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.VIEW) %>">
@@ -306,7 +306,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 
 							PortletURL rowURL = liferayPortletResponse.createRenderURL();
 
-							rowURL.setParameter("mvcPath", "/html/portlet/journal/edit_article.jsp");
+							rowURL.setParameter("mvcPath", "/edit_article.jsp");
 							rowURL.setParameter("redirect", currentURL);
 							rowURL.setParameter("groupId", String.valueOf(curArticle.getGroupId()));
 							rowURL.setParameter("folderId", String.valueOf(curArticle.getFolderId()));
@@ -316,7 +316,7 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 							%>
 
 							<liferay-ui:app-view-search-entry
-								actionJsp="/html/portlet/journal/article_action.jsp"
+								actionJsp="/article_action.jsp"
 								containerName="<%= JournalUtil.getAbsolutePath(liferayPortletRequest, curArticle.getFolderId()) %>"
 								cssClass='<%= MathUtil.isEven(i) ? "alt" : StringPool.BLANK %>'
 								description="<%= curArticle.getDescription(locale) %>"
