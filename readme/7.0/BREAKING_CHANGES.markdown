@@ -1193,3 +1193,42 @@ Use the className instead of the classNameId.
 #### Why was this change made?
 
 To simplify the usage of this taglib.
+
+---------------------------------------
+
+### Preview of assets has changed its usage
+- **Date:** 2015-Mar-16
+- **JIRA Ticket:** LPS-53972
+
+#### What changed?
+
+The way assets are being previewed. Now, one can use a taglib to do so.
+
+#### Who is affected?
+
+This affects developers who have written code that directly calls these
+operations. E.g:
+
+<liferay-util:include
+	page="<%= assetRenderer.getPreviewPath(liferayPortletRequest, liferayPortletResponse) %>"
+	portletId="<%= assetRendererFactory.getPortletId() %>"
+	servletContext="<%= application %>"
+/>
+
+#### How should I update my code?
+
+You need to replace the call to the preview page with this code. So, instead of
+including a page, you would call the taglib instead
+
+```
+<liferay-ui:asset-display
+	assetEntry="<%= assetEntry %>"
+	assetRenderer="<%= assetRenderer %>"
+	assetRendererFactory="<%= assetRendererFactory %>"
+	template="<%= AssetRenderer.TEMPLATE_PREVIEW %>"
+/>
+```
+
+#### Why was this change made?
+
+To simplify the usage of the functionality
