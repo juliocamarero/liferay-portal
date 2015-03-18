@@ -6250,7 +6250,10 @@ public class JournalArticleLocalServiceImpl
 			Element imageEl = (Element)imageNode;
 
 			String instanceId = imageEl.attributeValue("instance-id");
-			String name = imageEl.attributeValue("name");
+			String elName = imageEl.attributeValue("name");
+			String elIndex = imageEl.attributeValue("index");
+
+			String name = elName + "_" + elIndex;
 
 			List<Element> dynamicContentEls = imageEl.elements(
 				"dynamic-content");
