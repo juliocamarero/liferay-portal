@@ -74,7 +74,7 @@ for (long mergeTagId : mergeTagIds) {
 			for (String tagName : mergeTagNames) {
 			%>
 
-				<aui:option label="<%= tagName %>" value="<%= tagName %>" />
+				<aui:option label="<%= tagName %>" />
 
 			<%
 			}
