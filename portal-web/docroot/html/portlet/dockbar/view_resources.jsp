@@ -175,18 +175,10 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 		%>
 
 		<c:if test="<%= (classPK > 0) && Validator.isNotNull(className) %>">
-
-			<%
-			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(className, classPK);
-			AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
-			AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(classPK);
-			%>
-
 			<div id="<portlet:namespace />preview">
 				<liferay-ui:asset-display
-		 			assetEntry="<%= assetEntry %>"
-					assetRenderer="<%= assetRenderer %>"
-					assetRendererFactory="<%= assetRendererFactory %>"
+		 			className="<%= className %>"
+					classPK="<%= classPK %>"
 					template="<%= AssetRenderer.TEMPLATE_PREVIEW %>"
 				/>
 			</div>

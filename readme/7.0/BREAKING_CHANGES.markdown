@@ -1202,12 +1202,13 @@ To simplify the usage of this taglib.
 
 #### What changed?
 
-The way assets are being previewed. Now, one can use a taglib to do so.
+The way assets are being previewed. Now, a taglib should be used instead of
+directly including the JSP referenced by assetRenderer.getPreviewPath.
 
 #### Who is affected?
 
-This affects developers who have written code that directly calls these
-operations. E.g:
+This affects developers who have written code that directly calls the
+assetRenderer.getPreviewPath method. E.g:
 
 <liferay-util:include
 	page="<%= assetRenderer.getPreviewPath(liferayPortletRequest, liferayPortletResponse) %>"
@@ -1217,18 +1218,16 @@ operations. E.g:
 
 #### How should I update my code?
 
-You need to replace the call to the preview page with this code. So, instead of
-including a page, you would call the taglib instead
+You need to replace the call to include the preview JSP with the taglib
+liferay-ui:asset-display passing the parameter template as "preview".
 
 ```
 <liferay-ui:asset-display
 	assetEntry="<%= assetEntry %>"
-	assetRenderer="<%= assetRenderer %>"
-	assetRendererFactory="<%= assetRendererFactory %>"
 	template="<%= AssetRenderer.TEMPLATE_PREVIEW %>"
 />
 ```
 
 #### Why was this change made?
 
-To simplify the usage of the functionality
+To simplify the usage of the functionality.
