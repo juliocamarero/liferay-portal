@@ -70,10 +70,6 @@ public class ModifiedSearchFacet extends BaseSearchFacet {
 		jsonObject.put("ranges", jsonArray);
 
 		facetConfiguration.setDataJSONObject(jsonObject);
-		facetConfiguration.setDisplayStyle("modified");
-		facetConfiguration.setFieldName(Field.MODIFIED_DATE);
-		facetConfiguration.setLabel("modified");
-		facetConfiguration.setOrder("OrderHitsDesc");
 		facetConfiguration.setStatic(false);
 		facetConfiguration.setWeight(1.0);
 
@@ -81,8 +77,17 @@ public class ModifiedSearchFacet extends BaseSearchFacet {
 	}
 
 	@Override
+		public String getId() {
+			return ModifiedSearchFacet.class.getName();
+		}
+
 	public String getDisplayView() {
 		return "/facets/view/modified.jsp";
+	}
+
+	@Override
+	public String getFieldName() {
+		return Field.MODIFIED_DATE;
 	}
 
 	@Override
@@ -120,8 +125,13 @@ public class ModifiedSearchFacet extends BaseSearchFacet {
 	}
 
 	@Override
-	public String getTitle() {
+	public String getLabel() {
 		return "modified";
+	}
+
+	@Override
+	public String getTitle() {
+		return "modified-date";
 	}
 
 	private final String[] _labels = new String[] {

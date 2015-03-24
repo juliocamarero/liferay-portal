@@ -58,10 +58,6 @@ public class AssetTagsSearchFacet extends BaseSearchFacet {
 		jsonObject.put("showAssetCount", true);
 
 		facetConfiguration.setDataJSONObject(jsonObject);
-		facetConfiguration.setDisplayStyle("asset_tags");
-		facetConfiguration.setFieldName(Field.ASSET_TAG_NAMES);
-		facetConfiguration.setLabel("tag");
-		facetConfiguration.setOrder("OrderHitsDesc");
 		facetConfiguration.setStatic(false);
 		facetConfiguration.setWeight(1.4);
 
@@ -71,6 +67,16 @@ public class AssetTagsSearchFacet extends BaseSearchFacet {
 	@Override
 	public String getDisplayView() {
 		return "/facets/view/asset_tags.jsp";
+	}
+
+	@Override
+	public String getFieldName() {
+		return Field.ASSET_TAG_NAMES;
+	}
+
+	@Override
+	public String getId() {
+		return AssetTagsSearchFacet.class.getName();
 	}
 
 	@Override
@@ -92,6 +98,11 @@ public class AssetTagsSearchFacet extends BaseSearchFacet {
 		jsonObject.put("showAssetCount", showAssetCount);
 
 		return jsonObject;
+	}
+
+	@Override
+	public String getLabel() {
+		return "tag";
 	}
 
 	@Override
