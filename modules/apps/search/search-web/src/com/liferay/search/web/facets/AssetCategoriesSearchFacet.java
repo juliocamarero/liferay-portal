@@ -58,10 +58,6 @@ public class AssetCategoriesSearchFacet extends BaseSearchFacet {
 		jsonObject.put("showAssetCount", true);
 
 		facetConfiguration.setDataJSONObject(jsonObject);
-		facetConfiguration.setDisplayStyle("asset_categories");
-		facetConfiguration.setFieldName(Field.ASSET_CATEGORY_IDS);
-		facetConfiguration.setLabel("category");
-		facetConfiguration.setOrder("OrderHitsDesc");
 		facetConfiguration.setStatic(false);
 		facetConfiguration.setWeight(1.3);
 
@@ -71,6 +67,16 @@ public class AssetCategoriesSearchFacet extends BaseSearchFacet {
 	@Override
 	public String getDisplayView() {
 		return "/facets/view/asset_categories.jsp";
+	}
+
+	@Override
+	public String getFieldName() {
+		return Field.ASSET_CATEGORY_IDS;
+	}
+
+	@Override
+	public String getId() {
+		return AssetCategoriesSearchFacet.class.getName();
 	}
 
 	@Override
@@ -92,6 +98,11 @@ public class AssetCategoriesSearchFacet extends BaseSearchFacet {
 		jsonObject.put("showAssetCount", showAssetCount);
 
 		return jsonObject;
+	}
+
+	@Override
+	public String getLabel() {
+		return "category";
 	}
 
 	@Override
