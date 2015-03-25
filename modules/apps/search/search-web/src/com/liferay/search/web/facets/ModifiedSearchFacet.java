@@ -70,6 +70,9 @@ public class ModifiedSearchFacet extends BaseSearchFacet {
 		jsonObject.put("ranges", jsonArray);
 
 		facetConfiguration.setDataJSONObject(jsonObject);
+		facetConfiguration.setFieldName(getFieldName());
+		facetConfiguration.setLabel(getLabel());
+		facetConfiguration.setOrder(getOrder());
 		facetConfiguration.setStatic(false);
 		facetConfiguration.setWeight(1.0);
 

@@ -78,6 +78,9 @@ public class AssetEntriesSearchFacet extends BaseSearchFacet {
 		jsonObject.put("values", assetTypesJSONArray);
 
 		facetConfiguration.setDataJSONObject(jsonObject);
+		facetConfiguration.setFieldName(getFieldName());
+		facetConfiguration.setLabel(getLabel());
+		facetConfiguration.setOrder(getOrder());
 		facetConfiguration.setStatic(false);
 		facetConfiguration.setWeight(1.5);
 
