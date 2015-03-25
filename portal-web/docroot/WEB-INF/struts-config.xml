@@ -1145,10 +1145,6 @@
 			<forward name="portlet.my_pages.view" path="portlet.my_account.view" />
 		</action>
 
-		<!-- My Sites -->
-
-		<action path="/my_sites/view" forward="portlet.my_sites.view" />
-
 		<!-- My Workflow Instances -->
 
 		<action path="/my_workflow_instances/edit_workflow_instance" type="com.liferay.portlet.workflowinstances.action.EditWorkflowInstanceAction">
@@ -1496,6 +1492,8 @@
 			<forward name="portlet.layouts_admin.import_layouts" path="portlet.layouts_admin.import_layouts" />
 		</action>
 
+		<action path="/sites_admin/page" type="com.liferay.portlet.myplaces.action.ViewAction" />
+
 		<action path="/sites_admin/post_membership_request" type="com.liferay.portlet.sites.action.PostMembershipRequestAction">
 			<forward name="portlet.sites_admin.error" path="portlet.sites_admin.error" />
 			<forward name="portlet.sites_admin.post_membership_request" path="portlet.sites_admin.post_membership_request" />
@@ -1653,6 +1651,8 @@
 			<forward name="portlet.layouts_admin.error" path="portlet.layouts_admin.error" />
 			<forward name="portlet.layouts_admin.import_layouts" path="portlet.layouts_admin.import_layouts" />
 		</action>
+
+		<action path="/user_groups_admin/page" type="com.liferay.portlet.myplaces.action.ViewAction" />
 
 		<action path="/user_groups_admin/select_user_group" forward="portlet.user_groups_admin.select_user_group" />
 
