@@ -146,6 +146,10 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 					Group group = groupPersistence.fetchByPrimaryKey(
 						trashEntry.getGroupId());
 
+					if (group == null) {
+						return;
+					}
+
 					Date date = getMaxAge(group);
 
 					if (createDate.before(date) ||
