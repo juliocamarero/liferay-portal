@@ -14,6 +14,7 @@
 
 package com.liferay.journal.lar;
 
+import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.journal.web.lar.JournalPortletDataHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -34,7 +35,6 @@ import com.liferay.portal.model.StagedModel;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.MainServletTestRule;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -58,10 +58,12 @@ import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Juan Fernández
  */
+@RunWith(Arquillian.class)
 @Sync
 public class JournalExportImportTest extends BasePortletExportImportTestCase {
 
@@ -69,7 +71,7 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
-			new LiferayIntegrationTestRule(), MainServletTestRule.INSTANCE,
+			new LiferayIntegrationTestRule(),
 			SynchronousDestinationTestRule.INSTANCE);
 
 	@Override
