@@ -170,6 +170,15 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 		actionableDynamicQuery.performActions();
 	}
 
+	@Override
+	public void deleteEntries(long groupId) throws PortalException {
+		List<TrashEntry> trashEntries = getEntries(groupId);
+
+		for (TrashEntry trashEntry : trashEntries) {
+			deleteEntry(trashEntry);
+		}
+	}
+
 	/**
 	 * Deletes the trash entry with the primary key.
 	 *
