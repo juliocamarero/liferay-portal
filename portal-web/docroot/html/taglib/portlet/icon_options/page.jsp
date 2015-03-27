@@ -27,7 +27,11 @@
 >
 
 	<%
-	for (PortletConfigurationIcon portletConfigurationIcon : PortletConfigurationIconTracker.getPortletConfigurationIcons()) {
+	List<PortletConfigurationIcon> portletConfigurationIcons = ListUtil.copy(PortletConfigurationIconTracker.getPortletConfigurationIcons());
+
+	portletConfigurationIcons = ListUtil.sort(portletConfigurationIcons, new PropertyComparator("weight", false, false));
+
+	for (PortletConfigurationIcon portletConfigurationIcon : portletConfigurationIcons) {
 		portletConfigurationIcon.setRequest(request);
 	%>
 

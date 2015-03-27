@@ -47,6 +47,11 @@ public class EditDefaultsPortletConfigurationIcon
 	}
 
 	@Override
+	public double getWeight() {
+		return 13.0;
+	}
+
+	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
