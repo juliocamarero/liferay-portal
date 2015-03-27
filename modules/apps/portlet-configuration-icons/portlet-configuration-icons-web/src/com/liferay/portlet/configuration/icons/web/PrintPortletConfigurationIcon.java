@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
@@ -26,49 +26,54 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class RefreshPortletConfigurationIcon
+public class PrintPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "portlet-refresh portlet-refresh-icon";
+		return "portlet-print portlet-print-icon";
 	}
 
 	@Override
 	public String getImage() {
-		return "../aui/refresh";
+		return "../aui/print";
 	}
 
 	@Override
 	public String getMessage() {
-		return "refresh";
+		return "print";
 	}
 
 	@Override
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return "Liferay.Portlet.refresh('#p_p_id_".concat(
-			portletDisplay.getId()).concat("_'); return false;");
+		return "location.href = '".concat(
+			portletDisplay.getURLPrint()).concat("'; return false;");
+	}
+
+	@Override
+	public String getTarget() {
+		return "_blank";
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLRefresh();
+		return portletDisplay.getURLPrint();
 	}
 
 	@Override
 	public double getWeight() {
-		return 17.0;
+		return 8.0;
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowRefreshIcon();
+		return portletDisplay.isShowPrintIcon();
 	}
 
 	@Override

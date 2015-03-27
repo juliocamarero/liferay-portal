@@ -12,13 +12,12 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
 import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.theme.PortletDisplay;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,22 +28,22 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class ExportImportPortletConfigurationIcon
+public class ConfigurationPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "portlet-export-import portlet-export-import-icon";
+		return "portlet-configuration portlet-configuration-icon";
 	}
 
 	@Override
 	public String getImage() {
-		return "../aui/download-alt";
+		return "../aui/wrench";
 	}
 
 	@Override
 	public String getMessage() {
-		return "export-import";
+		return "configuration";
 	}
 
 	@Override
@@ -56,18 +55,18 @@ public class ExportImportPortletConfigurationIcon
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		StringBundler sb = new StringBundler(11);
+		StringBuilder sb = new StringBuilder(11);
 
 		sb.append("Liferay.Portlet.openWindow('#p_p_id_");
 		sb.append(portletDisplay.getId());
 		sb.append("_', '");
 		sb.append(portletDisplay.getId());
 		sb.append("', '");
-		sb.append(HtmlUtil.escapeJS(portletDisplay.getURLExportImport()));
+		sb.append(HtmlUtil.escapeJS(portletDisplay.getURLConfiguration()));
 		sb.append("', '");
 		sb.append(portletDisplay.getNamespace());
 		sb.append("', '");
-		sb.append(LanguageUtil.get(_themeDisplay.getLocale(), "export-import"));
+		sb.append(LanguageUtil.get(_themeDisplay.getLocale(), "configuration"));
 		sb.append("'); return false;");
 
 		return sb.toString();
@@ -77,19 +76,19 @@ public class ExportImportPortletConfigurationIcon
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLExportImport();
+		return portletDisplay.getURLConfiguration();
 	}
 
 	@Override
 	public double getWeight() {
-		return 11.0;
+		return 15.0;
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowExportImportIcon();
+		return portletDisplay.isShowConfigurationIcon();
 	}
 
 	@Override

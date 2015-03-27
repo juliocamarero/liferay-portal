@@ -12,10 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.PortletDisplay;
 
 import org.osgi.service.component.annotations.Component;
@@ -26,35 +27,54 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class EditPortletConfigurationIcon extends BasePortletConfigurationIcon {
+public class MaximizePortletConfigurationIcon
+	extends BasePortletConfigurationIcon {
 
 	@Override
+	public String getCssClass() {
+		return "portlet-maximize portlet-maximize-icon";
+	}
+
 	public String getImage() {
-		return "../aui/edit";
+		return "../aui/plus";
 	}
 
 	@Override
 	public String getMessage() {
-		return "preferences";
+		return "maximize";
+	}
+
+	@Override
+	public String getMethod() {
+		return "get";
+	}
+
+	@Override
+	public String getOnClick() {
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+
+		return "submitForm(document.hrefFm, '".concat(
+			HtmlUtil.escapeJS(portletDisplay.getURLMax())).concat(
+				"'); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLEdit();
+		return portletDisplay.getURLMax();
 	}
 
 	@Override
 	public double getWeight() {
-		return 14.0;
+		return 7.0;
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowEditIcon();
+		return portletDisplay.isShowMaxIcon();
 	}
 
 	@Override
