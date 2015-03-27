@@ -12,53 +12,73 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.PortletDisplay;
 
 /**
  * @author Eudaldo Alonso
  */
 @OSGiBeanProperties
-public class ClosePortletConfigurationIcon
+public class ConfigurationPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "item-remove portlet-close portlet-close-icon";
+		return "portlet-configuration portlet-configuration-icon";
 	}
 
 	@Override
 	public String getImage() {
-		return "../aui/remove";
+		return "../aui/wrench";
 	}
 
 	@Override
 	public String getMessage() {
-		return "remove";
+		return "configuration";
+	}
+
+	@Override
+	public String getMethod() {
+		return "get";
 	}
 
 	@Override
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return "Liferay.Portlet.close('#p_p_id_".concat(
-			portletDisplay.getId()).concat("_'); return false;");
+		StringBuilder sb = new StringBuilder(11);
+
+		sb.append("Liferay.Portlet.openWindow('#p_p_id_");
+		sb.append(portletDisplay.getId());
+		sb.append("_', '");
+		sb.append(portletDisplay.getId());
+		sb.append("', '");
+		sb.append(HtmlUtil.escapeJS(portletDisplay.getURLConfiguration()));
+		sb.append("', '");
+		sb.append(portletDisplay.getNamespace());
+		sb.append("', '");
+		sb.append(LanguageUtil.get(_themeDisplay.getLocale(), "configuration"));
+		sb.append("'); return false;");
+
+		return sb.toString();
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLClose();
+		return portletDisplay.getURLConfiguration();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowCloseIcon();
+		return portletDisplay.isShowConfigurationIcon();
 	}
 
 	@Override

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.theme.PortletDisplay;
@@ -21,56 +21,30 @@ import com.liferay.portal.theme.PortletDisplay;
  * @author Eudaldo Alonso
  */
 @OSGiBeanProperties
-public class MinimizePortletConfigurationIcon
-	extends BasePortletConfigurationIcon {
-
-	@Override
-	public String getCssClass() {
-		return "portlet-minimize portlet-minimize-icon";
-	}
+public class EditPortletConfigurationIcon extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getImage() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		if (portletDisplay.isStateMin()) {
-			return "../aui/resize-vertical";
-		}
-
-		return "../aui/minus";
+		return "../aui/edit";
 	}
 
 	@Override
 	public String getMessage() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		if (portletDisplay.isStateMin()) {
-			return "restore";
-		}
-
-		return "minimize";
-	}
-
-	@Override
-	public String getOnClick() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		return "Liferay.Portlet.minimize('#p_p_id_".concat(
-			portletDisplay.getId()).concat("_', this); return false;");
+		return "preferences";
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLMin();
+		return portletDisplay.getURLEdit();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowMinIcon();
+		return portletDisplay.isShowEditIcon();
 	}
 
 	@Override

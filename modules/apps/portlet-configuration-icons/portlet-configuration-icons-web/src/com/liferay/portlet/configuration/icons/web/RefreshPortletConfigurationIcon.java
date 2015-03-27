@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.theme.PortletDisplay;
@@ -21,30 +21,44 @@ import com.liferay.portal.theme.PortletDisplay;
  * @author Eudaldo Alonso
  */
 @OSGiBeanProperties
-public class EditPortletConfigurationIcon extends BasePortletConfigurationIcon {
+public class RefreshPortletConfigurationIcon
+	extends BasePortletConfigurationIcon {
+
+	@Override
+	public String getCssClass() {
+		return "portlet-refresh portlet-refresh-icon";
+	}
 
 	@Override
 	public String getImage() {
-		return "../aui/edit";
+		return "../aui/refresh";
 	}
 
 	@Override
 	public String getMessage() {
-		return "preferences";
+		return "refresh";
+	}
+
+	@Override
+	public String getOnClick() {
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+
+		return "Liferay.Portlet.refresh('#p_p_id_".concat(
+			portletDisplay.getId()).concat("_'); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLEdit();
+		return portletDisplay.getURLRefresh();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowEditIcon();
+		return portletDisplay.isShowRefreshIcon();
 	}
 
 	@Override

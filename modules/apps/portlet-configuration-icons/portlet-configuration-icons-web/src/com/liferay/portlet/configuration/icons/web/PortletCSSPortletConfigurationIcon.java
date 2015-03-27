@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.theme.PortletDisplay;
@@ -21,49 +21,44 @@ import com.liferay.portal.theme.PortletDisplay;
  * @author Eudaldo Alonso
  */
 @OSGiBeanProperties
-public class PrintPortletConfigurationIcon
+public class PortletCSSPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "portlet-print portlet-print-icon";
+		return "portlet-css portlet-css-icon lfr-js-required";
 	}
 
 	@Override
 	public String getImage() {
-		return "../aui/print";
+		return "../aui/picture";
 	}
 
 	@Override
 	public String getMessage() {
-		return "print";
+		return "look-and-feel";
 	}
 
 	@Override
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return "location.href = '".concat(
-			portletDisplay.getURLPrint()).concat("'; return false;");
-	}
-
-	@Override
-	public String getTarget() {
-		return "_blank";
+		return "Liferay.Portlet.loadCSSEditor('".concat(portletDisplay.getId()).
+			concat("'); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLPrint();
+		return portletDisplay.getURLPortletCss();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowPrintIcon();
+		return portletDisplay.isShowPortletCssIcon();
 	}
 
 	@Override

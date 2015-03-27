@@ -12,40 +12,59 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.PortletDisplay;
 
 /**
  * @author Eudaldo Alonso
  */
 @OSGiBeanProperties
-public class EditDefaultsPortletConfigurationIcon
+public class MaximizePortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
+	public String getCssClass() {
+		return "portlet-maximize portlet-maximize-icon";
+	}
+
 	public String getImage() {
-		return "../aui/edit-sign";
+		return "../aui/plus";
 	}
 
 	@Override
 	public String getMessage() {
-		return "default-preferences";
+		return "maximize";
+	}
+
+	@Override
+	public String getMethod() {
+		return "get";
+	}
+
+	@Override
+	public String getOnClick() {
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+
+		return "submitForm(document.hrefFm, '".concat(
+			HtmlUtil.escapeJS(portletDisplay.getURLMax())).concat(
+				"'); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLEditDefaults();
+		return portletDisplay.getURLMax();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowEditDefaultsIcon();
+		return portletDisplay.isShowMaxIcon();
 	}
 
 	@Override
