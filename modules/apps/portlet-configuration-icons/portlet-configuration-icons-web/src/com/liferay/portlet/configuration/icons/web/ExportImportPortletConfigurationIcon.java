@@ -81,6 +81,11 @@ public class ExportImportPortletConfigurationIcon
 	}
 
 	@Override
+	public double getWeight() {
+		return 11.0;
+	}
+
+	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 

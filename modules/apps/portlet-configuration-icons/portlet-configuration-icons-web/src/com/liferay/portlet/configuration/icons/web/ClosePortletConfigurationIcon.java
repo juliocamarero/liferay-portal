@@ -60,6 +60,11 @@ public class ClosePortletConfigurationIcon
 	}
 
 	@Override
+	public double getWeight() {
+		return 1.0;
+	}
+
+	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
