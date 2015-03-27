@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/taglib/init.jsp" %>
+<%@ include file="/html/taglib/portlet/icon_options/init.jsp" %>
 
 <liferay-ui:icon-menu
 	cssClass="portlet-options"
@@ -25,33 +25,41 @@
 	showArrow="<%= true %>"
 	showWhenSingleIcon="<%= true %>"
 >
-	<liferay-portlet:icon-refresh />
-
-	<liferay-portlet:icon-portlet-css />
-
-	<liferay-portlet:icon-configuration />
-
-	<liferay-portlet:icon-edit />
-
-	<liferay-portlet:icon-edit-defaults />
-
-	<liferay-portlet:icon-edit-guest />
-
-	<liferay-portlet:icon-export-import />
-
-	<liferay-portlet:icon-staging />
-
-	<liferay-portlet:icon-help />
-
-	<liferay-portlet:icon-print />
-
-	<liferay-portlet:icon-maximize />
-
-	<liferay-portlet:icon-minimize />
-
-	<liferay-portlet:icon-close />
 
 	<%
+	for (PortletConfigurationIcon portletConfigurationIcon : PortletConfigurationIconTracker.getPortletConfigurationIcons()) {
+		portletConfigurationIcon.setRequest(request);
+	%>
+
+		<c:if test="<%= portletConfigurationIcon.isShow() %>">
+			<liferay-ui:icon
+				alt="<%= portletConfigurationIcon.getAlt() %>"
+				ariaRole="<%= portletConfigurationIcon.getAriaRole() %>"
+				cssClass="<%= portletConfigurationIcon.getCssClass() %>"
+				data="<%= portletConfigurationIcon.getData() %>"
+				iconCssClass="<%= portletConfigurationIcon.getIconCssClass() %>"
+				id="<%= portletConfigurationIcon.getId() %>"
+				image="<%= portletConfigurationIcon.getImage() %>"
+				imageHover="<%= portletConfigurationIcon.getImageHover() %>"
+				label="<%= portletConfigurationIcon.showLabel() %>"
+				lang="<%= portletConfigurationIcon.getLang() %>"
+				linkCssClass="<%= portletConfigurationIcon.getLinkCssClass() %>"
+				localizeMessage="<%= portletConfigurationIcon.isLocalizeMessage() %>"
+				message="<%= portletConfigurationIcon.getMessage() %>"
+				method="<%= portletConfigurationIcon.getMethod() %>"
+				onClick="<%= portletConfigurationIcon.getOnClick() %>"
+				src="<%= portletConfigurationIcon.getSrc() %>"
+				srcHover="<%= portletConfigurationIcon.getSrcHover() %>"
+				target="<%= portletConfigurationIcon.getTarget() %>"
+				toolTip="<%= portletConfigurationIcon.showToolTip() %>"
+				url="<%= portletConfigurationIcon.getURL() %>"
+				useDialog="<%= portletConfigurationIcon.showUseDialog() %>"
+			/>
+		</c:if>
+
+	<%
+	}
+
 	Portlet portlet = (Portlet)request.getAttribute(WebKeys.RENDER_PORTLET);
 	%>
 
