@@ -14,14 +14,19 @@
 
 package com.liferay.portlet.configuration.icons.web;
 
-import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
+import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
+import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.PortletDisplay;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
  */
-@OSGiBeanProperties
+@Component(
+	immediate = true, service = PortletConfigurationIcon.class
+)
 public class MaximizePortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
