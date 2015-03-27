@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
@@ -26,61 +26,49 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class MinimizePortletConfigurationIcon
+public class RefreshPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "portlet-minimize portlet-minimize-icon";
+		return "portlet-refresh portlet-refresh-icon";
 	}
 
 	@Override
 	public String getImage() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		if (portletDisplay.isStateMin()) {
-			return "../aui/resize-vertical";
-		}
-
-		return "../aui/minus";
+		return "../aui/refresh";
 	}
 
 	@Override
 	public String getMessage() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		if (portletDisplay.isStateMin()) {
-			return "restore";
-		}
-
-		return "minimize";
+		return "refresh";
 	}
 
 	@Override
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return "Liferay.Portlet.minimize('#p_p_id_".concat(
-			portletDisplay.getId()).concat("_', this); return false;");
+		return "Liferay.Portlet.refresh('#p_p_id_".concat(
+			portletDisplay.getId()).concat("_'); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLMin();
+		return portletDisplay.getURLRefresh();
 	}
 
 	@Override
 	public double getWeight() {
-		return 6.0;
+		return 17.0;
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowMinIcon();
+		return portletDisplay.isShowRefreshIcon();
 	}
 
 	@Override

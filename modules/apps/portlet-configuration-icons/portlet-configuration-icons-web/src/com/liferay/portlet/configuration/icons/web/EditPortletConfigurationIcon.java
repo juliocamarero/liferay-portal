@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
@@ -26,49 +26,35 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class PortletCSSPortletConfigurationIcon
-	extends BasePortletConfigurationIcon {
-
-	@Override
-	public String getCssClass() {
-		return "portlet-css portlet-css-icon lfr-js-required";
-	}
+public class EditPortletConfigurationIcon extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getImage() {
-		return "../aui/picture";
+		return "../aui/edit";
 	}
 
 	@Override
 	public String getMessage() {
-		return "look-and-feel";
-	}
-
-	@Override
-	public String getOnClick() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		return "Liferay.Portlet.loadCSSEditor('".concat(portletDisplay.getId()).
-			concat("'); return false;");
+		return "preferences";
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLPortletCss();
+		return portletDisplay.getURLEdit();
 	}
 
 	@Override
 	public double getWeight() {
-		return 16.0;
+		return 14.0;
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowPortletCssIcon();
+		return portletDisplay.isShowEditIcon();
 	}
 
 	@Override
