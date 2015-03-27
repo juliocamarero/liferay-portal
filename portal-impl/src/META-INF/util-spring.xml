@@ -787,7 +787,20 @@
 		</property>
 	</bean>
 	<bean id="com.liferay.portal.struts.DoIncludeJSPDynamicInclude" class="com.liferay.portal.struts.DoIncludeJSPDynamicInclude" />
+	<bean id="com.liferay.portal.theme.ClosePortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.ClosePortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.ConfigurationPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.ConfigurationPortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.EditDefaultsPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.EditDefaultsPortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.EditGuestPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.EditGuestPortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.EditPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.EditPortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.ExportImportPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.ExportImportPortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.HelpPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.HelpPortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.MaximizePortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.MaximizePortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.MinimizePortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.MinimizePortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.PortletCSSPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.PortletCSSPortletConfigurationIcon" />
 	<bean id="com.liferay.portal.theme.PortletConfigurationIconTracker" class="com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIconTracker" />
+	<bean id="com.liferay.portal.theme.PrintPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.PrintPortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.RefreshPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.RefreshPortletConfigurationIcon" />
+	<bean id="com.liferay.portal.theme.StagingPortletConfigurationIcon" class="com.liferay.portal.kernel.portlet.configuration.StagingPortletConfigurationIcon" />
 	<bean id="com.liferay.portal.util.CustomJspRegistryUtil" class="com.liferay.portal.util.CustomJspRegistryUtil">
 		<property name="customJspRegistry">
 			<bean class="com.liferay.portal.util.CustomJspRegistryImpl" />
