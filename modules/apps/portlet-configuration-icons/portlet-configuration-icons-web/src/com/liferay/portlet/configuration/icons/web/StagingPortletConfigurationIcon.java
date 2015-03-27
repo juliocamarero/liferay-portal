@@ -81,6 +81,11 @@ public class StagingPortletConfigurationIcon
 	}
 
 	@Override
+	public double getWeight() {
+		return 10.0;
+	}
+
+	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 

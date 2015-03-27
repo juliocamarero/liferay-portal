@@ -60,6 +60,11 @@ public class RefreshPortletConfigurationIcon
 	}
 
 	@Override
+	public double getWeight() {
+		return 17.0;
+	}
+
+	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
