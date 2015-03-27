@@ -12,13 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
-import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.theme.PortletDisplay;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,62 +26,31 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class ExportImportPortletConfigurationIcon
+public class EditDefaultsPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
-	public String getCssClass() {
-		return "portlet-export-import portlet-export-import-icon";
-	}
-
-	@Override
 	public String getImage() {
-		return "../aui/download-alt";
+		return "../aui/edit-sign";
 	}
 
 	@Override
 	public String getMessage() {
-		return "export-import";
-	}
-
-	@Override
-	public String getMethod() {
-		return "get";
-	}
-
-	@Override
-	public String getOnClick() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		StringBundler sb = new StringBundler(11);
-
-		sb.append("Liferay.Portlet.openWindow('#p_p_id_");
-		sb.append(portletDisplay.getId());
-		sb.append("_', '");
-		sb.append(portletDisplay.getId());
-		sb.append("', '");
-		sb.append(HtmlUtil.escapeJS(portletDisplay.getURLExportImport()));
-		sb.append("', '");
-		sb.append(portletDisplay.getNamespace());
-		sb.append("', '");
-		sb.append(LanguageUtil.get(_themeDisplay.getLocale(), "export-import"));
-		sb.append("'); return false;");
-
-		return sb.toString();
+		return "default-preferences";
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLExportImport();
+		return portletDisplay.getURLEditDefaults();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowExportImportIcon();
+		return portletDisplay.isShowEditDefaultsIcon();
 	}
 
 	@Override

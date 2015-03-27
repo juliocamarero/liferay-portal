@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
@@ -26,31 +26,30 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class EditGuestPortletConfigurationIcon
-	extends BasePortletConfigurationIcon {
+public class EditPortletConfigurationIcon extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getImage() {
-		return "../aui/edit-sign";
+		return "../aui/edit";
 	}
 
 	@Override
 	public String getMessage() {
-		return "guest-preferences";
+		return "preferences";
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLEditGuest();
+		return portletDisplay.getURLEdit();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowEditGuestIcon();
+		return portletDisplay.isShowEditIcon();
 	}
 
 	@Override

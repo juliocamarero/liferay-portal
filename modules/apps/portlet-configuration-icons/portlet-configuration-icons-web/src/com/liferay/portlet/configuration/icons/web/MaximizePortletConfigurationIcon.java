@@ -12,10 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.PortletDisplay;
 
 import org.osgi.service.component.annotations.Component;
@@ -26,44 +27,49 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class PortletCSSPortletConfigurationIcon
+public class MaximizePortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "portlet-css portlet-css-icon lfr-js-required";
+		return "portlet-maximize portlet-maximize-icon";
 	}
 
-	@Override
 	public String getImage() {
-		return "../aui/picture";
+		return "../aui/plus";
 	}
 
 	@Override
 	public String getMessage() {
-		return "look-and-feel";
+		return "maximize";
+	}
+
+	@Override
+	public String getMethod() {
+		return "get";
 	}
 
 	@Override
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return "Liferay.Portlet.loadCSSEditor('".concat(portletDisplay.getId()).
-			concat("'); return false;");
+		return "submitForm(document.hrefFm, '".concat(
+			HtmlUtil.escapeJS(portletDisplay.getURLMax())).concat(
+				"'); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLPortletCss();
+		return portletDisplay.getURLMax();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowPortletCssIcon();
+		return portletDisplay.isShowMaxIcon();
 	}
 
 	@Override

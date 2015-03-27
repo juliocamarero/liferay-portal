@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
@@ -26,30 +26,44 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class EditPortletConfigurationIcon extends BasePortletConfigurationIcon {
+public class ClosePortletConfigurationIcon
+	extends BasePortletConfigurationIcon {
+
+	@Override
+	public String getCssClass() {
+		return "item-remove portlet-close portlet-close-icon";
+	}
 
 	@Override
 	public String getImage() {
-		return "../aui/edit";
+		return "../aui/remove";
 	}
 
 	@Override
 	public String getMessage() {
-		return "preferences";
+		return "remove";
+	}
+
+	@Override
+	public String getOnClick() {
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+
+		return "Liferay.Portlet.close('#p_p_id_".concat(
+			portletDisplay.getId()).concat("_'); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLEdit();
+		return portletDisplay.getURLClose();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowEditIcon();
+		return portletDisplay.isShowCloseIcon();
 	}
 
 	@Override

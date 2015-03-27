@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
@@ -26,44 +26,44 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class ClosePortletConfigurationIcon
+public class PortletCSSPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "item-remove portlet-close portlet-close-icon";
+		return "portlet-css portlet-css-icon lfr-js-required";
 	}
 
 	@Override
 	public String getImage() {
-		return "../aui/remove";
+		return "../aui/picture";
 	}
 
 	@Override
 	public String getMessage() {
-		return "remove";
+		return "look-and-feel";
 	}
 
 	@Override
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return "Liferay.Portlet.close('#p_p_id_".concat(
-			portletDisplay.getId()).concat("_'); return false;");
+		return "Liferay.Portlet.loadCSSEditor('".concat(portletDisplay.getId()).
+			concat("'); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLClose();
+		return portletDisplay.getURLPortletCss();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowCloseIcon();
+		return portletDisplay.isShowPortletCssIcon();
 	}
 
 	@Override

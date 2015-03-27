@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
@@ -26,44 +26,56 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class RefreshPortletConfigurationIcon
+public class MinimizePortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "portlet-refresh portlet-refresh-icon";
+		return "portlet-minimize portlet-minimize-icon";
 	}
 
 	@Override
 	public String getImage() {
-		return "../aui/refresh";
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+
+		if (portletDisplay.isStateMin()) {
+			return "../aui/resize-vertical";
+		}
+
+		return "../aui/minus";
 	}
 
 	@Override
 	public String getMessage() {
-		return "refresh";
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+
+		if (portletDisplay.isStateMin()) {
+			return "restore";
+		}
+
+		return "minimize";
 	}
 
 	@Override
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return "Liferay.Portlet.refresh('#p_p_id_".concat(
-			portletDisplay.getId()).concat("_'); return false;");
+		return "Liferay.Portlet.minimize('#p_p_id_".concat(
+			portletDisplay.getId()).concat("_', this); return false;");
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLRefresh();
+		return portletDisplay.getURLMin();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowRefreshIcon();
+		return portletDisplay.isShowMinIcon();
 	}
 
 	@Override

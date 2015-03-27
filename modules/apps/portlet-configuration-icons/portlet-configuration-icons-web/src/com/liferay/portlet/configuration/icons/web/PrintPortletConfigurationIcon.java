@@ -12,12 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet.configuration;
+package com.liferay.portlet.configuration.icons.web;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.PortletDisplay;
 
 import org.osgi.service.component.annotations.Component;
@@ -28,62 +26,49 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = PortletConfigurationIcon.class
 )
-public class ConfigurationPortletConfigurationIcon
+public class PrintPortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getCssClass() {
-		return "portlet-configuration portlet-configuration-icon";
+		return "portlet-print portlet-print-icon";
 	}
 
 	@Override
 	public String getImage() {
-		return "../aui/wrench";
+		return "../aui/print";
 	}
 
 	@Override
 	public String getMessage() {
-		return "configuration";
-	}
-
-	@Override
-	public String getMethod() {
-		return "get";
+		return "print";
 	}
 
 	@Override
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		StringBuilder sb = new StringBuilder(11);
+		return "location.href = '".concat(
+			portletDisplay.getURLPrint()).concat("'; return false;");
+	}
 
-		sb.append("Liferay.Portlet.openWindow('#p_p_id_");
-		sb.append(portletDisplay.getId());
-		sb.append("_', '");
-		sb.append(portletDisplay.getId());
-		sb.append("', '");
-		sb.append(HtmlUtil.escapeJS(portletDisplay.getURLConfiguration()));
-		sb.append("', '");
-		sb.append(portletDisplay.getNamespace());
-		sb.append("', '");
-		sb.append(LanguageUtil.get(_themeDisplay.getLocale(), "configuration"));
-		sb.append("'); return false;");
-
-		return sb.toString();
+	@Override
+	public String getTarget() {
+		return "_blank";
 	}
 
 	@Override
 	public String getURL() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.getURLConfiguration();
+		return portletDisplay.getURLPrint();
 	}
 
 	@Override
 	public boolean isShow() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return portletDisplay.isShowConfigurationIcon();
+		return portletDisplay.isShowPrintIcon();
 	}
 
 	@Override
