@@ -57,6 +57,8 @@ public interface PortletConfigurationIcon {
 
 	public String getURL();
 
+	public double getWeight();
+
 	public boolean isLocalizeMessage();
 
 	public boolean isShow();
