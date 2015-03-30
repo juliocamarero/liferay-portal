@@ -18,6 +18,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Eudaldo Alonso
  */
@@ -105,7 +107,7 @@ public abstract class BasePortletConfigurationIcon
 	}
 
 	@Override
-	public String getURL() {
+	public String getURL(HttpServletRequest request) {
 		return null;
 	}
 

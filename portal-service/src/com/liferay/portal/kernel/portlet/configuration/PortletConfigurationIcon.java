@@ -18,6 +18,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Eudaldo Alonso
  */
@@ -55,7 +57,7 @@ public interface PortletConfigurationIcon {
 
 	public String getTarget();
 
-	public String getURL();
+	public String getURL(HttpServletRequest request);
 
 	public double getWeight();
 

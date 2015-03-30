@@ -53,7 +53,7 @@ public class FacebookPortletConfigurationIcon
 	}
 
 	@Override
-	public String getURL() {
+	public String getURL(HttpServletRequest request) {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
 		PortletPreferences portletSetup =
