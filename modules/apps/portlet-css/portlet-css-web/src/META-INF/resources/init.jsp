@@ -16,4 +16,4 @@
 
 <%@ include file="/html/portlet/init.jsp" %>
 
-<%@ include file="/html/portlet/portlet_css/init-ext.jsp" %>
+<%@ include file="/init-ext.jsp" %>
