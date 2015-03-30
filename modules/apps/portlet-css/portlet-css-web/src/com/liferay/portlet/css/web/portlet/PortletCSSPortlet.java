@@ -15,10 +15,12 @@
 package com.liferay.portlet.css.web.portlet;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portlet.css.web.upgrade.PortletCSSWebUpgrade;
 
 import javax.portlet.Portlet;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -42,4 +44,10 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class PortletCSSPortlet extends MVCPortlet {
+
+	@Reference(unbind = "-")
+	protected void setPortletCSSWebUpgrade(
+		PortletCSSWebUpgrade portletCSSWebUpgrade) {
+	}
+
 }
