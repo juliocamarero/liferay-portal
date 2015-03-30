@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationI
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
 import com.liferay.portal.theme.PortletDisplay;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -53,7 +55,7 @@ public class RefreshPortletConfigurationIcon
 	}
 
 	@Override
-	public String getURL() {
+	public String getURL(HttpServletRequest request) {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
 		return portletDisplay.getURLRefresh();

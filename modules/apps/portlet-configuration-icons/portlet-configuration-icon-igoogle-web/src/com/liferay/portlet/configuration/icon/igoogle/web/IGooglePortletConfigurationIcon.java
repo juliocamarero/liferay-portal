@@ -58,10 +58,8 @@ public class IGooglePortletConfigurationIcon
 	}
 
 	@Override
-	public String getURL() {
+	public String getURL(HttpServletRequest request) {
 		try {
-			HttpServletRequest request = _themeDisplay.getRequest();
-
 			Portlet portlet = (Portlet)request.getAttribute(
 				WebKeys.RENDER_PORTLET);
 
