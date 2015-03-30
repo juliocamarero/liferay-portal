@@ -1,0 +1,4 @@
+Bundle-Name: Liferay Portlet Configuration Icon Refresh Web
+Bundle-SymbolicName: com.liferay.portlet.configuration.icon.refresh.web
+Bundle-Version: 1.0.0
+Include-Resource: classes
