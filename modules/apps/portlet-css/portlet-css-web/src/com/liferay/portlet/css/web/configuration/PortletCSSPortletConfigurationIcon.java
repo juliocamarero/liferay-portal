@@ -16,7 +16,15 @@ package com.liferay.portlet.css.web.configuration;
 
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.theme.PortletDisplay;
+import com.liferay.portlet.PortletURLFactoryUtil;
+import com.liferay.portlet.css.web.constants.PortletCSSPortletKeys;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -48,8 +56,33 @@ public class PortletCSSPortletConfigurationIcon
 	public String getOnClick() {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
-		return "Liferay.Portlet.loadCSSEditor('".concat(portletDisplay.getId()).
-			concat("'); return false;");
+		HttpServletRequest request = _themeDisplay.getRequest();
+
+		PortletURL baseActionURL = PortletURLFactoryUtil.create(
+			request, PortletCSSPortletKeys.PORTLET_CSS, _themeDisplay.getPlid(),
+			PortletRequest.ACTION_PHASE);
+
+		PortletURL baseRenderURL = PortletURLFactoryUtil.create(
+			request, PortletCSSPortletKeys.PORTLET_CSS, _themeDisplay.getPlid(),
+			PortletRequest.RENDER_PHASE);
+
+		PortletURL baseResourceURL = PortletURLFactoryUtil.create(
+			request, PortletCSSPortletKeys.PORTLET_CSS, _themeDisplay.getPlid(),
+			PortletRequest.RESOURCE_PHASE);
+
+		StringBundler sb = new StringBundler(9);
+
+		sb.append("Liferay.Portlet.loadCSSEditor('");
+		sb.append(portletDisplay.getId());
+		sb.append("', '");
+		sb.append(baseActionURL);
+		sb.append("', '");
+		sb.append(baseRenderURL);
+		sb.append("', '");
+		sb.append(baseResourceURL);
+		sb.append("'); return false;");
+
+		return sb.toString();
 	}
 
 	@Override

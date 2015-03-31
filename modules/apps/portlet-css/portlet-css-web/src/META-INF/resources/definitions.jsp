@@ -47,8 +47,8 @@
 	Liferay.provide(
 		Liferay.Portlet,
 		'loadCSSEditor',
-		function(portletId) {
-			Liferay.PortletCSS.init(portletId);
+		function(portletId, baseActionURL, baseRenderURL, baseResourceURL) {
+			Liferay.PortletCSS.init(portletId, baseActionURL, baseRenderURL, baseResourceURL);
 		},
 		['liferay-look-and-feel']
 	);

@@ -29,8 +29,6 @@ AUI.add(
 
 		var ERROR = 'error';
 
-		var EXCLUSIVE = 'exclusive';
-
 		var FIELDSET = 'fieldset';
 
 		var FIRST_CHILD = 'firstChild';
@@ -106,13 +104,16 @@ AUI.add(
 		var WORD_SPACING = 'wordSpacing';
 
 		var PortletCSS = {
-			init: function(portletId) {
+			init: function(portletId, baseActionPortletURL, baseRenderPortletURL, baseResourcePortletURL) {
 				var instance = this;
 
 				var curPortletBoundaryId = 'p_p_id_' + portletId + '_';
 				var obj = A.one('#' + curPortletBoundaryId);
 
 				if (obj) {
+					instance._baseActionPortletURL = baseActionPortletURL;
+					instance._baseRenderPortletURL = baseRenderPortletURL;
+					instance._baseResourcePortletURL = baseResourcePortletURL;
 					instance._portletId = portletId;
 
 					if (!obj.hasClass('portlet-borderless')) {
@@ -154,6 +155,13 @@ AUI.add(
 								}
 							);
 
+							var viewURL = new Liferay.PortletURL.createURL(instance._baseRenderPortletURL);
+
+							viewURL.setWindowState('POP_UP');
+
+							viewURL.setParameter('mvcPath', '/view.jsp');
+							viewURL.setParameter("portletResource", instance._portletId);
+
 							instance._currentPopup.plug(
 								[
 									{
@@ -172,15 +180,8 @@ AUI.add(
 												}
 											},
 											autoLoad: false,
-											data: {
-												doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
-												p_l_id: themeDisplay.getPlid(),
-												p_p_id: 113,
-												p_p_state: EXCLUSIVE,
-												_113_portletResource: instance._portletId
-											},
 											showLoading: false,
-											uri: themeDisplay.getPathMain() + '/portal/render_portlet'
+											uri: viewURL.toString()
 										},
 										fn: A.Plugin.IO
 									},
@@ -895,7 +896,7 @@ AUI.add(
 			_getNodeById: function(id) {
 				var instance = this;
 
-				return A.one('#_113_' + id);
+				return A.one('#_com_liferay_portlet_css_web_portlet_PortletCSSPortlet_' + id);
 			},
 
 			_getSafeInteger: function(input) {
@@ -1187,15 +1188,17 @@ AUI.add(
 								instance._objData.wapData.initialWindowState = instance._wapInitialWindowStateSelect.val();
 							}
 
+							var updateLookAndFeelURL = new Liferay.PortletURL.createURL(instance._baseActionPortletURL);
+
+							updateLookAndFeelURL.setParameter('javax.portlet.action', 'updateLookAndFeel');
+							updateLookAndFeelURL.setParameter('portletId', instance._portletId);
+							updateLookAndFeelURL.setWindowState('NORMAL');
+
 							A.io.request(
-								themeDisplay.getPathMain() + '/portlet_configuration/update_look_and_feel',
+								updateLookAndFeelURL.toString(),
 								{
 									data: {
-										css: A.JSON.stringify(instance._objData),
-										doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
-										p_auth: Liferay.authToken,
-										p_l_id: themeDisplay.getPlid(),
-										portletId: instance._portletId
+										_com_liferay_portlet_css_web_portlet_PortletCSSPortlet_css: A.JSON.stringify(instance._objData)
 									},
 									on: {
 										complete: saveHandler
@@ -1234,15 +1237,15 @@ AUI.add(
 
 				instance._objData = portletConfig;
 
+				var getLookAndFeelURL = new Liferay.PortletURL.createURL(instance._baseResourcePortletURL);
+
+				getLookAndFeelURL.setParameter("portletId", instance._portletId);
+
+				getLookAndFeelURL.setResourceId('getLookAndFeel');
+
 				A.io.request(
-					themeDisplay.getPathMain() + '/portlet_configuration/get_look_and_feel',
+					getLookAndFeelURL.toString(),
 					{
-						data: {
-							doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
-							p_auth: Liferay.authToken,
-							p_l_id: themeDisplay.getPlid(),
-							portletId: instance._portletId
-						},
 						dataType: STR_JSON,
 						on: {
 							success: function(event, id, obj) {
@@ -2055,6 +2058,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-color-picker-popover', 'aui-io-plugin-deprecated', 'aui-io-request', 'aui-tabview', 'liferay-util-window', 'liferay-widget-zindex']
+		requires: ['aui-color-picker-popover', 'aui-io-plugin-deprecated', 'aui-io-request', 'aui-tabview', 'liferay-portlet-url', 'liferay-util-window', 'liferay-widget-zindex']
 	}
 );
