@@ -43,6 +43,7 @@ import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.AssetCategoryNameException;
 import com.liferay.portlet.asset.DuplicateCategoryException;
@@ -101,7 +102,7 @@ public class AssetCategoryLocalServiceImpl
 
 		Date now = new Date();
 
-		validate(0, parentCategoryId, name, vocabularyId);
+		validate(0, parentCategoryId, name, vocabularyId, groupId);
 
 		if (parentCategoryId > 0) {
 			assetCategoryPersistence.findByPrimaryKey(parentCategoryId);
@@ -848,6 +849,16 @@ public class AssetCategoryLocalServiceImpl
 			}
 		}
 	}
+
+    protected void validate(
+            long categoryId, long parentCategoryId, String name,
+            long vocabularyId, long groupId)
+        throws PortalException {
+
+        GroupLocalServiceUtil.getGroup(groupId);
+
+        validate(categoryId, parentCategoryId, name, vocabularyId);
+    }
 
 	protected void validate(
 			long categoryId, long parentCategoryId, String name,
