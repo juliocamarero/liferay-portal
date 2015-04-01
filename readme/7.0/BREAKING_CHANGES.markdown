@@ -1284,7 +1284,7 @@ The taglib liferay-ui:icon can replace the call to the previous taglibs.
 All the previous taglibs have been converted into Java classes that implement
 the methods that the icon taglib needs.
 
-See the modules portlet-configuration-icon-* in the portal-extensions folder.
+See the modules portlet-configuration-icon-* in the portal-addons folder.
 
 #### Why was this change made?
 
