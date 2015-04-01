@@ -120,6 +120,7 @@ public abstract class BasePortletConfigurationIcon
 	@Override
 	public void setRequest(HttpServletRequest request) {
 		_request = request;
+
 		_themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
