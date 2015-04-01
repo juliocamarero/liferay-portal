@@ -127,10 +127,8 @@ public class JournalArticleExpirationTest {
 
 		String content = DDMStructureTestUtil.getSampleStructuredContent();
 
-		String definition = DDMStructureTestUtil.getSampleStructureDefinition();
-
 		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
-			groupId, JournalArticle.class.getName(), definition);
+			groupId, JournalArticle.class.getName());
 
 		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
 			groupId, ddmStructure.getStructureId());
