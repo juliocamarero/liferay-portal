@@ -41,7 +41,7 @@ String eventName = "_" + HtmlUtil.escapeJS(assetPublisherDisplayContext.getPortl
 		<aui:fieldset label="model.resource.com.liferay.portlet.asset">
 
 			<%
-			List<AssetEntry> assetEntries = AssetPublisherUtil.getAssetEntries(renderRequest, portletPreferences, permissionChecker, assetPublisherDisplayContext.getGroupIds(), true, assetPublisherDisplayContext.isEnablePermissions());
+			List<AssetEntry> assetEntries = AssetPublisherUtil.getAssetEntries(renderRequest, portletPreferences, permissionChecker, assetPublisherDisplayContext.getGroupIds(), true, assetPublisherDisplayContext.isEnablePermissions(), true);
 			%>
 
 			<liferay-ui:search-container
@@ -63,14 +63,25 @@ String eventName = "_" + HtmlUtil.escapeJS(assetPublisherDisplayContext.getPortl
 					<%
 					AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetEntry.getClassName());
 
-					AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(assetEntry.getClassPK());
+					AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(assetEntry.getClassPK(), AssetRendererFactory.TYPE_LATEST_APPROVED, true);
 					%>
 
-					<liferay-ui:search-container-column-text name="title">
-						<i class="<%= assetRenderer.getIconCssClass() %>"></i>
+					<c:choose>
+						<c:when test="<%= assetEntry.isVisible() %>">
+							<liferay-ui:search-container-column-text name="title">
+								<i class="<%= assetRenderer.getIconCssClass() %>"></i>
 
-						<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>
-					</liferay-ui:search-container-column-text>
+								<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>
+							</liferay-ui:search-container-column-text>
+						</c:when>
+						<c:otherwise>
+							<liferay-ui:search-container-column-text name="title">
+								<i class="<%= assetRenderer.getIconCssClass() %>"></i>
+
+								<%= HtmlUtil.escape(assetRenderer.getTitle(locale) + StringPool.SPACE + StringPool.OPEN_PARENTHESIS + LanguageUtil.get(locale, "not-displayable") + StringPool.CLOSE_PARENTHESIS) %>
+							</liferay-ui:search-container-column-text>
+						</c:otherwise>
+					</c:choose>
 
 					<liferay-ui:search-container-column-text
 						name="type"
