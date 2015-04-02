@@ -474,11 +474,7 @@ public class LanguageImpl implements Language, Serializable {
 			return locales;
 		}
 
-		synchronized(this) {
-			if (_groupLocalesMap.get(groupId) == null) {
-				_initGroupLocales(groupId);
-			}
-		}
+		_initGroupLocales(groupId);
 
 		return _groupLocalesMap.get(groupId);
 	}
@@ -677,11 +673,7 @@ public class LanguageImpl implements Language, Serializable {
 			return localesSet.contains(locale);
 		}
 
-		synchronized(this) {
-			if (_groupLocalesSet.get(groupId) == null) {
-				_initGroupLocales(groupId);
-			}
-		}
+		_initGroupLocales(groupId);
 
 		localesSet = _groupLocalesSet.get(groupId);
 
@@ -935,13 +927,14 @@ public class LanguageImpl implements Language, Serializable {
 	}
 
 	private Locale _getLocale(long groupId, String languageCode) {
-		if (_groupLocalesByLanguageMap.get(groupId) == null) {
-			synchronized(this) {
-				if (_groupLocalesByLanguageMap.get(groupId) == null) {
-					_initGroupLocales(groupId);
-				}
-			}
+		Map<String, Locale> localesMap = _groupLocalesByLanguageMap.get(
+			groupId);
+
+		if (localesMap != null) {
+			return localesMap.get(languageCode);
 		}
+
+		_initGroupLocales(groupId);
 
 		return _groupLocalesByLanguageMap.get(groupId).get(languageCode);
 	}
