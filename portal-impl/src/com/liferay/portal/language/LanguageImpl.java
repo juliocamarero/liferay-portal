@@ -66,6 +66,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -469,15 +470,7 @@ public class LanguageImpl implements Language, Serializable {
 		catch (Exception e) {
 		}
 
-		GroupLocales groupLocales = _groupLocalesMap.get(groupId);
-
-		if (groupLocales != null) {
-			return groupLocales.getLocales();
-		}
-
-		_initGroupLocales(groupId);
-
-		groupLocales = _groupLocalesMap.get(groupId);
+		GroupLocales groupLocales = _initGroupLocales(groupId);
 
 		return groupLocales.getLocales();
 	}
@@ -670,15 +663,7 @@ public class LanguageImpl implements Language, Serializable {
 		catch (Exception e) {
 		}
 
-		GroupLocales groupLocales = _groupLocalesMap.get(groupId);
-
-		if (groupLocales != null) {
-			return groupLocales.contains(locale);
-		}
-
-		_initGroupLocales(groupId);
-
-		groupLocales = _groupLocalesMap.get(groupId);
+		GroupLocales groupLocales = _initGroupLocales(groupId);
 
 		return groupLocales.contains(locale);
 	}
@@ -930,15 +915,7 @@ public class LanguageImpl implements Language, Serializable {
 	}
 
 	private Locale _getLocale(long groupId, String languageCode) {
-		GroupLocales groupLocales = _groupLocalesMap.get(groupId);
-
-		if (groupLocales != null) {
-			return groupLocales.getLocale(languageCode);
-		}
-
-		_initGroupLocales(groupId);
-
-		groupLocales = _groupLocalesMap.get(groupId);
+		GroupLocales groupLocales = _initGroupLocales(groupId);
 
 		return groupLocales.getLocale(languageCode);
 	}
@@ -947,12 +924,23 @@ public class LanguageImpl implements Language, Serializable {
 		return _localesMap.get(languageCode);
 	}
 
-	private void _initGroupLocales(long groupId) {
-		GroupLocales groupLocales = new GroupLocales();
+	private GroupLocales _initGroupLocales(long groupId) {
+		GroupLocales currentGroupLocales = _groupLocalesMap.get(groupId);
 
-		groupLocales.init(groupId);
+		if (currentGroupLocales == null) {
+			currentGroupLocales = new GroupLocales();
 
-		_groupLocalesMap.put(groupId, groupLocales);
+			GroupLocales previousGroupLocales = _groupLocalesMap.putIfAbsent(
+				groupId, currentGroupLocales);
+
+			if (previousGroupLocales != null) {
+				currentGroupLocales = previousGroupLocales;
+			}
+		}
+
+		currentGroupLocales.init(groupId);
+
+		return currentGroupLocales;
 	}
 
 	private void _resetAvailableGroupLocales(long groupId) {
@@ -990,7 +978,8 @@ public class LanguageImpl implements Language, Serializable {
 
 	private final Map<String, String> _charEncodings;
 	private final Set<String> _duplicateLanguageCodes;
-	private final Map<Long, GroupLocales> _groupLocalesMap = new HashMap<>();
+	private final ConcurrentMap<Long, GroupLocales> _groupLocalesMap =
+		new ConcurrentHashMap<>();
 	private final Locale[] _locales;
 	private final Set<Locale> _localesBetaSet;
 	private final Map<String, Locale> _localesMap;
@@ -1011,6 +1000,10 @@ public class LanguageImpl implements Language, Serializable {
 		}
 
 		public void init(long groupId) {
+			if (_initialized) {
+				return;
+			}
+
 			String[] languageIds = null;
 
 			try {
@@ -1051,8 +1044,11 @@ public class LanguageImpl implements Language, Serializable {
 
 				_localesSet.add(locale);
 			}
+
+			_initialized = true;
 		}
 
+		private volatile boolean _initialized = false;
 		private Locale[] _locales;
 		private Map<String, Locale> _localesMap;
 		private Set<Locale> _localesSet;
