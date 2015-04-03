@@ -57,6 +57,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1035,5 +1036,72 @@ public class LanguageImpl implements Language, Serializable {
 	private final Set<Locale> _localesBetaSet;
 	private final Map<String, Locale> _localesMap;
 	private final Set<Locale> _localesSet;
+
+	private static class GroupLocales {
+
+		public boolean contains(Locale locale) {
+			return _localesSet.contains(locale);
+		}
+
+		public Locale getLocale(String languageId) {
+			return _localesMap.get(languageId);
+		}
+
+		public Locale[] getLocales() {
+			return Arrays.copyOf(_locales, _locales.length);
+		}
+
+		public void init(long groupId) {
+			String[] languageIds = null;
+
+			try {
+				Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+				UnicodeProperties typeSettingsProperties =
+					group.getTypeSettingsProperties();
+
+				languageIds = StringUtil.split(
+					typeSettingsProperties.getProperty(PropsKeys.LOCALES));
+			}
+			catch (Exception e) {
+				languageIds = PropsValues.LOCALES_ENABLED;
+			}
+
+			Locale[] locales = new Locale[languageIds.length];
+			Map<String, Locale> localesMap = new HashMap<>(languageIds.length);
+			Set<Locale> localesSet = new HashSet<>(languageIds.length);
+
+			for (int i = 0; i < languageIds.length; i++) {
+				String languageId = languageIds[i];
+
+				Locale locale = LocaleUtil.fromLanguageId(languageId, false);
+
+				String language = languageId;
+
+				int pos = languageId.indexOf(CharPool.UNDERLINE);
+
+				if (pos > 0) {
+					language = languageId.substring(0, pos);
+				}
+
+				locales[i] = locale;
+
+				if (!localesMap.containsKey(language)) {
+					localesMap.put(language, locale);
+				}
+
+				localesSet.add(locale);
+			}
+
+			_groupLocalesByLanguageMap.put(groupId, localesMap);
+			_groupLocalesMap.put(groupId, locales);
+			_groupLocalesSet.put(groupId, localesSet);
+		}
+
+		private Locale[] _locales;
+		private Map<String, Locale> _localesMap;
+		private Set<Locale> _localesSet;
+
+	}
 
 }
