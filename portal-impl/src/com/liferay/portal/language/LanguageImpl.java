@@ -67,6 +67,9 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -987,16 +990,44 @@ public class LanguageImpl implements Language, Serializable {
 
 	private static class GroupLocales {
 
+		public GroupLocales() {
+			ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+			_readLock = readWriteLock.readLock();
+			_writeLock = readWriteLock.writeLock();
+		}
+
 		public boolean contains(Locale locale) {
-			return _localesSet.contains(locale);
+			_readLock.lock();
+
+			try {
+				return _localesSet.contains(locale);
+			}
+			finally {
+				_readLock.unlock();
+			}
 		}
 
 		public Locale getLocale(String languageId) {
-			return _localesMap.get(languageId);
+			_readLock.lock();
+
+			try {
+				return _localesMap.get(languageId);
+			}
+			finally {
+				_readLock.unlock();
+			}
 		}
 
 		public Locale[] getLocales() {
-			return Arrays.copyOf(_locales, _locales.length);
+			_readLock.lock();
+
+			try {
+				return Arrays.copyOf(_locales, _locales.length);
+			}
+			finally {
+				_readLock.unlock();
+			}
 		}
 
 		public void init(long groupId) {
@@ -1004,54 +1035,70 @@ public class LanguageImpl implements Language, Serializable {
 				return;
 			}
 
-			String[] languageIds = null;
+			_writeLock.lock();
+
+			if (_initialized) {
+				_writeLock.unlock();
+
+				return;
+			}
 
 			try {
-				Group group = GroupLocalServiceUtil.getGroup(groupId);
+				String[] languageIds = null;
 
-				UnicodeProperties typeSettingsProperties =
-					group.getTypeSettingsProperties();
+				try {
+					Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-				languageIds = StringUtil.split(
-					typeSettingsProperties.getProperty(PropsKeys.LOCALES));
-			}
-			catch (Exception e) {
-				languageIds = PropsValues.LOCALES_ENABLED;
-			}
+					UnicodeProperties typeSettingsProperties =
+						group.getTypeSettingsProperties();
 
-			_locales = new Locale[languageIds.length];
-			_localesMap = new HashMap<>(languageIds.length);
-			_localesSet = new HashSet<>(languageIds.length);
-
-			for (int i = 0; i < languageIds.length; i++) {
-				String languageId = languageIds[i];
-
-				Locale locale = LocaleUtil.fromLanguageId(languageId, false);
-
-				String language = languageId;
-
-				int pos = languageId.indexOf(CharPool.UNDERLINE);
-
-				if (pos > 0) {
-					language = languageId.substring(0, pos);
+					languageIds = StringUtil.split(
+						typeSettingsProperties.getProperty(PropsKeys.LOCALES));
+				}
+				catch (Exception e) {
+					languageIds = PropsValues.LOCALES_ENABLED;
 				}
 
-				_locales[i] = locale;
+				_locales = new Locale[languageIds.length];
+				_localesMap = new HashMap<>(languageIds.length);
+				_localesSet = new HashSet<>(languageIds.length);
 
-				if (!_localesMap.containsKey(language)) {
-					_localesMap.put(language, locale);
+				for (int i = 0; i < languageIds.length; i++) {
+					String languageId = languageIds[i];
+
+					Locale locale = LocaleUtil.fromLanguageId(
+						languageId, false);
+
+					String language = languageId;
+
+					int pos = languageId.indexOf(CharPool.UNDERLINE);
+
+					if (pos > 0) {
+						language = languageId.substring(0, pos);
+					}
+
+					_locales[i] = locale;
+
+					if (!_localesMap.containsKey(language)) {
+						_localesMap.put(language, locale);
+					}
+
+					_localesSet.add(locale);
 				}
 
-				_localesSet.add(locale);
+				_initialized = true;
 			}
-
-			_initialized = true;
+			finally {
+				_writeLock.unlock();
+			}
 		}
 
 		private volatile boolean _initialized = false;
 		private Locale[] _locales;
 		private Map<String, Locale> _localesMap;
 		private Set<Locale> _localesSet;
+		private final Lock _readLock;
+		private final Lock _writeLock;
 
 	}
 
