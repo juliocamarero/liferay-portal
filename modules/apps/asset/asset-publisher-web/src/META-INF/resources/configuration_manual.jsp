@@ -78,7 +78,7 @@ String eventName = "_" + HtmlUtil.escapeJS(assetPublisherDisplayContext.getPortl
 							<liferay-ui:search-container-column-text name="title">
 								<i class="<%= assetRenderer.getIconCssClass() %>"></i>
 
-								<%= HtmlUtil.escape(assetRenderer.getTitle(locale) + StringPool.SPACE + StringPool.OPEN_PARENTHESIS + LanguageUtil.get(locale, "not-displayable") + StringPool.CLOSE_PARENTHESIS) %>
+								<%= HtmlUtil.escape(assetRenderer.getTitle(locale) + StringPool.SPACE + StringPool.OPEN_PARENTHESIS + LanguageUtil.get(locale, "expired") + StringPool.CLOSE_PARENTHESIS) %>
 							</liferay-ui:search-container-column-text>
 						</c:otherwise>
 					</c:choose>
