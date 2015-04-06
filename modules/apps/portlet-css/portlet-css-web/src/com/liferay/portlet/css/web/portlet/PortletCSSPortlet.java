@@ -45,6 +45,130 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class PortletCSSPortlet extends MVCPortlet {
 
+	@Override
+	public String getJSON(
+			ActionMapping actionMapping, ActionForm actionForm,
+			HttpServletRequest request, HttpServletResponse response)
+		throws Exception {
+
+		HttpSession session = request.getSession();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Layout layout = themeDisplay.getLayout();
+
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
+		String portletId = ParamUtil.getString(request, "portletId");
+
+		if (!PortletPermissionUtil.contains(
+				permissionChecker, layout, portletId,
+				ActionKeys.CONFIGURATION)) {
+
+			return null;
+		}
+
+		PortletPreferences portletSetup =
+			PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
+				layout, portletId);
+
+		String css = ParamUtil.getString(request, "css");
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Updating css " + css);
+		}
+
+		JSONObject jsonObj = JSONFactoryUtil.createJSONObject(css);
+
+		JSONObject portletData = jsonObj.getJSONObject("portletData");
+
+		jsonObj.remove("portletData");
+
+		css = jsonObj.toString();
+
+		boolean useCustomTitle = portletData.getBoolean("useCustomTitle");
+		String showBorders = portletData.getString("showBorders");
+		String linkToLayoutUuid = GetterUtil.getString(
+			portletData.getString("portletLinksTarget"));
+
+		JSONObject titles = portletData.getJSONObject("titles");
+
+		for (Locale locale : LanguageUtil.getAvailableLocales(
+				themeDisplay.getSiteGroupId())) {
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			String title = null;
+
+			if (titles.has(languageId)) {
+				title = GetterUtil.getString(titles.getString(languageId));
+			}
+
+			String rootPortletId = PortletConstants.getRootPortletId(portletId);
+
+			String defaultPortletTitle = PortalUtil.getPortletTitle(
+				rootPortletId, languageId);
+
+			if ((title != null) &&
+				!Validator.equals(defaultPortletTitle, title)) {
+
+				portletSetup.setValue("portletSetupTitle_" + languageId, title);
+			}
+			else {
+				portletSetup.reset("portletSetupTitle_" + languageId);
+			}
+		}
+
+		portletSetup.setValue(
+			"portletSetupUseCustomTitle", String.valueOf(useCustomTitle));
+
+		if (Validator.isNotNull(showBorders)) {
+			boolean showBordersBoolean = portletData.getBoolean("showBorders");
+
+			portletSetup.setValue(
+				"portletSetupShowBorders", String.valueOf(showBordersBoolean));
+		}
+		else {
+			portletSetup.reset("portletSetupShowBorders");
+		}
+
+		if (Validator.isNotNull(linkToLayoutUuid)) {
+			portletSetup.setValue(
+				"portletSetupLinkToLayoutUuid", linkToLayoutUuid);
+		}
+		else {
+			portletSetup.reset("portletSetupLinkToLayoutUuid");
+		}
+
+		portletSetup.setValue("portletSetupCss", css);
+
+		if (PropsValues.MOBILE_DEVICE_STYLING_WAP_ENABLED) {
+			JSONObject wapData = jsonObj.getJSONObject("wapData");
+
+			String wapInitialWindowState = wapData.getString(
+				"initialWindowState");
+			String wapTitle = wapData.getString("title");
+
+			portletSetup.setValue(
+				"lfrWapInitialWindowState", wapInitialWindowState);
+			portletSetup.setValue("lfrWapTitle", wapTitle);
+		}
+		else {
+			portletSetup.reset("lfrWapInitialWindowState");
+			portletSetup.reset("lfrWapTitle");
+		}
+
+		portletSetup.store();
+
+		InvokerPortletImpl.clearResponse(
+			session, layout.getPrimaryKey(), portletId,
+			LanguageUtil.getLanguageId(request));
+
+		return null;
+	}
+
 	@Reference(unbind = "-")
 	protected void setPortletCSSWebUpgrade(
 		PortletCSSWebUpgrade portletCSSWebUpgrade) {
