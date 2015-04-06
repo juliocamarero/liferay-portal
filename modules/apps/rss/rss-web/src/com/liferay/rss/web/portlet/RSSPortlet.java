@@ -86,8 +86,7 @@ public class RSSPortlet extends MVCPortlet {
 		try {
 			RSSPortletInstanceSettings rssPortletInstanceSettings =
 				_portletInstanceSettingsProvider.getPortletInstanceSettings(
-					themeDisplay.getLayout(),
-					portletDisplay.getId());
+					themeDisplay.getLayout(), portletDisplay.getId());
 
 			renderRequest.setAttribute(
 				RSSPortletInstanceSettings.class.getName(),
