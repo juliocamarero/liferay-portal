@@ -14,10 +14,34 @@
 
 package com.liferay.portlet.css.web.portlet;
 
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.permission.PortletPermissionUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PropsValues;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.css.web.upgrade.PortletCSSWebUpgrade;
 
+import java.util.Locale;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
+import javax.portlet.PortletPreferences;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -45,15 +69,11 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class PortletCSSPortlet extends MVCPortlet {
 
-	@Override
-	public String getJSON(
-			ActionMapping actionMapping, ActionForm actionForm,
-			HttpServletRequest request, HttpServletResponse response)
+	public void updateLookAndFeel(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		HttpSession session = request.getSession();
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		Layout layout = themeDisplay.getLayout();
@@ -61,20 +81,20 @@ public class PortletCSSPortlet extends MVCPortlet {
 		PermissionChecker permissionChecker =
 			themeDisplay.getPermissionChecker();
 
-		String portletId = ParamUtil.getString(request, "portletId");
+		String portletId = ParamUtil.getString(actionRequest, "portletId");
 
 		if (!PortletPermissionUtil.contains(
 				permissionChecker, layout, portletId,
 				ActionKeys.CONFIGURATION)) {
 
-			return null;
+			return;
 		}
 
 		PortletPreferences portletSetup =
 			PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
 				layout, portletId);
 
-		String css = ParamUtil.getString(request, "css");
+		String css = ParamUtil.getString(actionRequest, "css");
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Updating css " + css);
@@ -161,17 +181,14 @@ public class PortletCSSPortlet extends MVCPortlet {
 		}
 
 		portletSetup.store();
-
-		InvokerPortletImpl.clearResponse(
-			session, layout.getPrimaryKey(), portletId,
-			LanguageUtil.getLanguageId(request));
-
-		return null;
 	}
 
 	@Reference(unbind = "-")
 	protected void setPortletCSSWebUpgrade(
 		PortletCSSWebUpgrade portletCSSWebUpgrade) {
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		PortletCSSPortlet.class);
 
 }
