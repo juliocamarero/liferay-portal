@@ -66,22 +66,18 @@ String eventName = "_" + HtmlUtil.escapeJS(assetPublisherDisplayContext.getPortl
 					AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(assetEntry.getClassPK(), AssetRendererFactory.TYPE_LATEST_APPROVED, true);
 					%>
 
-					<c:choose>
-						<c:when test="<%= assetEntry.isVisible() %>">
-							<liferay-ui:search-container-column-text name="title">
-								<i class="<%= assetRenderer.getIconCssClass() %>"></i>
+					<liferay-ui:search-container-column-text name="title">
+						<i class="<%= assetRenderer.getIconCssClass() %>"></i>
 
+						<c:choose>
+							<c:when test="<%= assetEntry.isVisible() %>">
 								<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>
-							</liferay-ui:search-container-column-text>
-						</c:when>
-						<c:otherwise>
-							<liferay-ui:search-container-column-text name="title">
-								<i class="<%= assetRenderer.getIconCssClass() %>"></i>
-
+							</c:when>
+							<c:otherwise>
 								<%= HtmlUtil.escape(assetRenderer.getTitle(locale) + StringPool.SPACE + StringPool.OPEN_PARENTHESIS + LanguageUtil.get(locale, "expired") + StringPool.CLOSE_PARENTHESIS) %>
-							</liferay-ui:search-container-column-text>
-						</c:otherwise>
-					</c:choose>
+							</c:otherwise>
+						</c:choose>
+					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-text
 						name="type"
