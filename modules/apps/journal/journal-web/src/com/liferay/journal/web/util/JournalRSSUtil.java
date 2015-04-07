@@ -492,8 +492,7 @@ public class JournalRSSUtil {
 
 		List<Long> hitLayoutIds =
 			JournalContentSearchLocalServiceUtil.getLayoutIds(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				article.getArticleId());
+				layout.getGroupId(), article.getArticleId());
 
 		if (!hitLayoutIds.isEmpty()) {
 			Long hitLayoutId = hitLayoutIds.get(0);
