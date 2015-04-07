@@ -170,8 +170,6 @@ public class ServicePreAction extends Action {
 		// Paths
 
 		String contextPath = PortalUtil.getPathContext();
-		String friendlyURLPrivateUserPath =
-			PortalUtil.getPathFriendlyURLPrivateUser();
 		String friendlyURLPublicPath = PortalUtil.getPathFriendlyURLPublic();
 		String imagePath = dynamicResourcesCDNHost.concat(
 			PortalUtil.getPathImage());
@@ -183,16 +181,12 @@ public class ServicePreAction extends Action {
 			if (Validator.isNotNull(contextPath)) {
 				String i18nContextPath = contextPath.concat(i18nPath);
 
-				friendlyURLPrivateUserPath = StringUtil.replaceFirst(
-					friendlyURLPrivateUserPath, contextPath, i18nContextPath);
 				friendlyURLPublicPath = StringUtil.replaceFirst(
 					friendlyURLPublicPath, contextPath, i18nContextPath);
 				mainPath = StringUtil.replaceFirst(
 					mainPath, contextPath, i18nContextPath);
 			}
 			else {
-				friendlyURLPrivateUserPath = i18nPath.concat(
-					friendlyURLPrivateUserPath);
 				friendlyURLPublicPath = i18nPath.concat(friendlyURLPublicPath);
 				mainPath = i18nPath.concat(mainPath);
 			}
@@ -798,8 +792,6 @@ public class ServicePreAction extends Action {
 		themeDisplay.setPathCms(contextPath.concat("/cms"));
 		themeDisplay.setPathContext(contextPath);
 		themeDisplay.setPathFlash(contextPath.concat("/flash"));
-		themeDisplay.setPathFriendlyURLPrivateGroup(friendlyURLPublicPath);
-		themeDisplay.setPathFriendlyURLPrivateUser(friendlyURLPrivateUserPath);
 		themeDisplay.setPathFriendlyURLPublic(friendlyURLPublicPath);
 		themeDisplay.setPathImage(imagePath);
 		themeDisplay.setPathJavaScript(contextPath.concat("/html/js"));
@@ -1376,104 +1368,6 @@ public class ServicePreAction extends Action {
 			userId, groupId, privateLayout, parameterMap, larFile);
 	}
 
-	protected void addDefaultUserPrivateLayoutByProperties(
-			long userId, long groupId)
-		throws PortalException {
-
-		String friendlyURL = getFriendlyURL(
-			PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_FRIENDLY_URL);
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		Layout layout = LayoutLocalServiceUtil.addLayout(
-			userId, groupId, true, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
-			PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_NAME, StringPool.BLANK,
-			StringPool.BLANK, LayoutConstants.TYPE_PORTLET, false, friendlyURL,
-			serviceContext);
-
-		LayoutTypePortlet layoutTypePortlet =
-			(LayoutTypePortlet)layout.getLayoutType();
-
-		layoutTypePortlet.setLayoutTemplateId(
-			0, PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_TEMPLATE_ID, false);
-
-		LayoutTemplate layoutTemplate = layoutTypePortlet.getLayoutTemplate();
-
-		for (String columnId : layoutTemplate.getColumns()) {
-			String keyPrefix = PropsKeys.DEFAULT_USER_PRIVATE_LAYOUT_PREFIX;
-
-			String portletIds = PropsUtil.get(keyPrefix.concat(columnId));
-
-			layoutTypePortlet.addPortletIds(
-				0, StringUtil.split(portletIds), columnId, false);
-		}
-
-		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
-
-		boolean updateLayoutSet = false;
-
-		LayoutSet layoutSet = layout.getLayoutSet();
-
-		if (Validator.isNotNull(
-				PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_REGULAR_THEME_ID)) {
-
-			layoutSet.setThemeId(
-				PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_REGULAR_THEME_ID);
-
-			updateLayoutSet = true;
-		}
-
-		if (Validator.isNotNull(
-				PropsValues.
-					DEFAULT_USER_PRIVATE_LAYOUT_REGULAR_COLOR_SCHEME_ID)) {
-
-			layoutSet.setColorSchemeId(
-				PropsValues.
-					DEFAULT_USER_PRIVATE_LAYOUT_REGULAR_COLOR_SCHEME_ID);
-
-			updateLayoutSet = true;
-		}
-
-		if (Validator.isNotNull(
-				PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_WAP_THEME_ID)) {
-
-			layoutSet.setWapThemeId(
-				PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_WAP_THEME_ID);
-
-			updateLayoutSet = true;
-		}
-
-		if (Validator.isNotNull(
-				PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_WAP_COLOR_SCHEME_ID)) {
-
-			layoutSet.setWapColorSchemeId(
-				PropsValues.DEFAULT_USER_PRIVATE_LAYOUT_WAP_COLOR_SCHEME_ID);
-
-			updateLayoutSet = true;
-		}
-
-		if (updateLayoutSet) {
-			LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
-		}
-	}
-
-	protected void addDefaultUserPrivateLayouts(User user)
-		throws PortalException {
-
-		Group userGroup = user.getGroup();
-
-		if (privateLARFile != null) {
-			addDefaultLayoutsByLAR(
-				user.getUserId(), userGroup.getGroupId(), true, privateLARFile);
-		}
-		else {
-			addDefaultUserPrivateLayoutByProperties(
-				user.getUserId(), userGroup.getGroupId());
-		}
-	}
-
 	protected void addDefaultUserPublicLayoutByProperties(
 			long userId, long groupId)
 		throws PortalException {
@@ -1844,29 +1738,6 @@ public class ServicePreAction extends Action {
 	}
 
 	protected void initImportLARFiles() {
-		String privateLARFileName =
-			PropsValues.DEFAULT_USER_PRIVATE_LAYOUTS_LAR;
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Reading private LAR file " + privateLARFileName);
-		}
-
-		if (Validator.isNotNull(privateLARFileName)) {
-			privateLARFile = new File(privateLARFileName);
-
-			if (!privateLARFile.exists()) {
-				_log.error(
-					"Private LAR file " + privateLARFile + " does not exist");
-
-				privateLARFile = null;
-			}
-			else {
-				if (_log.isDebugEnabled()) {
-					_log.debug("Using private LAR file " + privateLARFileName);
-				}
-			}
-		}
-
 		String publicLARFileName = PropsValues.DEFAULT_USER_PUBLIC_LAYOUTS_LAR;
 
 		if (_log.isDebugEnabled()) {

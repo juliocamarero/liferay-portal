@@ -470,17 +470,7 @@ public class GroupImpl extends GroupBaseImpl {
 	public String getPathFriendlyURL(
 		boolean privateLayout, ThemeDisplay themeDisplay) {
 
-		if (privateLayout) {
-			if (isUser()) {
-				return themeDisplay.getPathFriendlyURLPrivateUser();
-			}
-			else {
-				return themeDisplay.getPathFriendlyURLPrivateGroup();
-			}
-		}
-		else {
-			return themeDisplay.getPathFriendlyURLPublic();
-		}
+		return themeDisplay.getPathFriendlyURLPublic();
 	}
 
 	@Override
