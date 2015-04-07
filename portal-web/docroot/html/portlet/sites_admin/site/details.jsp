@@ -431,7 +431,6 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 		Liferay.Util.toggleSelectBox('<portlet:namespace />layoutSetPrototypeId', <portlet:namespace />isVisible, '<portlet:namespace />layoutSetPrototypeIdOptions');
 
 		Liferay.Util.toggleBoxes('<portlet:namespace />publicLayoutSetPrototypeLinkEnabled','<portlet:namespace />publicLayoutSetPrototypeMergeAlert');
-		Liferay.Util.toggleBoxes('<portlet:namespace />privateLayoutSetPrototypeLinkEnabled','<portlet:namespace />privateLayoutSetPrototypeMergeAlert');
 	</aui:script>
 
 	<aui:script use="liferay-search-container">

@@ -24,7 +24,6 @@ PortletURL portletURL = liferayPortletResponse.createRenderURL();
 portletURL.setParameter("struts_action", "/layouts_admin/import_layouts");
 portletURL.setParameter("tabs2", "current-and-previous");
 portletURL.setParameter("groupId", String.valueOf(groupId));
-portletURL.setParameter("privateLayout", Boolean.FALSE.toString());
 
 String orderByCol = ParamUtil.getString(request, "orderByCol");
 String orderByType = ParamUtil.getString(request, "orderByType");
