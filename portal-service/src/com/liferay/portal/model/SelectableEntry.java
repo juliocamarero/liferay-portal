@@ -14,9 +14,12 @@
 
 package com.liferay.portal.model;
 
+import java.io.IOException;
+
 import javax.portlet.PortletPreferences;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 public interface SelectableEntry {
 
 	public String getIcon();
@@ -26,6 +29,10 @@ public interface SelectableEntry {
 	public String getLabel();
 
 	public Double getWeight();
+
+	public void include(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException;
 
 	public boolean isEnabled();
 
