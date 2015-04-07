@@ -41,7 +41,6 @@ int mergeFailCount = SitesUtil.getMergeFailCount(layoutSetPrototype);
 		portletURL.setParameter("struts_action", "/sites_admin/edit_site");
 		portletURL.setParameter(Constants.CMD, "reset_merge_fail_count_and_merge");
 		portletURL.setParameter("groupId", String.valueOf(groupId));
-		portletURL.setParameter("privateLayoutSet", Boolean.FALSE.toString());
 
 		merge = true;
 	}

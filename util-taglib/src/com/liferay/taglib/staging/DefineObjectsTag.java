@@ -63,18 +63,6 @@ public class DefineObjectsTag extends IncludeTag {
 
 		Layout layout = themeDisplay.getLayout();
 
-		String privateLayoutString = request.getParameter("privateLayout");
-
-		if (Validator.isNull(privateLayoutString)) {
-			privateLayoutString = String.valueOf(
-				request.getAttribute(WebKeys.PRIVATE_LAYOUT));
-		}
-
-		boolean privateLayout = GetterUtil.getBoolean(
-			privateLayoutString, layout.isPrivateLayout());
-
-		pageContext.setAttribute("privateLayout", privateLayout);
-
 		pageContext.setAttribute("stagingGroup", null);
 		pageContext.setAttribute("stagingGroupId", 0L);
 

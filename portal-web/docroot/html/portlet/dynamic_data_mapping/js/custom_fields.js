@@ -301,8 +301,7 @@ AUI.add(
 								options[prefix + item.name] = {
 									groupId: item.groupId,
 									layoutId: item.layoutId,
-									name: item.name,
-									privateLayout: item.privateLayout
+									name: item.name
 								};
 
 								if (item.hasChildren) {
@@ -319,7 +318,6 @@ AUI.add(
 					_createOptions: function(val) {
 						var instance = this;
 
-						var privateOptions = [];
 						var publicOptions = [];
 
 						A.each(
@@ -331,13 +329,7 @@ AUI.add(
 									value: LString.escapeHTML(JSON.stringify(item))
 								};
 
-								var optionsArray = publicOptions;
-
-								if (item.privateLayout) {
-									optionsArray = privateOptions;
-								}
-
-								optionsArray.push(
+								publicOptions.push(
 									Lang.sub(instance.OPTION_TEMPLATE, values)
 								);
 							}
@@ -384,8 +376,7 @@ AUI.add(
 										var curLayout = LiferayFormBuilderUtil.parseJSON(item.attr('value'));
 
 										if ((curLayout.groupId === selLayout.groupId) &&
-											(curLayout.layoutId === selLayout.layoutId) &&
-											(curLayout.privateLayout === selLayout.privateLayout)) {
+											(curLayout.layoutId === selLayout.layoutId)) {
 
 											item.set('selected', true);
 										}

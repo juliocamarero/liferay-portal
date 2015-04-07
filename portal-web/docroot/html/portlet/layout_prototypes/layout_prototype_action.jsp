@@ -64,7 +64,6 @@ LayoutPrototype layoutPrototype = (LayoutPrototype)row.getObject();
 			<portlet:param name="struts_action" value="/layout_prototypes/export_layouts" />
 			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(layoutPrototype.getGroupId()) %>" />
-			<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 			<portlet:param name="rootNodeName" value="<%= layoutPrototype.getName(locale) %>" />
 		</portlet:renderURL>
 
@@ -83,7 +82,6 @@ LayoutPrototype layoutPrototype = (LayoutPrototype)row.getObject();
 			<portlet:param name="struts_action" value="/layout_prototypes/import_layouts" />
 			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.IMPORT %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(layoutPrototype.getGroupId()) %>" />
-			<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 			<portlet:param name="rootNodeName" value="<%= layoutPrototype.getName(locale) %>" />
 		</portlet:renderURL>
 

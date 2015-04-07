@@ -33,7 +33,6 @@ ExportImportConfiguration exportImportConfiguration = (ExportImportConfiguration
 	<portlet:param name="exportConfigurationButtons" value="saved" />
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 	<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
-	<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 	<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
 </portlet:renderURL>
 
@@ -50,7 +49,6 @@ ExportImportConfiguration exportImportConfiguration = (ExportImportConfiguration
 	<portlet:param name="tabs2" value="current-and-previous" />
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 	<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
-	<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 	<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
 </portlet:renderURL>
 
