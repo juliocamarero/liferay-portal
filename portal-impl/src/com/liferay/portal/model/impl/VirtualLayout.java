@@ -25,7 +25,6 @@ import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutWrapper;
 import com.liferay.portal.model.VirtualLayoutConstants;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 
 import java.util.Locale;
