@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
@@ -81,21 +80,11 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 
 		for (JournalContentSearch contentSearch : contentSearches) {
 			if (LayoutPermissionUtil.contains(
-					permissionChecker, contentSearch.getGroupId(),
-					contentSearch.isPrivateLayout(),
+					permissionChecker, contentSearch.getGroupId(), false,
 					contentSearch.getLayoutId(), ActionKeys.VIEW)) {
 
-				if (contentSearch.isPrivateLayout()) {
-					if (!GroupLocalServiceUtil.hasUserGroup(
-							themeDisplay.getUserId(),
-							contentSearch.getGroupId())) {
-
-						continue;
-					}
-				}
-
 				Layout hitLayout = LayoutLocalServiceUtil.getLayout(
-					contentSearch.getGroupId(), contentSearch.isPrivateLayout(),
+					contentSearch.getGroupId(), false,
 					contentSearch.getLayoutId());
 
 				return PortalUtil.getLayoutURL(hitLayout, themeDisplay);
@@ -131,7 +120,7 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 
 		List<Long> hitLayoutIds =
 			JournalContentSearchLocalServiceUtil.getLayoutIds(
-				layout.getGroupId(), layout.isPrivateLayout(), articleId);
+				layout.getGroupId(), articleId);
 
 		for (Long hitLayoutId : hitLayoutIds) {
 			PermissionChecker permissionChecker =

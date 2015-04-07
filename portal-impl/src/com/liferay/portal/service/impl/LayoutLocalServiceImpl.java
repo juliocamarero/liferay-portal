@@ -647,8 +647,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		// Journal content searches
 
 		journalContentSearchLocalService.deleteLayoutContentSearches(
-			layout.getGroupId(), layout.isPrivateLayout(),
-			layout.getLayoutId());
+			layout.getGroupId(), layout.getLayoutId());
 
 		// Expando
 

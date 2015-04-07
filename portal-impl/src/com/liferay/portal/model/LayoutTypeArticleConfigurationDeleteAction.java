@@ -54,8 +54,8 @@ public class LayoutTypeArticleConfigurationDeleteAction extends Action {
 			}
 
 			JournalContentSearchLocalServiceUtil.deleteArticleContentSearch(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				layout.getLayoutId(), StringPool.BLANK, articleId);
+				layout.getGroupId(), layout.getLayoutId(), StringPool.BLANK,
+				articleId);
 		}
 		catch (Exception e) {
 			throw new ActionException(e);

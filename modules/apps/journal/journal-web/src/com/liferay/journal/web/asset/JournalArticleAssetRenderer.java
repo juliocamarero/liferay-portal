@@ -318,8 +318,7 @@ public class JournalArticleAssetRenderer
 
 		List<Long> hitLayoutIds =
 			JournalContentSearchLocalServiceUtil.getLayoutIds(
-				_article.getGroupId(), layout.isPrivateLayout(),
-				_article.getArticleId());
+				_article.getGroupId(), _article.getArticleId());
 
 		if (!hitLayoutIds.isEmpty()) {
 			Long hitLayoutId = hitLayoutIds.get(0);
