@@ -103,7 +103,7 @@ public class UpgradeGroup extends UpgradeProcess {
 				GroupTable.TABLE_NAME, GroupTable.TABLE_COLUMNS,
 				GroupTable.TABLE_SQL_CREATE, GroupTable.TABLE_SQL_ADD_INDEXES);
 		}
-		
+
 		updateGroups();
 		updateTable("Layout");
 		updateTable("LayoutSet");
