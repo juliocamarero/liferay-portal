@@ -901,10 +901,6 @@ public interface Portal {
 
 	public String getPathContext(String contextPath);
 
-	public String getPathFriendlyURLPrivateGroup();
-
-	public String getPathFriendlyURLPrivateUser();
-
 	public String getPathFriendlyURLPublic();
 
 	public String getPathImage();

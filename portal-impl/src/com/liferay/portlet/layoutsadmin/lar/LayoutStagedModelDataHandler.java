@@ -784,17 +784,10 @@ public class LayoutStagedModelDataHandler
 
 		String url = GetterUtil.getString(typeSettings.getProperty("url"));
 
-		String friendlyURLPrivateGroupPath =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-		String friendlyURLPrivateUserPath =
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
 		String friendlyURLPublicPath =
 			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
 
-		if (!url.startsWith(friendlyURLPrivateGroupPath) &&
-			!url.startsWith(friendlyURLPrivateUserPath) &&
-			!url.startsWith(friendlyURLPublicPath)) {
-
+		if (!url.startsWith(friendlyURLPublicPath)) {
 			return null;
 		}
 

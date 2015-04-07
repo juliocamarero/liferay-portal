@@ -365,10 +365,6 @@ public class PortalImpl implements Portal {
 			ContextPathUtil.getContextPath(
 				PortalContextLoaderListener.getPortalServletContextPath()));
 
-		_pathFriendlyURLPrivateGroup =
-			_pathContext + _PRIVATE_GROUP_SERVLET_MAPPING;
-		_pathFriendlyURLPrivateUser =
-			_pathContext + _PRIVATE_USER_SERVLET_MAPPING;
 		_pathFriendlyURLPublic = _pathContext + _PUBLIC_GROUP_SERVLET_MAPPING;
 		_pathImage = _pathContext + PATH_IMAGE;
 		_pathMain = _pathContext + PATH_MAIN;
@@ -1704,7 +1700,7 @@ public class PortalImpl implements Portal {
 			getPortalURL(
 				company.getVirtualHostname(), getPortalServerPort(false),
 				false));
-		sb.append(getPathFriendlyURLPrivateGroup());
+		sb.append(getPathFriendlyURLPublic());
 		sb.append(GroupConstants.CONTROL_PANEL_FRIENDLY_URL);
 		sb.append(PropsValues.CONTROL_PANEL_LAYOUT_FRIENDLY_URL);
 
@@ -2592,10 +2588,6 @@ public class PortalImpl implements Portal {
 	@Override
 	public int[] getGroupFriendlyURLIndex(String requestURI) {
 		if (requestURI.startsWith(
-				_PRIVATE_GROUP_SERVLET_MAPPING + StringPool.SLASH) ||
-			requestURI.startsWith(
-				_PRIVATE_USER_SERVLET_MAPPING + StringPool.SLASH) ||
-			requestURI.startsWith(
 				_PUBLIC_GROUP_SERVLET_MAPPING + StringPool.SLASH)) {
 
 			int x = requestURI.indexOf(StringPool.SLASH, 1);
@@ -3139,19 +3131,7 @@ public class PortalImpl implements Portal {
 			virtualHostname, getPortalServerPort(secure), secure);
 
 		sb.append(portalURL);
-
-		if (layout.isPrivateLayout()) {
-			if (group.isUser()) {
-				sb.append(getPathFriendlyURLPrivateUser());
-			}
-			else {
-				sb.append(getPathFriendlyURLPrivateGroup());
-			}
-		}
-		else {
-			sb.append(getPathFriendlyURLPublic());
-		}
-
+		sb.append(getPathFriendlyURLPublic());
 		sb.append(group.getFriendlyURL());
 		sb.append(layout.getFriendlyURL());
 
@@ -3218,19 +3198,7 @@ public class PortalImpl implements Portal {
 
 		Group group = GroupLocalServiceUtil.getGroup(layoutSet.getGroupId());
 
-		String friendlyURL = null;
-
-		if (layoutSet.isPrivateLayout()) {
-			if (group.isUser()) {
-				friendlyURL = _PRIVATE_USER_SERVLET_MAPPING;
-			}
-			else {
-				friendlyURL = _PRIVATE_GROUP_SERVLET_MAPPING;
-			}
-		}
-		else {
-			friendlyURL = _PUBLIC_GROUP_SERVLET_MAPPING;
-		}
+		String friendlyURL = _PUBLIC_GROUP_SERVLET_MAPPING;
 
 		if (themeDisplay.isI18n()) {
 			friendlyURL = themeDisplay.getI18nPath() + friendlyURL;
@@ -3785,16 +3753,6 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public String getPathFriendlyURLPrivateGroup() {
-		return _pathFriendlyURLPrivateGroup;
-	}
-
-	@Override
-	public String getPathFriendlyURLPrivateUser() {
-		return _pathFriendlyURLPrivateUser;
-	}
-
-	@Override
 	public String getPathFriendlyURLPublic() {
 		return _pathFriendlyURLPublic;
 	}
@@ -3833,19 +3791,11 @@ public class PortalImpl implements Portal {
 			return LayoutConstants.DEFAULT_PLID;
 		}
 
-		boolean privateLayout = true;
+		boolean privateLayout = false;
 
 		String urlPrefix = StringPool.SLASH + urlParts[1];
 
-		if (_PUBLIC_GROUP_SERVLET_MAPPING.equals(urlPrefix)) {
-			privateLayout = false;
-		}
-		else if (_PRIVATE_GROUP_SERVLET_MAPPING.equals(urlPrefix) ||
-				 _PRIVATE_USER_SERVLET_MAPPING.equals(urlPrefix)) {
-
-			privateLayout = true;
-		}
-		else {
+		if (!_PUBLIC_GROUP_SERVLET_MAPPING.equals(urlPrefix)) {
 			return LayoutConstants.DEFAULT_PLID;
 		}
 
@@ -7983,19 +7933,7 @@ public class PortalImpl implements Portal {
 			}
 		}
 
-		String friendlyURL = null;
-
-		if (privateLayoutSet) {
-			if (group.isUser()) {
-				friendlyURL = _PRIVATE_USER_SERVLET_MAPPING;
-			}
-			else {
-				friendlyURL = _PRIVATE_GROUP_SERVLET_MAPPING;
-			}
-		}
-		else {
-			friendlyURL = _PUBLIC_GROUP_SERVLET_MAPPING;
-		}
+		String friendlyURL = _PUBLIC_GROUP_SERVLET_MAPPING;
 
 		StringBundler sb = new StringBundler(6);
 
@@ -8128,18 +8066,7 @@ public class PortalImpl implements Portal {
 
 		Group group = layout.getGroup();
 
-		if (layout.isPrivateLayout()) {
-			if (group.isUser()) {
-				sb.append(_PRIVATE_USER_SERVLET_MAPPING);
-			}
-			else {
-				sb.append(_PRIVATE_GROUP_SERVLET_MAPPING);
-			}
-		}
-		else {
-			sb.append(_PUBLIC_GROUP_SERVLET_MAPPING);
-		}
-
+		sb.append(_PUBLIC_GROUP_SERVLET_MAPPING);
 		sb.append(group.getFriendlyURL());
 		sb.append(layout.getFriendlyURL(themeDisplay.getLocale()));
 
@@ -8426,12 +8353,6 @@ public class PortalImpl implements Portal {
 
 	private static final String _LOCALHOST = "localhost";
 
-	private static final String _PRIVATE_GROUP_SERVLET_MAPPING =
-		PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING;
-
-	private static final String _PRIVATE_USER_SERVLET_MAPPING =
-		PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
-
 	private static final String _PUBLIC_GROUP_SERVLET_MAPPING =
 		PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING;
 
@@ -8461,8 +8382,6 @@ public class PortalImpl implements Portal {
 	private final EditDiscussionAction _editDiscussionAction =
 		new EditDiscussionAction();
 	private final String _pathContext;
-	private final String _pathFriendlyURLPrivateGroup;
-	private final String _pathFriendlyURLPrivateUser;
 	private final String _pathFriendlyURLPublic;
 	private final String _pathImage;
 	private final String _pathMain;
