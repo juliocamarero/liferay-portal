@@ -62,6 +62,7 @@ import com.liferay.portlet.journal.service.permission.JournalPermission;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.util.PropertyComparator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,6 +72,7 @@ import java.util.List;
 import javax.portlet.PortletPreferences;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Eudaldo Alonso
@@ -78,10 +80,12 @@ import javax.servlet.http.HttpServletRequest;
 public class JournalContentDisplayContext {
 
 	public JournalContentDisplayContext(
-			HttpServletRequest request, PortletPreferences portletPreferences)
+			HttpServletRequest request, HttpServletResponse response,
+			PortletPreferences portletPreferences)
 		throws PortalException {
 
 		_request = request;
+		_response = response;
 		_portletPreferences = portletPreferences;
 
 		String portletId = PortalUtil.getPortletId(request);
@@ -370,6 +374,50 @@ public class JournalContentDisplayContext {
 		_portletResource = ParamUtil.getString(_request, "portletResource");
 
 		return _portletResource;
+	}
+
+	public List<ContentMetadataEntry> getSelectedContentMetadataEntries() {
+		List<ContentMetadataEntry> contentMetadataEntries = ListUtil.filter(
+			ContentMetadataEntryTracker.getContentMetadataEntries(),
+			new PredicateFilter<ContentMetadataEntry>() {
+
+				@Override
+				public boolean filter(
+					ContentMetadataEntry contentMetadataEntry) {
+						return contentMetadataEntry.isSelected(
+							_request, _portletPreferences);
+				}
+
+			});
+
+		_request.setAttribute(WebKeys.JOURNAL_ARTICLE, getArticle());
+		_request.setAttribute(
+			WebKeys.JOURNAL_ARTICLE_DISPLAY, getArticleDisplay());
+
+		return ListUtil.sort(
+			contentMetadataEntries,
+			new PropertyComparator("weight", true, false));
+	}
+
+	public List<UserToolEntry> getSelectedUserToolEntries() {
+		List<UserToolEntry> userToolEntries = ListUtil.filter(
+			UserToolEntryTracker.getUserToolEntries(),
+			new PredicateFilter<UserToolEntry>() {
+
+				@Override
+				public boolean filter(UserToolEntry userToolEntry) {
+					return userToolEntry.isSelected(
+						_request, _portletPreferences);
+				}
+
+			});
+
+		_request.setAttribute(WebKeys.JOURNAL_ARTICLE, getArticle());
+		_request.setAttribute(
+			WebKeys.JOURNAL_ARTICLE_DISPLAY, getArticleDisplay());
+
+		return ListUtil.sort(
+			userToolEntries, new PropertyComparator("weight", true, false));
 	}
 
 	public boolean hasViewPermission() throws PortalException {
@@ -706,6 +754,7 @@ public class JournalContentDisplayContext {
 	private String _portletResource;
 	private Boolean _print;
 	private final HttpServletRequest _request;
+	private final HttpServletResponse _response;
 	private Boolean _showAddArticleIcon;
 	private Boolean _showAvailableLocales;
 	private Boolean _showEditArticleIcon;
