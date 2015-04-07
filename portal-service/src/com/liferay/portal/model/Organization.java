@@ -77,9 +77,7 @@ public interface Organization extends OrganizationModel, PersistedModel,
 
 	public javax.portlet.PortletPreferences getPreferences();
 
-	public int getPrivateLayoutsPageCount();
-
-	public int getPublicLayoutsPageCount();
+	public int getLayoutsPageCount();
 
 	public java.util.Set<java.lang.String> getReminderQueryQuestions(
 		java.util.Locale locale);
@@ -93,9 +91,7 @@ public interface Organization extends OrganizationModel, PersistedModel,
 
 	public int getTypeOrder();
 
-	public boolean hasPrivateLayouts();
-
-	public boolean hasPublicLayouts();
+	public boolean hasLayouts();
 
 	public boolean hasSuborganizations();
 

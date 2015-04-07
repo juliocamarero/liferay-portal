@@ -160,8 +160,7 @@ public interface User extends UserModel, PersistedModel {
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
-	* Returns the user's display URL based on the theme display, discounting
-	* the URL of the user's default intranet site home page.
+	* Returns the user's display URL based on the theme display.
 	*
 	* <p>
 	* The logic for the display URL to return is as follows:
@@ -186,42 +185,6 @@ public interface User extends UserModel, PersistedModel {
 	*/
 	public java.lang.String getDisplayURL(
 		com.liferay.portal.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException;
-
-	/**
-	* Returns the user's display URL based on the theme display.
-	*
-	* <p>
-	* The logic for the display URL to return is as follows:
-	* </p>
-	*
-	* <ol>
-	* <li>
-	* If the user is the guest user, return an empty string.
-	* </li>
-	* <li>
-	* Else, if a friendly URL is available for the user's profile, return that
-	* friendly URL.
-	* </li>
-	* <li>
-	* Else, if <code>privateLayout</code> is <code>true</code>, return the URL
-	* of the user's default intranet site home page.
-	* </li>
-	* <li>
-	* Otherwise, return the URL of the user's default extranet site home page.
-	* </li>
-	* </ol>
-	*
-	* @param themeDisplay the theme display
-	* @param privateLayout whether to use the URL of the user's default
-	intranet (versus extranet) site home page, if no friendly URL is
-	available for the user's profile
-	* @return the user's display URL
-	* @throws PortalException if a portal exception occurred
-	*/
-	public java.lang.String getDisplayURL(
-		com.liferay.portal.theme.ThemeDisplay themeDisplay,
-		boolean privateLayout)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	/**
@@ -367,10 +330,7 @@ public interface User extends UserModel, PersistedModel {
 		com.liferay.portal.theme.ThemeDisplay themeDisplay)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public int getPrivateLayoutsPageCount()
-		throws com.liferay.portal.kernel.exception.PortalException;
-
-	public int getPublicLayoutsPageCount()
+	public int getLayoutsPageCount()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public java.util.Set<java.lang.String> getReminderQueryQuestions()
@@ -421,10 +381,7 @@ public interface User extends UserModel, PersistedModel {
 
 	public boolean hasOrganization();
 
-	public boolean hasPrivateLayouts()
-		throws com.liferay.portal.kernel.exception.PortalException;
-
-	public boolean hasPublicLayouts()
+	public boolean hasLayouts()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public boolean hasReminderQuery();
