@@ -14,10 +14,23 @@
 
 package com.liferay.site.navigation.breadcrumb.web.portlet;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.settings.PortletInstanceSettingsLocator;
+import com.liferay.portal.kernel.settings.SettingsFactory;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.PortletDisplay;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.site.navigation.breadcrumb.web.configuration.BreadcrumbPortletInstanceConfiguration;
 import com.liferay.site.navigation.breadcrumb.web.upgrade.BreadcrumbWebUpgrade;
 
+import java.io.IOException;
+
 import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -53,9 +66,45 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class BreadcrumbPortlet extends MVCPortlet {
 
+	@Override
+	public void doView(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		try {
+			BreadcrumbPortletInstanceConfiguration
+				breadcrumbPortletInstanceConfiguration =
+					_settingsFactory.getSettings(
+						BreadcrumbPortletInstanceConfiguration.class,
+						new PortletInstanceSettingsLocator(
+							themeDisplay.getLayout(), portletDisplay.getId()));
+
+			renderRequest.setAttribute(
+				BreadcrumbPortletInstanceConfiguration.class.getName(),
+				breadcrumbPortletInstanceConfiguration);
+		}
+		catch (PortalException pe) {
+			throw new SystemException(pe);
+		}
+
+		super.doView(renderRequest, renderResponse);
+	}
+
 	@Reference(unbind = "-")
 	protected void setBreadcrumbWebUpgrade(
 		BreadcrumbWebUpgrade breadcrumbWebUpgrade) {
 	}
+
+	@Reference(unbind = "-")
+	protected void setSettingsFactory(SettingsFactory settingsFactory) {
+		_settingsFactory = settingsFactory;
+	}
+
+	private SettingsFactory _settingsFactory;
 
 }
