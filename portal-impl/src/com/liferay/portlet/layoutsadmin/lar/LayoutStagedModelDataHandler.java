@@ -999,8 +999,8 @@ public class LayoutStagedModelDataHandler
 		typeSettingsProperties.setProperty("article-id", articleId);
 
 		JournalContentSearchLocalServiceUtil.updateContentSearch(
-			portletDataContext.getScopeGroupId(), layout.isPrivateLayout(),
-			layout.getLayoutId(), StringPool.BLANK, articleId, true);
+			portletDataContext.getScopeGroupId(), layout.getLayoutId(),
+			StringPool.BLANK, articleId, true);
 	}
 
 	protected void importLayoutFriendlyURLs(

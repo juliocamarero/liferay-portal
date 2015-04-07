@@ -54,8 +54,8 @@ public class LayoutTypeArticleConfigurationUpdateAction extends Action {
 			}
 
 			JournalContentSearchLocalServiceUtil.updateContentSearch(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				layout.getLayoutId(), StringPool.BLANK, articleId, true);
+				layout.getGroupId(), layout.getLayoutId(), StringPool.BLANK,
+				articleId, true);
 		}
 		catch (Exception e) {
 			throw new ActionException(e);
