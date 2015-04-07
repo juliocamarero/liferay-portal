@@ -61,7 +61,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 				<portlet:param name="struts_action" value="/layouts_admin/add_layout" />
 				<portlet:param name="tabs1" value="<%= layoutsAdminDisplayContext.getTabs1() %>" />
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-				<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 			</portlet:renderURL>
 
 			<aui:nav-item href="<%= addPagesURL %>" iconCssClass="icon-plus" label="add-page" />
@@ -72,7 +71,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 				<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 				<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
-				<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 				<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
 			</portlet:renderURL>
 
@@ -82,7 +80,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 				<portlet:param name="struts_action" value="/layouts_admin/import_layouts" />
 				<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.VALIDATE %>" />
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-				<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 				<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
 			</portlet:renderURL>
 
@@ -112,7 +109,6 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 	<aui:input name="liveGroupId" type="hidden" value="<%= liveGroupId %>" />
 	<aui:input name="stagingGroupId" type="hidden" value="<%= layoutsAdminDisplayContext.getStagingGroupId() %>" />
 	<aui:input name="selPlid" type="hidden" value="<%= layoutsAdminDisplayContext.getSelPlid() %>" />
-	<aui:input name="privateLayout" type="hidden" value="<%= false %>" />
 	<aui:input name="layoutSetId" type="hidden" value="<%= selLayoutSet.getLayoutSetId() %>" />
 	<aui:input name="<%= PortletDataHandlerKeys.SELECTED_LAYOUTS %>" type="hidden" />
 

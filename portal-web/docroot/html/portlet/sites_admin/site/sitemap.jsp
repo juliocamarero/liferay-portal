@@ -27,7 +27,7 @@ String sitemapUrl = PortalUtil.getPortalURL(request) + themeDisplay.getPathConte
 LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId, false);
 
 if (!host.equals(layoutSet.getVirtualHostname())) {
-	sitemapUrl += "?groupId=" + liveGroup.getGroupId() + "&privateLayout=" + false;
+	sitemapUrl += "?groupId=" + liveGroup.getGroupId();
 }
 %>
 

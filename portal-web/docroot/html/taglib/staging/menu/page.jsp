@@ -66,7 +66,6 @@ String publishMessage = LanguageUtil.get(request, publishDialogTitle);
 	<liferay-portlet:param name="<%= Constants.CMD %>" value="<%= Constants.PUBLISH_TO_LIVE %>" />
 	<liferay-portlet:param name="closeRedirect" value="<%= currentURL %>" />
 	<liferay-portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-	<liferay-portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 	<liferay-portlet:param name="selPlid" value="<%= String.valueOf(selPlid) %>" />
 </liferay-portlet:renderURL>
 

@@ -109,8 +109,8 @@ if (userGroup != null) {
 				hasUpdateSitePermission = GroupPermissionUtil.contains(permissionChecker, userGroupGroup, ActionKeys.UPDATE);
 			}
 			else {
-				for (LayoutSetPrototype layoutSetPrototype : layoutSetPrototypes) {
-					if (GroupPermissionUtil.contains(permissionChecker, layoutSetPrototype.getGroup(), ActionKeys.UPDATE)) {
+				for (LayoutSetPrototype curLayoutSetPrototype : layoutSetPrototypes) {
+					if (GroupPermissionUtil.contains(permissionChecker, curLayoutSetPrototype.getGroup(), ActionKeys.UPDATE)) {
 						hasUpdateSitePermission = true;
 					}
 				}

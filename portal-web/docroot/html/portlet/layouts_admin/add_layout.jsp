@@ -68,7 +68,6 @@ String[] types = LayoutTypeControllerTracker.getTypes();
 	<aui:input id="addLayoutCMD" name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.ADD %>" />
 	<aui:input id="addLayoutRedirect" name="redirect" type="hidden" value="<%= editLayoutRenderURL %>" />
 	<aui:input id="addLayoutGroupId" name="groupId" type="hidden" value="<%= String.valueOf(groupId) %>" />
-	<aui:input id="addLayoutPrivateLayout" name="privateLayout" type="hidden" value="<%= false %>" />
 	<aui:input id="addLayoutParentPlid" name="parentPlid" type="hidden" value="<%= parentPlid %>" />
 	<aui:input id="addLayoutParentLayoutId" name="parentLayoutId" type="hidden" value="<%= parentLayoutId %>" />
 	<aui:input id="addLayoutType" name="type" type="hidden" value="portlet" />

@@ -96,7 +96,6 @@ else {
 
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("liveGroupId", String.valueOf(liveGroupId));
-portletURL.setParameter("privateLayout", Boolean.FALSE.toString());
 portletURL.setParameter("rootNodeName", rootNodeName);
 portletURL.setParameter("showHeader", String.valueOf(showHeader));
 
@@ -118,7 +117,7 @@ if (!cmd.equals(Constants.ADD)) {
 
 <portlet:renderURL var="backURL">
 	<portlet:param name="struts_action" value="/layouts_admin/edit_layout_set" />
-	<portlet:param name="tabs1" value='<%= privateLayout ? "my-dashboard" : "my-profile" %>' />
+	<portlet:param name="tabs1" value="my-profile" />
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 </portlet:renderURL>
 
@@ -180,7 +179,6 @@ if (!cmd.equals(Constants.ADD)) {
 				<aui:input name="exportImportConfigurationId" type="hidden" value="<%= exportImportConfigurationId %>" />
 				<aui:input name="groupId" type="hidden" value="<%= String.valueOf(groupId) %>" />
 				<aui:input name="liveGroupId" type="hidden" value="<%= String.valueOf(liveGroupId) %>" />
-				<aui:input name="privateLayout" type="hidden" value="<%= Boolean.FALSE.toString() %>" />
 				<aui:input name="rootNodeName" type="hidden" value="<%= rootNodeName %>" />
 				<aui:input name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS_ALL %>" type="hidden" value="<%= true %>" />
 				<aui:input name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION_ALL %>" type="hidden" value="<%= true %>" />
@@ -204,7 +202,6 @@ if (!cmd.equals(Constants.ADD)) {
 							<liferay-util:include page="/html/portlet/layouts_admin/export_configuration/select_pages.jsp">
 								<liferay-util:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
 								<liferay-util:param name="groupId" value="<%= String.valueOf(liveGroupId) %>" />
-								<liferay-util:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 								<liferay-util:param name="treeId" value="<%= treeId %>" />
 								<liferay-util:param name="selectedLayoutIds" value="<%= StringUtil.merge(selectedLayoutIds) %>" />
 							</liferay-util:include>
@@ -240,7 +237,6 @@ if (!cmd.equals(Constants.ADD)) {
 				<liferay-util:include page="/html/portlet/layouts_admin/export_layouts_configurations.jsp">
 					<liferay-util:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 					<liferay-util:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
-					<liferay-util:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 					<liferay-util:param name="rootNodeName" value="<%= rootNodeName %>" />
 				</liferay-util:include>
 			</div>

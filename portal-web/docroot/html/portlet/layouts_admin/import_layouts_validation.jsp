@@ -74,7 +74,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader");
 								groupId: <%= groupId %>
 							}
 						},
-						uploadFile: '<liferay-portlet:actionURL doAsUserId="<%= user.getUserId() %>"><portlet:param name="struts_action" value="/layouts_admin/import_layouts" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD_TEMP %>" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /><portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" /></liferay-portlet:actionURL>&ticketKey=<%= ticket.getKey() %><liferay-ui:input-permissions-params modelName="<%= Group.class.getName() %>" />'
+						uploadFile: '<liferay-portlet:actionURL doAsUserId="<%= user.getUserId() %>"><portlet:param name="struts_action" value="/layouts_admin/import_layouts" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD_TEMP %>" /><portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /></liferay-portlet:actionURL>&ticketKey=<%= ticket.getKey() %><liferay-ui:input-permissions-params modelName="<%= Group.class.getName() %>" />'
 					}
 				);
 
@@ -130,7 +130,6 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader");
 						<portlet:param name="p_p_isolated" value="true" />
 						<portlet:param name="struts_action" value="/layouts_admin/import_layouts" />
 						<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-						<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 						<portlet:param name="validate" value="<%= String.valueOf(Boolean.FALSE) %>" />
 						<portlet:param name="showHeader" value="<%= String.valueOf(showHeader) %>" />
 					</liferay-portlet:resourceURL>

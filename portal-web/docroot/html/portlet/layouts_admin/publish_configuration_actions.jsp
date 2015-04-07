@@ -35,7 +35,6 @@ ExportImportConfiguration exportImportConfiguration = (ExportImportConfiguration
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 	<portlet:param name="layoutSetBranchId" value="<%= String.valueOf(layoutSetBranchId) %>" />
 	<portlet:param name="layoutSetBranchName" value="<%= layoutSetBranchName %>" />
-	<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 </portlet:renderURL>
 
 <portlet:actionURL var="deletePublishConfigurationURL">
@@ -52,7 +51,6 @@ ExportImportConfiguration exportImportConfiguration = (ExportImportConfiguration
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 	<portlet:param name="layoutSetBranchId" value="<%= String.valueOf(layoutSetBranchId) %>" />
 	<portlet:param name="layoutSetBranchName" value="<%= layoutSetBranchName %>" />
-	<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 </portlet:renderURL>
 
 <portlet:renderURL var="publishByExportImportConfigurationURL">

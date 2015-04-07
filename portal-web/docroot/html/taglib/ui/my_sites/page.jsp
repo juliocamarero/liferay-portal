@@ -145,20 +145,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(classNames, includeControlPanel,
 						String addPageHREF = null;
 
 						if (mySiteGroup.isSite() && GroupPermissionUtil.contains(permissionChecker, mySiteGroup, ActionKeys.ADD_LAYOUT)) {
-							PortletURL addPageURL = new PortletURLImpl(request, PortletKeys.SITE_REDIRECTOR, plid, PortletRequest.ACTION_PHASE);
-
-							addPageURL.setParameter("struts_action", "/my_sites/edit_layouts");
-							addPageURL.setParameter("redirect", currentURL);
-							addPageURL.setParameter("groupId", String.valueOf(mySiteGroup.getGroupId()));
-							addPageURL.setParameter("privateLayout", Boolean.FALSE.toString());
-							addPageURL.setPortletMode(PortletMode.VIEW);
-							addPageURL.setWindowState(WindowState.NORMAL);
-
-							publicAddPageHREF = addPageURL.toString();
-
-							addPageURL.setParameter("privateLayout", Boolean.TRUE.toString());
-
-							privateAddPageHREF = addPageURL.toString();
+							addPageHREF = mySiteGroup.getDisplayURL(themeDisplay, false);
 						}
 						else if (mySiteGroup.isUser()) {
 							PortletURL addPageURL = new PortletURLImpl(request, PortletKeys.MY_ACCOUNT, plid, PortletRequest.RENDER_PHASE);
@@ -219,8 +206,8 @@ List<Group> mySiteGroups = user.getMySiteGroups(classNames, includeControlPanel,
 
 												><liferay-ui:message key="pages" /> <span class="page-count">(<%= mySiteGroup.getPublicLayoutsPageCount() %>)</span></a>
 
-												<c:if test="<%= publicAddPageHREF != null %>">
-													<a class="add-page" href="<%= HtmlUtil.escape(publicAddPageHREF) %>" onclick="Liferay.Util.forcePost(this); return false;"><liferay-ui:message key="manage-pages" /></a>
+												<c:if test="<%= addPageHREF != null %>">
+													<a class="add-page" href="<%= HtmlUtil.escape(addPageHREF) %>" onclick="Liferay.Util.forcePost(this); return false;"><liferay-ui:message key="manage-pages" /></a>
 												</c:if>
 											</li>
 										</c:if>

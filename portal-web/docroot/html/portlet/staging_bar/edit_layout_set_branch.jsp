@@ -39,7 +39,6 @@ if (layoutSetBranchId > 0) {
 		<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= layoutSetBranch != null ? Constants.UPDATE : Constants.ADD %>" />
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="groupId" type="hidden" value="<%= stagingGroup.getGroupId() %>" />
-		<aui:input name="privateLayout" type="hidden" value="<%= Boolean.FALSE %>" />
 		<aui:input name="layoutSetBranchId" type="hidden" value="<%= layoutSetBranchId %>" />
 		<aui:input name="workflowAction" type="hidden" value="<%= WorkflowConstants.ACTION_SAVE_DRAFT %>" />
 
