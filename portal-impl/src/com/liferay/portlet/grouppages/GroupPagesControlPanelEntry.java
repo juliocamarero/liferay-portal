@@ -65,7 +65,7 @@ public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {
 			return true;
 		}
 
-		if ((PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_POWER_USER_REQUIRED) &&
+		if (PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_POWER_USER_REQUIRED &&
 			!RoleLocalServiceUtil.hasUserRole(
 				permissionChecker.getUserId(), permissionChecker.getCompanyId(),
 				RoleConstants.POWER_USER, true)) {

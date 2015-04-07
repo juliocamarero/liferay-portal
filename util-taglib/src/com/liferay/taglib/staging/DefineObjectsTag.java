@@ -15,7 +15,6 @@
 package com.liferay.taglib.staging;
 
 import com.liferay.portal.kernel.staging.StagingUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
