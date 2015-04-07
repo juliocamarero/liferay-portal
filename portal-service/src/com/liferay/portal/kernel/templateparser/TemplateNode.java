@@ -195,13 +195,7 @@ public class TemplateNode extends LinkedHashMap<String, Object> {
 			return StringPool.BLANK;
 		}
 
-		if (layoutType.equals(_LAYOUT_TYPE_PRIVATE_GROUP)) {
-			sb.append(PortalUtil.getPathFriendlyURLPrivateGroup());
-		}
-		else if (layoutType.equals(_LAYOUT_TYPE_PRIVATE_USER)) {
-			sb.append(PortalUtil.getPathFriendlyURLPrivateUser());
-		}
-		else if (layoutType.equals(_LAYOUT_TYPE_PUBLIC)) {
+		if (layoutType.equals(_LAYOUT_TYPE_PUBLIC)) {
 			sb.append(PortalUtil.getPathFriendlyURLPublic());
 		}
 		else {
@@ -270,10 +264,6 @@ public class TemplateNode extends LinkedHashMap<String, Object> {
 
 		return data;
 	}
-
-	private static final String _LAYOUT_TYPE_PRIVATE_GROUP = "private-group";
-
-	private static final String _LAYOUT_TYPE_PRIVATE_USER = "private-user";
 
 	private static final String _LAYOUT_TYPE_PUBLIC = "public";
 

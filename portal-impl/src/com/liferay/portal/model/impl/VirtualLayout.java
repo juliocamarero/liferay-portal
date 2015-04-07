@@ -160,14 +160,6 @@ public class VirtualLayout extends LayoutWrapper {
 
 			StringBundler sb = new StringBundler(4);
 
-			if (_targetGroup.isUser() && isPrivateLayout()) {
-				layoutURL = layoutURL.replaceFirst(
-					PropsValues.
-						LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING,
-					PropsValues.
-						LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING);
-			}
-
 			int pos = layoutURL.indexOf(group.getFriendlyURL());
 
 			sb.append(layoutURL.substring(0, pos));

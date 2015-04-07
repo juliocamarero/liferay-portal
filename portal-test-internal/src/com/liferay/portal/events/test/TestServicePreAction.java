@@ -43,19 +43,6 @@ public class TestServicePreAction extends ServicePreAction {
 	}
 
 	@Override
-	public void addDefaultUserPrivateLayoutByProperties(
-			long userId, long groupId)
-		throws PortalException {
-
-		super.addDefaultUserPublicLayoutByProperties(userId, groupId);
-	}
-
-	@Override
-	public void addDefaultUserPrivateLayouts(User user) throws PortalException {
-		super.addDefaultUserPrivateLayouts(user);
-	}
-
-	@Override
 	public void addDefaultUserPublicLayoutByProperties(
 			long userId, long groupId)
 		throws PortalException {
