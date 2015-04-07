@@ -1374,14 +1374,6 @@ public class PortalUtil {
 		return getPortal().getPathContext(contextPath);
 	}
 
-	public static String getPathFriendlyURLPrivateGroup() {
-		return getPortal().getPathFriendlyURLPrivateGroup();
-	}
-
-	public static String getPathFriendlyURLPrivateUser() {
-		return getPortal().getPathFriendlyURLPrivateUser();
-	}
-
 	public static String getPathFriendlyURLPublic() {
 		return getPortal().getPathFriendlyURLPublic();
 	}

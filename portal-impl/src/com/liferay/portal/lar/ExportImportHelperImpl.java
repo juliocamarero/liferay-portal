@@ -987,10 +987,6 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 						localePath.length());
 
 					if (urlWithoutLocale.startsWith(
-							_PRIVATE_GROUP_SERVLET_MAPPING) ||
-						urlWithoutLocale.startsWith(
-							_PRIVATE_USER_SERVLET_MAPPING) ||
-						urlWithoutLocale.startsWith(
 							_PUBLIC_GROUP_SERVLET_MAPPING)) {
 
 						urlSB.append(localePath);
@@ -999,19 +995,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 					}
 				}
 
-				if (url.startsWith(_PRIVATE_GROUP_SERVLET_MAPPING)) {
-					urlSB.append(DATA_HANDLER_PRIVATE_GROUP_SERVLET_MAPPING);
-
-					url = url.substring(
-						_PRIVATE_GROUP_SERVLET_MAPPING.length() - 1);
-				}
-				else if (url.startsWith(_PRIVATE_USER_SERVLET_MAPPING)) {
-					urlSB.append(DATA_HANDLER_PRIVATE_USER_SERVLET_MAPPING);
-
-					url = url.substring(
-						_PRIVATE_USER_SERVLET_MAPPING.length() - 1);
-				}
-				else if (url.startsWith(_PUBLIC_GROUP_SERVLET_MAPPING)) {
+				if (url.startsWith(_PUBLIC_GROUP_SERVLET_MAPPING)) {
 					urlSB.append(DATA_HANDLER_PUBLIC_SERVLET_MAPPING);
 
 					url = url.substring(
@@ -1387,17 +1371,11 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		content = StringUtil.replace(
 			content, DATA_HANDLER_PATH_CONTEXT, PortalUtil.getPathContext());
 		content = StringUtil.replace(
-			content, DATA_HANDLER_PRIVATE_GROUP_SERVLET_MAPPING,
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING);
-		content = StringUtil.replace(
 			content, DATA_HANDLER_PRIVATE_LAYOUT_SET_SECURE_URL,
 			privateLayoutSetSecurePortalURL);
 		content = StringUtil.replace(
 			content, DATA_HANDLER_PRIVATE_LAYOUT_SET_URL,
 			privateLayoutSetPortalURL);
-		content = StringUtil.replace(
-			content, DATA_HANDLER_PRIVATE_USER_SERVLET_MAPPING,
-			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING);
 		content = StringUtil.replace(
 			content, DATA_HANDLER_PUBLIC_LAYOUT_SET_SECURE_URL,
 			publicLayoutSetSecurePortalURL);
@@ -2577,14 +2555,6 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		CharPool.CLOSE_PARENTHESIS, CharPool.GREATER_THAN, CharPool.LESS_THAN,
 		CharPool.PIPE, CharPool.QUESTION, CharPool.QUOTE, CharPool.SPACE
 	};
-
-	private static final String _PRIVATE_GROUP_SERVLET_MAPPING =
-		PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING +
-			StringPool.SLASH;
-
-	private static final String _PRIVATE_USER_SERVLET_MAPPING =
-		PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING +
-			StringPool.SLASH;
 
 	private static final String _PUBLIC_GROUP_SERVLET_MAPPING =
 		PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING +

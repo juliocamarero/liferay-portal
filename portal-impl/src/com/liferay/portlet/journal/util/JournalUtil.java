@@ -1632,17 +1632,7 @@ public class JournalUtil {
 
 		LayoutSet layoutSet = layout.getLayoutSet();
 
-		String friendlyUrlCurrent = null;
-
-		if (layout.isPublicLayout()) {
-			friendlyUrlCurrent = themeDisplay.getPathFriendlyURLPublic();
-		}
-		else if (group.isUserGroup()) {
-			friendlyUrlCurrent = themeDisplay.getPathFriendlyURLPrivateUser();
-		}
-		else {
-			friendlyUrlCurrent = themeDisplay.getPathFriendlyURLPrivateGroup();
-		}
+		String friendlyUrlCurrent = themeDisplay.getPathFriendlyURLPublic();
 
 		String layoutSetFriendlyUrl = themeDisplay.getI18nPath();
 
@@ -1658,12 +1648,6 @@ public class JournalUtil {
 		tokens.put("cdn_host", themeDisplay.getCDNHost());
 		tokens.put("company_id", String.valueOf(themeDisplay.getCompanyId()));
 		tokens.put("friendly_url_current", friendlyUrlCurrent);
-		tokens.put(
-			"friendly_url_private_group",
-			themeDisplay.getPathFriendlyURLPrivateGroup());
-		tokens.put(
-			"friendly_url_private_user",
-			themeDisplay.getPathFriendlyURLPrivateUser());
 		tokens.put(
 			"friendly_url_public", themeDisplay.getPathFriendlyURLPublic());
 		tokens.put("group_friendly_url", group.getFriendlyURL());
@@ -1687,9 +1671,6 @@ public class JournalUtil {
 		// Deprecated tokens
 
 		tokens.put("friendly_url", themeDisplay.getPathFriendlyURLPublic());
-		tokens.put(
-			"friendly_url_private",
-			themeDisplay.getPathFriendlyURLPrivateGroup());
 		tokens.put("group_id", String.valueOf(articleGroupId));
 		tokens.put("page_url", themeDisplay.getPathFriendlyURLPublic());
 	}
@@ -1706,19 +1687,8 @@ public class JournalUtil {
 
 		LayoutSet layoutSet = layout.getLayoutSet();
 
-		String friendlyUrlCurrent = null;
-
-		if (layout.isPublicLayout()) {
-			friendlyUrlCurrent = themeDisplayModel.getPathFriendlyURLPublic();
-		}
-		else if (group.isUserGroup()) {
-			friendlyUrlCurrent =
-				themeDisplayModel.getPathFriendlyURLPrivateUser();
-		}
-		else {
-			friendlyUrlCurrent =
-				themeDisplayModel.getPathFriendlyURLPrivateGroup();
-		}
+		String friendlyUrlCurrent =
+			themeDisplayModel.getPathFriendlyURLPublic();
 
 		String layoutSetFriendlyUrl = themeDisplayModel.getI18nPath();
 
@@ -1735,12 +1705,6 @@ public class JournalUtil {
 		tokens.put(
 			"company_id", String.valueOf(themeDisplayModel.getCompanyId()));
 		tokens.put("friendly_url_current", friendlyUrlCurrent);
-		tokens.put(
-			"friendly_url_private_group",
-			themeDisplayModel.getPathFriendlyURLPrivateGroup());
-		tokens.put(
-			"friendly_url_private_user",
-			themeDisplayModel.getPathFriendlyURLPrivateUser());
 		tokens.put(
 			"friendly_url_public",
 			themeDisplayModel.getPathFriendlyURLPublic());
@@ -1766,9 +1730,6 @@ public class JournalUtil {
 
 		tokens.put(
 			"friendly_url", themeDisplayModel.getPathFriendlyURLPublic());
-		tokens.put(
-			"friendly_url_private",
-			themeDisplayModel.getPathFriendlyURLPrivateGroup());
 		tokens.put("group_id", String.valueOf(articleGroupId));
 		tokens.put("page_url", themeDisplayModel.getPathFriendlyURLPublic());
 	}
