@@ -1971,11 +1971,6 @@ public class LayoutWrapper implements Layout, ModelWrapper<Layout> {
 		_layout.setPriority(priority);
 	}
 
-	@Override
-	public void setPrivateLayout(boolean privateLayout) {
-		_layout.setPrivateLayout(privateLayout);
-	}
-
 	/**
 	* Sets the robots of this layout.
 	*

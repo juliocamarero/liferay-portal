@@ -55,6 +55,8 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public int getChildrenWithLayoutsCount(boolean site);
 
+	public long getDefaultPlid();
+
 	public java.util.List<com.liferay.portal.model.Group> getDescendants(
 		boolean site);
 
