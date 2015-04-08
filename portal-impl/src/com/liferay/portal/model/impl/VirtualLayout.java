@@ -94,10 +94,6 @@ public class VirtualLayout extends LayoutWrapper {
 
 	@Override
 	public LayoutSet getLayoutSet() {
-		if (isPrivateLayout()) {
-			return _targetGroup.getPrivateLayoutSet();
-		}
-
 		return _targetGroup.getPublicLayoutSet();
 	}
 

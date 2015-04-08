@@ -83,8 +83,7 @@ public class VerifyGroup extends VerifyProcess {
 		}
 
 		return GetterUtil.get(
-			layoutSet.getSettingsProperty(
-				layoutSet.isPrivateLayout() + "-robots.txt"),
+			layoutSet.getSettingsProperty("robots.txt"),
 			RobotsUtil.getDefaultRobots(virtualHostname));
 	}
 
