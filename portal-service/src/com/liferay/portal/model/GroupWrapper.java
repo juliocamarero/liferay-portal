@@ -351,6 +351,11 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	}
 
 	@Override
+	public long getDefaultPlid() {
+		return _group.getDefaultPlid();
+	}
+
+	@Override
 	public java.util.List<com.liferay.portal.model.Group> getDescendants(
 		boolean site) {
 		return _group.getDescendants(site);
