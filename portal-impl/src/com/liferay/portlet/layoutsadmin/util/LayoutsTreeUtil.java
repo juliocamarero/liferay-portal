@@ -63,19 +63,17 @@ import javax.servlet.http.HttpSession;
 public class LayoutsTreeUtil {
 
 	public static String getLayoutsJSON(
-			HttpServletRequest request, long groupId, boolean privateLayout,
-			long parentLayoutId, boolean incomplete, String treeId)
+			HttpServletRequest request, long groupId, long parentLayoutId,
+			boolean incomplete, String treeId)
 		throws Exception {
 
 		return getLayoutsJSON(
-			request, groupId, privateLayout, parentLayoutId, null, incomplete,
-			treeId);
+			request, groupId, parentLayoutId, null, incomplete, treeId);
 	}
 
 	public static String getLayoutsJSON(
-			HttpServletRequest request, long groupId, boolean privateLayout,
-			long parentLayoutId, long[] expandedLayoutIds, boolean incomplete,
-			String treeId)
+			HttpServletRequest request, long groupId, long parentLayoutId,
+			long[] expandedLayoutIds, boolean incomplete, String treeId)
 		throws Exception {
 
 		LayoutTreeNodes layoutTreeNodes = _getLayoutTreeNodes(
