@@ -155,7 +155,7 @@ public class CompanyImpl extends CompanyBaseImpl {
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-		if (group.hasPublicLayouts()) {
+		if (group.hasLayouts()) {
 			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
 				groupId);
 
