@@ -66,7 +66,7 @@ String treeId = (String)request.getAttribute("liferay-ui:layouts-tree:treeId");
 	<%
 	long[] openNodes = StringUtil.split(SessionTreeJSClicks.getOpenNodes(request, treeId), 0L);
 
-	JSONObject layoutsJSON = JSONFactoryUtil.createJSONObject(LayoutsTreeUtil.getLayoutsJSON(request, groupId, false, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, openNodes, true, treeId));
+	JSONObject layoutsJSON = JSONFactoryUtil.createJSONObject(LayoutsTreeUtil.getLayoutsJSON(request, groupId, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, openNodes, true, treeId));
 	%>
 
 	var TreeViewType = Liferay.LayoutsTree;
