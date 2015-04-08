@@ -116,7 +116,7 @@ public class BreadcrumbUtil {
 		Group group = GroupLocalServiceUtil.getGroup(
 			themeDisplay.getCompanyId(), GroupConstants.GUEST);
 
-		if (group.getPublicLayoutsPageCount() == 0) {
+		if (!group.hasLayouts()) {
 			return null;
 		}
 
@@ -262,7 +262,7 @@ public class BreadcrumbUtil {
 			}
 		}
 
-		int layoutsPageCount = group.getPublicLayoutsPageCount();
+		int layoutsPageCount = group.getLayoutsPageCount();
 
 		if ((layoutsPageCount > 0) && !group.isGuest()) {
 			String layoutSetFriendlyURL = PortalUtil.getLayoutSetFriendlyURL(

@@ -163,7 +163,7 @@ public class ServiceContext implements Cloneable, Serializable {
 				if (roleName.equals(RoleConstants.GUEST) &&
 					!guestUnsupportedActions.contains(action) &&
 					guestDefaultActions.contains(action) &&
-					siteGroup.hasPublicLayouts()) {
+					siteGroup.hasLayouts()) {
 
 					guestPermissions.add(action);
 				}

@@ -1007,7 +1007,7 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 
 		Group group = userGroup.getGroup();
 
-		if (userGroup.hasPublicLayouts()) {
+		if (userGroup.hasLayouts()) {
 			return layoutLocalService.exportLayoutsAsFile(
 				group.getGroupId(), null, parameterMap, null, null);
 		}

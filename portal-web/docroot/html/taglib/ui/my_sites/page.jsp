@@ -34,7 +34,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(classNames, includeControlPanel,
 
 		<%
 		for (Group mySiteGroup : mySiteGroups) {
-			boolean showSite = mySiteGroup.isShowSite(permissionChecker, false);
+			boolean showSite = mySiteGroup.isShowSite(permissionChecker);
 
 			Group siteGroup = mySiteGroup;
 		%>
@@ -93,14 +93,14 @@ List<Group> mySiteGroups = user.getMySiteGroups(classNames, includeControlPanel,
 							stagingGroupId = stagingGroup.getGroupId();
 
 							if (GroupPermissionUtil.contains(permissionChecker, mySiteGroup, ActionKeys.VIEW_STAGING)) {
-								if ((mySiteGroup.getPublicLayoutsPageCount() == 0) && (stagingGroup.getPublicLayoutsPageCount() > 0)) {
+								if (!mySiteGroup.hasLayouts() && stagingGroup.hasLayouts()) {
 									showSiteStaging = true;
 								}
 							}
 						}
 						%>
 
-						<c:if test="<%= showSite && ((mySiteGroup.getPublicLayoutsPageCount() > 0) || showSiteStaging) %>">
+						<c:if test="<%= showSite && (mySiteGroup.hasLayouts() || showSiteStaging) %>">
 
 							<%
 							if (showSiteStaging) {
@@ -109,7 +109,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(classNames, includeControlPanel,
 							%>
 
 							<li class="<%= (selectedSite && layout.isPublicLayout()) ? "active" : "public-site" %> <%= itemCssClass %>">
-								<a href="<%= HtmlUtil.escape(siteGroup.getDisplayURL(themeDisplay, false)) %>" onclick="Liferay.Util.forcePost(this); return false;">
+								<a href="<%= HtmlUtil.escape(siteGroup.getDisplayURL(themeDisplay)) %>" onclick="Liferay.Util.forcePost(this); return false;">
 
 									<%
 									String siteName = StringPool.BLANK;
@@ -145,7 +145,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(classNames, includeControlPanel,
 						String addPageHREF = null;
 
 						if (mySiteGroup.isSite() && GroupPermissionUtil.contains(permissionChecker, mySiteGroup, ActionKeys.ADD_LAYOUT)) {
-							addPageHREF = mySiteGroup.getDisplayURL(themeDisplay, false);
+							addPageHREF = mySiteGroup.getDisplayURL(themeDisplay);
 						}
 						else if (mySiteGroup.isUser()) {
 							PortletURL addPageURL = new PortletURLImpl(request, PortletKeys.MY_ACCOUNT, plid, PortletRequest.RENDER_PHASE);
@@ -194,17 +194,17 @@ List<Group> mySiteGroups = user.getMySiteGroups(classNames, includeControlPanel,
 									<ul>
 										<c:if test="<%= showSite %>">
 											<li>
-												<a href="<%= (mySiteGroup.getPublicLayoutsPageCount() > 0) ? HtmlUtil.escape(mySiteGroup.getDisplayURL(themeDisplay, false)) : "javascript:;" %>"
+												<a href="<%= mySiteGroup.hasLayouts() ? HtmlUtil.escape(mySiteGroup.getDisplayURL(themeDisplay)) : "javascript:;" %>"
 
 												<c:if test="<%= mySiteGroup.isUser() %>">
 													id="my-site-pages"
 												</c:if>
 
-												<c:if test="<%= (mySiteGroup.getPublicLayoutsPageCount() > 0) %>">
+												<c:if test="<%= mySiteGroup.hasLayouts() %>">
 													onclick="Liferay.Util.forcePost(this); return false;"
 												</c:if>
 
-												><liferay-ui:message key="pages" /> <span class="page-count">(<%= mySiteGroup.getPublicLayoutsPageCount() %>)</span></a>
+												><liferay-ui:message key="pages" /> <span class="page-count">(<%= mySiteGroup.getLayoutsPageCount() %>)</span></a>
 
 												<c:if test="<%= addPageHREF != null %>">
 													<a class="add-page" href="<%= HtmlUtil.escape(addPageHREF) %>" onclick="Liferay.Util.forcePost(this); return false;"><liferay-ui:message key="manage-pages" /></a>

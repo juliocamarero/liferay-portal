@@ -94,7 +94,7 @@ public class VirtualLayout extends LayoutWrapper {
 
 	@Override
 	public LayoutSet getLayoutSet() {
-		return _targetGroup.getPublicLayoutSet();
+		return _targetGroup.getLayoutSet();
 	}
 
 	@Override

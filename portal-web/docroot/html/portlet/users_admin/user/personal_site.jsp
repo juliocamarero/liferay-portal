@@ -61,7 +61,7 @@ if (selUser != null) {
 	%>
 
 	<c:choose>
-		<c:when test="<%= PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED && hasGroupUpdatePermission && ((selUser == null) || ((layoutSetPrototype == null) && (selUser.getPublicLayoutsPageCount() == 0))) && !layoutSetPrototypes.isEmpty() %>">
+		<c:when test="<%= PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED && hasGroupUpdatePermission && ((selUser == null) || ((layoutSetPrototype == null) && !selUser.hasLayouts())) && !layoutSetPrototypes.isEmpty() %>">
 			<aui:select label="pages" name="publicLayoutSetPrototypeId">
 				<aui:option label="none" selected="<%= true %>" value="" />
 
@@ -93,7 +93,7 @@ if (selUser != null) {
 				<c:choose>
 					<c:when test="<%= selUser != null %>">
 						<c:choose>
-							<c:when test="<%= selUser.getPublicLayoutsPageCount() > 0 %>">
+							<c:when test="<%= selUser.hasLayouts() %>">
 
 								<%
 								Group selUserGroup = selUser.getGroup();
@@ -105,7 +105,7 @@ if (selUser != null) {
 									message="open-pages"
 									method="get"
 									target="_blank"
-									url="<%= selUserGroup.getDisplayURL(themeDisplay, false) %>"
+									url="<%= selUserGroup.getDisplayURL(themeDisplay) %>"
 								/>
 							</c:when>
 							<c:otherwise>

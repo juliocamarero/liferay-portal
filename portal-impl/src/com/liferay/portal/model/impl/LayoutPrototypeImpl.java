@@ -45,7 +45,7 @@ public class LayoutPrototypeImpl extends LayoutPrototypeBaseImpl {
 	public Layout getLayout() throws PortalException {
 		Group group = getGroup();
 
-		if (group.getPublicLayoutsPageCount() > 0) {
+		if (group.hasLayouts()) {
 			List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
 				group.getGroupId());
 

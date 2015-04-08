@@ -156,7 +156,7 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 
 		Group liveGroup = group.getLiveGroup();
 
-		LayoutSet liveLayoutSet = liveGroup.getPublicLayoutSet();
+		LayoutSet liveLayoutSet = liveGroup.getLayoutSet();
 
 		return liveLayoutSet.getLogoId();
 	}
