@@ -133,8 +133,7 @@ public class LayoutSetLocalServiceStagingAdvice
 			String layoutSetPrototypeUuid)
 		throws PortalException {
 
-		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
-			groupId, privateLayout);
+		LayoutSet layoutSet = layoutSetPersistence.findByGroupId(groupId);
 
 		layoutSet = wrapLayoutSet(layoutSet);
 
@@ -143,8 +142,7 @@ public class LayoutSetLocalServiceStagingAdvice
 
 		if (layoutSetBranch == null) {
 			layoutSetLocalService.updateLayoutSetPrototypeLinkEnabled(
-				groupId, privateLayout, layoutSetPrototypeLinkEnabled,
-				layoutSetPrototypeUuid);
+				groupId, layoutSetPrototypeLinkEnabled, layoutSetPrototypeUuid);
 
 			return;
 		}
@@ -174,8 +172,7 @@ public class LayoutSetLocalServiceStagingAdvice
 			boolean privateLayout, boolean logo, byte[] logoBytes)
 		throws PortalException {
 
-		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
-			groupId, privateLayout);
+		LayoutSet layoutSet = layoutSetPersistence.findByGroupId(groupId);
 
 		layoutSet = wrapLayoutSet(layoutSet);
 
@@ -183,8 +180,7 @@ public class LayoutSetLocalServiceStagingAdvice
 			layoutSet);
 
 		if (layoutSetBranch == null) {
-			return layoutSetLocalService.updateLogo(
-				groupId, privateLayout, logo, logoBytes);
+			return layoutSetLocalService.updateLogo(groupId, logo, logoBytes);
 		}
 
 		layoutSetBranch.setModifiedDate(new Date());
@@ -202,8 +198,7 @@ public class LayoutSetLocalServiceStagingAdvice
 			String themeId, String colorSchemeId, String css, boolean wapTheme)
 		throws PortalException {
 
-		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
-			groupId, privateLayout);
+		LayoutSet layoutSet = layoutSetPersistence.findByGroupId(groupId);
 
 		layoutSet = wrapLayoutSet(layoutSet);
 
@@ -212,7 +207,7 @@ public class LayoutSetLocalServiceStagingAdvice
 
 		if (layoutSetBranch == null) {
 			return target.updateLookAndFeel(
-				groupId, privateLayout, themeId, colorSchemeId, css, wapTheme);
+				groupId, themeId, colorSchemeId, css, wapTheme);
 		}
 
 		layoutSetBranch.setModifiedDate(new Date());
@@ -247,8 +242,7 @@ public class LayoutSetLocalServiceStagingAdvice
 			String settings)
 		throws PortalException {
 
-		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
-			groupId, privateLayout);
+		LayoutSet layoutSet = layoutSetPersistence.findByGroupId(groupId);
 
 		layoutSet = wrapLayoutSet(layoutSet);
 
@@ -256,7 +250,7 @@ public class LayoutSetLocalServiceStagingAdvice
 			layoutSet);
 
 		if (layoutSetBranch == null) {
-			return target.updateSettings(groupId, privateLayout, settings);
+			return target.updateSettings(groupId, settings);
 		}
 
 		layoutSetBranch.setModifiedDate(new Date());
@@ -295,9 +289,7 @@ public class LayoutSetLocalServiceStagingAdvice
 			return layoutSet;
 		}
 
-		if (!LayoutStagingUtil.isBranchingLayoutSet(
-				group, layoutSet.getPrivateLayout())) {
-
+		if (!LayoutStagingUtil.isBranchingLayoutSet(group, false)) {
 			return layoutSet;
 		}
 

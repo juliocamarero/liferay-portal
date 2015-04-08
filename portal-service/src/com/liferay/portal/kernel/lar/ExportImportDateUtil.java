@@ -73,8 +73,7 @@ public class ExportImportDateUtil {
 	public static void clearLastPublishDate(long groupId, boolean privateLayout)
 		throws PortalException {
 
-		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-			groupId, privateLayout);
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(groupId);
 
 		UnicodeProperties settingsProperties =
 			layoutSet.getSettingsProperties();
@@ -82,7 +81,7 @@ public class ExportImportDateUtil {
 		settingsProperties.remove(_LAST_PUBLISH_DATE);
 
 		LayoutSetLocalServiceUtil.updateSettings(
-			groupId, privateLayout, settingsProperties.toString());
+			groupId, settingsProperties.toString());
 	}
 
 	public static Calendar getCalendar(
@@ -272,8 +271,7 @@ public class ExportImportDateUtil {
 			Date lastPublishDate)
 		throws PortalException {
 
-		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-			groupId, privateLayout);
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(groupId);
 
 		Date originalLastPublishDate = getLastPublishDate(layoutSet);
 
@@ -292,8 +290,7 @@ public class ExportImportDateUtil {
 			_LAST_PUBLISH_DATE, String.valueOf(lastPublishDate.getTime()));
 
 		LayoutSetLocalServiceUtil.updateSettings(
-			layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
-			settingsProperties.toString());
+			layoutSet.getGroupId(), settingsProperties.toString());
 	}
 
 	public static void updateLastPublishDate(
@@ -395,7 +392,7 @@ public class ExportImportDateUtil {
 			}
 			else {
 				LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-					groupId, privateLayout);
+					groupId);
 
 				lastPublishDate = getLastPublishDate(layoutSet);
 			}

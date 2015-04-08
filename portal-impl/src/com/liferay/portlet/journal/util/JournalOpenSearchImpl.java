@@ -84,8 +84,7 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 					contentSearch.getLayoutId(), ActionKeys.VIEW)) {
 
 				Layout hitLayout = LayoutLocalServiceUtil.getLayout(
-					contentSearch.getGroupId(), false,
-					contentSearch.getLayoutId());
+					contentSearch.getGroupId(), contentSearch.getLayoutId());
 
 				return PortalUtil.getLayoutURL(hitLayout, themeDisplay);
 			}
@@ -107,8 +106,7 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 
 		if (Validator.isNotNull(article.getLayoutUuid())) {
 			String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(
-				LayoutSetLocalServiceUtil.getLayoutSet(
-					article.getGroupId(), false),
+				LayoutSetLocalServiceUtil.getLayoutSet(article.getGroupId()),
 				themeDisplay);
 
 			return groupFriendlyURL.concat(
@@ -127,12 +125,11 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 				themeDisplay.getPermissionChecker();
 
 			if (LayoutPermissionUtil.contains(
-					permissionChecker, layout.getGroupId(),
-					layout.isPrivateLayout(), hitLayoutId, ActionKeys.VIEW)) {
+					permissionChecker, layout.getGroupId(), false, hitLayoutId,
+					ActionKeys.VIEW)) {
 
 				Layout hitLayout = LayoutLocalServiceUtil.getLayout(
-					layout.getGroupId(), layout.isPrivateLayout(),
-					hitLayoutId.longValue());
+					layout.getGroupId(), hitLayoutId.longValue());
 
 				return PortalUtil.getLayoutURL(hitLayout, themeDisplay);
 			}

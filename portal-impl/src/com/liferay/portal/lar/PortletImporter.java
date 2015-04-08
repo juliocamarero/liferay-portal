@@ -658,7 +658,7 @@ public class PortletImporter {
 		portletDataContext.setOldPlid(plid);
 		portletDataContext.setPlid(plid);
 		portletDataContext.setPortletId(portletId);
-		portletDataContext.setPrivateLayout(layout.isPrivateLayout());
+		portletDataContext.setPrivateLayout(false);
 
 		return portletDataContext;
 	}

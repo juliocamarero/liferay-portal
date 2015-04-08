@@ -119,7 +119,7 @@ User selUser = (User)request.getAttribute("user.selUser");
 				<%
 				long logoId = 0;
 
-				LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(groupId, false);
+				LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(groupId);
 
 				if (layoutSet.getLogoId() > 0) {
 					logoId = layoutSet.getLogoId();

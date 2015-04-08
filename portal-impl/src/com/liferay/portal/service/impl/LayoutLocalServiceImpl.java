@@ -279,18 +279,18 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		User user = userPersistence.findByPrimaryKey(userId);
 		long layoutId = getNextLayoutId(groupId);
 		parentLayoutId = layoutLocalServiceHelper.getParentLayoutId(
-			groupId, false, parentLayoutId);
+			groupId, parentLayoutId);
 		String name = nameMap.get(LocaleUtil.getSiteDefault());
 		friendlyURLMap = layoutLocalServiceHelper.getFriendlyURLMap(
-			groupId, false, layoutId, name, friendlyURLMap);
+			groupId, layoutId, name, friendlyURLMap);
 
 		String friendlyURL = friendlyURLMap.get(LocaleUtil.getSiteDefault());
 
 		int priority = layoutLocalServiceHelper.getNextPriority(
-			groupId, false, parentLayoutId, null, -1);
+			groupId, parentLayoutId, null, -1);
 
 		layoutLocalServiceHelper.validate(
-			groupId, false, layoutId, parentLayoutId, name, type, hidden,
+			groupId, layoutId, parentLayoutId, name, type, hidden,
 			friendlyURLMap);
 
 		Date now = new Date();
@@ -2341,11 +2341,11 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		Layout layout = layoutPersistence.findByPrimaryKey(plid);
 
 		friendlyURL = layoutLocalServiceHelper.getFriendlyURL(
-			layout.getGroupId(), false, layout.getLayoutId(), StringPool.BLANK,
+			layout.getGroupId(), layout.getLayoutId(), StringPool.BLANK,
 			friendlyURL);
 
 		layoutLocalServiceHelper.validateFriendlyURL(
-			layout.getGroupId(), false, layout.getLayoutId(), friendlyURL);
+			layout.getGroupId(), layout.getLayoutId(), friendlyURL);
 
 		layoutFriendlyURLLocalService.updateLayoutFriendlyURL(
 			userId, layout.getCompanyId(), layout.getGroupId(),
@@ -2533,19 +2533,19 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		// Layout
 
 		parentLayoutId = layoutLocalServiceHelper.getParentLayoutId(
-			groupId, false, parentLayoutId);
+			groupId, parentLayoutId);
 		String name = nameMap.get(LocaleUtil.getSiteDefault());
 		friendlyURLMap = layoutLocalServiceHelper.getFriendlyURLMap(
-			groupId, false, layoutId, name, friendlyURLMap);
+			groupId, layoutId, name, friendlyURLMap);
 
 		String friendlyURL = friendlyURLMap.get(LocaleUtil.getSiteDefault());
 
 		layoutLocalServiceHelper.validate(
-			groupId, false, layoutId, parentLayoutId, name, type, hidden,
+			groupId, layoutId, parentLayoutId, name, type, hidden,
 			friendlyURLMap);
 
 		layoutLocalServiceHelper.validateParentLayoutId(
-			groupId, false, layoutId, parentLayoutId);
+			groupId, layoutId, parentLayoutId);
 
 		Date now = new Date();
 
@@ -2553,8 +2553,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		if (parentLayoutId != layout.getParentLayoutId()) {
 			int priority = layoutLocalServiceHelper.getNextPriority(
-				groupId, false, parentLayoutId,
-				layout.getSourcePrototypeLayoutUuid(), -1);
+				groupId, parentLayoutId, layout.getSourcePrototypeLayoutUuid(),
+				-1);
 
 			layout.setPriority(priority);
 		}
@@ -2804,14 +2804,14 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		}
 
 		parentLayoutId = layoutLocalServiceHelper.getParentLayoutId(
-			layout.getGroupId(), false, parentLayoutId);
+			layout.getGroupId(), parentLayoutId);
 
 		layoutLocalServiceHelper.validateParentLayoutId(
-			layout.getGroupId(), false, layout.getLayoutId(), parentLayoutId);
+			layout.getGroupId(), layout.getLayoutId(), parentLayoutId);
 
 		if (parentLayoutId != layout.getParentLayoutId()) {
 			int priority = layoutLocalServiceHelper.getNextPriority(
-				layout.getGroupId(), false, parentLayoutId,
+				layout.getGroupId(), parentLayoutId,
 				layout.getSourcePrototypeLayoutUuid(), -1);
 
 			layout.setPriority(priority);
@@ -2843,10 +2843,10 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		throws PortalException {
 
 		parentLayoutId = layoutLocalServiceHelper.getParentLayoutId(
-			groupId, false, parentLayoutId);
+			groupId, parentLayoutId);
 
 		layoutLocalServiceHelper.validateParentLayoutId(
-			groupId, false, layoutId, parentLayoutId);
+			groupId, layoutId, parentLayoutId);
 
 		Date now = new Date();
 
@@ -2854,8 +2854,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		if (parentLayoutId != layout.getParentLayoutId()) {
 			int priority = layoutLocalServiceHelper.getNextPriority(
-				groupId, false, parentLayoutId,
-				layout.getSourcePrototypeLayoutUuid(), -1);
+				groupId, parentLayoutId, layout.getSourcePrototypeLayoutUuid(),
+				-1);
 
 			layout.setPriority(priority);
 		}
@@ -2900,7 +2900,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		for (Layout layout : layouts) {
 			int nextPriority = layoutLocalServiceHelper.getNextPriority(
-				layout.getGroupId(), false, layout.getParentLayoutId(),
+				layout.getGroupId(), layout.getParentLayoutId(),
 				layout.getSourcePrototypeLayoutUuid(), layout.getPriority());
 
 			layout.setPriority(nextPriority);
@@ -2928,7 +2928,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		int oldPriority = layout.getPriority();
 
 		int nextPriority = layoutLocalServiceHelper.getNextPriority(
-			layout.getGroupId(), false, layout.getParentLayoutId(),
+			layout.getGroupId(), layout.getParentLayoutId(),
 			layout.getSourcePrototypeLayoutUuid(), priority);
 
 		if (oldPriority == nextPriority) {
@@ -2964,7 +2964,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		for (Layout curLayout : layouts) {
 			int curNextPriority = layoutLocalServiceHelper.getNextPriority(
-				layout.getGroupId(), false, layout.getParentLayoutId(),
+				layout.getGroupId(), layout.getParentLayoutId(),
 				curLayout.getSourcePrototypeLayoutUuid(), newPriority++);
 
 			if (curLayout.getPriority() == curNextPriority) {

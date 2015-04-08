@@ -46,7 +46,7 @@ if (layout != null) {
 	String liveFriendlyURL = null;
 
 	if (liveGroup != null) {
-		liveLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(layout.getUuid(), liveGroup.getGroupId(), false);
+		liveLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(layout.getUuid(), liveGroup.getGroupId());
 
 		if (liveLayout != null) {
 			liveFriendlyURL = PortalUtil.getLayoutFriendlyURL(liveLayout, themeDisplay);
@@ -59,7 +59,7 @@ if (layout != null) {
 	String stagingFriendlyURL = null;
 
 	if (stagingGroup != null) {
-		Layout stagingLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(layout.getUuid(), stagingGroup.getGroupId(), false);
+		Layout stagingLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(layout.getUuid(), stagingGroup.getGroupId());
 
 		if (stagingLayout != null) {
 			stagingFriendlyURL = PortalUtil.getLayoutFriendlyURL(stagingLayout, themeDisplay);
@@ -72,7 +72,7 @@ if (layout != null) {
 	List<LayoutSetBranch> layoutSetBranches = null;
 
 	if (group.isStagingGroup() || group.isStagedRemotely()) {
-		layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(stagingGroup.getGroupId(), false);
+		layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(stagingGroup.getGroupId());
 	}
 	%>
 

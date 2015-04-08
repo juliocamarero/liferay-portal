@@ -46,8 +46,7 @@ public class LayoutSetPrototypeImpl extends LayoutSetPrototypeBaseImpl {
 
 	@Override
 	public LayoutSet getLayoutSet() throws PortalException {
-		return LayoutSetLocalServiceUtil.getLayoutSet(
-			getGroup().getGroupId(), false);
+		return LayoutSetLocalServiceUtil.getLayoutSet(getGroup().getGroupId());
 	}
 
 	@Override

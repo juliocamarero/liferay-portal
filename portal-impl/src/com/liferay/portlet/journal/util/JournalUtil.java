@@ -400,12 +400,7 @@ public class JournalUtil {
 		// The target page and the article must belong to the same group
 
 		Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-			layoutUuid, groupId, false);
-
-		if (layout == null) {
-			layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				layoutUuid, groupId, true);
-		}
+			layoutUuid, groupId);
 
 		return layout;
 	}
@@ -859,14 +854,8 @@ public class JournalUtil {
 		}
 
 		Layout layout = LayoutLocalServiceUtil.fetchFirstLayout(
-			themeDisplay.getScopeGroupId(), false,
+			themeDisplay.getScopeGroupId(),
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-
-		if (layout == null) {
-			layout = LayoutLocalServiceUtil.fetchFirstLayout(
-				themeDisplay.getScopeGroupId(), true,
-				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-		}
 
 		if (layout != null) {
 			return layout.getPlid();

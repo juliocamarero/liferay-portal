@@ -275,7 +275,6 @@ public class DDLExporterTest {
 
 		jsonObject.put("groupId", layout.getGroupId());
 		jsonObject.put("layoutId", layout.getLayoutId());
-		jsonObject.put("privateLayout", layout.getPrivateLayout());
 
 		return jsonObject.toString();
 	}

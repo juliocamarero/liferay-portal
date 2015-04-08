@@ -112,7 +112,7 @@ public class LayoutTestUtil {
 			ServiceContextTestUtil.getServiceContext(groupId);
 
 		return LayoutLocalServiceUtil.addLayout(
-			serviceContext.getUserId(), groupId, privateLayout,
+			serviceContext.getUserId(), groupId,
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, nameMap, nameMap,
 			new HashMap<Locale, String>(), new HashMap<Locale, String>(),
 			new HashMap<Locale, String>(), LayoutConstants.TYPE_PORTLET,
@@ -149,7 +149,7 @@ public class LayoutTestUtil {
 
 		try {
 			layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
-				groupId, false, friendlyURL);
+				groupId, friendlyURL);
 
 			return layout;
 		}
@@ -169,7 +169,7 @@ public class LayoutTestUtil {
 		}
 
 		return LayoutLocalServiceUtil.addLayout(
-			TestPropsValues.getUserId(), groupId, privateLayout,
+			TestPropsValues.getUserId(), groupId,
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, name, null, description,
 			LayoutConstants.TYPE_PORTLET, false, friendlyURL, serviceContext);
 	}
@@ -252,7 +252,7 @@ public class LayoutTestUtil {
 			userId, portletId, columnId, -1);
 
 		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
+			layout.getGroupId(), layout.getLayoutId(),
 			layout.getTypeSettings());
 
 		if (preferenceMap == null) {
@@ -361,7 +361,7 @@ public class LayoutTestUtil {
 		layoutTypePortlet.setUpdatePermission(customizable);
 
 		return LayoutServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
+			layout.getGroupId(), layout.getLayoutId(),
 			layout.getTypeSettings());
 	}
 
@@ -409,7 +409,7 @@ public class LayoutTestUtil {
 			TestPropsValues.getUserId(), layoutTemplateId);
 
 		return LayoutServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
+			layout.getGroupId(), layout.getLayoutId(),
 			layout.getTypeSettings());
 	}
 

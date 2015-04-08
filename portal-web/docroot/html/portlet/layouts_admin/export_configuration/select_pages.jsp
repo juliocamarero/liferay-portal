@@ -72,7 +72,7 @@ Map<String, String[]> parameterMap = (Map<String, String[]>)GetterUtil.getObject
 					<c:if test="<%= LayoutStagingUtil.isBranchingLayoutSet(group, false) %>">
 
 						<%
-						List<LayoutSetBranch> layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(group.getGroupId(), false);
+						List<LayoutSetBranch> layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(group.getGroupId());
 						%>
 
 						<aui:select label="site-pages-variation" name="layoutSetBranchId">
