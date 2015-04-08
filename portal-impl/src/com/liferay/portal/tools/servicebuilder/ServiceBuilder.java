@@ -4899,13 +4899,7 @@ public class ServiceBuilder {
 			if (columnList.contains(new EntityColumn("groupId"))) {
 				Element finderElement = SAXReaderUtil.createElement("finder");
 
-				if (ejbName.equals("Layout")) {
-					finderElement.addAttribute("name", "UUID_G_P");
-				}
-				else {
-					finderElement.addAttribute("name", "UUID_G");
-				}
-
+				finderElement.addAttribute("name", "UUID_G");
 				finderElement.addAttribute("return-type", ejbName);
 				finderElement.addAttribute("unique", "true");
 
@@ -4917,13 +4911,6 @@ public class ServiceBuilder {
 				finderColumnElement = finderElement.addElement("finder-column");
 
 				finderColumnElement.addAttribute("name", "groupId");
-
-				if (ejbName.equals("Layout")) {
-					finderColumnElement = finderElement.addElement(
-						"finder-column");
-
-					finderColumnElement.addAttribute("name", "privateLayout");
-				}
 
 				finderElements.add(0, finderElement);
 			}
