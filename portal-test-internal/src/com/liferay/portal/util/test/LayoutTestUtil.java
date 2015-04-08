@@ -58,19 +58,11 @@ public class LayoutTestUtil {
 		return addLayout(group.getGroupId());
 	}
 
-	public static Layout addLayout(Group group, boolean privateLayout)
-		throws Exception {
-
-		return addLayout(group.getGroupId(), privateLayout);
-	}
-
 	public static Layout addLayout(
-			Group group, boolean privateLayout, LayoutPrototype layoutPrototype,
-			boolean linkEnabled)
+			Group group, LayoutPrototype layoutPrototype, boolean linkEnabled)
 		throws Exception {
 
-		return addLayout(
-			group.getGroupId(), privateLayout, layoutPrototype, linkEnabled);
+		return addLayout(group.getGroupId(), layoutPrototype, linkEnabled);
 	}
 
 	public static Layout addLayout(Group group, long parentLayoutPlid)
@@ -80,18 +72,11 @@ public class LayoutTestUtil {
 	}
 
 	public static Layout addLayout(long groupId) throws Exception {
-		return addLayout(groupId, false);
-	}
-
-	public static Layout addLayout(long groupId, boolean privateLayout)
-		throws Exception {
-
-		return addLayout(groupId, privateLayout, null, false);
+		return addLayout(groupId, null, false);
 	}
 
 	public static Layout addLayout(
-			long groupId, boolean privateLayout,
-			LayoutPrototype layoutPrototype, boolean linkEnabled)
+			long groupId, LayoutPrototype layoutPrototype, boolean linkEnabled)
 		throws Exception {
 
 		return addLayout(
@@ -100,11 +85,22 @@ public class LayoutTestUtil {
 				FriendlyURLRandomizerBumper.INSTANCE,
 				NumericStringRandomizerBumper.INSTANCE,
 				UniqueStringRandomizerBumper.INSTANCE),
-			privateLayout, layoutPrototype, linkEnabled);
+			layoutPrototype, linkEnabled);
+	}
+
+	public static Layout addLayout(long groupId, long parentLayoutPlid)
+		throws Exception {
+
+		Layout layout = addLayout(groupId);
+
+		LayoutLocalServiceUtil.updateParentLayoutId(
+			layout.getPlid(), parentLayoutPlid);
+
+		return LayoutLocalServiceUtil.fetchLayout(layout.getPlid());
 	}
 
 	public static Layout addLayout(
-			long groupId, boolean privateLayout, Map<Locale, String> nameMap,
+			long groupId, Map<Locale, String> nameMap,
 			Map<Locale, String> friendlyURLMap)
 		throws Exception {
 
@@ -119,27 +115,13 @@ public class LayoutTestUtil {
 			StringPool.BLANK, false, friendlyURLMap, serviceContext);
 	}
 
-	public static Layout addLayout(long groupId, long parentLayoutPlid)
-		throws Exception {
-
-		Layout layout = addLayout(groupId, false);
-
-		LayoutLocalServiceUtil.updateParentLayoutId(
-			layout.getPlid(), parentLayoutPlid);
-
-		return LayoutLocalServiceUtil.fetchLayout(layout.getPlid());
+	public static Layout addLayout(long groupId, String name) throws Exception {
+		return addLayout(groupId, name, null, false);
 	}
 
 	public static Layout addLayout(
-			long groupId, String name, boolean privateLayout)
-		throws Exception {
-
-		return addLayout(groupId, name, privateLayout, null, false);
-	}
-
-	public static Layout addLayout(
-			long groupId, String name, boolean privateLayout,
-			LayoutPrototype layoutPrototype, boolean linkEnabled)
+			long groupId, String name, LayoutPrototype layoutPrototype,
+			boolean linkEnabled)
 		throws Exception {
 
 		String friendlyURL =
@@ -178,7 +160,7 @@ public class LayoutTestUtil {
 			long groupId, String name, long parentLayoutPlid)
 		throws Exception {
 
-		Layout layout = addLayout(groupId, name, false);
+		Layout layout = addLayout(groupId, name);
 
 		LayoutLocalServiceUtil.updateParentLayoutId(
 			layout.getPlid(), parentLayoutPlid);
@@ -274,7 +256,7 @@ public class LayoutTestUtil {
 	public static Layout addTypeArticleLayout(long groupId, String articleId)
 		throws Exception {
 
-		Layout layout = addLayout(groupId, false);
+		Layout layout = addLayout(groupId);
 
 		UnicodeProperties typeSettingsProperties =
 			layout.getTypeSettingsProperties();
@@ -292,7 +274,7 @@ public class LayoutTestUtil {
 			long groupId, long linkedToLayoutId)
 		throws Exception {
 
-		Layout layout = addLayout(groupId, false);
+		Layout layout = addLayout(groupId);
 
 		UnicodeProperties typeSettingsProperties =
 			layout.getTypeSettingsProperties();

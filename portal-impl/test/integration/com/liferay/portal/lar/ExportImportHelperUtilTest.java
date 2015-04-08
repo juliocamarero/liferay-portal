@@ -430,7 +430,7 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 
 		String selectedLayoutsJSON =
 			ExportImportHelperUtil.getSelectedLayoutsJSON(
-				_stagingGroup.getGroupId(), false,
+				_stagingGroup.getGroupId(),
 				StringUtil.merge(selectedLayoutIds));
 
 		JSONArray selectedLayoutsJSONArray = JSONFactoryUtil.createJSONArray(
@@ -455,7 +455,7 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 
 		String selectedLayoutsJSON =
 			ExportImportHelperUtil.getSelectedLayoutsJSON(
-				_stagingGroup.getGroupId(), false,
+				_stagingGroup.getGroupId(),
 				StringUtil.merge(selectedLayoutIds));
 
 		JSONArray selectedLayoutsJSONArray = JSONFactoryUtil.createJSONArray(
@@ -478,8 +478,7 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 
 		String selectedLayoutsJSON =
 			ExportImportHelperUtil.getSelectedLayoutsJSON(
-				_stagingGroup.getGroupId(), false,
-				StringUtil.merge(new long[0]));
+				_stagingGroup.getGroupId(), StringUtil.merge(new long[0]));
 
 		JSONArray selectedLayoutsJSONArray = JSONFactoryUtil.createJSONArray(
 			selectedLayoutsJSON);
@@ -500,7 +499,7 @@ public class ExportImportHelperUtilTest extends PowerMockito {
 
 		String selectedLayoutsJSON =
 			ExportImportHelperUtil.getSelectedLayoutsJSON(
-				_stagingGroup.getGroupId(), false,
+				_stagingGroup.getGroupId(),
 				StringUtil.merge(selectedLayoutIds));
 
 		JSONArray selectedLayoutsJSONArray = JSONFactoryUtil.createJSONArray(
