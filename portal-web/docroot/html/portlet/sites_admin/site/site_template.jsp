@@ -19,7 +19,7 @@
 <%
 Group group = (Group)request.getAttribute("site.group");
 
-LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(), false);
+LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId());
 
 LayoutSetPrototype layoutSetPrototype = null;
 

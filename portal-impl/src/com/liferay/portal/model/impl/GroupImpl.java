@@ -164,12 +164,12 @@ public class GroupImpl extends GroupBaseImpl {
 
 	@Override
 	public long getDefaultPrivatePlid() {
-		return getDefaultPlid(true);
+		return getDefaultPlid();
 	}
 
 	@Override
 	public long getDefaultPublicPlid() {
-		return getDefaultPlid(false);
+		return getDefaultPlid();
 	}
 
 	@Override
@@ -478,8 +478,7 @@ public class GroupImpl extends GroupBaseImpl {
 		LayoutSet layoutSet = null;
 
 		try {
-			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				getGroupId(), true);
+			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(getGroupId());
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -505,8 +504,7 @@ public class GroupImpl extends GroupBaseImpl {
 		LayoutSet layoutSet = null;
 
 		try {
-			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				getGroupId(), false);
+			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(getGroupId());
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -899,8 +897,7 @@ public class GroupImpl extends GroupBaseImpl {
 
 		Layout defaultLayout = null;
 
-		int siteLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-			this, privateSite);
+		int siteLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(this);
 
 		if (siteLayoutsCount == 0) {
 			boolean hasPowerUserRole = RoleLocalServiceUtil.hasUserRole(
@@ -928,8 +925,7 @@ public class GroupImpl extends GroupBaseImpl {
 		}
 		else {
 			defaultLayout = LayoutLocalServiceUtil.fetchFirstLayout(
-				getGroupId(), privateSite,
-				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+				getGroupId(), LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			if ((defaultLayout != null ) &&
 				!LayoutPermissionUtil.contains(
@@ -1060,11 +1056,10 @@ public class GroupImpl extends GroupBaseImpl {
 		super.setTypeSettings(_typeSettingsProperties.toString());
 	}
 
-	protected long getDefaultPlid(boolean privateLayout) {
+	protected long getDefaultPlid() {
 		try {
 			Layout firstLayout = LayoutLocalServiceUtil.fetchFirstLayout(
-				getGroupId(), privateLayout,
-				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+				getGroupId(), LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			if (firstLayout != null) {
 				return firstLayout.getPlid();

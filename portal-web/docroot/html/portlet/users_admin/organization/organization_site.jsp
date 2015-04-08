@@ -36,9 +36,9 @@ if (organization != null) {
 
 	if (site) {
 		try {
-			LayoutLocalServiceUtil.getLayouts(organizationGroup.getGroupId(), true, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+			LayoutLocalServiceUtil.getLayouts(organizationGroup.getGroupId(), LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
-			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(organizationGroup.getGroupId(), false);
+			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(organizationGroup.getGroupId());
 
 			layoutSetPrototypeLinkEnabled = layoutSet.isLayoutSetPrototypeLinkEnabled();
 

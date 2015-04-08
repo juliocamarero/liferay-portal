@@ -38,7 +38,7 @@ List<LayoutSetBranch> layoutSetBranches = null;
 String publishDialogTitle = null;
 
 if (!group.isCompany()) {
-	layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(stagingGroup.getGroupId(), false);
+	layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(stagingGroup.getGroupId());
 }
 
 if (group.isStaged() && group.isStagedRemotely()) {

@@ -19,7 +19,7 @@
 <%
 Long liveGroupId = (Long)request.getAttribute("site.liveGroupId");
 
-LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId, false);
+LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId);
 
 String virtualHostName = PortalUtil.getVirtualHostname(layoutSet);
 

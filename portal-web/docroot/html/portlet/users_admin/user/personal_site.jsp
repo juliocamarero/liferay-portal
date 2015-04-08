@@ -34,9 +34,9 @@ if (selUser != null) {
 
 	if (userGroup != null) {
 		try {
-			LayoutLocalServiceUtil.getLayouts(userGroup.getGroupId(), true, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+			LayoutLocalServiceUtil.getLayouts(userGroup.getGroupId(), LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
-			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(userGroup.getGroupId(), false);
+			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(userGroup.getGroupId());
 
 			layoutSetPrototypeLinkEnabled = layoutSet.isLayoutSetPrototypeLinkEnabled();
 

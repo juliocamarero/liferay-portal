@@ -42,7 +42,7 @@ else {
 	<aui:option disabled="<%= true %>" label="select-a-page" selected="<%= actionPlid == 0 %>" value="" />
 
 	<%
-	List<Layout> curLayouts = LayoutServiceUtil.getLayouts(actionGroupId, false);
+	List<Layout> curLayouts = LayoutServiceUtil.getLayouts(actionGroupId);
 	%>
 
 	<c:if test="<%= !curLayouts.isEmpty() %>">

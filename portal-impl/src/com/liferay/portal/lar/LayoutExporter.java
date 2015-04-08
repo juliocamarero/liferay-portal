@@ -244,8 +244,7 @@ public class LayoutExporter {
 		}
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-			portletDataContext.getGroupId(),
-			portletDataContext.isPrivateLayout());
+			portletDataContext.getGroupId());
 
 		long companyId = layoutSet.getCompanyId();
 		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
@@ -398,8 +397,7 @@ public class LayoutExporter {
 		Map<String, Object[]> portletIds = new LinkedHashMap<>();
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			portletDataContext.getGroupId(),
-			portletDataContext.isPrivateLayout());
+			portletDataContext.getGroupId());
 
 		if (group.isStagingGroup()) {
 			group = group.getLiveGroup();
@@ -710,8 +708,7 @@ public class LayoutExporter {
 
 					scopeLayout =
 						LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-							scopeLayoutUuid, portletDataContext.getGroupId(),
-							portletDataContext.isPrivateLayout());
+							scopeLayoutUuid, portletDataContext.getGroupId());
 
 					if (scopeLayout == null) {
 						continue;

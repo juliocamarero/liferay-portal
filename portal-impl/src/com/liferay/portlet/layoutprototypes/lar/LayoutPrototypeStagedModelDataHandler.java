@@ -170,7 +170,7 @@ public class LayoutPrototypeStagedModelDataHandler
 		long scopeGroupId = portletDataContext.getScopeGroupId();
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			layoutPrototype.getGroupId(), true,
+			layoutPrototype.getGroupId(),
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 		try {

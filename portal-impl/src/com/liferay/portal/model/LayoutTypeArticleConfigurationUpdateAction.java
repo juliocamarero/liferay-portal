@@ -37,12 +37,9 @@ public class LayoutTypeArticleConfigurationUpdateAction extends Action {
 
 		try {
 			long groupId = ParamUtil.getLong(request, "groupId");
-			boolean privateLayout = ParamUtil.getBoolean(
-				request, "privateLayout");
 			long layoutId = ParamUtil.getLong(request, "layoutId");
 
-			Layout layout = LayoutLocalServiceUtil.getLayout(
-				groupId, privateLayout, layoutId);
+			Layout layout = LayoutLocalServiceUtil.getLayout(groupId, layoutId);
 
 			UnicodeProperties typeSettingsProperties =
 				layout.getTypeSettingsProperties();

@@ -78,9 +78,9 @@ if (userGroup != null) {
 
 	if (userGroupGroup != null) {
 		try {
-			LayoutLocalServiceUtil.getLayouts(userGroupGroup.getGroupId(), true, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+			LayoutLocalServiceUtil.getLayouts(userGroupGroup.getGroupId(), LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
-			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(userGroupGroup.getGroupId(), false);
+			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(userGroupGroup.getGroupId());
 
 			layoutSetPrototypeLinkEnabled = layoutSet.isLayoutSetPrototypeLinkEnabled();
 

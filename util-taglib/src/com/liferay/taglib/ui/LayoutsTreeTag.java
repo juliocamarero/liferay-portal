@@ -124,7 +124,7 @@ public class LayoutsTreeTag extends IncludeTag {
 
 		for (long checkedLayoutId : StringUtil.split(checkedLayoutIds, 0L)) {
 			Layout checkedLayout = LayoutLocalServiceUtil.fetchLayout(
-				_groupId, false, checkedLayoutId);
+				_groupId, checkedLayoutId);
 
 			if (checkedLayout != null) {
 				checkedNodesJSONArray.put(

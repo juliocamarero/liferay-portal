@@ -170,7 +170,7 @@ public class LayoutImporter {
 			// LAR validation
 
 			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, privateLayout);
+				groupId);
 
 			zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
@@ -220,7 +220,7 @@ public class LayoutImporter {
 			ExportImportThreadLocal.setLayoutValidationInProcess(true);
 
 			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, privateLayout);
+				groupId);
 
 			zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
@@ -364,8 +364,7 @@ public class LayoutImporter {
 		LayoutCache layoutCache = new LayoutCache();
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-			portletDataContext.getGroupId(),
-			portletDataContext.isPrivateLayout());
+			portletDataContext.getGroupId());
 
 		long companyId = layoutSet.getCompanyId();
 
@@ -524,13 +523,11 @@ public class LayoutImporter {
 
 			if (ArrayUtil.isNotEmpty(iconBytes)) {
 				LayoutSetLocalServiceUtil.updateLogo(
-					portletDataContext.getGroupId(),
-					portletDataContext.isPrivateLayout(), true, iconBytes);
+					portletDataContext.getGroupId(), true, iconBytes);
 			}
 			else {
 				LayoutSetLocalServiceUtil.updateLogo(
-					portletDataContext.getGroupId(),
-					portletDataContext.isPrivateLayout(), false, (File)null);
+					portletDataContext.getGroupId(), false, (File)null);
 			}
 		}
 
@@ -541,8 +538,7 @@ public class LayoutImporter {
 				headerElement.elementText("settings"));
 
 			LayoutSetLocalServiceUtil.updateSettings(
-				portletDataContext.getGroupId(),
-				portletDataContext.isPrivateLayout(), settings);
+				portletDataContext.getGroupId(), settings);
 		}
 
 		Element portletsElement = rootElement.element("portlets");
@@ -593,9 +589,8 @@ public class LayoutImporter {
 		// Layouts
 
 		Set<Layout> modifiedLayouts = new HashSet<>();
-		List<Layout> previousLayouts = LayoutUtil.findByG_P(
-			portletDataContext.getGroupId(),
-			portletDataContext.isPrivateLayout());
+		List<Layout> previousLayouts = LayoutUtil.findByGroupId(
+			portletDataContext.getGroupId());
 
 		// Remove layouts that were deleted from the layout set prototype
 
@@ -621,9 +616,8 @@ public class LayoutImporter {
 					continue;
 				}
 
-				Layout sourcePrototypeLayout = LayoutUtil.fetchByUUID_G_P(
-					sourcePrototypeLayoutUuid, layoutSetPrototype.getGroupId(),
-					true);
+				Layout sourcePrototypeLayout = LayoutUtil.fetchByUUID_G(
+					sourcePrototypeLayoutUuid, layoutSetPrototype.getGroupId());
 
 				if (sourcePrototypeLayout == null) {
 					LayoutLocalServiceUtil.deleteLayout(
@@ -828,8 +822,7 @@ public class LayoutImporter {
 		// Page count
 
 		layoutSet = LayoutSetLocalServiceUtil.updatePageCount(
-			portletDataContext.getGroupId(),
-			portletDataContext.isPrivateLayout());
+			portletDataContext.getGroupId());
 
 		// Site
 
@@ -1000,8 +993,7 @@ public class LayoutImporter {
 			else if (Validator.isNotNull(scopeLayoutUuid)) {
 				Layout scopeLayout =
 					LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-						scopeLayoutUuid, portletDataContext.getGroupId(),
-						portletDataContext.isPrivateLayout());
+						scopeLayoutUuid, portletDataContext.getGroupId());
 
 				if (scopeLayout.hasScopeGroup()) {
 					scopeGroup = scopeLayout.getScopeGroup();
@@ -1026,14 +1018,10 @@ public class LayoutImporter {
 
 				if (group.isStaged() && !group.isStagedRemotely()) {
 					try {
-						boolean privateLayout = GetterUtil.getBoolean(
-							portletElement.attributeValue("private-layout"));
-
 						Layout oldLayout =
 							LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
 								scopeLayoutUuid,
-								portletDataContext.getSourceGroupId(),
-								privateLayout);
+								portletDataContext.getSourceGroupId());
 
 						Group oldScopeGroup = oldLayout.getScopeGroup();
 
@@ -1126,7 +1114,7 @@ public class LayoutImporter {
 		}
 
 		List<Layout> layoutSetLayouts = LayoutLocalServiceUtil.getLayouts(
-			portletDataContext.getGroupId(), privateLayout);
+			portletDataContext.getGroupId());
 
 		for (Layout layout : layoutSetLayouts) {
 			if (layoutPriorities.containsKey(layout.getPlid())) {

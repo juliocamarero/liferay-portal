@@ -140,9 +140,7 @@ public class LayoutStagingBackgroundTaskExecutor
 		}
 
 		LayoutSetBranchLocalServiceUtil.deleteLayoutSetBranches(
-			targetGroupId, false, true);
-		LayoutSetBranchLocalServiceUtil.deleteLayoutSetBranches(
-			targetGroupId, true, true);
+			targetGroupId, true);
 
 		UnicodeProperties typeSettingsProperties =
 			sourceGroup.getTypeSettingsProperties();
@@ -187,10 +185,7 @@ public class LayoutStagingBackgroundTaskExecutor
 				Map<String, Serializable> settingsMap =
 					_exportImportConfiguration.getSettingsMap();
 
-				boolean privateLayout = MapUtil.getBoolean(
-					settingsMap, "privateLayout");
-
-				initThreadLocals(_sourceGroupId, privateLayout);
+				initThreadLocals(_sourceGroupId);
 
 				long[] layoutIds = GetterUtil.getLongValues(
 					settingsMap.get("layoutIds"));
@@ -200,23 +195,22 @@ public class LayoutStagingBackgroundTaskExecutor
 					_exportImportConfiguration);
 
 				file = LayoutLocalServiceUtil.exportLayoutsAsFile(
-					_sourceGroupId, privateLayout, layoutIds, parameterMap,
+					_sourceGroupId, layoutIds, parameterMap,
 					dateRange.getStartDate(), dateRange.getEndDate());
 
 				markBackgroundTask(_backgroundTaskId, "exported");
 
 				LayoutLocalServiceUtil.importLayoutsDataDeletions(
-					_userId, _targetGroupId, privateLayout, parameterMap, file);
+					_userId, _targetGroupId, parameterMap, file);
 
 				missingReferences =
 					LayoutLocalServiceUtil.validateImportLayoutsFile(
-						_userId, _targetGroupId, privateLayout, parameterMap,
-						file);
+						_userId, _targetGroupId, parameterMap, file);
 
 				markBackgroundTask(_backgroundTaskId, "validated");
 
 				LayoutLocalServiceUtil.importLayouts(
-					_userId, _targetGroupId, privateLayout, parameterMap, file);
+					_userId, _targetGroupId, parameterMap, file);
 
 				initLayoutSetBranches(_userId, _sourceGroupId, _targetGroupId);
 			}

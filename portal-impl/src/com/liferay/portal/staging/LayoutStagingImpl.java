@@ -98,8 +98,7 @@ public class LayoutStagingImpl implements LayoutStaging {
 	@Override
 	public boolean isBranchingLayout(Layout layout) {
 		try {
-			return isBranchingLayoutSet(
-				layout.getGroup(), layout.isPrivateLayout());
+			return isBranchingLayoutSet(layout.getGroup(), false);
 		}
 		catch (Exception e) {
 			throw new IllegalStateException(e);
@@ -148,7 +147,7 @@ public class LayoutStagingImpl implements LayoutStaging {
 
 		try {
 			LayoutSetBranchLocalServiceUtil.getMasterLayoutSetBranch(
-				stagingGroup.getGroupId(), privateLayout);
+				stagingGroup.getGroupId());
 
 			return true;
 		}

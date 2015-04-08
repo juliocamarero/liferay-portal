@@ -72,7 +72,6 @@ public class FriendlyURLServlet extends HttpServlet {
 	public void init(ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
 
-		_private = false;
 		_user = GetterUtil.getBoolean(servletConfig.getInitParameter("user"));
 
 		_friendlyURLPathPrefix = PortalUtil.getPathFriendlyURLPublic();
@@ -297,7 +296,7 @@ public class FriendlyURLServlet extends HttpServlet {
 			try {
 				LayoutFriendlyURLComposite layoutFriendlyURLComposite =
 					PortalUtil.getLayoutFriendlyURLComposite(
-						group.getGroupId(), _private, friendlyURL, params,
+						group.getGroupId(), false, friendlyURL, params,
 						requestContext);
 
 				Layout layout = layoutFriendlyURLComposite.getLayout();
@@ -336,7 +335,7 @@ public class FriendlyURLServlet extends HttpServlet {
 			}
 			catch (NoSuchLayoutException nsle) {
 				List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-					group.getGroupId(), _private,
+					group.getGroupId(),
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 				for (Layout layout : layouts) {
@@ -394,7 +393,6 @@ public class FriendlyURLServlet extends HttpServlet {
 		FriendlyURLServlet.class);
 
 	private String _friendlyURLPathPrefix;
-	private boolean _private;
 	private boolean _user;
 
 }

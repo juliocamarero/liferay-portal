@@ -498,8 +498,7 @@ public class JournalRSSUtil {
 			Long hitLayoutId = hitLayoutIds.get(0);
 
 			Layout hitLayout = LayoutLocalServiceUtil.getLayout(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				hitLayoutId.longValue());
+				layout.getGroupId(), hitLayoutId.longValue());
 
 			return PortalUtil.getLayoutFriendlyURL(hitLayout, themeDisplay);
 		}

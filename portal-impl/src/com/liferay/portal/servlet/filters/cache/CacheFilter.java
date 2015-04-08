@@ -213,8 +213,7 @@ public class CacheFilter extends BasePortalFilter {
 
 		if (Validator.isNull(friendlyURL)) {
 			try {
-				long plid = LayoutLocalServiceUtil.getDefaultPlid(
-					groupId, false);
+				long plid = LayoutLocalServiceUtil.getDefaultPlid(groupId);
 
 				return plid;
 			}
@@ -232,7 +231,7 @@ public class CacheFilter extends BasePortalFilter {
 
 		try {
 			Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
-				groupId, false, friendlyURL);
+				groupId, friendlyURL);
 
 			return layout.getPlid();
 		}

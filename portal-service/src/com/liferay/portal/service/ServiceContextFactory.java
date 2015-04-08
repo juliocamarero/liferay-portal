@@ -94,7 +94,7 @@ public class ServiceContextFactory {
 			serviceContext.setScopeGroupId(guestGroup.getGroupId());
 
 			long plid = LayoutLocalServiceUtil.getDefaultPlid(
-				serviceContext.getScopeGroupId(), false);
+				serviceContext.getScopeGroupId());
 
 			serviceContext.setPlid(plid);
 

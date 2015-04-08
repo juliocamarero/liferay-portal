@@ -75,16 +75,14 @@ public class ExportLayoutsAction extends PortletAction {
 
 		try {
 			long groupId = ParamUtil.getLong(actionRequest, "liveGroupId");
-			boolean privateLayout = ParamUtil.getBoolean(
-				actionRequest, "privateLayout");
 			long[] layoutIds = getLayoutIds(actionRequest);
 
 			String taskName = LanguageUtil.get(
 				actionRequest.getLocale(), "pages");
 
 			LayoutServiceUtil.exportLayoutsAsFileInBackground(
-				taskName, groupId, privateLayout, layoutIds,
-				actionRequest.getParameterMap(), null, null);
+				taskName, groupId, layoutIds, actionRequest.getParameterMap(),
+				null, null);
 
 			String redirect = ParamUtil.getString(actionRequest, "redirect");
 

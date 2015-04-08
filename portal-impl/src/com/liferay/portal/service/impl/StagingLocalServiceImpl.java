@@ -109,8 +109,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 		LayoutSetBranch layoutSetBranch =
 			layoutSetBranchLocalService.fetchLayoutSetBranch(
-				targetGroupId, false,
-				LayoutSetBranchConstants.MASTER_BRANCH_NAME);
+				targetGroupId, LayoutSetBranchConstants.MASTER_BRANCH_NAME);
 
 		if (branchingPublic && (layoutSetBranch == null)) {
 			addDefaultLayoutSetBranch(
@@ -125,7 +124,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		}
 
 		layoutSetBranch = layoutSetBranchLocalService.fetchLayoutSetBranch(
-			targetGroupId, true, LayoutSetBranchConstants.MASTER_BRANCH_NAME);
+			targetGroupId, LayoutSetBranchConstants.MASTER_BRANCH_NAME);
 
 		if (branchingPrivate && (layoutSetBranch == null)) {
 			addDefaultLayoutSetBranch(
@@ -405,15 +404,14 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			FileUtil.write(file, stagingRequestFileEntry.getContentStream());
 
 			layoutLocalService.importLayoutsDataDeletions(
-				userId, folder.getGroupId(), privateLayout, parameterMap, file);
+				userId, folder.getGroupId(), parameterMap, file);
 
 			MissingReferences missingReferences =
 				layoutLocalService.validateImportLayoutsFile(
-					userId, folder.getGroupId(), privateLayout, parameterMap,
-					file);
+					userId, folder.getGroupId(), parameterMap, file);
 
 			layoutLocalService.importLayouts(
-				userId, folder.getGroupId(), privateLayout, parameterMap, file);
+				userId, folder.getGroupId(), parameterMap, file);
 
 			return missingReferences;
 		}
@@ -475,7 +473,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 			LayoutSetBranch layoutSetBranch =
 				layoutSetBranchLocalService.addLayoutSetBranch(
-					userId, groupId, privateLayout,
+					userId, groupId,
 					LayoutSetBranchConstants.MASTER_BRANCH_NAME, description,
 					true, LayoutSetBranchConstants.ALL_BRANCHES,
 					serviceContext);
@@ -560,8 +558,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		Map<Long, LayoutRevision> layoutRevisions = new HashMap<>();
 
 		List<LayoutSetBranch> layoutSetBranches =
-			layoutSetBranchLocalService.getLayoutSetBranches(
-				groupId, privateLayout);
+			layoutSetBranchLocalService.getLayoutSetBranches(groupId);
 
 		for (LayoutSetBranch layoutSetBranch : layoutSetBranches) {
 			String lastPublishDateString = layoutSetBranch.getSettingsProperty(
@@ -606,8 +603,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			updateLayoutWithLayoutRevision(layoutRevision);
 		}
 
-		layoutSetBranchLocalService.deleteLayoutSetBranches(
-			groupId, privateLayout, true);
+		layoutSetBranchLocalService.deleteLayoutSetBranches(groupId, true);
 	}
 
 	protected void disableRemoteStaging(
@@ -832,7 +828,6 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		layout.setUserName(layoutRevision.getUserName());
 		layout.setCreateDate(layoutRevision.getCreateDate());
 		layout.setModifiedDate(layoutRevision.getModifiedDate());
-		layout.setPrivateLayout(layoutRevision.getPrivateLayout());
 		layout.setName(layoutRevision.getName());
 		layout.setTitle(layoutRevision.getTitle());
 		layout.setDescription(layoutRevision.getDescription());
