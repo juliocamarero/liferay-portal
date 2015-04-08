@@ -734,13 +734,13 @@ public class EditGroupAction extends PortletAction {
 
 		if (!liveGroup.isStaged() || liveGroup.isStagedRemotely()) {
 			SitesUtil.updateLayoutSetPrototypesLinks(
-				liveGroup, layoutSetPrototypeId, 0,
-				layoutSetPrototypeLinkEnabled, false);
+				liveGroup, layoutSetPrototypeId,
+				layoutSetPrototypeLinkEnabled);
 		}
 		else {
 			SitesUtil.updateLayoutSetPrototypesLinks(
-				liveGroup.getStagingGroup(), layoutSetPrototypeId, 0,
-				layoutSetPrototypeLinkEnabled, false);
+				liveGroup.getStagingGroup(), layoutSetPrototypeId,
+				layoutSetPrototypeLinkEnabled);
 		}
 
 		// Staging
