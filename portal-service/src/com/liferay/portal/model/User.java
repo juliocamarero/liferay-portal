@@ -228,6 +228,9 @@ public interface User extends UserModel, PersistedModel {
 
 	public java.util.List<com.liferay.portal.model.Group> getGroups();
 
+	public int getLayoutsPageCount()
+		throws com.liferay.portal.kernel.exception.PortalException;
+
 	public java.util.Locale getLocale();
 
 	public java.lang.String getLogin()
@@ -330,9 +333,6 @@ public interface User extends UserModel, PersistedModel {
 		com.liferay.portal.theme.ThemeDisplay themeDisplay)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
-	public int getLayoutsPageCount()
-		throws com.liferay.portal.kernel.exception.PortalException;
-
 	public java.util.Set<java.lang.String> getReminderQueryQuestions()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
@@ -376,13 +376,13 @@ public interface User extends UserModel, PersistedModel {
 	public boolean hasCompanyMx(java.lang.String emailAddress)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	public boolean hasLayouts()
+		throws com.liferay.portal.kernel.exception.PortalException;
+
 	public boolean hasMySites()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public boolean hasOrganization();
-
-	public boolean hasLayouts()
-		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public boolean hasReminderQuery();
 
