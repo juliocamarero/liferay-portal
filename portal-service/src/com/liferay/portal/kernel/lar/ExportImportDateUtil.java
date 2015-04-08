@@ -80,7 +80,7 @@ public class ExportImportDateUtil {
 
 	public static final String RANGE_LAST = "last";
 
-	public static void clearLastPublishDate(long groupId, boolean privateLayout)
+	public static void clearLastPublishDate(long groupId)
 		throws PortalException {
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(groupId);
@@ -157,8 +157,6 @@ public class ExportImportDateUtil {
 		String portletId = (String)settingsMap.get("portletId");
 		long groupId = MapUtil.getLong(settingsMap, "sourceGroupId");
 		long plid = MapUtil.getLong(settingsMap, "sourcePlid");
-		boolean privateLayout = MapUtil.getBoolean(
-			settingsMap, "privateLayout");
 		Locale locale = (Locale)settingsMap.get("locale");
 		TimeZone timeZone = (TimeZone)settingsMap.get("timezone");
 
@@ -166,7 +164,7 @@ public class ExportImportDateUtil {
 			range, rangeLast, startDateAmPm, startDateYear, startDateMonth,
 			startDateDay, startDateHour, startDateMinute, endDateAmPm,
 			endDateYear, endDateMonth, endDateDay, endDateHour, endDateMinute,
-			portletId, groupId, plid, privateLayout, locale, timeZone);
+			portletId, groupId, plid, locale, timeZone);
 	}
 
 	public static DateRange getDateRange(long exportImportConfigurationId)
@@ -180,8 +178,8 @@ public class ExportImportDateUtil {
 	}
 
 	public static DateRange getDateRange(
-			PortletRequest portletRequest, long groupId, boolean privateLayout,
-			long plid, String portletId, String defaultRange)
+			PortletRequest portletRequest, long groupId, long plid,
+			String portletId, String defaultRange)
 		throws PortalException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
@@ -212,7 +210,7 @@ public class ExportImportDateUtil {
 			range, rangeLast, startDateAmPm, startDateYear, startDateMonth,
 			startDateDay, startDateHour, startDateMinute, endDateAmPm,
 			endDateYear, endDateMonth, endDateDay, endDateHour, endDateMinute,
-			portletId, groupId, plid, privateLayout, themeDisplay.getLocale(),
+			portletId, groupId, plid, themeDisplay.getLocale(),
 			themeDisplay.getTimeZone());
 	}
 
@@ -279,8 +277,7 @@ public class ExportImportDateUtil {
 	}
 
 	public static void updateLastPublishDate(
-			long groupId, boolean privateLayout, DateRange dateRange,
-			Date lastPublishDate)
+			long groupId, DateRange dateRange, Date lastPublishDate)
 		throws PortalException {
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(groupId);
@@ -371,7 +368,7 @@ public class ExportImportDateUtil {
 			int startDateMinute, int endDateAmPm, int endDateYear,
 			int endDateMonth, int endDateDay, int endDateHour,
 			int endDateMinute, String portletId, long groupId, long plid,
-			boolean privateLayout, Locale locale, TimeZone timeZone)
+			Locale locale, TimeZone timeZone)
 		throws PortalException {
 
 		Date startDate = null;
