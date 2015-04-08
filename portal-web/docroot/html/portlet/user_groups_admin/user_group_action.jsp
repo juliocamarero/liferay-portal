@@ -105,12 +105,12 @@ UserGroup userGroup = (UserGroup)row.getObject();
 	boolean hasViewPermission = GroupPermissionUtil.contains(permissionChecker, userGroupGroup, ActionKeys.VIEW);
 	%>
 
-	<c:if test="<%= hasViewPermission && (userGroupGroup.getPublicLayoutsPageCount() > 0) %>">
+	<c:if test="<%= hasViewPermission && userGroupGroup.hasLayouts() %>">
 		<liferay-ui:icon
 			iconCssClass="icon-search"
 			message="go-to-the-site's-pages"
 			target="_blank"
-			url="<%= userGroupGroup.getDisplayURL(themeDisplay, false) %>"
+			url="<%= userGroupGroup.getDisplayURL(themeDisplay) %>"
 		/>
 	</c:if>
 

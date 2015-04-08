@@ -118,7 +118,7 @@ if (userGroup != null) {
 			%>
 
 			<c:choose>
-				<c:when test="<%= ((userGroupGroup == null) || ((layoutSetPrototype == null) && (userGroupGroup.getPublicLayoutsPageCount() == 0))) && !layoutSetPrototypes.isEmpty() %>">
+				<c:when test="<%= ((userGroupGroup == null) || ((layoutSetPrototype == null) && !userGroupGroup.hasLayouts())) && !layoutSetPrototypes.isEmpty() %>">
 					<aui:select disabled="<%= !hasUpdateSitePermission || !hasUserGroupUpdatePermission %>" label="pages" name="publicLayoutSetPrototypeId">
 						<aui:option label="none" selected="<%= true %>" value="" />
 
@@ -150,14 +150,14 @@ if (userGroup != null) {
 						<c:choose>
 							<c:when test="<%= userGroupGroup != null %>">
 								<c:choose>
-									<c:when test="<%= userGroupGroup.getPublicLayoutsPageCount() > 0 %>">
+									<c:when test="<%= userGroupGroup.hasLayouts() %>">
 										<liferay-ui:icon
 											iconCssClass="icon-search"
 											label="<%= true %>"
 											message="open-pages"
 											method="get"
 											target="_blank"
-											url="<%= userGroupGroup.getDisplayURL(themeDisplay, false) %>"
+											url="<%= userGroupGroup.getDisplayURL(themeDisplay) %>"
 										/>
 									</c:when>
 									<c:otherwise>

@@ -74,7 +74,7 @@ if (organization != null) {
 
 			<div id="<portlet:namespace />siteTemplates">
 				<c:choose>
-					<c:when test="<%= ((organization == null) || ((layoutSetPrototype == null) && (organization.getPublicLayoutsPageCount() == 0))) && !layoutSetPrototypes.isEmpty() %>">
+					<c:when test="<%= ((organization == null) || ((layoutSetPrototype == null) && (organization.getLayoutsPageCount() == 0))) && !layoutSetPrototypes.isEmpty() %>">
 						<aui:select label="pages" name="publicLayoutSetPrototypeId">
 							<aui:option label="none" selected="<%= true %>" value="" />
 
@@ -112,14 +112,14 @@ if (organization != null) {
 							<c:choose>
 								<c:when test="<%= organization != null %>">
 									<c:choose>
-										<c:when test="<%= organization.getPublicLayoutsPageCount() > 0 %>">
+										<c:when test="<%= organization.hasLayouts() %>">
 											<liferay-ui:icon
 												iconCssClass="icon-search"
 												label="<%= true %>"
 												message="open-pages"
 												method="get"
 												target="_blank"
-												url="<%= organizationGroup.getDisplayURL(themeDisplay, false) %>"
+												url="<%= organizationGroup.getDisplayURL(themeDisplay) %>"
 											/>
 										</c:when>
 										<c:otherwise>

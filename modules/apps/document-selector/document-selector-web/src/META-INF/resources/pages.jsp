@@ -39,7 +39,7 @@ String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
 LayoutsAdminDisplayContext layoutsAdminDisplayContext = new LayoutsAdminDisplayContext(request, liferayPortletResponse);
 %>
 
-<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
+<c:if test="<%= group.hasLayouts() %>">
 	<liferay-ui:section>
 		<div>
 			<liferay-ui:layouts-tree
@@ -156,7 +156,7 @@ LayoutsAdminDisplayContext layoutsAdminDisplayContext = new LayoutsAdminDisplayC
 		selectPageMessage.attr('className', 'alert alert-' + messageType);
 	};
 
-	<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
+	<c:if test="<%= group.hasLayouts() %>">
 		bindTreeUI('treeContainerPagesOutput');
 	</c:if>
 

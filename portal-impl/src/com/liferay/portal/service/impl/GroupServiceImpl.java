@@ -720,9 +720,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 					userId, start, end, null);
 
 			for (Organization organization : userOrgs) {
-				if (!organization.hasPrivateLayouts() &&
-					!organization.hasPublicLayouts()) {
-
+				if (!organization.hasLayouts()) {
 					userSiteGroups.remove(organization.getGroup());
 				}
 				else {
@@ -733,9 +731,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 					for (Organization ancestorOrganization :
 							organization.getAncestors()) {
 
-						if (!ancestorOrganization.hasPrivateLayouts() &&
-							!ancestorOrganization.hasPublicLayouts()) {
-
+						if (!ancestorOrganization.hasLayouts()) {
 							continue;
 						}
 

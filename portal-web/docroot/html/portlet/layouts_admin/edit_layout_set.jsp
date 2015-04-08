@@ -30,7 +30,7 @@ String rootNodeName = layoutsAdminDisplayContext.getRootNodeName();
 
 PortletURL redirectURL = layoutsAdminDisplayContext.getRedirectURL();
 
-int pagesCount = group.getPublicLayoutsPageCount();
+int pagesCount = group.getLayoutsPageCount();
 
 String[] mainSections = PropsValues.LAYOUT_SET_FORM_UPDATE;
 
@@ -54,7 +54,7 @@ boolean hasViewPagesPermission = (pagesCount > 0) && (liveGroup.isStaged() || se
 <aui:nav-bar>
 	<aui:nav cssClass="navbar-nav">
 		<c:if test="<%= hasViewPagesPermission %>">
-			<aui:nav-item href="<%= group.getDisplayURL(themeDisplay, false) %>" iconCssClass="icon-file" label="view-pages" target="_blank" />
+			<aui:nav-item href="<%= group.getDisplayURL(themeDisplay) %>" iconCssClass="icon-file" label="view-pages" target="_blank" />
 		</c:if>
 		<c:if test="<%= hasAddPageLayoutsPermission %>">
 			<portlet:renderURL var="addPagesURL">

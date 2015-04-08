@@ -356,7 +356,7 @@ public class PortalImplCanonicalURLTest {
 
 		themeDisplay.setCompany(company);
 
-		themeDisplay.setLayoutSet(group.getPublicLayoutSet());
+		themeDisplay.setLayoutSet(group.getLayoutSet());
 		themeDisplay.setServerPort(80);
 		themeDisplay.setSiteGroupId(group.getGroupId());
 

@@ -132,11 +132,11 @@ request.setAttribute("control_panel.jsp-ppid", ppid);
 												<%@ include file="/html/portal/layout/view/control_panel_site_selector.jspf" %>
 											</h1>
 
-											<c:if test="<%= group.hasPublicLayouts() %>">
+											<c:if test="<%= group.hasLayouts() %>">
 												<ul class="visit-links">
 													<li><liferay-ui:message key="visit" />:</li>
 
-													<li><a href="<%= group.getDisplayURL(themeDisplay, false) %>"><liferay-ui:message key="pages" /></a></li>
+													<li><a href="<%= group.getDisplayURL(themeDisplay) %>"><liferay-ui:message key="pages" /></a></li>
 												</ul>
 											</c:if>
 										</div>

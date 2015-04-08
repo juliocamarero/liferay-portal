@@ -175,9 +175,9 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 				<h3><liferay-ui:message key="pages" /></h3>
 
 				<liferay-ui:panel-container extended="<%= false %>">
-					<liferay-ui:panel collapsible="<%= true %>" defaultState='<%= ((group != null) && (group.getPublicLayoutsPageCount() > 0)) ? "open" : "closed" %>' title="pages">
+					<liferay-ui:panel collapsible="<%= true %>" defaultState='<%= ((group != null) && group.hasLayouts()) ? "open" : "closed" %>' title="pages">
 						<c:choose>
-							<c:when test="<%= ((group == null) || ((layoutSetPrototype == null) && (group.getPublicLayoutsPageCount() == 0))) && !layoutSetPrototypes.isEmpty() %>">
+							<c:when test="<%= ((group == null) || ((layoutSetPrototype == null) && !group.hasLayouts())) && !layoutSetPrototypes.isEmpty() %>">
 								<c:if test="<%= disableLayoutSetPrototypeInput %>">
 									<div class="alert alert-info">
 										<liferay-ui:message key="you-cannot-apply-a-site-template-because-you-modified-the-display-settings-of-this-site" />
@@ -227,14 +227,14 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 								<c:choose>
 									<c:when test="<%= group != null %>">
 										<c:choose>
-											<c:when test="<%= group.getPublicLayoutsPageCount() > 0 %>">
+											<c:when test="<%= group.hasLayouts() %>">
 												<liferay-ui:icon
 													iconCssClass="icon-search"
 													label="<%= true %>"
 													message="open-pages"
 													method="get"
 													target="_blank"
-													url="<%= group.getDisplayURL(themeDisplay, false) %>"
+													url="<%= group.getDisplayURL(themeDisplay) %>"
 												/>
 											</c:when>
 											<c:otherwise>
