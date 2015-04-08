@@ -50,12 +50,12 @@ Group group = layoutSetPrototype.getGroup();
 			/>
 		</c:if>
 
-		<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
+		<c:if test="<%= group.hasLayouts() %>">
 			<liferay-ui:icon
 				iconCssClass="icon-search"
 				message="view-pages"
 				target="_blank"
-				url="<%= group.getDisplayURL(themeDisplay, false) %>"
+				url="<%= group.getDisplayURL(themeDisplay) %>"
 			/>
 		</c:if>
 	</c:if>

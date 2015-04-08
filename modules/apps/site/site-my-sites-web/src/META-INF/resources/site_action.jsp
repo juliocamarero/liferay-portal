@@ -27,12 +27,12 @@ String tabs1 = (String)request.getAttribute("view.jsp-tabs1");
 <liferay-ui:icon-menu direction="down" icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>" showWhenSingleIcon='<%= tabs1.equals("my-sites") %>'>
 	<c:choose>
 		<c:when test='<%= tabs1.equals("my-sites") %>'>
-			<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
+			<c:if test="<%= group.hasLayouts() %>">
 				<liferay-ui:icon
 					iconCssClass="icon-search"
 					message="go-to-pages"
 					target="_blank"
-					url="<%= group.getDisplayURL(themeDisplay, false) %>"
+					url="<%= group.getDisplayURL(themeDisplay) %>"
 				/>
 			</c:if>
 
