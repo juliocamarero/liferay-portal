@@ -96,7 +96,7 @@ public class VirtualHostFilter extends BasePortalFilter {
 			if (pathArray.length == 2) {
 				try {
 					LayoutLocalServiceUtil.getFriendlyURLLayout(
-						groupId, false, friendlyURL);
+						groupId, friendlyURL);
 				}
 				catch (NoSuchLayoutException nsle) {
 					return true;
@@ -279,9 +279,7 @@ public class VirtualHostFilter extends BasePortalFilter {
 					return;
 				}
 
-				if (group.isGuest() && friendlyURL.equals(StringPool.SLASH) &&
-					!layoutSet.isPrivateLayout()) {
-
+				if (group.isGuest() && friendlyURL.equals(StringPool.SLASH)) {
 					String homeURL = PortalUtil.getRelativeHomeURL(request);
 
 					if (Validator.isNotNull(homeURL)) {

@@ -35,11 +35,10 @@ public class TestServicePreAction extends ServicePreAction {
 	public static TestServicePreAction INSTANCE = new TestServicePreAction();
 
 	@Override
-	public void addDefaultLayoutsByLAR(
-			long userId, long groupId, boolean privateLayout, File larFile)
+	public void addDefaultLayoutsByLAR(long userId, long groupId, File larFile)
 		throws PortalException {
 
-		super.addDefaultLayoutsByLAR(userId, groupId, privateLayout, larFile);
+		super.addDefaultLayoutsByLAR(userId, groupId, larFile);
 	}
 
 	@Override
@@ -53,13 +52,6 @@ public class TestServicePreAction extends ServicePreAction {
 	@Override
 	public void addDefaultUserPublicLayouts(User user) throws PortalException {
 		super.addDefaultUserPublicLayouts(user);
-	}
-
-	@Override
-	public void deleteDefaultUserPrivateLayouts(User user)
-		throws PortalException {
-
-		super.deleteDefaultUserPrivateLayouts(user);
 	}
 
 	@Override

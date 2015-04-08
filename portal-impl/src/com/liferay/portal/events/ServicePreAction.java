@@ -322,13 +322,10 @@ public class ServicePreAction extends Action {
 		}
 		else {
 			long groupId = ParamUtil.getLong(request, "groupId");
-			boolean privateLayout = ParamUtil.getBoolean(
-				request, "privateLayout");
 			long layoutId = ParamUtil.getLong(request, "layoutId");
 
 			if ((groupId > 0) && (layoutId > 0)) {
-				layout = LayoutLocalServiceUtil.getLayout(
-					groupId, privateLayout, layoutId);
+				layout = LayoutLocalServiceUtil.getLayout(groupId, layoutId);
 			}
 		}
 
@@ -410,7 +407,7 @@ public class ServicePreAction extends Action {
 
 			if (viewableStaging) {
 				layouts = LayoutLocalServiceUtil.getLayouts(
-					layout.getGroupId(), layout.isPrivateLayout(),
+					layout.getGroupId(),
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 			}
 			else if ((!viewableGroup || !viewableSourceGroup) &&
@@ -435,9 +432,7 @@ public class ServicePreAction extends Action {
 
 				sb.append("User ");
 				sb.append(user.getUserId());
-				sb.append(" is not allowed to access the ");
-				sb.append(layout.isPrivateLayout() ? "private": "public");
-				sb.append(" pages of group ");
+				sb.append(" is not allowed to access the pages of group ");
 				sb.append(layout.getGroupId());
 
 				if (_log.isWarnEnabled()) {
@@ -454,7 +449,7 @@ public class ServicePreAction extends Action {
 			}
 			else {
 				layouts = LayoutLocalServiceUtil.getLayouts(
-					layout.getGroupId(), layout.isPrivateLayout(),
+					layout.getGroupId(),
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 				if (!group.isControlPanel()) {
@@ -983,13 +978,7 @@ public class ServicePreAction extends Action {
 				pageSettingsURL.setParameter(
 					"struts_action", "/group_pages/edit_layouts");
 
-				if (layout.isPrivateLayout()) {
-					pageSettingsURL.setParameter("tabs1", "private-pages");
-				}
-				else {
-					pageSettingsURL.setParameter("tabs1", "public-pages");
-				}
-
+				pageSettingsURL.setParameter("tabs1", "pages");
 				pageSettingsURL.setParameter(
 					"groupId", String.valueOf(scopeGroupId));
 				pageSettingsURL.setParameter("selPlid", String.valueOf(plid));
@@ -1128,14 +1117,7 @@ public class ServicePreAction extends Action {
 				siteMapSettingsURL.setDoAsGroupId(scopeGroupId);
 				siteMapSettingsURL.setParameter(
 					"struts_action", "/group_pages/edit_layouts");
-
-				if (layout.isPrivateLayout()) {
-					siteMapSettingsURL.setParameter("tabs1", "private-pages");
-				}
-				else {
-					siteMapSettingsURL.setParameter("tabs1", "public-pages");
-				}
-
+				siteMapSettingsURL.setParameter("tabs1", "pages");
 				siteMapSettingsURL.setParameter(
 					"groupId", String.valueOf(scopeGroupId));
 				siteMapSettingsURL.setPortletMode(PortletMode.VIEW);
@@ -1186,14 +1168,7 @@ public class ServicePreAction extends Action {
 
 					publishToLiveURL.setParameter(
 						"struts_action", "/layouts_admin/publish_layouts");
-
-					if (layout.isPrivateLayout()) {
-						publishToLiveURL.setParameter("tabs1", "private-pages");
-					}
-					else {
-						publishToLiveURL.setParameter("tabs1", "public-pages");
-					}
-
+					publishToLiveURL.setParameter("tabs1", "pages");
 					publishToLiveURL.setParameter(
 						"groupId", String.valueOf(scopeGroupId));
 					publishToLiveURL.setParameter(
@@ -1328,7 +1303,7 @@ public class ServicePreAction extends Action {
 	}
 
 	protected void addDefaultLayoutsByLAR(
-			long userId, long groupId, boolean privateLayout, File larFile)
+			long userId, long groupId, File larFile)
 		throws PortalException {
 
 		Map<String, String[]> parameterMap = new HashMap<>();
@@ -1365,7 +1340,7 @@ public class ServicePreAction extends Action {
 			new String[] {Boolean.TRUE.toString()});
 
 		LayoutLocalServiceUtil.importLayouts(
-			userId, groupId, privateLayout, parameterMap, larFile);
+			userId, groupId, parameterMap, larFile);
 	}
 
 	protected void addDefaultUserPublicLayoutByProperties(
@@ -1378,7 +1353,7 @@ public class ServicePreAction extends Action {
 		ServiceContext serviceContext = new ServiceContext();
 
 		Layout layout = LayoutLocalServiceUtil.addLayout(
-			userId, groupId, false, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
+			userId, groupId, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
 			PropsValues.DEFAULT_USER_PUBLIC_LAYOUT_NAME, StringPool.BLANK,
 			StringPool.BLANK, LayoutConstants.TYPE_PORTLET, false, friendlyURL,
 			serviceContext);
@@ -1401,7 +1376,7 @@ public class ServicePreAction extends Action {
 		}
 
 		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
+			layout.getGroupId(), layout.getLayoutId(),
 			layout.getTypeSettings());
 
 		boolean updateLayoutSet = false;
@@ -1457,23 +1432,12 @@ public class ServicePreAction extends Action {
 
 		if (publicLARFile != null) {
 			addDefaultLayoutsByLAR(
-				user.getUserId(), userGroup.getGroupId(), false, publicLARFile);
+				user.getUserId(), userGroup.getGroupId(), publicLARFile);
 		}
 		else {
 			addDefaultUserPublicLayoutByProperties(
 				user.getUserId(), userGroup.getGroupId());
 		}
-	}
-
-	protected void deleteDefaultUserPrivateLayouts(User user)
-		throws PortalException {
-
-		Group userGroup = user.getGroup();
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		LayoutLocalServiceUtil.deleteLayouts(
-			userGroup.getGroupId(), true, serviceContext);
 	}
 
 	protected void deleteDefaultUserPublicLayouts(User user)
@@ -1484,7 +1448,7 @@ public class ServicePreAction extends Action {
 		ServiceContext serviceContext = new ServiceContext();
 
 		LayoutLocalServiceUtil.deleteLayouts(
-			userGroup.getGroupId(), false, serviceContext);
+			userGroup.getGroupId(), serviceContext);
 	}
 
 	protected Object[] getDefaultLayout(
@@ -1501,7 +1465,7 @@ public class ServicePreAction extends Action {
 
 		if (layoutSet != null) {
 			layouts = LayoutLocalServiceUtil.getLayouts(
-				layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
+				layoutSet.getGroupId(),
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			Group group = null;
@@ -1512,9 +1476,9 @@ public class ServicePreAction extends Action {
 				group = layout.getGroup();
 			}
 
-			if ((layout != null) && layout.isPrivateLayout()) {
+			if (layout != null) {
 				layouts = LayoutLocalServiceUtil.getLayouts(
-					group.getGroupId(), false,
+					group.getGroupId(),
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 				if (!layouts.isEmpty()) {
@@ -1530,7 +1494,7 @@ public class ServicePreAction extends Action {
 				Group liveGroup = group.getLiveGroup();
 
 				layouts = LayoutLocalServiceUtil.getLayouts(
-					liveGroup.getGroupId(), false,
+					liveGroup.getGroupId(),
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 				if (!layouts.isEmpty()) {
@@ -1549,14 +1513,8 @@ public class ServicePreAction extends Action {
 			Group userGroup = user.getGroup();
 
 			layouts = LayoutLocalServiceUtil.getLayouts(
-				userGroup.getGroupId(), true,
+				userGroup.getGroupId(),
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-
-			if (layouts.isEmpty()) {
-				layouts = LayoutLocalServiceUtil.getLayouts(
-					userGroup.getGroupId(), false,
-					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-			}
 
 			if (!layouts.isEmpty()) {
 				layout = layouts.get(0);
@@ -1576,14 +1534,8 @@ public class ServicePreAction extends Action {
 
 				for (Group group : groups) {
 					layouts = LayoutLocalServiceUtil.getLayouts(
-						group.getGroupId(), true,
+						group.getGroupId(),
 						LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-
-					if (layouts.isEmpty()) {
-						layouts = LayoutLocalServiceUtil.getLayouts(
-							group.getGroupId(), false,
-							LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-					}
 
 					if (!layouts.isEmpty()) {
 						layout = layouts.get(0);
@@ -1602,7 +1554,7 @@ public class ServicePreAction extends Action {
 				user.getCompanyId(), GroupConstants.GUEST);
 
 			layouts = LayoutLocalServiceUtil.getLayouts(
-				guestGroup.getGroupId(), false,
+				guestGroup.getGroupId(),
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			if (!layouts.isEmpty()) {
@@ -1807,7 +1759,7 @@ public class ServicePreAction extends Action {
 			List<Layout> layouts, long doAsGroupId, String controlPanelCategory)
 		throws PortalException {
 
-		if ((layout == null) || layout.isPrivateLayout()) {
+		if (layout == null) {
 			return layouts;
 		}
 
@@ -1830,7 +1782,7 @@ public class ServicePreAction extends Action {
 			}
 
 			List<Layout> guestLayouts = LayoutLocalServiceUtil.getLayouts(
-				guestGroup.getGroupId(), false,
+				guestGroup.getGroupId(),
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			Object[] viewableLayouts = getViewableLayouts(
@@ -1881,7 +1833,7 @@ public class ServicePreAction extends Action {
 
 				List<Layout> previousLayouts =
 					LayoutLocalServiceUtil.getLayouts(
-						previousGroupId.longValue(), false,
+						previousGroupId.longValue(),
 						LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 				Object[] viewableLayouts = getViewableLayouts(
@@ -2161,8 +2113,7 @@ public class ServicePreAction extends Action {
 		Boolean hasPublicLayouts = null;
 
 		if (addDefaultUserPublicLayouts) {
-			hasPublicLayouts = LayoutLocalServiceUtil.hasLayouts(
-				user, false, false);
+			hasPublicLayouts = LayoutLocalServiceUtil.hasLayouts(user, false);
 
 			if (!hasPublicLayouts) {
 				addDefaultUserPublicLayouts(user);
@@ -2187,7 +2138,7 @@ public class ServicePreAction extends Action {
 		if (deleteDefaultUserPublicLayouts) {
 			if (hasPublicLayouts == null) {
 				hasPublicLayouts = LayoutLocalServiceUtil.hasLayouts(
-					user, false, false);
+					user, false);
 			}
 
 			if (hasPublicLayouts) {

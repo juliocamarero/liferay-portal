@@ -984,8 +984,7 @@ public class PortalImpl implements Portal {
 			// We need to ensure that virtual layouts are merged
 
 			List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-				groupId, privateLayout,
-				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+				groupId, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			if (!layouts.isEmpty()) {
 				layout = layouts.get(0);
@@ -1732,7 +1731,7 @@ public class PortalImpl implements Portal {
 			companyId, GroupConstants.CONTROL_PANEL);
 
 		return LayoutLocalServiceUtil.getDefaultPlid(
-			controlPanelGroup.getGroupId(), true);
+			controlPanelGroup.getGroupId());
 	}
 
 	@Override
@@ -1865,7 +1864,7 @@ public class PortalImpl implements Portal {
 
 		try {
 			Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
-				themeDisplay.getScopeGroupId(), false,
+				themeDisplay.getScopeGroupId(),
 				PropsValues.COMPANY_SECURITY_STRANGERS_URL);
 
 			return getLayoutURL(layout, themeDisplay);
@@ -2884,7 +2883,7 @@ public class PortalImpl implements Portal {
 				groupId, urlTitle);
 
 		return LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-			journalArticle.getLayoutUuid(), groupId, privateLayout);
+			journalArticle.getLayoutUuid(), groupId);
 	}
 
 	@Override
@@ -3821,11 +3820,11 @@ public class PortalImpl implements Portal {
 				layoutFriendlyURL = StringPool.SLASH + urlParts[3];
 
 				layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
-					group.getGroupId(), privateLayout, layoutFriendlyURL);
+					group.getGroupId(), layoutFriendlyURL);
 			}
 			else {
 				List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-					group.getGroupId(), privateLayout,
+					group.getGroupId(),
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, true, 0, 1);
 
 				if (!layouts.isEmpty()) {
@@ -4413,7 +4412,7 @@ public class PortalImpl implements Portal {
 		}
 
 		Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
-			groupId, privateLayout, friendlyURL);
+			groupId, friendlyURL);
 
 		return new LayoutQueryStringComposite(layout, friendlyURL, queryString);
 	}
@@ -4776,8 +4775,7 @@ public class PortalImpl implements Portal {
 
 					Layout liveGroupLayout =
 						LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-								layout.getUuid(), liveGroup.getGroupId(),
-								layout.isPrivateLayout());
+							layout.getUuid(), liveGroup.getGroupId());
 
 					if ((liveGroupLayout != null) &&
 						liveGroupLayout.hasScopeGroup()) {
@@ -4850,8 +4848,7 @@ public class PortalImpl implements Portal {
 
 			Layout scopeLayout =
 				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-					scopeLayoutUuid, layout.getGroupId(),
-					layout.isPrivateLayout());
+					scopeLayoutUuid, layout.getGroupId());
 
 			Group scopeGroup = scopeLayout.getScopeGroup();
 
@@ -6503,10 +6500,6 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public boolean isLayoutSitemapable(Layout layout) {
-		if (layout.isPrivateLayout()) {
-			return false;
-		}
-
 		LayoutType layoutType = layout.getLayoutType();
 
 		return layoutType.isSitemapable();
@@ -7498,7 +7491,7 @@ public class PortalImpl implements Portal {
 		if (portletActions) {
 			Group layoutGroup = layout.getGroup();
 
-			if (layout.isPrivateLayout() && !layoutGroup.isLayoutPrototype() &&
+			if (!layoutGroup.isLayoutPrototype() &&
 				!layoutGroup.isLayoutSetPrototype()) {
 
 				addGuestPermissions = false;
@@ -7599,7 +7592,7 @@ public class PortalImpl implements Portal {
 		long plid = LayoutConstants.DEFAULT_PLID;
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			groupId, privateLayout, LayoutConstants.TYPE_PORTLET);
+			groupId, LayoutConstants.TYPE_PORTLET);
 
 		for (Layout layout : layouts) {
 			LayoutTypePortlet layoutTypePortlet =
@@ -7832,8 +7825,6 @@ public class PortalImpl implements Portal {
 
 		Group group = layoutSet.getGroup();
 
-		boolean privateLayoutSet = layoutSet.getPrivateLayout();
-
 		String portalURL = themeDisplay.getPortalURL();
 
 		boolean useGroupVirtualHostName = false;
@@ -7852,8 +7843,7 @@ public class PortalImpl implements Portal {
 				refererPlid);
 
 			if ((refererLayout != null) &&
-				((refererLayout.getGroupId() != group.getGroupId()) ||
-				 (refererLayout.isPrivateLayout() != privateLayoutSet))) {
+				(refererLayout.getGroupId() != group.getGroupId())) {
 
 				useGroupVirtualHostName = false;
 			}
@@ -7891,7 +7881,7 @@ public class PortalImpl implements Portal {
 			}
 			else {
 				LayoutSet curLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-					themeDisplay.getSiteGroupId(), privateLayoutSet);
+					themeDisplay.getSiteGroupId());
 
 				if (canonicalURL ||
 					((layoutSet.getLayoutSetId() !=

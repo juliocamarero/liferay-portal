@@ -382,7 +382,7 @@ public class PortletPreferencesFactoryImpl
 			boolean hasUpdateLayoutPermission = LayoutPermissionUtil.contains(
 				permissionChecker, layout, ActionKeys.UPDATE);
 
-			if (!layout.isPrivateLayout() && hasUpdateLayoutPermission) {
+			if (hasUpdateLayoutPermission) {
 			}
 			else {
 
