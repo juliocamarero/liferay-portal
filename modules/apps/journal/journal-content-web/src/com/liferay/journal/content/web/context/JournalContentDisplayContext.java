@@ -53,7 +53,6 @@ import com.liferay.portlet.journal.model.JournalArticleDisplay;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.journal.service.permission.JournalPermission;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.util.PropertyComparator;
 
 import java.io.IOException;
@@ -232,22 +231,6 @@ public class JournalContentDisplayContext {
 		return _ddmTemplates;
 	}
 
-	public int getDiscussionMessagesCount() {
-		if (_discussionMessagesCount != null) {
-			return _discussionMessagesCount;
-		}
-
-		JournalArticleDisplay articleDisplay = getArticleDisplay();
-
-		_discussionMessagesCount =
-			MBMessageLocalServiceUtil.getDiscussionMessagesCount(
-				PortalUtil.getClassNameId(JournalArticle.class.getName()),
-				articleDisplay.getResourcePrimKey(),
-				WorkflowConstants.STATUS_APPROVED);
-
-		return _discussionMessagesCount;
-	}
-
 	public List<ContentMetadataEntry> getEnabledContentMetadataEntries() {
 		List<ContentMetadataEntry> contentMetadataEntries = ListUtil.filter(
 			ContentMetadataEntryTracker.getContentMetadataEntries(),
@@ -387,38 +370,6 @@ public class JournalContentDisplayContext {
 				JournalArticle.class.getName(),
 				articleDisplay.getResourcePrimKey());
 		}
-	}
-
-	public boolean isCommentsEnabled() {
-		return PropsValues.JOURNAL_ARTICLE_COMMENTS_ENABLED;
-	}
-
-	public boolean isEnableCommentRatings() {
-		if (_enableCommentRatings != null) {
-			return _enableCommentRatings;
-		}
-
-		_enableCommentRatings = GetterUtil.getBoolean(
-			_portletPreferences.getValue("enableCommentRatings", null));
-
-		return _enableCommentRatings;
-	}
-
-	public boolean isEnableComments() {
-		if (_enableComments != null) {
-			return _enableComments;
-		}
-
-		_enableComments = false;
-
-		if (PropsValues.JOURNAL_ARTICLE_COMMENTS_ENABLED &&
-			GetterUtil.getBoolean(
-				_portletPreferences.getValue("enableComments", null))) {
-
-			_enableComments = true;
-		}
-
-		return _enableComments;
 	}
 
 	public boolean isEnableViewCountIncrement() {
@@ -597,9 +548,6 @@ public class JournalContentDisplayContext {
 	private DDMTemplate _ddmTemplate;
 	private String _ddmTemplateKey;
 	private List<DDMTemplate> _ddmTemplates;
-	private Integer _discussionMessagesCount;
-	private Boolean _enableCommentRatings;
-	private Boolean _enableComments;
 	private Boolean _enableViewCountIncrement;
 	private Boolean _expired;
 	private Boolean _hasViewPermission;
