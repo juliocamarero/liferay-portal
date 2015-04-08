@@ -831,9 +831,7 @@ public class SitesImpl implements Sites {
 	}
 
 	@Override
-	public boolean isFirstLayout(
-		long groupId, boolean privateLayout, long layoutId) {
-
+	public boolean isFirstLayout(long groupId, long layoutId) {
 		Layout firstLayout = LayoutLocalServiceUtil.fetchFirstLayout(
 			groupId, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
@@ -1418,15 +1416,13 @@ public class SitesImpl implements Sites {
 
 	@Override
 	public void updateLayoutSetPrototypesLinks(
-			Group group, long publicLayoutSetPrototypeId,
-			long privateLayoutSetPrototypeId,
-			boolean publicLayoutSetPrototypeLinkEnabled,
-			boolean privateLayoutSetPrototypeLinkEnabled)
+			Group group, long layoutSetPrototypeId,
+			boolean layoutSetPrototypeLinkEnabled)
 		throws Exception {
 
 		updateLayoutSetPrototypeLink(
-			group.getGroupId(), publicLayoutSetPrototypeId,
-			publicLayoutSetPrototypeLinkEnabled);
+			group.getGroupId(), layoutSetPrototypeId,
+			layoutSetPrototypeLinkEnabled);
 	}
 
 	/**
