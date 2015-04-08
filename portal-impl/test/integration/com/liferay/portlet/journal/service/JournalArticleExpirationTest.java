@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
@@ -31,8 +30,6 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.MainServletTestRule;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
@@ -40,9 +37,6 @@ import com.liferay.portlet.dynamicdatamapping.util.test.DDMTemplateTestUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.liferay.portlet.journal.model.JournalFolderConstants;
-import com.liferay.portlet.journal.service.persistence.JournalArticlePersistence;
-import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
-import com.liferay.portlet.journal.util.test.JournalTestUtil;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -76,31 +70,26 @@ public class JournalArticleExpirationTest {
 	}
 
 	@Test
-	public void testExpireDraftArticle()
-			throws Exception {
-		testExpireArticle(false, _NO_CHANGE);
-	}
-	
-	@Test
-	public void testExpireApprovedArticle()
-			throws Exception {
+	public void testExpireApprovedArticle() throws Exception {
 		testExpireArticle(true, _NO_CHANGE);
 	}
 
 	@Test
-	public void testExpireDraftArticlePostponedExpiring()
-			throws Exception {
-		testExpireArticle(false, _POSTPONE_EXPIRE);
-	}
-
-	@Test
-	public void testExpireApprovedArticlePostponedExpiring()
-			throws Exception {
+	public void testExpireApprovedArticlePostponedExpiring() throws Exception {
 		testExpireArticle(true, _POSTPONE_EXPIRE);
 	}
 
-	protected JournalArticle addArticle(
-			long groupId, boolean approved)
+	@Test
+	public void testExpireDraftArticle() throws Exception {
+		testExpireArticle(false, _NO_CHANGE);
+	}
+
+	@Test
+	public void testExpireDraftArticlePostponedExpiring() throws Exception {
+		testExpireArticle(false, _POSTPONE_EXPIRE);
+	}
+
+	protected JournalArticle addArticle(long groupId, boolean approved)
 		throws Exception {
 
 		Map<Locale, String> titleMap = new HashMap<>();
@@ -121,6 +110,7 @@ public class JournalArticleExpirationTest {
 			groupId, ddmStructure.getStructureId());
 
 		Calendar displayDateCalendar = new GregorianCalendar();
+
 		displayDateCalendar.setTime(new Date());
 
 		ServiceContext serviceContext =
@@ -134,8 +124,7 @@ public class JournalArticleExpirationTest {
 				WorkflowConstants.ACTION_SAVE_DRAFT);
 		}
 
-		Calendar expirationDateCalendar = getExpirationCalendar(
-				Time.MINUTE, 1);
+		Calendar expirationDateCalendar = getExpirationCalendar(Time.MINUTE, 1);
 
 		return JournalArticleLocalServiceUtil.addArticle(
 			TestPropsValues.getUserId(), groupId,
@@ -165,23 +154,21 @@ public class JournalArticleExpirationTest {
 		return calendar;
 	}
 
-	protected void testExpireArticle(boolean approved,
-			int mode)
+	protected void testExpireArticle(boolean approved, int mode)
 		throws Exception {
 
 		// Add Expiring, Approved Article
 
-		JournalArticle article = addArticle(
-			_group.getGroupId(), approved);
+		JournalArticle article = addArticle(_group.getGroupId(), approved);
 
 		Date originalExpirationDate = article.getExpirationDate();
 
 		// Add a version of the article, changing expire date
 
 		article = updateArticle(article, mode);
-		
+
 		// Wait until the original article expire date passes
-		
+
 		long waitTime = originalExpirationDate.getTime() - new Date().getTime();
 
 		Thread.sleep(waitTime);
@@ -205,8 +192,7 @@ public class JournalArticleExpirationTest {
 		}
 	}
 
-	protected JournalArticle updateArticle(
-			JournalArticle article, int mode)
+	protected JournalArticle updateArticle(JournalArticle article, int mode)
 		throws Exception {
 
 		if (mode == _POSTPONE_EXPIRE) {
@@ -219,15 +205,15 @@ public class JournalArticleExpirationTest {
 			displayDateCalendar.setTime(article.getDisplayDate());
 
 			Calendar expirationDateCalendar = getExpirationCalendar(
-					Time.YEAR, 1);
+				Time.YEAR, 1);
 
 			return JournalArticleLocalServiceUtil.updateArticle(
 				TestPropsValues.getUserId(), article.getGroupId(),
 				article.getFolderId(), article.getArticleId(),
-				article.getVersion(),
-				article.getTitleMap(), article.getDescriptionMap(),
-				article.getContent(), article.getDDMStructureKey(),
-				article.getDDMTemplateKey(), article.getLayoutUuid(),
+				article.getVersion(), article.getTitleMap(),
+				article.getDescriptionMap(), article.getContent(),
+				article.getDDMStructureKey(), article.getDDMTemplateKey(),
+				article.getLayoutUuid(),
 				displayDateCalendar.get(Calendar.MONTH),
 				displayDateCalendar.get(Calendar.DAY_OF_MONTH),
 				displayDateCalendar.get(Calendar.YEAR),
@@ -237,9 +223,8 @@ public class JournalArticleExpirationTest {
 				expirationDateCalendar.get(Calendar.DAY_OF_MONTH),
 				expirationDateCalendar.get(Calendar.YEAR),
 				expirationDateCalendar.get(Calendar.HOUR_OF_DAY),
-				expirationDateCalendar.get(Calendar.MINUTE), true,
-				0, 0, 0, 0, 0, true,
-				article.getIndexable(), article.isSmallImage(),
+				expirationDateCalendar.get(Calendar.MINUTE), true, 0, 0, 0, 0,
+				0, true, article.getIndexable(), article.isSmallImage(),
 				article.getSmallImageURL(), null, null, null, serviceContext);
 		}
 		else {
