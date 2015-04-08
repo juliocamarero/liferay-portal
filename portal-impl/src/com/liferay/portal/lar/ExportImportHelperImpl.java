@@ -1009,14 +1009,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 						urlSBString.contains(
 							DATA_HANDLER_PUBLIC_LAYOUT_SET_URL)) {
 
-						layoutSet = group.getPublicLayoutSet();
-					}
-					else if (urlSBString.contains(
-								DATA_HANDLER_PRIVATE_LAYOUT_SET_SECURE_URL) ||
-							 urlSBString.contains(
-								 DATA_HANDLER_PRIVATE_LAYOUT_SET_URL)) {
-
-						layoutSet = group.getPrivateLayoutSet();
+						layoutSet = group.getLayoutSet();
 					}
 
 					if (layoutSet == null) {
@@ -1298,8 +1291,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		throws Exception {
 
 		String companyPortalURL = StringPool.BLANK;
-		String privateLayoutSetPortalURL = StringPool.BLANK;
-		String publicLayoutSetPortalURL = StringPool.BLANK;
+		String layoutSetPortalURL = StringPool.BLANK;
 
 		Group group = GroupLocalServiceUtil.getGroup(
 			portletDataContext.getScopeGroupId());
@@ -1307,8 +1299,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		Company company = CompanyLocalServiceUtil.getCompany(
 			group.getCompanyId());
 
-		LayoutSet privateLayoutSet = group.getPrivateLayoutSet();
-		LayoutSet publicLayoutSet = group.getPublicLayoutSet();
+		LayoutSet layoutSet = group.getLayoutSet();
 
 		int serverPort = PortalUtil.getPortalServerPort(false);
 
@@ -1318,22 +1309,16 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 					company.getVirtualHostname(), serverPort, false);
 			}
 
-			if (Validator.isNotNull(privateLayoutSet.getVirtualHostname())) {
-				privateLayoutSetPortalURL = PortalUtil.getPortalURL(
-					privateLayoutSet.getVirtualHostname(), serverPort, false);
-			}
-
-			if (Validator.isNotNull(publicLayoutSet.getVirtualHostname())) {
-				publicLayoutSetPortalURL = PortalUtil.getPortalURL(
-					publicLayoutSet.getVirtualHostname(), serverPort, false);
+			if (Validator.isNotNull(layoutSet.getVirtualHostname())) {
+				layoutSetPortalURL = PortalUtil.getPortalURL(
+					layoutSet.getVirtualHostname(), serverPort, false);
 			}
 		}
 
 		int secureSecurePort = PortalUtil.getPortalServerPort(true);
 
 		String companySecurePortalURL = StringPool.BLANK;
-		String privateLayoutSetSecurePortalURL = StringPool.BLANK;
-		String publicLayoutSetSecurePortalURL = StringPool.BLANK;
+		String layoutSetSecurePortalURL = StringPool.BLANK;
 
 		if (secureSecurePort != -1) {
 			if (Validator.isNotNull(company.getVirtualHostname())) {
@@ -1341,16 +1326,9 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 					company.getVirtualHostname(), secureSecurePort, true);
 			}
 
-			if (Validator.isNotNull(privateLayoutSet.getVirtualHostname())) {
-				privateLayoutSetSecurePortalURL = PortalUtil.getPortalURL(
-					privateLayoutSet.getVirtualHostname(), secureSecurePort,
-					true);
-			}
-
-			if (Validator.isNotNull(publicLayoutSet.getVirtualHostname())) {
-				publicLayoutSetSecurePortalURL = PortalUtil.getPortalURL(
-					publicLayoutSet.getVirtualHostname(), secureSecurePort,
-					true);
+			if (Validator.isNotNull(layoutSet.getVirtualHostname())) {
+				layoutSetSecurePortalURL = PortalUtil.getPortalURL(
+					layoutSet.getVirtualHostname(), secureSecurePort, true);
 			}
 		}
 
@@ -1363,17 +1341,10 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		content = StringUtil.replace(
 			content, DATA_HANDLER_PATH_CONTEXT, PortalUtil.getPathContext());
 		content = StringUtil.replace(
-			content, DATA_HANDLER_PRIVATE_LAYOUT_SET_SECURE_URL,
-			privateLayoutSetSecurePortalURL);
-		content = StringUtil.replace(
-			content, DATA_HANDLER_PRIVATE_LAYOUT_SET_URL,
-			privateLayoutSetPortalURL);
-		content = StringUtil.replace(
 			content, DATA_HANDLER_PUBLIC_LAYOUT_SET_SECURE_URL,
-			publicLayoutSetSecurePortalURL);
+			layoutSetSecurePortalURL);
 		content = StringUtil.replace(
-			content, DATA_HANDLER_PUBLIC_LAYOUT_SET_URL,
-			publicLayoutSetPortalURL);
+			content, DATA_HANDLER_PUBLIC_LAYOUT_SET_URL, layoutSetPortalURL);
 		content = StringUtil.replace(
 			content, DATA_HANDLER_PUBLIC_SERVLET_MAPPING,
 			PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING);
@@ -2426,10 +2397,9 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		Group group = GroupLocalServiceUtil.getGroup(
 			portletDataContext.getScopeGroupId());
 
-		LayoutSet publicLayoutSet = group.getPublicLayoutSet();
+		LayoutSet layoutSet = group.getLayoutSet();
 
-		String publicLayoutSetVirtualHostname =
-			publicLayoutSet.getVirtualHostname();
+		String publicLayoutSetVirtualHostname = layoutSet.getVirtualHostname();
 
 		String portalUrl = StringPool.BLANK;
 
@@ -2443,27 +2413,6 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 				}
 				else {
 					urlSB.append(DATA_HANDLER_PUBLIC_LAYOUT_SET_URL);
-				}
-
-				return url.substring(portalUrl.length());
-			}
-		}
-
-		LayoutSet privateLayoutSet = group.getPrivateLayoutSet();
-
-		String privateLayoutSetVirtualHostname =
-			privateLayoutSet.getVirtualHostname();
-
-		if (Validator.isNotNull(privateLayoutSetVirtualHostname)) {
-			portalUrl = PortalUtil.getPortalURL(
-				privateLayoutSetVirtualHostname, serverPort, secure);
-
-			if (url.startsWith(portalUrl)) {
-				if (secure) {
-					urlSB.append(DATA_HANDLER_PRIVATE_LAYOUT_SET_SECURE_URL);
-				}
-				else {
-					urlSB.append(DATA_HANDLER_PRIVATE_LAYOUT_SET_URL);
 				}
 
 				return url.substring(portalUrl.length());
