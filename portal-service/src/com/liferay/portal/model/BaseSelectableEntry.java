@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
 
@@ -54,6 +55,8 @@ public abstract class BaseSelectableEntry implements SelectableEntry {
 	public void include(
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
+
+		request.setAttribute(WebKeys.SELECTABLE_ENTRY, this);
 
 		RequestDispatcher requestDispatcher =
 			_servletContext.getRequestDispatcher(getJSPPath());
