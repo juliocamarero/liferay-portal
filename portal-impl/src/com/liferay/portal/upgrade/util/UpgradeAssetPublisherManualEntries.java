@@ -24,10 +24,16 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.model.JournalArticleResource;
+import com.liferay.portlet.journal.service.persistence.JournalArticleResourceUtil;
+import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import java.util.List;
 
 import javax.portlet.PortletPreferences;
 
@@ -175,7 +181,47 @@ public class UpgradeAssetPublisherManualEntries
 			portletPreferences.setValues("asset-entry-xml", assetEntryXmls);
 		}
 
+		if (ArrayUtil.isNotEmpty(assetEntryXmls)) {
+			upgradeUuids(assetEntryXmls);
+
+			portletPreferences.setValues("assetEntryXml", assetEntryXmls);
+		}
+
 		return PortletPreferencesFactoryUtil.toXML(portletPreferences);
+	}
+
+	protected void upgradeUuids(String[] assetEntryXmls) throws Exception {
+		for (int i = 0; i < assetEntryXmls.length; i++) {
+			String assetEntry = assetEntryXmls[i];
+
+			Document document = SAXReaderUtil.read(assetEntry);
+
+			Element rootElement = document.getRootElement();
+
+			Element assetTypeElementUuid = rootElement.element(
+				"asset-entry-uuid");
+
+			String assetUuid = assetTypeElementUuid.getStringValue();
+
+			List<JournalArticle> articles = JournalArticleUtil.findByUuid(
+				assetUuid);
+
+			if (articles.size() > 0) {
+				JournalArticleResource resource =
+					JournalArticleResourceUtil.findByPrimaryKey(
+						articles.get(0).getResourcePrimKey());
+
+				rootElement.remove(assetTypeElementUuid);
+
+				assetTypeElementUuid.setText(resource.getUuid());
+
+				rootElement.add(assetTypeElementUuid);
+
+				document.setRootElement(rootElement);
+
+				assetEntryXmls[i] = document.formattedString(StringPool.BLANK);
+			}
+		}
 	}
 
 }
