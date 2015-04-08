@@ -304,7 +304,7 @@ definePermissionsURL.setRefererPlid(plid);
 
 				// LPS-32515
 
-				if ((selLayout != null) && group.isGuest() && SitesUtil.isFirstLayout(selLayout.getGroupId(), false, selLayout.getLayoutId())) {
+				if ((selLayout != null) && group.isGuest() && SitesUtil.isFirstLayout(selLayout.getGroupId(), selLayout.getLayoutId())) {
 					guestUnsupportedActions = new ArrayList<String>(guestUnsupportedActions);
 
 					guestUnsupportedActions.add(ActionKeys.VIEW);
