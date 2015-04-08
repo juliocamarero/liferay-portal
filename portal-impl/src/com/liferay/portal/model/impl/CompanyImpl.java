@@ -157,16 +157,7 @@ public class CompanyImpl extends CompanyBaseImpl {
 
 		if (group.hasPublicLayouts()) {
 			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, false);
-
-			if (Validator.isNotNull(layoutSet.getVirtualHostname())) {
-				portalURL = PortalUtil.getPortalURL(
-					layoutSet.getVirtualHostname(), Http.HTTP_PORT, false);
-			}
-		}
-		else if (group.hasPrivateLayouts()) {
-			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, true);
+				groupId);
 
 			if (Validator.isNotNull(layoutSet.getVirtualHostname())) {
 				portalURL = PortalUtil.getPortalURL(

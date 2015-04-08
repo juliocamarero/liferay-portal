@@ -88,7 +88,7 @@ public class LayoutListUtil {
 		List<LayoutDescription> layoutDescriptions = new ArrayList<>();
 
 		List<Layout> layouts = new ArrayList<>(
-			LayoutLocalServiceUtil.getLayouts(groupId, privateLayout));
+			LayoutLocalServiceUtil.getLayouts(groupId));
 
 		Deque<ObjectValuePair<Layout, Integer>> deque = new LinkedList<>();
 

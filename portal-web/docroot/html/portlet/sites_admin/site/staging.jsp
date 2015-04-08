@@ -21,7 +21,7 @@ Group liveGroup = (Group)request.getAttribute("site.liveGroup");
 long liveGroupId = ((Long)request.getAttribute("site.liveGroupId")).longValue();
 UnicodeProperties liveGroupTypeSettings = (UnicodeProperties)request.getAttribute("site.liveGroupTypeSettings");
 
-LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroup.getGroupId(), false);
+LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroup.getGroupId());
 
 boolean liveGroupRemoteStaging = liveGroup.hasRemoteStagingGroup() && PropsValues.STAGING_LIVE_GROUP_REMOTE_STAGING_ENABLED;
 boolean stagedLocally = liveGroup.isStaged() && !liveGroup.isStagedRemotely();

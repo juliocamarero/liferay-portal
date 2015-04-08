@@ -195,7 +195,7 @@ public class EditUserAction extends PortletAction {
 						Layout layout = themeDisplay.getLayout();
 
 						String friendlyURLPath = group.getPathFriendlyURL(
-							layout.isPrivateLayout(), themeDisplay);
+							false, themeDisplay);
 
 						String oldPath =
 							friendlyURLPath + StringPool.SLASH + oldScreenName;

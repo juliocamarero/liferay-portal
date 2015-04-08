@@ -80,7 +80,7 @@ public class SitemapImpl implements Sitemap {
 		rootElement.addAttribute("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			groupId, privateLayout, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+			groupId, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 		visitLayouts(rootElement, layouts, themeDisplay);
 
@@ -230,7 +230,7 @@ public class SitemapImpl implements Sitemap {
 
 			String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(
 				LayoutSetLocalServiceUtil.getLayoutSet(
-					journalArticle.getGroupId(), false),
+					journalArticle.getGroupId()),
 				themeDisplay);
 
 			StringBundler sb = new StringBundler(4);

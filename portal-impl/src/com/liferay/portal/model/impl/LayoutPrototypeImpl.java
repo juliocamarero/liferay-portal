@@ -47,7 +47,7 @@ public class LayoutPrototypeImpl extends LayoutPrototypeBaseImpl {
 
 		if (group.getPublicLayoutsPageCount() > 0) {
 			List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-				group.getGroupId(), false);
+				group.getGroupId());
 
 			return layouts.get(0);
 		}

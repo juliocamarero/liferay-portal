@@ -22,7 +22,7 @@ Long liveGroupId = (Long)request.getAttribute("site.liveGroupId");
 Group stagingGroup = (Group)request.getAttribute("site.stagingGroup");
 Long stagingGroupId = (Long)request.getAttribute("site.stagingGroupId");
 
-LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId, false);
+LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(liveGroupId);
 
 String virtualHost = ParamUtil.getString(request, "publicVirtualHost", BeanParamUtil.getString(layoutSet, request, "virtualHostname"));
 %>
@@ -131,7 +131,7 @@ String virtualHost = ParamUtil.getString(request, "publicVirtualHost", BeanParam
 	<c:if test="<%= liveGroup.hasStagingGroup() %>">
 
 		<%
-		LayoutSet stagingLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(stagingGroupId, false);
+		LayoutSet stagingLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(stagingGroupId);
 
 		String stagingVirtualHost = ParamUtil.getString(request, "stagingPublicVirtualHost", stagingLayoutSet.getVirtualHostname());
 		%>

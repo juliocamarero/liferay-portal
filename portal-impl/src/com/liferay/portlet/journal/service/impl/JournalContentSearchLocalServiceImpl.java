@@ -55,8 +55,7 @@ public class JournalContentSearchLocalServiceImpl
 		for (Group group : groups) {
 			deleteOwnerContentSearches(group.getGroupId());
 
-			layouts.addAll(
-				layoutLocalService.getLayouts(group.getGroupId(), false));
+			layouts.addAll(layoutLocalService.getLayouts(group.getGroupId()));
 		}
 
 		for (Layout layout : layouts) {

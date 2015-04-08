@@ -61,7 +61,7 @@ boolean layoutSetPrototypeLinkEnabled = true;
 
 if (showPrototypes && (group != null)) {
 	try {
-		layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(), false);
+		layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId());
 
 		layoutSetPrototypeLinkEnabled = layoutSet.isLayoutSetPrototypeLinkEnabled();
 
