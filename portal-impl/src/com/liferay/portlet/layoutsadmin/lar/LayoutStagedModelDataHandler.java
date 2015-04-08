@@ -104,10 +104,8 @@ public class LayoutStagedModelDataHandler
 		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject(
 			extraData);
 
-		boolean privateLayout = extraDataJSONObject.getBoolean("privateLayout");
-
 		Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-			uuid, groupId, privateLayout);
+			uuid, groupId);
 
 		if (layout != null) {
 			LayoutLocalServiceUtil.deleteLayout(
@@ -140,8 +138,6 @@ public class LayoutStagedModelDataHandler
 
 		Map<String, String> referenceAttributes = new HashMap<>();
 
-		referenceAttributes.put(
-			"private-layout", String.valueOf(layout.isPrivateLayout()));
 		referenceAttributes.put(
 			"layout-id", String.valueOf(layout.getLayoutId()));
 
@@ -261,7 +257,7 @@ public class LayoutStagedModelDataHandler
 
 		if (parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
 			Layout parentLayout = LayoutLocalServiceUtil.fetchLayout(
-				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
+				layout.getGroupId(), parentLayoutId);
 
 			if (parentLayout != null) {
 				StagedModelDataHandlerUtil.exportReferenceStagedModel(
@@ -321,14 +317,12 @@ public class LayoutStagedModelDataHandler
 
 		long oldLayoutId = layoutId;
 
-		boolean privateLayout = portletDataContext.isPrivateLayout();
-
 		String action = layoutElement.attributeValue(Constants.ACTION);
 
 		if (action.equals(Constants.DELETE)) {
 			Layout deletingLayout =
 				LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-					layoutUuid, groupId, privateLayout);
+					layoutUuid, groupId);
 
 			LayoutLocalServiceUtil.deleteLayout(
 				deletingLayout, false,
@@ -354,8 +348,7 @@ public class LayoutStagedModelDataHandler
 		if (layoutsImportMode.equals(
 				PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE_ADD_AS_NEW)) {
 
-			layoutId = LayoutLocalServiceUtil.getNextLayoutId(
-				groupId, privateLayout);
+			layoutId = LayoutLocalServiceUtil.getNextLayoutId(groupId);
 			friendlyURL = StringPool.SLASH + layoutId;
 		}
 		else if (layoutsImportMode.equals(
@@ -367,7 +360,7 @@ public class LayoutStagedModelDataHandler
 			String localizedName = layout.getName(locale);
 
 			List<Layout> previousLayouts = LayoutLocalServiceUtil.getLayouts(
-				groupId, privateLayout);
+				groupId);
 
 			for (Layout curLayout : previousLayouts) {
 				if (localizedName.equals(curLayout.getName(locale)) ||
@@ -380,8 +373,7 @@ public class LayoutStagedModelDataHandler
 			}
 
 			if (existingLayout == null) {
-				layoutId = LayoutLocalServiceUtil.getNextLayoutId(
-					groupId, privateLayout);
+				layoutId = LayoutLocalServiceUtil.getNextLayoutId(groupId);
 			}
 		}
 		else if (layoutsImportMode.equals(
@@ -389,7 +381,7 @@ public class LayoutStagedModelDataHandler
 						LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE)) {
 
 			existingLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				layout.getUuid(), groupId, privateLayout);
+				layout.getUuid(), groupId);
 
 			if (SitesUtil.isLayoutModifiedSinceLastMerge(existingLayout)) {
 				layouts.put(oldLayoutId, existingLayout);
@@ -399,7 +391,7 @@ public class LayoutStagedModelDataHandler
 
 			LayoutFriendlyURL layoutFriendlyURL =
 				LayoutFriendlyURLLocalServiceUtil.fetchFirstLayoutFriendlyURL(
-					groupId, privateLayout, friendlyURL);
+					groupId, friendlyURL);
 
 			if ((layoutFriendlyURL != null) && (existingLayout == null)) {
 				Layout mergeFailFriendlyURLLayout =
@@ -433,17 +425,16 @@ public class LayoutStagedModelDataHandler
 			// PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE_MERGE_BY_LAYOUT_UUID
 
 			existingLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				layout.getUuid(), groupId, privateLayout);
+				layout.getUuid(), groupId);
 
 			if (existingLayout == null) {
 				existingLayout =
 					LayoutLocalServiceUtil.fetchLayoutByFriendlyURL(
-						groupId, privateLayout, friendlyURL);
+						groupId, friendlyURL);
 			}
 
 			if (existingLayout == null) {
-				layoutId = LayoutLocalServiceUtil.getNextLayoutId(
-					groupId, privateLayout);
+				layoutId = LayoutLocalServiceUtil.getNextLayoutId(groupId);
 			}
 		}
 
@@ -452,8 +443,6 @@ public class LayoutStagedModelDataHandler
 
 			sb.append("Layout with {groupId=");
 			sb.append(groupId);
-			sb.append(",privateLayout=");
-			sb.append(privateLayout);
 			sb.append(",layoutId=");
 			sb.append(layoutId);
 
@@ -480,8 +469,7 @@ public class LayoutStagedModelDataHandler
 
 				importedLayout.setSourcePrototypeLayoutUuid(layout.getUuid());
 
-				layoutId = LayoutLocalServiceUtil.getNextLayoutId(
-					groupId, privateLayout);
+				layoutId = LayoutLocalServiceUtil.getNextLayoutId(groupId);
 			}
 			else {
 				importedLayout.setCreateDate(layout.getCreateDate());
@@ -497,15 +485,14 @@ public class LayoutStagedModelDataHandler
 			importedLayout.setUuid(layout.getUuid());
 			importedLayout.setGroupId(groupId);
 			importedLayout.setUserId(userId);
-			importedLayout.setPrivateLayout(privateLayout);
 			importedLayout.setLayoutId(layoutId);
 
 			initNewLayoutPermissions(
 				portletDataContext.getCompanyId(), groupId, userId, layout,
-				importedLayout, privateLayout);
+				importedLayout);
 
 			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, privateLayout);
+				groupId);
 
 			importedLayout.setLayoutSet(layoutSet);
 		}
@@ -603,7 +590,7 @@ public class LayoutStagedModelDataHandler
 
 		if (existingLayout == null) {
 			int priority = _layoutLocalServiceHelper.getNextPriority(
-				groupId, privateLayout, parentLayoutId, null, -1);
+				groupId, parentLayoutId, null, -1);
 
 			importedLayout.setPriority(priority);
 		}
@@ -626,7 +613,7 @@ public class LayoutStagedModelDataHandler
 
 		LayoutLocalServiceUtil.updateLayout(importedLayout);
 
-		LayoutSetLocalServiceUtil.updatePageCount(groupId, privateLayout);
+		LayoutSetLocalServiceUtil.updatePageCount(groupId);
 
 		Map<Long, Long> layoutPlids =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -727,8 +714,7 @@ public class LayoutStagedModelDataHandler
 		if (linkToLayoutId > 0) {
 			try {
 				Layout linkedToLayout = LayoutLocalServiceUtil.getLayout(
-					portletDataContext.getScopeGroupId(),
-					layout.isPrivateLayout(), linkToLayoutId);
+					portletDataContext.getScopeGroupId(), linkToLayoutId);
 
 				StagedModelDataHandlerUtil.exportReferenceStagedModel(
 					portletDataContext, layout, linkedToLayout,
@@ -806,7 +792,7 @@ public class LayoutStagedModelDataHandler
 		// Try to fetch the existing layout from the importing group
 
 		Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-			uuid, groupId, privateLayout);
+			uuid, groupId);
 
 		if (layout != null) {
 			return layout;
@@ -822,7 +808,7 @@ public class LayoutStagedModelDataHandler
 
 			while (group != null) {
 				layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-					uuid, group.getGroupId(), privateLayout);
+					uuid, group.getGroupId());
 
 				if (layout != null) {
 					break;
@@ -921,8 +907,7 @@ public class LayoutStagedModelDataHandler
 		for (int i = 1;; i++) {
 			Layout duplicateFriendlyURLLayout =
 				LayoutLocalServiceUtil.fetchLayoutByFriendlyURL(
-					portletDataContext.getGroupId(),
-					portletDataContext.isPrivateLayout(), friendlyURL);
+					portletDataContext.getGroupId(), friendlyURL);
 
 			if ((duplicateFriendlyURLLayout == null) ||
 				(duplicateFriendlyURLLayout.getPlid() ==
@@ -1076,9 +1061,6 @@ public class LayoutStagedModelDataHandler
 			Layout importedLinkedLayout = layouts.get(linkToLayoutId);
 
 			typeSettingsProperties.setProperty(
-				"privateLayout",
-				String.valueOf(importedLinkedLayout.isPrivateLayout()));
-			typeSettingsProperties.setProperty(
 				"linkToLayoutId",
 				String.valueOf(importedLinkedLayout.getLayoutId()));
 		}
@@ -1136,20 +1118,20 @@ public class LayoutStagedModelDataHandler
 
 	protected void initNewLayoutPermissions(
 			long companyId, long groupId, long userId, Layout layout,
-			Layout importedLayout, boolean privateLayout)
+			Layout importedLayout)
 		throws Exception {
 
 		boolean addGroupPermissions = true;
 
 		Group group = importedLayout.getGroup();
 
-		if (privateLayout && group.isUser()) {
+		if (group.isUser()) {
 			addGroupPermissions = false;
 		}
 
 		boolean addGuestPermissions = false;
 
-		if (!privateLayout || layout.isTypeControlPanel()) {
+		if (layout.isTypeControlPanel()) {
 			addGuestPermissions = true;
 		}
 

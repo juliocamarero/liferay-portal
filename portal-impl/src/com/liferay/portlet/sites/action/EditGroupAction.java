@@ -328,14 +328,8 @@ public class EditGroupAction extends PortletAction {
 			(scopeGroupId != liveGroup.getGroupId())) {
 
 			Layout firstLayout = LayoutLocalServiceUtil.fetchFirstLayout(
-				liveGroup.getGroupId(), false,
+				liveGroup.getGroupId(),
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-
-			if (firstLayout == null) {
-				firstLayout = LayoutLocalServiceUtil.fetchFirstLayout(
-					liveGroup.getGroupId(), true,
-					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-			}
 
 			if (firstLayout != null) {
 				return firstLayout.getPlid();
@@ -425,11 +419,8 @@ public class EditGroupAction extends PortletAction {
 		SitesUtil.setMergeFailCount(layoutSetPrototype, 0);
 
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
-		boolean privateLayoutSet = ParamUtil.getBoolean(
-			actionRequest, "privateLayoutSet");
 
-		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-			groupId, privateLayoutSet);
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(groupId);
 
 		SitesUtil.resetPrototype(layoutSet);
 
@@ -641,12 +632,8 @@ public class EditGroupAction extends PortletAction {
 		String publicRobots = ParamUtil.getString(
 			actionRequest, "publicRobots",
 			liveGroup.getTypeSettingsProperty("false-robots.txt"));
-		String privateRobots = ParamUtil.getString(
-			actionRequest, "privateRobots",
-			liveGroup.getTypeSettingsProperty("true-robots.txt"));
 
 		typeSettingsProperties.setProperty("false-robots.txt", publicRobots);
-		typeSettingsProperties.setProperty("true-robots.txt", privateRobots);
 
 		boolean trashEnabled = ParamUtil.getBoolean(
 			actionRequest, "trashEnabled",
@@ -706,16 +693,7 @@ public class EditGroupAction extends PortletAction {
 			publicLayoutSet.getVirtualHostname());
 
 		LayoutSetServiceUtil.updateVirtualHost(
-			liveGroup.getGroupId(), false, publicVirtualHost);
-
-		LayoutSet privateLayoutSet = liveGroup.getPrivateLayoutSet();
-
-		String privateVirtualHost = ParamUtil.getString(
-			actionRequest, "privateVirtualHost",
-			privateLayoutSet.getVirtualHostname());
-
-		LayoutSetServiceUtil.updateVirtualHost(
-			liveGroup.getGroupId(), true, privateVirtualHost);
+			liveGroup.getGroupId(), publicVirtualHost);
 
 		// Staging
 
@@ -737,17 +715,7 @@ public class EditGroupAction extends PortletAction {
 				stagingPublicLayoutSet.getVirtualHostname());
 
 			LayoutSetServiceUtil.updateVirtualHost(
-				stagingGroup.getGroupId(), false, publicVirtualHost);
-
-			LayoutSet stagingPrivateLayoutSet =
-				stagingGroup.getPrivateLayoutSet();
-
-			privateVirtualHost = ParamUtil.getString(
-				actionRequest, "stagingPrivateVirtualHost",
-				stagingPrivateLayoutSet.getVirtualHostname());
-
-			LayoutSetServiceUtil.updateVirtualHost(
-				stagingGroup.getGroupId(), true, privateVirtualHost);
+				stagingGroup.getGroupId(), publicVirtualHost);
 
 			GroupServiceUtil.updateGroup(
 				stagingGroup.getGroupId(), typeSettingsProperties.toString());
@@ -758,21 +726,14 @@ public class EditGroupAction extends PortletAction {
 
 		// Layout set prototypes
 
-		long privateLayoutSetPrototypeId = ParamUtil.getLong(
-			actionRequest, "privateLayoutSetPrototypeId");
 		long publicLayoutSetPrototypeId = ParamUtil.getLong(
 			actionRequest, "publicLayoutSetPrototypeId");
 
-		boolean privateLayoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
-			actionRequest, "privateLayoutSetPrototypeLinkEnabled",
-			privateLayoutSet.isLayoutSetPrototypeLinkEnabled());
 		boolean publicLayoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
 			actionRequest, "publicLayoutSetPrototypeLinkEnabled",
 			publicLayoutSet.isLayoutSetPrototypeLinkEnabled());
 
-		if ((privateLayoutSetPrototypeId == 0) &&
-			(publicLayoutSetPrototypeId == 0) &&
-			!privateLayoutSetPrototypeLinkEnabled &&
+		if ((publicLayoutSetPrototypeId == 0) &&
 			!publicLayoutSetPrototypeLinkEnabled) {
 
 			long layoutSetPrototypeId = ParamUtil.getLong(
@@ -783,40 +744,25 @@ public class EditGroupAction extends PortletAction {
 				actionRequest, "layoutSetPrototypeLinkEnabled",
 				(layoutSetPrototypeId > 0));
 
-			if (layoutSetVisibility == _LAYOUT_SET_VISIBILITY_PRIVATE) {
-				privateLayoutSetPrototypeId = layoutSetPrototypeId;
+			publicLayoutSetPrototypeId = layoutSetPrototypeId;
 
-				privateLayoutSetPrototypeLinkEnabled =
-					layoutSetPrototypeLinkEnabled;
-			}
-			else {
-				publicLayoutSetPrototypeId = layoutSetPrototypeId;
-
-				publicLayoutSetPrototypeLinkEnabled =
-					layoutSetPrototypeLinkEnabled;
-			}
+			publicLayoutSetPrototypeLinkEnabled = layoutSetPrototypeLinkEnabled;
 		}
 
 		if (!liveGroup.isStaged() || liveGroup.isStagedRemotely()) {
 			SitesUtil.updateLayoutSetPrototypesLinks(
-				liveGroup, publicLayoutSetPrototypeId,
-				privateLayoutSetPrototypeId,
-				publicLayoutSetPrototypeLinkEnabled,
-				privateLayoutSetPrototypeLinkEnabled);
+				liveGroup, publicLayoutSetPrototypeId, 0,
+				publicLayoutSetPrototypeLinkEnabled, false);
 		}
 		else {
 			SitesUtil.updateLayoutSetPrototypesLinks(
-				liveGroup.getStagingGroup(), publicLayoutSetPrototypeId,
-				privateLayoutSetPrototypeId,
-				publicLayoutSetPrototypeLinkEnabled,
-				privateLayoutSetPrototypeLinkEnabled);
+				liveGroup.getStagingGroup(), publicLayoutSetPrototypeId, 0,
+				publicLayoutSetPrototypeLinkEnabled, false);
 		}
 
 		// Staging
 
-		if (!privateLayoutSet.isLayoutSetPrototypeLinkActive() &&
-			!publicLayoutSet.isLayoutSetPrototypeLinkActive()) {
-
+		if (!publicLayoutSet.isLayoutSetPrototypeLinkActive()) {
 			StagingUtil.updateStaging(actionRequest, liveGroup);
 		}
 
@@ -829,8 +775,6 @@ public class EditGroupAction extends PortletAction {
 
 		return liveGroup;
 	}
-
-	private static final int _LAYOUT_SET_VISIBILITY_PRIVATE = 1;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		EditGroupAction.class);

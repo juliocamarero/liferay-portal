@@ -252,8 +252,7 @@ public class StagingImpl implements Staging {
 		Group liveGroup = stagingGroup.getLiveGroup();
 
 		Layout sourceLayout = LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-			targetLayout.getUuid(), liveGroup.getGroupId(),
-			targetLayout.isPrivateLayout());
+			targetLayout.getUuid(), liveGroup.getGroupId());
 
 		copyPortlet(
 			portletRequest, liveGroup.getGroupId(), stagingGroup.getGroupId(),
@@ -391,7 +390,7 @@ public class StagingImpl implements Staging {
 		throws PortalException {
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			liveGroup.getGroupId(), privateLayout);
+			liveGroup.getGroupId());
 
 		for (Layout layout : layouts) {
 			UnicodeProperties typeSettingsProperties =
@@ -414,8 +413,8 @@ public class StagingImpl implements Staging {
 			}
 
 			LayoutLocalServiceUtil.updateLayout(
-				layout.getGroupId(), layout.getPrivateLayout(),
-				layout.getLayoutId(), typeSettingsProperties.toString());
+				layout.getGroupId(), layout.getLayoutId(),
+				typeSettingsProperties.toString());
 		}
 	}
 
@@ -1206,8 +1205,8 @@ public class StagingImpl implements Staging {
 		long[] layoutIds = ExportImportHelperUtil.getLayoutIds(layouts);
 
 		publishLayouts(
-			userId, layout.getGroupId(), liveGroupId, layout.isPrivateLayout(),
-			layoutIds, parameterMap);
+			userId, layout.getGroupId(), liveGroupId, false, layoutIds,
+			parameterMap);
 	}
 
 	@Override
@@ -1311,7 +1310,7 @@ public class StagingImpl implements Staging {
 		throws PortalException {
 
 		List<Layout> sourceGroupLayouts = LayoutLocalServiceUtil.getLayouts(
-			sourceGroupId, privateLayout);
+			sourceGroupId);
 
 		publishLayouts(
 			userId, sourceGroupId, targetGroupId, privateLayout,
@@ -1454,8 +1453,7 @@ public class StagingImpl implements Staging {
 			liveGroup = stagingGroup.getLiveGroup();
 
 			targetLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				sourceLayout.getUuid(), liveGroup.getGroupId(),
-				sourceLayout.isPrivateLayout());
+				sourceLayout.getUuid(), liveGroup.getGroupId());
 		}
 
 		copyPortlet(
@@ -2132,9 +2130,9 @@ public class StagingImpl implements Staging {
 				portletRequest, "description");
 
 			LayoutServiceUtil.schedulePublishToLive(
-				sourceGroupId, targetGroupId, privateLayout, layoutIds,
-				parameterMap, scope, null, null, groupName, cronText,
-				startCalendar.getTime(), schedulerEndDate, description);
+				sourceGroupId, targetGroupId, layoutIds, parameterMap, scope,
+				null, null, groupName, cronText, startCalendar.getTime(),
+				schedulerEndDate, description);
 		}
 		else {
 			if (scope.equals("all-pages")) {
@@ -2154,15 +2152,7 @@ public class StagingImpl implements Staging {
 			PortletRequest portletRequest, boolean schedule)
 		throws PortalException {
 
-		String tabs1 = ParamUtil.getString(portletRequest, "tabs1");
-
 		long groupId = ParamUtil.getLong(portletRequest, "groupId");
-
-		boolean privateLayout = true;
-
-		if (tabs1.equals("public-pages")) {
-			privateLayout = false;
-		}
 
 		String scope = ParamUtil.getString(portletRequest, "scope");
 
@@ -2206,8 +2196,6 @@ public class StagingImpl implements Staging {
 			portletRequest, "remoteGroupId",
 			GetterUtil.getLong(
 				groupTypeSettingsProperties.getProperty("remoteGroupId")));
-		boolean remotePrivateLayout = ParamUtil.getBoolean(
-			portletRequest, "remotePrivateLayout");
 
 		validateRemote(
 			groupId, remoteAddress, remotePort, remotePathContext,
@@ -2242,17 +2230,16 @@ public class StagingImpl implements Staging {
 				portletRequest, "description");
 
 			LayoutServiceUtil.schedulePublishToRemote(
-				groupId, privateLayout, layoutIdMap, parameterMap,
-				remoteAddress, remotePort, remotePathContext, secureConnection,
-				remoteGroupId, remotePrivateLayout, null, null, groupName,
-				cronText, startCalendar.getTime(), schedulerEndDate,
+				groupId, layoutIdMap, parameterMap, remoteAddress, remotePort,
+				remotePathContext, secureConnection, remoteGroupId, null, null,
+				groupName, cronText, startCalendar.getTime(), schedulerEndDate,
 				description);
 		}
 		else {
 			copyRemoteLayouts(
-				groupId, privateLayout, layoutIdMap, parameterMap,
-				remoteAddress, remotePort, remotePathContext, secureConnection,
-				remoteGroupId, remotePrivateLayout);
+				groupId, false, layoutIdMap, parameterMap, remoteAddress,
+				remotePort, remotePathContext, secureConnection, remoteGroupId,
+				false);
 		}
 	}
 

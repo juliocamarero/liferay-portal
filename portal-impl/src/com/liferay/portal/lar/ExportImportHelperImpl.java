@@ -149,8 +149,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 
 	@Override
 	public long[] getAllLayoutIds(long groupId, boolean privateLayout) {
-		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			groupId, privateLayout);
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(groupId);
 
 		return getLayoutIds(layouts);
 	}
@@ -160,7 +159,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		long groupId, boolean privateLayout) {
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			groupId, privateLayout, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+			groupId, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 		Map<Long, Boolean> layoutIdMap = new HashMap<>();
 
@@ -600,12 +599,11 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 
 		while (parentLayoutId > 0) {
 			parentLayout = LayoutLocalServiceUtil.getLayout(
-				layout.getGroupId(), layout.isPrivateLayout(), parentLayoutId);
+				layout.getGroupId(), parentLayoutId);
 
 			try {
 				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-					parentLayout.getUuid(), liveGroupId,
-					parentLayout.isPrivateLayout());
+					parentLayout.getUuid(), liveGroupId);
 
 				// If one parent is found, all others are assumed to exist
 
@@ -652,7 +650,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			groupId, privateLayout, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+			groupId, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 		for (Layout layout : layouts) {
 			populateLayoutsJSON(
@@ -1025,31 +1023,16 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 						continue;
 					}
 
-					boolean privateLayout = layoutSet.isPrivateLayout();
-
 					LayoutFriendlyURL layoutFriendlyUrl =
 						LayoutFriendlyURLLocalServiceUtil.
 							fetchFirstLayoutFriendlyURL(
-								group.getGroupId(), privateLayout, url);
+								group.getGroupId(), url);
 
 					if (layoutFriendlyUrl == null) {
 						continue;
 					}
 
-					if (privateLayout) {
-						if (group.isUser()) {
-							urlSB.append(
-								DATA_HANDLER_PRIVATE_USER_SERVLET_MAPPING);
-						}
-						else {
-							urlSB.append(
-								DATA_HANDLER_PRIVATE_GROUP_SERVLET_MAPPING);
-						}
-					}
-					else {
-						urlSB.append(DATA_HANDLER_PUBLIC_SERVLET_MAPPING);
-					}
-
+					urlSB.append(DATA_HANDLER_PUBLIC_SERVLET_MAPPING);
 					urlSB.append(DATA_HANDLER_GROUP_FRIENDLY_URL);
 
 					continue;
@@ -1126,12 +1109,9 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 
 			String type = matcher.group(2);
 
-			boolean privateLayout = type.startsWith("private");
-
 			try {
 				Layout layout = LayoutLocalServiceUtil.getLayout(
-					portletDataContext.getScopeGroupId(), privateLayout,
-					layoutId);
+					portletDataContext.getScopeGroupId(), layoutId);
 
 				String oldLinkToLayout = matcher.group(0);
 
