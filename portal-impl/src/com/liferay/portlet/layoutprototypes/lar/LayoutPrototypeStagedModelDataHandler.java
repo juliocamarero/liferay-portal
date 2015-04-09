@@ -164,16 +164,14 @@ public class LayoutPrototypeStagedModelDataHandler
 		throws Exception {
 
 		long groupId = portletDataContext.getGroupId();
-		boolean privateLayout = portletDataContext.isPrivateLayout();
 		long scopeGroupId = portletDataContext.getScopeGroupId();
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			layoutPrototype.getGroupId(), true,
+			layoutPrototype.getGroupId(),
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 		try {
 			portletDataContext.setGroupId(layoutPrototype.getGroupId());
-			portletDataContext.setPrivateLayout(true);
 			portletDataContext.setScopeGroupId(layoutPrototype.getGroupId());
 
 			for (Layout layout : layouts) {
@@ -184,7 +182,6 @@ public class LayoutPrototypeStagedModelDataHandler
 		}
 		finally {
 			portletDataContext.setGroupId(groupId);
-			portletDataContext.setPrivateLayout(privateLayout);
 			portletDataContext.setScopeGroupId(scopeGroupId);
 		}
 	}
@@ -195,12 +192,10 @@ public class LayoutPrototypeStagedModelDataHandler
 		throws PortalException {
 
 		long groupId = portletDataContext.getGroupId();
-		boolean privateLayout = portletDataContext.isPrivateLayout();
 		long scopeGroupId = portletDataContext.getScopeGroupId();
 
 		try {
 			portletDataContext.setGroupId(importedGroupId);
-			portletDataContext.setPrivateLayout(true);
 			portletDataContext.setScopeGroupId(importedGroupId);
 
 			StagedModelDataHandlerUtil.importReferenceStagedModels(
@@ -208,7 +203,6 @@ public class LayoutPrototypeStagedModelDataHandler
 		}
 		finally {
 			portletDataContext.setGroupId(groupId);
-			portletDataContext.setPrivateLayout(privateLayout);
 			portletDataContext.setScopeGroupId(scopeGroupId);
 		}
 	}
