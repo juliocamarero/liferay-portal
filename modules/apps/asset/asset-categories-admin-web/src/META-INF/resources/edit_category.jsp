@@ -103,7 +103,7 @@ else {
 	<aui:model-context bean="<%= category %>" model="<%= AssetCategory.class %>" />
 
 	<aui:fieldset>
-		<aui:input autoFocus="<%= true %>" label="name" name="title" />
+		<aui:input autoFocus="<%= true %>" label="name" name="title" required="<%= true %>" />
 
 		<aui:input name="description" />
 
