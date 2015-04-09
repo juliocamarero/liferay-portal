@@ -89,7 +89,7 @@ public class LayoutExportBackgroundTaskExecutor
 
 		if (updateLastPublishDate) {
 			ExportImportDateUtil.updateLastPublishDate(
-				groupId, false, dateRange, dateRange.getEndDate());
+				groupId, dateRange, dateRange.getEndDate());
 		}
 
 		return BackgroundTaskResult.SUCCESS;

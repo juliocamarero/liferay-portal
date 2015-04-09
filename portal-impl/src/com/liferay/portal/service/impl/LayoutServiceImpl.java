@@ -138,7 +138,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		}
 		else {
 			LayoutPermissionUtil.check(
-				permissionChecker, groupId, false, parentLayoutId,
+				permissionChecker, groupId, parentLayoutId,
 				ActionKeys.ADD_LAYOUT);
 		}
 
@@ -210,7 +210,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		}
 		else {
 			LayoutPermissionUtil.check(
-				permissionChecker, groupId, false, parentLayoutId,
+				permissionChecker, groupId, parentLayoutId,
 				ActionKeys.ADD_LAYOUT);
 		}
 
@@ -274,7 +274,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		}
 		else {
 			LayoutPermissionUtil.check(
-				permissionChecker, groupId, false, parentLayoutId,
+				permissionChecker, groupId, parentLayoutId,
 				ActionKeys.ADD_LAYOUT);
 		}
 
@@ -315,8 +315,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.DELETE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.DELETE);
 
 		layoutLocalService.deleteLayout(groupId, layoutId, serviceContext);
 	}
@@ -707,7 +706,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			PortletPreferencesFactoryUtil.getPortletSetupMap(
 				scopeGroup.getCompanyId(), groupId,
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, portletId, false);
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, portletId);
 
 		for (Map.Entry<Long, javax.portlet.PortletPreferences> entry :
 				jxPortletPreferencesMap.entrySet()) {
@@ -1186,7 +1185,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 		Map<String, Serializable> settingsMap =
 			ExportImportConfigurationSettingsMapFactory.buildSettingsMap(
-				getUserId(), sourceGroupId, targetGroupId, false, layoutIds,
+				getUserId(), sourceGroupId, targetGroupId, layoutIds,
 				parameterMap, user.getLocale(), user.getTimeZone());
 
 		ExportImportConfiguration exportImportConfiguration =
@@ -1299,9 +1298,9 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 		Map<String, Serializable> settingsMap =
 			ExportImportConfigurationSettingsMapFactory.buildSettingsMap(
-				getUserId(), sourceGroupId, false, layoutIdMap, parameterMap,
+				getUserId(), sourceGroupId, layoutIdMap, parameterMap,
 				remoteAddress, remotePort, remotePathContext, secureConnection,
-				remoteGroupId, false, user.getLocale(), user.getTimeZone());
+				remoteGroupId, user.getLocale(), user.getTimeZone());
 
 		ExportImportConfiguration exportImportConfiguration =
 			exportImportConfigurationLocalService.addExportImportConfiguration(
@@ -1444,8 +1443,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.UPDATE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.UPDATE);
 
 		return layoutLocalService.updateLayout(
 			groupId, layoutId, parentLayoutId, localeNamesMap, localeTitlesMap,
@@ -1503,8 +1501,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.UPDATE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.UPDATE);
 
 		return layoutLocalService.updateLayout(
 			groupId, false, layoutId, parentLayoutId, localeNamesMap,
@@ -1529,8 +1526,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.UPDATE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.UPDATE);
 
 		return layoutLocalService.updateLayout(groupId, layoutId, typeSettings);
 	}
@@ -1556,8 +1552,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.UPDATE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.UPDATE);
 
 		if (Validator.isNotNull(themeId)) {
 			pluginSettingLocalService.checkPermission(
@@ -1588,8 +1583,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.UPDATE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.UPDATE);
 
 		return layoutLocalService.updateName(
 			groupId, layoutId, name, languageId);
@@ -1660,8 +1654,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.UPDATE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.UPDATE);
 
 		return layoutLocalService.updateParentLayoutId(
 			groupId, layoutId, parentLayoutId);
@@ -1720,8 +1713,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.UPDATE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.UPDATE);
 
 		return layoutLocalService.updatePriority(groupId, layoutId, priority);
 	}
@@ -1746,8 +1738,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), groupId, false, layoutId,
-			ActionKeys.UPDATE);
+			getPermissionChecker(), groupId, layoutId, ActionKeys.UPDATE);
 
 		return layoutLocalService.updatePriority(
 			groupId, layoutId, nextLayoutId, previousLayoutId);

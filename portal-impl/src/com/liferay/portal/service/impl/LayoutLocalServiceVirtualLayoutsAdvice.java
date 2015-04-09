@@ -229,9 +229,7 @@ public class LayoutLocalServiceVirtualLayoutsAdvice
 		return layouts;
 	}
 
-	protected List<Layout> getPrototypeLinkedLayouts(
-		long groupId, boolean privateLayout) {
-
+	protected List<Layout> getPrototypeLinkedLayouts(long groupId) {
 		Class<?> clazz = getClass();
 
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
@@ -245,11 +243,6 @@ public class LayoutLocalServiceVirtualLayoutsAdvice
 			"layoutPrototypeUuid");
 
 		dynamicQuery.add(layoutPrototypeUuidProperty.isNotNull());
-
-		Property privateLayoutProperty = PropertyFactoryUtil.forName(
-			"privateLayout");
-
-		dynamicQuery.add(privateLayoutProperty.eq(privateLayout));
 
 		Property sourcePrototypeLayoutUuidProperty =
 			PropertyFactoryUtil.forName("sourcePrototypeLayoutUuid");

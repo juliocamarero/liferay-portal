@@ -136,8 +136,7 @@ public class LayoutsAdminDisplayContext {
 		}
 
 		_layoutDescriptions = LayoutListUtil.getLayoutDescriptions(
-			getGroupId(), isPrivateLayout(), getRootNodeName(),
-			_themeDisplay.getLocale());
+			getGroupId(), false, getRootNodeName(), _themeDisplay.getLocale());
 
 		return _layoutDescriptions;
 	}
@@ -182,35 +181,7 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public String getPagesName() {
-		if (_pagesName != null) {
-			return _pagesName;
-		}
-
-		Group liveGroup = getLiveGroup();
-
-		if (liveGroup.isLayoutPrototype() || liveGroup.isLayoutSetPrototype() ||
-			liveGroup.isUserGroup()) {
-
-			_pagesName = "pages";
-		}
-		else if (isPrivateLayout()) {
-			if (liveGroup.isUser()) {
-				_pagesName = "my-dashboard";
-			}
-			else {
-				_pagesName = "private-pages";
-			}
-		}
-		else {
-			if (liveGroup.isUser()) {
-				_pagesName = "my-profile";
-			}
-			else {
-				_pagesName = "public-pages";
-			}
-		}
-
-		return _pagesName;
+		return "pages";
 	}
 
 	public String getRedirect() {
@@ -252,7 +223,7 @@ public class LayoutsAdminDisplayContext {
 		Group liveGroup = getLiveGroup();
 
 		_rootNodeName = liveGroup.getLayoutRootNodeName(
-			isPrivateLayout(), _themeDisplay.getLocale());
+			_themeDisplay.getLocale());
 
 		return _rootNodeName;
 	}
@@ -339,10 +310,6 @@ public class LayoutsAdminDisplayContext {
 		return _userGroup;
 	}
 
-	public boolean isPrivateLayout() {
-		return false;
-	}
-
 	protected String getPortletName() {
 		PortletConfig portletConfig = (PortletConfig)_request.getAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG);
@@ -385,7 +352,6 @@ public class LayoutsAdminDisplayContext {
 	private Long _layoutId;
 	private final LiferayPortletResponse _liferayPortletResponse;
 	private Organization _organization;
-	private String _pagesName;
 	private String _redirect;
 	private final HttpServletRequest _request;
 	private String _rootNodeName;

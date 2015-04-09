@@ -96,7 +96,7 @@ long[] layoutIds = GetterUtil.getLongValues(settingsMap.get("layoutIds"));
 
 							long sourceGroupId = MapUtil.getLong(settingsMap, "sourceGroupId");
 
-							long[] allLayoutIds = ExportImportHelperUtil.getAllLayoutIds(sourceGroupId, false);
+							long[] allLayoutIds = ExportImportHelperUtil.getAllLayoutIds(sourceGroupId);
 
 							if (ArrayUtil.containsAll(layoutIds, allLayoutIds)) {
 								sb.append(LanguageUtil.get(locale, "all-pages"));

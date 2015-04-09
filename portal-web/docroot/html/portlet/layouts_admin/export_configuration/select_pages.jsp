@@ -34,7 +34,7 @@ String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
 Map<String, String[]> parameterMap = (Map<String, String[]>)GetterUtil.getObject(request.getAttribute("select_pages.jsp-parameterMap"), Collections.emptyMap());
 %>
 
-<aui:input name="layoutIds" type="hidden" value="<%= ExportImportHelperUtil.getSelectedLayoutsJSON(groupId, false, selectedLayoutIds) %>" />
+<aui:input name="layoutIds" type="hidden" value="<%= ExportImportHelperUtil.getSelectedLayoutsJSON(groupId, selectedLayoutIds) %>" />
 
 <span class="selected-labels" id="<portlet:namespace />selectedPages"></span>
 
@@ -69,7 +69,7 @@ Map<String, String[]> parameterMap = (Map<String, String[]>)GetterUtil.getObject
 					<aui:input name="layoutSetBranchId" type="hidden" value="<%= layoutSetBranchId %>" />
 				</c:when>
 				<c:otherwise>
-					<c:if test="<%= LayoutStagingUtil.isBranchingLayoutSet(group, false) %>">
+					<c:if test="<%= LayoutStagingUtil.isBranchingLayoutSet(group) %>">
 
 						<%
 						List<LayoutSetBranch> layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(group.getGroupId());

@@ -706,8 +706,7 @@ public class EditGroupAction extends PortletAction {
 			GroupServiceUtil.updateFriendlyURL(
 				stagingGroup.getGroupId(), friendlyURL);
 
-			LayoutSet stagingLayoutSet =
-				stagingGroup.getLayoutSet();
+			LayoutSet stagingLayoutSet = stagingGroup.getLayoutSet();
 
 			virtualHost = ParamUtil.getString(
 				actionRequest, "stagingVirtualHost",
@@ -734,8 +733,7 @@ public class EditGroupAction extends PortletAction {
 
 		if (!liveGroup.isStaged() || liveGroup.isStagedRemotely()) {
 			SitesUtil.updateLayoutSetPrototypesLinks(
-				liveGroup, layoutSetPrototypeId,
-				layoutSetPrototypeLinkEnabled);
+				liveGroup, layoutSetPrototypeId, layoutSetPrototypeLinkEnabled);
 		}
 		else {
 			SitesUtil.updateLayoutSetPrototypesLinks(

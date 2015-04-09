@@ -102,7 +102,7 @@ String virtualHost = ParamUtil.getString(request, "publicVirtualHost", BeanParam
 </liferay-ui:error>
 
 <aui:fieldset label="friendly-url">
-	<liferay-ui:message key="enter-the-friendly-url-that-is-used-by-both-public-and-private-pages" />
+	<liferay-ui:message key="enter-the-friendly-url-that-is-used-by-pages" />
 
 	<liferay-ui:message arguments="<%= new Object[] {themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic()} %>" key="the-friendly-url-is-appended-to-x-for-pages" translateArguments="<%= false %>" />
 
@@ -122,7 +122,7 @@ String virtualHost = ParamUtil.getString(request, "publicVirtualHost", BeanParam
 </aui:fieldset>
 
 <aui:fieldset label="virtual-hosts">
-	<liferay-ui:message key="enter-the-public-and-private-virtual-host-that-map-to-the-public-and-private-friendly-url" />
+	<liferay-ui:message key="enter-the-virtual-host-that-map-to-the-friendly-url" />
 
 	<liferay-ui:message arguments="<%= new Object[] {HttpUtil.getProtocol(request), themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic()} %>" key="for-example,-if-the-virtual-host-is-www.helloworld.com-and-the-friendly-url-is-/helloworld" translateArguments="<%= false %>" />
 
