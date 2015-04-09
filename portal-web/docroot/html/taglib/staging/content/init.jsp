@@ -47,7 +47,7 @@ else {
 	}
 }
 
-dateRange = ExportImportDateUtil.getDateRange(renderRequest, exportGroupId, false, 0, null, defaultRange);
+dateRange = ExportImportDateUtil.getDateRange(renderRequest, exportGroupId, 0, null, defaultRange);
 
 Date startDate = dateRange.getStartDate();
 Date endDate = dateRange.getEndDate();

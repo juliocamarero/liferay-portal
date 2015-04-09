@@ -87,8 +87,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 	@Override
 	public void checkDefaultLayoutSetBranches(
-			long userId, Group liveGroup, boolean branchingPublic,
-			boolean branchingPrivate, boolean remote,
+			long userId, Group liveGroup, boolean branching, boolean remote,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -111,31 +110,16 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			layoutSetBranchLocalService.fetchLayoutSetBranch(
 				targetGroupId, LayoutSetBranchConstants.MASTER_BRANCH_NAME);
 
-		if (branchingPublic && (layoutSetBranch == null)) {
+		if (branching && (layoutSetBranch == null)) {
 			addDefaultLayoutSetBranch(
-				userId, targetGroupId, liveGroup.getDescriptiveName(), false,
+				userId, targetGroupId, liveGroup.getDescriptiveName(),
 				serviceContext);
 		}
-		else if (!branchingPublic && (layoutSetBranch != null)) {
-			deleteLayoutSetBranches(targetGroupId, false);
+		else if (!branching && (layoutSetBranch != null)) {
+			deleteLayoutSetBranches(targetGroupId);
 		}
 		else if (layoutSetBranch != null) {
-			ExportImportDateUtil.clearLastPublishDate(targetGroupId, false);
-		}
-
-		layoutSetBranch = layoutSetBranchLocalService.fetchLayoutSetBranch(
-			targetGroupId, LayoutSetBranchConstants.MASTER_BRANCH_NAME);
-
-		if (branchingPrivate && (layoutSetBranch == null)) {
-			addDefaultLayoutSetBranch(
-				userId, targetGroupId, liveGroup.getDescriptiveName(), true,
-				serviceContext);
-		}
-		else if (!branchingPrivate && (layoutSetBranch != null)) {
-			deleteLayoutSetBranches(targetGroupId, true);
-		}
-		else if (layoutSetBranch != null) {
-			ExportImportDateUtil.clearLastPublishDate(targetGroupId, true);
+			ExportImportDateUtil.clearLastPublishDate(targetGroupId);
 		}
 	}
 
@@ -203,8 +187,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			disableRemoteStaging(remoteURL, remoteGroupId, forceDisable);
 		}
 
-		typeSettingsProperties.remove("branchingPrivate");
-		typeSettingsProperties.remove("branchingPublic");
+		typeSettingsProperties.remove("branching");
 		typeSettingsProperties.remove("remoteAddress");
 		typeSettingsProperties.remove("remoteGroupId");
 		typeSettingsProperties.remove("remotePathContext");
@@ -225,11 +208,10 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			typeSettingsProperties.remove(key);
 		}
 
-		StagingUtil.deleteLastImportSettings(liveGroup, true);
-		StagingUtil.deleteLastImportSettings(liveGroup, false);
+		StagingUtil.deleteLastImportSettings(liveGroup);
 
 		checkDefaultLayoutSetBranches(
-			serviceContext.getUserId(), liveGroup, false, false, stagedRemotely,
+			serviceContext.getUserId(), liveGroup, false, stagedRemotely,
 			serviceContext);
 
 		if (liveGroup.hasStagingGroup()) {
@@ -246,8 +228,8 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 	@Override
 	public void enableLocalStaging(
-			long userId, Group liveGroup, boolean branchingPublic,
-			boolean branchingPrivate, ServiceContext serviceContext)
+			long userId, Group liveGroup, boolean branching,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		if (liveGroup.isStagedRemotely()) {
@@ -263,16 +245,13 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		}
 
 		checkDefaultLayoutSetBranches(
-			userId, liveGroup, branchingPublic, branchingPrivate, false,
-			serviceContext);
+			userId, liveGroup, branching, false, serviceContext);
 
 		UnicodeProperties typeSettingsProperties =
 			liveGroup.getTypeSettingsProperties();
 
 		typeSettingsProperties.setProperty(
-			"branchingPrivate", String.valueOf(branchingPrivate));
-		typeSettingsProperties.setProperty(
-			"branchingPublic", String.valueOf(branchingPublic));
+			"branching", String.valueOf(branching));
 		typeSettingsProperties.setProperty("staged", Boolean.TRUE.toString());
 		typeSettingsProperties.setProperty(
 			"stagedRemotely", String.valueOf(false));
@@ -292,16 +271,16 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 			StagingUtil.publishLayouts(
 				userId, liveGroup.getGroupId(), stagingGroup.getGroupId(),
-				false, parameterMap);
+				parameterMap);
 		}
 	}
 
 	@Override
 	public void enableRemoteStaging(
-			long userId, Group stagingGroup, boolean branchingPublic,
-			boolean branchingPrivate, String remoteAddress, int remotePort,
-			String remotePathContext, boolean secureConnection,
-			long remoteGroupId, ServiceContext serviceContext)
+			long userId, Group stagingGroup, boolean branching,
+			String remoteAddress, int remotePort, String remotePathContext,
+			boolean secureConnection, long remoteGroupId,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		StagingUtil.validateRemote(
@@ -314,7 +293,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 		String remoteURL = StagingUtil.buildRemoteURL(
 			remoteAddress, remotePort, remotePathContext, secureConnection,
-			GroupConstants.DEFAULT_LIVE_GROUP_ID, false);
+			GroupConstants.DEFAULT_LIVE_GROUP_ID);
 
 		UnicodeProperties typeSettingsProperties =
 			stagingGroup.getTypeSettingsProperties();
@@ -343,13 +322,10 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		}
 
 		checkDefaultLayoutSetBranches(
-			userId, stagingGroup, branchingPublic, branchingPrivate, true,
-			serviceContext);
+			userId, stagingGroup, branching, true, serviceContext);
 
 		typeSettingsProperties.setProperty(
-			"branchingPrivate", String.valueOf(branchingPrivate));
-		typeSettingsProperties.setProperty(
-			"branchingPublic", String.valueOf(branchingPublic));
+			"branching", String.valueOf(branching));
 		typeSettingsProperties.setProperty("remoteAddress", remoteAddress);
 		typeSettingsProperties.setProperty(
 			"remoteGroupId", String.valueOf(remoteGroupId));
@@ -374,7 +350,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 	@Override
 	public MissingReferences publishStagingRequest(
-			long userId, long stagingRequestId, boolean privateLayout,
+			long userId, long stagingRequestId,
 			Map<String, String[]> parameterMap)
 		throws PortalException {
 
@@ -430,7 +406,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link #publishStagingRequest(long,
-	 *             long, boolean, java.util.Map)}
+	 *             long, java.util.Map)}
 	 */
 	@Deprecated
 	@Override
@@ -442,17 +418,12 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 	}
 
 	protected void addDefaultLayoutSetBranch(
-			long userId, long groupId, String groupName, boolean privateLayout,
+			long userId, long groupId, String groupName,
 			ServiceContext serviceContext)
 		throws PortalException {
 
 		String masterBranchDescription =
 			LayoutSetBranchConstants.MASTER_BRANCH_DESCRIPTION_PUBLIC;
-
-		if (privateLayout) {
-			masterBranchDescription =
-				LayoutSetBranchConstants.MASTER_BRANCH_DESCRIPTION_PRIVATE;
-		}
 
 		String description = LanguageUtil.format(
 			PortalUtil.getSiteDefaultLocale(groupId), masterBranchDescription,
@@ -480,10 +451,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		}
 		catch (PortalException pe) {
 			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Unable to create master branch for " +
-						(privateLayout ? "private" : "public") + " layouts",
-					pe);
+				_log.warn("Unable to create master branch for layouts", pe);
 			}
 		}
 	}
@@ -540,7 +508,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			stagingTypeSettingsProperties.toString());
 	}
 
-	protected void deleteLayoutSetBranches(long groupId, boolean privateLayout)
+	protected void deleteLayoutSetBranches(long groupId)
 		throws PortalException {
 
 		// Find the latest layout revision for all the published layouts

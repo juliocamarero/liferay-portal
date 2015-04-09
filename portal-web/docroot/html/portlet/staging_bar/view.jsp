@@ -158,7 +158,7 @@ if (layout != null) {
 					boolean secureConnection = GetterUtil.getBoolean(typeSettingsProperties.getProperty("secureConnection"));
 					long remoteGroupId = GetterUtil.getLong(typeSettingsProperties.getProperty("remoteGroupId"));
 
-					String remoteURL = StagingUtil.buildRemoteURL(remoteAddress, remotePort, remotePathContext, secureConnection, remoteGroupId, false);
+					String remoteURL = StagingUtil.buildRemoteURL(remoteAddress, remotePort, remotePathContext, secureConnection, remoteGroupId);
 					%>
 
 					<aui:nav-item cssClass="remote-live-link" href="<%= remoteURL %>" iconCssClass="icon-external-link-sign" label="go-to-remote-live" />

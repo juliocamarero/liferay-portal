@@ -113,6 +113,63 @@ public class LayoutStagedModelDataHandler
 		}
 	}
 
+	public Layout fetchMissingReference(String uuid, long groupId) {
+
+		// Try to fetch the existing layout from the importing group
+
+		Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+			uuid, groupId);
+
+		if (layout != null) {
+			return layout;
+		}
+
+		try {
+
+			// Try to fetch the existing layout from the parent sites
+
+			Group originalGroup = GroupLocalServiceUtil.getGroup(groupId);
+
+			Group group = originalGroup.getParentGroup();
+
+			while (group != null) {
+				layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+					uuid, group.getGroupId());
+
+				if (layout != null) {
+					break;
+				}
+
+				group = group.getParentGroup();
+			}
+
+			if (layout == null) {
+				List<Layout> layouts = fetchStagedModelsByUuidAndCompanyId(
+					uuid, originalGroup.getCompanyId());
+
+				if (ListUtil.isEmpty(layouts)) {
+					return null;
+				}
+
+				layout = layouts.get(0);
+			}
+
+			return layout;
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(e, e);
+			}
+			else if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to fetch missing reference layout from group " +
+						groupId);
+			}
+
+			return null;
+		}
+	}
+
 	@Override
 	public List<Layout> fetchStagedModelsByUuidAndCompanyId(
 		String uuid, long companyId) {
@@ -162,12 +219,9 @@ public class LayoutStagedModelDataHandler
 
 		groupId = MapUtil.getLong(groupIds, groupId);
 
-		boolean privateLayout = GetterUtil.getBoolean(
-			referenceElement.attributeValue("private-layout"));
-
 		Layout existingLayout = null;
 
-		existingLayout = fetchMissingReference(uuid, groupId, privateLayout);
+		existingLayout = fetchMissingReference(uuid, groupId);
 
 		Map<Long, Layout> layouts =
 			(Map<Long, Layout>)portletDataContext.getNewPrimaryKeysMap(
@@ -205,11 +259,7 @@ public class LayoutStagedModelDataHandler
 
 		groupId = MapUtil.getLong(groupIds, groupId);
 
-		boolean privateLayout = GetterUtil.getBoolean(
-			referenceElement.attributeValue("private-layout"));
-
-		Layout existingLayout = fetchMissingReference(
-			uuid, groupId, privateLayout);
+		Layout existingLayout = fetchMissingReference(uuid, groupId);
 
 		if (existingLayout == null) {
 			return false;
@@ -790,64 +840,6 @@ public class LayoutStagedModelDataHandler
 		}
 
 		return new Object[] {url.substring(x, y), url, x, y};
-	}
-
-	protected Layout fetchMissingReference(
-		String uuid, long groupId, boolean privateLayout) {
-
-		// Try to fetch the existing layout from the importing group
-
-		Layout layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-			uuid, groupId);
-
-		if (layout != null) {
-			return layout;
-		}
-
-		try {
-
-			// Try to fetch the existing layout from the parent sites
-
-			Group originalGroup = GroupLocalServiceUtil.getGroup(groupId);
-
-			Group group = originalGroup.getParentGroup();
-
-			while (group != null) {
-				layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-					uuid, group.getGroupId());
-
-				if (layout != null) {
-					break;
-				}
-
-				group = group.getParentGroup();
-			}
-
-			if (layout == null) {
-				List<Layout> layouts = fetchStagedModelsByUuidAndCompanyId(
-					uuid, originalGroup.getCompanyId());
-
-				if (ListUtil.isEmpty(layouts)) {
-					return null;
-				}
-
-				layout = layouts.get(0);
-			}
-
-			return layout;
-		}
-		catch (Exception e) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(e, e);
-			}
-			else if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Unable to fetch missing reference layout from group " +
-						groupId);
-			}
-
-			return null;
-		}
 	}
 
 	protected void fixExportTypeSettings(Layout layout) throws Exception {

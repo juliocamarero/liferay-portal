@@ -577,15 +577,14 @@ public class PortletPreferencesFactoryImpl
 	@Override
 	public Map<Long, PortletPreferences> getPortletSetupMap(
 		long companyId, long groupId, long ownerId, int ownerType,
-		String portletId, boolean privateLayout) {
+		String portletId) {
 
 		Map<Long, PortletPreferences> portletSetupMap = new HashMap<>();
 
 		List<com.liferay.portal.model.PortletPreferences>
 			portletPreferencesList =
 				PortletPreferencesLocalServiceUtil.getPortletPreferences(
-					companyId, groupId, ownerId, ownerType, portletId,
-					privateLayout);
+					companyId, groupId, ownerId, ownerType, portletId);
 
 		for (com.liferay.portal.model.PortletPreferences portletPreferences :
 				portletPreferencesList) {

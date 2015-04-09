@@ -74,7 +74,7 @@ if (!cmd.equals(Constants.UPDATE)) {
 	String openNodes = SessionTreeJSClicks.getOpenNodes(request, treeId + "SelectedNode");
 
 	if (openNodes == null) {
-		selectedLayoutIds = ExportImportHelperUtil.getAllLayoutIds(liveGroupId, false);
+		selectedLayoutIds = ExportImportHelperUtil.getAllLayoutIds(liveGroupId);
 	}
 	else {
 		selectedLayoutIds = GetterUtil.getLongValues(StringUtil.split(openNodes, ','));

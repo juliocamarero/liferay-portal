@@ -148,16 +148,14 @@ import org.xml.sax.XMLReader;
 public class ExportImportHelperImpl implements ExportImportHelper {
 
 	@Override
-	public long[] getAllLayoutIds(long groupId, boolean privateLayout) {
+	public long[] getAllLayoutIds(long groupId) {
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(groupId);
 
 		return getLayoutIds(layouts);
 	}
 
 	@Override
-	public Map<Long, Boolean> getAllLayoutIdsMap(
-		long groupId, boolean privateLayout) {
-
+	public Map<Long, Boolean> getAllLayoutIdsMap(long groupId) {
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
 			groupId, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
@@ -187,8 +185,8 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 
 	/**
 	 * @deprecated As of 7.0.0, moved to {@link
-	 *             ExportImportDateUtil#getDateRange(PortletRequest, long,
-	 *             boolean, long, String, String)}
+	 *             ExportImportDateUtil#getDateRange(PortletRequest, long, long,
+	 *             String, String)}
 	 */
 	@Deprecated
 	@Override
@@ -198,8 +196,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		throws Exception {
 
 		return ExportImportDateUtil.getDateRange(
-			portletRequest, groupId, privateLayout, plid, portletId,
-			defaultRange);
+			portletRequest, groupId, plid, portletId, defaultRange);
 	}
 
 	@Override
@@ -644,9 +641,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 	}
 
 	@Override
-	public String getSelectedLayoutsJSON(
-		long groupId, boolean privateLayout, String selectedNodes) {
-
+	public String getSelectedLayoutsJSON(long groupId, String selectedNodes) {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(

@@ -296,7 +296,7 @@ public class FriendlyURLServlet extends HttpServlet {
 			try {
 				LayoutFriendlyURLComposite layoutFriendlyURLComposite =
 					PortalUtil.getLayoutFriendlyURLComposite(
-						group.getGroupId(), false, friendlyURL, params,
+						group.getGroupId(), friendlyURL, params,
 						requestContext);
 
 				Layout layout = layoutFriendlyURLComposite.getLayout();
@@ -352,8 +352,7 @@ public class FriendlyURLServlet extends HttpServlet {
 		}
 
 		String actualURL = PortalUtil.getActualURL(
-			group.getGroupId(), false, mainPath, friendlyURL, params,
-			requestContext);
+			group.getGroupId(), mainPath, friendlyURL, params, requestContext);
 
 		return new Object[] {actualURL, Boolean.FALSE};
 	}

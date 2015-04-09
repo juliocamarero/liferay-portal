@@ -1279,7 +1279,6 @@ public class MainServlet extends ActionServlet {
 
 		dynamicRequest.setParameter("groupId", StringPool.BLANK);
 		dynamicRequest.setParameter("layoutId", StringPool.BLANK);
-		dynamicRequest.setParameter("privateLayout", StringPool.BLANK);
 
 		PortalUtil.sendError(status, (Exception)t, dynamicRequest, response);
 	}

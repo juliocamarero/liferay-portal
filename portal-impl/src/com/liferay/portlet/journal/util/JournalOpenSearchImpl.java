@@ -80,7 +80,7 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 
 		for (JournalContentSearch contentSearch : contentSearches) {
 			if (LayoutPermissionUtil.contains(
-					permissionChecker, contentSearch.getGroupId(), false,
+					permissionChecker, contentSearch.getGroupId(),
 					contentSearch.getLayoutId(), ActionKeys.VIEW)) {
 
 				Layout hitLayout = LayoutLocalServiceUtil.getLayout(
@@ -125,7 +125,7 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 				themeDisplay.getPermissionChecker();
 
 			if (LayoutPermissionUtil.contains(
-					permissionChecker, layout.getGroupId(), false, hitLayoutId,
+					permissionChecker, layout.getGroupId(), hitLayoutId,
 					ActionKeys.VIEW)) {
 
 				Layout hitLayout = LayoutLocalServiceUtil.getLayout(

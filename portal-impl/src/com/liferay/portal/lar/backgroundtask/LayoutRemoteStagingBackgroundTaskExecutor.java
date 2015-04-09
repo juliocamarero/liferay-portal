@@ -293,7 +293,7 @@ public class LayoutRemoteStagingBackgroundTaskExecutor
 				markBackgroundTask(_backgroundTaskId, "exported");
 
 				StagingServiceHttp.publishStagingRequest(
-					httpPrincipal, stagingRequestId, false, parameterMap);
+					httpPrincipal, stagingRequestId, parameterMap);
 			}
 			catch (IOException ioe) {
 				deleteTempLarOnFailure(file);

@@ -114,8 +114,8 @@ public class LayoutImporter {
 	}
 
 	public void importLayouts(
-			long userId, long groupId, boolean privateLayout,
-			Map<String, String[]> parameterMap, File file)
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
 		throws Exception {
 
 		PortletDataContext portletDataContext = null;
@@ -124,7 +124,7 @@ public class LayoutImporter {
 			ExportImportThreadLocal.setLayoutImportInProcess(true);
 
 			portletDataContext = getPortletDataContext(
-				userId, groupId, privateLayout, parameterMap, file);
+				userId, groupId, parameterMap, file);
 
 			ExportImportLifecycleManager.fireExportImportLifecycleEvent(
 				ExportImportLifecycleConstants.EVENT_LAYOUT_IMPORT_STARTED,
@@ -158,8 +158,8 @@ public class LayoutImporter {
 	}
 
 	public void importLayoutsDataDeletions(
-			long userId, long groupId, boolean privateLayout,
-			Map<String, String[]> parameterMap, File file)
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
 		throws Exception {
 
 		ZipReader zipReader = null;
@@ -178,7 +178,7 @@ public class LayoutImporter {
 				layoutSet.getCompanyId(), groupId, parameterMap, zipReader);
 
 			PortletDataContext portletDataContext = getPortletDataContext(
-				userId, groupId, privateLayout, parameterMap, file);
+				userId, groupId, parameterMap, file);
 
 			boolean deletePortletData = MapUtil.getBoolean(
 				parameterMap, PortletDataHandlerKeys.DELETE_PORTLET_DATA);
@@ -210,8 +210,8 @@ public class LayoutImporter {
 	}
 
 	public MissingReferences validateFile(
-			long userId, long groupId, boolean privateLayout,
-			Map<String, String[]> parameterMap, File file)
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
 		throws Exception {
 
 		ZipReader zipReader = null;
@@ -228,9 +228,7 @@ public class LayoutImporter {
 				layoutSet.getCompanyId(), groupId, parameterMap, zipReader);
 
 			PortletDataContext portletDataContext = getPortletDataContext(
-				userId, groupId, privateLayout, parameterMap, file);
-
-			portletDataContext.setPrivateLayout(privateLayout);
+				userId, groupId, parameterMap, file);
 
 			MissingReferences missingReferences =
 				ExportImportHelperUtil.validateMissingReferences(
@@ -830,9 +828,7 @@ public class LayoutImporter {
 
 		// Page priorities
 
-		updateLayoutPriorities(
-			portletDataContext, layoutElements,
-			portletDataContext.isPrivateLayout());
+		updateLayoutPriorities(portletDataContext, layoutElements);
 
 		// Last merge time is updated only if there aren not any modified
 		// layouts
@@ -892,8 +888,8 @@ public class LayoutImporter {
 	}
 
 	protected PortletDataContext getPortletDataContext(
-			long userId, long groupId, boolean privateLayout,
-			Map<String, String[]> parameterMap, File file)
+			long userId, long groupId, Map<String, String[]> parameterMap,
+			File file)
 		throws PortalException {
 
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
@@ -907,14 +903,9 @@ public class LayoutImporter {
 
 		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
 
-		PortletDataContext portletDataContext =
-			PortletDataContextFactoryUtil.createImportPortletDataContext(
-				group.getCompanyId(), groupId, parameterMap, userIdStrategy,
-				zipReader);
-
-		portletDataContext.setPrivateLayout(privateLayout);
-
-		return portletDataContext;
+		return PortletDataContextFactoryUtil.createImportPortletDataContext(
+			group.getCompanyId(), groupId, parameterMap, userIdStrategy,
+			zipReader);
 	}
 
 	protected void importLayout(
@@ -1067,8 +1058,7 @@ public class LayoutImporter {
 	}
 
 	protected void updateLayoutPriorities(
-		PortletDataContext portletDataContext, List<Element> layoutElements,
-		boolean privateLayout) {
+		PortletDataContext portletDataContext, List<Element> layoutElements) {
 
 		Map<Long, Layout> layouts =
 			(Map<Long, Layout>)portletDataContext.getNewPrimaryKeysMap(

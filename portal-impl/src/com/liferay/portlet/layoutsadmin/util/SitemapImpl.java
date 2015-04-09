@@ -66,8 +66,7 @@ public class SitemapImpl implements Sitemap {
 	}
 
 	@Override
-	public String getSitemap(
-			long groupId, boolean privateLayout, ThemeDisplay themeDisplay)
+	public String getSitemap(long groupId, ThemeDisplay themeDisplay)
 		throws PortalException {
 
 		Document document = SAXReaderUtil.createDocument();

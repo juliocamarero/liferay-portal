@@ -103,7 +103,7 @@ long[] selectedLayoutIds = null;
 String openNodes = SessionTreeJSClicks.getOpenNodes(request, treeId + "SelectedNode");
 
 if (openNodes == null) {
-	selectedLayoutIds = ExportImportHelperUtil.getAllLayoutIds(stagingGroupId, false);
+	selectedLayoutIds = ExportImportHelperUtil.getAllLayoutIds(stagingGroupId);
 }
 else {
 	selectedLayoutIds = GetterUtil.getLongValues(StringUtil.split(openNodes, ','));

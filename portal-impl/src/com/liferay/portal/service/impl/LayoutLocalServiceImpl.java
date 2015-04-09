@@ -815,7 +815,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			LayoutExporter layoutExporter = LayoutExporter.getInstance();
 
 			return layoutExporter.exportLayoutsAsFile(
-				groupId, false, layoutIds, parameterMap, startDate, endDate);
+				groupId, layoutIds, parameterMap, startDate, endDate);
 		}
 		catch (PortalException pe) {
 			throw pe;
@@ -877,8 +877,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		Map<String, Serializable> settingsMap =
 			ExportImportConfigurationSettingsMapFactory.buildSettingsMap(
-				userId, groupId, false, layoutIds, parameterMap,
-				user.getLocale(), user.getTimeZone());
+				userId, groupId, layoutIds, parameterMap, user.getLocale(),
+				user.getTimeZone());
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -1704,8 +1704,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		try {
 			LayoutImporter layoutImporter = LayoutImporter.getInstance();
 
-			layoutImporter.importLayouts(
-				userId, groupId, false, parameterMap, file);
+			layoutImporter.importLayouts(userId, groupId, parameterMap, file);
 		}
 		catch (PortalException pe) {
 			Throwable cause = pe.getCause();
@@ -1771,7 +1770,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			LayoutImporter layoutImporter = LayoutImporter.getInstance();
 
 			layoutImporter.importLayoutsDataDeletions(
-				userId, groupId, false, parameterMap, file);
+				userId, groupId, parameterMap, file);
 		}
 		catch (PortalException pe) {
 			Throwable cause = pe.getCause();
@@ -1839,7 +1838,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		Map<String, Serializable> settingsMap =
 			ExportImportConfigurationSettingsMapFactory.buildImportSettingsMap(
-				userId, groupId, false, null, parameterMap, Constants.IMPORT,
+				userId, groupId, null, parameterMap, Constants.IMPORT,
 				user.getLocale(), user.getTimeZone(), file.getName());
 
 		ServiceContext serviceContext = new ServiceContext();
@@ -3070,7 +3069,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			LayoutImporter layoutImporter = LayoutImporter.getInstance();
 
 			return layoutImporter.validateFile(
-				userId, groupId, false, parameterMap, file);
+				userId, groupId, parameterMap, file);
 		}
 		catch (PortalException pe) {
 			Throwable cause = pe.getCause();
