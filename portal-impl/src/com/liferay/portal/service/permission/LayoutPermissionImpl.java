@@ -77,14 +77,11 @@ public class LayoutPermissionImpl
 
 	@Override
 	public void check(
-			PermissionChecker permissionChecker, long groupId,
-			boolean privateLayout, long layoutId, String actionId)
+			PermissionChecker permissionChecker, long groupId, long layoutId,
+			String actionId)
 		throws PortalException {
 
-		if (!contains(
-				permissionChecker, groupId, privateLayout, layoutId,
-				actionId)) {
-
+		if (!contains(permissionChecker, groupId, layoutId, actionId)) {
 			throw new PrincipalException();
 		}
 	}
@@ -168,20 +165,9 @@ public class LayoutPermissionImpl
 		return contains(permissionChecker, layout, actionId);
 	}
 
-	@Override
-	public boolean contains(
-			PermissionChecker permissionChecker, long groupId,
-			boolean privateLayout, long layoutId, String actionId)
-		throws PortalException {
-
-		Layout layout = LayoutLocalServiceUtil.getLayout(groupId, layoutId);
-
-		return contains(permissionChecker, layout, actionId);
-	}
-
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link #contains(PermissionChecker,
-	 *             long, boolean, long, String)}
+	 *             long, long, String)}
 	 */
 	@Deprecated
 	@Override
@@ -191,8 +177,18 @@ public class LayoutPermissionImpl
 			String actionId)
 		throws PortalException {
 
-		return contains(
-			permissionChecker, groupId, privateLayout, layoutId, actionId);
+		return contains(permissionChecker, groupId, layoutId, actionId);
+	}
+
+	@Override
+	public boolean contains(
+			PermissionChecker permissionChecker, long groupId, long layoutId,
+			String actionId)
+		throws PortalException {
+
+		Layout layout = LayoutLocalServiceUtil.getLayout(groupId, layoutId);
+
+		return contains(permissionChecker, layout, actionId);
 	}
 
 	@Override

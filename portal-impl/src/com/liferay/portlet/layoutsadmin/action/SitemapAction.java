@@ -102,7 +102,7 @@ public class SitemapAction extends Action {
 			}
 
 			String sitemap = SitemapUtil.getSitemap(
-				layoutSet.getGroupId(), false, themeDisplay);
+				layoutSet.getGroupId(), themeDisplay);
 
 			ServletResponseUtil.sendFile(
 				request, response, null, sitemap.getBytes(StringPool.UTF8),

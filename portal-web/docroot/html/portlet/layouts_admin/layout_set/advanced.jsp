@@ -32,7 +32,7 @@ boolean mergeGuestPublicPages = PropertiesParamUtil.getBoolean(layoutsAdminDispl
 
 			<%
 			String taglibLabel = LanguageUtil.format(request, "merge-x-pages", HtmlUtil.escape(guestGroup.getDescriptiveName(locale)), false);
-			String taglibHelpMessage = LanguageUtil.format(request, "you-can-configure-the-top-level-pages-of-this-public-site-to-merge-with-the-top-level-pages-of-the-public-x-site", HtmlUtil.escape(guestGroup.getDescriptiveName(locale)), false);
+			String taglibHelpMessage = LanguageUtil.format(request, "you-can-configure-the-top-level-pages-of-this-site-to-merge-with-the-top-level-pages-of-the-x-site", HtmlUtil.escape(guestGroup.getDescriptiveName(locale)), false);
 			%>
 
 			<aui:input helpMessage="<%= taglibHelpMessage %>" label="<%= taglibLabel %>" name="mergeGuestPublicPages" type="checkbox" value="<%= mergeGuestPublicPages %>" />

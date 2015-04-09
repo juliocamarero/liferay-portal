@@ -1104,11 +1104,6 @@ public class LayoutImpl extends LayoutBaseImpl {
 	}
 
 	@Override
-	public void setPrivateLayout(boolean privateLayout) {
-		_layoutSet = null;
-	}
-
-	@Override
 	public void setTypeSettings(String typeSettings) {
 		_typeSettingsProperties = null;
 

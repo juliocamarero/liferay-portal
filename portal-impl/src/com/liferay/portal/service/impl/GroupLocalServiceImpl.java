@@ -1604,8 +1604,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 * </p>
 	 *
 	 * @param  className the entity's class name
-	 * @param  privateLayout whether to include groups with private layout sets
-	 *         or non-private layout sets
 	 * @param  start the lower bound of the range of groups to return
 	 * @param  end the upper bound of the range of groups to return (not
 	 *         inclusive)
@@ -1613,12 +1611,11 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<Group> getNoLayoutsGroups(
-		String className, boolean privateLayout, int start, int end) {
+		String className, int start, int end) {
 
 		long classNameId = classNameLocalService.getClassNameId(className);
 
-		return groupFinder.findByNoLayouts(
-			classNameId, privateLayout, start, end);
+		return groupFinder.findByNoLayouts(classNameId, start, end);
 	}
 
 	/**
