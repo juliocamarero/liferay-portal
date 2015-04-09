@@ -1075,17 +1075,16 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	}
 
 	protected void importLayouts(
-			long userId, Map<String, String[]> parameterMap,
-			File publicLayoutsFile)
+			long userId, Map<String, String[]> parameterMap, File layoutsFile)
 		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
 		long groupId = user.getGroupId();
 
-		if (publicLayoutsFile != null) {
+		if (layoutsFile != null) {
 			layoutLocalService.importLayouts(
-				userId, groupId, parameterMap, publicLayoutsFile);
+				userId, groupId, parameterMap, layoutsFile);
 		}
 	}
 

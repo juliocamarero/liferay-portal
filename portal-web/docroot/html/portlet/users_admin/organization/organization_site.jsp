@@ -75,7 +75,7 @@ if (organization != null) {
 			<div id="<portlet:namespace />siteTemplates">
 				<c:choose>
 					<c:when test="<%= ((organization == null) || ((layoutSetPrototype == null) && (organization.getLayoutsPageCount() == 0))) && !layoutSetPrototypes.isEmpty() %>">
-						<aui:select label="pages" name="publicLayoutSetPrototypeId">
+						<aui:select label="pages" name="layoutSetPrototypeId">
 							<aui:option label="none" selected="<%= true %>" value="" />
 
 							<%
@@ -96,14 +96,14 @@ if (organization != null) {
 									<aui:input
 										helpMessage="enable-propagation-of-changes-from-the-site-template-help"
 										label="enable-propagation-of-changes-from-the-site-template"
-										name="publicLayoutSetPrototypeLinkEnabled"
+										name="layoutSetPrototypeLinkEnabled"
 										type="checkbox"
 										value="<%= true %>"
 									/>
 								</div>
 							</c:when>
 							<c:otherwise>
-								<aui:input name="publicLayoutSetPrototypeLinkEnabled" type="hidden" value="<%= true %>" />
+								<aui:input name="layoutSetPrototypeLinkEnabled" type="hidden" value="<%= true %>" />
 							</c:otherwise>
 						</c:choose>
 					</c:when>
@@ -129,12 +129,12 @@ if (organization != null) {
 
 									<c:choose>
 										<c:when test="<%= (layoutSetPrototype != null) && !organizationGroup.isStaged() && hasUnlinkLayoutSetPrototypePermission %>">
-											<aui:input label='<%= LanguageUtil.format(request, "enable-propagation-of-changes-from-the-site-template-x", HtmlUtil.escape(layoutSetPrototype.getName(locale)), false) %>' name="publicLayoutSetPrototypeLinkEnabled" type="checkbox" value="<%= layoutSetPrototypeLinkEnabled %>" />
+											<aui:input label='<%= LanguageUtil.format(request, "enable-propagation-of-changes-from-the-site-template-x", HtmlUtil.escape(layoutSetPrototype.getName(locale)), false) %>' name="layoutSetPrototypeLinkEnabled" type="checkbox" value="<%= layoutSetPrototypeLinkEnabled %>" />
 										</c:when>
 										<c:when test="<%= layoutSetPrototype != null %>">
 											<liferay-ui:message arguments="<%= new Object[] {HtmlUtil.escape(layoutSetPrototype.getName(locale))} %>" key="these-pages-are-linked-to-site-template-x" translateArguments="<%= false %>" />
 
-											<aui:input name="publicLayoutSetPrototypeLinkEnabled" type="hidden" value="<%= layoutSetPrototypeLinkEnabled %>" />
+											<aui:input name="layoutSetPrototypeLinkEnabled" type="hidden" value="<%= layoutSetPrototypeLinkEnabled %>" />
 										</c:when>
 									</c:choose>
 								</c:when>
@@ -158,7 +158,7 @@ if (organization != null) {
 
 			Liferay.Util.toggleBoxes('<portlet:namespace />site', '<portlet:namespace />siteTemplates');
 
-			Liferay.Util.toggleSelectBox('<portlet:namespace />publicLayoutSetPrototypeId', <portlet:namespace />isVisible, '<portlet:namespace />layoutSetPrototypeIdOptions');
+			Liferay.Util.toggleSelectBox('<portlet:namespace />layoutSetPrototypeId', <portlet:namespace />isVisible, '<portlet:namespace />layoutSetPrototypeIdOptions');
 		</aui:script>
 	</c:when>
 	<c:otherwise>

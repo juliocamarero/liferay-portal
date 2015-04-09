@@ -1791,19 +1791,17 @@ public class SitesImpl implements Sites {
 			return;
 		}
 
-		boolean publicLayoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
+		boolean layoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
 			serviceContext, "publicLayoutSetPrototypeLinkEnabled");
 
-		if (!publicLayoutSetPrototypeLinkEnabled) {
-			publicLayoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
+		if (!layoutSetPrototypeLinkEnabled) {
+			layoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
 				serviceContext, "layoutSetPrototypeLinkEnabled", true);
 		}
 
 		parameterMap.put(
 			PortletDataHandlerKeys.LAYOUT_SET_PROTOTYPE_LINK_ENABLED,
-			new String[] {
-				String.valueOf(publicLayoutSetPrototypeLinkEnabled)
-			});
+			new String[] {String.valueOf(layoutSetPrototypeLinkEnabled)});
 	}
 
 	protected void updateLayoutSetPrototypeLink(

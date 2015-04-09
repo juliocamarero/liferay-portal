@@ -47,10 +47,10 @@ public class PortalImplLayoutRelativeURLTest extends PortalImplBaseURLTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 
-		LayoutSet publicLayoutSet = layout.getLayoutSet();
+		LayoutSet layoutSet = layout.getLayoutSet();
 
 		VirtualHostLocalServiceUtil.updateVirtualHost(
-			company.getCompanyId(), publicLayoutSet.getLayoutSetId(),
+			company.getCompanyId(), layoutSet.getLayoutSetId(),
 			VIRTUAL_HOSTNAME);
 
 		layoutRelativeURL =

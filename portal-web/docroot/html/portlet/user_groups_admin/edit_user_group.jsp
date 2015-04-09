@@ -119,7 +119,7 @@ if (userGroup != null) {
 
 			<c:choose>
 				<c:when test="<%= ((userGroupGroup == null) || ((layoutSetPrototype == null) && !userGroupGroup.hasLayouts())) && !layoutSetPrototypes.isEmpty() %>">
-					<aui:select disabled="<%= !hasUpdateSitePermission || !hasUserGroupUpdatePermission %>" label="pages" name="publicLayoutSetPrototypeId">
+					<aui:select disabled="<%= !hasUpdateSitePermission || !hasUserGroupUpdatePermission %>" label="pages" name="layoutSetPrototypeId">
 						<aui:option label="none" selected="<%= true %>" value="" />
 
 						<%
@@ -137,11 +137,11 @@ if (userGroup != null) {
 					<c:choose>
 						<c:when test="<%= hasUnlinkLayoutSetPrototypePermission %>">
 							<div class="hide" id="<portlet:namespace />layoutSetPrototypeIdOptions">
-								<aui:input helpMessage="enable-propagation-of-changes-from-the-site-template-help" label="enable-propagation-of-changes-from-the-site-template" name="publicLayoutSetPrototypeLinkEnabled" type="checkbox" value="<%= layoutSetPrototypeLinkEnabled %>" />
+								<aui:input helpMessage="enable-propagation-of-changes-from-the-site-template-help" label="enable-propagation-of-changes-from-the-site-template" name="layoutSetPrototypeLinkEnabled" type="checkbox" value="<%= layoutSetPrototypeLinkEnabled %>" />
 							</div>
 						</c:when>
 						<c:otherwise>
-							<aui:input name="publicLayoutSetPrototypeLinkEnabled" type="hidden" value="<%= true %>" />
+							<aui:input name="layoutSetPrototypeLinkEnabled" type="hidden" value="<%= true %>" />
 						</c:otherwise>
 					</c:choose>
 				</c:when>
@@ -167,7 +167,7 @@ if (userGroup != null) {
 
 								<c:choose>
 									<c:when test="<%= (layoutSetPrototype != null) && hasUnlinkLayoutSetPrototypePermission %>">
-										<aui:input label='<%= LanguageUtil.format(request, "enable-propagation-of-changes-from-the-site-template-x", HtmlUtil.escape(layoutSetPrototype.getName(locale)), false) %>' name="publicLayoutSetPrototypeLinkEnabled" type="checkbox" value="<%= layoutSetPrototypeLinkEnabled %>" />
+										<aui:input label='<%= LanguageUtil.format(request, "enable-propagation-of-changes-from-the-site-template-x", HtmlUtil.escape(layoutSetPrototype.getName(locale)), false) %>' name="layoutSetPrototypeLinkEnabled" type="checkbox" value="<%= layoutSetPrototypeLinkEnabled %>" />
 									</c:when>
 									<c:when test="<%= layoutSetPrototype != null %>">
 										<liferay-ui:message arguments="<%= new Object[] {HtmlUtil.escape(layoutSetPrototype.getName(locale))} %>" key="these-pages-are-linked-to-site-template-x" translateArguments="<%= false %>" />
@@ -201,7 +201,7 @@ if (userGroup != null) {
 		submitForm(document.<portlet:namespace />fm, '<portlet:actionURL><portlet:param name="struts_action" value="/users_admin/edit_user_group" /></portlet:actionURL>');
 	}
 
-	Liferay.Util.toggleSelectBox('<portlet:namespace />publicLayoutSetPrototypeId', <portlet:namespace />isVisible, '<portlet:namespace />layoutSetPrototypeIdOptions');
+	Liferay.Util.toggleSelectBox('<portlet:namespace />layoutSetPrototypeId', <portlet:namespace />isVisible, '<portlet:namespace />layoutSetPrototypeIdOptions');
 </aui:script>
 
 <%

@@ -2382,13 +2382,13 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 
 		LayoutSet layoutSet = group.getLayoutSet();
 
-		String publicLayoutSetVirtualHostname = layoutSet.getVirtualHostname();
+		String layoutSetVirtualHostname = layoutSet.getVirtualHostname();
 
 		String portalUrl = StringPool.BLANK;
 
-		if (Validator.isNotNull(publicLayoutSetVirtualHostname)) {
+		if (Validator.isNotNull(layoutSetVirtualHostname)) {
 			portalUrl = PortalUtil.getPortalURL(
-				publicLayoutSetVirtualHostname, serverPort, secure);
+				layoutSetVirtualHostname, serverPort, secure);
 
 			if (url.startsWith(portalUrl)) {
 				if (secure) {
