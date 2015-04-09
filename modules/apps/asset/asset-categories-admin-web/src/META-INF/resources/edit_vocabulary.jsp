@@ -54,7 +54,7 @@ if (vocabularyId > 0) {
 	<aui:fieldset>
 		<div>
 			<div class="add-vocabulary-layer asset-category-layer">
-				<aui:input autoFocus="<%= true %>" label="name" name="title" />
+				<aui:input autoFocus="<%= true %>" label="name" name="title" required="<%= true %>" />
 
 				<aui:input name="description" />
 
