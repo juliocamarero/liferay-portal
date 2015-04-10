@@ -365,6 +365,12 @@
 							'aui-base'
 						]
 					},
+					'liferay-element-selector': {
+						path: 'element_selector.js',
+						requires: [
+							'aui-base'
+						]
+					},
 					'liferay-editor-image-uploader': {
 						path: 'editor_image_uploader.js',
 						requires: [

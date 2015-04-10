@@ -16,6 +16,17 @@
 
 <%@ include file="/init.jsp" %>
 
+<%@ page import="com.liferay.portal.model.SelectableEntry" %>
+<%@ page import="com.liferay.journal.content.web.entries.CommentRatingsSelectableEntry" %>
+<%@ page import="com.liferay.journal.content.web.entries.CommentsSelectableEntry" %>
+<%@ page import="com.liferay.journal.content.web.entries.PrintSelectableEntry" %>
+<%@ page import="com.liferay.journal.content.web.entries.RatingsSelectableEntry" %>
+<%@ page import="com.liferay.journal.content.web.entries.RelatedAssetsSelectableEntry" %>
+<%@ page import="com.liferay.journal.content.web.entries.ShowAvailableLocalesSelectableEntry" %>
+<%@ page import="com.liferay.journal.content.web.entries.ViewCountIncrementSelectableEntry" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+
 <%
 JournalArticle article = journalContentDisplayContext.getArticle();
 
@@ -107,6 +118,72 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 	</aui:fieldset>
 
 	<aui:fieldset>
+		<aui:field-wrapper label="user-tools">
+			<%
+			/*
+			JSONArray userTools = JSONFactoryUtil.createJSONArray();
+
+			List<KeyValuePair> availableExtensions = journalContentDisplayContext.getAvailableExtensions();
+
+			for (KeyValuePair extension : availableExtensions) {
+				JSONObject extensionObject = JSONFactoryUtil.createJSONObject();
+				extensionObject.put("selected", false);
+				extensionObject.put("icon", "sun");
+				extensionObject.put("key", extension.getValue());
+				extensionObject.put("name", extension.getValue());
+				userTools.put(extensionObject);
+			}
+
+			List<KeyValuePair> currentExtensions = journalContentDisplayContext.getCurrentExtensions();
+
+			for (KeyValuePair extension : currentExtensions) {
+				JSONObject extensionObject = JSONFactoryUtil.createJSONObject();
+				extensionObject.put("selected", true);
+				extensionObject.put("icon", "sun");
+				extensionObject.put("key", extension.getValue());
+				extensionObject.put("name", extension.getValue());
+				userTools.put(extensionObject);
+			}
+			*/
+			List<SelectableEntry> userTools = new ArrayList<SelectableEntry>();
+
+			userTools.add(new PrintSelectableEntry(journalContentDisplayContext.isEnablePrint()));
+			userTools.add(new ShowAvailableLocalesSelectableEntry(journalContentDisplayContext.isShowAvailableLocales()));
+			%>
+
+			<liferay-ui:element-selector
+				elements="<%= userTools %>"
+				hiddenInput="usertools"
+				id="currentUserToolsSelector"
+			/>
+		</aui:field-wrapper>
+
+		<aui:field-wrapper label="metadata">
+			<%
+			List<SelectableEntry> metadata = new ArrayList<SelectableEntry>();
+
+			metadata.add(new PrintSelectableEntry(journalContentDisplayContext.isEnablePrint()));
+			metadata.add(new ShowAvailableLocalesSelectableEntry(journalContentDisplayContext.isShowAvailableLocales()));
+			metadata.add(new RelatedAssetsSelectableEntry(journalContentDisplayContext.isEnableRelatedAssets()));
+			metadata.add(new RatingsSelectableEntry(journalContentDisplayContext.isEnableRatings()));
+			metadata.add(new CommentsSelectableEntry(journalContentDisplayContext.isEnableComments()));
+			metadata.add(new CommentRatingsSelectableEntry(journalContentDisplayContext.isEnableCommentRatings()));
+			metadata.add(new ViewCountIncrementSelectableEntry(journalContentDisplayContext.isEnableViewCountIncrement()));
+			%>
+
+			<liferay-ui:element-selector
+				elements="<%= metadata %>"
+				hiddenInput="metadata"
+				id="metadataSelector"
+			/>
+		</aui:field-wrapper>
+
+
+		<hr>
+		<hr>
+		<hr>
+
+
 		<aui:field-wrapper>
 			<aui:input name="preferences--showAvailableLocales--" type="checkbox" value="<%= journalContentDisplayContext.isShowAvailableLocales() %>" />
 		</aui:field-wrapper>

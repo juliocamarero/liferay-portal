@@ -1250,6 +1250,26 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>element-selector</name>
+		<tag-class>com.liferay.taglib.ui.ElementSelectorTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>elements</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>hiddenInput</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>email-notification-settings</name>
 		<tag-class>com.liferay.taglib.ui.EmailNotificationSettingsTag</tag-class>
 		<body-content>JSP</body-content>
