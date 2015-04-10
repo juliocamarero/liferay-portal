@@ -47,7 +47,7 @@ import javax.portlet.PortletMode;
  */
 public class PortletPermissionImpl implements PortletPermission {
 
-	public static final boolean DEFAULT_INCLUDE_STAGING_PERMISSION = true;
+	public static final boolean DEFAULT_CHECK_STAGING_PERMISSION = true;
 
 	public static final boolean DEFAULT_STRICT = false;
 
@@ -100,19 +100,19 @@ public class PortletPermissionImpl implements PortletPermission {
 
 		check(
 			permissionChecker, groupId, layout, portletId, actionId, strict,
-			DEFAULT_INCLUDE_STAGING_PERMISSION);
+			DEFAULT_CHECK_STAGING_PERMISSION);
 	}
 
 	@Override
 	public void check(
 			PermissionChecker permissionChecker, long groupId, Layout layout,
 			String portletId, String actionId, boolean strict,
-			boolean includeStagingPermission)
+			boolean checkStagingPermission)
 		throws PortalException {
 
 		if (!contains(
 				permissionChecker, groupId, layout, portletId, actionId, strict,
-				includeStagingPermission)) {
+				checkStagingPermission)) {
 
 			throw new PrincipalException();
 		}
@@ -259,14 +259,14 @@ public class PortletPermissionImpl implements PortletPermission {
 
 		return contains(
 			permissionChecker, groupId, layout, portletId, actionId, strict,
-			DEFAULT_INCLUDE_STAGING_PERMISSION);
+			DEFAULT_CHECK_STAGING_PERMISSION);
 	}
 
 	@Override
 	public boolean contains(
 			PermissionChecker permissionChecker, long groupId, Layout layout,
 			String portletId, String actionId, boolean strict,
-			boolean includeStagingPermission)
+			boolean checkStagingPermission)
 		throws PortalException {
 
 		String name = null;
@@ -300,7 +300,7 @@ public class PortletPermissionImpl implements PortletPermission {
 
 		name = PortletConstants.getRootPortletId(portletId);
 
-		if (includeStagingPermission) {
+		if (checkStagingPermission) {
 			Boolean hasPermission = StagingPermissionUtil.hasPermission(
 				permissionChecker, groupId, name, groupId, name, actionId);
 

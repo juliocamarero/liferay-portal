@@ -52,7 +52,7 @@ public interface PortletPermission {
 	public void check(
 			PermissionChecker permissionChecker, long groupId, Layout layout,
 			String portletId, String actionId, boolean strict,
-			boolean includeStagingPermission)
+			boolean checkStagingPermission)
 		throws PortalException;
 
 	public void check(
@@ -123,7 +123,7 @@ public interface PortletPermission {
 	public boolean contains(
 			PermissionChecker permissionChecker, long groupId, Layout layout,
 			String portletId, String actionId, boolean strict,
-			boolean includeStagingPermission)
+			boolean checkStagingPermission)
 		throws PortalException;
 
 	public boolean contains(
