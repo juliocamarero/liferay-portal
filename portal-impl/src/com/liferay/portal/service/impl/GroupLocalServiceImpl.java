@@ -364,9 +364,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		// Layout sets
 
-		layoutSetLocalService.addLayoutSet(groupId, true);
-
-		layoutSetLocalService.addLayoutSet(groupId, false);
+		layoutSetLocalService.addLayoutSet(groupId);
 
 		// Resources
 
@@ -730,7 +728,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			if (group.isControlPanel()) {
 				LayoutSet layoutSet = layoutSetLocalService.getLayoutSet(
-					group.getGroupId(), true);
+					group.getGroupId());
 
 				if (layoutSet.getPageCount() == 0) {
 					addControlPanelLayouts(group);
@@ -739,7 +737,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			if (group.isGuest()) {
 				LayoutSet layoutSet = layoutSetLocalService.getLayoutSet(
-					group.getGroupId(), false);
+					group.getGroupId());
 
 				if (layoutSet.getPageCount() == 0) {
 					addDefaultGuestPublicLayouts(group);
@@ -748,7 +746,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			if (group.isUserPersonalPanel()) {
 				LayoutSet layoutSet = layoutSetLocalService.getLayoutSet(
-					group.getGroupId(), true);
+					group.getGroupId());
 
 				if (layoutSet.getPageCount() == 0) {
 					addUserPersonalPanelLayouts(group);
@@ -815,10 +813,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			// Layout set branches
 
 			layoutSetBranchLocalService.deleteLayoutSetBranches(
-				group.getGroupId(), true, true);
-
-			layoutSetBranchLocalService.deleteLayoutSetBranches(
-				group.getGroupId(), false, true);
+				group.getGroupId(), true);
 
 			// Layout sets
 
@@ -826,14 +821,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			try {
 				layoutSetLocalService.deleteLayoutSet(
-					group.getGroupId(), true, serviceContext);
-			}
-			catch (NoSuchLayoutSetException nslse) {
-			}
-
-			try {
-				layoutSetLocalService.deleteLayoutSet(
-					group.getGroupId(), false, serviceContext);
+					group.getGroupId(), serviceContext);
 			}
 			catch (NoSuchLayoutSetException nslse) {
 			}
@@ -1616,8 +1604,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 * </p>
 	 *
 	 * @param  className the entity's class name
-	 * @param  privateLayout whether to include groups with private layout sets
-	 *         or non-private layout sets
 	 * @param  start the lower bound of the range of groups to return
 	 * @param  end the upper bound of the range of groups to return (not
 	 *         inclusive)
@@ -1625,12 +1611,11 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<Group> getNoLayoutsGroups(
-		String className, boolean privateLayout, int start, int end) {
+		String className, int start, int end) {
 
 		long classNameId = classNameLocalService.getClassNameId(className);
 
-		return groupFinder.findByNoLayouts(
-			classNameId, privateLayout, start, end);
+		return groupFinder.findByNoLayouts(classNameId, start, end);
 	}
 
 	/**
@@ -3523,7 +3508,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		ServiceContext serviceContext = new ServiceContext();
 
 		layoutLocalService.addLayout(
-			defaultUserId, group.getGroupId(), true,
+			defaultUserId, group.getGroupId(),
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
 			PropsValues.CONTROL_PANEL_LAYOUT_NAME, StringPool.BLANK,
 			StringPool.BLANK, LayoutConstants.TYPE_CONTROL_PANEL, false,
@@ -3551,7 +3536,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		ServiceContext serviceContext = new ServiceContext();
 
 		Layout layout = layoutLocalService.addLayout(
-			defaultUserId, group.getGroupId(), false,
+			defaultUserId, group.getGroupId(),
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
 			PropsValues.DEFAULT_GUEST_PUBLIC_LAYOUT_NAME, StringPool.BLANK,
 			StringPool.BLANK, LayoutConstants.TYPE_PORTLET, false, friendlyURL,
@@ -3575,7 +3560,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		}
 
 		layoutLocalService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
+			layout.getGroupId(), layout.getLayoutId(),
 			layout.getTypeSettings());
 
 		boolean updateLayoutSet = false;
@@ -3658,7 +3643,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			new String[] {Boolean.TRUE.toString()});
 
 		layoutLocalService.importLayouts(
-			defaultUserId, group.getGroupId(), false, parameterMap, larFile);
+			defaultUserId, group.getGroupId(), parameterMap, larFile);
 	}
 
 	protected void addPortletDefaultData(Group group) throws PortalException {
@@ -3700,7 +3685,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		ServiceContext serviceContext = new ServiceContext();
 
 		layoutLocalService.addLayout(
-			defaultUserId, group.getGroupId(), true,
+			defaultUserId, group.getGroupId(),
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
 			PropsValues.USER_PERSONAL_PANEL_LAYOUT_NAME, StringPool.BLANK,
 			StringPool.BLANK, LayoutConstants.TYPE_USER_PERSONAL_PANEL, false,
