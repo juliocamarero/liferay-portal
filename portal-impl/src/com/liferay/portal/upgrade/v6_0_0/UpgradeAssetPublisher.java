@@ -39,36 +39,6 @@ import javax.portlet.PortletPreferences;
  */
 public class UpgradeAssetPublisher extends BaseUpgradePortletPreferences {
 
-	protected void upgradeToAssetEntryIdElement(Element rootElement) {
-		Element assetIdElement = rootElement.element("asset-id");
-
-		if (assetIdElement != null) {
-			String assetEntryId = assetIdElement.getText();
-
-			Element assetEntryIdElement = rootElement.addElement(
-				"assetEntryId");
-
-			assetEntryIdElement.addText(assetEntryId);
-
-			rootElement.remove(assetIdElement);
-		}
-	}
-
-	protected void upgradeToAssetEntryTypeElement(Element rootElement) {
-		Element assetTypeElement = rootElement.element("asset-type");
-
-		if (assetTypeElement != null) {
-			String assetEntryType = assetTypeElement.getText();
-
-			Element assetEntryTypeElement = rootElement.addElement(
-				"assetEntryType");
-
-			assetEntryTypeElement.addText(assetEntryType);
-
-			rootElement.remove(assetTypeElement);
-		}
-	}
-
 	protected String[] getAssetEntryXmls(String[] manualEntries)
 		throws Exception {
 
@@ -227,6 +197,36 @@ public class UpgradeAssetPublisher extends BaseUpgradePortletPreferences {
 		}
 
 		return PortletPreferencesFactoryUtil.toXML(portletPreferences);
+	}
+
+	protected void upgradeToAssetEntryIdElement(Element rootElement) {
+		Element assetIdElement = rootElement.element("asset-id");
+
+		if (assetIdElement != null) {
+			String assetEntryId = assetIdElement.getText();
+
+			Element assetEntryIdElement = rootElement.addElement(
+				"assetEntryId");
+
+			assetEntryIdElement.addText(assetEntryId);
+
+			rootElement.remove(assetIdElement);
+		}
+	}
+
+	protected void upgradeToAssetEntryTypeElement(Element rootElement) {
+		Element assetTypeElement = rootElement.element("asset-type");
+
+		if (assetTypeElement != null) {
+			String assetEntryType = assetTypeElement.getText();
+
+			Element assetEntryTypeElement = rootElement.addElement(
+				"assetEntryType");
+
+			assetEntryTypeElement.addText(assetEntryType);
+
+			rootElement.remove(assetTypeElement);
+		}
 	}
 
 	protected void upgradeUuids(String[] assetEntryXmls) throws Exception {

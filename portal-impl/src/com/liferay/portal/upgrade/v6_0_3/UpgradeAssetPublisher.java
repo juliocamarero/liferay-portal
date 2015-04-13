@@ -35,43 +35,6 @@ import javax.portlet.PortletPreferences;
  */
 public class UpgradeAssetPublisher extends BaseUpgradePortletPreferences {
 
-	protected void upgradeToAssetEntryUuidElement(Element rootElement)
-		throws Exception {
-
-		Element assetEntryIdElement = rootElement.element("assetEntryId");
-
-		long assetEntryId = GetterUtil.getLong(assetEntryIdElement.getText());
-
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-
-		try {
-			con = DataAccess.getUpgradeOptimizedConnection();
-
-			ps = con.prepareStatement(
-				"select classUuid from AssetEntry where entryId = ?");
-
-			ps.setLong(1, assetEntryId);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				String classUuid = rs.getString("classUuid");
-
-				Element assetEntryUuidElement = rootElement.addElement(
-					"assetEntryUuid");
-
-				assetEntryUuidElement.addText(classUuid);
-
-				rootElement.remove(assetEntryIdElement);
-			}
-		}
-		finally {
-			DataAccess.cleanUp(con, ps, rs);
-		}
-	}
-
 	protected String[] getAssetEntryXmls(String[] assetEntryXmls)
 		throws Exception {
 
@@ -122,6 +85,43 @@ public class UpgradeAssetPublisher extends BaseUpgradePortletPreferences {
 		}
 
 		return PortletPreferencesFactoryUtil.toXML(portletPreferences);
+	}
+
+	protected void upgradeToAssetEntryUuidElement(Element rootElement)
+		throws Exception {
+
+		Element assetEntryIdElement = rootElement.element("assetEntryId");
+
+		long assetEntryId = GetterUtil.getLong(assetEntryIdElement.getText());
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			con = DataAccess.getUpgradeOptimizedConnection();
+
+			ps = con.prepareStatement(
+				"select classUuid from AssetEntry where entryId = ?");
+
+			ps.setLong(1, assetEntryId);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				String classUuid = rs.getString("classUuid");
+
+				Element assetEntryUuidElement = rootElement.addElement(
+					"assetEntryUuid");
+
+				assetEntryUuidElement.addText(classUuid);
+
+				rootElement.remove(assetEntryIdElement);
+			}
+		}
+		finally {
+			DataAccess.cleanUp(con, ps, rs);
+		}
 	}
 
 }
