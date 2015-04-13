@@ -154,6 +154,7 @@ summary.setQueryTerms(queryTerms);
 
 			summary.setHighlight(highlightEnabled);
 			summary.setQueryTerms(queryTerms);
+			summary.setEscape(false);
 		%>
 
 			<div class="entry-discussion">
@@ -171,7 +172,7 @@ summary.setQueryTerms(queryTerms);
 					</span>
 
 					<span class="body">
-						<%= HtmlUtil.extractText(summary.getHighlightedContent()) %>
+						<%= summary.getHighlightedContent() %>
 					</span>
 				</aui:a>
 			</div>
