@@ -35,7 +35,7 @@ import javax.portlet.PortletPreferences;
  */
 public class UpgradeAssetPublisher extends BaseUpgradePortletPreferences {
 
-	public static void upgradeToAssetEntryUuidElement(Element rootElement)
+	protected void upgradeToAssetEntryUuidElement(Element rootElement)
 		throws Exception {
 
 		Element assetEntryIdElement = rootElement.element("assetEntryId");

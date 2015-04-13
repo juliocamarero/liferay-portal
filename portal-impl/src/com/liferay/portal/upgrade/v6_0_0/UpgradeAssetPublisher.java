@@ -39,7 +39,7 @@ import javax.portlet.PortletPreferences;
  */
 public class UpgradeAssetPublisher extends BaseUpgradePortletPreferences {
 
-	public static void upgradeToAssetEntryIdElement(Element rootElement) {
+	protected void upgradeToAssetEntryIdElement(Element rootElement) {
 		Element assetIdElement = rootElement.element("asset-id");
 
 		if (assetIdElement != null) {
@@ -54,7 +54,7 @@ public class UpgradeAssetPublisher extends BaseUpgradePortletPreferences {
 		}
 	}
 
-	public static void upgradeToAssetEntryTypeElement(Element rootElement) {
+	protected void upgradeToAssetEntryTypeElement(Element rootElement) {
 		Element assetTypeElement = rootElement.element("asset-type");
 
 		if (assetTypeElement != null) {
