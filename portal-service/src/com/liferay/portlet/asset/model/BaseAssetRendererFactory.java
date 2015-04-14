@@ -206,6 +206,20 @@ public abstract class BaseAssetRendererFactory implements AssetRendererFactory {
 
 	@Override
 	@SuppressWarnings("unused")
+	public PortletURL getURLAdd(
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse, long classTypeId)
+		throws PortalException {
+
+		if (!isSupportsClassTypes()) {
+			return getURLAdd(liferayPortletRequest, liferayPortletResponse);
+		}
+
+		return null;
+	}
+
+	@Override
+	@SuppressWarnings("unused")
 	public PortletURL getURLView(
 			LiferayPortletResponse liferayPortletResponse,
 			WindowState windowState)
