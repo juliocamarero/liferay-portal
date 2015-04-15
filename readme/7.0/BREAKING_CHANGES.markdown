@@ -1337,3 +1337,26 @@ functionality will now be managed from OSGi modules instead of tags since OSGi
 modules provide more flexibility and can be included in any app.
 
 ---------------------------------------
+
+### Changed default value of copy-request-parameters init parameter in MVCPortlet
+- **Date:** 2015-Apr-15
+- **JIRA Ticket:** LPS-54798
+
+#### What changed?
+
+The copy request init parameter default value is now set to true in MVCPortlet
+
+#### Who is affected?
+
+This affects developers that have created portlets that extend MVCPortlet
+
+#### How should I update my code?
+
+To change the default property, you have to set the init parameter to false in
+your MVCPortlet:
+
+"javax.portlet.init-param.copy-request-parameters=false"
+
+#### Why was this change made?
+
+This was done for backwards compatibility
