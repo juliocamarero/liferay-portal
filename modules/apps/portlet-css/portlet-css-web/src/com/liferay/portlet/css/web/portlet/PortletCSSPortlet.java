@@ -69,6 +69,55 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class PortletCSSPortlet extends MVCPortlet {
 
+	public String getJSON(
+			ActionMapping actionMapping, ActionForm actionForm,
+			HttpServletRequest request, HttpServletResponse response)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Layout layout = themeDisplay.getLayout();
+
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
+		String portletId = ParamUtil.getString(request, "portletId");
+
+		if (!PortletPermissionUtil.contains(
+				permissionChecker, layout, portletId,
+				ActionKeys.CONFIGURATION)) {
+
+			return null;
+		}
+
+		PortletPreferences portletSetup =
+			PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
+				layout, portletId);
+
+		JSONObject portletSetupJSONObject = PortletSetupUtil.cssToJSONObject(
+			portletSetup);
+
+		JSONObject defaultPortletTitlesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		for (Locale locale : LanguageUtil.getAvailableLocales(
+				themeDisplay.getSiteGroupId())) {
+
+			String rootPortletId = PortletConstants.getRootPortletId(portletId);
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			defaultPortletTitlesJSONObject.put(
+				languageId,
+				PortalUtil.getPortletTitle(rootPortletId, languageId));
+		}
+
+		portletSetupJSONObject.put(
+			"defaultPortletTitles", defaultPortletTitlesJSONObject);
+
+		return portletSetupJSONObject.toString();
+	}
+
 	public void updateLookAndFeel(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
