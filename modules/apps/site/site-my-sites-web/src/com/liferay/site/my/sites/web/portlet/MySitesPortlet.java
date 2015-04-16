@@ -80,6 +80,8 @@ public class MySitesPortlet extends MVCPortlet {
 			groupId, comments, serviceContext);
 
 		SessionMessages.add(actionRequest, "membershipRequestSent");
+
+		sendRedirect(actionRequest, actionResponse);
 	}
 
 	public void updateGroupUsers(
