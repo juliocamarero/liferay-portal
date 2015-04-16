@@ -34,14 +34,20 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portlet.PortletSetupUtil;
 import com.liferay.portlet.css.web.upgrade.PortletCSSWebUpgrade;
+
+import java.io.IOException;
 
 import java.util.Locale;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
+import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -69,53 +75,77 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class PortletCSSPortlet extends MVCPortlet {
 
-	public String getJSON(
-			ActionMapping actionMapping, ActionForm actionForm,
-			HttpServletRequest request, HttpServletResponse response)
-		throws Exception {
+	public void getLookAndFeel(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+		throws PortletException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Layout layout = themeDisplay.getLayout();
+		try {
+			Layout layout = themeDisplay.getLayout();
 
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
+			PermissionChecker permissionChecker =
+				themeDisplay.getPermissionChecker();
 
-		String portletId = ParamUtil.getString(request, "portletId");
+			String portletId = ParamUtil.getString(
+				resourceRequest, "portletId");
 
-		if (!PortletPermissionUtil.contains(
-				permissionChecker, layout, portletId,
-				ActionKeys.CONFIGURATION)) {
+			if (!PortletPermissionUtil.contains(
+					permissionChecker, layout, portletId,
+					ActionKeys.CONFIGURATION)) {
 
-			return null;
+				return;
+			}
+
+			PortletPreferences portletSetup =
+				PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
+					layout, portletId);
+
+			JSONObject portletSetupJSONObject =
+				PortletSetupUtil.cssToJSONObject(portletSetup);
+
+			JSONObject defaultPortletTitlesJSONObject =
+				JSONFactoryUtil.createJSONObject();
+
+			for (Locale locale : LanguageUtil.getAvailableLocales(
+					themeDisplay.getSiteGroupId())) {
+
+				String rootPortletId = PortletConstants.getRootPortletId(
+					portletId);
+				String languageId = LocaleUtil.toLanguageId(locale);
+
+				defaultPortletTitlesJSONObject.put(
+					languageId,
+					PortalUtil.getPortletTitle(rootPortletId, languageId));
+			}
+
+			portletSetupJSONObject.put(
+				"defaultPortletTitles", defaultPortletTitlesJSONObject);
+
+			writeJSON(
+				resourceRequest, resourceResponse,
+				portletSetupJSONObject.toString());
 		}
-
-		PortletPreferences portletSetup =
-			PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
-				layout, portletId);
-
-		JSONObject portletSetupJSONObject = PortletSetupUtil.cssToJSONObject(
-			portletSetup);
-
-		JSONObject defaultPortletTitlesJSONObject =
-			JSONFactoryUtil.createJSONObject();
-
-		for (Locale locale : LanguageUtil.getAvailableLocales(
-				themeDisplay.getSiteGroupId())) {
-
-			String rootPortletId = PortletConstants.getRootPortletId(portletId);
-			String languageId = LocaleUtil.toLanguageId(locale);
-
-			defaultPortletTitlesJSONObject.put(
-				languageId,
-				PortalUtil.getPortletTitle(rootPortletId, languageId));
+		catch (Exception e) {
+			throw new PortletException(e);
 		}
+	}
 
-		portletSetupJSONObject.put(
-			"defaultPortletTitles", defaultPortletTitlesJSONObject);
+	@Override
+	public void serveResource(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+		throws IOException, PortletException {
 
-		return portletSetupJSONObject.toString();
+		String resourceID = GetterUtil.getString(
+			resourceRequest.getResourceID());
+
+		if (resourceID.equals("getLookAndFeel")) {
+			getLookAndFeel(resourceRequest, resourceResponse);
+		}
+		else {
+			super.serveResource(resourceRequest, resourceResponse);
+		}
 	}
 
 	public void updateLookAndFeel(
