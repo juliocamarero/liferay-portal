@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/sites_admin/init.jsp" %>
+<%@ include file="/html/portlet/site_memberships/init.jsp" %>
 
 <%
 String tabs1 = ParamUtil.getString(request, "tabs1", "current");
@@ -103,10 +103,10 @@ request.setAttribute("edit_user_roles.jsp-portletURL", portletURL);
 
 	<c:choose>
 		<c:when test="<%= role == null %>">
-			<liferay-util:include page="/html/portlet/sites_admin/edit_user_roles_role.jsp" />
+			<liferay-util:include page="/html/portlet/site_memberships/edit_user_roles_role.jsp" />
 		</c:when>
 		<c:otherwise>
-			<liferay-util:include page="/html/portlet/sites_admin/edit_user_roles_users.jsp" />
+			<liferay-util:include page="/html/portlet/site_memberships/edit_user_roles_users.jsp" />
 		</c:otherwise>
 	</c:choose>
 </aui:form>
