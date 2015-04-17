@@ -1412,7 +1412,7 @@
 		</init-param>
 		<init-param>
 			<name>view-template</name>
-			<value>/html/portlet/site_admin/edit_site_assignments.jsp</value>
+			<value>/html/portlet/site_memberships/view.jsp</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>

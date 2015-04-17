@@ -47,7 +47,7 @@ Group group = (Group)request.getAttribute(WebKeys.GROUP);
 	/>
 </c:if>
 
-<liferay-util:include page="/html/portlet/sites_admin/edit_site_assignments_toolbar.jsp">
+<liferay-util:include page="/html/portlet/sites_admin/toolbar.jsp">
 	<liferay-util:param name="toolbarItem" value="view-membership-requests" />
 </liferay-util:include>
 
