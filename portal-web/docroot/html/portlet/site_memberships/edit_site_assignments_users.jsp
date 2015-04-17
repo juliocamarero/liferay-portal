@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/sites_admin/init.jsp" %>
+<%@ include file="/html/portlet/site_memberships/init.jsp" %>
 
 <%
 String tabs1 = (String)request.getAttribute("edit_site_assignments.jsp-tabs1");
@@ -186,7 +186,7 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 			<liferay-ui:search-container-column-jsp
 				align="right"
 				cssClass="entry-action"
-				path="/html/portlet/sites_admin/user_action.jsp"
+				path="/html/portlet/site_memberships/user_action.jsp"
 			/>
 		</c:if>
 	</liferay-ui:search-container-row>
