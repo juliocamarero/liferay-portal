@@ -78,7 +78,26 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 	%>
 
 	<liferay-ui:search-container-results>
-		<%@ include file="/html/portlet/user_groups_admin/user_group_search_results.jspf" %>
+
+		<%
+		if (searchTerms.isAdvancedSearch()) {
+			total = UserGroupLocalServiceUtil.searchCount(company.getCompanyId(), searchTerms.getName(), searchTerms.getDescription(), userGroupParams, searchTerms.isAndOperator());
+
+			searchContainer.setTotal(total);
+
+			results = UserGroupLocalServiceUtil.search(company.getCompanyId(), searchTerms.getName(), searchTerms.getDescription(), userGroupParams, searchTerms.isAndOperator(), searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+		}
+		else {
+			total = UserGroupLocalServiceUtil.searchCount(company.getCompanyId(), searchTerms.getKeywords(), userGroupParams);
+
+			searchContainer.setTotal(total);
+
+			results = UserGroupLocalServiceUtil.search(company.getCompanyId(), searchTerms.getKeywords(), userGroupParams, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+		}
+
+		searchContainer.setResults(results);
+		%>
+
 	</liferay-ui:search-container-results>
 
 	<liferay-ui:search-container-row
