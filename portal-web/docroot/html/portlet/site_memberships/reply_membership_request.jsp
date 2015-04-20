@@ -19,17 +19,13 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-ActionUtil.getGroup(request);
+long groupId = ParamUtil.getLong(request, "groupId");
 
-Group group = (Group)request.getAttribute(WebKeys.GROUP);
+Group group = GroupLocalServiceUtil.getGroup(groupId);
 
-long groupId = BeanParamUtil.getLong(group, request, "groupId");
+long membershipRequestId = ParamUtil.getLong(request, "membershipRequestId");
 
-String friendlyURL = BeanParamUtil.getString(group, request, "friendlyURL");
-
-ActionUtil.getMembershipRequest(request);
-
-MembershipRequest membershipRequest = (MembershipRequest)request.getAttribute(WebKeys.MEMBERSHIP_REQUEST);
+MembershipRequest membershipRequest = MembershipRequestLocalServiceUtil.fetchMembershipRequest(membershipRequestId);
 %>
 
 <portlet:actionURL name="replyMembershipRequest" var="replyMembershipRequestURL" />

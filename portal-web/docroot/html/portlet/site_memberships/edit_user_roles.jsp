@@ -23,9 +23,9 @@ int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 
 String redirect = ParamUtil.getString(request, "redirect");
 
-String backURL = ParamUtil.getString(request, "backURL", redirect);
+long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
 
-Group group = (Group)request.getAttribute(WebKeys.GROUP);
+Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 if (group != null) {
 	group = StagingUtil.getLiveGroup(group.getGroupId());
