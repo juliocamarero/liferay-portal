@@ -53,6 +53,93 @@ import javax.portlet.RenderResponse;
  */
 public class SiteMembershipsPortlet extends MVCPortlet {
 
+	@Override
+	public void processAction(
+			ActionMapping actionMapping, ActionForm actionForm,
+			PortletConfig portletConfig, ActionRequest actionRequest,
+			ActionResponse actionResponse)
+		throws Exception {
+
+		try {
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
+			long membershipRequestId = ParamUtil.getLong(
+				actionRequest, "membershipRequestId");
+
+			long statusId = ParamUtil.getLong(actionRequest, "statusId");
+			String replyComments = ParamUtil.getString(
+				actionRequest, "replyComments");
+
+			ServiceContext serviceContext = ServiceContextFactory.getInstance(
+				actionRequest);
+
+			MembershipRequestServiceUtil.updateStatus(
+				membershipRequestId, replyComments, statusId, serviceContext);
+
+			if (statusId == MembershipRequestConstants.STATUS_APPROVED) {
+				MembershipRequest membershipRequest =
+					MembershipRequestServiceUtil.getMembershipRequest(
+						membershipRequestId);
+
+				LiveUsers.joinGroup(
+					themeDisplay.getCompanyId(), membershipRequest.getGroupId(),
+					new long[] {membershipRequest.getUserId()});
+			}
+
+			SessionMessages.add(actionRequest, "membershipReplySent");
+
+			sendRedirect(actionRequest, actionResponse);
+		}
+		catch (Exception e) {
+			if (e instanceof NoSuchGroupException ||
+				e instanceof PrincipalException) {
+
+				SessionErrors.add(actionRequest, e.getClass());
+
+				setForward(actionRequest, "portlet.sites_admin.error");
+			}
+			else if (e instanceof MembershipRequestCommentsException) {
+				SessionErrors.add(actionRequest, e.getClass());
+
+				setForward(
+					actionRequest,
+					"portlet.sites_admin.reply_membership_request");
+			}
+			else {
+				throw e;
+			}
+		}
+	}
+
+	@Override
+	public ActionForward render(
+			ActionMapping actionMapping, ActionForm actionForm,
+			PortletConfig portletConfig, RenderRequest renderRequest,
+			RenderResponse renderResponse)
+		throws Exception {
+
+		try {
+			ActionUtil.getGroup(renderRequest);
+		}
+		catch (Exception e) {
+			if (e instanceof NoSuchGroupException ||
+				e instanceof PrincipalException) {
+
+				SessionErrors.add(renderRequest, e.getClass());
+
+				return actionMapping.findForward("portlet.sites_admin.error");
+			}
+			else {
+				throw e;
+			}
+		}
+
+		return actionMapping.findForward(
+			getForward(
+				renderRequest, "portlet.sites_admin.reply_membership_request"));
+	}
+
 	public void updateGroupOrganizations(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
