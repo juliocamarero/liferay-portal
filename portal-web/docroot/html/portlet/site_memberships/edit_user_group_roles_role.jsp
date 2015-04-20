@@ -63,7 +63,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_group_roles.
 		modelVar="role"
 	>
 		<portlet:renderURL var="rowURL">
-			<portlet:param name="struts_action" value="/sites_admin/edit_user_group_roles" />
+			<portlet:param name="mvcPath" value="/html/portlet/site_memberships/edit_user_group_roles.jsp" />
 			<portlet:param name="redirect" value="<%= redirect %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
 			<portlet:param name="roleId" value="<%= String.valueOf(role.getRoleId()) %>" />
