@@ -62,78 +62,6 @@ import javax.portlet.RenderResponse;
  */
 public class SiteMembershipsPortlet extends MVCPortlet {
 
-	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
-		throws Exception {
-
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-		try {
-			if (cmd.equals("user_group_role_users")) {
-				updateUserGroupRoleUsers(actionRequest);
-			}
-
-			sendRedirect(actionRequest, actionResponse);
-		}
-		catch (Exception e) {
-			if (e instanceof MembershipPolicyException) {
-				SessionErrors.add(actionRequest, e.getClass(), e);
-			}
-			else if (e instanceof PrincipalException) {
-				SessionErrors.add(actionRequest, e.getClass());
-
-				setForward(actionRequest, "portlet.sites_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		try {
-			ActionUtil.getGroup(renderRequest);
-			ActionUtil.getRole(renderRequest);
-
-			Role role = (Role)renderRequest.getAttribute(WebKeys.ROLE);
-
-			if (role != null) {
-				String roleName = role.getName();
-
-				if (roleName.equals(RoleConstants.ORGANIZATION_USER) ||
-					roleName.equals(RoleConstants.SITE_MEMBER)) {
-
-					throw new NoSuchRoleException();
-				}
-			}
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchGroupException ||
-				e instanceof NoSuchRoleException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(renderRequest, e.getClass());
-
-				return actionMapping.findForward("portlet.sites_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-
-		return actionMapping.findForward(
-			getForward(renderRequest, "portlet.sites_admin.edit_user_roles"));
-	}
-
 	public void replyMembershipRequest(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -326,7 +254,8 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 			removeUserGroupIds, groupId, roleId);
 	}
 
-	public void updateUserGroupRoleUsers(ActionRequest actionRequest)
+	public void updateUserGroupRoleUsers(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
