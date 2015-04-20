@@ -33,7 +33,9 @@ else {
 	statusId = MembershipRequestConstants.STATUS_PENDING;
 }
 
-Group group = (Group)request.getAttribute(WebKeys.GROUP);
+long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
+
+Group group = GroupLocalServiceUtil.getGroup(groupId);
 %>
 
 <liferay-ui:success key="membershipReplySent" message="your-reply-will-be-sent-to-the-user-by-email" />
