@@ -32,12 +32,9 @@ ActionUtil.getMembershipRequest(request);
 MembershipRequest membershipRequest = (MembershipRequest)request.getAttribute(WebKeys.MEMBERSHIP_REQUEST);
 %>
 
-<portlet:actionURL var="replyMembershipRequestURL">
-	<portlet:param name="struts_action" value="/sites_admin/reply_membership_request" />
-</portlet:actionURL>
+<portlet:actionURL name="replyMembershipRequest" var="replyMembershipRequestURL" />
 
 <aui:form action="<%= replyMembershipRequestURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
 	<aui:input name="membershipRequestId" type="hidden" value="<%= membershipRequest.getMembershipRequestId() %>" />

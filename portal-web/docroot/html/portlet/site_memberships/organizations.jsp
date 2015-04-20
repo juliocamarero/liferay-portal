@@ -28,7 +28,6 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.
 
 PortletURL viewOrganizationsURL = renderResponse.createRenderURL();
 
-viewOrganizationsURL.setParameter("struts_action", "/sites_admin/edit_site_assignments");
 viewOrganizationsURL.setParameter("tabs1", "organizations");
 viewOrganizationsURL.setParameter("tabs2", tabs2);
 viewOrganizationsURL.setParameter("redirect", currentURL);

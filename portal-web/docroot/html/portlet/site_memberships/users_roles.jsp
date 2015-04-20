@@ -74,7 +74,6 @@ portletURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
 	<%
 	PortletURL updateRoleAssignmentsURL = renderResponse.createRenderURL();
 
-	updateRoleAssignmentsURL.setParameter("struts_action", "/sites_admin/edit_site_assignments");
 	updateRoleAssignmentsURL.setParameter("tabs1", tabs1);
 	updateRoleAssignmentsURL.setParameter("tabs2", tabs2);
 	updateRoleAssignmentsURL.setParameter("cur", String.valueOf(cur));
