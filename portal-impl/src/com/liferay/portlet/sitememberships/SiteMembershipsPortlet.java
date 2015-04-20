@@ -62,42 +62,7 @@ import javax.portlet.RenderResponse;
  */
 public class SiteMembershipsPortlet extends MVCPortlet {
 
-	public void replyMembershipRequest(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-
-		long membershipRequestId = ParamUtil.getLong(
-			actionRequest, "membershipRequestId");
-
-		long statusId = ParamUtil.getLong(actionRequest, "statusId");
-		String replyComments = ParamUtil.getString(
-			actionRequest, "replyComments");
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			actionRequest);
-
-		MembershipRequestServiceUtil.updateStatus(
-			membershipRequestId, replyComments, statusId, serviceContext);
-
-		if (statusId == MembershipRequestConstants.STATUS_APPROVED) {
-			MembershipRequest membershipRequest =
-				MembershipRequestServiceUtil.getMembershipRequest(
-					membershipRequestId);
-
-			LiveUsers.joinGroup(
-				themeDisplay.getCompanyId(), membershipRequest.getGroupId(),
-				new long[] {membershipRequest.getUserId()});
-		}
-
-		SessionMessages.add(actionRequest, "membershipReplySent");
-
-		sendRedirect(actionRequest, actionResponse);
-	}
-
-	public void updateGroupOrganizations(
+	public void editGroupOrganizations(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -121,7 +86,7 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateGroupUserGroups(
+	public void editGroupUserGroups(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -143,7 +108,7 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateGroupUsers(
+	public void editGroupUsers(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -180,7 +145,7 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateUserGroupGroupRole(
+	public void editUserGroupGroupRole(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -206,7 +171,25 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateUserGroupRole(
+	public void editUserGroupGroupRoleUsers(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long groupId = ParamUtil.getLong(actionRequest, "groupId");
+		long roleId = ParamUtil.getLong(actionRequest, "roleId");
+
+		long[] addUserGroupIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "addUserGroupIds"), 0L);
+		long[] removeUserGroupIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "removeUserGroupIds"), 0L);
+
+		UserGroupGroupRoleServiceUtil.addUserGroupGroupRoles(
+			addUserGroupIds, groupId, roleId);
+		UserGroupGroupRoleServiceUtil.deleteUserGroupGroupRoles(
+			removeUserGroupIds, groupId, roleId);
+	}
+
+	public void editUserGroupRole(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -236,25 +219,7 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateUserGroupGroupRoleUsers(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		long groupId = ParamUtil.getLong(actionRequest, "groupId");
-		long roleId = ParamUtil.getLong(actionRequest, "roleId");
-
-		long[] addUserGroupIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "addUserGroupIds"), 0L);
-		long[] removeUserGroupIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "removeUserGroupIds"), 0L);
-
-		UserGroupGroupRoleServiceUtil.addUserGroupGroupRoles(
-			addUserGroupIds, groupId, roleId);
-		UserGroupGroupRoleServiceUtil.deleteUserGroupGroupRoles(
-			removeUserGroupIds, groupId, roleId);
-	}
-
-	public void updateUserGroupRoleUsers(
+	public void editUserGroupRoleUsers(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -269,6 +234,41 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		UserGroupRoleServiceUtil.addUserGroupRoles(addUserIds, groupId, roleId);
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
 			removeUserIds, groupId, roleId);
+	}
+
+	public void replyMembershipRequest(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long membershipRequestId = ParamUtil.getLong(
+			actionRequest, "membershipRequestId");
+
+		long statusId = ParamUtil.getLong(actionRequest, "statusId");
+		String replyComments = ParamUtil.getString(
+			actionRequest, "replyComments");
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			actionRequest);
+
+		MembershipRequestServiceUtil.updateStatus(
+			membershipRequestId, replyComments, statusId, serviceContext);
+
+		if (statusId == MembershipRequestConstants.STATUS_APPROVED) {
+			MembershipRequest membershipRequest =
+				MembershipRequestServiceUtil.getMembershipRequest(
+					membershipRequestId);
+
+			LiveUsers.joinGroup(
+				themeDisplay.getCompanyId(), membershipRequest.getGroupId(),
+				new long[] {membershipRequest.getUserId()});
+		}
+
+		SessionMessages.add(actionRequest, "membershipReplySent");
+
+		sendRedirect(actionRequest, actionResponse);
 	}
 
 	@Override
