@@ -16,6 +16,7 @@ package com.liferay.portlet.sitememberships;
 
 import com.liferay.portal.MembershipRequestCommentsException;
 import com.liferay.portal.NoSuchGroupException;
+import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -26,6 +27,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.liveusers.LiveUsers;
 import com.liferay.portal.model.MembershipRequest;
 import com.liferay.portal.model.MembershipRequestConstants;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.membershippolicy.MembershipPolicyException;
@@ -41,6 +44,7 @@ import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.sites.action.ActionUtil;
 
 import java.io.IOException;
 
@@ -57,76 +61,6 @@ import javax.portlet.RenderResponse;
  * @author Brian Wing Shun Chan
  */
 public class SiteMembershipsPortlet extends MVCPortlet {
-
-	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
-		throws Exception {
-
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-		try {
-			if (cmd.equals("user_group_group_role_users")) {
-				updateUserGroupGroupRoleUsers(actionRequest);
-			}
-
-			sendRedirect(actionRequest, actionResponse);
-		}
-		catch (Exception e) {
-			if (e instanceof PrincipalException) {
-				SessionErrors.add(actionRequest, e.getClass());
-
-				setForward(actionRequest, "portlet.sites_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		try {
-			ActionUtil.getGroup(renderRequest);
-			ActionUtil.getRole(renderRequest);
-
-			Role role = (Role)renderRequest.getAttribute(WebKeys.ROLE);
-
-			if (role != null) {
-				String roleName = role.getName();
-
-				if (roleName.equals(RoleConstants.ORGANIZATION_USER) ||
-					roleName.equals(RoleConstants.SITE_MEMBER)) {
-
-					throw new NoSuchRoleException();
-				}
-			}
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchGroupException ||
-				e instanceof NoSuchRoleException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(renderRequest, e.getClass());
-
-				return actionMapping.findForward("portlet.sites_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-
-		return actionMapping.findForward(
-			getForward(
-				renderRequest, "portlet.sites_admin.edit_user_group_roles"));
-	}
 
 	public void replyMembershipRequest(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -302,7 +236,8 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateUserGroupGroupRoleUsers(ActionRequest actionRequest)
+	public void updateUserGroupGroupRoleUsers(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
@@ -324,8 +259,28 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		try {
+			ActionUtil.getRole(renderRequest);
+
+			Role role = (Role)renderRequest.getAttribute(WebKeys.ROLE);
+
+			if (role != null) {
+				String roleName = role.getName();
+
+				if (roleName.equals(RoleConstants.ORGANIZATION_USER) ||
+					roleName.equals(RoleConstants.SITE_MEMBER)) {
+
+					include("/error.jsp", renderRequest, renderResponse);
+				}
+			}
+		}
+		catch (Exception e) {
+		}
+
 		if (SessionErrors.contains(
 				renderRequest, NoSuchGroupException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, NoSuchRoleException.class.getName()) ||
 			SessionErrors.contains(
 				renderRequest, PrincipalException.class.getName())) {
 
@@ -371,6 +326,7 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		if (cause instanceof MembershipPolicyException ||
 			cause instanceof MembershipRequestCommentsException ||
 			cause instanceof NoSuchGroupException ||
+			cause instanceof NoSuchRoleException ||
 			cause instanceof PrincipalException ||
 			super.isSessionErrorException(cause)) {
 
