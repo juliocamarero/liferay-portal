@@ -15,9 +15,9 @@
 package com.liferay.portlet.sitememberships;
 
 import com.liferay.portal.NoSuchGroupException;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -33,113 +33,28 @@ import com.liferay.portal.service.UserGroupRoleServiceUtil;
 import com.liferay.portal.service.UserGroupServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
-import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.portlet.sites.action.ActionUtil;
+
+import java.io.IOException;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
+import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class SiteMembershipsPortlet extends PortletAction {
+public class SiteMembershipsPortlet extends MVCPortlet {
 
-	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
-		throws Exception {
-
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-		try {
-			if (cmd.equals("group_organizations")) {
-				updateGroupOrganizations(actionRequest);
-			}
-			else if (cmd.equals("group_user_groups")) {
-				updateGroupUserGroups(actionRequest);
-			}
-			else if (cmd.equals("group_users")) {
-				updateGroupUsers(actionRequest);
-			}
-			else if (cmd.equals("user_group_group_role")) {
-				updateUserGroupGroupRole(actionRequest);
-			}
-			else if (cmd.equals("user_group_role")) {
-				updateUserGroupRole(actionRequest);
-			}
-
-			if (Validator.isNotNull(cmd)) {
-				String redirect = ParamUtil.getString(
-					actionRequest, "assignmentsRedirect");
-
-				if (Validator.isNull(redirect)) {
-					redirect = ParamUtil.getString(actionRequest, "redirect");
-				}
-
-				sendRedirect(actionRequest, actionResponse, redirect);
-			}
-		}
-		catch (Exception e) {
-			if (e instanceof MembershipPolicyException) {
-				SessionErrors.add(actionRequest, e.getClass(), e);
-			}
-			else if (e instanceof NoSuchGroupException ||
-					 e instanceof PrincipalException) {
-
-				SessionErrors.add(actionRequest, e.getClass());
-
-				setForward(actionRequest, "portlet.sites_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		try {
-			ActionUtil.getGroup(renderRequest);
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchGroupException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(renderRequest, e.getClass());
-
-				return actionMapping.findForward("portlet.sites_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-
-		return actionMapping.findForward(
-			getForward(
-				renderRequest, "portlet.sites_admin.edit_site_assignments"));
-	}
-
-	public void updateGroupOrganizations(ActionRequest actionRequest)
+	public void updateGroupOrganizations(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
@@ -153,9 +68,17 @@ public class SiteMembershipsPortlet extends PortletAction {
 			groupId, addOrganizationIds);
 		OrganizationServiceUtil.unsetGroupOrganizations(
 			groupId, removeOrganizationIds);
+
+		String redirect = ParamUtil.getString(
+			actionRequest, "assignmentsRedirect");
+
+		if (Validator.isNotNull(redirect)) {
+			actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
+		}
 	}
 
-	public void updateGroupUserGroups(ActionRequest actionRequest)
+	public void updateGroupUserGroups(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
@@ -167,9 +90,19 @@ public class SiteMembershipsPortlet extends PortletAction {
 
 		UserGroupServiceUtil.addGroupUserGroups(groupId, addUserGroupIds);
 		UserGroupServiceUtil.unsetGroupUserGroups(groupId, removeUserGroupIds);
+
+		String redirect = ParamUtil.getString(
+			actionRequest, "assignmentsRedirect");
+
+		if (Validator.isNotNull(redirect)) {
+			actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
+		}
 	}
 
-	public void updateGroupUsers(ActionRequest actionRequest) throws Exception {
+	public void updateGroupUsers(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -194,9 +127,17 @@ public class SiteMembershipsPortlet extends PortletAction {
 		LiveUsers.joinGroup(themeDisplay.getCompanyId(), groupId, addUserIds);
 		LiveUsers.leaveGroup(
 			themeDisplay.getCompanyId(), groupId, removeUserIds);
+
+		String redirect = ParamUtil.getString(
+			actionRequest, "assignmentsRedirect");
+
+		if (Validator.isNotNull(redirect)) {
+			actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
+		}
 	}
 
-	public void updateUserGroupGroupRole(ActionRequest actionRequest)
+	public void updateUserGroupGroupRole(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
@@ -212,9 +153,17 @@ public class SiteMembershipsPortlet extends PortletAction {
 			userGroupId, groupId, addRoleIds);
 		UserGroupGroupRoleServiceUtil.deleteUserGroupGroupRoles(
 			userGroupId, groupId, removeRoleIds);
+
+		String redirect = ParamUtil.getString(
+			actionRequest, "assignmentsRedirect");
+
+		if (Validator.isNotNull(redirect)) {
+			actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
+		}
 	}
 
-	public void updateUserGroupRole(ActionRequest actionRequest)
+	public void updateUserGroupRole(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		User user = PortalUtil.getSelectedUser(actionRequest, false);
@@ -234,6 +183,30 @@ public class SiteMembershipsPortlet extends PortletAction {
 			user.getUserId(), groupId, addRoleIds);
 		UserGroupRoleServiceUtil.deleteUserGroupRoles(
 			user.getUserId(), groupId, removeRoleIds);
+
+		String redirect = ParamUtil.getString(
+			actionRequest, "assignmentsRedirect");
+
+		if (Validator.isNotNull(redirect)) {
+			actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
+		}
+	}
+
+	@Override
+	protected void doDispatch(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		if (SessionErrors.contains(
+				renderRequest, NoSuchGroupException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, PrincipalException.class.getName())) {
+
+			include("/error.jsp", renderRequest, renderResponse);
+		}
+		else {
+			super.doDispatch(renderRequest, renderResponse);
+		}
 	}
 
 	protected long[] filterAddUserIds(long groupId, long[] userIds)
@@ -264,6 +237,19 @@ public class SiteMembershipsPortlet extends PortletAction {
 
 		return ArrayUtil.toArray(
 			filteredUserIds.toArray(new Long[filteredUserIds.size()]));
+	}
+
+	@Override
+	protected boolean isSessionErrorException(Throwable cause) {
+		if (cause instanceof MembershipPolicyException ||
+			cause instanceof NoSuchGroupException ||
+			cause instanceof PrincipalException ||
+			super.isSessionErrorException(cause)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
