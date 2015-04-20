@@ -19,13 +19,9 @@
 <%
 String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view-members");
 
-Group group = (Group)request.getAttribute(WebKeys.GROUP);
+long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
 
-if (group == null) {
-	long groupId = ParamUtil.getLong(request, "groupId");
-
-	group = GroupServiceUtil.getGroup(groupId);
-}
+Group group = GroupLocalServiceUtil.getGroup(groupId);
 %>
 
 <aui:nav-bar>
@@ -79,7 +75,7 @@ if (group == null) {
 
 		<c:if test="<%= group.getType() == GroupConstants.TYPE_SITE_RESTRICTED %>">
 			<portlet:renderURL var="viewMembershipRequestsURL">
-				<portlet:param name="mvcPath" value="/html/portlet/sites_admin/view_membership_requests.jsp" />
+				<portlet:param name="mvcPath" value="/html/portlet/site_memberships/view_membership_requests.jsp" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
 			</portlet:renderURL>
 
