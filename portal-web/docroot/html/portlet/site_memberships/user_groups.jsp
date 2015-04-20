@@ -28,7 +28,6 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.
 
 PortletURL viewUserGroupsURL = renderResponse.createRenderURL();
 
-viewUserGroupsURL.setParameter("struts_action", "/sites_admin/edit_site_assignments");
 viewUserGroupsURL.setParameter("tabs1", "user-groups");
 viewUserGroupsURL.setParameter("tabs2", tabs2);
 viewUserGroupsURL.setParameter("redirect", currentURL);

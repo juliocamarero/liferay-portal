@@ -47,7 +47,7 @@ Group group = (Group)request.getAttribute(WebKeys.GROUP);
 	/>
 </c:if>
 
-<liferay-util:include page="/html/portlet/sites_admin/toolbar.jsp">
+<liferay-util:include page="/html/portlet/site_memberships/toolbar.jsp">
 	<liferay-util:param name="toolbarItem" value="view-membership-requests" />
 </liferay-util:include>
 
@@ -59,7 +59,7 @@ Group group = (Group)request.getAttribute(WebKeys.GROUP);
 <%
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/sites_admin/view_membership_requests");
+portletURL.setParameter("mcvPath", "/html/portlet/site_memberships/view_membership_requests.jsp");
 portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
@@ -137,7 +137,7 @@ portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 
 		<liferay-ui:search-container-column-jsp
 			cssClass="entry-action"
-			path="/html/portlet/sites_admin/membership_request_action.jsp"
+			path="/html/portlet/site_memberships/membership_request_action.jsp"
 		/>
 	</liferay-ui:search-container-row>
 

@@ -30,7 +30,6 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.
 
 PortletURL viewUsersURL = renderResponse.createRenderURL();
 
-viewUsersURL.setParameter("struts_action", "/sites_admin/edit_site_assignments");
 viewUsersURL.setParameter("tabs1", "users");
 viewUsersURL.setParameter("tabs2", tabs2);
 viewUsersURL.setParameter("redirect", currentURL);

@@ -49,7 +49,7 @@ if (group.isOrganization()) {
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/sites_admin/edit_user_roles");
+portletURL.setParameter("mvcPath", "/html/portlet/site_memberships/edit_user_roles.jsp");
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
@@ -95,7 +95,6 @@ request.setAttribute("edit_user_roles.jsp-portletURL", portletURL);
 />
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(group.getGroupId()) %>" />
@@ -117,11 +116,10 @@ request.setAttribute("edit_user_roles.jsp-portletURL", portletURL);
 
 		var form = AUI.$(document.<portlet:namespace />fm);
 
-		form.fm('<%= Constants.CMD %>').val('user_group_role_users');
 		form.fm('redirect').val(redirect);
 		form.fm('addUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 		form.fm('removeUserIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
 
-		submitForm(form, '<portlet:actionURL><portlet:param name="struts_action" value="/sites_admin/edit_user_roles" /></portlet:actionURL>');
+		submitForm(form, '<portlet:actionURL name="editUserGroupRoleUsers" />');
 	}
 </aui:script>

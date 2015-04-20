@@ -27,7 +27,7 @@ Group group = (Group)row.getParameter("group");
 <liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 	<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.ASSIGN_USER_ROLES) %>">
 		<portlet:renderURL var="assignURL">
-			<portlet:param name="struts_action" value="/sites_admin/edit_site_assignments" />
+			<portlet:param name="mvcPath" value="/html/portlet/site_memberships/view.jsp" />
 			<portlet:param name="tabs1" value="user-groups" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="userGroupId" value="<%= String.valueOf(userGroup.getUserGroupId()) %>" />
@@ -42,9 +42,7 @@ Group group = (Group)row.getParameter("group");
 	</c:if>
 
 	<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.ASSIGN_MEMBERS) %>">
-		<portlet:actionURL var="removeURL">
-			<portlet:param name="struts_action" value="/sites_admin/edit_site_assignments" />
-			<portlet:param name="<%= Constants.CMD %>" value="group_user_groups" />
+		<portlet:actionURL name="editGroupUserGroups" var="removeURL">
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
 			<portlet:param name="removeUserGroupIds" value="<%= String.valueOf(userGroup.getUserGroupId()) %>" />
