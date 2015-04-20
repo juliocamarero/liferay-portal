@@ -1363,7 +1363,7 @@
 	<portlet>
 		<portlet-name>174</portlet-name>
 		<display-name>Site Memberships Admin</display-name>
-		<portlet-class>com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet</portlet-class>
+		<portlet-class>com.liferay.portlet.sitememberships.SiteMembershipsPortlet</portlet-class>
 		<init-param>
 			<name>template-path</name>
 			<value>/html/portlet/site_memberships/</value>
