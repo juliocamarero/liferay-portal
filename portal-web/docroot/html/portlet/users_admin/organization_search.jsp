@@ -22,16 +22,6 @@ OrganizationSearch searchContainer = (OrganizationSearch)request.getAttribute("l
 OrganizationDisplayTerms displayTerms = (OrganizationDisplayTerms)searchContainer.getDisplayTerms();
 
 String type = displayTerms.getType();
-
-Organization organization = null;
-
-if (displayTerms.getParentOrganizationId() > 0) {
-	try {
-		organization = OrganizationLocalServiceUtil.getOrganization(displayTerms.getParentOrganizationId());
-	}
-	catch (NoSuchOrganizationException nsoe) {
-	}
-}
 %>
 
 <liferay-ui:search-toggle
