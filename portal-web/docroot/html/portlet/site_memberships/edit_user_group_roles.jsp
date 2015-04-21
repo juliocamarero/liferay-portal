@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/sites_admin/init.jsp" %>
+<%@ include file="/html/portlet/site_memberships/init.jsp" %>
 
 <%
 String tabs1 = ParamUtil.getString(request, "tabs1", "current");
@@ -23,13 +23,13 @@ int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 
 String redirect = ParamUtil.getString(request, "redirect");
 
-String backURL = ParamUtil.getString(request, "backURL", redirect);
+long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
 
-Group group = (Group)request.getAttribute(WebKeys.GROUP);
+Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 String groupDescriptiveName = group.getDescriptiveName(locale);
 
-Role role = (Role)request.getAttribute(WebKeys.ROLE);
+Role role = ActionUtil.getRole(request);
 
 long roleId = BeanParamUtil.getLong(role, request, "roleId");
 
@@ -43,7 +43,7 @@ if (group.isOrganization()) {
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/sites_admin/edit_user_group_roles");
+portletURL.setParameter("mvcPath", "/html/portlet/site_memberships/edit_user_group_roles.jsp");
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
@@ -89,7 +89,6 @@ request.setAttribute("edit_user_group_roles.jsp-portletURL", portletURL);
 />
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(group.getGroupId()) %>" />
@@ -97,10 +96,10 @@ request.setAttribute("edit_user_group_roles.jsp-portletURL", portletURL);
 
 	<c:choose>
 		<c:when test="<%= role == null %>">
-			<liferay-util:include page="/html/portlet/sites_admin/edit_user_group_roles_role.jsp" />
+			<liferay-util:include page="/html/portlet/site_memberships/edit_user_group_roles_role.jsp" />
 		</c:when>
 		<c:otherwise>
-			<liferay-util:include page="/html/portlet/sites_admin/edit_user_group_roles_users.jsp" />
+			<liferay-util:include page="/html/portlet/site_memberships/edit_user_group_roles_users.jsp" />
 		</c:otherwise>
 	</c:choose>
 </aui:form>
@@ -111,11 +110,10 @@ request.setAttribute("edit_user_group_roles.jsp-portletURL", portletURL);
 
 		var form = AUI.$(document.<portlet:namespace />fm);
 
-		form.fm('<%= Constants.CMD %>').val('user_group_group_role_users');
 		form.fm('redirect').val(redirect);
 		form.fm('addUserGroupIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 		form.fm('removeUserGroupIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
 
-		submitForm(form, '<portlet:actionURL><portlet:param name="struts_action" value="/sites_admin/edit_user_group_roles" /></portlet:actionURL>');
+		submitForm(form, '<portlet:actionURL name="editUserGroupGroupRoleUsers" />');
 	}
 </aui:script>

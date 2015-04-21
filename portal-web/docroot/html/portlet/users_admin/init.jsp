@@ -53,7 +53,6 @@ page import="com.liferay.portal.security.auth.ScreenNameValidator" %><%@
 page import="com.liferay.portal.security.auth.ScreenNameValidatorFactory" %><%@
 page import="com.liferay.portal.security.membershippolicy.OrganizationMembershipPolicyUtil" %><%@
 page import="com.liferay.portal.security.membershippolicy.RoleMembershipPolicyUtil" %><%@
-page import="com.liferay.portal.security.membershippolicy.SiteMembershipPolicyUtil" %><%@
 page import="com.liferay.portal.security.membershippolicy.UserGroupMembershipPolicyUtil" %><%@
 page import="com.liferay.portal.service.permission.OrganizationPermissionUtil" %><%@
 page import="com.liferay.portal.service.permission.UserPermissionUtil" %><%@

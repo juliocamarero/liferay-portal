@@ -1061,7 +1061,7 @@ public class ServicePreAction extends Action {
 
 					manageSiteMembershipsURL.setDoAsGroupId(scopeGroupId);
 					manageSiteMembershipsURL.setParameter(
-						"struts_action", "/sites_admin/edit_site_assignments");
+						"mvcPath", "/html/portlet/site_memberships/view.jsp");
 					manageSiteMembershipsURL.setParameter(
 						"groupId", String.valueOf(scopeGroupId));
 					manageSiteMembershipsURL.setParameter(
