@@ -57,7 +57,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_roles.jsp-po
 	var="userSearchContainer"
 >
 	<liferay-ui:search-form
-		page="/html/portlet/users_admin/user_search.jsp"
+		page="/html/portlet/site_memberships/user_search.jsp"
 	/>
 
 	<%
