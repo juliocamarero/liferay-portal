@@ -51,10 +51,7 @@ portletURL.setParameter("userGroupId", String.valueOf(userGroupId));
 	searchContainer="<%= new RoleSearch(renderRequest, portletURL) %>"
 >
 
-	<liferay-ui:search-form
-		page="/html/portlet/roles_admin/role_search.jsp"
-		searchContainer="<%= searchContainer %>"
-	/>
+	<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" cssClass="col-xs-12 form-search" placeholder="keywords" />
 
 	<%
 	PortletURL updateRoleAssignmentsURL = renderResponse.createRenderURL();
