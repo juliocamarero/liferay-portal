@@ -35,16 +35,11 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_group_roles.
 
 <h3><liferay-ui:message key="roles" /></h3>
 
+<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" cssClass="col-xs-12 form-search" placeholder="keywords" />
+
 <%
 RoleSearch searchContainer = new RoleSearch(renderRequest, portletURL);
-%>
 
-<liferay-ui:search-form
-	page="/html/portlet/roles_admin/role_search.jsp"
-	searchContainer="<%= searchContainer %>"
-/>
-
-<%
 RoleSearchTerms searchTerms = (RoleSearchTerms)searchContainer.getSearchTerms();
 
 List<Role> roles = RoleLocalServiceUtil.search(company.getCompanyId(), searchTerms.getKeywords(), new Integer[] {roleType}, QueryUtil.ALL_POS, QueryUtil.ALL_POS, searchContainer.getOrderByComparator());
