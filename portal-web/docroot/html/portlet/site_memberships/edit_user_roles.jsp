@@ -33,7 +33,7 @@ if (group != null) {
 
 String groupDescriptiveName = group.getDescriptiveName(locale);
 
-Role role = (Role)request.getAttribute(WebKeys.ROLE);
+Role role = ActionUtil.getRole(request);
 
 if (role != null) {
 	String roleName = role.getName();
