@@ -35,61 +35,60 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_roles.jsp-po
 
 <h3><liferay-ui:message key="roles" /></h3>
 
-<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" cssClass="col-xs-12 form-search" placeholder="keywords" />
+<liferay-ui:search-container
+	searchContainer="<%= new RoleSearch(renderRequest, portletURL) %>"
+>
+	<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" cssClass="col-xs-12 form-search" placeholder="keywords" />
 
-<%
-RoleSearch searchContainer = new RoleSearch(renderRequest, portletURL);
+	<%
+	RoleSearchTerms searchTerms = (RoleSearchTerms)searchContainer.getSearchTerms();
 
-RoleSearchTerms searchTerms = (RoleSearchTerms)searchContainer.getSearchTerms();
+	List<Role> roles = RoleLocalServiceUtil.search(company.getCompanyId(), searchTerms.getKeywords(), new Integer[] {roleType}, QueryUtil.ALL_POS, QueryUtil.ALL_POS, searchContainer.getOrderByComparator());
 
-List<Role> roles = RoleLocalServiceUtil.search(company.getCompanyId(), searchTerms.getKeywords(), new Integer[] {roleType}, QueryUtil.ALL_POS, QueryUtil.ALL_POS, searchContainer.getOrderByComparator());
+	roles = UsersAdminUtil.filterGroupRoles(permissionChecker, group.getGroupId(), roles);
 
-roles = UsersAdminUtil.filterGroupRoles(permissionChecker, group.getGroupId(), roles);
+	total = roles.size();
 
-int total = roles.size();
+	searchContainer.setTotal(total);
+	%>
 
-searchContainer.setTotal(total);
+	<liferay-ui:search-container-results
+		results="<%= ListUtil.subList(roles, searchContainer.getStart(), searchContainer.getEnd()) %>"
+	/>
 
-List results = ListUtil.subList(roles, searchContainer.getStart(), searchContainer.getEnd());
+	<liferay-ui:search-container-row
+		className="com.liferay.portal.model.Role"
+		escapedModel="<%= true %>"
+		keyProperty="roleId"
+		modelVar="role"
+	>
+		<portlet:renderURL var="rowURL">
+			<portlet:param name="struts_action" value="/sites_admin/edit_user_roles" />
+			<portlet:param name="redirect" value="<%= redirect %>" />
+			<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
+			<portlet:param name="roleId" value="<%= String.valueOf(role.getRoleId()) %>" />
+		</portlet:renderURL>
 
-searchContainer.setResults(results);
-%>
+		<liferay-ui:search-container-column-text
+			href="<%= rowURL %>"
+			name="title"
+			value="<%= role.getTitle(locale) %>"
+		/>
 
-<div class="separator"><!-- --></div>
+		<liferay-ui:search-container-column-text
+			href="<%= rowURL %>"
+			name="type"
+			value="<%= LanguageUtil.get(request, role.getTypeLabel()) %>"
+		/>
 
-<%
-List resultRows = searchContainer.getResultRows();
+		<liferay-ui:search-container-column-text
+			href="<%= rowURL %>"
+			name="description"
+			value="<%= role.getDescription(locale) %>"
+		/>
+	</liferay-ui:search-container-row>
 
-for (int i = 0; i < results.size(); i++) {
-	Role curRole = (Role)results.get(i);
+	<div class="separator"><!-- --></div>
 
-	curRole = curRole.toEscapedModel();
-
-	ResultRow row = new ResultRow(curRole, curRole.getRoleId(), i);
-
-	PortletURL rowURL = renderResponse.createRenderURL();
-
-	rowURL.setParameter("struts_action", "/sites_admin/edit_user_roles");
-	rowURL.setParameter("redirect", redirect);
-	rowURL.setParameter("groupId", String.valueOf(group.getGroupId()));
-	rowURL.setParameter("roleId", String.valueOf(curRole.getRoleId()));
-
-	// Name
-
-	row.addText(curRole.getTitle(locale), rowURL);
-
-	// Type
-
-	row.addText(LanguageUtil.get(request, curRole.getTypeLabel()), rowURL);
-
-	// Description
-
-	row.addText(curRole.getDescription(locale), rowURL);
-
-	// Add result row
-
-	resultRows.add(row);
-}
-%>
-
-<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+	<liferay-ui:search-iterator />
+</liferay-ui:search-container>
