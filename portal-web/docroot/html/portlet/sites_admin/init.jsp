@@ -44,6 +44,7 @@ page import="com.liferay.portlet.backgroundtask.util.comparator.BackgroundTaskCr
 page import="com.liferay.portlet.ratings.display.context.CompanyPortletRatingsDefinitionDisplayContext" %><%@
 page import="com.liferay.portlet.ratings.display.context.GroupPortletRatingsDefinitionDisplayContext" %><%@
 page import="com.liferay.portlet.rolesadmin.search.GroupRoleChecker" %><%@
+page import="com.liferay.portlet.sites.action.ActionUtil" %><%@
 page import="com.liferay.portlet.sitesadmin.search.SiteChecker" %><%@
 page import="com.liferay.portlet.sitesadmin.search.TeamDisplayTerms" %><%@
 page import="com.liferay.portlet.sitesadmin.search.TeamSearch" %><%@

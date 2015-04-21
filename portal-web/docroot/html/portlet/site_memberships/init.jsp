@@ -20,6 +20,7 @@
 page import="com.liferay.portal.GroupKeyException" %><%@
 page import="com.liferay.portal.MembershipRequestCommentsException" %><%@
 page import="com.liferay.portal.RequiredGroupException" %><%@
+page import="com.liferay.portlet.rolesadmin.action.ActionUtil" %><%@
 page import="com.liferay.portlet.rolesadmin.search.RoleSearch" %><%@
 page import="com.liferay.portlet.rolesadmin.search.RoleSearchTerms" %><%@
 page import="com.liferay.portlet.sites.search.OrganizationRoleUserChecker" %><%@

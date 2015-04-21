@@ -277,9 +277,7 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		throws IOException, PortletException {
 
 		try {
-			ActionUtil.getRole(renderRequest);
-
-			Role role = (Role)renderRequest.getAttribute(WebKeys.ROLE);
+			Role role = ActionUtil.getRole(renderRequest);
 
 			if (role != null) {
 				String roleName = role.getName();
