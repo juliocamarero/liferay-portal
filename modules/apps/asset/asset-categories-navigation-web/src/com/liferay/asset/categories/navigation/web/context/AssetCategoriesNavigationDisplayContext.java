@@ -17,11 +17,11 @@ package com.liferay.asset.categories.navigation.web.context;
 import com.liferay.asset.categories.navigation.web.configuration.AssetCategoriesNavigationPortletInstanceConfiguration;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.KeyValuePairComparator;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
@@ -80,11 +80,10 @@ public class AssetCategoriesNavigationDisplayContext {
 			(_assetCategoriesNavigationPortletInstanceConfiguration.
 				assetVocabularyIds() != null)) {
 
-			String assetVocabularyIds = StringUtil.merge(
-				_assetCategoriesNavigationPortletInstanceConfiguration.
-					assetVocabularyIds());
-
-			_assetVocabularyIds = StringUtil.split(assetVocabularyIds, 0L);
+			_assetVocabularyIds = ArrayUtil.toArray(
+				ArrayUtil.toLongArray(
+					_assetCategoriesNavigationPortletInstanceConfiguration.
+						assetVocabularyIds()));
 		}
 
 		return _assetVocabularyIds;
