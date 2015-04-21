@@ -54,7 +54,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_group_roles.
 	searchContainer="<%= new UserGroupSearch(renderRequest, portletURL) %>"
 >
 	<liferay-ui:search-form
-		page="/html/portlet/users_admin/user_group_search.jsp"
+		page="/html/portlet/site_memberships/user_group_search.jsp"
 	/>
 
 	<%
