@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view-members");
@@ -58,14 +58,14 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.ASSIGN_USER_ROLES) %>">
 			<aui:nav-item dropdown="<%= true %>" iconCssClass="icon-plus" label="add-site-roles-to" selected='<%= toolbarItem.equals("assign-user-roles") %>'>
 				<portlet:renderURL var="assignUserRolesURL">
-					<portlet:param name="mvcPath" value="/html/portlet/site_memberships/edit_user_roles.jsp" />
+					<portlet:param name="mvcPath" value="/edit_user_roles.jsp" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 				</portlet:renderURL>
 
 				<aui:nav-item href="<%= assignUserRolesURL %>" iconCssClass="icon-user" label="users" />
 
 				<portlet:renderURL var="assignUserGroupRolesURL">
-					<portlet:param name="mvcPath" value="/html/portlet/site_memberships/edit_user_group_roles.jsp" />
+					<portlet:param name="mvcPath" value="/edit_user_group_roles.jsp" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 				</portlet:renderURL>
 
@@ -75,7 +75,7 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 		<c:if test="<%= group.getType() == GroupConstants.TYPE_SITE_RESTRICTED %>">
 			<portlet:renderURL var="viewMembershipRequestsURL">
-				<portlet:param name="mvcPath" value="/html/portlet/site_memberships/view_membership_requests.jsp" />
+				<portlet:param name="mvcPath" value="/view_membership_requests.jsp" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
 			</portlet:renderURL>
 

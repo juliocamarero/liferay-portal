@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String tabs1 = (String)request.getAttribute("edit_site_assignments.jsp-tabs1");
@@ -25,14 +25,17 @@ String redirect = (String)request.getAttribute("edit_site_assignments.jsp-redire
 int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
 
 Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
-User selUser = (User)request.getAttribute("edit_site_assignments.jsp-selUser");
+
+long userGroupId = ParamUtil.getLong(request, "userGroupId");
+
+UserGroup userGroup = UserGroupLocalServiceUtil.getUserGroup(userGroupId);
 
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.jsp-portletURL");
 
-portletURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
+portletURL.setParameter("userGroupId", String.valueOf(userGroupId));
 %>
 
-<aui:input name="p_u_i_d" type="hidden" value="<%= selUser.getUserId() %>" />
+<aui:input name="userGroupId" type="hidden" value="<%= userGroupId %>" />
 <aui:input name="addRoleIds" type="hidden" />
 <aui:input name="removeRoleIds" type="hidden" />
 
@@ -40,16 +43,34 @@ portletURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
 	backURL="<%= redirect %>"
 	escapeXml="<%= false %>"
 	localizeTitle="<%= false %>"
-	title='<%= LanguageUtil.get(request, "edit-site-roles-for-user") + ": " + HtmlUtil.escape(selUser.getFullName()) %>'
+	title='<%= LanguageUtil.get(request, "edit-site-roles-for-user-group") + ": " + HtmlUtil.escape(userGroup.getName()) %>'
 />
 
-<liferay-ui:membership-policy-error />
-
 <liferay-ui:search-container
-	rowChecker="<%= new UserGroupRoleRoleChecker(renderResponse, selUser, group) %>"
+	rowChecker="<%= new UserGroupGroupRoleRoleChecker(renderResponse, userGroup, group) %>"
 	searchContainer="<%= new RoleSearch(renderRequest, portletURL) %>"
 >
+
 	<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" cssClass="col-xs-12 form-search" placeholder="keywords" />
+
+	<%
+	PortletURL updateRoleAssignmentsURL = renderResponse.createRenderURL();
+
+	updateRoleAssignmentsURL.setParameter("tabs1", tabs1);
+	updateRoleAssignmentsURL.setParameter("tabs2", tabs2);
+	updateRoleAssignmentsURL.setParameter("cur", String.valueOf(cur));
+	updateRoleAssignmentsURL.setParameter("redirect", redirect);
+	updateRoleAssignmentsURL.setParameter("userGroupId", String.valueOf(userGroupId));
+	updateRoleAssignmentsURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+	%>
+
+	<div class="separator"><!-- --></div>
+
+	<%
+	String taglibOnClick = renderResponse.getNamespace() + "updateUserGroupGroupRole('" + updateRoleAssignmentsURL.toString() + "');";
+	%>
+
+	<aui:button onClick="<%= taglibOnClick %>" value="update-associations" />
 
 	<liferay-ui:search-container-results>
 
@@ -70,25 +91,6 @@ portletURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
 		%>
 
 	</liferay-ui:search-container-results>
-
-	<%
-	PortletURL updateRoleAssignmentsURL = renderResponse.createRenderURL();
-
-	updateRoleAssignmentsURL.setParameter("tabs1", tabs1);
-	updateRoleAssignmentsURL.setParameter("tabs2", tabs2);
-	updateRoleAssignmentsURL.setParameter("cur", String.valueOf(cur));
-	updateRoleAssignmentsURL.setParameter("redirect", redirect);
-	updateRoleAssignmentsURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
-	updateRoleAssignmentsURL.setParameter("groupId", String.valueOf(group.getGroupId()));
-	%>
-
-	<div class="separator"><!-- --></div>
-
-	<%
-	String taglibOnClick = renderResponse.getNamespace() + "updateUserGroupRole('" + updateRoleAssignmentsURL.toString() + "');";
-	%>
-
-	<aui:button onClick="<%= taglibOnClick %>" value="update-associations" />
 
 	<liferay-ui:search-container-row
 		className="com.liferay.portal.model.Role"

@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String tabs1 = (String)request.getAttribute("edit_site_assignments.jsp-tabs1");
@@ -61,7 +61,7 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 >
 	<c:if test='<%= !tabs1.equals("summary") %>'>
 		<liferay-ui:search-form
-			page="/html/portlet/site_memberships/organization_search.jsp"
+			page="/organization_search.jsp"
 		/>
 
 		<div class="separator"><!-- --></div>

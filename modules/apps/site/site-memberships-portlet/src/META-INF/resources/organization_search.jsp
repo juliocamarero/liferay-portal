@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 OrganizationSearch searchContainer = (OrganizationSearch)request.getAttribute("liferay-ui:search:searchContainer");

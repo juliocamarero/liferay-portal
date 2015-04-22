@@ -34,4 +34,4 @@ page import="com.liferay.portlet.usersadmin.search.OrganizationDisplayTerms" %><
 page import="com.liferay.portlet.usersadmin.search.OrganizationGroupChecker" %><%@
 page import="com.liferay.portlet.usersadmin.search.UserDisplayTerms" %>
 
-<%@ include file="/html/portlet/site_memberships/init-ext.jsp" %>
+<%@ include file="/init-ext.jsp" %>

@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
@@ -49,7 +49,7 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 	/>
 </c:if>
 
-<liferay-util:include page="/html/portlet/site_memberships/toolbar.jsp">
+<liferay-util:include page="/toolbar.jsp">
 	<liferay-util:param name="toolbarItem" value="view-membership-requests" />
 </liferay-util:include>
 
@@ -61,7 +61,7 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 <%
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("mcvPath", "/html/portlet/site_memberships/view_membership_requests.jsp");
+portletURL.setParameter("mcvPath", "/view_membership_requests.jsp");
 portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
@@ -139,7 +139,7 @@ portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 
 		<liferay-ui:search-container-column-jsp
 			cssClass="entry-action"
-			path="/html/portlet/site_memberships/membership_request_action.jsp"
+			path="/membership_request_action.jsp"
 		/>
 	</liferay-ui:search-container-row>
 

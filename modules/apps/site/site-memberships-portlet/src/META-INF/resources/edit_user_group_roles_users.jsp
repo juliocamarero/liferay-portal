@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String tabs1 = (String)request.getAttribute("edit_user_group_roles.jsp-tabs1");
@@ -54,7 +54,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_group_roles.
 	searchContainer="<%= new UserGroupSearch(renderRequest, portletURL) %>"
 >
 	<liferay-ui:search-form
-		page="/html/portlet/site_memberships/user_group_search.jsp"
+		page="/user_group_search.jsp"
 	/>
 
 	<%

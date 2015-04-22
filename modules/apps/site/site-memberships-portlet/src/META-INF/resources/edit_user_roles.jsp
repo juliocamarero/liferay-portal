@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String tabs1 = ParamUtil.getString(request, "tabs1", "current");
@@ -26,6 +26,10 @@ String redirect = ParamUtil.getString(request, "redirect");
 long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
 
 Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+if (group != null) {
+	group = StagingUtil.getLiveGroup(group.getGroupId());
+}
 
 String groupDescriptiveName = group.getDescriptiveName(locale);
 
@@ -46,12 +50,14 @@ int roleType = ParamUtil.getInteger(request, "roleType", RoleConstants.TYPE_SITE
 Organization organization = null;
 
 if (group.isOrganization()) {
+	roleType = RoleConstants.TYPE_ORGANIZATION;
+
 	organization = OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
 }
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("mvcPath", "/html/portlet/site_memberships/edit_user_group_roles.jsp");
+portletURL.setParameter("mvcPath", "/edit_user_roles.jsp");
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
@@ -62,38 +68,38 @@ if (organization != null) {
 	UsersAdminUtil.addPortletBreadcrumbEntries(organization, request, renderResponse);
 }
 else if (group != null) {
-	PortalUtil.addPortletBreadcrumbEntry(request, group.getDescriptiveName(locale), null);
+	PortalUtil.addPortletBreadcrumbEntry(request, groupDescriptiveName, null);
 }
 
-PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "assign-user-group-roles"), portletURL.toString());
+PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "assign-user-roles"), portletURL.toString());
 
 if (role != null) {
 	portletURL.setParameter("roleId", String.valueOf(roleId));
 
-	PortalUtil.addPortletBreadcrumbEntry(request, HtmlUtil.escape(role.getTitle(locale)), currentURL);
+	PortalUtil.addPortletBreadcrumbEntry(request, role.getTitle(locale), currentURL);
 }
 
-request.setAttribute("edit_user_group_roles.jsp-tabs1", tabs1);
+request.setAttribute("edit_user_roles.jsp-tabs1", tabs1);
 
-request.setAttribute("edit_user_group_roles.jsp-cur", cur);
+request.setAttribute("edit_user_roles.jsp-cur", cur);
 
-request.setAttribute("edit_user_group_roles.jsp-redirect", redirect);
+request.setAttribute("edit_user_roles.jsp-redirect", redirect);
 
-request.setAttribute("edit_user_group_roles.jsp-group", group);
-request.setAttribute("edit_user_group_roles.jsp-groupDescriptiveName", groupDescriptiveName);
-request.setAttribute("edit_user_group_roles.jsp-role", role);
-request.setAttribute("edit_user_group_roles.jsp-roleId", roleId);
-request.setAttribute("edit_user_group_roles.jsp-roleType", roleType);
-request.setAttribute("edit_user_group_roles.jsp-organization", organization);
+request.setAttribute("edit_user_roles.jsp-group", group);
+request.setAttribute("edit_user_roles.jsp-groupDescriptiveName", groupDescriptiveName);
+request.setAttribute("edit_user_roles.jsp-role", role);
+request.setAttribute("edit_user_roles.jsp-roleId", roleId);
+request.setAttribute("edit_user_roles.jsp-roleType", roleType);
+request.setAttribute("edit_user_roles.jsp-organization", organization);
 
-request.setAttribute("edit_user_group_roles.jsp-portletURL", portletURL);
+request.setAttribute("edit_user_roles.jsp-portletURL", portletURL);
 %>
 
 <liferay-ui:header
 	backURL="<%= redirect %>"
 	escapeXml="<%= false %>"
 	localizeTitle="<%= false %>"
-	title='<%= LanguageUtil.get(request, "add-site-roles-to") + ": " + LanguageUtil.get(request, "user-groups") %>'
+	title='<%= LanguageUtil.get(request, group.isOrganization() ? "add-organization-roles-to" : "add-site-roles-to") + ": " + LanguageUtil.get(request, "users") %>'
 />
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
@@ -104,24 +110,24 @@ request.setAttribute("edit_user_group_roles.jsp-portletURL", portletURL);
 
 	<c:choose>
 		<c:when test="<%= role == null %>">
-			<liferay-util:include page="/html/portlet/site_memberships/edit_user_group_roles_role.jsp" />
+			<liferay-util:include page="/edit_user_roles_role.jsp" />
 		</c:when>
 		<c:otherwise>
-			<liferay-util:include page="/html/portlet/site_memberships/edit_user_group_roles_users.jsp" />
+			<liferay-util:include page="/edit_user_roles_users.jsp" />
 		</c:otherwise>
 	</c:choose>
 </aui:form>
 
 <aui:script>
-	function <portlet:namespace />updateUserGroupGroupRoleUsers(redirect) {
+	function <portlet:namespace />updateUserGroupRoleUsers(redirect) {
 		var Util = Liferay.Util;
 
 		var form = AUI.$(document.<portlet:namespace />fm);
 
 		form.fm('redirect').val(redirect);
-		form.fm('addUserGroupIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-		form.fm('removeUserGroupIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
+		form.fm('addUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
+		form.fm('removeUserIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
 
-		submitForm(form, '<portlet:actionURL name="editUserGroupGroupRoleUsers" />');
+		submitForm(form, '<portlet:actionURL name="editUserGroupRoleUsers" />');
 	}
 </aui:script>

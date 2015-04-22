@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String tabs1 = (String)request.getAttribute("edit_site_assignments.jsp-tabs1");
@@ -60,7 +60,7 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 >
 	<c:if test='<%= !tabs1.equals("summary") %>'>
 		<liferay-ui:search-form
-			page="/html/portlet/site_memberships/user_group_search.jsp"
+			page="/user_group_search.jsp"
 		/>
 
 		<div class="separator"><!-- --></div>
@@ -136,7 +136,7 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 			<liferay-ui:search-container-column-jsp
 				align="right"
 				cssClass="entry-action"
-				path="/html/portlet/site_memberships/user_group_action.jsp"
+				path="/user_group_action.jsp"
 			/>
 		</c:if>
 	</liferay-ui:search-container-row>

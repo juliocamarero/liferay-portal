@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String tabs1 = ParamUtil.getString(request, "tabs1", "summary");
@@ -76,7 +76,7 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 				/>
 			</c:when>
 			<c:otherwise>
-				<liferay-util:include page="/html/portlet/site_memberships/toolbar.jsp">
+				<liferay-util:include page="/toolbar.jsp">
 					<liferay-util:param name="toolbarItem" value='<%= tabs2.equals("available") ? "add-role" : null %>' />
 				</liferay-util:include>
 			</c:otherwise>
@@ -121,7 +121,7 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 						<br />
 
 						<portlet:renderURL var="viewMembershipRequestsURL">
-							<portlet:param name="mvcPath" value="/html/portlet/site_memberships/view_membership_requests.jsp" />
+							<portlet:param name="mvcPath" value="/view_membership_requests.jsp" />
 							<portlet:param name="redirect" value="<%= currentURL %>" />
 							<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
 						</portlet:renderURL>
@@ -136,32 +136,32 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 				</c:if>
 			</div>
 
-			<liferay-util:include page="/html/portlet/site_memberships/users.jsp" />
+			<liferay-util:include page="/users.jsp" />
 
-			<liferay-util:include page="/html/portlet/site_memberships/organizations.jsp" />
+			<liferay-util:include page="/organizations.jsp" />
 
-			<liferay-util:include page="/html/portlet/site_memberships/user_groups.jsp" />
+			<liferay-util:include page="/user_groups.jsp" />
 		</c:when>
 		<c:when test='<%= tabs1.equals("users") %>'>
 			<c:choose>
 				<c:when test="<%= selUser == null %>">
-					<liferay-util:include page="/html/portlet/site_memberships/users.jsp" />
+					<liferay-util:include page="/users.jsp" />
 				</c:when>
 				<c:otherwise>
-					<liferay-util:include page="/html/portlet/site_memberships/users_roles.jsp" />
+					<liferay-util:include page="/users_roles.jsp" />
 				</c:otherwise>
 			</c:choose>
 		</c:when>
 		<c:when test='<%= tabs1.equals("organizations") %>'>
-			<liferay-util:include page="/html/portlet/site_memberships/organizations.jsp" />
+			<liferay-util:include page="/organizations.jsp" />
 		</c:when>
 		<c:when test='<%= tabs1.equals("user-groups") %>'>
 			<c:choose>
 				<c:when test="<%= userGroupId == 0 %>">
-					<liferay-util:include page="/html/portlet/site_memberships/user_groups.jsp" />
+					<liferay-util:include page="/user_groups.jsp" />
 				</c:when>
 				<c:otherwise>
-					<liferay-util:include page="/html/portlet/site_memberships/user_groups_roles.jsp" />
+					<liferay-util:include page="/user_groups_roles.jsp" />
 				</c:otherwise>
 			</c:choose>
 		</c:when>
