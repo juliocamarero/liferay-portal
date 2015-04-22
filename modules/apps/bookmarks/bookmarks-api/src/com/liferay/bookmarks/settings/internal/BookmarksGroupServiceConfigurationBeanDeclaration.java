@@ -12,11 +12,10 @@
  * details.
  */
 
-package com.liferay.bookmarks.settings.definition;
+package com.liferay.bookmarks.settings.internal;
 
 import com.liferay.bookmarks.configuration.BookmarksGroupServiceConfiguration;
-import com.liferay.bookmarks.constants.BookmarksConstants;
-import com.liferay.portal.kernel.settings.definition.SettingsIdMapping;
+import com.liferay.portal.kernel.settings.definition.ConfigurationBeanDeclaration;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -24,17 +23,12 @@ import org.osgi.service.component.annotations.Component;
  * @author Iván Zaera
  */
 @Component
-public class BookmarksGroupServiceSettingsIdMapping
-	implements SettingsIdMapping {
+public class BookmarksGroupServiceConfigurationBeanDeclaration
+	implements ConfigurationBeanDeclaration {
 
 	@Override
 	public Class getConfigurationBeanClass() {
 		return BookmarksGroupServiceConfiguration.class;
-	}
-
-	@Override
-	public String getSettingsId() {
-		return BookmarksConstants.SERVICE_NAME;
 	}
 
 }
