@@ -18,6 +18,56 @@
 	}
 }
 
+.lfr-entry-selector {
+	.selected-items {
+		margin: 5px 0 20px;
+
+		.list-entry {
+			background-color: #E3F1FC;
+			border-radius: 14px;
+			color: #55A6EC;
+			padding: 0 10px;
+
+			.remove-button {
+				background-color: transparent;
+				border-width: 0;
+				color: inherit;
+				padding: 5px;
+			}
+		}
+	}
+
+	.select-button, .cancel-button {
+		background-color: transparent;
+		border-radius: 14px;
+		color: #999;
+	}
+
+	.done-button {
+		border-radius: 14px;
+		float: left;
+	}
+
+	.select-list {
+		.list-entry {
+			height: 100px;
+			padding-left: 10px;
+			padding-right: 10px;
+			margin-bottom: 20px;
+
+			.content {
+				height: 100%;
+				text-align: center;
+				width: 100%;
+
+				&.selected {
+					color: #7BB8F1;
+				}
+			}
+		}
+	}
+}
+
 .lfr-tag-selector-popup {
 	width: 250px;
 
