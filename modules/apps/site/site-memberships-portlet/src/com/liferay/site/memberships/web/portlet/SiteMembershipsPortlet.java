@@ -42,6 +42,7 @@ import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.site.memberships.web.upgrade.SiteMembershipsWebUpgrade;
 
 import java.io.IOException;
 
@@ -56,6 +57,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Brian Wing Shun Chan
@@ -357,6 +359,11 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		}
 
 		return false;
+	}
+
+	@Reference(unbind = "-")
+	protected void setSiteMembershipsWebUpgrade(
+		SiteMembershipsWebUpgrade siteMembershipsWebUpgrade) {
 	}
 
 }
