@@ -55,6 +55,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_user_group_roles.
 >
 	<liferay-ui:search-form
 		page="/user_group_search.jsp"
+		servletContext="<%= application %>"
 	/>
 
 	<%

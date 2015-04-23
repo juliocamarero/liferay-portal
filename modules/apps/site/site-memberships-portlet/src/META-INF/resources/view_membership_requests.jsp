@@ -49,7 +49,7 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 	/>
 </c:if>
 
-<liferay-util:include page="/toolbar.jsp">
+<liferay-util:include page="/toolbar.jsp" servletContext="<%= application %>">
 	<liferay-util:param name="toolbarItem" value="view-membership-requests" />
 </liferay-util:include>
 

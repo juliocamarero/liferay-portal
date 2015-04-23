@@ -104,10 +104,10 @@ request.setAttribute("edit_user_group_roles.jsp-portletURL", portletURL);
 
 	<c:choose>
 		<c:when test="<%= role == null %>">
-			<liferay-util:include page="/edit_user_group_roles_role.jsp" />
+			<liferay-util:include page="/edit_user_group_roles_role.jsp" servletContext="<%= application %>" />
 		</c:when>
 		<c:otherwise>
-			<liferay-util:include page="/edit_user_group_roles_users.jsp" />
+			<liferay-util:include page="/edit_user_group_roles_users.jsp" servletContext="<%= application %>" />
 		</c:otherwise>
 	</c:choose>
 </aui:form>
