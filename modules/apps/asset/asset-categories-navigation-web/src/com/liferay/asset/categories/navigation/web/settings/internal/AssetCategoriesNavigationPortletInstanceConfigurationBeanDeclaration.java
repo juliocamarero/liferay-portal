@@ -12,11 +12,10 @@
  * details.
  */
 
-package com.liferay.asset.categories.navigation.web.configuration.internal;
+package com.liferay.asset.categories.navigation.web.settings.internal;
 
 import com.liferay.asset.categories.navigation.web.configuration.AssetCategoriesNavigationPortletInstanceConfiguration;
-import com.liferay.asset.categories.navigation.web.constants.AssetCategoriesNavigationPortletKeys;
-import com.liferay.portal.kernel.settings.definition.SettingsIdMapping;
+import com.liferay.portal.kernel.settings.definition.ConfigurationBeanDeclaration;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -24,17 +23,13 @@ import org.osgi.service.component.annotations.Component;
  * @author Juergen Kappler
  */
 @Component
-public class AssetCategoriesNavigationPortletInstanceSettingsIdMapping
-	implements SettingsIdMapping {
+public class
+	AssetCategoriesNavigationPortletInstanceConfigurationBeanDeclaration
+		implements ConfigurationBeanDeclaration {
 
 	@Override
-	public Class<?> getConfigurationBeanClass() {
+	public Class getConfigurationBeanClass() {
 		return AssetCategoriesNavigationPortletInstanceConfiguration.class;
-	}
-
-	@Override
-	public String getSettingsId() {
-		return AssetCategoriesNavigationPortletKeys.ASSET_CATEGORIES_NAVIGATION;
 	}
 
 }
