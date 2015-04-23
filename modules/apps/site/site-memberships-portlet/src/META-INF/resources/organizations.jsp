@@ -62,6 +62,7 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 	<c:if test='<%= !tabs1.equals("summary") %>'>
 		<liferay-ui:search-form
 			page="/organization_search.jsp"
+			servletContext="<%= application %>"
 		/>
 
 		<div class="separator"><!-- --></div>
