@@ -41,6 +41,7 @@ String portletResource = ParamUtil.getString(request, "portletResource");
 			<div class="tabbable-content" id="portlet-set-properties">
 				<liferay-ui:tabs
 					names="<%= tabs1Names %>"
+					refresh="<%= false %>"
 					url="<%= portletURL.toString() %>"
 				/>
 
