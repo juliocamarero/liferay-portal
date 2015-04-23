@@ -32,11 +32,13 @@ String title = GetterUtil.getString((String)request.getAttribute("liferay-ui:ent
 		<%
 		for (SelectableEntry entry : selectedEntries) {
 		%>
+
 			<li class="list-entry" data-key="<%= entry.getKey() %>">
 				<span><%= LanguageUtil.get(request, entry.getLabel()) %></span>
 
 				<aui:button cssClass="remove-button" icon="icon-remove" />
 			</li>
+
 		<%
 		}
 		%>
@@ -51,8 +53,6 @@ String title = GetterUtil.getString((String)request.getAttribute("liferay-ui:ent
 
 	<%
 	for (SelectableEntry entry : entries) {
-		String entryLabel = LanguageUtil.get(request, entry.getLabel());
-		String entryKey = entry.getKey();
 	%>
 
 		entries.push(

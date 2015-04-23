@@ -51,9 +51,9 @@
 	.select-list {
 		.list-entry {
 			height: 100px;
+			margin-bottom: 20px;
 			padding-left: 10px;
 			padding-right: 10px;
-			margin-bottom: 20px;
 
 			.content {
 				height: 100%;
