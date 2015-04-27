@@ -586,6 +586,30 @@ public class JournalArticleIndexer extends BaseIndexer {
 			ddmStructure, ddmFormValues, LocaleUtil.fromLanguageId(languageId));
 	}
 
+	protected JournalArticle fetchLatestIndexableArticle(long resourcePrimKey) {
+		JournalArticle latestIndexableArticle =
+			JournalArticleLocalServiceUtil.fetchLatestArticle(
+				resourcePrimKey,
+				new int[] {
+					WorkflowConstants.STATUS_APPROVED,
+					WorkflowConstants.STATUS_IN_TRASH
+				});
+
+		if (latestIndexableArticle == null) {
+			latestIndexableArticle =
+				JournalArticleLocalServiceUtil.fetchLatestArticle(
+					resourcePrimKey);
+		}
+
+		if ((latestIndexableArticle != null) &&
+			latestIndexableArticle.isIndexable()) {
+
+			return latestIndexableArticle;
+		}
+
+		return null;
+	}
+
 	protected Collection<Document> getArticleVersions(JournalArticle article)
 		throws PortalException {
 
@@ -603,22 +627,9 @@ public class JournalArticleIndexer extends BaseIndexer {
 			articles = new ArrayList<>();
 
 			JournalArticle latestIndexableArticle =
-				JournalArticleLocalServiceUtil.fetchLatestArticle(
-					article.getResourcePrimKey(),
-					new int[] {
-						WorkflowConstants.STATUS_APPROVED,
-						WorkflowConstants.STATUS_IN_TRASH
-					});
+				fetchLatestIndexableArticle(article.getResourcePrimKey());
 
-			if (latestIndexableArticle == null) {
-				latestIndexableArticle =
-					JournalArticleLocalServiceUtil.fetchLatestArticle(
-						article.getResourcePrimKey());
-			}
-
-			if ((latestIndexableArticle != null) &&
-				latestIndexableArticle.isIndexable()) {
-
+			if (latestIndexableArticle != null) {
 				articles.add(latestIndexableArticle);
 			}
 		}
@@ -739,31 +750,15 @@ public class JournalArticleIndexer extends BaseIndexer {
 								(JournalArticleResource)object;
 
 							JournalArticle latestIndexableArticle =
-								JournalArticleLocalServiceUtil.
-									fetchLatestArticle(
-										articleResource.getResourcePrimKey(),
-										new int[] {
-											WorkflowConstants.STATUS_APPROVED,
-											WorkflowConstants.STATUS_IN_TRASH
-										});
+								fetchLatestIndexableArticle(
+									articleResource.getResourcePrimKey());
 
-								if (latestIndexableArticle == null) {
-									latestIndexableArticle =
-										JournalArticleLocalServiceUtil.
-											fetchLatestArticle(
-												articleResource.
-													getResourcePrimKey());
-								}
+							if (latestIndexableArticle != null) {
+								Document document =
+									getDocument(latestIndexableArticle);
 
-								if ((latestIndexableArticle != null) &&
-									latestIndexableArticle.isIndexable()) {
-
-									Document document =
-										getDocument(latestIndexableArticle);
-
-									actionableDynamicQuery.addDocument(
-										document);
-								}
+								actionableDynamicQuery.addDocument(document);
+							}
 						}
 
 					});
