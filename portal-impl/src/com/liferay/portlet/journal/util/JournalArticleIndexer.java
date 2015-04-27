@@ -59,12 +59,13 @@ import com.liferay.portlet.dynamicdatamapping.util.DDMUtil;
 import com.liferay.portlet.dynamicdatamapping.util.FieldsToDDMFormValuesConverterUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleDisplay;
+import com.liferay.portlet.journal.model.JournalArticleResource;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -695,49 +696,82 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	protected void reindexArticles(long companyId) throws PortalException {
-		final ActionableDynamicQuery actionableDynamicQuery =
-			JournalArticleLocalServiceUtil.getActionableDynamicQuery();
+		if (PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
 
-		actionableDynamicQuery.setAddCriteriaMethod(
-			new ActionableDynamicQuery.AddCriteriaMethod() {
+			final ActionableDynamicQuery actionableDynamicQuery =
+				JournalArticleLocalServiceUtil.getActionableDynamicQuery();
 
-				@Override
-				public void addCriteria(DynamicQuery dynamicQuery) {
-					if (PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-						return;
+			actionableDynamicQuery.setCompanyId(companyId);
+			actionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.PerformActionMethod() {
+
+					@Override
+					public void performAction(Object object)
+						throws PortalException {
+
+						JournalArticle article = (JournalArticle)object;
+
+						Document document = getDocument(article);
+
+						actionableDynamicQuery.addDocument(document);
 					}
 
-					Property statusProperty = PropertyFactoryUtil.forName(
-						"status");
+				});
 
-					Integer[] statuses = {
-						WorkflowConstants.STATUS_APPROVED,
-						WorkflowConstants.STATUS_IN_TRASH
-					};
+			actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
-					dynamicQuery.add(statusProperty.in(statuses));
-				}
+			actionableDynamicQuery.performActions();
+		}
+		else {
+			final ActionableDynamicQuery actionableDynamicQuery =
+				JournalArticleResourceLocalServiceUtil.
+					getActionableDynamicQuery();
 
-			});
-		actionableDynamicQuery.setCompanyId(companyId);
-		actionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.PerformActionMethod() {
+				actionableDynamicQuery.setCompanyId(companyId);
+				actionableDynamicQuery.setPerformActionMethod(
+					new ActionableDynamicQuery.PerformActionMethod() {
 
-				@Override
-				public void performAction(Object object)
-					throws PortalException {
+						@Override
+						public void performAction(Object object)
+							throws PortalException {
 
-					JournalArticle article = (JournalArticle)object;
+							JournalArticleResource articleResource =
+								(JournalArticleResource)object;
 
-					Document document = getDocument(article);
+							JournalArticle latestIndexableArticle =
+								JournalArticleLocalServiceUtil.
+									fetchLatestArticle(
+										articleResource.getResourcePrimKey(),
+										new int[] {
+											WorkflowConstants.STATUS_APPROVED,
+											WorkflowConstants.STATUS_IN_TRASH
+										});
 
-					actionableDynamicQuery.addDocument(document);
-				}
+								if (latestIndexableArticle == null) {
+									latestIndexableArticle =
+										JournalArticleLocalServiceUtil.
+											fetchLatestArticle(
+												articleResource.
+													getResourcePrimKey());
+								}
 
-			});
-		actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+								if ((latestIndexableArticle != null) &&
+									latestIndexableArticle.isIndexable()) {
 
-		actionableDynamicQuery.performActions();
+									Document document =
+										getDocument(latestIndexableArticle);
+
+									actionableDynamicQuery.addDocument(
+										document);
+								}
+						}
+
+					});
+
+				actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+
+				actionableDynamicQuery.performActions();
+		}
 	}
 
 	protected void reindexArticleVersions(JournalArticle article)
