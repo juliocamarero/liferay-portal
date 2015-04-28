@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view-members");
@@ -78,7 +78,7 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 		<c:if test="<%= group.getType() == GroupConstants.TYPE_SITE_RESTRICTED %>">
 			<portlet:renderURL var="viewMembershipRequestsURL">
-				<portlet:param name="mvcPath" value="/html/portlet/site_memberships/view_membership_requests.jsp" />
+				<portlet:param name="mvcPath" value="/view_membership_requests.jsp" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
 			</portlet:renderURL>
 

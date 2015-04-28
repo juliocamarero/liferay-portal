@@ -90,7 +90,7 @@ if (group.getType() == GroupConstants.TYPE_SITE_RESTRICTED) {
 
 			<dd class="membership-requests">
 				<liferay-portlet:renderURL portletName="<%= PortletKeys.SITE_MEMBERSHIPS_ADMIN %>" var="viewMembershipRequestsURL">
-					<portlet:param name="mvcPath" value="/html/portlet/site_memberships/view_membership_requests.jsp" />
+					<portlet:param name="mvcPath" value="/view_membership_requests.jsp" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
 				</liferay-portlet:renderURL>

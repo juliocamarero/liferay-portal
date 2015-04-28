@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/site_memberships/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
@@ -27,7 +27,7 @@ Group group = (Group)row.getParameter("group");
 <liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 	<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.ASSIGN_USER_ROLES) %>">
 		<portlet:renderURL var="assignURL">
-			<portlet:param name="mvcPath" value="/html/portlet/site_memberships/view.jsp" />
+			<portlet:param name="mvcPath" value="/view.jsp" />
 			<portlet:param name="tabs1" value="user-groups" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="userGroupId" value="<%= String.valueOf(userGroup.getUserGroupId()) %>" />
