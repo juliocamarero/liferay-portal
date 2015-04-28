@@ -20,11 +20,20 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portlet.BaseControlPanelEntry;
+import com.liferay.portlet.ControlPanelEntry;
+import com.liferay.site.memberships.web.constants.SiteMembershipsPortletKeys;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Raymond Augé
  * @author Jorge Ferrer
  */
+@Component(
+	immediate = true,
+	property = {"javax.portlet.name=" + SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN},
+	service = ControlPanelEntry.class
+)
 public class SiteMembershipsControlPanelEntry extends BaseControlPanelEntry {
 
 	@Override
