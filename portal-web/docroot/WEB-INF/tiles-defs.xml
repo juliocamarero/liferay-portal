@@ -1020,10 +1020,6 @@
 		<put name="portlet_content" value="/portlet/sites_admin/error.jsp" />
 	</definition>
 
-	<definition name="portlet.sites_admin.select_site" extends="portlet.sites_admin">
-		<put name="portlet_content" value="/portlet/sites_admin/select_site.jsp" />
-	</definition>
-
 	<definition name="portlet.sites_admin.view" extends="portlet.sites_admin">
 		<put name="portlet_content" value="/portlet/sites_admin/view.jsp" />
 	</definition>

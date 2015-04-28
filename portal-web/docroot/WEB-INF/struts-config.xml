@@ -1274,8 +1274,6 @@
 
 		<action path="/roles_admin/select_regular_role" forward="portlet.roles_admin.select_regular_role" />
 
-		<action path="/roles_admin/select_site" forward="portlet.sites_admin.select_site" />
-
 		<action path="/roles_admin/select_site_role" forward="portlet.roles_admin.select_site_role" />
 
 		<action path="/roles_admin/view" forward="portlet.roles_admin.view" />
@@ -1379,8 +1377,6 @@
 		<action path="/sites_admin/publish_layouts" type="com.liferay.portlet.layoutsadmin.action.PublishLayoutsAction">
 			<forward name="portlet.layouts_admin.publish_layouts" path="portlet.layouts_admin.publish_layouts" />
 		</action>
-
-		<action path="/sites_admin/select_site" forward="portlet.sites_admin.select_site" />
 
 		<action path="/sites_admin/select_site_role" forward="portlet.roles_admin.select_site_role" />
 
@@ -1583,8 +1579,6 @@
 		<action path="/users_admin/select_organization_role" forward="portlet.roles_admin.select_organization_role" />
 
 		<action path="/users_admin/select_regular_role" forward="portlet.roles_admin.select_regular_role" />
-
-		<action path="/users_admin/select_site" forward="portlet.sites_admin.select_site" />
 
 		<action path="/users_admin/select_site_role" forward="portlet.roles_admin.select_site_role" />
 
